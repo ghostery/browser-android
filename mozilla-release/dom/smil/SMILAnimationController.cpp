@@ -33,26 +33,6 @@ namespace mozilla {
 //----------------------------------------------------------------------
 // ctors, dtors, factory methods
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-nsSMILAnimationController::nsSMILAnimationController(nsIDocument* aDoc)
-    : mAvgTimeBetweenSamples(0),
-      mResampleNeeded(false),
-      mDeferredStartSampling(false),
-      mRunningSample(false),
-      mRegisteredWithRefreshDriver(false),
-      mMightHavePendingStyleUpdates(false),
-      mDocument(aDoc) {
-||||||| merged common ancestors
-nsSMILAnimationController::nsSMILAnimationController(nsIDocument* aDoc)
-  : mAvgTimeBetweenSamples(0),
-    mResampleNeeded(false),
-    mDeferredStartSampling(false),
-    mRunningSample(false),
-    mRegisteredWithRefreshDriver(false),
-    mMightHavePendingStyleUpdates(false),
-    mDocument(aDoc)
-{
-=======
 SMILAnimationController::SMILAnimationController(Document* aDoc)
     : mAvgTimeBetweenSamples(0),
       mResampleNeeded(false),
@@ -61,7 +41,6 @@ SMILAnimationController::SMILAnimationController(Document* aDoc)
       mRegisteredWithRefreshDriver(false),
       mMightHavePendingStyleUpdates(false),
       mDocument(aDoc) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   MOZ_ASSERT(aDoc, "need a non-null document");
 
   nsRefreshDriver* refreshDriver = GetRefreshDriver();
@@ -75,14 +54,7 @@ SMILAnimationController::SMILAnimationController(Document* aDoc)
   Begin();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-nsSMILAnimationController::~nsSMILAnimationController() {
-||||||| merged common ancestors
-nsSMILAnimationController::~nsSMILAnimationController()
-{
-=======
 SMILAnimationController::~SMILAnimationController() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   NS_ASSERTION(mAnimationElementTable.Count() == 0,
                "Animation controller shouldn't be tracking any animation"
                " elements when it dies");
@@ -90,15 +62,7 @@ SMILAnimationController::~SMILAnimationController() {
                "Leaving stale entry in refresh driver's observer list");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::Disconnect() {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::Disconnect()
-{
-=======
 void SMILAnimationController::Disconnect() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   MOZ_ASSERT(mDocument, "disconnecting when we weren't connected...?");
   MOZ_ASSERT(mRefCnt.get() == 1,
              "Expecting to disconnect when doc is sole remaining owner");
@@ -113,18 +77,8 @@ void SMILAnimationController::Disconnect() {
 //----------------------------------------------------------------------
 // SMILTimeContainer methods:
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::Pause(uint32_t aType) {
-  nsSMILTimeContainer::Pause(aType);
-||||||| merged common ancestors
-void
-nsSMILAnimationController::Pause(uint32_t aType)
-{
-  nsSMILTimeContainer::Pause(aType);
-=======
 void SMILAnimationController::Pause(uint32_t aType) {
   SMILTimeContainer::Pause(aType);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
   if (mPauseState) {
     mDeferredStartSampling = false;
@@ -132,15 +86,7 @@ void SMILAnimationController::Pause(uint32_t aType) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::Resume(uint32_t aType) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::Resume(uint32_t aType)
-{
-=======
 void SMILAnimationController::Resume(uint32_t aType) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   bool wasPaused = (mPauseState != 0);
   // Update mCurrentSampleTime so that calls to GetParentTime--used for
   // calculating parent offsets--are accurate
@@ -154,18 +100,8 @@ void SMILAnimationController::Resume(uint32_t aType) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-nsSMILTime nsSMILAnimationController::GetParentTime() const {
-  return (nsSMILTime)(mCurrentSampleTime - mStartTime).ToMilliseconds();
-||||||| merged common ancestors
-nsSMILTime
-nsSMILAnimationController::GetParentTime() const
-{
-  return (nsSMILTime)(mCurrentSampleTime - mStartTime).ToMilliseconds();
-=======
 SMILTime SMILAnimationController::GetParentTime() const {
   return (SMILTime)(mCurrentSampleTime - mStartTime).ToMilliseconds();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 }
 
 //----------------------------------------------------------------------
@@ -174,15 +110,7 @@ NS_IMPL_ADDREF(SMILAnimationController)
 NS_IMPL_RELEASE(SMILAnimationController)
 
 // nsRefreshDriver Callback function
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::WillRefresh(mozilla::TimeStamp aTime) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::WillRefresh(mozilla::TimeStamp aTime)
-{
-=======
 void SMILAnimationController::WillRefresh(mozilla::TimeStamp aTime) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   // Although we never expect aTime to go backwards, when we initialise the
   // animation controller, if we can't get hold of a refresh driver we
   // initialise mCurrentSampleTime to Now(). It may be possible that after
@@ -205,16 +133,8 @@ void SMILAnimationController::WillRefresh(mozilla::TimeStamp aTime) {
   // initiate special behaviour to basically ignore the intervening time.
   static const double SAMPLE_DEV_THRESHOLD = 200.0;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-  nsSMILTime elapsedTime =
-      (nsSMILTime)(aTime - mCurrentSampleTime).ToMilliseconds();
-||||||| merged common ancestors
-  nsSMILTime elapsedTime =
-    (nsSMILTime)(aTime - mCurrentSampleTime).ToMilliseconds();
-=======
   SMILTime elapsedTime =
       (SMILTime)(aTime - mCurrentSampleTime).ToMilliseconds();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   if (mAvgTimeBetweenSamples == 0) {
     // First sample.
     mAvgTimeBetweenSamples = elapsedTime;
@@ -229,16 +149,8 @@ void SMILAnimationController::WillRefresh(mozilla::TimeStamp aTime) {
     // Update the moving average. Due to truncation here the average will
     // normally be a little less than it should be but that's probably ok.
     mAvgTimeBetweenSamples =
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-        (nsSMILTime)(elapsedTime * SAMPLE_DUR_WEIGHTING +
-                     mAvgTimeBetweenSamples * (1.0 - SAMPLE_DUR_WEIGHTING));
-||||||| merged common ancestors
-      (nsSMILTime)(elapsedTime * SAMPLE_DUR_WEIGHTING +
-      mAvgTimeBetweenSamples * (1.0 - SAMPLE_DUR_WEIGHTING));
-=======
         (SMILTime)(elapsedTime * SAMPLE_DUR_WEIGHTING +
                    mAvgTimeBetweenSamples * (1.0 - SAMPLE_DUR_WEIGHTING));
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   }
   mCurrentSampleTime = aTime;
 
@@ -248,18 +160,8 @@ void SMILAnimationController::WillRefresh(mozilla::TimeStamp aTime) {
 //----------------------------------------------------------------------
 // Animation element registration methods:
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::RegisterAnimationElement(
-    SVGAnimationElement* aAnimationElement) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::RegisterAnimationElement(
-                                  SVGAnimationElement* aAnimationElement)
-{
-=======
 void SMILAnimationController::RegisterAnimationElement(
     SVGAnimationElement* aAnimationElement) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   mAnimationElementTable.PutEntry(aAnimationElement);
   if (mDeferredStartSampling) {
     mDeferredStartSampling = false;
@@ -274,67 +176,27 @@ void SMILAnimationController::RegisterAnimationElement(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::UnregisterAnimationElement(
-    SVGAnimationElement* aAnimationElement) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::UnregisterAnimationElement(
-                                  SVGAnimationElement* aAnimationElement)
-{
-=======
 void SMILAnimationController::UnregisterAnimationElement(
     SVGAnimationElement* aAnimationElement) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   mAnimationElementTable.RemoveEntry(aAnimationElement);
 }
 
 //----------------------------------------------------------------------
 // Page show/hide
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::OnPageShow() {
-  Resume(nsSMILTimeContainer::PAUSE_PAGEHIDE);
-||||||| merged common ancestors
-void
-nsSMILAnimationController::OnPageShow()
-{
-  Resume(nsSMILTimeContainer::PAUSE_PAGEHIDE);
-=======
 void SMILAnimationController::OnPageShow() {
   Resume(SMILTimeContainer::PAUSE_PAGEHIDE);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::OnPageHide() {
-  Pause(nsSMILTimeContainer::PAUSE_PAGEHIDE);
-||||||| merged common ancestors
-void
-nsSMILAnimationController::OnPageHide()
-{
-  Pause(nsSMILTimeContainer::PAUSE_PAGEHIDE);
-=======
 void SMILAnimationController::OnPageHide() {
   Pause(SMILTimeContainer::PAUSE_PAGEHIDE);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 }
 
 //----------------------------------------------------------------------
 // Cycle-collection support
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::Traverse(
-    nsCycleCollectionTraversalCallback* aCallback) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::Traverse(
-    nsCycleCollectionTraversalCallback* aCallback)
-{
-=======
 void SMILAnimationController::Traverse(
     nsCycleCollectionTraversalCallback* aCallback) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   // Traverse last compositor table
   if (mLastCompositorTable) {
     for (auto iter = mLastCompositorTable->Iter(); !iter.Done(); iter.Next()) {
@@ -344,52 +206,20 @@ void SMILAnimationController::Traverse(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::Unlink() { mLastCompositorTable = nullptr; }
-||||||| merged common ancestors
-void
-nsSMILAnimationController::Unlink()
-{
-  mLastCompositorTable = nullptr;
-}
-=======
 void SMILAnimationController::Unlink() { mLastCompositorTable = nullptr; }
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
 //----------------------------------------------------------------------
 // Refresh driver lifecycle related methods
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::NotifyRefreshDriverCreated(
-    nsRefreshDriver* aRefreshDriver) {
-  if (!mPauseState) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::NotifyRefreshDriverCreated(
-    nsRefreshDriver* aRefreshDriver)
-{
-  if (!mPauseState) {
-=======
 void SMILAnimationController::NotifyRefreshDriverCreated(
     nsRefreshDriver* aRefreshDriver) {
   if (!mPauseState && !mChildContainerTable.IsEmpty()) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
     MaybeStartSampling(aRefreshDriver);
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::NotifyRefreshDriverDestroying(
-    nsRefreshDriver* aRefreshDriver) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::NotifyRefreshDriverDestroying(
-    nsRefreshDriver* aRefreshDriver)
-{
-=======
 void SMILAnimationController::NotifyRefreshDriverDestroying(
     nsRefreshDriver* aRefreshDriver) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   if (!mPauseState && !mDeferredStartSampling) {
     StopSampling(aRefreshDriver);
   }
@@ -398,15 +228,7 @@ void SMILAnimationController::NotifyRefreshDriverDestroying(
 //----------------------------------------------------------------------
 // Timer-related implementation helpers
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::StartSampling(nsRefreshDriver* aRefreshDriver) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::StartSampling(nsRefreshDriver* aRefreshDriver)
-{
-=======
 void SMILAnimationController::StartSampling(nsRefreshDriver* aRefreshDriver) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   NS_ASSERTION(mPauseState == 0, "Starting sampling but controller is paused");
   NS_ASSERTION(!mDeferredStartSampling,
                "Started sampling but the deferred start flag is still set");
@@ -423,15 +245,7 @@ void SMILAnimationController::StartSampling(nsRefreshDriver* aRefreshDriver) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::StopSampling(nsRefreshDriver* aRefreshDriver) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::StopSampling(nsRefreshDriver* aRefreshDriver)
-{
-=======
 void SMILAnimationController::StopSampling(nsRefreshDriver* aRefreshDriver) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   if (aRefreshDriver && mRegisteredWithRefreshDriver) {
     // NOTE: The document might already have been detached from its PresContext
     // (and RefreshDriver), which would make GetRefreshDriver() return null.
@@ -442,17 +256,8 @@ void SMILAnimationController::StopSampling(nsRefreshDriver* aRefreshDriver) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::MaybeStartSampling(
-    nsRefreshDriver* aRefreshDriver) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::MaybeStartSampling(nsRefreshDriver* aRefreshDriver)
-{
-=======
 void SMILAnimationController::MaybeStartSampling(
     nsRefreshDriver* aRefreshDriver) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   if (mDeferredStartSampling) {
     // We've received earlier 'MaybeStartSampling' calls, and we're
     // deferring until we get a registered animation.
@@ -469,29 +274,11 @@ void SMILAnimationController::MaybeStartSampling(
 //----------------------------------------------------------------------
 // Sample-related methods and callbacks
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::DoSample() {
-  DoSample(true);  // Skip unchanged time containers
-||||||| merged common ancestors
-void
-nsSMILAnimationController::DoSample()
-{
-  DoSample(true); // Skip unchanged time containers
-=======
 void SMILAnimationController::DoSample() {
   DoSample(true);  // Skip unchanged time containers
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::DoSample(bool aSkipUnchangedContainers) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::DoSample(bool aSkipUnchangedContainers)
-{
-=======
 void SMILAnimationController::DoSample(bool aSkipUnchangedContainers) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   if (!mDocument) {
     NS_ERROR("Shouldn't be sampling after document has disconnected");
     return;
@@ -558,22 +345,10 @@ void SMILAnimationController::DoSample(bool aSkipUnchangedContainers) {
   // save iterating over the animation elements twice.
 
   // Create the compositor table
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-  nsAutoPtr<nsSMILCompositorTable> currentCompositorTable(
-      new nsSMILCompositorTable(0));
-  nsTArray<RefPtr<SVGAnimationElement>> animElems(
-      mAnimationElementTable.Count());
-||||||| merged common ancestors
-  nsAutoPtr<nsSMILCompositorTable>
-    currentCompositorTable(new nsSMILCompositorTable(0));
-  nsTArray<RefPtr<SVGAnimationElement>>
-    animElems(mAnimationElementTable.Count());
-=======
   nsAutoPtr<SMILCompositorTable> currentCompositorTable(
       new SMILCompositorTable(0));
   nsTArray<RefPtr<SVGAnimationElement>> animElems(
       mAnimationElementTable.Count());
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
   for (auto iter = mAnimationElementTable.Iter(); !iter.Done(); iter.Next()) {
     SVGAnimationElement* animElem = iter.Get()->GetKey();
@@ -591,19 +366,9 @@ void SMILAnimationController::DoSample(bool aSkipUnchangedContainers) {
     // * Transfer over cached base values, from last sample's compositors
     for (auto iter = currentCompositorTable->Iter(); !iter.Done();
          iter.Next()) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-      nsSMILCompositor* compositor = iter.Get();
-      nsSMILCompositor* lastCompositor =
-          mLastCompositorTable->GetEntry(compositor->GetKey());
-||||||| merged common ancestors
-      nsSMILCompositor* compositor = iter.Get();
-      nsSMILCompositor* lastCompositor =
-        mLastCompositorTable->GetEntry(compositor->GetKey());
-=======
       SMILCompositor* compositor = iter.Get();
       SMILCompositor* lastCompositor =
           mLastCompositorTable->GetEntry(compositor->GetKey());
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
       if (lastCompositor) {
         compositor->StealCachedBaseValue(lastCompositor);
@@ -657,15 +422,7 @@ void SMILAnimationController::DoSample(bool aSkipUnchangedContainers) {
   NS_ASSERTION(!mResampleNeeded, "Resample dirty flag set during sample!");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::RewindElements() {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::RewindElements()
-{
-=======
 void SMILAnimationController::RewindElements() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   bool rewindNeeded = false;
   for (auto iter = mChildContainerTable.Iter(); !iter.Done(); iter.Next()) {
     SMILTimeContainer* container = iter.Get()->GetKey();
@@ -690,15 +447,7 @@ void SMILAnimationController::RewindElements() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::DoMilestoneSamples() {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::DoMilestoneSamples()
-{
-=======
 void SMILAnimationController::DoMilestoneSamples() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   // We need to sample the timing model but because SMIL operates independently
   // of the frame-rate, we can get one sample at t=0s and the next at t=10min.
   //
@@ -773,31 +522,13 @@ void SMILAnimationController::DoMilestoneSamples() {
         // its parent since registering a milestone.
         continue;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-      nsSMILTimeValue containerTimeValue =
-          container->ParentToContainerTime(sampleTime);
-      if (!containerTimeValue.IsDefinite()) continue;
-||||||| merged common ancestors
-      nsSMILTimeValue containerTimeValue =
-        container->ParentToContainerTime(sampleTime);
-      if (!containerTimeValue.IsDefinite())
-        continue;
-=======
       SMILTimeValue containerTimeValue =
           container->ParentToContainerTime(sampleTime);
       if (!containerTimeValue.IsDefinite()) continue;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
       // Clamp the converted container time to non-negative values.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-      nsSMILTime containerTime =
-          std::max<nsSMILTime>(0, containerTimeValue.GetMillis());
-||||||| merged common ancestors
-      nsSMILTime containerTime = std::max<nsSMILTime>(0, containerTimeValue.GetMillis());
-=======
       SMILTime containerTime =
           std::max<SMILTime>(0, containerTimeValue.GetMillis());
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
       if (nextMilestone.mIsEnd) {
         elem->TimedElement().SampleEndAt(containerTime);
@@ -808,26 +539,11 @@ void SMILAnimationController::DoMilestoneSamples() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-/*static*/ void nsSMILAnimationController::SampleTimedElement(
-    SVGAnimationElement* aElement, TimeContainerHashtable* aActiveContainers) {
-  nsSMILTimeContainer* timeContainer = aElement->GetTimeContainer();
-  if (!timeContainer) return;
-||||||| merged common ancestors
-/*static*/ void
-nsSMILAnimationController::SampleTimedElement(
-  SVGAnimationElement* aElement, TimeContainerHashtable* aActiveContainers)
-{
-  nsSMILTimeContainer* timeContainer = aElement->GetTimeContainer();
-  if (!timeContainer)
-    return;
-=======
 /*static*/
 void SMILAnimationController::SampleTimedElement(
     SVGAnimationElement* aElement, TimeContainerHashtable* aActiveContainers) {
   SMILTimeContainer* timeContainer = aElement->GetTimeContainer();
   if (!timeContainer) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
   // We'd like to call timeContainer->NeedsSample() here and skip all timed
   // elements that belong to paused time containers that don't need a sample,
@@ -847,23 +563,10 @@ void SMILAnimationController::SampleTimedElement(
   aElement->TimedElement().SampleAt(containerTime);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-/*static*/ void nsSMILAnimationController::AddAnimationToCompositorTable(
-    SVGAnimationElement* aElement, nsSMILCompositorTable* aCompositorTable,
-    bool& aStyleFlushNeeded) {
-||||||| merged common ancestors
-/*static*/ void
-nsSMILAnimationController::AddAnimationToCompositorTable(
-  SVGAnimationElement* aElement,
-  nsSMILCompositorTable* aCompositorTable,
-  bool& aStyleFlushNeeded)
-{
-=======
 /*static*/
 void SMILAnimationController::AddAnimationToCompositorTable(
     SVGAnimationElement* aElement, SMILCompositorTable* aCompositorTable,
     bool& aStyleFlushNeeded) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   // Add a compositor to the hash table if there's not already one there
   SMILTargetIdentifier key;
   if (!GetTargetIdentifierForAnimation(aElement, key))
@@ -909,19 +612,9 @@ static inline bool IsTransformAttribute(int32_t aNamespaceID,
 // Helper function that, given a SVGAnimationElement, looks up its target
 // element & target attribute and populates a SMILTargetIdentifier
 // for this target.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-/*static*/ bool nsSMILAnimationController::GetTargetIdentifierForAnimation(
-    SVGAnimationElement* aAnimElem, nsSMILTargetIdentifier& aResult) {
-||||||| merged common ancestors
-/*static*/ bool
-nsSMILAnimationController::GetTargetIdentifierForAnimation(
-    SVGAnimationElement* aAnimElem, nsSMILTargetIdentifier& aResult)
-{
-=======
 /*static*/
 bool SMILAnimationController::GetTargetIdentifierForAnimation(
     SVGAnimationElement* aAnimElem, SMILTargetIdentifier& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   // Look up target (animated) element
   Element* targetElem = aAnimElem->GetTargetElementContent();
   if (!targetElem)
@@ -952,27 +645,11 @@ bool SMILAnimationController::GetTargetIdentifierForAnimation(
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-bool nsSMILAnimationController::PreTraverse() {
-||||||| merged common ancestors
-bool
-nsSMILAnimationController::PreTraverse()
-{
-=======
 bool SMILAnimationController::PreTraverse() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   return PreTraverseInSubtree(nullptr);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-bool nsSMILAnimationController::PreTraverseInSubtree(Element* aRoot) {
-||||||| merged common ancestors
-bool
-nsSMILAnimationController::PreTraverseInSubtree(Element* aRoot)
-{
-=======
 bool SMILAnimationController::PreTraverseInSubtree(Element* aRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!mMightHavePendingStyleUpdates) {
@@ -1001,20 +678,9 @@ bool SMILAnimationController::PreTraverseInSubtree(Element* aRoot) {
       continue;
     }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-    context->RestyleManager()->PostRestyleEventForAnimations(
-        key.mElement, CSSPseudoElementType::NotPseudo,
-        eRestyle_StyleAttribute_Animations);
-||||||| merged common ancestors
-    context->RestyleManager()->
-      PostRestyleEventForAnimations(key.mElement,
-                                    CSSPseudoElementType::NotPseudo,
-                                    eRestyle_StyleAttribute_Animations);
-=======
     context->RestyleManager()->PostRestyleEventForAnimations(
         key.mElement, PseudoStyleType::NotPseudo,
         StyleRestyleHint_RESTYLE_SMIL);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
 
     foundElementsNeedingRestyle = true;
   }
@@ -1031,15 +697,7 @@ bool SMILAnimationController::PreTraverseInSubtree(Element* aRoot) {
 //----------------------------------------------------------------------
 // Add/remove child time containers
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-nsresult nsSMILAnimationController::AddChild(nsSMILTimeContainer& aChild) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationController::AddChild(nsSMILTimeContainer& aChild)
-{
-=======
 nsresult SMILAnimationController::AddChild(SMILTimeContainer& aChild) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   TimeContainerPtrKey* key = mChildContainerTable.PutEntry(&aChild);
   NS_ENSURE_TRUE(key, NS_ERROR_OUT_OF_MEMORY);
 
@@ -1051,15 +709,7 @@ nsresult SMILAnimationController::AddChild(SMILTimeContainer& aChild) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::RemoveChild(nsSMILTimeContainer& aChild) {
-||||||| merged common ancestors
-void
-nsSMILAnimationController::RemoveChild(nsSMILTimeContainer& aChild)
-{
-=======
 void SMILAnimationController::RemoveChild(SMILTimeContainer& aChild) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   mChildContainerTable.RemoveEntry(&aChild);
 
   if (!mPauseState && mChildContainerTable.IsEmpty()) {
@@ -1068,15 +718,7 @@ void SMILAnimationController::RemoveChild(SMILTimeContainer& aChild) {
 }
 
 // Helper method
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-nsRefreshDriver* nsSMILAnimationController::GetRefreshDriver() {
-||||||| merged common ancestors
-nsRefreshDriver*
-nsSMILAnimationController::GetRefreshDriver()
-{
-=======
 nsRefreshDriver* SMILAnimationController::GetRefreshDriver() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   if (!mDocument) {
     NS_ERROR("Requesting refresh driver after document has disconnected!");
     return nullptr;
@@ -1086,21 +728,9 @@ nsRefreshDriver* SMILAnimationController::GetRefreshDriver() {
   return context ? context->RefreshDriver() : nullptr;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationController.cpp
-void nsSMILAnimationController::FlagDocumentNeedsFlush() {
-  if (nsIPresShell* shell = mDocument->GetShell()) {
-    shell->SetNeedStyleFlush();
-||||||| merged common ancestors
-void
-nsSMILAnimationController::FlagDocumentNeedsFlush()
-{
-  if (nsIPresShell* shell = mDocument->GetShell()) {
-    shell->SetNeedStyleFlush();
-=======
 void SMILAnimationController::FlagDocumentNeedsFlush() {
   if (PresShell* presShell = mDocument->GetPresShell()) {
     presShell->SetNeedStyleFlush();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationController.cpp
   }
 }
 

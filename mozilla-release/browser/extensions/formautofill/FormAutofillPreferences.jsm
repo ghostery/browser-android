@@ -80,21 +80,11 @@ FormAutofillPreferences.prototype = {
       Services.urlFormatter.formatURLPref("app.support.baseURL") +
       "autofill-card-address";
     let formAutofillFragment = document.createDocumentFragment();
-<<<<<<< HEAD
-    let formAutofillGroupBoxLabel = document.createXULElement("label");
-    let formAutofillGroupBoxLabelHeading = document.createElementNS(HTML_NS, "h2");
-    let formAutofillGroupBoxDescription = document.createXULElement("description");
-||||||| merged common ancestors
-    let formAutofillGroupBoxCaption = document.createXULElement("caption");
-    let formAutofillGroupBoxCaptionLabel = document.createXULElement("label");
-    let formAutofillGroupBoxDescription = document.createXULElement("description");
-=======
     let formAutofillGroupBoxLabel = document.createXULElement("label");
     let formAutofillGroupBoxLabelHeading = document.createElementNS(
       HTML_NS,
       "h2"
     );
->>>>>>> upstream-releases
     let formAutofillGroup = document.createXULElement("vbox");
     let addressAutofill = document.createXULElement("hbox");
     let addressAutofillCheckboxGroup = document.createXULElement("hbox");
@@ -117,23 +107,9 @@ FormAutofillPreferences.prototype = {
     addressAutofill.id = "addressAutofill";
     addressAutofillLearnMore.id = "addressAutofillLearnMore";
 
-<<<<<<< HEAD
-    formAutofillGroupBoxLabelHeading.textContent = this.bundle.GetStringFromName("autofillHeader");
-    formAutofillGroupBoxDescription.textContent =
-      this.bundle.formatStringFromName("autofillDescription",
-                                       [FormAutofillUtils.brandBundle.GetStringFromName("brandShortName")],
-                                       1);
-||||||| merged common ancestors
-    formAutofillGroupBoxCaptionLabel.textContent = this.bundle.GetStringFromName("autofillHeader");
-    formAutofillGroupBoxDescription.textContent =
-      this.bundle.formatStringFromName("autofillDescription",
-                                       [FormAutofillUtils.brandBundle.GetStringFromName("brandShortName")],
-                                       1);
-=======
     formAutofillGroupBoxLabelHeading.textContent = this.bundle.GetStringFromName(
       "autofillHeader"
     );
->>>>>>> upstream-releases
 
     addressAutofill.setAttribute("data-subcategory", "address-autofill");
     addressAutofillCheckbox.setAttribute(
@@ -169,18 +145,8 @@ FormAutofillPreferences.prototype = {
     addressAutofillCheckboxGroup.align = "center";
     addressAutofillCheckboxGroup.flex = 1;
 
-<<<<<<< HEAD
     formAutofillGroupBoxLabel.appendChild(formAutofillGroupBoxLabelHeading);
     formAutofillFragment.appendChild(formAutofillGroupBoxLabel);
-    formAutofillFragment.appendChild(formAutofillGroupBoxDescription);
-||||||| merged common ancestors
-    formAutofillGroupBoxCaption.appendChild(formAutofillGroupBoxCaptionLabel);
-    formAutofillFragment.appendChild(formAutofillGroupBoxCaption);
-    formAutofillFragment.appendChild(formAutofillGroupBoxDescription);
-=======
-    formAutofillGroupBoxLabel.appendChild(formAutofillGroupBoxLabelHeading);
-    formAutofillFragment.appendChild(formAutofillGroupBoxLabel);
->>>>>>> upstream-releases
     formAutofillFragment.appendChild(formAutofillGroup);
     formAutofillGroup.appendChild(addressAutofill);
     addressAutofill.appendChild(addressAutofillCheckboxGroup);

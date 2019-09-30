@@ -21,25 +21,6 @@ using namespace mozilla::dom;
  * identifier. The SVGViewFrame class passes on any attribute changes
  * the view receives to the overridden <svg> element (if there is one).
  **/
-<<<<<<< HEAD
-class SVGViewFrame final : public nsFrame {
-  friend nsIFrame* NS_NewSVGViewFrame(nsIPresShell* aPresShell,
-                                      ComputedStyle* aStyle);
-
- protected:
-  explicit SVGViewFrame(ComputedStyle* aStyle) : nsFrame(aStyle, kClassID) {
-    AddStateBits(NS_FRAME_IS_NONDISPLAY);
-||||||| merged common ancestors
-class SVGViewFrame final : public nsFrame
-{
-  friend nsIFrame*
-  NS_NewSVGViewFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-protected:
-  explicit SVGViewFrame(ComputedStyle* aStyle)
-    : nsFrame(aStyle, kClassID)
-  {
-    AddStateBits(NS_FRAME_IS_NONDISPLAY);
-=======
 class SVGViewFrame final : public nsFrame {
   friend nsIFrame* NS_NewSVGViewFrame(mozilla::PresShell* aPresShell,
                                       ComputedStyle* aStyle);
@@ -48,7 +29,6 @@ class SVGViewFrame final : public nsFrame {
   explicit SVGViewFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsFrame(aStyle, aPresContext, kClassID) {
     AddStateBits(NS_FRAME_SVG_LAYOUT | NS_FRAME_IS_NONDISPLAY);
->>>>>>> upstream-releases
   }
 
  public:
@@ -82,18 +62,8 @@ class SVGViewFrame final : public nsFrame {
   }
 };
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGViewFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) SVGViewFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGViewFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) SVGViewFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGViewFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) SVGViewFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(SVGViewFrame)

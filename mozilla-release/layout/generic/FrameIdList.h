@@ -21,13 +21,7 @@ FRAME_ID(ColumnSetWrapperFrame, ColumnSetWrapper, NotLeaf)
 FRAME_ID(nsComboboxControlFrame, ComboboxControl, NotLeaf)
 FRAME_ID(nsComboboxDisplayFrame, ComboboxDisplay, NotLeaf)
 FRAME_ID(nsContinuingTextFrame, Text, Leaf)
-<<<<<<< HEAD:mozilla-release/layout/generic/nsFrameIdList.h
-FRAME_ID(nsDateTimeControlFrame, DateTimeControl, DynamicLeaf)
-||||||| merged common ancestors
-FRAME_ID(nsDateTimeControlFrame, DateTimeControl, Leaf)
-=======
 FRAME_ID(nsDateTimeControlFrame, DateTimeControl, NotLeaf)
->>>>>>> upstream-releases:mozilla-release/layout/generic/FrameIdList.h
 FRAME_ID(nsDeckFrame, Deck, NotLeaf)
 FRAME_ID(nsDocElementBoxFrame, DocElementBox, NotLeaf)
 FRAME_ID(nsFieldSetFrame, FieldSet, NotLeaf)

@@ -12,56 +12,8 @@
  * for tips on how to do that.
  */
 
-<<<<<<< HEAD
-/* These reflows happen only the first time the awesomebar panel opens. */
-const EXPECTED_REFLOWS_FIRST_OPEN = [];
-if (AppConstants.DEBUG ||
-    AppConstants.platform == "linux" ||
-    AppConstants.platform == "macosx" ||
-    AppConstants.isPlatformAndVersionAtLeast("win", "10")) {
-  EXPECTED_REFLOWS_FIRST_OPEN.push({
-    stack: [
-      "_rebuild@chrome://browser/content/search/search-one-offs.js",
-      "set popup@chrome://browser/content/search/search-one-offs.js",
-      "_syncOneOffSearchesEnabled@chrome://browser/content/urlbarBindings.xml",
-      "toggleOneOffSearches@chrome://browser/content/urlbarBindings.xml",
-      "_enableOrDisableOneOffSearches@chrome://browser/content/urlbarBindings.xml",
-      "@chrome://browser/content/urlbarBindings.xml",
-      "_openAutocompletePopup@chrome://browser/content/urlbarBindings.xml",
-      "openAutocompletePopup@chrome://browser/content/urlbarBindings.xml",
-      "openPopup@chrome://global/content/bindings/autocomplete.xml",
-      "set_popupOpen@chrome://global/content/bindings/autocomplete.xml",
-    ],
-  });
-}
-EXPECTED_REFLOWS_FIRST_OPEN.push(
-||||||| merged common ancestors
-/* These reflows happen only the first time the awesomebar panel opens. */
-const EXPECTED_REFLOWS_FIRST_OPEN = [];
-if (AppConstants.DEBUG ||
-    AppConstants.platform == "linux" ||
-    AppConstants.platform == "macosx" ||
-    AppConstants.isPlatformAndVersionAtLeast("win", "10")) {
-  EXPECTED_REFLOWS_FIRST_OPEN.push({
-    stack: [
-      "_rebuild@chrome://browser/content/search/search.xml",
-      "set_popup@chrome://browser/content/search/search.xml",
-      "_syncOneOffSearchesEnabled@chrome://browser/content/urlbarBindings.xml",
-      "toggleOneOffSearches@chrome://browser/content/urlbarBindings.xml",
-      "_enableOrDisableOneOffSearches@chrome://browser/content/urlbarBindings.xml",
-      "@chrome://browser/content/urlbarBindings.xml",
-      "_openAutocompletePopup@chrome://browser/content/urlbarBindings.xml",
-      "openAutocompletePopup@chrome://browser/content/urlbarBindings.xml",
-      "openPopup@chrome://global/content/bindings/autocomplete.xml",
-      "set_popupOpen@chrome://global/content/bindings/autocomplete.xml",
-    ],
-  });
-}
-EXPECTED_REFLOWS_FIRST_OPEN.push(
-=======
 /* These reflows happen only the first time the panel opens. */
 const EXPECTED_REFLOWS_FIRST_OPEN = [
->>>>>>> upstream-releases
   {
     stack: [
       "__rebuild@chrome://browser/content/search/search-one-offs.js",

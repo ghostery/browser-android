@@ -35,80 +35,8 @@ static const char kProfileProperties[] =
  * profile's local directory. Once complete have the profile service remove the
  * old profile and if necessary make the new profile the default.
  */
-<<<<<<< HEAD
-nsresult CreateResetProfile(nsIToolkitProfileService* aProfileSvc,
-                            const nsACString& aOldProfileName,
-                            nsIToolkitProfile** aNewProfile) {
-  MOZ_ASSERT(aProfileSvc, "NULL profile service");
-
-  nsCOMPtr<nsIToolkitProfile> newProfile;
-  // Make the new profile the old profile (or "default-") + the time in seconds
-  // since epoch for uniqueness.
-  nsAutoCString newProfileName;
-  if (!aOldProfileName.IsEmpty()) {
-    newProfileName.Assign(aOldProfileName);
-    newProfileName.Append("-");
-  } else {
-    newProfileName.AssignLiteral("default-");
-  }
-  newProfileName.Append(nsPrintfCString("%" PRId64, PR_Now() / 1000));
-  nsresult rv =
-      aProfileSvc->CreateProfile(nullptr,  // choose a default dir for us
-                                 newProfileName, getter_AddRefs(newProfile));
-  if (NS_FAILED(rv)) return rv;
-
-  rv = aProfileSvc->Flush();
-  if (NS_FAILED(rv)) return rv;
-
-  newProfile.swap(*aNewProfile);
-
-  return NS_OK;
-}
-
-/**
- * Delete the profile directory being reset after a backup and delete the local
- * profile directory.
- */
-nsresult ProfileResetCleanup(nsIToolkitProfile* aOldProfile) {
-||||||| merged common ancestors
-nsresult
-CreateResetProfile(nsIToolkitProfileService* aProfileSvc, const nsACString& aOldProfileName, nsIToolkitProfile* *aNewProfile)
-{
-  MOZ_ASSERT(aProfileSvc, "NULL profile service");
-
-  nsCOMPtr<nsIToolkitProfile> newProfile;
-  // Make the new profile the old profile (or "default-") + the time in seconds since epoch for uniqueness.
-  nsAutoCString newProfileName;
-  if (!aOldProfileName.IsEmpty()) {
-    newProfileName.Assign(aOldProfileName);
-    newProfileName.Append("-");
-  } else {
-    newProfileName.AssignLiteral("default-");
-  }
-  newProfileName.Append(nsPrintfCString("%" PRId64, PR_Now() / 1000));
-  nsresult rv = aProfileSvc->CreateProfile(nullptr, // choose a default dir for us
-                                           newProfileName,
-                                           getter_AddRefs(newProfile));
-  if (NS_FAILED(rv)) return rv;
-
-  rv = aProfileSvc->Flush();
-  if (NS_FAILED(rv)) return rv;
-
-  newProfile.swap(*aNewProfile);
-
-  return NS_OK;
-}
-
-/**
- * Delete the profile directory being reset after a backup and delete the local profile directory.
- */
-nsresult
-ProfileResetCleanup(nsIToolkitProfile* aOldProfile)
-{
-=======
 nsresult ProfileResetCleanup(nsToolkitProfileService* aService,
                              nsIToolkitProfile* aOldProfile) {
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIFile> profileDir;
   rv = aOldProfile->GetRootDir(getter_AddRefs(profileDir));
@@ -216,20 +144,5 @@ nsresult ProfileResetCleanup(nsToolkitProfileService* aService,
   auto* piWindow = nsPIDOMWindowOuter::From(progressWindow);
   piWindow->Close();
 
-<<<<<<< HEAD
-  // Delete the old profile from profiles.ini. The folder was already deleted by
-  // the thread above.
-  rv = aOldProfile->Remove(false);
-  if (NS_FAILED(rv)) NS_WARNING("Could not remove the profile");
-
-  return rv;
-||||||| merged common ancestors
-  // Delete the old profile from profiles.ini. The folder was already deleted by the thread above.
-  rv = aOldProfile->Remove(false);
-  if (NS_FAILED(rv)) NS_WARNING("Could not remove the profile");
-
-  return rv;
-=======
   return aService->ApplyResetProfile(aOldProfile);
->>>>>>> upstream-releases
 }

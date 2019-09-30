@@ -9,26 +9,6 @@
 
 #include "nsSVGViewportFrame.h"
 
-<<<<<<< HEAD
-class nsSVGInnerSVGFrame final : public nsSVGViewportFrame {
-  friend nsIFrame* NS_NewSVGInnerSVGFrame(nsIPresShell* aPresShell,
-                                          ComputedStyle* aStyle);
-
- protected:
-  explicit nsSVGInnerSVGFrame(ComputedStyle* aStyle)
-      : nsSVGViewportFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-class nsSVGInnerSVGFrame final
-  : public nsSVGViewportFrame
-{
-  friend nsIFrame*
-  NS_NewSVGInnerSVGFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-protected:
-  explicit nsSVGInnerSVGFrame(ComputedStyle* aStyle)
-    : nsSVGViewportFrame(aStyle, kClassID)
-  {
-  }
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
@@ -36,20 +16,13 @@ class PresShell;
 class nsSVGInnerSVGFrame final : public nsSVGViewportFrame {
   friend nsIFrame* NS_NewSVGInnerSVGFrame(mozilla::PresShell* aPresShell,
                                           ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
  protected:
   explicit nsSVGInnerSVGFrame(ComputedStyle* aStyle,
                               nsPresContext* aPresContext)
       : nsSVGViewportFrame(aStyle, aPresContext, kClassID) {}
 
  public:
->>>>>>> upstream-releases
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsSVGInnerSVGFrame)
 

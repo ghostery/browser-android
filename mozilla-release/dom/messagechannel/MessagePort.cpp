@@ -206,22 +206,11 @@ MessagePort::~MessagePort() {
   MOZ_ASSERT(!mWorkerRef);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MessagePort> MessagePort::Create(
-    nsIGlobalObject* aGlobal, const nsID& aUUID, const nsID& aDestinationUUID,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MessagePort>
-MessagePort::Create(nsIGlobalObject* aGlobal, const nsID& aUUID,
-                    const nsID& aDestinationUUID, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MessagePort> MessagePort::Create(nsIGlobalObject* aGlobal,
                                                   const nsID& aUUID,
                                                   const nsID& aDestinationUUID,
                                                   ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aGlobal);
 
   RefPtr<MessagePort> mp = new MessagePort(aGlobal, eStateUnshippedEntangled);
@@ -230,22 +219,10 @@ already_AddRefed<MessagePort> MessagePort::Create(nsIGlobalObject* aGlobal,
   return mp.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MessagePort> MessagePort::Create(
-    nsIGlobalObject* aGlobal, const MessagePortIdentifier& aIdentifier,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MessagePort>
-MessagePort::Create(nsIGlobalObject* aGlobal,
-                    const MessagePortIdentifier& aIdentifier,
-                    ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MessagePort> MessagePort::Create(
     nsIGlobalObject* aGlobal, const MessagePortIdentifier& aIdentifier,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aGlobal);
 
   RefPtr<MessagePort> mp = new MessagePort(aGlobal, eStateEntangling);
@@ -847,17 +824,8 @@ void MessagePort::RemoveDocFromBFCache() {
   bfCacheEntry->RemoveFromBFCacheSync();
 }
 
-<<<<<<< HEAD
-/* static */ void MessagePort::ForceClose(
-    const MessagePortIdentifier& aIdentifier) {
-||||||| merged common ancestors
-/* static */ void
-MessagePort::ForceClose(const MessagePortIdentifier& aIdentifier)
-{
-=======
 /* static */
 void MessagePort::ForceClose(const MessagePortIdentifier& aIdentifier) {
->>>>>>> upstream-releases
   mozilla::ipc::PBackgroundChild* actorChild =
       mozilla::ipc::BackgroundChild::GetOrCreateForCurrentThread();
   if (NS_WARN_IF(!actorChild)) {

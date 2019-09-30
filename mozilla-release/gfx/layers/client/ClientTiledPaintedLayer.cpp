@@ -5,27 +5,6 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "ClientTiledPaintedLayer.h"
-<<<<<<< HEAD
-#include "FrameMetrics.h"          // for FrameMetrics
-#include "Units.h"                 // for ScreenIntRect, CSSPoint, etc
-#include "UnitTransforms.h"        // for TransformTo
-#include "ClientLayerManager.h"    // for ClientLayerManager, etc
-#include "gfxPlatform.h"           // for gfxPlatform
-#include "gfxPrefs.h"              // for gfxPrefs
-#include "gfxRect.h"               // for gfxRect
-#include "mozilla/Assertions.h"    // for MOZ_ASSERT, etc
-#include "mozilla/gfx/BaseSize.h"  // for BaseSize
-||||||| merged common ancestors
-#include "FrameMetrics.h"               // for FrameMetrics
-#include "Units.h"                      // for ScreenIntRect, CSSPoint, etc
-#include "UnitTransforms.h"             // for TransformTo
-#include "ClientLayerManager.h"         // for ClientLayerManager, etc
-#include "gfxPlatform.h"                // for gfxPlatform
-#include "gfxPrefs.h"                   // for gfxPrefs
-#include "gfxRect.h"                    // for gfxRect
-#include "mozilla/Assertions.h"         // for MOZ_ASSERT, etc
-#include "mozilla/gfx/BaseSize.h"       // for BaseSize
-=======
 #include "FrameMetrics.h"          // for FrameMetrics
 #include "Units.h"                 // for ScreenIntRect, CSSPoint, etc
 #include "UnitTransforms.h"        // for TransformTo
@@ -35,7 +14,6 @@
 #include "mozilla/Assertions.h"    // for MOZ_ASSERT, etc
 #include "mozilla/StaticPrefs.h"   // for StaticPrefs
 #include "mozilla/gfx/BaseSize.h"  // for BaseSize
->>>>>>> upstream-releases
 #include "mozilla/gfx/gfxVars.h"
 #include "mozilla/gfx/Rect.h"  // for Rect, RectTyped
 #include "mozilla/layers/CompositorBridgeChild.h"
@@ -89,14 +67,6 @@ static Maybe<LayerRect> ApplyParentLayerToLayerTransform(
   return UntransformBy(aTransform, aParentLayerRect, aClip);
 }
 
-<<<<<<< HEAD
-static LayerToParentLayerMatrix4x4 GetTransformToAncestorsParentLayer(
-    Layer* aStart, const LayerMetricsWrapper& aAncestor) {
-||||||| merged common ancestors
-static LayerToParentLayerMatrix4x4
-GetTransformToAncestorsParentLayer(Layer* aStart, const LayerMetricsWrapper& aAncestor)
-{
-=======
 static LayerToParentLayerMatrix4x4 GetTransformToAncestorsParentLayer(
     Layer* aStart, const LayerMetricsWrapper& aAncestor) {
   // If the ancestor layer Combines3DTransformWithAncestors, then the
@@ -108,7 +78,6 @@ static LayerToParentLayerMatrix4x4 GetTransformToAncestorsParentLayer(
     root3dAncestor = root3dAncestor.GetParent();
   }
 
->>>>>>> upstream-releases
   gfx::Matrix4x4 transform;
   const LayerMetricsWrapper& ancestorParent = root3dAncestor.GetParent();
   for (LayerMetricsWrapper iter(aStart, LayerMetricsWrapper::StartAt::BOTTOM);
@@ -297,17 +266,8 @@ bool ClientTiledPaintedLayer::IsScrollingOnCompositor(
                               COORDINATE_EPSILON);
 }
 
-<<<<<<< HEAD
-bool ClientTiledPaintedLayer::UseProgressiveDraw() {
-  if (!gfxPrefs::ProgressivePaint()) {
-||||||| merged common ancestors
-bool
-ClientTiledPaintedLayer::UseProgressiveDraw() {
-  if (!gfxPrefs::ProgressivePaint()) {
-=======
 bool ClientTiledPaintedLayer::UseProgressiveDraw() {
   if (!StaticPrefs::layers_progressive_paint()) {
->>>>>>> upstream-releases
     // pref is disabled, so never do progressive
     return false;
   }
@@ -496,20 +456,12 @@ void ClientTiledPaintedLayer::EndPaint() {
   TILING_LOG("TILING %p: Paint finished\n", this);
 }
 
-<<<<<<< HEAD
-void ClientTiledPaintedLayer::RenderLayer() {
-||||||| merged common ancestors
-void
-ClientTiledPaintedLayer::RenderLayer()
-{
-=======
 void ClientTiledPaintedLayer::RenderLayer() {
   if (!ClientManager()->IsRepeatTransaction()) {
     // Only paint the mask layers on the first transaction.
     RenderMaskLayers(this);
   }
 
->>>>>>> upstream-releases
   LayerManager::DrawPaintedLayerCallback callback =
       ClientManager()->GetPaintedLayerCallback();
   void* data = ClientManager()->GetPaintedLayerCallbackData();
@@ -525,18 +477,9 @@ void ClientTiledPaintedLayer::RenderLayer() {
   bool wantSingleTiledContentClient =
       (mCreationHint == LayerManager::NONE || layerSize <= tileSize ||
        isHalfTileWidthOrHeight) &&
-<<<<<<< HEAD
-      SingleTiledContentClient::ClientSupportsLayerSize(layerSize,
-                                                        ClientManager()) &&
-      gfxPrefs::LayersSingleTileEnabled();
-||||||| merged common ancestors
-      SingleTiledContentClient::ClientSupportsLayerSize(layerSize, ClientManager()) &&
-      gfxPrefs::LayersSingleTileEnabled();
-=======
       SingleTiledContentClient::ClientSupportsLayerSize(layerSize,
                                                         ClientManager()) &&
       StaticPrefs::layers_single_tile_enabled();
->>>>>>> upstream-releases
 
   if (mContentClient && mHaveSingleTiledContentClient &&
       !wantSingleTiledContentClient) {

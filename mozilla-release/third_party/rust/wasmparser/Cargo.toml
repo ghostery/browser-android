@@ -13,33 +13,19 @@
 [package]
 edition = "2018"
 name = "wasmparser"
-<<<<<<< HEAD
-version = "0.22.0"
-||||||| merged common ancestors
-version = "0.17.2"
-=======
 version = "0.32.1"
->>>>>>> upstream-releases
 authors = ["Yury Delendik <ydelendik@mozilla.com>"]
 exclude = ["fuzz/**/*", "tests/**/*"]
 description = "A simple event-driven library for parsing WebAssembly binary files.\n"
 keywords = ["parser", "WebAssembly", "wasm"]
 license = "Apache-2.0 WITH LLVM-exception"
 repository = "https://github.com/yurydelendik/wasmparser.rs"
-<<<<<<< HEAD
-[dependencies.hashmap_core]
-version = "0.1.9"
-||||||| merged common ancestors
-[dependencies.hashmap_core]
-version = "0.1.1"
-=======
 
 [[bench]]
 name = "benchmark"
 harness = false
 [dependencies.hashbrown]
 version = "0.5.0"
->>>>>>> upstream-releases
 optional = true
 [dev-dependencies.criterion]
 version = "0.2"

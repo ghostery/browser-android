@@ -39,14 +39,6 @@ def executor_kwargs(test_type, server_config, cache_manager, run_info_data,
     executor_kwargs["supports_eager_pageload"] = False
 
     capabilities = {
-<<<<<<< HEAD
-        "browserName": "chrome",
-||||||| merged common ancestors
-        "browserName": "chrome",
-        "platform": "ANY",
-        "version": "",
-=======
->>>>>>> upstream-releases
         "goog:chromeOptions": {
             "prefs": {
                 "profile": {

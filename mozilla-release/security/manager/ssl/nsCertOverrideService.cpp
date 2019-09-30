@@ -34,17 +34,8 @@ using namespace mozilla::psm;
 
 #define CERT_OVERRIDE_FILE_NAME "cert_override.txt"
 
-<<<<<<< HEAD
-void nsCertOverride::convertBitsToString(OverrideBits ob,
-                                         /*out*/ nsACString &str) {
-||||||| merged common ancestors
-void
-nsCertOverride::convertBitsToString(OverrideBits ob, /*out*/ nsACString& str)
-{
-=======
 void nsCertOverride::convertBitsToString(OverrideBits ob,
                                          /*out*/ nsACString& str) {
->>>>>>> upstream-releases
   str.Truncate();
 
   if (ob & OverrideBits::Mismatch) {
@@ -60,18 +51,8 @@ void nsCertOverride::convertBitsToString(OverrideBits ob,
   }
 }
 
-<<<<<<< HEAD
-void nsCertOverride::convertStringToBits(const nsACString &str,
-                                         /*out*/ OverrideBits &ob) {
-||||||| merged common ancestors
-void
-nsCertOverride::convertStringToBits(const nsACString& str,
-                            /*out*/ OverrideBits& ob)
-{
-=======
 void nsCertOverride::convertStringToBits(const nsACString& str,
                                          /*out*/ OverrideBits& ob) {
->>>>>>> upstream-releases
   ob = OverrideBits::None;
 
   for (uint32_t i = 0; i < str.Length(); i++) {
@@ -129,18 +110,8 @@ nsresult nsCertOverrideService::Init() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertOverrideService::Observe(nsISupports *, const char *aTopic,
-                               const char16_t *aData) {
-||||||| merged common ancestors
-nsCertOverrideService::Observe(nsISupports     *,
-                               const char      *aTopic,
-                               const char16_t *aData)
-{
-=======
 nsCertOverrideService::Observe(nsISupports*, const char* aTopic,
                                const char16_t* aData) {
->>>>>>> upstream-releases
   // check the topic
   if (!nsCRT::strcmp(aTopic, "profile-before-change")) {
     // The profile is about to change,
@@ -185,15 +156,7 @@ void nsCertOverrideService::RemoveAllTemporaryOverrides() {
   // no need to write, as temporaries are never written to disk
 }
 
-<<<<<<< HEAD
-nsresult nsCertOverrideService::Read(const MutexAutoLock &aProofOfLock) {
-||||||| merged common ancestors
-nsresult
-nsCertOverrideService::Read(const MutexAutoLock& aProofOfLock)
-{
-=======
 nsresult nsCertOverrideService::Read(const MutexAutoLock& aProofOfLock) {
->>>>>>> upstream-releases
   // If we don't have a profile, then we won't try to read any settings file.
   if (!mSettingsFile) return NS_OK;
 
@@ -245,35 +208,15 @@ nsresult nsCertOverrideService::Read(const MutexAutoLock& aProofOfLock) {
       continue;
     }
 
-<<<<<<< HEAD
-    const nsACString &tmp =
-        Substring(buffer, hostIndex, algoIndex - hostIndex - 1);
-||||||| merged common ancestors
-    const nsACString& tmp = Substring(buffer, hostIndex, algoIndex - hostIndex - 1);
-=======
     const nsACString& tmp =
         Substring(buffer, hostIndex, algoIndex - hostIndex - 1);
->>>>>>> upstream-releases
     // We just ignore the algorithm string.
-<<<<<<< HEAD
-    const nsACString &fingerprint = Substring(
-        buffer, fingerprintIndex, overrideBitsIndex - fingerprintIndex - 1);
-    const nsACString &bits_string = Substring(
-        buffer, overrideBitsIndex, dbKeyIndex - overrideBitsIndex - 1);
-    const nsACString &db_key =
-        Substring(buffer, dbKeyIndex, buffer.Length() - dbKeyIndex);
-||||||| merged common ancestors
-    const nsACString& fingerprint = Substring(buffer, fingerprintIndex, overrideBitsIndex - fingerprintIndex - 1);
-    const nsACString& bits_string = Substring(buffer, overrideBitsIndex, dbKeyIndex - overrideBitsIndex - 1);
-    const nsACString& db_key = Substring(buffer, dbKeyIndex, buffer.Length() - dbKeyIndex);
-=======
     const nsACString& fingerprint = Substring(
         buffer, fingerprintIndex, overrideBitsIndex - fingerprintIndex - 1);
     const nsACString& bits_string = Substring(
         buffer, overrideBitsIndex, dbKeyIndex - overrideBitsIndex - 1);
     const nsACString& db_key =
         Substring(buffer, dbKeyIndex, buffer.Length() - dbKeyIndex);
->>>>>>> upstream-releases
 
     nsAutoCString host(tmp);
     nsCertOverride::OverrideBits bits;
@@ -300,15 +243,7 @@ nsresult nsCertOverrideService::Read(const MutexAutoLock& aProofOfLock) {
 }
 
 static const char sSHA256OIDString[] = "OID.2.16.840.1.101.3.4.2.1";
-<<<<<<< HEAD
-nsresult nsCertOverrideService::Write(const MutexAutoLock &aProofOfLock) {
-||||||| merged common ancestors
-nsresult
-nsCertOverrideService::Write(const MutexAutoLock& aProofOfLock)
-{
-=======
 nsresult nsCertOverrideService::Write(const MutexAutoLock& aProofOfLock) {
->>>>>>> upstream-releases
   // If we don't have any profile, then we won't try to write any file
   if (!mSettingsFile) {
     return NS_OK;
@@ -385,19 +320,8 @@ nsresult nsCertOverrideService::Write(const MutexAutoLock& aProofOfLock) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static nsresult GetCertFingerprintByOidTag(nsIX509Cert *aCert,
-                                           SECOidTag aOidTag, nsCString &fp) {
-||||||| merged common ancestors
-static nsresult
-GetCertFingerprintByOidTag(nsIX509Cert *aCert,
-                           SECOidTag aOidTag,
-                           nsCString &fp)
-{
-=======
 static nsresult GetCertFingerprintByOidTag(nsIX509Cert* aCert,
                                            SECOidTag aOidTag, nsCString& fp) {
->>>>>>> upstream-releases
   UniqueCERTCertificate nsscert(aCert->GetCert());
   if (!nsscert) {
     return NS_ERROR_FAILURE;
@@ -406,26 +330,16 @@ static nsresult GetCertFingerprintByOidTag(nsIX509Cert* aCert,
 }
 
 NS_IMETHODIMP
-nsCertOverrideService::RememberValidityOverride(const nsACString &aHostName,
+nsCertOverrideService::RememberValidityOverride(const nsACString& aHostName,
                                                 int32_t aPort,
-                                                nsIX509Cert *aCert,
+                                                nsIX509Cert* aCert,
                                                 uint32_t aOverrideBits,
                                                 bool aTemporary) {
   NS_ENSURE_ARG_POINTER(aCert);
-<<<<<<< HEAD
-  if (aHostName.IsEmpty()) return NS_ERROR_INVALID_ARG;
-  if (aPort < -1) return NS_ERROR_INVALID_ARG;
-||||||| merged common ancestors
-  if (aHostName.IsEmpty())
-    return NS_ERROR_INVALID_ARG;
-  if (aPort < -1)
-    return NS_ERROR_INVALID_ARG;
-=======
   if (aHostName.IsEmpty() || !IsASCII(aHostName)) {
     return NS_ERROR_INVALID_ARG;
   }
   if (aPort < -1) return NS_ERROR_INVALID_ARG;
->>>>>>> upstream-releases
 
   UniqueCERTCertificate nsscert(aCert->GetCert());
   if (!nsscert) {
@@ -475,23 +389,10 @@ nsCertOverrideService::RememberValidityOverride(const nsACString &aHostName,
 
 NS_IMETHODIMP
 nsCertOverrideService::RememberTemporaryValidityOverrideUsingFingerprint(
-<<<<<<< HEAD
-    const nsACString &aHostName, int32_t aPort,
-    const nsACString &aCertFingerprint, uint32_t aOverrideBits) {
-  if (aCertFingerprint.IsEmpty() || aHostName.IsEmpty() || (aPort < -1)) {
-||||||| merged common ancestors
-  const nsACString& aHostName,
-  int32_t aPort,
-  const nsACString& aCertFingerprint,
-  uint32_t aOverrideBits)
-{
-  if(aCertFingerprint.IsEmpty() || aHostName.IsEmpty() || (aPort < -1)) {
-=======
     const nsACString& aHostName, int32_t aPort,
     const nsACString& aCertFingerprint, uint32_t aOverrideBits) {
   if (aCertFingerprint.IsEmpty() || aHostName.IsEmpty() ||
       !IsASCII(aCertFingerprint) || !IsASCII(aHostName) || (aPort < -1)) {
->>>>>>> upstream-releases
     return NS_ERROR_INVALID_ARG;
   }
 
@@ -507,25 +408,6 @@ nsCertOverrideService::RememberTemporaryValidityOverrideUsingFingerprint(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertOverrideService::HasMatchingOverride(const nsACString &aHostName,
-                                           int32_t aPort, nsIX509Cert *aCert,
-                                           uint32_t *aOverrideBits,
-                                           bool *aIsTemporary, bool *_retval) {
-  if (aHostName.IsEmpty()) return NS_ERROR_INVALID_ARG;
-  if (aPort < -1) return NS_ERROR_INVALID_ARG;
-||||||| merged common ancestors
-nsCertOverrideService::HasMatchingOverride(const nsACString & aHostName, int32_t aPort,
-                                           nsIX509Cert *aCert,
-                                           uint32_t *aOverrideBits,
-                                           bool *aIsTemporary,
-                                           bool *_retval)
-{
-  if (aHostName.IsEmpty())
-    return NS_ERROR_INVALID_ARG;
-  if (aPort < -1)
-    return NS_ERROR_INVALID_ARG;
-=======
 nsCertOverrideService::HasMatchingOverride(const nsACString& aHostName,
                                            int32_t aPort, nsIX509Cert* aCert,
                                            uint32_t* aOverrideBits,
@@ -534,7 +416,6 @@ nsCertOverrideService::HasMatchingOverride(const nsACString& aHostName,
     return NS_ERROR_INVALID_ARG;
   }
   if (aPort < -1) return NS_ERROR_INVALID_ARG;
->>>>>>> upstream-releases
 
   NS_ENSURE_ARG_POINTER(aCert);
   NS_ENSURE_ARG_POINTER(aOverrideBits);
@@ -571,29 +452,11 @@ nsCertOverrideService::HasMatchingOverride(const nsACString& aHostName,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCertOverrideService::AddEntryToList(
-    const nsACString &aHostName, int32_t aPort, nsIX509Cert *aCert,
-    const bool aIsTemporary, const nsACString &fingerprint,
-    nsCertOverride::OverrideBits ob, const nsACString &dbKey,
-    const MutexAutoLock &aProofOfLock) {
-||||||| merged common ancestors
-nsresult
-nsCertOverrideService::AddEntryToList(const nsACString &aHostName, int32_t aPort,
-                                      nsIX509Cert *aCert,
-                                      const bool aIsTemporary,
-                                      const nsACString &fingerprint,
-                                      nsCertOverride::OverrideBits ob,
-                                      const nsACString &dbKey,
-                                      const MutexAutoLock& aProofOfLock)
-{
-=======
 nsresult nsCertOverrideService::AddEntryToList(
     const nsACString& aHostName, int32_t aPort, nsIX509Cert* aCert,
     const bool aIsTemporary, const nsACString& fingerprint,
     nsCertOverride::OverrideBits ob, const nsACString& dbKey,
     const MutexAutoLock& aProofOfLock) {
->>>>>>> upstream-releases
   nsAutoCString hostPort;
   GetHostWithPort(aHostName, aPort, hostPort);
 
@@ -621,19 +484,11 @@ nsresult nsCertOverrideService::AddEntryToList(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCertOverrideService::ClearValidityOverride(const nsACString &aHostName,
-                                             int32_t aPort) {
-||||||| merged common ancestors
-nsCertOverrideService::ClearValidityOverride(const nsACString & aHostName, int32_t aPort)
-{
-=======
 nsCertOverrideService::ClearValidityOverride(const nsACString& aHostName,
                                              int32_t aPort) {
   if (aHostName.IsEmpty() || !IsASCII(aHostName)) {
     return NS_ERROR_INVALID_ARG;
   }
->>>>>>> upstream-releases
   if (!NS_IsMainThread()) {
     return NS_ERROR_NOT_SAME_THREAD;
   }
@@ -660,14 +515,6 @@ nsCertOverrideService::ClearValidityOverride(const nsACString& aHostName,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsCertOverrideService::CountPermanentOverrideTelemetry(
-    const MutexAutoLock &aProofOfLock) {
-||||||| merged common ancestors
-void
-nsCertOverrideService::CountPermanentOverrideTelemetry(const MutexAutoLock& aProofOfLock)
-{
-=======
 NS_IMETHODIMP
 nsCertOverrideService::ClearAllOverrides() {
   if (!NS_IsMainThread()) {
@@ -692,7 +539,6 @@ nsCertOverrideService::ClearAllOverrides() {
 
 void nsCertOverrideService::CountPermanentOverrideTelemetry(
     const MutexAutoLock& aProofOfLock) {
->>>>>>> upstream-releases
   uint32_t overrideCount = 0;
   for (auto iter = mSettingsTable.Iter(); !iter.Done(); iter.Next()) {
     if (!iter.Get()->mSettings.mIsTemporary) {
@@ -703,15 +549,7 @@ void nsCertOverrideService::CountPermanentOverrideTelemetry(
                         overrideCount);
 }
 
-<<<<<<< HEAD
-static bool matchesDBKey(nsIX509Cert *cert, const nsCString &matchDbKey) {
-||||||| merged common ancestors
-static bool
-matchesDBKey(nsIX509Cert* cert, const nsCString& matchDbKey)
-{
-=======
 static bool matchesDBKey(nsIX509Cert* cert, const nsCString& matchDbKey) {
->>>>>>> upstream-releases
   nsAutoCString dbKey;
   nsresult rv = cert->GetDbKey(dbKey);
   if (NS_FAILED(rv)) {
@@ -724,14 +562,7 @@ NS_IMETHODIMP
 nsCertOverrideService::IsCertUsedForOverrides(nsIX509Cert* aCert,
                                               bool aCheckTemporaries,
                                               bool aCheckPermanents,
-<<<<<<< HEAD
-                                              uint32_t *_retval) {
-||||||| merged common ancestors
-                                              uint32_t *_retval)
-{
-=======
                                               uint32_t* _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aCert);
   NS_ENSURE_ARG(_retval);
 
@@ -761,19 +592,8 @@ nsCertOverrideService::IsCertUsedForOverrides(nsIX509Cert* aCert,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCertOverrideService::EnumerateCertOverrides(
-    nsIX509Cert *aCert, CertOverrideEnumerator aEnumerator, void *aUserData) {
-||||||| merged common ancestors
-nsresult
-nsCertOverrideService::EnumerateCertOverrides(nsIX509Cert *aCert,
-                         CertOverrideEnumerator aEnumerator,
-                         void *aUserData)
-{
-=======
 nsresult nsCertOverrideService::EnumerateCertOverrides(
     nsIX509Cert* aCert, CertOverrideEnumerator aEnumerator, void* aUserData) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
   for (auto iter = mSettingsTable.Iter(); !iter.Done(); iter.Next()) {
     const nsCertOverride& settings = iter.Get()->mSettings;
@@ -795,19 +615,9 @@ nsresult nsCertOverrideService::EnumerateCertOverrides(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsCertOverrideService::GetHostWithPort(const nsACString &aHostName,
-                                            int32_t aPort,
-                                            nsACString &_retval) {
-||||||| merged common ancestors
-void
-nsCertOverrideService::GetHostWithPort(const nsACString & aHostName, int32_t aPort, nsACString& _retval)
-{
-=======
 void nsCertOverrideService::GetHostWithPort(const nsACString& aHostName,
                                             int32_t aPort,
                                             nsACString& _retval) {
->>>>>>> upstream-releases
   nsAutoCString hostPort(aHostName);
   if (aPort == -1) {
     aPort = 443;

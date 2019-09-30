@@ -10,34 +10,14 @@
 #include <string>
 #include "mozilla/Attributes.h"
 
-<<<<<<< HEAD
-class FakeDecryptor : public cdm::ContentDecryptionModule_9 {
- public:
-  explicit FakeDecryptor(cdm::Host_9* aHost);
-||||||| merged common ancestors
-class FakeDecryptor : public cdm::ContentDecryptionModule_9 {
-public:
-  explicit FakeDecryptor(cdm::Host_9* aHost);
-=======
 class FakeDecryptor : public cdm::ContentDecryptionModule_10 {
  public:
   explicit FakeDecryptor(cdm::Host_10* aHost);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void Initialize(bool aAllowDistinctiveIdentifier,
-                  bool aAllowPersistentState) override {}
-||||||| merged common ancestors
-  void Initialize(bool aAllowDistinctiveIdentifier,
-                  bool aAllowPersistentState) override
-  {
-  }
-=======
   void Initialize(bool aAllowDistinctiveIdentifier, bool aAllowPersistentState,
                   bool aUseHardwareSecureCodecs) override {
     mHost->OnInitialized(true);
   }
->>>>>>> upstream-releases
 
   void GetStatusForPolicy(uint32_t aPromiseId,
                           const cdm::Policy& aPolicy) override {}
@@ -67,41 +47,18 @@ class FakeDecryptor : public cdm::ContentDecryptionModule_10 {
 
   void TimerExpired(void* aContext) override {}
 
-<<<<<<< HEAD
-  cdm::Status Decrypt(const cdm::InputBuffer_1& aEncryptedBuffer,
-                      cdm::DecryptedBlock* aDecryptedBuffer) override {
-||||||| merged common ancestors
-  cdm::Status Decrypt(const cdm::InputBuffer_1& aEncryptedBuffer,
-                      cdm::DecryptedBlock* aDecryptedBuffer) override
-  {
-=======
   cdm::Status Decrypt(const cdm::InputBuffer_2& aEncryptedBuffer,
                       cdm::DecryptedBlock* aDecryptedBuffer) override {
->>>>>>> upstream-releases
     return cdm::Status::kDecodeError;
   }
 
   cdm::Status InitializeAudioDecoder(
-<<<<<<< HEAD
-      const cdm::AudioDecoderConfig_1& aAudioDecoderConfig) override {
-||||||| merged common ancestors
-    const cdm::AudioDecoderConfig_1& aAudioDecoderConfig) override
-  {
-=======
       const cdm::AudioDecoderConfig_2& aAudioDecoderConfig) override {
->>>>>>> upstream-releases
     return cdm::Status::kDecodeError;
   }
 
   cdm::Status InitializeVideoDecoder(
-<<<<<<< HEAD
-      const cdm::VideoDecoderConfig_1& aVideoDecoderConfig) override {
-||||||| merged common ancestors
-    const cdm::VideoDecoderConfig_1& aVideoDecoderConfig) override
-  {
-=======
       const cdm::VideoDecoderConfig_2& aVideoDecoderConfig) override {
->>>>>>> upstream-releases
     return cdm::Status::kDecodeError;
   }
 
@@ -109,32 +66,14 @@ class FakeDecryptor : public cdm::ContentDecryptionModule_10 {
 
   void ResetDecoder(cdm::StreamType aDecoderType) override {}
 
-<<<<<<< HEAD
-  cdm::Status DecryptAndDecodeFrame(const cdm::InputBuffer_1& aEncryptedBuffer,
-                                    cdm::VideoFrame* aVideoFrame) override {
-||||||| merged common ancestors
-  cdm::Status DecryptAndDecodeFrame(const cdm::InputBuffer_1& aEncryptedBuffer,
-                                    cdm::VideoFrame* aVideoFrame) override
-  {
-=======
   cdm::Status DecryptAndDecodeFrame(const cdm::InputBuffer_2& aEncryptedBuffer,
                                     cdm::VideoFrame* aVideoFrame) override {
->>>>>>> upstream-releases
     return cdm::Status::kDecodeError;
   }
 
   cdm::Status DecryptAndDecodeSamples(
-<<<<<<< HEAD
-      const cdm::InputBuffer_1& aEncryptedBuffer,
-      cdm::AudioFrames* aAudioFrame) override {
-||||||| merged common ancestors
-    const cdm::InputBuffer_1& aEncryptedBuffer,
-    cdm::AudioFrames* aAudioFrame) override
-  {
-=======
       const cdm::InputBuffer_2& aEncryptedBuffer,
       cdm::AudioFrames* aAudioFrame) override {
->>>>>>> upstream-releases
     return cdm::Status::kDecodeError;
   }
 

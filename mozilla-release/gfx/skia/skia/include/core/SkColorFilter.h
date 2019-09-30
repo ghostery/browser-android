@@ -149,13 +149,7 @@ public:
         return this->filterColor(SK_ColorTRANSPARENT) != SK_ColorTRANSPARENT;
     }
 
-<<<<<<< HEAD
-    static void InitializeFlattenables();
-||||||| merged common ancestors
-    SK_TO_STRING_PUREVIRT()
-=======
     static void RegisterFlattenables();
->>>>>>> upstream-releases
 
     static SkFlattenable::Type GetFlattenableType() {
         return kSkColorFilter_Type;

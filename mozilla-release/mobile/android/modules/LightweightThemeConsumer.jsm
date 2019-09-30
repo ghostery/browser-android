@@ -12,31 +12,16 @@ const { ExtensionUtils } = ChromeUtils.import(
   "resource://gre/modules/ExtensionUtils.jsm"
 );
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "EventDispatcher",
-                               "resource://gre/modules/Messaging.jsm");
-ChromeUtils.defineModuleGetter(this, "LightweightThemePersister",
-  "resource://gre/modules/addons/LightweightThemePersister.jsm");
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "EventDispatcher",
-                               "resource://gre/modules/Messaging.jsm");
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "EventDispatcher",
   "resource://gre/modules/Messaging.jsm"
 );
->>>>>>> upstream-releases
 
 const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 
 let RESOLVE_PROPERTIES = ["headerURL"];
 
-<<<<<<< HEAD
-  this._update(LightweightThemeManager.currentThemeWithFallback);
-||||||| merged common ancestors
-  this._update(LightweightThemeManager.currentThemeForDisplay);
-=======
 let handlers = new ExtensionUtils.DefaultMap(proto => {
   try {
     return Cc[`@mozilla.org/network/protocol;1?name=${proto}`].getService(
@@ -61,7 +46,6 @@ function maybeResolveURL(url) {
     Cu.reportError(e);
   }
   return url;
->>>>>>> upstream-releases
 }
 
 class LightweightThemeConsumer {
@@ -74,25 +58,7 @@ class LightweightThemeConsumer {
 
   observe(aSubject, aTopic, aData) {
     if (aTopic == "lightweight-theme-styling-update") {
-<<<<<<< HEAD
-      let parsedData = JSON.parse(aData);
-      if (!parsedData) {
-        parsedData = { theme: null };
-      }
-      this._update(parsedData.theme);
-    } else if (aTopic == "lightweight-theme-apply") {
-      this._update(LightweightThemeManager.currentThemeWithFallback);
-||||||| merged common ancestors
-      let parsedData = JSON.parse(aData);
-      if (!parsedData) {
-        parsedData = { theme: null };
-      }
-      this._update(parsedData.theme);
-    } else if (aTopic == "lightweight-theme-apply") {
-      this._update(LightweightThemeManager.currentThemeForDisplay);
-=======
       this._update(aSubject.wrappedJSObject.theme);
->>>>>>> upstream-releases
     }
   }
 
@@ -103,31 +69,6 @@ class LightweightThemeConsumer {
 
   _update(aData) {
     let active = aData && aData.id !== DEFAULT_THEME_ID;
-<<<<<<< HEAD
-    let msg = active ? { type: "LightweightTheme:Update" } :
-                       { type: "LightweightTheme:Disable" };
-
-    if (active) {
-      LightweightThemePersister.persistImages(aData, () => {
-        msg.data = LightweightThemePersister.getPersistedData(aData);
-        EventDispatcher.instance.sendRequest(msg);
-      });
-    } else {
-      EventDispatcher.instance.sendRequest(msg);
-    }
-  },
-};
-||||||| merged common ancestors
-    if (!aData) {
-      aData = {};
-    }
-
-    let msg = active ? { type: "LightweightTheme:Update", data: aData } :
-                       { type: "LightweightTheme:Disable" };
-    EventDispatcher.instance.sendRequest(msg);
-  },
-};
-=======
     let msg = {
       type: active ? "LightweightTheme:Update" : "LightweightTheme:Disable",
     };
@@ -143,4 +84,3 @@ class LightweightThemeConsumer {
     EventDispatcher.instance.sendRequest(msg);
   }
 }
->>>>>>> upstream-releases

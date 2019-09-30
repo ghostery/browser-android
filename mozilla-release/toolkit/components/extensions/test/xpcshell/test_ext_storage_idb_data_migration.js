@@ -81,17 +81,6 @@ function clearMigrationHistogram() {
 }
 
 function assertMigrationHistogramCount(category, expectedCount) {
-<<<<<<< HEAD
-  const histogram = Services.telemetry.getHistogramById(IDB_MIGRATE_RESULT_HISTOGRAM);
-
-  equal(histogram.snapshot().values[CATEGORIES.indexOf(category)], expectedCount,
-        `Got the expected count on category "${category}" for histogram ${IDB_MIGRATE_RESULT_HISTOGRAM}`);
-||||||| merged common ancestors
-  const histogram = Services.telemetry.getHistogramById(IDB_MIGRATE_RESULT_HISTOGRAM);
-
-  equal(histogram.snapshot().counts[CATEGORIES.indexOf(category)], expectedCount,
-        `Got the expected count on category "${category}" for histogram ${IDB_MIGRATE_RESULT_HISTOGRAM}`);
-=======
   const histogram = Services.telemetry.getHistogramById(
     IDB_MIGRATE_RESULT_HISTOGRAM
   );
@@ -101,7 +90,6 @@ function assertMigrationHistogramCount(category, expectedCount) {
     expectedCount,
     `Got the expected count on category "${category}" for histogram ${IDB_MIGRATE_RESULT_HISTOGRAM}`
   );
->>>>>>> upstream-releases
 }
 
 function assertTelemetryEvents(extensionId, expectedEvents) {

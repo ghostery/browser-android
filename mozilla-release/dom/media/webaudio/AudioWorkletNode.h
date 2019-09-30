@@ -34,34 +34,17 @@ class AudioWorkletNode : public AudioNode {
   JSObject* WrapObject(JSContext* aCx,
                        JS::Handle<JSObject*> aGivenProto) override;
 
-<<<<<<< HEAD
-  const char* NodeType() const override { return "AudioWorkletNode"; }
-||||||| merged common ancestors
-  const char* NodeType() const override
-  {
-    return "AudioWorkletNode";
-  }
-=======
   // AudioNode methods
   uint16_t NumberOfInputs() const override { return mInputCount; }
   uint16_t NumberOfOutputs() const override { return mOutputCount; }
   const char* NodeType() const override { return "AudioWorkletNode"; }
->>>>>>> upstream-releases
 
   size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const override;
   size_t SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const override;
 
-<<<<<<< HEAD
- private:
-  AudioWorkletNode(AudioContext* aAudioContext, const nsAString& aName);
-||||||| merged common ancestors
-private:
-  AudioWorkletNode(AudioContext* aAudioContext, const nsAString& aName);
-=======
  private:
   AudioWorkletNode(AudioContext* aAudioContext, const nsAString& aName,
                    const AudioWorkletNodeOptions& aOptions);
->>>>>>> upstream-releases
   ~AudioWorkletNode() = default;
 
   nsString mNodeName;
@@ -72,10 +55,4 @@ private:
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
 #endif  // AudioWorkletNode_h_
-||||||| merged common ancestors
-#endif // AudioWorkletNode_h_
-=======
-#endif  // AudioWorkletNode_h_
->>>>>>> upstream-releases

@@ -101,18 +101,8 @@ nsresult nsWindowRoot::PostHandleEvent(EventChainPostVisitor& aVisitor) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowOuter* nsWindowRoot::GetOwnerGlobalForBindings() {
-  return GetWindow();
-||||||| merged common ancestors
-nsPIDOMWindowOuter*
-nsWindowRoot::GetOwnerGlobalForBindings()
-{
-  return GetWindow();
-=======
 nsPIDOMWindowOuter* nsWindowRoot::GetOwnerGlobalForBindingsInternal() {
   return mWindow;
->>>>>>> upstream-releases
 }
 
 nsIGlobalObject* nsWindowRoot::GetOwnerGlobal() const {
@@ -213,26 +203,11 @@ nsresult nsWindowRoot::GetControllerForCommand(const char* aCommand,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsWindowRoot::GetEnabledDisabledCommandsForControllers(
-    nsIControllers* aControllers,
-    nsTHashtable<nsCharPtrHashKey>& aCommandsHandled,
-    nsTArray<nsCString>& aEnabledCommands,
-    nsTArray<nsCString>& aDisabledCommands) {
-||||||| merged common ancestors
-void
-nsWindowRoot::GetEnabledDisabledCommandsForControllers(nsIControllers* aControllers,
-                                                       nsTHashtable<nsCharPtrHashKey>& aCommandsHandled,
-                                                       nsTArray<nsCString>& aEnabledCommands,
-                                                       nsTArray<nsCString>& aDisabledCommands)
-{
-=======
 void nsWindowRoot::GetEnabledDisabledCommandsForControllers(
     nsIControllers* aControllers,
     nsTHashtable<nsCStringHashKey>& aCommandsHandled,
     nsTArray<nsCString>& aEnabledCommands,
     nsTArray<nsCString>& aDisabledCommands) {
->>>>>>> upstream-releases
   uint32_t controllerCount;
   aControllers->GetControllerCount(&controllerCount);
   for (uint32_t c = 0; c < controllerCount; c++) {
@@ -242,25 +217,12 @@ void nsWindowRoot::GetEnabledDisabledCommandsForControllers(
     nsCOMPtr<nsICommandController> commandController(
         do_QueryInterface(controller));
     if (commandController) {
-<<<<<<< HEAD
-      uint32_t commandsCount;
-      char** commands;
-      if (NS_SUCCEEDED(commandController->GetSupportedCommands(&commandsCount,
-                                                               &commands))) {
-        for (uint32_t e = 0; e < commandsCount; e++) {
-||||||| merged common ancestors
-      uint32_t commandsCount;
-      char** commands;
-      if (NS_SUCCEEDED(commandController->GetSupportedCommands(&commandsCount, &commands))) {
-        for (uint32_t e = 0; e < commandsCount; e++) {
-=======
       // All of our default command controllers have 20-60 commands.  Let's just
       // leave enough space here for all of them so we probably don't need to
       // heap-allocate.
       AutoTArray<nsCString, 64> commands;
       if (NS_SUCCEEDED(commandController->GetSupportedCommands(commands))) {
         for (auto& commandStr : commands) {
->>>>>>> upstream-releases
           // Use a hash to determine which commands have already been handled by
           // earlier controllers, as the earlier controller's result should get
           // priority.
@@ -269,13 +231,6 @@ void nsWindowRoot::GetEnabledDisabledCommandsForControllers(
             bool enabled = false;
             controller->IsCommandEnabled(commandStr.get(), &enabled);
 
-<<<<<<< HEAD
-            const nsDependentCSubstring commandStr(commands[e],
-                                                   strlen(commands[e]));
-||||||| merged common ancestors
-            const nsDependentCSubstring commandStr(commands[e], strlen(commands[e]));
-=======
->>>>>>> upstream-releases
             if (enabled) {
               aEnabledCommands.AppendElement(commandStr);
             } else {
@@ -288,23 +243,10 @@ void nsWindowRoot::GetEnabledDisabledCommandsForControllers(
   }
 }
 
-<<<<<<< HEAD
-void nsWindowRoot::GetEnabledDisabledCommands(
-    nsTArray<nsCString>& aEnabledCommands,
-    nsTArray<nsCString>& aDisabledCommands) {
-  nsTHashtable<nsCharPtrHashKey> commandsHandled;
-||||||| merged common ancestors
-void
-nsWindowRoot::GetEnabledDisabledCommands(nsTArray<nsCString>& aEnabledCommands,
-                                         nsTArray<nsCString>& aDisabledCommands)
-{
-  nsTHashtable<nsCharPtrHashKey> commandsHandled;
-=======
 void nsWindowRoot::GetEnabledDisabledCommands(
     nsTArray<nsCString>& aEnabledCommands,
     nsTArray<nsCString>& aDisabledCommands) {
   nsTHashtable<nsCStringHashKey> commandsHandled;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIControllers> controllers;
   GetControllers(false, getter_AddRefs(controllers));
@@ -347,35 +289,13 @@ JSObject* nsWindowRoot::WrapObject(JSContext* aCx,
   return mozilla::dom::WindowRoot_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-void nsWindowRoot::AddBrowser(mozilla::dom::TabParent* aBrowser) {
-  nsWeakPtr weakBrowser =
-      do_GetWeakReference(static_cast<nsITabParent*>(aBrowser));
-||||||| merged common ancestors
-void
-nsWindowRoot::AddBrowser(mozilla::dom::TabParent* aBrowser)
-{
-  nsWeakPtr weakBrowser = do_GetWeakReference(static_cast<nsITabParent*>(aBrowser));
-=======
 void nsWindowRoot::AddBrowser(nsIRemoteTab* aBrowser) {
   nsWeakPtr weakBrowser = do_GetWeakReference(aBrowser);
->>>>>>> upstream-releases
   mWeakBrowsers.PutEntry(weakBrowser);
 }
 
-<<<<<<< HEAD
-void nsWindowRoot::RemoveBrowser(mozilla::dom::TabParent* aBrowser) {
-  nsWeakPtr weakBrowser =
-      do_GetWeakReference(static_cast<nsITabParent*>(aBrowser));
-||||||| merged common ancestors
-void
-nsWindowRoot::RemoveBrowser(mozilla::dom::TabParent* aBrowser)
-{
-  nsWeakPtr weakBrowser = do_GetWeakReference(static_cast<nsITabParent*>(aBrowser));
-=======
 void nsWindowRoot::RemoveBrowser(nsIRemoteTab* aBrowser) {
   nsWeakPtr weakBrowser = do_GetWeakReference(aBrowser);
->>>>>>> upstream-releases
   mWeakBrowsers.RemoveEntry(weakBrowser);
 }
 

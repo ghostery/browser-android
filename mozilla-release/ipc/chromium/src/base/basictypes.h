@@ -36,27 +36,6 @@ const int64_t kint64min = ((int64_t)GG_LONGLONG(0x8000000000000000));
 const int64_t kint64max = ((int64_t)GG_LONGLONG(0x7FFFFFFFFFFFFFFF));
 
 // Platform- and hardware-dependent printf specifiers
-<<<<<<< HEAD
-#if defined(OS_POSIX)
-#define PRId64L "I64d"
-#define PRIu64L "I64u"
-#define PRIx64L "I64x"
-#elif defined(OS_WIN)
-#define PRId64L L"I64d"
-#define PRIu64L L"I64u"
-#define PRIx64L L"I64x"
-#endif
-||||||| merged common ancestors
-#  if defined(OS_POSIX)
-#    define PRId64L "I64d"
-#    define PRIu64L "I64u"
-#    define PRIx64L "I64x"
-#  elif defined(OS_WIN)
-#    define PRId64L L"I64d"
-#    define PRIu64L L"I64u"
-#    define PRIx64L L"I64x"
-#  endif
-=======
 #if defined(OS_POSIX)
 #  define PRId64L "I64d"
 #  define PRIu64L "I64u"
@@ -66,14 +45,13 @@ const int64_t kint64max = ((int64_t)GG_LONGLONG(0x7FFFFFFFFFFFFFFF));
 #  define PRIu64L L"I64u"
 #  define PRIx64L L"I64x"
 #endif
->>>>>>> upstream-releases
 
 // A macro to disallow the copy constructor and operator= functions
 // This should be used in the private: declarations for a class
 #undef DISALLOW_COPY_AND_ASSIGN
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName &);              \
-  void operator=(const TypeName &)
+  TypeName(const TypeName&);               \
+  void operator=(const TypeName&)
 
 // An older, deprecated, politically incorrect name for the above.
 #undef DISALLOW_EVIL_CONSTRUCTORS
@@ -175,41 +153,19 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
 // implicit_cast would have been part of the C++ standard library,
 // but the proposal was submitted too late.  It will probably make
 // its way into the language in the future.
-<<<<<<< HEAD
-template <typename To, typename From>
-inline To implicit_cast(From const &f) {
-||||||| merged common ancestors
-template<typename To, typename From>
-inline To implicit_cast(From const &f) {
-=======
 template <typename To, typename From>
 inline To implicit_cast(From const& f) {
->>>>>>> upstream-releases
   return f;
 }
 
 // The COMPILE_ASSERT macro (below) creates an otherwise-unused typedef.  This
 // triggers compiler warnings with gcc 4.8 and higher, so mark the typedef
 // as permissibly-unused to disable the warnings.
-<<<<<<< HEAD
-#if defined(__GNUC__)
-#define COMPILE_ASSERT_UNUSED_ATTRIBUTE __attribute__((unused))
-#else
-#define COMPILE_ASSERT_UNUSED_ATTRIBUTE /* nothing */
-#endif
-||||||| merged common ancestors
-#  if defined(__GNUC__)
-#    define COMPILE_ASSERT_UNUSED_ATTRIBUTE __attribute__((unused))
-#  else
-#    define COMPILE_ASSERT_UNUSED_ATTRIBUTE /* nothing */
-#  endif
-=======
 #if defined(__GNUC__)
 #  define COMPILE_ASSERT_UNUSED_ATTRIBUTE __attribute__((unused))
 #else
 #  define COMPILE_ASSERT_UNUSED_ATTRIBUTE /* nothing */
 #endif
->>>>>>> upstream-releases
 
 // The COMPILE_ASSERT macro can be used to verify that a compile time
 // expression is true. For example, you could use it to verify the
@@ -231,19 +187,9 @@ inline To implicit_cast(From const& f) {
 template <bool>
 struct CompileAssert {};
 
-<<<<<<< HEAD
-#define COMPILE_ASSERT(expr, msg)     \
-  typedef CompileAssert<(bool(expr))> \
-      msg[bool(expr) ? 1 : -1] COMPILE_ASSERT_UNUSED_ATTRIBUTE
-||||||| merged common ancestors
-#define COMPILE_ASSERT(expr, msg) \
-  typedef CompileAssert<(bool(expr))> msg[bool(expr) ? 1 : -1] \
-  COMPILE_ASSERT_UNUSED_ATTRIBUTE
-=======
 #  define COMPILE_ASSERT(expr, msg)     \
     typedef CompileAssert<(bool(expr))> \
         msg[bool(expr) ? 1 : -1] COMPILE_ASSERT_UNUSED_ATTRIBUTE
->>>>>>> upstream-releases
 #endif
 
 // Implementation details of COMPILE_ASSERT:

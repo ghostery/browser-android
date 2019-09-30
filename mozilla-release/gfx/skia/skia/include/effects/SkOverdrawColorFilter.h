@@ -32,19 +32,7 @@ public:
             GrRecordingContext*, const GrColorSpaceInfo&) const override;
 #endif
 
-<<<<<<< HEAD
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer& buffer);
-    Factory getFactory() const override { return CreateProc; }
-    static void InitializeFlattenables();
-||||||| merged common ancestors
-    void toString(SkString* str) const override;
-
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer& buffer);
-    Factory getFactory() const override { return CreateProc; }
-    SK_DECLARE_FLATTENABLE_REGISTRAR_GROUP()
-=======
     static void RegisterFlattenables();
->>>>>>> upstream-releases
 
 protected:
     void flatten(SkWriteBuffer& buffer) const override;

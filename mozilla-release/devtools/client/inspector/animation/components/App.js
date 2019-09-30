@@ -105,31 +105,6 @@ class App extends Component {
               setAnimationsPlaybackRate,
               setAnimationsPlayState,
               timeScale,
-<<<<<<< HEAD
-            }
-          ),
-          vert: false,
-        }),
-      ]
-      :
-      NoAnimationPanel(
-        {
-          toggleElementPicker,
-        }
-      )
-||||||| merged common ancestors
-            }
-          ),
-          vert: false,
-        })
-      ]
-      :
-      NoAnimationPanel(
-        {
-          toggleElementPicker
-        }
-      )
-=======
             }),
             SplitBox({
               className: "animation-container-splitter",
@@ -171,7 +146,6 @@ class App extends Component {
         : NoAnimationPanel({
             toggleElementPicker,
           })
->>>>>>> upstream-releases
     );
   }
 }

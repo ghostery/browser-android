@@ -348,18 +348,10 @@ const downloadQuery = query => {
   // const endedBefore = normalizeDownloadTime(query.endedBefore, true);
   // const endedAfter = normalizeDownloadTime(query.endedAfter, false);
 
-<<<<<<< HEAD
-  const totalBytesGreater = query.totalBytesGreater !== null ? query.totalBytesGreater : -1;
-  const totalBytesLess = query.totalBytesLess !== null ? query.totalBytesLess : Number.MAX_VALUE;
-||||||| merged common ancestors
-  const totalBytesGreater = query.totalBytesGreater || 0;
-  const totalBytesLess = query.totalBytesLess != null ? query.totalBytesLess : Number.MAX_VALUE;
-=======
   const totalBytesGreater =
     query.totalBytesGreater !== null ? query.totalBytesGreater : -1;
   const totalBytesLess =
     query.totalBytesLess !== null ? query.totalBytesLess : Number.MAX_VALUE;
->>>>>>> upstream-releases
 
   // Handle options for which we can have a regular expression and/or
   // an explicit value to match.

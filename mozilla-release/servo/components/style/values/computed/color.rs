@@ -4,32 +4,12 @@
 
 //! Computed color values.
 
-<<<<<<< HEAD
-use crate::values::animated::color::RGBA as AnimatedRGBA;
-use crate::values::animated::ToAnimatedValue;
-use crate::values::generics::color::Color as GenericColor;
-||||||| merged common ancestors
-=======
 use crate::values::animated::color::RGBA as AnimatedRGBA;
 use crate::values::animated::ToAnimatedValue;
 use crate::values::generics::color::{Color as GenericColor, ColorOrAuto as GenericColorOrAuto};
->>>>>>> upstream-releases
 use cssparser::{Color as CSSParserColor, RGBA};
 use std::fmt;
 use style_traits::{CssWriter, ToCss};
-<<<<<<< HEAD
-
-/// Computed value type for the specified RGBAColor.
-pub type RGBAColor = RGBA;
-||||||| merged common ancestors
-use values::animated::ToAnimatedValue;
-use values::animated::color::RGBA as AnimatedRGBA;
-use values::generics::color::Color as GenericColor;
-
-/// Computed value type for the specified RGBAColor.
-pub type RGBAColor = RGBA;
-=======
->>>>>>> upstream-releases
 
 /// The computed value of the `color` property.
 pub type ColorPropertyValue = RGBA;

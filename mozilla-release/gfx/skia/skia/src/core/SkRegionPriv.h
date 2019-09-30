@@ -14,14 +14,6 @@
 #include <atomic>
 #include <functional>
 
-<<<<<<< HEAD
-#include "SkAtomics.h"
-#include "SkMalloc.h"
-#include "SkTo.h"
-
-
-#include <functional>
-
 class SkRegionPriv {
 public:
     static constexpr int kRunTypeSentinel = 0x7FFFFFFF;
@@ -39,28 +31,6 @@ public:
 };
 
 static constexpr int SkRegion_kRunTypeSentinel = 0x7FFFFFFF;
-||||||| merged common ancestors
-#include "SkAtomics.h"
-#include "SkMalloc.h"
-=======
-class SkRegionPriv {
-public:
-    static constexpr int kRunTypeSentinel = 0x7FFFFFFF;
-    typedef SkRegion::RunType RunType;
-    typedef SkRegion::RunHead RunHead;
-
-    // Call the function with each span, in Y -> X ascending order.
-    // We pass a rect, but we will still ensure the span Y->X ordering, so often the height
-    // of the rect may be 1. It should never be empty.
-    static void VisitSpans(const SkRegion& rgn, const std::function<void(const SkIRect&)>&);
-
-#ifdef SK_DEBUG
-    static void Validate(const SkRegion& rgn);
-#endif
-};
-
-static constexpr int SkRegion_kRunTypeSentinel = 0x7FFFFFFF;
->>>>>>> upstream-releases
 
 inline bool SkRegionValueIsSentinel(int32_t value) {
     return value == (int32_t)SkRegion_kRunTypeSentinel;
@@ -111,16 +81,6 @@ public:
     }
 
     static RunHead* Alloc(int count) {
-<<<<<<< HEAD
-        //SkDEBUGCODE(sk_atomic_inc(&gRgnAllocCounter);)
-        //SkDEBUGF("************** gRgnAllocCounter::alloc %d\n", gRgnAllocCounter);
-
-||||||| merged common ancestors
-        //SkDEBUGCODE(sk_atomic_inc(&gRgnAllocCounter);)
-        //SkDEBUGF(("************** gRgnAllocCounter::alloc %d\n", gRgnAllocCounter));
-
-=======
->>>>>>> upstream-releases
         if (count < SkRegion::kRectRegionRuns) {
             return nullptr;
         }

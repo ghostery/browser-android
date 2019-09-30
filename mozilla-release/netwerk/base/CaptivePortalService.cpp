@@ -226,14 +226,7 @@ void CaptivePortalService::SetStateInChild(int32_t aState) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CaptivePortalService::GetState(int32_t *aState) {
-||||||| merged common ancestors
-CaptivePortalService::GetState(int32_t *aState)
-{
-=======
 CaptivePortalService::GetState(int32_t* aState) {
->>>>>>> upstream-releases
   *aState = mState;
   return NS_OK;
 }
@@ -258,14 +251,7 @@ CaptivePortalService::RecheckCaptivePortal() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CaptivePortalService::GetLastChecked(uint64_t *aLastChecked) {
-||||||| merged common ancestors
-CaptivePortalService::GetLastChecked(uint64_t *aLastChecked)
-{
-=======
 CaptivePortalService::GetLastChecked(uint64_t* aLastChecked) {
->>>>>>> upstream-releases
   double duration = (TimeStamp::Now() - mLastChecked).ToMilliseconds();
   *aLastChecked = static_cast<uint64_t>(duration);
   return NS_OK;
@@ -277,14 +263,7 @@ CaptivePortalService::GetLastChecked(uint64_t* aLastChecked) {
 // It issues a checkCaptivePortal operation if one isn't already in progress
 //-----------------------------------------------------------------------------
 NS_IMETHODIMP
-<<<<<<< HEAD
-CaptivePortalService::Notify(nsITimer *aTimer) {
-||||||| merged common ancestors
-CaptivePortalService::Notify(nsITimer *aTimer)
-{
-=======
 CaptivePortalService::Notify(nsITimer* aTimer) {
->>>>>>> upstream-releases
   LOG(("CaptivePortalService::Notify\n"));
   MOZ_ASSERT(aTimer == mTimer);
   MOZ_ASSERT(XRE_GetProcessType() == GeckoProcessType_Default);
@@ -313,14 +292,7 @@ CaptivePortalService::Notify(nsITimer* aTimer) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-CaptivePortalService::GetName(nsACString &aName) {
-||||||| merged common ancestors
-CaptivePortalService::GetName(nsACString& aName)
-{
-=======
 CaptivePortalService::GetName(nsACString& aName) {
->>>>>>> upstream-releases
   aName.AssignLiteral("CaptivePortalService");
   return NS_OK;
 }
@@ -329,18 +301,8 @@ CaptivePortalService::GetName(nsACString& aName) {
 // CaptivePortalService::nsIObserver
 //-----------------------------------------------------------------------------
 NS_IMETHODIMP
-<<<<<<< HEAD
-CaptivePortalService::Observe(nsISupports *aSubject, const char *aTopic,
-                              const char16_t *aData) {
-||||||| merged common ancestors
-CaptivePortalService::Observe(nsISupports *aSubject,
-                              const char * aTopic,
-                              const char16_t * aData)
-{
-=======
 CaptivePortalService::Observe(nsISupports* aSubject, const char* aTopic,
                               const char16_t* aData) {
->>>>>>> upstream-releases
   if (XRE_GetProcessType() != GeckoProcessType_Default) {
     // Doesn't do anything if called in the content process.
     return NS_OK;

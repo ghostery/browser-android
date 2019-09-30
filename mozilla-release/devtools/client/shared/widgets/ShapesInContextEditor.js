@@ -52,39 +52,6 @@ class ShapesInContextEditor {
   }
 
   /**
-<<<<<<< HEAD
-   * Get the reference to the TextProperty where shape changes should be written.
-   *
-   * We can't rely on the TextProperty to be consistent while changing the value of an
-   * inline style because the fix for Bug 1467076 forces a full rebuild of TextProperties
-   * for the inline style's mock-CSS Rule in the Rule view.
-   *
-   * On |toggle()|, we store the target TextProperty index, property name and parent rule.
-   * Here, we use that index and property name to attempt to re-identify the correct
-   * TextProperty in the rule.
-   *
-   * @return {TextProperty|null}
-   */
-  get textProperty() {
-    if (!this.rule || !this.rule.textProps) {
-      return null;
-    }
-
-    const textProp = this.rule.textProps[this.textPropIndex];
-    return (textProp && textProp.name === this.textPropName) ? textProp : null;
-  }
-
-  /**
-  * Called when the element style changes from the Rule view.
-  * If the TextProperty we're acting on isn't enabled anymore or overridden,
-  * turn off the shapes highlighter.
-  */
-||||||| merged common ancestors
-  * Called when the element style changes from the Rule view.
-  * If the TextProperty we're acting on isn't enabled anymore or overridden,
-  * turn off the shapes highlighter.
-  */
-=======
    * Get the reference to the TextProperty where shape changes should be written.
    *
    * We can't rely on the TextProperty to be consistent while changing the value of an
@@ -111,7 +78,6 @@ class ShapesInContextEditor {
    * If the TextProperty we're acting on isn't enabled anymore or overridden,
    * turn off the shapes highlighter.
    */
->>>>>>> upstream-releases
   async onRuleViewChanged() {
     if (
       this.textProperty &&
@@ -315,33 +281,6 @@ class ShapesInContextEditor {
   }
 
   /**
-<<<<<<< HEAD
-  * Handler for "property-value-updated" event triggered by the Rule view.
-  * Called after the shape value has been written to the element's style and the Rule
-  * view updated. Emits an event on HighlightersOverlay that is expected by
-  * tests in order to check if the shape value has been correctly applied.
-  */
-  async onShapeValueUpdated() {
-    if (this.textProperty) {
-      // When TextPropertyEditor updates, it replaces the previous swatch DOM node.
-      // Find and store the new one.
-      this.findSwatch();
-      this.inspector.highlighters.emit("shapes-highlighter-changes-applied");
-    } else {
-      await this.hide();
-    }
-||||||| merged common ancestors
-  * Handler for "property-value-updated" event triggered by the Rule view.
-  * Called after the shape value has been written to the element's style and the Rule
-  * view updated. Emits an event on HighlightersOverlay that is expected by
-  * tests in order to check if the shape value has been correctly applied.
-  */
-  onShapeValueUpdated() {
-    // When TextPropertyEditor updates, it replaces the previous swatch DOM node.
-    // Find and store the new one.
-    this.findSwatch();
-    this.inspector.highlighters.emit("shapes-highlighter-changes-applied");
-=======
    * Handler for "property-value-updated" event triggered by the Rule view.
    * Called after the shape value has been written to the element's style and the Rule
    * view updated. Emits an event on HighlightersOverlay that is expected by
@@ -356,7 +295,6 @@ class ShapesInContextEditor {
     } else {
       await this.hide();
     }
->>>>>>> upstream-releases
   }
 
   /**

@@ -7,18 +7,8 @@
 #include "mozilla/dom/HTMLTrackElement.h"
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/HTMLMediaElement.h"
-<<<<<<< HEAD
-#include "mozilla/dom/HTMLTrackElement.h"
-#ifdef XP_WIN
-// HTMLTrackElement.webidl defines ERROR, but so does windows.h:
-#undef ERROR
-#endif
-||||||| merged common ancestors
-#include "mozilla/dom/HTMLTrackElement.h"
-=======
 #include "WebVTTListener.h"
 #include "mozilla/LoadInfo.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/HTMLTrackElementBinding.h"
 #include "mozilla/dom/HTMLUnknownElement.h"
 #include "nsAttrValueInlines.h"
@@ -220,13 +210,6 @@ bool HTMLTrackElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                                               aMaybeScriptedPrincipal, aResult);
 }
 
-<<<<<<< HEAD
-void HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError) {
-||||||| merged common ancestors
-void
-HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError)
-{
-=======
 void HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError) {
   LOG("Set src=%s", NS_ConvertUTF16toUTF8(aSrc).get());
 
@@ -236,7 +219,6 @@ void HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError) {
     return;
   }
 
->>>>>>> upstream-releases
   SetHTMLAttr(nsGkAtoms::src, aSrc, aError);
   SetReadyState(TextTrackReadyState::NotLoaded);
   if (!mMediaParent) {
@@ -253,13 +235,6 @@ void HTMLTrackElement::SetSrc(const nsAString& aSrc, ErrorResult& aError) {
   MaybeDispatchLoadResource();
 }
 
-<<<<<<< HEAD
-void HTMLTrackElement::DispatchLoadResource() {
-||||||| merged common ancestors
-void
-HTMLTrackElement::DispatchLoadResource()
-{
-=======
 void HTMLTrackElement::MaybeClearAllCues() {
   // Empty track's cue list whenever the track element's `src` attribute set,
   // changed, or removed,
@@ -296,38 +271,18 @@ void HTMLTrackElement::MaybeDispatchLoadResource() {
   }
 
   // step5, await a stable state and run the rest of steps.
->>>>>>> upstream-releases
   if (!mLoadResourceDispatched) {
-<<<<<<< HEAD
-    RefPtr<Runnable> r =
-        NewRunnableMethod("dom::HTMLTrackElement::LoadResource", this,
-                          &HTMLTrackElement::LoadResource);
-||||||| merged common ancestors
-    RefPtr<Runnable> r =
-      NewRunnableMethod("dom::HTMLTrackElement::LoadResource",
-                        this,
-                        &HTMLTrackElement::LoadResource);
-=======
     RefPtr<WebVTTListener> listener = new WebVTTListener(this);
     RefPtr<Runnable> r = NewRunnableMethod<RefPtr<WebVTTListener>>(
         "dom::HTMLTrackElement::LoadResource", this,
         &HTMLTrackElement::LoadResource, std::move(listener));
->>>>>>> upstream-releases
     nsContentUtils::RunInStableState(r.forget());
     mLoadResourceDispatched = true;
   }
 }
 
-<<<<<<< HEAD
-void HTMLTrackElement::LoadResource() {
-||||||| merged common ancestors
-void
-HTMLTrackElement::LoadResource()
-{
-=======
 void HTMLTrackElement::LoadResource(RefPtr<WebVTTListener>&& aWebVTTListener) {
   LOG("LoadResource");
->>>>>>> upstream-releases
   mLoadResourceDispatched = false;
 
   nsAutoString src;
@@ -340,15 +295,7 @@ void HTMLTrackElement::LoadResource(RefPtr<WebVTTListener>&& aWebVTTListener) {
   nsCOMPtr<nsIURI> uri;
   nsresult rv = NewURIFromString(src, getter_AddRefs(uri));
   NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
-<<<<<<< HEAD
-  LOG(LogLevel::Info, ("%p Trying to load from src=%s", this,
-                       NS_ConvertUTF16toUTF8(src).get()));
-||||||| merged common ancestors
-  LOG(LogLevel::Info, ("%p Trying to load from src=%s", this,
-      NS_ConvertUTF16toUTF8(src).get()));
-=======
   LOG("Trying to load from src=%s", NS_ConvertUTF16toUTF8(src).get());
->>>>>>> upstream-releases
 
   CancelChannelAndListener();
 
@@ -381,39 +328,8 @@ void HTMLTrackElement::LoadResource(RefPtr<WebVTTListener>&& aWebVTTListener) {
     }
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIChannel> channel;
-  nsCOMPtr<nsILoadGroup> loadGroup = OwnerDoc()->GetDocumentLoadGroup();
-  rv = NS_NewChannel(getter_AddRefs(channel), uri, static_cast<Element*>(this),
-                     secFlags, nsIContentPolicy::TYPE_INTERNAL_TRACK,
-                     nullptr,  // PerformanceStorage
-                     loadGroup,
-                     nullptr,  // aCallbacks
-                     nsIRequest::LOAD_NORMAL | nsIChannel::LOAD_CLASSIFY_URI);
-
-  NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
-
-  mListener = new WebVTTListener(this);
-||||||| merged common ancestors
-  nsCOMPtr<nsIChannel> channel;
-  nsCOMPtr<nsILoadGroup> loadGroup = OwnerDoc()->GetDocumentLoadGroup();
-  rv = NS_NewChannel(getter_AddRefs(channel),
-                     uri,
-                     static_cast<Element*>(this),
-                     secFlags,
-                     nsIContentPolicy::TYPE_INTERNAL_TRACK,
-                     nullptr, // PerformanceStorage
-                     loadGroup,
-                     nullptr,   // aCallbacks
-                     nsIRequest::LOAD_NORMAL | nsIChannel::LOAD_CLASSIFY_URI);
-
-  NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
-
-  mListener = new WebVTTListener(this);
-=======
   mListener = std::move(aWebVTTListener);
   // This will do 6. Set the text track readiness state to loading.
->>>>>>> upstream-releases
   rv = mListener->LoadResource();
   NS_ENSURE_TRUE_VOID(NS_SUCCEEDED(rv));
 
@@ -458,25 +374,8 @@ void HTMLTrackElement::LoadResource(RefPtr<WebVTTListener>&& aWebVTTListener) {
   doc->Dispatch(TaskCategory::Other, runnable.forget());
 }
 
-<<<<<<< HEAD
-nsresult HTMLTrackElement::BindToTree(nsIDocument* aDocument,
-                                      nsIContent* aParent,
-                                      nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLTrackElement::BindToTree(nsIDocument* aDocument,
-                             nsIContent* aParent,
-                             nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument,
-                                                 aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLTrackElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   LOG("Track Element bound to tree.");
@@ -505,15 +404,7 @@ nsresult HTMLTrackElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void HTMLTrackElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-HTMLTrackElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void HTMLTrackElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   if (mMediaParent && aNullParent) {
     // mTrack can be null if HTMLTrackElement::LoadResource has never been
     // called.
@@ -555,18 +446,8 @@ void HTMLTrackElement::SetReadyState(uint16_t aReadyState) {
   }
 }
 
-<<<<<<< HEAD
-void HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName) {
-  nsIDocument* doc = OwnerDoc();
-||||||| merged common ancestors
-void
-HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName)
-{
-  nsIDocument* doc = OwnerDoc();
-=======
 void HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName) {
   Document* doc = OwnerDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return;
   }
@@ -576,18 +457,8 @@ void HTMLTrackElement::DispatchTrackRunnable(const nsString& aEventName) {
   doc->Dispatch(TaskCategory::Other, runnable.forget());
 }
 
-<<<<<<< HEAD
-void HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName) {
-  nsIDocument* doc = OwnerDoc();
-||||||| merged common ancestors
-void
-HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName)
-{
-  nsIDocument* doc = OwnerDoc();
-=======
 void HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName) {
   Document* doc = OwnerDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return;
   }
@@ -595,23 +466,7 @@ void HTMLTrackElement::DispatchTrustedEvent(const nsAString& aName) {
                                        aName, CanBubble::eNo, Cancelable::eNo);
 }
 
-<<<<<<< HEAD
-void HTMLTrackElement::DropChannel() { mChannel = nullptr; }
-
-void HTMLTrackElement::NotifyShutdown() {
-||||||| merged common ancestors
-void
-HTMLTrackElement::DropChannel()
-{
-  mChannel = nullptr;
-}
-
-void
-HTMLTrackElement::NotifyShutdown()
-{
-=======
 void HTMLTrackElement::CancelChannelAndListener() {
->>>>>>> upstream-releases
   if (mChannel) {
     mChannel->Cancel(NS_BINDING_ABORTED);
     mChannel->SetNotificationCallbacks(nullptr);

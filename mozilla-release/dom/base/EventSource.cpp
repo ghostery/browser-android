@@ -113,19 +113,8 @@ class EventSourceImpl final : public nsIObserver,
 
   static void TimerCallback(nsITimer* aTimer, void* aClosure);
 
-<<<<<<< HEAD
-  nsresult PrintErrorOnConsole(const char* aBundleURI, const char* aError,
-                               const char16_t** aFormatStrings,
-                               uint32_t aFormatStringsLen);
-||||||| merged common ancestors
-  nsresult PrintErrorOnConsole(const char* aBundleURI,
-                               const char* aError,
-                               const char16_t** aFormatStrings,
-                               uint32_t aFormatStringsLen);
-=======
   nsresult PrintErrorOnConsole(const char* aBundleURI, const char* aError,
                                const nsTArray<nsString>& aFormatStrings);
->>>>>>> upstream-releases
   nsresult ConsoleError();
 
   static nsresult StreamReaderFunc(nsIInputStream* aInputStream, void* aClosure,
@@ -302,16 +291,9 @@ class EventSourceImpl final : public nsIObserver,
   uint32_t mScriptColumn;
   uint64_t mInnerWindowID;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-
-=======
  private:
   nsCOMPtr<nsICookieSettings> mCookieSettings;
 
->>>>>>> upstream-releases
   // Pointer to the target thread for checking whether we are
   // on the target thread. This is intentionally a non-owning
   // pointer in order not to affect the thread destruction
@@ -332,51 +314,6 @@ private:
   }
 };
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(EventSourceImpl, nsIObserver, nsIStreamListener,
-                  nsIRequestObserver, nsIChannelEventSink,
-                  nsIInterfaceRequestor, nsISupportsWeakReference,
-                  nsIEventTarget, nsIThreadRetargetableStreamListener)
-
-EventSourceImpl::EventSourceImpl(EventSource* aEventSource)
-    : mEventSource(aEventSource),
-      mReconnectionTime(0),
-      mStatus(PARSE_STATE_OFF),
-      mMutex("EventSourceImpl::mMutex"),
-      mFrozen(false),
-      mGoingToDispatchAllMessages(false),
-      mIsMainThread(NS_IsMainThread()),
-      mIsShutDown(false),
-      mScriptLine(0),
-      mScriptColumn(0),
-      mInnerWindowID(0),
-      mTargetThread(NS_GetCurrentThread()) {
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(EventSourceImpl,
-                  nsIObserver,
-                  nsIStreamListener,
-                  nsIRequestObserver,
-                  nsIChannelEventSink,
-                  nsIInterfaceRequestor,
-                  nsISupportsWeakReference,
-                  nsIEventTarget,
-                  nsIThreadRetargetableStreamListener)
-
-EventSourceImpl::EventSourceImpl(EventSource* aEventSource)
-  : mEventSource(aEventSource)
-  , mReconnectionTime(0)
-  , mStatus(PARSE_STATE_OFF)
-  , mMutex("EventSourceImpl::mMutex")
-  , mFrozen(false)
-  , mGoingToDispatchAllMessages(false)
-  , mIsMainThread(NS_IsMainThread())
-  , mIsShutDown(false)
-  , mScriptLine(0)
-  , mScriptColumn(0)
-  , mInnerWindowID(0)
-  , mTargetThread(NS_GetCurrentThread())
-{
-=======
 NS_IMPL_ISUPPORTS(EventSourceImpl, nsIObserver, nsIStreamListener,
                   nsIRequestObserver, nsIChannelEventSink,
                   nsIInterfaceRequestor, nsISupportsWeakReference,
@@ -397,7 +334,6 @@ EventSourceImpl::EventSourceImpl(EventSource* aEventSource,
       mInnerWindowID(0),
       mCookieSettings(aCookieSettings),
       mTargetThread(NS_GetCurrentThread()) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mEventSource);
   if (!mIsMainThread) {
     mEventSource->mIsMainThread = false;
@@ -506,19 +442,9 @@ class InitRunnable final : public WorkerMainThreadRunnable {
       wp = wp->GetParent();
     }
     nsPIDOMWindowInner* window = wp->GetWindow();
-<<<<<<< HEAD
-    nsIDocument* doc = window ? window->GetExtantDoc() : nullptr;
-    nsCOMPtr<nsIPrincipal> principal =
-        doc ? doc->NodePrincipal() : wp->GetPrincipal();
-||||||| merged common ancestors
-    nsIDocument* doc = window ? window->GetExtantDoc() : nullptr;
-    nsCOMPtr<nsIPrincipal> principal = doc ? doc->NodePrincipal() :
-                                             wp->GetPrincipal();
-=======
     Document* doc = window ? window->GetExtantDoc() : nullptr;
     nsCOMPtr<nsIPrincipal> principal =
         doc ? doc->NodePrincipal() : wp->GetPrincipal();
->>>>>>> upstream-releases
     if (!principal) {
       mRv = NS_ERROR_FAILURE;
       return true;
@@ -680,14 +606,7 @@ EventSourceImpl::Observe(nsISupports* aSubject, const char* aTopic,
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EventSourceImpl::OnStartRequest(nsIRequest* aRequest, nsISupports* aCtxt) {
-||||||| merged common ancestors
-EventSourceImpl::OnStartRequest(nsIRequest* aRequest, nsISupports* aCtxt)
-{
-=======
 EventSourceImpl::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
   if (IsClosed()) {
     return NS_ERROR_ABORT;
@@ -793,22 +712,9 @@ void EventSourceImpl::ParseSegment(const char* aBuffer, uint32_t aLength) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EventSourceImpl::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                                 nsIInputStream* aInputStream, uint64_t aOffset,
-                                 uint32_t aCount) {
-||||||| merged common ancestors
-EventSourceImpl::OnDataAvailable(nsIRequest* aRequest,
-                                 nsISupports* aContext,
-                                 nsIInputStream* aInputStream,
-                                 uint64_t aOffset,
-                                 uint32_t aCount)
-{
-=======
 EventSourceImpl::OnDataAvailable(nsIRequest* aRequest,
                                  nsIInputStream* aInputStream, uint64_t aOffset,
                                  uint32_t aCount) {
->>>>>>> upstream-releases
   AssertIsOnTargetThread();
   NS_ENSURE_ARG_POINTER(aInputStream);
   if (IsClosed()) {
@@ -824,17 +730,7 @@ EventSourceImpl::OnDataAvailable(nsIRequest* aRequest,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EventSourceImpl::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                               nsresult aStatusCode) {
-||||||| merged common ancestors
-EventSourceImpl::OnStopRequest(nsIRequest* aRequest,
-                               nsISupports* aContext,
-                               nsresult aStatusCode)
-{
-=======
 EventSourceImpl::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
 
   if (IsClosed()) {
@@ -1033,15 +929,7 @@ void EventSourceImpl::SetupHttpChannel() {
   Unused << rv;
 }
 
-<<<<<<< HEAD
-nsresult EventSourceImpl::SetupReferrerPolicy() {
-||||||| merged common ancestors
-nsresult
-EventSourceImpl::SetupReferrerPolicy()
-{
-=======
 nsresult EventSourceImpl::SetupReferrerInfo() {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
   MOZ_ASSERT(!IsShutDown());
   nsCOMPtr<Document> doc = mEventSource->GetDocumentIfCurrent();
@@ -1101,23 +989,11 @@ nsresult EventSourceImpl::InitChannelAndRequestEventSource() {
     // otherwise use the principal
     rv = NS_NewChannel(getter_AddRefs(channel), mSrc, mPrincipal, securityFlags,
                        nsIContentPolicy::TYPE_INTERNAL_EVENTSOURCE,
-<<<<<<< HEAD
-                       nullptr,     // aPerformanceStorage
-                       nullptr,     // loadGroup
-                       nullptr,     // aCallbacks
-                       loadFlags);  // aLoadFlags
-||||||| merged common ancestors
-                       nullptr,          // aPerformanceStorage
-                       nullptr,          // loadGroup
-                       nullptr,          // aCallbacks
-                       loadFlags);       // aLoadFlags
-=======
                        mCookieSettings,
                        nullptr,     // aPerformanceStorage
                        nullptr,     // loadGroup
                        nullptr,     // aCallbacks
                        loadFlags);  // aLoadFlags
->>>>>>> upstream-releases
   }
 
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1279,23 +1155,9 @@ nsresult EventSourceImpl::SetReconnectionTimeout() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult EventSourceImpl::PrintErrorOnConsole(const char* aBundleURI,
-                                              const char* aError,
-                                              const char16_t** aFormatStrings,
-                                              uint32_t aFormatStringsLen) {
-||||||| merged common ancestors
-nsresult
-EventSourceImpl::PrintErrorOnConsole(const char* aBundleURI,
-                                     const char* aError,
-                                     const char16_t** aFormatStrings,
-                                     uint32_t aFormatStringsLen)
-{
-=======
 nsresult EventSourceImpl::PrintErrorOnConsole(
     const char* aBundleURI, const char* aError,
     const nsTArray<nsString>& aFormatStrings) {
->>>>>>> upstream-releases
   AssertIsOnMainThread();
   MOZ_ASSERT(!IsShutDown());
   nsCOMPtr<nsIStringBundleService> bundleService =
@@ -1343,39 +1205,15 @@ nsresult EventSourceImpl::ConsoleError() {
   nsresult rv = mSrc->GetSpec(targetSpec);
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  NS_ConvertUTF8toUTF16 specUTF16(targetSpec);
-  const char16_t* formatStrings[] = {specUTF16.get()};
-||||||| merged common ancestors
-  NS_ConvertUTF8toUTF16 specUTF16(targetSpec);
-  const char16_t* formatStrings[] = { specUTF16.get() };
-=======
   AutoTArray<nsString, 1> formatStrings;
   CopyUTF8toUTF16(targetSpec, *formatStrings.AppendElement());
->>>>>>> upstream-releases
 
   if (ReadyState() == CONNECTING) {
     rv = PrintErrorOnConsole("chrome://global/locale/appstrings.properties",
-<<<<<<< HEAD
-                             "connectionFailure", formatStrings,
-                             ArrayLength(formatStrings));
-||||||| merged common ancestors
-                             "connectionFailure",
-                             formatStrings, ArrayLength(formatStrings));
-=======
                              "connectionFailure", formatStrings);
->>>>>>> upstream-releases
   } else {
     rv = PrintErrorOnConsole("chrome://global/locale/appstrings.properties",
-<<<<<<< HEAD
-                             "netInterrupt", formatStrings,
-                             ArrayLength(formatStrings));
-||||||| merged common ancestors
-                             "netInterrupt",
-                             formatStrings, ArrayLength(formatStrings));
-=======
                              "netInterrupt", formatStrings);
->>>>>>> upstream-releases
   }
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -1939,20 +1777,6 @@ EventSourceImpl::CheckListenerChain() {
 EventSource::EventSource(nsIGlobalObject* aGlobal,
                          nsICookieSettings* aCookieSettings,
                          bool aWithCredentials)
-<<<<<<< HEAD
-    : DOMEventTargetHelper(aOwnerWindow),
-      mWithCredentials(aWithCredentials),
-      mIsMainThread(true),
-      mKeepingAlive(false) {
-  mImpl = new EventSourceImpl(this);
-||||||| merged common ancestors
-  : DOMEventTargetHelper(aOwnerWindow)
-  , mWithCredentials(aWithCredentials)
-  , mIsMainThread(true)
-  , mKeepingAlive(false)
-{
-  mImpl = new EventSourceImpl(this);
-=======
     : DOMEventTargetHelper(aGlobal),
       mWithCredentials(aWithCredentials),
       mIsMainThread(true),
@@ -1960,7 +1784,6 @@ EventSource::EventSource(nsIGlobalObject* aGlobal,
   MOZ_ASSERT(aGlobal);
   MOZ_ASSERT(aCookieSettings);
   mImpl = new EventSourceImpl(this, aCookieSettings);
->>>>>>> upstream-releases
 }
 
 EventSource::~EventSource() {}
@@ -1975,21 +1798,6 @@ nsresult EventSource::CreateAndDispatchSimpleEvent(const nsAString& aName) {
   return rv.StealNSResult();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<EventSource> EventSource::Constructor(
-    const GlobalObject& aGlobal, const nsAString& aURL,
-    const EventSourceInit& aEventSourceInitDict, ErrorResult& aRv) {
-  nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
-      do_QueryInterface(aGlobal.GetAsSupports());
-||||||| merged common ancestors
-/* static */ already_AddRefed<EventSource>
-EventSource::Constructor(const GlobalObject& aGlobal, const nsAString& aURL,
-                         const EventSourceInit& aEventSourceInitDict,
-                         ErrorResult& aRv)
-{
-  nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
-    do_QueryInterface(aGlobal.GetAsSupports());
-=======
 /* static */
 already_AddRefed<EventSource> EventSource::Constructor(
     const GlobalObject& aGlobal, const nsAString& aURL,
@@ -1999,7 +1807,6 @@ already_AddRefed<EventSource> EventSource::Constructor(
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
   }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsICookieSettings> cookieSettings;
   nsCOMPtr<nsPIDOMWindowInner> ownerWindow = do_QueryInterface(global);
@@ -2018,16 +1825,8 @@ already_AddRefed<EventSource> EventSource::Constructor(
     cookieSettings = workerPrivate->CookieSettings();
   }
 
-<<<<<<< HEAD
-  RefPtr<EventSource> eventSource =
-      new EventSource(ownerWindow, aEventSourceInitDict.mWithCredentials);
-||||||| merged common ancestors
-  RefPtr<EventSource> eventSource =
-    new EventSource(ownerWindow, aEventSourceInitDict.mWithCredentials);
-=======
   RefPtr<EventSource> eventSource = new EventSource(
       global, cookieSettings, aEventSourceInitDict.mWithCredentials);
->>>>>>> upstream-releases
   RefPtr<EventSourceImpl> eventSourceImp = eventSource->mImpl;
 
   if (NS_IsMainThread()) {

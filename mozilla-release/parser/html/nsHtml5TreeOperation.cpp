@@ -48,21 +48,9 @@ using mozilla::dom::Document;
  * Helper class that opens a notification batch if the current doc
  * is different from the executor doc.
  */
-<<<<<<< HEAD
-class MOZ_STACK_CLASS nsHtml5OtherDocUpdate {
- public:
-  nsHtml5OtherDocUpdate(nsIDocument* aCurrentDoc, nsIDocument* aExecutorDoc) {
-||||||| merged common ancestors
-class MOZ_STACK_CLASS nsHtml5OtherDocUpdate
-{
-public:
-  nsHtml5OtherDocUpdate(nsIDocument* aCurrentDoc, nsIDocument* aExecutorDoc)
-  {
-=======
 class MOZ_STACK_CLASS nsHtml5OtherDocUpdate {
  public:
   nsHtml5OtherDocUpdate(Document* aCurrentDoc, Document* aExecutorDoc) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aCurrentDoc, "Node has no doc?");
     MOZ_ASSERT(aExecutorDoc, "Executor has no doc?");
     if (MOZ_LIKELY(aCurrentDoc == aExecutorDoc)) {
@@ -79,16 +67,8 @@ class MOZ_STACK_CLASS nsHtml5OtherDocUpdate {
     }
   }
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsIDocument> mDocument;
-=======
  private:
   RefPtr<Document> mDocument;
->>>>>>> upstream-releases
 };
 
 nsHtml5TreeOperation::nsHtml5TreeOperation()
@@ -341,41 +321,11 @@ void nsHtml5TreeOperation::SetHTMLElementAttributes(
   }
 }
 
-<<<<<<< HEAD
 nsIContent* nsHtml5TreeOperation::CreateHTMLElement(
     nsAtom* aName, nsHtml5HtmlAttributes* aAttributes,
     mozilla::dom::FromParser aFromParser, nsNodeInfoManager* aNodeInfoManager,
     nsHtml5DocumentBuilder* aBuilder,
     mozilla::dom::HTMLContentCreatorFunction aCreator) {
-  bool isKeygen = (aName == nsGkAtoms::keygen);
-  if (MOZ_UNLIKELY(isKeygen)) {
-    aName = nsGkAtoms::select;
-    aCreator = NS_NewHTMLSelectElement;
-  }
-
-||||||| merged common ancestors
-nsIContent*
-nsHtml5TreeOperation::CreateHTMLElement(
-  nsAtom* aName,
-  nsHtml5HtmlAttributes* aAttributes,
-  mozilla::dom::FromParser aFromParser,
-  nsNodeInfoManager* aNodeInfoManager,
-  nsHtml5DocumentBuilder* aBuilder,
-  mozilla::dom::HTMLContentCreatorFunction aCreator)
-{
-  bool isKeygen = (aName == nsGkAtoms::keygen);
-  if (MOZ_UNLIKELY(isKeygen)) {
-    aName = nsGkAtoms::select;
-    aCreator = NS_NewHTMLSelectElement;
-  }
-
-=======
-nsIContent* nsHtml5TreeOperation::CreateHTMLElement(
-    nsAtom* aName, nsHtml5HtmlAttributes* aAttributes,
-    mozilla::dom::FromParser aFromParser, nsNodeInfoManager* aNodeInfoManager,
-    nsHtml5DocumentBuilder* aBuilder,
-    mozilla::dom::HTMLContentCreatorFunction aCreator) {
->>>>>>> upstream-releases
   RefPtr<dom::NodeInfo> nodeInfo = aNodeInfoManager->GetNodeInfo(
       aName, nullptr, kNameSpaceID_XHTML, nsINode::ELEMENT_NODE);
   NS_ASSERTION(nodeInfo, "Got null nodeinfo.");
@@ -411,21 +361,10 @@ nsIContent* nsHtml5TreeOperation::CreateHTMLElement(
     }
   }
 
-<<<<<<< HEAD
-  if (willExecuteScript) {  // This will cause custom element constructors to
-                            // run
-    AutoSetThrowOnDynamicMarkupInsertionCounter
-        throwOnDynamicMarkupInsertionCounter(document);
-||||||| merged common ancestors
-  if (willExecuteScript) { // This will cause custom element constructors to run
-    AutoSetThrowOnDynamicMarkupInsertionCounter
-      throwOnDynamicMarkupInsertionCounter(document);
-=======
   if (willExecuteScript) {  // This will cause custom element constructors to
                             // run
     mozilla::dom::AutoSetThrowOnDynamicMarkupInsertionCounter
         throwOnDynamicMarkupInsertionCounter(document);
->>>>>>> upstream-releases
     nsHtml5AutoPauseUpdate autoPauseContentUpdate(aBuilder);
     { nsAutoMicroTask mt; }
     dom::AutoCEReaction autoCEReaction(
@@ -473,73 +412,6 @@ nsIContent* nsHtml5TreeOperation::CreateHTMLElement(
         ssle->InitStyleLinkElement(false);
         ssle->SetEnableUpdates(false);
       }
-<<<<<<< HEAD
-    } else if (MOZ_UNLIKELY(isKeygen)) {
-      // Adapted from CNavDTD
-      nsresult rv;
-      nsCOMPtr<nsIFormProcessor> theFormProcessor =
-          do_GetService(kFormProcessorCID, &rv);
-      if (NS_FAILED(rv)) {
-        return newContent;
-      }
-
-      nsTArray<nsString> theContent;
-      nsAutoString theAttribute;
-
-      (void)theFormProcessor->ProvideContent(NS_LITERAL_STRING("select"),
-                                             theContent, theAttribute);
-
-      newContent->SetAttr(kNameSpaceID_None, nsGkAtoms::moztype, nullptr,
-                          theAttribute, false);
-
-      RefPtr<dom::NodeInfo> optionNodeInfo = aNodeInfoManager->GetNodeInfo(
-          nsGkAtoms::option, nullptr, kNameSpaceID_XHTML,
-          nsINode::ELEMENT_NODE);
-
-      for (uint32_t i = 0; i < theContent.Length(); ++i) {
-        RefPtr<dom::NodeInfo> ni = optionNodeInfo;
-        nsCOMPtr<dom::Element> optionElt =
-            NS_NewHTMLOptionElement(ni.forget(), aFromParser);
-        RefPtr<nsTextNode> optionText = new nsTextNode(aNodeInfoManager);
-        (void)optionText->SetText(theContent[i], false);
-        optionElt->AppendChildTo(optionText, false);
-        newContent->AppendChildTo(optionElt, false);
-      }
-      newContent->DoneAddingChildren(false);
-||||||| merged common ancestors
-    } else if (MOZ_UNLIKELY(isKeygen)) {
-      // Adapted from CNavDTD
-      nsresult rv;
-      nsCOMPtr<nsIFormProcessor> theFormProcessor =
-        do_GetService(kFormProcessorCID, &rv);
-      if (NS_FAILED(rv)) {
-        return newContent;
-      }
-
-      nsTArray<nsString> theContent;
-      nsAutoString theAttribute;
-
-      (void)theFormProcessor->ProvideContent(
-        NS_LITERAL_STRING("select"), theContent, theAttribute);
-
-      newContent->SetAttr(
-        kNameSpaceID_None, nsGkAtoms::moztype, nullptr, theAttribute, false);
-
-      RefPtr<dom::NodeInfo> optionNodeInfo = aNodeInfoManager->GetNodeInfo(
-        nsGkAtoms::option, nullptr, kNameSpaceID_XHTML, nsINode::ELEMENT_NODE);
-
-      for (uint32_t i = 0; i < theContent.Length(); ++i) {
-        RefPtr<dom::NodeInfo> ni = optionNodeInfo;
-        nsCOMPtr<dom::Element> optionElt =
-          NS_NewHTMLOptionElement(ni.forget(), aFromParser);
-        RefPtr<nsTextNode> optionText = new nsTextNode(aNodeInfoManager);
-        (void)optionText->SetText(theContent[i], false);
-        optionElt->AppendChildTo(optionText, false);
-        newContent->AppendChildTo(optionElt, false);
-      }
-      newContent->DoneAddingChildren(false);
-=======
->>>>>>> upstream-releases
     }
 
     if (!aAttributes) {
@@ -1162,40 +1034,14 @@ nsresult nsHtml5TreeOperation::Perform(nsHtml5TreeOpExecutor* aBuilder,
       nsresult rv;
       nsAutoString message;
       if (otherAtom) {
-<<<<<<< HEAD
-        const char16_t* params[] = {atom->GetUTF16String(),
-                                    otherAtom->GetUTF16String()};
-||||||| merged common ancestors
-        const char16_t* params[] = { atom->GetUTF16String(),
-                                     otherAtom->GetUTF16String() };
-=======
->>>>>>> upstream-releases
         rv = nsContentUtils::FormatLocalizedString(
-<<<<<<< HEAD
-            nsContentUtils::eHTMLPARSER_PROPERTIES, msgId, params, message);
-||||||| merged common ancestors
-          nsContentUtils::eHTMLPARSER_PROPERTIES, msgId, params, message);
-=======
             message, nsContentUtils::eHTMLPARSER_PROPERTIES, msgId,
             nsDependentAtomString(atom), nsDependentAtomString(otherAtom));
->>>>>>> upstream-releases
         NS_ENSURE_SUCCESS(rv, NS_OK);
       } else if (atom) {
-<<<<<<< HEAD
-        const char16_t* params[] = {atom->GetUTF16String()};
-||||||| merged common ancestors
-        const char16_t* params[] = { atom->GetUTF16String() };
-=======
->>>>>>> upstream-releases
         rv = nsContentUtils::FormatLocalizedString(
-<<<<<<< HEAD
-            nsContentUtils::eHTMLPARSER_PROPERTIES, msgId, params, message);
-||||||| merged common ancestors
-          nsContentUtils::eHTMLPARSER_PROPERTIES, msgId, params, message);
-=======
             message, nsContentUtils::eHTMLPARSER_PROPERTIES, msgId,
             nsDependentAtomString(atom));
->>>>>>> upstream-releases
         NS_ENSURE_SUCCESS(rv, NS_OK);
       } else {
         rv = nsContentUtils::GetLocalizedString(
@@ -1227,7 +1073,9 @@ nsresult nsHtml5TreeOperation::Perform(nsHtml5TreeOpExecutor* aBuilder,
           aInterrupted);  // this causes a notification flush anyway
       return NS_OK;
     }
-    default: { MOZ_CRASH("Bogus tree op"); }
+    default: {
+      MOZ_CRASH("Bogus tree op");
+    }
   }
   return NS_OK;  // keep compiler happy
 }

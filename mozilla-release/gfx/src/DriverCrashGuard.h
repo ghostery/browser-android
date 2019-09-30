@@ -177,15 +177,6 @@ class GLContextCrashGuard final : public DriverCrashGuard {
   void LogFeatureDisabled() override;
 };
 
-<<<<<<< HEAD
-}  // namespace gfx
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-
-#endif // gfx_src_DriverCrashGuard_h__
-=======
 class WMFVPXVideoCrashGuard final : public DriverCrashGuard {
  public:
   explicit WMFVPXVideoCrashGuard(dom::ContentParent* aContentParent = nullptr);
@@ -197,6 +188,5 @@ class WMFVPXVideoCrashGuard final : public DriverCrashGuard {
 
 }  // namespace gfx
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // gfx_src_DriverCrashGuard_h__

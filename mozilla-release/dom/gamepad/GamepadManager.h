@@ -44,23 +44,11 @@ class GamepadManager final : public nsIObserver {
   void RemoveListener(nsGlobalWindowInner* aWindow);
 
   // Add a gamepad to the list of known gamepads.
-<<<<<<< HEAD
-  void AddGamepad(uint32_t aIndex, const nsAString& aID,
-                  GamepadMappingType aMapping, GamepadHand aHand,
-                  GamepadServiceType aServiceType, uint32_t aDisplayID,
-                  uint32_t aNumButtons, uint32_t aNumAxes,
-                  uint32_t aNumHaptics);
-||||||| merged common ancestors
-  void AddGamepad(uint32_t aIndex, const nsAString& aID, GamepadMappingType aMapping,
-                  GamepadHand aHand, GamepadServiceType aServiceType, uint32_t aDisplayID,
-                  uint32_t aNumButtons, uint32_t aNumAxes, uint32_t aNumHaptics);
-=======
   void AddGamepad(uint32_t aIndex, const nsAString& aID,
                   GamepadMappingType aMapping, GamepadHand aHand,
                   GamepadServiceType aServiceType, uint32_t aDisplayID,
                   uint32_t aNumButtons, uint32_t aNumAxes, uint32_t aNumHaptics,
                   uint32_t aNumLightIndicator, uint32_t aNumTouchEvents);
->>>>>>> upstream-releases
 
   // Remove the gamepad at |aIndex| from the list of known gamepads.
   void RemoveGamepad(uint32_t aIndex, GamepadServiceType aServiceType);

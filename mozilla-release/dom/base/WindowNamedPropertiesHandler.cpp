@@ -17,20 +17,9 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-static bool ShouldExposeChildWindow(nsString& aNameBeingResolved,
-                                    nsPIDOMWindowOuter* aChild) {
-  Element* e = aChild->GetFrameElementInternal();
-||||||| merged common ancestors
-static bool
-ShouldExposeChildWindow(nsString& aNameBeingResolved, nsPIDOMWindowOuter* aChild)
-{
-  Element* e = aChild->GetFrameElementInternal();
-=======
 static bool ShouldExposeChildWindow(const nsString& aNameBeingResolved,
                                     BrowsingContext* aChild) {
   Element* e = aChild->GetEmbedderElement();
->>>>>>> upstream-releases
   if (e && e->IsInShadowTree()) {
     return false;
   }
@@ -164,22 +153,9 @@ bool WindowNamedPropertiesHandler::defineProperty(
   return false;
 }
 
-<<<<<<< HEAD
-bool WindowNamedPropertiesHandler::ownPropNames(
-    JSContext* aCx, JS::Handle<JSObject*> aProxy, unsigned flags,
-    JS::AutoIdVector& aProps) const {
-||||||| merged common ancestors
-bool
-WindowNamedPropertiesHandler::ownPropNames(JSContext* aCx,
-                                           JS::Handle<JSObject*> aProxy,
-                                           unsigned flags,
-                                           JS::AutoIdVector& aProps) const
-{
-=======
 bool WindowNamedPropertiesHandler::ownPropNames(
     JSContext* aCx, JS::Handle<JSObject*> aProxy, unsigned flags,
     JS::MutableHandleVector<jsid> aProps) const {
->>>>>>> upstream-releases
   if (!(flags & JSITER_HIDDEN)) {
     // None of our named properties are enumerable.
     return true;
@@ -191,42 +167,10 @@ bool WindowNamedPropertiesHandler::ownPropNames(
   // The names live on the outer window, which might be null
   nsGlobalWindowOuter* outer = win->GetOuterWindowInternal();
   if (outer) {
-<<<<<<< HEAD
-    nsDOMWindowList* childWindows = outer->GetFrames();
-    if (childWindows) {
-      uint32_t length = childWindows->GetLength();
-      for (uint32_t i = 0; i < length; ++i) {
-        nsCOMPtr<nsIDocShellTreeItem> item =
-            childWindows->GetDocShellTreeItemAt(i);
-        // This is a bit silly, since we could presumably just do
-        // item->GetWindow().  But it's not obvious whether this does the same
-        // thing as GetChildWindow() with the item's name (due to the complexity
-        // of FindChildWithName).  Since GetChildWindow is what we use in
-        // getOwnPropDescriptor, let's try to be consistent.
-        nsString name;
-        item->GetName(name);
-        if (!names.Contains(name)) {
-||||||| merged common ancestors
-    nsDOMWindowList* childWindows = outer->GetFrames();
-    if (childWindows) {
-      uint32_t length = childWindows->GetLength();
-      for (uint32_t i = 0; i < length; ++i) {
-        nsCOMPtr<nsIDocShellTreeItem> item =
-          childWindows->GetDocShellTreeItemAt(i);
-        // This is a bit silly, since we could presumably just do
-        // item->GetWindow().  But it's not obvious whether this does the same
-        // thing as GetChildWindow() with the item's name (due to the complexity
-        // of FindChildWithName).  Since GetChildWindow is what we use in
-        // getOwnPropDescriptor, let's try to be consistent.
-        nsString name;
-        item->GetName(name);
-        if (!names.Contains(name)) {
-=======
     if (BrowsingContext* bc = outer->GetBrowsingContext()) {
       for (const auto& child : bc->GetChildren()) {
         const nsString& name = child->Name();
         if (!name.IsEmpty() && !names.Contains(name)) {
->>>>>>> upstream-releases
           // Make sure we really would expose it from getOwnPropDescriptor.
           if (ShouldExposeChildWindow(name, child)) {
             names.AppendElement(name);

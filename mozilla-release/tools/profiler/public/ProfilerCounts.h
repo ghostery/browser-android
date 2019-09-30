@@ -80,36 +80,6 @@ class BaseProfilerCount {
   BaseProfilerCount(const char* aLabel, ProfilerAtomicSigned* aCounter,
                     ProfilerAtomicUnsigned* aNumber, const char* aCategory,
                     const char* aDescription)
-<<<<<<< HEAD
-      : mLabel(aLabel),
-        mCategory(aCategory),
-        mDescription(aDescription),
-        mCounter(aCounter),
-        mNumber(aNumber) {
-#define COUNTER_CANARY 0xDEADBEEF
-#ifdef DEBUG
-    mCanary = COUNTER_CANARY;
-    mPrevNumber = 0;
-#endif
-    // Can't call profiler_* here since this may be non-xul-library
-||||||| merged common ancestors
-    : mLabel(aLabel)
-    , mCategory(aCategory)
-    , mDescription(aDescription)
-    , mCounter(aCounter)
-    , mNumber(aNumber)
-    {
-#define COUNTER_CANARY 0xDEADBEEF
-#ifdef DEBUG
-      mCanary = COUNTER_CANARY;
-      mPrevNumber = 0;
-#endif
-      // Can't call profiler_* here since this may be non-xul-library
-    }
-#ifdef DEBUG
-  ~BaseProfilerCount() {
-    mCanary = 0;
-=======
       : mLabel(aLabel),
         mCategory(aCategory),
         mDescription(aDescription),
@@ -121,19 +91,10 @@ class BaseProfilerCount {
     mPrevNumber = 0;
 #  endif
     // Can't call profiler_* here since this may be non-xul-library
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-#ifdef DEBUG
-  ~BaseProfilerCount() { mCanary = 0; }
-#endif
-||||||| merged common ancestors
-#endif
-=======
 #  ifdef DEBUG
   ~BaseProfilerCount() { mCanary = 0; }
 #  endif
->>>>>>> upstream-releases
 
   void Sample(int64_t& aCounter, uint64_t& aNumber) {
     MOZ_ASSERT(mCanary == COUNTER_CANARY);
@@ -169,16 +130,8 @@ class BaseProfilerCount {
 
 #  ifdef DEBUG
   uint32_t mCanary;
-<<<<<<< HEAD
-  uint64_t mPrevNumber;  // value of number from the last Sample()
-#endif
-||||||| merged common ancestors
-  uint64_t mPrevNumber; // value of number from the last Sample()
-#endif
-=======
   uint64_t mPrevNumber;  // value of number from the last Sample()
 #  endif
->>>>>>> upstream-releases
 };
 
 // Designed to be allocated dynamically, and simply incremented with obj++
@@ -236,152 +189,35 @@ class ProfilerCounterTotal final : public BaseProfilerCount {
 // independent Atomics, there is a possiblity that count will not include
 // the last call, but number of uses will.  I think this is not worth
 // worrying about
-<<<<<<< HEAD
-#define PROFILER_DEFINE_COUNT_TOTAL(label, category, description) \
-  ProfilerAtomicSigned profiler_count_##label(0);                 \
-  ProfilerAtomicUnsigned profiler_number_##label(0);              \
-  const char profiler_category_##label[] = category;              \
-  const char profiler_description_##label[] = description;        \
-  mozilla::UniquePtr<BaseProfilerCount> AutoCount_##label;
-||||||| merged common ancestors
-#define PROFILER_DEFINE_COUNT_TOTAL(label, category, description) \
-  ProfilerAtomicSigned profiler_count_ ## label(0);    \
-  ProfilerAtomicUnsigned profiler_number_ ## label(0);              \
-  const char profiler_category_ ## label[] = category; \
-  const char profiler_description_ ## label[] = description; \
-  mozilla::UniquePtr<BaseProfilerCount> AutoCount_ ## label;
-=======
 #  define PROFILER_DEFINE_COUNT_TOTAL(label, category, description) \
     ProfilerAtomicSigned profiler_count_##label(0);                 \
     ProfilerAtomicUnsigned profiler_number_##label(0);              \
     const char profiler_category_##label[] = category;              \
     const char profiler_description_##label[] = description;        \
     mozilla::UniquePtr<BaseProfilerCount> AutoCount_##label;
->>>>>>> upstream-releases
 
 // This counts, but doesn't keep track of the number of calls to
 // AUTO_PROFILER_COUNT()
-<<<<<<< HEAD
-#define PROFILER_DEFINE_COUNT(label, category, description) \
-  ProfilerAtomicSigned profiler_count_##label(0);           \
-  const char profiler_category_##label[] = category;        \
-  const char profiler_description_##label[] = description;  \
-  mozilla::UniquePtr<BaseProfilerCount> AutoCount_##label;
-||||||| merged common ancestors
-#define PROFILER_DEFINE_COUNT(label, category, description) \
-  ProfilerAtomicSigned profiler_count_ ## label(0);           \
-  const char profiler_category_ ## label[] = category; \
-  const char profiler_description_ ## label[] = description; \
-  mozilla::UniquePtr<BaseProfilerCount> AutoCount_ ## label;
-=======
 #  define PROFILER_DEFINE_COUNT(label, category, description) \
     ProfilerAtomicSigned profiler_count_##label(0);           \
     const char profiler_category_##label[] = category;        \
     const char profiler_description_##label[] = description;  \
     mozilla::UniquePtr<BaseProfilerCount> AutoCount_##label;
->>>>>>> upstream-releases
 
 // This will create a static initializer if used, but avoids a possible
 // allocation.
-<<<<<<< HEAD
-#define PROFILER_DEFINE_STATIC_COUNT_TOTAL(label, category, description)  \
-  ProfilerAtomicSigned profiler_count_##label(0);                         \
-  ProfilerAtomicUnsigned profiler_number_##label(0);                      \
-  BaseProfilerCount AutoCount_##label(#label, &profiler_count_##label,    \
-                                      &profiler_number_##label, category, \
-                                      description);
-||||||| merged common ancestors
-#define PROFILER_DEFINE_STATIC_COUNT_TOTAL(label, category, description) \
-  ProfilerAtomicSigned profiler_count_ ## label(0);           \
-  ProfilerAtomicUnsigned profiler_number_ ## label(0);              \
-  BaseProfilerCount AutoCount_ ## label(#label, \
-                                       &profiler_count_ ## label,        \
-                                       &profiler_number_ ## label,       \
-                                       category,     \
-                                       description);
-=======
 #  define PROFILER_DEFINE_STATIC_COUNT_TOTAL(label, category, description)  \
     ProfilerAtomicSigned profiler_count_##label(0);                         \
     ProfilerAtomicUnsigned profiler_number_##label(0);                      \
     BaseProfilerCount AutoCount_##label(#label, &profiler_count_##label,    \
                                         &profiler_number_##label, category, \
                                         description);
->>>>>>> upstream-releases
 
 // If we didn't care about static initializers, we could avoid the need for
 // a ptr to the BaseProfilerCount object.
 
 // XXX It would be better to do this without the if() and without the
 // theoretical race to set the UniquePtr (i.e. possible leak).
-<<<<<<< HEAD
-#define AUTO_PROFILER_COUNT_TOTAL(label, count)                                \
-  do {                                                                         \
-    profiler_number_##label++; /* do this first*/                              \
-    profiler_count_##label += count;                                           \
-    if (!AutoCount_##label) {                                                  \
-      /* Ignore that we could call this twice in theory, and that we leak them \
-       */                                                                      \
-      AutoCount_##label.reset(new BaseProfilerCount(                           \
-          #label, &profiler_count_##label, &profiler_number_##label,           \
-          profiler_category_##label, profiler_description_##label));           \
-      profiler_add_sampled_counter(AutoCount_##label.get());                   \
-    }                                                                          \
-  } while (0)
-
-#define AUTO_PROFILER_COUNT(label, count)                                      \
-  do {                                                                         \
-    profiler_count_##label += count; /* do this first*/                        \
-    if (!AutoCount_##label) {                                                  \
-      /* Ignore that we could call this twice in theory, and that we leak them \
-       */                                                                      \
-      AutoCount_##label.reset(new BaseProfilerCount(                           \
-          #label, nullptr, &profiler_number_##label,                           \
-          profiler_category_##label, profiler_description_##label));           \
-      profiler_add_sampled_counter(AutoCount_##label.get());                   \
-    }                                                                          \
-  } while (0)
-
-#define AUTO_PROFILER_STATIC_COUNT(label, count)  \
-  do {                                            \
-    profiler_number_##label++; /* do this first*/ \
-    profiler_count_##label += count;              \
-  } while (0)
-||||||| merged common ancestors
-#define AUTO_PROFILER_COUNT_TOTAL(label, count) \
-  do { \
-    profiler_number_ ## label++;  /* do this first*/ \
-    profiler_count_ ## label += count; \
-    if (!AutoCount_ ## label) { \
-      /* Ignore that we could call this twice in theory, and that we leak them */ \
-      AutoCount_ ## label .reset(new BaseProfilerCount(#label,       \
-                                                       &profiler_count_ ## label, \
-                                                       &profiler_number_ ## label, \
-                                                       profiler_category_ ## label, \
-                                                       profiler_description_ ## label)); \
-      profiler_add_sampled_counter(AutoCount_ ## label .get());          \
-    } \
-  } while (0)
-
-#define AUTO_PROFILER_COUNT(label, count)             \
-  do { \
-    profiler_count_ ## label += count;  /* do this first*/ \
-    if (!AutoCount_ ## label) { \
-      /* Ignore that we could call this twice in theory, and that we leak them */ \
-      AutoCount_ ## label .reset(new BaseProfilerCount(#label,        \
-                                                       nullptr,         \
-                                                       &profiler_number_ ## label, \
-                                                       profiler_category_ ## label, \
-                                                       profiler_description_ ## label)); \
-      profiler_add_sampled_counter(AutoCount_ ## label .get()); \
-    } \
-  } while (0)
-
-#define AUTO_PROFILER_STATIC_COUNT(label, count)       \
-  do { \
-    profiler_number_ ## label++;  /* do this first*/ \
-    profiler_count_ ## label += count; \
-  } while (0)
-=======
 #  define AUTO_PROFILER_COUNT_TOTAL(label, count)                           \
     do {                                                                    \
       profiler_number_##label++; /* do this first*/                         \
@@ -416,41 +252,8 @@ class ProfilerCounterTotal final : public BaseProfilerCount {
       profiler_number_##label++; /* do this first*/ \
       profiler_count_##label += count;              \
     } while (0)
->>>>>>> upstream-releases
 
 // if we need to force the allocation
-<<<<<<< HEAD
-#define AUTO_PROFILER_FORCE_ALLOCATION(label)                                  \
-  do {                                                                         \
-    if (!AutoCount_##label) {                                                  \
-      /* Ignore that we could call this twice in theory, and that we leak them \
-       */                                                                      \
-      AutoCount_##label.reset(new BaseProfilerCount(                           \
-          #label, &profiler_count_##label, &profiler_number_##label,           \
-          profiler_category_##label, profiler_description_##label));           \
-    }                                                                          \
-  } while (0)
-
-#endif  // !MOZ_GECKO_PROFILER
-
-#endif  // ProfilerCounts_h
-||||||| merged common ancestors
-#define AUTO_PROFILER_FORCE_ALLOCATION(label) \
-  do { \
-    if (!AutoCount_ ## label) { \
-      /* Ignore that we could call this twice in theory, and that we leak them */ \
-      AutoCount_ ## label .reset(new BaseProfilerCount(#label,       \
-                                                       &profiler_count_ ## label, \
-                                                       &profiler_number_ ## label, \
-                                                       profiler_category_ ## label, \
-                                                       profiler_description_ ## label)); \
-    } \
-  } while (0)
-
-#endif // !MOZ_GECKO_PROFILER
-
-#endif // ProfilerCounts_h
-=======
 #  define AUTO_PROFILER_FORCE_ALLOCATION(label)                             \
     do {                                                                    \
       if (!AutoCount_##label) {                                             \
@@ -466,4 +269,3 @@ class ProfilerCounterTotal final : public BaseProfilerCount {
 #endif  // !MOZ_GECKO_PROFILER
 
 #endif  // ProfilerCounts_h
->>>>>>> upstream-releases

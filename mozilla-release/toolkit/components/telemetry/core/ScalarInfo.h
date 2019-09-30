@@ -39,24 +39,12 @@ struct BaseScalarInfo {
         builtin(aBuiltin) {}
   virtual ~BaseScalarInfo() {}
 
-<<<<<<< HEAD
-  virtual const char *name() const = 0;
-  virtual const char *expiration() const = 0;
-
-  virtual uint32_t storeOffset() const = 0;
-
-  virtual uint32_t storeCount() const = 0;
-||||||| merged common ancestors
-  virtual const char *name() const = 0;
-  virtual const char *expiration() const = 0;
-=======
   virtual const char* name() const = 0;
   virtual const char* expiration() const = 0;
 
   virtual uint32_t storeOffset() const = 0;
 
   virtual uint32_t storeCount() const = 0;
->>>>>>> upstream-releases
 };
 
 /**
@@ -79,32 +67,6 @@ struct ScalarInfo : BaseScalarInfo {
   ScalarInfo(uint32_t aKind, uint32_t aNameOffset, uint32_t aExpirationOffset,
              uint32_t aDataset,
              mozilla::Telemetry::Common::RecordedProcessType aRecordInProcess,
-<<<<<<< HEAD
-             bool aKeyed,
-             mozilla::Telemetry::Common::SupportedProduct aProducts,
-             uint32_t aStoreCount, uint16_t aStoreOffset)
-      : BaseScalarInfo(aKind, aDataset, aRecordInProcess, aKeyed, aProducts),
-        name_offset(aNameOffset),
-        expiration_offset(aExpirationOffset),
-        store_count(aStoreCount),
-        store_offset(aStoreOffset) {}
-
-  const char *name() const override;
-  const char *expiration() const override;
-
-  uint32_t storeOffset() const override { return store_offset; };
-
-  uint32_t storeCount() const override { return store_count; };
-||||||| merged common ancestors
-             bool aKeyed, mozilla::Telemetry::Common::SupportedProduct aProducts)
-    : BaseScalarInfo(aKind, aDataset, aRecordInProcess, aKeyed, aProducts)
-    , name_offset(aNameOffset)
-    , expiration_offset(aExpirationOffset)
-  {}
-
-  const char *name() const override;
-  const char *expiration() const override;
-=======
              bool aKeyed,
              mozilla::Telemetry::Common::SupportedProduct aProducts,
              uint32_t aStoreCount, uint16_t aStoreOffset)
@@ -120,7 +82,6 @@ struct ScalarInfo : BaseScalarInfo {
   uint32_t storeOffset() const override { return store_offset; };
 
   uint32_t storeCount() const override { return store_count; };
->>>>>>> upstream-releases
 };
 
 }  // namespace

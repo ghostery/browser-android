@@ -103,37 +103,14 @@ WebGLExtensionTextureHalfFloat::WebGLExtensionTextureHalfFloat(
 
 WebGLExtensionTextureHalfFloat::~WebGLExtensionTextureHalfFloat() {}
 
-<<<<<<< HEAD
-bool WebGLExtensionTextureHalfFloat::IsSupported(const WebGLContext* webgl) {
-  gl::GLContext* gl = webgl->GL();
-||||||| merged common ancestors
-bool
-WebGLExtensionTextureHalfFloat::IsSupported(const WebGLContext* webgl)
-{
-    gl::GLContext* gl = webgl->GL();
-=======
 bool WebGLExtensionTextureHalfFloat::IsSupported(const WebGLContext* webgl) {
   if (webgl->IsWebGL2()) return false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!gl->IsSupported(gl::GLFeature::texture_half_float) &&
-      !gl->IsExtensionSupported(gl::GLContext::OES_texture_half_float)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!gl->IsSupported(gl::GLFeature::texture_half_float) &&
-        !gl->IsExtensionSupported(gl::GLContext::OES_texture_half_float))
-    {
-        return false;
-    }
-=======
   gl::GLContext* gl = webgl->GL();
   if (!gl->IsSupported(gl::GLFeature::texture_half_float) &&
       !gl->IsExtensionSupported(gl::GLContext::OES_texture_half_float)) {
     return false;
   }
->>>>>>> upstream-releases
 
   const bool needsSwizzle = gl->IsCoreProfile();
   const bool hasSwizzle = gl->IsSupported(gl::GLFeature::texture_swizzle);

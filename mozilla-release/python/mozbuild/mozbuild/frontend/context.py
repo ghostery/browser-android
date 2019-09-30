@@ -368,24 +368,12 @@ class AsmFlags(BaseCompileFlags):
         debug_flags = []
         if (self._context.config.substs.get('MOZ_DEBUG') or
             self._context.config.substs.get('MOZ_DEBUG_SYMBOLS')):
-<<<<<<< HEAD
-            if self._context.get('USE_NASM') or (self._context.get('USE_YASM') and self._context.config.substs.get('NASM')):
-                if (self._context.config.substs.get('OS_ARCH') == 'WINNT' and
-                    not self._context.config.substs.get('GNU_CC')):
-                    debug_flags += ['-F', 'cv8']
-                elif self._context.config.substs.get('OS_ARCH') != 'Darwin':
-                    debug_flags += ['-F', 'dwarf']
-            elif self._context.get('USE_YASM'):
-||||||| merged common ancestors
-            if self._context.get('USE_YASM'):
-=======
             if self._context.get('USE_NASM'):
                 if self._context.config.substs.get('OS_ARCH') == 'WINNT':
                     debug_flags += ['-F', 'cv8']
                 elif self._context.config.substs.get('OS_ARCH') != 'Darwin':
                     debug_flags += ['-F', 'dwarf']
             elif self._context.get('USE_YASM'):
->>>>>>> upstream-releases
                 if (self._context.config.substs.get('OS_ARCH') == 'WINNT' and
                     not self._context.config.substs.get('GNU_CC')):
                     debug_flags += ['-g', 'cv8']
@@ -1949,10 +1937,6 @@ VARIABLES = {
                                  """List of manifest files defining marionette-gpu tests.
         """),
 
-    'MARIONETTE_GPU_MANIFESTS': (ManifestparserManifestList, list,
-        """List of manifest files defining marionette-gpu tests.
-        """),
-
     'MARIONETTE_UNIT_MANIFESTS': (ManifestparserManifestList, list,
                                   """List of manifest files defining marionette-unit tests.
         """),
@@ -2254,20 +2238,6 @@ VARIABLES = {
         corresponding XPCOMBinaryComponent.
         """),
 
-<<<<<<< HEAD
-    'USE_NASM': (bool, bool,
-        """Use the nasm assembler to assemble assembly files from SOURCES.
-
-        By default, the build will use the toolchain assembler, $(AS), to
-        assemble source files in assembly language (.s or .asm files). Setting
-        this value to ``True`` will cause it to use nasm instead.
-
-        If nasm is not available on this system, or does not support the
-        current target architecture, an error will be raised.
-        """),
-
-||||||| merged common ancestors
-=======
     'USE_NASM': (bool, bool,
                  """Use the nasm assembler to assemble assembly files from SOURCES.
 
@@ -2279,7 +2249,6 @@ VARIABLES = {
         current target architecture, an error will be raised.
         """),
 
->>>>>>> upstream-releases
     'USE_YASM': (bool, bool,
                  """Use the yasm assembler to assemble assembly files from SOURCES.
 

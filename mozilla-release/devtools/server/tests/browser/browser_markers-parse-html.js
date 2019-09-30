@@ -11,15 +11,7 @@ const MARKER_NAME = "Parse HTML";
 add_task(async function() {
   const target = await addTabTarget(MAIN_DOMAIN + "doc_innerHTML.html");
 
-<<<<<<< HEAD
   const front = await target.getFront("performance");
-  await front.connect();
-||||||| merged common ancestors
-  const front = target.getFront("performance");
-  await front.connect();
-=======
-  const front = await target.getFront("performance");
->>>>>>> upstream-releases
   const rec = await front.startRecording({ withMarkers: true });
 
   const markers = await waitForMarkerType(front, MARKER_NAME);

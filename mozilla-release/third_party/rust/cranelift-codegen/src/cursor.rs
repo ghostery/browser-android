@@ -662,16 +662,8 @@ pub struct EncCursor<'f> {
 
 impl<'f> EncCursor<'f> {
     /// Create a new `EncCursor` pointing nowhere.
-<<<<<<< HEAD
-    pub fn new(func: &'f mut ir::Function, isa: &'f TargetIsa) -> Self {
-        Self {
-||||||| merged common ancestors
-    pub fn new(func: &'f mut ir::Function, isa: &'f TargetIsa) -> EncCursor<'f> {
-        EncCursor {
-=======
     pub fn new(func: &'f mut ir::Function, isa: &'f dyn TargetIsa) -> Self {
         Self {
->>>>>>> upstream-releases
             pos: CursorPosition::Nowhere,
             srcloc: Default::default(),
             built_inst: None,

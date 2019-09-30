@@ -25,29 +25,11 @@
 #include "nsStringFwd.h"
 #include "mozilla/dom/nsCSPService.h"
 
-<<<<<<< HEAD
-// XXXtw sadly, this makes consumers of nsContentPolicyUtils depend on widget
-#include "nsIDocument.h"
-||||||| merged common ancestors
-//XXXtw sadly, this makes consumers of nsContentPolicyUtils depend on widget
-#include "nsIDocument.h"
-=======
 // XXXtw sadly, this makes consumers of nsContentPolicyUtils depend on widget
 #include "mozilla/dom/Document.h"
->>>>>>> upstream-releases
 #include "nsPIDOMWindow.h"
 
-<<<<<<< HEAD
-class nsIPrincipal;
-
 #define NS_CONTENTPOLICY_CONTRACTID "@mozilla.org/layout/content-policy;1"
-||||||| merged common ancestors
-class nsIPrincipal;
-
-#define NS_CONTENTPOLICY_CONTRACTID   "@mozilla.org/layout/content-policy;1"
-=======
-#define NS_CONTENTPOLICY_CONTRACTID "@mozilla.org/layout/content-policy;1"
->>>>>>> upstream-releases
 #define NS_CONTENTPOLICY_CATEGORY "content-policy"
 #define NS_CONTENTPOLICY_CID                         \
   {                                                  \
@@ -87,15 +69,7 @@ class nsIPrincipal;
  * @param response the response code
  * @return the name of the given response code
  */
-<<<<<<< HEAD
-inline const char *NS_CP_ResponseName(int16_t response) {
-||||||| merged common ancestors
-inline const char *
-NS_CP_ResponseName(int16_t response)
-{
-=======
 inline const char* NS_CP_ResponseName(int16_t response) {
->>>>>>> upstream-releases
   switch (response) {
     CASE_RETURN(REJECT_REQUEST);
     CASE_RETURN(REJECT_TYPE);
@@ -116,111 +90,8 @@ inline const char* NS_CP_ResponseName(int16_t response) {
  * @param contentType the content type code
  * @return the name of the given content type code
  */
-<<<<<<< HEAD
-inline const char *NS_CP_ContentTypeName(uint32_t contentType) {
-||||||| merged common ancestors
-inline const char *
-NS_CP_ContentTypeName(uint32_t contentType)
-{
-=======
 inline const char* NS_CP_ContentTypeName(uint32_t contentType) {
->>>>>>> upstream-releases
   switch (contentType) {
-<<<<<<< HEAD
-    CASE_RETURN(TYPE_OTHER);
-    CASE_RETURN(TYPE_SCRIPT);
-    CASE_RETURN(TYPE_IMAGE);
-    CASE_RETURN(TYPE_STYLESHEET);
-    CASE_RETURN(TYPE_OBJECT);
-    CASE_RETURN(TYPE_DOCUMENT);
-    CASE_RETURN(TYPE_SUBDOCUMENT);
-    CASE_RETURN(TYPE_REFRESH);
-    CASE_RETURN(TYPE_XBL);
-    CASE_RETURN(TYPE_PING);
-    CASE_RETURN(TYPE_XMLHTTPREQUEST);
-    CASE_RETURN(TYPE_OBJECT_SUBREQUEST);
-    CASE_RETURN(TYPE_DTD);
-    CASE_RETURN(TYPE_FONT);
-    CASE_RETURN(TYPE_MEDIA);
-    CASE_RETURN(TYPE_WEBSOCKET);
-    CASE_RETURN(TYPE_CSP_REPORT);
-    CASE_RETURN(TYPE_XSLT);
-    CASE_RETURN(TYPE_BEACON);
-    CASE_RETURN(TYPE_FETCH);
-    CASE_RETURN(TYPE_IMAGESET);
-    CASE_RETURN(TYPE_WEB_MANIFEST);
-    CASE_RETURN(TYPE_INTERNAL_SCRIPT);
-    CASE_RETURN(TYPE_INTERNAL_WORKER);
-    CASE_RETURN(TYPE_INTERNAL_SHARED_WORKER);
-    CASE_RETURN(TYPE_INTERNAL_EMBED);
-    CASE_RETURN(TYPE_INTERNAL_OBJECT);
-    CASE_RETURN(TYPE_INTERNAL_FRAME);
-    CASE_RETURN(TYPE_INTERNAL_IFRAME);
-    CASE_RETURN(TYPE_INTERNAL_AUDIO);
-    CASE_RETURN(TYPE_INTERNAL_VIDEO);
-    CASE_RETURN(TYPE_INTERNAL_TRACK);
-    CASE_RETURN(TYPE_INTERNAL_XMLHTTPREQUEST);
-    CASE_RETURN(TYPE_INTERNAL_EVENTSOURCE);
-    CASE_RETURN(TYPE_INTERNAL_SERVICE_WORKER);
-    CASE_RETURN(TYPE_INTERNAL_SCRIPT_PRELOAD);
-    CASE_RETURN(TYPE_INTERNAL_IMAGE);
-    CASE_RETURN(TYPE_INTERNAL_IMAGE_PRELOAD);
-    CASE_RETURN(TYPE_INTERNAL_IMAGE_FAVICON);
-    CASE_RETURN(TYPE_INTERNAL_STYLESHEET);
-    CASE_RETURN(TYPE_INTERNAL_STYLESHEET_PRELOAD);
-    CASE_RETURN(TYPE_INTERNAL_WORKER_IMPORT_SCRIPTS);
-    CASE_RETURN(TYPE_SAVEAS_DOWNLOAD);
-    CASE_RETURN(TYPE_SPECULATIVE);
-    default:
-      return "<Unknown Type>";
-||||||| merged common ancestors
-    CASE_RETURN( TYPE_OTHER                       );
-    CASE_RETURN( TYPE_SCRIPT                      );
-    CASE_RETURN( TYPE_IMAGE                       );
-    CASE_RETURN( TYPE_STYLESHEET                  );
-    CASE_RETURN( TYPE_OBJECT                      );
-    CASE_RETURN( TYPE_DOCUMENT                    );
-    CASE_RETURN( TYPE_SUBDOCUMENT                 );
-    CASE_RETURN( TYPE_REFRESH                     );
-    CASE_RETURN( TYPE_XBL                         );
-    CASE_RETURN( TYPE_PING                        );
-    CASE_RETURN( TYPE_XMLHTTPREQUEST              );
-    CASE_RETURN( TYPE_OBJECT_SUBREQUEST           );
-    CASE_RETURN( TYPE_DTD                         );
-    CASE_RETURN( TYPE_FONT                        );
-    CASE_RETURN( TYPE_MEDIA                       );
-    CASE_RETURN( TYPE_WEBSOCKET                   );
-    CASE_RETURN( TYPE_CSP_REPORT                  );
-    CASE_RETURN( TYPE_XSLT                        );
-    CASE_RETURN( TYPE_BEACON                      );
-    CASE_RETURN( TYPE_FETCH                       );
-    CASE_RETURN( TYPE_IMAGESET                    );
-    CASE_RETURN( TYPE_WEB_MANIFEST                );
-    CASE_RETURN( TYPE_INTERNAL_SCRIPT             );
-    CASE_RETURN( TYPE_INTERNAL_WORKER             );
-    CASE_RETURN( TYPE_INTERNAL_SHARED_WORKER      );
-    CASE_RETURN( TYPE_INTERNAL_EMBED              );
-    CASE_RETURN( TYPE_INTERNAL_OBJECT             );
-    CASE_RETURN( TYPE_INTERNAL_FRAME              );
-    CASE_RETURN( TYPE_INTERNAL_IFRAME             );
-    CASE_RETURN( TYPE_INTERNAL_AUDIO              );
-    CASE_RETURN( TYPE_INTERNAL_VIDEO              );
-    CASE_RETURN( TYPE_INTERNAL_TRACK              );
-    CASE_RETURN( TYPE_INTERNAL_XMLHTTPREQUEST     );
-    CASE_RETURN( TYPE_INTERNAL_EVENTSOURCE        );
-    CASE_RETURN( TYPE_INTERNAL_SERVICE_WORKER     );
-    CASE_RETURN( TYPE_INTERNAL_SCRIPT_PRELOAD     );
-    CASE_RETURN( TYPE_INTERNAL_IMAGE              );
-    CASE_RETURN( TYPE_INTERNAL_IMAGE_PRELOAD      );
-    CASE_RETURN( TYPE_INTERNAL_IMAGE_FAVICON      );
-    CASE_RETURN( TYPE_INTERNAL_STYLESHEET         );
-    CASE_RETURN( TYPE_INTERNAL_STYLESHEET_PRELOAD );
-    CASE_RETURN( TYPE_INTERNAL_WORKER_IMPORT_SCRIPTS );
-    CASE_RETURN( TYPE_SAVEAS_DOWNLOAD             );
-    CASE_RETURN( TYPE_SPECULATIVE                 );
-   default:
-    return "<Unknown Type>";
-=======
     CASE_RETURN(TYPE_OTHER);
     CASE_RETURN(TYPE_SCRIPT);
     CASE_RETURN(TYPE_IMAGE);
@@ -269,7 +140,6 @@ inline const char* NS_CP_ContentTypeName(uint32_t contentType) {
     CASE_RETURN(TYPE_INTERNAL_MODULE_PRELOAD);
     default:
       return "<Unknown Type>";
->>>>>>> upstream-releases
   }
 }
 
@@ -297,75 +167,6 @@ inline const char* NS_CP_ContentTypeName(uint32_t contentType) {
  *
  * Note: requestOrigin is scoped outside the PR_BEGIN_MACRO/PR_END_MACRO on
  * purpose */
-<<<<<<< HEAD
-#define CHECK_PRINCIPAL_AND_DATA(action)                                       \
-  nsCOMPtr<nsIURI> requestOrigin;                                              \
-  PR_BEGIN_MACRO                                                               \
-  if (loadingPrincipal) {                                                      \
-    /* We exempt most loads into any document with the system principal        \
-     * from content policy checks, mostly as an optimization. Which means      \
-     * that we need to apply this check to the loading principal, not the      \
-     * principal that triggered the load. */                                   \
-    bool isSystem = loadingPrincipal->GetIsSystemPrincipal();                  \
-    if (isSystem && contentType != nsIContentPolicy::TYPE_DOCUMENT) {          \
-      *decision = nsIContentPolicy::ACCEPT;                                    \
-      nsCOMPtr<nsINode> n = do_QueryInterface(context);                        \
-      if (!n) {                                                                \
-        nsCOMPtr<nsPIDOMWindowOuter> win = do_QueryInterface(context);         \
-        n = win ? win->GetExtantDoc() : nullptr;                               \
-      }                                                                        \
-      if (n) {                                                                 \
-        nsIDocument *d = n->OwnerDoc();                                        \
-        if (d->IsLoadedAsData() || d->IsBeingUsedAsImage() ||                  \
-            d->IsResourceDoc()) {                                              \
-          nsCOMPtr<nsIContentPolicy> dataPolicy =                              \
-              do_GetService("@mozilla.org/data-document-content-policy;1");    \
-          if (dataPolicy) {                                                    \
-            dataPolicy->action(contentLocation, loadInfo, mimeType, decision); \
-          }                                                                    \
-        }                                                                      \
-      }                                                                        \
-      return NS_OK;                                                            \
-    }                                                                          \
-    nsresult rv = loadingPrincipal->GetURI(getter_AddRefs(requestOrigin));     \
-    NS_ENSURE_SUCCESS(rv, rv);                                                 \
-  }                                                                            \
-||||||| merged common ancestors
-#define CHECK_PRINCIPAL_AND_DATA(action)                                      \
-  nsCOMPtr<nsIURI> requestOrigin;                                             \
-  PR_BEGIN_MACRO                                                              \
-  if (loadingPrincipal) {                                                     \
-      /* We exempt most loads into any document with the system principal     \
-       * from content policy checks, mostly as an optimization. Which means   \
-       * that we need to apply this check to the loading principal, not the   \
-       * principal that triggered the load. */                                \
-      bool isSystem = loadingPrincipal->GetIsSystemPrincipal();               \
-      if (isSystem && contentType != nsIContentPolicy::TYPE_DOCUMENT) {       \
-          *decision = nsIContentPolicy::ACCEPT;                               \
-          nsCOMPtr<nsINode> n = do_QueryInterface(context);                   \
-          if (!n) {                                                           \
-              nsCOMPtr<nsPIDOMWindowOuter> win = do_QueryInterface(context);  \
-              n = win ? win->GetExtantDoc() : nullptr;                        \
-          }                                                                   \
-          if (n) {                                                            \
-              nsIDocument* d = n->OwnerDoc();                                 \
-              if (d->IsLoadedAsData() || d->IsBeingUsedAsImage() ||           \
-                  d->IsResourceDoc()) {                                       \
-                  nsCOMPtr<nsIContentPolicy> dataPolicy =                     \
-                      do_GetService(                                          \
-                              "@mozilla.org/data-document-content-policy;1"); \
-                  if (dataPolicy) {                                           \
-                      dataPolicy-> action (contentLocation, loadInfo,         \
-                                           mimeType, decision);               \
-                  }                                                           \
-              }                                                               \
-          }                                                                   \
-          return NS_OK;                                                       \
-      }                                                                       \
-      nsresult rv = loadingPrincipal->GetURI(getter_AddRefs(requestOrigin));  \
-      NS_ENSURE_SUCCESS(rv, rv);                                              \
-  }                                                                           \
-=======
 #define CHECK_PRINCIPAL_CSP_AND_DATA(action)                                  \
   nsCOMPtr<nsIURI> requestOrigin;                                             \
   PR_BEGIN_MACRO                                                              \
@@ -406,7 +207,6 @@ inline const char* NS_CP_ContentTypeName(uint32_t contentType) {
     nsresult rv = loadingPrincipal->GetURI(getter_AddRefs(requestOrigin));    \
     NS_ENSURE_SUCCESS(rv, rv);                                                \
   }                                                                           \
->>>>>>> upstream-releases
   PR_END_MACRO
 
 /**
@@ -419,35 +219,6 @@ inline const char* NS_CP_ContentTypeName(uint32_t contentType) {
  * loadingPrincipal, unless loadingPrincipal is null (in which case a null
  * origin URI will be passed).
  */
-<<<<<<< HEAD
-inline nsresult NS_CheckContentLoadPolicy(
-    nsIURI *contentLocation, nsILoadInfo *loadInfo, const nsACString &mimeType,
-    int16_t *decision, nsIContentPolicy *policyService = nullptr) {
-  nsIPrincipal *loadingPrincipal = loadInfo->LoadingPrincipal();
-  nsCOMPtr<nsISupports> context = loadInfo->GetLoadingContext();
-  nsContentPolicyType contentType = loadInfo->InternalContentPolicyType();
-  CHECK_PRINCIPAL_AND_DATA(ShouldLoad);
-  if (policyService) {
-    CHECK_CONTENT_POLICY_WITH_SERVICE(ShouldLoad, policyService);
-  }
-  CHECK_CONTENT_POLICY(ShouldLoad);
-||||||| merged common ancestors
-inline nsresult
-NS_CheckContentLoadPolicy(nsIURI           *contentLocation,
-                          nsILoadInfo      *loadInfo,
-                          const nsACString &mimeType,
-                          int16_t          *decision,
-                          nsIContentPolicy *policyService = nullptr)
-{
-    nsIPrincipal* loadingPrincipal = loadInfo->LoadingPrincipal();
-    nsCOMPtr<nsISupports> context = loadInfo->GetLoadingContext();
-    nsContentPolicyType contentType = loadInfo->InternalContentPolicyType();
-    CHECK_PRINCIPAL_AND_DATA(ShouldLoad);
-    if (policyService) {
-        CHECK_CONTENT_POLICY_WITH_SERVICE(ShouldLoad, policyService);
-    }
-    CHECK_CONTENT_POLICY(ShouldLoad);
-=======
 inline nsresult NS_CheckContentLoadPolicy(
     nsIURI* contentLocation, nsILoadInfo* loadInfo, const nsACString& mimeType,
     int16_t* decision, nsIContentPolicy* policyService = nullptr) {
@@ -459,41 +230,11 @@ inline nsresult NS_CheckContentLoadPolicy(
     CHECK_CONTENT_POLICY_WITH_SERVICE(ShouldLoad, policyService);
   }
   CHECK_CONTENT_POLICY(ShouldLoad);
->>>>>>> upstream-releases
 }
 
 /**
  * Alias for calling ShouldProcess on the content policy service.
  */
-<<<<<<< HEAD
-inline nsresult NS_CheckContentProcessPolicy(
-    nsIURI *contentLocation, nsILoadInfo *loadInfo, const nsACString &mimeType,
-    int16_t *decision, nsIContentPolicy *policyService = nullptr) {
-  nsIPrincipal *loadingPrincipal = loadInfo->LoadingPrincipal();
-  nsCOMPtr<nsISupports> context = loadInfo->GetLoadingContext();
-  nsContentPolicyType contentType = loadInfo->InternalContentPolicyType();
-  CHECK_PRINCIPAL_AND_DATA(ShouldProcess);
-  if (policyService) {
-    CHECK_CONTENT_POLICY_WITH_SERVICE(ShouldProcess, policyService);
-  }
-  CHECK_CONTENT_POLICY(ShouldProcess);
-||||||| merged common ancestors
-inline nsresult
-NS_CheckContentProcessPolicy(nsIURI           *contentLocation,
-                             nsILoadInfo      *loadInfo,
-                             const nsACString &mimeType,
-                             int16_t          *decision,
-                             nsIContentPolicy *policyService = nullptr)
-{
-    nsIPrincipal* loadingPrincipal = loadInfo->LoadingPrincipal();
-    nsCOMPtr<nsISupports> context = loadInfo->GetLoadingContext();
-    nsContentPolicyType contentType = loadInfo->InternalContentPolicyType();
-    CHECK_PRINCIPAL_AND_DATA(ShouldProcess);
-    if (policyService) {
-        CHECK_CONTENT_POLICY_WITH_SERVICE(ShouldProcess, policyService);
-    }
-    CHECK_CONTENT_POLICY(ShouldProcess);
-=======
 inline nsresult NS_CheckContentProcessPolicy(
     nsIURI* contentLocation, nsILoadInfo* loadInfo, const nsACString& mimeType,
     int16_t* decision, nsIContentPolicy* policyService = nullptr) {
@@ -505,7 +246,6 @@ inline nsresult NS_CheckContentProcessPolicy(
     CHECK_CONTENT_POLICY_WITH_SERVICE(ShouldProcess, policyService);
   }
   CHECK_CONTENT_POLICY(ShouldProcess);
->>>>>>> upstream-releases
 }
 
 #undef CHECK_CONTENT_POLICY
@@ -534,52 +274,13 @@ inline nsresult NS_CheckContentProcessPolicy(
  * happening in.  These are somewhat odd semantics, and bug 466687 has been
  * filed to consider improving them.
  */
-<<<<<<< HEAD
-inline nsIDocShell *NS_CP_GetDocShellFromContext(nsISupports *aContext) {
-  if (!aContext) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-inline nsIDocShell*
-NS_CP_GetDocShellFromContext(nsISupports *aContext)
-{
-    if (!aContext) {
-        return nullptr;
-    }
-=======
 inline nsIDocShell* NS_CP_GetDocShellFromContext(nsISupports* aContext) {
   if (!aContext) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsPIDOMWindowOuter> window = do_QueryInterface(aContext);
 
-<<<<<<< HEAD
-  if (!window) {
-    // Our context might be a document.
-    nsCOMPtr<nsIDocument> doc = do_QueryInterface(aContext);
-    if (!doc) {
-      // we were not a document after all, get our ownerDocument,
-      // hopefully
-      nsCOMPtr<nsIContent> content = do_QueryInterface(aContext);
-      if (content) {
-        doc = content->OwnerDoc();
-      }
-    }
-||||||| merged common ancestors
-    if (!window) {
-        // Our context might be a document.
-        nsCOMPtr<nsIDocument> doc = do_QueryInterface(aContext);
-        if (!doc) {
-            // we were not a document after all, get our ownerDocument,
-            // hopefully
-            nsCOMPtr<nsIContent> content = do_QueryInterface(aContext);
-            if (content) {
-                doc = content->OwnerDoc();
-            }
-        }
-=======
   if (!window) {
     // Our context might be a document.
     nsCOMPtr<mozilla::dom::Document> doc = do_QueryInterface(aContext);
@@ -591,7 +292,6 @@ inline nsIDocShell* NS_CP_GetDocShellFromContext(nsISupports* aContext) {
         doc = content->OwnerDoc();
       }
     }
->>>>>>> upstream-releases
 
     if (doc) {
       if (doc->GetDisplayDocument()) {

@@ -44,22 +44,6 @@ namespace mozilla {
 
 using namespace dom;
 
-<<<<<<< HEAD
-template CreateElementResult TextEditRules::CreateBRInternal(
-    const EditorDOMPoint& aPointToInsert, bool aCreateMozBR);
-template CreateElementResult TextEditRules::CreateBRInternal(
-    const EditorRawDOMPoint& aPointToInsert, bool aCreateMozBR);
-
-||||||| merged common ancestors
-template CreateElementResult
-TextEditRules::CreateBRInternal(const EditorDOMPoint& aPointToInsert,
-                                bool aCreateMozBR);
-template CreateElementResult
-TextEditRules::CreateBRInternal(const EditorRawDOMPoint& aPointToInsert,
-                                bool aCreateMozBR);
-
-=======
->>>>>>> upstream-releases
 #define CANCEL_OPERATION_IF_READONLY_OR_DISABLED \
   if (IsReadonly() || IsDisabled()) {            \
     *aCancel = true;                             \
@@ -266,32 +250,11 @@ nsresult TextEditRules::AfterEdit(EditSubAction aEditSubAction,
 
   MOZ_ASSERT(mActionNesting > 0, "bad action nesting!");
   if (!--mActionNesting) {
-<<<<<<< HEAD
     AutoSafeEditorData setData(*this, *mTextEditor);
 
     nsresult rv = TextEditorRef().HandleInlineSpellCheck(
         aEditSubAction, mCachedSelectionNode, mCachedSelectionOffset, nullptr,
         0, nullptr, 0);
-||||||| merged common ancestors
-    Selection* selection = mTextEditor->GetSelection();
-    if (NS_WARN_IF(!selection)) {
-      return NS_ERROR_FAILURE;
-    }
-
-    AutoSafeEditorData setData(*this, *mTextEditor, *selection);
-
-    nsresult rv =
-      TextEditorRef().HandleInlineSpellCheck(aEditSubAction, *selection,
-                                             mCachedSelectionNode,
-                                             mCachedSelectionOffset,
-                                             nullptr, 0, nullptr, 0);
-=======
-    AutoSafeEditorData setData(*this, *mTextEditor);
-
-    nsresult rv = TextEditorRef().HandleInlineSpellCheck(
-        aEditSubAction, mCachedSelectionNode, mCachedSelectionOffset, nullptr,
-        0, nullptr, 0);
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -445,26 +408,11 @@ nsresult TextEditRules::WillInsert(bool* aCancel) {
   // call of DeleteNodeWithTransaction().  So, move it first.
   nsCOMPtr<nsIContent> bogusNode(std::move(mBogusNode));
   DebugOnly<nsresult> rv =
-<<<<<<< HEAD
-      TextEditorRef().DeleteNodeWithTransaction(*mBogusNode);
-||||||| merged common ancestors
-    TextEditorRef().DeleteNodeWithTransaction(*mBogusNode);
-=======
       MOZ_KnownLive(TextEditorRef()).DeleteNodeWithTransaction(*bogusNode);
->>>>>>> upstream-releases
   if (NS_WARN_IF(!CanHandleEditAction())) {
     return NS_ERROR_EDITOR_DESTROYED;
   }
-<<<<<<< HEAD
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to remove the bogus node");
-  mBogusNode = nullptr;
-||||||| merged common ancestors
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv),
-    "Failed to remove the bogus node");
-  mBogusNode = nullptr;
-=======
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to remove the bogus node");
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -484,34 +432,6 @@ EditActionResult TextEditRules::WillInsertLineBreak(int32_t aMaxLength) {
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditActionIgnored(rv);
   }
-<<<<<<< HEAD
-  if (didTruncate) {
-    return EditActionCanceled();
-  }
-
-  // if the selection isn't collapsed, delete it.
-  if (!SelectionRefPtr()->IsCollapsed()) {
-    rv = TextEditorRef().DeleteSelectionAsSubAction(nsIEditor::eNone,
-                                                    nsIEditor::eStrip);
-    if (NS_WARN_IF(!CanHandleEditAction())) {
-      return EditActionIgnored(NS_ERROR_EDITOR_DESTROYED);
-||||||| merged common ancestors
-  CANCEL_OPERATION_IF_READONLY_OR_DISABLED
-  *aHandled = false;
-  if (IsSingleLineEditor()) {
-    *aCancel = true;
-  } else {
-    // handle docs with a max length
-    // NOTE, this function copies inString into outString for us.
-    NS_NAMED_LITERAL_STRING(inString, "\n");
-    nsAutoString outString;
-    bool didTruncate;
-    nsresult rv =
-      TruncateInsertionIfNeeded(&inString.AsString(),
-                                &outString, aMaxLength, &didTruncate);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      return rv;
-=======
   if (didTruncate) {
     return EditActionCanceled();
   }
@@ -522,7 +442,6 @@ EditActionResult TextEditRules::WillInsertLineBreak(int32_t aMaxLength) {
              .DeleteSelectionAsSubAction(nsIEditor::eNone, nsIEditor::eStrip);
     if (NS_WARN_IF(!CanHandleEditAction())) {
       return EditActionIgnored(NS_ERROR_EDITOR_DESTROYED);
->>>>>>> upstream-releases
     }
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return EditActionIgnored(rv);
@@ -544,60 +463,6 @@ EditActionResult TextEditRules::WillInsertLineBreak(int32_t aMaxLength) {
   if (NS_WARN_IF(!pointToInsert.IsSet())) {
     return EditActionIgnored(NS_ERROR_FAILURE);
   }
-<<<<<<< HEAD
-  MOZ_ASSERT(pointToInsert.IsSetAndValid());
-
-  // Don't put text in places that can't have it.
-  if (!pointToInsert.IsInTextNode() &&
-      !TextEditorRef().CanContainTag(*pointToInsert.GetContainer(),
-                                     *nsGkAtoms::textTagName)) {
-    return EditActionIgnored(NS_ERROR_FAILURE);
-  }
-
-  nsCOMPtr<nsIDocument> doc = TextEditorRef().GetDocument();
-  if (NS_WARN_IF(!doc)) {
-    return EditActionIgnored(NS_ERROR_NOT_INITIALIZED);
-  }
-
-  // Don't change my selection in sub-transactions.
-  AutoTransactionsConserveSelection dontChangeMySelection(TextEditorRef());
-
-  // Insert a linefeed character.
-  EditorRawDOMPoint pointAfterInsertedLineBreak;
-  rv = TextEditorRef().InsertTextWithTransaction(*doc, NS_LITERAL_STRING("\n"),
-                                                 pointToInsert,
-                                                 &pointAfterInsertedLineBreak);
-  if (NS_WARN_IF(!pointAfterInsertedLineBreak.IsSet())) {
-    return EditActionIgnored(NS_ERROR_FAILURE);
-  }
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return EditActionIgnored(rv);
-  }
-
-  // set the selection to the correct location
-  MOZ_ASSERT(
-      !pointAfterInsertedLineBreak.GetChild(),
-      "After inserting text into a text node, pointAfterInsertedLineBreak."
-      "GetChild() should be nullptr");
-  rv = SelectionRefPtr()->Collapse(pointAfterInsertedLineBreak);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return EditActionIgnored(rv);
-  }
-
-  // see if we're at the end of the editor range
-  EditorRawDOMPoint endPoint(EditorBase::GetEndPoint(*SelectionRefPtr()));
-  if (endPoint == pointAfterInsertedLineBreak) {
-    // SetInterlinePosition(true) means we want the caret to stick to the
-    // content on the "right".  We want the caret to stick to whatever is
-    // past the break.  This is because the break is on the same line we
-    // were on, but the next content will be on the following line.
-    SelectionRefPtr()->SetInterlinePosition(true, IgnoreErrors());
-  }
-
-  return EditActionHandled();
-||||||| merged common ancestors
-  return NS_OK;
-=======
   MOZ_ASSERT(pointToInsert.IsSetAndValid());
 
   // Don't put text in places that can't have it.
@@ -649,7 +514,6 @@ EditActionResult TextEditRules::WillInsertLineBreak(int32_t aMaxLength) {
   }
 
   return EditActionHandled();
->>>>>>> upstream-releases
 }
 
 nsresult TextEditRules::CollapseSelectionToTrailingBRIfNeeded() {
@@ -745,23 +609,6 @@ TextEditRules::GetTextNodeAroundSelectionStartContainer() {
 }
 
 #ifdef DEBUG
-<<<<<<< HEAD
-#define ASSERT_PASSWORD_LENGTHS_EQUAL()                               \
-  if (IsPasswordEditor() && mTextEditor->GetRoot()) {                 \
-    int32_t txtLen;                                                   \
-    mTextEditor->GetTextLength(&txtLen);                              \
-    NS_ASSERTION(mPasswordText.Length() == uint32_t(txtLen),          \
-                 "password length not equal to number of asterisks"); \
-  }
-||||||| merged common ancestors
-#define ASSERT_PASSWORD_LENGTHS_EQUAL()                                \
-  if (IsPasswordEditor() && mTextEditor->GetRoot()) {                  \
-    int32_t txtLen;                                                    \
-    mTextEditor->GetTextLength(&txtLen);                               \
-    NS_ASSERTION(mPasswordText.Length() == uint32_t(txtLen),           \
-                 "password length not equal to number of asterisks");  \
-  }
-=======
 #  define ASSERT_PASSWORD_LENGTHS_EQUAL()                               \
     if (IsPasswordEditor() && mTextEditor->GetRoot()) {                 \
       int32_t txtLen;                                                   \
@@ -769,7 +616,6 @@ TextEditRules::GetTextNodeAroundSelectionStartContainer() {
       NS_ASSERTION(mPasswordText.Length() == uint32_t(txtLen),          \
                    "password length not equal to number of asterisks"); \
     }
->>>>>>> upstream-releases
 #else
 #  define ASSERT_PASSWORD_LENGTHS_EQUAL()
 #endif
@@ -900,19 +746,9 @@ nsresult TextEditRules::WillInsertText(EditSubAction aEditSubAction,
   }
 
   // if the selection isn't collapsed, delete it.
-<<<<<<< HEAD
-  if (!SelectionRefPtr()->IsCollapsed()) {
-    rv = TextEditorRef().DeleteSelectionAsSubAction(nsIEditor::eNone,
-                                                    nsIEditor::eStrip);
-||||||| merged common ancestors
-  if (!SelectionRef().IsCollapsed()) {
-    rv = TextEditorRef().DeleteSelectionAsSubAction(nsIEditor::eNone,
-                                                    nsIEditor::eStrip);
-=======
   if (!SelectionRefPtr()->IsCollapsed()) {
     rv = MOZ_KnownLive(TextEditorRef())
              .DeleteSelectionAsSubAction(nsIEditor::eNone, nsIEditor::eStrip);
->>>>>>> upstream-releases
     if (NS_WARN_IF(!CanHandleEditAction())) {
       return NS_ERROR_EDITOR_DESTROYED;
     }
@@ -1006,36 +842,11 @@ nsresult TextEditRules::WillInsertText(EditSubAction aEditSubAction,
   }
 
   if (aEditSubAction == EditSubAction::eInsertTextComingFromIME) {
-<<<<<<< HEAD
-    // Find better insertion point to insert text.
-    EditorRawDOMPoint betterInsertionPoint =
-        TextEditorRef().FindBetterInsertionPoint(atStartOfSelection);
-    // If there is one or more IME selections, its minimum offset should be
-    // the insertion point.
-    int32_t IMESelectionOffset = TextEditorRef().GetIMESelectionStartOffsetIn(
-        betterInsertionPoint.GetContainer());
-    if (IMESelectionOffset >= 0) {
-      betterInsertionPoint.Set(betterInsertionPoint.GetContainer(),
-                               IMESelectionOffset);
-||||||| merged common ancestors
-    // Find better insertion point to insert text.
-    EditorRawDOMPoint betterInsertionPoint =
-      TextEditorRef().FindBetterInsertionPoint(atStartOfSelection);
-    // If there is one or more IME selections, its minimum offset should be
-    // the insertion point.
-    int32_t IMESelectionOffset =
-      TextEditorRef().GetIMESelectionStartOffsetIn(
-                        betterInsertionPoint.GetContainer());
-    if (IMESelectionOffset >= 0) {
-      betterInsertionPoint.Set(betterInsertionPoint.GetContainer(),
-                               IMESelectionOffset);
-=======
     EditorRawDOMPoint compositionStartPoint =
         TextEditorRef().GetCompositionStartPoint();
     if (!compositionStartPoint.IsSet()) {
       compositionStartPoint =
           TextEditorRef().FindBetterInsertionPoint(atStartOfSelection);
->>>>>>> upstream-releases
     }
     rv =
         MOZ_KnownLive(TextEditorRef())
@@ -1053,18 +864,9 @@ nsresult TextEditRules::WillInsertText(EditSubAction aEditSubAction,
     AutoTransactionsConserveSelection dontChangeMySelection(TextEditorRef());
 
     EditorRawDOMPoint pointAfterStringInserted;
-<<<<<<< HEAD
-    rv = TextEditorRef().InsertTextWithTransaction(
-        *doc, *outString, atStartOfSelection, &pointAfterStringInserted);
-||||||| merged common ancestors
-    rv = TextEditorRef().InsertTextWithTransaction(*doc, *outString,
-                                                   atStartOfSelection,
-                                                   &pointAfterStringInserted);
-=======
     rv = MOZ_KnownLive(TextEditorRef())
              .InsertTextWithTransaction(*doc, *outString, atStartOfSelection,
                                         &pointAfterStringInserted);
->>>>>>> upstream-releases
     if (NS_WARN_IF(!CanHandleEditAction())) {
       return NS_ERROR_EDITOR_DESTROYED;
     }
@@ -1189,18 +991,9 @@ nsresult TextEditRules::WillSetText(bool* aCancel, bool* aHandled,
     if (NS_WARN_IF(!newNode)) {
       return NS_OK;
     }
-<<<<<<< HEAD
-    nsresult rv = TextEditorRef().InsertNodeWithTransaction(
-        *newNode, EditorRawDOMPoint(rootElement, 0));
-||||||| merged common ancestors
-    nsresult rv =
-      TextEditorRef().InsertNodeWithTransaction(
-                        *newNode, EditorRawDOMPoint(rootElement, 0));
-=======
     nsresult rv = MOZ_KnownLive(TextEditorRef())
                       .InsertNodeWithTransaction(
                           *newNode, EditorDOMPoint(rootElement, 0));
->>>>>>> upstream-releases
     if (NS_WARN_IF(!CanHandleEditAction())) {
       return NS_ERROR_EDITOR_DESTROYED;
     }
@@ -1216,18 +1009,11 @@ nsresult TextEditRules::WillSetText(bool* aCancel, bool* aHandled,
 
   // Even if empty text, we don't remove text node and set empty text
   // for performance
-<<<<<<< HEAD
-  rv = TextEditorRef().SetTextImpl(tString, *curNode->GetAsText());
-||||||| merged common ancestors
-  rv = TextEditorRef().SetTextImpl(SelectionRef(), tString,
-                                   *curNode->GetAsText());
-=======
   RefPtr<Text> textNode = firstChild->GetAsText();
   if (MOZ_UNLIKELY(NS_WARN_IF(!textNode))) {
     return NS_OK;
   }
   rv = TextEditorRef().SetTextImpl(tString, *textNode);
->>>>>>> upstream-releases
   if (NS_WARN_IF(!CanHandleEditAction())) {
     return NS_ERROR_EDITOR_DESTROYED;
   }
@@ -1390,18 +1176,9 @@ nsresult TextEditRules::DeleteSelectionWithTransaction(
     }
   }
 
-<<<<<<< HEAD
-  nsresult rv = TextEditorRef().DeleteSelectionWithTransaction(
-      aCollapsedAction, nsIEditor::eStrip);
-||||||| merged common ancestors
-  nsresult rv =
-    TextEditorRef().DeleteSelectionWithTransaction(aCollapsedAction,
-                                                   nsIEditor::eStrip);
-=======
   nsresult rv =
       MOZ_KnownLive(TextEditorRef())
           .DeleteSelectionWithTransaction(aCollapsedAction, nsIEditor::eStrip);
->>>>>>> upstream-releases
   if (NS_WARN_IF(!CanHandleEditAction())) {
     return NS_ERROR_EDITOR_DESTROYED;
   }
@@ -1417,16 +1194,8 @@ nsresult TextEditRules::DeleteSelectionWithTransaction(
 nsresult TextEditRules::DidDeleteSelection() {
   MOZ_ASSERT(IsEditorDataAvailable());
 
-<<<<<<< HEAD
-  EditorRawDOMPoint selectionStartPoint(
-      EditorBase::GetStartPoint(*SelectionRefPtr()));
-||||||| merged common ancestors
-  EditorRawDOMPoint selectionStartPoint(
-                      EditorBase::GetStartPoint(&SelectionRef()));
-=======
   EditorDOMPoint selectionStartPoint(
       EditorBase::GetStartPoint(*SelectionRefPtr()));
->>>>>>> upstream-releases
   if (NS_WARN_IF(!selectionStartPoint.IsSet())) {
     return NS_ERROR_FAILURE;
   }
@@ -1434,18 +1203,9 @@ nsresult TextEditRules::DidDeleteSelection() {
   // Delete empty text nodes at selection.
   if (selectionStartPoint.IsInTextNode() &&
       !selectionStartPoint.GetContainer()->Length()) {
-<<<<<<< HEAD
-    nsresult rv = TextEditorRef().DeleteNodeWithTransaction(
-        *selectionStartPoint.GetContainer());
-||||||| merged common ancestors
-    nsresult rv =
-      TextEditorRef().DeleteNodeWithTransaction(
-                        *selectionStartPoint.GetContainer());
-=======
     nsresult rv = MOZ_KnownLive(TextEditorRef())
                       .DeleteNodeWithTransaction(
                           MOZ_KnownLive(*selectionStartPoint.GetContainer()));
->>>>>>> upstream-releases
     if (NS_WARN_IF(!CanHandleEditAction())) {
       return NS_ERROR_EDITOR_DESTROYED;
     }
@@ -1808,18 +1568,9 @@ nsresult TextEditRules::CreateBogusNodeIfNeeded() {
   }
 
   // Put the node in the document.
-<<<<<<< HEAD
-  nsresult rv = TextEditorRef().InsertNodeWithTransaction(
-      *mBogusNode, EditorRawDOMPoint(rootElement, 0));
-||||||| merged common ancestors
-  nsresult rv =
-    TextEditorRef().InsertNodeWithTransaction(
-                      *mBogusNode, EditorRawDOMPoint(rootElement, 0));
-=======
   nsresult rv = MOZ_KnownLive(TextEditorRef())
                     .InsertNodeWithTransaction(*newBrElement,
                                                EditorDOMPoint(rootElement, 0));
->>>>>>> upstream-releases
   if (NS_WARN_IF(!CanHandleEditAction())) {
     return NS_ERROR_EDITOR_DESTROYED;
   }
@@ -2006,44 +1757,14 @@ nsresult TextEditRules::HideLastPasswordInputInternal() {
   if (NS_WARN_IF(!CanHandleEditAction())) {
     return NS_ERROR_EDITOR_DESTROYED;
   }
-<<<<<<< HEAD
-  // XXXbz Selection::Collapse/Extend take int32_t, but there are tons of
-  // callsites... Converting all that is a battle for another day.
-  DebugOnly<nsresult> rv = SelectionRefPtr()->Collapse(selNode, start);
-||||||| merged common ancestors
-  // XXXbz Selection::Collapse/Extend take int32_t, but there are tons of
-  // callsites... Converting all that is a battle for another day.
-  DebugOnly<nsresult> rv = SelectionRef().Collapse(selNode, start);
-=======
   IgnoredErrorResult ignoredError;
   MOZ_KnownLive(SelectionRefPtr())
       ->SetStartAndEndInLimiter(RawRangeBoundary(selNode, start),
                                 RawRangeBoundary(selNode, end), ignoredError);
->>>>>>> upstream-releases
   if (NS_WARN_IF(!CanHandleEditAction())) {
     return NS_ERROR_EDITOR_DESTROYED;
   }
-<<<<<<< HEAD
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to collapse selection");
-  if (start != end) {
-    rv = SelectionRefPtr()->Extend(selNode, end);
-    if (NS_WARN_IF(!CanHandleEditAction())) {
-      return NS_ERROR_EDITOR_DESTROYED;
-    }
-    NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to extend selection");
-  }
-||||||| merged common ancestors
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to collapse selection");
-  if (start != end) {
-    rv = SelectionRef().Extend(selNode, end);
-    if (NS_WARN_IF(!CanHandleEditAction())) {
-      return NS_ERROR_EDITOR_DESTROYED;
-    }
-    NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to extend selection");
-  }
-=======
   NS_WARNING_ASSERTION(!ignoredError.Failed(), "Failed to set selection");
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -2060,21 +1781,8 @@ void TextEditRules::FillBufWithPWChars(nsAString* aOutString, int32_t aLength) {
   }
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-CreateElementResult TextEditRules::CreateBRInternal(
-    const EditorDOMPointBase<PT, CT>& aPointToInsert, bool aCreateMozBR) {
-||||||| merged common ancestors
-template<typename PT, typename CT>
-CreateElementResult
-TextEditRules::CreateBRInternal(
-                 const EditorDOMPointBase<PT, CT>& aPointToInsert,
-                 bool aCreateMozBR)
-{
-=======
 CreateElementResult TextEditRules::CreateBRInternal(
     const EditorDOMPoint& aPointToInsert, bool aCreateMozBR) {
->>>>>>> upstream-releases
   MOZ_ASSERT(IsEditorDataAvailable());
 
   if (NS_WARN_IF(!aPointToInsert.IsSet())) {
@@ -2082,15 +1790,8 @@ CreateElementResult TextEditRules::CreateBRInternal(
   }
 
   RefPtr<Element> brElement =
-<<<<<<< HEAD
-      TextEditorRef().InsertBrElementWithTransaction(aPointToInsert);
-||||||| merged common ancestors
-    TextEditorRef().InsertBrElementWithTransaction(SelectionRef(),
-                                                   aPointToInsert);
-=======
       MOZ_KnownLive(TextEditorRef())
           .InsertBrElementWithTransaction(aPointToInsert);
->>>>>>> upstream-releases
   if (NS_WARN_IF(!CanHandleEditAction())) {
     return CreateElementResult(NS_ERROR_EDITOR_DESTROYED);
   }
@@ -2104,18 +1805,9 @@ CreateElementResult TextEditRules::CreateBRInternal(
   }
 
   // XXX Why do we need to set this attribute with transaction?
-<<<<<<< HEAD
-  nsresult rv = TextEditorRef().SetAttributeWithTransaction(
-      *brElement, *nsGkAtoms::type, NS_LITERAL_STRING("_moz"));
-||||||| merged common ancestors
-  nsresult rv =
-    TextEditorRef().SetAttributeWithTransaction(*brElement, *nsGkAtoms::type,
-                                                NS_LITERAL_STRING("_moz"));
-=======
   nsresult rv = MOZ_KnownLive(TextEditorRef())
                     .SetAttributeWithTransaction(*brElement, *nsGkAtoms::type,
                                                  NS_LITERAL_STRING("_moz"));
->>>>>>> upstream-releases
   // XXX Don't we need to remove the new <br> element from the DOM tree
   //     in these case?
   if (NS_WARN_IF(!CanHandleEditAction())) {

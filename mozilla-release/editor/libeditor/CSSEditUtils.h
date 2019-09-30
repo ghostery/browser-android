@@ -96,24 +96,6 @@ class CSSEditUtils final {
    * @param aSuppressTransaction [IN] A boolean indicating, when true,
    *                                  that no transaction should be recorded.
    */
-<<<<<<< HEAD
-  nsresult SetCSSProperty(dom::Element& aElement, nsAtom& aProperty,
-                          const nsAString& aValue, bool aSuppressTxn = false);
-  nsresult SetCSSPropertyPixels(dom::Element& aElement, nsAtom& aProperty,
-                                int32_t aIntValue);
-  nsresult RemoveCSSProperty(dom::Element& aElement, nsAtom& aProperty,
-                             const nsAString& aPropertyValue,
-                             bool aSuppressTxn = false);
-||||||| merged common ancestors
-  nsresult SetCSSProperty(dom::Element& aElement, nsAtom& aProperty,
-                          const nsAString& aValue, bool aSuppressTxn = false);
-  nsresult SetCSSPropertyPixels(dom::Element& aElement,
-                                nsAtom& aProperty, int32_t aIntValue);
-  nsresult RemoveCSSProperty(dom::Element& aElement,
-                             nsAtom& aProperty,
-                             const nsAString& aPropertyValue,
-                             bool aSuppressTxn = false);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult SetCSSProperty(dom::Element& aElement,
                                              nsAtom& aProperty,
                                              const nsAString& aValue,
@@ -125,7 +107,6 @@ class CSSEditUtils final {
                                                 nsAtom& aProperty,
                                                 const nsAString& aPropertyValue,
                                                 bool aSuppressTxn = false);
->>>>>>> upstream-releases
 
   /**
    * Gets the specified/computed style value of a CSS property for a given
@@ -266,22 +247,9 @@ class CSSEditUtils final {
    *
    * @return               The number of CSS properties set by the call.
    */
-<<<<<<< HEAD
-  int32_t SetCSSEquivalentToHTMLStyle(dom::Element* aElement, nsAtom* aProperty,
-                                      nsAtom* aAttribute,
-                                      const nsAString* aValue,
-                                      bool aSuppressTransaction);
-||||||| merged common ancestors
-  int32_t SetCSSEquivalentToHTMLStyle(dom::Element* aElement,
-                                      nsAtom* aProperty,
-                                      nsAtom* aAttribute,
-                                      const nsAString* aValue,
-                                      bool aSuppressTransaction);
-=======
   MOZ_CAN_RUN_SCRIPT int32_t SetCSSEquivalentToHTMLStyle(
       dom::Element* aElement, nsAtom* aProperty, nsAtom* aAttribute,
       const nsAString* aValue, bool aSuppressTransaction);
->>>>>>> upstream-releases
 
   /**
    * Removes from the node the CSS inline styles equivalent to the HTML style.

@@ -4,25 +4,10 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
-<<<<<<< HEAD
 
-#include "SkEdgeBuilder.h"
-
-||||||| merged common ancestors
-#include "SkEdgeBuilder.h"
-#include "SkPath.h"
-#include "SkEdge.h"
-=======
-
->>>>>>> upstream-releases
 #include "SkAnalyticEdge.h"
-<<<<<<< HEAD
-#include "SkEdge.h"
-||||||| merged common ancestors
-=======
 #include "SkEdge.h"
 #include "SkEdgeBuilder.h"
->>>>>>> upstream-releases
 #include "SkEdgeClipper.h"
 #include "SkGeometry.h"
 #include "SkLineClipper.h"
@@ -131,91 +116,6 @@ static bool is_vertical(const Edge* edge) {
 // TODO: we can deallocate the edge if edge->setFoo() fails
 // or when we don't use it (kPartial_Combine or kTotal_Combine).
 
-<<<<<<< HEAD
-void SkEdgeBuilder::addLine(const SkPoint pts[]) {
-    if (fEdgeType == kBezier) {
-        SkLine* line = fAlloc.make<SkLine>();
-        if (line->set(pts)) {
-            fList.push_back(line);
-        }
-    } else if (fEdgeType == kAnalyticEdge) {
-        SkAnalyticEdge* edge = fAlloc.make<SkAnalyticEdge>();
-        if (edge->setLine(pts[0], pts[1])) {
-            if (vertical_line(edge) && fList.count()) {
-                Combine combine = CombineVertical(edge, (SkAnalyticEdge*)*(fList.end() - 1));
-                if (kNo_Combine != combine) {
-                    if (kTotal_Combine == combine) {
-                        fList.pop();
-                    }
-                    goto unallocate_analytic_edge;
-                }
-            }
-            fList.push_back(edge);
-        } else {
-unallocate_analytic_edge:
-            ;
-            // TODO: unallocate edge from storage...
-        }
-    } else {
-        SkEdge* edge = fAlloc.make<SkEdge>();
-        if (edge->setLine(pts[0], pts[1], fShiftUp)) {
-            if (vertical_line(edge) && fList.count()) {
-                Combine combine = CombineVertical(edge, (SkEdge*)*(fList.end() - 1));
-                if (kNo_Combine != combine) {
-                    if (kTotal_Combine == combine) {
-                        fList.pop();
-                    }
-                    goto unallocate_edge;
-                }
-            }
-            fList.push_back(edge);
-        } else {
-unallocate_edge:
-            ;
-            // TODO: unallocate edge from storage...
-||||||| merged common ancestors
-void SkEdgeBuilder::addLine(const SkPoint pts[]) {
-    if (fEdgeType == kBezier) {
-        SkLine* line = fAlloc.make<SkLine>();
-        if (line->set(pts)) {
-            fList.push(line);
-        }
-    } else if (fEdgeType == kAnalyticEdge) {
-        SkAnalyticEdge* edge = fAlloc.make<SkAnalyticEdge>();
-        if (edge->setLine(pts[0], pts[1])) {
-            if (vertical_line(edge) && fList.count()) {
-                Combine combine = CombineVertical(edge, (SkAnalyticEdge*)*(fList.end() - 1));
-                if (kNo_Combine != combine) {
-                    if (kTotal_Combine == combine) {
-                        fList.pop();
-                    }
-                    goto unallocate_analytic_edge;
-                }
-            }
-            fList.push(edge);
-        } else {
-unallocate_analytic_edge:
-            ;
-            // TODO: unallocate edge from storage...
-        }
-    } else {
-        SkEdge* edge = fAlloc.make<SkEdge>();
-        if (edge->setLine(pts[0], pts[1], fShiftUp)) {
-            if (vertical_line(edge) && fList.count()) {
-                Combine combine = CombineVertical(edge, (SkEdge*)*(fList.end() - 1));
-                if (kNo_Combine != combine) {
-                    if (kTotal_Combine == combine) {
-                        fList.pop();
-                    }
-                    goto unallocate_edge;
-                }
-            }
-            fList.push(edge);
-        } else {
-unallocate_edge:
-            ;
-            // TODO: unallocate edge from storage...
-=======
 void SkBasicEdgeBuilder::addLine(const SkPoint pts[]) {
     SkEdge* edge = fAlloc.make<SkEdge>();
     if (edge->setLine(pts[0], pts[1], fClipShift)) {
@@ -227,53 +127,9 @@ void SkBasicEdgeBuilder::addLine(const SkPoint pts[]) {
             case kTotal_Combine:    fList.pop();           break;
             case kPartial_Combine:                         break;
             case kNo_Combine:       fList.push_back(edge); break;
->>>>>>> upstream-releases
         }
     }
 }
-<<<<<<< HEAD
-
-void SkEdgeBuilder::addQuad(const SkPoint pts[]) {
-    if (fEdgeType == kBezier) {
-        SkQuad* quad = fAlloc.make<SkQuad>();
-        if (quad->set(pts)) {
-            fList.push_back(quad);
-        }
-    } else if (fEdgeType == kAnalyticEdge) {
-        SkAnalyticQuadraticEdge* edge = fAlloc.make<SkAnalyticQuadraticEdge>();
-        if (edge->setQuadratic(pts)) {
-            fList.push_back(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-        }
-    } else {
-        SkQuadraticEdge* edge = fAlloc.make<SkQuadraticEdge>();
-        if (edge->setQuadratic(pts, fShiftUp)) {
-            fList.push_back(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-||||||| merged common ancestors
-
-void SkEdgeBuilder::addQuad(const SkPoint pts[]) {
-    if (fEdgeType == kBezier) {
-        SkQuad* quad = fAlloc.make<SkQuad>();
-        if (quad->set(pts)) {
-            fList.push(quad);
-        }
-    } else if (fEdgeType == kAnalyticEdge) {
-        SkAnalyticQuadraticEdge* edge = fAlloc.make<SkAnalyticQuadraticEdge>();
-        if (edge->setQuadratic(pts)) {
-            fList.push(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-        }
-    } else {
-        SkQuadraticEdge* edge = fAlloc.make<SkQuadraticEdge>();
-        if (edge->setQuadratic(pts, fShiftUp)) {
-            fList.push(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-=======
 void SkAnalyticEdgeBuilder::addLine(const SkPoint pts[]) {
     SkAnalyticEdge* edge = fAlloc.make<SkAnalyticEdge>();
     if (edge->setLine(pts[0], pts[1])) {
@@ -286,7 +142,6 @@ void SkAnalyticEdgeBuilder::addLine(const SkPoint pts[]) {
             case kTotal_Combine:    fList.pop();           break;
             case kPartial_Combine:                         break;
             case kNo_Combine:       fList.push_back(edge); break;
->>>>>>> upstream-releases
         }
     }
 }
@@ -297,49 +152,6 @@ void SkBezierEdgeBuilder::addLine(const SkPoint pts[]) {
     }
 }
 
-<<<<<<< HEAD
-void SkEdgeBuilder::addCubic(const SkPoint pts[]) {
-    if (fEdgeType == kBezier) {
-        SkCubic* cubic = fAlloc.make<SkCubic>();
-        if (cubic->set(pts)) {
-            fList.push_back(cubic);
-        }
-    } else if (fEdgeType == kAnalyticEdge) {
-        SkAnalyticCubicEdge* edge = fAlloc.make<SkAnalyticCubicEdge>();
-        if (edge->setCubic(pts)) {
-            fList.push_back(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-        }
-    } else {
-        SkCubicEdge* edge = fAlloc.make<SkCubicEdge>();
-        if (edge->setCubic(pts, fShiftUp)) {
-            fList.push_back(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-        }
-||||||| merged common ancestors
-void SkEdgeBuilder::addCubic(const SkPoint pts[]) {
-    if (fEdgeType == kBezier) {
-        SkCubic* cubic = fAlloc.make<SkCubic>();
-        if (cubic->set(pts)) {
-            fList.push(cubic);
-        }
-    } else if (fEdgeType == kAnalyticEdge) {
-        SkAnalyticCubicEdge* edge = fAlloc.make<SkAnalyticCubicEdge>();
-        if (edge->setCubic(pts)) {
-            fList.push(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-        }
-    } else {
-        SkCubicEdge* edge = fAlloc.make<SkCubicEdge>();
-        if (edge->setCubic(pts, fShiftUp)) {
-            fList.push(edge);
-        } else {
-            // TODO: unallocate edge from storage...
-        }
-=======
 void SkBasicEdgeBuilder::addQuad(const SkPoint pts[]) {
     SkQuadraticEdge* edge = fAlloc.make<SkQuadraticEdge>();
     if (edge->setQuadratic(pts, fClipShift)) {
@@ -356,54 +168,9 @@ void SkBezierEdgeBuilder::addQuad(const SkPoint pts[]) {
     SkQuad* quad = fAlloc.make<SkQuad>();
     if (quad->set(pts)) {
         fList.push_back(quad);
->>>>>>> upstream-releases
     }
 }
 
-<<<<<<< HEAD
-void SkEdgeBuilder::addClipper(SkEdgeClipper* clipper) {
-    SkPoint      pts[4];
-    SkPath::Verb verb;
-
-    while ((verb = clipper->next(pts)) != SkPath::kDone_Verb) {
-        const int count = SkPathPriv::PtsInIter(verb);
-        if (!SkScalarsAreFinite(&pts[0].fX, count*2)) {
-            fIsFinite = false;
-            return;
-        }
-        switch (verb) {
-            case SkPath::kLine_Verb:
-                this->addLine(pts);
-                break;
-            case SkPath::kQuad_Verb:
-                this->addQuad(pts);
-                break;
-            case SkPath::kCubic_Verb:
-                this->addCubic(pts);
-                break;
-            default:
-                break;
-        }
-||||||| merged common ancestors
-void SkEdgeBuilder::addClipper(SkEdgeClipper* clipper) {
-    SkPoint      pts[4];
-    SkPath::Verb verb;
-
-    while ((verb = clipper->next(pts)) != SkPath::kDone_Verb) {
-        switch (verb) {
-            case SkPath::kLine_Verb:
-                this->addLine(pts);
-                break;
-            case SkPath::kQuad_Verb:
-                this->addQuad(pts);
-                break;
-            case SkPath::kCubic_Verb:
-                this->addCubic(pts);
-                break;
-            default:
-                break;
-        }
-=======
 void SkBasicEdgeBuilder::addCubic(const SkPoint pts[]) {
     SkCubicEdge* edge = fAlloc.make<SkCubicEdge>();
     if (edge->setCubic(pts, fClipShift)) {
@@ -420,7 +187,6 @@ void SkBezierEdgeBuilder::addCubic(const SkPoint pts[]) {
     SkCubic* cubic = fAlloc.make<SkCubic>();
     if (cubic->set(pts)) {
         fList.push_back(cubic);
->>>>>>> upstream-releases
     }
 }
 
@@ -565,7 +331,7 @@ int SkEdgeBuilder::buildPoly(const SkPath& path, const SkIRect* iclip, bool canC
     }
     SkASSERT((size_t)(edge - edgeStart) <= maxEdgeCount * edgeSize);
     SkASSERT((size_t)(edgePtr - (char**)fEdgeList) <= maxEdgeCount);
-    return fIsFinite ? SkToInt(edgePtr - (char**)fEdgeList) : 0;
+    return SkToInt(edgePtr - (char**)fEdgeList);
 }
 
 int SkEdgeBuilder::build(const SkPath& path, const SkIRect* iclip, bool canCullToTheRight) {
@@ -688,13 +454,7 @@ int SkEdgeBuilder::build(const SkPath& path, const SkIRect* iclip, bool canCullT
         }
     }
     fEdgeList = fList.begin();
-<<<<<<< HEAD
-    return fIsFinite ? fList.count() : 0;
-||||||| merged common ancestors
-    return fList.count();
-=======
     return is_finite ? fList.count() : 0;
->>>>>>> upstream-releases
 }
 
 int SkEdgeBuilder::buildEdges(const SkPath& path,
@@ -717,5 +477,5 @@ int SkEdgeBuilder::buildEdges(const SkPath& path,
         SkASSERT(!this->chopCubics());
     }
 
-    return fIsFinite ? count : 0;
+    return count;
 }

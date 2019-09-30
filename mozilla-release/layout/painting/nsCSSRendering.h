@@ -38,29 +38,14 @@ class ImageContainer;
 class StackingContextHelper;
 class WebRenderParentCommand;
 class LayerManager;
-<<<<<<< HEAD
-}  // namespace layers
-||||||| merged common ancestors
-} // namespace layers
-=======
 class RenderRootStateManager;
 }  // namespace layers
->>>>>>> upstream-releases
 
 namespace wr {
 class DisplayListBuilder;
 }  // namespace wr
 
-<<<<<<< HEAD
-enum class PaintBorderFlags : uint8_t { SYNC_DECODE_IMAGES = 1 << 0 };
-||||||| merged common ancestors
-enum class PaintBorderFlags : uint8_t
-{
-  SYNC_DECODE_IMAGES = 1 << 0
-};
-=======
 enum class PaintBorderFlags : uint8_t { SyncDecodeImages = 1 << 0 };
->>>>>>> upstream-releases
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(PaintBorderFlags)
 
 }  // namespace mozilla
@@ -156,17 +141,8 @@ struct nsCSSRendering {
                              RectCornerRadii& aOutRadii);
   static nsRect GetShadowRect(const nsRect& aFrameArea, bool aNativeTheme,
                               nsIFrame* aForFrame);
-<<<<<<< HEAD
-  static mozilla::gfx::Color GetShadowColor(nsCSSShadowItem* aShadow,
-                                            nsIFrame* aFrame, float aOpacity);
-||||||| merged common ancestors
-  static mozilla::gfx::Color GetShadowColor(nsCSSShadowItem* aShadow,
-                                            nsIFrame* aFrame,
-                                            float aOpacity);
-=======
   static mozilla::gfx::Color GetShadowColor(const mozilla::StyleSimpleShadow&,
                                             nsIFrame* aFrame, float aOpacity);
->>>>>>> upstream-releases
   // Returns if the frame has a themed frame.
   // aMaybeHasBorderRadius will return false if we can early detect
   // that we don't have a border radius.
@@ -187,28 +163,11 @@ struct nsCSSRendering {
    * for borders. aSkipSides says which sides to skip
    * when rendering, the default is to skip none.
    */
-<<<<<<< HEAD
-  static ImgDrawResult PaintBorder(
-      nsPresContext* aPresContext, gfxContext& aRenderingContext,
-      nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      mozilla::ComputedStyle* aComputedStyle, mozilla::PaintBorderFlags aFlags,
-      Sides aSkipSides = Sides());
-||||||| merged common ancestors
-  static ImgDrawResult PaintBorder(nsPresContext* aPresContext,
-                                   gfxContext& aRenderingContext,
-                                   nsIFrame* aForFrame,
-                                   const nsRect& aDirtyRect,
-                                   const nsRect& aBorderArea,
-                                   mozilla::ComputedStyle* aComputedStyle,
-                                   mozilla::PaintBorderFlags aFlags,
-                                   Sides aSkipSides = Sides());
-=======
   static ImgDrawResult PaintBorder(
       nsPresContext* aPresContext, gfxContext& aRenderingContext,
       nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
       mozilla::ComputedStyle* aStyle, mozilla::PaintBorderFlags aFlags,
       Sides aSkipSides = Sides());
->>>>>>> upstream-releases
 
   /**
    * Like PaintBorder, but taking an nsStyleBorder argument instead of
@@ -216,68 +175,18 @@ struct nsCSSRendering {
    * when rendering, the default is to skip none.
    */
   static ImgDrawResult PaintBorderWithStyleBorder(
-<<<<<<< HEAD
-      nsPresContext* aPresContext, gfxContext& aRenderingContext,
-      nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aComputedStyle,
-      mozilla::PaintBorderFlags aFlags, Sides aSkipSides = Sides());
-||||||| merged common ancestors
-    nsPresContext* aPresContext,
-    gfxContext& aRenderingContext,
-    nsIFrame* aForFrame,
-    const nsRect& aDirtyRect,
-    const nsRect& aBorderArea,
-    const nsStyleBorder& aBorderStyle,
-    mozilla::ComputedStyle* aComputedStyle,
-    mozilla::PaintBorderFlags aFlags,
-    Sides aSkipSides = Sides());
-=======
       nsPresContext* aPresContext, gfxContext& aRenderingContext,
       nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
       const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aStyle,
       mozilla::PaintBorderFlags aFlags, Sides aSkipSides = Sides());
->>>>>>> upstream-releases
 
   static mozilla::Maybe<nsCSSBorderRenderer> CreateBorderRenderer(
-<<<<<<< HEAD
-      nsPresContext* aPresContext, DrawTarget* aDrawTarget, nsIFrame* aForFrame,
-      const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      mozilla::ComputedStyle* aComputedStyle, bool* aOutBorderIsEmpty,
-      Sides aSkipSides = Sides());
-||||||| merged common ancestors
-    nsPresContext* aPresContext,
-    DrawTarget* aDrawTarget,
-    nsIFrame* aForFrame,
-    const nsRect& aDirtyRect,
-    const nsRect& aBorderArea,
-    mozilla::ComputedStyle* aComputedStyle,
-    bool* aOutBorderIsEmpty,
-    Sides aSkipSides = Sides());
-=======
       nsPresContext* aPresContext, DrawTarget* aDrawTarget, nsIFrame* aForFrame,
       const nsRect& aDirtyRect, const nsRect& aBorderArea,
       mozilla::ComputedStyle* aStyle, bool* aOutBorderIsEmpty,
       Sides aSkipSides = Sides());
->>>>>>> upstream-releases
 
   static mozilla::Maybe<nsCSSBorderRenderer>
-<<<<<<< HEAD
-  CreateBorderRendererWithStyleBorder(
-      nsPresContext* aPresContext, DrawTarget* aDrawTarget, nsIFrame* aForFrame,
-      const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aComputedStyle,
-      bool* aOutBorderIsEmpty, Sides aSkipSides = Sides());
-||||||| merged common ancestors
-  CreateBorderRendererWithStyleBorder(nsPresContext* aPresContext,
-                                      DrawTarget* aDrawTarget,
-                                      nsIFrame* aForFrame,
-                                      const nsRect& aDirtyRect,
-                                      const nsRect& aBorderArea,
-                                      const nsStyleBorder& aBorderStyle,
-                                      mozilla::ComputedStyle* aComputedStyle,
-                                      bool* aOutBorderIsEmpty,
-                                      Sides aSkipSides = Sides());
-=======
   CreateBorderRendererWithStyleBorder(
       nsPresContext* aPresContext, DrawTarget* aDrawTarget, nsIFrame* aForFrame,
       const nsRect& aDirtyRect, const nsRect& aBorderArea,
@@ -290,44 +199,13 @@ struct nsCSSRendering {
       const nsRect& aDirtyRect, const nsRect& aBorderArea,
       const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aStyle,
       bool* aOutBorderIsEmpty, Sides aSkipSides = Sides());
->>>>>>> upstream-releases
 
   static mozilla::Maybe<nsCSSBorderRenderer> CreateBorderRendererForOutline(
-<<<<<<< HEAD
-      nsPresContext* aPresContext, gfxContext* aRenderingContext,
-      nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      mozilla::ComputedStyle* aComputedStyle);
-||||||| merged common ancestors
-    nsPresContext* aPresContext,
-    gfxContext* aRenderingContext,
-    nsIFrame* aForFrame,
-    const nsRect& aDirtyRect,
-    const nsRect& aBorderArea,
-    mozilla::ComputedStyle* aComputedStyle);
-=======
       nsPresContext* aPresContext, gfxContext* aRenderingContext,
       nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
       mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   static ImgDrawResult CreateWebRenderCommandsForBorder(
-<<<<<<< HEAD
-      nsDisplayItem* aItem, nsIFrame* aForFrame, const nsRect& aBorderArea,
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager,
-      nsDisplayListBuilder* aDisplayListBuilder);
-||||||| merged common ancestors
-    nsDisplayItem* aItem,
-    nsIFrame* aForFrame,
-    const nsRect& aBorderArea,
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder);
-=======
       nsDisplayItem* aItem, nsIFrame* aForFrame, const nsRect& aBorderArea,
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -350,28 +228,15 @@ struct nsCSSRendering {
       mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder,
       const nsStyleBorder& aStyleBorder);
->>>>>>> upstream-releases
 
   /**
    * Render the outline for an element using css rendering rules
    * for borders.
    */
   static void PaintOutline(nsPresContext* aPresContext,
-<<<<<<< HEAD
-                           gfxContext& aRenderingContext, nsIFrame* aForFrame,
-                           const nsRect& aDirtyRect, const nsRect& aBorderArea,
-                           mozilla::ComputedStyle* aComputedStyle);
-||||||| merged common ancestors
-                           gfxContext& aRenderingContext,
-                           nsIFrame* aForFrame,
-                           const nsRect& aDirtyRect,
-                           const nsRect& aBorderArea,
-                           mozilla::ComputedStyle* aComputedStyle);
-=======
                            gfxContext& aRenderingContext, nsIFrame* aForFrame,
                            const nsRect& aDirtyRect, const nsRect& aBorderArea,
                            mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   /**
    * Render keyboard focus on an element.
@@ -392,25 +257,10 @@ struct nsCSSRendering {
    * onto aDest.
    * aIntrinsicSize is the size of the source gradient.
    */
-<<<<<<< HEAD
-  static void PaintGradient(nsPresContext* aPresContext, gfxContext& aContext,
-                            nsStyleGradient* aGradient,
-                            const nsRect& aDirtyRect, const nsRect& aDest,
-                            const nsRect& aFill, const nsSize& aRepeatSize,
-||||||| merged common ancestors
-  static void PaintGradient(nsPresContext* aPresContext,
-                            gfxContext& aContext,
-                            nsStyleGradient* aGradient,
-                            const nsRect& aDirtyRect,
-                            const nsRect& aDest,
-                            const nsRect& aFill,
-                            const nsSize& aRepeatSize,
-=======
   static void PaintGradient(nsPresContext* aPresContext, gfxContext& aContext,
                             const mozilla::StyleGradient& aGradient,
                             const nsRect& aDirtyRect, const nsRect& aDest,
                             const nsRect& aFill, const nsSize& aRepeatSize,
->>>>>>> upstream-releases
                             const mozilla::CSSIntRect& aSrc,
                             const nsSize& aIntrinsiceSize,
                             float aOpacity = 1.0);
@@ -462,16 +312,9 @@ struct nsCSSRendering {
   static nsIFrame* FindCanvasBackgroundFrame(nsIFrame* aForFrame,
                                              nsIFrame* aRootElementFrame) {
     MOZ_ASSERT(IsCanvasFrame(aForFrame), "not a canvas frame");
-<<<<<<< HEAD
-    if (aRootElementFrame) return FindBackgroundStyleFrame(aRootElementFrame);
-||||||| merged common ancestors
-    if (aRootElementFrame)
-      return FindBackgroundStyleFrame(aRootElementFrame);
-=======
     if (aRootElementFrame) {
       return FindBackgroundStyleFrame(aRootElementFrame);
     }
->>>>>>> upstream-releases
 
     // This should always give transparent, so we'll fill it in with the
     // default color if needed.  This seems to happen a bit while a page is
@@ -500,19 +343,8 @@ struct nsCSSRendering {
    * Determine the background color to draw taking into account print settings.
    */
   static nscolor DetermineBackgroundColor(
-<<<<<<< HEAD
-      nsPresContext* aPresContext, mozilla::ComputedStyle* aComputedStyle,
-      nsIFrame* aFrame, bool& aDrawBackgroundImage, bool& aDrawBackgroundColor);
-||||||| merged common ancestors
-    nsPresContext* aPresContext,
-    mozilla::ComputedStyle* aComputedStyle,
-    nsIFrame* aFrame,
-    bool& aDrawBackgroundImage,
-    bool& aDrawBackgroundColor);
-=======
       nsPresContext* aPresContext, mozilla::ComputedStyle* aStyle,
       nsIFrame* aFrame, bool& aDrawBackgroundImage, bool& aDrawBackgroundColor);
->>>>>>> upstream-releases
 
   static nsRect ComputeImageLayerPositioningArea(
       nsPresContext* aPresContext, nsIFrame* aForFrame,
@@ -665,48 +497,17 @@ struct nsCSSRendering {
       const nsStyleBackground* aBackgroundStyle, int32_t aLayer,
       uint32_t aPaintFlags);
   static ImgDrawResult BuildWebRenderDisplayItemsForStyleImageLayer(
-<<<<<<< HEAD
-      const PaintBGParams& aParams, mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem);
-||||||| merged common ancestors
-    const PaintBGParams& aParams,
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayItem* aItem);
-=======
       const PaintBGParams& aParams, mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager, nsDisplayItem* aItem);
->>>>>>> upstream-releases
 
   static ImgDrawResult BuildWebRenderDisplayItemsForStyleImageLayerWithSC(
-<<<<<<< HEAD
-      const PaintBGParams& aParams, mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem,
-      mozilla::ComputedStyle* mBackgroundSC, const nsStyleBorder& aBorder);
-||||||| merged common ancestors
-    const PaintBGParams& aParams,
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const mozilla::layers::StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayItem* aItem,
-    mozilla::ComputedStyle* mBackgroundSC,
-    const nsStyleBorder& aBorder);
-=======
       const PaintBGParams& aParams, mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
       mozilla::layers::RenderRootStateManager* aManager, nsDisplayItem* aItem,
       mozilla::ComputedStyle* mBackgroundSC, const nsStyleBorder& aBorder);
->>>>>>> upstream-releases
 
   /**
    * Returns the rectangle covered by the given background layer image, taking

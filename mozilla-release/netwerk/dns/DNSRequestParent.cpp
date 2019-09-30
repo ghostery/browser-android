@@ -21,23 +21,9 @@ namespace net {
 
 DNSRequestParent::DNSRequestParent() : mFlags(0), mIPCClosed(false) {}
 
-<<<<<<< HEAD
-void DNSRequestParent::DoAsyncResolve(const nsACString &hostname,
-                                      const OriginAttributes &originAttributes,
-                                      uint32_t flags) {
-||||||| merged common ancestors
-}
-
-void
-DNSRequestParent::DoAsyncResolve(const nsACString &hostname,
-                                 const OriginAttributes &originAttributes,
-                                 uint32_t flags)
-{
-=======
 void DNSRequestParent::DoAsyncResolve(const nsACString& hostname,
                                       const OriginAttributes& originAttributes,
                                       uint32_t flags) {
->>>>>>> upstream-releases
   nsresult rv;
   mFlags = flags;
   nsCOMPtr<nsIDNSService> dns = do_GetService(NS_DNSSERVICE_CONTRACTID, &rv);
@@ -54,25 +40,10 @@ void DNSRequestParent::DoAsyncResolve(const nsACString& hostname,
   }
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult DNSRequestParent::RecvCancelDNSRequest(
-    const nsCString &hostName, const uint16_t &type,
-    const OriginAttributes &originAttributes, const uint32_t &flags,
-    const nsresult &reason) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-DNSRequestParent::RecvCancelDNSRequest(const nsCString& hostName,
-                                       const uint16_t& type,
-                                       const OriginAttributes& originAttributes,
-                                       const uint32_t& flags,
-                                       const nsresult& reason)
-{
-=======
 mozilla::ipc::IPCResult DNSRequestParent::RecvCancelDNSRequest(
     const nsCString& hostName, const uint16_t& type,
     const OriginAttributes& originAttributes, const uint32_t& flags,
     const nsresult& reason) {
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIDNSService> dns = do_GetService(NS_DNSSERVICE_CONTRACTID, &rv);
   if (NS_SUCCEEDED(rv)) {
@@ -109,18 +80,8 @@ NS_IMPL_ISUPPORTS(DNSRequestParent, nsIDNSListener)
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DNSRequestParent::OnLookupComplete(nsICancelable *request, nsIDNSRecord *rec,
-                                   nsresult status) {
-||||||| merged common ancestors
-DNSRequestParent::OnLookupComplete(nsICancelable *request,
-                                   nsIDNSRecord  *rec,
-                                   nsresult       status)
-{
-=======
 DNSRequestParent::OnLookupComplete(nsICancelable* request, nsIDNSRecord* rec,
                                    nsresult status) {
->>>>>>> upstream-releases
   if (mIPCClosed) {
     // nothing to do: child probably crashed
     return NS_OK;
@@ -151,20 +112,9 @@ DNSRequestParent::OnLookupComplete(nsICancelable* request, nsIDNSRecord* rec,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-DNSRequestParent::OnLookupByTypeComplete(nsICancelable *aRequest,
-                                         nsIDNSByTypeRecord *aRes,
-                                         nsresult aStatus) {
-||||||| merged common ancestors
-DNSRequestParent::OnLookupByTypeComplete(nsICancelable      *aRequest,
-                                         nsIDNSByTypeRecord *aRes,
-                                         nsresult            aStatus)
-{
-=======
 DNSRequestParent::OnLookupByTypeComplete(nsICancelable* aRequest,
                                          nsIDNSByTypeRecord* aRes,
                                          nsresult aStatus) {
->>>>>>> upstream-releases
   if (mIPCClosed) {
     // nothing to do: child probably crashed
     return NS_OK;

@@ -26,19 +26,10 @@ class StunAddrsListener {
   NS_DECL_OWNINGTHREAD
 };
 
-<<<<<<< HEAD
-class StunAddrsRequestChild final : public PStunAddrsRequestChild {
- public:
-||||||| merged common ancestors
-class StunAddrsRequestChild final : public PStunAddrsRequestChild
-{
-public:
-=======
 class StunAddrsRequestChild final : public PStunAddrsRequestChild {
   friend class PStunAddrsRequestChild;
 
  public:
->>>>>>> upstream-releases
   explicit StunAddrsRequestChild(StunAddrsListener* listener,
                                  nsIEventTarget* mainThreadEventTarget);
 

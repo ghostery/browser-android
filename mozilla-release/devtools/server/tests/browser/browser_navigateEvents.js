@@ -119,32 +119,11 @@ function onMessage({ data }) {
   assertEvent(data.event, data.data);
 }
 
-<<<<<<< HEAD
-async function connectAndAttachTab(tab) {
-  const target = await TargetFactory.forTab(tab);
-  await target.attach();
-  const targetFront = target.activeTab;
-  const actorID = targetFront.targetForm.actor;
-  targetFront.on("tabNavigated", function(packet) {
-||||||| merged common ancestors
-async function connectAndAttachTab() {
-  // Ensure having a minimal server
-  initDebuggerServer();
-
-  // Connect to this tab
-  const transport = DebuggerServer.connectPipe();
-  const client = new DebuggerClient(transport);
-  const form = await connectDebuggerClient(client);
-  const actorID = form.actor;
-  const [, targetFront ] = await client.attachTarget(actorID);
-  targetFront.on("tabNavigated", function(packet) {
-=======
 async function connectAndAttachTab(tab) {
   const target = await TargetFactory.forTab(tab);
   await target.attach();
   const actorID = target.targetForm.actor;
   target.on("tabNavigated", function(packet) {
->>>>>>> upstream-releases
     assertEvent("tabNavigated", packet);
   });
   return { target, actorID };
@@ -219,19 +198,11 @@ add_task(async function() {
   await onAllEventsReceived;
 
   // Cleanup
-<<<<<<< HEAD
-  browser.messageManager.removeMessageListener("devtools-test:event", onMessage);
-  await target.destroy();
-||||||| merged common ancestors
-  browser.messageManager.removeMessageListener("devtools-test:event", onMessage);
-  await client.close();
-=======
   browser.messageManager.removeMessageListener(
     "devtools-test:event",
     onMessage
   );
   await target.destroy();
->>>>>>> upstream-releases
   Services.obs.addObserver(httpObserver, "http-on-modify-request");
   DebuggerServer.destroy();
 });

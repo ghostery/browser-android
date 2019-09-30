@@ -78,19 +78,8 @@ class DOMSVGPointList final : public nsISupports, public nsWrapperCache {
    * use the addresses of these members as the key for the hash table, and
    * clearly SVGPointList* and a SVGPointList** are not the same type.
    */
-<<<<<<< HEAD
-  static already_AddRefed<DOMSVGPointList> GetDOMWrapper(void* aList,
-                                                         nsSVGElement* aElement,
-                                                         bool aIsAnimValList);
-||||||| merged common ancestors
-  static already_AddRefed<DOMSVGPointList>
-  GetDOMWrapper(void *aList,
-                nsSVGElement *aElement,
-                bool aIsAnimValList);
-=======
   static already_AddRefed<DOMSVGPointList> GetDOMWrapper(
       void* aList, dom::SVGElement* aElement, bool aIsAnimValList);
->>>>>>> upstream-releases
 
   /**
    * This method returns the DOMSVGPointList wrapper for an internal
@@ -169,34 +158,14 @@ class DOMSVGPointList final : public nsISupports, public nsWrapperCache {
    * Only our static GetDOMWrapper() factory method may create objects of our
    * type.
    */
-<<<<<<< HEAD
-  DOMSVGPointList(nsSVGElement* aElement, bool aIsAnimValList)
-      : mElement(aElement), mIsAnimValList(aIsAnimValList) {
-    InternalListWillChangeTo(InternalList());  // Sync mItems
-||||||| merged common ancestors
-  DOMSVGPointList(nsSVGElement *aElement, bool aIsAnimValList)
-    : mElement(aElement)
-    , mIsAnimValList(aIsAnimValList)
-  {
-    InternalListWillChangeTo(InternalList()); // Sync mItems
-=======
   DOMSVGPointList(dom::SVGElement* aElement, bool aIsAnimValList)
       : mElement(aElement), mIsAnimValList(aIsAnimValList) {
     InternalListWillChangeTo(InternalList());  // Sync mItems
->>>>>>> upstream-releases
   }
 
   ~DOMSVGPointList();
 
-<<<<<<< HEAD
-  nsSVGElement* Element() const { return mElement.get(); }
-||||||| merged common ancestors
-  nsSVGElement* Element() const {
-    return mElement.get();
-  }
-=======
   dom::SVGElement* Element() const { return mElement.get(); }
->>>>>>> upstream-releases
 
   /// Used to determine if this list is the baseVal or animVal list.
   bool IsAnimValList() const { return mIsAnimValList; }

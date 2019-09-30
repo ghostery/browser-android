@@ -1,12 +1,6 @@
 {
   "name": "@mozilla/normandy-action-argument-schemas",
-<<<<<<< HEAD
-  "version": "0.5.0",
-||||||| merged common ancestors
-  "version": "0.4.0",
-=======
   "version": "0.8.0",
->>>>>>> upstream-releases
   "description": "Schemas for Normandy action arguments",
   "main": "index.js",
   "author": "Michael Cooper <mcooper@mozilla.com>",

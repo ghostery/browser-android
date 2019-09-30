@@ -29,25 +29,10 @@ void HandshakeCallback(PRFileDesc* fd, void* client_data);
 SECStatus CanFalseStartCallback(PRFileDesc* fd, void* client_data,
                                 PRBool* canFalseStart);
 
-<<<<<<< HEAD
-mozilla::pkix::Result DoOCSPRequest(const nsCString& aiaLocation,
-                                    const OriginAttributes& originAttributes,
-                                    Vector<uint8_t>&& ocspRequest,
-                                    TimeDuration timeout,
-                                    /*out*/ Vector<uint8_t>& result);
-||||||| merged common ancestors
-mozilla::pkix::Result
-DoOCSPRequest(const nsCString& aiaLocation,
-              const OriginAttributes& originAttributes,
-              Vector<uint8_t>&& ocspRequest,
-              TimeDuration timeout,
-              /*out*/ Vector<uint8_t>& result);
-=======
 mozilla::pkix::Result DoOCSPRequest(
     const nsCString& aiaLocation, const OriginAttributes& originAttributes,
     uint8_t (&ocspRequest)[mozilla::pkix::OCSP_REQUEST_MAX_LENGTH],
     size_t ocspRequestLength, TimeDuration timeout,
     /*out*/ Vector<uint8_t>& result);
->>>>>>> upstream-releases
 
 #endif  // nsNSSCallbacks_h

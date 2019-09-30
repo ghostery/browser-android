@@ -36,21 +36,6 @@ class FlexItemList extends PureComponent {
       setSelectedNode,
     } = this.props;
 
-<<<<<<< HEAD
-    return (
-      dom.div(
-        { className: "flex-item-list" },
-        dom.div({ className: "flex-item-list-header" },
-          !flexItems.length ?
-            getStr("flexbox.noFlexItems") :
-            getStr("flexbox.flexItems")),
-        flexItems.map((flexItem, index) => FlexItem({
-||||||| merged common ancestors
-    return (
-      dom.ol(
-        { className: "flex-item-list" },
-        flexItems.map(flexItem => FlexItem({
-=======
     return dom.div(
       { className: "flex-item-list" },
       dom.div(
@@ -61,7 +46,6 @@ class FlexItemList extends PureComponent {
       ),
       flexItems.map((flexItem, index) =>
         FlexItem({
->>>>>>> upstream-releases
           key: flexItem.actorID,
           flexItem,
           index: index + 1,

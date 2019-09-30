@@ -52,37 +52,17 @@ class nsFilePicker : public nsBaseFilePicker {
   // aFile is an existing but unspecified file. These functions must specify it.
   //
   // will return |returnCancel| or |returnOK| as result.
-<<<<<<< HEAD
-  int16_t GetLocalFiles(const nsString& inTitle, bool inAllowMultiple,
-                        nsCOMArray<nsIFile>& outFiles);
-  int16_t GetLocalFolder(const nsString& inTitle, nsIFile** outFile);
-  int16_t PutLocalFile(const nsString& inTitle, const nsString& inDefaultName, nsIFile** outFile);
-||||||| merged common ancestors
-  int16_t GetLocalFiles(const nsString& inTitle, bool inAllowMultiple, nsCOMArray<nsIFile>& outFiles);
-  int16_t GetLocalFolder(const nsString& inTitle, nsIFile** outFile);
-  int16_t PutLocalFile(const nsString& inTitle, const nsString& inDefaultName, nsIFile** outFile);
-=======
   int16_t GetLocalFiles(bool inAllowMultiple, nsCOMArray<nsIFile>& outFiles);
   int16_t GetLocalFolder(nsIFile** outFile);
   int16_t PutLocalFile(nsIFile** outFile);
->>>>>>> upstream-releases
 
   void SetDialogTitle(const nsString& inTitle, id aDialog);
   NSString* PanelDefaultDirectory();
   NSView* GetAccessoryView();
 
-<<<<<<< HEAD
-  nsString mTitle;
-  nsCOMArray<nsIFile> mFiles;
-  nsString mDefault;
-||||||| merged common ancestors
-  nsTArray<nsString>     mFilters; 
-  nsTArray<nsString>     mTitles;
-=======
   nsString mTitle;
   nsCOMArray<nsIFile> mFiles;
   nsString mDefaultFilename;
->>>>>>> upstream-releases
 
   nsTArray<nsString> mFilters;
   nsTArray<nsString> mTitles;

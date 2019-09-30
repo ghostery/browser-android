@@ -51,34 +51,17 @@ const char AllEntryTypesIgnoredMsgId[] = "AllEntryTypesIgnored";
 
 PerformanceObserver::PerformanceObserver(nsPIDOMWindowInner* aOwner,
                                          PerformanceObserverCallback& aCb)
-<<<<<<< HEAD
-    : mOwner(aOwner), mCallback(&aCb), mConnected(false) {
-||||||| merged common ancestors
-  : mOwner(aOwner)
-  , mCallback(&aCb)
-  , mConnected(false)
-{
-=======
     : mOwner(aOwner),
       mCallback(&aCb),
       mObserverType(ObserverTypeUndefined),
       mConnected(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mOwner);
   mPerformance = aOwner->GetPerformance();
 }
 
 PerformanceObserver::PerformanceObserver(WorkerPrivate* aWorkerPrivate,
                                          PerformanceObserverCallback& aCb)
-<<<<<<< HEAD
-    : mCallback(&aCb), mConnected(false) {
-||||||| merged common ancestors
-  : mCallback(&aCb)
-  , mConnected(false)
-{
-=======
     : mCallback(&aCb), mObserverType(ObserverTypeUndefined), mConnected(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aWorkerPrivate);
   mPerformance = aWorkerPrivate->GlobalScope()->GetPerformance();
 }
@@ -145,19 +128,6 @@ void PerformanceObserver::QueueEntry(PerformanceEntry* aEntry) {
   mQueuedEntries.AppendElement(aEntry);
 }
 
-<<<<<<< HEAD
-static const char16_t* const sValidTypeNames[4] = {
-    u"navigation",
-    u"mark",
-    u"measure",
-    u"resource",
-||||||| merged common ancestors
-static const char16_t *const sValidTypeNames[4] = {
-  u"navigation",
-  u"mark",
-  u"measure",
-  u"resource",
-=======
 /*
  * Keep this list in alphabetical order.
  * https://w3c.github.io/performance-timeline/#supportedentrytypes-attribute
@@ -167,20 +137,8 @@ static const char16_t* const sValidTypeNames[4] = {
     u"measure",
     u"navigation",
     u"resource",
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-void PerformanceObserver::Observe(const PerformanceObserverInit& aOptions) {
-  if (aOptions.mEntryTypes.IsEmpty()) {
-    return;
-||||||| merged common ancestors
-void
-PerformanceObserver::Observe(const PerformanceObserverInit& aOptions)
-{
-  if (aOptions.mEntryTypes.IsEmpty()) {
-    return;
-=======
 void PerformanceObserver::ReportUnsupportedTypesErrorToConsole(
     bool aIsMainThread, const char* msgId, const nsString& aInvalidTypes) {
   if (!aIsMainThread) {
@@ -194,7 +152,6 @@ void PerformanceObserver::ReportUnsupportedTypesErrorToConsole(
     nsContentUtils::ReportToConsole(
         nsIScriptError::warningFlag, NS_LITERAL_CSTRING("DOM"), document,
         nsContentUtils::eDOM_PROPERTIES, msgId, params);
->>>>>>> upstream-releases
   }
   return;
 }
@@ -223,26 +180,7 @@ void PerformanceObserver::Observe(const PerformanceObserverInit& aOptions,
     if (maybeEntryTypes.WasPassed()) {
       mObserverType = ObserverTypeMultiple;
     } else {
-<<<<<<< HEAD
-      nsCOMPtr<nsPIDOMWindowInner> ownerWindow = do_QueryInterface(mOwner);
-      nsIDocument* document = ownerWindow->GetExtantDoc();
-      const char16_t* params[] = {invalidTypesJoined.get()};
-      nsContentUtils::ReportToConsole(
-          nsIScriptError::warningFlag, NS_LITERAL_CSTRING("DOM"), document,
-          nsContentUtils::eDOM_PROPERTIES, "UnsupportedEntryTypesIgnored",
-          params, 1);
-||||||| merged common ancestors
-      nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
-        do_QueryInterface(mOwner);
-      nsIDocument* document = ownerWindow->GetExtantDoc();
-      const char16_t* params[] = { invalidTypesJoined.get() };
-      nsContentUtils::ReportToConsole(nsIScriptError::warningFlag,
-                                      NS_LITERAL_CSTRING("DOM"), document,
-                                      nsContentUtils::eDOM_PROPERTIES,
-                                      "UnsupportedEntryTypesIgnored", params, 1);
-=======
       mObserverType = ObserverTypeSingle;
->>>>>>> upstream-releases
     }
   }
 
@@ -360,13 +298,6 @@ void PerformanceObserver::Observe(const PerformanceObserverInit& aOptions,
   mConnected = true;
 }
 
-<<<<<<< HEAD
-void PerformanceObserver::Disconnect() {
-||||||| merged common ancestors
-void
-PerformanceObserver::Disconnect()
-{
-=======
 void PerformanceObserver::GetSupportedEntryTypes(
     const GlobalObject& aGlobal, JS::MutableHandle<JSObject*> aObject) {
   nsTArray<nsString> validTypes;
@@ -403,7 +334,6 @@ bool PerformanceObserver::ObservesTypeOfEntry(PerformanceEntry* aEntry) {
 }
 
 void PerformanceObserver::Disconnect() {
->>>>>>> upstream-releases
   if (mConnected) {
     MOZ_ASSERT(mPerformance);
     mPerformance->RemoveObserver(this);

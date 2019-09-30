@@ -13,13 +13,6 @@
 #include "mozilla/dom/DocGroup.h"
 #include "nsDOMCSSDeclaration.h"
 
-<<<<<<< HEAD
-class nsSMILValue;
-||||||| merged common ancestors
-
-class nsSMILValue;
-=======
->>>>>>> upstream-releases
 struct RawServoUnlockedDeclarationBlock;
 
 namespace mozilla {
@@ -78,21 +71,10 @@ class nsDOMCSSAttributeDeclaration final : public nsDOMCSSDeclaration {
  protected:
   ~nsDOMCSSAttributeDeclaration();
 
-<<<<<<< HEAD
-  virtual nsresult SetCSSDeclaration(
-      mozilla::DeclarationBlock* aDecl,
-      mozilla::MutationClosureData* aClosureData) override;
-  virtual nsIDocument* DocToUpdate() override;
-||||||| merged common ancestors
-  virtual nsresult SetCSSDeclaration(mozilla::DeclarationBlock* aDecl,
-                                     mozilla::MutationClosureData* aClosureData) override;
-  virtual nsIDocument* DocToUpdate() override;
-=======
   nsresult SetCSSDeclaration(
       mozilla::DeclarationBlock* aDecl,
       mozilla::MutationClosureData* aClosureData) override;
   mozilla::dom::Document* DocToUpdate() override;
->>>>>>> upstream-releases
 
   RefPtr<Element> mElement;
 

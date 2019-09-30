@@ -26,18 +26,9 @@ class nsOpenURIInFrameParams final : public nsIOpenURIInFrameParams {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_NSIOPENURIINFRAMEPARAMS
 
-<<<<<<< HEAD
-  explicit nsOpenURIInFrameParams(
-      const mozilla::OriginAttributes& aOriginAttributes,
-      nsIFrameLoaderOwner* aOpener);
-||||||| merged common ancestors
-  explicit nsOpenURIInFrameParams(const mozilla::OriginAttributes& aOriginAttributes,
-                                  nsIFrameLoaderOwner* aOpener);
-=======
   explicit nsOpenURIInFrameParams(
       const mozilla::OriginAttributes& aOriginAttributes,
       mozilla::dom::Element* aOpener);
->>>>>>> upstream-releases
 
  private:
   ~nsOpenURIInFrameParams();

@@ -43,19 +43,9 @@ class Storage : public nsISupports, public nsWrapperCache {
 
   virtual int64_t GetOriginQuotaUsage() const = 0;
 
-<<<<<<< HEAD
-  nsIPrincipal* Principal() const { return mPrincipal; }
-||||||| merged common ancestors
-  nsIPrincipal*
-  Principal() const
-  {
-    return mPrincipal;
-  }
-=======
   nsIPrincipal* Principal() const { return mPrincipal; }
 
   nsIPrincipal* StoragePrincipal() const { return mStoragePrincipal; }
->>>>>>> upstream-releases
 
   // WebIDL
   JSObject* WrapObject(JSContext* aCx,
@@ -103,33 +93,6 @@ class Storage : public nsISupports, public nsWrapperCache {
 
   bool IsSessionOnly() const { return mIsSessionOnly; }
 
-<<<<<<< HEAD
-  //////////////////////////////////////////////////////////////////////////////
-  // Testing Methods:
-  //
-  // These methods are exposed on the `Storage` WebIDL interface behind a
-  // preference for the benefit of automated-tests.  They are not exposed to
-  // content.  See `Storage.webidl` for more details.
-
-  virtual void Open(nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {}
-
-  virtual void Close(nsIPrincipal& aSubjectPrincipal, ErrorResult& aRv) {}
-
-  virtual void BeginExplicitSnapshot(nsIPrincipal& aSubjectPrincipal,
-                                     ErrorResult& aRv) {}
-
-  virtual void EndExplicitSnapshot(nsIPrincipal& aSubjectPrincipal,
-                                   ErrorResult& aRv) {}
-
-  //////////////////////////////////////////////////////////////////////////////
-
-  // Dispatch storage notification events on all impacted pages in the current
-  // process as well as for consumption by devtools.  Pages receive the
-  // notification via StorageNotifierService (not observers like in the past),
-  // while devtools does receive the notification via the observer service.
-  //
-||||||| merged common ancestors
-=======
   //////////////////////////////////////////////////////////////////////////////
   // Testing Methods:
   //
@@ -159,7 +122,6 @@ class Storage : public nsISupports, public nsWrapperCache {
   // notification via StorageNotifierService (not observers like in the past),
   // while devtools does receive the notification via the observer service.
   //
->>>>>>> upstream-releases
   // aStorage can be null if this method is called by LocalStorageCacheChild.
   //
   // aImmediateDispatch is for use by child IPC code (LocalStorageCacheChild)

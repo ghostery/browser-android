@@ -147,10 +147,6 @@ fn unraw(ident: &Ident) -> String {
     ident.to_string().trim_left_matches("r#").to_owned()
 }
 
-fn unraw(ident: &Ident) -> String {
-    ident.to_string().trim_left_matches("r#").to_owned()
-}
-
 impl Name {
     fn from_attrs(
         source_name: String,
@@ -601,19 +597,7 @@ impl Container {
         }
 
         Container {
-<<<<<<< HEAD
-            name: Name {
-                serialize: ser_name.get().unwrap_or_else(|| unraw(&item.ident)),
-                deserialize: de_name.get().unwrap_or_else(|| unraw(&item.ident)),
-            },
-||||||| merged common ancestors
-            name: Name {
-                serialize: ser_name.get().unwrap_or_else(|| item.ident.to_string()),
-                deserialize: de_name.get().unwrap_or_else(|| item.ident.to_string()),
-            },
-=======
             name: Name::from_attrs(unraw(&item.ident), ser_name, de_name, None),
->>>>>>> upstream-releases
             transparent: transparent.get(),
             deny_unknown_fields: deny_unknown_fields.get(),
             default: default.get().unwrap_or(Default::None),
@@ -1070,20 +1054,10 @@ impl Variant {
         }
 
         Variant {
-<<<<<<< HEAD
-            name: Name {
-                serialize: ser_name.unwrap_or_else(|| unraw(&variant.ident)),
-                deserialize: de_name.unwrap_or_else(|| unraw(&variant.ident)),
-||||||| merged common ancestors
-            name: Name {
-                serialize: ser_name.unwrap_or_else(|| variant.ident.to_string()),
-                deserialize: de_name.unwrap_or_else(|| variant.ident.to_string()),
-=======
             name: Name::from_attrs(unraw(&variant.ident), ser_name, de_name, Some(de_aliases)),
             rename_all_rules: RenameAllRules {
                 serialize: rename_all_ser_rule.get().unwrap_or(RenameRule::None),
                 deserialize: rename_all_de_rule.get().unwrap_or(RenameRule::None),
->>>>>>> upstream-releases
             },
             ser_bound: ser_bound.get(),
             de_bound: de_bound.get(),

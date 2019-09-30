@@ -28,37 +28,13 @@ async function installTheme(id) {
 
 add_task(async function() {
   await startCustomizing();
-<<<<<<< HEAD
-  // Check restore defaults button is disabled.
-  ok(document.getElementById("customization-reset-button").disabled,
-     "Reset button should start out disabled");
-||||||| merged common ancestors
-=======
   // Check restore defaults button is disabled.
   ok(
     document.getElementById("customization-reset-button").disabled,
     "Reset button should start out disabled"
   );
->>>>>>> upstream-releases
 
   let themesButton = document.getElementById("customization-lwtheme-button");
-<<<<<<< HEAD
-  let themesButtonIcon = document.getAnonymousElementByAttribute(themesButton,
-      "class", "button-icon");
-  let iconURL = themesButtonIcon.style.backgroundImage;
-  // If we've run other tests before, we might have set the image to the
-  // default theme's icon explicitly, otherwise it might be empty, in which
-  // case the icon is determined by CSS (which will be the default
-  // theme's icon).
-  if (iconURL) {
-    ok((/default/i).test(themesButtonIcon.style.backgroundImage),
-       `Button should show default theme thumbnail - was: "${iconURL}"`);
-  } else {
-    is(iconURL, "",
-       `Button should show default theme thumbnail (empty string) - was: "${iconURL}"`);
-  }
-||||||| merged common ancestors
-=======
   let themesButtonIcon = themesButton.icon;
   let iconURL = themesButtonIcon.style.backgroundImage;
   // If we've run other tests before, we might have set the image to the
@@ -77,7 +53,6 @@ add_task(async function() {
       `Button should show default theme thumbnail (empty string) - was: "${iconURL}"`
     );
   }
->>>>>>> upstream-releases
   let popup = document.getElementById("customization-lwtheme-menu");
 
   let popupShownPromise = popupShown(popup);
@@ -127,15 +102,6 @@ add_task(async function() {
   info("Clicked on light theme");
   await themeChangedPromise;
 
-<<<<<<< HEAD
-  // Check restore defaults button is enabled.
-  ok(!document.getElementById("customization-reset-button").disabled,
-     "Reset button should not be disabled anymore");
-  ok((/light/i).test(themesButtonIcon.style.backgroundImage),
-     `Button should show light theme thumbnail - was: "${themesButtonIcon.style.backgroundImage}"`);
-
-||||||| merged common ancestors
-=======
   let button = document.getElementById("customization-reset-button");
   await TestUtils.waitForCondition(() => !button.disabled);
 
@@ -148,7 +114,6 @@ add_task(async function() {
     }"`
   );
 
->>>>>>> upstream-releases
   popupShownPromise = popupShown(popup);
   EventUtils.synthesizeMouseAtCenter(themesButton, {});
   info("Clicked on themes button a third time");

@@ -11,13 +11,7 @@ he{
                 "‎&״"
                 "<<'\u0022'"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         standard{
             Sequence{
@@ -26,13 +20,7 @@ he{
                 "&[before 2]''<<׳"
                 "&[before 2]'\u0022'<<״"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

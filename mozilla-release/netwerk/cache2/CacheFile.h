@@ -49,23 +49,9 @@ class CacheFile final : public CacheFileChunkListener,
 
   CacheFile();
 
-<<<<<<< HEAD
-  nsresult Init(const nsACString &aKey, bool aCreateNew, bool aMemoryOnly,
-                bool aSkipSizeCheck, bool aPriority, bool aPinned,
-                CacheFileListener *aCallback);
-||||||| merged common ancestors
-  nsresult Init(const nsACString &aKey,
-                bool aCreateNew,
-                bool aMemoryOnly,
-                bool aSkipSizeCheck,
-                bool aPriority,
-                bool aPinned,
-                CacheFileListener *aCallback);
-=======
   nsresult Init(const nsACString& aKey, bool aCreateNew, bool aMemoryOnly,
                 bool aSkipSizeCheck, bool aPriority, bool aPinned,
                 CacheFileListener* aCallback);
->>>>>>> upstream-releases
 
   NS_IMETHOD OnChunkRead(nsresult aResult, CacheFileChunk* aChunk) override;
   NS_IMETHOD OnChunkWritten(nsresult aResult, CacheFileChunk* aChunk) override;
@@ -76,48 +62,16 @@ class CacheFile final : public CacheFileChunkListener,
   NS_IMETHOD OnFileOpened(CacheFileHandle* aHandle, nsresult aResult) override;
   NS_IMETHOD OnDataWritten(CacheFileHandle* aHandle, const char* aBuf,
                            nsresult aResult) override;
-<<<<<<< HEAD
-  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf,
-                        nsresult aResult) override;
-  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
-||||||| merged common ancestors
-  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf, nsresult aResult) override;
-  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
-=======
   NS_IMETHOD OnDataRead(CacheFileHandle* aHandle, char* aBuf,
                         nsresult aResult) override;
   NS_IMETHOD OnFileDoomed(CacheFileHandle* aHandle, nsresult aResult) override;
   NS_IMETHOD OnEOFSet(CacheFileHandle* aHandle, nsresult aResult) override;
   NS_IMETHOD OnFileRenamed(CacheFileHandle* aHandle, nsresult aResult) override;
->>>>>>> upstream-releases
   virtual bool IsKilled() override;
 
   NS_IMETHOD OnMetadataRead(nsresult aResult) override;
   NS_IMETHOD OnMetadataWritten(nsresult aResult) override;
 
-<<<<<<< HEAD
-  NS_IMETHOD OpenInputStream(nsICacheEntry *aCacheEntryHandle,
-                             nsIInputStream **_retval);
-  NS_IMETHOD OpenAlternativeInputStream(nsICacheEntry *aCacheEntryHandle,
-                                        const char *aAltDataType,
-                                        nsIInputStream **_retval);
-  NS_IMETHOD OpenOutputStream(CacheOutputCloseListener *aCloseListener,
-                              nsIOutputStream **_retval);
-  NS_IMETHOD OpenAlternativeOutputStream(
-      CacheOutputCloseListener *aCloseListener, const char *aAltDataType,
-      nsIOutputStream **_retval);
-||||||| merged common ancestors
-  NS_IMETHOD OpenInputStream(nsICacheEntry *aCacheEntryHandle, nsIInputStream **_retval);
-  NS_IMETHOD OpenAlternativeInputStream(nsICacheEntry *aCacheEntryHandle,
-                                        const char *aAltDataType, nsIInputStream **_retval);
-  NS_IMETHOD OpenOutputStream(CacheOutputCloseListener *aCloseListener, nsIOutputStream **_retval);
-  NS_IMETHOD OpenAlternativeOutputStream(CacheOutputCloseListener *aCloseListener,
-                                         const char *aAltDataType, nsIOutputStream **_retval);
-=======
   NS_IMETHOD OpenInputStream(nsICacheEntry* aCacheEntryHandle,
                              nsIInputStream** _retval);
   NS_IMETHOD OpenAlternativeInputStream(nsICacheEntry* aCacheEntryHandle,
@@ -128,23 +82,14 @@ class CacheFile final : public CacheFileChunkListener,
   NS_IMETHOD OpenAlternativeOutputStream(
       CacheOutputCloseListener* aCloseListener, const char* aAltDataType,
       nsIAsyncOutputStream** _retval);
->>>>>>> upstream-releases
   NS_IMETHOD SetMemoryOnly();
   NS_IMETHOD Doom(CacheFileListener* aCallback);
 
   void Kill() { mKill = true; }
   nsresult ThrowMemoryCachedData();
 
-<<<<<<< HEAD
-  nsresult GetAltDataSize(int64_t *aSize);
-  nsresult GetAltDataType(nsACString &aType);
-||||||| merged common ancestors
-  nsresult GetAltDataSize(int64_t *aSize);
-  nsresult GetAltDataType(nsACString& aType);
-=======
   nsresult GetAltDataSize(int64_t* aSize);
   nsresult GetAltDataType(nsACString& aType);
->>>>>>> upstream-releases
 
   // metadata forwarders
   nsresult GetElement(const char* aKey, char** _retval);
@@ -168,8 +113,8 @@ class CacheFile final : public CacheFileChunkListener,
   // i.e. delivered to the consumer.
   nsresult OnFetched();
 
-  bool DataSize(int64_t *aSize);
-  void Key(nsACString &aKey) { aKey = mKey; }
+  bool DataSize(int64_t* aSize);
+  void Key(nsACString& aKey) { aKey = mKey; }
   bool IsDoomed();
   bool IsPinned() const { return mPinned; }
   bool IsWriteInProgress();
@@ -206,16 +151,8 @@ class CacheFile final : public CacheFileChunkListener,
   bool ShouldCacheChunk(uint32_t aIndex);
   bool MustKeepCachedChunk(uint32_t aIndex);
 
-<<<<<<< HEAD
-  nsresult DeactivateChunk(CacheFileChunk *aChunk);
-  void RemoveChunkInternal(CacheFileChunk *aChunk, bool aCacheChunk);
-||||||| merged common ancestors
-  nsresult DeactivateChunk(CacheFileChunk *aChunk);
-  void     RemoveChunkInternal(CacheFileChunk *aChunk, bool aCacheChunk);
-=======
   nsresult DeactivateChunk(CacheFileChunk* aChunk);
   void RemoveChunkInternal(CacheFileChunk* aChunk, bool aCacheChunk);
->>>>>>> upstream-releases
 
   bool OutputStreamExists(bool aAlternativeData);
   // Returns number of bytes that are available and can be read by input stream
@@ -225,43 +162,17 @@ class CacheFile final : public CacheFileChunkListener,
   int64_t BytesFromChunk(uint32_t aIndex, bool aAlternativeData);
   nsresult Truncate(int64_t aOffset);
 
-<<<<<<< HEAD
-  nsresult RemoveInput(CacheFileInputStream *aInput, nsresult aStatus);
-  nsresult RemoveOutput(CacheFileOutputStream *aOutput, nsresult aStatus);
-  nsresult NotifyChunkListener(CacheFileChunkListener *aCallback,
-                               nsIEventTarget *aTarget, nsresult aResult,
-                               uint32_t aChunkIdx, CacheFileChunk *aChunk);
-||||||| merged common ancestors
-  nsresult RemoveInput(CacheFileInputStream *aInput, nsresult aStatus);
-  nsresult RemoveOutput(CacheFileOutputStream *aOutput, nsresult aStatus);
-  nsresult NotifyChunkListener(CacheFileChunkListener *aCallback,
-                               nsIEventTarget *aTarget,
-                               nsresult aResult,
-                               uint32_t aChunkIdx,
-                               CacheFileChunk *aChunk);
-=======
   nsresult RemoveInput(CacheFileInputStream* aInput, nsresult aStatus);
   nsresult RemoveOutput(CacheFileOutputStream* aOutput, nsresult aStatus);
   nsresult NotifyChunkListener(CacheFileChunkListener* aCallback,
                                nsIEventTarget* aTarget, nsresult aResult,
                                uint32_t aChunkIdx, CacheFileChunk* aChunk);
->>>>>>> upstream-releases
   nsresult QueueChunkListener(uint32_t aIndex,
                               CacheFileChunkListener* aCallback);
   nsresult NotifyChunkListeners(uint32_t aIndex, nsresult aResult,
-<<<<<<< HEAD
-                                CacheFileChunk *aChunk);
-  bool HaveChunkListeners(uint32_t aIndex);
-  void NotifyListenersAboutOutputRemoval();
-||||||| merged common ancestors
-                                CacheFileChunk *aChunk);
-  bool     HaveChunkListeners(uint32_t aIndex);
-  void     NotifyListenersAboutOutputRemoval();
-=======
                                 CacheFileChunk* aChunk);
   bool HaveChunkListeners(uint32_t aIndex);
   void NotifyListenersAboutOutputRemoval();
->>>>>>> upstream-releases
 
   bool IsDirty();
   void WriteMetadataIfNeeded();
@@ -273,7 +184,7 @@ class CacheFile final : public CacheFileChunkListener,
   nsresult PadChunkWithZeroes(uint32_t aChunkIdx);
 
   void SetError(nsresult aStatus);
-  nsresult SetAltMetadata(const char *aAltMetadata);
+  nsresult SetAltMetadata(const char* aAltMetadata);
 
   nsresult InitIndexEntry();
 
@@ -318,34 +229,15 @@ class CacheFile final : public CacheFileChunkListener,
   // and mark it as discarded.
   nsTArray<RefPtr<CacheFileChunk>> mDiscardedChunks;
 
-<<<<<<< HEAD
-  nsTArray<CacheFileInputStream *> mInputs;
-  CacheFileOutputStream *mOutput;
-||||||| merged common ancestors
-  nsTArray<CacheFileInputStream*> mInputs;
-  CacheFileOutputStream          *mOutput;
-=======
   nsTArray<CacheFileInputStream*> mInputs;
   CacheFileOutputStream* mOutput;
->>>>>>> upstream-releases
 
   nsTArray<RefPtr<nsISupports>> mObjsToRelease;
 };
 
 class CacheFileAutoLock {
-<<<<<<< HEAD
- public:
-  explicit CacheFileAutoLock(CacheFile *aFile) : mFile(aFile), mLocked(true) {
-||||||| merged common ancestors
-public:
-  explicit CacheFileAutoLock(CacheFile *aFile)
-    : mFile(aFile)
-    , mLocked(true)
-  {
-=======
  public:
   explicit CacheFileAutoLock(CacheFile* aFile) : mFile(aFile), mLocked(true) {
->>>>>>> upstream-releases
     mFile->Lock();
   }
   ~CacheFileAutoLock() {

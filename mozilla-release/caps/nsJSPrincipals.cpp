@@ -46,49 +46,19 @@ nsJSPrincipals::Release() {
   return count;
 }
 
-<<<<<<< HEAD
-/* static */ bool nsJSPrincipals::Subsume(JSPrincipals* jsprin,
-                                          JSPrincipals* other) {
-  bool result;
-  nsresult rv = nsJSPrincipals::get(jsprin)->Subsumes(
-      nsJSPrincipals::get(other), &result);
-  return NS_SUCCEEDED(rv) && result;
-||||||| merged common ancestors
-/* static */ bool
-nsJSPrincipals::Subsume(JSPrincipals *jsprin, JSPrincipals *other)
-{
-    bool result;
-    nsresult rv = nsJSPrincipals::get(jsprin)->Subsumes(nsJSPrincipals::get(other), &result);
-    return NS_SUCCEEDED(rv) && result;
-=======
 /* static */
 bool nsJSPrincipals::Subsume(JSPrincipals* jsprin, JSPrincipals* other) {
   bool result;
   nsresult rv = nsJSPrincipals::get(jsprin)->Subsumes(
       nsJSPrincipals::get(other), &result);
   return NS_SUCCEEDED(rv) && result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void nsJSPrincipals::Destroy(JSPrincipals* jsprin) {
-  // The JS runtime can call this method during the last GC when
-  // nsScriptSecurityManager is destroyed. So we must not assume here that
-  // the security manager still exists.
-||||||| merged common ancestors
-/* static */ void
-nsJSPrincipals::Destroy(JSPrincipals *jsprin)
-{
-    // The JS runtime can call this method during the last GC when
-    // nsScriptSecurityManager is destroyed. So we must not assume here that
-    // the security manager still exists.
-=======
 /* static */
 void nsJSPrincipals::Destroy(JSPrincipals* jsprin) {
   // The JS runtime can call this method during the last GC when
   // nsScriptSecurityManager is destroyed. So we must not assume here that
   // the security manager still exists.
->>>>>>> upstream-releases
 
   nsJSPrincipals* nsjsprin = nsJSPrincipals::get(jsprin);
 
@@ -132,26 +102,6 @@ JS_PUBLIC_API void JSPrincipals::dump() {
 
 #endif
 
-<<<<<<< HEAD
-/* static */ bool nsJSPrincipals::ReadPrincipals(
-    JSContext* aCx, JSStructuredCloneReader* aReader,
-    JSPrincipals** aOutPrincipals) {
-  uint32_t tag;
-  uint32_t unused;
-  if (!JS_ReadUint32Pair(aReader, &tag, &unused)) {
-    return false;
-  }
-||||||| merged common ancestors
-/* static */ bool
-nsJSPrincipals::ReadPrincipals(JSContext* aCx, JSStructuredCloneReader* aReader,
-                               JSPrincipals** aOutPrincipals)
-{
-    uint32_t tag;
-    uint32_t unused;
-    if (!JS_ReadUint32Pair(aReader, &tag, &unused)) {
-        return false;
-    }
-=======
 /* static */
 bool nsJSPrincipals::ReadPrincipals(JSContext* aCx,
                                     JSStructuredCloneReader* aReader,
@@ -161,24 +111,7 @@ bool nsJSPrincipals::ReadPrincipals(JSContext* aCx,
   if (!JS_ReadUint32Pair(aReader, &tag, &unused)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!(tag == SCTAG_DOM_NULL_PRINCIPAL || tag == SCTAG_DOM_SYSTEM_PRINCIPAL ||
-        tag == SCTAG_DOM_CONTENT_PRINCIPAL ||
-        tag == SCTAG_DOM_EXPANDED_PRINCIPAL)) {
-    xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
-    return false;
-  }
-||||||| merged common ancestors
-    if (!(tag == SCTAG_DOM_NULL_PRINCIPAL ||
-          tag == SCTAG_DOM_SYSTEM_PRINCIPAL ||
-          tag == SCTAG_DOM_CONTENT_PRINCIPAL ||
-          tag == SCTAG_DOM_EXPANDED_PRINCIPAL)) {
-        xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
-        return false;
-    }
-=======
   if (!(tag == SCTAG_DOM_NULL_PRINCIPAL || tag == SCTAG_DOM_SYSTEM_PRINCIPAL ||
         tag == SCTAG_DOM_CONTENT_PRINCIPAL ||
         tag == SCTAG_DOM_EXPANDED_PRINCIPAL ||
@@ -186,31 +119,10 @@ bool nsJSPrincipals::ReadPrincipals(JSContext* aCx,
     xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
     return false;
   }
->>>>>>> upstream-releases
 
   return ReadKnownPrincipalType(aCx, aReader, tag, aOutPrincipals);
 }
 
-<<<<<<< HEAD
-static bool ReadPrincipalInfo(JSStructuredCloneReader* aReader,
-                              OriginAttributes& aAttrs, nsACString& aSpec,
-                              nsACString& aOriginNoSuffix) {
-  uint32_t suffixLength, specLength;
-  if (!JS_ReadUint32Pair(aReader, &suffixLength, &specLength)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-ReadPrincipalInfo(JSStructuredCloneReader* aReader,
-                  OriginAttributes& aAttrs,
-                  nsACString& aSpec,
-                  nsACString& aOriginNoSuffix)
-{
-    uint32_t suffixLength, specLength;
-    if (!JS_ReadUint32Pair(aReader, &suffixLength, &specLength)) {
-        return false;
-    }
-=======
 static bool ReadPrincipalInfo(JSStructuredCloneReader* aReader,
                               OriginAttributes& aAttrs, nsACString& aSpec,
                               nsACString& aOriginNoSuffix,
@@ -219,7 +131,6 @@ static bool ReadPrincipalInfo(JSStructuredCloneReader* aReader,
   if (!JS_ReadUint32Pair(aReader, &suffixLength, &specLength)) {
     return false;
   }
->>>>>>> upstream-releases
 
   nsAutoCString suffix;
   if (!suffix.SetLength(suffixLength, fallible)) {
@@ -242,47 +153,6 @@ static bool ReadPrincipalInfo(JSStructuredCloneReader* aReader,
     return false;
   }
 
-<<<<<<< HEAD
-  uint32_t originNoSuffixLength, dummy;
-  if (!JS_ReadUint32Pair(aReader, &originNoSuffixLength, &dummy)) {
-    return false;
-  }
-
-  MOZ_ASSERT(dummy == 0);
-
-  if (!aOriginNoSuffix.SetLength(originNoSuffixLength, fallible)) {
-    return false;
-  }
-
-  if (!JS_ReadBytes(aReader, aOriginNoSuffix.BeginWriting(),
-                    originNoSuffixLength)) {
-    return false;
-  }
-
-  return true;
-}
-
-static bool ReadPrincipalInfo(JSStructuredCloneReader* aReader, uint32_t aTag,
-                              PrincipalInfo& aInfo) {
-  if (aTag == SCTAG_DOM_SYSTEM_PRINCIPAL) {
-    aInfo = SystemPrincipalInfo();
-  } else if (aTag == SCTAG_DOM_NULL_PRINCIPAL) {
-    OriginAttributes attrs;
-    nsAutoCString spec;
-    nsAutoCString originNoSuffix;
-    if (!ReadPrincipalInfo(aReader, attrs, spec, originNoSuffix)) {
-      return false;
-    }
-    aInfo = NullPrincipalInfo(attrs, spec);
-  } else if (aTag == SCTAG_DOM_EXPANDED_PRINCIPAL) {
-    uint32_t length, unused;
-    if (!JS_ReadUint32Pair(aReader, &length, &unused)) {
-      return false;
-||||||| merged common ancestors
-    uint32_t originNoSuffixLength, dummy;
-    if (!JS_ReadUint32Pair(aReader, &originNoSuffixLength, &dummy)) {
-        return false;
-=======
   uint32_t originNoSuffixLength, dummy;
   if (!JS_ReadUint32Pair(aReader, &originNoSuffixLength, &dummy)) {
     return false;
@@ -344,7 +214,6 @@ static bool ReadPrincipalInfo(JSStructuredCloneReader* aReader, uint32_t aTag,
     uint32_t length, unused;
     if (!JS_ReadUint32Pair(aReader, &length, &unused)) {
       return false;
->>>>>>> upstream-releases
     }
 
     ExpandedPrincipalInfo expanded;
@@ -362,64 +231,6 @@ static bool ReadPrincipalInfo(JSStructuredCloneReader* aReader, uint32_t aTag,
       expanded.allowlist().AppendElement(sub);
     }
 
-<<<<<<< HEAD
-    aInfo = expanded;
-  } else if (aTag == SCTAG_DOM_CONTENT_PRINCIPAL) {
-    OriginAttributes attrs;
-    nsAutoCString spec;
-    nsAutoCString originNoSuffix;
-    if (!ReadPrincipalInfo(aReader, attrs, spec, originNoSuffix)) {
-      return false;
-    }
-||||||| merged common ancestors
-    return true;
-}
-
-static bool
-ReadPrincipalInfo(JSStructuredCloneReader* aReader,
-                  uint32_t aTag,
-                  PrincipalInfo& aInfo)
-{
-    if (aTag == SCTAG_DOM_SYSTEM_PRINCIPAL) {
-        aInfo = SystemPrincipalInfo();
-    } else if (aTag == SCTAG_DOM_NULL_PRINCIPAL) {
-        OriginAttributes attrs;
-        nsAutoCString spec;
-        nsAutoCString originNoSuffix;
-        if (!ReadPrincipalInfo(aReader, attrs, spec, originNoSuffix)) {
-            return false;
-        }
-        aInfo = NullPrincipalInfo(attrs, spec);
-    } else if (aTag == SCTAG_DOM_EXPANDED_PRINCIPAL) {
-        uint32_t length, unused;
-        if (!JS_ReadUint32Pair(aReader, &length, &unused)) {
-            return false;
-        }
-
-        ExpandedPrincipalInfo expanded;
-
-        for (uint32_t i = 0; i < length; i++) {
-            uint32_t tag;
-            if (!JS_ReadUint32Pair(aReader, &tag, &unused)) {
-                return false;
-            }
-
-            PrincipalInfo sub;
-            if (!ReadPrincipalInfo(aReader, tag, sub)) {
-                return false;
-            }
-            expanded.whitelist().AppendElement(sub);
-        }
-
-        aInfo = expanded;
-    } else if (aTag == SCTAG_DOM_CONTENT_PRINCIPAL) {
-        OriginAttributes attrs;
-        nsAutoCString spec;
-        nsAutoCString originNoSuffix;
-        if (!ReadPrincipalInfo(aReader, attrs, spec, originNoSuffix)) {
-            return false;
-        }
-=======
     aInfo = expanded;
   } else if (aTag == SCTAG_DOM_CONTENT_PRINCIPAL) {
     OriginAttributes attrs;
@@ -429,7 +240,6 @@ ReadPrincipalInfo(JSStructuredCloneReader* aReader,
     if (!ReadPrincipalInfo(aReader, attrs, spec, originNoSuffix, baseDomain)) {
       return false;
     }
->>>>>>> upstream-releases
 
 #ifdef FUZZING
     if (originNoSuffix.IsEmpty()) {
@@ -439,18 +249,10 @@ ReadPrincipalInfo(JSStructuredCloneReader* aReader,
 
     MOZ_DIAGNOSTIC_ASSERT(!originNoSuffix.IsEmpty());
 
-<<<<<<< HEAD
-    aInfo = ContentPrincipalInfo(attrs, originNoSuffix, spec);
-  } else {
-||||||| merged common ancestors
-        aInfo = ContentPrincipalInfo(attrs, originNoSuffix, spec);
-    } else {
-=======
     // XXX: Do we care about mDomain for structured clone?
     aInfo = ContentPrincipalInfo(attrs, originNoSuffix, spec, Nothing(),
                                  baseDomain);
   } else {
->>>>>>> upstream-releases
 #ifdef FUZZING
     return false;
 #else
@@ -461,85 +263,19 @@ ReadPrincipalInfo(JSStructuredCloneReader* aReader,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool nsJSPrincipals::ReadKnownPrincipalType(
-    JSContext* aCx, JSStructuredCloneReader* aReader, uint32_t aTag,
-    JSPrincipals** aOutPrincipals) {
-  MOZ_ASSERT(aTag == SCTAG_DOM_NULL_PRINCIPAL ||
-             aTag == SCTAG_DOM_SYSTEM_PRINCIPAL ||
-             aTag == SCTAG_DOM_CONTENT_PRINCIPAL ||
-             aTag == SCTAG_DOM_EXPANDED_PRINCIPAL);
-
-  if (NS_WARN_IF(!NS_IsMainThread())) {
-    xpc::Throw(aCx, NS_ERROR_UNCATCHABLE_EXCEPTION);
-    return false;
-  }
-||||||| merged common ancestors
-/* static */ bool
-nsJSPrincipals::ReadKnownPrincipalType(JSContext* aCx,
-                                       JSStructuredCloneReader* aReader,
-                                       uint32_t aTag,
-                                       JSPrincipals** aOutPrincipals)
-{
-    MOZ_ASSERT(aTag == SCTAG_DOM_NULL_PRINCIPAL ||
-               aTag == SCTAG_DOM_SYSTEM_PRINCIPAL ||
-               aTag == SCTAG_DOM_CONTENT_PRINCIPAL ||
-               aTag == SCTAG_DOM_EXPANDED_PRINCIPAL);
-
-    if (NS_WARN_IF(!NS_IsMainThread())) {
-        xpc::Throw(aCx, NS_ERROR_UNCATCHABLE_EXCEPTION);
-        return false;
-    }
-=======
 static StaticRefPtr<nsIPrincipal> sActiveWorkerPrincipal;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  PrincipalInfo info;
-  if (!ReadPrincipalInfo(aReader, aTag, info)) {
-    return false;
-  }
-||||||| merged common ancestors
-    PrincipalInfo info;
-    if (!ReadPrincipalInfo(aReader, aTag, info)) {
-        return false;
-    }
-=======
 nsJSPrincipals::AutoSetActiveWorkerPrincipal::AutoSetActiveWorkerPrincipal(
     nsIPrincipal* aPrincipal) {
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_RELEASE_ASSERT(!sActiveWorkerPrincipal);
   sActiveWorkerPrincipal = aPrincipal;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult rv;
-  nsCOMPtr<nsIPrincipal> prin = PrincipalInfoToPrincipal(info, &rv);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
-    return false;
-  }
-||||||| merged common ancestors
-    nsresult rv;
-    nsCOMPtr<nsIPrincipal> prin = PrincipalInfoToPrincipal(info, &rv);
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-        xpc::Throw(aCx, NS_ERROR_DOM_DATA_CLONE_ERR);
-        return false;
-    }
-=======
 nsJSPrincipals::AutoSetActiveWorkerPrincipal::~AutoSetActiveWorkerPrincipal() {
   sActiveWorkerPrincipal = nullptr;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *aOutPrincipals = get(prin.forget().take());
-  return true;
-||||||| merged common ancestors
-    *aOutPrincipals = get(prin.forget().take());
-    return true;
-=======
 /* static */
 bool nsJSPrincipals::ReadKnownPrincipalType(JSContext* aCx,
                                             JSStructuredCloneReader* aReader,
@@ -582,28 +318,13 @@ bool nsJSPrincipals::ReadKnownPrincipalType(JSContext* aCx,
 
   *aOutPrincipals = get(prin.forget().take());
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
-                               const OriginAttributes& aAttrs,
-                               const nsCString& aSpec,
-                               const nsCString& aOriginNoSuffix) {
-||||||| merged common ancestors
-static bool
-WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
-                   const OriginAttributes& aAttrs,
-                   const nsCString& aSpec,
-                   const nsCString& aOriginNoSuffix)
-{
-=======
 static bool WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
                                const OriginAttributes& aAttrs,
                                const nsCString& aSpec,
                                const nsCString& aOriginNoSuffix,
                                const nsCString& aBaseDomain) {
->>>>>>> upstream-releases
   nsAutoCString suffix;
   aAttrs.CreateSuffix(suffix);
 
@@ -624,36 +345,6 @@ static bool WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
          JS_WriteBytes(aWriter, aBaseDomain.get(), aBaseDomain.Length());
 }
 
-<<<<<<< HEAD
-static bool WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
-                               const PrincipalInfo& aInfo) {
-  if (aInfo.type() == PrincipalInfo::TNullPrincipalInfo) {
-    const NullPrincipalInfo& nullInfo = aInfo;
-    return JS_WriteUint32Pair(aWriter, SCTAG_DOM_NULL_PRINCIPAL, 0) &&
-           WritePrincipalInfo(aWriter, nullInfo.attrs(), nullInfo.spec(),
-                              EmptyCString());
-  }
-  if (aInfo.type() == PrincipalInfo::TSystemPrincipalInfo) {
-    return JS_WriteUint32Pair(aWriter, SCTAG_DOM_SYSTEM_PRINCIPAL, 0);
-  }
-  if (aInfo.type() == PrincipalInfo::TExpandedPrincipalInfo) {
-    const ExpandedPrincipalInfo& expanded = aInfo;
-    if (!JS_WriteUint32Pair(aWriter, SCTAG_DOM_EXPANDED_PRINCIPAL, 0) ||
-        !JS_WriteUint32Pair(aWriter, expanded.allowlist().Length(), 0)) {
-      return false;
-||||||| merged common ancestors
-static bool
-WritePrincipalInfo(JSStructuredCloneWriter* aWriter, const PrincipalInfo& aInfo)
-{
-    if (aInfo.type() == PrincipalInfo::TNullPrincipalInfo) {
-        const NullPrincipalInfo& nullInfo = aInfo;
-        return JS_WriteUint32Pair(aWriter, SCTAG_DOM_NULL_PRINCIPAL, 0) &&
-               WritePrincipalInfo(aWriter, nullInfo.attrs(), nullInfo.spec(),
-                                  EmptyCString());
-    }
-    if (aInfo.type() == PrincipalInfo::TSystemPrincipalInfo) {
-        return JS_WriteUint32Pair(aWriter, SCTAG_DOM_SYSTEM_PRINCIPAL, 0);
-=======
 static bool WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
                                const PrincipalInfo& aInfo) {
   if (aInfo.type() == PrincipalInfo::TNullPrincipalInfo) {
@@ -670,7 +361,6 @@ static bool WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
     if (!JS_WriteUint32Pair(aWriter, SCTAG_DOM_EXPANDED_PRINCIPAL, 0) ||
         !JS_WriteUint32Pair(aWriter, expanded.allowlist().Length(), 0)) {
       return false;
->>>>>>> upstream-releases
     }
 
     for (uint32_t i = 0; i < expanded.allowlist().Length(); i++) {
@@ -681,25 +371,11 @@ static bool WritePrincipalInfo(JSStructuredCloneWriter* aWriter,
     return true;
   }
 
-<<<<<<< HEAD
-  MOZ_ASSERT(aInfo.type() == PrincipalInfo::TContentPrincipalInfo);
-  const ContentPrincipalInfo& cInfo = aInfo;
-  return JS_WriteUint32Pair(aWriter, SCTAG_DOM_CONTENT_PRINCIPAL, 0) &&
-         WritePrincipalInfo(aWriter, cInfo.attrs(), cInfo.spec(),
-                            cInfo.originNoSuffix());
-||||||| merged common ancestors
-    MOZ_ASSERT(aInfo.type() == PrincipalInfo::TContentPrincipalInfo);
-    const ContentPrincipalInfo& cInfo = aInfo;
-    return JS_WriteUint32Pair(aWriter, SCTAG_DOM_CONTENT_PRINCIPAL, 0) &&
-           WritePrincipalInfo(aWriter, cInfo.attrs(), cInfo.spec(),
-                              cInfo.originNoSuffix());
-=======
   MOZ_ASSERT(aInfo.type() == PrincipalInfo::TContentPrincipalInfo);
   const ContentPrincipalInfo& cInfo = aInfo;
   return JS_WriteUint32Pair(aWriter, SCTAG_DOM_CONTENT_PRINCIPAL, 0) &&
          WritePrincipalInfo(aWriter, cInfo.attrs(), cInfo.spec(),
                             cInfo.originNoSuffix(), cInfo.baseDomain());
->>>>>>> upstream-releases
 }
 
 bool nsJSPrincipals::write(JSContext* aCx, JSStructuredCloneWriter* aWriter) {

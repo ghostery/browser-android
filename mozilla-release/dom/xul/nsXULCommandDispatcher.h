@@ -29,102 +29,6 @@ class Element;
 }  // namespace mozilla
 
 class nsXULCommandDispatcher : public nsIDOMXULCommandDispatcher,
-<<<<<<< HEAD
-                               public nsSupportsWeakReference {
- public:
-  explicit nsXULCommandDispatcher(nsIDocument* aDocument);
-
-  // nsISupports
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(nsXULCommandDispatcher,
-                                           nsIDOMXULCommandDispatcher)
-
-  // nsIDOMXULCommandDispatcher interface
-  NS_DECL_NSIDOMXULCOMMANDDISPATCHER
-
-  void Disconnect();
-
- protected:
-  virtual ~nsXULCommandDispatcher();
-
-  already_AddRefed<nsPIWindowRoot> GetWindowRoot();
-
-  mozilla::dom::Element* GetRootFocusedContentAndWindow(
-      nsPIDOMWindowOuter** aWindow);
-
-  nsCOMPtr<nsIDocument> mDocument;
-
-  class Updater {
-   public:
-    Updater(mozilla::dom::Element* aElement, const nsAString& aEvents,
-            const nsAString& aTargets)
-        : mElement(aElement),
-          mEvents(aEvents),
-          mTargets(aTargets),
-          mNext(nullptr) {}
-
-    RefPtr<mozilla::dom::Element> mElement;
-    nsString mEvents;
-    nsString mTargets;
-    Updater* mNext;
-  };
-
-  Updater* mUpdaters;
-
-  bool Matches(const nsString& aList, const nsAString& aElement);
-
-  bool mLocked;
-  nsTArray<nsString> mPendingUpdates;
-||||||| merged common ancestors
-                               public nsSupportsWeakReference
-{
-public:
-    explicit nsXULCommandDispatcher(nsIDocument* aDocument);
-
-    // nsISupports
-    NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-    NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(nsXULCommandDispatcher,
-                                             nsIDOMXULCommandDispatcher)
-
-    // nsIDOMXULCommandDispatcher interface
-    NS_DECL_NSIDOMXULCOMMANDDISPATCHER
-
-    void Disconnect();
-protected:
-    virtual ~nsXULCommandDispatcher();
-
-    already_AddRefed<nsPIWindowRoot> GetWindowRoot();
-
-    mozilla::dom::Element*
-      GetRootFocusedContentAndWindow(nsPIDOMWindowOuter** aWindow);
-
-    nsCOMPtr<nsIDocument> mDocument;
-
-    class Updater {
-    public:
-      Updater(mozilla::dom::Element* aElement,
-              const nsAString& aEvents,
-              const nsAString& aTargets)
-          : mElement(aElement),
-            mEvents(aEvents),
-            mTargets(aTargets),
-            mNext(nullptr)
-      {}
-
-      RefPtr<mozilla::dom::Element> mElement;
-      nsString                mEvents;
-      nsString                mTargets;
-      Updater*                mNext;
-    };
-
-    Updater* mUpdaters;
-
-    bool Matches(const nsString& aList,
-                   const nsAString& aElement);
-
-    bool mLocked;
-    nsTArray<nsString> mPendingUpdates;
-=======
                                public nsSupportsWeakReference {
  public:
   explicit nsXULCommandDispatcher(mozilla::dom::Document* aDocument);
@@ -170,7 +74,6 @@ protected:
 
   bool mLocked;
   nsTArray<nsString> mPendingUpdates;
->>>>>>> upstream-releases
 };
 
 #endif  // nsXULCommandDispatcher_h__

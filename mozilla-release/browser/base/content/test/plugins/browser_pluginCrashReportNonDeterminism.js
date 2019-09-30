@@ -169,17 +169,9 @@ add_task(async function testChromeHearsPluginCrashFirst() {
     // the PluginCrashed event.
     let plugin = content.document.getElementById("plugin");
     plugin.QueryInterface(Ci.nsIObjectLoadingContent);
-<<<<<<< HEAD
-    let statusDiv = plugin.openOrClosedShadowRoot.getElementById("submitStatus");
-||||||| merged common ancestors
-    let statusDiv = plugin.ownerDocument
-                          .getAnonymousElementByAttribute(plugin, "anonid",
-                                                          "submitStatus");
-=======
     let statusDiv = plugin.openOrClosedShadowRoot.getElementById(
       "submitStatus"
     );
->>>>>>> upstream-releases
 
     if (statusDiv.getAttribute("status") == "please") {
       Assert.ok(false, "Did not expect plugin to be in crash report mode yet.");
@@ -244,17 +236,9 @@ add_task(async function testContentHearsCrashFirst() {
     // we're not showing the plugin crash report UI.
     let plugin = content.document.getElementById("plugin");
     plugin.QueryInterface(Ci.nsIObjectLoadingContent);
-<<<<<<< HEAD
-    let statusDiv = plugin.openOrClosedShadowRoot.getElementById("submitStatus");
-||||||| merged common ancestors
-    let statusDiv = plugin.ownerDocument
-                          .getAnonymousElementByAttribute(plugin, "anonid",
-                                                          "submitStatus");
-=======
     let statusDiv = plugin.openOrClosedShadowRoot.getElementById(
       "submitStatus"
     );
->>>>>>> upstream-releases
 
     if (statusDiv.getAttribute("status") == "please") {
       Assert.ok(false, "Did not expect plugin to be in crash report mode yet.");
@@ -293,19 +277,6 @@ add_task(async function testContentHearsCrashFirst() {
     // crash report UI now.
     let plugin = content.document.getElementById("plugin");
     plugin.QueryInterface(Ci.nsIObjectLoadingContent);
-<<<<<<< HEAD
-    let statusDiv = plugin.openOrClosedShadowRoot.getElementById("submitStatus");
-
-    Assert.equal(statusDiv.getAttribute("status"), "please",
-      "Should have been showing crash report UI");
-||||||| merged common ancestors
-    let statusDiv = plugin.ownerDocument
-                          .getAnonymousElementByAttribute(plugin, "anonid",
-                                                          "submitStatus");
-
-    Assert.equal(statusDiv.getAttribute("status"), "please",
-      "Should have been showing crash report UI");
-=======
     let statusDiv = plugin.openOrClosedShadowRoot.getElementById(
       "submitStatus"
     );
@@ -315,7 +286,6 @@ add_task(async function testContentHearsCrashFirst() {
       "please",
       "Should have been showing crash report UI"
     );
->>>>>>> upstream-releases
   });
 
   await BrowserTestUtils.closeWindow(win);

@@ -2,13 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/debug_server.rs
-use api::{ApiMsg, DebugCommand, DeviceIntSize};
-||||||| merged common ancestors
-use api::{ApiMsg, DebugCommand};
-=======
 use api::{ApiMsg, DebugCommand, DebugFlags};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/debug_server.rs
 use api::channel::MsgSender;
 use api::units::DeviceIntSize;
 use crate::print_tree::PrintTreePrinter;

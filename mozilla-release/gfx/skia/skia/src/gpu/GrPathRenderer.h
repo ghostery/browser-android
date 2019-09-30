@@ -12,30 +12,10 @@
 #include "SkTArray.h"
 #include "SkRefCnt.h"
 
-<<<<<<< HEAD
 class GrCaps;
 class GrClip;
-class GrContext;
-||||||| merged common ancestors
-class SkPath;
-=======
-class GrCaps;
-class GrClip;
->>>>>>> upstream-releases
 class GrFixedClip;
 class GrHardClip;
-<<<<<<< HEAD
-class GrPaint;
-class GrRenderTargetContext;
-class GrShape;
-class GrStyle;
-struct GrUserStencilSettings;
-struct SkIRect;
-class SkMatrix;
-class SkPath;
-||||||| merged common ancestors
-struct GrPoint;
-=======
 class GrPaint;
 class GrRecordingContext;
 class GrRenderTargetContext;
@@ -45,7 +25,6 @@ struct GrUserStencilSettings;
 struct SkIRect;
 class SkMatrix;
 class SkPath;
->>>>>>> upstream-releases
 
 /**
  *  Base class for drawing paths into a GrOpList.

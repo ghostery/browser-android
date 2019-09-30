@@ -44,11 +44,6 @@ int content_process_main(mozilla::Bootstrap* bootstrap, int argc,
   }
 #endif
 
-<<<<<<< HEAD
-  bootstrap->XRE_SetProcessType(argv[--argc]);
-||||||| merged common ancestors
-    bootstrap->XRE_SetProcessType(argv[--argc]);
-=======
   bootstrap->XRE_SetProcessType(argv[--argc]);
 
 #if defined(XP_WIN) && defined(MOZ_SANDBOX)
@@ -57,7 +52,6 @@ int content_process_main(mozilla::Bootstrap* bootstrap, int argc,
         mozilla::sandboxing::GetInitializedBrokerServices();
   }
 #endif
->>>>>>> upstream-releases
 
   nsresult rv = bootstrap->XRE_InitChildProcess(argc, argv, &childData);
   return NS_FAILED(rv);

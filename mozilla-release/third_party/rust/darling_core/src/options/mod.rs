@@ -42,18 +42,8 @@ impl FromMeta for DefaultExpression {
         Ok(DefaultExpression::Trait)
     }
 
-<<<<<<< HEAD
-    fn from_string(lit: &str) -> Result<Self> {
-        Ok(DefaultExpression::Explicit(
-            syn::parse_str(lit).map_err(|_| Error::unknown_value(lit))?
-        ))
-||||||| merged common ancestors
-    fn from_string(lit: &str) -> Result<Self> {
-        Ok(DefaultExpression::Explicit(syn::Path::from(lit)))
-=======
     fn from_value(value: &syn::Lit) -> Result<Self> {
         syn::Path::from_value(value).map(DefaultExpression::Explicit)
->>>>>>> upstream-releases
     }
 }
 
@@ -90,18 +80,8 @@ pub trait ParseAttribute: Sized {
 }
 
 fn parse_attr<T: ParseAttribute>(attr: &syn::Attribute, target: &mut T) -> Result<()> {
-<<<<<<< HEAD
-    match attr.interpret_meta() {
-||||||| merged common ancestors
-    if attr.is_sugared_doc {
-        return Ok(())
-    }
-
-    match attr.interpret_meta() {
-=======
     let mut errors = Vec::new();
     match attr.parse_meta().ok() {
->>>>>>> upstream-releases
         Some(syn::Meta::List(data)) => {
             for item in data.nested {
                 if let syn::NestedMeta::Meta(ref mi) = item {
@@ -111,20 +91,12 @@ fn parse_attr<T: ParseAttribute>(attr: &syn::Attribute, target: &mut T) -> Resul
                 }
             }
 
-<<<<<<< HEAD
-            Ok(())
-        }
-||||||| merged common ancestors
-            Ok(())
-        },
-=======
             if !errors.is_empty() {
                 Err(Error::multiple(errors))
             } else {
                 Ok(())
             }
         }
->>>>>>> upstream-releases
         Some(ref item) => panic!("Wasn't able to parse: `{:?}`", item),
         None => panic!("Unable to parse {:?}", attr),
     }
@@ -140,51 +112,17 @@ pub trait ParseData: Sized {
         let mut errors = Vec::new();
 
         match *body {
-<<<<<<< HEAD
-            Data::Struct(ref data) => match data.fields {
-                Fields::Unit => Ok(self),
-                Fields::Named(ref fields) => {
-                    for field in &fields.named {
-                        self.parse_field(field)?;
-||||||| merged common ancestors
-            Data::Struct(ref data) => {
-                match data.fields {
-                    Fields::Unit => Ok(self),
-                    Fields::Named(ref fields) => {
-                        for field in &fields.named {
-                            self.parse_field(field)?;
-                        }
-                        Ok(self)
-=======
             Data::Struct(ref data) => match data.fields {
                 Fields::Unit => {}
                 Fields::Named(ref fields) => {
                     for field in &fields.named {
                         collect_error!(errors, self.parse_field(field));
->>>>>>> upstream-releases
                     }
-<<<<<<< HEAD
-                    Ok(self)
-                }
-                Fields::Unnamed(ref fields) => {
-                    for field in &fields.unnamed {
-                        self.parse_field(field)?;
-||||||| merged common ancestors
-                    Fields::Unnamed(ref fields) => {
-                        for field in &fields.unnamed {
-                            self.parse_field(field)?;
-                        }
-
-                        Ok(self)
-=======
                 }
                 Fields::Unnamed(ref fields) => {
                     for field in &fields.unnamed {
                         collect_error!(errors, self.parse_field(field));
->>>>>>> upstream-releases
                     }
-
-                    Ok(self)
                 }
             },
             Data::Enum(ref data) => {

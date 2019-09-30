@@ -302,18 +302,10 @@ class Compositor : public TextureSourceProvider {
    * with buffered BasicCompositor, where only the invalid area is drawn to a
    * render target), this will return null.
    */
-<<<<<<< HEAD
-  virtual CompositingRenderTarget* GetWindowRenderTarget() const {
-    return nullptr;
-  }
-||||||| merged common ancestors
-  virtual CompositingRenderTarget* GetWindowRenderTarget() const { return nullptr; }
-=======
   virtual already_AddRefed<CompositingRenderTarget> GetWindowRenderTarget()
       const {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   /**
    * Mostly the compositor will pull the size from a widget and this method will
@@ -479,15 +471,7 @@ class Compositor : public TextureSourceProvider {
 
   virtual CompositorD3D11* AsCompositorD3D11() { return nullptr; }
 
-<<<<<<< HEAD
-  virtual Compositor* AsCompositor() override { return this; }
-||||||| merged common ancestors
-  virtual Compositor* AsCompositor() override {
-    return this;
-  }
-=======
   Compositor* AsCompositor() override { return this; }
->>>>>>> upstream-releases
 
   TimeStamp GetLastCompositionEndTime() const override {
     return mLastCompositionEndTime;
@@ -534,15 +518,6 @@ class Compositor : public TextureSourceProvider {
   // A stale Compositor has no CompositorBridgeParent; it will not process
   // frames and should not be used.
   void SetInvalid();
-<<<<<<< HEAD
-  virtual bool IsValid() const override;
-  CompositorBridgeParent* GetCompositorBridgeParent() const { return mParent; }
-||||||| merged common ancestors
-  virtual bool IsValid() const override;
-  CompositorBridgeParent* GetCompositorBridgeParent() const {
-    return mParent;
-  }
-=======
   bool IsValid() const override;
   CompositorBridgeParent* GetCompositorBridgeParent() const { return mParent; }
 
@@ -560,7 +535,6 @@ class Compositor : public TextureSourceProvider {
    * returned instead.
    */
   already_AddRefed<RecordedFrame> RecordFrame(const TimeStamp& aTimeStamp);
->>>>>>> upstream-releases
 
  protected:
   void DrawDiagnosticsInternal(DiagnosticFlags aFlags,

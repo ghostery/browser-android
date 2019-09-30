@@ -201,18 +201,8 @@ void doGCCCDump(const nsCString& aInputStr) {
   NS_DispatchToMainThread(runnable);
 }
 
-<<<<<<< HEAD
-bool SetupFifo() {
-#ifdef DEBUG
-||||||| merged common ancestors
-bool
-SetupFifo()
-{
-#ifdef DEBUG
-=======
 bool SetupFifo() {
 #  ifdef DEBUG
->>>>>>> upstream-releases
   static bool fifoCallbacksRegistered = false;
 #  endif
 
@@ -255,16 +245,8 @@ nsMemoryInfoDumper::nsMemoryInfoDumper() {}
 
 nsMemoryInfoDumper::~nsMemoryInfoDumper() {}
 
-<<<<<<< HEAD
-/* static */ void nsMemoryInfoDumper::Initialize() {
-||||||| merged common ancestors
-/* static */ void
-nsMemoryInfoDumper::Initialize()
-{
-=======
 /* static */
 void nsMemoryInfoDumper::Initialize() {
->>>>>>> upstream-releases
 #if defined(MOZ_SUPPORTS_RT_SIGNALS)
   SignalPipeWatcher* sw = SignalPipeWatcher::GetSingleton();
 

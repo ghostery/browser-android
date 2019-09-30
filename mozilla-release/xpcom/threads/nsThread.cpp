@@ -87,25 +87,11 @@ using GetCurrentThreadStackLimitsFn = void(WINAPI*)(PULONG_PTR LowLimit,
 #endif
 
 #ifdef MOZ_CANARY
-<<<<<<< HEAD
-#include <unistd.h>
-#include <execinfo.h>
-#include <signal.h>
-#include <fcntl.h>
-#include "nsXULAppAPI.h"
-||||||| merged common ancestors
-# include <unistd.h>
-# include <execinfo.h>
-# include <signal.h>
-# include <fcntl.h>
-# include "nsXULAppAPI.h"
-=======
 #  include <unistd.h>
 #  include <execinfo.h>
 #  include <signal.h>
 #  include <fcntl.h>
 #  include "nsXULAppAPI.h"
->>>>>>> upstream-releases
 #endif
 
 #if defined(NS_FUNCTION_TIMER) && defined(_MSC_VER)
@@ -160,17 +146,8 @@ nsThreadClassInfo::Release() { return 1; }
 NS_IMPL_QUERY_INTERFACE(nsThreadClassInfo, nsIClassInfo)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsThreadClassInfo::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
-  return NS_CI_INTERFACE_GETTER_NAME(nsThread)(aCount, aArray);
-||||||| merged common ancestors
-nsThreadClassInfo::GetInterfaces(uint32_t* aCount, nsIID*** aArray)
-{
-  return NS_CI_INTERFACE_GETTER_NAME(nsThread)(aCount, aArray);
-=======
 nsThreadClassInfo::GetInterfaces(nsTArray<nsIID>& aArray) {
   return NS_CI_INTERFACE_GETTER_NAME(nsThread)(aArray);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -397,44 +374,18 @@ struct ThreadInitData {
   return sList;
 }
 
-<<<<<<< HEAD
-/* static */ void nsThread::ClearThreadList() {
-||||||| merged common ancestors
-/* static */ void
-nsThread::ClearThreadList()
-{
-=======
 /* static */
 void nsThread::ClearThreadList() {
->>>>>>> upstream-releases
   OffTheBooksMutexAutoLock mal(ThreadListMutex());
   while (ThreadList().popFirst()) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ nsThreadEnumerator nsThread::Enumerate() { return {}; }
-||||||| merged common ancestors
-/* static */ nsThreadEnumerator
-nsThread::Enumerate()
-{
-  return {};
-}
-=======
 /* static */
 nsThreadEnumerator nsThread::Enumerate() { return {}; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ uint32_t nsThread::MaxActiveThreads() {
-||||||| merged common ancestors
-/* static */ uint32_t
-nsThread::MaxActiveThreads()
-{
-=======
 /* static */
 uint32_t nsThread::MaxActiveThreads() {
->>>>>>> upstream-releases
   OffTheBooksMutexAutoLock mal(ThreadListMutex());
   return sMaxActiveThreads;
 }
@@ -457,16 +408,8 @@ void nsThread::MaybeRemoveFromThreadList() {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void nsThread::ThreadFunc(void* aArg) {
-||||||| merged common ancestors
-/*static*/ void
-nsThread::ThreadFunc(void* aArg)
-{
-=======
 /*static*/
 void nsThread::ThreadFunc(void* aArg) {
->>>>>>> upstream-releases
   using mozilla::ipc::BackgroundChild;
 
   ThreadInitData* initData = static_cast<ThreadInitData*>(aArg);
@@ -586,16 +529,8 @@ void nsThread::InitCommon() {
 #  ifdef __GLIBC__
       unsigned major, minor;
       sscanf(gnu_get_libc_version(), "%u.%u", &major, &minor) < 2 ||
-<<<<<<< HEAD
-          major < 2 || (major == 2 && minor < 27);
-#else
-||||||| merged common ancestors
-        major < 2 || (major == 2 && minor < 27);
-#else
-=======
           major < 2 || (major == 2 && minor < 27);
 #  else
->>>>>>> upstream-releases
       false;
 #  endif
     });
@@ -653,44 +588,6 @@ int sCanaryOutputFD = -1;
 #endif
 
 nsThread::nsThread(NotNull<SynchronizedEventQueue*> aQueue,
-<<<<<<< HEAD
-                   MainThreadFlag aMainThread, uint32_t aStackSize)
-    : mEvents(aQueue.get()),
-      mEventTarget(
-          new ThreadEventTarget(mEvents.get(), aMainThread == MAIN_THREAD)),
-      mShutdownContext(nullptr),
-      mScriptObserver(nullptr),
-      mThread(nullptr),
-      mStackSize(aStackSize),
-      mNestedEventLoopDepth(0),
-      mCurrentEventLoopDepth(-1),
-      mShutdownRequired(false),
-      mPriority(PRIORITY_NORMAL),
-      mIsMainThread(uint8_t(aMainThread)),
-      mCanInvokeJS(false),
-      mCurrentEvent(nullptr),
-      mCurrentEventStart(TimeStamp::Now()),
-      mCurrentPerformanceCounter(nullptr) {
-||||||| merged common ancestors
-                   MainThreadFlag aMainThread,
-                   uint32_t aStackSize)
-  : mEvents(aQueue.get())
-  , mEventTarget(new ThreadEventTarget(mEvents.get(), aMainThread == MAIN_THREAD))
-  , mShutdownContext(nullptr)
-  , mScriptObserver(nullptr)
-  , mThread(nullptr)
-  , mStackSize(aStackSize)
-  , mNestedEventLoopDepth(0)
-  , mCurrentEventLoopDepth(-1)
-  , mShutdownRequired(false)
-  , mPriority(PRIORITY_NORMAL)
-  , mIsMainThread(uint8_t(aMainThread))
-  , mCanInvokeJS(false)
-  , mCurrentEvent(nullptr)
-  , mCurrentEventStart(TimeStamp::Now())
-  , mCurrentPerformanceCounter(nullptr)
-{
-=======
                    MainThreadFlag aMainThread, uint32_t aStackSize)
     : mEvents(aQueue.get()),
       mEventTarget(
@@ -711,46 +608,11 @@ nsThread::nsThread(NotNull<SynchronizedEventQueue*> aQueue,
       mLastWakeupCheckTime(mCurrentEventStart),
 #endif
       mCurrentPerformanceCounter(nullptr) {
->>>>>>> upstream-releases
   mLastLongTaskEnd = mCurrentEventStart;
   mLastLongNonIdleTaskEnd = mCurrentEventStart;
 }
 
 nsThread::nsThread()
-<<<<<<< HEAD
-    : mEvents(nullptr),
-      mEventTarget(nullptr),
-      mShutdownContext(nullptr),
-      mScriptObserver(nullptr),
-      mThread(nullptr),
-      mStackSize(0),
-      mNestedEventLoopDepth(0),
-      mCurrentEventLoopDepth(-1),
-      mShutdownRequired(false),
-      mPriority(PRIORITY_NORMAL),
-      mIsMainThread(NOT_MAIN_THREAD),
-      mCanInvokeJS(false),
-      mCurrentEvent(nullptr),
-      mCurrentEventStart(TimeStamp::Now()),
-      mCurrentPerformanceCounter(nullptr) {
-||||||| merged common ancestors
-  : mEvents(nullptr)
-  , mEventTarget(nullptr)
-  , mShutdownContext(nullptr)
-  , mScriptObserver(nullptr)
-  , mThread(nullptr)
-  , mStackSize(0)
-  , mNestedEventLoopDepth(0)
-  , mCurrentEventLoopDepth(-1)
-  , mShutdownRequired(false)
-  , mPriority(PRIORITY_NORMAL)
-  , mIsMainThread(NOT_MAIN_THREAD)
-  , mCanInvokeJS(false)
-  , mCurrentEvent(nullptr)
-  , mCurrentEventStart(TimeStamp::Now())
-  , mCurrentPerformanceCounter(nullptr)
-{
-=======
     : mEvents(nullptr),
       mEventTarget(nullptr),
       mShutdownContext(nullptr),
@@ -769,7 +631,6 @@ nsThread::nsThread()
       mLastWakeupCheckTime(mCurrentEventStart),
 #endif
       mCurrentPerformanceCounter(nullptr) {
->>>>>>> upstream-releases
   mLastLongTaskEnd = mCurrentEventStart;
   mLastLongNonIdleTaskEnd = mCurrentEventStart;
   MOZ_ASSERT(!NS_IsMainThread());
@@ -819,15 +680,8 @@ nsresult nsThread::Init(const nsACString& aName) {
   // mThread.  By delaying insertion of this event into the queue, we ensure
   // that mThread is set properly.
   {
-<<<<<<< HEAD
-    mEvents->PutEvent(do_AddRef(startup),
-                      EventPriority::Normal);  // retain a reference
-||||||| merged common ancestors
-    mEvents->PutEvent(do_AddRef(startup), EventPriority::Normal); // retain a reference
-=======
     mEvents->PutEvent(do_AddRef(startup),
                       EventQueuePriority::Normal);  // retain a reference
->>>>>>> upstream-releases
   }
 
   // Wait for thread to call ThreadManager::SetupCurrentThread, which completes
@@ -926,12 +780,6 @@ nsThread::GetLastLongNonIdleTaskEnd(TimeStamp* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsThread::AsyncShutdown() {
-||||||| merged common ancestors
-nsThread::AsyncShutdown()
-{
-=======
 nsThread::SetNameForWakeupTelemetry(const nsACString& aName) {
 #ifdef EARLY_BETA_OR_EARLIER
   mNameForWakeupTelemetry = aName;
@@ -941,7 +789,6 @@ nsThread::SetNameForWakeupTelemetry(const nsACString& aName) {
 
 NS_IMETHODIMP
 nsThread::AsyncShutdown() {
->>>>>>> upstream-releases
   LOG(("THRD(%p) async shutdown\n", this));
 
   // XXX If we make this warn, then we hit that warning at xpcom shutdown while
@@ -1069,12 +916,6 @@ nsThread::HasPendingEvents(bool* aResult) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsThread::IdleDispatch(already_AddRefed<nsIRunnable> aEvent) {
-||||||| merged common ancestors
-nsThread::IdleDispatch(already_AddRefed<nsIRunnable> aEvent)
-{
-=======
 nsThread::HasPendingHighPriorityEvents(bool* aResult) {
   if (NS_WARN_IF(PR_GetCurrentThread() != mThread)) {
     return NS_ERROR_NOT_SAME_THREAD;
@@ -1087,27 +928,16 @@ nsThread::HasPendingHighPriorityEvents(bool* aResult) {
 NS_IMETHODIMP
 nsThread::DispatchToQueue(already_AddRefed<nsIRunnable> aEvent,
                           EventQueuePriority aQueue) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIRunnable> event = aEvent;
 
   if (NS_WARN_IF(!event)) {
     return NS_ERROR_INVALID_ARG;
   }
 
-<<<<<<< HEAD
-  if (!mEvents->PutEvent(event.forget(), EventPriority::Idle)) {
-    NS_WARNING(
-        "An idle event was posted to a thread that will never run it "
-        "(rejected)");
-||||||| merged common ancestors
-  if (!mEvents->PutEvent(event.forget(), EventPriority::Idle)) {
-    NS_WARNING("An idle event was posted to a thread that will never run it (rejected)");
-=======
   if (!mEvents->PutEvent(event.forget(), aQueue)) {
     NS_WARNING(
         "An idle event was posted to a thread that will never run it "
         "(rejected)");
->>>>>>> upstream-releases
     return NS_ERROR_UNEXPECTED;
   }
 
@@ -1162,19 +992,8 @@ void canary_alarm_handler(int signum) {
   } while (0)
 
 #ifdef MOZ_COLLECTING_RUNNABLE_TELEMETRY
-<<<<<<< HEAD
-static bool GetLabeledRunnableName(nsIRunnable* aEvent, nsACString& aName,
-                                   EventPriority aPriority) {
-||||||| merged common ancestors
-static bool
-GetLabeledRunnableName(nsIRunnable* aEvent,
-                       nsACString& aName,
-                       EventPriority aPriority)
-{
-=======
 static bool GetLabeledRunnableName(nsIRunnable* aEvent, nsACString& aName,
                                    EventQueuePriority aPriority) {
->>>>>>> upstream-releases
   bool labeled = false;
   if (RefPtr<SchedulerGroup::Runnable> groupRunnable = do_QueryObject(aEvent)) {
     labeled = true;
@@ -1351,27 +1170,6 @@ nsThread::ProcessNextEvent(bool aMayWait, bool* aResult) {
         BackgroundHangMonitor().NotifyActivity();
       }
 
-<<<<<<< HEAD
-      bool schedulerLoggingEnabled =
-          mozilla::StaticPrefs::dom_performance_enable_scheduler_timing();
-      if (schedulerLoggingEnabled &&
-          mNestedEventLoopDepth > mCurrentEventLoopDepth &&
-          mCurrentPerformanceCounter) {
-        // This is a recursive call, we're saving the time
-        // spent in the parent event if the runnable is linked to a DocGroup.
-        mozilla::TimeDuration duration = TimeStamp::Now() - mCurrentEventStart;
-        mCurrentPerformanceCounter->IncrementExecutionDuration(
-            duration.ToMicroseconds());
-||||||| merged common ancestors
-      bool schedulerLoggingEnabled = mozilla::StaticPrefs::dom_performance_enable_scheduler_timing();
-      if (schedulerLoggingEnabled
-          && mNestedEventLoopDepth > mCurrentEventLoopDepth
-          && mCurrentPerformanceCounter) {
-          // This is a recursive call, we're saving the time
-          // spent in the parent event if the runnable is linked to a DocGroup.
-          mozilla::TimeDuration duration = TimeStamp::Now() - mCurrentEventStart;
-          mCurrentPerformanceCounter->IncrementExecutionDuration(duration.ToMicroseconds());
-=======
       if (mNestedEventLoopDepth > mCurrentEventLoopDepth &&
           mCurrentPerformanceCounter) {
         // This is a recursive call, we're saving the time
@@ -1379,7 +1177,6 @@ nsThread::ProcessNextEvent(bool aMayWait, bool* aResult) {
         mozilla::TimeDuration duration = TimeStamp::Now() - mCurrentEventStart;
         mCurrentPerformanceCounter->IncrementExecutionDuration(
             duration.ToMicroseconds());
->>>>>>> upstream-releases
       }
 
 #ifdef MOZ_COLLECTING_RUNNABLE_TELEMETRY
@@ -1439,21 +1236,11 @@ nsThread::ProcessNextEvent(bool aMayWait, bool* aResult) {
           }
           mLastLongTaskEnd = now;
 #ifdef MOZ_GECKO_PROFILER
-<<<<<<< HEAD
-          if (profiler_thread_is_being_profiled()) {
-            profiler_add_marker(
-                (priority != EventPriority::Idle) ? "LongTask" : "LongIdleTask",
-||||||| merged common ancestors
-          if (profiler_is_active()) {
-              profiler_add_marker(
-                (priority != EventPriority::Idle) ? "LongTask" : "LongIdleTask",
-=======
           if (profiler_thread_is_being_profiled()) {
             profiler_add_marker(
                 (priority != EventQueuePriority::Idle) ? "LongTask"
                                                        : "LongIdleTask",
                 JS::ProfilingCategoryPair::OTHER,
->>>>>>> upstream-releases
                 MakeUnique<LongTaskMarkerPayload>(mCurrentEventStart, now));
           }
 #endif
@@ -1461,41 +1248,6 @@ nsThread::ProcessNextEvent(bool aMayWait, bool* aResult) {
       }
 
       // End of execution, we can send the duration for the group
-<<<<<<< HEAD
-      if (schedulerLoggingEnabled) {
-        if (recursiveEvent) {
-          // If we're in a recursive call, reset the timer,
-          // so the parent gets its remaining execution time right.
-          mCurrentEventStart = mozilla::TimeStamp::Now();
-          mCurrentPerformanceCounter = currentPerformanceCounter;
-        } else {
-          // We're done with this dispatch
-          if (currentPerformanceCounter) {
-            mozilla::TimeDuration duration =
-                TimeStamp::Now() - mCurrentEventStart;
-            currentPerformanceCounter->IncrementExecutionDuration(
-                duration.ToMicroseconds());
-          }
-          mCurrentEvent = nullptr;
-          mCurrentEventLoopDepth = -1;
-          mCurrentPerformanceCounter = nullptr;
-||||||| merged common ancestors
-      if (schedulerLoggingEnabled) {
-       if (recursiveEvent) {
-          // If we're in a recursive call, reset the timer,
-          // so the parent gets its remaining execution time right.
-          mCurrentEventStart = mozilla::TimeStamp::Now();
-          mCurrentPerformanceCounter = currentPerformanceCounter;
-        } else {
-          // We're done with this dispatch
-          if (currentPerformanceCounter) {
-            mozilla::TimeDuration duration = TimeStamp::Now() - mCurrentEventStart;
-            currentPerformanceCounter->IncrementExecutionDuration(duration.ToMicroseconds());
-          }
-          mCurrentEvent = nullptr;
-          mCurrentEventLoopDepth = -1;
-          mCurrentPerformanceCounter = nullptr;
-=======
       if (recursiveEvent) {
         // If we're in a recursive call, reset the timer,
         // so the parent gets its remaining execution time right.
@@ -1508,7 +1260,6 @@ nsThread::ProcessNextEvent(bool aMayWait, bool* aResult) {
               TimeStamp::Now() - mCurrentEventStart;
           currentPerformanceCounter->IncrementExecutionDuration(
               duration.ToMicroseconds());
->>>>>>> upstream-releases
         }
         mCurrentEvent = nullptr;
         mCurrentEventLoopDepth = MaxValue<uint32_t>::value;
@@ -1659,18 +1410,8 @@ void nsThread::SetScriptObserver(
   mScriptObserver = aScriptObserver;
 }
 
-<<<<<<< HEAD
-void nsThread::DoMainThreadSpecificProcessing(bool aReallyWait) {
-  MOZ_ASSERT(IsMainThread());
-||||||| merged common ancestors
-void
-nsThread::DoMainThreadSpecificProcessing(bool aReallyWait)
-{
-  MOZ_ASSERT(IsMainThread());
-=======
 void nsThread::DoMainThreadSpecificProcessing(bool aReallyWait) {
   MOZ_ASSERT(mIsMainThread);
->>>>>>> upstream-releases
 
   ipc::CancelCPOWs();
 
@@ -1707,15 +1448,6 @@ nsThread::GetEventTarget(nsIEventTarget** aEventTarget) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsIEventTarget* nsThread::EventTarget() { return this; }
-||||||| merged common ancestors
-nsIEventTarget*
-nsThread::EventTarget()
-{
-  return this;
-}
-=======
 nsIEventTarget* nsThread::EventTarget() { return this; }
 
 nsISerialEventTarget* nsThread::SerialEventTarget() { return this; }
@@ -1736,20 +1468,9 @@ nsLocalExecutionGuard::nsLocalExecutionGuard(
   MOZ_ASSERT(!mLocalExecutionFlag);
   mLocalExecutionFlag = true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsISerialEventTarget* nsThread::SerialEventTarget() { return this; }
-||||||| merged common ancestors
-nsISerialEventTarget*
-nsThread::SerialEventTarget()
-{
-  return this;
-}
-=======
 nsLocalExecutionGuard::~nsLocalExecutionGuard() {
   MOZ_ASSERT(mLocalExecutionFlag);
   mLocalExecutionFlag = false;
   mEventQueueStack.PopEventQueue(mLocalEventTarget);
 }
->>>>>>> upstream-releases

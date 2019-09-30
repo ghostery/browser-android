@@ -36,17 +36,7 @@ class Element;
 class SVGElement;
 class SVGSVGElement;
 class SVGViewportElement;
-<<<<<<< HEAD
 }  // namespace dom
-
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-
-} // namespace mozilla
-=======
-}  // namespace dom
->>>>>>> upstream-releases
 
 #define SVG_ZERO_LENGTH_PATH_FIX_FACTOR 512
 
@@ -83,44 +73,17 @@ enum SVGTransformTypes {
  * Functions generally used by SVG Content classes. Functions here
  * should not generally depend on layout methods/classes e.g. nsSVGUtils
  */
-<<<<<<< HEAD
 class SVGContentUtils {
  public:
-  typedef mozilla::ComputedStyle ComputedStyle;
-||||||| merged common ancestors
-class SVGContentUtils
-{
-public:
-  typedef mozilla::ComputedStyle ComputedStyle;
-=======
-class SVGContentUtils {
- public:
->>>>>>> upstream-releases
   typedef mozilla::gfx::Float Float;
   typedef mozilla::gfx::Matrix Matrix;
   typedef mozilla::gfx::Rect Rect;
   typedef mozilla::gfx::StrokeOptions StrokeOptions;
-<<<<<<< HEAD
-  typedef mozilla::SVGAnimatedPreserveAspectRatio
-      SVGAnimatedPreserveAspectRatio;
-  typedef mozilla::SVGPreserveAspectRatio SVGPreserveAspectRatio;
-||||||| merged common ancestors
-  typedef mozilla::SVGAnimatedPreserveAspectRatio SVGAnimatedPreserveAspectRatio;
-  typedef mozilla::SVGPreserveAspectRatio SVGPreserveAspectRatio;
-=======
->>>>>>> upstream-releases
 
   /*
    * Get the outer SVG element of an nsIContent
    */
-<<<<<<< HEAD
-  static mozilla::dom::SVGSVGElement* GetOuterSVGElement(
-      nsSVGElement* aSVGElement);
-||||||| merged common ancestors
-  static mozilla::dom::SVGSVGElement *GetOuterSVGElement(nsSVGElement *aSVGElement);
-=======
   static dom::SVGSVGElement* GetOuterSVGElement(dom::SVGElement* aSVGElement);
->>>>>>> upstream-releases
 
   /**
    * Activates the animation element aContent as a result of navigation to the
@@ -229,27 +192,10 @@ class SVGContentUtils {
   /*
    * Report a localized error message to the error console.
    */
-<<<<<<< HEAD
-  static nsresult ReportToConsole(nsIDocument* doc, const char* aWarning,
-                                  const char16_t** aParams,
-                                  uint32_t aParamsLength);
-||||||| merged common ancestors
-  static nsresult ReportToConsole(nsIDocument* doc,
-                                  const char* aWarning,
-                                  const char16_t **aParams,
-                                  uint32_t aParamsLength);
-=======
   static nsresult ReportToConsole(dom::Document* doc, const char* aWarning,
                                   const nsTArray<nsString>& aParams);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static Matrix GetCTM(nsSVGElement* aElement, bool aScreenCTM);
-||||||| merged common ancestors
-  static Matrix GetCTM(nsSVGElement *aElement, bool aScreenCTM);
-=======
   static Matrix GetCTM(dom::SVGElement* aElement, bool aScreenCTM);
->>>>>>> upstream-releases
 
   /**
    * Gets the tight bounds-space stroke bounds of the non-scaling-stroked rect
@@ -375,14 +321,7 @@ class SVGContentUtils {
    * Converts a LengthPercentage into a userspace value, resolving percentage
    * values relative to aContent's SVG viewport.
    */
-<<<<<<< HEAD
-  static float CoordToFloat(nsSVGElement* aContent, const nsStyleCoord& aCoord);
-||||||| merged common ancestors
-  static float CoordToFloat(nsSVGElement *aContent,
-                            const nsStyleCoord &aCoord);
-=======
   static float CoordToFloat(dom::SVGElement* aContent, const LengthPercentage&);
->>>>>>> upstream-releases
   /**
    * Parse the SVG path string
    * Returns a path

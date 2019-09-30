@@ -27,79 +27,29 @@ EXPORT_CDECL(int64_t) test_finalizer_acq_int64_t(size_t i);
 EXPORT_CDECL(void) test_finalizer_rel_int64_t(int64_t i);
 EXPORT_CDECL(bool) test_finalizer_cmp_int64_t(int64_t a, int64_t b);
 
-<<<<<<< HEAD
-EXPORT_CDECL(void *) test_finalizer_acq_ptr_t(size_t i);
-EXPORT_CDECL(void) test_finalizer_rel_ptr_t(void *i);
-EXPORT_CDECL(bool) test_finalizer_cmp_ptr_t(void *a, void *b);
-||||||| merged common ancestors
-  EXPORT_CDECL(void*) test_finalizer_acq_ptr_t(size_t i);
-  EXPORT_CDECL(void) test_finalizer_rel_ptr_t(void *i);
-  EXPORT_CDECL(bool) test_finalizer_cmp_ptr_t(void *a, void *b);
-=======
 EXPORT_CDECL(void*) test_finalizer_acq_ptr_t(size_t i);
 EXPORT_CDECL(void) test_finalizer_rel_ptr_t(void* i);
 EXPORT_CDECL(bool) test_finalizer_cmp_ptr_t(void* a, void* b);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-EXPORT_CDECL(int32_t *) test_finalizer_acq_int32_ptr_t(size_t i);
-EXPORT_CDECL(void) test_finalizer_rel_int32_ptr_t(int32_t *i);
-EXPORT_CDECL(bool) test_finalizer_cmp_int32_ptr_t(int32_t *a, int32_t *b);
-||||||| merged common ancestors
-  EXPORT_CDECL(int32_t*) test_finalizer_acq_int32_ptr_t(size_t i);
-  EXPORT_CDECL(void) test_finalizer_rel_int32_ptr_t(int32_t *i);
-  EXPORT_CDECL(bool) test_finalizer_cmp_int32_ptr_t(int32_t *a, int32_t *b);
-=======
 EXPORT_CDECL(int32_t*) test_finalizer_acq_int32_ptr_t(size_t i);
 EXPORT_CDECL(void) test_finalizer_rel_int32_ptr_t(int32_t* i);
 EXPORT_CDECL(bool) test_finalizer_cmp_int32_ptr_t(int32_t* a, int32_t* b);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-EXPORT_CDECL(char *) test_finalizer_acq_string_t(int i);
-EXPORT_CDECL(void) test_finalizer_rel_string_t(char *i);
-EXPORT_CDECL(bool) test_finalizer_cmp_string_t(char *a, char *b);
-||||||| merged common ancestors
-  EXPORT_CDECL(char*) test_finalizer_acq_string_t(int i);
-  EXPORT_CDECL(void) test_finalizer_rel_string_t(char *i);
-  EXPORT_CDECL(bool) test_finalizer_cmp_string_t(char *a, char *b);
-=======
 EXPORT_CDECL(char*) test_finalizer_acq_string_t(int i);
 EXPORT_CDECL(void) test_finalizer_rel_string_t(char* i);
 EXPORT_CDECL(bool) test_finalizer_cmp_string_t(char* a, char* b);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-EXPORT_CDECL(void *) test_finalizer_acq_null_t(size_t i);
-EXPORT_CDECL(void) test_finalizer_rel_null_t(void *i);
-EXPORT_CDECL(bool) test_finalizer_cmp_null_t(void *a, void *b);
-EXPORT_CDECL(bool) test_finalizer_null_resource_is_acquired(size_t i);
-||||||| merged common ancestors
-  EXPORT_CDECL(void*) test_finalizer_acq_null_t(size_t i);
-  EXPORT_CDECL(void) test_finalizer_rel_null_t(void *i);
-  EXPORT_CDECL(bool) test_finalizer_cmp_null_t(void *a, void *b);
-  EXPORT_CDECL(bool) test_finalizer_null_resource_is_acquired(size_t i);
-=======
 EXPORT_CDECL(void*) test_finalizer_acq_null_t(size_t i);
 EXPORT_CDECL(void) test_finalizer_rel_null_t(void* i);
 EXPORT_CDECL(bool) test_finalizer_cmp_null_t(void* a, void* b);
 EXPORT_CDECL(bool) test_finalizer_null_resource_is_acquired(size_t i);
->>>>>>> upstream-releases
 
 EXPORT_CDECL(myRECT) test_finalizer_acq_struct_t(int i);
 EXPORT_CDECL(void) test_finalizer_rel_struct_t(myRECT i);
 EXPORT_CDECL(bool) test_finalizer_cmp_struct_t(myRECT a, myRECT b);
 
-<<<<<<< HEAD
-typedef void (*afun)(size_t);
-EXPORT_CDECL(afun *) test_finalizer_rel_null_function();
-||||||| merged common ancestors
-  typedef void (*afun)(size_t);
-  EXPORT_CDECL(afun*) test_finalizer_rel_null_function();
-=======
 typedef void (*afun)(size_t);
 EXPORT_CDECL(afun*) test_finalizer_rel_null_function();
->>>>>>> upstream-releases
 
 EXPORT_CDECL(void) test_finalizer_rel_size_t_set_errno(size_t i);
 EXPORT_CDECL(void) reset_errno();

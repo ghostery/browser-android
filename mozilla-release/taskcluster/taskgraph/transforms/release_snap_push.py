@@ -9,33 +9,11 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.transforms.task import task_description_schema
-<<<<<<< HEAD
-from taskgraph.util.schema import optionally_keyed_by, resolve_keyed_by, Schema
-||||||| merged common ancestors
-from taskgraph.util.schema import optionally_keyed_by, resolve_keyed_by, Schema, validate_schema
-=======
 from taskgraph.util.schema import optionally_keyed_by, resolve_keyed_by, Schema
 from taskgraph.util.scriptworker import add_scope_prefix
->>>>>>> upstream-releases
 
 from voluptuous import Optional, Required
 
-<<<<<<< HEAD
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-||||||| merged common ancestors
-
-transforms = TransformSequence()
-
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-
-=======
->>>>>>> upstream-releases
 push_snap_description_schema = Schema({
     Required('name'): basestring,
     Required('job-from'): task_description_schema['job-from'],

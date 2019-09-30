@@ -13,30 +13,6 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-using namespace mozilla;
-
-nsSMILTimeContainer::nsSMILTimeContainer()
-    : mParent(nullptr),
-      mCurrentTime(0L),
-      mParentOffset(0L),
-      mPauseStart(0L),
-      mNeedsPauseSample(false),
-      mNeedsRewind(false),
-      mIsSeeking(false),
-||||||| merged common ancestors
-using namespace mozilla;
-
-nsSMILTimeContainer::nsSMILTimeContainer()
-:
-  mParent(nullptr),
-  mCurrentTime(0L),
-  mParentOffset(0L),
-  mPauseStart(0L),
-  mNeedsPauseSample(false),
-  mNeedsRewind(false),
-  mIsSeeking(false),
-=======
 SMILTimeContainer::SMILTimeContainer()
     : mParent(nullptr),
       mCurrentTime(0L),
@@ -45,37 +21,20 @@ SMILTimeContainer::SMILTimeContainer()
       mNeedsPauseSample(false),
       mNeedsRewind(false),
       mIsSeeking(false),
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 #ifdef DEBUG
       mHoldingEntries(false),
 #endif
       mPauseState(PAUSE_BEGIN) {
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-nsSMILTimeContainer::~nsSMILTimeContainer() {
-||||||| merged common ancestors
-nsSMILTimeContainer::~nsSMILTimeContainer()
-{
-=======
 SMILTimeContainer::~SMILTimeContainer() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   if (mParent) {
     mParent->RemoveChild(*this);
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-nsSMILTimeValue nsSMILTimeContainer::ContainerToParentTime(
-    nsSMILTime aContainerTime) const {
-||||||| merged common ancestors
-nsSMILTimeValue
-nsSMILTimeContainer::ContainerToParentTime(nsSMILTime aContainerTime) const
-{
-=======
 SMILTimeValue SMILTimeContainer::ContainerToParentTime(
     SMILTime aContainerTime) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   // If we're paused, then future times are indefinite
   if (IsPaused() && aContainerTime > mCurrentTime)
     return SMILTimeValue::Indefinite();
@@ -83,17 +42,8 @@ SMILTimeValue SMILTimeContainer::ContainerToParentTime(
   return SMILTimeValue(aContainerTime + mParentOffset);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-nsSMILTimeValue nsSMILTimeContainer::ParentToContainerTime(
-    nsSMILTime aParentTime) const {
-||||||| merged common ancestors
-nsSMILTimeValue
-nsSMILTimeContainer::ParentToContainerTime(nsSMILTime aParentTime) const
-{
-=======
 SMILTimeValue SMILTimeContainer::ParentToContainerTime(
     SMILTime aParentTime) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   // If we're paused, then any time after when we paused is indefinite
   if (IsPaused() && aParentTime > mPauseStart)
     return SMILTimeValue::Indefinite();
@@ -101,15 +51,7 @@ SMILTimeValue SMILTimeContainer::ParentToContainerTime(
   return SMILTimeValue(aParentTime - mParentOffset);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::Begin() {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::Begin()
-{
-=======
 void SMILTimeContainer::Begin() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   Resume(PAUSE_BEGIN);
   if (mPauseState) {
     mNeedsPauseSample = true;
@@ -125,15 +67,7 @@ void SMILTimeContainer::Begin() {
   UpdateCurrentTime();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::Pause(uint32_t aType) {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::Pause(uint32_t aType)
-{
-=======
 void SMILTimeContainer::Pause(uint32_t aType) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   bool didStartPause = false;
 
   if (!mPauseState && aType) {
@@ -149,19 +83,8 @@ void SMILTimeContainer::Pause(uint32_t aType) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::Resume(uint32_t aType) {
-  if (!mPauseState) return;
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::Resume(uint32_t aType)
-{
-  if (!mPauseState)
-    return;
-=======
 void SMILTimeContainer::Resume(uint32_t aType) {
   if (!mPauseState) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 
   mPauseState &= ~aType;
 
@@ -172,15 +95,7 @@ void SMILTimeContainer::Resume(uint32_t aType) {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-nsSMILTime nsSMILTimeContainer::GetCurrentTime() const {
-||||||| merged common ancestors
-nsSMILTime
-nsSMILTimeContainer::GetCurrentTime() const
-{
-=======
 SMILTime SMILTimeContainer::GetCurrentTimeAsSMILTime() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   // The following behaviour is consistent with:
   // http://www.w3.org/2003/01/REC-SVG11-20030114-errata
   //  #getCurrentTime_setCurrentTime_undefined_before_document_timeline_begin
@@ -191,15 +106,7 @@ SMILTime SMILTimeContainer::GetCurrentTimeAsSMILTime() const {
   return mCurrentTime;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::SetCurrentTime(nsSMILTime aSeekTo) {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::SetCurrentTime(nsSMILTime aSeekTo)
-{
-=======
 void SMILTimeContainer::SetCurrentTime(SMILTime aSeekTo) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   // SVG 1.1 doesn't specify what to do for negative times so we adopt SVGT1.2's
   // behaviour of clamping negative times to 0.
   aSeekTo = std::max<SMILTime>(0, aSeekTo);
@@ -231,32 +138,13 @@ void SMILTimeContainer::SetCurrentTime(SMILTime aSeekTo) {
   NotifyTimeChange();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-nsSMILTime nsSMILTimeContainer::GetParentTime() const {
-  if (mParent) return mParent->GetCurrentTime();
-||||||| merged common ancestors
-nsSMILTime
-nsSMILTimeContainer::GetParentTime() const
-{
-  if (mParent)
-    return mParent->GetCurrentTime();
-=======
 SMILTime SMILTimeContainer::GetParentTime() const {
   if (mParent) return mParent->GetCurrentTimeAsSMILTime();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 
   return 0L;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::SyncPauseTime() {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::SyncPauseTime()
-{
-=======
 void SMILTimeContainer::SyncPauseTime() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   if (IsPaused()) {
     SMILTime parentTime = GetParentTime();
     SMILTime extraOffset = parentTime - mPauseStart;
@@ -265,19 +153,8 @@ void SMILTimeContainer::SyncPauseTime() {
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::Sample() {
-  if (!NeedsSample()) return;
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::Sample()
-{
-  if (!NeedsSample())
-    return;
-=======
 void SMILTimeContainer::Sample() {
   if (!NeedsSample()) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 
   UpdateCurrentTime();
   DoSample();
@@ -285,15 +162,7 @@ void SMILTimeContainer::Sample() {
   mNeedsPauseSample = false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-nsresult nsSMILTimeContainer::SetParent(nsSMILTimeContainer* aParent) {
-||||||| merged common ancestors
-nsresult
-nsSMILTimeContainer::SetParent(nsSMILTimeContainer* aParent)
-{
-=======
 nsresult SMILTimeContainer::SetParent(SMILTimeContainer* aParent) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   if (mParent) {
     mParent->RemoveChild(*this);
     // When we're not attached to a parent time container, GetParentTime() will
@@ -316,20 +185,9 @@ nsresult SMILTimeContainer::SetParent(SMILTimeContainer* aParent) {
   return rv;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-bool nsSMILTimeContainer::AddMilestone(
-    const nsSMILMilestone& aMilestone,
-    mozilla::dom::SVGAnimationElement& aElement) {
-||||||| merged common ancestors
-bool
-nsSMILTimeContainer::AddMilestone(const nsSMILMilestone& aMilestone,
-                                  mozilla::dom::SVGAnimationElement& aElement)
-{
-=======
 bool SMILTimeContainer::AddMilestone(
     const SMILMilestone& aMilestone,
     mozilla::dom::SVGAnimationElement& aElement) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   // We record the milestone time and store it along with the element but this
   // time may change (e.g. if attributes are changed on the timed element in
   // between samples). If this happens, then we may do an unecessary sample
@@ -338,50 +196,18 @@ bool SMILTimeContainer::AddMilestone(
   return mMilestoneEntries.Push(MilestoneEntry(aMilestone, aElement));
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::ClearMilestones() {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::ClearMilestones()
-{
-=======
 void SMILTimeContainer::ClearMilestones() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   MOZ_ASSERT(!mHoldingEntries);
   mMilestoneEntries.Clear();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-bool nsSMILTimeContainer::GetNextMilestoneInParentTime(
-    nsSMILMilestone& aNextMilestone) const {
-  if (mMilestoneEntries.IsEmpty()) return false;
-||||||| merged common ancestors
-bool
-nsSMILTimeContainer::GetNextMilestoneInParentTime(
-    nsSMILMilestone& aNextMilestone) const
-{
-  if (mMilestoneEntries.IsEmpty())
-    return false;
-=======
 bool SMILTimeContainer::GetNextMilestoneInParentTime(
     SMILMilestone& aNextMilestone) const {
   if (mMilestoneEntries.IsEmpty()) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-  nsSMILTimeValue parentTime =
-      ContainerToParentTime(mMilestoneEntries.Top().mMilestone.mTime);
-  if (!parentTime.IsDefinite()) return false;
-||||||| merged common ancestors
-  nsSMILTimeValue parentTime =
-    ContainerToParentTime(mMilestoneEntries.Top().mMilestone.mTime);
-  if (!parentTime.IsDefinite())
-    return false;
-=======
   SMILTimeValue parentTime =
       ContainerToParentTime(mMilestoneEntries.Top().mMilestone.mTime);
   if (!parentTime.IsDefinite()) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 
   aNextMilestone = SMILMilestone(parentTime.GetMillis(),
                                  mMilestoneEntries.Top().mMilestone.mIsEnd);
@@ -389,35 +215,12 @@ bool SMILTimeContainer::GetNextMilestoneInParentTime(
   return true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-bool nsSMILTimeContainer::PopMilestoneElementsAtMilestone(
-    const nsSMILMilestone& aMilestone, AnimElemArray& aMatchedElements) {
-  if (mMilestoneEntries.IsEmpty()) return false;
-||||||| merged common ancestors
-bool
-nsSMILTimeContainer::PopMilestoneElementsAtMilestone(
-      const nsSMILMilestone& aMilestone,
-      AnimElemArray& aMatchedElements)
-{
-  if (mMilestoneEntries.IsEmpty())
-    return false;
-=======
 bool SMILTimeContainer::PopMilestoneElementsAtMilestone(
     const SMILMilestone& aMilestone, AnimElemArray& aMatchedElements) {
   if (mMilestoneEntries.IsEmpty()) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-  nsSMILTimeValue containerTime = ParentToContainerTime(aMilestone.mTime);
-  if (!containerTime.IsDefinite()) return false;
-||||||| merged common ancestors
-  nsSMILTimeValue containerTime = ParentToContainerTime(aMilestone.mTime);
-  if (!containerTime.IsDefinite())
-    return false;
-=======
   SMILTimeValue containerTime = ParentToContainerTime(aMilestone.mTime);
   if (!containerTime.IsDefinite()) return false;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 
   SMILMilestone containerMilestone(containerTime.GetMillis(),
                                    aMilestone.mIsEnd);
@@ -438,17 +241,8 @@ bool SMILTimeContainer::PopMilestoneElementsAtMilestone(
   return gotOne;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::Traverse(
-    nsCycleCollectionTraversalCallback* aCallback) {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::Traverse(nsCycleCollectionTraversalCallback* aCallback)
-{
-=======
 void SMILTimeContainer::Traverse(
     nsCycleCollectionTraversalCallback* aCallback) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
 #ifdef DEBUG
   AutoRestore<bool> saveHolding(mHoldingEntries);
   mHoldingEntries = true;
@@ -461,44 +255,18 @@ void SMILTimeContainer::Traverse(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::Unlink() {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::Unlink()
-{
-=======
 void SMILTimeContainer::Unlink() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   MOZ_ASSERT(!mHoldingEntries);
   mMilestoneEntries.Clear();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::UpdateCurrentTime() {
-  nsSMILTime now = IsPaused() ? mPauseStart : GetParentTime();
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::UpdateCurrentTime()
-{
-  nsSMILTime now = IsPaused() ? mPauseStart : GetParentTime();
-=======
 void SMILTimeContainer::UpdateCurrentTime() {
   SMILTime now = IsPaused() ? mPauseStart : GetParentTime();
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   mCurrentTime = now - mParentOffset;
   MOZ_ASSERT(mCurrentTime >= 0, "Container has negative time");
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTimeContainer.cpp
-void nsSMILTimeContainer::NotifyTimeChange() {
-||||||| merged common ancestors
-void
-nsSMILTimeContainer::NotifyTimeChange()
-{
-=======
 void SMILTimeContainer::NotifyTimeChange() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTimeContainer.cpp
   // Called when the container time is changed with respect to the document
   // time. When this happens time dependencies in other time containers need to
   // re-resolve their times because begin and end times are stored in container

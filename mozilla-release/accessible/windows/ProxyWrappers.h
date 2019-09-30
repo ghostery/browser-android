@@ -64,11 +64,6 @@ class DocProxyAccessibleWrap : public HyperTextProxyAccessibleWrap {
     return mIDToAccessibleMap.Get(aID);
   }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   virtual nsIntRect Bounds() const override {
     // OuterDocAccessible can return a DocProxyAccessibleWrap as a child.
     // Accessible::ChildAtPoint on an ancestor might retrieve this proxy and
@@ -78,7 +73,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   /*
    * This provides a mapping from 32 bit id to accessible objects.
    */
@@ -93,13 +87,6 @@ inline ProxyAccessible* HyperTextProxyFor(T* aWrapper) {
   return wrapper->IsProxy() ? wrapper->Proxy() : nullptr;
 }
 
-<<<<<<< HEAD
-}  // namespace a11y
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-}
-=======
 /**
  * Stub AccessibleWrap used in a content process for an embedded document
  * residing in another content process.
@@ -140,6 +127,5 @@ class RemoteIframeDocProxyAccessibleWrap : public HyperTextAccessibleWrap {
 
 }  // namespace a11y
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif

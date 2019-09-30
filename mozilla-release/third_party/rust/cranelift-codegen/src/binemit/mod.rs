@@ -128,14 +128,6 @@ pub trait CodeSink {
     fn reloc_jt(&mut self, _: Reloc, _: JumpTable);
 
     /// Add trap information for the current offset.
-<<<<<<< HEAD
-    fn trap(&mut self, TrapCode, SourceLoc);
-
-    /// Code output is complete, read-only data may follow.
-    fn begin_rodata(&mut self);
-||||||| merged common ancestors
-    fn trap(&mut self, TrapCode, SourceLoc);
-=======
     fn trap(&mut self, _: TrapCode, _: SourceLoc);
 
     /// Machine code output is complete, jump table data may follow.
@@ -146,7 +138,6 @@ pub trait CodeSink {
 
     /// Read-only data output is complete, we're done.
     fn end_codegen(&mut self);
->>>>>>> upstream-releases
 }
 
 /// Report a bad encoding error.
@@ -176,20 +167,6 @@ where
             emit_inst(func, inst, &mut divert, sink);
         }
     }
-<<<<<<< HEAD
-
-    sink.begin_rodata();
-
-    // output jump tables
-    for (jt, jt_data) in func.jump_tables.iter() {
-        let jt_offset = func.jt_offsets[jt];
-        for ebb in jt_data.iter() {
-            let rel_offset: i32 = func.offsets[*ebb] as i32 - jt_offset as i32;
-            sink.put4(rel_offset as u32)
-        }
-    }
-||||||| merged common ancestors
-=======
 
     sink.begin_jumptables();
 
@@ -206,5 +183,4 @@ where
     // TODO: No read-only data (constant pools) at this time.
 
     sink.end_codegen();
->>>>>>> upstream-releases
 }

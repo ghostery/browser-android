@@ -21,23 +21,6 @@ const res1 = [
   { selector: ".boxmodel-border.boxmodel-right > span", value: 10 },
 ];
 
-<<<<<<< HEAD
-const TEST_URI = encodeURIComponent([
-  "<style>",
-  "div { border:10px solid black; padding: 20px 20px 20px 2000000px; " +
-  "margin: 30px auto; }",
-  "</style>",
-  "<div></div>",
-].join(""));
-||||||| merged common ancestors
-const TEST_URI = encodeURIComponent([
-  "<style>",
-  "div { border:10px solid black; padding: 20px 20px 20px 2000000px; " +
-  "margin: 30px auto; }",
-  "</style>",
-  "<div></div>"
-].join(""));
-=======
 const TEST_URI = encodeURIComponent(
   [
     "<style>",
@@ -47,7 +30,6 @@ const TEST_URI = encodeURIComponent(
     "<div></div>",
   ].join("")
 );
->>>>>>> upstream-releases
 const LONG_TEXT_ROTATE_LIMIT = 3;
 
 add_task(async function() {

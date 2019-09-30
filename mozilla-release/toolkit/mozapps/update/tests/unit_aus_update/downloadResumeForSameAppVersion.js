@@ -31,26 +31,8 @@ function run_test() {
     "the update manager activeUpdate state attribute" + MSG_SHOULD_EQUAL
   );
 
-<<<<<<< HEAD
-  // Pause the download early to prevent it writing the update xml files during
-  // shutdown.
-  gAUS.pauseDownload();
-||||||| merged common ancestors
-  // Pausing the download along with reloading the update manager in
-  // doTestFinish will prevent writing the update xml files during shutdown.
-  gAUS.pauseDownload();
-  gUpdateManager.cleanupActiveUpdate();
-  executeSoon(waitForUpdateXMLFiles);
-}
-
-/**
- * Called after the call to waitForUpdateXMLFiles finishes.
- */
-function waitForUpdateXMLFilesFinished() {
-=======
   // Cancel the download early to prevent it writing the update xml files during
   // shutdown.
   gAUS.stopDownload();
->>>>>>> upstream-releases
   executeSoon(doTestFinish);
 }

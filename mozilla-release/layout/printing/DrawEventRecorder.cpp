@@ -9,21 +9,8 @@
 namespace mozilla {
 namespace layout {
 
-<<<<<<< HEAD
 void DrawEventRecorderPRFileDesc::RecordEvent(
     const gfx::RecordedEvent& aEvent) {
-  WriteElement(mOutputStream, aEvent.GetType());
-
-||||||| merged common ancestors
-void
-DrawEventRecorderPRFileDesc::RecordEvent(const gfx::RecordedEvent& aEvent)
-{
-  WriteElement(mOutputStream, aEvent.GetType());
-
-=======
-void DrawEventRecorderPRFileDesc::RecordEvent(
-    const gfx::RecordedEvent& aEvent) {
->>>>>>> upstream-releases
   aEvent.RecordToStream(mOutputStream);
 
   Flush();

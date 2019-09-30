@@ -32,24 +32,8 @@ SVGTitleElement::SVGTitleElement(
   AddMutationObserver(this);
 }
 
-<<<<<<< HEAD
-SVGTitleElement::~SVGTitleElement() {}
-
 void SVGTitleElement::CharacterDataChanged(nsIContent* aContent,
                                            const CharacterDataChangeInfo&) {
-||||||| merged common ancestors
-SVGTitleElement::~SVGTitleElement()
-{
-}
-
-void
-SVGTitleElement::CharacterDataChanged(nsIContent* aContent,
-                                      const CharacterDataChangeInfo&)
-{
-=======
-void SVGTitleElement::CharacterDataChanged(nsIContent* aContent,
-                                           const CharacterDataChangeInfo&) {
->>>>>>> upstream-releases
   SendTitleChangeEvent(false);
 }
 
@@ -66,29 +50,9 @@ void SVGTitleElement::ContentRemoved(nsIContent* aChild,
   SendTitleChangeEvent(false);
 }
 
-<<<<<<< HEAD
-nsresult SVGTitleElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-||||||| merged common ancestors
-nsresult
-SVGTitleElement::BindToTree(nsIDocument *aDocument,
-                             nsIContent *aParent,
-                             nsIContent *aBindingParent)
-{
-=======
 nsresult SVGTitleElement::BindToTree(BindContext& aContext, nsINode& aParent) {
->>>>>>> upstream-releases
   // Let this fall through.
-<<<<<<< HEAD
-  nsresult rv =
-      SVGTitleElementBase::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  nsresult rv = SVGTitleElementBase::BindToTree(aDocument, aParent,
-                                                aBindingParent);
-=======
   nsresult rv = SVGTitleElementBase::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   SendTitleChangeEvent(true);
@@ -96,15 +60,7 @@ nsresult SVGTitleElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void SVGTitleElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-SVGTitleElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void SVGTitleElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   SendTitleChangeEvent(false);
 
   // Let this fall through.
@@ -117,18 +73,8 @@ void SVGTitleElement::DoneAddingChildren(bool aHaveNotified) {
   }
 }
 
-<<<<<<< HEAD
-void SVGTitleElement::SendTitleChangeEvent(bool aBound) {
-  nsIDocument* doc = GetUncomposedDoc();
-||||||| merged common ancestors
-void
-SVGTitleElement::SendTitleChangeEvent(bool aBound)
-{
-  nsIDocument* doc = GetUncomposedDoc();
-=======
 void SVGTitleElement::SendTitleChangeEvent(bool aBound) {
   Document* doc = GetUncomposedDoc();
->>>>>>> upstream-releases
   if (doc) {
     doc->NotifyPossibleTitleChange(aBound);
   }

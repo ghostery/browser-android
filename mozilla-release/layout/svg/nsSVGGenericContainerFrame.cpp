@@ -8,34 +8,17 @@
 #include "nsSVGGenericContainerFrame.h"
 #include "nsSVGIntegrationUtils.h"
 
-<<<<<<< HEAD
-using namespace mozilla;
-
-||||||| merged common ancestors
-=======
 #include "mozilla/PresShell.h"
 
 using namespace mozilla;
 
->>>>>>> upstream-releases
 //----------------------------------------------------------------------
 // nsSVGGenericContainerFrame Implementation
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGGenericContainerFrame(nsIPresShell* aPresShell,
-                                         ComputedStyle* aStyle) {
-  return new (aPresShell) nsSVGGenericContainerFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGGenericContainerFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSVGGenericContainerFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGGenericContainerFrame(PresShell* aPresShell,
                                          ComputedStyle* aStyle) {
   return new (aPresShell)
       nsSVGGenericContainerFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGGenericContainerFrame)

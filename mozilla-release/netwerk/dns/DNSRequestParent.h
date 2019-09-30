@@ -26,23 +26,10 @@ class DNSRequestParent : public PDNSRequestParent, public nsIDNSListener {
 
   // Pass args here rather than storing them in the parent; they are only
   // needed if the request is to be canceled.
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvCancelDNSRequest(
-      const nsCString& hostName, const uint16_t& type,
-      const OriginAttributes& originAttributes, const uint32_t& flags,
-      const nsresult& reason) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvCancelDNSRequest(const nsCString& hostName,
-                                               const uint16_t& type,
-                                               const OriginAttributes& originAttributes,
-                                               const uint32_t& flags,
-                                               const nsresult& reason) override;
-=======
   mozilla::ipc::IPCResult RecvCancelDNSRequest(
       const nsCString& hostName, const uint16_t& type,
       const OriginAttributes& originAttributes, const uint32_t& flags,
       const nsresult& reason);
->>>>>>> upstream-releases
   mozilla::ipc::IPCResult Recv__delete__() override;
 
  protected:

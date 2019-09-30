@@ -47,60 +47,25 @@ add_task(async function() {
 function checkResults() {
   // For help generating these tests use generateTelemetryTests("DEVTOOLS_PERFTOOLS_")
   // here.
-<<<<<<< HEAD
-  checkTelemetry("DEVTOOLS_PERFTOOLS_RECORDING_COUNT", "", {0: 2, 1: 0}, "array");
-  checkTelemetry("DEVTOOLS_PERFTOOLS_RECORDING_DURATION_MS", "", null, "hasentries");
-||||||| merged common ancestors
-  checkTelemetry("DEVTOOLS_PERFTOOLS_RECORDING_COUNT", "", [2, 0, 0], "array");
-  checkTelemetry("DEVTOOLS_PERFTOOLS_RECORDING_DURATION_MS", "", null, "hasentries");
-=======
->>>>>>> upstream-releases
   checkTelemetry(
-<<<<<<< HEAD
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withMarkers", {0: 0, 1: 2, 2: 0},
-    "array");
-||||||| merged common ancestors
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withMarkers", [0, 2, 0], "array");
-=======
     "DEVTOOLS_PERFTOOLS_RECORDING_COUNT",
     "",
     { 0: 2, 1: 0 },
     "array"
   );
->>>>>>> upstream-releases
   checkTelemetry(
-<<<<<<< HEAD
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withMemory", {0: 1, 1: 1, 2: 0},
-    "array");
-||||||| merged common ancestors
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withMemory", [1, 1, 0], "array");
-=======
     "DEVTOOLS_PERFTOOLS_RECORDING_DURATION_MS",
     "",
     null,
     "hasentries"
   );
->>>>>>> upstream-releases
   checkTelemetry(
-<<<<<<< HEAD
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withAllocations", {0: 2, 1: 0},
-    "array");
-||||||| merged common ancestors
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withAllocations", [2, 0, 0], "array");
-=======
     "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED",
     "withMarkers",
     { 0: 0, 1: 2, 2: 0 },
     "array"
   );
->>>>>>> upstream-releases
   checkTelemetry(
-<<<<<<< HEAD
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withTicks", {0: 0, 1: 2, 2: 0},
-    "array");
-||||||| merged common ancestors
-    "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED", "withTicks", [0, 2, 0], "array");
-=======
     "DEVTOOLS_PERFTOOLS_RECORDING_FEATURES_USED",
     "withMemory",
     { 0: 1, 1: 1, 2: 0 },
@@ -118,5 +83,4 @@ function checkResults() {
     { 0: 0, 1: 2, 2: 0 },
     "array"
   );
->>>>>>> upstream-releases
 }

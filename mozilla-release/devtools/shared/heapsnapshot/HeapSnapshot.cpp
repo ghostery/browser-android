@@ -81,42 +81,19 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(HeapSnapshot)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* virtual */ JSObject* HeapSnapshot::WrapObject(JSContext* aCx,
-                                                 HandleObject aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-HeapSnapshot::WrapObject(JSContext* aCx, HandleObject aGivenProto)
-{
-=======
 /* virtual */
 JSObject* HeapSnapshot::WrapObject(JSContext* aCx, HandleObject aGivenProto) {
->>>>>>> upstream-releases
   return HeapSnapshot_Binding::Wrap(aCx, this, aGivenProto);
 }
 
 /*** Reading Heap Snapshots ***************************************************/
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<HeapSnapshot> HeapSnapshot::Create(
-    JSContext* cx, GlobalObject& global, const uint8_t* buffer, uint32_t size,
-    ErrorResult& rv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<HeapSnapshot>
-HeapSnapshot::Create(JSContext* cx,
-                     GlobalObject& global,
-                     const uint8_t* buffer,
-                     uint32_t size,
-                     ErrorResult& rv)
-{
-=======
 /* static */
 already_AddRefed<HeapSnapshot> HeapSnapshot::Create(JSContext* cx,
                                                     GlobalObject& global,
                                                     const uint8_t* buffer,
                                                     uint32_t size,
                                                     ErrorResult& rv) {
->>>>>>> upstream-releases
   RefPtr<HeapSnapshot> snapshot = new HeapSnapshot(cx, global.GetAsSupports());
   if (!snapshot->init(cx, buffer, size)) {
     rv.Throw(NS_ERROR_UNEXPECTED);
@@ -684,17 +661,8 @@ void HeapSnapshot::ComputeShortestPaths(JSContext* cx, uint64_t start,
 // If we are only taking a snapshot of the heap affected by the given set of
 // globals, find the set of compartments the globals are allocated
 // within. Returns false on OOM failure.
-<<<<<<< HEAD
-static bool PopulateCompartmentsWithGlobals(CompartmentSet& compartments,
-                                            AutoObjectVector& globals) {
-||||||| merged common ancestors
-static bool
-PopulateCompartmentsWithGlobals(CompartmentSet& compartments, AutoObjectVector& globals)
-{
-=======
 static bool PopulateCompartmentsWithGlobals(CompartmentSet& compartments,
                                             HandleObjectVector globals) {
->>>>>>> upstream-releases
   unsigned length = globals.length();
   for (unsigned i = 0; i < length; i++) {
     if (!compartments.put(GetObjectCompartment(globals[i]))) return false;
@@ -705,16 +673,8 @@ static bool PopulateCompartmentsWithGlobals(CompartmentSet& compartments,
 
 // Add the given set of globals as explicit roots in the given roots
 // list. Returns false on OOM failure.
-<<<<<<< HEAD
-static bool AddGlobalsAsRoots(AutoObjectVector& globals, ubi::RootList& roots) {
-||||||| merged common ancestors
-static bool
-AddGlobalsAsRoots(AutoObjectVector& globals, ubi::RootList& roots)
-{
-=======
 static bool AddGlobalsAsRoots(HandleObjectVector globals,
                               ubi::RootList& roots) {
->>>>>>> upstream-releases
   unsigned length = globals.length();
   for (unsigned i = 0; i < length; i++) {
     if (!roots.addRoot(ubi::Node(globals[i].get()), u"heap snapshot global")) {
@@ -827,98 +787,16 @@ class TwoByteString
     : public Variant<JSAtom*, const char16_t*, JS::ubi::EdgeName> {
   using Base = Variant<JSAtom*, const char16_t*, JS::ubi::EdgeName>;
 
-<<<<<<< HEAD
-  struct AsTwoByteStringMatcher {
-    TwoByteString match(JSAtom* atom) { return TwoByteString(atom); }
-
-    TwoByteString match(const char16_t* chars) { return TwoByteString(chars); }
-  };
-
-  struct IsNonNullMatcher {
-    template <typename T>
-    bool match(const T& t) {
-      return t != nullptr;
-    }
-  };
-
-  struct LengthMatcher {
-    size_t match(JSAtom* atom) {
-      MOZ_ASSERT(atom);
-      JS::ubi::AtomOrTwoByteChars s(atom);
-      return s.length();
-    }
-
-    size_t match(const char16_t* chars) {
-      MOZ_ASSERT(chars);
-      return NS_strlen(chars);
-    }
-
-    size_t match(const JS::ubi::EdgeName& ptr) {
-      MOZ_ASSERT(ptr);
-      return NS_strlen(ptr.get());
-    }
-  };
-
   struct CopyToBufferMatcher {
-||||||| merged common ancestors
-  struct AsTwoByteStringMatcher
-  {
-    TwoByteString match(JSAtom* atom) {
-      return TwoByteString(atom);
-    }
-
-    TwoByteString match(const char16_t* chars) {
-      return TwoByteString(chars);
-    }
-  };
-
-  struct IsNonNullMatcher
-  {
-    template<typename T>
-    bool match(const T& t) { return t != nullptr; }
-  };
-
-  struct LengthMatcher
-  {
-    size_t match(JSAtom* atom) {
-      MOZ_ASSERT(atom);
-      JS::ubi::AtomOrTwoByteChars s(atom);
-      return s.length();
-    }
-
-    size_t match(const char16_t* chars) {
-      MOZ_ASSERT(chars);
-      return NS_strlen(chars);
-    }
-
-    size_t match(const JS::ubi::EdgeName& ptr) {
-      MOZ_ASSERT(ptr);
-      return NS_strlen(ptr.get());
-    }
-  };
-
-  struct CopyToBufferMatcher
-  {
-=======
-  struct CopyToBufferMatcher {
->>>>>>> upstream-releases
     RangedPtr<char16_t> destination;
     size_t maxLength;
 
     CopyToBufferMatcher(RangedPtr<char16_t> destination, size_t maxLength)
         : destination(destination), maxLength(maxLength) {}
 
-<<<<<<< HEAD
-    size_t match(JS::ubi::EdgeName& ptr) { return ptr ? match(ptr.get()) : 0; }
-||||||| merged common ancestors
-    size_t match(JS::ubi::EdgeName& ptr) {
-      return ptr ? match(ptr.get()) : 0;
-    }
-=======
     size_t operator()(JS::ubi::EdgeName& ptr) {
       return ptr ? operator()(ptr.get()) : 0;
     }
->>>>>>> upstream-releases
 
     size_t operator()(JSAtom* atom) {
       MOZ_ASSERT(atom);
@@ -1452,23 +1330,10 @@ static unsigned long msSinceProcessCreation(const TimeStamp& now) {
   return (unsigned long)duration.ToMilliseconds();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsIFile> HeapSnapshot::CreateUniqueCoreDumpFile(
-    ErrorResult& rv, const TimeStamp& now, nsAString& outFilePath,
-    nsAString& outSnapshotId) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsIFile>
-HeapSnapshot::CreateUniqueCoreDumpFile(ErrorResult& rv,
-                                       const TimeStamp& now,
-                                       nsAString& outFilePath,
-                                       nsAString& outSnapshotId)
-{
-=======
 /* static */
 already_AddRefed<nsIFile> HeapSnapshot::CreateUniqueCoreDumpFile(
     ErrorResult& rv, const TimeStamp& now, nsAString& outFilePath,
     nsAString& outSnapshotId) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIFile> file;
   rv = NS_GetSpecialDirectory(NS_OS_TEMP_DIR, getter_AddRefs(file));
   if (NS_WARN_IF(rv.Failed())) return nullptr;
@@ -1579,24 +1444,10 @@ namespace dom {
 using namespace JS;
 using namespace devtools;
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::SaveHeapSnapshotShared(
-    GlobalObject& global, const HeapSnapshotBoundaries& boundaries,
-    nsAString& outFilePath, nsAString& outSnapshotId, ErrorResult& rv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::SaveHeapSnapshotShared(GlobalObject& global,
-                                    const HeapSnapshotBoundaries& boundaries,
-                                    nsAString& outFilePath,
-                                    nsAString& outSnapshotId,
-                                    ErrorResult& rv)
-{
-=======
 /* static */
 void ChromeUtils::SaveHeapSnapshotShared(
     GlobalObject& global, const HeapSnapshotBoundaries& boundaries,
     nsAString& outFilePath, nsAString& outSnapshotId, ErrorResult& rv) {
->>>>>>> upstream-releases
   auto start = TimeStamp::Now();
 
   bool wantNames = true;
@@ -1646,62 +1497,25 @@ void ChromeUtils::SaveHeapSnapshotShared(
                         edgeCount);
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::SaveHeapSnapshot(
-    GlobalObject& global, const HeapSnapshotBoundaries& boundaries,
-    nsAString& outFilePath, ErrorResult& rv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::SaveHeapSnapshot(GlobalObject& global,
-                              const HeapSnapshotBoundaries& boundaries,
-                              nsAString& outFilePath,
-                              ErrorResult& rv)
-{
-=======
 /* static */
 void ChromeUtils::SaveHeapSnapshot(GlobalObject& global,
                                    const HeapSnapshotBoundaries& boundaries,
                                    nsAString& outFilePath, ErrorResult& rv) {
->>>>>>> upstream-releases
   nsAutoString snapshotId;
   SaveHeapSnapshotShared(global, boundaries, outFilePath, snapshotId, rv);
 }
 
-<<<<<<< HEAD
-/* static */ void ChromeUtils::SaveHeapSnapshotGetId(
-    GlobalObject& global, const HeapSnapshotBoundaries& boundaries,
-    nsAString& outSnapshotId, ErrorResult& rv) {
-||||||| merged common ancestors
-/* static */ void
-ChromeUtils::SaveHeapSnapshotGetId(GlobalObject& global,
-                                   const HeapSnapshotBoundaries& boundaries,
-                                   nsAString& outSnapshotId,
-                                   ErrorResult& rv)
-{
-=======
 /* static */
 void ChromeUtils::SaveHeapSnapshotGetId(
     GlobalObject& global, const HeapSnapshotBoundaries& boundaries,
     nsAString& outSnapshotId, ErrorResult& rv) {
->>>>>>> upstream-releases
   nsAutoString filePath;
   SaveHeapSnapshotShared(global, boundaries, filePath, outSnapshotId, rv);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<HeapSnapshot> ChromeUtils::ReadHeapSnapshot(
-    GlobalObject& global, const nsAString& filePath, ErrorResult& rv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<HeapSnapshot>
-ChromeUtils::ReadHeapSnapshot(GlobalObject& global,
-                              const nsAString& filePath,
-                              ErrorResult& rv)
-{
-=======
 /* static */
 already_AddRefed<HeapSnapshot> ChromeUtils::ReadHeapSnapshot(
     GlobalObject& global, const nsAString& filePath, ErrorResult& rv) {
->>>>>>> upstream-releases
   auto start = TimeStamp::Now();
 
   UniquePtr<char[]> path(ToNewCString(filePath));

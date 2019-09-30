@@ -39,15 +39,8 @@ private:
                                           int arrayCount,
                                           const char** outName) override;
 
-<<<<<<< HEAD
-    SamplerHandle addSampler(GrSwizzle, GrTextureType, GrSLPrecision, const char* name) override;
-||||||| merged common ancestors
-    SamplerHandle addSampler(uint32_t visibility, GrSwizzle, GrSLType, GrSLPrecision,
-                             const char* name) override;
-=======
     SamplerHandle addSampler(const GrTexture*, const GrSamplerState&, const char* name,
                              const GrShaderCaps*) override;
->>>>>>> upstream-releases
 
     const GrShaderVar& samplerVariable(SamplerHandle handle) const override {
         return fSamplers[handle.toIndex()].fVariable;

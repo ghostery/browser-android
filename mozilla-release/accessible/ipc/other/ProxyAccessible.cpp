@@ -126,20 +126,12 @@ void ProxyAccessible::ScrollToPoint(uint32_t aScrollType, int32_t aX,
   Unused << mDoc->SendScrollToPoint(mID, aScrollType, aX, aY);
 }
 
-<<<<<<< HEAD
-int32_t ProxyAccessible::CaretLineNumber() {
-||||||| merged common ancestors
-int32_t
-ProxyAccessible::CaretLineNumber()
-{
-=======
 void ProxyAccessible::Announce(const nsString& aAnnouncement,
                                uint16_t aPriority) {
   Unused << mDoc->SendAnnounce(mID, aAnnouncement, aPriority);
 }
 
 int32_t ProxyAccessible::CaretLineNumber() {
->>>>>>> upstream-releases
   int32_t line = -1;
   Unused << mDoc->SendCaretOffset(mID, &line);
   return line;

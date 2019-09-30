@@ -30,22 +30,10 @@ XPIDL_MODULE = 'locale'
 
 LOCAL_INCLUDES += [
     '/dom/base',
-    '/js/xpconnect/src',
 ]
 
 XPCSHELL_TESTS_MANIFESTS += ['test/xpcshell.ini']
-<<<<<<< HEAD
-
-MOCHITEST_MANIFESTS += ['test/mochitest.ini']
-MOCHITEST_CHROME_MANIFESTS += ['test/chrome.ini']
-BROWSER_CHROME_MANIFESTS += ['test/browser.ini']
-||||||| merged common ancestors
-
-MOCHITEST_MANIFESTS += ['test/mochitest.ini']
-MOCHITEST_CHROME_MANIFESTS += ['test/chrome.ini']
-=======
 MOCHITEST_CHROME_MANIFESTS += ['test/mochitest/chrome.ini']
->>>>>>> upstream-releases
 
 SPHINX_TREES['l10n'] = 'docs'
 

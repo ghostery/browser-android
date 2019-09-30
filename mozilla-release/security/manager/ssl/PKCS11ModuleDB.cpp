@@ -61,64 +61,6 @@ PKCS11ModuleDB::DeleteModule(const nsAString& aModuleName) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// Given a PKCS#11 module, determines an appropriate name to identify it for the
-// purposes of gathering telemetry. For 3rd party PKCS#11 modules, this should
-// be the name of the dynamic library that implements the module. For built-in
-// NSS modules, it will be the common name of the module.
-// Because the result will be used as a telemetry scalar key (which must be less
-// than 70 characters), this function will also truncate the result if it
-// exceeds this limit. (Note that unfortunately telemetry doesn't expose a way
-// to programmatically query the scalar key length limit, so we have to
-// hard-code the value here.)
-void GetModuleNameForTelemetry(/*in*/ const SECMODModule* module,
-                               /*out*/ nsString& result) {
-  result.Truncate();
-  if (module->dllName) {
-    result.AssignASCII(module->dllName);
-    int32_t separatorIndex = result.RFind(FILE_PATH_SEPARATOR);
-    if (separatorIndex != kNotFound) {
-      result = Substring(result, separatorIndex + 1);
-    }
-  } else {
-    result.AssignASCII(module->commonName);
-  }
-  if (result.Length() >= 70) {
-    result.Truncate(69);
-  }
-}
-
-||||||| merged common ancestors
-// Given a PKCS#11 module, determines an appropriate name to identify it for the
-// purposes of gathering telemetry. For 3rd party PKCS#11 modules, this should
-// be the name of the dynamic library that implements the module. For built-in
-// NSS modules, it will be the common name of the module.
-// Because the result will be used as a telemetry scalar key (which must be less
-// than 70 characters), this function will also truncate the result if it
-// exceeds this limit. (Note that unfortunately telemetry doesn't expose a way
-// to programmatically query the scalar key length limit, so we have to
-// hard-code the value here.)
-void
-GetModuleNameForTelemetry(/*in*/ const SECMODModule* module,
-                          /*out*/nsString& result)
-{
-  result.Truncate();
-  if (module->dllName) {
-    result.AssignASCII(module->dllName);
-    int32_t separatorIndex = result.RFind(FILE_PATH_SEPARATOR);
-    if (separatorIndex != kNotFound) {
-      result = Substring(result, separatorIndex + 1);
-    }
-  } else {
-    result.AssignASCII(module->commonName);
-  }
-  if (result.Length() >= 70) {
-    result.Truncate(69);
-  }
-}
-
-=======
->>>>>>> upstream-releases
 // Add a new PKCS11 module to the user's profile.
 NS_IMETHODIMP
 PKCS11ModuleDB::AddModule(const nsAString& aModuleName,

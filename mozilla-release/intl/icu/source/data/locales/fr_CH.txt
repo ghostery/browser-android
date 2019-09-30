@@ -12,13 +12,7 @@ fr_CH{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.85"}
-=======
     Version{"2.1.48.88"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

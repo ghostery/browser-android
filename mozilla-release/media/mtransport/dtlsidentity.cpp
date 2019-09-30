@@ -199,19 +199,9 @@ RefPtr<DtlsIdentity> DtlsIdentity::Generate() {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  unsigned char paramBuf[12];  // OIDs are small
-  SECItem ecdsaParams = {siBuffer, paramBuf, sizeof(paramBuf)};
-  SECOidData *oidData = SECOID_FindOIDByTag(SEC_OID_SECG_EC_SECP256R1);
-||||||| merged common ancestors
-  unsigned char paramBuf[12]; // OIDs are small
-  SECItem ecdsaParams = { siBuffer, paramBuf, sizeof(paramBuf) };
-  SECOidData* oidData = SECOID_FindOIDByTag(SEC_OID_SECG_EC_SECP256R1);
-=======
   unsigned char paramBuf[12];  // OIDs are small
   SECItem ecdsaParams = {siBuffer, paramBuf, sizeof(paramBuf)};
   SECOidData* oidData = SECOID_FindOIDByTag(SEC_OID_SECG_EC_SECP256R1);
->>>>>>> upstream-releases
   if (!oidData || (oidData->oid.len > (sizeof(paramBuf) - 2))) {
     return nullptr;
   }
@@ -261,17 +251,8 @@ RefPtr<DtlsIdentity> DtlsIdentity::Generate() {
 
   unsigned long serial;
   // Note: This serial in principle could collide, but it's unlikely
-<<<<<<< HEAD
-  rv = PK11_GenerateRandomOnSlot(
-      slot.get(), reinterpret_cast<unsigned char *>(&serial), sizeof(serial));
-||||||| merged common ancestors
-  rv = PK11_GenerateRandomOnSlot(slot.get(),
-                                 reinterpret_cast<unsigned char *>(&serial),
-                                 sizeof(serial));
-=======
   rv = PK11_GenerateRandomOnSlot(
       slot.get(), reinterpret_cast<unsigned char*>(&serial), sizeof(serial));
->>>>>>> upstream-releases
   if (rv != SECSuccess) {
     return nullptr;
   }
@@ -321,41 +302,15 @@ RefPtr<DtlsIdentity> DtlsIdentity::Generate() {
 
 const std::string DtlsIdentity::DEFAULT_HASH_ALGORITHM = "sha-256";
 
-<<<<<<< HEAD
-nsresult DtlsIdentity::ComputeFingerprint(const std::string algorithm,
-                                          uint8_t *digest, size_t size,
-                                          size_t *digest_length) const {
-  const UniqueCERTCertificate &c = cert();
-||||||| merged common ancestors
-nsresult DtlsIdentity::ComputeFingerprint(const std::string algorithm,
-                                          uint8_t *digest,
-                                          size_t size,
-                                          size_t *digest_length) const {
-  const UniqueCERTCertificate& c = cert();
-=======
 nsresult DtlsIdentity::ComputeFingerprint(DtlsDigest* digest) const {
   const UniqueCERTCertificate& c = cert();
->>>>>>> upstream-releases
   MOZ_ASSERT(c);
 
   return ComputeFingerprint(c, digest);
 }
 
-<<<<<<< HEAD
-nsresult DtlsIdentity::ComputeFingerprint(const UniqueCERTCertificate &cert,
-                                          const std::string algorithm,
-                                          uint8_t *digest, size_t size,
-                                          size_t *digest_length) {
-||||||| merged common ancestors
-nsresult DtlsIdentity::ComputeFingerprint(const UniqueCERTCertificate& cert,
-                                          const std::string algorithm,
-                                          uint8_t *digest,
-                                          size_t size,
-                                          size_t *digest_length) {
-=======
 nsresult DtlsIdentity::ComputeFingerprint(const UniqueCERTCertificate& cert,
                                           DtlsDigest* digest) {
->>>>>>> upstream-releases
   MOZ_ASSERT(cert);
 
   HASH_HashType ht;
@@ -368,13 +323,7 @@ nsresult DtlsIdentity::ComputeFingerprint(const UniqueCERTCertificate& cert,
     ht = HASH_AlgSHA256;
   } else if (digest->algorithm_ == "sha-384") {
     ht = HASH_AlgSHA384;
-<<<<<<< HEAD
-  } else if (algorithm == "sha-512") {
-||||||| merged common ancestors
-  }  else if (algorithm == "sha-512") {
-=======
   } else if (digest->algorithm_ == "sha-512") {
->>>>>>> upstream-releases
     ht = HASH_AlgSHA512;
   } else {
     return NS_ERROR_INVALID_ARG;
@@ -389,25 +338,8 @@ nsresult DtlsIdentity::ComputeFingerprint(const UniqueCERTCertificate& cert,
   MOZ_ASSERT(ho->length >= 20);  // Double check
   digest->value_.resize(ho->length);
 
-<<<<<<< HEAD
-  if (size < ho->length) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-  SECStatus rv =
-      HASH_HashBuf(ho->type, digest, cert->derCert.data, cert->derCert.len);
-||||||| merged common ancestors
-  if (size < ho->length) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-  SECStatus rv = HASH_HashBuf(ho->type, digest,
-                              cert->derCert.data,
-                              cert->derCert.len);
-=======
   SECStatus rv = HASH_HashBuf(ho->type, digest->value_.data(),
                               cert->derCert.data, cert->derCert.len);
->>>>>>> upstream-releases
   if (rv != SECSuccess) {
     return NS_ERROR_FAILURE;
   }

@@ -92,15 +92,4 @@ function UpdateCanvas(buffer, width, height, hadFailure) {
 }
 
 // eslint-disable-next-line no-unused-vars
-<<<<<<< HEAD
-var EXPORTED_SYMBOLS = [
-  "UpdateCanvas",
-];
-||||||| merged common ancestors
-var EXPORTED_SYMBOLS = [
-  "UpdateCanvas",
-  "UpdateOverlay",
-];
-=======
 var EXPORTED_SYMBOLS = ["UpdateCanvas"];
->>>>>>> upstream-releases

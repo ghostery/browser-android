@@ -27,37 +27,13 @@ class LoginReputationService final : public nsILoginReputationService,
   NS_DECL_NSILOGINREPUTATIONSERVICE
   NS_DECL_NSIOBSERVER
 
-<<<<<<< HEAD
  public:
   static already_AddRefed<LoginReputationService> GetSingleton();
 
   static already_AddRefed<nsILoginReputationQuery> ConstructQueryParam(
       nsIURI* aURI);
-||||||| merged common ancestors
-public:
-  static
-  already_AddRefed<LoginReputationService> GetSingleton();
-
-  static
-  already_AddRefed<nsILoginReputationQuery> ConstructQueryParam(nsIURI* aURI);
-=======
- public:
-  static already_AddRefed<LoginReputationService> GetSingleton();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  static nsCString VerdictTypeToString(VerdictType aVerdict);
-||||||| merged common ancestors
-  static
-  nsCString VerdictTypeToString(VerdictType aVerdict);
-
-private:
-=======
-  static already_AddRefed<nsILoginReputationQuery> ConstructQueryParam(
-      nsIURI* aURI);
 
   static nsCString VerdictTypeToString(VerdictType aVerdict);
->>>>>>> upstream-releases
 
  private:
   struct QueryRequest {

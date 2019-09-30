@@ -197,20 +197,9 @@ EventListenerService::~EventListenerService() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EventListenerService::GetListenerInfoFor(EventTarget* aEventTarget,
-                                         uint32_t* aCount,
-                                         nsIEventListenerInfo*** aOutArray) {
-||||||| merged common ancestors
-EventListenerService::GetListenerInfoFor(EventTarget* aEventTarget,
-                                         uint32_t* aCount,
-                                         nsIEventListenerInfo*** aOutArray)
-{
-=======
 EventListenerService::GetListenerInfoFor(
     EventTarget* aEventTarget,
     nsTArray<RefPtr<nsIEventListenerInfo>>& aOutArray) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aEventTarget);
 
   EventListenerManager* elm = aEventTarget->GetExistingListenerManager();
@@ -222,25 +211,9 @@ EventListenerService::GetListenerInfoFor(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EventListenerService::GetEventTargetChainFor(EventTarget* aEventTarget,
-                                             bool aComposed, uint32_t* aCount,
-                                             EventTarget*** aOutArray) {
-  *aCount = 0;
-  *aOutArray = nullptr;
-||||||| merged common ancestors
-EventListenerService::GetEventTargetChainFor(EventTarget* aEventTarget,
-                                             bool aComposed,
-                                             uint32_t* aCount,
-                                             EventTarget*** aOutArray)
-{
-  *aCount = 0;
-  *aOutArray = nullptr;
-=======
 EventListenerService::GetEventTargetChainFor(
     EventTarget* aEventTarget, bool aComposed,
     nsTArray<RefPtr<EventTarget>>& aOutArray) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aEventTarget);
   WidgetEvent event(true, eVoidEvent);
   event.SetComposed(aComposed);
@@ -248,37 +221,7 @@ EventListenerService::GetEventTargetChainFor(
   nsresult rv = EventDispatcher::Dispatch(aEventTarget, nullptr, &event,
                                           nullptr, nullptr, nullptr, &targets);
   NS_ENSURE_SUCCESS(rv, rv);
-<<<<<<< HEAD
-  int32_t count = targets.Length();
-  if (count == 0) {
-    return NS_OK;
-  }
-
-  *aOutArray =
-      static_cast<EventTarget**>(moz_xmalloc(sizeof(EventTarget*) * count));
-
-  for (int32_t i = 0; i < count; ++i) {
-    NS_ADDREF((*aOutArray)[i] = targets[i]);
-  }
-  *aCount = count;
-
-||||||| merged common ancestors
-  int32_t count = targets.Length();
-  if (count == 0) {
-    return NS_OK;
-  }
-
-  *aOutArray =
-    static_cast<EventTarget**>(moz_xmalloc(sizeof(EventTarget*) * count));
-
-  for (int32_t i = 0; i < count; ++i) {
-    NS_ADDREF((*aOutArray)[i] = targets[i]);
-  }
-  *aCount = count;
-
-=======
   aOutArray.AppendElements(targets);
->>>>>>> upstream-releases
   return NS_OK;
 }
 

@@ -502,18 +502,8 @@ protected:
     bool generateAdvance(SkGlyph* glyph) override;
     void generateMetrics(SkGlyph* glyph) override;
     void generateImage(const SkGlyph& glyph) override;
-<<<<<<< HEAD
-    bool generatePath(SkGlyphID glyphID, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-    SkUnichar generateGlyphToChar(uint16_t glyph) override;
-||||||| merged common ancestors
-    void generatePath(SkGlyphID glyphID, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-    SkUnichar generateGlyphToChar(uint16_t glyph) override;
-=======
     bool generatePath(SkGlyphID glyphID, SkPath* path) override;
     void generateFontMetrics(SkFontMetrics*) override;
->>>>>>> upstream-releases
 
 private:
     using UnrefFTFace = SkFunctionWrapper<void, SkFaceRec, unref_ft_face>;
@@ -636,23 +626,9 @@ std::unique_ptr<SkAdvancedTypefaceMetrics> SkTypeface_FreeType::onGetAdvancedMet
     }
     info->fBBox = SkIRect::MakeLTRB(face->bbox.xMin, face->bbox.yMax,
                                     face->bbox.xMax, face->bbox.yMin);
-<<<<<<< HEAD
-    return info;
-}
-||||||| merged common ancestors
-=======
     return info;
 }
 
-void SkTypeface_FreeType::getGlyphToUnicodeMap(SkUnichar* dstArray) const {
-    SkASSERT(dstArray);
-    AutoFTAccess fta(this);
-    FT_Face face = fta.face();
-    FT_Long numGlyphs = face->num_glyphs;
-    sk_bzero(dstArray, sizeof(SkUnichar) * numGlyphs);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 void SkTypeface_FreeType::getGlyphToUnicodeMap(SkUnichar* dstArray) const {
     SkASSERT(dstArray);
     AutoFTAccess fta(this);
@@ -671,21 +647,6 @@ void SkTypeface_FreeType::getGlyphToUnicodeMap(SkUnichar* dstArray) const {
         charCode = FT_Get_Next_Char(face, charCode, &glyphIndex);
     }
 }
-||||||| merged common ancestors
-    bool perGlyphInfo = FT_IS_SCALABLE(face);
-=======
-    FT_UInt glyphIndex;
-    SkUnichar charCode = FT_Get_First_Char(face, &glyphIndex);
-    while (glyphIndex) {
-        SkASSERT(glyphIndex < SkToUInt(numGlyphs));
-        // Use the first character that maps to this glyphID. https://crbug.com/359065
-        if (0 == dstArray[glyphIndex]) {
-            dstArray[glyphIndex] = charCode;
-        }
-        charCode = FT_Get_Next_Char(face, charCode, &glyphIndex);
-    }
-}
->>>>>>> upstream-releases
 
 void SkTypeface_FreeType::getPostScriptGlyphNames(SkString* dstArray) const {
     SkASSERT(dstArray);
@@ -723,28 +684,6 @@ SkScalerContext* SkTypeface_FreeType::onCreateScalerContext(const SkScalerContex
     return c.release();
 }
 
-<<<<<<< HEAD
-std::unique_ptr<SkFontData> SkTypeface_FreeType::cloneFontData(
-                                                            const SkFontArguments& args) const {
-    SkString name;
-    AutoFTAccess fta(this);
-    FT_Face face = fta.face();
-    Scanner::AxisDefinitions axisDefinitions;
-
-    if (!Scanner::GetAxes(face, &axisDefinitions)) {
-        return nullptr;
-    }
-    SkAutoSTMalloc<4, SkFixed> axisValues(axisDefinitions.count());
-    Scanner::computeAxisValues(axisDefinitions, args.getVariationDesignPosition(),
-                               axisValues, name);
-    int ttcIndex;
-    auto stream = std::unique_ptr<SkStreamAsset>(this->openStream(&ttcIndex));
-    return skstd::make_unique<SkFontData>(std::move(stream), ttcIndex, axisValues.get(),
-                                          axisDefinitions.count());
-}
-
-||||||| merged common ancestors
-=======
 std::unique_ptr<SkFontData> SkTypeface_FreeType::cloneFontData(
                                                             const SkFontArguments& args) const {
     SkString name;
@@ -764,7 +703,6 @@ std::unique_ptr<SkFontData> SkTypeface_FreeType::cloneFontData(
                                           axisDefinitions.count());
 }
 
->>>>>>> upstream-releases
 void SkTypeface_FreeType::onFilterRec(SkScalerContextRec* rec) const {
     //BOGUS: http://code.google.com/p/chromium/issues/detail?id=121119
     //Cap the requested size as larger sizes give bogus values.
@@ -922,34 +860,10 @@ SkScalerContext_FreeType::SkScalerContext_FreeType(sk_sp<SkTypeface> typeface,
             case kSlight_SkFontHinting:
                 loadFlags = FT_LOAD_TARGET_LIGHT;  // This implies FORCE_AUTOHINT
                 break;
-<<<<<<< HEAD
-            case SkPaint::kNormal_Hinting:
-                loadFlags = FT_LOAD_TARGET_NORMAL;
-||||||| merged common ancestors
-            case SkPaint::kNormal_Hinting:
-                if (fRec.fFlags & SkScalerContext::kForceAutohinting_Flag) {
-                    loadFlags = FT_LOAD_FORCE_AUTOHINT;
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-                } else {
-                    loadFlags = FT_LOAD_NO_AUTOHINT;
-#endif
-                }
-=======
             case kNormal_SkFontHinting:
                 loadFlags = FT_LOAD_TARGET_NORMAL;
->>>>>>> upstream-releases
                 break;
-<<<<<<< HEAD
-            case SkPaint::kFull_Hinting:
-||||||| merged common ancestors
-            case SkPaint::kFull_Hinting:
-                if (fRec.fFlags & SkScalerContext::kForceAutohinting_Flag) {
-                    loadFlags = FT_LOAD_FORCE_AUTOHINT;
-                    break;
-                }
-=======
             case kFull_SkFontHinting:
->>>>>>> upstream-releases
                 loadFlags = FT_LOAD_TARGET_NORMAL;
                 if (isLCD(fRec)) {
                     if (fLCDIsVert) {
@@ -1120,49 +1034,7 @@ uint16_t SkScalerContext_FreeType::generateCharToGlyph(SkUnichar uni) {
     return SkToU16(FT_Get_Char_Index( fFace, uni ));
 }
 
-<<<<<<< HEAD
-SkUnichar SkScalerContext_FreeType::generateGlyphToChar(uint16_t glyph) {
-    SkAutoMutexAcquire  ac(gFTMutex);
-    // iterate through each cmap entry, looking for matching glyph indices
-    FT_UInt glyphIndex;
-    SkUnichar charCode = FT_Get_First_Char( fFace, &glyphIndex );
-
-    while (glyphIndex != 0) {
-        if (glyphIndex == glyph) {
-            return charCode;
-        }
-        charCode = FT_Get_Next_Char( fFace, charCode, &glyphIndex );
-    }
-
-    return 0;
-}
-
 bool SkScalerContext_FreeType::generateAdvance(SkGlyph* glyph) {
-||||||| merged common ancestors
-SkUnichar SkScalerContext_FreeType::generateGlyphToChar(uint16_t glyph) {
-    SkAutoMutexAcquire  ac(gFTMutex);
-    // iterate through each cmap entry, looking for matching glyph indices
-    FT_UInt glyphIndex;
-    SkUnichar charCode = FT_Get_First_Char( fFace, &glyphIndex );
-
-    while (glyphIndex != 0) {
-        if (glyphIndex == glyph) {
-            return charCode;
-        }
-        charCode = FT_Get_Next_Char( fFace, charCode, &glyphIndex );
-    }
-
-    return 0;
-}
-
-static SkScalar SkFT_FixedToScalar(FT_Fixed x) {
-  return SkFixedToScalar(x);
-}
-
-void SkScalerContext_FreeType::generateAdvance(SkGlyph* glyph) {
-=======
-bool SkScalerContext_FreeType::generateAdvance(SkGlyph* glyph) {
->>>>>>> upstream-releases
    /* unhinted and light hinted text have linearly scaled advances
     * which are very cheap to compute with some font formats...
     */
@@ -1293,7 +1165,6 @@ void SkScalerContext_FreeType::generateMetrics(SkGlyph* glyph) {
     }
     emboldenIfNeeded(fFace, fFace->glyph, glyph->getGlyphID());
 
-<<<<<<< HEAD
     if (fFace->glyph->format == FT_GLYPH_FORMAT_OUTLINE) {
         using FT_PosLimits = std::numeric_limits<FT_Pos>;
         FT_BBox bounds = { FT_PosLimits::max(), FT_PosLimits::max(),
@@ -1318,41 +1189,7 @@ void SkScalerContext_FreeType::generateMetrics(SkGlyph* glyph) {
             if (0 < fFace->glyph->outline.n_contours) {
                 FT_BBox bbox;
                 getBBoxForCurrentGlyph(glyph, &bbox, true);
-||||||| merged common ancestors
-    switch ( fFace->glyph->format ) {
-      case FT_GLYPH_FORMAT_OUTLINE:
-        if (0 == fFace->glyph->outline.n_contours) {
-            glyph->fWidth = 0;
-            glyph->fHeight = 0;
-            glyph->fTop = 0;
-            glyph->fLeft = 0;
-        } else {
-            FT_BBox bbox;
-            getBBoxForCurrentGlyph(glyph, &bbox, true);
-=======
-    if (fFace->glyph->format == FT_GLYPH_FORMAT_OUTLINE) {
-        using FT_PosLimits = std::numeric_limits<FT_Pos>;
-        FT_BBox bounds = { FT_PosLimits::max(), FT_PosLimits::max(),
-                           FT_PosLimits::min(), FT_PosLimits::min() };
-#ifdef FT_COLOR_H
-        FT_Bool haveLayers = false;
-        FT_LayerIterator layerIterator = { 0, 0, nullptr };
-        FT_UInt layerGlyphIndex;
-        FT_UInt layerColorIndex;
-        while (FT_Get_Color_Glyph_Layer(fFace, glyph->getGlyphID(),
-                                        &layerGlyphIndex, &layerColorIndex, &layerIterator))
-        {
-            haveLayers = true;
-            err = FT_Load_Glyph(fFace, layerGlyphIndex,
-                                fLoadGlyphFlags | FT_LOAD_BITMAP_METRICS_ONLY);
-            if (err != 0) {
-                glyph->zeroMetrics();
-                return;
-            }
-            emboldenIfNeeded(fFace, fFace->glyph, layerGlyphIndex);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
                 // Union
                 bounds.xMin = std::min(bbox.xMin, bounds.xMin);
                 bounds.yMin = std::min(bbox.yMin, bounds.yMin);
@@ -1360,79 +1197,7 @@ void SkScalerContext_FreeType::generateMetrics(SkGlyph* glyph) {
                 bounds.yMax = std::max(bbox.yMax, bounds.yMax);
             }
         }
-||||||| merged common ancestors
-            glyph->fWidth   = SkToU16(SkFDot6Floor(bbox.xMax - bbox.xMin));
-            glyph->fHeight  = SkToU16(SkFDot6Floor(bbox.yMax - bbox.yMin));
-            glyph->fTop     = -SkToS16(SkFDot6Floor(bbox.yMax));
-            glyph->fLeft    = SkToS16(SkFDot6Floor(bbox.xMin));
-=======
-            if (0 < fFace->glyph->outline.n_contours) {
-                FT_BBox bbox;
-                getBBoxForCurrentGlyph(glyph, &bbox, true);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        if (haveLayers) {
-            glyph->fMaskFormat = SkMask::kARGB32_Format;
-            if (!(bounds.xMin < bounds.xMax && bounds.yMin < bounds.yMax)) {
-                bounds = { 0, 0, 0, 0 };
-            }
-        } else {
-#endif
-            if (0 < fFace->glyph->outline.n_contours) {
-                getBBoxForCurrentGlyph(glyph, &bounds, true);
-            } else {
-                bounds = { 0, 0, 0, 0 };
-            }
-#ifdef FT_COLOR_H
-||||||| merged common ancestors
-            updateGlyphIfLCD(glyph);
-=======
-                // Union
-                bounds.xMin = std::min(bbox.xMin, bounds.xMin);
-                bounds.yMin = std::min(bbox.yMin, bounds.yMin);
-                bounds.xMax = std::max(bbox.xMax, bounds.xMax);
-                bounds.yMax = std::max(bbox.yMax, bounds.yMax);
-            }
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-#endif
-        // Round out, no longer dot6.
-        bounds.xMin = SkFDot6Floor(bounds.xMin);
-        bounds.yMin = SkFDot6Floor(bounds.yMin);
-        bounds.xMax = SkFDot6Ceil (bounds.xMax);
-        bounds.yMax = SkFDot6Ceil (bounds.yMax);
-
-        FT_Pos width  =  bounds.xMax - bounds.xMin;
-        FT_Pos height =  bounds.yMax - bounds.yMin;
-        FT_Pos top    = -bounds.yMax;  // Freetype y-up, Skia y-down.
-        FT_Pos left   =  bounds.xMin;
-        if (!SkTFitsIn<decltype(glyph->fWidth )>(width ) ||
-            !SkTFitsIn<decltype(glyph->fHeight)>(height) ||
-            !SkTFitsIn<decltype(glyph->fTop   )>(top   ) ||
-            !SkTFitsIn<decltype(glyph->fLeft  )>(left  )  )
-        {
-            width = height = top = left = 0;
-        }
-
-        glyph->fWidth  = SkToU16(width );
-        glyph->fHeight = SkToU16(height);
-        glyph->fTop    = SkToS16(top   );
-        glyph->fLeft   = SkToS16(left  );
-        updateGlyphIfLCD(glyph);
-||||||| merged common ancestors
-        break;
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    } else if (fFace->glyph->format == FT_GLYPH_FORMAT_BITMAP) {
-        if (this->isVertical()) {
-||||||| merged common ancestors
-      case FT_GLYPH_FORMAT_BITMAP:
-        if (fRec.fFlags & SkScalerContext::kVertical_Flag) {
-=======
         if (haveLayers) {
             glyph->fMaskFormat = SkMask::kARGB32_Format;
             if (!(bounds.xMin < bounds.xMax && bounds.yMin < bounds.yMax)) {
@@ -1474,7 +1239,6 @@ void SkScalerContext_FreeType::generateMetrics(SkGlyph* glyph) {
 
     } else if (fFace->glyph->format == FT_GLYPH_FORMAT_BITMAP) {
         if (this->isVertical()) {
->>>>>>> upstream-releases
             FT_Vector vector;
             vector.x = fFace->glyph->metrics.vertBearingX - fFace->glyph->metrics.horiBearingX;
             vector.y = -fFace->glyph->metrics.vertBearingY - fFace->glyph->metrics.horiBearingY;

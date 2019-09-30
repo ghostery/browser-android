@@ -5,14 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "BasicCompositor.h"
-<<<<<<< HEAD
-#include "BasicLayersImpl.h"  // for FillRectWithMask
-||||||| merged common ancestors
-#include "BasicLayersImpl.h"            // for FillRectWithMask
-=======
 #include "BasicLayersImpl.h"  // for FillRectWithMask
 #include "GeckoProfiler.h"
->>>>>>> upstream-releases
 #include "TextureHostBasic.h"
 #include "mozilla/layers/Effects.h"
 #include "nsIWidget.h"
@@ -37,35 +31,15 @@ using namespace mozilla::gfx;
 
 namespace layers {
 
-<<<<<<< HEAD
-class DataTextureSourceBasic : public DataTextureSource,
-                               public TextureSourceBasic {
- public:
-  virtual const char* Name() const override { return "DataTextureSourceBasic"; }
-||||||| merged common ancestors
-class DataTextureSourceBasic : public DataTextureSource
-                             , public TextureSourceBasic
-{
-public:
-  virtual const char* Name() const override { return "DataTextureSourceBasic"; }
-=======
 class DataTextureSourceBasic : public DataTextureSource,
                                public TextureSourceBasic {
  public:
   const char* Name() const override { return "DataTextureSourceBasic"; }
->>>>>>> upstream-releases
 
   explicit DataTextureSourceBasic(DataSourceSurface* aSurface)
       : mSurface(aSurface), mWrappingExistingData(!!aSurface) {}
 
-<<<<<<< HEAD
-  virtual DataTextureSource* AsDataTextureSource() override {
-||||||| merged common ancestors
-  virtual DataTextureSource* AsDataTextureSource() override
-  {
-=======
   DataTextureSource* AsDataTextureSource() override {
->>>>>>> upstream-releases
     // If the texture wraps someone else's memory we'd rather not use it as
     // a DataTextureSource per say (that is call Update on it).
     return mWrappingExistingData ? nullptr : this;
@@ -73,47 +47,21 @@ class DataTextureSourceBasic : public DataTextureSource,
 
   TextureSourceBasic* AsSourceBasic() override { return this; }
 
-<<<<<<< HEAD
-  virtual gfx::SourceSurface* GetSurface(DrawTarget* aTarget) override {
-    return mSurface;
-  }
-||||||| merged common ancestors
-  virtual gfx::SourceSurface* GetSurface(DrawTarget* aTarget) override { return mSurface; }
-=======
   gfx::SourceSurface* GetSurface(DrawTarget* aTarget) override {
     return mSurface;
   }
->>>>>>> upstream-releases
 
   SurfaceFormat GetFormat() const override {
     return mSurface ? mSurface->GetFormat() : gfx::SurfaceFormat::UNKNOWN;
   }
 
-<<<<<<< HEAD
-  virtual IntSize GetSize() const override {
-||||||| merged common ancestors
-  virtual IntSize GetSize() const override
-  {
-=======
   IntSize GetSize() const override {
->>>>>>> upstream-releases
     return mSurface ? mSurface->GetSize() : gfx::IntSize(0, 0);
   }
 
-<<<<<<< HEAD
-  virtual bool Update(gfx::DataSourceSurface* aSurface,
-                      nsIntRegion* aDestRegion = nullptr,
-                      gfx::IntPoint* aSrcOffset = nullptr) override {
-||||||| merged common ancestors
-  virtual bool Update(gfx::DataSourceSurface* aSurface,
-                      nsIntRegion* aDestRegion = nullptr,
-                      gfx::IntPoint* aSrcOffset = nullptr) override
-  {
-=======
   bool Update(gfx::DataSourceSurface* aSurface,
               nsIntRegion* aDestRegion = nullptr,
               gfx::IntPoint* aSrcOffset = nullptr) override {
->>>>>>> upstream-releases
     MOZ_ASSERT(!mWrappingExistingData);
     if (mWrappingExistingData) {
       return false;
@@ -122,14 +70,7 @@ class DataTextureSourceBasic : public DataTextureSource,
     return true;
   }
 
-<<<<<<< HEAD
-  virtual void DeallocateDeviceData() override {
-||||||| merged common ancestors
-  virtual void DeallocateDeviceData() override
-  {
-=======
   void DeallocateDeviceData() override {
->>>>>>> upstream-releases
     mSurface = nullptr;
     SetUpdateSerial(0);
   }
@@ -143,68 +84,28 @@ class DataTextureSourceBasic : public DataTextureSource,
  * WrappingTextureSourceYCbCrBasic wraps YUV format BufferTextureHost to defer
  * yuv->rgb conversion. The conversion happens when GetSurface is called.
  */
-<<<<<<< HEAD
-class WrappingTextureSourceYCbCrBasic : public DataTextureSource,
-                                        public TextureSourceBasic {
- public:
-  virtual const char* Name() const override {
-    return "WrappingTextureSourceYCbCrBasic";
-  }
-||||||| merged common ancestors
-class WrappingTextureSourceYCbCrBasic : public DataTextureSource
-                                      , public TextureSourceBasic
-{
-public:
-  virtual const char* Name() const override { return "WrappingTextureSourceYCbCrBasic"; }
-=======
 class WrappingTextureSourceYCbCrBasic : public DataTextureSource,
                                         public TextureSourceBasic {
  public:
   const char* Name() const override {
     return "WrappingTextureSourceYCbCrBasic";
   }
->>>>>>> upstream-releases
 
   explicit WrappingTextureSourceYCbCrBasic(BufferTextureHost* aTexture)
       : mTexture(aTexture), mSize(aTexture->GetSize()), mNeedsUpdate(true) {
     mFromYCBCR = true;
   }
 
-<<<<<<< HEAD
-  virtual DataTextureSource* AsDataTextureSource() override { return this; }
-||||||| merged common ancestors
-  virtual DataTextureSource* AsDataTextureSource() override
-  {
-    return this;
-  }
-=======
   DataTextureSource* AsDataTextureSource() override { return this; }
->>>>>>> upstream-releases
 
   TextureSourceBasic* AsSourceBasic() override { return this; }
 
-<<<<<<< HEAD
-  virtual WrappingTextureSourceYCbCrBasic* AsWrappingTextureSourceYCbCrBasic()
-      override {
-    return this;
-  }
-||||||| merged common ancestors
-  virtual WrappingTextureSourceYCbCrBasic* AsWrappingTextureSourceYCbCrBasic() override { return this; }
-=======
   WrappingTextureSourceYCbCrBasic* AsWrappingTextureSourceYCbCrBasic()
       override {
     return this;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual gfx::SourceSurface* GetSurface(DrawTarget* aTarget) override {
-||||||| merged common ancestors
-  virtual gfx::SourceSurface* GetSurface(DrawTarget* aTarget) override
-  {
-=======
   gfx::SourceSurface* GetSurface(DrawTarget* aTarget) override {
->>>>>>> upstream-releases
     if (mSurface && !mNeedsUpdate) {
       return mSurface;
     }
@@ -235,16 +136,7 @@ class WrappingTextureSourceYCbCrBasic : public DataTextureSource,
     return gfx::SurfaceFormat::B8G8R8X8;
   }
 
-<<<<<<< HEAD
-  virtual IntSize GetSize() const override { return mSize; }
-||||||| merged common ancestors
-  virtual IntSize GetSize() const override
-  {
-    return mSize;
-  }
-=======
   IntSize GetSize() const override { return mSize; }
->>>>>>> upstream-releases
 
   virtual bool Update(gfx::DataSourceSurface* aSurface,
                       nsIntRegion* aDestRegion = nullptr,
@@ -252,29 +144,13 @@ class WrappingTextureSourceYCbCrBasic : public DataTextureSource,
     return false;
   }
 
-<<<<<<< HEAD
-  virtual void DeallocateDeviceData() override {
-||||||| merged common ancestors
-  virtual void DeallocateDeviceData() override
-  {
-=======
   void DeallocateDeviceData() override {
->>>>>>> upstream-releases
     mTexture = nullptr;
     mSurface = nullptr;
     SetUpdateSerial(0);
   }
 
-<<<<<<< HEAD
-  virtual void Unbind() override { mNeedsUpdate = true; }
-||||||| merged common ancestors
-  virtual void Unbind() override
-  {
-    mNeedsUpdate = true;
-  }
-=======
   void Unbind() override { mNeedsUpdate = true; }
->>>>>>> upstream-releases
 
   void SetBufferTextureHost(BufferTextureHost* aTexture) override {
     mTexture = aTexture;
@@ -304,18 +180,6 @@ class WrappingTextureSourceYCbCrBasic : public DataTextureSource,
   bool mNeedsUpdate;
 };
 
-<<<<<<< HEAD
-BasicCompositor::BasicCompositor(CompositorBridgeParent* aParent,
-                                 widget::CompositorWidget* aWidget)
-    : Compositor(aWidget, aParent), mIsPendingEndRemoteDrawing(false) {
-  MOZ_COUNT_CTOR(BasicCompositor);
-||||||| merged common ancestors
-BasicCompositor::BasicCompositor(CompositorBridgeParent* aParent, widget::CompositorWidget* aWidget)
-  : Compositor(aWidget, aParent)
-  , mIsPendingEndRemoteDrawing(false)
-{
-  MOZ_COUNT_CTOR(BasicCompositor);
-=======
 class BasicAsyncReadbackBuffer final : public AsyncReadbackBuffer {
  public:
   explicit BasicAsyncReadbackBuffer(const IntSize& aSize)
@@ -335,7 +199,6 @@ bool BasicAsyncReadbackBuffer::MapAndCopyInto(DataSourceSurface* aSurface,
   if (!mSurface) {
     return false;
   }
->>>>>>> upstream-releases
 
   MOZ_RELEASE_ASSERT(aReadSize <= aSurface->GetSize());
   RefPtr<DataSourceSurface> source = mSurface->GetDataSurface();
@@ -348,14 +211,6 @@ bool BasicAsyncReadbackBuffer::MapAndCopyInto(DataSourceSurface* aSurface,
                      destMap.GetStride(), aSurface->GetFormat(), aReadSize);
 }
 
-<<<<<<< HEAD
-BasicCompositor::~BasicCompositor() { MOZ_COUNT_DTOR(BasicCompositor); }
-||||||| merged common ancestors
-BasicCompositor::~BasicCompositor()
-{
-  MOZ_COUNT_DTOR(BasicCompositor);
-}
-=======
 BasicCompositor::BasicCompositor(CompositorBridgeParent* aParent,
                                  widget::CompositorWidget* aWidget)
     : Compositor(aWidget, aParent),
@@ -371,19 +226,10 @@ BasicCompositor::BasicCompositor(CompositorBridgeParent* aParent,
       std::min(Factory::GetMaxSurfaceSize(gfxVars::ContentBackend()),
                Factory::GetMaxSurfaceSize(BackendType::CAIRO));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BasicCompositor::Initialize(nsCString* const out_failureReason) {
-||||||| merged common ancestors
-bool
-BasicCompositor::Initialize(nsCString* const out_failureReason)
-{
-=======
 BasicCompositor::~BasicCompositor() { MOZ_COUNT_DTOR(BasicCompositor); }
 
 bool BasicCompositor::Initialize(nsCString* const out_failureReason) {
->>>>>>> upstream-releases
   return mWidget ? mWidget->InitCompositor(this) : false;
 };
 
@@ -520,18 +366,8 @@ bool BasicCompositor::SupportsEffect(EffectTypes aEffect) {
          aEffect != EffectTypes::COMPONENT_ALPHA;
 }
 
-<<<<<<< HEAD
-bool BasicCompositor::SupportsLayerGeometry() const {
-  return gfxPrefs::BasicLayerGeometry();
-||||||| merged common ancestors
-bool
-BasicCompositor::SupportsLayerGeometry() const
-{
-  return gfxPrefs::BasicLayerGeometry();
-=======
 bool BasicCompositor::SupportsLayerGeometry() const {
   return StaticPrefs::layers_geometry_basic_enabled();
->>>>>>> upstream-releases
 }
 
 static RefPtr<gfx::Path> BuildPathFromPolygon(const RefPtr<DrawTarget>& aDT,
@@ -773,7 +609,6 @@ static bool AttemptVideoConvertAndScale(
     return false;
 }
 
-<<<<<<< HEAD
 void BasicCompositor::DrawQuad(const gfx::Rect& aRect,
                                const gfx::IntRect& aClipRect,
                                const EffectChain& aEffectChain,
@@ -801,73 +636,6 @@ void BasicCompositor::DrawGeometry(
     const gfx::IntRect& aClipRect, const EffectChain& aEffectChain,
     gfx::Float aOpacity, const gfx::Matrix4x4& aTransform,
     const gfx::Rect& aVisibleRect, const bool aEnableAA) {
-||||||| merged common ancestors
-void
-BasicCompositor::DrawQuad(const gfx::Rect& aRect,
-                          const gfx::IntRect& aClipRect,
-                          const EffectChain &aEffectChain,
-                          gfx::Float aOpacity,
-                          const gfx::Matrix4x4& aTransform,
-                          const gfx::Rect& aVisibleRect)
-{
-  DrawGeometry(aRect, aRect, aClipRect, aEffectChain,
-               aOpacity, aTransform, aVisibleRect, true);
-}
-
-void
-BasicCompositor::DrawPolygon(const gfx::Polygon& aPolygon,
-                             const gfx::Rect& aRect,
-                             const gfx::IntRect& aClipRect,
-                             const EffectChain& aEffectChain,
-                             gfx::Float aOpacity,
-                             const gfx::Matrix4x4& aTransform,
-                             const gfx::Rect& aVisibleRect)
-{
-  DrawGeometry(aPolygon, aRect, aClipRect, aEffectChain,
-               aOpacity, aTransform, aVisibleRect, false);
-}
-
-
-template<typename Geometry>
-void
-BasicCompositor::DrawGeometry(const Geometry& aGeometry,
-                              const gfx::Rect& aRect,
-                              const gfx::IntRect& aClipRect,
-                              const EffectChain& aEffectChain,
-                              gfx::Float aOpacity,
-                              const gfx::Matrix4x4& aTransform,
-                              const gfx::Rect& aVisibleRect,
-                              const bool aEnableAA)
-{
-=======
-void BasicCompositor::DrawQuad(const gfx::Rect& aRect,
-                               const gfx::IntRect& aClipRect,
-                               const EffectChain& aEffectChain,
-                               gfx::Float aOpacity,
-                               const gfx::Matrix4x4& aTransform,
-                               const gfx::Rect& aVisibleRect) {
-  DrawGeometry(aRect, aRect, aClipRect, aEffectChain, aOpacity, aTransform,
-               aVisibleRect, true);
-}
-
-void BasicCompositor::DrawPolygon(const gfx::Polygon& aPolygon,
-                                  const gfx::Rect& aRect,
-                                  const gfx::IntRect& aClipRect,
-                                  const EffectChain& aEffectChain,
-                                  gfx::Float aOpacity,
-                                  const gfx::Matrix4x4& aTransform,
-                                  const gfx::Rect& aVisibleRect) {
-  DrawGeometry(aPolygon, aRect, aClipRect, aEffectChain, aOpacity, aTransform,
-               aVisibleRect, false);
-}
-
-template <typename Geometry>
-void BasicCompositor::DrawGeometry(
-    const Geometry& aGeometry, const gfx::Rect& aRect,
-    const gfx::IntRect& aClipRect, const EffectChain& aEffectChain,
-    gfx::Float aOpacity, const gfx::Matrix4x4& aTransform,
-    const gfx::Rect& aVisibleRect, const bool aEnableAA) {
->>>>>>> upstream-releases
   RefPtr<DrawTarget> buffer = mRenderTarget->mDrawTarget;
 
   // For 2D drawing, |dest| and |buffer| are the same surface. For 3D drawing,
@@ -1196,13 +964,6 @@ void BasicCompositor::BeginFrame(
   // Setup an intermediate render target to buffer all compositing. We will
   // copy this into mDrawTarget (the widget), and/or mTarget in EndFrame()
   RefPtr<CompositingRenderTarget> target =
-<<<<<<< HEAD
-      CreateRenderTargetForWindow(mInvalidRect, clearRect, bufferMode);
-||||||| merged common ancestors
-    CreateRenderTargetForWindow(mInvalidRect,
-                                clearRect,
-                                bufferMode);
-=======
       CreateRenderTargetForWindow(mInvalidRect, clearRect, bufferMode);
 
   if (ShouldRecordFrames()) {
@@ -1223,7 +984,6 @@ void BasicCompositor::BeginFrame(
           new BasicCompositingRenderTarget(drawTarget, rect);
     }
   }
->>>>>>> upstream-releases
 
   mDrawTarget->PopClip();
 
@@ -1362,13 +1122,6 @@ void BasicCompositor::FinishPendingComposite() {
   TryToEndRemoteDrawing(/* aForceToEnd */ true);
 }
 
-<<<<<<< HEAD
-}  // namespace layers
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace layers
-} // namespace mozilla
-=======
 bool BasicCompositor::ShouldRecordFrames() const {
 #ifdef MOZ_GECKO_PROFILER
   return profiler_feature_active(ProfilerFeature::Screenshots) || mRecordFrames;
@@ -1379,4 +1132,3 @@ bool BasicCompositor::ShouldRecordFrames() const {
 
 }  // namespace layers
 }  // namespace mozilla
->>>>>>> upstream-releases

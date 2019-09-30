@@ -37,19 +37,11 @@ MOZ_END_EXTERN_C
 static inline void AnnotateMozCrashReason(const char* reason) {
   gMozCrashReason = reason;
 }
-#define MOZ_CRASH_ANNOTATE(...) AnnotateMozCrashReason(__VA_ARGS__)
+#  define MOZ_CRASH_ANNOTATE(...) AnnotateMozCrashReason(__VA_ARGS__)
 #else
-<<<<<<< HEAD
-#define MOZ_CRASH_ANNOTATE(...) \
-  do { /* nothing */            \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_CRASH_ANNOTATE(...) do { /* nothing */ } while (false)
-=======
 #  define MOZ_CRASH_ANNOTATE(...) \
     do { /* nothing */            \
     } while (false)
->>>>>>> upstream-releases
 #endif
 
 #include <stddef.h>
@@ -68,10 +60,10 @@ __declspec(dllimport) int __stdcall TerminateProcess(void* hProcess,
 __declspec(dllimport) void* __stdcall GetCurrentProcess(void);
 MOZ_END_EXTERN_C
 #else
-#include <signal.h>
+#  include <signal.h>
 #endif
 #ifdef ANDROID
-#include <android/log.h>
+#  include <android/log.h>
 #endif
 
 /*
@@ -93,112 +85,6 @@ MOZ_END_EXTERN_C
  * typedef could be used.
  */
 #ifndef __cplusplus
-<<<<<<< HEAD
-/*
- * Some of the definitions below create an otherwise-unused typedef.  This
- * triggers compiler warnings with some versions of gcc, so mark the typedefs
- * as permissibly-unused to disable the warnings.
- */
-#if defined(__GNUC__)
-#define MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE __attribute__((unused))
-#else
-#define MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE /* nothing */
-#endif
-#define MOZ_STATIC_ASSERT_GLUE1(x, y) x##y
-#define MOZ_STATIC_ASSERT_GLUE(x, y) MOZ_STATIC_ASSERT_GLUE1(x, y)
-#if defined(__SUNPRO_CC)
-/*
- * The Sun Studio C++ compiler is buggy when declaring, inside a function,
- * another extern'd function with an array argument whose length contains a
- * sizeof, triggering the error message "sizeof expression not accepted as
- * size of array parameter".  This bug (6688515, not public yet) would hit
- * defining moz_static_assert as a function, so we always define an extern
- * array for Sun Studio.
- *
- * We include the line number in the symbol name in a best-effort attempt
- * to avoid conflicts (see below).
- */
-#define MOZ_STATIC_ASSERT(cond, reason)                 \
-  extern char MOZ_STATIC_ASSERT_GLUE(moz_static_assert, \
-                                     __LINE__)[(cond) ? 1 : -1]
-#elif defined(__COUNTER__)
-/*
- * If there was no preferred alternative, use a compiler-agnostic version.
- *
- * Note that the non-__COUNTER__ version has a bug in C++: it can't be used
- * in both |extern "C"| and normal C++ in the same translation unit.  (Alas
- * |extern "C"| isn't allowed in a function.)  The only affected compiler
- * we really care about is gcc 4.2.  For that compiler and others like it,
- * we include the line number in the function name to do the best we can to
- * avoid conflicts.  These should be rare: a conflict would require use of
- * MOZ_STATIC_ASSERT on the same line in separate files in the same
- * translation unit, *and* the uses would have to be in code with
- * different linkage, *and* the first observed use must be in C++-linkage
- * code.
- */
-#define MOZ_STATIC_ASSERT(cond, reason) \
-  typedef int MOZ_STATIC_ASSERT_GLUE(   \
-      moz_static_assert,                \
-      __COUNTER__)[(cond) ? 1 : -1] MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE
-#else
-#define MOZ_STATIC_ASSERT(cond, reason)                            \
-  extern void MOZ_STATIC_ASSERT_GLUE(moz_static_assert, __LINE__)( \
-      int arg[(cond) ? 1 : -1]) MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE
-#endif
-
-#define MOZ_STATIC_ASSERT_IF(cond, expr, reason) \
-  MOZ_STATIC_ASSERT(!(cond) || (expr), reason)
-||||||| merged common ancestors
-   /*
-    * Some of the definitions below create an otherwise-unused typedef.  This
-    * triggers compiler warnings with some versions of gcc, so mark the typedefs
-    * as permissibly-unused to disable the warnings.
-    */
-#  if defined(__GNUC__)
-#    define MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE __attribute__((unused))
-#  else
-#    define MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE /* nothing */
-#  endif
-#  define MOZ_STATIC_ASSERT_GLUE1(x, y)          x##y
-#  define MOZ_STATIC_ASSERT_GLUE(x, y)           MOZ_STATIC_ASSERT_GLUE1(x, y)
-#  if defined(__SUNPRO_CC)
-     /*
-      * The Sun Studio C++ compiler is buggy when declaring, inside a function,
-      * another extern'd function with an array argument whose length contains a
-      * sizeof, triggering the error message "sizeof expression not accepted as
-      * size of array parameter".  This bug (6688515, not public yet) would hit
-      * defining moz_static_assert as a function, so we always define an extern
-      * array for Sun Studio.
-      *
-      * We include the line number in the symbol name in a best-effort attempt
-      * to avoid conflicts (see below).
-      */
-#    define MOZ_STATIC_ASSERT(cond, reason) \
-       extern char MOZ_STATIC_ASSERT_GLUE(moz_static_assert, __LINE__)[(cond) ? 1 : -1]
-#  elif defined(__COUNTER__)
-     /*
-      * If there was no preferred alternative, use a compiler-agnostic version.
-      *
-      * Note that the non-__COUNTER__ version has a bug in C++: it can't be used
-      * in both |extern "C"| and normal C++ in the same translation unit.  (Alas
-      * |extern "C"| isn't allowed in a function.)  The only affected compiler
-      * we really care about is gcc 4.2.  For that compiler and others like it,
-      * we include the line number in the function name to do the best we can to
-      * avoid conflicts.  These should be rare: a conflict would require use of
-      * MOZ_STATIC_ASSERT on the same line in separate files in the same
-      * translation unit, *and* the uses would have to be in code with
-      * different linkage, *and* the first observed use must be in C++-linkage
-      * code.
-      */
-#    define MOZ_STATIC_ASSERT(cond, reason) \
-       typedef int MOZ_STATIC_ASSERT_GLUE(moz_static_assert, __COUNTER__)[(cond) ? 1 : -1] MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE
-#  else
-#    define MOZ_STATIC_ASSERT(cond, reason) \
-       extern void MOZ_STATIC_ASSERT_GLUE(moz_static_assert, __LINE__)(int arg[(cond) ? 1 : -1]) MOZ_STATIC_ASSERT_UNUSED_ATTRIBUTE
-#  endif
-
-#define MOZ_STATIC_ASSERT_IF(cond, expr, reason)  MOZ_STATIC_ASSERT(!(cond) || (expr), reason)
-=======
 /*
  * Some of the definitions below create an otherwise-unused typedef.  This
  * triggers compiler warnings with some versions of gcc, so mark the typedefs
@@ -253,17 +139,9 @@ MOZ_END_EXTERN_C
 
 #  define MOZ_STATIC_ASSERT_IF(cond, expr, reason) \
     MOZ_STATIC_ASSERT(!(cond) || (expr), reason)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_STATIC_ASSERT_IF(cond, expr, reason) \
-  static_assert(!(cond) || (expr), reason)
-||||||| merged common ancestors
-#define MOZ_STATIC_ASSERT_IF(cond, expr, reason)  static_assert(!(cond) || (expr), reason)
-=======
 #  define MOZ_STATIC_ASSERT_IF(cond, expr, reason) \
     static_assert(!(cond) || (expr), reason)
->>>>>>> upstream-releases
 #endif
 
 MOZ_BEGIN_EXTERN_C
@@ -285,13 +163,7 @@ MOZ_ReportAssertionFailure(const char* aStr, const char* aFilename,
                       aLine);
 #else
   fprintf(stderr, "Assertion failure: %s, at %s:%d\n", aStr, aFilename, aLine);
-<<<<<<< HEAD
-#if defined(MOZ_DUMP_ASSERTION_STACK)
-||||||| merged common ancestors
-#if defined (MOZ_DUMP_ASSERTION_STACK)
-=======
 #  if defined(MOZ_DUMP_ASSERTION_STACK)
->>>>>>> upstream-releases
   nsTraceRefcnt::WalkTheStack(stderr);
 #  endif
   fflush(stderr);
@@ -346,25 +218,11 @@ MOZ_NoReturn(int aLine) {
   TerminateProcess(GetCurrentProcess(), 3);
 }
 
-<<<<<<< HEAD
-#define MOZ_REALLY_CRASH(line) \
-  do {                         \
-    __debugbreak();            \
-    MOZ_NoReturn(line);        \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_REALLY_CRASH(line) \
-     do { \
-       __debugbreak(); \
-       MOZ_NoReturn(line); \
-     } while (false)
-=======
 #  define MOZ_REALLY_CRASH(line) \
     do {                         \
       __debugbreak();            \
       MOZ_NoReturn(line);        \
     } while (false)
->>>>>>> upstream-releases
 #else
 
 /*
@@ -377,47 +235,6 @@ MOZ_NoReturn(int aLine) {
  * crashes to manifest as ILL (at an arbitrary address) instead of the expected
  * SEGV at 0x0.
  */
-<<<<<<< HEAD
-#ifdef MOZ_UBSAN
-#define MOZ_CRASH_WRITE_ADDR 0x1
-#else
-#define MOZ_CRASH_WRITE_ADDR NULL
-#endif
-
-#ifdef __cplusplus
-#define MOZ_REALLY_CRASH(line)                     \
-  do {                                             \
-    *((volatile int*)MOZ_CRASH_WRITE_ADDR) = line; \
-    ::abort();                                     \
-  } while (false)
-#else
-#define MOZ_REALLY_CRASH(line)                     \
-  do {                                             \
-    *((volatile int*)MOZ_CRASH_WRITE_ADDR) = line; \
-    abort();                                       \
-  } while (false)
-#endif
-||||||| merged common ancestors
-#  ifdef MOZ_UBSAN
-#    define MOZ_CRASH_WRITE_ADDR 0x1
-#  else
-#    define MOZ_CRASH_WRITE_ADDR NULL
-#  endif
-
-#  ifdef __cplusplus
-#    define MOZ_REALLY_CRASH(line) \
-       do { \
-         *((volatile int*) MOZ_CRASH_WRITE_ADDR) = line; \
-         ::abort(); \
-       } while (false)
-#  else
-#    define MOZ_REALLY_CRASH(line) \
-       do { \
-         *((volatile int*) MOZ_CRASH_WRITE_ADDR) = line; \
-         abort(); \
-       } while (false)
-#  endif
-=======
 #  ifdef MOZ_UBSAN
 #    define MOZ_CRASH_WRITE_ADDR 0x1
 #  else
@@ -437,7 +254,6 @@ MOZ_NoReturn(int aLine) {
         abort();                                                    \
       } while (false)
 #  endif
->>>>>>> upstream-releases
 #endif
 
 /*
@@ -462,48 +278,18 @@ MOZ_NoReturn(int aLine) {
  * corrupted.
  */
 #ifndef DEBUG
-<<<<<<< HEAD
-#define MOZ_CRASH(...)                                \
-  do {                                                \
-    MOZ_CRASH_ANNOTATE("MOZ_CRASH(" __VA_ARGS__ ")"); \
-    MOZ_REALLY_CRASH(__LINE__);                       \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_CRASH(...) \
-     do { \
-       MOZ_CRASH_ANNOTATE("MOZ_CRASH(" __VA_ARGS__ ")"); \
-       MOZ_REALLY_CRASH(__LINE__); \
-     } while (false)
-=======
 #  define MOZ_CRASH(...)                                \
     do {                                                \
       MOZ_CRASH_ANNOTATE("MOZ_CRASH(" __VA_ARGS__ ")"); \
       MOZ_REALLY_CRASH(__LINE__);                       \
     } while (false)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_CRASH(...)                                   \
-  do {                                                   \
-    MOZ_ReportCrash("" __VA_ARGS__, __FILE__, __LINE__); \
-    MOZ_CRASH_ANNOTATE("MOZ_CRASH(" __VA_ARGS__ ")");    \
-    MOZ_REALLY_CRASH(__LINE__);                          \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_CRASH(...) \
-     do { \
-       MOZ_ReportCrash("" __VA_ARGS__, __FILE__, __LINE__); \
-       MOZ_CRASH_ANNOTATE("MOZ_CRASH(" __VA_ARGS__ ")"); \
-       MOZ_REALLY_CRASH(__LINE__); \
-     } while (false)
-=======
 #  define MOZ_CRASH(...)                                   \
     do {                                                   \
       MOZ_ReportCrash("" __VA_ARGS__, __FILE__, __LINE__); \
       MOZ_CRASH_ANNOTATE("MOZ_CRASH(" __VA_ARGS__ ")");    \
       MOZ_REALLY_CRASH(__LINE__);                          \
     } while (false)
->>>>>>> upstream-releases
 #endif
 
 /*
@@ -518,73 +304,21 @@ MOZ_NoReturn(int aLine) {
  * to crash-stats and are publicly visible. Firefox data stewards must do data
  * review on usages of this macro.
  */
-<<<<<<< HEAD
-static inline MOZ_COLD MOZ_NORETURN void MOZ_CrashOOL(const char* aFilename,
-                                                      int aLine,
-                                                      const char* aReason) {
-#ifdef DEBUG
-  MOZ_ReportCrash(aReason, aFilename, aLine);
-||||||| merged common ancestors
-#ifndef DEBUG
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE void
-MOZ_CrashOOL(int aLine, const char* aReason);
-#  define MOZ_CRASH_UNSAFE_OOL(reason) MOZ_CrashOOL(__LINE__, reason)
-#else
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE void
-MOZ_CrashOOL(const char* aFilename, int aLine, const char* aReason);
-#  define MOZ_CRASH_UNSAFE_OOL(reason) MOZ_CrashOOL(__FILE__, __LINE__, reason)
-=======
 static MOZ_ALWAYS_INLINE_EVEN_DEBUG MOZ_COLD MOZ_NORETURN void MOZ_Crash(
     const char* aFilename, int aLine, const char* aReason) {
 #ifdef DEBUG
   MOZ_ReportCrash(aReason, aFilename, aLine);
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  MOZ_CRASH_ANNOTATE(aReason);
-  MOZ_REALLY_CRASH(aLine);
-}
-#define MOZ_CRASH_UNSAFE_OOL(reason) MOZ_CrashOOL(__FILE__, __LINE__, reason)
-||||||| merged common ancestors
-=======
   MOZ_CRASH_ANNOTATE(aReason);
   MOZ_REALLY_CRASH(aLine);
 }
 #define MOZ_CRASH_UNSAFE(reason) MOZ_Crash(__FILE__, __LINE__, reason)
->>>>>>> upstream-releases
 
 static const size_t sPrintfMaxArgs = 4;
 static const size_t sPrintfCrashReasonSize = 1024;
 
-<<<<<<< HEAD
-#ifndef DEBUG
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(
-    2, 3) void MOZ_CrashPrintf(int aLine, const char* aFormat, ...);
-#define MOZ_CALL_CRASH_PRINTF(format, ...) \
-  MOZ_CrashPrintf(__LINE__, format, __VA_ARGS__)
-#else
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(
-    3, 4) void MOZ_CrashPrintf(const char* aFilename, int aLine,
-                               const char* aFormat, ...);
-#define MOZ_CALL_CRASH_PRINTF(format, ...) \
-  MOZ_CrashPrintf(__FILE__, __LINE__, format, __VA_ARGS__)
-#endif
-||||||| merged common ancestors
-#ifndef DEBUG
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(2, 3) void
-MOZ_CrashPrintf(int aLine, const char* aFormat, ...);
-#  define MOZ_CALL_CRASH_PRINTF(format, ...) \
-     MOZ_CrashPrintf(__LINE__, format, __VA_ARGS__)
-#else
-MFBT_API MOZ_COLD MOZ_NORETURN MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(3, 4) void
-MOZ_CrashPrintf(const char* aFilename, int aLine, const char* aFormat, ...);
-#  define MOZ_CALL_CRASH_PRINTF(format, ...) \
-     MOZ_CrashPrintf(__FILE__, __LINE__, format, __VA_ARGS__)
-#endif
-=======
 MFBT_API MOZ_COLD MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(1, 2) const
     char* MOZ_CrashPrintf(const char* aFormat, ...);
->>>>>>> upstream-releases
 
 /*
  * MOZ_CRASH_UNSAFE_PRINTF(format, arg1 [, args]) can be used when more
@@ -598,33 +332,6 @@ MFBT_API MOZ_COLD MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(1, 2) const
  * to crash-stats and are publicly visible. Firefox data stewards must do data
  * review on usages of this macro.
  */
-<<<<<<< HEAD
-#define MOZ_CRASH_UNSAFE_PRINTF(format, ...)                              \
-  do {                                                                    \
-    static_assert(MOZ_ARG_COUNT(__VA_ARGS__) > 0,                         \
-                  "Did you forget arguments to MOZ_CRASH_UNSAFE_PRINTF? " \
-                  "Or maybe you want MOZ_CRASH instead?");                \
-    static_assert(MOZ_ARG_COUNT(__VA_ARGS__) <= sPrintfMaxArgs,           \
-                  "Only up to 4 additional arguments are allowed!");      \
-    static_assert(sizeof(format) <= sPrintfCrashReasonSize,               \
-                  "The supplied format string is too long!");             \
-    MOZ_CALL_CRASH_PRINTF("" format, __VA_ARGS__);                        \
-  } while (false)
-||||||| merged common ancestors
-#define MOZ_CRASH_UNSAFE_PRINTF(format, ...) \
-   do { \
-     static_assert( \
-       MOZ_ARG_COUNT(__VA_ARGS__) > 0, \
-       "Did you forget arguments to MOZ_CRASH_UNSAFE_PRINTF? " \
-       "Or maybe you want MOZ_CRASH instead?"); \
-     static_assert( \
-       MOZ_ARG_COUNT(__VA_ARGS__) <= sPrintfMaxArgs, \
-       "Only up to 4 additional arguments are allowed!"); \
-     static_assert(sizeof(format) <= sPrintfCrashReasonSize, \
-       "The supplied format string is too long!"); \
-     MOZ_CALL_CRASH_PRINTF("" format, __VA_ARGS__); \
-   } while (false)
-=======
 #define MOZ_CRASH_UNSAFE_PRINTF(format, ...)                                \
   do {                                                                      \
     static_assert(MOZ_ARG_COUNT(__VA_ARGS__) > 0,                           \
@@ -636,7 +343,6 @@ MFBT_API MOZ_COLD MOZ_NEVER_INLINE MOZ_FORMAT_PRINTF(1, 2) const
                   "The supplied format string is too long!");               \
     MOZ_Crash(__FILE__, __LINE__, MOZ_CrashPrintf("" format, __VA_ARGS__)); \
   } while (false)
->>>>>>> upstream-releases
 
 MOZ_END_EXTERN_C
 
@@ -690,7 +396,7 @@ MOZ_END_EXTERN_C
  */
 
 #ifdef __cplusplus
-#include "mozilla/TypeTraits.h"
+#  include "mozilla/TypeTraits.h"
 namespace mozilla {
 namespace detail {
 
@@ -713,52 +419,23 @@ struct AssertionConditionType {
   static const bool isValid = true;
 };
 
-<<<<<<< HEAD
-}  // namespace detail
-}  // namespace mozilla
-#define MOZ_VALIDATE_ASSERT_CONDITION_TYPE(x)                                  \
-  static_assert(mozilla::detail::AssertionConditionType<decltype(x)>::isValid, \
-                "invalid assertion condition")
-||||||| merged common ancestors
-} // namespace detail
-} // namespace mozilla
-#  define MOZ_VALIDATE_ASSERT_CONDITION_TYPE(x) \
-     static_assert(mozilla::detail::AssertionConditionType<decltype(x)>::isValid, \
-                   "invalid assertion condition")
-=======
 }  // namespace detail
 }  // namespace mozilla
 #  define MOZ_VALIDATE_ASSERT_CONDITION_TYPE(x)                        \
     static_assert(                                                     \
         mozilla::detail::AssertionConditionType<decltype(x)>::isValid, \
         "invalid assertion condition")
->>>>>>> upstream-releases
 #else
-#define MOZ_VALIDATE_ASSERT_CONDITION_TYPE(x)
+#  define MOZ_VALIDATE_ASSERT_CONDITION_TYPE(x)
 #endif
 
 #if defined(DEBUG) || defined(MOZ_ASAN)
-<<<<<<< HEAD
-#define MOZ_REPORT_ASSERTION_FAILURE(...) \
-  MOZ_ReportAssertionFailure(__VA_ARGS__)
-||||||| merged common ancestors
-#  define MOZ_REPORT_ASSERTION_FAILURE(...) MOZ_ReportAssertionFailure(__VA_ARGS__)
-=======
 #  define MOZ_REPORT_ASSERTION_FAILURE(...) \
     MOZ_ReportAssertionFailure(__VA_ARGS__)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_REPORT_ASSERTION_FAILURE(...) \
-  do { /* nothing */                      \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_REPORT_ASSERTION_FAILURE(...) do { /* nothing */ } while (false)
-=======
 #  define MOZ_REPORT_ASSERTION_FAILURE(...) \
     do { /* nothing */                      \
     } while (false)
->>>>>>> upstream-releases
 #endif
 
 /* First the single-argument form. */
@@ -790,29 +467,21 @@ struct AssertionConditionType {
       (__VA_ARGS__))
 
 #ifdef DEBUG
-#define MOZ_ASSERT(...) MOZ_RELEASE_ASSERT(__VA_ARGS__)
+#  define MOZ_ASSERT(...) MOZ_RELEASE_ASSERT(__VA_ARGS__)
 #else
-<<<<<<< HEAD
-#define MOZ_ASSERT(...) \
-  do {                  \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_ASSERT(...) do { } while (false)
-=======
 #  define MOZ_ASSERT(...) \
     do {                  \
     } while (false)
->>>>>>> upstream-releases
 #endif /* DEBUG */
 
 #if defined(NIGHTLY_BUILD) || defined(MOZ_DEV_EDITION)
-#define MOZ_DIAGNOSTIC_ASSERT MOZ_RELEASE_ASSERT
-#define MOZ_DIAGNOSTIC_ASSERT_ENABLED 1
+#  define MOZ_DIAGNOSTIC_ASSERT MOZ_RELEASE_ASSERT
+#  define MOZ_DIAGNOSTIC_ASSERT_ENABLED 1
 #else
-#define MOZ_DIAGNOSTIC_ASSERT MOZ_ASSERT
-#ifdef DEBUG
-#define MOZ_DIAGNOSTIC_ASSERT_ENABLED 1
-#endif
+#  define MOZ_DIAGNOSTIC_ASSERT MOZ_ASSERT
+#  ifdef DEBUG
+#    define MOZ_DIAGNOSTIC_ASSERT_ENABLED 1
+#  endif
 #endif
 
 /*
@@ -825,21 +494,6 @@ struct AssertionConditionType {
  * designed to catch bugs during debugging, not "in the field".
  */
 #ifdef DEBUG
-<<<<<<< HEAD
-#define MOZ_ASSERT_IF(cond, expr) \
-  do {                            \
-    if (cond) {                   \
-      MOZ_ASSERT(expr);           \
-    }                             \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_ASSERT_IF(cond, expr) \
-     do { \
-       if (cond) { \
-         MOZ_ASSERT(expr); \
-       } \
-     } while (false)
-=======
 #  define MOZ_ASSERT_IF(cond, expr) \
     do {                            \
       if (cond) {                   \
@@ -866,19 +520,10 @@ struct AssertionConditionType {
         MOZ_DIAGNOSTIC_ASSERT(expr);           \
       }                                        \
     } while (false)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_ASSERT_IF(cond, expr) \
-  do {                            \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_ASSERT_IF(cond, expr)  do { } while (false)
-=======
 #  define MOZ_DIAGNOSTIC_ASSERT_IF(cond, expr) \
     do {                                       \
     } while (false)
->>>>>>> upstream-releases
 #endif
 
 /*
@@ -889,15 +534,15 @@ struct AssertionConditionType {
  * asserts.
  */
 #if defined(__clang__) || defined(__GNUC__)
-#define MOZ_ASSUME_UNREACHABLE_MARKER() __builtin_unreachable()
+#  define MOZ_ASSUME_UNREACHABLE_MARKER() __builtin_unreachable()
 #elif defined(_MSC_VER)
-#define MOZ_ASSUME_UNREACHABLE_MARKER() __assume(0)
+#  define MOZ_ASSUME_UNREACHABLE_MARKER() __assume(0)
 #else
-#ifdef __cplusplus
-#define MOZ_ASSUME_UNREACHABLE_MARKER() ::abort()
-#else
-#define MOZ_ASSUME_UNREACHABLE_MARKER() abort()
-#endif
+#  ifdef __cplusplus
+#    define MOZ_ASSUME_UNREACHABLE_MARKER() ::abort()
+#  else
+#    define MOZ_ASSUME_UNREACHABLE_MARKER() abort()
+#  endif
 #endif
 
 /*
@@ -988,17 +633,10 @@ struct AssertionConditionType {
  * }
  */
 #ifdef DEBUG
-<<<<<<< HEAD
-#define MOZ_FALLTHROUGH_ASSERT(...) \
-  MOZ_CRASH("MOZ_FALLTHROUGH_ASSERT: " __VA_ARGS__)
-||||||| merged common ancestors
-#  define MOZ_FALLTHROUGH_ASSERT(...) MOZ_CRASH("MOZ_FALLTHROUGH_ASSERT: " __VA_ARGS__)
-=======
 #  define MOZ_FALLTHROUGH_ASSERT(...) \
     MOZ_CRASH("MOZ_FALLTHROUGH_ASSERT: " __VA_ARGS__)
->>>>>>> upstream-releases
 #else
-#define MOZ_FALLTHROUGH_ASSERT(...) MOZ_FALLTHROUGH
+#  define MOZ_FALLTHROUGH_ASSERT(...) MOZ_FALLTHROUGH
 #endif
 
 /*
@@ -1008,45 +646,6 @@ struct AssertionConditionType {
  * using MOZ_ASSERT.
  */
 #ifdef DEBUG
-<<<<<<< HEAD
-#define MOZ_ALWAYS_TRUE(expr)   \
-  do {                          \
-    if ((expr)) {               \
-      /* Do nothing. */         \
-    } else {                    \
-      MOZ_ASSERT(false, #expr); \
-    }                           \
-  } while (false)
-#define MOZ_ALWAYS_FALSE(expr)  \
-  do {                          \
-    if ((expr)) {               \
-      MOZ_ASSERT(false, #expr); \
-    } else {                    \
-      /* Do nothing. */         \
-    }                           \
-  } while (false)
-#define MOZ_ALWAYS_OK(expr) MOZ_ASSERT((expr).isOk())
-#define MOZ_ALWAYS_ERR(expr) MOZ_ASSERT((expr).isErr())
-||||||| merged common ancestors
-#  define MOZ_ALWAYS_TRUE(expr) \
-     do { \
-       if ((expr)) { \
-         /* Do nothing. */ \
-       } else { \
-         MOZ_ASSERT(false, #expr); \
-       } \
-     } while (false)
-#  define MOZ_ALWAYS_FALSE(expr) \
-     do { \
-       if ((expr)) { \
-         MOZ_ASSERT(false, #expr); \
-       } else { \
-         /* Do nothing. */ \
-       } \
-     } while (false)
-#  define MOZ_ALWAYS_OK(expr)        MOZ_ASSERT((expr).isOk())
-#  define MOZ_ALWAYS_ERR(expr)       MOZ_ASSERT((expr).isErr())
-=======
 #  define MOZ_ALWAYS_TRUE(expr)   \
     do {                          \
       if ((expr)) {               \
@@ -1108,66 +707,13 @@ struct AssertionConditionType {
         MOZ_DIAGNOSTIC_ASSERT(false, #expr); \
       }                                      \
     } while (false)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_ALWAYS_TRUE(expr)     \
-  do {                            \
-    if ((expr)) {                 \
-      /* Silence MOZ_MUST_USE. */ \
-    }                             \
-  } while (false)
-#define MOZ_ALWAYS_FALSE(expr)    \
-  do {                            \
-    if ((expr)) {                 \
-      /* Silence MOZ_MUST_USE. */ \
-    }                             \
-  } while (false)
-#define MOZ_ALWAYS_OK(expr)       \
-  do {                            \
-    if ((expr).isOk()) {          \
-      /* Silence MOZ_MUST_USE. */ \
-    }                             \
-  } while (false)
-#define MOZ_ALWAYS_ERR(expr)      \
-  do {                            \
-    if ((expr).isErr()) {         \
-      /* Silence MOZ_MUST_USE. */ \
-    }                             \
-  } while (false)
-||||||| merged common ancestors
-#  define MOZ_ALWAYS_TRUE(expr) \
-     do { \
-       if ((expr)) { \
-          /* Silence MOZ_MUST_USE. */ \
-       } \
-     } while (false)
-#  define MOZ_ALWAYS_FALSE(expr) \
-     do { \
-       if ((expr)) { \
-         /* Silence MOZ_MUST_USE. */ \
-       } \
-     } while (false)
-#  define MOZ_ALWAYS_OK(expr) \
-     do { \
-       if ((expr).isOk()) { \
-         /* Silence MOZ_MUST_USE. */ \
-       } \
-     } while (false)
-#  define MOZ_ALWAYS_ERR(expr) \
-     do { \
-       if ((expr).isErr()) { \
-         /* Silence MOZ_MUST_USE. */ \
-       } \
-     } while (false)
-=======
 #  define MOZ_DIAGNOSTIC_ALWAYS_TRUE(expr) \
     do {                                   \
       if ((expr)) {                        \
         /* Silence MOZ_MUST_USE. */        \
       }                                    \
     } while (false)
->>>>>>> upstream-releases
 #endif
 
 #undef MOZ_DUMP_ASSERTION_STACK

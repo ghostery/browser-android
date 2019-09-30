@@ -203,17 +203,8 @@ class nsTString : public nsTSubstring<T> {
                int32_t aCount = -1) const {
     return Find(static_cast<const char16_t*>(aString), aOffset, aCount);
   }
-<<<<<<< HEAD
-#endif
-
-||||||| merged common ancestors
-#endif
-
-
-=======
 #  endif
 
->>>>>>> upstream-releases
   /**
    * This methods scans the string backwards, looking for the given string
    *
@@ -463,23 +454,6 @@ class nsTString : public nsTSubstring<T> {
   /**
    * verify restrictions for dependent strings
    */
-<<<<<<< HEAD
-  void AssertValidDependentString() {
-    NS_ASSERTION(this->mData, "nsTDependentString must wrap a non-NULL buffer");
-    NS_ASSERTION(this->mLength != size_type(-1),
-                 "nsTDependentString has bogus length");
-    NS_ASSERTION(this->mData[substring_type::mLength] == 0,
-                 "nsTDependentString must wrap only null-terminated strings. "
-                 "You are probably looking for nsTDependentSubstring.");
-||||||| merged common ancestors
-  void AssertValidDependentString()
-  {
-    NS_ASSERTION(this->mData, "nsTDependentString must wrap a non-NULL buffer");
-    NS_ASSERTION(this->mLength != size_type(-1), "nsTDependentString has bogus length");
-    NS_ASSERTION(this->mData[substring_type::mLength] == 0,
-                 "nsTDependentString must wrap only null-terminated strings. "
-                 "You are probably looking for nsTDependentSubstring.");
-=======
   void AssertValidDependentString() {
     MOZ_ASSERT(this->mData, "nsTDependentString must wrap a non-NULL buffer");
     MOZ_ASSERT(this->mLength != size_type(-1),
@@ -488,7 +462,6 @@ class nsTString : public nsTSubstring<T> {
                           "nsTDependentString must wrap only null-terminated "
                           "strings.  You are probably looking for "
                           "nsTDependentSubstring.");
->>>>>>> upstream-releases
   }
 
  protected:
@@ -503,16 +476,6 @@ class nsTString : public nsTSubstring<T> {
 
   // Used by Null[C]String.
   explicit nsTString(DataFlags aDataFlags)
-<<<<<<< HEAD
-      : substring_type(char_traits::sEmptyBuffer, 0,
-                       aDataFlags | DataFlags::TERMINATED,
-                       ClassFlags::NULL_TERMINATED) {}
-||||||| merged common ancestors
-    : substring_type(char_traits::sEmptyBuffer, 0,
-                     aDataFlags | DataFlags::TERMINATED,
-                     ClassFlags::NULL_TERMINATED)
-  {}
-=======
       : substring_type(char_traits::sEmptyBuffer, 0,
                        aDataFlags | DataFlags::TERMINATED,
                        ClassFlags::NULL_TERMINATED) {}
@@ -524,7 +487,6 @@ class nsTString : public nsTSubstring<T> {
   // Utility function for ToDouble and ToDoubleAllowTrailingChars.
   double ToDouble(TrailingCharsPolicy aTrailingCharsPolicy,
                   nsresult* aErrorCode) const;
->>>>>>> upstream-releases
 
   struct Segment {
     uint32_t mBegin, mLength;

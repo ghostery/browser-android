@@ -58,16 +58,8 @@ class nsPageFrame final : public nsContainerFrame {
    */
   void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
 
-<<<<<<< HEAD
- protected:
-  explicit nsPageFrame(ComputedStyle* aStyle);
-||||||| merged common ancestors
-protected:
-  explicit nsPageFrame(ComputedStyle* aStyle);
-=======
  protected:
   explicit nsPageFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
->>>>>>> upstream-releases
   virtual ~nsPageFrame();
 
   typedef enum { eHeader, eFooter } nsHeaderFooterEnum;

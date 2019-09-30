@@ -77,20 +77,6 @@ nsresult nsXPTInterfaceInfo::GetConstant(uint16_t aIndex,
 // nsXPTMethodInfo symbol helpers //
 ////////////////////////////////////
 
-<<<<<<< HEAD
-void nsXPTMethodInfo::GetSymbolDescription(JSContext* aCx,
-                                           nsACString& aID) const {
-  JS::RootedSymbol symbol(aCx, GetSymbol(aCx));
-  JSString* desc = JS::GetSymbolDescription(symbol);
-  MOZ_ASSERT(JS_StringHasLatin1Chars(desc));
-||||||| merged common ancestors
-void
-nsXPTMethodInfo::GetSymbolDescription(JSContext* aCx, nsACString& aID) const
-{
-  JS::RootedSymbol symbol(aCx, GetSymbol(aCx));
-  JSString* desc = JS::GetSymbolDescription(symbol);
-  MOZ_ASSERT(JS_StringHasLatin1Chars(desc));
-=======
 const char* nsXPTMethodInfo::SymbolDescription() const {
   switch (GetSymbolCode()) {
 #define XPC_WELL_KNOWN_SYMBOL_DESCR_CASE(name) \
@@ -98,19 +84,7 @@ const char* nsXPTMethodInfo::SymbolDescription() const {
     return #name;
     JS_FOR_EACH_WELL_KNOWN_SYMBOL(XPC_WELL_KNOWN_SYMBOL_DESCR_CASE)
 #undef XPC_WELL_KNOWN_SYMBOL_DESCR_CASE
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS::AutoAssertNoGC nogc(aCx);
-  size_t length;
-  const JS::Latin1Char* chars =
-      JS_GetLatin1StringCharsAndLength(aCx, nogc, desc, &length);
-||||||| merged common ancestors
-  JS::AutoAssertNoGC nogc(aCx);
-  size_t length;
-  const JS::Latin1Char* chars = JS_GetLatin1StringCharsAndLength(
-    aCx, nogc, desc, &length);
-=======
     default:
       return "";
   }
@@ -121,7 +95,6 @@ bool nsXPTMethodInfo::GetId(JSContext* aCx, jsid& aId) const {
     aId = SYMBOL_TO_JSID(GetSymbol(aCx));
     return true;
   }
->>>>>>> upstream-releases
 
   return mozilla::dom::AtomizeAndPinJSString(aCx, aId, Name());
 }

@@ -138,13 +138,7 @@ class Digest {
 #  pragma warning(push)
     // C4061: enumerator 'symbol' in switch of enum 'symbol' is not
     // explicitly handled.
-<<<<<<< HEAD
-#pragma warning(disable : 4061)
-||||||| merged common ancestors
-#pragma warning(disable:4061)
-=======
 #  pragma warning(disable : 4061)
->>>>>>> upstream-releases
 #endif
     switch (hashType) {
       case SEC_OID_SHA1:
@@ -244,11 +238,6 @@ inline void VFY_DestroyContext_true(VFYContext* ctx) {
   VFY_DestroyContext(ctx, true);
 }
 
-<<<<<<< HEAD
-}  // namespace internal
-||||||| merged common ancestors
-} // namespace internal
-=======
 // If this was created via PK11_ListFixedKeysInSlot, we may have a list of keys,
 // in which case we have to free them all (and if not, this will still free the
 // one key).
@@ -260,18 +249,10 @@ inline void FreeOneOrMoreSymKeys(PK11SymKey* keys) {
     keys = next;
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniqueCERTCertificate, CERTCertificate,
-||||||| merged common ancestors
-MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniqueCERTCertificate,
-                                      CERTCertificate,
-=======
 }  // namespace internal
 
 MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniqueCERTCertificate, CERTCertificate,
->>>>>>> upstream-releases
                                       CERT_DestroyCertificate)
 MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniqueCERTCertificateList,
                                       CERTCertificateList,
@@ -311,17 +292,8 @@ MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniquePK11SlotInfo, PK11SlotInfo,
                                       PK11_FreeSlot)
 MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniquePK11SlotList, PK11SlotList,
                                       PK11_FreeSlotList)
-<<<<<<< HEAD
-MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniquePK11SymKey, PK11SymKey,
-                                      PK11_FreeSymKey)
-||||||| merged common ancestors
-MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniquePK11SymKey,
-                                      PK11SymKey,
-                                      PK11_FreeSymKey)
-=======
 MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniquePK11SymKey, PK11SymKey,
                                       internal::FreeOneOrMoreSymKeys)
->>>>>>> upstream-releases
 
 MOZ_TYPE_SPECIFIC_UNIQUE_PTR_TEMPLATE(UniquePLArenaPool, PLArenaPool,
                                       internal::PORT_FreeArena_false)

@@ -88,24 +88,11 @@ static nsresult IsEligible(nsIChannel* aChannel,
   return NS_ERROR_SRI_NOT_ELIGIBLE;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult SRICheck::IntegrityMetadata(
-    const nsAString& aMetadataList, const nsACString& aSourceFileURI,
-    nsIConsoleReportCollector* aReporter, SRIMetadata* outMetadata) {
-||||||| merged common ancestors
-/* static */ nsresult
-SRICheck::IntegrityMetadata(const nsAString& aMetadataList,
-                            const nsACString& aSourceFileURI,
-                            nsIConsoleReportCollector* aReporter,
-                            SRIMetadata* outMetadata)
-{
-=======
 /* static */
 nsresult SRICheck::IntegrityMetadata(const nsAString& aMetadataList,
                                      const nsACString& aSourceFileURI,
                                      nsIConsoleReportCollector* aReporter,
                                      SRIMetadata* outMetadata) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(outMetadata);
   NS_ENSURE_ARG_POINTER(aReporter);
   MOZ_ASSERT(outMetadata->IsEmpty());  // caller must pass empty metadata

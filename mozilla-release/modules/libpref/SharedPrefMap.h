@@ -397,25 +397,12 @@ class SharedPrefMap {
     // to work here.
     Pref& operator*() { return *this; }
 
-<<<<<<< HEAD
-    // Updates this wrapper to point to the next entry in the map. This should
-    // not be attempted unless Index() is less than the map's Count().
-    Pref& operator++() {
-      mEntry++;
-||||||| merged common ancestors
-    // Updates this wrapper to point to the next entry in the map. This should
-    // not be attempted unless Index() is less than the map's Count().
-    Pref& operator++()
-    {
-      mEntry++;
-=======
     // Updates this wrapper to point to the next visible entry in the map. This
     // should not be attempted unless Index() is less than the map's Count().
     Pref& operator++() {
       do {
         mEntry++;
       } while (mEntry->mIsSkippedByIteration && Index() < mMap->Count());
->>>>>>> upstream-releases
       return *this;
     }
 

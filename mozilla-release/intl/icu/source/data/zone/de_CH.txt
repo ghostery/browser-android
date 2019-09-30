@@ -1,19 +1,6 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 de_CH{
-<<<<<<< HEAD
-    Version{"2.1.44.50"}
-    zoneStrings{
-        "meta:Brunei"{
-            ls{"Brunei-Zeit"}
-        }
-        "meta:Solomon"{
-            ls{"Salomoninseln-Zeit"}
-        }
-    }
-||||||| merged common ancestors
-    Version{"2.1.39.37"}
-=======
     Version{"2.1.47.86"}
     zoneStrings{
         "Asia:Brunei"{
@@ -32,5 +19,4 @@ de_CH{
             ls{"Salomoninseln-Zeit"}
         }
     }
->>>>>>> upstream-releases
 }

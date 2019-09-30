@@ -21,20 +21,6 @@
 
 namespace SkSL {
 
-<<<<<<< HEAD
-void MetalCodeGenerator::setupIntrinsics() {
-#define METAL(x) std::make_pair(kMetal_IntrinsicKind, k ## x ## _MetalIntrinsic)
-#define SPECIAL(x) std::make_pair(kSpecial_IntrinsicKind, k ## x ## _SpecialIntrinsic)
-    fIntrinsicMap[String("texture")]            = SPECIAL(Texture);
-    fIntrinsicMap[String("mod")]                = SPECIAL(Mod);
-    fIntrinsicMap[String("lessThan")]           = METAL(LessThan);
-    fIntrinsicMap[String("lessThanEqual")]      = METAL(LessThanEqual);
-    fIntrinsicMap[String("greaterThan")]        = METAL(GreaterThan);
-    fIntrinsicMap[String("greaterThanEqual")]   = METAL(GreaterThanEqual);
-}
-
-||||||| merged common ancestors
-=======
 void MetalCodeGenerator::setupIntrinsics() {
 #define METAL(x) std::make_pair(kMetal_IntrinsicKind, k ## x ## _MetalIntrinsic)
 #define SPECIAL(x) std::make_pair(kSpecial_IntrinsicKind, k ## x ## _SpecialIntrinsic)
@@ -48,7 +34,6 @@ void MetalCodeGenerator::setupIntrinsics() {
     fIntrinsicMap[String("greaterThanEqual")]   = METAL(GreaterThanEqual);
 }
 
->>>>>>> upstream-releases
 void MetalCodeGenerator::write(const char* s) {
     if (!s[0]) {
         return;
@@ -177,43 +162,6 @@ void MetalCodeGenerator::writeExpression(const Expression& expr, Precedence pare
     }
 }
 
-<<<<<<< HEAD
-void MetalCodeGenerator::writeIntrinsicCall(const FunctionCall& c) {
-    auto i = fIntrinsicMap.find(c.fFunction.fName);
-    SkASSERT(i != fIntrinsicMap.end());
-    Intrinsic intrinsic = i->second;
-    int32_t intrinsicId = intrinsic.second;
-    switch (intrinsic.first) {
-        case kSpecial_IntrinsicKind:
-            return this->writeSpecialIntrinsic(c, (SpecialIntrinsic) intrinsicId);
-            break;
-        case kMetal_IntrinsicKind:
-            this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-            switch ((MetalIntrinsic) intrinsicId) {
-                case kLessThan_MetalIntrinsic:
-                    this->write(" < ");
-                    break;
-                case kLessThanEqual_MetalIntrinsic:
-                    this->write(" <= ");
-                    break;
-                case kGreaterThan_MetalIntrinsic:
-                    this->write(" > ");
-                    break;
-                case kGreaterThanEqual_MetalIntrinsic:
-                    this->write(" >= ");
-                    break;
-                default:
-                    ABORT("unsupported metal intrinsic kind");
-            }
-            this->writeExpression(*c.fArguments[1], kSequence_Precedence);
-            break;
-        default:
-            ABORT("unsupported intrinsic kind");
-    }
-}
-
-||||||| merged common ancestors
-=======
 void MetalCodeGenerator::writeIntrinsicCall(const FunctionCall& c) {
     auto i = fIntrinsicMap.find(c.fFunction.fName);
     SkASSERT(i != fIntrinsicMap.end());
@@ -254,7 +202,6 @@ void MetalCodeGenerator::writeIntrinsicCall(const FunctionCall& c) {
     }
 }
 
->>>>>>> upstream-releases
 void MetalCodeGenerator::writeFunctionCall(const FunctionCall& c) {
     const auto& entry = fIntrinsicMap.find(c.fFunction.fName);
     if (entry != fIntrinsicMap.end()) {
@@ -263,15 +210,6 @@ void MetalCodeGenerator::writeFunctionCall(const FunctionCall& c) {
     }
     if (c.fFunction.fBuiltin && "atan" == c.fFunction.fName && 2 == c.fArguments.size()) {
         this->write("atan2");
-<<<<<<< HEAD
-    } else if (c.fFunction.fBuiltin && "inversesqrt" == c.fFunction.fName) {
-        this->write("rsqrt");
-    } else if (c.fFunction.fBuiltin && "dFdx" == c.fFunction.fName) {
-        this->write("dfdx");
-    } else if (c.fFunction.fBuiltin && "dFdy" == c.fFunction.fName) {
-        this->write("dfdy");
-||||||| merged common ancestors
-=======
     } else if (c.fFunction.fBuiltin && "inversesqrt" == c.fFunction.fName) {
         this->write("rsqrt");
     } else if (c.fFunction.fBuiltin && "inverse" == c.fFunction.fName) {
@@ -282,7 +220,6 @@ void MetalCodeGenerator::writeFunctionCall(const FunctionCall& c) {
     } else if (c.fFunction.fBuiltin && "dFdy" == c.fFunction.fName) {
         // Flipping Y also negates the Y derivatives.
         this->write((fProgram.fSettings.fFlipY) ? "-dfdy" : "dfdy");
->>>>>>> upstream-releases
     } else {
         this->writeName(c.fFunction.fName);
     }
@@ -319,72 +256,6 @@ void MetalCodeGenerator::writeFunctionCall(const FunctionCall& c) {
     this->write(")");
 }
 
-<<<<<<< HEAD
-void MetalCodeGenerator::writeSpecialIntrinsic(const FunctionCall & c, SpecialIntrinsic kind) {
-    switch (kind) {
-        case kTexture_SpecialIntrinsic:
-            this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-            this->write(".sample(");
-            this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-            this->write(SAMPLER_SUFFIX);
-            this->write(", ");
-            this->writeExpression(*c.fArguments[1], kSequence_Precedence);
-            if (c.fArguments[1]->fType == *fContext.fFloat3_Type) {
-                this->write(".xy)"); // FIXME - add projection functionality
-            } else {
-                SkASSERT(c.fArguments[1]->fType == *fContext.fFloat2_Type);
-                this->write(")");
-            }
-            break;
-        case kMod_SpecialIntrinsic:
-            // fmod(x, y) in metal calculates x - y * trunc(x / y) instead of x - y * floor(x / y)
-            this->write("((");
-            this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-            this->write(") - (");
-            this->writeExpression(*c.fArguments[1], kSequence_Precedence);
-            this->write(") * floor((");
-            this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-            this->write(") / (");
-            this->writeExpression(*c.fArguments[1], kSequence_Precedence);
-            this->write(")))");
-            break;
-        default:
-            ABORT("unsupported special intrinsic kind");
-    }
-}
-
-void MetalCodeGenerator::writeConstructor(const Constructor& c) {
-    this->writeType(c.fType);
-    this->write("(");
-    const char* separator = "";
-    int scalarCount = 0;
-    for (const auto& arg : c.fArguments) {
-        this->write(separator);
-        separator = ", ";
-        if (Type::kMatrix_Kind == c.fType.kind() && Type::kScalar_Kind == arg->fType.kind()) {
-            // float2x2(float, float, float, float) doesn't work in Metal 1, so we need to merge to
-            // float2x2(float2, float2).
-            if (!scalarCount) {
-                this->writeType(c.fType.componentType());
-                this->write(to_string(c.fType.rows()));
-                this->write("(");
-||||||| merged common ancestors
-void MetalCodeGenerator::writeConstructor(const Constructor& c) {
-    this->writeType(c.fType);
-    this->write("(");
-    const char* separator = "";
-    int scalarCount = 0;
-    for (const auto& arg : c.fArguments) {
-        this->write(separator);
-        separator = ", ";
-        if (Type::kMatrix_Kind == c.fType.kind() && Type::kScalar_Kind == arg->fType.kind()) {
-            // float2x2(float, float, float, float) doesn't work in Metal 1, so we need to merge to
-            // float2x2(float2, float2).
-            if (!scalarCount) {
-                this->writeType(c.fType.componentType());
-                this->write(to_string(c.fType.rows()));
-                this->write("(");
-=======
 void MetalCodeGenerator::writeInverseHack(const Expression& mat) {
     String typeName = mat.fType.name();
     String name = typeName + "_inverse";
@@ -545,7 +416,6 @@ String MetalCodeGenerator::getMatrixConstructHelper(const Type& matrix, const Ty
         for (int i = 0; i < columns; ++i) {
             if (i > 0) {
                 fExtraFunctions.writeText(", ");
->>>>>>> upstream-releases
             }
             fExtraFunctions.printf("float%d(", rows);
             for (int j = 0; j < rows; ++j) {
@@ -628,18 +498,12 @@ void MetalCodeGenerator::writeConstructor(const Constructor& c, Precedence paren
 }
 
 void MetalCodeGenerator::writeFragCoord() {
-<<<<<<< HEAD
-    this->write("float4(_fragCoord.x, _anonInterface0.u_skRTHeight - _fragCoord.y, 0.0, 1.0)");
-||||||| merged common ancestors
-    this->write("_in.position");
-=======
     if (fProgram.fInputs.fRTHeight) {
         this->write("float4(_fragCoord.x, _anonInterface0.u_skRTHeight - _fragCoord.y, 0.0, "
                     "_fragCoord.w)");
     } else {
         this->write("float4(_fragCoord.x, _fragCoord.y, 0.0, _fragCoord.w)");
     }
->>>>>>> upstream-releases
 }
 
 void MetalCodeGenerator::writeVariableReference(const VariableReference& ref) {
@@ -917,64 +781,6 @@ void MetalCodeGenerator::writeFunction(const FunctionDefinition& f) {
             this->write(", constant Uniforms& _uniforms [[buffer(" +
                         to_string(fUniformBuffer) + ")]]");
         }
-<<<<<<< HEAD
-        for (const auto& e : fProgram) {
-            if (ProgramElement::kVar_Kind == e.fKind) {
-                VarDeclarations& decls = (VarDeclarations&) e;
-                if (!decls.fVars.size()) {
-                    continue;
-                }
-                for (const auto& stmt: decls.fVars) {
-                    VarDeclaration& var = (VarDeclaration&) *stmt;
-                    if (var.fVar->fType.kind() == Type::kSampler_Kind) {
-                        this->write(", texture2d<float> "); // FIXME - support other texture types
-                        this->writeName(var.fVar->fName);
-                        this->write("[[texture(");
-                        this->write(to_string(var.fVar->fModifiers.fLayout.fBinding));
-                        this->write(")]]");
-                        this->write(", sampler ");
-                        this->writeName(var.fVar->fName);
-                        this->write(SAMPLER_SUFFIX);
-                        this->write("[[sampler(");
-                        this->write(to_string(var.fVar->fModifiers.fLayout.fBinding));
-                        this->write(")]]");
-                    }
-                }
-            } else if (ProgramElement::kInterfaceBlock_Kind == e.fKind) {
-                InterfaceBlock& intf = (InterfaceBlock&) e;
-                if ("sk_PerVertex" == intf.fTypeName) {
-                    continue;
-                }
-                this->write(", constant ");
-                this->writeType(intf.fVariable.fType);
-                this->write("& " );
-                this->write(fInterfaceBlockNameMap[&intf]);
-                this->write(" [[buffer(");
-#ifdef SK_MOLTENVK
-                this->write(to_string(intf.fVariable.fModifiers.fLayout.fSet));
-#else
-                this->write(to_string(intf.fVariable.fModifiers.fLayout.fBinding));
-#endif
-                this->write(")]]");
-            }
-        }
-        if (fProgram.fKind == Program::kFragment_Kind) {
-            if (fInterfaceBlockNameMap.empty()) {
-            // FIXME - Possibly have a different way of passing in u_skRTHeight or flip y axis
-            // in a different way altogether.
-#ifdef SK_MOLTENVK
-                this->write(", constant sksl_synthetic_uniforms& _anonInterface0 [[buffer(0)]]");
-#else
-                this->write(", constant sksl_synthetic_uniforms& _anonInterface0 [[buffer(1)]]");
-#endif
-            }
-            this->write(", bool _frontFacing [[front_facing]]");
-            this->write(", float4 _fragCoord [[position]]");
-        } else if (fProgram.fKind == Program::kVertex_Kind) {
-            this->write(", uint sk_VertexID [[vertex_id]], uint sk_InstanceID [[instance_id]]");
-        }
-||||||| merged common ancestors
-=======
         for (const auto& e : fProgram) {
             if (ProgramElement::kVar_Kind == e.fKind) {
                 VarDeclarations& decls = (VarDeclarations&) e;
@@ -1028,7 +834,6 @@ void MetalCodeGenerator::writeFunction(const FunctionDefinition& f) {
         } else if (fProgram.fKind == Program::kVertex_Kind) {
             this->write(", uint sk_VertexID [[vertex_id]], uint sk_InstanceID [[instance_id]]");
         }
->>>>>>> upstream-releases
         separator = ", ";
     } else {
         this->writeType(f.fDeclaration.fReturnType);
@@ -1169,22 +974,10 @@ void MetalCodeGenerator::writeInterfaceBlock(const InterfaceBlock& intf) {
     while (Type::kArray_Kind == structType->kind()) {
         structType = &structType->componentType();
     }
-<<<<<<< HEAD
-    fIndentation++;
-    writeFields(structType->fields(), structType->fOffset, &intf);
-    if (fProgram.fKind == Program::kFragment_Kind) {
-        this->writeLine("float u_skRTHeight;");
-||||||| merged common ancestors
-    for (const auto& f : structType->fields()) {
-        this->writeModifiers(f.fModifiers, false);
-        this->writeType(*f.fType);
-        this->writeLine(" " + f.fName + ";");
-=======
     fIndentation++;
     writeFields(structType->fields(), structType->fOffset, &intf);
     if (fProgram.fInputs.fRTHeight) {
         this->writeLine("float u_skRTHeight;");
->>>>>>> upstream-releases
     }
     fIndentation--;
     this->write("}");
@@ -1568,23 +1361,6 @@ void MetalCodeGenerator::writeOutputStruct() {
                 this->write(" ");
                 for (const auto& stmt : decls.fVars) {
                     VarDeclaration& var = (VarDeclaration&) *stmt;
-<<<<<<< HEAD
-                    this->writeName(var.fVar->fName);
-                    if (fProgram.fKind == Program::kVertex_Kind) {
-                        this->write("  [[user(locn" +
-                                    to_string(var.fVar->fModifiers.fLayout.fLocation) + ")]]");
-                    } else if (fProgram.fKind == Program::kFragment_Kind) {
-                        this->write(" [[color(" +
-                                    to_string(var.fVar->fModifiers.fLayout.fLocation) +")");
-                        int colorIndex = var.fVar->fModifiers.fLayout.fIndex;
-                        if (colorIndex) {
-                            this->write(", index(" + to_string(colorIndex) + ")");
-                        }
-                        this->write("]]");
-                    }
-||||||| merged common ancestors
-                    this->write(var.fVar->fName);
-=======
                     this->writeName(var.fVar->fName);
                     if (fProgram.fKind == Program::kVertex_Kind) {
                         this->write("  [[user(locn" +
@@ -1670,82 +1446,6 @@ void MetalCodeGenerator::writeGlobalStruct() {
                     if (var.fValue) {
                         fInitNonConstGlobalVars.push_back(&var);
                     }
->>>>>>> upstream-releases
-                }
-                this->write(";\n");
-            }
-        }
-<<<<<<< HEAD
-    }
-    if (fProgram.fKind == Program::kVertex_Kind) {
-        this->write("    float sk_PointSize;\n");
-    }
-    this->write("};\n");
-}
-
-void MetalCodeGenerator::writeInterfaceBlocks() {
-    bool wroteInterfaceBlock = false;
-    for (const auto& e : fProgram) {
-        if (ProgramElement::kInterfaceBlock_Kind == e.fKind) {
-            this->writeInterfaceBlock((InterfaceBlock&) e);
-            wroteInterfaceBlock = true;
-        }
-    }
-    if (!wroteInterfaceBlock && (fProgram.fKind == Program::kFragment_Kind)) {
-        // FIXME - Possibly have a different way of passing in u_skRTHeight or flip y axis
-        // in a different way altogether.
-        this->writeLine("struct sksl_synthetic_uniforms {");
-        this->writeLine("    float u_skRTHeight;");
-        this->writeLine("};");
-    }
-}
-
-void MetalCodeGenerator::writeGlobalStruct() {
-    bool wroteStructDecl = false;
-    for (const auto& intf : fInterfaceBlockNameMap) {
-        if (!wroteStructDecl) {
-            this->write("struct Globals {\n");
-            wroteStructDecl = true;
-        }
-        fNeedsGlobalStructInit = true;
-        const auto& intfType = intf.first;
-        const auto& intfName = intf.second;
-        this->write("    constant ");
-        this->write(intfType->fTypeName);
-        this->write("* ");
-        this->writeName(intfName);
-        this->write(";\n");
-    }
-    for (const auto& e : fProgram) {
-        if (ProgramElement::kVar_Kind == e.fKind) {
-            VarDeclarations& decls = (VarDeclarations&) e;
-            if (!decls.fVars.size()) {
-                continue;
-            }
-            const Variable& first = *((VarDeclaration&) *decls.fVars[0]).fVar;
-            if ((!first.fModifiers.fFlags && -1 == first.fModifiers.fLayout.fBuiltin) ||
-                first.fType.kind() == Type::kSampler_Kind) {
-                if (!wroteStructDecl) {
-                    this->write("struct Globals {\n");
-                    wroteStructDecl = true;
-                }
-                fNeedsGlobalStructInit = true;
-                this->write("    ");
-                this->writeType(first.fType);
-                this->write(" ");
-                for (const auto& stmt : decls.fVars) {
-                    VarDeclaration& var = (VarDeclaration&) *stmt;
-                    this->writeName(var.fVar->fName);
-                    if (var.fVar->fType.kind() == Type::kSampler_Kind) {
-                        fTextures.push_back(var.fVar);
-                        this->write(";\n");
-                        this->write("    sampler ");
-                        this->writeName(var.fVar->fName);
-                        this->write(SAMPLER_SUFFIX);
-                    }
-                    if (var.fValue) {
-                        fInitNonConstGlobalVars.push_back(&var);
-                    }
                 }
                 this->write(";\n");
             }
@@ -1754,14 +1454,6 @@ void MetalCodeGenerator::writeGlobalStruct() {
     if (wroteStructDecl) {
         this->write("};\n");
     }
-||||||| merged common ancestors
-    }    this->write("};\n");
-=======
-    }
-    if (wroteStructDecl) {
-        this->write("};\n");
-    }
->>>>>>> upstream-releases
 }
 
 void MetalCodeGenerator::writeProgramElement(const ProgramElement& e) {

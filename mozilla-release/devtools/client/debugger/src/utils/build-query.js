@@ -2,19 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/build-query.js
-// @flow
-import escapeRegExp from "lodash/escapeRegExp";
-
-import type { SearchModifiers } from "../types";
-
-type QueryOptions = {
-  isGlobal?: boolean,
-  ignoreSpaces?: boolean
-};
-
-||||||| merged common ancestors
-=======
 // @flow
 import escapeRegExp from "lodash/escapeRegExp";
 
@@ -25,7 +12,6 @@ type QueryOptions = {
   ignoreSpaces?: boolean,
 };
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/build-query.js
 /**
  * Ignore doing outline matches for less than 3 whitespaces
  *

@@ -66,17 +66,7 @@ extensions.registerModules({
   userScriptsContent: {
     url: "chrome://extensions/content/child/ext-userScripts-content.js",
     scopes: ["content_child"],
-<<<<<<< HEAD
-    paths: [
-      ["userScripts", "onBeforeScript"],
-    ],
-||||||| merged common ancestors
-    paths: [
-      ["userScripts", "setScriptAPIs"],
-    ],
-=======
     paths: [["userScripts", "onBeforeScript"]],
->>>>>>> upstream-releases
   },
   webRequest: {
     url: "chrome://extensions/content/child/ext-webRequest.js",

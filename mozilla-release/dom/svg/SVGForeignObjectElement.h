@@ -22,28 +22,6 @@ namespace dom {
 class SVGForeignObjectElement final : public SVGGraphicsElement {
   friend class ::nsSVGForeignObjectFrame;
 
-<<<<<<< HEAD
- protected:
-  friend nsresult(::NS_NewSVGForeignObjectElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-  explicit SVGForeignObjectElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  virtual JSObject* WrapNode(JSContext* cx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-
- public:
-  // nsSVGElement specializations:
-||||||| merged common ancestors
-protected:
-  friend nsresult (::NS_NewSVGForeignObjectElement(nsIContent **aResult,
-                                                   already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-  explicit SVGForeignObjectElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  virtual JSObject* WrapNode(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
-
-public:
-  // nsSVGElement specializations:
-=======
  protected:
   friend nsresult(::NS_NewSVGForeignObjectElement(
       nsIContent** aResult,
@@ -55,7 +33,6 @@ public:
 
  public:
   // SVGElement specializations:
->>>>>>> upstream-releases
   virtual gfxMatrix PrependLocalTransformsTo(
       const gfxMatrix& aMatrix,
       SVGTransformTypes aWhich = eAllTransforms) const override;
@@ -68,12 +45,6 @@ public:
 
   static nsCSSPropertyID GetCSSPropertyIdForAttrEnum(uint8_t aAttrEnum);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-
-=======
   // WebIDL
   already_AddRefed<DOMSVGAnimatedLength> X();
   already_AddRefed<DOMSVGAnimatedLength> Y();
@@ -81,7 +52,6 @@ protected:
   already_AddRefed<DOMSVGAnimatedLength> Height();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { ATTR_X, ATTR_Y, ATTR_WIDTH, ATTR_HEIGHT };

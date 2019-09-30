@@ -4,24 +4,8 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-const bundle = Services.strings.createBundle(
-  "chrome://global/locale/aboutServiceWorkers.properties");
-
-const brandBundle = Services.strings.createBundle(
-  "chrome://branding/locale/brand.properties");
-
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
->>>>>>> upstream-releases
 var gSWM;
 var gSWCount = 0;
 
@@ -83,41 +67,11 @@ async function display(info, pushService) {
   parent.appendChild(div);
 
   let title = document.createElement("h2");
-<<<<<<< HEAD
-  document.l10n.setAttributes(title, "origin-title", { originTitle: info.principal.origin });
-||||||| merged common ancestors
-  let titleStr = bundle.formatStringFromName("title", [info.principal.origin], 1);
-  title.appendChild(document.createTextNode(titleStr));
-=======
   document.l10n.setAttributes(title, "origin-title", {
     originTitle: info.principal.origin,
   });
->>>>>>> upstream-releases
   div.appendChild(title);
 
-<<<<<<< HEAD
-  if (info.principal.appId) {
-    let b2gtitle = document.createElement("h3");
-    let trueFalse = info.principal.isInIsolatedMozBrowserElement ? "true" : "false";
-    document.l10n.setAttributes(b2gtitle, "app-title", { appId: info.principal.appId, isInIsolatedElement: trueFalse });
-    div.appendChild(b2gtitle);
-  }
-
-||||||| merged common ancestors
-  if (info.principal.appId) {
-    let b2gtitle = document.createElement("h3");
-    let trueFalse = bundle.GetStringFromName(info.principal.isInIsolatedMozBrowserElement ? "true" : "false");
-
-    let b2gtitleStr =
-      bundle.formatStringFromName("b2gtitle", [ brandBundle.getString("brandShortName"),
-                                                info.principal.appId,
-                                                trueFalse], 2);
-    b2gtitle.appendChild(document.createTextNode(b2gtitleStr));
-    div.appendChild(b2gtitle);
-  }
-
-=======
->>>>>>> upstream-releases
   let list = document.createElement("ul");
   div.appendChild(list);
 
@@ -139,14 +93,7 @@ async function display(info, pushService) {
     } else {
       document.l10n.setAttributes(item, l10nId, { name: value });
     }
-<<<<<<< HEAD
-      return item;
-||||||| merged common ancestors
-
-    return textNode;
-=======
     return item;
->>>>>>> upstream-releases
   }
 
   createItem("scope", info.scope);
@@ -160,19 +107,6 @@ async function display(info, pushService) {
 
   let pushItem = createItem("push-end-point-waiting");
   if (pushService) {
-<<<<<<< HEAD
-    pushService.getSubscription(info.scope, info.principal, (status, pushRecord) => {
-      if (Components.isSuccessCode(status)) {
-        document.l10n.setAttributes(pushItem, "push-end-point-result", { name: JSON.stringify(pushRecord) });
-      } else {
-        dump("about:serviceworkers - retrieving push registration failed\n");
-||||||| merged common ancestors
-    pushService.getSubscription(info.scope, info.principal, (status, pushRecord) => {
-      if (Components.isSuccessCode(status)) {
-        pushItem.data = JSON.stringify(pushRecord);
-      } else {
-        dump("about:serviceworkers - retrieving push registration failed\n");
-=======
     pushService.getSubscription(
       info.scope,
       info.principal,
@@ -184,7 +118,6 @@ async function display(info, pushService) {
         } else {
           dump("about:serviceworkers - retrieving push registration failed\n");
         }
->>>>>>> upstream-releases
       }
     );
   }
@@ -216,20 +149,11 @@ async function display(info, pushService) {
         }
       },
 
-<<<<<<< HEAD
-      async unregisterFailed() {
-        let [alertMsg] = await document.l10n.formatValues([{ id: "unregister-error" }]);
-        alert(alertMsg);
-||||||| merged common ancestors
-      unregisterFailed() {
-        alert(bundle.GetStringFromName("unregisterError"));
-=======
       async unregisterFailed() {
         let [alertMsg] = await document.l10n.formatValues([
           { id: "unregister-error" },
         ]);
         alert(alertMsg);
->>>>>>> upstream-releases
       },
 
       QueryInterface: ChromeUtils.generateQI([

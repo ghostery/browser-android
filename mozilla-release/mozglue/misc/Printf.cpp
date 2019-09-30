@@ -31,29 +31,11 @@
  * and requires array notation.
  */
 #ifdef HAVE_VA_COPY
-<<<<<<< HEAD
-#define VARARGS_ASSIGN(foo, bar) VA_COPY(foo, bar)
-||||||| merged common ancestors
-#define VARARGS_ASSIGN(foo, bar)        VA_COPY(foo, bar)
-=======
 #  define VARARGS_ASSIGN(foo, bar) VA_COPY(foo, bar)
->>>>>>> upstream-releases
 #elif defined(HAVE_VA_LIST_AS_ARRAY)
-<<<<<<< HEAD
-#define VARARGS_ASSIGN(foo, bar) foo[0] = bar[0]
-||||||| merged common ancestors
-#define VARARGS_ASSIGN(foo, bar)        foo[0] = bar[0]
-=======
 #  define VARARGS_ASSIGN(foo, bar) foo[0] = bar[0]
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define VARARGS_ASSIGN(foo, bar) (foo) = (bar)
-||||||| merged common ancestors
-#define VARARGS_ASSIGN(foo, bar)        (foo) = (bar)
-=======
 #  define VARARGS_ASSIGN(foo, bar) (foo) = (bar)
->>>>>>> upstream-releases
 #endif
 
 /*
@@ -80,29 +62,10 @@ typedef mozilla::Vector<NumArgState, 20, mozilla::MallocAllocPolicy>
 #define TYPE_INTSTR 10
 #define TYPE_POINTER 11
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#define TYPE_WSTRING 12
-||||||| merged common ancestors
-#define TYPE_WSTRING    12
-=======
 #  define TYPE_WSTRING 12
->>>>>>> upstream-releases
 #endif
 #define TYPE_UNKNOWN 20
 
-<<<<<<< HEAD
-#define FLAG_LEFT 0x1
-#define FLAG_SIGNED 0x2
-#define FLAG_SPACED 0x4
-#define FLAG_ZEROS 0x8
-#define FLAG_NEG 0x10
-||||||| merged common ancestors
-#define FLAG_LEFT       0x1
-#define FLAG_SIGNED     0x2
-#define FLAG_SPACED     0x4
-#define FLAG_ZEROS      0x8
-#define FLAG_NEG        0x10
-=======
 #define FLAG_LEFT 0x1
 #define FLAG_SIGNED 0x2
 #define FLAG_SPACED 0x4
@@ -111,7 +74,6 @@ typedef mozilla::Vector<NumArgState, 20, mozilla::MallocAllocPolicy>
 
 static const char hex[] = "0123456789abcdef";
 static const char HEX[] = "0123456789ABCDEF";
->>>>>>> upstream-releases
 
 // Fill into the buffer using the data in src
 bool mozilla::PrintfTarget::fill2(const char* src, int srclen, int width,
@@ -183,7 +145,6 @@ bool mozilla::PrintfTarget::fill_n(const char* src, int srclen, int width,
       // Space filling on the right (i.e. left adjusting)
       rightspaces = width - cvtwidth;
     }
-<<<<<<< HEAD
   } else {
     if (width > cvtwidth) {
       // Space filling on the left (i.e. right adjusting)
@@ -207,121 +168,8 @@ bool mozilla::PrintfTarget::fill_n(const char* src, int srclen, int width,
     if (!emit(" ", 1)) return false;
   }
   return true;
-||||||| merged common ancestors
-    while (--leftspaces >= 0) {
-        if (!emit(" ", 1))
-            return false;
-    }
-    if (signwidth) {
-        if (!emit(&sign, 1))
-            return false;
-    }
-    while (--precwidth >= 0) {
-        if (!emit("0", 1))
-            return false;
-    }
-    while (--zerowidth >= 0) {
-        if (!emit("0", 1))
-            return false;
-    }
-    if (!emit(src, uint32_t(srclen)))
-        return false;
-    while (--rightspaces >= 0) {
-        if (!emit(" ", 1))
-            return false;
-    }
-    return true;
-=======
-  } else {
-    if (width > cvtwidth) {
-      // Space filling on the left (i.e. right adjusting)
-      leftspaces = width - cvtwidth;
-    }
-  }
-  while (--leftspaces >= 0) {
-    if (!emit(" ", 1)) return false;
-  }
-  if (signwidth) {
-    if (!emit(&sign, 1)) return false;
-  }
-  while (--precwidth >= 0) {
-    if (!emit("0", 1)) return false;
-  }
-  while (--zerowidth >= 0) {
-    if (!emit("0", 1)) return false;
-  }
-  if (!emit(src, uint32_t(srclen))) return false;
-  while (--rightspaces >= 0) {
-    if (!emit(" ", 1)) return false;
-  }
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* Convert a long into its printable form. */
-bool mozilla::PrintfTarget::cvt_l(long num, int width, int prec, int radix,
-                                  int type, int flags, const char* hexp) {
-  char cvtbuf[100];
-  char* cvt;
-  int digits;
-
-  // according to the man page this needs to happen
-  if ((prec == 0) && (num == 0)) return true;
-
-  // Converting decimal is a little tricky. In the unsigned case we
-  // need to stop when we hit 10 digits. In the signed case, we can
-  // stop when the number is zero.
-  cvt = cvtbuf + sizeof(cvtbuf);
-  digits = 0;
-  while (num) {
-    int digit = (((unsigned long)num) % radix) & 0xF;
-    *--cvt = hexp[digit];
-    digits++;
-    num = (long)(((unsigned long)num) / radix);
-  }
-  if (digits == 0) {
-    *--cvt = '0';
-    digits++;
-  }
-
-  // Now that we have the number converted without its sign, deal with
-  // the sign and zero padding.
-  return fill_n(cvt, digits, width, prec, type, flags);
-||||||| merged common ancestors
-/* Convert a long into its printable form. */
-bool
-mozilla::PrintfTarget::cvt_l(long num, int width, int prec, int radix,
-                             int type, int flags, const char* hexp)
-{
-    char cvtbuf[100];
-    char* cvt;
-    int digits;
-
-    // according to the man page this needs to happen
-    if ((prec == 0) && (num == 0))
-        return true;
-
-    // Converting decimal is a little tricky. In the unsigned case we
-    // need to stop when we hit 10 digits. In the signed case, we can
-    // stop when the number is zero.
-    cvt = cvtbuf + sizeof(cvtbuf);
-    digits = 0;
-    while (num) {
-        int digit = (((unsigned long)num) % radix) & 0xF;
-        *--cvt = hexp[digit];
-        digits++;
-        num = (long)(((unsigned long)num) / radix);
-    }
-    if (digits == 0) {
-        *--cvt = '0';
-        digits++;
-    }
-
-    // Now that we have the number converted without its sign, deal with
-    // the sign and zero padding.
-    return fill_n(cvt, digits, width, prec, type, flags);
-=======
 // All that the cvt_* functions care about as far as the TYPE_* constants is
 // that the low bit is set to indicate unsigned, or unset to indicate signed.
 // So we don't try to hard to ensure that the passed TYPE_* constant lines
@@ -340,73 +188,8 @@ bool mozilla::PrintfTarget::appendIntDec(int32_t num) {
 
 bool mozilla::PrintfTarget::appendIntDec(uint32_t num) {
   return cvt_l(num, -1, -1, 10, TYPE_UINTN, 0, hex);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* Convert a 64-bit integer into its printable form. */
-bool mozilla::PrintfTarget::cvt_ll(int64_t num, int width, int prec, int radix,
-                                   int type, int flags, const char* hexp) {
-  // According to the man page, this needs to happen.
-  if (prec == 0 && num == 0) return true;
-
-  // Converting decimal is a little tricky. In the unsigned case we
-  // need to stop when we hit 10 digits. In the signed case, we can
-  // stop when the number is zero.
-  int64_t rad = int64_t(radix);
-  char cvtbuf[100];
-  char* cvt = cvtbuf + sizeof(cvtbuf);
-  int digits = 0;
-  while (num != 0) {
-    int64_t quot = uint64_t(num) / rad;
-    int64_t rem = uint64_t(num) % rad;
-    int32_t digit = int32_t(rem);
-    *--cvt = hexp[digit & 0xf];
-    digits++;
-    num = quot;
-  }
-  if (digits == 0) {
-    *--cvt = '0';
-    digits++;
-  }
-
-  // Now that we have the number converted without its sign, deal with
-  // the sign and zero padding.
-  return fill_n(cvt, digits, width, prec, type, flags);
-||||||| merged common ancestors
-/* Convert a 64-bit integer into its printable form. */
-bool
-mozilla::PrintfTarget::cvt_ll(int64_t num, int width, int prec, int radix,
-                              int type, int flags, const char* hexp)
-{
-    // According to the man page, this needs to happen.
-    if (prec == 0 && num == 0)
-        return true;
-
-    // Converting decimal is a little tricky. In the unsigned case we
-    // need to stop when we hit 10 digits. In the signed case, we can
-    // stop when the number is zero.
-    int64_t rad = int64_t(radix);
-    char cvtbuf[100];
-    char* cvt = cvtbuf + sizeof(cvtbuf);
-    int digits = 0;
-    while (num != 0) {
-        int64_t quot = uint64_t(num) / rad;
-        int64_t rem = uint64_t(num) % rad;
-        int32_t digit = int32_t(rem);
-        *--cvt = hexp[digit & 0xf];
-        digits++;
-        num = quot;
-    }
-    if (digits == 0) {
-        *--cvt = '0';
-        digits++;
-    }
-
-    // Now that we have the number converted without its sign, deal with
-    // the sign and zero padding.
-    return fill_n(cvt, digits, width, prec, type, flags);
-=======
 bool mozilla::PrintfTarget::appendIntOct(uint32_t num) {
   return cvt_l(num, -1, -1, 8, TYPE_UINTN, 0, hex);
 }
@@ -496,7 +279,6 @@ bool mozilla::PrintfTarget::cvt_ll(int64_t num, int width, int prec, int radix,
   // Now that we have the number converted without its sign, deal with
   // the sign and zero padding.
   return fill_n(cvt, digits, width, prec, type, flags);
->>>>>>> upstream-releases
 }
 
 /*
@@ -600,7 +382,6 @@ static bool BuildArgArray(const char* fmt, va_list ap, NumArgStateVector& nas) {
           if (number > 0) MOZ_CRASH("Bad format string");
           i = 1;
         }
-<<<<<<< HEAD
         break;
       }
 
@@ -609,107 +390,17 @@ static bool BuildArgArray(const char* fmt, va_list ap, NumArgStateVector& nas) {
   }
 
   if (number == 0) return true;
-||||||| merged common ancestors
-    }
 
-    if (number == 0)
-        return true;
-
-    // Only allow a limited number of arguments.
-    MOZ_RELEASE_ASSERT(number <= 20);
-
-    if (!nas.growByUninitialized(number))
-        return false;
-
-    for (i = 0; i < number; i++)
-        nas[i].type = TYPE_UNKNOWN;
-=======
-        break;
-      }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Only allow a limited number of arguments.
-  MOZ_RELEASE_ASSERT(number <= 20);
-||||||| merged common ancestors
-=======
-      c = *p++;
-    }
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!nas.growByUninitialized(number)) return false;
-||||||| merged common ancestors
-    // Second pass:
-    // Set nas[].type.
-=======
-  if (number == 0) return true;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  for (i = 0; i < number; i++) nas[i].type = TYPE_UNKNOWN;
-||||||| merged common ancestors
-    p = fmt;
-    while ((c = *p++) != 0) {
-        if (c != '%')
-            continue;
-        c = *p++;
-        if (c == '%')
-            continue;
-
-        cn = 0;
-        while (c && c != '$') {     // should improve error check later
-            cn = cn*10 + c - '0';
-            c = *p++;
-        }
-=======
   // Only allow a limited number of arguments.
   MOZ_RELEASE_ASSERT(number <= 20);
 
   if (!nas.growByUninitialized(number)) return false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Second pass:
-  // Set nas[].type.
-||||||| merged common ancestors
-        if (!c || cn < 1 || cn > number)
-            MOZ_CRASH("Bad format string");
-=======
   for (i = 0; i < number; i++) nas[i].type = TYPE_UNKNOWN;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  p = fmt;
-  while ((c = *p++) != 0) {
-    if (c != '%') continue;
-    c = *p++;
-    if (c == '%') continue;
-||||||| merged common ancestors
-        // nas[cn] starts from 0, and make sure nas[cn].type is not assigned.
-        cn--;
-        if (nas[cn].type != TYPE_UNKNOWN)
-            continue;
-=======
   // Second pass:
   // Set nas[].type.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    cn = 0;
-    while (c && c != '$') {  // should improve error check later
-      cn = cn * 10 + c - '0';
-      c = *p++;
-    }
-||||||| merged common ancestors
-        c = *p++;
-
-        // flags
-        while ((c == '-') || (c == '+') || (c == ' ') || (c == '0')) {
-            c = *p++;
-        }
-=======
   p = fmt;
   while ((c = *p++) != 0) {
     if (c != '%') continue;
@@ -721,7 +412,6 @@ static bool BuildArgArray(const char* fmt, va_list ap, NumArgStateVector& nas) {
       cn = cn * 10 + c - '0';
       c = *p++;
     }
->>>>>>> upstream-releases
 
     if (!c || cn < 1 || cn > number) MOZ_CRASH("Bad format string");
 
@@ -922,48 +612,6 @@ bool mozilla::PrintfTarget::vprint(const char* fmt, va_list ap) {
 #if defined(XP_WIN)
     const wchar_t* ws;
 #endif
-<<<<<<< HEAD
-  } u;
-  const char* fmt0;
-  static const char hex[] = "0123456789abcdef";
-  static const char HEX[] = "0123456789ABCDEF";
-  const char* hexp;
-  int i;
-  char pattern[20];
-  const char* dolPt = nullptr;  // in "%4$.2f", dolPt will point to '.'
-
-  // Build an argument array, IF the fmt is numbered argument
-  // list style, to contain the Numbered Argument list pointers.
-
-  NumArgStateVector nas;
-  if (!BuildArgArray(fmt, ap, nas)) {
-    // the fmt contains error Numbered Argument format, jliu@netscape.com
-    MOZ_CRASH("Bad format string");
-  }
-
-  while ((c = *fmt++) != 0) {
-    if (c != '%') {
-      if (!emit(fmt - 1, 1)) return false;
-
-      continue;
-||||||| merged common ancestors
-    } u;
-    const char* fmt0;
-    static const char hex[] = "0123456789abcdef";
-    static const char HEX[] = "0123456789ABCDEF";
-    const char* hexp;
-    int i;
-    char pattern[20];
-    const char* dolPt = nullptr;  // in "%4$.2f", dolPt will point to '.'
-
-    // Build an argument array, IF the fmt is numbered argument
-    // list style, to contain the Numbered Argument list pointers.
-
-    NumArgStateVector nas;
-    if (!BuildArgArray(fmt, ap, nas)) {
-        // the fmt contains error Numbered Argument format, jliu@netscape.com
-        MOZ_CRASH("Bad format string");
-=======
   } u;
   const char* fmt0;
   const char* hexp;
@@ -985,7 +633,6 @@ bool mozilla::PrintfTarget::vprint(const char* fmt, va_list ap) {
       if (!emit(fmt - 1, 1)) return false;
 
       continue;
->>>>>>> upstream-releases
     }
     fmt0 = fmt - 1;
 
@@ -1254,37 +901,12 @@ bool mozilla::PrintfTarget::vprint(const char* fmt, va_list ap) {
         // Not supported here.
         MOZ_ASSERT(0);
 #endif
-<<<<<<< HEAD
       break;
 
       case 'n':
         u.ip = va_arg(ap, int*);
         if (u.ip) {
           *u.ip = mEmitted;
-||||||| merged common ancestors
-            break;
-
-          case 'n':
-            u.ip = va_arg(ap, int*);
-            if (u.ip) {
-                *u.ip = mEmitted;
-            }
-            break;
-
-          default:
-            // Not a % token after all... skip it
-            if (!emit("%", 1))
-                return false;
-            if (!emit(fmt - 1, 1))
-                return false;
-=======
-      break;
-
-      case 'n':
-        u.ip = va_arg(ap, int*);
-        if (u.ip) {
-          *u.ip = mEmitted;
->>>>>>> upstream-releases
         }
         break;
 

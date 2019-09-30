@@ -386,17 +386,8 @@ void nsXHTMLContentSerializer::AfterElementEnd(nsIContent* aContent,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXHTMLContentSerializer::AppendDocumentStart(nsIDocument* aDocument,
-                                              nsAString& aStr) {
-||||||| merged common ancestors
-nsXHTMLContentSerializer::AppendDocumentStart(nsIDocument *aDocument,
-                                              nsAString& aStr)
-{
-=======
 nsXHTMLContentSerializer::AppendDocumentStart(Document* aDocument,
                                               nsAString& aStr) {
->>>>>>> upstream-releases
   if (!mBodyOnly)
     return nsXMLContentSerializer::AppendDocumentStart(aDocument, aStr);
 
@@ -429,26 +420,11 @@ bool nsXHTMLContentSerializer::CheckElementStart(Element* aElement,
   return true;
 }
 
-<<<<<<< HEAD
-bool nsXHTMLContentSerializer::CheckElementEnd(dom::Element* aElement,
-                                               bool& aForceFormat,
-                                               nsAString& aStr) {
-  NS_ASSERTION(!mIsHTMLSerializer,
-               "nsHTMLContentSerializer shouldn't call this method !");
-||||||| merged common ancestors
-bool
-nsXHTMLContentSerializer::CheckElementEnd(dom::Element* aElement,
-                                          bool& aForceFormat,
-                                          nsAString& aStr)
-{
-  NS_ASSERTION(!mIsHTMLSerializer, "nsHTMLContentSerializer shouldn't call this method !");
-=======
 bool nsXHTMLContentSerializer::CheckElementEnd(Element* aElement,
                                                bool& aForceFormat,
                                                nsAString& aStr) {
   NS_ASSERTION(!mIsHTMLSerializer,
                "nsHTMLContentSerializer shouldn't call this method !");
->>>>>>> upstream-releases
 
   aForceFormat = !(mFlags & nsIDocumentEncoder::OutputIgnoreMozDirty) &&
                  aElement->HasAttr(kNameSpaceID_None, nsGkAtoms::mozdirty);

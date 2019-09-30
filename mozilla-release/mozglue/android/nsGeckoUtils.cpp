@@ -12,41 +12,9 @@
 #include "mozilla/RefPtr.h"
 
 #ifdef MOZ_CRASHREPORTER
-<<<<<<< HEAD
-#include "minidump-analyzer.h"
-||||||| merged common ancestors
-# include "minidump-analyzer.h"
-=======
 #  include "minidump-analyzer.h"
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) void MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_GeckoLoader_putenv(JNIEnv *jenv, jclass,
-                                                  jstring map) {
-  const char *str;
-  // XXX: java doesn't give us true UTF8, we should figure out something
-  // better to do here
-  str = jenv->GetStringUTFChars(map, nullptr);
-  if (str == nullptr) return;
-  putenv(strdup(str));
-  jenv->ReleaseStringUTFChars(map, str);
-||||||| merged common ancestors
-extern "C"
-__attribute__ ((visibility("default")))
-void MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_GeckoLoader_putenv(JNIEnv *jenv, jclass, jstring map)
-{
-    const char* str;
-    // XXX: java doesn't give us true UTF8, we should figure out something
-    // better to do here
-    str = jenv->GetStringUTFChars(map, nullptr);
-    if (str == nullptr)
-        return;
-    putenv(strdup(str));
-    jenv->ReleaseStringUTFChars(map, str);
-=======
 extern "C" __attribute__((visibility("default"))) void MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_GeckoLoader_putenv(JNIEnv* jenv, jclass,
                                                   jstring map) {
@@ -57,22 +25,12 @@ Java_org_mozilla_gecko_mozglue_GeckoLoader_putenv(JNIEnv* jenv, jclass,
   if (str == nullptr) return;
   putenv(strdup(str));
   jenv->ReleaseStringUTFChars(map, str);
->>>>>>> upstream-releases
 }
 
 extern "C" APKOPEN_EXPORT jboolean MOZ_JNICALL
-<<<<<<< HEAD
-Java_org_mozilla_gecko_mozglue_GeckoLoader_verifyCRCs(JNIEnv *jenv, jclass,
-                                                      jstring jApkName) {
-  const char *str;
-||||||| merged common ancestors
-Java_org_mozilla_gecko_mozglue_GeckoLoader_verifyCRCs(JNIEnv *jenv, jclass, jstring jApkName) {
-  const char* str;
-=======
 Java_org_mozilla_gecko_mozglue_GeckoLoader_verifyCRCs(JNIEnv* jenv, jclass,
                                                       jstring jApkName) {
   const char* str;
->>>>>>> upstream-releases
   // XXX: java doesn't give us true UTF8, we should figure out something
   // better to do here
   str = jenv->GetStringUTFChars(jApkName, nullptr);
@@ -86,32 +44,6 @@ Java_org_mozilla_gecko_mozglue_GeckoLoader_verifyCRCs(JNIEnv* jenv, jclass,
   return jboolean(valid);
 }
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) jobject MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_DirectBufferAllocator_nativeAllocateDirectBuffer(
-    JNIEnv *jenv, jclass, jlong size) {
-  jobject buffer = nullptr;
-  void *mem = malloc(size);
-  if (mem) {
-    buffer = jenv->NewDirectByteBuffer(mem, size);
-    if (!buffer) free(mem);
-  }
-  return buffer;
-||||||| merged common ancestors
-extern "C"
-__attribute__ ((visibility("default")))
-jobject MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_DirectBufferAllocator_nativeAllocateDirectBuffer(JNIEnv *jenv, jclass, jlong size)
-{
-    jobject buffer = nullptr;
-    void* mem = malloc(size);
-    if (mem) {
-        buffer = jenv->NewDirectByteBuffer(mem, size);
-        if (!buffer)
-            free(mem);
-    }
-    return buffer;
-=======
 extern "C" __attribute__((visibility("default"))) jobject MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_DirectBufferAllocator_nativeAllocateDirectBuffer(
     JNIEnv* jenv, jclass, jlong size) {
@@ -122,70 +54,14 @@ Java_org_mozilla_gecko_mozglue_DirectBufferAllocator_nativeAllocateDirectBuffer(
     if (!buffer) free(mem);
   }
   return buffer;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) void MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_DirectBufferAllocator_nativeFreeDirectBuffer(
-    JNIEnv *jenv, jclass, jobject buf) {
-  free(jenv->GetDirectBufferAddress(buf));
-||||||| merged common ancestors
-extern "C"
-__attribute__ ((visibility("default")))
-void MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_DirectBufferAllocator_nativeFreeDirectBuffer(JNIEnv *jenv, jclass, jobject buf)
-{
-    free(jenv->GetDirectBufferAddress(buf));
-=======
 extern "C" __attribute__((visibility("default"))) void MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_DirectBufferAllocator_nativeFreeDirectBuffer(
     JNIEnv* jenv, jclass, jobject buf) {
   free(jenv->GetDirectBufferAddress(buf));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) jlong MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip_getZip(JNIEnv *jenv, jclass,
-                                                jstring path) {
-  const char *str;
-  str = jenv->GetStringUTFChars(path, nullptr);
-  if (!str || !*str) {
-    if (str) jenv->ReleaseStringUTFChars(path, str);
-    JNI_Throw(jenv, "java/lang/IllegalArgumentException", "Invalid path");
-    return 0;
-  }
-  RefPtr<Zip> zip = ZipCollection::GetZip(str);
-  jenv->ReleaseStringUTFChars(path, str);
-  if (!zip) {
-    JNI_Throw(jenv, "java/lang/IllegalArgumentException",
-              "Invalid path or invalid zip");
-    return 0;
-  }
-  return reinterpret_cast<jlong>(zip.forget().take());
-||||||| merged common ancestors
-extern "C"
-__attribute__ ((visibility("default")))
-jlong MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip_getZip(JNIEnv *jenv, jclass, jstring path)
-{
-    const char* str;
-    str = jenv->GetStringUTFChars(path, nullptr);
-    if (!str || !*str) {
-        if (str)
-            jenv->ReleaseStringUTFChars(path, str);
-        JNI_Throw(jenv, "java/lang/IllegalArgumentException", "Invalid path");
-        return 0;
-    }
-    RefPtr<Zip> zip = ZipCollection::GetZip(str);
-    jenv->ReleaseStringUTFChars(path, str);
-    if (!zip) {
-        JNI_Throw(jenv, "java/lang/IllegalArgumentException", "Invalid path or invalid zip");
-        return 0;
-    }
-    return reinterpret_cast<jlong>(zip.forget().take());
-=======
 extern "C" __attribute__((visibility("default"))) jlong MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_NativeZip_getZip(JNIEnv* jenv, jclass,
                                                 jstring path) {
@@ -204,37 +80,8 @@ Java_org_mozilla_gecko_mozglue_NativeZip_getZip(JNIEnv* jenv, jclass,
     return 0;
   }
   return reinterpret_cast<jlong>(zip.forget().take());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) jlong MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip_getZipFromByteBuffer(JNIEnv *jenv,
-                                                              jclass,
-                                                              jobject buffer) {
-  void *buf = jenv->GetDirectBufferAddress(buffer);
-  size_t size = jenv->GetDirectBufferCapacity(buffer);
-  RefPtr<Zip> zip = Zip::Create(buf, size);
-  if (!zip) {
-    JNI_Throw(jenv, "java/lang/IllegalArgumentException", "Invalid zip");
-    return 0;
-  }
-  return reinterpret_cast<jlong>(zip.forget().take());
-||||||| merged common ancestors
-extern "C"
-__attribute__ ((visibility("default")))
-jlong MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip_getZipFromByteBuffer(JNIEnv *jenv, jclass, jobject buffer)
-{
-    void *buf = jenv->GetDirectBufferAddress(buffer);
-    size_t size = jenv->GetDirectBufferCapacity(buffer);
-    RefPtr<Zip> zip = Zip::Create(buf, size);
-    if (!zip) {
-        JNI_Throw(jenv, "java/lang/IllegalArgumentException", "Invalid zip");
-        return 0;
-    }
-    return reinterpret_cast<jlong>(zip.forget().take());
-=======
 extern "C" __attribute__((visibility("default"))) jlong MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_NativeZip_getZipFromByteBuffer(JNIEnv* jenv,
                                                               jclass,
@@ -247,91 +94,15 @@ Java_org_mozilla_gecko_mozglue_NativeZip_getZipFromByteBuffer(JNIEnv* jenv,
     return 0;
   }
   return reinterpret_cast<jlong>(zip.forget().take());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) void MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip__1release(JNIEnv *jenv, jclass,
-                                                   jlong obj) {
-  Zip *zip = (Zip *)obj;
-  zip->Release();
-||||||| merged common ancestors
- extern "C"
-__attribute__ ((visibility("default")))
-void MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip__1release(JNIEnv *jenv, jclass, jlong obj)
-{
-    Zip *zip = (Zip *)obj;
-    zip->Release();
-=======
 extern "C" __attribute__((visibility("default"))) void MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_NativeZip__1release(JNIEnv* jenv, jclass,
                                                    jlong obj) {
   Zip* zip = (Zip*)obj;
   zip->Release();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) jobject MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip__1getInputStream(JNIEnv *jenv,
-                                                          jobject jzip,
-                                                          jlong obj,
-                                                          jstring path) {
-  Zip *zip = (Zip *)obj;
-  const char *str;
-  str = jenv->GetStringUTFChars(path, nullptr);
-
-  Zip::Stream stream;
-  bool res = zip->GetStream(str, &stream);
-  jenv->ReleaseStringUTFChars(path, str);
-  if (!res) {
-    return nullptr;
-  }
-  jobject buf = jenv->NewDirectByteBuffer(
-      const_cast<void *>(stream.GetBuffer()), stream.GetSize());
-  if (!buf) {
-    JNI_Throw(jenv, "java/lang/RuntimeException",
-              "Failed to create ByteBuffer");
-    return nullptr;
-  }
-  jclass nativeZip = jenv->GetObjectClass(jzip);
-  jmethodID method =
-      jenv->GetMethodID(nativeZip, "createInputStream",
-                        "(Ljava/nio/ByteBuffer;I)Ljava/io/InputStream;");
-  // Since this function is only expected to be called from Java, it is safe
-  // to skip exception checking for the method call below, as long as no
-  // other Native -> Java call doesn't happen before returning to Java.
-  return jenv->CallObjectMethod(jzip, method, buf, (jint)stream.GetType());
-||||||| merged common ancestors
-extern "C"
-__attribute__ ((visibility("default")))
-jobject MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_NativeZip__1getInputStream(JNIEnv *jenv, jobject jzip, jlong obj, jstring path)
-{
-    Zip *zip = (Zip *)obj;
-    const char* str;
-    str = jenv->GetStringUTFChars(path, nullptr);
-
-    Zip::Stream stream;
-    bool res = zip->GetStream(str, &stream);
-    jenv->ReleaseStringUTFChars(path, str);
-    if (!res) {
-        return nullptr;
-    }
-    jobject buf = jenv->NewDirectByteBuffer(const_cast<void *>(stream.GetBuffer()), stream.GetSize());
-    if (!buf) {
-        JNI_Throw(jenv, "java/lang/RuntimeException", "Failed to create ByteBuffer");
-        return nullptr;
-    }
-    jclass nativeZip = jenv->GetObjectClass(jzip);
-    jmethodID method = jenv->GetMethodID(nativeZip, "createInputStream", "(Ljava/nio/ByteBuffer;I)Ljava/io/InputStream;");
-    // Since this function is only expected to be called from Java, it is safe
-    // to skip exception checking for the method call below, as long as no
-    // other Native -> Java call doesn't happen before returning to Java.
-    return jenv->CallObjectMethod(jzip, method, buf, (jint) stream.GetType());
-=======
 extern "C" __attribute__((visibility("default"))) jobject MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_NativeZip__1getInputStream(JNIEnv* jenv,
                                                           jobject jzip,
@@ -362,32 +133,15 @@ Java_org_mozilla_gecko_mozglue_NativeZip__1getInputStream(JNIEnv* jenv,
   // to skip exception checking for the method call below, as long as no
   // other Native -> Java call doesn't happen before returning to Java.
   return jenv->CallObjectMethod(jzip, method, buf, (jint)stream.GetType());
->>>>>>> upstream-releases
 }
 
 #ifdef MOZ_CRASHREPORTER
 
-<<<<<<< HEAD
-extern "C" __attribute__((visibility("default"))) jboolean MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_MinidumpAnalyzer_GenerateStacks(
-    JNIEnv *jenv, jclass, jstring minidumpPath, jboolean fullStacks) {
-  const char *str;
-  str = jenv->GetStringUTFChars(minidumpPath, nullptr);
-||||||| merged common ancestors
-extern "C"
-__attribute__ ((visibility("default")))
-jboolean MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_MinidumpAnalyzer_GenerateStacks(JNIEnv *jenv, jclass, jstring minidumpPath, jboolean fullStacks)
-{
-    const char* str;
-    str = jenv->GetStringUTFChars(minidumpPath, nullptr);
-=======
 extern "C" __attribute__((visibility("default"))) jboolean MOZ_JNICALL
 Java_org_mozilla_gecko_mozglue_MinidumpAnalyzer_GenerateStacks(
     JNIEnv* jenv, jclass, jstring minidumpPath, jboolean fullStacks) {
   const char* str;
   str = jenv->GetStringUTFChars(minidumpPath, nullptr);
->>>>>>> upstream-releases
 
   bool res = CrashReporter::GenerateStacks(str, fullStacks);
 

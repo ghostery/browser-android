@@ -4,39 +4,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 #if !defined(MediaInfo_h)
-<<<<<<< HEAD
-#define MediaInfo_h
-
-#include "mozilla/UniquePtr.h"
-#include "mozilla/RefPtr.h"
-#include "nsDataHashtable.h"
-#include "nsString.h"
-#include "nsTArray.h"
-#include "AudioConfig.h"
-#include "ImageTypes.h"
-#include "MediaData.h"
-#include "TrackID.h"  // for TrackID
-#include "TimeUnits.h"
-#include "mozilla/gfx/Point.h"  // for gfx::IntSize
-#include "mozilla/gfx/Rect.h"   // for gfx::IntRect
-#include "mozilla/gfx/Types.h"  // for gfx::ColorDepth
-||||||| merged common ancestors
-#define MediaInfo_h
-
-#include "mozilla/UniquePtr.h"
-#include "mozilla/RefPtr.h"
-#include "nsDataHashtable.h"
-#include "nsString.h"
-#include "nsTArray.h"
-#include "AudioConfig.h"
-#include "ImageTypes.h"
-#include "MediaData.h"
-#include "TrackID.h" // for TrackID
-#include "TimeUnits.h"
-#include "mozilla/gfx/Point.h" // for gfx::IntSize
-#include "mozilla/gfx/Rect.h"  // for gfx::IntRect
-#include "mozilla/gfx/Types.h"  // for gfx::ColorDepth
-=======
 #  define MediaInfo_h
 
 #  include "mozilla/UniquePtr.h"
@@ -52,7 +19,6 @@
 #  include "mozilla/gfx/Point.h"  // for gfx::IntSize
 #  include "mozilla/gfx/Rect.h"   // for gfx::IntRect
 #  include "mozilla/gfx/Types.h"  // for gfx::ColorDepth
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -180,66 +146,6 @@ class VideoInfo : public TrackInfo {
       : VideoInfo(gfx::IntSize(aWidth, aHeight)) {}
 
   explicit VideoInfo(const gfx::IntSize& aSize)
-<<<<<<< HEAD
-      : TrackInfo(kVideoTrack, NS_LITERAL_STRING("2"),
-                  NS_LITERAL_STRING("main"), EmptyString(), EmptyString(), true,
-                  2),
-        mDisplay(aSize),
-        mStereoMode(StereoMode::MONO),
-        mImage(aSize),
-        mCodecSpecificConfig(new MediaByteBuffer),
-        mExtraData(new MediaByteBuffer),
-        mRotation(kDegree_0),
-        mImageRect(gfx::IntRect(gfx::IntPoint(), aSize)) {}
-
-  VideoInfo(const VideoInfo& aOther)
-      : TrackInfo(aOther),
-        mDisplay(aOther.mDisplay),
-        mStereoMode(aOther.mStereoMode),
-        mImage(aOther.mImage),
-        mCodecSpecificConfig(aOther.mCodecSpecificConfig),
-        mExtraData(aOther.mExtraData),
-        mRotation(aOther.mRotation),
-        mColorDepth(aOther.mColorDepth),
-        mImageRect(aOther.mImageRect),
-        mAlphaPresent(aOther.mAlphaPresent) {}
-
-  bool IsValid() const override {
-||||||| merged common ancestors
-    : TrackInfo(kVideoTrack,
-                NS_LITERAL_STRING("2"),
-                NS_LITERAL_STRING("main"),
-                EmptyString(),
-                EmptyString(),
-                true,
-                2)
-    , mDisplay(aSize)
-    , mStereoMode(StereoMode::MONO)
-    , mImage(aSize)
-    , mCodecSpecificConfig(new MediaByteBuffer)
-    , mExtraData(new MediaByteBuffer)
-    , mRotation(kDegree_0)
-    , mImageRect(gfx::IntRect(gfx::IntPoint(), aSize))
-  {
-  }
-
-  VideoInfo(const VideoInfo& aOther)
-    : TrackInfo(aOther)
-    , mDisplay(aOther.mDisplay)
-    , mStereoMode(aOther.mStereoMode)
-    , mImage(aOther.mImage)
-    , mCodecSpecificConfig(aOther.mCodecSpecificConfig)
-    , mExtraData(aOther.mExtraData)
-    , mRotation(aOther.mRotation)
-    , mColorDepth(aOther.mColorDepth)
-    , mImageRect(aOther.mImageRect)
-    , mAlphaPresent(aOther.mAlphaPresent)
-  {
-  }
-
-  bool IsValid() const override
-  {
-=======
       : TrackInfo(kVideoTrack, NS_LITERAL_STRING("2"),
                   NS_LITERAL_STRING("main"), EmptyString(), EmptyString(), true,
                   2),
@@ -256,7 +162,6 @@ class VideoInfo : public TrackInfo {
   bool operator==(const VideoInfo& rhs) const;
 
   bool IsValid() const override {
->>>>>>> upstream-releases
     return mDisplay.width > 0 && mDisplay.height > 0;
   }
 
@@ -342,11 +247,6 @@ class VideoInfo : public TrackInfo {
   // Should be 8, 10 or 12. Default value is 8.
   gfx::ColorDepth mColorDepth = gfx::ColorDepth::COLOR_8;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   gfx::YUVColorSpace mColorSpace = gfx::YUVColorSpace::UNKNOWN;
 
   // True indicates no restriction on Y, U, V values (otherwise 16-235 for 8
@@ -354,7 +254,6 @@ private:
   bool mFullRange = false;
 
  private:
->>>>>>> upstream-releases
   // mImage may be cropped; currently only used with the WebM container.
   // A negative width or height indicate that no cropping is to occur.
   gfx::IntRect mImageRect;
@@ -366,56 +265,6 @@ private:
 class AudioInfo : public TrackInfo {
  public:
   AudioInfo()
-<<<<<<< HEAD
-      : TrackInfo(kAudioTrack, NS_LITERAL_STRING("1"),
-                  NS_LITERAL_STRING("main"), EmptyString(), EmptyString(), true,
-                  1),
-        mRate(0),
-        mChannels(0),
-        mChannelMap(AudioConfig::ChannelLayout::UNKNOWN_MAP),
-        mBitDepth(0),
-        mProfile(0),
-        mExtendedProfile(0),
-        mCodecSpecificConfig(new MediaByteBuffer),
-        mExtraData(new MediaByteBuffer) {}
-
-  AudioInfo(const AudioInfo& aOther)
-      : TrackInfo(aOther),
-        mRate(aOther.mRate),
-        mChannels(aOther.mChannels),
-        mChannelMap(aOther.mChannelMap),
-        mBitDepth(aOther.mBitDepth),
-        mProfile(aOther.mProfile),
-        mExtendedProfile(aOther.mExtendedProfile),
-        mCodecSpecificConfig(aOther.mCodecSpecificConfig),
-        mExtraData(aOther.mExtraData) {}
-||||||| merged common ancestors
-    : TrackInfo(kAudioTrack, NS_LITERAL_STRING("1"), NS_LITERAL_STRING("main"),
-                EmptyString(), EmptyString(), true, 1)
-    , mRate(0)
-    , mChannels(0)
-    , mChannelMap(AudioConfig::ChannelLayout::UNKNOWN_MAP)
-    , mBitDepth(0)
-    , mProfile(0)
-    , mExtendedProfile(0)
-    , mCodecSpecificConfig(new MediaByteBuffer)
-    , mExtraData(new MediaByteBuffer)
-  {
-  }
-
-  AudioInfo(const AudioInfo& aOther)
-    : TrackInfo(aOther)
-    , mRate(aOther.mRate)
-    , mChannels(aOther.mChannels)
-    , mChannelMap(aOther.mChannelMap)
-    , mBitDepth(aOther.mBitDepth)
-    , mProfile(aOther.mProfile)
-    , mExtendedProfile(aOther.mExtendedProfile)
-    , mCodecSpecificConfig(aOther.mCodecSpecificConfig)
-    , mExtraData(aOther.mExtraData)
-  {
-  }
-=======
       : TrackInfo(kAudioTrack, NS_LITERAL_STRING("1"),
                   NS_LITERAL_STRING("main"), EmptyString(), EmptyString(), true,
                   1),
@@ -431,7 +280,6 @@ class AudioInfo : public TrackInfo {
   AudioInfo(const AudioInfo& aOther) = default;
 
   bool operator==(const AudioInfo& rhs) const;
->>>>>>> upstream-releases
 
   static const uint32_t MAX_RATE = 640000;
 
@@ -540,20 +388,9 @@ class MediaInfo {
     mAudio.mRate = 44100;
   }
 
-<<<<<<< HEAD
-  bool IsEncrypted() const {
-    return (HasAudio() && mAudio.mCrypto.mValid) ||
-           (HasVideo() && mVideo.mCrypto.mValid);
-||||||| merged common ancestors
-  bool IsEncrypted() const
-  {
-    return (HasAudio() && mAudio.mCrypto.mValid) ||
-           (HasVideo() && mVideo.mCrypto.mValid);
-=======
   bool IsEncrypted() const {
     return (HasAudio() && mAudio.mCrypto.IsEncrypted()) ||
            (HasVideo() && mVideo.mCrypto.IsEncrypted());
->>>>>>> upstream-releases
   }
 
   bool HasValidMedia() const { return HasVideo() || HasAudio(); }

@@ -25,13 +25,6 @@ void EbmlComposer::GenerateHeader() {
   MOZ_RELEASE_ASSERT(!mMetadataFinished);
   MOZ_RELEASE_ASSERT(mHasAudio || mHasVideo);
 
-<<<<<<< HEAD
-void EbmlComposer::GenerateHeader() {
-||||||| merged common ancestors
-void EbmlComposer::GenerateHeader()
-{
-=======
->>>>>>> upstream-releases
   // Write the EBML header.
   EbmlGlobal ebml;
   // The WEbM header default size usually smaller than 1k.
@@ -85,49 +78,11 @@ void EbmlComposer::GenerateHeader()
   auto block = mFinishedClusters.AppendElement();
   block->SetLength(ebml.offset);
   memcpy(block->Elements(), ebml.buf, ebml.offset);
-<<<<<<< HEAD
-  mFlushState |= FLUSH_METADATA;
-}
-
-void EbmlComposer::FinishMetadata() {
-  if (mFlushState & FLUSH_METADATA) {
-    // We don't remove the first element of mClusterBuffs because the
-    // |mClusterHeaderIndex| may have value.
-    mClusterCanFlushBuffs.AppendElement()->SwapElements(mClusterBuffs[0]);
-    mFlushState &= ~FLUSH_METADATA;
-  }
-||||||| merged common ancestors
-  mFlushState |= FLUSH_METADATA;
-}
-
-void EbmlComposer::FinishMetadata()
-{
-  if (mFlushState & FLUSH_METADATA) {
-    // We don't remove the first element of mClusterBuffs because the
-    // |mClusterHeaderIndex| may have value.
-    mClusterCanFlushBuffs.AppendElement()->SwapElements(mClusterBuffs[0]);
-    mFlushState &= ~FLUSH_METADATA;
-  }
-=======
   mMetadataFinished = true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void EbmlComposer::FinishCluster() {
-  FinishMetadata();
-  if (!(mFlushState & FLUSH_CLUSTER)) {
-    // No completed cluster available.
-||||||| merged common ancestors
-void EbmlComposer::FinishCluster()
-{
-  FinishMetadata();
-  if (!(mFlushState & FLUSH_CLUSTER)) {
-    // No completed cluster available.
-=======
 void EbmlComposer::FinishCluster() {
   if (!mWritingCluster) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -153,17 +108,9 @@ void EbmlComposer::FinishCluster() {
   mWritingCluster = false;
 }
 
-<<<<<<< HEAD
-void EbmlComposer::WriteSimpleBlock(EncodedFrame* aFrame) {
-||||||| merged common ancestors
-void
-EbmlComposer::WriteSimpleBlock(EncodedFrame* aFrame)
-{
-=======
 void EbmlComposer::WriteSimpleBlock(EncodedFrame* aFrame) {
   MOZ_RELEASE_ASSERT(mMetadataFinished);
 
->>>>>>> upstream-releases
   EbmlGlobal ebml;
   ebml.offset = 0;
 
@@ -174,32 +121,6 @@ void EbmlComposer::WriteSimpleBlock(EncodedFrame* aFrame) {
   if (isVP8IFrame) {
     MOZ_ASSERT(mHasVideo);
     FinishCluster();
-<<<<<<< HEAD
-    flush = true;
-  } else {
-    // Force it to calculate timecode using signed math via cast
-    int64_t timeCode =
-        (aFrame->GetTimeStamp() / ((int)PR_USEC_PER_MSEC) - mClusterTimecode) +
-        (mCodecDelay / PR_NSEC_PER_MSEC);
-    if (timeCode < SHRT_MIN || timeCode > SHRT_MAX) {
-      // We're probably going to overflow (or underflow) the timeCode value
-      // later!
-      FinishCluster();
-      flush = true;
-    }
-||||||| merged common ancestors
-    flush = true;
-  } else {
-    // Force it to calculate timecode using signed math via cast
-    int64_t timeCode = (aFrame->GetTimeStamp() / ((int) PR_USEC_PER_MSEC) - mClusterTimecode) +
-                       (mCodecDelay / PR_NSEC_PER_MSEC);
-    if (timeCode < SHRT_MIN || timeCode > SHRT_MAX ) {
-      // We're probably going to overflow (or underflow) the timeCode value later!
-      FinishCluster();
-      flush = true;
-    }
-=======
->>>>>>> upstream-releases
   }
 
   if (isVP8PFrame && !mWritingCluster) {
@@ -239,20 +160,6 @@ void EbmlComposer::WriteSimpleBlock(EncodedFrame* aFrame) {
     mClusterTimecode = aFrame->GetTimeStamp() / PR_USEC_PER_MSEC;
     Ebml_SerializeUnsigned(&ebml, Timecode, mClusterTimecode);
 
-<<<<<<< HEAD
-  bool isOpus = (frameType == EncodedFrame::FrameType::OPUS_AUDIO_FRAME);
-  // Can't underflow/overflow now
-  int64_t timeCode =
-      aFrame->GetTimeStamp() / ((int)PR_USEC_PER_MSEC) - mClusterTimecode;
-  if (isOpus) {
-    timeCode += mCodecDelay / PR_NSEC_PER_MSEC;
-||||||| merged common ancestors
-  bool isOpus = (frameType == EncodedFrame::FrameType::OPUS_AUDIO_FRAME);
-  // Can't underflow/overflow now
-  int64_t timeCode = aFrame->GetTimeStamp() / ((int) PR_USEC_PER_MSEC) - mClusterTimecode;
-  if (isOpus) {
-    timeCode += mCodecDelay / PR_NSEC_PER_MSEC;
-=======
     // Can't under-/overflow now
     timeCode =
         aFrame->GetTimeStamp() / ((int)PR_USEC_PER_MSEC) - mClusterTimecode;
@@ -261,23 +168,11 @@ void EbmlComposer::WriteSimpleBlock(EncodedFrame* aFrame) {
     }
 
     mWritingCluster = true;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  MOZ_ASSERT(timeCode >= SHRT_MIN && timeCode <= SHRT_MAX);
-  writeSimpleBlock(&ebml, isOpus ? 0x2 : 0x1, static_cast<short>(timeCode),
-                   isVP8IFrame, 0, 0,
-                   (unsigned char*)aFrame->GetFrameData().Elements(),
-||||||| merged common ancestors
-  MOZ_ASSERT(timeCode >= SHRT_MIN && timeCode <= SHRT_MAX);
-  writeSimpleBlock(&ebml, isOpus ? 0x2 : 0x1, static_cast<short>(timeCode), isVP8IFrame,
-                   0, 0, (unsigned char*)aFrame->GetFrameData().Elements(),
-=======
 
   writeSimpleBlock(&ebml, isOpus ? 0x2 : 0x1, static_cast<short>(timeCode),
                    isVP8IFrame, 0, 0,
                    (unsigned char*)aFrame->GetFrameData().Elements(),
->>>>>>> upstream-releases
                    aFrame->GetFrameData().Length());
   MOZ_ASSERT(
       ebml.offset <= DEFAULT_HEADER_SIZE + aFrame->GetFrameData().Length(),
@@ -285,21 +180,10 @@ void EbmlComposer::WriteSimpleBlock(EncodedFrame* aFrame) {
   block->SetLength(ebml.offset);
 }
 
-<<<<<<< HEAD
-void EbmlComposer::SetVideoConfig(uint32_t aWidth, uint32_t aHeight,
-                                  uint32_t aDisplayWidth,
-                                  uint32_t aDisplayHeight) {
-||||||| merged common ancestors
-void
-EbmlComposer::SetVideoConfig(uint32_t aWidth, uint32_t aHeight,
-                             uint32_t aDisplayWidth, uint32_t aDisplayHeight)
-{
-=======
 void EbmlComposer::SetVideoConfig(uint32_t aWidth, uint32_t aHeight,
                                   uint32_t aDisplayWidth,
                                   uint32_t aDisplayHeight) {
   MOZ_RELEASE_ASSERT(!mMetadataFinished);
->>>>>>> upstream-releases
   MOZ_ASSERT(aWidth > 0, "Width should > 0");
   MOZ_ASSERT(aHeight > 0, "Height should > 0");
   MOZ_ASSERT(aDisplayWidth > 0, "DisplayWidth should > 0");
@@ -311,16 +195,8 @@ void EbmlComposer::SetVideoConfig(uint32_t aWidth, uint32_t aHeight,
   mHasVideo = true;
 }
 
-<<<<<<< HEAD
-void EbmlComposer::SetAudioConfig(uint32_t aSampleFreq, uint32_t aChannels) {
-||||||| merged common ancestors
-void
-EbmlComposer::SetAudioConfig(uint32_t aSampleFreq, uint32_t aChannels)
-{
-=======
 void EbmlComposer::SetAudioConfig(uint32_t aSampleFreq, uint32_t aChannels) {
   MOZ_RELEASE_ASSERT(!mMetadataFinished);
->>>>>>> upstream-releases
   MOZ_ASSERT(aSampleFreq > 0, "SampleFreq should > 0");
   MOZ_ASSERT(aChannels > 0, "Channels should > 0");
   mSampleFreq = aSampleFreq;
@@ -328,27 +204,10 @@ void EbmlComposer::SetAudioConfig(uint32_t aSampleFreq, uint32_t aChannels) {
   mHasAudio = true;
 }
 
-<<<<<<< HEAD
-void EbmlComposer::ExtractBuffer(nsTArray<nsTArray<uint8_t> >* aDestBufs,
-                                 uint32_t aFlag) {
-  if ((aFlag & ContainerWriter::FLUSH_NEEDED) ||
-      (aFlag & ContainerWriter::GET_HEADER)) {
-    FinishMetadata();
-||||||| merged common ancestors
-void
-EbmlComposer::ExtractBuffer(nsTArray<nsTArray<uint8_t> >* aDestBufs,
-                            uint32_t aFlag)
-{
-  if ((aFlag & ContainerWriter::FLUSH_NEEDED) ||
-      (aFlag & ContainerWriter::GET_HEADER))
-  {
-    FinishMetadata();
-=======
 void EbmlComposer::ExtractBuffer(nsTArray<nsTArray<uint8_t> >* aDestBufs,
                                  uint32_t aFlag) {
   if (!mMetadataFinished) {
     return;
->>>>>>> upstream-releases
   }
   if (aFlag & ContainerWriter::FLUSH_NEEDED) {
     FinishCluster();
@@ -360,37 +219,4 @@ void EbmlComposer::ExtractBuffer(nsTArray<nsTArray<uint8_t> >* aDestBufs,
   mFinishedClusters.Clear();
 }
 
-<<<<<<< HEAD
-EbmlComposer::EbmlComposer()
-    : mFlushState(FLUSH_NONE),
-      mClusterHeaderIndex(0),
-      mClusterLengthLoc(0),
-      mCodecDelay(0),
-      mClusterTimecode(0),
-      mWidth(0),
-      mHeight(0),
-      mDisplayWidth(0),
-      mDisplayHeight(0),
-      mSampleFreq(0),
-      mChannels(0) {}
-
 }  // namespace mozilla
-||||||| merged common ancestors
-EbmlComposer::EbmlComposer()
-  : mFlushState(FLUSH_NONE)
-  , mClusterHeaderIndex(0)
-  , mClusterLengthLoc(0)
-  , mCodecDelay(0)
-  , mClusterTimecode(0)
-  , mWidth(0)
-  , mHeight(0)
-  , mDisplayWidth(0)
-  , mDisplayHeight(0)
-  , mSampleFreq(0)
-  , mChannels(0)
-{}
-
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

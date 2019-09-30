@@ -97,15 +97,8 @@ TEST(Gfx, BufferUnrotateVertical)
   }
 }
 
-<<<<<<< HEAD
-TEST(Gfx, BufferUnrotateBoth) {
-||||||| merged common ancestors
-
-TEST(Gfx, BufferUnrotateBoth) {
-=======
 TEST(Gfx, BufferUnrotateBoth)
 {
->>>>>>> upstream-releases
   const int NUM_OF_TESTS = 16;
   int bytesPerPixelList[2] = {2, 4};
   int width[NUM_OF_TESTS] = {100, 100, 99, 99, 100, 100, 99, 99,

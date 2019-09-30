@@ -36,24 +36,7 @@ class AnimationCollection
   typedef AnimationTypeTraits<AnimationType> TraitsType;
 
   AnimationCollection(dom::Element* aElement, nsAtom* aElementProperty)
-<<<<<<< HEAD
-      : mElement(aElement),
-        mElementProperty(aElementProperty)
-#ifdef DEBUG
-        ,
-        mCalledPropertyDtor(false)
-#endif
-  {
-||||||| merged common ancestors
-    : mElement(aElement)
-    , mElementProperty(aElementProperty)
-#ifdef DEBUG
-    , mCalledPropertyDtor(false)
-#endif
-  {
-=======
       : mElement(aElement), mElementProperty(aElementProperty) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(AnimationCollection);
   }
 
@@ -65,16 +48,9 @@ class AnimationCollection
     LinkedListElement<SelfType>::remove();
   }
 
-<<<<<<< HEAD
-  void Destroy() {
-||||||| merged common ancestors
-  void Destroy()
-  {
-=======
   void Destroy() {
     mCalledDestroy = true;
 
->>>>>>> upstream-releases
     // This will call our destructor.
     mElement->DeleteProperty(mElementProperty);
   }
@@ -84,17 +60,8 @@ class AnimationCollection
 
   // Get the collection of animations for the given |aElement| and
   // |aPseudoType|.
-<<<<<<< HEAD
-  static AnimationCollection<AnimationType>* GetAnimationCollection(
-      const dom::Element* aElement, CSSPseudoElementType aPseudoType);
-||||||| merged common ancestors
-  static AnimationCollection<AnimationType>*
-    GetAnimationCollection(const dom::Element* aElement,
-                           CSSPseudoElementType aPseudoType);
-=======
   static AnimationCollection<AnimationType>* GetAnimationCollection(
       const dom::Element* aElement, PseudoStyleType aPseudoType);
->>>>>>> upstream-releases
 
   // Given the frame |aFrame| with possibly animated content, finds its
   // associated collection of animations. If |aFrame| is a generated content
@@ -109,20 +76,9 @@ class AnimationCollection
   // We'll set the outparam |aCreatedCollection| to true if we have
   // to create the collection and we successfully do so. Otherwise,
   // we'll set it to false.
-<<<<<<< HEAD
-  static AnimationCollection<AnimationType>* GetOrCreateAnimationCollection(
-      dom::Element* aElement, CSSPseudoElementType aPseudoType,
-      bool* aCreatedCollection);
-||||||| merged common ancestors
-  static AnimationCollection<AnimationType>*
-    GetOrCreateAnimationCollection(dom::Element* aElement,
-                                   CSSPseudoElementType aPseudoType,
-                                   bool* aCreatedCollection);
-=======
   static AnimationCollection<AnimationType>* GetOrCreateAnimationCollection(
       dom::Element* aElement, PseudoStyleType aPseudoType,
       bool* aCreatedCollection);
->>>>>>> upstream-releases
 
   dom::Element* mElement;
 
@@ -132,15 +88,6 @@ class AnimationCollection
 
   InfallibleTArray<RefPtr<AnimationType>> mAnimations;
 
-<<<<<<< HEAD
- private:
-  static nsAtom* GetPropertyAtomForPseudoType(CSSPseudoElementType aPseudoType);
-||||||| merged common ancestors
-
-private:
-  static nsAtom* GetPropertyAtomForPseudoType(
-    CSSPseudoElementType aPseudoType);
-=======
  private:
   static nsAtom* GetPropertyAtomForPseudoType(PseudoStyleType aPseudoType);
 
@@ -153,7 +100,6 @@ private:
   // The latter case represents document tear-down or other DOM surgery in
   // which case we should not trigger restyles.
   bool mCalledDestroy = false;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   bool mCalledPropertyDtor = false;

@@ -16,17 +16,9 @@
 
 // XXX need another bug to move this to a common header.
 #ifdef DISABLE_ASSERTS_FOR_FUZZING
-<<<<<<< HEAD
-#define ASSERT_UNLESS_FUZZING(...) \
-  do {                             \
-  } while (0)
-||||||| merged common ancestors
-#define ASSERT_UNLESS_FUZZING(...) do { } while (0)
-=======
 #  define ASSERT_UNLESS_FUZZING(...) \
     do {                             \
     } while (0)
->>>>>>> upstream-releases
 #else
 #  define ASSERT_UNLESS_FUZZING(...) MOZ_ASSERT(false, __VA_ARGS__)
 #endif
@@ -37,16 +29,8 @@ namespace dom {
 /* static */
 StaticAutoPtr<ContentProcessManager> ContentProcessManager::sSingleton;
 
-<<<<<<< HEAD
-/* static */ ContentProcessManager* ContentProcessManager::GetSingleton() {
-||||||| merged common ancestors
-/* static */ ContentProcessManager*
-ContentProcessManager::GetSingleton()
-{
-=======
 /* static */
 ContentProcessManager* ContentProcessManager::GetSingleton() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   if (!sSingleton) {
@@ -85,48 +69,9 @@ void ContentProcessManager::RemoveContentProcess(
   }
 }
 
-<<<<<<< HEAD
-bool ContentProcessManager::AddGrandchildProcess(
-    const ContentParentId& aParentCpId, const ContentParentId& aChildCpId) {
-  MOZ_ASSERT(NS_IsMainThread());
-
-  auto iter = mContentParentMap.find(aParentCpId);
-  if (NS_WARN_IF(iter == mContentParentMap.end())) {
-    ASSERT_UNLESS_FUZZING("Parent process should be already in map!");
-    return false;
-  }
-  iter->second.mChildrenCpId.insert(aChildCpId);
-  return true;
-}
-
 bool ContentProcessManager::GetParentProcessId(
     const ContentParentId& aChildCpId,
     /*out*/ ContentParentId* aParentCpId) {
-||||||| merged common ancestors
-bool
-ContentProcessManager::AddGrandchildProcess(const ContentParentId& aParentCpId,
-                                            const ContentParentId& aChildCpId)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-
-  auto iter = mContentParentMap.find(aParentCpId);
-  if (NS_WARN_IF(iter == mContentParentMap.end())) {
-    ASSERT_UNLESS_FUZZING("Parent process should be already in map!");
-    return false;
-  }
-  iter->second.mChildrenCpId.insert(aChildCpId);
-  return true;
-}
-
-bool
-ContentProcessManager::GetParentProcessId(const ContentParentId& aChildCpId,
-                                          /*out*/ ContentParentId* aParentCpId)
-{
-=======
-bool ContentProcessManager::GetParentProcessId(
-    const ContentParentId& aChildCpId,
-    /*out*/ ContentParentId* aParentCpId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   auto iter = mContentParentMap.find(aChildCpId);
@@ -309,20 +254,9 @@ ContentParentId ContentProcessManager::GetTabProcessId(const TabId& aTabId) {
   return tabProcessIter->second;
 }
 
-<<<<<<< HEAD
-already_AddRefed<TabParent>
-ContentProcessManager::GetTabParentByProcessAndTabId(
-    const ContentParentId& aChildCpId, const TabId& aChildTabId) {
-||||||| merged common ancestors
-already_AddRefed<TabParent>
-ContentProcessManager::GetTabParentByProcessAndTabId(const ContentParentId& aChildCpId,
-                                                     const TabId& aChildTabId)
-{
-=======
 already_AddRefed<BrowserParent>
 ContentProcessManager::GetBrowserParentByProcessAndTabId(
     const ContentParentId& aChildCpId, const TabId& aChildTabId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   auto iter = mContentParentMap.find(aChildCpId);
@@ -343,20 +277,9 @@ ContentProcessManager::GetBrowserParentByProcessAndTabId(
   return nullptr;
 }
 
-<<<<<<< HEAD
-already_AddRefed<TabParent>
-ContentProcessManager::GetTopLevelTabParentByProcessAndTabId(
-    const ContentParentId& aChildCpId, const TabId& aChildTabId) {
-||||||| merged common ancestors
-already_AddRefed<TabParent>
-ContentProcessManager::GetTopLevelTabParentByProcessAndTabId(const ContentParentId& aChildCpId,
-                                                             const TabId& aChildTabId)
-{
-=======
 already_AddRefed<BrowserParent>
 ContentProcessManager::GetTopLevelBrowserParentByProcessAndTabId(
     const ContentParentId& aChildCpId, const TabId& aChildTabId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // Used to keep the current ContentParentId and the current TabId
@@ -386,17 +309,8 @@ ContentProcessManager::GetTopLevelBrowserParentByProcessAndTabId(
   return GetBrowserParentByProcessAndTabId(currentCpId, currentTabId);
 }
 
-<<<<<<< HEAD
-nsTArray<TabId> ContentProcessManager::GetTabParentsByProcessId(
-    const ContentParentId& aChildCpId) {
-||||||| merged common ancestors
-nsTArray<TabId>
-ContentProcessManager::GetTabParentsByProcessId(const ContentParentId& aChildCpId)
-{
-=======
 nsTArray<TabId> ContentProcessManager::GetBrowserParentsByProcessId(
     const ContentParentId& aChildCpId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsTArray<TabId> tabIdList;
@@ -414,17 +328,8 @@ nsTArray<TabId> ContentProcessManager::GetBrowserParentsByProcessId(
   return tabIdList;
 }
 
-<<<<<<< HEAD
-uint32_t ContentProcessManager::GetTabParentCountByProcessId(
-    const ContentParentId& aChildCpId) {
-||||||| merged common ancestors
-uint32_t
-ContentProcessManager::GetTabParentCountByProcessId(const ContentParentId& aChildCpId)
-{
-=======
 uint32_t ContentProcessManager::GetBrowserParentCountByProcessId(
     const ContentParentId& aChildCpId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   auto iter = mContentParentMap.find(aChildCpId);

@@ -36,17 +36,8 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-Http2Stream::Http2Stream(nsAHttpTransaction *httpTransaction,
-                         Http2Session *session, int32_t priority,
-||||||| merged common ancestors
-Http2Stream::Http2Stream(nsAHttpTransaction *httpTransaction,
-                         Http2Session *session,
-                         int32_t priority,
-=======
 Http2Stream::Http2Stream(nsAHttpTransaction* httpTransaction,
                          Http2Session* session, int32_t priority,
->>>>>>> upstream-releases
                          uint64_t windowId)
     : mStreamID(0),
       mSession(session),
@@ -88,18 +79,9 @@ Http2Stream::Http2Stream(nsAHttpTransaction* httpTransaction,
       mIsWebsocket(false) {
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
-<<<<<<< HEAD
-  nsHttpTransaction *trans = mTransaction->QueryHttpTransaction();
-  LOG1(("Http2Stream::Http2Stream %p trans=%p atrans=%p", this, trans,
-        httpTransaction));
-||||||| merged common ancestors
-  nsHttpTransaction *trans = mTransaction->QueryHttpTransaction();
-  LOG3(("Http2Stream::Http2Stream %p trans=%p atrans=%p", this, trans, httpTransaction));
-=======
   nsHttpTransaction* trans = mTransaction->QueryHttpTransaction();
   LOG1(("Http2Stream::Http2Stream %p trans=%p atrans=%p", this, trans,
         httpTransaction));
->>>>>>> upstream-releases
 
   mServerReceiveWindow = session->GetServerInitialStreamWindow();
   mClientReceiveWindow = session->PushAllowance();
@@ -148,25 +130,10 @@ void Http2Stream::ClearPushSource() {
 // converted to HTTP/2 data. Sometimes control data like a window-update is
 // generated instead.
 
-<<<<<<< HEAD
-nsresult Http2Stream::ReadSegments(nsAHttpSegmentReader *reader, uint32_t count,
-                                   uint32_t *countRead) {
-  LOG3(("Http2Stream %p ReadSegments reader=%p count=%d state=%x", this, reader,
-        count, mUpstreamState));
-||||||| merged common ancestors
-nsresult
-Http2Stream::ReadSegments(nsAHttpSegmentReader *reader,
-                          uint32_t count,
-                          uint32_t *countRead)
-{
-  LOG3(("Http2Stream %p ReadSegments reader=%p count=%d state=%x",
-        this, reader, count, mUpstreamState));
-=======
 nsresult Http2Stream::ReadSegments(nsAHttpSegmentReader* reader, uint32_t count,
                                    uint32_t* countRead) {
   LOG3(("Http2Stream %p ReadSegments reader=%p count=%d state=%x", this, reader,
         count, mUpstreamState));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
@@ -208,33 +175,6 @@ nsresult Http2Stream::ReadSegments(nsAHttpSegmentReader* reader, uint32_t count,
       if (NS_SUCCEEDED(rv) && mUpstreamState == GENERATING_HEADERS &&
           !mRequestHeadersDone)
         mSession->TransactionHasDataToWrite(this);
-<<<<<<< HEAD
-
-      // mTxinlineFrameUsed represents any queued un-sent frame. It might
-      // be 0 if there is no such frame, which is not a gurantee that we
-      // don't have more request body to send - just that any data that was
-      // sent comprised a complete HTTP/2 frame. Likewise, a non 0 value is
-      // a queued, but complete, http/2 frame length.
-
-      // Mark that we are blocked on read if the http transaction needs to
-      // provide more of the request message body and there is nothing queued
-      // for writing
-      if (rv == NS_BASE_STREAM_WOULD_BLOCK && !mTxInlineFrameUsed)
-        mRequestBlockedOnRead = 1;
-
-      // A transaction that had already generated its headers before it was
-      // queued at the session level (due to concurrency concerns) may not call
-      // onReadSegment off the ReadSegments() stack above.
-      if (mUpstreamState == GENERATING_HEADERS && NS_SUCCEEDED(rv)) {
-        LOG3(
-            ("Http2Stream %p ReadSegments forcing OnReadSegment call\n", this));
-        uint32_t wasted = 0;
-        mSegmentReader = reader;
-        Unused << OnReadSegment("", 0, &wasted);
-        mSegmentReader = nullptr;
-||||||| merged common ancestors
-        rv = NS_BASE_STREAM_WOULD_BLOCK;
-=======
 
       // mTxinlineFrameUsed represents any queued un-sent frame. It might
       // be 0 if there is no such frame, which is not a gurantee that we
@@ -248,56 +188,8 @@ nsresult Http2Stream::ReadSegments(nsAHttpSegmentReader* reader, uint32_t count,
       if (rv == NS_BASE_STREAM_WOULD_BLOCK && !mTxInlineFrameUsed) {
         LOG(("Http2Stream %p mRequestBlockedOnRead = 1", this));
         mRequestBlockedOnRead = 1;
->>>>>>> upstream-releases
       }
 
-<<<<<<< HEAD
-      // If the sending flow control window is open (!mBlockedOnRwin) then
-      // continue sending the request
-      if (!mBlockedOnRwin && mOpenGenerated && !mTxInlineFrameUsed &&
-          NS_SUCCEEDED(rv) && (!*countRead)) {
-        MOZ_ASSERT(!mQueued);
-        MOZ_ASSERT(mRequestHeadersDone);
-        LOG3((
-            "Http2Stream::ReadSegments %p 0x%X: Sending request data complete, "
-            "mUpstreamState=%x\n",
-            this, mStreamID, mUpstreamState));
-        if (mSentFin) {
-          ChangeState(UPSTREAM_COMPLETE);
-        } else {
-          GenerateDataFrameHeader(0, true);
-          ChangeState(SENDING_FIN_STREAM);
-          mSession->TransactionHasDataToWrite(this);
-          rv = NS_BASE_STREAM_WOULD_BLOCK;
-        }
-      }
-      break;
-
-    case SENDING_FIN_STREAM:
-      // We were trying to send the FIN-STREAM but were blocked from
-      // sending it out - try again.
-      if (!mSentFin) {
-        mSegmentReader = reader;
-        rv = TransmitFrame(nullptr, nullptr, false);
-        mSegmentReader = nullptr;
-        MOZ_ASSERT(NS_FAILED(rv) || !mTxInlineFrameUsed,
-                   "Transmit Frame should be all or nothing");
-        if (NS_SUCCEEDED(rv)) ChangeState(UPSTREAM_COMPLETE);
-      } else {
-        rv = NS_OK;
-        mTxInlineFrameUsed = 0;  // cancel fin data packet
-||||||| merged common ancestors
-  case SENDING_FIN_STREAM:
-    // We were trying to send the FIN-STREAM but were blocked from
-    // sending it out - try again.
-    if (!mSentFin) {
-      mSegmentReader = reader;
-      rv = TransmitFrame(nullptr, nullptr, false);
-      mSegmentReader = nullptr;
-      MOZ_ASSERT(NS_FAILED(rv) || !mTxInlineFrameUsed,
-                 "Transmit Frame should be all or nothing");
-      if (NS_SUCCEEDED(rv))
-=======
       // A transaction that had already generated its headers before it was
       // queued at the session level (due to concurrency concerns) may not call
       // onReadSegment off the ReadSegments() stack above.
@@ -357,7 +249,6 @@ nsresult Http2Stream::ReadSegments(nsAHttpSegmentReader* reader, uint32_t count,
       } else {
         rv = NS_OK;
         mTxInlineFrameUsed = 0;  // cancel fin data packet
->>>>>>> upstream-releases
         ChangeState(UPSTREAM_COMPLETE);
       }
 
@@ -390,15 +281,7 @@ uint64_t Http2Stream::LocalUnAcked() {
   return mLocalUnacked - undelivered;
 }
 
-<<<<<<< HEAD
-nsresult Http2Stream::BufferInput(uint32_t count, uint32_t *countWritten) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::BufferInput(uint32_t count, uint32_t *countWritten)
-{
-=======
 nsresult Http2Stream::BufferInput(uint32_t count, uint32_t* countWritten) {
->>>>>>> upstream-releases
   char buf[SimpleBufferPage::kSimpleBufferPageSize];
   if (SimpleBufferPage::kSimpleBufferPageSize < count) {
     count = SimpleBufferPage::kSimpleBufferPageSize;
@@ -427,19 +310,8 @@ bool Http2Stream::DeferCleanup(nsresult status) {
 // just a call through to the associated nsHttpTransaction for this stream
 // for the remaining data bytes indicated by the current DATA frame.
 
-<<<<<<< HEAD
-nsresult Http2Stream::WriteSegments(nsAHttpSegmentWriter *writer,
-                                    uint32_t count, uint32_t *countWritten) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::WriteSegments(nsAHttpSegmentWriter *writer,
-                           uint32_t count,
-                           uint32_t *countWritten)
-{
-=======
 nsresult Http2Stream::WriteSegments(nsAHttpSegmentWriter* writer,
                                     uint32_t count, uint32_t* countWritten) {
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
   MOZ_ASSERT(!mSegmentWriter, "segment writer in progress");
 
@@ -475,37 +347,17 @@ nsresult Http2Stream::WriteSegments(nsAHttpSegmentWriter* writer,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult Http2Stream::MakeOriginURL(const nsACString &origin,
-                                    nsCOMPtr<nsIURI> &url) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::MakeOriginURL(const nsACString &origin, nsCOMPtr<nsIURI> &url)
-{
-=======
 nsresult Http2Stream::MakeOriginURL(const nsACString& origin,
                                     nsCOMPtr<nsIURI>& url) {
->>>>>>> upstream-releases
   nsAutoCString scheme;
   nsresult rv = net_ExtractURLScheme(origin, scheme);
   NS_ENSURE_SUCCESS(rv, rv);
   return MakeOriginURL(scheme, origin, url);
 }
 
-<<<<<<< HEAD
-nsresult Http2Stream::MakeOriginURL(const nsACString &scheme,
-                                    const nsACString &origin,
-                                    nsCOMPtr<nsIURI> &url) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::MakeOriginURL(const nsACString &scheme, const nsACString &origin,
-                           nsCOMPtr<nsIURI> &url)
-{
-=======
 nsresult Http2Stream::MakeOriginURL(const nsACString& scheme,
                                     const nsACString& origin,
                                     nsCOMPtr<nsIURI>& url) {
->>>>>>> upstream-releases
   return NS_MutateURI(new nsStandardURL::Mutator())
       .Apply(NS_MutatorMethod(
           &nsIStandardURLMutator::Init, nsIStandardURL::URLTYPE_AUTHORITY,
@@ -515,27 +367,10 @@ nsresult Http2Stream::MakeOriginURL(const nsACString& scheme,
       .Finalize(url);
 }
 
-<<<<<<< HEAD
-void Http2Stream::CreatePushHashKey(
-    const nsCString &scheme, const nsCString &hostHeader,
-    const mozilla::OriginAttributes &originAttributes, uint64_t serial,
-    const nsACString &pathInfo, nsCString &outOrigin, nsCString &outKey) {
-||||||| merged common ancestors
-void
-Http2Stream::CreatePushHashKey(const nsCString &scheme,
-                               const nsCString &hostHeader,
-                               const mozilla::OriginAttributes &originAttributes,
-                               uint64_t serial,
-                               const nsACString& pathInfo,
-                               nsCString &outOrigin,
-                               nsCString &outKey)
-{
-=======
 void Http2Stream::CreatePushHashKey(
     const nsCString& scheme, const nsCString& hostHeader,
     const mozilla::OriginAttributes& originAttributes, uint64_t serial,
     const nsACString& pathInfo, nsCString& outOrigin, nsCString& outKey) {
->>>>>>> upstream-releases
   nsCString fullOrigin = scheme;
   fullOrigin.AppendLiteral("://");
   fullOrigin.Append(hostHeader);
@@ -565,19 +400,8 @@ void Http2Stream::CreatePushHashKey(
   outKey.Append(pathInfo);
 }
 
-<<<<<<< HEAD
-nsresult Http2Stream::ParseHttpRequestHeaders(const char *buf, uint32_t avail,
-                                              uint32_t *countUsed) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::ParseHttpRequestHeaders(const char *buf,
-                                     uint32_t avail,
-                                     uint32_t *countUsed)
-{
-=======
 nsresult Http2Stream::ParseHttpRequestHeaders(const char* buf, uint32_t avail,
                                               uint32_t* countUsed) {
->>>>>>> upstream-releases
   // Returns NS_OK even if the headers are incomplete
   // set mRequestHeadersDone flag if they are complete
 
@@ -643,25 +467,12 @@ nsresult Http2Stream::ParseHttpRequestHeaders(const char* buf, uint32_t avail,
     RefPtr<Http2PushedStreamWrapper> pushedStreamWrapper;
     Http2PushedStream* pushedStream = nullptr;
 
-<<<<<<< HEAD
-    // If a push stream is attached to the transaction via onPush, match only
-    // with that one. This occurs when a push was made with in conjunction with
-    // a nsIHttpPushListener
-    nsHttpTransaction *trans = mTransaction->QueryHttpTransaction();
-    if (trans && (pushedStream = trans->TakePushedStream())) {
-||||||| merged common ancestors
-    // If a push stream is attached to the transaction via onPush, match only with that
-    // one. This occurs when a push was made with in conjunction with a nsIHttpPushListener
-    nsHttpTransaction *trans = mTransaction->QueryHttpTransaction();
-    if (trans && (pushedStream = trans->TakePushedStream())) {
-=======
     // If a push stream is attached to the transaction via onPush, match only
     // with that one. This occurs when a push was made with in conjunction with
     // a nsIHttpPushListener
     nsHttpTransaction* trans = mTransaction->QueryHttpTransaction();
     if (trans && (pushedStreamWrapper = trans->TakePushedStream()) &&
         (pushedStream = pushedStreamWrapper->GetStream())) {
->>>>>>> upstream-releases
       if (pushedStream->mSession == mSession) {
         LOG3(("Pushed Stream match based on OnPush correlation %p",
               pushedStream));
@@ -755,19 +566,6 @@ nsresult Http2Stream::GenerateOpen() {
 
   nsDependentCString scheme(head->IsHTTPS() ? "https" : "http");
   if (head->IsConnect()) {
-<<<<<<< HEAD
-    SpdyConnectTransaction *scTrans =
-        mTransaction->QuerySpdyConnectTransaction();
-    MOZ_ASSERT(scTrans);
-    if (scTrans->IsWebsocket()) {
-      mIsWebsocket = true;
-    } else {
-      mIsTunnel = true;
-    }
-||||||| merged common ancestors
-    MOZ_ASSERT(mTransaction->QuerySpdyConnectTransaction());
-    mIsTunnel = true;
-=======
     SpdyConnectTransaction* scTrans =
         mTransaction->QuerySpdyConnectTransaction();
     MOZ_ASSERT(scTrans);
@@ -776,25 +574,8 @@ nsresult Http2Stream::GenerateOpen() {
     } else {
       mIsTunnel = true;
     }
->>>>>>> upstream-releases
     mRequestBodyLenRemaining = 0x0fffffffffffffffULL;
 
-<<<<<<< HEAD
-    if (mIsTunnel) {
-      // Our normal authority has an implicit port, best to use an
-      // explicit one with a tunnel
-      nsHttpConnectionInfo *ci = mTransaction->ConnectionInfo();
-      if (!ci) {
-        return NS_ERROR_UNEXPECTED;
-      }
-||||||| merged common ancestors
-    // Our normal authority has an implicit port, best to use an
-    // explicit one with a tunnel
-    nsHttpConnectionInfo *ci = mTransaction->ConnectionInfo();
-    if (!ci) {
-      return NS_ERROR_UNEXPECTED;
-    }
-=======
     if (mIsTunnel) {
       // Our normal authority has an implicit port, best to use an
       // explicit one with a tunnel
@@ -802,7 +583,6 @@ nsresult Http2Stream::GenerateOpen() {
       if (!ci) {
         return NS_ERROR_UNEXPECTED;
       }
->>>>>>> upstream-releases
 
       authorityHeader = ci->GetOrigin();
       authorityHeader.Append(':');
@@ -1077,19 +857,8 @@ void Http2Stream::UpdateTransportSendEvents(uint32_t count) {
   }
 }
 
-<<<<<<< HEAD
-nsresult Http2Stream::TransmitFrame(const char *buf, uint32_t *countUsed,
-                                    bool forceCommitment) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::TransmitFrame(const char *buf,
-                           uint32_t *countUsed,
-                           bool forceCommitment)
-{
-=======
 nsresult Http2Stream::TransmitFrame(const char* buf, uint32_t* countUsed,
                                     bool forceCommitment) {
->>>>>>> upstream-releases
   // If TransmitFrame returns SUCCESS than all the data is sent (or at least
   // buffered at the session level), if it returns WOULD_BLOCK then none of
   // the data is sent.
@@ -1144,28 +913,12 @@ nsresult Http2Stream::TransmitFrame(const char* buf, uint32_t* countUsed,
   // which calls the socket write function. It will accept all of the inline and
   // stream data because of the above 'commitment' even if it has to buffer
 
-<<<<<<< HEAD
-  rv = mSession->BufferOutput(reinterpret_cast<char *>(mTxInlineFrame.get()),
-                              mTxInlineFrameUsed, &transmittedCount);
-  LOG3(
-      ("Http2Stream::TransmitFrame for inline BufferOutput session=%p "
-       "stream=%p result %" PRIx32 " len=%d",
-       mSession, this, static_cast<uint32_t>(rv), transmittedCount));
-||||||| merged common ancestors
-  rv = mSession->BufferOutput(reinterpret_cast<char*>(mTxInlineFrame.get()),
-                              mTxInlineFrameUsed,
-                              &transmittedCount);
-  LOG3(("Http2Stream::TransmitFrame for inline BufferOutput session=%p "
-        "stream=%p result %" PRIx32 " len=%d",
-        mSession, this, static_cast<uint32_t>(rv), transmittedCount));
-=======
   rv = mSession->BufferOutput(reinterpret_cast<char*>(mTxInlineFrame.get()),
                               mTxInlineFrameUsed, &transmittedCount);
   LOG3(
       ("Http2Stream::TransmitFrame for inline BufferOutput session=%p "
        "stream=%p result %" PRIx32 " len=%d",
        mSession, this, static_cast<uint32_t>(rv), transmittedCount));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(rv != NS_BASE_STREAM_WOULD_BLOCK,
              "inconsistent inline commitment result");
@@ -1176,16 +929,8 @@ nsresult Http2Stream::TransmitFrame(const char* buf, uint32_t* countUsed,
              "inconsistent inline commitment count");
 
   Http2Session::LogIO(mSession, this, "Writing from Inline Buffer",
-<<<<<<< HEAD
-                      reinterpret_cast<char *>(mTxInlineFrame.get()),
-                      transmittedCount);
-||||||| merged common ancestors
-                       reinterpret_cast<char*>(mTxInlineFrame.get()),
-                       transmittedCount);
-=======
                       reinterpret_cast<char*>(mTxInlineFrame.get()),
                       transmittedCount);
->>>>>>> upstream-releases
 
   if (mTxStreamFrameSize) {
     if (!buf) {
@@ -1267,26 +1012,6 @@ void Http2Stream::GenerateDataFrameHeader(uint32_t dataLength, bool lastFrame) {
 
 // ConvertResponseHeaders is used to convert the response headers
 // into HTTP/1 format and report some telemetry
-<<<<<<< HEAD
-nsresult Http2Stream::ConvertResponseHeaders(Http2Decompressor *decompressor,
-                                             nsACString &aHeadersIn,
-                                             nsACString &aHeadersOut,
-                                             int32_t &httpResponseCode) {
-  nsresult rv = decompressor->DecodeHeaderBlock(
-      reinterpret_cast<const uint8_t *>(aHeadersIn.BeginReading()),
-      aHeadersIn.Length(), aHeadersOut, false);
-||||||| merged common ancestors
-nsresult
-Http2Stream::ConvertResponseHeaders(Http2Decompressor *decompressor,
-                                    nsACString &aHeadersIn,
-                                    nsACString &aHeadersOut,
-                                    int32_t &httpResponseCode)
-{
-  nsresult rv =
-    decompressor->DecodeHeaderBlock(reinterpret_cast<const uint8_t *>(aHeadersIn.BeginReading()),
-                                    aHeadersIn.Length(),
-                                    aHeadersOut, false);
-=======
 nsresult Http2Stream::ConvertResponseHeaders(Http2Decompressor* decompressor,
                                              nsACString& aHeadersIn,
                                              nsACString& aHeadersOut,
@@ -1294,7 +1019,6 @@ nsresult Http2Stream::ConvertResponseHeaders(Http2Decompressor* decompressor,
   nsresult rv = decompressor->DecodeHeaderBlock(
       reinterpret_cast<const uint8_t*>(aHeadersIn.BeginReading()),
       aHeadersIn.Length(), aHeadersOut, false);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     LOG3(("Http2Stream::ConvertResponseHeaders %p decode Error\n", this));
     return rv;
@@ -1372,31 +1096,12 @@ nsresult Http2Stream::ConvertResponseHeaders(Http2Decompressor* decompressor,
 
 // ConvertPushHeaders is used to convert the pushed request headers
 // into HTTP/1 format and report some telemetry
-<<<<<<< HEAD
-nsresult Http2Stream::ConvertPushHeaders(Http2Decompressor *decompressor,
-                                         nsACString &aHeadersIn,
-                                         nsACString &aHeadersOut) {
-  nsresult rv = decompressor->DecodeHeaderBlock(
-      reinterpret_cast<const uint8_t *>(aHeadersIn.BeginReading()),
-      aHeadersIn.Length(), aHeadersOut, true);
-||||||| merged common ancestors
-nsresult
-Http2Stream::ConvertPushHeaders(Http2Decompressor *decompressor,
-                                nsACString &aHeadersIn,
-                                nsACString &aHeadersOut)
-{
-  nsresult rv =
-    decompressor->DecodeHeaderBlock(reinterpret_cast<const uint8_t *>(aHeadersIn.BeginReading()),
-                                    aHeadersIn.Length(),
-                                    aHeadersOut, true);
-=======
 nsresult Http2Stream::ConvertPushHeaders(Http2Decompressor* decompressor,
                                          nsACString& aHeadersIn,
                                          nsACString& aHeadersOut) {
   nsresult rv = decompressor->DecodeHeaderBlock(
       reinterpret_cast<const uint8_t*>(aHeadersIn.BeginReading()),
       aHeadersIn.Length(), aHeadersOut, true);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     LOG3(("Http2Stream::ConvertPushHeaders %p Error\n", this));
     return rv;
@@ -1431,35 +1136,14 @@ nsresult Http2Stream::ConvertPushHeaders(Http2Decompressor* decompressor,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult Http2Stream::ConvertResponseTrailers(Http2Decompressor *decompressor,
-                                              nsACString &aTrailersIn) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::ConvertResponseTrailers(Http2Decompressor *decompressor,
-                                     nsACString &aTrailersIn)
-{
-=======
 nsresult Http2Stream::ConvertResponseTrailers(Http2Decompressor* decompressor,
                                               nsACString& aTrailersIn) {
->>>>>>> upstream-releases
   LOG3(("Http2Stream::ConvertResponseTrailers %p", this));
   nsAutoCString flatTrailers;
 
-<<<<<<< HEAD
-  nsresult rv = decompressor->DecodeHeaderBlock(
-      reinterpret_cast<const uint8_t *>(aTrailersIn.BeginReading()),
-      aTrailersIn.Length(), flatTrailers, false);
-||||||| merged common ancestors
-  nsresult rv =
-    decompressor->DecodeHeaderBlock(reinterpret_cast<const uint8_t *>(aTrailersIn.BeginReading()),
-                                    aTrailersIn.Length(),
-                                    flatTrailers, false);
-=======
   nsresult rv = decompressor->DecodeHeaderBlock(
       reinterpret_cast<const uint8_t*>(aTrailersIn.BeginReading()),
       aTrailersIn.Length(), flatTrailers, false);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     LOG3(("Http2Stream::ConvertResponseTrailers %p decode Error", this));
     return rv;
@@ -1484,18 +1168,8 @@ void Http2Stream::Close(nsresult reason) {
   mTransaction->Close(reason);
 }
 
-<<<<<<< HEAD
-void Http2Stream::SetResponseIsComplete() {
-  nsHttpTransaction *trans = mTransaction->QueryHttpTransaction();
-||||||| merged common ancestors
-void
-Http2Stream::SetResponseIsComplete()
-{
-  nsHttpTransaction *trans = mTransaction->QueryHttpTransaction();
-=======
 void Http2Stream::SetResponseIsComplete() {
   nsHttpTransaction* trans = mTransaction->QueryHttpTransaction();
->>>>>>> upstream-releases
   if (trans) {
     trans->SetResponseIsComplete();
   }
@@ -1554,15 +1228,7 @@ void Http2Stream::SetPriorityDependency(uint32_t newPriority,
   mPriorityDependency = newDependency;
 }
 
-<<<<<<< HEAD
-static uint32_t GetPriorityDependencyFromTransaction(nsHttpTransaction *trans) {
-||||||| merged common ancestors
-static uint32_t
-GetPriorityDependencyFromTransaction(nsHttpTransaction *trans)
-{
-=======
 static uint32_t GetPriorityDependencyFromTransaction(nsHttpTransaction* trans) {
->>>>>>> upstream-releases
   MOZ_ASSERT(trans);
 
   uint32_t classFlags = trans->ClassOfService();
@@ -1741,25 +1407,10 @@ void Http2Stream::SetSentReset(bool aStatus) {
 // nsAHttpSegmentReader
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsresult Http2Stream::OnReadSegment(const char *buf, uint32_t count,
-                                    uint32_t *countRead) {
-  LOG3(("Http2Stream::OnReadSegment %p count=%d state=%x", this, count,
-        mUpstreamState));
-||||||| merged common ancestors
-nsresult
-Http2Stream::OnReadSegment(const char *buf,
-                           uint32_t count,
-                           uint32_t *countRead)
-{
-  LOG3(("Http2Stream::OnReadSegment %p count=%d state=%x",
-        this, count, mUpstreamState));
-=======
 nsresult Http2Stream::OnReadSegment(const char* buf, uint32_t count,
                                     uint32_t* countRead) {
   LOG3(("Http2Stream::OnReadSegment %p count=%d state=%x", this, count,
         mUpstreamState));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
   MOZ_ASSERT(mSegmentReader, "OnReadSegment with null mSegmentReader");
@@ -1808,7 +1459,6 @@ nsresult Http2Stream::OnReadSegment(const char* buf, uint32_t count,
       MOZ_ASSERT(*countRead == count,
                  "Header parsing not complete but unused data");
       break;
-<<<<<<< HEAD
 
     case GENERATING_BODY:
       // if there is session flow control and either the stream window is active
@@ -1875,162 +1525,7 @@ nsresult Http2Stream::OnReadSegment(const char* buf, uint32_t count,
             "Header is %d Body is %d.",
             static_cast<uint32_t>(rv), *countRead, mTxInlineFrameUsed,
             mTxStreamFrameSize));
-||||||| merged common ancestors
-    }
-    MOZ_ASSERT(*countRead == count, "Header parsing not complete but unused data");
-    break;
 
-  case GENERATING_BODY:
-    // if there is session flow control and either the stream window is active and
-    // exhaused or the session window is exhausted then suspend
-    if (!AllowFlowControlledWrite()) {
-      *countRead = 0;
-      LOG3(("Http2Stream this=%p, id 0x%X request body suspended because "
-            "remote window is stream=%" PRId64 " session=%" PRId64 ".\n", this, mStreamID,
-            mServerReceiveWindow, mSession->ServerSessionWindow()));
-      mBlockedOnRwin = true;
-      return NS_BASE_STREAM_WOULD_BLOCK;
-    }
-    mBlockedOnRwin = false;
-
-    // The chunk is the smallest of: availableData, configured chunkSize,
-    // stream window, session window, or 14 bit framing limit.
-    // Its amazing we send anything at all.
-    dataLength = std::min(count, mChunkSize);
-
-    if (dataLength > Http2Session::kMaxFrameData)
-      dataLength = Http2Session::kMaxFrameData;
-
-    if (dataLength > mSession->ServerSessionWindow())
-      dataLength = static_cast<uint32_t>(mSession->ServerSessionWindow());
-
-    if (dataLength > mServerReceiveWindow)
-      dataLength = static_cast<uint32_t>(mServerReceiveWindow);
-
-    LOG3(("Http2Stream this=%p id 0x%X send calculation "
-          "avail=%d chunksize=%d stream window=%" PRId64 " session window=%" PRId64 " "
-          "max frame=%d USING=%u\n", this, mStreamID,
-          count, mChunkSize, mServerReceiveWindow, mSession->ServerSessionWindow(),
-          Http2Session::kMaxFrameData, dataLength));
-=======
-
-    case GENERATING_BODY:
-      // if there is session flow control and either the stream window is active
-      // and exhaused or the session window is exhausted then suspend
-      if (!AllowFlowControlledWrite()) {
-        *countRead = 0;
-        LOG3(
-            ("Http2Stream this=%p, id 0x%X request body suspended because "
-             "remote window is stream=%" PRId64 " session=%" PRId64 ".\n",
-             this, mStreamID, mServerReceiveWindow,
-             mSession->ServerSessionWindow()));
-        mBlockedOnRwin = true;
-        return NS_BASE_STREAM_WOULD_BLOCK;
-      }
-      mBlockedOnRwin = false;
-
-      // The chunk is the smallest of: availableData, configured chunkSize,
-      // stream window, session window, or 14 bit framing limit.
-      // Its amazing we send anything at all.
-      dataLength = std::min(count, mChunkSize);
-
-      if (dataLength > Http2Session::kMaxFrameData)
-        dataLength = Http2Session::kMaxFrameData;
-
-      if (dataLength > mSession->ServerSessionWindow())
-        dataLength = static_cast<uint32_t>(mSession->ServerSessionWindow());
-
-      if (dataLength > mServerReceiveWindow)
-        dataLength = static_cast<uint32_t>(mServerReceiveWindow);
-
-      LOG3(
-          ("Http2Stream this=%p id 0x%X send calculation "
-           "avail=%d chunksize=%d stream window=%" PRId64
-           " session window=%" PRId64 " "
-           "max frame=%d USING=%u\n",
-           this, mStreamID, count, mChunkSize, mServerReceiveWindow,
-           mSession->ServerSessionWindow(), Http2Session::kMaxFrameData,
-           dataLength));
-
-      mSession->DecrementServerSessionWindow(dataLength);
-      mServerReceiveWindow -= dataLength;
-
-      LOG3(("Http2Stream %p id 0x%x request len remaining %" PRId64 ", "
-            "count avail %u, chunk used %u",
-            this, mStreamID, mRequestBodyLenRemaining, count, dataLength));
-      if (!dataLength && mRequestBodyLenRemaining) {
-        return NS_BASE_STREAM_WOULD_BLOCK;
-      }
-      if (dataLength > mRequestBodyLenRemaining) {
-        return NS_ERROR_UNEXPECTED;
-      }
-      mRequestBodyLenRemaining -= dataLength;
-      GenerateDataFrameHeader(dataLength, !mRequestBodyLenRemaining);
-      ChangeState(SENDING_BODY);
-      MOZ_FALLTHROUGH;
-
-    case SENDING_BODY:
-      MOZ_ASSERT(mTxInlineFrameUsed, "OnReadSegment Send Data Header 0b");
-      rv = TransmitFrame(buf, countRead, false);
-      MOZ_ASSERT(NS_FAILED(rv) || !mTxInlineFrameUsed,
-                 "Transmit Frame should be all or nothing");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      // normalize a partial write with a WOULD_BLOCK into just a partial write
-      // as some code will take WOULD_BLOCK to mean an error with nothing
-      // written (e.g. nsHttpTransaction::ReadRequestSegment()
-      if (rv == NS_BASE_STREAM_WOULD_BLOCK && *countRead) rv = NS_OK;
-||||||| merged common ancestors
-    mSession->DecrementServerSessionWindow(dataLength);
-    mServerReceiveWindow -= dataLength;
-=======
-      LOG3(("TransmitFrame() rv=%" PRIx32 " returning %d data bytes. "
-            "Header is %d Body is %d.",
-            static_cast<uint32_t>(rv), *countRead, mTxInlineFrameUsed,
-            mTxStreamFrameSize));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      // If that frame was all sent, look for another one
-      if (!mTxInlineFrameUsed) ChangeState(GENERATING_BODY);
-      break;
-||||||| merged common ancestors
-    LOG3(("Http2Stream %p id 0x%x request len remaining %" PRId64 ", "
-          "count avail %u, chunk used %u",
-          this, mStreamID, mRequestBodyLenRemaining, count, dataLength));
-    if (!dataLength && mRequestBodyLenRemaining) {
-      return NS_BASE_STREAM_WOULD_BLOCK;
-    }
-    if (dataLength > mRequestBodyLenRemaining) {
-      return NS_ERROR_UNEXPECTED;
-    }
-    mRequestBodyLenRemaining -= dataLength;
-    GenerateDataFrameHeader(dataLength, !mRequestBodyLenRemaining);
-    ChangeState(SENDING_BODY);
-    MOZ_FALLTHROUGH;
-
-  case SENDING_BODY:
-    MOZ_ASSERT(mTxInlineFrameUsed, "OnReadSegment Send Data Header 0b");
-    rv = TransmitFrame(buf, countRead, false);
-    MOZ_ASSERT(NS_FAILED(rv) || !mTxInlineFrameUsed,
-               "Transmit Frame should be all or nothing");
-
-    LOG3(("TransmitFrame() rv=%" PRIx32 " returning %d data bytes. "
-          "Header is %d Body is %d.",
-          static_cast<uint32_t>(rv), *countRead, mTxInlineFrameUsed, mTxStreamFrameSize));
-
-    // normalize a partial write with a WOULD_BLOCK into just a partial write
-    // as some code will take WOULD_BLOCK to mean an error with nothing
-    // written (e.g. nsHttpTransaction::ReadRequestSegment()
-    if (rv == NS_BASE_STREAM_WOULD_BLOCK && *countRead)
-      rv = NS_OK;
-
-    // If that frame was all sent, look for another one
-    if (!mTxInlineFrameUsed)
-      ChangeState(GENERATING_BODY);
-    break;
-=======
       // normalize a partial write with a WOULD_BLOCK into just a partial write
       // as some code will take WOULD_BLOCK to mean an error with nothing
       // written (e.g. nsHttpTransaction::ReadRequestSegment()
@@ -2039,7 +1534,6 @@ nsresult Http2Stream::OnReadSegment(const char* buf, uint32_t count,
       // If that frame was all sent, look for another one
       if (!mTxInlineFrameUsed) ChangeState(GENERATING_BODY);
       break;
->>>>>>> upstream-releases
 
     case SENDING_FIN_STREAM:
       MOZ_ASSERT(false, "resuming partial fin stream out of OnReadSegment");
@@ -2062,25 +1556,10 @@ nsresult Http2Stream::OnReadSegment(const char* buf, uint32_t count,
 // nsAHttpSegmentWriter
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsresult Http2Stream::OnWriteSegment(char *buf, uint32_t count,
-                                     uint32_t *countWritten) {
-  LOG3(("Http2Stream::OnWriteSegment %p count=%d state=%x 0x%X\n", this, count,
-        mUpstreamState, mStreamID));
-||||||| merged common ancestors
-nsresult
-Http2Stream::OnWriteSegment(char *buf,
-                            uint32_t count,
-                            uint32_t *countWritten)
-{
-  LOG3(("Http2Stream::OnWriteSegment %p count=%d state=%x 0x%X\n",
-        this, count, mUpstreamState, mStreamID));
-=======
 nsresult Http2Stream::OnWriteSegment(char* buf, uint32_t count,
                                      uint32_t* countWritten) {
   LOG3(("Http2Stream::OnWriteSegment %p count=%d state=%x 0x%X\n", this, count,
         mUpstreamState, mStreamID));
->>>>>>> upstream-releases
 
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
   MOZ_ASSERT(mSegmentWriter);
@@ -2113,13 +1592,6 @@ nsresult Http2Stream::OnWriteSegment(char* buf, uint32_t count,
 
 /// connect tunnels
 
-<<<<<<< HEAD
-void Http2Stream::ClearTransactionsBlockedOnTunnel() {
-||||||| merged common ancestors
-void
-Http2Stream::ClearTransactionsBlockedOnTunnel()
-{
-=======
 nsCString& Http2Stream::RegistrationKey() {
   if (mRegistrationKey.IsEmpty()) {
     MOZ_ASSERT(Transaction());
@@ -2132,7 +1604,6 @@ nsCString& Http2Stream::RegistrationKey() {
 }
 
 void Http2Stream::ClearTransactionsBlockedOnTunnel() {
->>>>>>> upstream-releases
   MOZ_ASSERT(OnSocketThread(), "not on socket thread");
 
   if (!mIsTunnel) {
@@ -2156,20 +1627,9 @@ void Http2Stream::MapStreamToPlainText() {
   qiTrans->ForcePlainText();
 }
 
-<<<<<<< HEAD
-void Http2Stream::MapStreamToHttpConnection() {
-  RefPtr<SpdyConnectTransaction> qiTrans(
-      mTransaction->QuerySpdyConnectTransaction());
-||||||| merged common ancestors
-void
-Http2Stream::MapStreamToHttpConnection()
-{
-  RefPtr<SpdyConnectTransaction> qiTrans(mTransaction->QuerySpdyConnectTransaction());
-=======
 void Http2Stream::MapStreamToHttpConnection(int32_t httpResponseCode) {
   RefPtr<SpdyConnectTransaction> qiTrans(
       mTransaction->QuerySpdyConnectTransaction());
->>>>>>> upstream-releases
   MOZ_ASSERT(qiTrans);
 
   qiTrans->MapStreamToHttpConnection(mSocketTransport,
@@ -2209,15 +1669,7 @@ nsresult Http2Stream::Finish0RTT(bool aRestart, bool aAlpnChanged) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult Http2Stream::GetOriginAttributes(mozilla::OriginAttributes *oa) {
-||||||| merged common ancestors
-nsresult
-Http2Stream::GetOriginAttributes(mozilla::OriginAttributes *oa)
-{
-=======
 nsresult Http2Stream::GetOriginAttributes(mozilla::OriginAttributes* oa) {
->>>>>>> upstream-releases
   if (!mSocketTransport) {
     return NS_ERROR_UNEXPECTED;
   }

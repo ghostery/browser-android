@@ -25,19 +25,11 @@ namespace mozilla {
 namespace dom {
 class Attr;
 class DocGroup;
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 class Document;
 class Element;
 class NodeInfo;
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 /**
  * Structure used as a key for caching Attrs in nsDOMAttributeMap's

@@ -55,55 +55,6 @@ RematerializedFrame::RematerializedFrame(JSContext* cx, uint8_t* top,
                               &newTarget_, ReadFrame_Actuals, fallback);
 }
 
-<<<<<<< HEAD
-/* static */ RematerializedFrame* RematerializedFrame::New(
-    JSContext* cx, uint8_t* top, InlineFrameIterator& iter,
-    MaybeReadFallback& fallback) {
-  unsigned numFormals =
-      iter.isFunctionFrame() ? iter.calleeTemplate()->nargs() : 0;
-  unsigned argSlots = Max(numFormals, iter.numActualArgs());
-  unsigned extraSlots = argSlots + iter.script()->nfixed();
-
-  // One Value slot is included in sizeof(RematerializedFrame), so we can
-  // reduce the extra slot count by one.  However, if there are zero slot
-  // allocations total, then reducing the slots by one will lead to
-  // the memory allocation being smaller  than sizeof(RematerializedFrame).
-  if (extraSlots > 0) {
-    extraSlots -= 1;
-  }
-
-  RematerializedFrame* buf =
-      cx->pod_calloc_with_extra<RematerializedFrame, Value>(extraSlots);
-  if (!buf) {
-    return nullptr;
-  }
-
-  return new (buf)
-      RematerializedFrame(cx, top, iter.numActualArgs(), iter, fallback);
-||||||| merged common ancestors
-/* static */ RematerializedFrame*
-RematerializedFrame::New(JSContext* cx, uint8_t* top, InlineFrameIterator& iter,
-                         MaybeReadFallback& fallback)
-{
-    unsigned numFormals = iter.isFunctionFrame() ? iter.calleeTemplate()->nargs() : 0;
-    unsigned argSlots = Max(numFormals, iter.numActualArgs());
-    unsigned extraSlots = argSlots + iter.script()->nfixed();
-
-    // One Value slot is included in sizeof(RematerializedFrame), so we can
-    // reduce the extra slot count by one.  However, if there are zero slot
-    // allocations total, then reducing the slots by one will lead to
-    // the memory allocation being smaller  than sizeof(RematerializedFrame).
-    if (extraSlots > 0) {
-        extraSlots -= 1;
-    }
-
-    RematerializedFrame* buf = cx->pod_calloc_with_extra<RematerializedFrame, Value>(extraSlots);
-    if (!buf) {
-        return nullptr;
-    }
-
-    return new (buf) RematerializedFrame(cx, top, iter.numActualArgs(), iter, fallback);
-=======
 /* static */
 RematerializedFrame* RematerializedFrame::New(JSContext* cx, uint8_t* top,
                                               InlineFrameIterator& iter,
@@ -129,37 +80,8 @@ RematerializedFrame* RematerializedFrame::New(JSContext* cx, uint8_t* top,
 
   return new (buf)
       RematerializedFrame(cx, top, iter.numActualArgs(), iter, fallback);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool RematerializedFrame::RematerializeInlineFrames(
-    JSContext* cx, uint8_t* top, InlineFrameIterator& iter,
-    MaybeReadFallback& fallback, GCVector<RematerializedFrame*>& frames) {
-  Rooted<GCVector<RematerializedFrame*>> tempFrames(
-      cx, GCVector<RematerializedFrame*>(cx));
-  if (!tempFrames.resize(iter.frameCount())) {
-    return false;
-  }
-
-  while (true) {
-    size_t frameNo = iter.frameNo();
-    tempFrames[frameNo].set(RematerializedFrame::New(cx, top, iter, fallback));
-    if (!tempFrames[frameNo]) {
-      return false;
-    }
-    if (tempFrames[frameNo]->environmentChain()) {
-      if (!EnsureHasEnvironmentObjects(cx, tempFrames[frameNo].get())) {
-||||||| merged common ancestors
-/* static */ bool
-RematerializedFrame::RematerializeInlineFrames(JSContext* cx, uint8_t* top,
-                                               InlineFrameIterator& iter,
-                                               MaybeReadFallback& fallback,
-                                               GCVector<RematerializedFrame*>& frames)
-{
-    Rooted<GCVector<RematerializedFrame*>> tempFrames(cx, GCVector<RematerializedFrame*>(cx));
-    if (!tempFrames.resize(iter.frameCount())) {
-=======
 /* static */
 bool RematerializedFrame::RematerializeInlineFrames(
     JSContext* cx, uint8_t* top, InlineFrameIterator& iter,
@@ -179,7 +101,6 @@ bool RematerializedFrame::RematerializeInlineFrames(
     }
     if (tempFrames[frameNo]->environmentChain()) {
       if (!EnsureHasEnvironmentObjects(cx, tempFrames[frameNo].get().get())) {
->>>>>>> upstream-releases
         return false;
       }
     }
@@ -194,44 +115,9 @@ bool RematerializedFrame::RematerializeInlineFrames(
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void RematerializedFrame::FreeInVector(
-    GCVector<RematerializedFrame*>& frames) {
-  for (size_t i = 0; i < frames.length(); i++) {
-    RematerializedFrame* f = frames[i];
-    MOZ_ASSERT(!Debugger::inFrameMaps(f));
-    f->RematerializedFrame::~RematerializedFrame();
-    js_free(f);
-  }
-  frames.clear();
-}
-
 CallObject& RematerializedFrame::callObj() const {
   MOZ_ASSERT(hasInitialEnvironment());
   MOZ_ASSERT(callee()->needsCallObject());
-||||||| merged common ancestors
-/* static */ void
-RematerializedFrame::FreeInVector(GCVector<RematerializedFrame*>& frames)
-{
-    for (size_t i = 0; i < frames.length(); i++) {
-        RematerializedFrame* f = frames[i];
-        MOZ_ASSERT(!Debugger::inFrameMaps(f));
-        f->RematerializedFrame::~RematerializedFrame();
-        js_free(f);
-    }
-    frames.clear();
-}
-
-CallObject&
-RematerializedFrame::callObj() const
-{
-    MOZ_ASSERT(hasInitialEnvironment());
-    MOZ_ASSERT(callee()->needsCallObject());
-=======
-CallObject& RematerializedFrame::callObj() const {
-  MOZ_ASSERT(hasInitialEnvironment());
-  MOZ_ASSERT(callee()->needsCallObject());
->>>>>>> upstream-releases
 
   JSObject* env = environmentChain();
   while (!env->is<CallObject>()) {

@@ -8,17 +8,8 @@
 
 // If rendertrace is off let's no compile this code
 #ifdef MOZ_RENDERTRACE
-<<<<<<< HEAD
-#include "Layers.h"
-#include "TreeTraversal.h"  // for ForEachNode
-||||||| merged common ancestors
-#include "Layers.h"
-#include "TreeTraversal.h"              // for ForEachNode
-
-=======
 #  include "Layers.h"
 #  include "TreeTraversal.h"  // for ForEachNode
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -32,41 +23,15 @@ static gfx::Matrix4x4 GetRootTransform(Layer* aLayer) {
   return layerTrans;
 }
 
-<<<<<<< HEAD
-void RenderTraceLayers(Layer *aLayer, const char *aColor,
-                       const gfx::Matrix4x4 aRootTransform) {
-||||||| merged common ancestors
-void RenderTraceLayers(Layer *aLayer, const char *aColor, const gfx::Matrix4x4 aRootTransform) {
-=======
 void RenderTraceLayers(Layer* aLayer, const char* aColor,
                        const gfx::Matrix4x4 aRootTransform) {
->>>>>>> upstream-releases
   int colorId = 0;
-<<<<<<< HEAD
-  ForEachNode<ForwardIterator>(aLayer, [&colorId](Layer *layer) {
-    gfx::Matrix4x4 trans = aRootTransform * layer->GetTransform();
-    trans.ProjectTo2D();
-    gfx::IntRect clipRect = layer->GetLocalVisibleRegion().GetBounds();
-    Rect rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
-    trans.TransformBounds(rect);
-||||||| merged common ancestors
-  ForEachNode<ForwardIterator>(
-      aLayer,
-      [&colorId] (Layer *layer)
-      {
-        gfx::Matrix4x4 trans = aRootTransform * layer->GetTransform();
-        trans.ProjectTo2D();
-        gfx::IntRect clipRect = layer->GetLocalVisibleRegion().GetBounds();
-        Rect rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
-        trans.TransformBounds(rect);
-=======
   ForEachNode<ForwardIterator>(aLayer, [&colorId](Layer* layer) {
     gfx::Matrix4x4 trans = aRootTransform * layer->GetTransform();
     trans.ProjectTo2D();
     gfx::IntRect clipRect = layer->GetLocalVisibleRegion().GetBounds();
     Rect rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
     trans.TransformBounds(rect);
->>>>>>> upstream-releases
 
     if (strcmp(layer->Name(), "ContainerLayer") != 0 &&
         strcmp(layer->Name(), "ContainerLayerComposite") != 0) {
@@ -79,15 +44,8 @@ void RenderTraceLayers(Layer* aLayer, const char* aColor,
   });
 }
 
-<<<<<<< HEAD
-void RenderTraceInvalidateStart(Layer *aLayer, const char *aColor,
-                                const gfx::IntRect aRect) {
-||||||| merged common ancestors
-void RenderTraceInvalidateStart(Layer *aLayer, const char *aColor, const gfx::IntRect aRect) {
-=======
 void RenderTraceInvalidateStart(Layer* aLayer, const char* aColor,
                                 const gfx::IntRect aRect) {
->>>>>>> upstream-releases
   gfx::Matrix4x4 trans = GetRootTransform(aLayer);
   gfx::Rect rect(aRect.x, aRect.y, aRect.width, aRect.height);
   trans.TransformBounds(rect);
@@ -101,34 +59,14 @@ void RenderTraceInvalidateEnd(Layer* aLayer, const char* aColor) {
   RenderTraceInvalidateStart(aLayer, aColor, gfx::IntRect());
 }
 
-<<<<<<< HEAD
-void renderTraceEventStart(const char *aComment, const char *aColor) {
-  printf_stderr("%s RENDERTRACE %u fillrect #%s 0 0 10 10\n", aComment,
-                (int)PR_IntervalNow(), aColor);
-||||||| merged common ancestors
-void renderTraceEventStart(const char *aComment, const char *aColor) {
-  printf_stderr("%s RENDERTRACE %u fillrect #%s 0 0 10 10\n",
-    aComment, (int)PR_IntervalNow(), aColor);
-=======
 void renderTraceEventStart(const char* aComment, const char* aColor) {
   printf_stderr("%s RENDERTRACE %u fillrect #%s 0 0 10 10\n", aComment,
                 (int)PR_IntervalNow(), aColor);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void renderTraceEventEnd(const char *aComment, const char *aColor) {
-  printf_stderr("%s RENDERTRACE %u fillrect #%s 0 0 0 0\n", aComment,
-                (int)PR_IntervalNow(), aColor);
-||||||| merged common ancestors
-void renderTraceEventEnd(const char *aComment, const char *aColor) {
-  printf_stderr("%s RENDERTRACE %u fillrect #%s 0 0 0 0\n",
-    aComment, (int)PR_IntervalNow(), aColor);
-=======
 void renderTraceEventEnd(const char* aComment, const char* aColor) {
   printf_stderr("%s RENDERTRACE %u fillrect #%s 0 0 0 0\n", aComment,
                 (int)PR_IntervalNow(), aColor);
->>>>>>> upstream-releases
 }
 
 void renderTraceEventEnd(const char* aColor) {

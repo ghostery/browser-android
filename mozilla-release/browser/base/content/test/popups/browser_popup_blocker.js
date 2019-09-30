@@ -19,24 +19,6 @@ function clearAllPermissionsByPrefix(aPrefix) {
 
 add_task(async function setup() {
   // Enable the popup blocker.
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({set: [["dom.disable_open_during_load", true]]});
-});
-
-// Tests that we show a special message when popup blocking exceeds
-// a certain maximum of popups per page.
-add_task(async function test_maximum_reported_blocks() {
-  Services.prefs.setIntPref("privacy.popups.maxReported", 5);
-
-  // Open the test page.
-  let tab = await BrowserTestUtils.openNewForegroundTab(gBrowser, baseURL + "popup_blocker_10_popups.html");
-
-  // Wait for the popup-blocked notification.
-  let notification = await BrowserTestUtils.waitForCondition(() =>
-    gBrowser.getNotificationBox().getNotificationWithValue("popup-blocked"));
-||||||| merged common ancestors
-  await SpecialPowers.pushPrefEnv({set: [["dom.disable_open_during_load", true]]});
-=======
   await SpecialPowers.pushPrefEnv({
     set: [["dom.disable_open_during_load", true]],
   });
@@ -57,21 +39,7 @@ add_task(async function test_maximum_reported_blocks() {
   let notification = await BrowserTestUtils.waitForCondition(() =>
     gBrowser.getNotificationBox().getNotificationWithValue("popup-blocked")
   );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Slightly hacky way to ensure we show the correct message in this case.
-  ok(notification.label.includes("more than"), "Notification label has 'more than'");
-  ok(notification.label.includes("5"), "Notification label shows the maximum number of popups");
-
-  gBrowser.removeTab(tab);
-
-  Services.prefs.clearUserPref("privacy.popups.maxReported");
-});
-
-add_task(async function test_opening_blocked_popups() {
-||||||| merged common ancestors
-=======
   // Slightly hacky way to ensure we show the correct message in this case.
   ok(
     notification.messageText.textContent.includes("more than"),
@@ -88,7 +56,6 @@ add_task(async function test_opening_blocked_popups() {
 });
 
 add_task(async function test_opening_blocked_popups() {
->>>>>>> upstream-releases
   // Open the test page.
   let tab = await BrowserTestUtils.openNewForegroundTab(
     gBrowser,

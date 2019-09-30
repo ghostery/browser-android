@@ -1,12 +1,4 @@
 [package]
-<<<<<<< HEAD
-name = "cranelift-codegen"
-version = "0.25.0"
-||||||| merged common ancestors
-name = "cranelift-codegen"
-version = "0.20.0"
-=======
->>>>>>> upstream-releases
 authors = ["The Cranelift Project Developers"]
 name = "cranelift-codegen"
 version = "0.32.0"
@@ -17,76 +9,6 @@ repository = "https://github.com/CraneStation/cranelift"
 categories = ["no-std"]
 readme = "README.md"
 keywords = ["compile", "compiler", "jit"]
-<<<<<<< HEAD
-categories = ["no-std"]
-license = "Apache-2.0 WITH LLVM-exception"
-repository = "https://github.com/CraneStation/cranelift"
-[dependencies.cranelift-bforest]
-version = "0.25.0"
-default-features = false
-
-[dependencies.cranelift-entity]
-version = "0.25.0"
-default-features = false
-
-[dependencies.failure]
-version = "0.1.1"
-features = ["derive"]
-default-features = false
-
-[dependencies.failure_derive]
-version = "0.1.1"
-default-features = false
-
-[dependencies.hashmap_core]
-version = "0.1.9"
-optional = true
-
-[dependencies.log]
-version = "0.4.4"
-default-features = false
-
-[dependencies.target-lexicon]
-version = "0.2.0"
-default-features = false
-[build-dependencies.cranelift-codegen-meta]
-version = "0.25.0"
-||||||| merged common ancestors
-categories = ["no-std"]
-license = "Apache-2.0 WITH LLVM-exception"
-repository = "https://github.com/CraneStation/cranelift"
-[dependencies.cranelift-bforest]
-version = "0.20.0"
-default-features = false
-
-[dependencies.cranelift-entity]
-version = "0.20.0"
-default-features = false
-
-[dependencies.failure]
-version = "0.1.1"
-features = ["derive"]
-default-features = false
-
-[dependencies.failure_derive]
-version = "0.1.1"
-default-features = false
-
-[dependencies.hashmap_core]
-version = "0.1.9"
-optional = true
-
-[dependencies.log]
-version = "0.4.4"
-features = ["release_max_level_warn"]
-default-features = false
-
-[dependencies.target-lexicon]
-version = "0.0.3"
-default-features = false
-[build-dependencies.cranelift-codegen-meta]
-version = "0.20.0"
-=======
 build = "build.rs"
 edition = "2018"
 
@@ -105,29 +27,8 @@ log = { version = "0.4.6", default-features = false }
 
 [build-dependencies]
 cranelift-codegen-meta = { path = "meta", version = "0.32.0", default-features = false }
->>>>>>> upstream-releases
 
 [features]
-<<<<<<< HEAD
-core = ["hashmap_core"]
-default = ["std"]
-std = ["cranelift-entity/std", "cranelift-bforest/std", "target-lexicon/std"]
-testing_hooks = []
-[badges.maintenance]
-status = "experimental"
-
-[badges.travis-ci]
-repository = "CraneStation/cranelift"
-||||||| merged common ancestors
-core = ["hashmap_core"]
-default = ["std"]
-std = ["cranelift-entity/std", "cranelift-bforest/std", "target-lexicon/std"]
-[badges.maintenance]
-status = "experimental"
-
-[badges.travis-ci]
-repository = "CraneStation/cranelift"
-=======
 default = ["std", "x86", "arm32", "arm64", "riscv"]
 
 # The "std" feature enables use of libstd. The "core" feature enables use
@@ -160,4 +61,3 @@ riscv = []
 [badges]
 maintenance = { status = "experimental" }
 travis-ci = { repository = "CraneStation/cranelift" }
->>>>>>> upstream-releases

@@ -20,15 +20,8 @@ static const char* mcvcLogTag = "MediaCodecVideoCodec";
 WebrtcVideoEncoder* MediaCodecVideoCodec::CreateEncoder(CodecType aCodecType) {
   CSFLogDebug(LOGTAG, "%s ", __FUNCTION__);
   if (aCodecType == CODEC_VP8) {
-<<<<<<< HEAD
-    if (StaticPrefs::
-            MediaNavigatorHardwareVp8encodeAccelerationRemoteEnabled()) {
-||||||| merged common ancestors
-    if (StaticPrefs::MediaNavigatorHardwareVp8encodeAccelerationRemoteEnabled()) {
-=======
     if (StaticPrefs::
             media_navigator_hardware_vp8_encode_acceleration_remote_enabled()) {
->>>>>>> upstream-releases
       return new WebrtcMediaCodecVP8VideoRemoteEncoder();
     } else {
       return new WebrtcMediaCodecVP8VideoEncoder();

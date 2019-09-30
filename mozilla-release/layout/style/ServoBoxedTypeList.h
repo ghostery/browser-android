@@ -23,8 +23,6 @@
 // TODO(emilio): We should remove the opaque type now, cbindgen should be able
 // to just generate the forward declaration.
 
-// clang-format off
-// Needs to be a on single line
 SERVO_BOXED_TYPE(StyleSet, RawServoStyleSet)
 SERVO_BOXED_TYPE(AnimationValueMap, RawServoAnimationValueMap)
 SERVO_BOXED_TYPE(AuthorStyles, RawServoAuthorStyles)
@@ -32,4 +30,3 @@ SERVO_BOXED_TYPE(SelectorList, RawServoSelectorList)
 SERVO_BOXED_TYPE(SharedMemoryBuilder, RawServoSharedMemoryBuilder)
 SERVO_BOXED_TYPE(SourceSizeList, RawServoSourceSizeList)
 SERVO_BOXED_TYPE(UseCounters, StyleUseCounters)
-// clang-format on

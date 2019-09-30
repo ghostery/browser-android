@@ -8,76 +8,13 @@
 const Babel = require("./babel");
 const fs = require("fs");
 const _path = require("path");
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/build/copy-module.js
-const { execFileSync } = require("child_process");
 
 const EXCLUDED_FILES = {
-||||||| merged common ancestors
-const { execFileSync } = require("child_process");
-
-const mappings = {
-  "./source-editor": "devtools/client/sourceeditor/editor",
-  "../editor/source-editor": "devtools/client/sourceeditor/editor",
-  "./test-flag": "devtools/shared/flags",
-  "./fronts-device": "devtools/shared/fronts/device",
-  immutable: "devtools/client/shared/vendor/immutable",
-  lodash: "devtools/client/shared/vendor/lodash",
-  react: "devtools/client/shared/vendor/react",
-  "react-dom": "devtools/client/shared/vendor/react-dom",
-  "react-dom-factories": "devtools/client/shared/vendor/react-dom-factories",
-  "react-redux": "devtools/client/shared/vendor/react-redux",
-  redux: "devtools/client/shared/vendor/redux",
-  "prop-types": "devtools/client/shared/vendor/react-prop-types",
-  "devtools-services": "Services",
-
-  "wasmparser/dist/WasmParser": "devtools/client/shared/vendor/WasmParser",
-  "wasmparser/dist/WasmDis": "devtools/client/shared/vendor/WasmDis",
-
-  // The excluded files below should not be required while the Debugger runs
-  // in Firefox. Here, "devtools/shared/flags" is used as a dummy module.
-=======
-
-const EXCLUDED_FILES = {
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/build/build-debugger.js
   "../assets/panel/debugger.properties": "devtools/shared/flags",
   "devtools-connection": "devtools/shared/flags",
   "chrome-remote-interface": "devtools/shared/flags",
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/build/copy-module.js
-  "devtools-launchpad": "devtools/shared/flags"
-||||||| merged common ancestors
   "devtools-launchpad": "devtools/shared/flags",
-
-  "devtools-reps": "devtools/client/shared/components/reps/reps.js",
-  "devtools-source-map": "devtools/client/shared/source-map/index.js",
-=======
-  "devtools-launchpad": "devtools/shared/flags",
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/build/build-debugger.js
 };
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/build/copy-module.js
-
-const mappings =  Object.assign(
-  {
-    "./source-editor": "devtools/client/sourceeditor/editor",
-    "../editor/source-editor": "devtools/client/sourceeditor/editor",
-    "./test-flag": "devtools/shared/flags",
-    "./fronts-device": "devtools/shared/fronts/device",
-    immutable: "devtools/client/shared/vendor/immutable",
-    lodash: "devtools/client/shared/vendor/lodash",
-    react: "devtools/client/shared/vendor/react",
-    "react-dom": "devtools/client/shared/vendor/react-dom",
-    "react-dom-factories": "devtools/client/shared/vendor/react-dom-factories",
-    "react-redux": "devtools/client/shared/vendor/react-redux",
-    redux: "devtools/client/shared/vendor/redux",
-    "prop-types": "devtools/client/shared/vendor/react-prop-types",
-    "devtools-services": "Services",
-    "wasmparser/dist/WasmParser": "devtools/client/shared/vendor/WasmParser",
-    "wasmparser/dist/WasmDis": "devtools/client/shared/vendor/WasmDis"
-  },
-  EXCLUDED_FILES
-);
-
-||||||| merged common ancestors
-=======
 
 const mappings = Object.assign(
   {
@@ -102,10 +39,8 @@ const mappings = Object.assign(
   EXCLUDED_FILES
 );
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/build/build-debugger.js
 const mappingValues = Object.values(mappings);
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/build/copy-module.js
 // Add two additional mappings that cannot be reused when creating the
 // webpack bundles.
 mappings["devtools-reps"] = "devtools/client/shared/components/reps/reps.js";
@@ -115,22 +50,6 @@ function isRequire(t, node) {
   return node && t.isCallExpression(node) && node.callee.name == "require";
 }
 
-function isImport(t, node) {
-  return node && t.isImportDeclaration(node);
-}
-
-||||||| merged common ancestors
-=======
-// Add two additional mappings that cannot be reused when creating the
-// webpack bundles.
-mappings["devtools-reps"] = "devtools/client/shared/components/reps/reps.js";
-mappings["devtools-source-map"] = "devtools/client/shared/source-map/index.js";
-
-function isRequire(t, node) {
-  return node && t.isCallExpression(node) && node.callee.name == "require";
-}
-
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/build/build-debugger.js
 // List of vendored modules.
 // Should be synchronized with vendors.js
 const VENDORS = [
@@ -146,15 +65,7 @@ const VENDORS = [
   "lodash-move",
   "react-aria-components/src/tabs",
   "react-transition-group/Transition",
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/build/copy-module.js
-  "reselect",
-  "Svg"
-||||||| merged common ancestors
-  "reselect",
   "Svg",
-=======
-  "Svg",
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/build/build-debugger.js
 ];
 
 const moduleMapping = {
@@ -295,65 +206,17 @@ function transformMC({ types: t }) {
           value = `${value}/index`;
           path.replaceWith(t.stringLiteral(value));
         }
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/build/copy-module.js
-      }
-    }
-  };
-};
-||||||| merged common ancestors
-      }
-    }
-  };
-}
-=======
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/build/build-debugger.js
 
         if (shouldLazyLoad(value)) {
           const requireCall = path.parentPath;
           const declarator = requireCall.parentPath;
           const declaration = declarator.parentPath;
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/build/copy-module.js
-function transform(filePath) {
-  const doc = fs.readFileSync(filePath, "utf8");
-  const out = Babel.transform(doc, {
-    plugins: [
-			"transform-flow-strip-types",
-			"syntax-trailing-function-commas",
-			"transform-class-properties",
-			"transform-es2015-modules-commonjs",
-			"transform-react-jsx",
-      			"syntax-object-rest-spread",
-      ["transform-mc", { mappings, vendors: VENDORS, filePath }]
-    ]
-  });
-
-  return out.code;
-}
-||||||| merged common ancestors
-function transform(filePath) {
-  const doc = fs.readFileSync(filePath, "utf8");
-  const out = Babel.transform(doc, {
-    plugins: [
-			"transform-flow-strip-types",
-			"syntax-trailing-function-commas",
-			"transform-class-properties",
-			"transform-es2015-modules-commonjs",
-			"transform-object-rest-spread",
-			"transform-react-jsx",
-      ["transform-mc", { mappings, vendors: VENDORS, filePath }]
-    ]
-  });
-
-  return out.code;
-}
-=======
           // require()s that are not assigned to a variable cannot be safely lazily required
           // since we lack anything to initiate the require (= the getter for the variable)
           if (declarator.type !== "VariableDeclarator") {
             return;
           }
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/build/build-debugger.js
 
           // update relative paths to be "absolute" (starting with devtools/)
           // e.g. ./utils/source-queue

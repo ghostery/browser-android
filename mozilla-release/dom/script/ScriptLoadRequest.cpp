@@ -28,25 +28,6 @@ NS_IMPL_CYCLE_COLLECTION(ScriptFetchOptions, mElement, mTriggeringPrincipal)
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(ScriptFetchOptions, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(ScriptFetchOptions, Release)
 
-<<<<<<< HEAD
-ScriptFetchOptions::ScriptFetchOptions(
-    mozilla::CORSMode aCORSMode, mozilla::net::ReferrerPolicy aReferrerPolicy,
-    nsIScriptElement* aElement, nsIPrincipal* aTriggeringPrincipal)
-    : mCORSMode(aCORSMode),
-      mReferrerPolicy(aReferrerPolicy),
-      mElement(aElement),
-      mTriggeringPrincipal(aTriggeringPrincipal) {
-||||||| merged common ancestors
-ScriptFetchOptions::ScriptFetchOptions(mozilla::CORSMode aCORSMode,
-                                       mozilla::net::ReferrerPolicy aReferrerPolicy,
-                                       nsIScriptElement* aElement,
-                                       nsIPrincipal* aTriggeringPrincipal)
-  : mCORSMode(aCORSMode)
-  , mReferrerPolicy(aReferrerPolicy)
-  , mElement(aElement)
-  , mTriggeringPrincipal(aTriggeringPrincipal)
-{
-=======
 ScriptFetchOptions::ScriptFetchOptions(
     mozilla::CORSMode aCORSMode, mozilla::net::ReferrerPolicy aReferrerPolicy,
     nsIScriptElement* aElement, nsIPrincipal* aTriggeringPrincipal)
@@ -55,7 +36,6 @@ ScriptFetchOptions::ScriptFetchOptions(
       mIsPreload(false),
       mElement(aElement),
       mTriggeringPrincipal(aTriggeringPrincipal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mTriggeringPrincipal);
 }
 
@@ -91,56 +71,6 @@ ScriptLoadRequest::ScriptLoadRequest(ScriptKind aKind, nsIURI* aURI,
                                      ScriptFetchOptions* aFetchOptions,
                                      const SRIMetadata& aIntegrity,
                                      nsIURI* aReferrer)
-<<<<<<< HEAD
-    : mKind(aKind),
-      mScriptMode(ScriptMode::eBlocking),
-      mProgress(Progress::eLoading),
-      mDataType(DataType::eUnknown),
-      mScriptFromHead(false),
-      mIsInline(true),
-      mHasSourceMapURL(false),
-      mInDeferList(false),
-      mInAsyncList(false),
-      mIsNonAsyncScriptInserted(false),
-      mIsXSLT(false),
-      mIsCanceled(false),
-      mWasCompiledOMT(false),
-      mIsTracking(false),
-      mFetchOptions(aFetchOptions),
-      mOffThreadToken(nullptr),
-      mScriptTextLength(0),
-      mScriptBytecode(),
-      mBytecodeOffset(0),
-      mURI(aURI),
-      mLineNo(1),
-      mIntegrity(aIntegrity),
-      mReferrer(aReferrer) {
-||||||| merged common ancestors
-  : mKind(aKind)
-  , mScriptMode(ScriptMode::eBlocking)
-  , mProgress(Progress::eLoading)
-  , mDataType(DataType::eUnknown)
-  , mScriptFromHead(false)
-  , mIsInline(true)
-  , mHasSourceMapURL(false)
-  , mInDeferList(false)
-  , mInAsyncList(false)
-  , mIsNonAsyncScriptInserted(false)
-  , mIsXSLT(false)
-  , mIsCanceled(false)
-  , mWasCompiledOMT(false)
-  , mIsTracking(false)
-  , mFetchOptions(aFetchOptions)
-  , mOffThreadToken(nullptr)
-  , mScriptTextLength(0)
-  , mScriptBytecode()
-  , mBytecodeOffset(0)
-  , mURI(aURI)
-  , mLineNo(1)
-  , mIntegrity(aIntegrity)
-  , mReferrer(aReferrer)
-{
-=======
     : mKind(aKind),
       mScriptMode(ScriptMode::eBlocking),
       mProgress(Progress::eLoading),
@@ -165,7 +95,6 @@ ScriptLoadRequest::ScriptLoadRequest(ScriptKind aKind, nsIURI* aURI,
       mIntegrity(aIntegrity),
       mReferrer(aReferrer),
       mUnreportedPreloadError(NS_OK) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mFetchOptions);
 }
 

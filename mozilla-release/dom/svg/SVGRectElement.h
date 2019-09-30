@@ -24,17 +24,6 @@ typedef SVGGeometryElement SVGRectElementBase;
 class SVGRectElement final : public SVGRectElementBase {
  protected:
   explicit SVGRectElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-<<<<<<< HEAD
-  virtual JSObject* WrapNode(JSContext* cx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-  friend nsresult(::NS_NewSVGRectElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-||||||| merged common ancestors
-  virtual JSObject* WrapNode(JSContext *cx, JS::Handle<JSObject*> aGivenProto) override;
-  friend nsresult (::NS_NewSVGRectElement(nsIContent **aResult,
-                                          already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-=======
   virtual JSObject* WrapNode(JSContext* cx,
                              JS::Handle<JSObject*> aGivenProto) override;
   friend nsresult(::NS_NewSVGRectElement(
@@ -43,14 +32,7 @@ class SVGRectElement final : public SVGRectElementBase {
 
  public:
   NS_IMETHOD_(bool) IsAttributeMapped(const nsAtom* aAttribute) const override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
->>>>>>> upstream-releases
   // nsSVGSVGElement methods:
   virtual bool HasValidDimensions() const override;
 
@@ -69,12 +51,6 @@ public:
                                     const ComputedStyle& aOldStyle);
   static nsCSSPropertyID GetCSSPropertyIdForAttrEnum(uint8_t aAttrEnum);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-
-=======
   // WebIDL
   already_AddRefed<DOMSVGAnimatedLength> X();
   already_AddRefed<DOMSVGAnimatedLength> Y();
@@ -84,7 +60,6 @@ protected:
   already_AddRefed<DOMSVGAnimatedLength> Ry();
 
  protected:
->>>>>>> upstream-releases
   virtual LengthAttributesInfo GetLengthInfo() override;
 
   enum { ATTR_X, ATTR_Y, ATTR_WIDTH, ATTR_HEIGHT, ATTR_RX, ATTR_RY };

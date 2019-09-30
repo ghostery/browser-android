@@ -65,37 +65,6 @@ struct ComputedGridTrackInfo {
   uint32_t mRepeatFirstTrack;
 };
 
-<<<<<<< HEAD
-struct ComputedGridLineInfo {
-  explicit ComputedGridLineInfo(nsTArray<nsTArray<nsString>>&& aNames,
-                                const nsTArray<nsString>& aNamesBefore,
-                                const nsTArray<nsString>& aNamesAfter,
-                                nsTArray<nsString>&& aNamesFollowingRepeat)
-      : mNames(aNames),
-        mNamesBefore(aNamesBefore),
-        mNamesAfter(aNamesAfter),
-        mNamesFollowingRepeat(aNamesFollowingRepeat) {}
-  nsTArray<nsTArray<nsString>> mNames;
-  nsTArray<nsString> mNamesBefore;
-  nsTArray<nsString> mNamesAfter;
-  nsTArray<nsString> mNamesFollowingRepeat;
-||||||| merged common ancestors
-struct ComputedGridLineInfo
-{
-  explicit ComputedGridLineInfo(nsTArray<nsTArray<nsString>>&& aNames,
-                                const nsTArray<nsString>& aNamesBefore,
-                                const nsTArray<nsString>& aNamesAfter,
-                                nsTArray<nsString>&& aNamesFollowingRepeat)
-    : mNames(aNames)
-    , mNamesBefore(aNamesBefore)
-    , mNamesAfter(aNamesAfter)
-    , mNamesFollowingRepeat(aNamesFollowingRepeat)
-  {}
-  nsTArray<nsTArray<nsString>> mNames;
-  nsTArray<nsString> mNamesBefore;
-  nsTArray<nsString> mNamesAfter;
-  nsTArray<nsString> mNamesFollowingRepeat;
-=======
 struct ComputedGridLineInfo {
   explicit ComputedGridLineInfo(
       nsTArray<nsTArray<RefPtr<nsAtom>>>&& aNames,
@@ -110,7 +79,6 @@ struct ComputedGridLineInfo {
   nsTArray<RefPtr<nsAtom>> mNamesBefore;
   nsTArray<RefPtr<nsAtom>> mNamesAfter;
   nsTArray<RefPtr<nsAtom>> mNamesFollowingRepeat;
->>>>>>> upstream-releases
 };
 }  // namespace mozilla
 
@@ -161,19 +129,9 @@ class nsGridContainerFrame final : public nsContainerFrame {
   }
 
   bool GetVerticalAlignBaseline(mozilla::WritingMode aWM,
-<<<<<<< HEAD
-                                nscoord* aBaseline) const override {
-    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst,
-                                     aBaseline);
-||||||| merged common ancestors
-                                nscoord* aBaseline) const override
-  {
-    return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::eFirst, aBaseline);
-=======
                                 nscoord* aBaseline) const override {
     return GetNaturalBaselineBOffset(aWM, BaselineSharingGroup::First,
                                      aBaseline);
->>>>>>> upstream-releases
   }
 
   bool GetNaturalBaselineBOffset(mozilla::WritingMode aWM,
@@ -195,18 +153,8 @@ class nsGridContainerFrame final : public nsContainerFrame {
   void InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
                     nsFrameList& aFrameList) override;
   void RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) override;
-<<<<<<< HEAD
-  uint16_t CSSAlignmentForAbsPosChild(
-      const ReflowInput& aChildRI,
-      mozilla::LogicalAxis aLogicalAxis) const override;
-||||||| merged common ancestors
-  uint16_t CSSAlignmentForAbsPosChild(
-            const ReflowInput& aChildRI,
-            mozilla::LogicalAxis aLogicalAxis) const override;
-=======
   uint16_t CSSAlignmentForAbsPosChild(const ReflowInput& aChildRI,
                                       LogicalAxis aLogicalAxis) const override;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   void SetInitialChildList(ChildListID aListID,
@@ -254,15 +202,6 @@ class nsGridContainerFrame final : public nsContainerFrame {
     return info;
   }
 
-<<<<<<< HEAD
-  typedef nsBaseHashtable<nsStringHashKey, mozilla::css::GridNamedArea,
-                          mozilla::css::GridNamedArea>
-      ImplicitNamedAreas;
-||||||| merged common ancestors
-  typedef nsBaseHashtable<nsStringHashKey,
-                          mozilla::css::GridNamedArea,
-                          mozilla::css::GridNamedArea> ImplicitNamedAreas;
-=======
   struct AtomKey {
     RefPtr<nsAtom> mKey;
 
@@ -278,7 +217,6 @@ class nsGridContainerFrame final : public nsContainerFrame {
   };
 
   using ImplicitNamedAreas = mozilla::HashMap<AtomKey, NamedArea, AtomKey>;
->>>>>>> upstream-releases
   NS_DECLARE_FRAME_PROPERTY_DELETABLE(ImplicitNamedAreasProperty,
                                       ImplicitNamedAreas)
   ImplicitNamedAreas* GetImplicitNamedAreas() const {
@@ -293,22 +231,10 @@ class nsGridContainerFrame final : public nsContainerFrame {
   }
 
   /** Return true if this frame is subgridded in its aAxis. */
-<<<<<<< HEAD
-  bool IsSubgrid(mozilla::LogicalAxis aAxis) const {
-    return HasAnyStateBits(aAxis == mozilla::eLogicalAxisBlock
-                               ? NS_STATE_GRID_IS_ROW_SUBGRID
-                               : NS_STATE_GRID_IS_COL_SUBGRID);
-||||||| merged common ancestors
-  bool IsSubgrid(mozilla::LogicalAxis aAxis) const {
-    return HasAnyStateBits(
-      aAxis == mozilla::eLogicalAxisBlock ? NS_STATE_GRID_IS_ROW_SUBGRID
-                                          : NS_STATE_GRID_IS_COL_SUBGRID);
-=======
   bool IsSubgrid(LogicalAxis aAxis) const {
     return HasAnyStateBits(aAxis == mozilla::eLogicalAxisBlock
                                ? NS_STATE_GRID_IS_ROW_SUBGRID
                                : NS_STATE_GRID_IS_COL_SUBGRID);
->>>>>>> upstream-releases
   }
   bool IsColSubgrid() const { return IsSubgrid(mozilla::eLogicalAxisInline); }
   bool IsRowSubgrid() const { return IsSubgrid(mozilla::eLogicalAxisBlock); }
@@ -319,22 +245,10 @@ class nsGridContainerFrame final : public nsContainerFrame {
   }
 
   /** Return true if this frame has an item that is subgridded in our aAxis. */
-<<<<<<< HEAD
-  bool HasSubgridItems(mozilla::LogicalAxis aAxis) const {
-    return HasAnyStateBits(aAxis == mozilla::eLogicalAxisBlock
-                               ? NS_STATE_GRID_HAS_ROW_SUBGRID_ITEM
-                               : NS_STATE_GRID_HAS_COL_SUBGRID_ITEM);
-||||||| merged common ancestors
-  bool HasSubgridItems(mozilla::LogicalAxis aAxis) const {
-    return HasAnyStateBits(
-      aAxis == mozilla::eLogicalAxisBlock ? NS_STATE_GRID_HAS_ROW_SUBGRID_ITEM
-                                          : NS_STATE_GRID_HAS_COL_SUBGRID_ITEM);
-=======
   bool HasSubgridItems(LogicalAxis aAxis) const {
     return HasAnyStateBits(aAxis == mozilla::eLogicalAxisBlock
                                ? NS_STATE_GRID_HAS_ROW_SUBGRID_ITEM
                                : NS_STATE_GRID_HAS_COL_SUBGRID_ITEM);
->>>>>>> upstream-releases
   }
   /** Return true if this frame has any subgrid items. */
   bool HasSubgridItems() const {
@@ -367,24 +281,11 @@ class nsGridContainerFrame final : public nsContainerFrame {
     // Does the above item span the first(last) track?
     bool mIsInEdgeTrack;
   };
-<<<<<<< HEAD
-
- protected:
-  static const uint32_t kAutoLine;
-  // The maximum line number, in the zero-based translated grid.
-  static const uint32_t kTranslatedMaxLine;
-||||||| merged common ancestors
-protected:
-  static const uint32_t kAutoLine;
-  // The maximum line number, in the zero-based translated grid.
-  static const uint32_t kTranslatedMaxLine;
-=======
 
   /** Return our parent grid container; |this| MUST be a subgrid. */
   nsGridContainerFrame* ParentGridContainerForSubgrid() const;
 
  protected:
->>>>>>> upstream-releases
   typedef mozilla::LogicalPoint LogicalPoint;
   typedef mozilla::LogicalRect LogicalRect;
   typedef mozilla::LogicalSize LogicalSize;
@@ -403,30 +304,6 @@ protected:
   struct TrackSizingFunctions;
   struct Tracks;
   struct TranslatedLineRange;
-<<<<<<< HEAD
-  friend nsContainerFrame* NS_NewGridContainerFrame(nsIPresShell* aPresShell,
-                                                    ComputedStyle* aStyle);
-  explicit nsGridContainerFrame(ComputedStyle* aStyle)
-      : nsContainerFrame(aStyle, kClassID),
-        mCachedMinISize(NS_INTRINSIC_WIDTH_UNKNOWN),
-        mCachedPrefISize(NS_INTRINSIC_WIDTH_UNKNOWN) {
-    mBaseline[0][0] = NS_INTRINSIC_WIDTH_UNKNOWN;
-    mBaseline[0][1] = NS_INTRINSIC_WIDTH_UNKNOWN;
-    mBaseline[1][0] = NS_INTRINSIC_WIDTH_UNKNOWN;
-    mBaseline[1][1] = NS_INTRINSIC_WIDTH_UNKNOWN;
-||||||| merged common ancestors
-  friend nsContainerFrame* NS_NewGridContainerFrame(nsIPresShell* aPresShell,
-                                                    ComputedStyle* aStyle);
-  explicit nsGridContainerFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID)
-    , mCachedMinISize(NS_INTRINSIC_WIDTH_UNKNOWN)
-    , mCachedPrefISize(NS_INTRINSIC_WIDTH_UNKNOWN)
-  {
-    mBaseline[0][0] = NS_INTRINSIC_WIDTH_UNKNOWN;
-    mBaseline[0][1] = NS_INTRINSIC_WIDTH_UNKNOWN;
-    mBaseline[1][0] = NS_INTRINSIC_WIDTH_UNKNOWN;
-    mBaseline[1][1] = NS_INTRINSIC_WIDTH_UNKNOWN;
-=======
   friend nsContainerFrame* NS_NewGridContainerFrame(
       mozilla::PresShell* aPresShell, ComputedStyle* aStyle);
   explicit nsGridContainerFrame(ComputedStyle* aStyle,
@@ -439,7 +316,6 @@ protected:
         baseline = NS_INTRINSIC_ISIZE_UNKNOWN;
       }
     }
->>>>>>> upstream-releases
   }
 
   /**
@@ -449,17 +325,10 @@ protected:
    * property when needed, as a ImplicitNamedAreas* value.
    */
   void InitImplicitNamedAreas(const nsStylePosition* aStyle);
-<<<<<<< HEAD
-  void AddImplicitNamedAreas(
-      const nsTArray<nsTArray<nsString>>& aLineNameLists);
-||||||| merged common ancestors
-  void AddImplicitNamedAreas(const nsTArray<nsTArray<nsString>>& aLineNameLists);
-=======
   void AddImplicitNamedAreas(
       const nsTArray<nsTArray<RefPtr<nsAtom>>>& aLineNameLists);
 
   void NormalizeChildLists();
->>>>>>> upstream-releases
 
   /**
    * Reflow and place our children.
@@ -524,22 +393,9 @@ protected:
    * Synthesize a Grid container baseline for aGroup.
    */
   nscoord SynthesizeBaseline(const FindItemInGridOrderResult& aItem,
-<<<<<<< HEAD
-                             mozilla::LogicalAxis aAxis,
-                             BaselineSharingGroup aGroup,
-                             const nsSize& aCBPhysicalSize, nscoord aCBSize,
-                             WritingMode aCBWM);
-||||||| merged common ancestors
-                             mozilla::LogicalAxis aAxis,
-                             BaselineSharingGroup aGroup,
-                             const nsSize&        aCBPhysicalSize,
-                             nscoord              aCBSize,
-                             WritingMode          aCBWM);
-=======
                              LogicalAxis aAxis, BaselineSharingGroup aGroup,
                              const nsSize& aCBPhysicalSize, nscoord aCBSize,
                              WritingMode aCBWM);
->>>>>>> upstream-releases
   /**
    * Find the first item in Grid Order in this fragment.
    * https://drafts.csswg.org/css-grid/#grid-order
@@ -566,11 +422,6 @@ protected:
 
 #ifdef DEBUG
   void SanityCheckGridItemsBeforeReflow() const;
-<<<<<<< HEAD
-#endif  // DEBUG
-||||||| merged common ancestors
-#endif // DEBUG
-=======
 #endif  // DEBUG
 
   /**
@@ -585,7 +436,6 @@ protected:
    * Return the NS_STATE_GRID_IS_COL/ROW_SUBGRID bits we ought to have.
    */
   nsFrameState ComputeSelfSubgridBits() const;
->>>>>>> upstream-releases
 
  private:
   // Helpers for ReflowChildren
@@ -637,18 +487,6 @@ protected:
   void ReflowInFlowChild(nsIFrame* aChild, const GridItemInfo* aGridItemInfo,
                          nsSize aContainerSize,
                          const mozilla::Maybe<nscoord>& aStretchBSize,
-<<<<<<< HEAD
-                         const Fragmentainer* aFragmentainer,
-                         const GridReflowInput& aState,
-                         const LogicalRect& aContentArea,
-                         ReflowOutput& aDesiredSize, nsReflowStatus& aStatus);
-||||||| merged common ancestors
-                         const Fragmentainer*    aFragmentainer,
-                         const GridReflowInput&  aState,
-                         const LogicalRect&      aContentArea,
-                         ReflowOutput&    aDesiredSize,
-                         nsReflowStatus&         aStatus);
-=======
                          const Fragmentainer* aFragmentainer,
                          const GridReflowInput& aState,
                          const LogicalRect& aContentArea,
@@ -660,7 +498,6 @@ protected:
   // Store the given TrackSizes in aAxis on a UsedTrackSizes frame property.
   void StoreUsedTrackSizes(LogicalAxis aAxis,
                            const nsTArray<TrackSize>& aSizes);
->>>>>>> upstream-releases
 
   /**
    * Cached values to optimize GetMinISize/GetPrefISize.
@@ -669,13 +506,7 @@ protected:
   nscoord mCachedPrefISize;
 
   // Our baselines, one per BaselineSharingGroup per axis.
-<<<<<<< HEAD
-  nscoord mBaseline[2 /*LogicalAxis*/][2 /*BaselineSharingGroup*/];
-||||||| merged common ancestors
-  nscoord mBaseline[2/*LogicalAxis*/][2/*BaselineSharingGroup*/];
-=======
   PerLogicalAxis<PerBaseline<nscoord>> mBaseline;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   // If true, NS_STATE_GRID_DID_PUSH_ITEMS may be set even though all pushed

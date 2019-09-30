@@ -31,14 +31,7 @@ class StorageNotificationObserver {
 
   virtual bool IsPrivateBrowsing() const = 0;
 
-<<<<<<< HEAD
-  virtual nsIPrincipal* GetPrincipal() const = 0;
-||||||| merged common ancestors
-  virtual nsIPrincipal*
-  GetPrincipal() const = 0;
-=======
   virtual nsIPrincipal* GetEffectiveStoragePrincipal() const = 0;
->>>>>>> upstream-releases
 
   virtual nsIEventTarget* GetEventTarget() const = 0;
 };

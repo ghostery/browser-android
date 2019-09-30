@@ -37,26 +37,7 @@ CHECKSUMS_SIGNING_ARTIFACTS = [
 ]
 
 
-<<<<<<< HEAD
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
 release_generate_checksums_beetmover_schema = schema.extend({
-||||||| merged common ancestors
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-transforms = TransformSequence()
-
-release_generate_checksums_beetmover_schema = Schema({
-    # the dependent task (object) for this beetmover job, used to inform beetmover.
-    Required('dependent-task'): object,
-
-=======
-release_generate_checksums_beetmover_schema = schema.extend({
->>>>>>> upstream-releases
     # depname is used in taskref's to identify the taskID of the unsigned things
     Required('depname', default='build'): basestring,
 
@@ -171,20 +152,6 @@ def make_task_worker(config, jobs):
         worker = {
             'implementation': 'beetmover',
             'release-properties': craft_release_properties(config, job),
-<<<<<<< HEAD
-        }
-
-        platform = job["attributes"]["build_platform"]
-        # Works with Firefox/Devedition. Commented for migration.
-        if should_use_artifact_map(platform, config.params['project']):
-            upstream_artifacts = generate_beetmover_upstream_artifacts(
-                job, platform=None, locale=None
-            )
-        else:
-            upstream_artifacts = generate_upstream_artifacts(
-||||||| merged common ancestors
-            'upstream-artifacts': generate_upstream_artifacts(
-=======
         }
 
         platform = job["attributes"]["build_platform"]
@@ -195,20 +162,8 @@ def make_task_worker(config, jobs):
             )
         else:
             upstream_artifacts = generate_upstream_artifacts(
->>>>>>> upstream-releases
                 job, signing_task_ref, build_task_ref
             )
-<<<<<<< HEAD
-
-        worker['upstream-artifacts'] = upstream_artifacts
-
-        # Works with Firefox/Devedition. Commented for migration.
-        if should_use_artifact_map(platform, config.params['project']):
-            worker['artifact-map'] = generate_beetmover_artifact_map(
-                config, job, platform=platform)
-||||||| merged common ancestors
-        }
-=======
 
         worker['upstream-artifacts'] = upstream_artifacts
 
@@ -216,7 +171,6 @@ def make_task_worker(config, jobs):
         if should_use_artifact_map(platform):
             worker['artifact-map'] = generate_beetmover_artifact_map(
                 config, job, platform=platform)
->>>>>>> upstream-releases
 
         job["worker"] = worker
 

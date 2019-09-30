@@ -43,25 +43,12 @@ def test_try_again(monkeypatch):
     assert args[0] == "again"
     assert args[1] == "Fuzzy message"
 
-<<<<<<< HEAD
-    try_task_config = kwargs.pop('try_task_config')
-    assert sorted(try_task_config.get('tasks')) == sorted(['foo', 'bar'])
-    assert try_task_config.get('templates') == {
-        'artifact': True,
-        'env': {'TRY_SELECTOR': 'fuzzy'},
-    }
-||||||| merged common ancestors
-    try_task_config = kwargs.pop('try_task_config')
-    assert sorted(try_task_config.get('tasks')) == sorted(['foo', 'bar'])
-    assert try_task_config.get('templates') == {'artifact': True}
-=======
     try_task_config = kwargs.pop("try_task_config")
     assert sorted(try_task_config.get("tasks")) == sorted(["foo", "bar"])
     assert try_task_config.get("templates") == {
         "artifact": True,
         "env": {"TRY_SELECTOR": "fuzzy"},
     }
->>>>>>> upstream-releases
 
     with open(push.history_path, "r") as fh:
         assert len(fh.readlines()) == 1

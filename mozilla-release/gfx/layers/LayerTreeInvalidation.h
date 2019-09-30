@@ -31,34 +31,15 @@ typedef void (*NotifySubDocInvalidationFunc)(ContainerLayer* aLayer,
  * A set of cached layer properties (including those of child layers),
  * used for comparing differences in layer trees.
  */
-<<<<<<< HEAD
-struct LayerProperties {
- protected:
-  LayerProperties() {}
-||||||| merged common ancestors
-struct LayerProperties
-{
-protected:
-  LayerProperties() {}
-=======
 struct LayerProperties {
  protected:
   LayerProperties() = default;
->>>>>>> upstream-releases
 
   LayerProperties(const LayerProperties& a) = delete;
   LayerProperties& operator=(const LayerProperties& a) = delete;
 
-<<<<<<< HEAD
- public:
-  virtual ~LayerProperties() {}
-||||||| merged common ancestors
-public:
-  virtual ~LayerProperties() {}
-=======
  public:
   virtual ~LayerProperties() = default;
->>>>>>> upstream-releases
 
   /**
    * Copies the current layer tree properties into

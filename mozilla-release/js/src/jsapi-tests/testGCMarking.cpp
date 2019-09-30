@@ -71,19 +71,9 @@ static bool ConstructCCW(JSContext* cx, const JSClass* globalClasp,
   return true;
 }
 
-<<<<<<< HEAD
-class CCWTestTracer : public JS::CallbackTracer {
-  void onChild(const JS::GCCellPtr& thing) override {
-    numberOfThingsTraced++;
-||||||| merged common ancestors
-class CCWTestTracer : public JS::CallbackTracer {
-    void onChild(const JS::GCCellPtr& thing) override {
-        numberOfThingsTraced++;
-=======
 class CCWTestTracer final : public JS::CallbackTracer {
   void onChild(const JS::GCCellPtr& thing) override {
     numberOfThingsTraced++;
->>>>>>> upstream-releases
 
     printf("*thingp         = %p\n", thing.asCell());
     printf("*expectedThingp = %p\n", *expectedThingp);
@@ -341,105 +331,6 @@ BEGIN_TEST(testIncrementalRoots) {
     if (!JS_DefineProperty(cx, leafOwner, "leaf2", leaf2, 0)) {
       return false;
     }
-<<<<<<< HEAD
-  }
-
-  // This is marked during markRuntime
-  JS::AutoObjectVector vec(cx);
-  if (!vec.append(root)) {
-    return false;
-  }
-
-  // Tenure everything so intentionally unrooted objects don't move before we
-  // can use them.
-  cx->runtime()->gc.minorGC(JS::gcreason::API);
-
-  // Release all roots except for the AutoObjectVector.
-  obj = root = nullptr;
-
-  // We need to manipulate interior nodes, but the JSAPI understandably wants
-  // to make it difficult to do that without rooting things on the stack (by
-  // requiring Handle parameters). We can do it anyway by using
-  // fromMarkedLocation. The hazard analysis is OK with this because the
-  // unrooted variables are not live after they've been pointed to via
-  // fromMarkedLocation; you're essentially lying to the analysis, saying
-  // that the unrooted variables are rooted.
-  //
-  // The analysis will report this lie in its listing of "unsafe references",
-  // but we do not break the build based on those as there are too many false
-  // positives.
-  JSObject* unrootedLeaf = leaf;
-  JS::Value unrootedLeafValue = JS::ObjectValue(*leaf);
-  JSObject* unrootedLeafOwner = leafOwner;
-  JS::HandleObject leafHandle =
-      JS::HandleObject::fromMarkedLocation(&unrootedLeaf);
-  JS::HandleValue leafValueHandle =
-      JS::HandleValue::fromMarkedLocation(&unrootedLeafValue);
-  JS::HandleObject leafOwnerHandle =
-      JS::HandleObject::fromMarkedLocation(&unrootedLeafOwner);
-  leaf = leafOwner = nullptr;
-
-  // Do the root marking slice. This should mark 'root' and a bunch of its
-  // descendants. It shouldn't make it all the way through (it gets a budget
-  // of 1000, and the graph is about 3000 objects deep).
-  js::SliceBudget budget(js::WorkBudget(1000));
-  JS_SetGCParameter(cx, JSGC_MODE, JSGC_MODE_INCREMENTAL);
-  rt->gc.startDebugGC(GC_NORMAL, budget);
-
-  // We'd better be between iGC slices now. There's always a risk that
-  // something will decide that we need to do a full GC (such as gczeal, but
-  // that is turned off.)
-  MOZ_ASSERT(JS::IsIncrementalGCInProgress(cx));
-
-  // And assert that the mark bits are as we expect them to be.
-  MOZ_ASSERT(vec[0]->asTenured().isMarkedBlack());
-  MOZ_ASSERT(!leafHandle->asTenured().isMarkedBlack());
-  MOZ_ASSERT(!leafOwnerHandle->asTenured().isMarkedBlack());
-||||||| merged common ancestors
-
-    // Tenure everything so intentionally unrooted objects don't move before we
-    // can use them.
-    cx->runtime()->gc.minorGC(JS::gcreason::API);
-
-    // Release all roots except for the AutoObjectVector.
-    obj = root = nullptr;
-
-    // We need to manipulate interior nodes, but the JSAPI understandably wants
-    // to make it difficult to do that without rooting things on the stack (by
-    // requiring Handle parameters). We can do it anyway by using
-    // fromMarkedLocation. The hazard analysis is OK with this because the
-    // unrooted variables are not live after they've been pointed to via
-    // fromMarkedLocation; you're essentially lying to the analysis, saying
-    // that the unrooted variables are rooted.
-    //
-    // The analysis will report this lie in its listing of "unsafe references",
-    // but we do not break the build based on those as there are too many false
-    // positives.
-    JSObject* unrootedLeaf = leaf;
-    JS::Value unrootedLeafValue = JS::ObjectValue(*leaf);
-    JSObject* unrootedLeafOwner = leafOwner;
-    JS::HandleObject leafHandle = JS::HandleObject::fromMarkedLocation(&unrootedLeaf);
-    JS::HandleValue leafValueHandle = JS::HandleValue::fromMarkedLocation(&unrootedLeafValue);
-    JS::HandleObject leafOwnerHandle = JS::HandleObject::fromMarkedLocation(&unrootedLeafOwner);
-    leaf = leafOwner = nullptr;
-
-    // Do the root marking slice. This should mark 'root' and a bunch of its
-    // descendants. It shouldn't make it all the way through (it gets a budget
-    // of 1000, and the graph is about 3000 objects deep).
-    js::SliceBudget budget(js::WorkBudget(1000));
-    JS_SetGCParameter(cx, JSGC_MODE, JSGC_MODE_INCREMENTAL);
-    rt->gc.startDebugGC(GC_NORMAL, budget);
-
-    // We'd better be between iGC slices now. There's always a risk that
-    // something will decide that we need to do a full GC (such as gczeal, but
-    // that is turned off.)
-    MOZ_ASSERT(JS::IsIncrementalGCInProgress(cx));
-
-    // And assert that the mark bits are as we expect them to be.
-    MOZ_ASSERT(vec[0]->asTenured().isMarkedBlack());
-    MOZ_ASSERT(!leafHandle->asTenured().isMarkedBlack());
-    MOZ_ASSERT(!leafOwnerHandle->asTenured().isMarkedBlack());
-=======
   }
 
   // This is marked during markRuntime
@@ -493,7 +384,6 @@ BEGIN_TEST(testIncrementalRoots) {
   MOZ_ASSERT(vec[0]->asTenured().isMarkedBlack());
   MOZ_ASSERT(!leafHandle->asTenured().isMarkedBlack());
   MOZ_ASSERT(!leafOwnerHandle->asTenured().isMarkedBlack());
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   // Remember the current GC number so we can assert that no GC occurs

@@ -19,23 +19,9 @@ namespace dom {
 class IPCBlobInputStream;
 class ThreadSafeWorkerRef;
 
-<<<<<<< HEAD
-class IPCBlobInputStreamChild final
-    : public mozilla::ipc::PIPCBlobInputStreamChild {
- public:
-  enum ActorState {
-||||||| merged common ancestors
-class IPCBlobInputStreamChild final
-  : public mozilla::ipc::PIPCBlobInputStreamChild
-{
-public:
-  enum ActorState
-  {
-=======
 class IPCBlobInputStreamChild final : public PIPCBlobInputStreamChild {
  public:
   enum ActorState {
->>>>>>> upstream-releases
     // The actor is connected via IPDL to the parent.
     eActive,
 
@@ -69,26 +55,11 @@ class IPCBlobInputStreamChild final : public PIPCBlobInputStreamChild {
 
   void StreamNeeded(IPCBlobInputStream* aStream, nsIEventTarget* aEventTarget);
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvStreamReady(
-      const OptionalIPCStream& aStream) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvStreamReady(const OptionalIPCStream& aStream) override;
-=======
   mozilla::ipc::IPCResult RecvStreamReady(const Maybe<IPCStream>& aStream);
->>>>>>> upstream-releases
 
   void LengthNeeded(IPCBlobInputStream* aStream, nsIEventTarget* aEventTarget);
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvLengthReady(const int64_t& aLength) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvLengthReady(const int64_t& aLength) override;
-=======
   mozilla::ipc::IPCResult RecvLengthReady(const int64_t& aLength);
->>>>>>> upstream-releases
 
   void Shutdown();
 
@@ -129,10 +100,4 @@ class IPCBlobInputStreamChild final : public PIPCBlobInputStreamChild {
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_ipc_IPCBlobInputStreamChild_h
-||||||| merged common ancestors
-#endif // mozilla_dom_ipc_IPCBlobInputStreamChild_h
-=======
 #endif  // mozilla_dom_IPCBlobInputStreamChild_h
->>>>>>> upstream-releases

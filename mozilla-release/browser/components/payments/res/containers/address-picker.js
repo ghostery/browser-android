@@ -30,14 +30,6 @@ export default class AddressPicker extends HandleEventMixin(RichPicker) {
 
   attributeChangedCallback(name, oldValue, newValue) {
     super.attributeChangedCallback(name, oldValue, newValue);
-<<<<<<< HEAD
-    // connectedCallback may add and adjust elements & values
-    // so avoid calling render before the element is connected
-    if (this.isConnected &&
-        AddressPicker.pickerAttributes.includes(name) && oldValue !== newValue) {
-||||||| merged common ancestors
-    if (AddressPicker.pickerAttributes.includes(name) && oldValue !== newValue) {
-=======
     // connectedCallback may add and adjust elements & values
     // so avoid calling render before the element is connected
     if (
@@ -45,7 +37,6 @@ export default class AddressPicker extends HandleEventMixin(RichPicker) {
       AddressPicker.pickerAttributes.includes(name) &&
       oldValue !== newValue
     ) {
->>>>>>> upstream-releases
       this.render(this.requestStore.getState());
     }
   }
@@ -211,18 +202,10 @@ export default class AddressPicker extends HandleEventMixin(RichPicker) {
       return "";
     }
 
-<<<<<<< HEAD
-    let merchantFieldErrors = AddressForm.merchantFieldErrorsForForm(
-          state, this.selectedStateKey.split("|"));
-||||||| merged common ancestors
-    let merchantFieldErrors = AddressForm.merchantFieldErrorsForForm(state,
-                                                                     [this.selectedStateKey]);
-=======
     let merchantFieldErrors = AddressForm.merchantFieldErrorsForForm(
       state,
       this.selectedStateKey.split("|")
     );
->>>>>>> upstream-releases
     // TODO: errors in priority order.
     return (
       Object.values(merchantFieldErrors).find(msg => {
@@ -240,19 +223,6 @@ export default class AddressPicker extends HandleEventMixin(RichPicker) {
     // to update with the new value
     let newState = {};
 
-<<<<<<< HEAD
-  onChange(event) {
-    let [selectedKey, selectedLeaf] = this.selectedStateKey.split("|");
-    if (!selectedKey) {
-      return;
-||||||| merged common ancestors
-  onChange(event) {
-    let selectedKey = this.selectedStateKey;
-    if (selectedKey) {
-      this.requestStore.setState({
-        [selectedKey]: this.dropdown.value,
-      });
-=======
     if (selectedLeaf) {
       let currentState = this.requestStore.getState();
       newState[selectedKey] = Object.assign({}, currentState[selectedKey], {
@@ -260,65 +230,17 @@ export default class AddressPicker extends HandleEventMixin(RichPicker) {
       });
     } else {
       newState[selectedKey] = this.dropdown.value;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    // selectedStateKey can be a '|' delimited string indicating a path into the state object
-    // to update with the new value
-    let newState = {};
-
-    if (selectedLeaf) {
-      let currentState = this.requestStore.getState();
-      newState[selectedKey] = Object.assign({},
-                                            currentState[selectedKey],
-                                            { [selectedLeaf]: this.dropdown.value });
-    } else {
-      newState[selectedKey] = this.dropdown.value;
     }
     this.requestStore.setState(newState);
-||||||| merged common ancestors
-=======
-    this.requestStore.setState(newState);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  onClick({target}) {
-    let pageId;
-    let currentState = this.requestStore.getState();
-||||||| merged common ancestors
-  onClick({target}) {
-=======
   onClick({ target }) {
     let pageId;
     let currentState = this.requestStore.getState();
->>>>>>> upstream-releases
     let nextState = {
       page: {},
     };
 
-<<<<<<< HEAD
-    switch (this.selectedStateKey) {
-      case "selectedShippingAddress":
-        pageId = "shipping-address-page";
-        break;
-      case "selectedPayerAddress":
-        pageId = "payer-address-page";
-        break;
-      case "basic-card-page|billingAddressGUID":
-        pageId = "billing-address-page";
-        break;
-      default: {
-        throw new Error("onClick, un-matched selectedStateKey: " +
-                        this.selectedStateKey);
-      }
-    }
-    nextState.page.id = pageId;
-    let addressFields = this.getAttribute("address-fields");
-    nextState[pageId] = { addressFields };
-
-||||||| merged common ancestors
-=======
     switch (this.selectedStateKey) {
       case "selectedShippingAddress":
         pageId = "shipping-address-page";
@@ -339,7 +261,6 @@ export default class AddressPicker extends HandleEventMixin(RichPicker) {
     let addressFields = this.getAttribute("address-fields");
     nextState[pageId] = { addressFields };
 
->>>>>>> upstream-releases
     switch (target) {
       case this.addLink: {
         nextState[pageId].guid = null;

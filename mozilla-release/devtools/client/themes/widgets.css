@@ -779,18 +779,9 @@
   background-image: url("chrome://devtools/skin/images/arrow.svg");
   background-position: 50% 50%;
   background-repeat: no-repeat;
-<<<<<<< HEAD
-  background-size: 10px;
-  -moz-context-properties: fill;
-  fill: var(--theme-twisty-fill);
-||||||| merged common ancestors
-  background-image: url("chrome://devtools/skin/images/controls.png");
-  background-size: 56px 28px;
-=======
   background-size: 10px;
   -moz-context-properties: fill;
   fill: var(--theme-icon-dimmed-color);
->>>>>>> upstream-releases
   cursor: pointer;
   transition: transform 125ms ease;
   transform: rotate(-90deg);

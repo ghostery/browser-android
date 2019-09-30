@@ -56,19 +56,7 @@ public:
     }
 
     // Used by GrGLProgram to configure OpenGL state.
-<<<<<<< HEAD
-    void bindTexture(int unitIdx, const GrSamplerState& samplerState, GrGLTexture* texture);
-||||||| merged common ancestors
-    void bindTexture(int unitIdx, const GrSamplerState& samplerState, bool allowSRGBInputs,
-                     GrGLTexture* texture, GrSurfaceOrigin textureOrigin);
-
-    void bindTexelBuffer(int unitIdx, GrPixelConfig, GrGLBuffer*);
-
-    void generateMipmaps(const GrSamplerState& params, bool allowSRGBInputs, GrGLTexture* texture,
-                         GrSurfaceOrigin textureOrigin);
-=======
     void bindTexture(int unitIdx, GrSamplerState samplerState, GrGLTexture* texture);
->>>>>>> upstream-releases
 
     // These functions should be used to bind GL objects. They track the GL state and skip redundant
     // bindings. Making the equivalent glBind calls directly will confuse the state tracking.
@@ -86,37 +74,16 @@ public:
     // returns the GL target the buffer was bound to.
     // When 'type' is kIndex_GrBufferType, this function will also implicitly bind the default VAO.
     // If the caller wishes to bind an index buffer to a specific VAO, it can call glBind directly.
-<<<<<<< HEAD
-    GrGLenum bindBuffer(GrBufferType type, const GrBuffer*);
-
-||||||| merged common ancestors
-    GrGLenum bindBuffer(GrBufferType type, const GrBuffer*);
-
-    // Called by GrGLBuffer after its buffer object has been destroyed.
-    void notifyBufferReleased(const GrGLBuffer*);
-
-=======
     GrGLenum bindBuffer(GrGpuBufferType type, const GrBuffer*);
 
->>>>>>> upstream-releases
     // The GrGLGpuRTCommandBuffer does not buffer up draws before submitting them to the gpu.
     // Thus this is the implementation of the draw call for the corresponding passthrough function
     // on GrGLRTGpuCommandBuffer.
-<<<<<<< HEAD
-    void draw(const GrPrimitiveProcessor&,
-              const GrPipeline&,
-              const GrPipeline::FixedDynamicState*,
-              const GrPipeline::DynamicStateArrays*,
-||||||| merged common ancestors
-    void draw(const GrPipeline&,
-              const GrPrimitiveProcessor&,
-=======
     void draw(GrRenderTarget*, GrSurfaceOrigin,
               const GrPrimitiveProcessor&,
               const GrPipeline&,
               const GrPipeline::FixedDynamicState*,
               const GrPipeline::DynamicStateArrays*,
->>>>>>> upstream-releases
               const GrMesh[],
               int meshCount);
 
@@ -150,30 +117,12 @@ public:
     void clearStencilClip(const GrFixedClip&, bool insideStencilMask,
                           GrRenderTarget*, GrSurfaceOrigin);
 
-<<<<<<< HEAD
-    void clearStencil(GrRenderTarget*, int clearValue);
-||||||| merged common ancestors
-    const GrGLContext* glContextForTesting() const override {
-        return &this->glContext();
-    }
-
-    void clearStencil(GrRenderTarget*, int clearValue) override;
-=======
     // FIXME (michaelludwig): Can this go away and just use clearStencilClip() + marking the
     // stencil buffer as not dirty?
     void clearStencil(GrRenderTarget*, int clearValue);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    GrGpuRTCommandBuffer* getCommandBuffer(
-            GrRenderTarget*, GrSurfaceOrigin,
-||||||| merged common ancestors
-    GrGpuRTCommandBuffer* createCommandBuffer(
-            GrRenderTarget*, GrSurfaceOrigin,
-=======
     GrGpuRTCommandBuffer* getCommandBuffer(
             GrRenderTarget*, GrSurfaceOrigin, const SkRect&,
->>>>>>> upstream-releases
             const GrGpuRTCommandBuffer::LoadAndStoreInfo&,
             const GrGpuRTCommandBuffer::StencilLoadAndStoreInfo&) override;
 
@@ -192,25 +141,10 @@ public:
                                                      GrMipMapped mipMapped,
                                                      size_t rowBytes = 0) override;
     bool isTestingOnlyBackendTexture(const GrBackendTexture&) const override;
-<<<<<<< HEAD
-    void deleteTestingOnlyBackendTexture(const GrBackendTexture&) override;
-
-    GrBackendRenderTarget createTestingOnlyBackendRenderTarget(int w, int h, GrColorType) override;
-||||||| merged common ancestors
-    void deleteTestingOnlyBackendTexture(GrBackendTexture*, bool abandonTexture = false) override;
-=======
     void deleteTestingOnlyBackendTexture(const GrBackendTexture&) override;
 
     GrBackendRenderTarget createTestingOnlyBackendRenderTarget(int w, int h, GrColorType) override;
 
-    void deleteTestingOnlyBackendRenderTarget(const GrBackendRenderTarget&) override;
-
-    const GrGLContext* glContextForTesting() const override { return &this->glContext(); }
-
-    void resetShaderCacheForTesting() const override { fProgramCache->abandon(); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     void deleteTestingOnlyBackendRenderTarget(const GrBackendRenderTarget&) override;
 
     const GrGLContext* glContextForTesting() const override { return &this->glContext(); }
@@ -221,14 +155,6 @@ public:
 #endif
 
     void submit(GrGpuCommandBuffer* buffer) override;
-||||||| merged common ancestors
-    void resetShaderCacheForTesting() const override;
-=======
-    void testingOnly_flushGpuAndSync() override;
-#endif
-
-    void submit(GrGpuCommandBuffer* buffer) override;
->>>>>>> upstream-releases
 
     GrFence SK_WARN_UNUSED_RESULT insertFence() override;
     bool waitFence(GrFence, uint64_t timeout) override;
@@ -284,24 +210,9 @@ private:
     // result is stored in |info|.
     // The texture is populated with |texels|, if it exists.
     // The texture parameters are cached in |initialTexParams|.
-<<<<<<< HEAD
-    bool createTextureImpl(const GrSurfaceDesc& desc, GrGLTextureInfo* info, bool renderTarget,
-                           GrGLTexture::TexParams* initialTexParams, const GrMipLevel texels[],
-                           int mipLevelCount, GrMipMapsStatus* mipMapsStatus);
-||||||| merged common ancestors
-    bool createTextureImpl(const GrSurfaceDesc& desc, GrGLTextureInfo* info,
-                           bool renderTarget, GrGLTexture::TexParams* initialTexParams,
-                           const GrMipLevel texels[], int mipLevelCount,
-                           GrMipMapsStatus* mipMapsStatus);
-
-    bool onIsACopyNeededForTextureParams(GrTextureProxy*, const GrSamplerState&,
-                                         GrTextureProducer::CopyParams*,
-                                         SkScalar scaleAdjust[2]) const override;
-=======
     bool createTextureImpl(const GrSurfaceDesc& desc, GrGLTextureInfo* info, bool renderTarget,
                            GrGLTexture::SamplerParams* initialTexParams, const GrMipLevel texels[],
                            int mipLevelCount, GrMipMapsStatus* mipMapsStatus);
->>>>>>> upstream-releases
 
     // Checks whether glReadPixels can be called to get pixel values in readConfig from the
     // render target.
@@ -351,31 +262,8 @@ private:
             const GrTextureProxy* const primitiveProcessorTextures[],
             int numPrimitiveProcessorTextureSets);
 
-    /**
-     * primitiveProcessorTextures must contain GrPrimitiveProcessor::numTextureSamplers() *
-     * numPrimitiveProcessorTextureSets entries.
-     */
-    void resolveAndGenerateMipMapsForProcessorTextures(
-            const GrPrimitiveProcessor&, const GrPipeline&,
-            const GrTextureProxy* const primitiveProcessorTextures[],
-            int numPrimitiveProcessorTextureSets);
-
     // Flushes state from GrPipeline to GL. Returns false if the state couldn't be set.
     // willDrawPoints must be true if point primitives will be rendered after setting the GL state.
-<<<<<<< HEAD
-    // If DynamicStateArrays is not null then dynamicStateArraysLength is the number of dynamic
-    // state entries in each array.
-    bool flushGLState(const GrPrimitiveProcessor&, const GrPipeline&,
-                      const GrPipeline::FixedDynamicState*, const GrPipeline::DynamicStateArrays*,
-                      int dynamicStateArraysLength, bool willDrawPoints);
-
-    void flushProgram(sk_sp<GrGLProgram>);
-
-    // Version for programs that aren't GrGLProgram.
-    void flushProgram(GrGLuint);
-||||||| merged common ancestors
-    bool flushGLState(const GrPipeline&, const GrPrimitiveProcessor&, bool willDrawPoints);
-=======
     // If DynamicStateArrays is not null then dynamicStateArraysLength is the number of dynamic
     // state entries in each array.
     bool flushGLState(GrRenderTarget*, GrSurfaceOrigin, const GrPrimitiveProcessor&,
@@ -387,7 +275,6 @@ private:
 
     // Version for programs that aren't GrGLProgram.
     void flushProgram(GrGLuint);
->>>>>>> upstream-releases
 
     // Sets up vertex/instance attribute pointers and strides.
     void setupGeometry(const GrBuffer* indexBuffer,
@@ -411,15 +298,6 @@ private:
     bool copySurfaceAsBlitFramebuffer(GrSurface* dst, GrSurfaceOrigin dstOrigin,
                                       GrSurface* src, GrSurfaceOrigin srcOrigin,
                                       const SkIRect& srcRect, const SkIPoint& dstPoint);
-<<<<<<< HEAD
-    void clearStencilClipAsDraw(const GrFixedClip&, bool insideStencilMask,
-                                GrRenderTarget*, GrSurfaceOrigin);
-||||||| merged common ancestors
-    bool generateMipmap(GrGLTexture* texture, GrSurfaceOrigin textureOrigin, bool gammaCorrect);
-    void clearStencilClipAsDraw(const GrFixedClip&, bool insideStencilMask,
-                                GrRenderTarget*, GrSurfaceOrigin);
-=======
->>>>>>> upstream-releases
 
     static bool BlendCoeffReferencesConstant(GrBlendCoeff coeff);
 
@@ -429,18 +307,10 @@ private:
         ~ProgramCache();
 
         void abandon();
-<<<<<<< HEAD
-        GrGLProgram* refProgram(const GrGLGpu*, const GrPrimitiveProcessor&, const GrPipeline&,
-                                bool hasPointSize);
-||||||| merged common ancestors
-        GrGLProgram* refProgram(const GrGLGpu*, const GrPipeline&, const GrPrimitiveProcessor&,
-                                bool hasPointSize);
-=======
         GrGLProgram* refProgram(GrGLGpu*, GrRenderTarget*, GrSurfaceOrigin,
                                 const GrPrimitiveProcessor&,
                                 const GrTextureProxy* const primProcProxies[],
                                 const GrPipeline&, bool hasPointSize);
->>>>>>> upstream-releases
 
     private:
         // We may actually have kMaxEntries+1 shaders in the GL context because we create a new
@@ -728,28 +598,6 @@ private:
     TriState                                fHWWriteToColor;
     GrGpuResource::UniqueID                 fHWBoundRenderTargetUniqueID;
     TriState                                fHWSRGBFramebuffer;
-<<<<<<< HEAD
-    SkTArray<GrGpuResource::UniqueID, true> fHWBoundTextureUniqueIDs;
-
-    GrGLuint fBoundDrawFramebuffer = 0;
-||||||| merged common ancestors
-    SkTArray<GrGpuResource::UniqueID, true> fHWBoundTextureUniqueIDs;
-
-    struct BufferTexture {
-        BufferTexture() : fTextureID(0), fKnownBound(false),
-                          fAttachedBufferUniqueID(SK_InvalidUniqueID),
-                          fSwizzle(GrSwizzle::RGBA()) {}
-
-        GrGLuint                fTextureID;
-        bool                    fKnownBound;
-        GrPixelConfig           fTexelConfig;
-        GrGpuResource::UniqueID fAttachedBufferUniqueID;
-        GrSwizzle               fSwizzle;
-    };
-
-    SkTArray<BufferTexture, true>           fHWBufferTextures;
-    int                                     fHWMaxUsedBufferTextureUnit;
-=======
 
     class TextureUnitBindings {
     public:
@@ -773,7 +621,6 @@ private:
     SkAutoTArray<TextureUnitBindings> fHWTextureUnitBindings;
 
     GrGLfloat fHWClearColor[4];
->>>>>>> upstream-releases
 
     GrGLuint fBoundDrawFramebuffer = 0;
 
@@ -802,17 +649,6 @@ private:
         return (wide ? 0x2 : 0x0) | (tall ? 0x1 : 0x0);
     }
 
-<<<<<<< HEAD
-    float fHWMinSampleShading;
-    GrPrimitiveType fLastPrimitiveType;
-    bool fRequiresFlushBeforeNextInstancedDraw = false;
-
-    std::unique_ptr<GrGLGpuRTCommandBuffer>      fCachedRTCommandBuffer;
-    std::unique_ptr<GrGLGpuTextureCommandBuffer> fCachedTexCommandBuffer;
-||||||| merged common ancestors
-    float                                   fHWMinSampleShading;
-    GrPrimitiveType                         fLastPrimitiveType;
-=======
     GrPrimitiveType fLastPrimitiveType;
 
     class SamplerObjectCache;
@@ -820,7 +656,6 @@ private:
 
     std::unique_ptr<GrGLGpuRTCommandBuffer>      fCachedRTCommandBuffer;
     std::unique_ptr<GrGLGpuTextureCommandBuffer> fCachedTexCommandBuffer;
->>>>>>> upstream-releases
 
     friend class GrGLPathRendering; // For accessing setTextureUnit.
 

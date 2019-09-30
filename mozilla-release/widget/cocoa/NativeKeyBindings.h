@@ -15,16 +15,8 @@
 namespace mozilla {
 namespace widget {
 
-<<<<<<< HEAD
-typedef nsDataHashtable<nsPtrHashKey<struct objc_selector>, CommandInt>
-    SelectorCommandHashtable;
-||||||| merged common ancestors
-typedef nsDataHashtable<nsPtrHashKey<struct objc_selector>, CommandInt>
-  SelectorCommandHashtable;
-=======
 typedef nsDataHashtable<nsPtrHashKey<struct objc_selector>, Command>
     SelectorCommandHashtable;
->>>>>>> upstream-releases
 
 class NativeKeyBindings final {
   typedef nsIWidget::NativeKeyBindingsType NativeKeyBindingsType;

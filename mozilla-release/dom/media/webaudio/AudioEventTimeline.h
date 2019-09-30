@@ -223,25 +223,7 @@ class AudioEventTimeline {
     return mValue;
   }
 
-<<<<<<< HEAD
-  float Value() const {
-    // TODO: Return the current value based on the timeline of the AudioContext
-    return mValue;
-  }
-
   void SetValue(float aValue) {
-||||||| merged common ancestors
-  float Value() const
-  {
-    // TODO: Return the current value based on the timeline of the AudioContext
-    return mValue;
-  }
-
-  void SetValue(float aValue)
-  {
-=======
-  void SetValue(float aValue) {
->>>>>>> upstream-releases
     // Silently don't change anything if there are any events
     if (mEvents.IsEmpty()) {
       mLastComputedValue = mComputedValue = mValue = aValue;

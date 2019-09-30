@@ -12,8 +12,6 @@ const LocalFile = new Components.Constructor(
 
 Services.prefs.setBoolPref("media.gmp-manager.updateEnabled", true);
 
-Services.prefs.setBoolPref("media.gmp-manager.updateEnabled", true);
-
 var testserver = new HttpServer();
 testserver.registerDirectory("/data/", do_get_file("data/productaddons"));
 testserver.start();

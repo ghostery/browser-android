@@ -126,27 +126,13 @@ class InlineTranslator : public Translator {
     mNativeFontResources.Put(aKey, aScaledFontResouce);
   }
 
-<<<<<<< HEAD
-  void RemoveDrawTarget(ReferencePtr aRefPtr) final {
-||||||| merged common ancestors
-  void RemoveDrawTarget(ReferencePtr aRefPtr) final
-  {
-=======
   void RemoveDrawTarget(ReferencePtr aRefPtr) override {
->>>>>>> upstream-releases
     mDrawTargets.Remove(aRefPtr);
   }
 
   void RemovePath(ReferencePtr aRefPtr) final { mPaths.Remove(aRefPtr); }
 
-<<<<<<< HEAD
-  void RemoveSourceSurface(ReferencePtr aRefPtr) final {
-||||||| merged common ancestors
-  void RemoveSourceSurface(ReferencePtr aRefPtr) final
-  {
-=======
   void RemoveSourceSurface(ReferencePtr aRefPtr) override {
->>>>>>> upstream-releases
     mSourceSurfaces.Remove(aRefPtr);
   }
 
@@ -166,20 +152,9 @@ class InlineTranslator : public Translator {
     mUnscaledFonts.Remove(aRefPtr);
   }
 
-<<<<<<< HEAD
-  already_AddRefed<DrawTarget> CreateDrawTarget(
-      ReferencePtr aRefPtr, const gfx::IntSize& aSize,
-      gfx::SurfaceFormat aFormat) final;
-||||||| merged common ancestors
-
-  already_AddRefed<DrawTarget> CreateDrawTarget(ReferencePtr aRefPtr,
-                                                const gfx::IntSize &aSize,
-                                                gfx::SurfaceFormat aFormat) final;
-=======
   already_AddRefed<DrawTarget> CreateDrawTarget(
       ReferencePtr aRefPtr, const gfx::IntSize& aSize,
       gfx::SurfaceFormat aFormat) override;
->>>>>>> upstream-releases
 
   mozilla::gfx::DrawTarget* GetReferenceDrawTarget() final { return mBaseDT; }
 

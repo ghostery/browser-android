@@ -88,19 +88,6 @@ const LoadURIDelegate = {
     };
 
     let errorPageURI = undefined;
-<<<<<<< HEAD
-    aEventDispatcher.sendRequestForResult(msg).then(response => {
-      try {
-        errorPageURI = response ? Services.io.newURI(response) : null;
-      } catch (e) {
-        warn `Failed to parse URI '${response}`;
-||||||| merged common ancestors
-    aEventDispatcher.sendRequestForResult(msg).then(response => {
-      try {
-        errorPageURI = Services.io.newURI(response);
-      } catch (e) {
-        warn `Failed to parse URI '${response}`;
-=======
     aEventDispatcher.sendRequestForResult(msg).then(
       response => {
         try {
@@ -112,7 +99,6 @@ const LoadURIDelegate = {
         }
       },
       e => {
->>>>>>> upstream-releases
         errorPageURI = null;
         Components.returnCode = Cr.NS_ERROR_ABORT;
       }

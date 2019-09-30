@@ -29,17 +29,8 @@
 #define REQUESTED_LOCALES_PREF "intl.locale.requested"
 #define WEB_EXPOSED_LOCALES_PREF "intl.locale.privacy.web_exposed"
 
-<<<<<<< HEAD
-static const char* kObservedPrefs[] = {REQUESTED_LOCALES_PREF, nullptr};
-||||||| merged common ancestors
-static const char* kObservedPrefs[] = {
-  REQUESTED_LOCALES_PREF,
-  nullptr
-};
-=======
 static const char* kObservedPrefs[] = {REQUESTED_LOCALES_PREF,
                                        WEB_EXPOSED_LOCALES_PREF, nullptr};
->>>>>>> upstream-releases
 
 using namespace mozilla::intl;
 using namespace mozilla;
@@ -132,14 +123,6 @@ static void ReadRequestedLocales(nsTArray<nsCString>& aRetVal) {
   }
 }
 
-<<<<<<< HEAD
-LocaleService::LocaleService(bool aIsServer) : mIsServer(aIsServer) {}
-||||||| merged common ancestors
-LocaleService::LocaleService(bool aIsServer)
-  :mIsServer(aIsServer)
-{
-}
-=======
 static void ReadWebExposedLocales(nsTArray<nsCString>& aRetVal) {
   nsAutoCString str;
   nsresult rv = Preferences::GetCString(WEB_EXPOSED_LOCALES_PREF, str);
@@ -149,7 +132,6 @@ static void ReadWebExposedLocales(nsTArray<nsCString>& aRetVal) {
 
   SplitLocaleListStringIntoArray(str, aRetVal);
 }
->>>>>>> upstream-releases
 
 LocaleService::LocaleService(bool aIsServer) : mIsServer(aIsServer) {}
 
@@ -261,13 +243,6 @@ void LocaleService::RequestedLocalesChanged() {
   }
 }
 
-<<<<<<< HEAD
-void LocaleService::LocalesChanged() {
-||||||| merged common ancestors
-void
-LocaleService::LocalesChanged()
-{
-=======
 void LocaleService::WebExposedLocalesChanged() {
   MOZ_ASSERT(mIsServer, "This should only be called in the server mode.");
 
@@ -279,7 +254,6 @@ void LocaleService::WebExposedLocalesChanged() {
 }
 
 void LocaleService::LocalesChanged() {
->>>>>>> upstream-releases
   MOZ_ASSERT(mIsServer, "This should only be called in the server mode.");
 
   // if mAppLocales has not been initialized yet, just return

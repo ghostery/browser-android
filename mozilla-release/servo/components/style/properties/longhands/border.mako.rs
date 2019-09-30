@@ -61,27 +61,6 @@
     )}
 % endfor
 
-<<<<<<< HEAD
-${helpers.gecko_keyword_conversion(
-    Keyword('border-style',
-    "none solid double dotted dashed hidden groove ridge inset outset",
-    gecko_enum_prefix="StyleBorderStyle",
-    gecko_inexhaustive=True),
-    type="crate::values::specified::BorderStyle",
-)}
-
-// FIXME(#4126): when gfx supports painting it, make this Size2D<LengthOrPercentage>
-% for corner in ["top-left", "top-right", "bottom-right", "bottom-left"]:
-||||||| merged common ancestors
-${helpers.gecko_keyword_conversion(
-    Keyword('border-style',
-    "none solid double dotted dashed hidden groove ridge inset outset"),
-    type="::values::specified::BorderStyle",
-)}
-
-// FIXME(#4126): when gfx supports painting it, make this Size2D<LengthOrPercentage>
-% for corner in ["top-left", "top-right", "bottom-right", "bottom-left"]:
-=======
 % for corner in ALL_CORNERS:
     <%
         corner_name = corner[0]
@@ -91,7 +70,6 @@ ${helpers.gecko_keyword_conversion(
         else:
             prefixes = "webkit"
     %>
->>>>>>> upstream-releases
     ${helpers.predefined_type(
         "border-%s-radius" % corner_name,
         "BorderCornerRadius",
@@ -181,117 +159,3 @@ ${helpers.predefined_type(
     flags="APPLIES_TO_FIRST_LETTER",
     boxed=True,
 )}
-<<<<<<< HEAD
-
-#[cfg(feature = "gecko")]
-impl crate::values::computed::BorderImageWidth {
-    pub fn to_gecko_rect(&self, sides: &mut crate::gecko_bindings::structs::nsStyleSides) {
-        use crate::gecko_bindings::sugar::ns_style_coord::{CoordDataMut, CoordDataValue};
-        use crate::gecko::values::GeckoStyleCoordConvertible;
-        use crate::values::generics::border::BorderImageSideWidth;
-
-        % for i in range(0, 4):
-        match self.${i} {
-            BorderImageSideWidth::Auto => {
-                sides.data_at_mut(${i}).set_value(CoordDataValue::Auto)
-            },
-            BorderImageSideWidth::Length(l) => {
-                l.to_gecko_style_coord(&mut sides.data_at_mut(${i}))
-            },
-            BorderImageSideWidth::Number(n) => {
-                sides.data_at_mut(${i}).set_value(CoordDataValue::Factor(n))
-            },
-        }
-        % endfor
-    }
-
-    pub fn from_gecko_rect(
-        sides: &crate::gecko_bindings::structs::nsStyleSides,
-    ) -> Option<crate::values::computed::BorderImageWidth> {
-        use crate::gecko_bindings::structs::nsStyleUnit::{eStyleUnit_Factor, eStyleUnit_Auto};
-        use crate::gecko_bindings::sugar::ns_style_coord::CoordData;
-        use crate::gecko::values::GeckoStyleCoordConvertible;
-        use crate::values::computed::{LengthOrPercentage, Number};
-        use crate::values::generics::border::BorderImageSideWidth;
-
-        Some(
-            crate::values::computed::BorderImageWidth::new(
-                % for i in range(0, 4):
-                match sides.data_at(${i}).unit() {
-                    eStyleUnit_Auto => {
-                        BorderImageSideWidth::Auto
-                    },
-                    eStyleUnit_Factor => {
-                        BorderImageSideWidth::Number(
-                            Number::from_gecko_style_coord(&sides.data_at(${i}))
-                                .expect("sides[${i}] could not convert to Number"))
-                    },
-                    _ => {
-                        BorderImageSideWidth::Length(
-                            LengthOrPercentage::from_gecko_style_coord(&sides.data_at(${i}))
-                                .expect("sides[${i}] could not convert to LengthOrPercentager"))
-                    },
-                },
-                % endfor
-            )
-        )
-    }
-}
-||||||| merged common ancestors
-
-#[cfg(feature = "gecko")]
-impl ::values::computed::BorderImageWidth {
-    pub fn to_gecko_rect(&self, sides: &mut ::gecko_bindings::structs::nsStyleSides) {
-        use gecko_bindings::sugar::ns_style_coord::{CoordDataMut, CoordDataValue};
-        use gecko::values::GeckoStyleCoordConvertible;
-        use values::generics::border::BorderImageSideWidth;
-
-        % for i in range(0, 4):
-        match self.${i} {
-            BorderImageSideWidth::Auto => {
-                sides.data_at_mut(${i}).set_value(CoordDataValue::Auto)
-            },
-            BorderImageSideWidth::Length(l) => {
-                l.to_gecko_style_coord(&mut sides.data_at_mut(${i}))
-            },
-            BorderImageSideWidth::Number(n) => {
-                sides.data_at_mut(${i}).set_value(CoordDataValue::Factor(n))
-            },
-        }
-        % endfor
-    }
-
-    pub fn from_gecko_rect(
-        sides: &::gecko_bindings::structs::nsStyleSides,
-    ) -> Option<::values::computed::BorderImageWidth> {
-        use gecko_bindings::structs::nsStyleUnit::{eStyleUnit_Factor, eStyleUnit_Auto};
-        use gecko_bindings::sugar::ns_style_coord::CoordData;
-        use gecko::values::GeckoStyleCoordConvertible;
-        use values::computed::{LengthOrPercentage, Number};
-        use values::generics::border::BorderImageSideWidth;
-
-        Some(
-            ::values::computed::BorderImageWidth::new(
-                % for i in range(0, 4):
-                match sides.data_at(${i}).unit() {
-                    eStyleUnit_Auto => {
-                        BorderImageSideWidth::Auto
-                    },
-                    eStyleUnit_Factor => {
-                        BorderImageSideWidth::Number(
-                            Number::from_gecko_style_coord(&sides.data_at(${i}))
-                                .expect("sides[${i}] could not convert to Number"))
-                    },
-                    _ => {
-                        BorderImageSideWidth::Length(
-                            LengthOrPercentage::from_gecko_style_coord(&sides.data_at(${i}))
-                                .expect("sides[${i}] could not convert to LengthOrPercentager"))
-                    },
-                },
-                % endfor
-            )
-        )
-    }
-}
-=======
->>>>>>> upstream-releases

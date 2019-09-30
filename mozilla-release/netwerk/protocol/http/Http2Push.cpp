@@ -24,31 +24,6 @@ namespace mozilla {
 namespace net {
 
 class CallChannelOnPush final : public Runnable {
-<<<<<<< HEAD
- public:
-  CallChannelOnPush(nsIHttpChannelInternal *associatedChannel,
-                    const nsACString &pushedURI, Http2PushedStream *pushStream)
-      : Runnable("net::CallChannelOnPush"),
-        mAssociatedChannel(associatedChannel),
-        mPushedURI(pushedURI),
-        mPushedStream(pushStream) {}
-
-  NS_IMETHOD Run() override {
-||||||| merged common ancestors
-  public:
-    CallChannelOnPush(nsIHttpChannelInternal* associatedChannel,
-                      const nsACString& pushedURI,
-                      Http2PushedStream* pushStream)
-      : Runnable("net::CallChannelOnPush")
-      , mAssociatedChannel(associatedChannel)
-      , mPushedURI(pushedURI)
-      , mPushedStream(pushStream)
-    {
-  }
-
-  NS_IMETHOD Run() override
-  {
-=======
  public:
   CallChannelOnPush(nsIHttpChannelInternal* associatedChannel,
                     const nsACString& pushedURI, Http2PushedStream* pushStream)
@@ -59,7 +34,6 @@ class CallChannelOnPush final : public Runnable {
   }
 
   NS_IMETHOD Run() override {
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
     RefPtr<nsHttpChannel> channel;
     CallQueryInterface(mAssociatedChannel, channel.StartAssignment());
@@ -159,38 +133,6 @@ void Http2PushedStreamWrapper::OnPushFailed() {
 // Http2PushedStream
 //////////////////////////////////////////
 
-<<<<<<< HEAD
-Http2PushedStream::Http2PushedStream(
-    Http2PushTransactionBuffer *aTransaction, Http2Session *aSession,
-    Http2Stream *aAssociatedStream, uint32_t aID,
-    uint64_t aCurrentForegroundTabOuterContentWindowId)
-    : Http2Stream(aTransaction, aSession, 0,
-                  aCurrentForegroundTabOuterContentWindowId),
-      mConsumerStream(nullptr),
-      mAssociatedTransaction(aAssociatedStream->Transaction()),
-      mBufferedPush(aTransaction),
-      mStatus(NS_OK),
-      mPushCompleted(false),
-      mDeferCleanupOnSuccess(true),
-      mDeferCleanupOnPush(false),
-      mOnPushFailed(false) {
-||||||| merged common ancestors
-Http2PushedStream::Http2PushedStream(Http2PushTransactionBuffer *aTransaction,
-                                     Http2Session *aSession,
-                                     Http2Stream *aAssociatedStream,
-                                     uint32_t aID,
-                                     uint64_t aCurrentForegroundTabOuterContentWindowId)
-  :Http2Stream(aTransaction, aSession, 0, aCurrentForegroundTabOuterContentWindowId)
-  , mConsumerStream(nullptr)
-  , mAssociatedTransaction(aAssociatedStream->Transaction())
-  , mBufferedPush(aTransaction)
-  , mStatus(NS_OK)
-  , mPushCompleted(false)
-  , mDeferCleanupOnSuccess(true)
-  , mDeferCleanupOnPush(false)
-  , mOnPushFailed(false)
-{
-=======
 Http2PushedStream::Http2PushedStream(
     Http2PushTransactionBuffer* aTransaction, Http2Session* aSession,
     Http2Stream* aAssociatedStream, uint32_t aID,
@@ -205,7 +147,6 @@ Http2PushedStream::Http2PushedStream(
       mDeferCleanupOnSuccess(true),
       mDeferCleanupOnPush(false),
       mOnPushFailed(false) {
->>>>>>> upstream-releases
   LOG3(("Http2PushedStream ctor this=%p 0x%X\n", this, aID));
   mStreamID = aID;
   MOZ_ASSERT(!(aID & 1));  // must be even to be a pushed stream
@@ -228,20 +169,9 @@ Http2PushedStream::Http2PushedStream(
 
 bool Http2PushedStream::GetPushComplete() { return mPushCompleted; }
 
-<<<<<<< HEAD
-nsresult Http2PushedStream::WriteSegments(nsAHttpSegmentWriter *writer,
-                                          uint32_t count,
-                                          uint32_t *countWritten) {
-||||||| merged common ancestors
-nsresult
-Http2PushedStream::WriteSegments(nsAHttpSegmentWriter *writer,
-                                 uint32_t count, uint32_t *countWritten)
-{
-=======
 nsresult Http2PushedStream::WriteSegments(nsAHttpSegmentWriter* writer,
                                           uint32_t count,
                                           uint32_t* countWritten) {
->>>>>>> upstream-releases
   nsresult rv = Http2Stream::WriteSegments(writer, count, countWritten);
   if (NS_SUCCEEDED(rv) && *countWritten) {
     mLastRead = TimeStamp::Now();
@@ -281,18 +211,8 @@ bool Http2PushedStream::DeferCleanup(nsresult status) {
 }
 
 // return true if channel implements nsIHttpPushListener
-<<<<<<< HEAD
-bool Http2PushedStream::TryOnPush() {
-  nsHttpTransaction *trans = mAssociatedTransaction->QueryHttpTransaction();
-||||||| merged common ancestors
-bool
-Http2PushedStream::TryOnPush()
-{
-  nsHttpTransaction *trans = mAssociatedTransaction->QueryHttpTransaction();
-=======
 bool Http2PushedStream::TryOnPush() {
   nsHttpTransaction* trans = mAssociatedTransaction->QueryHttpTransaction();
->>>>>>> upstream-releases
   if (!trans) {
     return false;
   }
@@ -313,20 +233,9 @@ bool Http2PushedStream::TryOnPush() {
   return true;
 }
 
-<<<<<<< HEAD
-// side effect free static method to determine if Http2Stream implements
-// nsIHttpPushListener
-bool Http2PushedStream::TestOnPush(Http2Stream *stream) {
-||||||| merged common ancestors
-// side effect free static method to determine if Http2Stream implements nsIHttpPushListener
-bool
-Http2PushedStream::TestOnPush(Http2Stream *stream)
-{
-=======
 // side effect free static method to determine if Http2Stream implements
 // nsIHttpPushListener
 bool Http2PushedStream::TestOnPush(Http2Stream* stream) {
->>>>>>> upstream-releases
   if (!stream) {
     return false;
   }
@@ -346,18 +255,8 @@ bool Http2PushedStream::TestOnPush(Http2Stream* stream) {
   return (trans->Caps() & NS_HTTP_ONPUSH_LISTENER);
 }
 
-<<<<<<< HEAD
-nsresult Http2PushedStream::ReadSegments(nsAHttpSegmentReader *reader, uint32_t,
-                                         uint32_t *count) {
-||||||| merged common ancestors
-nsresult
-Http2PushedStream::ReadSegments(nsAHttpSegmentReader *reader,
-                                uint32_t, uint32_t *count)
-{
-=======
 nsresult Http2PushedStream::ReadSegments(nsAHttpSegmentReader* reader, uint32_t,
                                          uint32_t* count) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   *count = 0;
 
@@ -416,53 +315,22 @@ void Http2PushedStream::AdjustInitialWindow() {
   // anyway, so we're good to go.
 }
 
-<<<<<<< HEAD
-void Http2PushedStream::SetConsumerStream(Http2Stream *consumer) {
-  LOG3(("Http2PushedStream::SetConsumerStream this=%p consumer=%p", this,
-        consumer));
-||||||| merged common ancestors
-void
-Http2PushedStream::SetConsumerStream(Http2Stream *consumer)
-{
-  LOG3(("Http2PushedStream::SetConsumerStream this=%p consumer=%p",
-        this, consumer));
-=======
 void Http2PushedStream::SetConsumerStream(Http2Stream* consumer) {
   LOG3(("Http2PushedStream::SetConsumerStream this=%p consumer=%p", this,
         consumer));
->>>>>>> upstream-releases
 
   mConsumerStream = consumer;
   mDeferCleanupOnPush = false;
 }
 
-<<<<<<< HEAD
-bool Http2PushedStream::GetHashKey(nsCString &key) {
-  if (mHashKey.IsEmpty()) return false;
-||||||| merged common ancestors
-bool
-Http2PushedStream::GetHashKey(nsCString &key)
-{
-  if (mHashKey.IsEmpty())
-    return false;
-=======
 bool Http2PushedStream::GetHashKey(nsCString& key) {
   if (mHashKey.IsEmpty()) return false;
->>>>>>> upstream-releases
 
   key = mHashKey;
   return true;
 }
 
-<<<<<<< HEAD
-void Http2PushedStream::ConnectPushedStream(Http2Stream *stream) {
-||||||| merged common ancestors
-void
-Http2PushedStream::ConnectPushedStream(Http2Stream *stream)
-{
-=======
 void Http2PushedStream::ConnectPushedStream(Http2Stream* stream) {
->>>>>>> upstream-releases
   mSession->ConnectPushedStream(stream);
 }
 
@@ -488,22 +356,9 @@ bool Http2PushedStream::IsOrphaned(TimeStamp now) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult Http2PushedStream::GetBufferedData(char *buf, uint32_t count,
-                                            uint32_t *countWritten) {
-  if (NS_FAILED(mStatus)) return mStatus;
-||||||| merged common ancestors
-nsresult
-Http2PushedStream::GetBufferedData(char *buf,
-                                   uint32_t count, uint32_t *countWritten)
-{
-  if (NS_FAILED(mStatus))
-    return mStatus;
-=======
 nsresult Http2PushedStream::GetBufferedData(char* buf, uint32_t count,
                                             uint32_t* countWritten) {
   if (NS_FAILED(mStatus)) return mStatus;
->>>>>>> upstream-releases
 
   nsresult rv = mBufferedPush->GetBufferedData(buf, count, countWritten);
   if (NS_FAILED(rv)) return rv;
@@ -566,68 +421,20 @@ Http2PushTransactionBuffer::~Http2PushTransactionBuffer() {
   delete mRequestHead;
 }
 
-<<<<<<< HEAD
-void Http2PushTransactionBuffer::SetConnection(nsAHttpConnection *conn) {}
-||||||| merged common ancestors
-void
-Http2PushTransactionBuffer::SetConnection(nsAHttpConnection *conn)
-{
-}
-=======
 void Http2PushTransactionBuffer::SetConnection(nsAHttpConnection* conn) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsAHttpConnection *Http2PushTransactionBuffer::Connection() { return nullptr; }
-||||||| merged common ancestors
-nsAHttpConnection *
-Http2PushTransactionBuffer::Connection()
-{
-  return nullptr;
-}
-=======
 nsAHttpConnection* Http2PushTransactionBuffer::Connection() { return nullptr; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void Http2PushTransactionBuffer::GetSecurityCallbacks(
-    nsIInterfaceRequestor **outCB) {
-||||||| merged common ancestors
-void
-Http2PushTransactionBuffer::GetSecurityCallbacks(nsIInterfaceRequestor **outCB)
-{
-=======
 void Http2PushTransactionBuffer::GetSecurityCallbacks(
     nsIInterfaceRequestor** outCB) {
->>>>>>> upstream-releases
   *outCB = nullptr;
 }
 
-<<<<<<< HEAD
-void Http2PushTransactionBuffer::OnTransportStatus(nsITransport *transport,
-                                                   nsresult status,
-                                                   int64_t progress) {}
-||||||| merged common ancestors
-void
-Http2PushTransactionBuffer::OnTransportStatus(nsITransport* transport,
-                                              nsresult status, int64_t progress)
-{
-}
-=======
 void Http2PushTransactionBuffer::OnTransportStatus(nsITransport* transport,
                                                    nsresult status,
                                                    int64_t progress) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsHttpConnectionInfo *Http2PushTransactionBuffer::ConnectionInfo() {
-||||||| merged common ancestors
-nsHttpConnectionInfo *
-Http2PushTransactionBuffer::ConnectionInfo()
-{
-=======
 nsHttpConnectionInfo* Http2PushTransactionBuffer::ConnectionInfo() {
->>>>>>> upstream-releases
   if (!mPushStream) {
     return nullptr;
   }
@@ -650,38 +457,16 @@ uint64_t Http2PushTransactionBuffer::Available() {
   return mBufferedHTTP1Used - mBufferedHTTP1Consumed;
 }
 
-<<<<<<< HEAD
-nsresult Http2PushTransactionBuffer::ReadSegments(nsAHttpSegmentReader *reader,
-                                                  uint32_t count,
-                                                  uint32_t *countRead) {
-||||||| merged common ancestors
-nsresult
-Http2PushTransactionBuffer::ReadSegments(nsAHttpSegmentReader *reader,
-                                         uint32_t count, uint32_t *countRead)
-{
-=======
 nsresult Http2PushTransactionBuffer::ReadSegments(nsAHttpSegmentReader* reader,
                                                   uint32_t count,
                                                   uint32_t* countRead) {
->>>>>>> upstream-releases
   *countRead = 0;
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-<<<<<<< HEAD
-nsresult Http2PushTransactionBuffer::WriteSegments(nsAHttpSegmentWriter *writer,
-                                                   uint32_t count,
-                                                   uint32_t *countWritten) {
-||||||| merged common ancestors
-nsresult
-Http2PushTransactionBuffer::WriteSegments(nsAHttpSegmentWriter *writer,
-                                          uint32_t count, uint32_t *countWritten)
-{
-=======
 nsresult Http2PushTransactionBuffer::WriteSegments(nsAHttpSegmentWriter* writer,
                                                    uint32_t count,
                                                    uint32_t* countWritten) {
->>>>>>> upstream-releases
   if ((mBufferedHTTP1Size - mBufferedHTTP1Used) < 20480) {
     EnsureBuffer(mBufferedHTTP1, mBufferedHTTP1Size + kDefaultBufferSize,
                  mBufferedHTTP1Used, mBufferedHTTP1Size);
@@ -713,34 +498,13 @@ nsresult Http2PushTransactionBuffer::WriteSegments(nsAHttpSegmentWriter* writer,
 
 uint32_t Http2PushTransactionBuffer::Http1xTransactionCount() { return 0; }
 
-<<<<<<< HEAD
-nsHttpRequestHead *Http2PushTransactionBuffer::RequestHead() {
-  if (!mRequestHead) mRequestHead = new nsHttpRequestHead();
-||||||| merged common ancestors
-nsHttpRequestHead *
-Http2PushTransactionBuffer::RequestHead()
-{
-  if (!mRequestHead)
-    mRequestHead = new nsHttpRequestHead();
-=======
 nsHttpRequestHead* Http2PushTransactionBuffer::RequestHead() {
   if (!mRequestHead) mRequestHead = new nsHttpRequestHead();
->>>>>>> upstream-releases
   return mRequestHead;
 }
 
-<<<<<<< HEAD
-nsresult Http2PushTransactionBuffer::TakeSubTransactions(
-    nsTArray<RefPtr<nsAHttpTransaction> > &outTransactions) {
-||||||| merged common ancestors
-nsresult
-Http2PushTransactionBuffer::TakeSubTransactions(
-  nsTArray<RefPtr<nsAHttpTransaction> > &outTransactions)
-{
-=======
 nsresult Http2PushTransactionBuffer::TakeSubTransactions(
     nsTArray<RefPtr<nsAHttpTransaction> >& outTransactions) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -751,19 +515,8 @@ void Http2PushTransactionBuffer::Close(nsresult reason) {
   mIsDone = true;
 }
 
-<<<<<<< HEAD
-nsresult Http2PushTransactionBuffer::GetBufferedData(char *buf, uint32_t count,
-                                                     uint32_t *countWritten) {
-||||||| merged common ancestors
-nsresult
-Http2PushTransactionBuffer::GetBufferedData(char *buf,
-                                            uint32_t count,
-                                            uint32_t *countWritten)
-{
-=======
 nsresult Http2PushTransactionBuffer::GetBufferedData(char* buf, uint32_t count,
                                                      uint32_t* countWritten) {
->>>>>>> upstream-releases
   *countWritten = std::min(count, static_cast<uint32_t>(Available()));
   if (*countWritten) {
     memcpy(buf, &mBufferedHTTP1[mBufferedHTTP1Consumed], *countWritten);

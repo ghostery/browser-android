@@ -17,24 +17,7 @@ from taskgraph.util.taskcluster import get_artifact_prefix
 
 from voluptuous import Optional, Required
 
-<<<<<<< HEAD
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
 
-
-||||||| merged common ancestors
-
-transforms = TransformSequence()
-
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-
-=======
-
->>>>>>> upstream-releases
 push_apk_description_schema = Schema({
     Required('dependent-tasks'): object,
     Required('name'): basestring,
@@ -55,21 +38,6 @@ push_apk_description_schema = Schema({
 
 PLATFORM_REGEX = re.compile(r'build-signing-android-(\S+)-nightly')
 
-<<<<<<< HEAD
-transforms = TransformSequence()
-transforms.add_validate(push_apk_description_schema)
-||||||| merged common ancestors
-
-@transforms.add
-def validate_jobs_schema_transform_partial(config, jobs):
-    for job in jobs:
-        label = job.get('label', '?no-label?')
-        validate_schema(
-            push_apk_description_schema, job,
-            "In PushApk ({!r} kind) task for {!r}:".format(config.kind, label)
-        )
-        yield job
-=======
 transforms = TransformSequence()
 transforms.add_validate(push_apk_description_schema)
 
@@ -81,7 +49,6 @@ def validate_dependent_tasks(config, jobs):
             config.params['project'], job['dependent-tasks']
         )
         yield job
->>>>>>> upstream-releases
 
 
 _REQUIRED_ARCHITECTURES = {

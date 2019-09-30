@@ -54,14 +54,7 @@ SOURCES += [
    '/intl/icu/source/i18n/dtitvinf.cpp',
    '/intl/icu/source/i18n/dtptngen.cpp',
    '/intl/icu/source/i18n/dtrule.cpp',
-<<<<<<< HEAD
    '/intl/icu/source/i18n/erarules.cpp',
-   '/intl/icu/source/i18n/esctrn.cpp',
-||||||| merged common ancestors
-   '/intl/icu/source/i18n/esctrn.cpp',
-=======
-   '/intl/icu/source/i18n/erarules.cpp',
->>>>>>> upstream-releases
    '/intl/icu/source/i18n/ethpccal.cpp',
    '/intl/icu/source/i18n/fmtable.cpp',
    '/intl/icu/source/i18n/format.cpp',
@@ -166,14 +159,7 @@ SOURCES += [
    '/intl/icu/source/i18n/udatpg.cpp',
    '/intl/icu/source/i18n/ufieldpositer.cpp',
    '/intl/icu/source/i18n/uitercollationiterator.cpp',
-<<<<<<< HEAD
    '/intl/icu/source/i18n/ulistformatter.cpp',
-   '/intl/icu/source/i18n/ulocdata.cpp',
-||||||| merged common ancestors
-   '/intl/icu/source/i18n/ulocdata.cpp',
-=======
-   '/intl/icu/source/i18n/ulistformatter.cpp',
->>>>>>> upstream-releases
    '/intl/icu/source/i18n/umsg.cpp',
    '/intl/icu/source/i18n/unum.cpp',
    '/intl/icu/source/i18n/unumsys.cpp',

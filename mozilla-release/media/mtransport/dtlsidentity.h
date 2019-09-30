@@ -54,13 +54,6 @@ class DtlsIdentity final {
   // This constructor takes ownership of privkey and cert.
   DtlsIdentity(UniqueSECKEYPrivateKey privkey, UniqueCERTCertificate cert,
                SSLKEAType authType)
-<<<<<<< HEAD
-      : private_key_(std::move(privkey)),
-        cert_(std::move(cert)),
-        auth_type_(authType) {}
-||||||| merged common ancestors
-      : private_key_(std::move(privkey)), cert_(std::move(cert)), auth_type_(authType) {}
-=======
       : private_key_(std::move(privkey)),
         cert_(std::move(cert)),
         auth_type_(authType) {}
@@ -72,7 +65,6 @@ class DtlsIdentity final {
   static RefPtr<DtlsIdentity> Deserialize(const nsTArray<uint8_t>& aKeyDer,
                                           const nsTArray<uint8_t>& aCertDer,
                                           SSLKEAType authType);
->>>>>>> upstream-releases
 
   // This is only for use in tests, or for external linkage.  It makes a (bad)
   // instance of this class.
@@ -80,36 +72,17 @@ class DtlsIdentity final {
 
   // These don't create copies or transfer ownership. If you want these to live
   // on, make a copy.
-  const UniqueCERTCertificate &cert() const { return cert_; }
-  const UniqueSECKEYPrivateKey &privkey() const { return private_key_; }
+  const UniqueCERTCertificate& cert() const { return cert_; }
+  const UniqueSECKEYPrivateKey& privkey() const { return private_key_; }
   // Note: this uses SSLKEAType because that is what the libssl API requires.
   // This is a giant confusing mess, but libssl indexes certificates based on a
   // key exchange type, not authentication type (as you might have reasonably
   // expected).
   SSLKEAType auth_type() const { return auth_type_; }
 
-<<<<<<< HEAD
-  nsresult ComputeFingerprint(const std::string algorithm, uint8_t *digest,
-                              size_t size, size_t *digest_length) const;
-  static nsresult ComputeFingerprint(const UniqueCERTCertificate &cert,
-                                     const std::string algorithm,
-                                     uint8_t *digest, size_t size,
-                                     size_t *digest_length);
-||||||| merged common ancestors
-  nsresult ComputeFingerprint(const std::string algorithm,
-                              uint8_t *digest,
-                              size_t size,
-                              size_t *digest_length) const;
-  static nsresult ComputeFingerprint(const UniqueCERTCertificate& cert,
-                                     const std::string algorithm,
-                                     uint8_t *digest,
-                                     size_t size,
-                                     size_t *digest_length);
-=======
   nsresult ComputeFingerprint(DtlsDigest* digest) const;
   static nsresult ComputeFingerprint(const UniqueCERTCertificate& cert,
                                      DtlsDigest* digest);
->>>>>>> upstream-releases
 
   static const std::string DEFAULT_HASH_ALGORITHM;
   enum { HASH_ALGORITHM_MAX_LENGTH = 64 };

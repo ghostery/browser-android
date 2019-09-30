@@ -22,14 +22,8 @@ typedef uint32_t HashNumber;
 #include "js/ForOfIterator.h"
 #include "js/Initialization.h"
 #include "js/MemoryMetrics.h"
-<<<<<<< HEAD
-#include "js/SourceText.h"
-||||||| merged common ancestors
-#include "js/SourceBufferHolder.h"
-=======
 #include "js/PropertySpec.h"
 #include "js/SourceText.h"
->>>>>>> upstream-releases
 #include "js/StructuredClone.h"
 #include "js/Warnings.h"
 

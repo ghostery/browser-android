@@ -397,15 +397,9 @@ class WorkerProxyToMainThreadRunnable : public Runnable {
  public:
   bool Dispatch(WorkerPrivate* aWorkerPrivate);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   virtual bool ForMessaging() const { return false; }
 
  private:
->>>>>>> upstream-releases
   NS_IMETHOD Run() override;
 
   void PostDispatchOnMainThread();
@@ -441,34 +435,14 @@ class MainThreadStopSyncLoopRunnable : public WorkerSyncRunnable {
     return true;
   }
 
-<<<<<<< HEAD
   virtual void PostDispatch(WorkerPrivate* aWorkerPrivate,
                             bool aDispatchResult) override;
 
   virtual bool WorkerRun(JSContext* aCx,
                          WorkerPrivate* aWorkerPrivate) override;
-||||||| merged common ancestors
-  virtual void
-  PostDispatch(WorkerPrivate* aWorkerPrivate,
-               bool aDispatchResult) override;
-=======
-  virtual void PostDispatch(WorkerPrivate* aWorkerPrivate,
-                            bool aDispatchResult) override;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  bool DispatchInternal() final;
-};
-||||||| merged common ancestors
-  virtual bool
-  WorkerRun(JSContext* aCx, WorkerPrivate* aWorkerPrivate) override;
-=======
-  virtual bool WorkerRun(JSContext* aCx,
-                         WorkerPrivate* aWorkerPrivate) override;
 
   bool DispatchInternal() final;
 };
->>>>>>> upstream-releases
 
 // Runnables handled by content JavaScript (MessageEventRunnable, JavaScript
 // error reports, and so on) must not be delivered while that content is in the

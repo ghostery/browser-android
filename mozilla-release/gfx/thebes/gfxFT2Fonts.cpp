@@ -40,41 +40,6 @@ using namespace mozilla::gfx;
  * gfxFT2Font
  */
 
-<<<<<<< HEAD
-bool gfxFT2Font::ShapeText(DrawTarget *aDrawTarget, const char16_t *aText,
-                           uint32_t aOffset, uint32_t aLength, Script aScript,
-                           bool aVertical, RoundingFlags aRounding,
-                           gfxShapedText *aShapedText) {
-  if (!gfxFont::ShapeText(aDrawTarget, aText, aOffset, aLength, aScript,
-                          aVertical, aRounding, aShapedText)) {
-    // harfbuzz must have failed(?!), just render raw glyphs
-    AddRange(aText, aOffset, aLength, aShapedText);
-    PostShapingFixup(aDrawTarget, aText, aOffset, aLength, aVertical,
-                     aShapedText);
-  }
-
-  return true;
-||||||| merged common ancestors
-bool
-gfxFT2Font::ShapeText(DrawTarget     *aDrawTarget,
-                      const char16_t *aText,
-                      uint32_t        aOffset,
-                      uint32_t        aLength,
-                      Script          aScript,
-                      bool            aVertical,
-                      RoundingFlags   aRounding,
-                      gfxShapedText  *aShapedText)
-{
-    if (!gfxFont::ShapeText(aDrawTarget, aText, aOffset, aLength, aScript,
-                            aVertical, aRounding, aShapedText)) {
-        // harfbuzz must have failed(?!), just render raw glyphs
-        AddRange(aText, aOffset, aLength, aShapedText);
-        PostShapingFixup(aDrawTarget, aText, aOffset, aLength,
-                         aVertical, aShapedText);
-    }
-
-    return true;
-=======
 bool gfxFT2Font::ShapeText(DrawTarget* aDrawTarget, const char16_t* aText,
                            uint32_t aOffset, uint32_t aLength, Script aScript,
                            bool aVertical, RoundingFlags aRounding,
@@ -88,25 +53,8 @@ bool gfxFT2Font::ShapeText(DrawTarget* aDrawTarget, const char16_t* aText,
   }
 
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void gfxFT2Font::AddRange(const char16_t *aText, uint32_t aOffset,
-                          uint32_t aLength, gfxShapedText *aShapedText) {
-  typedef gfxShapedText::CompressedGlyph CompressedGlyph;
-||||||| merged common ancestors
-void
-gfxFT2Font::AddRange(const char16_t *aText, uint32_t aOffset,
-                     uint32_t aLength, gfxShapedText *aShapedText)
-{
-    typedef gfxShapedText::CompressedGlyph CompressedGlyph;
-
-    const uint32_t appUnitsPerDevUnit = aShapedText->GetAppUnitsPerDevUnit();
-    // we'll pass this in/figure it out dynamically, but at this point there can be only one face.
-    gfxFT2LockedFace faceLock(this);
-    FT_Face face = faceLock.get();
-=======
 void gfxFT2Font::AddRange(const char16_t* aText, uint32_t aOffset,
                           uint32_t aLength, gfxShapedText* aShapedText) {
   typedef gfxShapedText::CompressedGlyph CompressedGlyph;
@@ -116,58 +64,16 @@ void gfxFT2Font::AddRange(const char16_t* aText, uint32_t aOffset,
   // be only one face.
   gfxFT2LockedFace faceLock(this);
   FT_Face face = faceLock.get();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const uint32_t appUnitsPerDevUnit = aShapedText->GetAppUnitsPerDevUnit();
-  // we'll pass this in/figure it out dynamically, but at this point there can
-  // be only one face.
-  gfxFT2LockedFace faceLock(this);
-  FT_Face face = faceLock.get();
-||||||| merged common ancestors
-    CompressedGlyph* charGlyphs = aShapedText->GetCharacterGlyphs();
-=======
   CompressedGlyph* charGlyphs = aShapedText->GetCharacterGlyphs();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CompressedGlyph *charGlyphs = aShapedText->GetCharacterGlyphs();
-||||||| merged common ancestors
-    const gfxFT2Font::CachedGlyphData *cgd = nullptr, *cgdNext = nullptr;
-=======
   const gfxFT2Font::CachedGlyphData *cgd = nullptr, *cgdNext = nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const gfxFT2Font::CachedGlyphData *cgd = nullptr, *cgdNext = nullptr;
-||||||| merged common ancestors
-    FT_UInt spaceGlyph = GetSpaceGlyph();
-=======
   FT_UInt spaceGlyph = GetSpaceGlyph();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  FT_UInt spaceGlyph = GetSpaceGlyph();
-||||||| merged common ancestors
-    for (uint32_t i = 0; i < aLength; i++, aOffset++) {
-        char16_t ch = aText[i];
-=======
   for (uint32_t i = 0; i < aLength; i++, aOffset++) {
     char16_t ch = aText[i];
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < aLength; i++, aOffset++) {
-    char16_t ch = aText[i];
-||||||| merged common ancestors
-        if (ch == 0) {
-            // treat this null byte as a missing glyph, don't create a glyph for it
-            aShapedText->SetMissingGlyph(aOffset, 0, this);
-            continue;
-        }
-
-        NS_ASSERTION(!gfxFontGroup::IsInvalidChar(ch), "Invalid char detected");
-=======
     if (ch == 0) {
       // treat this null byte as a missing glyph, don't create a glyph for it
       aShapedText->SetMissingGlyph(aOffset, 0, this);
@@ -175,80 +81,7 @@ void gfxFT2Font::AddRange(const char16_t* aText, uint32_t aOffset,
     }
 
     NS_ASSERTION(!gfxFontGroup::IsInvalidChar(ch), "Invalid char detected");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (ch == 0) {
-      // treat this null byte as a missing glyph, don't create a glyph for it
-      aShapedText->SetMissingGlyph(aOffset, 0, this);
-      continue;
-    }
-||||||| merged common ancestors
-        if (cgdNext) {
-            cgd = cgdNext;
-            cgdNext = nullptr;
-        } else {
-            cgd = GetGlyphDataForChar(face, ch);
-        }
-=======
-    if (cgdNext) {
-      cgd = cgdNext;
-      cgdNext = nullptr;
-    } else {
-      cgd = GetGlyphDataForChar(face, ch);
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    NS_ASSERTION(!gfxFontGroup::IsInvalidChar(ch), "Invalid char detected");
-||||||| merged common ancestors
-        FT_UInt gid = cgd->glyphIndex;
-        int32_t advance = 0;
-
-        if (gid == 0) {
-            advance = -1; // trigger the missing glyphs case below
-        } else {
-            // find next character and its glyph -- in case they exist
-            // and exist in the current font face -- to compute kerning
-            char16_t chNext = 0;
-            FT_UInt gidNext = 0;
-            FT_Pos lsbDeltaNext = 0;
-
-            if (FT_HAS_KERNING(face) && i + 1 < aLength) {
-                chNext = aText[i + 1];
-                if (chNext != 0) {
-                    cgdNext = GetGlyphDataForChar(face, chNext);
-                    gidNext = cgdNext->glyphIndex;
-                    if (gidNext && gidNext != spaceGlyph)
-                        lsbDeltaNext = cgdNext->lsbDelta;
-                }
-            }
-
-            advance = cgd->xAdvance;
-
-            // now add kerning to the current glyph's advance
-            if (chNext && gidNext) {
-                FT_Vector kerning; kerning.x = 0;
-                FT_Get_Kerning(face, gid, gidNext, FT_KERNING_DEFAULT, &kerning);
-                advance += kerning.x;
-                if (cgd->rsbDelta - lsbDeltaNext >= 32) {
-                    advance -= 64;
-                } else if (cgd->rsbDelta - lsbDeltaNext < -32) {
-                    advance += 64;
-                }
-            }
-
-            // convert 26.6 fixed point to app units
-            // round rather than truncate to nearest pixel
-            // because these advances are often scaled
-            advance = ((advance * appUnitsPerDevUnit + 32) >> 6);
-        }
-=======
-    FT_UInt gid = cgd->glyphIndex;
-    int32_t advance = 0;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     if (cgdNext) {
       cgd = cgdNext;
       cgdNext = nullptr;
@@ -258,43 +91,7 @@ void gfxFT2Font::AddRange(const char16_t* aText, uint32_t aOffset,
 
     FT_UInt gid = cgd->glyphIndex;
     int32_t advance = 0;
-||||||| merged common ancestors
-        if (advance >= 0 &&
-            CompressedGlyph::IsSimpleAdvance(advance) &&
-            CompressedGlyph::IsSimpleGlyphID(gid)) {
-            charGlyphs[aOffset].SetSimpleGlyph(advance, gid);
-        } else if (gid == 0) {
-            // gid = 0 only happens when the glyph is missing from the font
-            aShapedText->SetMissingGlyph(aOffset, ch, this);
-        } else {
-            gfxTextRun::DetailedGlyph details;
-            details.mGlyphID = gid;
-            NS_ASSERTION(details.mGlyphID == gid,
-                         "Seriously weird glyph ID detected!");
-            details.mAdvance = advance;
-            bool isClusterStart = charGlyphs[aOffset].IsClusterStart();
-            aShapedText->SetGlyphs(aOffset,
-                                   CompressedGlyph::MakeComplex(isClusterStart,
-                                                                true, 1),
-                                   &details);
-        }
-    }
-}
 
-gfxFT2Font::gfxFT2Font(const RefPtr<UnscaledFontFreeType>& aUnscaledFont,
-                       cairo_scaled_font_t *aCairoFont,
-                       FT_Face aFTFace,
-                       FT2FontEntry *aFontEntry,
-                       const gfxFontStyle *aFontStyle)
-    : gfxFT2FontBase(aUnscaledFont, aCairoFont, aFontEntry, aFontStyle)
-    , mCharGlyphCache(32)
-    , mFTFace(aFTFace)
-{
-    NS_ASSERTION(mFontEntry, "Unable to find font entry for font.  Something is whack.");
-    // TODO: use FreeType emboldening instead of multi-strike?
-    mApplySyntheticBold = aFontStyle->NeedsSyntheticBold(aFontEntry);
-}
-=======
     if (gid == 0) {
       advance = -1;  // trigger the missing glyphs case below
     } else {
@@ -328,97 +125,13 @@ gfxFT2Font::gfxFT2Font(const RefPtr<UnscaledFontFreeType>& aUnscaledFont,
           advance += 64;
         }
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (gid == 0) {
-      advance = -1;  // trigger the missing glyphs case below
-    } else {
-      // find next character and its glyph -- in case they exist
-      // and exist in the current font face -- to compute kerning
-      char16_t chNext = 0;
-      FT_UInt gidNext = 0;
-      FT_Pos lsbDeltaNext = 0;
-
-      if (FT_HAS_KERNING(face) && i + 1 < aLength) {
-        chNext = aText[i + 1];
-        if (chNext != 0) {
-          cgdNext = GetGlyphDataForChar(face, chNext);
-          gidNext = cgdNext->glyphIndex;
-          if (gidNext && gidNext != spaceGlyph)
-            lsbDeltaNext = cgdNext->lsbDelta;
-        }
-      }
-
-      advance = cgd->xAdvance;
-
-      // now add kerning to the current glyph's advance
-      if (chNext && gidNext) {
-        FT_Vector kerning;
-        kerning.x = 0;
-        FT_Get_Kerning(face, gid, gidNext, FT_KERNING_DEFAULT, &kerning);
-        advance += kerning.x;
-        if (cgd->rsbDelta - lsbDeltaNext >= 32) {
-          advance -= 64;
-        } else if (cgd->rsbDelta - lsbDeltaNext < -32) {
-          advance += 64;
-        }
-      }
-||||||| merged common ancestors
-gfxFT2Font::~gfxFT2Font()
-{
-}
-=======
       // convert 26.6 fixed point to app units
       // round rather than truncate to nearest pixel
       // because these advances are often scaled
       advance = ((advance * appUnitsPerDevUnit + 32) >> 6);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // convert 26.6 fixed point to app units
-      // round rather than truncate to nearest pixel
-      // because these advances are often scaled
-      advance = ((advance * appUnitsPerDevUnit + 32) >> 6);
-||||||| merged common ancestors
-already_AddRefed<ScaledFont>
-gfxFT2Font::GetScaledFont(DrawTarget *aTarget)
-{
-    if (!mAzureScaledFont) {
-        NativeFont nativeFont;
-        nativeFont.mType = NativeFontType::FREETYPE_FACE;
-        nativeFont.mFont = mFTFace;
-
-        mAzureScaledFont =
-          Factory::CreateScaledFontForNativeFont(nativeFont,
-                                                 GetUnscaledFont(),
-                                                 GetAdjustedSize(),
-                                                 GetCairoScaledFont());
-        InitializeScaledFont();
-=======
-    if (advance >= 0 && CompressedGlyph::IsSimpleAdvance(advance) &&
-        CompressedGlyph::IsSimpleGlyphID(gid)) {
-      charGlyphs[aOffset].SetSimpleGlyph(advance, gid);
-    } else if (gid == 0) {
-      // gid = 0 only happens when the glyph is missing from the font
-      aShapedText->SetMissingGlyph(aOffset, ch, this);
-    } else {
-      gfxTextRun::DetailedGlyph details;
-      details.mGlyphID = gid;
-      NS_ASSERTION(details.mGlyphID == gid,
-                   "Seriously weird glyph ID detected!");
-      details.mAdvance = advance;
-      bool isClusterStart = charGlyphs[aOffset].IsClusterStart();
-      aShapedText->SetGlyphs(
-          aOffset, CompressedGlyph::MakeComplex(isClusterStart, true, 1),
-          &details);
->>>>>>> upstream-releases
-    }
-  }
-}
-
-<<<<<<< HEAD
     if (advance >= 0 && CompressedGlyph::IsSimpleAdvance(advance) &&
         CompressedGlyph::IsSimpleGlyphID(gid)) {
       charGlyphs[aOffset].SetSimpleGlyph(advance, gid);
@@ -438,19 +151,7 @@ gfxFT2Font::GetScaledFont(DrawTarget *aTarget)
     }
   }
 }
-||||||| merged common ancestors
-    RefPtr<ScaledFont> scaledFont(mAzureScaledFont);
-    return scaledFont.forget();
-}
 
-void
-gfxFT2Font::FillGlyphDataForChar(FT_Face face, uint32_t ch, CachedGlyphData *gd)
-{
-    if (!face->charmap || face->charmap->encoding != FT_ENCODING_UNICODE) {
-        FT_Select_Charmap(face, FT_ENCODING_UNICODE);
-    }
-    FT_UInt gid = FT_Get_Char_Index(face, ch);
-=======
 gfxFT2Font::gfxFT2Font(const RefPtr<UnscaledFontFreeType>& aUnscaledFont,
                        cairo_scaled_font_t* aCairoFont, FT_Face aFTFace,
                        FT2FontEntry* aFontEntry, const gfxFontStyle* aFontStyle)
@@ -464,83 +165,22 @@ gfxFT2Font::gfxFT2Font(const RefPtr<UnscaledFontFreeType>& aUnscaledFont,
 }
 
 gfxFT2Font::~gfxFT2Font() {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-gfxFT2Font::gfxFT2Font(const RefPtr<UnscaledFontFreeType> &aUnscaledFont,
-                       cairo_scaled_font_t *aCairoFont, FT_Face aFTFace,
-                       FT2FontEntry *aFontEntry, const gfxFontStyle *aFontStyle)
-    : gfxFT2FontBase(aUnscaledFont, aCairoFont, aFontEntry, aFontStyle),
-      mCharGlyphCache(32),
-      mFTFace(aFTFace) {
-  NS_ASSERTION(mFontEntry,
-               "Unable to find font entry for font.  Something is whack.");
-  // TODO: use FreeType emboldening instead of multi-strike?
-  mApplySyntheticBold = aFontStyle->NeedsSyntheticBold(aFontEntry);
-}
-||||||| merged common ancestors
-    if (gid == 0) {
-        // this font doesn't support this char!
-        NS_ASSERTION(gid != 0, "We don't have a glyph, but font indicated that it supported this char in tables?");
-        gd->glyphIndex = 0;
-        return;
-    }
-=======
 already_AddRefed<ScaledFont> gfxFT2Font::GetScaledFont(DrawTarget* aTarget) {
   if (!mAzureScaledFont) {
     NativeFont nativeFont;
     nativeFont.mType = NativeFontType::FREETYPE_FACE;
     nativeFont.mFont = mFTFace;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-gfxFT2Font::~gfxFT2Font() {}
-||||||| merged common ancestors
-    FT_Int32 flags = gfxPlatform::GetPlatform()->FontHintingEnabled() ?
-                     FT_LOAD_DEFAULT :
-                     (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_HINTING);
-    FT_Error err = Factory::LoadFTGlyph(face, gid, flags);
-=======
     mAzureScaledFont = Factory::CreateScaledFontForNativeFont(
         nativeFont, GetUnscaledFont(), GetAdjustedSize(), GetCairoScaledFont());
     InitializeScaledFont();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-already_AddRefed<ScaledFont> gfxFT2Font::GetScaledFont(DrawTarget *aTarget) {
-  if (!mAzureScaledFont) {
-    NativeFont nativeFont;
-    nativeFont.mType = NativeFontType::FREETYPE_FACE;
-    nativeFont.mFont = mFTFace;
-||||||| merged common ancestors
-    if (err) {
-        // hmm, this is weird, we failed to load a glyph that we had?
-        NS_WARNING("Failed to load glyph that we got from Get_Char_index");
-=======
   RefPtr<ScaledFont> scaledFont(mAzureScaledFont);
   return scaledFont.forget();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    mAzureScaledFont = Factory::CreateScaledFontForNativeFont(
-        nativeFont, GetUnscaledFont(), GetAdjustedSize(), GetCairoScaledFont());
-    InitializeScaledFont();
-  }
-
-  RefPtr<ScaledFont> scaledFont(mAzureScaledFont);
-  return scaledFont.forget();
-||||||| merged common ancestors
-        gd->glyphIndex = 0;
-        return;
-    }
-
-    gd->glyphIndex = gid;
-    gd->lsbDelta = face->glyph->lsb_delta;
-    gd->rsbDelta = face->glyph->rsb_delta;
-    gd->xAdvance = face->glyph->advance.x;
-=======
 void gfxFT2Font::FillGlyphDataForChar(FT_Face face, uint32_t ch,
                                       CachedGlyphData* gd) {
   if (!face->charmap || (face->charmap->encoding != FT_ENCODING_UNICODE &&
@@ -581,88 +221,17 @@ void gfxFT2Font::FillGlyphDataForChar(FT_Face face, uint32_t ch,
   gd->lsbDelta = face->glyph->lsb_delta;
   gd->rsbDelta = face->glyph->rsb_delta;
   gd->xAdvance = face->glyph->advance.x;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void gfxFT2Font::FillGlyphDataForChar(FT_Face face, uint32_t ch,
-                                      CachedGlyphData *gd) {
-  if (!face->charmap || face->charmap->encoding != FT_ENCODING_UNICODE) {
-    FT_Select_Charmap(face, FT_ENCODING_UNICODE);
-  }
-  FT_UInt gid = FT_Get_Char_Index(face, ch);
-
-  if (gid == 0) {
-    // this font doesn't support this char!
-    NS_ASSERTION(gid != 0,
-                 "We don't have a glyph, but font indicated that it supported "
-                 "this char in tables?");
-    gd->glyphIndex = 0;
-    return;
-  }
-
-  FT_Int32 flags = gfxPlatform::GetPlatform()->FontHintingEnabled()
-                       ? FT_LOAD_DEFAULT
-                       : (FT_LOAD_NO_AUTOHINT | FT_LOAD_NO_HINTING);
-  FT_Error err = Factory::LoadFTGlyph(face, gid, flags);
-
-  if (err) {
-    // hmm, this is weird, we failed to load a glyph that we had?
-    NS_WARNING("Failed to load glyph that we got from Get_Char_index");
-
-    gd->glyphIndex = 0;
-    return;
-  }
-
-  gd->glyphIndex = gid;
-  gd->lsbDelta = face->glyph->lsb_delta;
-  gd->rsbDelta = face->glyph->rsb_delta;
-  gd->xAdvance = face->glyph->advance.x;
-||||||| merged common ancestors
-void
-gfxFT2Font::AddSizeOfExcludingThis(MallocSizeOf aMallocSizeOf,
-                                   FontCacheSizes* aSizes) const
-{
-    gfxFont::AddSizeOfExcludingThis(aMallocSizeOf, aSizes);
-    aSizes->mFontInstances +=
-        mCharGlyphCache.ShallowSizeOfExcludingThis(aMallocSizeOf);
-=======
 void gfxFT2Font::AddSizeOfExcludingThis(MallocSizeOf aMallocSizeOf,
                                         FontCacheSizes* aSizes) const {
   gfxFont::AddSizeOfExcludingThis(aMallocSizeOf, aSizes);
   aSizes->mFontInstances +=
       mCharGlyphCache.ShallowSizeOfExcludingThis(aMallocSizeOf);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void gfxFT2Font::AddSizeOfExcludingThis(MallocSizeOf aMallocSizeOf,
-                                        FontCacheSizes *aSizes) const {
-  gfxFont::AddSizeOfExcludingThis(aMallocSizeOf, aSizes);
-  aSizes->mFontInstances +=
-      mCharGlyphCache.ShallowSizeOfExcludingThis(aMallocSizeOf);
-||||||| merged common ancestors
-void
-gfxFT2Font::AddSizeOfIncludingThis(MallocSizeOf aMallocSizeOf,
-                                   FontCacheSizes* aSizes) const
-{
-    aSizes->mFontInstances += aMallocSizeOf(this);
-    AddSizeOfExcludingThis(aMallocSizeOf, aSizes);
-=======
 void gfxFT2Font::AddSizeOfIncludingThis(MallocSizeOf aMallocSizeOf,
                                         FontCacheSizes* aSizes) const {
   aSizes->mFontInstances += aMallocSizeOf(this);
   AddSizeOfExcludingThis(aMallocSizeOf, aSizes);
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-
-void gfxFT2Font::AddSizeOfIncludingThis(MallocSizeOf aMallocSizeOf,
-                                        FontCacheSizes *aSizes) const {
-  aSizes->mFontInstances += aMallocSizeOf(this);
-  AddSizeOfExcludingThis(aMallocSizeOf, aSizes);
-}
-||||||| merged common ancestors
-
-=======
->>>>>>> upstream-releases

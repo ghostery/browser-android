@@ -130,67 +130,8 @@ void MacroAssembler::xorPtr(Imm32 imm, Register dest) { ma_xor(dest, imm); }
 
 void MacroAssembler::addPtr(Register src, Register dest) { ma_addu(dest, src); }
 
-<<<<<<< HEAD
 void MacroAssembler::addPtr(Imm32 imm, Register dest) { ma_addu(dest, imm); }
 
-void MacroAssembler::addPtr(ImmWord imm, Register dest) {
-  addPtr(Imm32(imm.value), dest);
-}
-||||||| merged common ancestors
-void
-MacroAssembler::addPtr(Imm32 imm, Register dest)
-{
-    ma_addu(dest, imm);
-}
-
-void
-MacroAssembler::addPtr(ImmWord imm, Register dest)
-{
-    addPtr(Imm32(imm.value), dest);
-}
-=======
-void MacroAssembler::addPtr(Imm32 imm, Register dest) { ma_addu(dest, imm); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void MacroAssembler::add64(Register64 src, Register64 dest) {
-  if (dest.low == src.low) {
-    as_sltu(ScratchRegister, src.low, zero);
-    as_addu(dest.low, dest.low, src.low);
-  } else {
-    as_addu(dest.low, dest.low, src.low);
-    as_sltu(ScratchRegister, dest.low, src.low);
-  }
-  as_addu(dest.high, dest.high, src.high);
-  as_addu(dest.high, dest.high, ScratchRegister);
-||||||| merged common ancestors
-void
-MacroAssembler::add64(Register64 src, Register64 dest)
-{
-    if (dest.low == src.low) {
-        as_sltu(ScratchRegister, src.low, zero);
-        as_addu(dest.low, dest.low, src.low);
-    } else {
-        as_addu(dest.low, dest.low, src.low);
-        as_sltu(ScratchRegister, dest.low, src.low);
-    }
-    as_addu(dest.high, dest.high, src.high);
-    as_addu(dest.high, dest.high, ScratchRegister);
-}
-
-void
-MacroAssembler::add64(Imm32 imm, Register64 dest)
-{
-    if (Imm16::IsInSignedRange(imm.value)) {
-        as_addiu(dest.low, dest.low, imm.value);
-        as_sltiu(ScratchRegister, dest.low, imm.value);
-    } else {
-        ma_li(ScratchRegister, imm);
-        as_addu(dest.low, dest.low, ScratchRegister);
-        as_sltu(ScratchRegister, dest.low, ScratchRegister);
-    }
-    as_addu(dest.high, dest.high, ScratchRegister);
-=======
 void MacroAssembler::addPtr(ImmWord imm, Register dest) {
   addPtr(Imm32(imm.value), dest);
 }
@@ -205,7 +146,6 @@ void MacroAssembler::add64(Register64 src, Register64 dest) {
   }
   as_addu(dest.high, dest.high, src.high);
   as_addu(dest.high, dest.high, ScratchRegister);
->>>>>>> upstream-releases
 }
 
 void MacroAssembler::add64(Imm32 imm, Register64 dest) {
@@ -318,7 +258,6 @@ void MacroAssembler::mul64(Imm64 imm, const Register64& dest,
 
   MOZ_ASSERT(temp != dest.high && temp != dest.low);
 
-<<<<<<< HEAD
   // HIGH32 = LOW(HIGH(dest) * LOW(imm)) [multiply imm into upper bits]
   //        + LOW(LOW(dest) * HIGH(imm)) [multiply dest into upper bits]
   ma_li(ScratchRegister, imm.low());
@@ -340,92 +279,6 @@ void MacroAssembler::mul64(const Register64& src, const Register64& dest,
   // HIGH32 = LOW(HIGH(dest) * LOW(imm)) [multiply imm into upper bits]
   //        + LOW(LOW(dest) * HIGH(imm)) [multiply dest into upper bits]
   //        + HIGH(LOW(dest) * LOW(imm)) [carry]
-||||||| merged common ancestors
-    // HIGH32 = LOW(HIGH(dest) * LOW(src)) [multiply src into upper bits]
-    //        + LOW(LOW(dest) * HIGH(src)) [multiply dest into upper bits]
-    as_mult(dest.high, src.low);
-    as_madd(dest.low, src.high);
-    as_mflo(dest.high);
-    //        + HIGH(LOW(dest) * LOW(src)) [carry]
-    // LOW32  = LOW(LOW(dest) * LOW(src));
-    as_multu(dest.low, src.low);
-    as_mfhi(ScratchRegister);
-    as_mflo(dest.low);
-    as_addu(dest.high, dest.high, ScratchRegister);
-}
-
-void
-MacroAssembler::neg64(Register64 reg)
-{
-    as_subu(ScratchRegister, zero, reg.low);
-    as_sltu(ScratchRegister, reg.low, ScratchRegister);
-    as_subu(reg.high, zero, reg.high);
-    as_subu(reg.high, reg.high, ScratchRegister);
-}
-=======
-  // HIGH32 = LOW(HIGH(dest) * LOW(imm)) [multiply imm into upper bits]
-  //        + LOW(LOW(dest) * HIGH(imm)) [multiply dest into upper bits]
-  ma_li(ScratchRegister, imm.low());
-  as_mult(dest.high, ScratchRegister);
-  ma_li(temp, imm.hi());
-  as_madd(dest.low, temp);
-  as_mflo(dest.high);
-  //        + HIGH(LOW(dest) * LOW(imm)) [carry]
-  // LOW32  = LOW(LOW(dest) * LOW(imm));
-  as_multu(dest.low, ScratchRegister);
-  as_mfhi(ScratchRegister);
-  as_mflo(dest.low);
-  as_addu(dest.high, dest.high, ScratchRegister);
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  MOZ_ASSERT(dest != src);
-  MOZ_ASSERT(dest.low != src.high && dest.high != src.low);
-
-  // HIGH32 = LOW(HIGH(dest) * LOW(src)) [multiply src into upper bits]
-  //        + LOW(LOW(dest) * HIGH(src)) [multiply dest into upper bits]
-  as_mult(dest.high, src.low);
-  as_madd(dest.low, src.high);
-  as_mflo(dest.high);
-  //        + HIGH(LOW(dest) * LOW(src)) [carry]
-  // LOW32  = LOW(LOW(dest) * LOW(src));
-  as_multu(dest.low, src.low);
-  as_mfhi(ScratchRegister);
-  as_mflo(dest.low);
-  as_addu(dest.high, dest.high, ScratchRegister);
-||||||| merged common ancestors
-void
-MacroAssembler::mulBy3(Register src, Register dest)
-{
-    MOZ_ASSERT(src != ScratchRegister);
-    as_addu(ScratchRegister, src, src);
-    as_addu(dest, ScratchRegister, src);
-}
-
-void
-MacroAssembler::inc64(AbsoluteAddress dest)
-{
-    ma_li(ScratchRegister, Imm32((int32_t)dest.addr));
-    as_lw(SecondScratchReg, ScratchRegister, 0);
-
-    as_addiu(SecondScratchReg, SecondScratchReg, 1);
-    as_sw(SecondScratchReg, ScratchRegister, 0);
-
-    as_sltiu(SecondScratchReg, SecondScratchReg, 1);
-    as_lw(ScratchRegister, ScratchRegister, 4);
-
-    as_addu(SecondScratchReg, ScratchRegister, SecondScratchReg);
-
-    ma_li(ScratchRegister, Imm32((int32_t)dest.addr));
-    as_sw(SecondScratchReg, ScratchRegister, 4);
-=======
-void MacroAssembler::mul64(const Register64& src, const Register64& dest,
-                           const Register temp) {
-  // LOW32  = LOW(LOW(dest) * LOW(imm));
-  // HIGH32 = LOW(HIGH(dest) * LOW(imm)) [multiply imm into upper bits]
-  //        + LOW(LOW(dest) * HIGH(imm)) [multiply dest into upper bits]
-  //        + HIGH(LOW(dest) * LOW(imm)) [carry]
 
   MOZ_ASSERT(dest != src);
   MOZ_ASSERT(dest.low != src.high && dest.high != src.low);
@@ -441,7 +294,6 @@ void MacroAssembler::mul64(const Register64& src, const Register64& dest,
   as_mfhi(ScratchRegister);
   as_mflo(dest.low);
   as_addu(dest.high, dest.high, ScratchRegister);
->>>>>>> upstream-releases
 }
 
 void MacroAssembler::neg64(Register64 reg) {
@@ -451,37 +303,12 @@ void MacroAssembler::neg64(Register64 reg) {
   as_subu(reg.high, reg.high, ScratchRegister);
 }
 
-<<<<<<< HEAD
-void MacroAssembler::mulBy3(Register src, Register dest) {
-  MOZ_ASSERT(src != ScratchRegister);
-  as_addu(ScratchRegister, src, src);
-  as_addu(dest, ScratchRegister, src);
-||||||| merged common ancestors
-void
-MacroAssembler::lshift64(Imm32 imm, Register64 dest)
-{
-    MOZ_ASSERT(0 <= imm.value && imm.value < 64);
-    ScratchRegisterScope scratch(*this);
-
-    if (imm.value == 0) {
-        return;
-    } else if (imm.value < 32) {
-        as_sll(dest.high, dest.high, imm.value);
-        as_srl(scratch, dest.low, (32 - imm.value)%32);
-        as_or(dest.high, dest.high, scratch);
-        as_sll(dest.low, dest.low, imm.value);
-    } else {
-        as_sll(dest.high, dest.low, imm.value - 32);
-        move32(Imm32(0), dest.low);
-    }
-=======
 void MacroAssembler::negPtr(Register reg) { as_subu(reg, zero, reg); }
 
 void MacroAssembler::mulBy3(Register src, Register dest) {
   MOZ_ASSERT(src != ScratchRegister);
   as_addu(ScratchRegister, src, src);
   as_addu(dest, ScratchRegister, src);
->>>>>>> upstream-releases
 }
 
 void MacroAssembler::inc64(AbsoluteAddress dest) {
@@ -525,29 +352,13 @@ void MacroAssembler::lshift64(Imm32 imm, Register64 dest) {
   }
 }
 
-<<<<<<< HEAD
 void MacroAssembler::lshift64(Register unmaskedShift, Register64 dest) {
   Label done;
   ScratchRegisterScope shift(*this);
 
   ma_and(shift, unmaskedShift, Imm32(0x3f));
   ma_b(shift, Imm32(0), &done, Equal);
-||||||| merged common ancestors
-void
-MacroAssembler::rshift64(Register unmaskedShift, Register64 dest)
-{
-    Label done;
-    ScratchRegisterScope shift(*this);
 
-    ma_and(shift, unmaskedShift, Imm32(0x3f));
-    ma_b(shift, Imm32(0), &done, Equal);
-=======
-void MacroAssembler::lshift64(Register unmaskedShift, Register64 dest) {
-  Label done;
-  ScratchRegisterScope shift(*this);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   mov(dest.low, SecondScratchReg);
   ma_sll(dest.low, dest.low, shift);
   as_nor(shift, zero, shift);
@@ -556,71 +367,12 @@ void MacroAssembler::lshift64(Register unmaskedShift, Register64 dest) {
   ma_and(shift, unmaskedShift, Imm32(0x3f));
   ma_sll(dest.high, dest.high, shift);
   as_or(dest.high, dest.high, SecondScratchReg);
-||||||| merged common ancestors
-    mov(dest.high, SecondScratchReg);
-    ma_srl(dest.high, dest.high, shift);
-    as_nor(shift, zero, shift);
-    as_sll(SecondScratchReg, SecondScratchReg, 1);
-    ma_sll(SecondScratchReg, SecondScratchReg, shift);
-    ma_and(shift, unmaskedShift, Imm32(0x3f));
-    ma_srl(dest.low, dest.low, shift);
-    as_or(dest.low, dest.low, SecondScratchReg);
-    ma_and(SecondScratchReg, shift, Imm32(0x20));
-    as_movn(dest.low, dest.high, SecondScratchReg);
-    as_movn(dest.high, zero, SecondScratchReg);
-=======
-  ma_and(shift, unmaskedShift, Imm32(0x3f));
-  ma_b(shift, Imm32(0), &done, Equal);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ma_and(SecondScratchReg, shift, Imm32(0x20));
-  as_movn(dest.high, dest.low, SecondScratchReg);
-  as_movn(dest.low, zero, SecondScratchReg);
-||||||| merged common ancestors
-    bind(&done);
-}
-=======
-  mov(dest.low, SecondScratchReg);
-  ma_sll(dest.low, dest.low, shift);
-  as_nor(shift, zero, shift);
-  as_srl(SecondScratchReg, SecondScratchReg, 1);
-  ma_srl(SecondScratchReg, SecondScratchReg, shift);
-  ma_and(shift, unmaskedShift, Imm32(0x3f));
-  ma_sll(dest.high, dest.high, shift);
-  as_or(dest.high, dest.high, SecondScratchReg);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  bind(&done);
-||||||| merged common ancestors
-void
-MacroAssembler::rshift64Arithmetic(Imm32 imm, Register64 dest)
-{
-    MOZ_ASSERT(0 <= imm.value && imm.value < 64);
-    ScratchRegisterScope scratch(*this);
-
-    if (imm.value == 0) {
-        return;
-    } else if (imm.value < 32) {
-        as_srl(dest.low, dest.low, imm.value);
-        as_sll(scratch, dest.high, (32 - imm.value)%32);
-        as_or(dest.low, dest.low, scratch);
-        as_sra(dest.high, dest.high, imm.value);
-    } else if (imm.value == 32) {
-        ma_move(dest.low, dest.high);
-        as_sra(dest.high, dest.high, 31);
-    } else {
-        as_sra(dest.low, dest.high, imm.value - 32);
-        as_sra(dest.high, dest.high, 31);
-    }
-=======
   ma_and(SecondScratchReg, shift, Imm32(0x20));
   as_movn(dest.high, dest.low, SecondScratchReg);
   as_movn(dest.low, zero, SecondScratchReg);
 
   bind(&done);
->>>>>>> upstream-releases
 }
 
 void MacroAssembler::rshiftPtr(Imm32 imm, Register dest) {
@@ -1012,20 +764,6 @@ void MacroAssembler::branchTestInt32(Condition cond, const ValueOperand& value,
   branchTestInt32(cond, value.typeReg(), label);
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestInt32Truthy(bool b, const ValueOperand& value,
-                                           Label* label) {
-  ScratchRegisterScope scratch(*this);
-  as_and(scratch, value.payloadReg(), value.payloadReg());
-  ma_b(scratch, scratch, label, b ? NonZero : Zero);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestInt32Truthy(bool b, const ValueOperand& value, Label* label)
-{
-    ScratchRegisterScope scratch(*this);
-    as_and(scratch, value.payloadReg(), value.payloadReg());
-    ma_b(scratch, scratch, label, b ? NonZero : Zero);
-=======
 void MacroAssembler::branchTestInt32Truthy(bool b, const ValueOperand& value,
                                            Label* label) {
   ScratchRegisterScope scratch(*this);
@@ -1038,200 +776,65 @@ void MacroAssembler::branchTestDouble(Condition cond, Register tag,
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   Condition actual = (cond == Equal) ? Below : AboveOrEqual;
   ma_b(tag, ImmTag(JSVAL_TAG_CLEAR), label, actual);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestDouble(Condition cond, Register tag,
-                                      Label* label) {
-  MOZ_ASSERT(cond == Equal || cond == NotEqual);
-  Condition actual = (cond == Equal) ? Below : AboveOrEqual;
-  ma_b(tag, ImmTag(JSVAL_TAG_CLEAR), label, actual);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestDouble(Condition cond, Register tag, Label* label)
-{
-    MOZ_ASSERT(cond == Equal || cond == NotEqual);
-    Condition actual = (cond == Equal) ? Below : AboveOrEqual;
-    ma_b(tag, ImmTag(JSVAL_TAG_CLEAR), label, actual);
-=======
 void MacroAssembler::branchTestDouble(Condition cond, const ValueOperand& value,
                                       Label* label) {
   branchTestDouble(cond, value.typeReg(), label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestDouble(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  branchTestDouble(cond, value.typeReg(), label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestDouble(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestDouble(cond, value.typeReg(), label);
-=======
 void MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value,
                                       Label* label) {
   branchTestNumber(cond, value.typeReg(), label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  branchTestNumber(cond, value.typeReg(), label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestNumber(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestNumber(cond, value.typeReg(), label);
-=======
 void MacroAssembler::branchTestBoolean(Condition cond,
                                        const ValueOperand& value,
                                        Label* label) {
   MOZ_ASSERT(cond == Equal || cond == NotEqual);
   ma_b(value.typeReg(), ImmType(JSVAL_TYPE_BOOLEAN), label, cond);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestBoolean(Condition cond,
-                                       const ValueOperand& value,
-                                       Label* label) {
-  MOZ_ASSERT(cond == Equal || cond == NotEqual);
-  ma_b(value.typeReg(), ImmType(JSVAL_TYPE_BOOLEAN), label, cond);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestBoolean(Condition cond, const ValueOperand& value, Label* label)
-{
-    MOZ_ASSERT(cond == Equal || cond == NotEqual);
-    ma_b(value.typeReg(), ImmType(JSVAL_TYPE_BOOLEAN), label, cond);
-=======
 void MacroAssembler::branchTestBooleanTruthy(bool b, const ValueOperand& value,
                                              Label* label) {
   ma_b(value.payloadReg(), value.payloadReg(), label, b ? NonZero : Zero);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestBooleanTruthy(bool b, const ValueOperand& value,
-                                             Label* label) {
-  ma_b(value.payloadReg(), value.payloadReg(), label, b ? NonZero : Zero);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestBooleanTruthy(bool b, const ValueOperand& value, Label* label)
-{
-    ma_b(value.payloadReg(), value.payloadReg(), label, b ? NonZero : Zero);
-=======
 void MacroAssembler::branchTestString(Condition cond, const ValueOperand& value,
                                       Label* label) {
   branchTestString(cond, value.typeReg(), label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestString(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  branchTestString(cond, value.typeReg(), label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestString(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestString(cond, value.typeReg(), label);
-=======
 void MacroAssembler::branchTestStringTruthy(bool b, const ValueOperand& value,
                                             Label* label) {
   Register string = value.payloadReg();
   SecondScratchRegisterScope scratch2(*this);
   ma_lw(scratch2, Address(string, JSString::offsetOfLength()));
   ma_b(scratch2, Imm32(0), label, b ? NotEqual : Equal);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestStringTruthy(bool b, const ValueOperand& value,
-                                            Label* label) {
-  Register string = value.payloadReg();
-  SecondScratchRegisterScope scratch2(*this);
-  ma_lw(scratch2, Address(string, JSString::offsetOfLength()));
-  ma_b(scratch2, Imm32(0), label, b ? NotEqual : Equal);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestStringTruthy(bool b, const ValueOperand& value, Label* label)
-{
-    Register string = value.payloadReg();
-    SecondScratchRegisterScope scratch2(*this);
-    ma_lw(scratch2, Address(string, JSString::offsetOfLength()));
-    ma_b(scratch2, Imm32(0), label, b ? NotEqual : Equal);
-=======
 void MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value,
                                       Label* label) {
   branchTestSymbol(cond, value.typeReg(), label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  branchTestSymbol(cond, value.typeReg(), label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestSymbol(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestSymbol(cond, value.typeReg(), label);
-=======
 void MacroAssembler::branchTestBigInt(Condition cond, Register tag,
                                       Label* label) {
   branchTestBigIntImpl(cond, tag, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value,
-                                    Label* label) {
-  branchTestNull(cond, value.typeReg(), label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestNull(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestNull(cond, value.typeReg(), label);
-=======
 void MacroAssembler::branchTestBigInt(Condition cond, const BaseIndex& address,
                                       Label* label) {
   SecondScratchRegisterScope scratch2(*this);
   splitTag(value, scratch2);
   branchTestBigInt(cond, scratch2, label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestObject(Condition cond, const ValueOperand& value,
-                                      Label* label) {
-  branchTestObject(cond, value.typeReg(), label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestObject(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestObject(cond, value.typeReg(), label);
-=======
 void MacroAssembler::branchTestBigInt(Condition cond, const ValueOperand& value,
                                       Label* label) {
   branchTestBigInt(cond, value.typeReg(), label);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MacroAssembler::branchTestPrimitive(Condition cond,
-                                         const ValueOperand& value,
-                                         Label* label) {
-  branchTestPrimitive(cond, value.typeReg(), label);
-||||||| merged common ancestors
-void
-MacroAssembler::branchTestPrimitive(Condition cond, const ValueOperand& value, Label* label)
-{
-    branchTestPrimitive(cond, value.typeReg(), label);
-=======
 void MacroAssembler::branchTestBigIntTruthy(bool b, const ValueOperand& value,
                                             Label* label) {
   Register bi = value.payloadReg();
@@ -1254,7 +857,6 @@ void MacroAssembler::branchTestPrimitive(Condition cond,
                                          const ValueOperand& value,
                                          Label* label) {
   branchTestPrimitive(cond, value.typeReg(), label);
->>>>>>> upstream-releases
 }
 
 template <class L>

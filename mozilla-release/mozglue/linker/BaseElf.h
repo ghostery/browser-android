@@ -31,39 +31,9 @@ class BaseElf : public LibHandle {
    */
   const Elf::Sym* GetSymbol(const char* symbol, unsigned long hash) const;
 
-<<<<<<< HEAD
-  explicit BaseElf(const char *path, Mappable *mappable = nullptr)
-      : LibHandle(path), mappable(mappable) {}
-||||||| merged common ancestors
-  explicit BaseElf(const char *path, Mappable *mappable = nullptr)
-  : LibHandle(path)
-  , mappable(mappable)
-  {
-  }
-=======
   explicit BaseElf(const char* path, Mappable* mappable = nullptr)
       : LibHandle(path), mappable(mappable) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- protected:
-  /**
-   * Inherited from LibHandle. Those are temporary and are not supposed to
-   * be used.
-   */
-  virtual void *GetSymbolPtr(const char *symbol) const;
-  virtual bool Contains(void *addr) const;
-  virtual void *GetBase() const { return GetPtr(0); }
-||||||| merged common ancestors
-protected:
-   /**
-    * Inherited from LibHandle. Those are temporary and are not supposed to
-    * be used.
-    */
-   virtual void *GetSymbolPtr(const char *symbol) const;
-   virtual bool Contains(void *addr) const;
-   virtual void *GetBase() const { return GetPtr(0); }
-=======
  protected:
   /**
    * Inherited from LibHandle. Those are temporary and are not supposed to
@@ -72,7 +42,6 @@ protected:
   virtual void* GetSymbolPtr(const char* symbol) const;
   virtual bool Contains(void* addr) const;
   virtual void* GetBase() const { return GetPtr(0); }
->>>>>>> upstream-releases
 
 #ifdef __ARM_EABI__
   virtual const void* FindExidx(int* pcount) const;
@@ -86,20 +55,9 @@ protected:
    * Returns a pointer relative to the base address where the library is
    * loaded.
    */
-<<<<<<< HEAD
-  void *GetPtr(const Elf::Addr offset) const {
-    if (reinterpret_cast<void *>(offset) > base)
-      return reinterpret_cast<void *>(offset);
-||||||| merged common ancestors
-  void *GetPtr(const Elf::Addr offset) const
-  {
-    if (reinterpret_cast<void *>(offset) > base)
-      return reinterpret_cast<void *>(offset);
-=======
   void* GetPtr(const Elf::Addr offset) const {
     if (reinterpret_cast<void*>(offset) > base)
       return reinterpret_cast<void*>(offset);
->>>>>>> upstream-releases
     return base + offset;
   }
 
@@ -107,23 +65,10 @@ protected:
    * Like the above, but returns a typed (const) pointer
    */
   template <typename T>
-<<<<<<< HEAD
-  const T *GetPtr(const Elf::Addr offset) const {
-    if (reinterpret_cast<void *>(offset) > base)
-      return reinterpret_cast<const T *>(offset);
-    return reinterpret_cast<const T *>(base + offset);
-||||||| merged common ancestors
-  const T *GetPtr(const Elf::Addr offset) const
-  {
-    if (reinterpret_cast<void *>(offset) > base)
-      return reinterpret_cast<const T *>(offset);
-    return reinterpret_cast<const T *>(base + offset);
-=======
   const T* GetPtr(const Elf::Addr offset) const {
     if (reinterpret_cast<void*>(offset) > base)
       return reinterpret_cast<const T*>(offset);
     return reinterpret_cast<const T*>(base + offset);
->>>>>>> upstream-releases
   }
 
   /* Appropriated Mappable */
@@ -160,26 +105,10 @@ class LoadedElf : public BaseElf {
    * Returns a LoadedElf corresponding to the already loaded ELF
    * at the given base address.
    */
-<<<<<<< HEAD
-  static already_AddRefed<LibHandle> Create(const char *path, void *base_addr);
-||||||| merged common ancestors
-  static already_AddRefed<LibHandle> Create(const char *path,
-                                                 void *base_addr);
-=======
   static already_AddRefed<LibHandle> Create(const char* path, void* base_addr);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  explicit LoadedElf(const char *path) : BaseElf(path) {}
-||||||| merged common ancestors
-private:
-  explicit LoadedElf(const char *path)
-  : BaseElf(path) { }
-=======
  private:
   explicit LoadedElf(const char* path) : BaseElf(path) {}
->>>>>>> upstream-releases
 
   ~LoadedElf() {
     /* Avoid base's destructor unmapping something that doesn't actually

@@ -35,27 +35,6 @@ class nsCommandLine final : public nsICommandLineRunner {
 
   void appendArg(const char* arg);
   MOZ_MUST_USE nsresult resolveShortcutURL(nsIFile* aFile, nsACString& outURL);
-<<<<<<< HEAD
-  nsresult EnumerateHandlers(EnumerateHandlersCallback aCallback,
-                             void* aClosure);
-  nsresult EnumerateValidators(EnumerateValidatorsCallback aCallback,
-                               void* aClosure);
-
-  nsTArray<nsString> mArgs;
-  uint32_t mState;
-  nsCOMPtr<nsIFile> mWorkingDir;
-  nsCOMPtr<nsIDOMWindow> mWindowContext;
-  bool mPreventDefault;
-||||||| merged common ancestors
-  nsresult EnumerateHandlers(EnumerateHandlersCallback aCallback, void *aClosure);
-  nsresult EnumerateValidators(EnumerateValidatorsCallback aCallback, void *aClosure);
-
-  nsTArray<nsString>      mArgs;
-  uint32_t                mState;
-  nsCOMPtr<nsIFile>       mWorkingDir;
-  nsCOMPtr<nsIDOMWindow>  mWindowContext;
-  bool                    mPreventDefault;
-=======
   nsresult EnumerateHandlers(EnumerateHandlersCallback aCallback,
                              void* aClosure);
   nsresult EnumerateValidators(EnumerateValidatorsCallback aCallback,
@@ -65,7 +44,6 @@ class nsCommandLine final : public nsICommandLineRunner {
   uint32_t mState;
   nsCOMPtr<nsIFile> mWorkingDir;
   bool mPreventDefault;
->>>>>>> upstream-releases
 };
 
 #endif

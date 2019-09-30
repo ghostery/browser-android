@@ -887,22 +887,10 @@ void gfxMacPlatformFontList::AddFamily(const nsACString& aFamilyName, bool aSyst
   RefPtr<gfxFontFamily> familyEntry = new gfxMacFontFamily(aFamilyName, sizeHint);
   table.Put(key, familyEntry);
 
-<<<<<<< HEAD
-    // check the bad underline blacklist
-    if (mBadUnderlineFamilyNames.ContainsSorted(key)) {
-        familyEntry->SetBadUnderlineFamily();
-    }
-||||||| merged common ancestors
-    // check the bad underline blacklist
-    if (mBadUnderlineFamilyNames.Contains(key)) {
-        familyEntry->SetBadUnderlineFamily();
-    }
-=======
   // check the bad underline blacklist
   if (mBadUnderlineFamilyNames.ContainsSorted(key)) {
     familyEntry->SetBadUnderlineFamily();
   }
->>>>>>> upstream-releases
 }
 
 void gfxMacPlatformFontList::AddFamily(CFStringRef aFamily) {

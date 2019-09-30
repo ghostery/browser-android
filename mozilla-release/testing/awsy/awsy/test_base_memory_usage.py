@@ -52,20 +52,6 @@ class TestMemoryUsage(AwsyTestCase):
         # Override AwsyTestCase value, this is always going to be 1 iteration.
         self._iterations = 1
 
-<<<<<<< HEAD
-        # We don't want to measure the preallocated process, so we load enough
-        # tabs so that it is no longer launched.
-        process_count = self.marionette.get_pref('dom.ipc.processCount')
-        self._urls = ['about:blank'] * process_count
-
-        self.logger.info("areweslimyet run by %d pages, %d iterations, %d perTabPause, %d settleWaitTime, %d content processes"
-                         % (self._pages_to_load, self._iterations, self._perTabPause, self._settleWaitTime, process_count))
-||||||| merged common ancestors
-        self._urls = ['about:blank'] * 4
-
-        self.logger.info("areweslimyet run by %d pages, %d iterations, %d perTabPause, %d settleWaitTime"
-                         % (self._pages_to_load, self._iterations, self._perTabPause, self._settleWaitTime))
-=======
         # Override "entities" from our configuration.
         #
         # We aim to load a number of about:blank pages exactly matching the
@@ -82,7 +68,6 @@ class TestMemoryUsage(AwsyTestCase):
                          % (self._pages_to_load, self._iterations,
                             self._perTabPause, self._settleWaitTime,
                             process_count))
->>>>>>> upstream-releases
         self.logger.info("done setting up!")
 
     def tearDown(self):

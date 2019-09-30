@@ -28,24 +28,10 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(StreamFilterDataEvent)
 NS_INTERFACE_MAP_END_INHERITING(Event)
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<StreamFilterDataEvent>
-StreamFilterDataEvent::Constructor(EventTarget* aEventTarget,
-                                   const nsAString& aType,
-                                   const StreamFilterDataEventInit& aParam) {
-||||||| merged common ancestors
-
-/* static */ already_AddRefed<StreamFilterDataEvent>
-StreamFilterDataEvent::Constructor(EventTarget* aEventTarget,
-                                   const nsAString& aType,
-                                   const StreamFilterDataEventInit& aParam)
-{
-=======
 /* static */
 already_AddRefed<StreamFilterDataEvent> StreamFilterDataEvent::Constructor(
     EventTarget* aEventTarget, const nsAString& aType,
     const StreamFilterDataEventInit& aParam) {
->>>>>>> upstream-releases
   RefPtr<StreamFilterDataEvent> event = new StreamFilterDataEvent(aEventTarget);
 
   bool trusted = event->Init(aEventTarget);

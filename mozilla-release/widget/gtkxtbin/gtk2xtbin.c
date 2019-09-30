@@ -35,60 +35,13 @@
 
 #define XTBIN_MAX_EVENTS 30
 
-<<<<<<< HEAD
-static void gtk_xtbin_class_init(GtkXtBinClass *klass);
-static void gtk_xtbin_init(GtkXtBin *xtbin);
-static void gtk_xtbin_realize(GtkWidget *widget);
-static void gtk_xtbin_unrealize(GtkWidget *widget);
-static void gtk_xtbin_destroy(GtkObject *object);
-||||||| merged common ancestors
-static void            gtk_xtbin_class_init (GtkXtBinClass *klass);
-static void            gtk_xtbin_init       (GtkXtBin      *xtbin);
-static void            gtk_xtbin_realize    (GtkWidget      *widget);
-static void            gtk_xtbin_unrealize    (GtkWidget      *widget);
-static void            gtk_xtbin_destroy    (GtkObject      *object);
-=======
 static void gtk_xtbin_class_init(GtkXtBinClass* klass);
 static void gtk_xtbin_init(GtkXtBin* xtbin);
 static void gtk_xtbin_realize(GtkWidget* widget);
 static void gtk_xtbin_unrealize(GtkWidget* widget);
 static void gtk_xtbin_destroy(GtkObject* object);
->>>>>>> upstream-releases
 
 /* Xt aware XEmbed */
-<<<<<<< HEAD
-static void xt_client_handle_xembed_message(Widget w, XtPointer client_data,
-                                            XEvent *event);
-static void xt_add_focus_listener(Widget w, XtPointer user_data);
-static void xt_add_focus_listener_tree(Widget treeroot, XtPointer user_data);
-static void xt_remove_focus_listener(Widget w, XtPointer user_data);
-static void xt_client_event_handler(Widget w, XtPointer client_data,
-                                    XEvent *event);
-static void xt_client_focus_listener(Widget w, XtPointer user_data,
-                                     XEvent *event);
-static void xt_client_set_info(Widget xtplug, unsigned long flags);
-static void send_xembed_message(XtClient *xtclient, long message, long detail,
-                                long data1, long data2, long time);
-static int error_handler(Display *display, XErrorEvent *error);
-||||||| merged common ancestors
-static void       xt_client_handle_xembed_message (Widget w, 
-                                                   XtPointer client_data, 
-                                                   XEvent *event);
-static void       xt_add_focus_listener( Widget w, XtPointer user_data );
-static void       xt_add_focus_listener_tree ( Widget treeroot, XtPointer user_data); 
-static void       xt_remove_focus_listener(Widget w, XtPointer user_data);
-static void       xt_client_event_handler (Widget w, XtPointer client_data, XEvent *event);
-static void       xt_client_focus_listener (Widget w, XtPointer user_data, XEvent *event);
-static void       xt_client_set_info (Widget xtplug, unsigned long flags);
-static void       send_xembed_message (XtClient *xtclient,
-                                       long message, 
-                                       long detail, 
-                                       long data1, 
-                                       long data2,
-                                       long time);  
-static int        error_handler       (Display *display, 
-                                       XErrorEvent *error);
-=======
 static void xt_client_handle_xembed_message(Widget w, XtPointer client_data,
                                             XEvent* event);
 static void xt_add_focus_listener(Widget w, XtPointer user_data);
@@ -102,48 +55,7 @@ static void xt_client_set_info(Widget xtplug, unsigned long flags);
 static void send_xembed_message(XtClient* xtclient, long message, long detail,
                                 long data1, long data2, long time);
 static int error_handler(Display* display, XErrorEvent* error);
->>>>>>> upstream-releases
 /* For error trap of XEmbed */
-<<<<<<< HEAD
-static void trap_errors(void);
-static int untrap_error(void);
-static int (*old_error_handler)(Display *, XErrorEvent *);
-static int trapped_error_code = 0;
-
-static GtkWidgetClass *parent_class = NULL;
-
-static Display *xtdisplay = NULL;
-static String *fallback = NULL;
-static gboolean xt_is_initialized = FALSE;
-static gint num_widgets = 0;
-
-static GPollFD xt_event_poll_fd;
-static gint xt_polling_timer_id = 0;
-static guint tag = 0;
-
-static gboolean xt_event_prepare(GSource *source_data, gint *timeout) {
-||||||| merged common ancestors
-static void       trap_errors(void);
-static int        untrap_error(void);
-static int        (*old_error_handler) (Display *, XErrorEvent *);
-static int        trapped_error_code = 0;
-
-static GtkWidgetClass *parent_class = NULL;
-
-static Display         *xtdisplay = NULL;
-static String          *fallback = NULL;
-static gboolean         xt_is_initialized = FALSE;
-static gint             num_widgets = 0;
-
-static GPollFD          xt_event_poll_fd;
-static gint             xt_polling_timer_id = 0;
-static guint            tag = 0;
-
-static gboolean
-xt_event_prepare (GSource*  source_data,
-                   gint     *timeout)
-{   
-=======
 static void trap_errors(void);
 static int untrap_error(void);
 static int (*old_error_handler)(Display*, XErrorEvent*);
@@ -161,7 +73,6 @@ static gint xt_polling_timer_id = 0;
 static guint tag = 0;
 
 static gboolean xt_event_prepare(GSource* source_data, gint* timeout) {
->>>>>>> upstream-releases
   int mask;
 
   mask = XPending(xtdisplay);
@@ -169,15 +80,7 @@ static gboolean xt_event_prepare(GSource* source_data, gint* timeout) {
   return (gboolean)mask;
 }
 
-<<<<<<< HEAD
-static gboolean xt_event_check(GSource *source_data) {
-||||||| merged common ancestors
-static gboolean
-xt_event_check (GSource*  source_data)
-{
-=======
 static gboolean xt_event_check(GSource* source_data) {
->>>>>>> upstream-releases
   if (xt_event_poll_fd.revents & G_IO_IN) {
     int mask;
     mask = XPending(xtdisplay);
@@ -187,19 +90,8 @@ static gboolean xt_event_check(GSource* source_data) {
   return FALSE;
 }
 
-<<<<<<< HEAD
-static gboolean xt_event_dispatch(GSource *source_data, GSourceFunc call_back,
-                                  gpointer user_data) {
-||||||| merged common ancestors
-static gboolean
-xt_event_dispatch (GSource*  source_data,
-                    GSourceFunc call_back,
-                    gpointer  user_data)
-{
-=======
 static gboolean xt_event_dispatch(GSource* source_data, GSourceFunc call_back,
                                   gpointer user_data) {
->>>>>>> upstream-releases
   XtAppContext ac;
   int i = 0;
 
@@ -218,32 +110,11 @@ static gboolean xt_event_dispatch(GSource* source_data, GSourceFunc call_back,
 }
 
 static GSourceFuncs xt_event_funcs = {
-<<<<<<< HEAD
-    xt_event_prepare,  xt_event_check,           xt_event_dispatch, NULL,
-    (GSourceFunc)NULL, (GSourceDummyMarshal)NULL};
-
-static gboolean xt_event_polling_timer_callback(gpointer user_data) {
-  Display *display;
-||||||| merged common ancestors
-  xt_event_prepare,
-  xt_event_check,
-  xt_event_dispatch,
-  NULL,
-  (GSourceFunc)NULL,
-  (GSourceDummyMarshal)NULL
-};
-
-static gboolean
-xt_event_polling_timer_callback(gpointer user_data)
-{
-  Display * display;
-=======
     xt_event_prepare,  xt_event_check,           xt_event_dispatch, NULL,
     (GSourceFunc)NULL, (GSourceDummyMarshal)NULL};
 
 static gboolean xt_event_polling_timer_callback(gpointer user_data) {
   Display* display;
->>>>>>> upstream-releases
   XtAppContext ac;
   int eventsToProcess = 20;
 
@@ -282,21 +153,9 @@ GType gtk_xtbin_get_type(void) {
   return xtbin_type;
 }
 
-<<<<<<< HEAD
-static void gtk_xtbin_class_init(GtkXtBinClass *klass) {
-  GtkWidgetClass *widget_class;
-  GtkObjectClass *object_class;
-||||||| merged common ancestors
-static void
-gtk_xtbin_class_init (GtkXtBinClass *klass)
-{
-  GtkWidgetClass *widget_class;
-  GtkObjectClass *object_class;
-=======
 static void gtk_xtbin_class_init(GtkXtBinClass* klass) {
   GtkWidgetClass* widget_class;
   GtkObjectClass* object_class;
->>>>>>> upstream-releases
 
   parent_class = g_type_class_peek_parent(klass);
 
@@ -308,38 +167,16 @@ static void gtk_xtbin_class_init(GtkXtBinClass* klass) {
   object_class->destroy = gtk_xtbin_destroy;
 }
 
-<<<<<<< HEAD
-static void gtk_xtbin_init(GtkXtBin *xtbin) {
-||||||| merged common ancestors
-static void
-gtk_xtbin_init (GtkXtBin *xtbin)
-{
-=======
 static void gtk_xtbin_init(GtkXtBin* xtbin) {
->>>>>>> upstream-releases
   xtbin->xtdisplay = NULL;
   xtbin->parent_window = NULL;
   xtbin->xtwindow = 0;
 }
 
-<<<<<<< HEAD
-static void gtk_xtbin_realize(GtkWidget *widget) {
-  GtkXtBin *xtbin;
-  GtkAllocation allocation = {0, 0, 200, 200};
-  gint x, y, w, h, d; /* geometry of window */
-||||||| merged common ancestors
-static void
-gtk_xtbin_realize (GtkWidget *widget)
-{
-  GtkXtBin     *xtbin;
-  GtkAllocation allocation = { 0, 0, 200, 200 };
-  gint  x, y, w, h, d; /* geometry of window */
-=======
 static void gtk_xtbin_realize(GtkWidget* widget) {
   GtkXtBin* xtbin;
   GtkAllocation allocation = {0, 0, 200, 200};
   gint x, y, w, h, d; /* geometry of window */
->>>>>>> upstream-releases
 
 #ifdef DEBUG_XTBIN
   printf("gtk_xtbin_realize()\n");
@@ -373,33 +210,14 @@ static void gtk_xtbin_realize(GtkWidget* widget) {
   gtk_socket_add_id(GTK_SOCKET(widget), xtbin->xtwindow);
 }
 
-<<<<<<< HEAD
-GtkWidget *gtk_xtbin_new(GdkWindow *parent_window, String *f) {
-  GtkXtBin *xtbin;
-||||||| merged common ancestors
-
-
-GtkWidget*
-gtk_xtbin_new (GdkWindow *parent_window, String * f)
-{
-  GtkXtBin *xtbin;
-=======
 GtkWidget* gtk_xtbin_new(GdkWindow* parent_window, String* f) {
   GtkXtBin* xtbin;
->>>>>>> upstream-releases
   gpointer user_data;
 
   assert(parent_window != NULL);
   xtbin = g_object_new(GTK_TYPE_XTBIN, NULL);
 
-<<<<<<< HEAD
-  if (!xtbin) return (GtkWidget *)NULL;
-||||||| merged common ancestors
-  if (!xtbin)
-    return (GtkWidget*)NULL;
-=======
   if (!xtbin) return (GtkWidget*)NULL;
->>>>>>> upstream-releases
 
   if (f) fallback = f;
 
@@ -417,16 +235,8 @@ GtkWidget* gtk_xtbin_new(GdkWindow* parent_window, String* f) {
 #ifdef DEBUG_XTBIN
     printf("gtk_xtbin_init: XtOpenDisplay() returned NULL.\n");
 #endif
-<<<<<<< HEAD
-    g_free(xtbin);
-    return (GtkWidget *)NULL;
-||||||| merged common ancestors
-    g_free (xtbin);
-    return (GtkWidget *)NULL;
-=======
     g_free(xtbin);
     return (GtkWidget*)NULL;
->>>>>>> upstream-releases
   }
 
   /* Launch X event loop */
@@ -450,21 +260,9 @@ GtkWidget* gtk_xtbin_new(GdkWindow* parent_window, String* f) {
   return GTK_WIDGET(xtbin);
 }
 
-<<<<<<< HEAD
-static void gtk_xtbin_unrealize(GtkWidget *object) {
-  GtkXtBin *xtbin;
-  GtkWidget *widget;
-||||||| merged common ancestors
-static void
-gtk_xtbin_unrealize (GtkWidget *object)
-{
-  GtkXtBin *xtbin;
-  GtkWidget *widget;
-=======
 static void gtk_xtbin_unrealize(GtkWidget* object) {
   GtkXtBin* xtbin;
   GtkWidget* widget;
->>>>>>> upstream-releases
 
 #ifdef DEBUG_XTBIN
   printf("gtk_xtbin_unrealize()\n");
@@ -483,18 +281,8 @@ static void gtk_xtbin_unrealize(GtkWidget* object) {
   (*GTK_WIDGET_CLASS(parent_class)->unrealize)(widget);
 }
 
-<<<<<<< HEAD
-static void gtk_xtbin_destroy(GtkObject *object) {
-  GtkXtBin *xtbin;
-||||||| merged common ancestors
-static void
-gtk_xtbin_destroy (GtkObject *object)
-{
-  GtkXtBin *xtbin;
-=======
 static void gtk_xtbin_destroy(GtkObject* object) {
   GtkXtBin* xtbin;
->>>>>>> upstream-releases
 
 #ifdef DEBUG_XTBIN
   printf("gtk_xtbin_destroy()\n");
@@ -522,29 +310,11 @@ static void gtk_xtbin_destroy(GtkObject* object) {
  */
 
 /* Initial Xt plugin */
-<<<<<<< HEAD
-void xt_client_init(XtClient *xtclient, Visual *xtvisual, Colormap xtcolormap,
-                    int xtdepth) {
-  XtAppContext app_context;
-  char *mArgv[1];
-  int mArgc = 0;
-||||||| merged common ancestors
-void
-xt_client_init( XtClient * xtclient, 
-                Visual *xtvisual, 
-                Colormap xtcolormap,
-                int xtdepth)
-{
-  XtAppContext  app_context;
-  char         *mArgv[1];
-  int           mArgc = 0;
-=======
 void xt_client_init(XtClient* xtclient, Visual* xtvisual, Colormap xtcolormap,
                     int xtdepth) {
   XtAppContext app_context;
   char* mArgv[1];
   int mArgc = 0;
->>>>>>> upstream-releases
 
   /*
    * Initialize Xt stuff
@@ -579,7 +349,7 @@ void xt_client_xloop_create(void) {
      mainloop */
   if (0 == num_widgets) {
     int cnumber;
-    GSource *gs;
+    GSource* gs;
 
     /* Set up xtdisplay in case we're missing one */
     if (!xtdisplay) {
@@ -597,7 +367,7 @@ void xt_client_xloop_create(void) {
 
     g_source_set_priority(gs, GDK_PRIORITY_EVENTS);
     g_source_set_can_recurse(gs, TRUE);
-    tag = g_source_attach(gs, (GMainContext *)NULL);
+    tag = g_source_attach(gs, (GMainContext*)NULL);
     g_source_unref(gs);
 #ifdef VMS
     cnumber = XConnectionNumber(xtdisplay);
@@ -608,17 +378,8 @@ void xt_client_xloop_create(void) {
     xt_event_poll_fd.events = G_IO_IN;
     xt_event_poll_fd.revents = 0; /* hmm... is this correct? */
 
-<<<<<<< HEAD
-    g_main_context_add_poll((GMainContext *)NULL, &xt_event_poll_fd,
-                            G_PRIORITY_LOW);
-||||||| merged common ancestors
-    g_main_context_add_poll ((GMainContext*)NULL, 
-                             &xt_event_poll_fd, 
-                             G_PRIORITY_LOW);
-=======
     g_main_context_add_poll((GMainContext*)NULL, &xt_event_poll_fd,
                             G_PRIORITY_LOW);
->>>>>>> upstream-releases
     /* add a timer so that we can poll and process Xt timers */
     xt_polling_timer_id = g_timeout_add(
         25, (GtkFunction)xt_event_polling_timer_callback, xtdisplay);
@@ -637,7 +398,7 @@ void xt_client_xloop_destroy(void) {
 #ifdef DEBUG_XTBIN
     printf("removing the Xt connection from the main loop\n");
 #endif
-    g_main_context_remove_poll((GMainContext *)NULL, &xt_event_poll_fd);
+    g_main_context_remove_poll((GMainContext*)NULL, &xt_event_poll_fd);
     g_source_remove(tag);
 
     g_source_remove(xt_polling_timer_id);
@@ -646,15 +407,7 @@ void xt_client_xloop_destroy(void) {
 }
 
 /* Get Xt Client display */
-<<<<<<< HEAD
-Display *xt_client_get_display(void) {
-||||||| merged common ancestors
-Display	*
-xt_client_get_display(void)
-{
-=======
 Display* xt_client_get_display(void) {
->>>>>>> upstream-releases
   if (!xtdisplay) {
     XtClient tmp;
     xt_client_init(&tmp, NULL, 0, 0);
@@ -663,27 +416,6 @@ Display* xt_client_get_display(void) {
 }
 
 /* Create the Xt client widgets
-<<<<<<< HEAD
- *  */
-void xt_client_create(XtClient *xtclient, Window embedderid, int height,
-                      int width) {
-  int n;
-  Arg args[6];
-  Widget child_widget;
-  Widget top_widget;
-||||||| merged common ancestors
-*  */
-void
-xt_client_create ( XtClient* xtclient , 
-                   Window embedderid, 
-                   int height, 
-                   int width ) 
-{
-  int           n;
-  Arg           args[6];
-  Widget        child_widget;
-  Widget        top_widget;
-=======
  *  */
 void xt_client_create(XtClient* xtclient, Window embedderid, int height,
                       int width) {
@@ -691,7 +423,6 @@ void xt_client_create(XtClient* xtclient, Window embedderid, int height,
   Arg args[6];
   Widget child_widget;
   Widget top_widget;
->>>>>>> upstream-releases
 
 #ifdef DEBUG_XTBIN
   printf("xt_client_create() \n");
@@ -754,15 +485,7 @@ void xt_client_create(XtClient* xtclient, Window embedderid, int height,
   XSync(xtclient->xtdisplay, FALSE);
 }
 
-<<<<<<< HEAD
-void xt_client_unrealize(XtClient *xtclient) {
-||||||| merged common ancestors
-void
-xt_client_unrealize ( XtClient* xtclient )
-{
-=======
 void xt_client_unrealize(XtClient* xtclient) {
->>>>>>> upstream-releases
   /* Explicitly destroy the child_widget window because this is actually a
      child of the socket window.  It is not a child of top_widget's window
      when that is destroyed. */
@@ -782,18 +505,8 @@ void xt_client_unrealize(XtClient* xtclient) {
   XtUnrealizeWidget(xtclient->top_widget);
 }
 
-<<<<<<< HEAD
-void xt_client_destroy(XtClient *xtclient) {
-  if (xtclient->top_widget) {
-||||||| merged common ancestors
-void            
-xt_client_destroy   (XtClient* xtclient)
-{
-  if(xtclient->top_widget) {
-=======
 void xt_client_destroy(XtClient* xtclient) {
   if (xtclient->top_widget) {
->>>>>>> upstream-releases
     XtRemoveEventHandler(xtclient->child_widget,
                          StructureNotifyMask | KeyPressMask, TRUE,
                          (XtEventHandler)xt_client_event_handler, xtclient);
@@ -810,39 +523,10 @@ void xt_client_set_info(Widget xtplug, unsigned long flags) {
   buffer[1] = 0; /* Protocol version */
   buffer[1] = flags;
 
-<<<<<<< HEAD
-  XChangeProperty(XtDisplay(xtplug), XtWindow(xtplug), infoAtom, infoAtom, 32,
-                  PropModeReplace, (unsigned char *)buffer, 2);
-||||||| merged common ancestors
-  XChangeProperty (XtDisplay(xtplug), XtWindow(xtplug),
-                   infoAtom, infoAtom, 32,
-                   PropModeReplace,
-                   (unsigned char *)buffer, 2);
-=======
   XChangeProperty(XtDisplay(xtplug), XtWindow(xtplug), infoAtom, infoAtom, 32,
                   PropModeReplace, (unsigned char*)buffer, 2);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void xt_client_handle_xembed_message(Widget w, XtPointer client_data,
-                                            XEvent *event) {
-  XtClient *xtplug = (XtClient *)client_data;
-  switch (event->xclient.data.l[1]) {
-    case XEMBED_EMBEDDED_NOTIFY:
-      break;
-    case XEMBED_WINDOW_ACTIVATE:
-||||||| merged common ancestors
-static void
-xt_client_handle_xembed_message(Widget w, XtPointer client_data, XEvent *event)
-{
-  XtClient *xtplug = (XtClient*)client_data;
-  switch (event->xclient.data.l[1])
-  {
-  case XEMBED_EMBEDDED_NOTIFY:
-    break;
-  case XEMBED_WINDOW_ACTIVATE:
-=======
 static void xt_client_handle_xembed_message(Widget w, XtPointer client_data,
                                             XEvent* event) {
   XtClient* xtplug = (XtClient*)client_data;
@@ -850,7 +534,6 @@ static void xt_client_handle_xembed_message(Widget w, XtPointer client_data,
     case XEMBED_EMBEDDED_NOTIFY:
       break;
     case XEMBED_WINDOW_ACTIVATE:
->>>>>>> upstream-releases
 #ifdef DEBUG_XTBIN
       printf("Xt client get XEMBED_WINDOW_ACTIVATE\n");
 #endif
@@ -898,25 +581,10 @@ static void xt_client_handle_xembed_message(Widget w, XtPointer client_data,
   } /* End of XEmbed Message */
 }
 
-<<<<<<< HEAD
-void xt_client_event_handler(Widget w, XtPointer client_data, XEvent *event) {
-  XtClient *xtplug = (XtClient *)client_data;
-
-  switch (event->type) {
-||||||| merged common ancestors
-void         
-xt_client_event_handler( Widget w, XtPointer client_data, XEvent *event)
-{
-  XtClient *xtplug = (XtClient*)client_data;
-  
-  switch(event->type)
-    {
-=======
 void xt_client_event_handler(Widget w, XtPointer client_data, XEvent* event) {
   XtClient* xtplug = (XtClient*)client_data;
 
   switch (event->type) {
->>>>>>> upstream-releases
     case ClientMessage:
       /* Handle xembed message */
       if (event->xclient.message_type ==
@@ -942,31 +610,11 @@ void xt_client_event_handler(Widget w, XtPointer client_data, XEvent* event) {
   } /* End of switch(event->type) */
 }
 
-<<<<<<< HEAD
-static void send_xembed_message(XtClient *xtclient, long message, long detail,
-                                long data1, long data2, long time) {
-  XEvent xevent;
-  Window w = XtWindow(xtclient->top_widget);
-  Display *dpy = xtclient->xtdisplay;
-||||||| merged common ancestors
-static void
-send_xembed_message (XtClient  *xtclient,
-                     long      message,
-                     long      detail, 
-                     long      data1,  
-                     long      data2,  
-                     long      time)   
-{
-  XEvent xevent; 
-  Window w=XtWindow(xtclient->top_widget);
-  Display* dpy=xtclient->xtdisplay;
-=======
 static void send_xembed_message(XtClient* xtclient, long message, long detail,
                                 long data1, long data2, long time) {
   XEvent xevent;
   Window w = XtWindow(xtclient->top_widget);
   Display* dpy = xtclient->xtdisplay;
->>>>>>> upstream-releases
   int errorcode;
 
   memset(&xevent, 0, sizeof(xevent));
@@ -991,15 +639,7 @@ static void send_xembed_message(XtClient* xtclient, long message, long detail,
   }
 }
 
-<<<<<<< HEAD
-static int error_handler(Display *display, XErrorEvent *error) {
-||||||| merged common ancestors
-static int             
-error_handler(Display *display, XErrorEvent *error)
-{
-=======
 static int error_handler(Display* display, XErrorEvent* error) {
->>>>>>> upstream-releases
   trapped_error_code = error->error_code;
   return 0;
 }
@@ -1019,21 +659,9 @@ static int untrap_error(void) {
   return trapped_error_code;
 }
 
-<<<<<<< HEAD
-void xt_client_focus_listener(Widget w, XtPointer user_data, XEvent *event) {
-  Display *dpy = XtDisplay(w);
-  XtClient *xtclient = user_data;
-||||||| merged common ancestors
-void         
-xt_client_focus_listener( Widget w, XtPointer user_data, XEvent *event)
-{
-  Display *dpy = XtDisplay(w);
-  XtClient *xtclient = user_data;
-=======
 void xt_client_focus_listener(Widget w, XtPointer user_data, XEvent* event) {
   Display* dpy = XtDisplay(w);
   XtClient* xtclient = user_data;
->>>>>>> upstream-releases
   Window win = XtWindow(w);
 
   switch (event->type) {
@@ -1068,33 +696,12 @@ void xt_client_focus_listener(Widget w, XtPointer user_data, XEvent* event) {
   } /* End of switch(event->type) */
 }
 
-<<<<<<< HEAD
-static void xt_add_focus_listener(Widget w, XtPointer user_data) {
-  XtClient *xtclient = user_data;
-
-  trap_errors();
-  XtAddEventHandler(w, SubstructureNotifyMask | ButtonReleaseMask, FALSE,
-                    (XtEventHandler)xt_client_focus_listener, xtclient);
-||||||| merged common ancestors
-static void
-xt_add_focus_listener( Widget w, XtPointer user_data)
-{
-  XtClient *xtclient = user_data;
-
-  trap_errors ();
-  XtAddEventHandler(w, 
-                    SubstructureNotifyMask | ButtonReleaseMask, 
-                    FALSE, 
-                    (XtEventHandler)xt_client_focus_listener, 
-                    xtclient);
-=======
 static void xt_add_focus_listener(Widget w, XtPointer user_data) {
   XtClient* xtclient = user_data;
 
   trap_errors();
   XtAddEventHandler(w, SubstructureNotifyMask | ButtonReleaseMask, FALSE,
                     (XtEventHandler)xt_client_focus_listener, xtclient);
->>>>>>> upstream-releases
   untrap_error();
 }
 
@@ -1128,5 +735,5 @@ static void xt_add_focus_listener_tree(Widget treeroot, XtPointer user_data) {
     Widget child = XtWindowToWidget(dpy, children[i]);
     if (child) xt_add_focus_listener_tree(child, user_data);
   }
-  XFree((void *)children);
+  XFree((void*)children);
 }

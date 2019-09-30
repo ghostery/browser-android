@@ -115,16 +115,9 @@ class HTMLMediaElement : public nsGenericHTMLElement,
 
   CORSMode GetCORSMode() { return mCORSMode; }
 
-<<<<<<< HEAD
-  explicit HTMLMediaElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-||||||| merged common ancestors
-  explicit HTMLMediaElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-=======
   explicit HTMLMediaElement(
       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
   void Init();
->>>>>>> upstream-releases
 
   void ReportCanPlayTelemetry();
 
@@ -301,39 +294,8 @@ class HTMLMediaElement : public nsGenericHTMLElement,
   // changed.
   void NotifyDecoderPrincipalChanged() final;
 
-<<<<<<< HEAD
-  void GetEMEInfo(nsString& aEMEInfo);
-
-||||||| merged common ancestors
-  void GetEMEInfo(nsString& aEMEInfo);
-
-  // An interface for observing principal changes on the media elements
-  // MediaDecoder. This will also be notified if the active CORSMode changes.
-  class DecoderPrincipalChangeObserver
-  {
-  public:
-    virtual void NotifyDecoderPrincipalChanged() = 0;
-  };
-
-  /**
-   * Add a DecoderPrincipalChangeObserver to this media element.
-   *
-   * Ownership of the DecoderPrincipalChangeObserver remains with the caller,
-   * and it's the caller's responsibility to remove the observer before it dies.
-   */
-  void AddDecoderPrincipalChangeObserver(DecoderPrincipalChangeObserver* aObserver);
-
-  /**
-   * Remove an added DecoderPrincipalChangeObserver from this media element.
-   *
-   * Returns true if it was successfully removed.
-   */
-  bool RemoveDecoderPrincipalChangeObserver(DecoderPrincipalChangeObserver* aObserver);
-
-=======
   void GetEMEInfo(dom::EMEDebugInfo& aInfo);
 
->>>>>>> upstream-releases
   class StreamCaptureTrackSource;
 
   // Update the visual size of the media. Called from the decoder on the
@@ -473,31 +435,17 @@ class HTMLMediaElement : public nsGenericHTMLElement,
   // Notify agent when the MediaElement changes its audible state.
   void NotifyAudioPlaybackChanged(AudibleChangedReasons aReason);
 
-<<<<<<< HEAD
-  void GetPreload(nsAString& aValue) {
-||||||| merged common ancestors
-  void GetPreload(nsAString& aValue)
-  {
-=======
   void GetPreload(nsAString& aValue) {
     if (mSrcAttrStream) {
       nsGkAtoms::none->ToString(aValue);
       return;
     }
->>>>>>> upstream-releases
     GetEnumAttr(nsGkAtoms::preload, nullptr, aValue);
   }
-<<<<<<< HEAD
-  void SetPreload(const nsAString& aValue, ErrorResult& aRv) {
-||||||| merged common ancestors
-  void SetPreload(const nsAString& aValue, ErrorResult& aRv)
-  {
-=======
   void SetPreload(const nsAString& aValue, ErrorResult& aRv) {
     if (mSrcAttrStream) {
       return;
     }
->>>>>>> upstream-releases
     SetHTMLAttr(nsGkAtoms::preload, aValue, aRv);
   }
 
@@ -534,39 +482,21 @@ class HTMLMediaElement : public nsGenericHTMLElement,
 
   bool Paused() const { return mPaused; }
 
-<<<<<<< HEAD
-  double DefaultPlaybackRate() const { return mDefaultPlaybackRate; }
-||||||| merged common ancestors
-  double DefaultPlaybackRate() const
-  {
-    return mDefaultPlaybackRate;
-  }
-=======
   double DefaultPlaybackRate() const {
     if (mSrcAttrStream) {
       return 1.0;
     }
     return mDefaultPlaybackRate;
   }
->>>>>>> upstream-releases
 
   void SetDefaultPlaybackRate(double aDefaultPlaybackRate, ErrorResult& aRv);
 
-<<<<<<< HEAD
-  double PlaybackRate() const { return mPlaybackRate; }
-||||||| merged common ancestors
-  double PlaybackRate() const
-  {
-    return mPlaybackRate;
-  }
-=======
   double PlaybackRate() const {
     if (mSrcAttrStream) {
       return 1.0;
     }
     return mPlaybackRate;
   }
->>>>>>> upstream-releases
 
   void SetPlaybackRate(double aPlaybackRate, ErrorResult& aRv);
 
@@ -808,11 +738,6 @@ class HTMLMediaElement : public nsGenericHTMLElement,
     aSinkId = mSink.first();
   }
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   // This is used to notify MediaElementAudioSourceNode that media element is
   // allowed to play when media element is used as a source for web audio, so
   // that we can start AudioContext if it was not allowed to start.
@@ -821,7 +746,6 @@ protected:
   bool GetShowPosterFlag() const { return mShowPoster; }
 
  protected:
->>>>>>> upstream-releases
   virtual ~HTMLMediaElement();
 
   class AudioChannelAgentCallback;
@@ -829,14 +753,7 @@ protected:
   class ErrorSink;
   class MediaLoadListener;
   class MediaStreamTrackListener;
-<<<<<<< HEAD
-  class VideoFrameListener;
-||||||| merged common ancestors
-  class StreamListener;
-  class StreamSizeListener;
-=======
   class FirstFrameListener;
->>>>>>> upstream-releases
   class ShutdownObserver;
 
   MediaDecoderOwner::NextFrameStatus NextFrameStatus();
@@ -890,14 +807,6 @@ protected:
    * be substituted into the localized message, and aParamCount is the number
    * of parameters in aParams.
    */
-<<<<<<< HEAD
-  void ReportLoadError(const char* aMsg, const char16_t** aParams = nullptr,
-                       uint32_t aParamCount = 0);
-||||||| merged common ancestors
-  void ReportLoadError(const char* aMsg,
-                       const char16_t** aParams = nullptr,
-                       uint32_t aParamCount = 0);
-=======
   void ReportLoadError(const char* aMsg, const nsTArray<nsString>& aParams =
                                              nsTArray<nsString>());
 
@@ -907,7 +816,6 @@ protected:
   void ReportToConsole(
       uint32_t aErrorFlags, const char* aMsg,
       const nsTArray<nsString>& aParams = nsTArray<nsString>()) const;
->>>>>>> upstream-releases
 
   /**
    * Changes mHasPlayedOrSeeked to aValue. If mHasPlayedOrSeeked changes
@@ -1426,23 +1334,6 @@ protected:
   // True once mSrcStream's initial set of tracks are known.
   bool mSrcStreamTracksAvailable = false;
 
-<<<<<<< HEAD
-  // While mPaused is true and mSrcStream is set, this is the value to use for
-  // CurrentTime(). Otherwise this is set to GRAPH_TIME_MAX.
-  GraphTime mSrcStreamPausedGraphTime = GRAPH_TIME_MAX;
-
-  // The offset in GraphTime that this media element started playing the
-  // playback stream of mSrcStream.
-  GraphTime mSrcStreamGraphTimeOffset = 0;
-
-  // True once PlaybackEnded() is called and we're playing a MediaStream.
-  // Reset to false if we start playing mSrcStream again.
-  bool mSrcStreamPlaybackEnded = false;
-||||||| merged common ancestors
-  // If non-negative, the time we should return for currentTime while playing
-  // mSrcStream.
-  double mSrcStreamPausedCurrentTime = -1;
-=======
   // While mPaused is true and mSrcStream is set, this is the value to use for
   // CurrentTime(). Otherwise this is Nothing.
   Maybe<GraphTime> mSrcStreamPausedGraphTime;
@@ -1454,7 +1345,6 @@ protected:
   // True once PlaybackEnded() is called and we're playing a MediaStream.
   // Reset to false if we start playing mSrcStream again.
   bool mSrcStreamPlaybackEnded = false;
->>>>>>> upstream-releases
 
   // Holds a reference to the stream connecting this stream to the capture sink.
   RefPtr<MediaInputPort> mCaptureStreamPort;
@@ -1463,23 +1353,6 @@ protected:
   // writing to.
   nsTArray<OutputMediaStream> mOutputStreams;
 
-<<<<<<< HEAD
-  // The next track id to use for a captured MediaDecoder.
-  TrackID mNextAvailableMediaDecoderOutputTrackID = 1;
-
-  // Holds a reference to the size-getting track listener attached to
-  // mSelectedVideoStreamTrack.
-  RefPtr<VideoFrameListener> mVideoFrameListener;
-  // The currently selected video stream track.
-||||||| merged common ancestors
-  // Holds a reference to the MediaStreamListener attached to mSrcStream's
-  // playback stream.
-  RefPtr<StreamListener> mMediaStreamListener;
-  // Holds a reference to the size-getting MediaStreamListener attached to
-  // mSrcStream.
-  RefPtr<StreamSizeListener> mMediaStreamSizeListener;
-  // The selected video stream track which contained mMediaStreamSizeListener.
-=======
   // The next track id to use for a captured MediaDecoder.
   TrackID mNextAvailableMediaDecoderOutputTrackID = 1;
 
@@ -1487,7 +1360,6 @@ protected:
   // mSelectedVideoStreamTrack.
   RefPtr<FirstFrameListener> mFirstFrameListener;
   // The currently selected video stream track.
->>>>>>> upstream-releases
   RefPtr<VideoStreamTrack> mSelectedVideoStreamTrack;
 
   const RefPtr<ShutdownObserver> mShutdownObserver;
@@ -1814,25 +1686,6 @@ protected:
   // yet.
   bool mBlockedAsWithoutMetadata = false;
 
-<<<<<<< HEAD
- public:
-  // Helper class to measure times for MSE telemetry stats
-  class TimeDurationAccumulator {
-   public:
-    TimeDurationAccumulator() : mCount(0) {}
-    void Start() {
-||||||| merged common ancestors
-public:
-  // Helper class to measure times for MSE telemetry stats
-  class TimeDurationAccumulator
-  {
-  public:
-    TimeDurationAccumulator()
-      : mCount(0)
-    {}
-    void Start()
-    {
-=======
   // This promise is used to notify MediaElementAudioSourceNode that media
   // element is allowed to play when MediaElement is used as a source for web
   // audio.
@@ -1859,7 +1712,6 @@ public:
    public:
     TimeDurationAccumulator() : mCount(0) {}
     void Start() {
->>>>>>> upstream-releases
       if (IsStarted()) {
         return;
       }
@@ -1888,12 +1740,6 @@ public:
       // Count current run in this report, without increasing the stored count.
       return mCount + 1;
     }
-<<<<<<< HEAD
-
-   private:
-||||||| merged common ancestors
-  private:
-=======
     void Reset() {
       mStartTime = TimeStamp();
       mSum = TimeDuration();
@@ -1901,7 +1747,6 @@ public:
     }
 
    private:
->>>>>>> upstream-releases
     TimeStamp mStartTime;
     TimeDuration mSum;
     uint32_t mCount;
@@ -1936,13 +1781,6 @@ public:
   // Total time a video has (or would have) spent in video-decode-suspend mode.
   TimeDurationAccumulator mVideoDecodeSuspendTime;
 
-<<<<<<< HEAD
-  // True if user has called load(), seek() or element has started playing
-  // before. It's *only* use for checking autoplay policy
-||||||| merged common ancestors
-  // True if user has called load(), seek() or element has started playing before.
-  // It's *only* use for checking autoplay policy
-=======
   // Total time a video has spent playing on the current load, it would be reset
   // when media aborts the current load; be paused when the docuemt enters the
   // bf-cache and be resumed when the docuemt leaves the bf-cache.
@@ -1960,7 +1798,6 @@ public:
 
   // True if user has called load(), seek() or element has started playing
   // before. It's *only* use for checking autoplay policy
->>>>>>> upstream-releases
   bool mIsBlessed = false;
 
   // True if the first frame has been successfully loaded.

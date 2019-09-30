@@ -205,21 +205,7 @@ LayersBackend LayerManagerMLGPU::GetBackendType() {
 
 void LayerManagerMLGPU::SetRoot(Layer* aLayer) { mRoot = aLayer; }
 
-<<<<<<< HEAD
-bool LayerManagerMLGPU::BeginTransaction(const nsCString& aURL) {
-  MOZ_ASSERT(!mTarget);
-  return true;
-}
-||||||| merged common ancestors
-bool
-LayerManagerMLGPU::BeginTransaction()
-{
-  MOZ_ASSERT(!mTarget);
-  return true;
-}
-=======
 bool LayerManagerMLGPU::BeginTransaction(const nsCString& aURL) { return true; }
->>>>>>> upstream-releases
 
 void LayerManagerMLGPU::BeginTransactionWithDrawTarget(
     gfx::DrawTarget* aTarget, const gfx::IntRect& aRect) {
@@ -231,27 +217,10 @@ void LayerManagerMLGPU::BeginTransactionWithDrawTarget(
 }
 
 // Helper class for making sure textures are unlocked.
-<<<<<<< HEAD
-class MOZ_STACK_CLASS AutoUnlockAllTextures {
- public:
-  explicit AutoUnlockAllTextures(MLGDevice* aDevice) : mDevice(aDevice) {}
-  ~AutoUnlockAllTextures() { mDevice->UnlockAllTextures(); }
-||||||| merged common ancestors
-class MOZ_STACK_CLASS AutoUnlockAllTextures
-{
-public:
-  explicit AutoUnlockAllTextures(MLGDevice* aDevice)
-   : mDevice(aDevice)
-  {}
-  ~AutoUnlockAllTextures() {
-    mDevice->UnlockAllTextures();
-  }
-=======
 class MOZ_STACK_CLASS AutoUnlockAllTextures final {
  public:
   explicit AutoUnlockAllTextures(MLGDevice* aDevice) : mDevice(aDevice) {}
   ~AutoUnlockAllTextures() { mDevice->UnlockAllTextures(); }
->>>>>>> upstream-releases
 
  private:
   RefPtr<MLGDevice> mDevice;
@@ -341,16 +310,9 @@ void LayerManagerMLGPU::Composite() {
 
   // Now that we have the final invalid region, give it to the swap chain which
   // will tell us if we still need to render.
-<<<<<<< HEAD
-  if (!mSwapChain->ApplyNewInvalidRegion(std::move(mInvalidRegion),
-                                         diagnosticRect)) {
-||||||| merged common ancestors
-  if (!mSwapChain->ApplyNewInvalidRegion(std::move(mInvalidRegion), diagnosticRect)) {
-=======
   if (!mSwapChain->ApplyNewInvalidRegion(std::move(mInvalidRegion),
                                          diagnosticRect)) {
     mProfilerScreenshotGrabber.NotifyEmptyFrame();
->>>>>>> upstream-releases
     return;
   }
 
@@ -588,18 +550,8 @@ void LayerManagerMLGPU::ClearCachedResources(Layer* aSubtree) {
   });
 }
 
-<<<<<<< HEAD
-void LayerManagerMLGPU::NotifyShadowTreeTransaction() {
-  if (gfxPrefs::LayersDrawFPS()) {
-||||||| merged common ancestors
-void
-LayerManagerMLGPU::NotifyShadowTreeTransaction()
-{
-  if (gfxPrefs::LayersDrawFPS()) {
-=======
 void LayerManagerMLGPU::NotifyShadowTreeTransaction() {
   if (StaticPrefs::layers_acceleration_draw_fps()) {
->>>>>>> upstream-releases
     mDiagnostics->AddTxnFrame();
   }
 }

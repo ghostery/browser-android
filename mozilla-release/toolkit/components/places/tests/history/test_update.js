@@ -19,18 +19,6 @@ add_task(async function test_error_cases() {
     "passing a null as pageInfo should throw an Error"
   );
   Assert.throws(
-<<<<<<< HEAD
-    () => PlacesUtils.history.update({
-      description: "Test description",
-    }),
-    /Error: PageInfo: The following properties were expected: url, guid/,
-    "not included a url or a guid should throw"
-  );
-  Assert.throws(
-    () => PlacesUtils.history.update({url: "not a valid url string"}),
-||||||| merged common ancestors
-    () => PlacesUtils.history.update({url: "not a valid url string"}),
-=======
     () =>
       PlacesUtils.history.update({
         description: "Test description",
@@ -40,7 +28,6 @@ add_task(async function test_error_cases() {
   );
   Assert.throws(
     () => PlacesUtils.history.update({ url: "not a valid url string" }),
->>>>>>> upstream-releases
     /Error: PageInfo: Invalid value for property/,
     "passing an invalid url should throw an Error"
   );
@@ -226,15 +213,6 @@ add_task(async function test_previewImageURL_change_saved() {
 
   let guid = await PlacesTestUtils.fieldInDB(TEST_URL, "guid");
   previewImageURL = IMAGE_URL;
-<<<<<<< HEAD
-  await PlacesUtils.history.update({ guid, previewImageURL });
-  previewImageURLInDB = await PlacesTestUtils.fieldInDB(TEST_URL, "preview_image_url");
-  Assert.equal(previewImageURL, previewImageURLInDB, "previewImageURL should be updated via GUID as expected");
-||||||| merged common ancestors
-  await PlacesUtils.history.update({ url: TEST_URL, guid, previewImageURL });
-  previewImageURLInDB = await PlacesTestUtils.fieldInDB(TEST_URL, "preview_image_url");
-  Assert.equal(previewImageURL, previewImageURLInDB, "previewImageURL should be updated via GUID as expected");
-=======
   await PlacesUtils.history.update({ guid, previewImageURL });
   previewImageURLInDB = await PlacesTestUtils.fieldInDB(
     TEST_URL,
@@ -245,7 +223,6 @@ add_task(async function test_previewImageURL_change_saved() {
     previewImageURLInDB,
     "previewImageURL should be updated via GUID as expected"
   );
->>>>>>> upstream-releases
 
   previewImageURL = "";
   await PlacesUtils.history.update({ url: TEST_URL, previewImageURL });

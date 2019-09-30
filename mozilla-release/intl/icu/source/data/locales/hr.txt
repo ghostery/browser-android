@@ -24,15 +24,7 @@ hr{
             patterns{
                 accountingFormat{"#,##0.00 ¤"}
                 currencyFormat{"#,##0.00 ¤"}
-<<<<<<< HEAD
-                decimalFormat{"#,##0.###"}
                 percentFormat{"#,##0 %"}
-||||||| merged common ancestors
-                decimalFormat{"#,##0.###"}
-                percentFormat{"#,##0%"}
-=======
-                percentFormat{"#,##0 %"}
->>>>>>> upstream-releases
                 scientificFormat{"#E0"}
             }
             patternsLong{
@@ -250,13 +242,7 @@ hr{
         }
         minimumGroupingDigits{"1"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.50"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.42"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             eras{
@@ -1394,12 +1380,7 @@ hr{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
->>>>>>> upstream-releases
                 }
             }
         }
@@ -2512,41 +2493,6 @@ hr{
         US{"američki sustav"}
         metric{"metrički sustav"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -2575,5 +2521,4 @@ hr{
             }
         }
     }
->>>>>>> upstream-releases
 }

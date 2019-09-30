@@ -42,22 +42,11 @@
 # the files in icu4c/source/data/xml/ may require access to
 # http://www.unicode.org/repos/cldr/trunk/common/dtd/ldml.dtd
 #
-<<<<<<< HEAD
-# Unless you cache the dtds locally by e.g. setting -DCLDR_DTD_CACHE=/tmp, the
-# builds will repeatedly make such requests, which will likely result in the
-# Unicode server blocking access and consequent timeout failures. You can
-# prevent such blockage by having the external IP address of your build system
-# whitelisted with Unicode; contact Rick McGowan or Steven Loomis.
-||||||| merged common ancestors
-# The IP address of the system requesting such access be whitelisted with Unicode,
-# otherwise there may be timeout failures; contact Rick McGowan.
-=======
 # Unless you cache the dtds locally by
 # 1. creating a temp directory e.g. ~/.cldrdtd
 # 2. setting CLDR_DTD_CACHE to it e.g. -DCLDR_DTD_CACHE=~/.cldrdtd
 # your system will make excessive network requests, which will result in the
 # Unicode server blocking access.
->>>>>>> upstream-releases
 #
 #----
 #
@@ -73,15 +62,9 @@
 #
 #                -Xmx4096m, to give Java more memory; otherwise it may run out
 #                 of heap.
-<<<<<<< HEAD
-#                -DCLDR_DTD_CACHE=/tmp, to reduce frequent http: access to dtds
-#                 and consequent blockage by Unicode server.
-||||||| merged common ancestors
-=======
 #                -DCLDR_DTD_CACHE=~/.cldrdtd (or some other temp directory
 #                 that already exists), to reduce frequent http: access to dtds
 #                 and consequent blockage by Unicode server.
->>>>>>> upstream-releases
 #
 # b) CLDR-related variables
 #
@@ -157,13 +140,7 @@
 # 1a. Java and ant variables, adjust for your system
 
 export JAVA_HOME=`/usr/libexec/java_home`
-<<<<<<< HEAD
-export ANT_OPTS="-Xmx3072m -DCLDR_DTD_CACHE=/tmp"
-||||||| merged common ancestors
-export ANT_OPTS="-Xmx3072m"
-=======
 export ANT_OPTS="-Xmx4096m -DCLDR_DTD_CACHE=~/.cldrdtd"
->>>>>>> upstream-releases
 
 # 1b. CLDR variables, adjust for your setup; with cygwin it might be e.g.
 # CLDR_DIR=`cygpath -wp /build/cldr`
@@ -317,25 +294,9 @@ ant check 2>&1 | tee /tmp/icu4j-newData-antCheck.txt
 # 15. Check the file changes; then git add or git rm as necessary, and
 # commit the changes.
 
-<<<<<<< HEAD
-cd $ICU4C_DIR/source
-git status
-# add or remove as necessary
-
-cd $ICU4J_ROOT
-git status
-||||||| merged common ancestors
-cd $ICU4C_DIR/source
-svn status
-# add or remove as necessary
-
-cd $ICU4J_ROOT
-svn status
-=======
 cd $HOME/icu/
 cd ..
 git status
->>>>>>> upstream-releases
 # add or remove as necessary
 # commit
 

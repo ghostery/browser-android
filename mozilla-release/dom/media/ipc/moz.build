@@ -6,17 +6,6 @@
 
 
 IPDL_SOURCES += [
-<<<<<<< HEAD
-    'PMediaDecoderParams.ipdlh',
-    'PRDD.ipdl',
-    'PRemoteDecoderManager.ipdl',
-    'PRemoteVideoDecoder.ipdl',
-    'PVideoDecoder.ipdl',
-    'PVideoDecoderManager.ipdl',
-||||||| merged common ancestors
-    'PVideoDecoder.ipdl',
-    'PVideoDecoderManager.ipdl',
-=======
     'PMediaDecoderParams.ipdlh',
     'PRDD.ipdl',
     'PRemoteDecoder.ipdl',
@@ -37,60 +26,13 @@ EXPORTS.mozilla += [
     'RemoteDecoderModule.h',
     'RemoteDecoderParent.h',
     'RemoteMediaDataDecoder.h',
->>>>>>> upstream-releases
-]
-
-EXPORTS.mozilla += [
-    'GpuDecoderModule.h',
-    'RDDChild.h',
-    'RDDParent.h',
-    'RDDProcessHost.h',
-    'RDDProcessImpl.h',
-    'RDDProcessManager.h',
-    'RemoteDecoderManagerChild.h',
-    'RemoteDecoderManagerParent.h',
-    'RemoteDecoderModule.h',
-    'RemoteMediaDataDecoder.h',
 ]
 
 EXPORTS.mozilla.dom += [
     'MediaIPCUtils.h',
-<<<<<<< HEAD
-    'VideoDecoderManagerChild.h',
-    'VideoDecoderManagerParent.h',
-||||||| merged common ancestors
-    'RemoteVideoDecoder.h',
-    'VideoDecoderManagerChild.h',
-    'VideoDecoderManagerParent.h',
-=======
->>>>>>> upstream-releases
 ]
 
 SOURCES += [
-<<<<<<< HEAD
-    'GpuDecoderModule.cpp',
-    'RDDChild.cpp',
-    'RDDParent.cpp',
-    'RDDProcessHost.cpp',
-    'RDDProcessImpl.cpp',
-    'RDDProcessManager.cpp',
-    'RemoteDecoderManagerChild.cpp',
-    'RemoteDecoderManagerParent.cpp',
-    'RemoteDecoderModule.cpp',
-    'RemoteMediaDataDecoder.cpp',
-    'RemoteVideoDecoderChild.cpp',
-    'RemoteVideoDecoderParent.cpp',
-    'VideoDecoderChild.cpp',
-    'VideoDecoderManagerChild.cpp',
-    'VideoDecoderManagerParent.cpp',
-    'VideoDecoderParent.cpp',
-||||||| merged common ancestors
-    'RemoteVideoDecoder.cpp',
-    'VideoDecoderChild.cpp',
-    'VideoDecoderManagerChild.cpp',
-    'VideoDecoderManagerParent.cpp',
-    'VideoDecoderParent.cpp',
-=======
     'GpuDecoderModule.cpp',
     'RDDChild.cpp',
     'RDDParent.cpp',
@@ -105,12 +47,6 @@ SOURCES += [
     'RemoteDecoderParent.cpp',
     'RemoteMediaDataDecoder.cpp',
     'RemoteVideoDecoder.cpp',
-]
-
-# so we can include nsMacUtilsImpl.h in RDDParent.cpp for sandboxing
-LOCAL_INCLUDES += [
-    '/xpcom/base',
->>>>>>> upstream-releases
 ]
 
 # so we can include nsMacUtilsImpl.h in RDDParent.cpp for sandboxing

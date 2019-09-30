@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright @ Cliqz 2019 -->
-<!-- change the indicator color of selected tab to general_blue_color -->
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@color/general_blue_color"
-    android:insetTop="@dimen/tabs_panel_indicator_selected_padding_top" />

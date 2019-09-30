@@ -573,20 +573,10 @@ DownloadsPlacesView.prototype = {
     // Getting the data or creating the nsIURI might fail.
     try {
       let data = {};
-<<<<<<< HEAD
-      trans.getAnyTransferData({}, data);
-      let [url, name] = data.value.QueryInterface(Ci.nsISupportsString)
-                            .data.split("\n");
-||||||| merged common ancestors
-      trans.getAnyTransferData({}, data, {});
-      let [url, name] = data.value.QueryInterface(Ci.nsISupportsString)
-                            .data.split("\n");
-=======
       trans.getAnyTransferData({}, data);
       let [url, name] = data.value
         .QueryInterface(Ci.nsISupportsString)
         .data.split("\n");
->>>>>>> upstream-releases
       if (url) {
         return [NetUtil.newURI(url).spec, name];
       }

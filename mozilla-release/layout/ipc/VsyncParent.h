@@ -35,16 +35,8 @@ class VsyncParent final : public PVsyncParent, public VsyncObserver {
   VsyncParent();
   virtual ~VsyncParent();
 
-<<<<<<< HEAD
-  virtual bool NotifyVsync(const VsyncEvent& aVsync) override;
-  virtual mozilla::ipc::IPCResult RecvRequestVsyncRate() override;
-||||||| merged common ancestors
-  virtual bool NotifyVsync(TimeStamp aTimeStamp) override;
-  virtual mozilla::ipc::IPCResult RecvRequestVsyncRate() override;
-=======
   virtual bool NotifyVsync(const VsyncEvent& aVsync) override;
   mozilla::ipc::IPCResult RecvRequestVsyncRate();
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvObserve();
   mozilla::ipc::IPCResult RecvUnobserve();

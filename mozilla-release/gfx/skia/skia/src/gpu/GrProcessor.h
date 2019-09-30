@@ -9,12 +9,7 @@
 #define GrProcessor_DEFINED
 
 #include "GrColor.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "GrGpuResourceRef.h"
-=======
 #include "GrGpuBuffer.h"
->>>>>>> upstream-releases
 #include "GrProcessorUnitTest.h"
 #include "GrSamplerState.h"
 #include "GrShaderVar.h"
@@ -87,13 +82,8 @@ public:
         kEllipseGeometryProcessor_ClassID,
         kEllipticalRRectEffect_ClassID,
         kGP_ClassID,
-<<<<<<< HEAD
-        kVertexColorSpaceBenchGP_ClassID,
-||||||| merged common ancestors
-=======
         kVertexColorSpaceBenchGP_ClassID,
         kGrAAFillRRectOp_Processor_ClassID,
->>>>>>> upstream-releases
         kGrAARectEffect_ClassID,
         kGrAlphaThresholdFragmentProcessor_ClassID,
         kGrArithmeticFP_ClassID,
@@ -130,12 +120,7 @@ public:
         kGrMatrixConvolutionEffect_ClassID,
         kGrMeshTestProcessor_ClassID,
         kGrMorphologyEffect_ClassID,
-<<<<<<< HEAD
-||||||| merged common ancestors
-        kGrNonlinearColorSpaceXformEffect_ClassID,
-=======
         kGrMixerEffect_ClassID,
->>>>>>> upstream-releases
         kGrOverdrawFragmentProcessor_ClassID,
         kGrPathProcessor_ClassID,
         kGrPerlinNoise2Effect_ClassID,

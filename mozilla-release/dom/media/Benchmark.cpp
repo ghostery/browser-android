@@ -92,26 +92,12 @@ bool VP9Benchmark::IsVP9DecodeFast(bool aDefault) {
     RefPtr<WebMDemuxer> demuxer = new WebMDemuxer(
         new BufferMediaResource(sWebMSample, sizeof(sWebMSample)));
     RefPtr<Benchmark> estimiser = new Benchmark(
-<<<<<<< HEAD
-        demuxer,
-        {StaticPrefs::MediaBenchmarkFrames(),  // frames to measure
-         1,  // start benchmarking after decoding this frame.
-         8,  // loop after decoding that many frames.
-         TimeDuration::FromMilliseconds(StaticPrefs::MediaBenchmarkTimeout())});
-||||||| merged common ancestors
-      demuxer,
-      { StaticPrefs::MediaBenchmarkFrames(), // frames to measure
-        1, // start benchmarking after decoding this frame.
-        8, // loop after decoding that many frames.
-        TimeDuration::FromMilliseconds(StaticPrefs::MediaBenchmarkTimeout()) });
-=======
         demuxer,
         {StaticPrefs::media_benchmark_frames(),  // frames to measure
          1,  // start benchmarking after decoding this frame.
          8,  // loop after decoding that many frames.
          TimeDuration::FromMilliseconds(
              StaticPrefs::media_benchmark_timeout())});
->>>>>>> upstream-releases
     estimiser->Run()->Then(
         AbstractThread::MainThread(), __func__,
         [](uint32_t aDecodeFps) {
@@ -227,52 +213,6 @@ void BenchmarkPlayback::DemuxNextSample() {
   RefPtr<MediaTrackDemuxer::SamplesPromise> promise =
       mTrackDemuxer->GetSamples();
   promise->Then(
-<<<<<<< HEAD
-      Thread(), __func__,
-      [this, ref](RefPtr<MediaTrackDemuxer::SamplesHolder> aHolder) {
-        mSamples.AppendElements(std::move(aHolder->mSamples));
-        if (ref->mParameters.mStopAtFrame &&
-            mSamples.Length() == ref->mParameters.mStopAtFrame.ref()) {
-          InitDecoder(std::move(*mTrackDemuxer->GetInfo()));
-        } else {
-          Dispatch(
-              NS_NewRunnableFunction("BenchmarkPlayback::DemuxNextSample",
-                                     [this, ref]() { DemuxNextSample(); }));
-        }
-      },
-      [this, ref](const MediaResult& aError) {
-        switch (aError.Code()) {
-          case NS_ERROR_DOM_MEDIA_END_OF_STREAM:
-            InitDecoder(std::move(*mTrackDemuxer->GetInfo()));
-            break;
-          default:
-            Error(aError);
-            break;
-        }
-      });
-||||||| merged common ancestors
-    Thread(), __func__,
-    [this, ref](RefPtr<MediaTrackDemuxer::SamplesHolder> aHolder) {
-      mSamples.AppendElements(std::move(aHolder->mSamples));
-      if (ref->mParameters.mStopAtFrame &&
-          mSamples.Length() == ref->mParameters.mStopAtFrame.ref()) {
-        InitDecoder(std::move(*mTrackDemuxer->GetInfo()));
-      } else {
-        Dispatch(NS_NewRunnableFunction("BenchmarkPlayback::DemuxNextSample",
-                                        [this, ref]() { DemuxNextSample(); }));
-      }
-    },
-    [this, ref](const MediaResult& aError) {
-      switch (aError.Code()) {
-        case NS_ERROR_DOM_MEDIA_END_OF_STREAM:
-          InitDecoder(std::move(*mTrackDemuxer->GetInfo()));
-          break;
-        default:
-          Error(aError);
-          break;
-      }
-    });
-=======
       Thread(), __func__,
       [this, ref](RefPtr<MediaTrackDemuxer::SamplesHolder> aHolder) {
         mSamples.AppendElements(std::move(aHolder->mSamples));
@@ -295,29 +235,14 @@ void BenchmarkPlayback::DemuxNextSample() {
             break;
         }
       });
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void BenchmarkPlayback::InitDecoder(TrackInfo&& aInfo) {
-||||||| merged common ancestors
-void
-BenchmarkPlayback::InitDecoder(TrackInfo&& aInfo)
-{
-=======
 void BenchmarkPlayback::InitDecoder(UniquePtr<TrackInfo>&& aInfo) {
->>>>>>> upstream-releases
   MOZ_ASSERT(OnThread());
 
   RefPtr<PDMFactory> platform = new PDMFactory();
-<<<<<<< HEAD
-  mDecoder = platform->CreateDecoder({aInfo, mDecoderTaskQueue});
-||||||| merged common ancestors
-  mDecoder = platform->CreateDecoder({ aInfo, mDecoderTaskQueue });
-=======
   mInfo = std::move(aInfo);
   mDecoder = platform->CreateDecoder({*mInfo, mDecoderTaskQueue});
->>>>>>> upstream-releases
   if (!mDecoder) {
     Error(MediaResult(NS_ERROR_FAILURE, "Failed to create decoder"));
     return;
@@ -357,30 +282,6 @@ void BenchmarkPlayback::GlobalShutdown() {
 
   if (mDecoder) {
     RefPtr<Benchmark> ref(mGlobalState);
-<<<<<<< HEAD
-    mDecoder->Flush()->Then(Thread(), __func__,
-                            [ref, this]() {
-                              mDecoder->Shutdown()->Then(
-                                  Thread(), __func__,
-                                  [ref, this]() { FinalizeShutdown(); },
-                                  []() { MOZ_CRASH("not reached"); });
-                              mDecoder = nullptr;
-                            },
-                            []() { MOZ_CRASH("not reached"); });
-||||||| merged common ancestors
-    mDecoder->Flush()->Then(
-      Thread(), __func__,
-      [ref, this]() {
-        mDecoder->Shutdown()->Then(
-          Thread(), __func__,
-          [ref, this]() {
-            FinalizeShutdown();
-          },
-          []() { MOZ_CRASH("not reached"); });
-        mDecoder = nullptr;
-      },
-      []() { MOZ_CRASH("not reached"); });
-=======
     mDecoder->Flush()->Then(
         Thread(), __func__,
         [ref, this]() {
@@ -391,7 +292,6 @@ void BenchmarkPlayback::GlobalShutdown() {
           mInfo = nullptr;
         },
         []() { MOZ_CRASH("not reached"); });
->>>>>>> upstream-releases
   } else {
     FinalizeShutdown();
   }
@@ -446,39 +346,6 @@ void BenchmarkPlayback::InputExhausted() {
   mSampleIndex++;
   if (mSampleIndex == mSamples.Length() && !ref->mParameters.mStopAtFrame) {
     // Complete current frame decode then drain if still necessary.
-<<<<<<< HEAD
-    p->Then(Thread(), __func__,
-            [ref, this](MediaDataDecoder::DecodedData&& aResults) {
-              Output(std::move(aResults));
-              if (!mFinished) {
-                mDecoder->Drain()->Then(
-                    Thread(), __func__,
-                    [ref, this](MediaDataDecoder::DecodedData&& aResults) {
-                      mDrained = true;
-                      Output(std::move(aResults));
-                      MOZ_ASSERT(mFinished, "We must be done now");
-                    },
-                    [ref, this](const MediaResult& aError) { Error(aError); });
-              }
-            },
-            [ref, this](const MediaResult& aError) { Error(aError); });
-||||||| merged common ancestors
-    p->Then(Thread(), __func__,
-            [ref, this](const MediaDataDecoder::DecodedData& aResults) {
-              Output(aResults);
-              if (!mFinished) {
-                mDecoder->Drain()->Then(
-                  Thread(), __func__,
-                  [ref, this](const MediaDataDecoder::DecodedData& aResults) {
-                    mDrained = true;
-                    Output(aResults);
-                    MOZ_ASSERT(mFinished, "We must be done now");
-                  },
-                  [ref, this](const MediaResult& aError) { Error(aError); });
-              }
-            },
-            [ref, this](const MediaResult& aError) { Error(aError); });
-=======
     p->Then(
         Thread(), __func__,
         [ref, this](MediaDataDecoder::DecodedData&& aResults) {
@@ -495,31 +362,11 @@ void BenchmarkPlayback::InputExhausted() {
           }
         },
         [ref, this](const MediaResult& aError) { Error(aError); });
->>>>>>> upstream-releases
   } else {
     if (mSampleIndex == mSamples.Length() && ref->mParameters.mStopAtFrame) {
       mSampleIndex = 0;
     }
     // Continue decoding
-<<<<<<< HEAD
-    p->Then(Thread(), __func__,
-            [ref, this](MediaDataDecoder::DecodedData&& aResults) {
-              Output(std::move(aResults));
-              if (!mFinished) {
-                InputExhausted();
-              }
-            },
-            [ref, this](const MediaResult& aError) { Error(aError); });
-||||||| merged common ancestors
-    p->Then(Thread(), __func__,
-            [ref, this](const MediaDataDecoder::DecodedData& aResults) {
-              Output(aResults);
-              if (!mFinished) {
-                InputExhausted();
-              }
-            },
-            [ref, this](const MediaResult& aError) { Error(aError); });
-=======
     p->Then(
         Thread(), __func__,
         [ref, this](MediaDataDecoder::DecodedData&& aResults) {
@@ -529,7 +376,6 @@ void BenchmarkPlayback::InputExhausted() {
           }
         },
         [ref, this](const MediaResult& aError) { Error(aError); });
->>>>>>> upstream-releases
   }
 }
 

@@ -17,50 +17,6 @@
 namespace js {
 namespace jit {
 
-<<<<<<< HEAD
-class Linker {
-  MacroAssembler& masm;
-  mozilla::Maybe<AutoWritableJitCodeFallible> awjcf;
-
-  JitCode* fail(JSContext* cx) {
-    ReportOutOfMemory(cx);
-    return nullptr;
-  }
-
- public:
-  // Construct a linker with a rooted macro assembler.
-  explicit Linker(MacroAssembler& masm) : masm(masm) { masm.finish(); }
-
-  // Create a new JitCode object and populate it with the contents of the
-  // macro assember buffer.
-  //
-  // This method cannot GC. Errors are reported to the context.
-  JitCode* newCode(JSContext* cx, CodeKind kind);
-||||||| merged common ancestors
-class Linker
-{
-    MacroAssembler& masm;
-    mozilla::Maybe<AutoWritableJitCodeFallible> awjcf;
-
-    JitCode* fail(JSContext* cx) {
-        ReportOutOfMemory(cx);
-        return nullptr;
-    }
-
-  public:
-    // Construct a linker with a rooted macro assembler.
-    explicit Linker(MacroAssembler& masm)
-      : masm(masm)
-    {
-        masm.finish();
-    }
-
-    // Create a new JitCode object and populate it with the contents of the
-    // macro assember buffer.
-    //
-    // This method cannot GC. Errors are reported to the context.
-    JitCode* newCode(JSContext* cx, CodeKind kind);
-=======
 class Linker {
   MacroAssembler& masm;
   mozilla::Maybe<AutoWritableJitCodeFallible> awjcf;
@@ -83,7 +39,6 @@ class Linker {
   //
   // This method cannot GC. Errors are reported to the context.
   JitCode* newCode(JSContext* cx, CodeKind kind);
->>>>>>> upstream-releases
 };
 
 }  // namespace jit

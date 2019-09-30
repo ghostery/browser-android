@@ -1,13 +1,6 @@
 // dbg.getNewestFrame in an onPop handler returns the frame being popped.
-<<<<<<< HEAD
-
-var g = newGlobal();
-||||||| merged common ancestors
-var g = newGlobal();
-=======
 
 var g = newGlobal({newCompartment: true});
->>>>>>> upstream-releases
 g.eval("function f() { debugger; }");
 g.eval("function g() { f(); }");
 g.eval("function h() { g(); }");

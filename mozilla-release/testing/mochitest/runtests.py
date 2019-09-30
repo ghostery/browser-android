@@ -2579,23 +2579,7 @@ toolbar#nav-bar {
 
     def runTests(self, options):
         """ Prepare, configure, run tests and cleanup """
-<<<<<<< HEAD
         self.extraPrefs = parse_preferences(options.extraPrefs)
-
-        # a11y and chrome tests don't run with e10s enabled in CI. Need to set
-        # this here since |mach mochitest| sets the flavor after argument parsing.
-        if options.flavor in ('a11y', 'chrome'):
-            options.e10s = False
-||||||| merged common ancestors
-        self.extraPrefs = self.parseExtraPrefs(options.extraPrefs)
-
-        # a11y and chrome tests don't run with e10s enabled in CI. Need to set
-        # this here since |mach mochitest| sets the flavor after argument parsing.
-        if options.flavor in ('a11y', 'chrome'):
-            options.e10s = False
-=======
-        self.extraPrefs = parse_preferences(options.extraPrefs)
->>>>>>> upstream-releases
 
         # for test manifest parsing.
         mozinfo.update({
@@ -2644,11 +2628,6 @@ toolbar#nav-bar {
                 prefs = prefs.strip().split()
                 self.log.info("The following extra prefs will be set:\n  {}".format(
                     '\n  '.join(prefs)))
-<<<<<<< HEAD
-                self.extraPrefs.update(parse_preferences(prefs))
-||||||| merged common ancestors
-                self.extraPrefs.update(self.parseExtraPrefs(prefs))
-=======
                 self.extraPrefs.update(parse_preferences(prefs))
 
             envVars = list(self.env_vars_by_manifest[m])[0]
@@ -2658,7 +2637,6 @@ toolbar#nav-bar {
                 self.log.info(
                     "The following extra environment variables will be set:\n  {}".format(
                         '\n  '.join(self.extraEnv)))
->>>>>>> upstream-releases
 
             # If we are using --run-by-manifest, we should not use the profile path (if) provided
             # by the user, since we need to create a new directory for each run. We would face

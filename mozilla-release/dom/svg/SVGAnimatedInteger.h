@@ -23,66 +23,23 @@ namespace dom {
 class SVGAnimationElement;
 }  // namespace dom
 
-<<<<<<< HEAD
-class SVGAnimatedInteger : public nsISupports, public nsWrapperCache {
- public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(SVGAnimatedInteger)
-||||||| merged common ancestors
-class SVGAnimatedInteger : public nsISupports
-                         , public nsWrapperCache
-{
-public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(SVGAnimatedInteger)
-=======
 class SVGAnimatedInteger {
  public:
   typedef mozilla::dom::SVGElement SVGElement;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsSVGElement* GetParentObject() const { return mSVGElement; }
-||||||| merged common ancestors
-  nsSVGElement* GetParentObject() const
-  {
-    return mSVGElement;
-  }
-=======
   void Init(uint8_t aAttrEnum = 0xff, int32_t aValue = 0) {
     mAnimVal = mBaseVal = aValue;
     mAttrEnum = aAttrEnum;
     mIsAnimated = false;
     mIsBaseSet = false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) final;
-||||||| merged common ancestors
-  JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-    final;
-=======
   nsresult SetBaseValueString(const nsAString& aValue, SVGElement* aSVGElement);
   void GetBaseValueString(nsAString& aValue);
->>>>>>> upstream-releases
 
   void SetBaseValue(int32_t aValue, SVGElement* aSVGElement);
   int32_t GetBaseValue() const { return mBaseVal; }
 
-<<<<<<< HEAD
- protected:
-  explicit SVGAnimatedInteger(nsSVGElement* aSVGElement)
-      : mSVGElement(aSVGElement) {}
-  virtual ~SVGAnimatedInteger(){};
-||||||| merged common ancestors
-protected:
-  explicit SVGAnimatedInteger(nsSVGElement* aSVGElement)
-    : mSVGElement(aSVGElement)
-  {
-  }
-  virtual ~SVGAnimatedInteger() {};
-=======
   void SetAnimValue(int aValue, SVGElement* aSVGElement);
   int GetAnimValue() const { return mAnimVal; }
 
@@ -135,7 +92,6 @@ protected:
     // die during that.
     SVGAnimatedInteger* mVal;
     SVGElement* mSVGElement;
->>>>>>> upstream-releases
 
     // SMILAttr methods
     virtual nsresult ValueFromString(
@@ -148,20 +104,6 @@ protected:
   };
 };
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_SVGAnimatedInteger_h
-||||||| merged common ancestors
-#endif // mozilla_dom_SVGAnimatedInteger_h
-=======
 #endif  //__NS_SVGINTEGER_H__
->>>>>>> upstream-releases

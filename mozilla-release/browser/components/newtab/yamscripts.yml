@@ -26,23 +26,6 @@ scripts:
     fluentExport: cpx "$npm_package_config_locales_dir/*.ftl" $npm_package_config_mc_dir/browser/locales/$npm_package_config_default_locale/browser/newtab/
     copyPingCentre: cpx "ping-centre/PingCentre.jsm" $npm_package_config_mc_dir/browser/modules
 
-<<<<<<< HEAD
-# builduplift: Build and export to mozilla central for uplifts without exporting strings to browser/locales
-  builduplift:
-    pre: =>prebuildmc
-    bundle: => bundle
-    copy: =>buildmc:copy
-
-# buildlibrary: Export about:library code to mozilla-central - intentionally not included in buildmc for now
-  buildlibrary:
-    webpack: webpack --config webpack.aboutlibrary.config.js
-    css: node-sass --source-map true --source-map-contents content-src/aboutlibrary -o aboutlibrary/content
-    copy: cpx "aboutlibrary/**/{,.}*" $npm_package_config_mc_dir/browser/components/library
-
-# startmc: Start developing the bootstrapped add-on
-||||||| merged common ancestors
-# startmc: Start developing the bootstrapped add-on
-=======
 # builduplift: Build and export to mozilla central for uplifts without exporting strings to browser/locales
   builduplift:
     pre: =>prebuildmc
@@ -56,7 +39,6 @@ scripts:
     copy: cpx "aboutlibrary/**/{,.}*" $npm_package_config_mc_dir/browser/components/library
 
 # startmc: Automatically rebuild/export to mozilla central when files are changed. NOTE: Includes sourcemaps, do not use for profiling/perf testing.
->>>>>>> upstream-releases
   startmc:
     _parallel: true
     pre: =>buildmc
@@ -74,17 +56,8 @@ scripts:
 
   testmc:
     lint: =>lint
-<<<<<<< HEAD
-    build: =>bundle:webpack && =>bundle:locales
-    unit: karma start karma.mc.config.js
-||||||| merged common ancestors
-    build: =>bundle:webpack && =>bundle:locales
-    unit: karma start karma.mc.config.js || (cat logs/coverage/text.txt && exit 2)
-    post: cat logs/coverage/text-summary.txt
-=======
     build: =>bundle:webpack
     unit: karma start karma.mc.config.js
->>>>>>> upstream-releases
 
   tddmc: karma start karma.mc.config.js --tdd
 

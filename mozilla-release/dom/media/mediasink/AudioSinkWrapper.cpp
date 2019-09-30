@@ -11,17 +11,9 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-AudioSinkWrapper::~AudioSinkWrapper() {}
-||||||| merged common ancestors
-AudioSinkWrapper::~AudioSinkWrapper()
-{
-}
-=======
 using media::TimeUnit;
 
 AudioSinkWrapper::~AudioSinkWrapper() {}
->>>>>>> upstream-releases
 
 void AudioSinkWrapper::Shutdown() {
   AssertOwnerThread();
@@ -44,15 +36,7 @@ void AudioSinkWrapper::SetPlaybackParams(const PlaybackParams& aParams) {
   mParams = aParams;
 }
 
-<<<<<<< HEAD
-RefPtr<GenericPromise> AudioSinkWrapper::OnEnded(TrackType aType) {
-||||||| merged common ancestors
-RefPtr<GenericPromise>
-AudioSinkWrapper::OnEnded(TrackType aType)
-{
-=======
 RefPtr<MediaSink::EndedPromise> AudioSinkWrapper::OnEnded(TrackType aType) {
->>>>>>> upstream-releases
   AssertOwnerThread();
   MOZ_ASSERT(mIsStarted, "Must be called after playback starts.");
   if (aType == TrackInfo::kAudioTrack) {
@@ -183,25 +167,6 @@ nsresult AudioSinkWrapper::Start(const TimeUnit& aStartTime,
   nsresult rv = NS_OK;
   if (!mAudioEnded) {
     mAudioSink.reset(mCreator->Create());
-<<<<<<< HEAD
-    rv = mAudioSink->Init(mParams, mEndPromise);
-    mEndPromise
-        ->Then(mOwnerThread.get(), __func__, this,
-               &AudioSinkWrapper::OnAudioEnded, &AudioSinkWrapper::OnAudioEnded)
-        ->Track(mAudioSinkPromise);
-  } else {
-    if (aInfo.HasAudio()) {
-      mEndPromise = GenericPromise::CreateAndResolve(true, __func__);
-    }
-||||||| merged common ancestors
-    rv = mAudioSink->Init(mParams, mEndPromise);
-
-    mEndPromise->Then(
-      mOwnerThread.get(), __func__, this,
-      &AudioSinkWrapper::OnAudioEnded,
-      &AudioSinkWrapper::OnAudioEnded
-    )->Track(mAudioSinkPromise);
-=======
     rv = mAudioSink->Init(mParams, mEndedPromise);
     mEndedPromise
         ->Then(mOwnerThread.get(), __func__, this,
@@ -211,7 +176,6 @@ nsresult AudioSinkWrapper::Start(const TimeUnit& aStartTime,
     if (aInfo.HasAudio()) {
       mEndedPromise = MediaSink::EndedPromise::CreateAndResolve(true, __func__);
     }
->>>>>>> upstream-releases
   }
   return rv;
 }
@@ -258,43 +222,14 @@ void AudioSinkWrapper::OnAudioEnded() {
   mAudioEnded = true;
 }
 
-<<<<<<< HEAD
-nsCString AudioSinkWrapper::GetDebugInfo() {
-||||||| merged common ancestors
-nsCString
-AudioSinkWrapper::GetDebugInfo()
-{
-=======
 void AudioSinkWrapper::GetDebugInfo(dom::MediaSinkDebugInfo& aInfo) {
->>>>>>> upstream-releases
   AssertOwnerThread();
-<<<<<<< HEAD
-  auto str = nsPrintfCString(
-      "AudioSinkWrapper: IsStarted=%d IsPlaying=%d AudioEnded=%d", IsStarted(),
-      IsPlaying(), mAudioEnded);
-||||||| merged common ancestors
-  auto str =
-    nsPrintfCString("AudioSinkWrapper: IsStarted=%d IsPlaying=%d AudioEnded=%d",
-                    IsStarted(),
-                    IsPlaying(),
-                    mAudioEnded);
-=======
   aInfo.mAudioSinkWrapper.mIsPlaying = IsPlaying();
   aInfo.mAudioSinkWrapper.mIsStarted = IsStarted();
   aInfo.mAudioSinkWrapper.mAudioEnded = mAudioEnded;
->>>>>>> upstream-releases
   if (mAudioSink) {
     mAudioSink->GetDebugInfo(aInfo);
   }
 }
 
-<<<<<<< HEAD
-}  // namespace media
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace media
-} // namespace mozilla
-
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases

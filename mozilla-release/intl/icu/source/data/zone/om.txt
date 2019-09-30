@@ -1,13 +1,7 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 om{
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.38.69"}
-=======
     Version{"2.1.47.82"}
->>>>>>> upstream-releases
     zoneStrings{
         gmtFormat{"GMT{0}"}
         hourFormat{"+HH:mm;-HH:mm"}

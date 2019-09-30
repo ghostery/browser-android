@@ -1199,13 +1199,7 @@ element.isObscured = function(el) {
  *     `rect`.
  */
 element.getInViewCentrePoint = function(rect, win) {
-<<<<<<< HEAD
-  const {floor, max, min} = Math;
-||||||| merged common ancestors
-  const {max, min} = Math;
-=======
   const { floor, max, min } = Math;
->>>>>>> upstream-releases
 
   // calculate the intersection of the rect that is inside the viewport
   let visible = {
@@ -1215,22 +1209,6 @@ element.getInViewCentrePoint = function(rect, win) {
     bottom: min(win.innerHeight, max(rect.y, rect.y + rect.height)),
   };
 
-<<<<<<< HEAD
-  // arrive at the centre point of the visible rectangle
-  let x = (visible.left + visible.right) / 2.0;
-  let y = (visible.top + visible.bottom) / 2.0;
-
-  // convert to CSS pixels, as centre point can be float
-  x = floor(x);
-  y = floor(y);
-
-  return {x, y};
-||||||| merged common ancestors
-  return {
-    x: (x.left + x.right) / 2,
-    y: (y.top + y.bottom) / 2,
-  };
-=======
   // arrive at the centre point of the visible rectangle
   let x = (visible.left + visible.right) / 2.0;
   let y = (visible.top + visible.bottom) / 2.0;
@@ -1240,7 +1218,6 @@ element.getInViewCentrePoint = function(rect, win) {
   y = floor(y);
 
   return { x, y };
->>>>>>> upstream-releases
 };
 
 /**

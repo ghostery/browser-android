@@ -336,59 +336,8 @@ class Loader final {
    * ideally it would allow arbitrary encodings.  Callers should NOT depend on
    * non-UTF8 sheets being treated as UTF-8 by this method.
    */
-<<<<<<< HEAD
   nsresult LoadSheet(nsIURI* aURL, SheetParsingMode aParsingMode,
                      bool aUseSystemPrincipal, nsICSSLoaderObserver* aObserver,
-                     RefPtr<StyleSheet>* aSheet);
-
-  /**
-   * Asynchronously load the stylesheet at aURL.  If a successful result is
-   * returned, aObserver is guaranteed to be notified asynchronously once the
-   * sheet is loaded and marked complete.  This method can be used to load
-   * sheets not associated with a document.  This method cannot be used to
-   * load user or agent sheets.
-   *
-   * @param aURL the URL of the sheet to load
-   * @param aOriginPrincipal the principal to use for security checks.  This
-   *                         can be null to indicate that these checks should
-   *                         be skipped.
-   * @param aObserver the observer to notify when the load completes.
-   *                  Must not be null.
-   * @param [out] aSheet the sheet to load. Note that the sheet may well
-   *              not be loaded by the time this method returns.
-   */
-  nsresult LoadSheet(nsIURI* aURL, nsIPrincipal* aOriginPrincipal,
-                     nsICSSLoaderObserver* aObserver,
-||||||| merged common ancestors
-  nsresult LoadSheet(nsIURI* aURL,
-                     SheetParsingMode aParsingMode,
-                     bool aUseSystemPrincipal,
-                     nsICSSLoaderObserver* aObserver,
-                     RefPtr<StyleSheet>* aSheet);
-
-  /**
-   * Asynchronously load the stylesheet at aURL.  If a successful result is
-   * returned, aObserver is guaranteed to be notified asynchronously once the
-   * sheet is loaded and marked complete.  This method can be used to load
-   * sheets not associated with a document.  This method cannot be used to
-   * load user or agent sheets.
-   *
-   * @param aURL the URL of the sheet to load
-   * @param aOriginPrincipal the principal to use for security checks.  This
-   *                         can be null to indicate that these checks should
-   *                         be skipped.
-   * @param aObserver the observer to notify when the load completes.
-   *                  Must not be null.
-   * @param [out] aSheet the sheet to load. Note that the sheet may well
-   *              not be loaded by the time this method returns.
-   */
-  nsresult LoadSheet(nsIURI* aURL,
-                     nsIPrincipal* aOriginPrincipal,
-                     nsICSSLoaderObserver* aObserver,
-=======
-  nsresult LoadSheet(nsIURI* aURL, SheetParsingMode aParsingMode,
-                     bool aUseSystemPrincipal, nsICSSLoaderObserver* aObserver,
->>>>>>> upstream-releases
                      RefPtr<StyleSheet>* aSheet);
 
   /**
@@ -511,21 +460,9 @@ class Loader final {
   // pass both.
   //
   // This method will set the sheet's enabled state based on aIsAlternate
-<<<<<<< HEAD
-  MediaMatched PrepareSheet(StyleSheet* aSheet, const nsAString& aTitle,
-                            const nsAString& aMediaString,
-                            dom::MediaList* aMediaList, IsAlternate);
-||||||| merged common ancestors
-  MediaMatched PrepareSheet(StyleSheet* aSheet,
-                            const nsAString& aTitle,
-                            const nsAString& aMediaString,
-                            dom::MediaList* aMediaList,
-                            IsAlternate);
-=======
   MediaMatched PrepareSheet(StyleSheet* aSheet, const nsAString& aTitle,
                             const nsAString& aMediaString, dom::MediaList*,
                             IsAlternate, IsExplicitlyEnabled);
->>>>>>> upstream-releases
 
   // Inserts a style sheet in a document or a ShadowRoot.
   void InsertSheetInTree(StyleSheet& aSheet, nsIContent* aLinkingContent);

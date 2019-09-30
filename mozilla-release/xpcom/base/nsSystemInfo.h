@@ -8,45 +8,10 @@
 #define _NSSYSTEMINFO_H_
 
 #include "nsHashPropertyBag.h"
-<<<<<<< HEAD
-#if defined(XP_WIN)
-#include "nsIObserver.h"
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#if defined(XP_WIN)
-#include "nsIObserver.h"
-#endif // defined(XP_WIN)
-=======
 #include "nsISystemInfo.h"
 #include "mozilla/MozPromise.h"
->>>>>>> upstream-releases
 
 #ifdef MOZ_WIDGET_ANDROID
-<<<<<<< HEAD
-#include "mozilla/dom/PContent.h"
-#endif  // MOZ_WIDGET_ANDROID
-
-class nsSystemInfo final : public nsHashPropertyBag
-#if defined(XP_WIN)
-    ,
-                           public nsIObserver
-#endif  // defined(XP_WIN)
-{
- public:
-#if defined(XP_WIN)
-||||||| merged common ancestors
-#include "mozilla/dom/PContent.h"
-#endif // MOZ_WIDGET_ANDROID
-
-class nsSystemInfo final
-  : public nsHashPropertyBag
-#if defined(XP_WIN)
-  , public nsIObserver
-#endif // defined(XP_WIN)
-{
-public:
-#if defined(XP_WIN)
-=======
 #  include "mozilla/dom/PContent.h"
 #endif  // MOZ_WIDGET_ANDROID
 
@@ -67,17 +32,8 @@ typedef mozilla::MozPromise<DiskInfo, nsresult, /* IsExclusive */ false>
 
 class nsSystemInfo final : public nsISystemInfo, public nsHashPropertyBag {
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS_INHERITED
-<<<<<<< HEAD
-  NS_DECL_NSIOBSERVER
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-  NS_DECL_NSIOBSERVER
-#endif // defined(XP_WIN)
-=======
   NS_DECL_NSISYSTEMINFO
->>>>>>> upstream-releases
 
   nsSystemInfo();
 
@@ -102,17 +58,7 @@ class nsSystemInfo final : public nsISystemInfo, public nsHashPropertyBag {
  private:
   ~nsSystemInfo();
 
-<<<<<<< HEAD
-#if defined(XP_WIN)
-  nsresult GetProfileHDDInfo();
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#if defined(XP_WIN)
-  nsresult GetProfileHDDInfo();
-#endif // defined(XP_WIN)
-=======
   RefPtr<DiskInfoPromise> mDiskInfoPromise;
->>>>>>> upstream-releases
 };
 
 #define NS_SYSTEMINFO_CONTRACTID "@mozilla.org/system-info;1"

@@ -19,18 +19,8 @@ function notFound(ch) {
   Assert.ok(!ch.requestSucceeded);
 }
 
-<<<<<<< HEAD
-function makeCheckOverride(magic) {
-  return (function checkOverride(ch) {
-||||||| merged common ancestors
-function makeCheckOverride(magic)
-{
-  return (function checkOverride(ch)
-  {
-=======
 function makeCheckOverride(magic) {
   return function checkOverride(ch) {
->>>>>>> upstream-releases
     Assert.equal(ch.responseStatus, 200);
     Assert.equal(ch.responseStatusText, "OK");
     Assert.ok(ch.requestSucceeded);
@@ -59,20 +49,12 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
       makeCheckOverride("subpath")
     ),
     new Test(BASE + "/prefix/dummy", removeHandlers, null, notFound),
-<<<<<<< HEAD
-    new Test(BASE + "/prefix/subpath/dummy", newPrefixHandler, null,
-                makeCheckOverride("subpath")),
-||||||| merged common ancestors
-    new Test(BASE + "/prefix/subpath/dummy", newPrefixHandler, null,
-                makeCheckOverride("subpath"))
-=======
     new Test(
       BASE + "/prefix/subpath/dummy",
       newPrefixHandler,
       null,
       makeCheckOverride("subpath")
     ),
->>>>>>> upstream-releases
   ];
 });
 
@@ -138,18 +120,8 @@ function run_test() {
 // PATH HANDLERS
 
 // generate an override
-<<<<<<< HEAD
-function makeOverride(magic) {
-  return (function override(metadata, response) {
-||||||| merged common ancestors
-function makeOverride(magic)
-{
-  return (function override(metadata, response)
-  {
-=======
 function makeOverride(magic) {
   return function override(metadata, response) {
->>>>>>> upstream-releases
     response.setStatusLine("1.1", 200, "OK");
     response.setHeader("Override-Succeeded", magic, false);
 

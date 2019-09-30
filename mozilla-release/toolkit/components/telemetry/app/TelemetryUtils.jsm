@@ -50,13 +50,8 @@ var TelemetryUtils = {
       "toolkit.telemetry.shutdownPingSender.enabledFirstSession",
     TelemetryEnabled: "toolkit.telemetry.enabled",
     Unified: "toolkit.telemetry.unified",
-<<<<<<< HEAD
-    UntrustedModulesPingFrequency: "toolkit.telemetry.untrustedModulesPing.frequency",
-||||||| merged common ancestors
-=======
     UntrustedModulesPingFrequency:
       "toolkit.telemetry.untrustedModulesPing.frequency",
->>>>>>> upstream-releases
     UpdatePing: "toolkit.telemetry.updatePing.enabled",
     NewProfilePingEnabled: "toolkit.telemetry.newProfilePing.enabled",
     NewProfilePingDelay: "toolkit.telemetry.newProfilePing.delay",

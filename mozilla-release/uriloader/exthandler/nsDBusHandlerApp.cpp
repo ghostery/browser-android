@@ -24,69 +24,32 @@ NS_IMPL_ISUPPORTS_CI(nsDBusHandlerApp, nsIDBusHandlerApp, nsIHandlerApp)
 ////////////////////////////////////////////////////////////////////////////////
 //// nsIHandlerApp
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::GetName(nsAString &aName) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::GetName(nsAString& aName)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::GetName(nsAString& aName) {
->>>>>>> upstream-releases
   aName.Assign(mName);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::SetName(const nsAString &aName) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::SetName(const nsAString & aName)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::SetName(const nsAString& aName) {
->>>>>>> upstream-releases
   mName.Assign(aName);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::SetDetailedDescription(
-    const nsAString &aDescription) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::SetDetailedDescription(const nsAString & aDescription)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::SetDetailedDescription(
     const nsAString& aDescription) {
->>>>>>> upstream-releases
   mDetailedDescription.Assign(aDescription);
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::GetDetailedDescription(
-    nsAString &aDescription) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::GetDetailedDescription(nsAString& aDescription)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::GetDetailedDescription(
     nsAString& aDescription) {
->>>>>>> upstream-releases
   aDescription.Assign(mDetailedDescription);
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDBusHandlerApp::Equals(nsIHandlerApp *aHandlerApp, bool *_retval) {
-||||||| merged common ancestors
-nsDBusHandlerApp::Equals(nsIHandlerApp *aHandlerApp, bool *_retval)
-{
-=======
 nsDBusHandlerApp::Equals(nsIHandlerApp* aHandlerApp, bool* _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aHandlerApp);
 
   // If the handler app isn't a dbus handler app, then it's not the same app.
@@ -114,29 +77,12 @@ nsDBusHandlerApp::Equals(nsIHandlerApp* aHandlerApp, bool* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDBusHandlerApp::LaunchWithURI(nsIURI *aURI,
-                                nsIInterfaceRequestor *aWindowContext) {
-||||||| merged common ancestors
-nsDBusHandlerApp::LaunchWithURI(nsIURI *aURI,
-                                nsIInterfaceRequestor *aWindowContext)
-{
-=======
 nsDBusHandlerApp::LaunchWithURI(nsIURI* aURI,
                                 nsIInterfaceRequestor* aWindowContext) {
->>>>>>> upstream-releases
   nsAutoCString spec;
   nsresult rv = aURI->GetAsciiSpec(spec);
-<<<<<<< HEAD
-  NS_ENSURE_SUCCESS(rv, rv);
-  const char *uri = spec.get();
-||||||| merged common ancestors
-  NS_ENSURE_SUCCESS(rv,rv);
-  const char* uri = spec.get();
-=======
   NS_ENSURE_SUCCESS(rv, rv);
   const char* uri = spec.get();
->>>>>>> upstream-releases
 
   DBusError err;
   dbus_error_init(&err);
@@ -177,98 +123,42 @@ nsDBusHandlerApp::LaunchWithURI(nsIURI* aURI,
 ////////////////////////////////////////////////////////////////////////////////
 //// nsIDBusHandlerApp
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::GetService(nsACString &aService) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::GetService(nsACString & aService)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::GetService(nsACString& aService) {
->>>>>>> upstream-releases
   aService.Assign(mService);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::SetService(const nsACString &aService) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::SetService(const nsACString & aService)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::SetService(const nsACString& aService) {
->>>>>>> upstream-releases
   mService.Assign(aService);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::GetMethod(nsACString &aMethod) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::GetMethod(nsACString & aMethod)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::GetMethod(nsACString& aMethod) {
->>>>>>> upstream-releases
   aMethod.Assign(mMethod);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::SetMethod(const nsACString &aMethod) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::SetMethod(const nsACString & aMethod)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::SetMethod(const nsACString& aMethod) {
->>>>>>> upstream-releases
   mMethod.Assign(aMethod);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::GetDBusInterface(nsACString &aInterface) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::GetDBusInterface(nsACString & aInterface)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::GetDBusInterface(nsACString& aInterface) {
->>>>>>> upstream-releases
   aInterface.Assign(mInterface);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::SetDBusInterface(const nsACString &aInterface) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::SetDBusInterface(const nsACString & aInterface)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::SetDBusInterface(const nsACString& aInterface) {
->>>>>>> upstream-releases
   mInterface.Assign(aInterface);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::GetObjectPath(nsACString &aObjpath) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::GetObjectPath(nsACString & aObjpath)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::GetObjectPath(nsACString& aObjpath) {
->>>>>>> upstream-releases
   aObjpath.Assign(mObjpath);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDBusHandlerApp::SetObjectPath(const nsACString &aObjpath) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDBusHandlerApp::SetObjectPath(const nsACString & aObjpath)
-{
-=======
 NS_IMETHODIMP nsDBusHandlerApp::SetObjectPath(const nsACString& aObjpath) {
->>>>>>> upstream-releases
   mObjpath.Assign(aObjpath);
   return NS_OK;
 }

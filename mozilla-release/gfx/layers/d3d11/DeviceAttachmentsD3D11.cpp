@@ -27,18 +27,9 @@ DeviceAttachmentsD3D11::DeviceAttachmentsD3D11(ID3D11Device* device)
 
 DeviceAttachmentsD3D11::~DeviceAttachmentsD3D11() {}
 
-<<<<<<< HEAD
-/* static */ RefPtr<DeviceAttachmentsD3D11> DeviceAttachmentsD3D11::Create(
-    ID3D11Device* aDevice) {
-||||||| merged common ancestors
-/* static */ RefPtr<DeviceAttachmentsD3D11>
-DeviceAttachmentsD3D11::Create(ID3D11Device* aDevice)
-{
-=======
 /* static */
 RefPtr<DeviceAttachmentsD3D11> DeviceAttachmentsD3D11::Create(
     ID3D11Device* aDevice) {
->>>>>>> upstream-releases
   // We don't return null even if the attachments object even if it fails to
   // initialize, so the compositor can grab the failure ID.
   RefPtr<DeviceAttachmentsD3D11> attachments =
@@ -284,23 +275,11 @@ bool DeviceAttachmentsD3D11::CreateShaders() {
   InitPixelShader(sYCbCrShaderMask, mYCbCrShader, MaskType::Mask);
   InitPixelShader(sNV12Shader, mNV12Shader, MaskType::MaskNone);
   InitPixelShader(sNV12ShaderMask, mNV12Shader, MaskType::Mask);
-<<<<<<< HEAD
-  if (gfxPrefs::ComponentAlphaEnabled()) {
-    InitPixelShader(sComponentAlphaShader, mComponentAlphaShader,
-                    MaskType::MaskNone);
-    InitPixelShader(sComponentAlphaShaderMask, mComponentAlphaShader,
-                    MaskType::Mask);
-||||||| merged common ancestors
-  if (gfxPrefs::ComponentAlphaEnabled()) {
-    InitPixelShader(sComponentAlphaShader, mComponentAlphaShader, MaskType::MaskNone);
-    InitPixelShader(sComponentAlphaShaderMask, mComponentAlphaShader, MaskType::Mask);
-=======
   if (StaticPrefs::layers_componentalpha_enabled()) {
     InitPixelShader(sComponentAlphaShader, mComponentAlphaShader,
                     MaskType::MaskNone);
     InitPixelShader(sComponentAlphaShaderMask, mComponentAlphaShader,
                     MaskType::Mask);
->>>>>>> upstream-releases
   }
 
   return mContinueInit;

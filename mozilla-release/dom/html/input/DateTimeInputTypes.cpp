@@ -7,22 +7,10 @@
 #include "DateTimeInputTypes.h"
 
 #include "js/Date.h"
-<<<<<<< HEAD
-#include "mozilla/AsyncEventDispatcher.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/AsyncEventDispatcher.h"
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/HTMLInputElement.h"
-<<<<<<< HEAD
-#include "nsDateTimeControlFrame.h"
 #include "nsDOMTokenList.h"
-||||||| merged common ancestors
-#include "nsDateTimeControlFrame.h"
-=======
-#include "nsDOMTokenList.h"
->>>>>>> upstream-releases
 
 const double DateTimeInputTypeBase::kMinimumYear = 1;
 const double DateTimeInputTypeBase::kMaximumYear = 275760;
@@ -30,40 +18,8 @@ const double DateTimeInputTypeBase::kMaximumMonthInMaximumYear = 9;
 const double DateTimeInputTypeBase::kMaximumWeekInMaximumYear = 37;
 const double DateTimeInputTypeBase::kMsPerDay = 24 * 60 * 60 * 1000;
 
-<<<<<<< HEAD
 using namespace mozilla;
 using namespace mozilla::dom;
-
-/* static */ bool DateTimeInputTypeBase::IsInputDateTimeEnabled() {
-  static bool sDateTimeEnabled = false;
-  static bool sDateTimePrefCached = false;
-  if (!sDateTimePrefCached) {
-    sDateTimePrefCached = true;
-    mozilla::Preferences::AddBoolVarCache(&sDateTimeEnabled,
-                                          "dom.forms.datetime", false);
-  }
-
-  return sDateTimeEnabled;
-}
-||||||| merged common ancestors
-/* static */ bool
-DateTimeInputTypeBase::IsInputDateTimeEnabled()
-{
-  static bool sDateTimeEnabled = false;
-  static bool sDateTimePrefCached = false;
-  if (!sDateTimePrefCached) {
-    sDateTimePrefCached = true;
-    mozilla::Preferences::AddBoolVarCache(&sDateTimeEnabled,
-                                          "dom.forms.datetime",
-                                          false);
-  }
-
-  return sDateTimeEnabled;
-}
-=======
-using namespace mozilla;
-using namespace mozilla::dom;
->>>>>>> upstream-releases
 
 bool DateTimeInputTypeBase::IsMutable() const {
   return !mInputElement->IsDisabled() &&
@@ -131,29 +87,6 @@ bool DateTimeInputTypeBase::HasStepMismatch(bool aUseZeroIfValueNaN) const {
   return NS_floorModulo(value - GetStepBase(), step) != mozilla::Decimal(0);
 }
 
-<<<<<<< HEAD
-bool DateTimeInputTypeBase::HasBadInput() const {
-  Element* editWrapperElement = nullptr;
-  nsDateTimeControlFrame* frame = do_QueryFrame(GetPrimaryFrame());
-  if (frame && frame->GetInputAreaContent()) {
-    // edit-wrapper is inside an XBL binding
-    editWrapperElement =
-        mInputElement->GetComposedDoc()->GetAnonymousElementByAttribute(
-            frame->GetInputAreaContent(), nsGkAtoms::anonid,
-            NS_LITERAL_STRING("edit-wrapper"));
-  } else if (mInputElement->GetShadowRoot()) {
-    // edit-wrapper is inside an UA Widget Shadow DOM
-    editWrapperElement = mInputElement->GetShadowRoot()->GetElementById(
-        NS_LITERAL_STRING("edit-wrapper"));
-  }
-  if (!editWrapperElement) {
-||||||| merged common ancestors
-bool
-DateTimeInputTypeBase::HasBadInput() const
-{
-  nsDateTimeControlFrame* frame = do_QueryFrame(GetPrimaryFrame());
-  if (!frame) {
-=======
 bool DateTimeInputTypeBase::HasBadInput() const {
   if (!mInputElement->GetShadowRoot()) {
     return false;
@@ -163,7 +96,6 @@ bool DateTimeInputTypeBase::HasBadInput() const {
       NS_LITERAL_STRING("edit-wrapper"));
 
   if (!editWrapperElement) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -192,70 +124,26 @@ nsresult DateTimeInputTypeBase::GetRangeOverflowMessage(nsAString& aMessage) {
   nsAutoString maxStr;
   mInputElement->GetAttr(kNameSpaceID_None, nsGkAtoms::max, maxStr);
 
-<<<<<<< HEAD
-  const char16_t* params[] = {maxStr.get()};
-  return nsContentUtils::FormatLocalizedString(
-      nsContentUtils::eDOM_PROPERTIES, "FormValidationDateTimeRangeOverflow",
-      params, aMessage);
-||||||| merged common ancestors
-  const char16_t* params[] = { maxStr.get() };
-  return nsContentUtils::FormatLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-    "FormValidationDateTimeRangeOverflow", params, aMessage);
-=======
   return nsContentUtils::FormatLocalizedString(
       aMessage, nsContentUtils::eDOM_PROPERTIES,
       "FormValidationDateTimeRangeOverflow", maxStr);
->>>>>>> upstream-releases
 }
 
 nsresult DateTimeInputTypeBase::GetRangeUnderflowMessage(nsAString& aMessage) {
   nsAutoString minStr;
   mInputElement->GetAttr(kNameSpaceID_None, nsGkAtoms::min, minStr);
 
-<<<<<<< HEAD
-  const char16_t* params[] = {minStr.get()};
-  return nsContentUtils::FormatLocalizedString(
-      nsContentUtils::eDOM_PROPERTIES, "FormValidationDateTimeRangeUnderflow",
-      params, aMessage);
-||||||| merged common ancestors
-  const char16_t* params[] = { minStr.get() };
-  return nsContentUtils::FormatLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-    "FormValidationDateTimeRangeUnderflow", params, aMessage);
-=======
   return nsContentUtils::FormatLocalizedString(
       aMessage, nsContentUtils::eDOM_PROPERTIES,
       "FormValidationDateTimeRangeUnderflow", minStr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult DateTimeInputTypeBase::MinMaxStepAttrChanged() {
-  if (Element* dateTimeBoxElement =
-          mInputElement->GetDateTimeBoxElementInUAWidget()) {
-    AsyncEventDispatcher* dispatcher = new AsyncEventDispatcher(
-        dateTimeBoxElement, NS_LITERAL_STRING("MozNotifyMinMaxStepAttrChanged"),
-        CanBubble::eNo, ChromeOnlyDispatch::eNo);
-    dispatcher->RunDOMEventWhenSafe();
-  } else {
-    nsDateTimeControlFrame* frame = do_QueryFrame(GetPrimaryFrame());
-    if (frame) {
-      frame->OnMinMaxStepAttrChanged();
-    }
-||||||| merged common ancestors
-nsresult
-DateTimeInputTypeBase::MinMaxStepAttrChanged()
-{
-  nsDateTimeControlFrame* frame = do_QueryFrame(GetPrimaryFrame());
-  if (frame) {
-    frame->OnMinMaxStepAttrChanged();
-=======
 nsresult DateTimeInputTypeBase::MinMaxStepAttrChanged() {
   if (Element* dateTimeBoxElement = mInputElement->GetDateTimeBoxElement()) {
     AsyncEventDispatcher* dispatcher = new AsyncEventDispatcher(
         dateTimeBoxElement, NS_LITERAL_STRING("MozNotifyMinMaxStepAttrChanged"),
         CanBubble::eNo, ChromeOnlyDispatch::eNo);
     dispatcher->RunDOMEventWhenSafe();
->>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -286,18 +174,8 @@ bool DateTimeInputTypeBase::GetTimeFromMs(double aValue, uint16_t* aHours,
 
 // input type=date
 
-<<<<<<< HEAD
-nsresult DateInputType::GetBadInputMessage(nsAString& aMessage) {
-  if (!IsInputDateTimeEnabled()) {
-||||||| merged common ancestors
-nsresult
-DateInputType::GetBadInputMessage(nsAString& aMessage)
-{
-  if (!IsInputDateTimeEnabled()) {
-=======
 nsresult DateInputType::GetBadInputMessage(nsAString& aMessage) {
   if (!StaticPrefs::dom_forms_datetime()) {
->>>>>>> upstream-releases
     return NS_ERROR_UNEXPECTED;
   }
 

@@ -83,25 +83,6 @@ protected:
         return &fKey[kMetaDataCnt];
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/gpu/GrResourceKey.h
-#ifdef SK_DEBUG
-    void dump() const {
-        if (!this->isValid()) {
-            SkDebugf("Invalid Key\n");
-        } else {
-            SkDebugf("hash: %d ", this->hash());
-            SkDebugf("domain: %d ", this->domain());
-            SkDebugf("size: %dB ", this->internalSize());
-            for (size_t i = 0; i < this->internalSize(); ++i) {
-                SkDebugf("%d ", fKey[i]);
-            }
-            SkDebugf("\n");
-        }
-    }
-#endif
-
-||||||| merged common ancestors
-=======
 #ifdef SK_DEBUG
     void dump() const {
         if (!this->isValid()) {
@@ -118,7 +99,6 @@ protected:
     }
 #endif
 
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/GrResourceKey.h
     /** Used to initialize a key. */
     class Builder {
     public:
@@ -289,25 +269,12 @@ public:
 
     const char* tag() const { return fTag; }
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/gpu/GrResourceKey.h
-    const char* tag() const { return fTag; }
-
 #ifdef SK_DEBUG
     void dump(const char* label) const {
         SkDebugf("%s tag: %s\n", label, fTag ? fTag : "None");
         this->INHERITED::dump();
     }
 #endif
-||||||| merged common ancestors
-    SkDEBUGCODE(const char* tag() const { return fTag.c_str(); })
-=======
-#ifdef SK_DEBUG
-    void dump(const char* label) const {
-        SkDebugf("%s tag: %s\n", label, fTag ? fTag : "None");
-        this->INHERITED::dump();
-    }
-#endif
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/GrResourceKey.h
 
     class Builder : public INHERITED::Builder {
     public:
@@ -364,20 +331,11 @@ static inline void gr_init_static_unique_key_once(SkAlignedSTStorage<1, GrUnique
 // The cache listens for these messages to purge junk resources proactively.
 class GrUniqueKeyInvalidatedMessage {
 public:
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/gpu/GrResourceKey.h
-    GrUniqueKeyInvalidatedMessage(const GrUniqueKey& key, uint32_t contextUniqueID)
-            : fKey(key), fContextID(contextUniqueID) {
-        SkASSERT(SK_InvalidUniqueID != contextUniqueID);
-    }
-||||||| merged common ancestors
-    explicit GrUniqueKeyInvalidatedMessage(const GrUniqueKey& key) : fKey(key) {}
-=======
     GrUniqueKeyInvalidatedMessage() = default;
     GrUniqueKeyInvalidatedMessage(const GrUniqueKey& key, uint32_t contextUniqueID)
             : fKey(key), fContextID(contextUniqueID) {
         SkASSERT(SK_InvalidUniqueID != contextUniqueID);
     }
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/GrResourceKey.h
 
     GrUniqueKeyInvalidatedMessage(const GrUniqueKeyInvalidatedMessage&) = default;
 
@@ -386,26 +344,14 @@ public:
     const GrUniqueKey& key() const { return fKey; }
     uint32_t contextID() const { return fContextID; }
 
-    bool shouldSend(uint32_t inboxID) const { return fContextID == inboxID; }
-
 private:
     GrUniqueKey fKey;
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/gpu/GrResourceKey.h
-    uint32_t fContextID;
-||||||| merged common ancestors
-=======
     uint32_t fContextID = SK_InvalidUniqueID;
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/GrResourceKey.h
 };
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/include/gpu/GrResourceKey.h
-
-||||||| merged common ancestors
-=======
 
 static inline bool SkShouldPostMessageToBus(const GrUniqueKeyInvalidatedMessage& msg,
                                             uint32_t msgBusUniqueID) {
     return msg.contextID() == msgBusUniqueID;
 }
 
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/include/private/GrResourceKey.h
 #endif

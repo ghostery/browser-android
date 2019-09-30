@@ -15,19 +15,9 @@
 #define STRINGIFY_METHOD(method_) #method_
 
 struct PropertyInfo {
-<<<<<<< HEAD
-  const char *propName;
-  const char *domName;
-  const char *pref;
-||||||| merged common ancestors
-    const char *propName;
-    const char *domName;
-    const char *pref;
-=======
   const char* propName;
   const char* domName;
   const char* pref;
->>>>>>> upstream-releases
 };
 
 const PropertyInfo gLonghandProperties[] = {
@@ -48,7 +38,7 @@ const PropertyInfo gLonghandProperties[] = {
  * be used.  They're in the same order as the above list, with some
  * items skipped.
  */
-const char *gLonghandPropertiesWithDOMProp[] = {
+const char* gLonghandPropertiesWithDOMProp[] = {
 
 #define CSS_PROP_LIST_EXCLUDE_INTERNAL
 #define CSS_PROP_LONGHAND(name_, ...) #name_,
@@ -77,7 +67,7 @@ const PropertyInfo gShorthandProperties[] = {
 };
 
 /* see gLonghandPropertiesWithDOMProp */
-const char *gShorthandPropertiesWithDOMProp[] = {
+const char* gShorthandPropertiesWithDOMProp[] = {
 
 #define CSS_PROP_LIST_EXCLUDE_INTERNAL
 #define CSS_PROP_SHORTHAND(name_, id_, method_, flags_, pref_) #name_,
@@ -103,14 +93,8 @@ const char* gInaccessibleProperties[] = {
     "aspect-ratio",  // for now.
     "-moz-context-properties",
     "-moz-control-character-visibility",
-<<<<<<< HEAD
-    "-moz-script-level",  // parsed by UA sheets only
-||||||| merged common ancestors
-    "-moz-script-level", // parsed by UA sheets only
-=======
     "-moz-list-reversed",  // parsed by UA sheets only
     "-moz-script-level",   // parsed by UA sheets only
->>>>>>> upstream-releases
     "-moz-script-size-multiplier",
     "-moz-script-min-size",
     "-moz-math-variant",
@@ -124,102 +108,13 @@ const char* gInaccessibleProperties[] = {
     "-moz-window-shadow",                    // chrome-only internal properties
 };
 
-<<<<<<< HEAD
-inline int is_inaccessible(const char *aPropName) {
-  for (unsigned j = 0; j < MOZ_ARRAY_LENGTH(gInaccessibleProperties); ++j) {
-    if (strcmp(aPropName, gInaccessibleProperties[j]) == 0) return 1;
-  }
-  return 0;
-||||||| merged common ancestors
-inline int
-is_inaccessible(const char* aPropName)
-{
-    for (unsigned j = 0; j < MOZ_ARRAY_LENGTH(gInaccessibleProperties); ++j) {
-        if (strcmp(aPropName, gInaccessibleProperties[j]) == 0)
-            return 1;
-    }
-    return 0;
-=======
 inline int is_inaccessible(const char* aPropName) {
   for (unsigned j = 0; j < MOZ_ARRAY_LENGTH(gInaccessibleProperties); ++j) {
     if (strcmp(aPropName, gInaccessibleProperties[j]) == 0) return 1;
   }
   return 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void print_array(const char *aName, const PropertyInfo *aProps,
-                 unsigned aPropsLength, const char *const *aDOMProps,
-                 unsigned aDOMPropsLength) {
-  printf("var %s = [\n", aName);
-
-  int first = 1;
-  unsigned j = 0;  // index into DOM prop list
-  for (unsigned i = 0; i < aPropsLength; ++i) {
-    const PropertyInfo *p = aProps + i;
-
-    if (is_inaccessible(p->propName))
-      // inaccessible properties never have DOM props, so don't
-      // worry about incrementing j.  The assertion below will
-      // catch if they do.
-      continue;
-
-    if (first)
-      first = 0;
-    else
-      printf(",\n");
-
-    printf("\t{ name: \"%s\", prop: ", p->propName);
-    if (j >= aDOMPropsLength || strcmp(p->propName, aDOMProps[j]) != 0)
-      printf("null");
-    else {
-      ++j;
-      if (strncmp(p->domName, "Moz", 3) == 0)
-        printf("\"%s\"", p->domName);
-      else
-        // lowercase the first letter
-        printf("\"%c%s\"", p->domName[0] + 32, p->domName + 1);
-||||||| merged common ancestors
-void
-print_array(const char *aName,
-            const PropertyInfo *aProps, unsigned aPropsLength,
-            const char * const * aDOMProps, unsigned aDOMPropsLength)
-{
-    printf("var %s = [\n", aName);
-
-    int first = 1;
-    unsigned j = 0; // index into DOM prop list
-    for (unsigned i = 0; i < aPropsLength; ++i) {
-        const PropertyInfo *p = aProps + i;
-
-        if (is_inaccessible(p->propName))
-            // inaccessible properties never have DOM props, so don't
-            // worry about incrementing j.  The assertion below will
-            // catch if they do.
-            continue;
-
-        if (first)
-            first = 0;
-        else
-            printf(",\n");
-
-        printf("\t{ name: \"%s\", prop: ", p->propName);
-        if (j >= aDOMPropsLength || strcmp(p->propName, aDOMProps[j]) != 0)
-            printf("null");
-        else {
-            ++j;
-            if (strncmp(p->domName, "Moz", 3) == 0)
-                printf("\"%s\"", p->domName);
-            else
-                // lowercase the first letter
-                printf("\"%c%s\"", p->domName[0] + 32, p->domName + 1);
-        }
-        if (p->pref[0]) {
-            printf(", pref: \"%s\"", p->pref);
-        }
-        printf(" }");
-=======
 void print_array(const char* aName, const PropertyInfo* aProps,
                  unsigned aPropsLength, const char* const* aDOMProps,
                  unsigned aDOMPropsLength) {
@@ -251,7 +146,6 @@ void print_array(const char* aName, const PropertyInfo* aProps,
       else
         // lowercase the first letter
         printf("\"%c%s\"", p->domName[0] + 32, p->domName + 1);
->>>>>>> upstream-releases
     }
     if (p->pref[0]) {
       printf(", pref: \"%s\"", p->pref);

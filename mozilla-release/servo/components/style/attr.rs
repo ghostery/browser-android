@@ -6,10 +6,6 @@
 //!
 //! [attr]: https://dom.spec.whatwg.org/#interface-attr
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-use {Atom, LocalName, Namespace, Prefix};
-=======
 use crate::properties::PropertyDeclarationBlock;
 use crate::shared_lock::Locked;
 use crate::str::str_join;
@@ -17,15 +13,7 @@ use crate::str::{read_exponent, read_fraction, HTML_SPACE_CHARACTERS};
 use crate::str::{read_numbers, split_commas, split_html_space_chars};
 use crate::values::specified::Length;
 use crate::{Atom, LocalName, Namespace, Prefix};
->>>>>>> upstream-releases
 use app_units::Au;
-use crate::properties::PropertyDeclarationBlock;
-use crate::shared_lock::Locked;
-use crate::str::str_join;
-use crate::str::{read_exponent, read_fraction, HTML_SPACE_CHARACTERS};
-use crate::str::{read_numbers, split_commas, split_html_space_chars};
-use crate::values::specified::Length;
-use crate::{Atom, LocalName, Namespace, Prefix};
 use cssparser::{self, Color, RGBA};
 use euclid::num::Zero;
 use num_traits::ToPrimitive;

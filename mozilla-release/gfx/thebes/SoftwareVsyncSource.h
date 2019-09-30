@@ -28,20 +28,8 @@ class SoftwareDisplay final : public mozilla::gfx::VsyncSource::Display {
   void ScheduleNextVsync(mozilla::TimeStamp aVsyncTimestamp);
   void Shutdown() override;
 
-<<<<<<< HEAD
- protected:
-  ~SoftwareDisplay();
-
- private:
-||||||| merged common ancestors
-protected:
-  ~SoftwareDisplay();
-
-private:
-=======
  private:
   virtual ~SoftwareDisplay();
->>>>>>> upstream-releases
   mozilla::TimeDuration mVsyncRate;
   // Use a chromium thread because nsITimers* fire on the main thread
   base::Thread* mVsyncThread;
@@ -58,14 +46,7 @@ class SoftwareVsyncSource : public mozilla::gfx::VsyncSource {
   SoftwareVsyncSource();
   virtual ~SoftwareVsyncSource();
 
-<<<<<<< HEAD
-  virtual Display& GetGlobalDisplay() override {
-||||||| merged common ancestors
-  virtual Display& GetGlobalDisplay() override
-  {
-=======
   Display& GetGlobalDisplay() override {
->>>>>>> upstream-releases
     MOZ_ASSERT(mGlobalDisplay != nullptr);
     return *mGlobalDisplay;
   }

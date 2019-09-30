@@ -7,67 +7,6 @@
 // Test that the custom selector highlighter creates as many box-model
 // highlighters as there are nodes that match the given selector
 
-<<<<<<< HEAD
-const TEST_URL = "data:text/html;charset=utf-8," +
-                 "<div id='test-node'>test node</div>" +
-                 "<ul>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                 "</ul>";
-
-const TEST_DATA = [{
-  selector: "#test-node",
-  containerCount: 1,
-}, {
-  selector: null,
-  containerCount: 0,
-}, {
-  selector: undefined,
-  containerCount: 0,
-}, {
-  selector: ".invalid-class",
-  containerCount: 0,
-}, {
-  selector: ".item",
-  containerCount: 5,
-}, {
-  selector: "#test-node, ul, .item",
-  containerCount: 7,
-}];
-||||||| merged common ancestors
-const TEST_URL = "data:text/html;charset=utf-8," +
-                 "<div id='test-node'>test node</div>" +
-                 "<ul>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                  "  <li class='item'>item</li>" +
-                 "</ul>";
-
-const TEST_DATA = [{
-  selector: "#test-node",
-  containerCount: 1
-}, {
-  selector: null,
-  containerCount: 0,
-}, {
-  selector: undefined,
-  containerCount: 0,
-}, {
-  selector: ".invalid-class",
-  containerCount: 0
-}, {
-  selector: ".item",
-  containerCount: 5
-}, {
-  selector: "#test-node, ul, .item",
-  containerCount: 7
-}];
-=======
 const TEST_URL =
   "data:text/html;charset=utf-8," +
   "<div id='test-node'>test node</div>" +
@@ -105,7 +44,6 @@ const TEST_DATA = [
     containerCount: 7,
   },
 ];
->>>>>>> upstream-releases
 
 requestLongerTimeout(5);
 

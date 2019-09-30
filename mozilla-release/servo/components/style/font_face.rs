@@ -55,25 +55,12 @@ impl OneOrMoreSeparated for Source {
 #[repr(u8)]
 #[allow(missing_docs)]
 pub enum FontFaceSourceListComponent {
-<<<<<<< HEAD
-    Url(*const crate::gecko_bindings::structs::mozilla::css::URLValue),
-    Local(*mut crate::gecko_bindings::structs::nsAtom),
-    FormatHint {
-        length: usize,
-        utf8_bytes: *const u8,
-    },
-||||||| merged common ancestors
-    Url(*const ::gecko_bindings::structs::mozilla::css::URLValue),
-    Local(*mut ::gecko_bindings::structs::nsAtom),
-    FormatHint { length: usize, utf8_bytes: *const u8 },
-=======
     Url(*const crate::gecko::url::CssUrl),
     Local(*mut crate::gecko_bindings::structs::nsAtom),
     FormatHint {
         length: usize,
         utf8_bytes: *const u8,
     },
->>>>>>> upstream-releases
 }
 
 /// A `UrlSource` represents a font-face source that has been specified with a
@@ -428,30 +415,14 @@ impl Parse for Source {
 macro_rules! is_descriptor_enabled {
     ("font-display") => {
         unsafe {
-<<<<<<< HEAD
-            use crate::gecko_bindings::structs::mozilla;
-            mozilla::StaticPrefs_sVarCache_layout_css_font_display_enabled
-||||||| merged common ancestors
-            use gecko_bindings::structs::mozilla;
-            mozilla::StaticPrefs_sVarCache_layout_css_font_display_enabled
-=======
             use crate::gecko_bindings::structs::mozilla;
             mozilla::StaticPrefs::sVarCache_layout_css_font_display_enabled
->>>>>>> upstream-releases
         }
     };
     ("font-variation-settings") => {
         unsafe {
-<<<<<<< HEAD
-            use crate::gecko_bindings::structs::mozilla;
-            mozilla::StaticPrefs_sVarCache_layout_css_font_variations_enabled != 0
-||||||| merged common ancestors
-            use gecko_bindings::structs::mozilla;
-            mozilla::StaticPrefs_sVarCache_layout_css_font_variations_enabled != 0
-=======
             use crate::gecko_bindings::structs::mozilla;
             mozilla::StaticPrefs::sVarCache_layout_css_font_variations_enabled != 0
->>>>>>> upstream-releases
         }
     };
     ($name:tt) => {

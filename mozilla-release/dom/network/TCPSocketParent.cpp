@@ -43,23 +43,6 @@ using namespace net;
 
 namespace dom {
 
-<<<<<<< HEAD
-static void FireInteralError(mozilla::net::PTCPSocketParent* aActor,
-                             uint32_t aLineNo) {
-  mozilla::Unused << aActor->SendCallback(
-      NS_LITERAL_STRING("onerror"),
-      TCPError(NS_LITERAL_STRING("InvalidStateError"),
-               NS_LITERAL_STRING("Internal error")),
-      static_cast<uint32_t>(TCPReadyState::Connecting));
-||||||| merged common ancestors
-static void
-FireInteralError(mozilla::net::PTCPSocketParent* aActor, uint32_t aLineNo)
-{
-  mozilla::Unused <<
-      aActor->SendCallback(NS_LITERAL_STRING("onerror"),
-                           TCPError(NS_LITERAL_STRING("InvalidStateError"), NS_LITERAL_STRING("Internal error")),
-                           static_cast<uint32_t>(TCPReadyState::Connecting));
-=======
 static void FireInteralError(TCPSocketParent* aActor, uint32_t aLineNo) {
   MOZ_ASSERT(aActor->IPCOpen());
 
@@ -68,7 +51,6 @@ static void FireInteralError(TCPSocketParent* aActor, uint32_t aLineNo) {
       TCPError(NS_LITERAL_STRING("InvalidStateError"),
                NS_LITERAL_STRING("Internal error")),
       static_cast<uint32_t>(TCPReadyState::Connecting));
->>>>>>> upstream-releases
 }
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(TCPSocketParentBase)
@@ -128,34 +110,12 @@ mozilla::ipc::IPCResult TCPSocketParent::RecvOpenBind(
 
   nsCOMPtr<nsISocketTransport> socketTransport;
   if (aUseSSL) {
-<<<<<<< HEAD
-    const char* socketTypes[1];
-    socketTypes[0] = "ssl";
-    rv = sts->CreateTransport(socketTypes, 1, aRemoteHost, aRemotePort, nullptr,
-                              getter_AddRefs(socketTransport));
-||||||| merged common ancestors
-    const char* socketTypes[1];
-    socketTypes[0] = "ssl";
-    rv = sts->CreateTransport(socketTypes, 1,
-                              aRemoteHost, aRemotePort,
-                              nullptr, getter_AddRefs(socketTransport));
-=======
     AutoTArray<nsCString, 1> socketTypes = {NS_LITERAL_CSTRING("ssl")};
     rv = sts->CreateTransport(socketTypes, aRemoteHost, aRemotePort, nullptr,
                               getter_AddRefs(socketTransport));
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    rv = sts->CreateTransport(nullptr, 0, aRemoteHost, aRemotePort, nullptr,
-                              getter_AddRefs(socketTransport));
-||||||| merged common ancestors
-    rv = sts->CreateTransport(nullptr, 0,
-                              aRemoteHost, aRemotePort,
-                              nullptr, getter_AddRefs(socketTransport));
-=======
     rv = sts->CreateTransport(nsTArray<nsCString>(), aRemoteHost, aRemotePort,
                               nullptr, getter_AddRefs(socketTransport));
->>>>>>> upstream-releases
   }
 
   if (NS_FAILED(rv)) {

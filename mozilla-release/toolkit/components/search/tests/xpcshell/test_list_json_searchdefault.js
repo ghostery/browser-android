@@ -14,19 +14,11 @@ add_task(async function test_searchDefaultEngineUS() {
 
   Assert.ok(Services.search.isInitialized, "search initialized");
 
-<<<<<<< HEAD
-  Assert.equal(Services.search.defaultEngine.name,
-               getDefaultEngineName(true), "expected US default search engine");
-||||||| merged common ancestors
-  Assert.equal(Services.search.currentEngine.name,
-               getDefaultEngineName(true), "expected US default search engine");
-=======
   Assert.equal(
     Services.search.defaultEngine.name,
     getDefaultEngineName(true),
     "expected US default search engine"
   );
->>>>>>> upstream-releases
 
   Services.prefs.clearUserPref("browser.search.region");
 });

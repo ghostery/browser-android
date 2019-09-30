@@ -2,32 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
-use api::{
-    DevicePoint, DeviceSize, DeviceRect, LayoutRect, LayoutToWorldTransform, LayoutTransform,
-    PremultipliedColorF, LayoutToPictureTransform, PictureToLayoutTransform, PicturePixel,
-    WorldPixel, WorldToLayoutTransform, LayoutPoint,
-};
-use clip_scroll_tree::{ClipScrollTree, ROOT_SPATIAL_NODE_INDEX, SpatialNodeIndex};
-use gpu_cache::{GpuCacheAddress, GpuDataRequest};
-use internal_types::FastHashMap;
-use prim_store::EdgeAaSegmentMask;
-use render_task::RenderTaskAddress;
-use std::i32;
-use util::{TransformedRectKind, MatrixHelpers};
-||||||| merged common ancestors
-use api::{
-    DevicePoint, DeviceSize, DeviceRect, LayoutRect, LayoutToWorldTransform, LayoutTransform,
-    PremultipliedColorF, LayoutToPictureTransform, PictureToLayoutTransform, PicturePixel,
-    WorldPixel, WorldToLayoutTransform,
-};
-use clip_scroll_tree::{ClipScrollTree, ROOT_SPATIAL_NODE_INDEX, SpatialNodeIndex};
-use gpu_cache::{GpuCacheAddress, GpuDataRequest};
-use internal_types::FastHashMap;
-use prim_store::EdgeAaSegmentMask;
-use render_task::RenderTaskAddress;
-use util::{TransformedRectKind, MatrixHelpers};
-=======
 use api::{DocumentLayer, PremultipliedColorF};
 use api::units::*;
 use crate::clip_scroll_tree::{ClipScrollTree, ROOT_SPATIAL_NODE_INDEX, SpatialNodeIndex};
@@ -37,33 +11,17 @@ use crate::prim_store::EdgeAaSegmentMask;
 use crate::render_task::RenderTaskAddress;
 use std::i32;
 use crate::util::{TransformedRectKind, MatrixHelpers};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
 
 // Contains type that must exactly match the same structures declared in GLSL.
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
-#[derive(Copy, Clone, Debug, PartialEq)]
-||||||| merged common ancestors
-#[derive(Copy, Clone, Debug)]
-=======
 pub const VECS_PER_TRANSFORM: usize = 8;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
 #[repr(C)]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct ZBufferId(i32);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
-impl ZBufferId {
-    pub fn invalid() -> Self {
-        ZBufferId(i32::MAX)
-    }
-}
-
-||||||| merged common ancestors
-=======
 // We get 24 bits of Z value - use up 22 bits of it to give us
 // 4 bits to account for GPU issues. This seems to manifest on
 // some GPUs under certain perspectives due to z interpolation
@@ -79,7 +37,6 @@ impl ZBufferId {
     }
 }
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
 #[derive(Debug)]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
@@ -194,11 +151,6 @@ pub struct ClipMaskInstance {
     pub prim_transform_id: TransformPaletteId,
     pub clip_data_address: GpuCacheAddress,
     pub resource_address: GpuCacheAddress,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
-    pub local_pos: LayoutPoint,
-    pub tile_rect: LayoutRect,
-||||||| merged common ancestors
-=======
     pub local_pos: LayoutPoint,
     pub tile_rect: LayoutRect,
     pub sub_rect: DeviceRect,
@@ -206,7 +158,6 @@ pub struct ClipMaskInstance {
     pub task_origin: DevicePoint,
     pub screen_origin: DevicePoint,
     pub device_pixel_scale: f32,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
 }
 
 /// A border corner dot or dash drawn into the clipping mask.
@@ -275,15 +226,8 @@ impl PrimitiveHeaders {
     pub fn push(
         &mut self,
         prim_header: &PrimitiveHeader,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
-        z: ZBufferId,
-        user_data: [i32; 3],
-||||||| merged common ancestors
-        user_data: [i32; 3],
-=======
         z: ZBufferId,
         user_data: [i32; 4],
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
     ) -> PrimitiveHeaderIndex {
         debug_assert_eq!(self.headers_int.len(), self.headers_float.len());
         let id = self.headers_float.len();
@@ -295,16 +239,8 @@ impl PrimitiveHeaders {
         });
 
         self.headers_int.push(PrimitiveHeaderI {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
-            z,
-            task_address: prim_header.task_address,
-||||||| merged common ancestors
-            z: self.z_generator.next(),
-            task_address: prim_header.task_address,
-=======
             z,
             unused: 0,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
             specific_prim_address: prim_header.specific_prim_address.as_int(),
             transform_id: prim_header.transform_id,
             user_data,
@@ -401,15 +337,9 @@ impl From<SplitCompositeInstance> for PrimitiveInstanceData {
 bitflags! {
     /// Flags that define how the common brush shader
     /// code should process this instance.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
-    #[cfg_attr(feature = "capture", derive(Serialize))]
-    #[cfg_attr(feature = "replay", derive(Deserialize))]
-||||||| merged common ancestors
-=======
     #[cfg_attr(feature = "capture", derive(Serialize))]
     #[cfg_attr(feature = "replay", derive(Deserialize))]
     #[derive(MallocSizeOf)]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/gpu_types.rs
     pub struct BrushFlags: u8 {
         /// Apply perspective interpolation to UVs
         const PERSPECTIVE_INTERPOLATION = 0x1;

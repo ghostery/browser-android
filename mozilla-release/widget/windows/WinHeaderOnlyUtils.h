@@ -13,28 +13,15 @@
 #include <winternl.h>
 #include <objbase.h>
 
-<<<<<<< HEAD
-#include "mozilla/Assertions.h"
-#include "mozilla/Attributes.h"
-#include "mozilla/DynamicallyLinkedFunctionPtr.h"
-||||||| merged common ancestors
-=======
 #include <stdlib.h>
 
 #include "mozilla/Assertions.h"
 #include "mozilla/Attributes.h"
 #include "mozilla/DynamicallyLinkedFunctionPtr.h"
->>>>>>> upstream-releases
 #include "mozilla/Maybe.h"
-<<<<<<< HEAD
-#include "mozilla/Result.h"
-#include "mozilla/UniquePtr.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/Result.h"
 #include "mozilla/Tuple.h"
 #include "mozilla/UniquePtr.h"
->>>>>>> upstream-releases
 #include "mozilla/WindowsVersion.h"
 #include "nsWindowsHelpers.h"
 
@@ -60,151 +47,12 @@ typedef struct _FILE_ID_INFO {
 
 #endif  // _WIN32_WINNT < _WIN32_WINNT_WIN8
 
-<<<<<<< HEAD
-#endif  // _WIN32_WINNT < _WIN32_WINNT_WIN8
-
-#if !defined(STATUS_SUCCESS)
-#define STATUS_SUCCESS ((NTSTATUS)0x00000000L)
-#endif  // !defined(STATUS_SUCCESS)
-||||||| merged common ancestors
-#endif // _WIN32_WINNT < _WIN32_WINNT_WIN8
-=======
 #if !defined(STATUS_SUCCESS)
 #  define STATUS_SUCCESS ((NTSTATUS)0x00000000L)
 #endif  // !defined(STATUS_SUCCESS)
->>>>>>> upstream-releases
 
 namespace mozilla {
 
-<<<<<<< HEAD
-class WindowsError final {
- private:
-  // HRESULT and NTSTATUS are both typedefs of LONG, so we cannot use
-  // overloading to properly differentiate between the two. Instead we'll use
-  // static functions to convert the various error types to HRESULTs before
-  // instantiating.
-  explicit WindowsError(HRESULT aHResult) : mHResult(aHResult) {}
-
- public:
-  using UniqueString = UniquePtr<WCHAR[], LocalFreeDeleter>;
-
-  static WindowsError FromNtStatus(NTSTATUS aNtStatus) {
-    if (aNtStatus == STATUS_SUCCESS) {
-      // Special case: we don't want to set FACILITY_NT_BIT
-      // (HRESULT_FROM_NT does not handle this case, unlike HRESULT_FROM_WIN32)
-      return WindowsError(S_OK);
-    }
-
-    return WindowsError(HRESULT_FROM_NT(aNtStatus));
-  }
-
-  static WindowsError FromHResult(HRESULT aHResult) {
-    return WindowsError(aHResult);
-  }
-
-  static WindowsError FromWin32Error(DWORD aWin32Err) {
-    return WindowsError(HRESULT_FROM_WIN32(aWin32Err));
-  }
-
-  static WindowsError FromLastError() {
-    return FromWin32Error(::GetLastError());
-  }
-
-  static WindowsError CreateSuccess() { return WindowsError(S_OK); }
-
-  static WindowsError CreateGeneric() {
-    return FromWin32Error(ERROR_UNIDENTIFIED_ERROR);
-  }
-
-  bool IsSuccess() const { return SUCCEEDED(mHResult); }
-
-  bool IsFailure() const { return FAILED(mHResult); }
-
-  bool IsAvailableAsWin32Error() const {
-    return IsAvailableAsNtStatus() ||
-           HRESULT_FACILITY(mHResult) == FACILITY_WIN32;
-  }
-
-  bool IsAvailableAsNtStatus() const {
-    return mHResult == S_OK || (mHResult & FACILITY_NT_BIT);
-  }
-
-  bool IsAvailableAsHResult() const { return true; }
-
-  UniqueString AsString() const {
-    LPWSTR rawMsgBuf = nullptr;
-    DWORD result = ::FormatMessageW(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-            FORMAT_MESSAGE_IGNORE_INSERTS,
-        nullptr, mHResult, 0, reinterpret_cast<LPWSTR>(&rawMsgBuf), 0, nullptr);
-    if (!result) {
-      return nullptr;
-    }
-
-    return UniqueString(rawMsgBuf);
-  }
-
-  HRESULT AsHResult() const { return mHResult; }
-
-  // Not all HRESULTs are convertible to Win32 Errors, so we use Maybe
-  Maybe<DWORD> AsWin32Error() const {
-    if (mHResult == S_OK) {
-      return Some(static_cast<DWORD>(ERROR_SUCCESS));
-    }
-
-    if (HRESULT_FACILITY(mHResult) == FACILITY_WIN32) {
-      // This is the inverse of HRESULT_FROM_WIN32
-      return Some(static_cast<DWORD>(HRESULT_CODE(mHResult)));
-    }
-
-    // The NTSTATUS facility is a special case and thus does not utilize the
-    // HRESULT_FACILITY and HRESULT_CODE macros.
-    if (mHResult & FACILITY_NT_BIT) {
-      return Some(NtStatusToWin32Error(
-          static_cast<NTSTATUS>(mHResult & ~FACILITY_NT_BIT)));
-    }
-
-    return Nothing();
-  }
-
-  // Not all HRESULTs are convertible to NTSTATUS, so we use Maybe
-  Maybe<NTSTATUS> AsNtStatus() const {
-    if (mHResult == S_OK) {
-      return Some(STATUS_SUCCESS);
-    }
-
-    // The NTSTATUS facility is a special case and thus does not utilize the
-    // HRESULT_FACILITY and HRESULT_CODE macros.
-    if (mHResult & FACILITY_NT_BIT) {
-      return Some(static_cast<NTSTATUS>(mHResult & ~FACILITY_NT_BIT));
-    }
-
-    return Nothing();
-  }
-
-  static DWORD NtStatusToWin32Error(NTSTATUS aNtStatus) {
-    static const DynamicallyLinkedFunctionPtr<decltype(&RtlNtStatusToDosError)>
-        pRtlNtStatusToDosError(L"ntdll.dll", "RtlNtStatusToDosError");
-
-    MOZ_ASSERT(!!pRtlNtStatusToDosError);
-    if (!pRtlNtStatusToDosError) {
-      return ERROR_UNIDENTIFIED_ERROR;
-    }
-
-    return pRtlNtStatusToDosError(aNtStatus);
-  }
-
- private:
-  // We store the error code as an HRESULT because they can encode both Win32
-  // error codes and NTSTATUS codes.
-  HRESULT mHResult;
-};
-
-template <typename T>
-using WindowsErrorResult = Result<T, WindowsError>;
-
-||||||| merged common ancestors
-=======
 class WindowsError final {
  private:
   // HRESULT and NTSTATUS are both typedefs of LONG, so we cannot use
@@ -339,7 +187,6 @@ class WindowsError final {
 template <typename T>
 using WindowsErrorResult = Result<T, WindowsError>;
 
->>>>>>> upstream-releases
 // How long to wait for a created process to become available for input,
 // to prevent that process's windows being forced to the background.
 // This is used across update, restart, and the launcher.
@@ -516,12 +363,6 @@ inline WindowsErrorResult<bool> DoPathsPointToIdenticalFile(
 
   FileUniqueId id2(aPath2, aPathType2);
   if (!id2) {
-<<<<<<< HEAD
-    Maybe<WindowsError> error = id2.GetError();
-    return Err(error.valueOr(WindowsError::CreateGeneric()));
-||||||| merged common ancestors
-    return Nothing();
-=======
     Maybe<WindowsError> error = id2.GetError();
     return Err(error.valueOr(WindowsError::CreateGeneric()));
   }
@@ -598,27 +439,15 @@ inline UniquePtr<wchar_t[]> GetFullModulePath(HMODULE aModule) {
   auto result = mozilla::MakeUnique<wchar_t[]>(retLen);
   if (wcscpy_s(result.get(), retLen, buf.get())) {
     return nullptr;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return id1 == id2;
-||||||| merged common ancestors
-  return Some(id1 == id2);
-=======
   return result;
 }
 
 inline UniquePtr<wchar_t[]> GetFullBinaryPath() {
   return GetFullModulePath(nullptr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 class ModuleVersion final {
  public:
   explicit ModuleVersion(const VS_FIXEDFILEINFO& aFixedInfo)
@@ -709,6 +538,5 @@ struct CoTaskMemFreeDeleter {
 };
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // mozilla_WinHeaderOnlyUtils_h

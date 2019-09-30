@@ -28,125 +28,42 @@
  *  we need these for statfs()
  */
 #ifdef HAVE_SYS_STATVFS_H
-<<<<<<< HEAD
-#if defined(__osf__) && defined(__DECCXX)
-extern "C" int statvfs(const char*, struct statvfs*);
-#endif
-#include <sys/statvfs.h>
-||||||| merged common ancestors
-  #if defined(__osf__) && defined(__DECCXX)
-    extern "C" int statvfs(const char *, struct statvfs *);
-  #endif
-  #include <sys/statvfs.h>
-=======
 #  if defined(__osf__) && defined(__DECCXX)
 extern "C" int statvfs(const char*, struct statvfs*);
 #  endif
 #  include <sys/statvfs.h>
->>>>>>> upstream-releases
 #endif
 
 #ifdef HAVE_SYS_STATFS_H
-<<<<<<< HEAD
-#include <sys/statfs.h>
-||||||| merged common ancestors
-  #include <sys/statfs.h>
-=======
 #  include <sys/statfs.h>
->>>>>>> upstream-releases
 #endif
 
 #ifdef HAVE_SYS_VFS_H
-<<<<<<< HEAD
-#include <sys/vfs.h>
-||||||| merged common ancestors
-  #include <sys/vfs.h>
-=======
 #  include <sys/vfs.h>
->>>>>>> upstream-releases
 #endif
 
 #ifdef HAVE_SYS_MOUNT_H
-<<<<<<< HEAD
-#include <sys/param.h>
-#include <sys/mount.h>
-||||||| merged common ancestors
-  #include <sys/param.h>
-  #include <sys/mount.h>
-=======
 #  include <sys/param.h>
 #  include <sys/mount.h>
->>>>>>> upstream-releases
 #endif
 
 #if defined(HAVE_STATVFS64) && (!defined(LINUX) && !defined(__osf__))
-<<<<<<< HEAD
-#define STATFS statvfs64
-#define F_BSIZE f_frsize
-||||||| merged common ancestors
-  #define STATFS statvfs64
-  #define F_BSIZE f_frsize
-=======
 #  define STATFS statvfs64
 #  define F_BSIZE f_frsize
->>>>>>> upstream-releases
 #elif defined(HAVE_STATVFS) && (!defined(LINUX) && !defined(__osf__))
-<<<<<<< HEAD
-#define STATFS statvfs
-#define F_BSIZE f_frsize
-||||||| merged common ancestors
-  #define STATFS statvfs
-  #define F_BSIZE f_frsize
-=======
 #  define STATFS statvfs
 #  define F_BSIZE f_frsize
->>>>>>> upstream-releases
 #elif defined(HAVE_STATFS64)
-<<<<<<< HEAD
-#define STATFS statfs64
-#define F_BSIZE f_bsize
-||||||| merged common ancestors
-  #define STATFS statfs64
-  #define F_BSIZE f_bsize
-=======
 #  define STATFS statfs64
 #  define F_BSIZE f_bsize
->>>>>>> upstream-releases
 #elif defined(HAVE_STATFS)
-<<<<<<< HEAD
-#define STATFS statfs
-#define F_BSIZE f_bsize
-||||||| merged common ancestors
-  #define STATFS statfs
-  #define F_BSIZE f_bsize
-=======
 #  define STATFS statfs
 #  define F_BSIZE f_bsize
->>>>>>> upstream-releases
 #endif
 
 // stat64 and lstat64 are deprecated on OS X. Normal stat and lstat are
 // 64-bit by default on OS X 10.6+.
 #if defined(HAVE_STAT64) && defined(HAVE_LSTAT64) && !defined(XP_DARWIN)
-<<<<<<< HEAD
-#if defined(AIX)
-#if defined STAT
-#undef STAT
-#endif
-#endif
-#define STAT stat64
-#define LSTAT lstat64
-#define HAVE_STATS64 1
-||||||| merged common ancestors
-  #if defined (AIX)
-    #if defined STAT
-      #undef STAT
-    #endif
-  #endif
-  #define STAT stat64
-  #define LSTAT lstat64
-  #define HAVE_STATS64 1
-=======
 #  if defined(AIX)
 #    if defined STAT
 #      undef STAT
@@ -155,18 +72,9 @@ extern "C" int statvfs(const char*, struct statvfs*);
 #  define STAT stat64
 #  define LSTAT lstat64
 #  define HAVE_STATS64 1
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define STAT stat
-#define LSTAT lstat
-||||||| merged common ancestors
-  #define STAT stat
-  #define LSTAT lstat
-=======
 #  define STAT stat
 #  define LSTAT lstat
->>>>>>> upstream-releases
 #endif
 
 class nsLocalFile final
@@ -175,18 +83,8 @@ class nsLocalFile final
 #else
     : public nsIFile
 #endif
-<<<<<<< HEAD
-    ,
-      public nsIHashable {
- public:
-||||||| merged common ancestors
-  , public nsIHashable
-{
-public:
-=======
 {
  public:
->>>>>>> upstream-releases
   NS_DEFINE_STATIC_CID_ACCESSOR(NS_LOCAL_FILE_CID)
 
   nsLocalFile();

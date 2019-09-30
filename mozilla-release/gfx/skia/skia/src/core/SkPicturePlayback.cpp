@@ -482,39 +482,6 @@ void SkPicturePlayback::handleOp(SkReadBuffer* reader,
 
             canvas->private_draw_shadow_rec(path, rec);
         } break;
-<<<<<<< HEAD
-        case DRAW_TEXT: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            TextContainer text(reader, paint);
-            SkScalar x = reader->readScalar();
-            SkScalar y = reader->readScalar();
-            BREAK_ON_READ_ERROR(reader);
-
-            if (paint && text.text()) {
-                canvas->drawText(text.text(), text.length(), x, y, *paint);
-            }
-        } break;
-||||||| merged common ancestors
-        case DRAW_SPRITE: {
-            /* const SkPaint* paint = */ fPictureData->getPaint(reader);
-            /* const SkImage* image = */ fPictureData->getBitmapAsImage(reader);
-            /* int left = */ reader->readInt();
-            /* int top = */ reader->readInt();
-            // drawSprite removed dec-2015
-        } break;
-        case DRAW_TEXT: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            TextContainer text(reader, paint);
-            SkScalar x = reader->readScalar();
-            SkScalar y = reader->readScalar();
-            BREAK_ON_READ_ERROR(reader);
-
-            if (paint && text.text()) {
-                canvas->drawText(text.text(), text.length(), x, y, *paint);
-            }
-        } break;
-=======
->>>>>>> upstream-releases
         case DRAW_TEXT_BLOB: {
             const SkPaint* paint = fPictureData->getPaint(reader);
             const SkTextBlob* blob = fPictureData->getTextBlob(reader);
@@ -526,99 +493,6 @@ void SkPicturePlayback::handleOp(SkReadBuffer* reader,
                 canvas->drawTextBlob(blob, x, y, *paint);
             }
         } break;
-<<<<<<< HEAD
-        case DRAW_TEXT_TOP_BOTTOM: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            TextContainer text(reader, paint);
-            const SkScalar* ptr = (const SkScalar*)reader->skip(4 * sizeof(SkScalar));
-            BREAK_ON_READ_ERROR(reader);
-
-            // ptr[0] == x
-            // ptr[1] == y
-            // ptr[2] == top
-            // ptr[3] == bottom
-            SkRect clip = canvas->getLocalClipBounds();
-            float top = ptr[2];
-            float bottom = ptr[3];
-            if (top < clip.fBottom && bottom > clip.fTop && paint && text.text()) {
-                canvas->drawText(text.text(), text.length(), ptr[0], ptr[1], *paint);
-            }
-        } break;
-        case DRAW_TEXT_ON_PATH_RETIRED_08_2018_REMOVED_10_2018: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            TextContainer text(reader, paint);
-            /* ignored */ fPictureData->getPath(reader);
-            SkMatrix matrix;
-            reader->readMatrix(&matrix);
-            BREAK_ON_READ_ERROR(reader);
-            // no longer supported, so we draw nothing
-        } break;
-        case DRAW_TEXT_RSXFORM: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            uint32_t count = reader->readUInt();
-            uint32_t flags = reader->readUInt();
-            TextContainer text(reader, paint);
-            const SkRSXform* xform = (const SkRSXform*)reader->skip(count, sizeof(SkRSXform));
-            const SkRect* cull = nullptr;
-            if (flags & DRAW_TEXT_RSXFORM_HAS_CULL) {
-                cull = (const SkRect*)reader->skip(sizeof(SkRect));
-            }
-            reader->validate(count == text.count());
-            BREAK_ON_READ_ERROR(reader);
-
-            if (text.text()) {
-                canvas->drawTextRSXform(text.text(), text.length(), xform, cull, *paint);
-            }
-        } break;
-||||||| merged common ancestors
-        case DRAW_TEXT_TOP_BOTTOM: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            TextContainer text(reader, paint);
-            const SkScalar* ptr = (const SkScalar*)reader->skip(4 * sizeof(SkScalar));
-            BREAK_ON_READ_ERROR(reader);
-
-            // ptr[0] == x
-            // ptr[1] == y
-            // ptr[2] == top
-            // ptr[3] == bottom
-            SkRect clip = canvas->getLocalClipBounds();
-            float top = ptr[2];
-            float bottom = ptr[3];
-            if (top < clip.fBottom && bottom > clip.fTop && paint && text.text()) {
-                canvas->drawText(text.text(), text.length(), ptr[0], ptr[1], *paint);
-            }
-        } break;
-        case DRAW_TEXT_ON_PATH: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            TextContainer text(reader, paint);
-            const SkPath& path = fPictureData->getPath(reader);
-            SkMatrix matrix;
-            reader->readMatrix(&matrix);
-            BREAK_ON_READ_ERROR(reader);
-
-            if (paint && text.text()) {
-                canvas->drawTextOnPath(text.text(), text.length(), path, &matrix, *paint);
-            }
-        } break;
-        case DRAW_TEXT_RSXFORM: {
-            const SkPaint* paint = fPictureData->getPaint(reader);
-            uint32_t count = reader->readUInt();
-            uint32_t flags = reader->readUInt();
-            TextContainer text(reader, paint);
-            const SkRSXform* xform = (const SkRSXform*)reader->skip(count, sizeof(SkRSXform));
-            const SkRect* cull = nullptr;
-            if (flags & DRAW_TEXT_RSXFORM_HAS_CULL) {
-                cull = (const SkRect*)reader->skip(sizeof(SkRect));
-            }
-            reader->validate(count == text.count());
-            BREAK_ON_READ_ERROR(reader);
-
-            if (text.text()) {
-                canvas->drawTextRSXform(text.text(), text.length(), xform, cull, *paint);
-            }
-        } break;
-=======
->>>>>>> upstream-releases
         case DRAW_VERTICES_OBJECT: {
             const SkPaint* paint = fPictureData->getPaint(reader);
             const SkVertices* vertices = fPictureData->getVertices(reader);

@@ -57,11 +57,6 @@ class DynamicsCompressorNode final : public AudioNode {
     mReduction = aReduction;
   }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   void SetChannelCountModeValue(ChannelCountMode aMode,
                                 ErrorResult& aRv) override {
     if (aMode == ChannelCountMode::Max) {
@@ -80,7 +75,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   explicit DynamicsCompressorNode(AudioContext* aContext);
   ~DynamicsCompressorNode() = default;
 

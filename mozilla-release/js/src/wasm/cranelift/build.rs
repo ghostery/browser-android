@@ -42,18 +42,6 @@ fn main() {
         .rustified_enum("BD_.*|Trap|TypeCode|FuncTypeIdDescKind")
         .whitelist_type("BD_.*|Trap|TypeCode|FuncTypeIdDescKind")
         .header("baldrapi.h")
-<<<<<<< HEAD
-        .clang_args(&[
-            "-x",
-            "c++",
-            "-std=gnu++14",
-            "-fno-sized-deallocation",
-            "-DRUST_BINDGEN",
-        ]).clang_arg("-I../..");
-||||||| merged common ancestors
-        .clang_args(&["-x", "c++", "-std=gnu++14", "-fno-sized-deallocation", "-DRUST_BINDGEN"])
-        .clang_arg("-I../..");
-=======
         .clang_args(&[
             "-x",
             "c++",
@@ -62,7 +50,6 @@ fn main() {
             "-DRUST_BINDGEN",
         ])
         .clang_arg("-I../..");
->>>>>>> upstream-releases
 
     match env::var_os("MOZ_TOPOBJDIR") {
         Some(path) => {

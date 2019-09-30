@@ -380,11 +380,6 @@ class StyleSheet final : public nsICSSLoaderObserver, public nsWrapperCache {
     }
   }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // Copy the contents of this style sheet into the shared memory buffer managed
   // by aBuilder.  Returns the pointer into the buffer that the sheet contents
   // were stored at.  (The returned pointer is to an Arc<Locked<Rules>> value.)
@@ -402,7 +397,6 @@ private:
   bool IsReadOnly() const;
 
  private:
->>>>>>> upstream-releases
   dom::ShadowRoot* GetContainingShadow() const;
 
   StyleSheetInfo& Inner() {

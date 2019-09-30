@@ -27,23 +27,6 @@ bool TableAccessible::IsProbablyLayoutTable() {
   // the algorithm. Integrate it into Logging.
   // Change to |#define SHOW_LAYOUT_HEURISTIC DEBUG| before final release
 #ifdef SHOW_LAYOUT_HEURISTIC
-<<<<<<< HEAD
-#define RETURN_LAYOUT_ANSWER(isLayout, heuristic)                          \
-  {                                                                        \
-    mLayoutHeuristic = isLayout                                            \
-                           ? NS_LITERAL_STRING("layout table: " heuristic) \
-                           : NS_LITERAL_STRING("data table: " heuristic);  \
-    return isLayout;                                                       \
-  }
-||||||| merged common ancestors
-#define RETURN_LAYOUT_ANSWER(isLayout, heuristic) \
-  { \
-    mLayoutHeuristic = isLayout ? \
-      NS_LITERAL_STRING("layout table: " heuristic) : \
-      NS_LITERAL_STRING("data table: " heuristic); \
-    return isLayout; \
-  }
-=======
 #  define RETURN_LAYOUT_ANSWER(isLayout, heuristic)                          \
     {                                                                        \
       mLayoutHeuristic = isLayout                                            \
@@ -51,17 +34,9 @@ bool TableAccessible::IsProbablyLayoutTable() {
                              : NS_LITERAL_STRING("data table: " heuristic);  \
       return isLayout;                                                       \
     }
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define RETURN_LAYOUT_ANSWER(isLayout, heuristic) \
-  { return isLayout; }
-||||||| merged common ancestors
-#define RETURN_LAYOUT_ANSWER(isLayout, heuristic) { return isLayout; }
-=======
 #  define RETURN_LAYOUT_ANSWER(isLayout, heuristic) \
     { return isLayout; }
->>>>>>> upstream-releases
 #endif
 
   Accessible* thisacc = AsAccessible();

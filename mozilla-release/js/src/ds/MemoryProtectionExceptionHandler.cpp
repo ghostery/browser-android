@@ -10,48 +10,18 @@
 #include "mozilla/Atomics.h"
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include "util/Windows.h"
-||||||| merged common ancestors
-# include "util/Windows.h"
-=======
 #  include "util/Windows.h"
->>>>>>> upstream-releases
 #elif defined(XP_UNIX) && !defined(XP_DARWIN)
-<<<<<<< HEAD
-#include <signal.h>
-#include <sys/types.h>
-#include <unistd.h>
-||||||| merged common ancestors
-# include <signal.h>
-# include <sys/types.h>
-# include <unistd.h>
-=======
 #  include <signal.h>
 #  include <sys/types.h>
 #  include <unistd.h>
->>>>>>> upstream-releases
 #elif defined(XP_DARWIN)
-<<<<<<< HEAD
-#include <mach/mach.h>
-#include <unistd.h>
-||||||| merged common ancestors
-# include <mach/mach.h>
-# include <unistd.h>
-=======
 #  include <mach/mach.h>
 #  include <unistd.h>
->>>>>>> upstream-releases
 #endif
 
 #ifdef ANDROID
-<<<<<<< HEAD
-#include <android/log.h>
-||||||| merged common ancestors
-# include <android/log.h>
-=======
 #  include <android/log.h>
->>>>>>> upstream-releases
 #endif
 
 #include "ds/SplayTree.h"
@@ -73,7 +43,6 @@ static mozilla::Atomic<bool, mozilla::SequentiallyConsistent,
  * A class to store the addresses of the regions recognized as protected
  * by this exception handler. We use a splay tree to store these addresses.
  */
-<<<<<<< HEAD
 class ProtectedRegionTree {
   struct Region {
     uintptr_t first;
@@ -103,74 +72,10 @@ class ProtectedRegionTree {
 
  public:
   ProtectedRegionTree()
-||||||| merged common ancestors
-class ProtectedRegionTree
-{
-    struct Region
-    {
-        uintptr_t first;
-        uintptr_t last;
-
-        Region(uintptr_t addr, size_t size) : first(addr),
-                                              last(addr + (size - 1)) {}
-
-        // This function compares 2 memory regions. If they overlap they are
-        // considered as identical. This is used for querying if an address is
-        // included in a range, or if an address is already registered as a
-        // protected region.
-        static int compare(const Region& A, const Region& B) {
-            if (A.last < B.first) {
-                return -1;
-            }
-            if (A.first > B.last) {
-                return 1;
-            }
-            return 0;
-        }
-    };
-
-    Mutex lock;
-    LifoAlloc alloc;
-    SplayTree<Region, Region> tree;
-
-  public:
-    ProtectedRegionTree()
-=======
-class ProtectedRegionTree {
-  struct Region {
-    uintptr_t first;
-    uintptr_t last;
-
-    Region(uintptr_t addr, size_t size)
-        : first(addr), last(addr + (size - 1)) {}
-
-    // This function compares 2 memory regions. If they overlap they are
-    // considered as identical. This is used for querying if an address is
-    // included in a range, or if an address is already registered as a
-    // protected region.
-    static int compare(const Region& A, const Region& B) {
-      if (A.last < B.first) {
-        return -1;
-      }
-      if (A.first > B.last) {
-        return 1;
-      }
-      return 0;
-    }
-  };
-
-  Mutex lock;
-  LifoAlloc alloc;
-  SplayTree<Region, Region> tree;
-
- public:
-  ProtectedRegionTree()
->>>>>>> upstream-releases
       : lock(mutexid::ProtectedRegionTree),
         // Here "false" is used to not use the memory protection mechanism of
         // LifoAlloc in order to prevent dead-locks.
         alloc(4096),
-<<<<<<< HEAD
         tree(&alloc) {
     sProtectedRegionsInit = true;
   }
@@ -191,69 +96,10 @@ class ProtectedRegionTree {
     LockGuard<Mutex> guard(lock);
     tree.remove(Region(addr, 1));
   }
-||||||| merged common ancestors
-        tree(&alloc)
-    {
-        sProtectedRegionsInit = true;
-    }
-
-    ~ProtectedRegionTree() {
-        sProtectedRegionsInit = false;
-    }
-
-    void insert(uintptr_t addr, size_t size) {
-        MOZ_ASSERT(addr && size);
-        LockGuard<Mutex> guard(lock);
-        AutoEnterOOMUnsafeRegion oomUnsafe;
-        if (!tree.insert(Region(addr, size))) {
-            oomUnsafe.crash("Failed to store allocation ID.");
-        }
-    }
-=======
-        tree(&alloc) {
-    sProtectedRegionsInit = true;
-  }
-
-  ~ProtectedRegionTree() { sProtectedRegionsInit = false; }
-
-  void insert(uintptr_t addr, size_t size) {
-    MOZ_ASSERT(addr && size);
-    LockGuard<Mutex> guard(lock);
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-    if (!tree.insert(Region(addr, size))) {
-      oomUnsafe.crash("Failed to store allocation ID.");
-    }
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  bool isProtected(uintptr_t addr) {
-    if (!addr) {
-      return false;
-||||||| merged common ancestors
-    void remove(uintptr_t addr) {
-        MOZ_ASSERT(addr);
-        LockGuard<Mutex> guard(lock);
-        tree.remove(Region(addr, 1));
-    }
-
-    bool isProtected(uintptr_t addr) {
-        if (!addr) {
-            return false;
-        }
-        LockGuard<Mutex> guard(lock);
-        return tree.maybeLookup(Region(addr, 1));
-=======
-  void remove(uintptr_t addr) {
-    MOZ_ASSERT(addr);
-    LockGuard<Mutex> guard(lock);
-    tree.remove(Region(addr, 1));
-  }
 
   bool isProtected(uintptr_t addr) {
     if (!addr) {
       return false;
->>>>>>> upstream-releases
     }
     LockGuard<Mutex> guard(lock);
     return tree.maybeLookup(Region(addr, 1));
@@ -302,29 +148,6 @@ void MemoryProtectionExceptionHandler::removeRegion(void* addr) {
 static MOZ_COLD MOZ_ALWAYS_INLINE void ReportCrashIfDebug(const char* aStr)
     MOZ_PRETEND_NORETURN_FOR_STATIC_ANALYSIS {
 #ifdef DEBUG
-<<<<<<< HEAD
-#if defined(XP_WIN)
-  DWORD bytesWritten;
-  BOOL ret = WriteFile(GetStdHandle(STD_ERROR_HANDLE), aStr, strlen(aStr) + 1,
-                       &bytesWritten, nullptr);
-#elif defined(ANDROID)
-  int ret = __android_log_write(ANDROID_LOG_FATAL, "MOZ_CRASH", aStr);
-#else
-  ssize_t ret = write(STDERR_FILENO, aStr, strlen(aStr) + 1);
-#endif
-  (void)ret;  // Ignore failures; we're already crashing anyway.
-||||||| merged common ancestors
-# if defined(XP_WIN)
-    DWORD bytesWritten;
-    BOOL ret = WriteFile(GetStdHandle(STD_ERROR_HANDLE), aStr,
-                         strlen(aStr) + 1, &bytesWritten, nullptr);
-# elif defined(ANDROID)
-    int ret = __android_log_write(ANDROID_LOG_FATAL, "MOZ_CRASH", aStr);
-# else
-    ssize_t ret = write(STDERR_FILENO, aStr, strlen(aStr) + 1);
-# endif
-    (void)ret; // Ignore failures; we're already crashing anyway.
-=======
 #  if defined(XP_WIN)
   DWORD bytesWritten;
   BOOL ret = WriteFile(GetStdHandle(STD_ERROR_HANDLE), aStr, strlen(aStr) + 1,
@@ -335,7 +158,6 @@ static MOZ_COLD MOZ_ALWAYS_INLINE void ReportCrashIfDebug(const char* aStr)
   ssize_t ret = write(STDERR_FILENO, aStr, strlen(aStr) + 1);
 #  endif
   (void)ret;  // Ignore failures; we're already crashing anyway.
->>>>>>> upstream-releases
 #endif
 }
 
@@ -429,56 +251,8 @@ static void UnixExceptionHandler(int signum, siginfo_t* info, void* context) {
     // anyway, and if we crash while doing so we don't want to hang.
     MOZ_ALWAYS_FALSE(sigaction(SIGSEGV, &sPrevSEGVHandler, nullptr));
 
-<<<<<<< HEAD
     MOZ_ASSERT(signum == SIGSEGV && info->si_signo == SIGSEGV);
 
-    if (info->si_code == SEGV_ACCERR) {
-      // Get the address that the offending code tried to access.
-      uintptr_t address = uintptr_t(info->si_addr);
-||||||| merged common ancestors
-    // Forward to the previous handler which may be a debugger,
-    // the crash reporter or something else entirely.
-    if (sPrevSEGVHandler.sa_flags & SA_SIGINFO) {
-        sPrevSEGVHandler.sa_sigaction(signum, info, context);
-    } else if (sPrevSEGVHandler.sa_handler == SIG_DFL || sPrevSEGVHandler.sa_handler == SIG_IGN) {
-        sigaction(SIGSEGV, &sPrevSEGVHandler, nullptr);
-    } else {
-        sPrevSEGVHandler.sa_handler(signum);
-    }
-=======
-    MOZ_ASSERT(signum == SIGSEGV && info->si_signo == SIGSEGV);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      // If the faulting address is in one of our protected regions, we
-      // want to annotate the crash to make it stand out from the crowd.
-      if (sProtectedRegionsInit && sProtectedRegions.isProtected(address)) {
-        ReportCrashIfDebug(
-            "Hit MOZ_CRASH(Tried to access a protected region!)\n");
-        MOZ_CRASH_ANNOTATE("MOZ_CRASH(Tried to access a protected region!)");
-      }
-    }
-  }
-
-  // Forward to the previous handler which may be a debugger,
-  // the crash reporter or something else entirely.
-  if (sPrevSEGVHandler.sa_flags & SA_SIGINFO) {
-    sPrevSEGVHandler.sa_sigaction(signum, info, context);
-  } else if (sPrevSEGVHandler.sa_handler == SIG_DFL ||
-             sPrevSEGVHandler.sa_handler == SIG_IGN) {
-    sigaction(SIGSEGV, &sPrevSEGVHandler, nullptr);
-  } else {
-    sPrevSEGVHandler.sa_handler(signum);
-  }
-
-  // If we reach here, we're returning to let the default signal handler deal
-  // with the exception. This is technically undefined behavior, but
-  // everything seems to do it, and it removes us from the crash stack.
-||||||| merged common ancestors
-    // If we reach here, we're returning to let the default signal handler deal
-    // with the exception. This is technically undefined behavior, but
-    // everything seems to do it, and it removes us from the crash stack.
-=======
     if (info->si_code == SEGV_ACCERR) {
       // Get the address that the offending code tried to access.
       uintptr_t address = uintptr_t(info->si_addr);
@@ -507,7 +281,6 @@ static void UnixExceptionHandler(int signum, siginfo_t* info, void* context) {
   // If we reach here, we're returning to let the default signal handler deal
   // with the exception. This is technically undefined behavior, but
   // everything seems to do it, and it removes us from the crash stack.
->>>>>>> upstream-releases
 }
 
 bool MemoryProtectionExceptionHandler::install() {
@@ -569,102 +342,6 @@ static const mach_msg_id_t sIDRequestStateIdentity64 = 2407;
  * Each message ID has an associated Mach message structure.
  * We use the preprocessor to make defining them a little less arduous.
  */
-<<<<<<< HEAD
-#define REQUEST_HEADER_FIELDS mach_msg_header_t header;
-
-#define REQUEST_IDENTITY_FIELDS      \
-  mach_msg_body_t msgh_body;         \
-  mach_msg_port_descriptor_t thread; \
-  mach_msg_port_descriptor_t task;
-
-#define REQUEST_GENERAL_FIELDS(bits) \
-  NDR_record_t NDR;                  \
-  exception_type_t exception;        \
-  mach_msg_type_number_t code_count; \
-  int##bits##_t code[2];
-
-#define REQUEST_STATE_FIELDS              \
-  int flavor;                             \
-  mach_msg_type_number_t old_state_count; \
-  natural_t old_state[THREAD_STATE_MAX];
-
-#define REQUEST_TRAILER_FIELDS mach_msg_trailer_t trailer;
-
-#define EXCEPTION_REQUEST(bits)   \
-  struct ExceptionRequest##bits { \
-    REQUEST_HEADER_FIELDS         \
-    REQUEST_IDENTITY_FIELDS       \
-    REQUEST_GENERAL_FIELDS(bits)  \
-    REQUEST_TRAILER_FIELDS        \
-  };
-
-#define EXCEPTION_REQUEST_STATE(bits)  \
-  struct ExceptionRequestState##bits { \
-    REQUEST_HEADER_FIELDS              \
-    REQUEST_GENERAL_FIELDS(bits)       \
-    REQUEST_STATE_FIELDS               \
-    REQUEST_TRAILER_FIELDS             \
-  };
-
-#define EXCEPTION_REQUEST_STATE_IDENTITY(bits) \
-  struct ExceptionRequestStateIdentity##bits { \
-    REQUEST_HEADER_FIELDS                      \
-    REQUEST_IDENTITY_FIELDS                    \
-    REQUEST_GENERAL_FIELDS(bits)               \
-    REQUEST_STATE_FIELDS                       \
-    REQUEST_TRAILER_FIELDS                     \
-  };
-||||||| merged common ancestors
-# define REQUEST_HEADER_FIELDS\
-    mach_msg_header_t header;
-
-# define REQUEST_IDENTITY_FIELDS\
-    mach_msg_body_t msgh_body;\
-    mach_msg_port_descriptor_t thread;\
-    mach_msg_port_descriptor_t task;
-
-# define REQUEST_GENERAL_FIELDS(bits)\
-    NDR_record_t NDR;\
-    exception_type_t exception;\
-    mach_msg_type_number_t code_count;\
-    int##bits##_t code[2];
-
-# define REQUEST_STATE_FIELDS\
-    int flavor;\
-    mach_msg_type_number_t old_state_count;\
-    natural_t old_state[THREAD_STATE_MAX];
-
-# define REQUEST_TRAILER_FIELDS\
-    mach_msg_trailer_t trailer;
-
-# define EXCEPTION_REQUEST(bits)\
-    struct ExceptionRequest##bits\
-    {\
-        REQUEST_HEADER_FIELDS\
-        REQUEST_IDENTITY_FIELDS\
-        REQUEST_GENERAL_FIELDS(bits)\
-        REQUEST_TRAILER_FIELDS\
-    };\
-
-# define EXCEPTION_REQUEST_STATE(bits)\
-    struct ExceptionRequestState##bits\
-    {\
-        REQUEST_HEADER_FIELDS\
-        REQUEST_GENERAL_FIELDS(bits)\
-        REQUEST_STATE_FIELDS\
-        REQUEST_TRAILER_FIELDS\
-    };\
-
-# define EXCEPTION_REQUEST_STATE_IDENTITY(bits)\
-    struct ExceptionRequestStateIdentity##bits\
-    {\
-        REQUEST_HEADER_FIELDS\
-        REQUEST_IDENTITY_FIELDS\
-        REQUEST_GENERAL_FIELDS(bits)\
-        REQUEST_STATE_FIELDS\
-        REQUEST_TRAILER_FIELDS\
-    };\
-=======
 #  define REQUEST_HEADER_FIELDS mach_msg_header_t header;
 
 #  define REQUEST_IDENTITY_FIELDS      \
@@ -709,22 +386,11 @@ static const mach_msg_id_t sIDRequestStateIdentity64 = 2407;
       REQUEST_STATE_FIELDS                       \
       REQUEST_TRAILER_FIELDS                     \
     };
->>>>>>> upstream-releases
 
 /* This is needed because not all fields are naturally aligned on 64-bit. */
-<<<<<<< HEAD
-#ifdef __MigPackStructs
-#pragma pack(4)
-#endif
-||||||| merged common ancestors
-# ifdef  __MigPackStructs
-#  pragma pack(4)
-# endif
-=======
 #  ifdef __MigPackStructs
 #    pragma pack(4)
 #  endif
->>>>>>> upstream-releases
 
 EXCEPTION_REQUEST(32)
 EXCEPTION_REQUEST(64)
@@ -751,37 +417,10 @@ struct ExceptionReply {
   kern_return_t RetCode;
 };
 
-<<<<<<< HEAD
-#ifdef __MigPackStructs
-#pragma pack()
-#endif
-||||||| merged common ancestors
-# ifdef  __MigPackStructs
-#  pragma pack()
-# endif
-=======
 #  ifdef __MigPackStructs
 #    pragma pack()
 #  endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#undef EXCEPTION_REQUEST_STATE_IDENTITY
-#undef EXCEPTION_REQUEST_STATE
-#undef EXCEPTION_REQUEST
-#undef REQUEST_STATE_FIELDS
-#undef REQUEST_GENERAL_FIELDS
-#undef REQUEST_IDENTITY_FIELDS
-#undef REQUEST_HEADER_FIELDS
-||||||| merged common ancestors
-# undef EXCEPTION_REQUEST_STATE_IDENTITY
-# undef EXCEPTION_REQUEST_STATE
-# undef EXCEPTION_REQUEST
-# undef REQUEST_STATE_FIELDS
-# undef REQUEST_GENERAL_FIELDS
-# undef REQUEST_IDENTITY_FIELDS
-# undef REQUEST_HEADER_FIELDS
-=======
 #  undef EXCEPTION_REQUEST_STATE_IDENTITY
 #  undef EXCEPTION_REQUEST_STATE
 #  undef EXCEPTION_REQUEST
@@ -789,121 +428,12 @@ struct ExceptionReply {
 #  undef REQUEST_GENERAL_FIELDS
 #  undef REQUEST_IDENTITY_FIELDS
 #  undef REQUEST_HEADER_FIELDS
->>>>>>> upstream-releases
 
 /*
  * The exception handler we're forwarding to may not have the same behavior
  * or thread state flavor as what we're using. These macros help populate
  * the fields of the message we're about to send to the previous handler.
  */
-<<<<<<< HEAD
-#define COPY_REQUEST_COMMON(bits, id)                                  \
-  dst.header = src.header;                                             \
-  dst.header.msgh_id = id;                                             \
-  dst.header.msgh_size =                                               \
-      static_cast<mach_msg_size_t>(sizeof(dst) - sizeof(dst.trailer)); \
-  dst.NDR = src.NDR;                                                   \
-  dst.exception = src.exception;                                       \
-  dst.code_count = src.code_count;                                     \
-  dst.code[0] = int##bits##_t(src.code[0]);                            \
-  dst.code[1] = int##bits##_t(src.code[1]);
-
-#define COPY_REQUEST_IDENTITY    \
-  dst.msgh_body = src.msgh_body; \
-  dst.thread = src.thread;       \
-  dst.task = src.task;
-
-#define COPY_REQUEST_STATE(flavor, stateCount, state)                         \
-  mach_msg_size_t stateSize = stateCount * sizeof(natural_t);                 \
-  dst.header.msgh_size = static_cast<mach_msg_size_t>(                        \
-      sizeof(dst) - sizeof(dst.trailer) - sizeof(dst.old_state) + stateSize); \
-  dst.flavor = flavor;                                                        \
-  dst.old_state_count = stateCount;                                           \
-  memcpy(dst.old_state, state, stateSize);
-
-#define COPY_EXCEPTION_REQUEST(bits)                                    \
-  static void CopyExceptionRequest##bits(ExceptionRequest64& src,       \
-                                         ExceptionRequest##bits& dst) { \
-    COPY_REQUEST_COMMON(bits, sIDRequest##bits)                         \
-    COPY_REQUEST_IDENTITY                                               \
-  }
-
-#define COPY_EXCEPTION_REQUEST_STATE(bits)                             \
-  static void CopyExceptionRequestState##bits(                         \
-      ExceptionRequest64& src, ExceptionRequestState##bits& dst,       \
-      thread_state_flavor_t flavor, mach_msg_type_number_t stateCount, \
-      thread_state_t state) {                                          \
-    COPY_REQUEST_COMMON(bits, sIDRequestState##bits)                   \
-    COPY_REQUEST_STATE(flavor, stateCount, state)                      \
-  }
-
-#define COPY_EXCEPTION_REQUEST_STATE_IDENTITY(bits)                      \
-  static void CopyExceptionRequestStateIdentity##bits(                   \
-      ExceptionRequest64& src, ExceptionRequestStateIdentity##bits& dst, \
-      thread_state_flavor_t flavor, mach_msg_type_number_t stateCount,   \
-      thread_state_t state) {                                            \
-    COPY_REQUEST_COMMON(bits, sIDRequestStateIdentity##bits)             \
-    COPY_REQUEST_IDENTITY                                                \
-    COPY_REQUEST_STATE(flavor, stateCount, state)                        \
-  }
-||||||| merged common ancestors
-# define COPY_REQUEST_COMMON(bits, id)\
-    dst.header = src.header;\
-    dst.header.msgh_id = id;\
-    dst.header.msgh_size = static_cast<mach_msg_size_t>(sizeof(dst) - sizeof(dst.trailer));\
-    dst.NDR = src.NDR;\
-    dst.exception = src.exception;\
-    dst.code_count = src.code_count;\
-    dst.code[0] = int##bits##_t(src.code[0]);\
-    dst.code[1] = int##bits##_t(src.code[1]);
-
-# define COPY_REQUEST_IDENTITY\
-    dst.msgh_body = src.msgh_body;\
-    dst.thread = src.thread;\
-    dst.task = src.task;
-
-# define COPY_REQUEST_STATE(flavor, stateCount, state)\
-    mach_msg_size_t stateSize = stateCount * sizeof(natural_t);\
-    dst.header.msgh_size = static_cast<mach_msg_size_t>(sizeof(dst) - sizeof(dst.trailer) -\
-                                                        sizeof(dst.old_state) + stateSize);\
-    dst.flavor = flavor;\
-    dst.old_state_count = stateCount;\
-    memcpy(dst.old_state, state, stateSize);
-
-# define COPY_EXCEPTION_REQUEST(bits)\
-    static void\
-    CopyExceptionRequest##bits(ExceptionRequest64& src,\
-                               ExceptionRequest##bits& dst)\
-    {\
-        COPY_REQUEST_COMMON(bits, sIDRequest##bits)\
-        COPY_REQUEST_IDENTITY\
-    }
-
-# define COPY_EXCEPTION_REQUEST_STATE(bits)\
-    static void\
-    CopyExceptionRequestState##bits(ExceptionRequest64& src,\
-                                    ExceptionRequestState##bits& dst,\
-                                    thread_state_flavor_t flavor,\
-                                    mach_msg_type_number_t stateCount,\
-                                    thread_state_t state)\
-    {\
-        COPY_REQUEST_COMMON(bits, sIDRequestState##bits)\
-        COPY_REQUEST_STATE(flavor, stateCount, state)\
-    }
-
-# define COPY_EXCEPTION_REQUEST_STATE_IDENTITY(bits)\
-    static void\
-    CopyExceptionRequestStateIdentity##bits(ExceptionRequest64& src,\
-                                            ExceptionRequestStateIdentity##bits& dst,\
-                                            thread_state_flavor_t flavor,\
-                                            mach_msg_type_number_t stateCount,\
-                                            thread_state_t state)\
-    {\
-        COPY_REQUEST_COMMON(bits, sIDRequestStateIdentity##bits)\
-        COPY_REQUEST_IDENTITY\
-        COPY_REQUEST_STATE(flavor, stateCount, state)\
-    }
-=======
 #  define COPY_REQUEST_COMMON(bits, id)                                  \
     dst.header = src.header;                                             \
     dst.header.msgh_id = id;                                             \
@@ -954,7 +484,6 @@ struct ExceptionReply {
       COPY_REQUEST_IDENTITY                                                \
       COPY_REQUEST_STATE(flavor, stateCount, state)                        \
     }
->>>>>>> upstream-releases
 
 COPY_EXCEPTION_REQUEST(32)
 COPY_EXCEPTION_REQUEST_STATE(32)
@@ -963,28 +492,12 @@ COPY_EXCEPTION_REQUEST(64)
 COPY_EXCEPTION_REQUEST_STATE(64)
 COPY_EXCEPTION_REQUEST_STATE_IDENTITY(64)
 
-<<<<<<< HEAD
-#undef COPY_EXCEPTION_REQUEST_STATE_IDENTITY
-#undef COPY_EXCEPTION_REQUEST_STATE
-#undef COPY_EXCEPTION_REQUEST
-#undef COPY_REQUEST_STATE
-#undef COPY_REQUEST_IDENTITY
-#undef COPY_REQUEST_COMMON
-||||||| merged common ancestors
-# undef COPY_EXCEPTION_REQUEST_STATE_IDENTITY
-# undef COPY_EXCEPTION_REQUEST_STATE
-# undef COPY_EXCEPTION_REQUEST
-# undef COPY_REQUEST_STATE
-# undef COPY_REQUEST_IDENTITY
-# undef COPY_REQUEST_COMMON
-=======
 #  undef COPY_EXCEPTION_REQUEST_STATE_IDENTITY
 #  undef COPY_EXCEPTION_REQUEST_STATE
 #  undef COPY_EXCEPTION_REQUEST
 #  undef COPY_REQUEST_STATE
 #  undef COPY_REQUEST_IDENTITY
 #  undef COPY_REQUEST_COMMON
->>>>>>> upstream-releases
 
 /* -------------------------------------------------------------------------- */
 /*                 End Mach definitions and helper functions                  */
@@ -1016,169 +529,6 @@ static ExceptionHandlerState* sMachExceptionState = nullptr;
  * message, annotates the exception if needed, then forwards it to the
  * previously installed handler (which will likely terminate the process).
  */
-<<<<<<< HEAD
-static void MachExceptionHandler() {
-  kern_return_t ret;
-  MachExceptionParameters& current = sMachExceptionState->current;
-  MachExceptionParameters& previous = sMachExceptionState->previous;
-
-  // We use the simplest kind of 64-bit exception message here.
-  ExceptionRequest64 request = {};
-  request.header.msgh_local_port = current.port;
-  request.header.msgh_size = static_cast<mach_msg_size_t>(sizeof(request));
-  ret = mach_msg(&request.header, MACH_RCV_MSG, 0, request.header.msgh_size,
-                 current.port, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-
-  // Restore the previous handler. We're going to forward to it
-  // anyway, and if we crash while doing so we don't want to hang.
-  task_set_exception_ports(mach_task_self(), previous.mask, previous.port,
-                           previous.behavior, previous.flavor);
-
-  // If we failed even receiving the message, just give up.
-  if (ret != MACH_MSG_SUCCESS) {
-    MOZ_CRASH("MachExceptionHandler: mach_msg failed to receive a message!");
-  }
-
-  // Terminate the thread if we're shutting down.
-  if (request.header.msgh_id == sIDQuit) {
-    return;
-  }
-
-  // The only other valid message ID is the one associated with the
-  // EXCEPTION_DEFAULT | MACH_EXCEPTION_CODES behavior we chose.
-  if (request.header.msgh_id != sIDRequest64) {
-    MOZ_CRASH("MachExceptionHandler: Unexpected Message ID!");
-  }
-
-  // Make sure we can understand the exception we received.
-  if (request.exception != EXC_BAD_ACCESS || request.code_count != 2) {
-    MOZ_CRASH("MachExceptionHandler: Unexpected exception type!");
-  }
-
-  // Get the address that the offending code tried to access.
-  uintptr_t address = uintptr_t(request.code[1]);
-
-  // If the faulting address is inside one of our protected regions, we
-  // want to annotate the crash to make it stand out from the crowd.
-  if (sProtectedRegionsInit && sProtectedRegions.isProtected(address)) {
-    ReportCrashIfDebug("Hit MOZ_CRASH(Tried to access a protected region!)\n");
-    MOZ_CRASH_ANNOTATE("MOZ_CRASH(Tried to access a protected region!)");
-  }
-
-  // Forward to the previous handler which may be a debugger, the unix
-  // signal handler, the crash reporter or something else entirely.
-  if (previous.port != MACH_PORT_NULL) {
-    mach_msg_type_number_t stateCount;
-    thread_state_data_t state;
-    if ((uint32_t(previous.behavior) & ~MACH_EXCEPTION_CODES) !=
-        EXCEPTION_DEFAULT) {
-      // If the previous handler requested thread state, get it here.
-      stateCount = THREAD_STATE_MAX;
-      ret = thread_get_state(request.thread.name, previous.flavor, state,
-                             &stateCount);
-      if (ret != KERN_SUCCESS) {
-        MOZ_CRASH(
-            "MachExceptionHandler: Could not get the thread state to forward!");
-      }
-    }
-
-    // Depending on the behavior of the previous handler, the forwarded
-    // exception message will have a different set of fields.
-    // Of particular note is that exception handlers that lack
-    // MACH_EXCEPTION_CODES will get 32-bit fields even on 64-bit
-    // systems. It appears that OSX simply truncates these fields.
-    ExceptionRequestUnion forward;
-    switch (uint32_t(previous.behavior)) {
-      case EXCEPTION_DEFAULT:
-        CopyExceptionRequest32(request, forward.r32);
-        break;
-      case EXCEPTION_DEFAULT | MACH_EXCEPTION_CODES:
-        CopyExceptionRequest64(request, forward.r64);
-        break;
-      case EXCEPTION_STATE:
-        CopyExceptionRequestState32(request, forward.rs32, previous.flavor,
-                                    stateCount, state);
-        break;
-      case EXCEPTION_STATE | MACH_EXCEPTION_CODES:
-        CopyExceptionRequestState64(request, forward.rs64, previous.flavor,
-                                    stateCount, state);
-        break;
-      case EXCEPTION_STATE_IDENTITY:
-        CopyExceptionRequestStateIdentity32(request, forward.rsi32,
-                                            previous.flavor, stateCount, state);
-        break;
-      case EXCEPTION_STATE_IDENTITY | MACH_EXCEPTION_CODES:
-        CopyExceptionRequestStateIdentity64(request, forward.rsi64,
-                                            previous.flavor, stateCount, state);
-        break;
-      default:
-        MOZ_CRASH("MachExceptionHandler: Unknown previous handler behavior!");
-    }
-
-    // Forward the generated message to the old port. The local and remote
-    // port fields *and their rights* are swapped on arrival, so we need to
-    // swap them back first.
-    forward.header.msgh_bits =
-        (request.header.msgh_bits & ~MACH_MSGH_BITS_PORTS_MASK) |
-        MACH_MSGH_BITS(MACH_MSGH_BITS_LOCAL(request.header.msgh_bits),
-                       MACH_MSGH_BITS_REMOTE(request.header.msgh_bits));
-    forward.header.msgh_local_port = forward.header.msgh_remote_port;
-    forward.header.msgh_remote_port = previous.port;
-    ret = mach_msg(&forward.header, MACH_SEND_MSG, forward.header.msgh_size, 0,
-                   MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-    if (ret != MACH_MSG_SUCCESS) {
-      MOZ_CRASH(
-          "MachExceptionHandler: Failed to forward to the previous handler!");
-||||||| merged common ancestors
-static void
-MachExceptionHandler()
-{
-    kern_return_t ret;
-    MachExceptionParameters& current = sMachExceptionState->current;
-    MachExceptionParameters& previous = sMachExceptionState->previous;
-
-    // We use the simplest kind of 64-bit exception message here.
-    ExceptionRequest64 request = {};
-    request.header.msgh_local_port = current.port;
-    request.header.msgh_size = static_cast<mach_msg_size_t>(sizeof(request));
-    ret = mach_msg(&request.header, MACH_RCV_MSG, 0, request.header.msgh_size,
-                   current.port, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
-
-    // Restore the previous handler. We're going to forward to it
-    // anyway, and if we crash while doing so we don't want to hang.
-    task_set_exception_ports(mach_task_self(), previous.mask, previous.port,
-                             previous.behavior, previous.flavor);
-
-    // If we failed even receiving the message, just give up.
-    if (ret != MACH_MSG_SUCCESS) {
-        MOZ_CRASH("MachExceptionHandler: mach_msg failed to receive a message!");
-    }
-
-    // Terminate the thread if we're shutting down.
-    if (request.header.msgh_id == sIDQuit) {
-        return;
-    }
-
-    // The only other valid message ID is the one associated with the
-    // EXCEPTION_DEFAULT | MACH_EXCEPTION_CODES behavior we chose.
-    if (request.header.msgh_id != sIDRequest64) {
-        MOZ_CRASH("MachExceptionHandler: Unexpected Message ID!");
-    }
-
-    // Make sure we can understand the exception we received.
-    if (request.exception != EXC_BAD_ACCESS || request.code_count != 2) {
-        MOZ_CRASH("MachExceptionHandler: Unexpected exception type!");
-    }
-
-    // Get the address that the offending code tried to access.
-    uintptr_t address = uintptr_t(request.code[1]);
-
-    // If the faulting address is inside one of our protected regions, we
-    // want to annotate the crash to make it stand out from the crowd.
-    if (sProtectedRegionsInit && sProtectedRegions.isProtected(address)) {
-        ReportCrashIfDebug("Hit MOZ_CRASH(Tried to access a protected region!)\n");
-        MOZ_CRASH_ANNOTATE("MOZ_CRASH(Tried to access a protected region!)");
-=======
 static void MachExceptionHandler() {
   ThisThread::SetName("JS MachExceptionHandler");
   kern_return_t ret;
@@ -1292,7 +642,6 @@ static void MachExceptionHandler() {
     if (ret != MACH_MSG_SUCCESS) {
       MOZ_CRASH(
           "MachExceptionHandler: Failed to forward to the previous handler!");
->>>>>>> upstream-releases
     }
   } else {
     // There was no previous task-level exception handler, so defer to the

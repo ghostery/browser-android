@@ -130,50 +130,16 @@ function requestsReducer(state = Requests(), action) {
       return cloneRequest(state, action.id);
     }
 
-<<<<<<< HEAD
-      const newRequest = {
-        id: clonedRequest.id + "-clone",
-        cause: clonedRequest.cause,
-        method: clonedRequest.method,
-        url: clonedRequest.url,
-        urlDetails: clonedRequest.urlDetails,
-        requestHeaders: clonedRequest.requestHeaders,
-        requestPostData: clonedRequest.requestPostData,
-        requestPostDataAvailable: clonedRequest.requestPostDataAvailable,
-        isCustom: true,
-      };
-||||||| merged common ancestors
-      const newRequest = {
-        id: clonedRequest.id + "-clone",
-        method: clonedRequest.method,
-        url: clonedRequest.url,
-        urlDetails: clonedRequest.urlDetails,
-        requestHeaders: clonedRequest.requestHeaders,
-        requestPostData: clonedRequest.requestPostData,
-        requestPostDataAvailable: clonedRequest.requestPostDataAvailable,
-        isCustom: true,
-      };
-=======
     case CLONE_SELECTED_REQUEST: {
       return cloneRequest(state, state.selectedId);
     }
->>>>>>> upstream-releases
 
     case RIGHT_CLICK_REQUEST: {
       const { requests } = state;
       const clickedRequest = requests.get(action.id);
       return {
         ...state,
-<<<<<<< HEAD
-        requests: mapSet(requests, newRequest.id, newRequest),
-        selectedId: newRequest.id,
-        preselectedId: selectedId,
-||||||| merged common ancestors
-        requests: mapSet(requests, newRequest.id, newRequest),
-        selectedId: newRequest.id,
-=======
         clickedRequest,
->>>>>>> upstream-releases
       };
     }
 

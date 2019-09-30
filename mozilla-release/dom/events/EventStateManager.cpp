@@ -223,49 +223,12 @@ bool EventStateManager::WheelPrefs::sWheelEventsEnabledOnPlugins = true;
 bool EventStateManager::WheelPrefs::sIsAutoDirEnabled = false;
 bool EventStateManager::WheelPrefs::sHonoursRootForAutoDir = false;
 EventStateManager::DeltaAccumulator*
-<<<<<<< HEAD
-    EventStateManager::DeltaAccumulator::sInstance = nullptr;
-||||||| merged common ancestors
-  EventStateManager::DeltaAccumulator::sInstance = nullptr;
-=======
     EventStateManager::DeltaAccumulator::sInstance = nullptr;
 
 constexpr const StyleCursorKind kInvalidCursorKind =
     static_cast<StyleCursorKind>(255);
->>>>>>> upstream-releases
 
 EventStateManager::EventStateManager()
-<<<<<<< HEAD
-    : mLockCursor(0),
-      mLastFrameConsumedSetCursor(false),
-      mCurrentTarget(nullptr)
-      // init d&d gesture state machine variables
-      ,
-      mGestureDownPoint(0, 0),
-      mGestureModifiers(0),
-      mGestureDownButtons(0),
-      mPresContext(nullptr),
-      mLClickCount(0),
-      mMClickCount(0),
-      mRClickCount(0),
-      mInTouchDrag(false),
-      m_haveShutdown(false) {
-||||||| merged common ancestors
-  : mLockCursor(0)
-  , mLastFrameConsumedSetCursor(false)
-  , mCurrentTarget(nullptr)
-    // init d&d gesture state machine variables
-  , mGestureDownPoint(0,0)
-  , mGestureModifiers(0)
-  , mGestureDownButtons(0)
-  , mPresContext(nullptr)
-  , mLClickCount(0)
-  , mMClickCount(0)
-  , mRClickCount(0)
-  , mInTouchDrag(false)
-  , m_haveShutdown(false)
-{
-=======
     : mLockCursor(kInvalidCursorKind),
       mLastFrameConsumedSetCursor(false),
       mCurrentTarget(nullptr),
@@ -279,7 +242,6 @@ EventStateManager::EventStateManager()
       mRClickCount(0),
       mInTouchDrag(false),
       m_haveShutdown(false) {
->>>>>>> upstream-releases
   if (sESMInstanceCount == 0) {
     gUserInteractionTimerCallback = new UITimerCallback();
     if (gUserInteractionTimerCallback) NS_ADDREF(gUserInteractionTimerCallback);
@@ -387,41 +349,6 @@ NS_INTERFACE_MAP_END
 NS_IMPL_CYCLE_COLLECTING_ADDREF(EventStateManager)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(EventStateManager)
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION(
-    EventStateManager, mCurrentTargetContent, mGestureDownContent,
-    mGestureDownFrameOwner, mLastLeftMouseDownContent,
-    mLastLeftMouseDownContentParent, mLastMiddleMouseDownContent,
-    mLastMiddleMouseDownContentParent, mLastRightMouseDownContent,
-    mLastRightMouseDownContentParent, mActiveContent, mHoverContent,
-    mURLTargetContent, mMouseEnterLeaveHelper, mPointersEnterLeaveHelper,
-    mDocument, mIMEContentObserver, mAccessKeys)
-
-void EventStateManager::ReleaseCurrentIMEContentObserver() {
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION(EventStateManager,
-                         mCurrentTargetContent,
-                         mGestureDownContent,
-                         mGestureDownFrameOwner,
-                         mLastLeftMouseDownContent,
-                         mLastLeftMouseDownContentParent,
-                         mLastMiddleMouseDownContent,
-                         mLastMiddleMouseDownContentParent,
-                         mLastRightMouseDownContent,
-                         mLastRightMouseDownContentParent,
-                         mActiveContent,
-                         mHoverContent,
-                         mURLTargetContent,
-                         mMouseEnterLeaveHelper,
-                         mPointersEnterLeaveHelper,
-                         mDocument,
-                         mIMEContentObserver,
-                         mAccessKeys)
-
-void
-EventStateManager::ReleaseCurrentIMEContentObserver()
-{
-=======
 NS_IMPL_CYCLE_COLLECTION(EventStateManager, mCurrentTargetContent,
                          mGestureDownContent, mGestureDownFrameOwner,
                          mLastLeftMouseDownContent, mLastMiddleMouseDownContent,
@@ -431,7 +358,6 @@ NS_IMPL_CYCLE_COLLECTION(EventStateManager, mCurrentTargetContent,
                          mDocument, mIMEContentObserver, mAccessKeys)
 
 void EventStateManager::ReleaseCurrentIMEContentObserver() {
->>>>>>> upstream-releases
   if (mIMEContentObserver) {
     mIMEContentObserver->DisconnectFromEventStateManager();
   }
@@ -526,23 +452,10 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
     ++gMouseOrKeyboardEventCounter;
 
     nsCOMPtr<nsINode> node = aTargetContent;
-<<<<<<< HEAD
-    if (node && (aEvent->mMessage == eKeyUp || aEvent->mMessage == eMouseUp ||
-                 aEvent->mMessage == eWheel || aEvent->mMessage == eTouchEnd ||
-                 aEvent->mMessage == ePointerUp)) {
-      nsIDocument* doc = node->OwnerDoc();
-||||||| merged common ancestors
-    if (node &&
-        (aEvent->mMessage == eKeyUp || aEvent->mMessage == eMouseUp ||
-         aEvent->mMessage == eWheel || aEvent->mMessage == eTouchEnd ||
-         aEvent->mMessage == ePointerUp)) {
-      nsIDocument* doc = node->OwnerDoc();
-=======
     if (node && (aEvent->mMessage == eKeyUp || aEvent->mMessage == eMouseUp ||
                  aEvent->mMessage == eWheel || aEvent->mMessage == eTouchEnd ||
                  aEvent->mMessage == ePointerUp)) {
       Document* doc = node->OwnerDoc();
->>>>>>> upstream-releases
       while (doc) {
         doc->SetUserHasInteracted();
         doc = nsContentUtils::IsChildOfSameType(doc) ? doc->GetParentDocument()
@@ -607,30 +520,6 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
       mInTouchDrag = true;
       BeginTrackingDragGesture(aPresContext, mouseEvent, aTargetFrame);
       break;
-<<<<<<< HEAD
-    case eMouseDown: {
-      switch (mouseEvent->button) {
-        case WidgetMouseEvent::eLeftButton:
-          BeginTrackingDragGesture(aPresContext, mouseEvent, aTargetFrame);
-          mLClickCount = mouseEvent->mClickCount;
-          SetClickCount(mouseEvent, aStatus);
-          sNormalLMouseEventInProcess = true;
-          break;
-        case WidgetMouseEvent::eMiddleButton:
-          mMClickCount = mouseEvent->mClickCount;
-          SetClickCount(mouseEvent, aStatus);
-          break;
-        case WidgetMouseEvent::eRightButton:
-          mRClickCount = mouseEvent->mClickCount;
-          SetClickCount(mouseEvent, aStatus);
-          break;
-      }
-      NotifyTargetUserActivation(aEvent, aTargetContent);
-||||||| merged common ancestors
-    case WidgetMouseEvent::eMiddleButton:
-      mMClickCount = mouseEvent->mClickCount;
-      SetClickCount(mouseEvent, aStatus);
-=======
     case eMouseDown: {
       switch (mouseEvent->mButton) {
         case MouseButton::eLeft:
@@ -649,33 +538,7 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
           break;
       }
       NotifyTargetUserActivation(aEvent, aTargetContent);
->>>>>>> upstream-releases
       break;
-<<<<<<< HEAD
-    }
-    case eMouseUp: {
-      switch (mouseEvent->button) {
-        case WidgetMouseEvent::eLeftButton:
-          if (Prefs::ClickHoldContextMenu()) {
-            KillClickHoldTimer();
-          }
-          mInTouchDrag = false;
-          StopTrackingDragGesture();
-          sNormalLMouseEventInProcess = false;
-          // then fall through...
-          MOZ_FALLTHROUGH;
-        case WidgetMouseEvent::eRightButton:
-        case WidgetMouseEvent::eMiddleButton:
-          RefPtr<EventStateManager> esm =
-              ESMFromContentOrThis(aOverrideClickTarget);
-          esm->SetClickCount(mouseEvent, aStatus, aOverrideClickTarget);
-          break;
-      }
-||||||| merged common ancestors
-    case WidgetMouseEvent::eRightButton:
-      mRClickCount = mouseEvent->mClickCount;
-      SetClickCount(mouseEvent, aStatus);
-=======
     }
     case eMouseUp: {
       switch (mouseEvent->mButton) {
@@ -695,7 +558,6 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
           esm->SetClickCount(mouseEvent, aStatus, aOverrideClickTarget);
           break;
       }
->>>>>>> upstream-releases
       break;
     }
     case eMouseEnterIntoWidget:
@@ -742,61 +604,6 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
         // This is a window level mouse exit event and should stop here
         aEvent->mMessage = eVoidEvent;
         break;
-<<<<<<< HEAD
-      }
-      MOZ_FALLTHROUGH;
-    case eMouseMove:
-    case ePointerDown:
-      if (aEvent->mMessage == ePointerDown) {
-        PointerEventHandler::ImplicitlyCapturePointer(aTargetFrame, aEvent);
-        if (mouseEvent->inputSource != MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
-          NotifyTargetUserActivation(aEvent, aTargetContent);
-        }
-      }
-      MOZ_FALLTHROUGH;
-    case ePointerMove: {
-      // on the Mac, GenerateDragGesture() may not return until the drag
-      // has completed and so |aTargetFrame| may have been deleted (moving
-      // a bookmark, for example).  If this is the case, however, we know
-      // that ClearFrameRefs() has been called and it cleared out
-      // |mCurrentTarget|. As a result, we should pass |mCurrentTarget|
-      // into UpdateCursor().
-      if (!mInTouchDrag) {
-        GenerateDragGesture(aPresContext, mouseEvent);
-      }
-      UpdateCursor(aPresContext, aEvent, mCurrentTarget, aStatus);
-
-      UpdateLastRefPointOfMouseEvent(mouseEvent);
-      if (sIsPointerLocked) {
-        ResetPointerToWindowCenterWhilePointerLocked(mouseEvent);
-      }
-      UpdateLastPointerPosition(mouseEvent);
-||||||| merged common ancestors
-    }
-    break;
-  }
-  case eMouseEnterIntoWidget:
-    // In some cases on e10s eMouseEnterIntoWidget
-    // event was sent twice into child process of content.
-    // (From specific widget code (sending is not permanent) and
-    // from ESM::DispatchMouseOrPointerEvent (sending is permanent)).
-    // IsCrossProcessForwardingStopped() helps to suppress sending accidental
-    // event from widget code.
-    aEvent->StopCrossProcessForwarding();
-    break;
-  case eMouseExitFromWidget:
-    // If this is a remote frame, we receive eMouseExitFromWidget from the
-    // parent the mouse exits our content. Since the parent may update the
-    // cursor while the mouse is outside our frame, and since PuppetWidget
-    // caches the current cursor internally, re-entering our content (say from
-    // over a window edge) wont update the cursor if the cached value and the
-    // current cursor match. So when the mouse exits a remote frame, clear the
-    // cached widget cursor so a proper update will occur when the mouse
-    // re-enters.
-    if (XRE_IsContentProcess()) {
-      ClearCachedWidgetCursor(mCurrentTarget);
-    }
-=======
       }
       MOZ_FALLTHROUGH;
     case eMouseMove:
@@ -825,7 +632,6 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
         ResetPointerToWindowCenterWhilePointerLocked(mouseEvent);
       }
       UpdateLastPointerPosition(mouseEvent);
->>>>>>> upstream-releases
 
       GenerateMouseEnterExit(mouseEvent);
       // Flush pending layout changes, so that later mouse move events
@@ -944,87 +750,6 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
       // on some platforms which might dispatch wheel events which don't have
       // lineOrPageDelta values.  And also, if delta values are customized by
       // prefs, this recomputes them.
-<<<<<<< HEAD
-      DeltaAccumulator::GetInstance()->InitLineOrPageDelta(aTargetFrame, this,
-                                                           wheelEvent);
-    } break;
-    case eSetSelection:
-      IMEStateManager::HandleSelectionEvent(aPresContext, GetFocusedContent(),
-                                            aEvent->AsSelectionEvent());
-      break;
-    case eContentCommandCut:
-    case eContentCommandCopy:
-    case eContentCommandPaste:
-    case eContentCommandDelete:
-    case eContentCommandUndo:
-    case eContentCommandRedo:
-    case eContentCommandPasteTransferable:
-    case eContentCommandLookUpDictionary:
-      DoContentCommandEvent(aEvent->AsContentCommandEvent());
-      break;
-    case eContentCommandScroll:
-      DoContentCommandScrollEvent(aEvent->AsContentCommandEvent());
-      break;
-    case eCompositionStart:
-      if (aEvent->IsTrusted()) {
-        // If the event is trusted event, set the selected text to data of
-        // composition event.
-        WidgetCompositionEvent* compositionEvent = aEvent->AsCompositionEvent();
-        WidgetQueryContentEvent selectedText(true, eQuerySelectedText,
-                                             compositionEvent->mWidget);
-        HandleQueryContentEvent(&selectedText);
-        NS_ASSERTION(selectedText.mSucceeded, "Failed to get selected text");
-        compositionEvent->mData = selectedText.mReply.mString;
-      }
-      break;
-    case eTouchStart:
-      SetGestureDownPoint(aEvent->AsTouchEvent());
-      break;
-    case eTouchEnd:
-      NotifyTargetUserActivation(aEvent, aTargetContent);
-      break;
-    default:
-      break;
-||||||| merged common ancestors
-      DeltaAccumulator::GetInstance()->
-        InitLineOrPageDelta(aTargetFrame, this, wheelEvent);
-    }
-    break;
-  case eSetSelection:
-    IMEStateManager::HandleSelectionEvent(aPresContext, GetFocusedContent(),
-                                          aEvent->AsSelectionEvent());
-    break;
-  case eContentCommandCut:
-  case eContentCommandCopy:
-  case eContentCommandPaste:
-  case eContentCommandDelete:
-  case eContentCommandUndo:
-  case eContentCommandRedo:
-  case eContentCommandPasteTransferable:
-  case eContentCommandLookUpDictionary:
-    DoContentCommandEvent(aEvent->AsContentCommandEvent());
-    break;
-  case eContentCommandScroll:
-    DoContentCommandScrollEvent(aEvent->AsContentCommandEvent());
-    break;
-  case eCompositionStart:
-    if (aEvent->IsTrusted()) {
-      // If the event is trusted event, set the selected text to data of
-      // composition event.
-      WidgetCompositionEvent* compositionEvent = aEvent->AsCompositionEvent();
-      WidgetQueryContentEvent selectedText(true, eQuerySelectedText,
-                                           compositionEvent->mWidget);
-      HandleQueryContentEvent(&selectedText);
-      NS_ASSERTION(selectedText.mSucceeded, "Failed to get selected text");
-      compositionEvent->mData = selectedText.mReply.mString;
-    }
-    break;
-  case eTouchEnd:
-    NotifyTargetUserActivation(aEvent, aTargetContent);
-    break;
-  default:
-    break;
-=======
       DeltaAccumulator::GetInstance()->InitLineOrPageDelta(aTargetFrame, this,
                                                            wheelEvent);
     } break;
@@ -1067,7 +792,6 @@ nsresult EventStateManager::PreHandleEvent(nsPresContext* aPresContext,
       break;
     default:
       break;
->>>>>>> upstream-releases
   }
   return NS_OK;
 }
@@ -1224,18 +948,9 @@ static bool IsAccessKeyTarget(nsIContent* aContent, nsIFrame* aFrame,
   if (!aFrame->IsVisibleConsideringAncestors()) return false;
 
   // XUL controls can be activated.
-<<<<<<< HEAD
-  nsCOMPtr<nsIDOMXULControlElement> control(do_QueryInterface(aContent));
-  if (control) return true;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDOMXULControlElement> control(do_QueryInterface(aContent));
-  if (control)
-    return true;
-=======
   nsCOMPtr<nsIDOMXULControlElement> control =
       aContent->AsElement()->AsXULControl();
   if (control) return true;
->>>>>>> upstream-releases
 
   // HTML area, label and legend elements are never focusable, so
   // we need to check for them explicitly before giving up.
@@ -1262,21 +977,9 @@ bool EventStateManager::CheckIfEventMatchesAccessKey(
                                       eAccessKeyProcessingNormal, false);
 }
 
-<<<<<<< HEAD
-bool EventStateManager::LookForAccessKeyAndExecute(
-    nsTArray<uint32_t>& aAccessCharCodes, bool aIsTrustedEvent, bool aExecute) {
-||||||| merged common ancestors
-bool
-EventStateManager::LookForAccessKeyAndExecute(
-                     nsTArray<uint32_t>& aAccessCharCodes,
-                     bool aIsTrustedEvent,
-                     bool aExecute)
-{
-=======
 bool EventStateManager::LookForAccessKeyAndExecute(
     nsTArray<uint32_t>& aAccessCharCodes, bool aIsTrustedEvent, bool aIsRepeat,
     bool aExecute) {
->>>>>>> upstream-releases
   int32_t count, start = -1;
   nsIContent* focusedContent = GetFocusedContent();
   if (focusedContent) {
@@ -1329,16 +1032,8 @@ bool EventStateManager::LookForAccessKeyAndExecute(
           // focus, but pass false since we don't want to change the window
           // order.
           nsIDocShell* docShell = mPresContext->GetDocShell();
-<<<<<<< HEAD
-          nsCOMPtr<nsITabChild> child =
-              docShell ? docShell->GetTabChild() : nullptr;
-||||||| merged common ancestors
-          nsCOMPtr<nsITabChild> child =
-            docShell ? docShell->GetTabChild() : nullptr;
-=======
           nsCOMPtr<nsIBrowserChild> child =
               docShell ? docShell->GetBrowserChild() : nullptr;
->>>>>>> upstream-releases
           if (child) {
             child->SendRequestFocus(false);
           }
@@ -1398,16 +1093,8 @@ struct MOZ_STACK_CLASS AccessKeyInfo {
       : event(aEvent), charCodes(aCharCodes) {}
 };
 
-<<<<<<< HEAD
-static bool HandleAccessKeyInRemoteChild(TabParent* aTabParent, void* aArg) {
-||||||| merged common ancestors
-static bool
-HandleAccessKeyInRemoteChild(TabParent* aTabParent, void* aArg)
-{
-=======
 static bool HandleAccessKeyInRemoteChild(BrowserParent* aBrowserParent,
                                          void* aArg) {
->>>>>>> upstream-releases
   AccessKeyInfo* accessKeyInfo = static_cast<AccessKeyInfo*>(aArg);
 
   // Only forward accesskeys for the active tab.
@@ -1444,16 +1131,8 @@ bool EventStateManager::WalkESMTreeToHandleAccessKey(
   if (mAccessKeys.Count() > 0 &&
       aEvent->ModifiersMatchWithAccessKey(accessKeyType)) {
     // Someone registered an accesskey.  Find and activate it.
-<<<<<<< HEAD
-    if (LookForAccessKeyAndExecute(aAccessCharCodes, aEvent->IsTrusted(),
-                                   aExecute)) {
-||||||| merged common ancestors
-    if (LookForAccessKeyAndExecute(aAccessCharCodes,
-                                   aEvent->IsTrusted(), aExecute)) {
-=======
     if (LookForAccessKeyAndExecute(aAccessCharCodes, aEvent->IsTrusted(),
                                    aEvent->mIsRepeat, aExecute)) {
->>>>>>> upstream-releases
       return true;
     }
   }
@@ -1483,39 +1162,14 @@ bool EventStateManager::WalkESMTreeToHandleAccessKey(
         continue;
       }
 
-<<<<<<< HEAD
-      nsPresContext* subPC = subPS->GetPresContext();
-||||||| merged common ancestors
-      nsPresContext *subPC = subPS->GetPresContext();
-=======
       RefPtr<nsPresContext> subPresContext = subPresShell->GetPresContext();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      EventStateManager* esm =
-          static_cast<EventStateManager*>(subPC->EventStateManager());
-||||||| merged common ancestors
-      EventStateManager* esm =
-        static_cast<EventStateManager*>(subPC->EventStateManager());
-=======
       RefPtr<EventStateManager> esm =
           static_cast<EventStateManager*>(subPresContext->EventStateManager());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (esm && esm->WalkESMTreeToHandleAccessKey(
-                     aEvent, subPC, aAccessCharCodes, nullptr,
-                     eAccessKeyProcessingDown, aExecute)) {
-||||||| merged common ancestors
-      if (esm &&
-          esm->WalkESMTreeToHandleAccessKey(aEvent, subPC, aAccessCharCodes,
-                                            nullptr, eAccessKeyProcessingDown,
-                                            aExecute)) {
-=======
       if (esm && esm->WalkESMTreeToHandleAccessKey(
                      aEvent, subPresContext, aAccessCharCodes, nullptr,
                      eAccessKeyProcessingDown, aExecute)) {
->>>>>>> upstream-releases
         return true;
       }
     }
@@ -1527,32 +1181,6 @@ bool EventStateManager::WalkESMTreeToHandleAccessKey(
     docShell->GetParent(getter_AddRefs(parentShellItem));
     nsCOMPtr<nsIDocShell> parentDS = do_QueryInterface(parentShellItem);
     if (parentDS) {
-<<<<<<< HEAD
-      nsCOMPtr<nsIPresShell> parentPS = parentDS->GetPresShell();
-      NS_ASSERTION(parentPS, "Our PresShell exists but the parent's does not?");
-
-      nsPresContext* parentPC = parentPS->GetPresContext();
-      NS_ASSERTION(parentPC, "PresShell without PresContext");
-
-      EventStateManager* esm =
-          static_cast<EventStateManager*>(parentPC->EventStateManager());
-      if (esm && esm->WalkESMTreeToHandleAccessKey(
-                     aEvent, parentPC, aAccessCharCodes, docShell,
-                     eAccessKeyProcessingDown, aExecute)) {
-||||||| merged common ancestors
-      nsCOMPtr<nsIPresShell> parentPS = parentDS->GetPresShell();
-      NS_ASSERTION(parentPS, "Our PresShell exists but the parent's does not?");
-
-      nsPresContext *parentPC = parentPS->GetPresContext();
-      NS_ASSERTION(parentPC, "PresShell without PresContext");
-
-      EventStateManager* esm =
-        static_cast<EventStateManager*>(parentPC->EventStateManager());
-      if (esm &&
-          esm->WalkESMTreeToHandleAccessKey(aEvent, parentPC, aAccessCharCodes,
-                                            docShell, eAccessKeyProcessingDown,
-                                            aExecute)) {
-=======
       // Guarantee parentPresShell lifetime while we're handling access key
       // since somebody may assume that it won't be deleted before the
       // corresponding nsPresContext and EventStateManager.
@@ -1569,7 +1197,6 @@ bool EventStateManager::WalkESMTreeToHandleAccessKey(
       if (esm && esm->WalkESMTreeToHandleAccessKey(
                      aEvent, parentPresContext, aAccessCharCodes, docShell,
                      eAccessKeyProcessingDown, aExecute)) {
->>>>>>> upstream-releases
         return true;
       }
     }
@@ -1602,73 +1229,16 @@ bool EventStateManager::WalkESMTreeToHandleAccessKey(
   }
 
   return false;
-<<<<<<< HEAD
-}  // end of HandleAccessKey
-
-void EventStateManager::DispatchCrossProcessEvent(WidgetEvent* aEvent,
-                                                  nsFrameLoader* aFrameLoader,
-                                                  nsEventStatus* aStatus) {
-  TabParent* remote = TabParent::GetFrom(aFrameLoader);
-||||||| merged common ancestors
-}// end of HandleAccessKey
-
-void
-EventStateManager::DispatchCrossProcessEvent(WidgetEvent* aEvent,
-                                             nsFrameLoader* aFrameLoader,
-                                             nsEventStatus *aStatus)
-{
-  TabParent* remote = TabParent::GetFrom(aFrameLoader);
-=======
 }  // end of HandleAccessKey
 
 void EventStateManager::DispatchCrossProcessEvent(WidgetEvent* aEvent,
                                                   nsFrameLoader* aFrameLoader,
                                                   nsEventStatus* aStatus) {
   BrowserParent* remote = BrowserParent::GetFrom(aFrameLoader);
->>>>>>> upstream-releases
   if (!remote) {
     return;
   }
 
-<<<<<<< HEAD
-  switch (aEvent->mClass) {
-    case eMouseEventClass: {
-      remote->SendRealMouseEvent(*aEvent->AsMouseEvent());
-      return;
-    }
-    case eKeyboardEventClass: {
-      remote->SendRealKeyEvent(*aEvent->AsKeyboardEvent());
-      return;
-    }
-    case eWheelEventClass: {
-      remote->SendMouseWheelEvent(*aEvent->AsWheelEvent());
-      return;
-||||||| merged common ancestors
-  switch (aEvent->mClass) {
-  case eMouseEventClass: {
-    remote->SendRealMouseEvent(*aEvent->AsMouseEvent());
-    return;
-  }
-  case eKeyboardEventClass: {
-    remote->SendRealKeyEvent(*aEvent->AsKeyboardEvent());
-    return;
-  }
-  case eWheelEventClass: {
-    remote->SendMouseWheelEvent(*aEvent->AsWheelEvent());
-    return;
-  }
-  case eTouchEventClass: {
-    // Let the child process synthesize a mouse event if needed, and
-    // ensure we don't synthesize one in this process.
-    *aStatus = nsEventStatus_eConsumeNoDefault;
-    remote->SendRealTouchEvent(*aEvent->AsTouchEvent());
-    return;
-  }
-  case eDragEventClass: {
-    RefPtr<TabParent> tabParent = remote;
-    if (tabParent->Manager()->IsContentParent()) {
-      tabParent->Manager()->AsContentParent()->MaybeInvokeDragSession(tabParent);
-=======
   if (aEvent->mLayersId.IsValid()) {
     BrowserParent* preciseRemote =
         BrowserParent::GetBrowserParentFromLayersId(aEvent->mLayersId);
@@ -1708,56 +1278,11 @@ void EventStateManager::DispatchCrossProcessEvent(WidgetEvent* aEvent,
       *aStatus = nsEventStatus_eConsumeNoDefault;
       remote->SendRealTouchEvent(*aEvent->AsTouchEvent());
       return;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    case eTouchEventClass: {
-      // Let the child process synthesize a mouse event if needed, and
-      // ensure we don't synthesize one in this process.
-      *aStatus = nsEventStatus_eConsumeNoDefault;
-      remote->SendRealTouchEvent(*aEvent->AsTouchEvent());
-      return;
-    }
-    case eDragEventClass: {
-      RefPtr<TabParent> tabParent = remote;
-      if (tabParent->Manager()->IsContentParent()) {
-        tabParent->Manager()->AsContentParent()->MaybeInvokeDragSession(
-            tabParent);
-      }
-||||||| merged common ancestors
-=======
     case eDragEventClass: {
       RefPtr<BrowserParent> browserParent = remote;
       browserParent->Manager()->MaybeInvokeDragSession(browserParent);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      nsCOMPtr<nsIDragSession> dragSession = nsContentUtils::GetDragSession();
-      uint32_t dropEffect = nsIDragService::DRAGDROP_ACTION_NONE;
-      uint32_t action = nsIDragService::DRAGDROP_ACTION_NONE;
-      nsCString principalURISpec;
-      if (dragSession) {
-        dragSession->DragEventDispatchedToChildProcess();
-        dragSession->GetDragAction(&action);
-        dragSession->GetTriggeringPrincipalURISpec(principalURISpec);
-        RefPtr<DataTransfer> initialDataTransfer =
-            dragSession->GetDataTransfer();
-        if (initialDataTransfer) {
-          dropEffect = initialDataTransfer->DropEffectInt();
-        }
-||||||| merged common ancestors
-    nsCOMPtr<nsIDragSession> dragSession = nsContentUtils::GetDragSession();
-    uint32_t dropEffect = nsIDragService::DRAGDROP_ACTION_NONE;
-    uint32_t action = nsIDragService::DRAGDROP_ACTION_NONE;
-    nsCString principalURISpec;
-    if (dragSession) {
-      dragSession->DragEventDispatchedToChildProcess();
-      dragSession->GetDragAction(&action);
-      dragSession->GetTriggeringPrincipalURISpec(principalURISpec);
-      RefPtr<DataTransfer> initialDataTransfer = dragSession->GetDataTransfer();
-      if (initialDataTransfer) {
-        dropEffect = initialDataTransfer->DropEffectInt();
-=======
       nsCOMPtr<nsIDragSession> dragSession = nsContentUtils::GetDragSession();
       uint32_t dropEffect = nsIDragService::DRAGDROP_ACTION_NONE;
       uint32_t action = nsIDragService::DRAGDROP_ACTION_NONE;
@@ -1771,34 +1296,8 @@ void EventStateManager::DispatchCrossProcessEvent(WidgetEvent* aEvent,
         if (initialDataTransfer) {
           dropEffect = initialDataTransfer->DropEffectInt();
         }
->>>>>>> upstream-releases
       }
 
-<<<<<<< HEAD
-      tabParent->SendRealDragEvent(*aEvent->AsDragEvent(), action, dropEffect,
-                                   principalURISpec);
-      return;
-    }
-    case ePluginEventClass: {
-      *aStatus = nsEventStatus_eConsumeNoDefault;
-      remote->SendPluginEvent(*aEvent->AsPluginEvent());
-      return;
-    }
-    default: { MOZ_CRASH("Attempt to send non-whitelisted event?"); }
-||||||| merged common ancestors
-    tabParent->SendRealDragEvent(*aEvent->AsDragEvent(), action, dropEffect,
-                                 principalURISpec);
-    return;
-  }
-  case ePluginEventClass: {
-    *aStatus = nsEventStatus_eConsumeNoDefault;
-    remote->SendPluginEvent(*aEvent->AsPluginEvent());
-    return;
-  }
-  default: {
-    MOZ_CRASH("Attempt to send non-whitelisted event?");
-  }
-=======
       browserParent->SendRealDragEvent(*aEvent->AsDragEvent(), action,
                                        dropEffect, IPC::Principal(principal));
       return;
@@ -1811,22 +1310,11 @@ void EventStateManager::DispatchCrossProcessEvent(WidgetEvent* aEvent,
     default: {
       MOZ_CRASH("Attempt to send non-whitelisted event?");
     }
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-bool EventStateManager::IsRemoteTarget(nsIContent* target) {
-  return !!TabParent::GetFrom(target);
-||||||| merged common ancestors
-bool
-EventStateManager::IsRemoteTarget(nsIContent* target)
-{
-  return !!TabParent::GetFrom(target);
-=======
 bool EventStateManager::IsRemoteTarget(nsIContent* target) {
   return !!BrowserParent::GetFrom(target);
->>>>>>> upstream-releases
 }
 
 bool EventStateManager::HandleCrossProcessEvent(WidgetEvent* aEvent,
@@ -2135,26 +1623,6 @@ void EventStateManager::BeginTrackingDragGesture(nsPresContext* aPresContext,
   }
 }
 
-<<<<<<< HEAD
-void EventStateManager::SetGestureDownPoint(WidgetGUIEvent* aEvent) {
-  mGestureDownPoint =
-      GetEventRefPoint(aEvent) + aEvent->mWidget->WidgetToScreenOffset();
-}
-
-LayoutDeviceIntPoint EventStateManager::GetEventRefPoint(
-    WidgetEvent* aEvent) const {
-  auto touchEvent = aEvent->AsTouchEvent();
-  return (touchEvent && !touchEvent->mTouches.IsEmpty())
-             ? aEvent->AsTouchEvent()->mTouches[0]->mRefPoint
-             : aEvent->mRefPoint;
-}
-
-void EventStateManager::BeginTrackingRemoteDragGesture(nsIContent* aContent) {
-||||||| merged common ancestors
-void
-EventStateManager::BeginTrackingRemoteDragGesture(nsIContent* aContent)
-{
-=======
 void EventStateManager::SetGestureDownPoint(WidgetGUIEvent* aEvent) {
   mGestureDownPoint =
       GetEventRefPoint(aEvent) + aEvent->mWidget->WidgetToScreenOffset();
@@ -2170,7 +1638,6 @@ LayoutDeviceIntPoint EventStateManager::GetEventRefPoint(
 
 void EventStateManager::BeginTrackingRemoteDragGesture(
     nsIContent* aContent, RemoteDragStartData* aDragStartData) {
->>>>>>> upstream-releases
   mGestureDownContent = aContent;
   mGestureDownFrameOwner = aContent;
   mGestureDownDragStartData = aDragStartData;
@@ -2201,29 +1668,12 @@ void EventStateManager::FillInEventFromGestureDown(WidgetMouseEvent* aEvent) {
   aEvent->mButtons = mGestureDownButtons;
 }
 
-<<<<<<< HEAD
-void EventStateManager::MaybeFirePointerCancel(WidgetInputEvent* aEvent) {
-  nsCOMPtr<nsIPresShell> shell = mPresContext->GetPresShell();
-||||||| merged common ancestors
-void
-EventStateManager::MaybeFirePointerCancel(WidgetInputEvent* aEvent)
-{
-  nsCOMPtr<nsIPresShell> shell = mPresContext->GetPresShell();
-=======
 void EventStateManager::MaybeFirePointerCancel(WidgetInputEvent* aEvent) {
   RefPtr<PresShell> presShell = mPresContext->GetPresShell();
->>>>>>> upstream-releases
   AutoWeakFrame targetFrame = mCurrentTarget;
 
-<<<<<<< HEAD
-  if (!PointerEventHandler::IsPointerEventEnabled() || !shell || !targetFrame) {
-||||||| merged common ancestors
-  if (!PointerEventHandler::IsPointerEventEnabled() || !shell ||
-      !targetFrame) {
-=======
   if (!StaticPrefs::dom_w3c_pointer_events_enabled() || !presShell ||
       !targetFrame) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -2343,21 +1793,10 @@ void EventStateManager::GenerateDragGesture(nsPresContext* aPresContext,
       nsCOMPtr<nsIPrincipal> principal;
       mCurrentTarget->GetContentForEvent(aEvent, getter_AddRefs(eventContent));
       if (eventContent)
-<<<<<<< HEAD
-        DetermineDragTargetAndDefaultData(
-            window, eventContent, dataTransfer, getter_AddRefs(selection),
-            getter_AddRefs(targetContent), principalURISpec);
-||||||| merged common ancestors
-        DetermineDragTargetAndDefaultData(window, eventContent, dataTransfer,
-                                          getter_AddRefs(selection),
-                                          getter_AddRefs(targetContent),
-                                          principalURISpec);
-=======
         DetermineDragTargetAndDefaultData(
             window, eventContent, dataTransfer, getter_AddRefs(selection),
             getter_AddRefs(remoteDragStartData), getter_AddRefs(targetContent),
             getter_AddRefs(principal));
->>>>>>> upstream-releases
 
       // Stop tracking the drag gesture now. This should stop us from
       // reentering GenerateDragGesture inside DOM event processing.
@@ -2418,19 +1857,9 @@ void EventStateManager::GenerateDragGesture(nsPresContext* aPresContext,
       }
 
       if (status != nsEventStatus_eConsumeNoDefault) {
-<<<<<<< HEAD
-        bool dragStarted =
-            DoDefaultDragStart(aPresContext, event, dataTransfer, targetContent,
-                               selection, principalURISpec);
-||||||| merged common ancestors
-        bool dragStarted = DoDefaultDragStart(aPresContext, event, dataTransfer,
-                                              targetContent, selection,
-                                              principalURISpec);
-=======
         bool dragStarted =
             DoDefaultDragStart(aPresContext, event, dataTransfer, targetContent,
                                selection, remoteDragStartData, principal);
->>>>>>> upstream-releases
         if (dragStarted) {
           sActiveESM = nullptr;
           MaybeFirePointerCancel(aEvent);
@@ -2448,46 +1877,14 @@ void EventStateManager::GenerateDragGesture(nsPresContext* aPresContext,
   }
 }  // GenerateDragGesture
 
-<<<<<<< HEAD
-void EventStateManager::DetermineDragTargetAndDefaultData(
-    nsPIDOMWindowOuter* aWindow, nsIContent* aSelectionTarget,
-    DataTransfer* aDataTransfer, Selection** aSelection,
-    nsIContent** aTargetNode, nsACString& aPrincipalURISpec) {
-||||||| merged common ancestors
-void
-EventStateManager::DetermineDragTargetAndDefaultData(nsPIDOMWindowOuter* aWindow,
-                                                     nsIContent* aSelectionTarget,
-                                                     DataTransfer* aDataTransfer,
-                                                     Selection** aSelection,
-                                                     nsIContent** aTargetNode,
-                                                     nsACString& aPrincipalURISpec)
-{
-=======
 void EventStateManager::DetermineDragTargetAndDefaultData(
     nsPIDOMWindowOuter* aWindow, nsIContent* aSelectionTarget,
     DataTransfer* aDataTransfer, Selection** aSelection,
     RemoteDragStartData** aRemoteDragStartData, nsIContent** aTargetNode,
     nsIPrincipal** aPrincipal) {
->>>>>>> upstream-releases
   *aTargetNode = nullptr;
 
   nsCOMPtr<nsIContent> dragDataNode;
-<<<<<<< HEAD
-  bool wasAlt = (mGestureModifiers & MODIFIER_ALT) != 0;
-  nsresult rv = nsContentAreaDragDrop::GetDragData(
-      aWindow, mGestureDownContent, aSelectionTarget, wasAlt, aDataTransfer,
-      &canDrag, aSelection, getter_AddRefs(dragDataNode), aPrincipalURISpec);
-  if (NS_FAILED(rv) || !canDrag) return;
-||||||| merged common ancestors
-  bool wasAlt = (mGestureModifiers & MODIFIER_ALT) != 0;
-  nsresult rv = nsContentAreaDragDrop::GetDragData(aWindow, mGestureDownContent,
-                                                   aSelectionTarget, wasAlt,
-                                                   aDataTransfer, &canDrag, aSelection,
-                                                   getter_AddRefs(dragDataNode),
-                                                   aPrincipalURISpec);
-  if (NS_FAILED(rv) || !canDrag)
-    return;
-=======
 
   nsIContent* editingElement = aSelectionTarget->IsEditable()
                                    ? aSelectionTarget->GetEditingHost()
@@ -2520,7 +1917,6 @@ void EventStateManager::DetermineDragTargetAndDefaultData(
       return;
     }
   }
->>>>>>> upstream-releases
 
   // if GetDragData returned a node, use that as the node being dragged.
   // Otherwise, if a selection is being dragged, use the node within the
@@ -2575,26 +1971,10 @@ void EventStateManager::DetermineDragTargetAndDefaultData(
   }
 }
 
-<<<<<<< HEAD
-bool EventStateManager::DoDefaultDragStart(
-    nsPresContext* aPresContext, WidgetDragEvent* aDragEvent,
-    DataTransfer* aDataTransfer, nsIContent* aDragTarget, Selection* aSelection,
-    const nsACString& aPrincipalURISpec) {
-||||||| merged common ancestors
-bool
-EventStateManager::DoDefaultDragStart(nsPresContext* aPresContext,
-                                      WidgetDragEvent* aDragEvent,
-                                      DataTransfer* aDataTransfer,
-                                      nsIContent* aDragTarget,
-                                      Selection* aSelection,
-                                      const nsACString& aPrincipalURISpec)
-{
-=======
 bool EventStateManager::DoDefaultDragStart(
     nsPresContext* aPresContext, WidgetDragEvent* aDragEvent,
     DataTransfer* aDataTransfer, nsIContent* aDragTarget, Selection* aSelection,
     RemoteDragStartData* aDragStartData, nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIDragService> dragService =
       do_GetService("@mozilla.org/widget/dragservice;1");
   if (!dragService) return false;
@@ -2666,26 +2046,6 @@ bool EventStateManager::DoDefaultDragStart(
   // use InvokeDragSessionWithImage if a custom image was set or something
   // other than a selection is being dragged.
   if (!dragImage && aSelection) {
-<<<<<<< HEAD
-    dragService->InvokeDragSessionWithSelection(
-        aSelection, aPrincipalURISpec, transArray, action, event, dataTransfer);
-  } else {
-    dragService->InvokeDragSessionWithImage(
-        dragTarget, aPrincipalURISpec, transArray, action, dragImage, imageX,
-        imageY, event, dataTransfer);
-||||||| merged common ancestors
-    dragService->InvokeDragSessionWithSelection(aSelection,
-                                                aPrincipalURISpec,
-                                                transArray,
-                                                action, event, dataTransfer);
-  }
-  else {
-    dragService->InvokeDragSessionWithImage(dragTarget,
-                                            aPrincipalURISpec, transArray,
-                                            action, dragImage,
-                                            imageX, imageY, event,
-                                            dataTransfer);
-=======
     dragService->InvokeDragSessionWithSelection(
         aSelection, aPrincipal, transArray, action, event, dataTransfer);
   } else if (aDragStartData) {
@@ -2697,7 +2057,6 @@ bool EventStateManager::DoDefaultDragStart(
     dragService->InvokeDragSessionWithImage(dragTarget, aPrincipal, transArray,
                                             action, dragImage, imageX, imageY,
                                             event, dataTransfer);
->>>>>>> upstream-releases
   }
 
   return true;
@@ -2727,13 +2086,7 @@ nsresult EventStateManager::GetContentViewer(nsIContentViewer** aCv) {
       nsGlobalWindowOuter::Cast(rootWindow)->GetContent();
   if (!contentWindow) return NS_ERROR_FAILURE;
 
-<<<<<<< HEAD
-  nsIDocument* doc = contentWindow->GetDoc();
-||||||| merged common ancestors
-  nsIDocument *doc = contentWindow->GetDoc();
-=======
   Document* doc = contentWindow->GetDoc();
->>>>>>> upstream-releases
   if (!doc) return NS_ERROR_FAILURE;
 
   nsCOMPtr<nsISupports> container = doc->GetContainer();
@@ -2818,20 +2171,11 @@ void EventStateManager::DoScrollZoom(nsIFrame* aTargetFrame,
     } else {
       ChangeTextSize(change);
     }
-<<<<<<< HEAD
-    nsContentUtils::DispatchChromeEvent(
-        mDocument, static_cast<nsIDocument*>(mDocument),
-        NS_LITERAL_STRING("ZoomChangeUsingMouseWheel"), CanBubble::eYes,
-        Cancelable::eYes);
-  }
-||||||| merged common ancestors
-=======
     nsContentUtils::DispatchChromeEvent(
         mDocument, ToSupports(mDocument),
         NS_LITERAL_STRING("ZoomChangeUsingMouseWheel"), CanBubble::eYes,
         Cancelable::eYes);
   }
->>>>>>> upstream-releases
 }
 
 static nsIFrame* GetParentFrameToScroll(nsIFrame* aFrame) {
@@ -3574,14 +2918,6 @@ void EventStateManager::PostHandleKeyboardEvent(
 
   if (!aKeyboardEvent->HasBeenPostedToRemoteProcess()) {
     if (aKeyboardEvent->IsWaitingReplyFromRemoteProcess()) {
-<<<<<<< HEAD
-      RefPtr<TabParent> remote =
-          aTargetFrame ? TabParent::GetFrom(aTargetFrame->GetContent())
-                       : nullptr;
-||||||| merged common ancestors
-      RefPtr<TabParent> remote = aTargetFrame ?
-        TabParent::GetFrom(aTargetFrame->GetContent()) : nullptr;
-=======
       RefPtr<BrowserParent> remote =
           aTargetFrame ? BrowserParent::GetFrom(aTargetFrame->GetContent())
                        : nullptr;
@@ -3598,7 +2934,6 @@ void EventStateManager::PostHandleKeyboardEvent(
         }
         // else there was a race between layout and focus tracking
       }
->>>>>>> upstream-releases
       if (remote && !remote->IsReadyToHandleInputEvents()) {
         // We need to dispatch the event to the browser element again if we were
         // waiting for the key reply but the event wasn't sent to the content
@@ -3729,16 +3064,6 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
       // mousemove/mouseup events will continue to be dispatched to this element
       // and therefore forwarded to the child.
       if (aEvent->HasBeenPostedToRemoteProcess() &&
-<<<<<<< HEAD
-          !nsIPresShell::GetCapturingContent()) {
-        nsIContent* content =
-            mCurrentTarget ? mCurrentTarget->GetContent() : nullptr;
-        nsIPresShell::SetCapturingContent(content, 0);
-||||||| merged common ancestors
-          !nsIPresShell::GetCapturingContent()) {
-        nsIContent* content = mCurrentTarget ? mCurrentTarget->GetContent() : nullptr;
-        nsIPresShell::SetCapturingContent(content, 0);
-=======
           !PresShell::GetCapturingContent()) {
         if (nsIContent* content =
                 mCurrentTarget ? mCurrentTarget->GetContent() : nullptr) {
@@ -3746,7 +3071,6 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
         } else {
           PresShell::ReleaseCapturingContent();
         }
->>>>>>> upstream-releases
       }
 
       nsCOMPtr<nsIContent> activeContent;
@@ -3782,29 +3106,13 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
 
           nsCOMPtr<Element> element = do_QueryInterface(aEvent->mTarget);
           if (!suppressBlur) {
-<<<<<<< HEAD
-            nsCOMPtr<Element> element = do_QueryInterface(aEvent->mTarget);
             suppressBlur =
                 element && element->State().HasState(NS_EVENT_STATE_DISABLED);
-||||||| merged common ancestors
-            nsCOMPtr<Element> element = do_QueryInterface(aEvent->mTarget);
-            suppressBlur = element &&
-                           element->State().HasState(NS_EVENT_STATE_DISABLED);
-=======
-            suppressBlur =
-                element && element->State().HasState(NS_EVENT_STATE_DISABLED);
->>>>>>> upstream-releases
           }
 
           if (!suppressBlur && element) {
             nsCOMPtr<nsIDOMXULControlElement> xulControl =
-<<<<<<< HEAD
-                do_QueryInterface(aEvent->mTarget);
-||||||| merged common ancestors
-              do_QueryInterface(aEvent->mTarget);
-=======
                 element->AsXULControl();
->>>>>>> upstream-releases
             if (xulControl) {
               bool disabled;
               xulControl->GetDisabled(&disabled);
@@ -3826,13 +3134,7 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
         // NOTE: The newFocus isn't editable that also means it's not in
         // designMode.  In designMode, all contents are not focusable.
         if (newFocus && !newFocus->IsEditable()) {
-<<<<<<< HEAD
-          nsIDocument* doc = newFocus->GetComposedDoc();
-||||||| merged common ancestors
-          nsIDocument *doc = newFocus->GetComposedDoc();
-=======
           Document* doc = newFocus->GetComposedDoc();
->>>>>>> upstream-releases
           if (doc && newFocus == doc->GetRootElement()) {
             nsIContent* bodyContent =
                 nsLayoutUtils::GetEditableRootContentByContentEditable(doc);
@@ -3889,15 +3191,8 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
             uint32_t flags =
                 nsIFocusManager::FLAG_BYMOUSE | nsIFocusManager::FLAG_NOSCROLL;
             // If this was a touch-generated event, pass that information:
-<<<<<<< HEAD
-            if (mouseEvent->inputSource ==
-                MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
-||||||| merged common ancestors
-            if (mouseEvent->inputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
-=======
             if (mouseEvent->mInputSource ==
                 MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
->>>>>>> upstream-releases
               flags |= nsIFocusManager::FLAG_BYTOUCH;
             }
             fm->SetFocus(newFocus->AsElement(), flags);
@@ -3958,28 +3253,6 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
         }
       }
       SetActiveManager(this, activeContent);
-<<<<<<< HEAD
-    } break;
-    case ePointerCancel:
-    case ePointerUp: {
-      WidgetPointerEvent* pointerEvent = aEvent->AsPointerEvent();
-      MOZ_ASSERT(pointerEvent);
-      // Implicitly releasing capture for given pointer. ePointerLostCapture
-      // should be send after ePointerUp or ePointerCancel.
-      PointerEventHandler::ImplicitlyReleasePointerCapture(pointerEvent);
-
-      if (pointerEvent->mMessage == ePointerCancel ||
-          pointerEvent->inputSource == MouseEvent_Binding::MOZ_SOURCE_TOUCH) {
-        // After pointercancel, pointer becomes invalid so we can remove
-        // relevant helper from table. Regarding pointerup with non-hoverable
-        // device, the pointer also becomes invalid. Hoverable (mouse/pen)
-        // pointers are valid all the time (not only between down/up).
-        GenerateMouseEnterExit(pointerEvent);
-        mPointersEnterLeaveHelper.Remove(pointerEvent->pointerId);
-      }
-      break;
-||||||| merged common ancestors
-=======
     } break;
     case ePointerCancel:
     case ePointerUp: {
@@ -3999,7 +3272,6 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
         mPointersEnterLeaveHelper.Remove(pointerEvent->pointerId);
       }
       break;
->>>>>>> upstream-releases
     }
     case eMouseUp: {
       ClearGlobalActiveContent(this);
@@ -4013,18 +3285,8 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
             esm->PostHandleMouseUp(mouseUpEvent, aStatus, aOverrideClickTarget);
       }
 
-<<<<<<< HEAD
-      nsIPresShell* shell = presContext->GetPresShell();
-      if (shell) {
-        RefPtr<nsFrameSelection> frameSelection = shell->FrameSelection();
-||||||| merged common ancestors
-      nsIPresShell *shell = presContext->GetPresShell();
-      if (shell) {
-        RefPtr<nsFrameSelection> frameSelection = shell->FrameSelection();
-=======
       if (PresShell* presShell = presContext->GetPresShell()) {
         RefPtr<nsFrameSelection> frameSelection = presShell->FrameSelection();
->>>>>>> upstream-releases
         frameSelection->SetDragState(false);
       }
     } break;
@@ -4391,37 +3653,16 @@ nsresult EventStateManager::PostHandleEvent(nsPresContext* aPresContext,
   return ret;
 }
 
-<<<<<<< HEAD
-TabParent* EventStateManager::GetCrossProcessTarget() {
-  return IMEStateManager::GetActiveTabParent();
-||||||| merged common ancestors
-TabParent*
-EventStateManager::GetCrossProcessTarget()
-{
-  return IMEStateManager::GetActiveTabParent();
-=======
 BrowserParent* EventStateManager::GetCrossProcessTarget() {
   return IMEStateManager::GetActiveBrowserParent();
->>>>>>> upstream-releases
 }
 
 bool EventStateManager::IsTargetCrossProcess(WidgetGUIEvent* aEvent) {
   // Check to see if there is a focused, editable content in chrome,
   // in that case, do not forward IME events to content
-<<<<<<< HEAD
-  nsIContent* focusedContent = GetFocusedContent();
-  if (focusedContent && focusedContent->IsEditable()) return false;
-  return IMEStateManager::GetActiveTabParent() != nullptr;
-||||||| merged common ancestors
-  nsIContent *focusedContent = GetFocusedContent();
-  if (focusedContent && focusedContent->IsEditable())
-    return false;
-  return IMEStateManager::GetActiveTabParent() != nullptr;
-=======
   nsIContent* focusedContent = GetFocusedContent();
   if (focusedContent && focusedContent->IsEditable()) return false;
   return IMEStateManager::GetActiveBrowserParent() != nullptr;
->>>>>>> upstream-releases
 }
 
 void EventStateManager::NotifyDestroyPresContext(nsPresContext* aPresContext) {
@@ -4446,19 +3687,6 @@ void EventStateManager::ClearFrameRefs(nsIFrame* aFrame) {
   }
 }
 
-<<<<<<< HEAD
-void EventStateManager::UpdateCursor(nsPresContext* aPresContext,
-                                     WidgetEvent* aEvent,
-                                     nsIFrame* aTargetFrame,
-                                     nsEventStatus* aStatus) {
-||||||| merged common ancestors
-void
-EventStateManager::UpdateCursor(nsPresContext* aPresContext,
-                                WidgetEvent* aEvent,
-                                nsIFrame* aTargetFrame,
-                                nsEventStatus* aStatus)
-{
-=======
 struct CursorImage {
   gfx::IntPoint mHotspot;
   nsCOMPtr<imgIContainer> mContainer;
@@ -4603,7 +3831,6 @@ void EventStateManager::UpdateCursor(nsPresContext* aPresContext,
                                      WidgetEvent* aEvent,
                                      nsIFrame* aTargetFrame,
                                      nsEventStatus* aStatus) {
->>>>>>> upstream-releases
   if (aTargetFrame && IsRemoteTarget(aTargetFrame->GetContent())) {
     return;
   }
@@ -4612,39 +3839,17 @@ void EventStateManager::UpdateCursor(nsPresContext* aPresContext,
   nsCOMPtr<imgIContainer> container;
   Maybe<gfx::IntPoint> hotspot;
 
-<<<<<<< HEAD
-  // If cursor is locked just use the locked one
-  if (mLockCursor) {
-||||||| merged common ancestors
-  //If cursor is locked just use the locked one
-  if (mLockCursor) {
-=======
   // If cursor is locked just use the locked one
   if (mLockCursor != kInvalidCursorKind) {
->>>>>>> upstream-releases
     cursor = mLockCursor;
   }
   // If not locked, look for correct cursor
   else if (aTargetFrame) {
-<<<<<<< HEAD
-    nsIFrame::Cursor framecursor;
-    nsPoint pt =
-        nsLayoutUtils::GetEventCoordinatesRelativeTo(aEvent, aTargetFrame);
-    // Avoid setting cursor when the mouse is over a windowless pluign.
-    if (NS_FAILED(aTargetFrame->GetCursor(pt, framecursor))) {
-||||||| merged common ancestors
-    nsIFrame::Cursor framecursor;
-    nsPoint pt = nsLayoutUtils::GetEventCoordinatesRelativeTo(aEvent,
-                                                              aTargetFrame);
-    // Avoid setting cursor when the mouse is over a windowless pluign.
-    if (NS_FAILED(aTargetFrame->GetCursor(pt, framecursor))) {
-=======
     nsPoint pt =
         nsLayoutUtils::GetEventCoordinatesRelativeTo(aEvent, aTargetFrame);
     Maybe<nsIFrame::Cursor> framecursor = aTargetFrame->GetCursor(pt);
     // Avoid setting cursor when the mouse is over a windowless plugin.
     if (!framecursor) {
->>>>>>> upstream-releases
       if (XRE_IsContentProcess()) {
         mLastFrameConsumedSetCursor = true;
       }
@@ -4663,15 +3868,8 @@ void EventStateManager::UpdateCursor(nsPresContext* aPresContext,
     // If the current cursor is from the same frame, and it is now
     // loading some new image for the cursor, we should wait for a
     // while rather than taking its fallback cursor directly.
-<<<<<<< HEAD
-    if (framecursor.mLoading && gLastCursorSourceFrame == aTargetFrame &&
-||||||| merged common ancestors
-    if (framecursor.mLoading &&
-        gLastCursorSourceFrame == aTargetFrame &&
-=======
     if (customCursor.mEarlierCursorLoading &&
         gLastCursorSourceFrame == aTargetFrame &&
->>>>>>> upstream-releases
         TimeStamp::NowLoRes() - gLastCursorUpdateTime <
             TimeDuration::FromMilliseconds(kCursorLoadingTimeout)) {
       return;
@@ -4690,18 +3888,9 @@ void EventStateManager::UpdateCursor(nsPresContext* aPresContext,
     // Show busy cursor everywhere before page loads
     // and just replace the arrow cursor after page starts loading
     if (busyFlags & nsIDocShell::BUSY_FLAGS_BUSY &&
-<<<<<<< HEAD
-        (cursor == NS_STYLE_CURSOR_AUTO || cursor == NS_STYLE_CURSOR_DEFAULT)) {
-      cursor = NS_STYLE_CURSOR_SPINNING;
-||||||| merged common ancestors
-          (cursor == NS_STYLE_CURSOR_AUTO || cursor == NS_STYLE_CURSOR_DEFAULT))
-    {
-      cursor = NS_STYLE_CURSOR_SPINNING;
-=======
         (cursor == StyleCursorKind::Auto ||
          cursor == StyleCursorKind::Default)) {
       cursor = StyleCursorKind::Progress;
->>>>>>> upstream-releases
       container = nullptr;
     }
   }
@@ -4729,25 +3918,10 @@ void EventStateManager::ClearCachedWidgetCursor(nsIFrame* aTargetFrame) {
   aWidget->ClearCachedCursor();
 }
 
-<<<<<<< HEAD
-nsresult EventStateManager::SetCursor(int32_t aCursor,
-                                      imgIContainer* aContainer,
-                                      bool aHaveHotspot, float aHotspotX,
-                                      float aHotspotY, nsIWidget* aWidget,
-                                      bool aLockCursor) {
-||||||| merged common ancestors
-nsresult
-EventStateManager::SetCursor(int32_t aCursor, imgIContainer* aContainer,
-                             bool aHaveHotspot,
-                             float aHotspotX, float aHotspotY,
-                             nsIWidget* aWidget, bool aLockCursor)
-{
-=======
 nsresult EventStateManager::SetCursor(StyleCursorKind aCursor,
                                       imgIContainer* aContainer,
                                       const Maybe<gfx::IntPoint>& aHotspot,
                                       nsIWidget* aWidget, bool aLockCursor) {
->>>>>>> upstream-releases
   EnsureDocument(mPresContext);
   NS_ENSURE_TRUE(mDocument, NS_ERROR_FAILURE);
   sMouseOverDocument = mDocument.get();
@@ -4756,321 +3930,13 @@ nsresult EventStateManager::SetCursor(StyleCursorKind aCursor,
   if (aLockCursor) {
     if (StyleCursorKind::Auto != aCursor) {
       mLockCursor = aCursor;
-<<<<<<< HEAD
-    } else {
-      // If cursor style is set to auto we unlock the cursor again.
-      mLockCursor = 0;
-||||||| merged common ancestors
-    }
-    else {
-      //If cursor style is set to auto we unlock the cursor again.
-      mLockCursor = 0;
-=======
     } else {
       // If cursor style is set to auto we unlock the cursor again.
       mLockCursor = kInvalidCursorKind;
->>>>>>> upstream-releases
     }
   }
   nsCursor c;
   switch (aCursor) {
-<<<<<<< HEAD
-    default:
-    case NS_STYLE_CURSOR_AUTO:
-    case NS_STYLE_CURSOR_DEFAULT:
-      c = eCursor_standard;
-      break;
-    case NS_STYLE_CURSOR_POINTER:
-      c = eCursor_hyperlink;
-      break;
-    case NS_STYLE_CURSOR_CROSSHAIR:
-      c = eCursor_crosshair;
-      break;
-    case NS_STYLE_CURSOR_MOVE:
-      c = eCursor_move;
-      break;
-    case NS_STYLE_CURSOR_TEXT:
-      c = eCursor_select;
-      break;
-    case NS_STYLE_CURSOR_WAIT:
-      c = eCursor_wait;
-      break;
-    case NS_STYLE_CURSOR_HELP:
-      c = eCursor_help;
-      break;
-    case NS_STYLE_CURSOR_N_RESIZE:
-      c = eCursor_n_resize;
-      break;
-    case NS_STYLE_CURSOR_S_RESIZE:
-      c = eCursor_s_resize;
-      break;
-    case NS_STYLE_CURSOR_W_RESIZE:
-      c = eCursor_w_resize;
-      break;
-    case NS_STYLE_CURSOR_E_RESIZE:
-      c = eCursor_e_resize;
-      break;
-    case NS_STYLE_CURSOR_NW_RESIZE:
-      c = eCursor_nw_resize;
-      break;
-    case NS_STYLE_CURSOR_SE_RESIZE:
-      c = eCursor_se_resize;
-      break;
-    case NS_STYLE_CURSOR_NE_RESIZE:
-      c = eCursor_ne_resize;
-      break;
-    case NS_STYLE_CURSOR_SW_RESIZE:
-      c = eCursor_sw_resize;
-      break;
-    case NS_STYLE_CURSOR_COPY:  // CSS3
-      c = eCursor_copy;
-      break;
-    case NS_STYLE_CURSOR_ALIAS:
-      c = eCursor_alias;
-      break;
-    case NS_STYLE_CURSOR_CONTEXT_MENU:
-      c = eCursor_context_menu;
-      break;
-    case NS_STYLE_CURSOR_CELL:
-      c = eCursor_cell;
-      break;
-    case NS_STYLE_CURSOR_GRAB:
-      c = eCursor_grab;
-      break;
-    case NS_STYLE_CURSOR_GRABBING:
-      c = eCursor_grabbing;
-      break;
-    case NS_STYLE_CURSOR_SPINNING:
-      c = eCursor_spinning;
-      break;
-    case NS_STYLE_CURSOR_ZOOM_IN:
-      c = eCursor_zoom_in;
-      break;
-    case NS_STYLE_CURSOR_ZOOM_OUT:
-      c = eCursor_zoom_out;
-      break;
-    case NS_STYLE_CURSOR_NOT_ALLOWED:
-      c = eCursor_not_allowed;
-      break;
-    case NS_STYLE_CURSOR_COL_RESIZE:
-      c = eCursor_col_resize;
-      break;
-    case NS_STYLE_CURSOR_ROW_RESIZE:
-      c = eCursor_row_resize;
-      break;
-    case NS_STYLE_CURSOR_NO_DROP:
-      c = eCursor_no_drop;
-      break;
-    case NS_STYLE_CURSOR_VERTICAL_TEXT:
-      c = eCursor_vertical_text;
-      break;
-    case NS_STYLE_CURSOR_ALL_SCROLL:
-      c = eCursor_all_scroll;
-      break;
-    case NS_STYLE_CURSOR_NESW_RESIZE:
-      c = eCursor_nesw_resize;
-      break;
-    case NS_STYLE_CURSOR_NWSE_RESIZE:
-      c = eCursor_nwse_resize;
-      break;
-    case NS_STYLE_CURSOR_NS_RESIZE:
-      c = eCursor_ns_resize;
-      break;
-    case NS_STYLE_CURSOR_EW_RESIZE:
-      c = eCursor_ew_resize;
-      break;
-    case NS_STYLE_CURSOR_NONE:
-      c = eCursor_none;
-      break;
-  }
-
-  // First, try the imgIContainer, if non-null
-  nsresult rv = NS_ERROR_FAILURE;
-  if (aContainer) {
-    uint32_t hotspotX, hotspotY;
-
-    // css3-ui says to use the CSS-specified hotspot if present,
-    // otherwise use the intrinsic hotspot, otherwise use the top left
-    // corner.
-    if (aHaveHotspot) {
-      int32_t imgWidth, imgHeight;
-      aContainer->GetWidth(&imgWidth);
-      aContainer->GetHeight(&imgHeight);
-
-      // XXX std::max(NS_lround(x), 0)?
-      hotspotX = aHotspotX > 0.0f ? uint32_t(aHotspotX + 0.5f) : uint32_t(0);
-      if (hotspotX >= uint32_t(imgWidth)) hotspotX = imgWidth - 1;
-      hotspotY = aHotspotY > 0.0f ? uint32_t(aHotspotY + 0.5f) : uint32_t(0);
-      if (hotspotY >= uint32_t(imgHeight)) hotspotY = imgHeight - 1;
-    } else {
-      hotspotX = 0;
-      hotspotY = 0;
-      nsCOMPtr<nsIProperties> props(do_QueryInterface(aContainer));
-      if (props) {
-        nsCOMPtr<nsISupportsPRUint32> hotspotXWrap, hotspotYWrap;
-
-        props->Get("hotspotX", NS_GET_IID(nsISupportsPRUint32),
-                   getter_AddRefs(hotspotXWrap));
-        props->Get("hotspotY", NS_GET_IID(nsISupportsPRUint32),
-                   getter_AddRefs(hotspotYWrap));
-
-        if (hotspotXWrap) hotspotXWrap->GetData(&hotspotX);
-        if (hotspotYWrap) hotspotYWrap->GetData(&hotspotY);
-      }
-    }
-
-    rv = aWidget->SetCursor(aContainer, hotspotX, hotspotY);
-||||||| merged common ancestors
-  default:
-  case NS_STYLE_CURSOR_AUTO:
-  case NS_STYLE_CURSOR_DEFAULT:
-    c = eCursor_standard;
-    break;
-  case NS_STYLE_CURSOR_POINTER:
-    c = eCursor_hyperlink;
-    break;
-  case NS_STYLE_CURSOR_CROSSHAIR:
-    c = eCursor_crosshair;
-    break;
-  case NS_STYLE_CURSOR_MOVE:
-    c = eCursor_move;
-    break;
-  case NS_STYLE_CURSOR_TEXT:
-    c = eCursor_select;
-    break;
-  case NS_STYLE_CURSOR_WAIT:
-    c = eCursor_wait;
-    break;
-  case NS_STYLE_CURSOR_HELP:
-    c = eCursor_help;
-    break;
-  case NS_STYLE_CURSOR_N_RESIZE:
-    c = eCursor_n_resize;
-    break;
-  case NS_STYLE_CURSOR_S_RESIZE:
-    c = eCursor_s_resize;
-    break;
-  case NS_STYLE_CURSOR_W_RESIZE:
-    c = eCursor_w_resize;
-    break;
-  case NS_STYLE_CURSOR_E_RESIZE:
-    c = eCursor_e_resize;
-    break;
-  case NS_STYLE_CURSOR_NW_RESIZE:
-    c = eCursor_nw_resize;
-    break;
-  case NS_STYLE_CURSOR_SE_RESIZE:
-    c = eCursor_se_resize;
-    break;
-  case NS_STYLE_CURSOR_NE_RESIZE:
-    c = eCursor_ne_resize;
-    break;
-  case NS_STYLE_CURSOR_SW_RESIZE:
-    c = eCursor_sw_resize;
-    break;
-  case NS_STYLE_CURSOR_COPY: // CSS3
-    c = eCursor_copy;
-    break;
-  case NS_STYLE_CURSOR_ALIAS:
-    c = eCursor_alias;
-    break;
-  case NS_STYLE_CURSOR_CONTEXT_MENU:
-    c = eCursor_context_menu;
-    break;
-  case NS_STYLE_CURSOR_CELL:
-    c = eCursor_cell;
-    break;
-  case NS_STYLE_CURSOR_GRAB:
-    c = eCursor_grab;
-    break;
-  case NS_STYLE_CURSOR_GRABBING:
-    c = eCursor_grabbing;
-    break;
-  case NS_STYLE_CURSOR_SPINNING:
-    c = eCursor_spinning;
-    break;
-  case NS_STYLE_CURSOR_ZOOM_IN:
-    c = eCursor_zoom_in;
-    break;
-  case NS_STYLE_CURSOR_ZOOM_OUT:
-    c = eCursor_zoom_out;
-    break;
-  case NS_STYLE_CURSOR_NOT_ALLOWED:
-    c = eCursor_not_allowed;
-    break;
-  case NS_STYLE_CURSOR_COL_RESIZE:
-    c = eCursor_col_resize;
-    break;
-  case NS_STYLE_CURSOR_ROW_RESIZE:
-    c = eCursor_row_resize;
-    break;
-  case NS_STYLE_CURSOR_NO_DROP:
-    c = eCursor_no_drop;
-    break;
-  case NS_STYLE_CURSOR_VERTICAL_TEXT:
-    c = eCursor_vertical_text;
-    break;
-  case NS_STYLE_CURSOR_ALL_SCROLL:
-    c = eCursor_all_scroll;
-    break;
-  case NS_STYLE_CURSOR_NESW_RESIZE:
-    c = eCursor_nesw_resize;
-    break;
-  case NS_STYLE_CURSOR_NWSE_RESIZE:
-    c = eCursor_nwse_resize;
-    break;
-  case NS_STYLE_CURSOR_NS_RESIZE:
-    c = eCursor_ns_resize;
-    break;
-  case NS_STYLE_CURSOR_EW_RESIZE:
-    c = eCursor_ew_resize;
-    break;
-  case NS_STYLE_CURSOR_NONE:
-    c = eCursor_none;
-    break;
-  }
-
-  // First, try the imgIContainer, if non-null
-  nsresult rv = NS_ERROR_FAILURE;
-  if (aContainer) {
-    uint32_t hotspotX, hotspotY;
-
-    // css3-ui says to use the CSS-specified hotspot if present,
-    // otherwise use the intrinsic hotspot, otherwise use the top left
-    // corner.
-    if (aHaveHotspot) {
-      int32_t imgWidth, imgHeight;
-      aContainer->GetWidth(&imgWidth);
-      aContainer->GetHeight(&imgHeight);
-
-      // XXX std::max(NS_lround(x), 0)?
-      hotspotX = aHotspotX > 0.0f
-                   ? uint32_t(aHotspotX + 0.5f) : uint32_t(0);
-      if (hotspotX >= uint32_t(imgWidth))
-        hotspotX = imgWidth - 1;
-      hotspotY = aHotspotY > 0.0f
-                   ? uint32_t(aHotspotY + 0.5f) : uint32_t(0);
-      if (hotspotY >= uint32_t(imgHeight))
-        hotspotY = imgHeight - 1;
-    } else {
-      hotspotX = 0;
-      hotspotY = 0;
-      nsCOMPtr<nsIProperties> props(do_QueryInterface(aContainer));
-      if (props) {
-        nsCOMPtr<nsISupportsPRUint32> hotspotXWrap, hotspotYWrap;
-
-        props->Get("hotspotX", NS_GET_IID(nsISupportsPRUint32), getter_AddRefs(hotspotXWrap));
-        props->Get("hotspotY", NS_GET_IID(nsISupportsPRUint32), getter_AddRefs(hotspotYWrap));
-
-        if (hotspotXWrap)
-          hotspotXWrap->GetData(&hotspotX);
-        if (hotspotYWrap)
-          hotspotYWrap->GetData(&hotspotY);
-      }
-    }
-
-    rv = aWidget->SetCursor(aContainer, hotspotX, hotspotY);
-=======
     case StyleCursorKind::Auto:
     case StyleCursorKind::Default:
       c = eCursor_standard;
@@ -5181,21 +4047,11 @@ nsresult EventStateManager::SetCursor(StyleCursorKind aCursor,
       MOZ_ASSERT_UNREACHABLE("Unknown cursor kind");
       c = eCursor_standard;
       break;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (NS_FAILED(rv)) aWidget->SetCursor(c);
-
-||||||| merged common ancestors
-  if (NS_FAILED(rv))
-    aWidget->SetCursor(c);
-
-=======
   int32_t x = aHotspot ? aHotspot->x : 0;
   int32_t y = aHotspot ? aHotspot->y : 0;
   aWidget->SetCursor(c, aContainer, x, y);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -5203,27 +4059,13 @@ class MOZ_STACK_CLASS ESMEventCB : public EventDispatchingCallback {
  public:
   explicit ESMEventCB(nsIContent* aTarget) : mTarget(aTarget) {}
 
-<<<<<<< HEAD
-  void HandleEvent(EventChainPostVisitor& aVisitor) override {
-||||||| merged common ancestors
-  void HandleEvent(EventChainPostVisitor& aVisitor) override
-  {
-=======
   MOZ_CAN_RUN_SCRIPT
   void HandleEvent(EventChainPostVisitor& aVisitor) override {
->>>>>>> upstream-releases
     if (aVisitor.mPresContext) {
       nsIFrame* frame = aVisitor.mPresContext->GetPrimaryFrameFor(mTarget);
       if (frame) {
-<<<<<<< HEAD
-        frame->HandleEvent(aVisitor.mPresContext, aVisitor.mEvent->AsGUIEvent(),
-||||||| merged common ancestors
-        frame->HandleEvent(aVisitor.mPresContext,
-                           aVisitor.mEvent->AsGUIEvent(),
-=======
         frame->HandleEvent(MOZ_KnownLive(aVisitor.mPresContext),
                            aVisitor.mEvent->AsGUIEvent(),
->>>>>>> upstream-releases
                            &aVisitor.mEventStatus);
       }
     }
@@ -5232,13 +4074,6 @@ class MOZ_STACK_CLASS ESMEventCB : public EventDispatchingCallback {
   nsCOMPtr<nsIContent> mTarget;
 };
 
-<<<<<<< HEAD
-/*static*/ bool EventStateManager::IsHandlingUserInput() {
-||||||| merged common ancestors
-/*static*/ bool
-EventStateManager::IsHandlingUserInput()
-{
-=======
 /*static*/
 bool EventStateManager::IsUserInteractionEvent(const WidgetEvent* aEvent) {
   if (!aEvent->IsTrusted()) {
@@ -5274,34 +4109,16 @@ bool EventStateManager::IsUserInteractionEvent(const WidgetEvent* aEvent) {
 
 /*static*/
 bool EventStateManager::IsHandlingUserInput() {
->>>>>>> upstream-releases
   return sUserInputEventDepth > 0;
 }
 
-<<<<<<< HEAD
-/*static*/ bool EventStateManager::IsHandlingKeyboardInput() {
-||||||| merged common ancestors
-/*static*/ bool
-EventStateManager::IsHandlingKeyboardInput()
-{
-=======
 /*static*/
 bool EventStateManager::IsHandlingKeyboardInput() {
->>>>>>> upstream-releases
   return sUserKeyboardEventDepth > 0;
 }
 
-<<<<<<< HEAD
-/*static*/ void EventStateManager::StartHandlingUserInput(
-    EventMessage aMessage) {
-||||||| merged common ancestors
-/*static*/ void
-EventStateManager::StartHandlingUserInput(EventMessage aMessage)
-{
-=======
 /*static*/
 void EventStateManager::StartHandlingUserInput(EventMessage aMessage) {
->>>>>>> upstream-releases
   ++sUserInputEventDepth;
   if (sUserInputEventDepth == 1) {
     sLatestUserInputStart = sHandlingInputStart = TimeStamp::Now();
@@ -5311,17 +4128,8 @@ void EventStateManager::StartHandlingUserInput(EventMessage aMessage) {
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void EventStateManager::StopHandlingUserInput(
-    EventMessage aMessage) {
-||||||| merged common ancestors
-/*static*/ void
-EventStateManager::StopHandlingUserInput(EventMessage aMessage)
-{
-=======
 /*static*/
 void EventStateManager::StopHandlingUserInput(EventMessage aMessage) {
->>>>>>> upstream-releases
   --sUserInputEventDepth;
   if (sUserInputEventDepth == 0) {
     sHandlingInputStart = TimeStamp();
@@ -5572,32 +4380,12 @@ void EventStateManager::NotifyMouseOver(WidgetMouseEvent* aMouseEvent,
   // document's ESM state to indicate that the mouse is over the
   // content associated with our subdocument.
   EnsureDocument(mPresContext);
-<<<<<<< HEAD
-  if (nsIDocument* parentDoc = mDocument->GetParentDocument()) {
-||||||| merged common ancestors
-  if (nsIDocument *parentDoc = mDocument->GetParentDocument()) {
-=======
   if (Document* parentDoc = mDocument->GetParentDocument()) {
->>>>>>> upstream-releases
     if (nsCOMPtr<nsIContent> docContent =
-<<<<<<< HEAD
-            parentDoc->FindContentForSubDocument(mDocument)) {
-      if (nsIPresShell* parentShell = parentDoc->GetShell()) {
-||||||| merged common ancestors
-          parentDoc->FindContentForSubDocument(mDocument)) {
-      if (nsIPresShell *parentShell = parentDoc->GetShell()) {
-=======
             parentDoc->FindContentForSubDocument(mDocument)) {
       if (PresShell* parentPresShell = parentDoc->GetPresShell()) {
->>>>>>> upstream-releases
         RefPtr<EventStateManager> parentESM =
-<<<<<<< HEAD
-            parentShell->GetPresContext()->EventStateManager();
-||||||| merged common ancestors
-          parentShell->GetPresContext()->EventStateManager();
-=======
             parentPresShell->GetPresContext()->EventStateManager();
->>>>>>> upstream-releases
         parentESM->NotifyMouseOver(aMouseEvent, docContent);
       }
     }
@@ -5654,21 +4442,9 @@ static LayoutDeviceIntPoint GetWindowClientRectCenter(nsIWidget* aWidget) {
   return point - aWidget->WidgetToScreenOffset();
 }
 
-<<<<<<< HEAD
-void EventStateManager::GeneratePointerEnterExit(EventMessage aMessage,
-                                                 WidgetMouseEvent* aEvent) {
-  if (!PointerEventHandler::IsPointerEventEnabled()) {
-||||||| merged common ancestors
-void
-EventStateManager::GeneratePointerEnterExit(EventMessage aMessage,
-                                            WidgetMouseEvent* aEvent)
-{
-  if (!PointerEventHandler::IsPointerEventEnabled()) {
-=======
 void EventStateManager::GeneratePointerEnterExit(EventMessage aMessage,
                                                  WidgetMouseEvent* aEvent) {
   if (!StaticPrefs::dom_w3c_pointer_events_enabled()) {
->>>>>>> upstream-releases
     return;
   }
   WidgetPointerEvent pointerEvent(*aEvent);
@@ -5676,18 +4452,9 @@ void EventStateManager::GeneratePointerEnterExit(EventMessage aMessage,
   GenerateMouseEnterExit(&pointerEvent);
 }
 
-<<<<<<< HEAD
-/* static */ void EventStateManager::UpdateLastRefPointOfMouseEvent(
-    WidgetMouseEvent* aMouseEvent) {
-||||||| merged common ancestors
-/* static */ void
-EventStateManager::UpdateLastRefPointOfMouseEvent(WidgetMouseEvent* aMouseEvent)
-{
-=======
 /* static */
 void EventStateManager::UpdateLastRefPointOfMouseEvent(
     WidgetMouseEvent* aMouseEvent) {
->>>>>>> upstream-releases
   if (aMouseEvent->mMessage != eMouseMove &&
       aMouseEvent->mMessage != ePointerMove) {
     return;
@@ -5717,20 +4484,9 @@ void EventStateManager::UpdateLastRefPointOfMouseEvent(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void
-EventStateManager::ResetPointerToWindowCenterWhilePointerLocked(
-    WidgetMouseEvent* aMouseEvent) {
-||||||| merged common ancestors
-/* static */ void
-EventStateManager::ResetPointerToWindowCenterWhilePointerLocked(
-                     WidgetMouseEvent* aMouseEvent)
-{
-=======
 /* static */
 void EventStateManager::ResetPointerToWindowCenterWhilePointerLocked(
     WidgetMouseEvent* aMouseEvent) {
->>>>>>> upstream-releases
   MOZ_ASSERT(sIsPointerLocked);
   if ((aMouseEvent->mMessage != eMouseMove &&
        aMouseEvent->mMessage != ePointerMove) ||
@@ -5771,18 +4527,9 @@ void EventStateManager::ResetPointerToWindowCenterWhilePointerLocked(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void EventStateManager::UpdateLastPointerPosition(
-    WidgetMouseEvent* aMouseEvent) {
-||||||| merged common ancestors
-/* static */ void
-EventStateManager::UpdateLastPointerPosition(WidgetMouseEvent* aMouseEvent)
-{
-=======
 /* static */
 void EventStateManager::UpdateLastPointerPosition(
     WidgetMouseEvent* aMouseEvent) {
->>>>>>> upstream-releases
   if (aMouseEvent->mMessage != eMouseMove) {
     return;
   }
@@ -5875,19 +4622,9 @@ OverOutElementsWrapper* EventStateManager::GetWrapperByEventID(
       .OrInsert([]() { return new OverOutElementsWrapper(); });
 }
 
-<<<<<<< HEAD
-/* static */ void EventStateManager::SetPointerLock(nsIWidget* aWidget,
-                                                    nsIContent* aElement) {
-||||||| merged common ancestors
-/* static */ void
-EventStateManager::SetPointerLock(nsIWidget* aWidget,
-                                  nsIContent* aElement)
-{
-=======
 /* static */
 void EventStateManager::SetPointerLock(nsIWidget* aWidget,
                                        nsIContent* aElement) {
->>>>>>> upstream-releases
   // NOTE: aElement will be nullptr when unlocking.
   sIsPointerLocked = !!aElement;
 
@@ -6062,16 +4799,9 @@ void EventStateManager::FireDragEnterOrExit(nsPresContext* aPresContext,
   }
 
   // Finally dispatch the event to the frame
-<<<<<<< HEAD
-  if (aTargetFrame) aTargetFrame->HandleEvent(aPresContext, &event, &status);
-||||||| merged common ancestors
-  if (aTargetFrame)
-    aTargetFrame->HandleEvent(aPresContext, &event, &status);
-=======
   if (aTargetFrame) {
     aTargetFrame->HandleEvent(aPresContext, &event, &status);
   }
->>>>>>> upstream-releases
 }
 
 void EventStateManager::UpdateDragDataTransfer(WidgetDragEvent* dragEvent) {
@@ -6109,38 +4839,6 @@ nsresult EventStateManager::SetClickCount(WidgetMouseEvent* aEvent,
     }
   }
 
-<<<<<<< HEAD
-  switch (aEvent->button) {
-    case WidgetMouseEvent::eLeftButton:
-      if (aEvent->mMessage == eMouseDown) {
-        mLastLeftMouseDownContent = mouseContent;
-        mLastLeftMouseDownContentParent = mouseContentParent;
-      } else if (aEvent->mMessage == eMouseUp) {
-        if (mLastLeftMouseDownContent == mouseContent ||
-            mLastLeftMouseDownContentParent == mouseContent ||
-            mLastLeftMouseDownContent == mouseContentParent) {
-          aEvent->mClickCount = mLClickCount;
-          mLClickCount = 0;
-        } else {
-          aEvent->mClickCount = 0;
-        }
-        mLastLeftMouseDownContent = nullptr;
-        mLastLeftMouseDownContentParent = nullptr;
-||||||| merged common ancestors
-  switch (aEvent->button) {
-  case WidgetMouseEvent::eLeftButton:
-    if (aEvent->mMessage == eMouseDown) {
-      mLastLeftMouseDownContent = mouseContent;
-      mLastLeftMouseDownContentParent = mouseContentParent;
-    } else if (aEvent->mMessage == eMouseUp) {
-      if (mLastLeftMouseDownContent == mouseContent ||
-          mLastLeftMouseDownContentParent == mouseContent ||
-          mLastLeftMouseDownContent == mouseContentParent) {
-        aEvent->mClickCount = mLClickCount;
-        mLClickCount = 0;
-      } else {
-        aEvent->mClickCount = 0;
-=======
   switch (aEvent->mButton) {
     case MouseButton::eLeft:
       if (aEvent->mMessage == eMouseDown) {
@@ -6156,45 +4854,7 @@ nsresult EventStateManager::SetClickCount(WidgetMouseEvent* aEvent,
           aEvent->mClickCount = 0;
         }
         mLastLeftMouseDownContent = nullptr;
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-      break;
-
-    case WidgetMouseEvent::eMiddleButton:
-      if (aEvent->mMessage == eMouseDown) {
-        mLastMiddleMouseDownContent = mouseContent;
-        mLastMiddleMouseDownContentParent = mouseContentParent;
-      } else if (aEvent->mMessage == eMouseUp) {
-        if (mLastMiddleMouseDownContent == mouseContent ||
-            mLastMiddleMouseDownContentParent == mouseContent ||
-            mLastMiddleMouseDownContent == mouseContentParent) {
-          aEvent->mClickCount = mMClickCount;
-          mMClickCount = 0;
-        } else {
-          aEvent->mClickCount = 0;
-        }
-        mLastMiddleMouseDownContent = nullptr;
-        mLastMiddleMouseDownContentParent = nullptr;
-||||||| merged common ancestors
-      mLastLeftMouseDownContent = nullptr;
-      mLastLeftMouseDownContentParent = nullptr;
-    }
-    break;
-
-  case WidgetMouseEvent::eMiddleButton:
-    if (aEvent->mMessage == eMouseDown) {
-      mLastMiddleMouseDownContent = mouseContent;
-      mLastMiddleMouseDownContentParent = mouseContentParent;
-    } else if (aEvent->mMessage == eMouseUp) {
-      if (mLastMiddleMouseDownContent == mouseContent ||
-          mLastMiddleMouseDownContentParent == mouseContent ||
-          mLastMiddleMouseDownContent == mouseContentParent) {
-        aEvent->mClickCount = mMClickCount;
-        mMClickCount = 0;
-      } else {
-        aEvent->mClickCount = 0;
-=======
       break;
 
     case MouseButton::eMiddle:
@@ -6211,45 +4871,7 @@ nsresult EventStateManager::SetClickCount(WidgetMouseEvent* aEvent,
           aEvent->mClickCount = 0;
         }
         mLastMiddleMouseDownContent = nullptr;
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-      break;
-
-    case WidgetMouseEvent::eRightButton:
-      if (aEvent->mMessage == eMouseDown) {
-        mLastRightMouseDownContent = mouseContent;
-        mLastRightMouseDownContentParent = mouseContentParent;
-      } else if (aEvent->mMessage == eMouseUp) {
-        if (mLastRightMouseDownContent == mouseContent ||
-            mLastRightMouseDownContentParent == mouseContent ||
-            mLastRightMouseDownContent == mouseContentParent) {
-          aEvent->mClickCount = mRClickCount;
-          mRClickCount = 0;
-        } else {
-          aEvent->mClickCount = 0;
-        }
-        mLastRightMouseDownContent = nullptr;
-        mLastRightMouseDownContentParent = nullptr;
-||||||| merged common ancestors
-      mLastMiddleMouseDownContent = nullptr;
-      mLastMiddleMouseDownContentParent = nullptr;
-    }
-    break;
-
-  case WidgetMouseEvent::eRightButton:
-    if (aEvent->mMessage == eMouseDown) {
-      mLastRightMouseDownContent = mouseContent;
-      mLastRightMouseDownContentParent = mouseContentParent;
-    } else if (aEvent->mMessage == eMouseUp) {
-      if (mLastRightMouseDownContent == mouseContent ||
-          mLastRightMouseDownContentParent == mouseContent ||
-          mLastRightMouseDownContent == mouseContentParent) {
-        aEvent->mClickCount = mRClickCount;
-        mRClickCount = 0;
-      } else {
-        aEvent->mClickCount = 0;
-=======
       break;
 
     case MouseButton::eRight:
@@ -6266,7 +4888,6 @@ nsresult EventStateManager::SetClickCount(WidgetMouseEvent* aEvent,
           aEvent->mClickCount = 0;
         }
         mLastRightMouseDownContent = nullptr;
->>>>>>> upstream-releases
       }
       break;
   }
@@ -6295,30 +4916,11 @@ bool EventStateManager::EventCausesClickEvents(
   return !(aMouseEvent.mWidget && !aMouseEvent.mWidget->IsEnabled());
 }
 
-<<<<<<< HEAD
-nsresult EventStateManager::InitAndDispatchClickEvent(
-    WidgetMouseEvent* aMouseUpEvent, nsEventStatus* aStatus,
-    EventMessage aMessage, nsIPresShell* aPresShell,
-    nsIContent* aMouseUpContent, AutoWeakFrame aCurrentTarget,
-    bool aNoContentDispatch, nsIContent* aOverrideClickTarget) {
-||||||| merged common ancestors
-nsresult
-EventStateManager::InitAndDispatchClickEvent(WidgetMouseEvent* aMouseUpEvent,
-                                             nsEventStatus* aStatus,
-                                             EventMessage aMessage,
-                                             nsIPresShell* aPresShell,
-                                             nsIContent* aMouseUpContent,
-                                             AutoWeakFrame aCurrentTarget,
-                                             bool aNoContentDispatch,
-                                             nsIContent* aOverrideClickTarget)
-{
-=======
 nsresult EventStateManager::InitAndDispatchClickEvent(
     WidgetMouseEvent* aMouseUpEvent, nsEventStatus* aStatus,
     EventMessage aMessage, PresShell* aPresShell, nsIContent* aMouseUpContent,
     AutoWeakFrame aCurrentTarget, bool aNoContentDispatch,
     nsIContent* aOverrideClickTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aMouseUpEvent);
   MOZ_ASSERT(EventCausesClickEvents(*aMouseUpEvent));
   MOZ_ASSERT(aMouseUpContent || aCurrentTarget || aOverrideClickTarget);
@@ -6353,16 +4955,8 @@ nsresult EventStateManager::InitAndDispatchClickEvent(
   // cleared by EventStateManager::PreHandleEvent().  Therefore, dispatching
   // an event means that previous event status will be ignored.
   nsEventStatus status = nsEventStatus_eIgnore;
-<<<<<<< HEAD
-  nsresult rv =
-      aPresShell->HandleEventWithTarget(&event, targetFrame, target, &status);
-||||||| merged common ancestors
-  nsresult rv = aPresShell->HandleEventWithTarget(&event, targetFrame,
-                                                  target, &status);
-=======
   nsresult rv = aPresShell->HandleEventWithTarget(
       &event, targetFrame, MOZ_KnownLive(target), &status);
->>>>>>> upstream-releases
   // Copy mMultipleActionsPrevented flag from a click event to the mouseup
   // event only when it's set to true.  It may be set to true if an editor has
   // already handled it.  This is important to avoid two or more default
@@ -6445,25 +5039,10 @@ nsresult EventStateManager::PostHandleMouseUp(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult EventStateManager::DispatchClickEvents(
-    nsIPresShell* aPresShell, WidgetMouseEvent* aMouseUpEvent,
-    nsEventStatus* aStatus, nsIContent* aMouseUpContent,
-    nsIContent* aOverrideClickTarget) {
-||||||| merged common ancestors
-nsresult
-EventStateManager::DispatchClickEvents(nsIPresShell* aPresShell,
-                                       WidgetMouseEvent* aMouseUpEvent,
-                                       nsEventStatus* aStatus,
-                                       nsIContent* aMouseUpContent,
-                                       nsIContent* aOverrideClickTarget)
-{
-=======
 nsresult EventStateManager::DispatchClickEvents(
     PresShell* aPresShell, WidgetMouseEvent* aMouseUpEvent,
     nsEventStatus* aStatus, nsIContent* aClickTarget,
     nsIContent* aOverrideClickTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aPresShell);
   MOZ_ASSERT(aMouseUpEvent);
   MOZ_ASSERT(EventCausesClickEvents(*aMouseUpEvent));
@@ -6471,39 +5050,15 @@ nsresult EventStateManager::DispatchClickEvents(
   MOZ_ASSERT(aClickTarget || aOverrideClickTarget);
 
   bool notDispatchToContents =
-<<<<<<< HEAD
-      (aMouseUpEvent->button == WidgetMouseEvent::eMiddleButton ||
-       aMouseUpEvent->button == WidgetMouseEvent::eRightButton);
-||||||| merged common ancestors
-   (aMouseUpEvent->button == WidgetMouseEvent::eMiddleButton ||
-    aMouseUpEvent->button == WidgetMouseEvent::eRightButton);
-=======
       (aMouseUpEvent->mButton == MouseButton::eMiddle ||
        aMouseUpEvent->mButton == MouseButton::eRight);
->>>>>>> upstream-releases
 
   bool fireAuxClick = notDispatchToContents;
 
-<<<<<<< HEAD
-  // HandleEvent clears out mCurrentTarget which we might need again
-  AutoWeakFrame currentTarget = mCurrentTarget;
-  nsresult rv = InitAndDispatchClickEvent(
-      aMouseUpEvent, aStatus, eMouseClick, aPresShell, aMouseUpContent,
-      currentTarget, notDispatchToContents, aOverrideClickTarget);
-||||||| merged common ancestors
-  // HandleEvent clears out mCurrentTarget which we might need again
-  AutoWeakFrame currentTarget = mCurrentTarget;
-  nsresult rv =
-    InitAndDispatchClickEvent(aMouseUpEvent, aStatus, eMouseClick,
-                              aPresShell, aMouseUpContent, currentTarget,
-                              notDispatchToContents,
-                              aOverrideClickTarget);
-=======
   AutoWeakFrame currentTarget = aClickTarget->GetPrimaryFrame();
   nsresult rv = InitAndDispatchClickEvent(
       aMouseUpEvent, aStatus, eMouseClick, aPresShell, aClickTarget,
       currentTarget, notDispatchToContents, aOverrideClickTarget);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
@@ -6518,73 +5073,22 @@ nsresult EventStateManager::DispatchClickEvents(
   }
 
   // Fire double click event if click count is 2.
-<<<<<<< HEAD
-  if (aMouseUpEvent->mClickCount == 2 && aMouseUpContent &&
-      aMouseUpContent->IsInComposedDoc()) {
-||||||| merged common ancestors
-  if (aMouseUpEvent->mClickCount == 2 &&
-      aMouseUpContent && aMouseUpContent->IsInComposedDoc()) {
-=======
   if (aMouseUpEvent->mClickCount == 2 && !fireAuxClick && aClickTarget &&
       aClickTarget->IsInComposedDoc()) {
->>>>>>> upstream-releases
     rv = InitAndDispatchClickEvent(aMouseUpEvent, aStatus, eMouseDoubleClick,
-<<<<<<< HEAD
-                                   aPresShell, aMouseUpContent, currentTarget,
-                                   notDispatchToContents, aOverrideClickTarget);
-||||||| merged common ancestors
-                                   aPresShell, aMouseUpContent, currentTarget,
-                                   notDispatchToContents,
-                                   aOverrideClickTarget);
-=======
                                    aPresShell, aClickTarget, currentTarget,
                                    notDispatchToContents, aOverrideClickTarget);
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
   }
 
-<<<<<<< HEAD
-  // Fire auxclick even if necessary.
-  if (fireAuxClick && aMouseUpContent && aMouseUpContent->IsInComposedDoc()) {
-    rv = InitAndDispatchClickEvent(aMouseUpEvent, aStatus, eMouseAuxClick,
-                                   aPresShell, aMouseUpContent, currentTarget,
-                                   false, aOverrideClickTarget);
-    NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to dispatch eMouseAuxClick");
-  }
-
-||||||| merged common ancestors
-  // Fire auxclick even if necessary.
-  if (fireAuxClick &&
-      aMouseUpContent && aMouseUpContent->IsInComposedDoc()) {
-    rv = InitAndDispatchClickEvent(aMouseUpEvent, aStatus, eMouseAuxClick,
-                                   aPresShell, aMouseUpContent, currentTarget,
-                                   false, aOverrideClickTarget);
-    NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to dispatch eMouseAuxClick");
-  }
-
-=======
->>>>>>> upstream-releases
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult EventStateManager::HandleMiddleClickPaste(
-    nsIPresShell* aPresShell, WidgetMouseEvent* aMouseEvent,
-    nsEventStatus* aStatus, TextEditor* aTextEditor) {
-||||||| merged common ancestors
-nsresult
-EventStateManager::HandleMiddleClickPaste(nsIPresShell* aPresShell,
-                                          WidgetMouseEvent* aMouseEvent,
-                                          nsEventStatus* aStatus,
-                                          TextEditor* aTextEditor)
-{
-=======
 nsresult EventStateManager::HandleMiddleClickPaste(
     PresShell* aPresShell, WidgetMouseEvent* aMouseEvent,
     nsEventStatus* aStatus, TextEditor* aTextEditor) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aPresShell);
   MOZ_ASSERT(aMouseEvent);
   MOZ_ASSERT((aMouseEvent->mMessage == eMouseAuxClick &&
@@ -6696,25 +5200,10 @@ nsresult EventStateManager::HandleMiddleClickPaste(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsIFrame* EventStateManager::GetEventTarget() {
-  nsIPresShell* shell;
-  if (mCurrentTarget || !mPresContext ||
-      !(shell = mPresContext->GetPresShell())) {
-||||||| merged common ancestors
-nsIFrame*
-EventStateManager::GetEventTarget()
-{
-  nsIPresShell *shell;
-  if (mCurrentTarget ||
-      !mPresContext ||
-      !(shell = mPresContext->GetPresShell())) {
-=======
 nsIFrame* EventStateManager::GetEventTarget() {
   PresShell* presShell;
   if (mCurrentTarget || !mPresContext ||
       !(presShell = mPresContext->GetPresShell())) {
->>>>>>> upstream-releases
     return mCurrentTarget;
   }
 
@@ -6742,17 +5231,7 @@ already_AddRefed<nsIContent> EventStateManager::GetEventTargetContent(
   }
 
   nsCOMPtr<nsIContent> content;
-<<<<<<< HEAD
-
-  nsIPresShell* presShell = mPresContext->GetPresShell();
-  if (presShell) {
-||||||| merged common ancestors
-
-  nsIPresShell *presShell = mPresContext->GetPresShell();
-  if (presShell) {
-=======
   if (PresShell* presShell = mPresContext->GetPresShell()) {
->>>>>>> upstream-releases
     content = presShell->GetEventTargetContent(aEvent);
   }
 
@@ -6846,32 +5325,9 @@ void EventStateManager::UpdateAncestorState(nsIContent* aStartNode,
   }
 }
 
-<<<<<<< HEAD
-bool EventStateManager::SetContentState(nsIContent* aContent,
-                                        EventStates aState) {
-  // We manage 4 states here: ACTIVE, HOVER, DRAGOVER, URLTARGET
-  // The input must be exactly one of them.
-  MOZ_ASSERT(aState == NS_EVENT_STATE_ACTIVE ||
-                 aState == NS_EVENT_STATE_HOVER ||
-                 aState == NS_EVENT_STATE_DRAGOVER ||
-                 aState == NS_EVENT_STATE_URLTARGET,
-             "Unexpected state");
-||||||| merged common ancestors
-bool
-EventStateManager::SetContentState(nsIContent* aContent, EventStates aState)
-{
-  // We manage 4 states here: ACTIVE, HOVER, DRAGOVER, URLTARGET
-  // The input must be exactly one of them.
-  MOZ_ASSERT(aState == NS_EVENT_STATE_ACTIVE ||
-             aState == NS_EVENT_STATE_HOVER ||
-             aState == NS_EVENT_STATE_DRAGOVER ||
-             aState == NS_EVENT_STATE_URLTARGET,
-             "Unexpected state");
-=======
 bool EventStateManager::SetContentState(nsIContent* aContent,
                                         EventStates aState) {
   MOZ_ASSERT(ManagesState(aState), "Unexpected state");
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIContent> notifyContent1;
   nsCOMPtr<nsIContent> notifyContent2;
@@ -7042,17 +5498,8 @@ void EventStateManager::NativeAnonymousContentRemoved(nsIContent* aContent) {
   RemoveNodeFromChainIfNeeded(NS_EVENT_STATE_ACTIVE, aContent, false);
 }
 
-<<<<<<< HEAD
-void EventStateManager::ContentRemoved(nsIDocument* aDocument,
-                                       nsIContent* aContent) {
-||||||| merged common ancestors
-void
-EventStateManager::ContentRemoved(nsIDocument* aDocument, nsIContent* aContent)
-{
-=======
 void EventStateManager::ContentRemoved(Document* aDocument,
                                        nsIContent* aContent) {
->>>>>>> upstream-releases
   /*
    * Anchor and area elements when focused or hovered might make the UI to show
    * the current link. We want to make sure that the UI gets informed when they
@@ -7126,26 +5573,10 @@ void EventStateManager::EnsureDocument(nsPresContext* aPresContext) {
   if (!mDocument) mDocument = aPresContext->Document();
 }
 
-<<<<<<< HEAD
-void EventStateManager::FlushPendingEvents(nsPresContext* aPresContext) {
-  MOZ_ASSERT(nullptr != aPresContext, "nullptr ptr");
-  nsIPresShell* shell = aPresContext->GetPresShell();
-  if (shell) {
-    shell->FlushPendingNotifications(FlushType::InterruptibleLayout);
-||||||| merged common ancestors
-void
-EventStateManager::FlushPendingEvents(nsPresContext* aPresContext)
-{
-  MOZ_ASSERT(nullptr != aPresContext, "nullptr ptr");
-  nsIPresShell *shell = aPresContext->GetPresShell();
-  if (shell) {
-    shell->FlushPendingNotifications(FlushType::InterruptibleLayout);
-=======
 void EventStateManager::FlushPendingEvents(nsPresContext* aPresContext) {
   MOZ_ASSERT(aPresContext, "nullptr ptr");
   if (RefPtr<PresShell> presShell = aPresContext->GetPresShell()) {
     presShell->FlushPendingNotifications(FlushType::InterruptibleLayout);
->>>>>>> upstream-releases
   }
 }
 
@@ -7236,39 +5667,8 @@ nsresult EventStateManager::DoContentCommandEvent(
         case eContentCommandPasteTransferable: {
           BrowserParent* remote = BrowserParent::GetFocused();
           if (remote) {
-<<<<<<< HEAD
-            NS_ENSURE_TRUE(remote->Manager()->IsContentParent(),
-                           NS_ERROR_FAILURE);
-
-||||||| merged common ancestors
-            NS_ENSURE_TRUE(remote->Manager()->IsContentParent(), NS_ERROR_FAILURE);
-
-=======
->>>>>>> upstream-releases
             nsCOMPtr<nsITransferable> transferable = aEvent->mTransferable;
             IPCDataTransfer ipcDataTransfer;
-<<<<<<< HEAD
-            ContentParent* cp = remote->Manager()->AsContentParent();
-            nsContentUtils::TransferableToIPCTransferable(
-                transferable, &ipcDataTransfer, false, nullptr, cp);
-            bool isPrivateData = transferable->GetIsPrivateData();
-            nsCOMPtr<nsIPrincipal> requestingPrincipal =
-                transferable->GetRequestingPrincipal();
-            nsContentPolicyType contentPolicyType =
-                transferable->GetContentPolicyType();
-||||||| merged common ancestors
-            ContentParent* cp = remote->Manager()->AsContentParent();
-            nsContentUtils::TransferableToIPCTransferable(transferable,
-                                                          &ipcDataTransfer,
-                                                          false, nullptr,
-                                                          cp);
-            bool isPrivateData = false;
-            transferable->GetIsPrivateData(&isPrivateData);
-            nsCOMPtr<nsIPrincipal> requestingPrincipal;
-            transferable->GetRequestingPrincipal(getter_AddRefs(requestingPrincipal));
-            nsContentPolicyType contentPolicyType = nsIContentPolicy::TYPE_OTHER;
-            transferable->GetContentPolicyType(&contentPolicyType);
-=======
             nsContentUtils::TransferableToIPCTransferable(
                 transferable, &ipcDataTransfer, false, nullptr,
                 remote->Manager());
@@ -7277,7 +5677,6 @@ nsresult EventStateManager::DoContentCommandEvent(
                 transferable->GetRequestingPrincipal();
             nsContentPolicyType contentPolicyType =
                 transferable->GetContentPolicyType();
->>>>>>> upstream-releases
             remote->SendPasteTransferable(ipcDataTransfer, isPrivateData,
                                           IPC::Principal(requestingPrincipal),
                                           contentPolicyType);
@@ -7355,21 +5754,6 @@ nsresult EventStateManager::DoContentCommandScrollEvent(
   aEvent->mSucceeded = true;
 
   nsIScrollableFrame* sf =
-<<<<<<< HEAD
-      ps->GetScrollableFrameToScroll(nsIPresShell::eEither);
-  aEvent->mIsEnabled =
-      sf ? (aEvent->mScroll.mIsHorizontal ? WheelHandlingUtils::CanScrollOn(
-                                                sf, aEvent->mScroll.mAmount, 0)
-                                          : WheelHandlingUtils::CanScrollOn(
-                                                sf, 0, aEvent->mScroll.mAmount))
-         : false;
-||||||| merged common ancestors
-    ps->GetScrollableFrameToScroll(nsIPresShell::eEither);
-  aEvent->mIsEnabled = sf ?
-    (aEvent->mScroll.mIsHorizontal ?
-      WheelHandlingUtils::CanScrollOn(sf, aEvent->mScroll.mAmount, 0) :
-      WheelHandlingUtils::CanScrollOn(sf, 0, aEvent->mScroll.mAmount)) : false;
-=======
       presShell->GetScrollableFrameToScroll(ScrollableDirection::Either);
   aEvent->mIsEnabled =
       sf ? (aEvent->mScroll.mIsHorizontal ? WheelHandlingUtils::CanScrollOn(
@@ -7377,7 +5761,6 @@ nsresult EventStateManager::DoContentCommandScrollEvent(
                                           : WheelHandlingUtils::CanScrollOn(
                                                 sf, 0, aEvent->mScroll.mAmount))
          : false;
->>>>>>> upstream-releases
 
   if (!aEvent->mIsEnabled || aEvent->mOnlyEnabledCheck) {
     return NS_OK;
@@ -7915,24 +6298,7 @@ bool EventStateManager::Prefs::sKeyCausesActivation = true;
 bool EventStateManager::Prefs::sClickHoldContextMenu = false;
 
 // static
-<<<<<<< HEAD
 void EventStateManager::Prefs::Init() {
-  DebugOnly<nsresult> rv =
-      Preferences::RegisterCallback(OnChange, "dom.popup_allowed_events");
-  MOZ_ASSERT(NS_SUCCEEDED(rv),
-             "Failed to observe \"dom.popup_allowed_events\"");
-
-||||||| merged common ancestors
-void
-EventStateManager::Prefs::Init()
-{
-  DebugOnly<nsresult> rv = Preferences::RegisterCallback(OnChange, "dom.popup_allowed_events");
-  MOZ_ASSERT(NS_SUCCEEDED(rv),
-             "Failed to observe \"dom.popup_allowed_events\"");
-
-=======
-void EventStateManager::Prefs::Init() {
->>>>>>> upstream-releases
   static bool sPrefsAlreadyCached = false;
   if (sPrefsAlreadyCached) {
     return;
@@ -7951,103 +6317,18 @@ void EventStateManager::Prefs::Init() {
   sPrefsAlreadyCached = true;
 }
 
-<<<<<<< HEAD
-// static
-void EventStateManager::Prefs::OnChange(const char* aPrefName, void*) {
-  nsDependentCString prefName(aPrefName);
-  if (prefName.EqualsLiteral("dom.popup_allowed_events")) {
-    Event::PopupAllowedEventsChanged();
-  }
-}
-
-// static
-void EventStateManager::Prefs::Shutdown() {
-  Preferences::UnregisterCallback(OnChange, "dom.popup_allowed_events");
-}
-
-||||||| merged common ancestors
-// static
-void
-EventStateManager::Prefs::OnChange(const char* aPrefName, void*)
-{
-  nsDependentCString prefName(aPrefName);
-  if (prefName.EqualsLiteral("dom.popup_allowed_events")) {
-    Event::PopupAllowedEventsChanged();
-  }
-}
-
-// static
-void
-EventStateManager::Prefs::Shutdown()
-{
-  Preferences::UnregisterCallback(OnChange, "dom.popup_allowed_events");
-}
-
-=======
->>>>>>> upstream-releases
 /******************************************************************/
 /* mozilla::AutoHandlingUserInputStatePusher                      */
 /******************************************************************/
 
 AutoHandlingUserInputStatePusher::AutoHandlingUserInputStatePusher(
-<<<<<<< HEAD
-    bool aIsHandlingUserInput, WidgetEvent* aEvent, nsIDocument* aDocument)
-    : mMessage(aEvent ? aEvent->mMessage : eVoidEvent),
-      mIsHandlingUserInput(aIsHandlingUserInput) {
-||||||| merged common ancestors
-                                    bool aIsHandlingUserInput,
-                                    WidgetEvent* aEvent,
-                                    nsIDocument* aDocument)
-  : mMessage(aEvent ? aEvent->mMessage : eVoidEvent)
-  , mIsHandlingUserInput(aIsHandlingUserInput)
-{
-=======
     bool aIsHandlingUserInput, WidgetEvent* aEvent)
     : mMessage(aEvent ? aEvent->mMessage : eVoidEvent),
       mIsHandlingUserInput(aIsHandlingUserInput) {
->>>>>>> upstream-releases
   if (!aIsHandlingUserInput) {
     return;
   }
   EventStateManager::StartHandlingUserInput(mMessage);
-<<<<<<< HEAD
-  if (mMessage == eMouseDown) {
-    nsIPresShell::SetCapturingContent(nullptr, 0);
-    nsIPresShell::AllowMouseCapture(true);
-  }
-  if (!aDocument || !aEvent || !aEvent->IsTrusted()) {
-    return;
-  }
-  if (NeedsToResetFocusManagerMouseButtonHandlingState()) {
-    nsFocusManager* fm = nsFocusManager::GetFocusManager();
-    NS_ENSURE_TRUE_VOID(fm);
-    // If it's in modal state, mouse button event handling may be nested.
-    // E.g., a modal dialog is opened at mousedown or mouseup event handler
-    // and the dialog is clicked.  Therefore, we should store current
-    // mouse button event handling document if nsFocusManager already has it.
-    mMouseButtonEventHandlingDocument =
-        fm->SetMouseButtonHandlingDocument(aDocument);
-  }
-||||||| merged common ancestors
-  if (mMessage == eMouseDown) {
-    nsIPresShell::SetCapturingContent(nullptr, 0);
-    nsIPresShell::AllowMouseCapture(true);
-  }
-  if (!aDocument || !aEvent || !aEvent->IsTrusted()) {
-    return;
-  }
-  if (NeedsToResetFocusManagerMouseButtonHandlingState()) {
-    nsFocusManager* fm = nsFocusManager::GetFocusManager();
-    NS_ENSURE_TRUE_VOID(fm);
-    // If it's in modal state, mouse button event handling may be nested.
-    // E.g., a modal dialog is opened at mousedown or mouseup event handler
-    // and the dialog is clicked.  Therefore, we should store current
-    // mouse button event handling document if nsFocusManager already has it.
-    mMouseButtonEventHandlingDocument =
-      fm->SetMouseButtonHandlingDocument(aDocument);
-  }
-=======
->>>>>>> upstream-releases
 }
 
 AutoHandlingUserInputStatePusher::~AutoHandlingUserInputStatePusher() {
@@ -8055,28 +6336,6 @@ AutoHandlingUserInputStatePusher::~AutoHandlingUserInputStatePusher() {
     return;
   }
   EventStateManager::StopHandlingUserInput(mMessage);
-<<<<<<< HEAD
-  if (mMessage == eMouseDown) {
-    nsIPresShell::AllowMouseCapture(false);
-  }
-  if (NeedsToResetFocusManagerMouseButtonHandlingState()) {
-    nsFocusManager* fm = nsFocusManager::GetFocusManager();
-    NS_ENSURE_TRUE_VOID(fm);
-    nsCOMPtr<nsIDocument> handlingDocument =
-        fm->SetMouseButtonHandlingDocument(mMouseButtonEventHandlingDocument);
-  }
-||||||| merged common ancestors
-  if (mMessage == eMouseDown) {
-    nsIPresShell::AllowMouseCapture(false);
-  }
-  if (NeedsToResetFocusManagerMouseButtonHandlingState()) {
-    nsFocusManager* fm = nsFocusManager::GetFocusManager();
-    NS_ENSURE_TRUE_VOID(fm);
-    nsCOMPtr<nsIDocument> handlingDocument =
-      fm->SetMouseButtonHandlingDocument(mMouseButtonEventHandlingDocument);
-  }
-=======
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

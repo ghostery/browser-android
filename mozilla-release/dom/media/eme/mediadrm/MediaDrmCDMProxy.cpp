@@ -28,29 +28,11 @@ MediaDrmCDMProxy::MediaDrmCDMProxy(dom::MediaKeys* aKeys,
                                    const nsAString& aKeySystem,
                                    bool aDistinctiveIdentifierRequired,
                                    bool aPersistentStateRequired,
-<<<<<<< HEAD
-                                   nsIEventTarget* aMainThread)
-    : CDMProxy(aKeys, aKeySystem, aDistinctiveIdentifierRequired,
-               aPersistentStateRequired, aMainThread),
-      mCDM(nullptr),
-      mShutdownCalled(false) {
-||||||| merged common ancestors
-                                   nsIEventTarget* aMainThread)
-  : CDMProxy(aKeys,
-             aKeySystem,
-             aDistinctiveIdentifierRequired,
-             aPersistentStateRequired,
-             aMainThread)
-  , mCDM(nullptr)
-  , mShutdownCalled(false)
-{
-=======
                                    nsISerialEventTarget* aMainThread)
     : CDMProxy(aKeys, aKeySystem, aDistinctiveIdentifierRequired,
                aPersistentStateRequired, aMainThread),
       mCDM(nullptr),
       mShutdownCalled(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_COUNT_CTOR(MediaDrmCDMProxy);
 }

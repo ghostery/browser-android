@@ -166,49 +166,8 @@ extern JS_PUBLIC_API JSObject* NewReadableDefaultStreamObject(
 
 /**
  * Returns a new instance of the ReadableStream builtin class in the current
-<<<<<<< HEAD
- * compartment. If a |proto| is passed, that gets set as the instance's
- * [[Prototype]] instead of the original value of |ReadableStream.prototype|.
-||||||| merged common ancestors
- * compartment, with the right slot layout. If a |proto| is passed, that gets
- * set as the instance's [[Prototype]] instead of the original value of
- * |ReadableStream.prototype|.
-=======
  * compartment.
->>>>>>> upstream-releases
  *
-<<<<<<< HEAD
- * The instance is optimized for operating as a byte stream backed by an
- * embedding-provided underlying source, using the virtual methods of
- * |underlyingSource| as callbacks.
-||||||| merged common ancestors
- * The instance is optimized for operating as a byte stream backed by an
- * embedding-provided underlying source, using the callbacks set via
- * |JS::SetReadableStreamCallbacks|.
- *
- * The given |flags| will be passed to all applicable callbacks and can be
- * used to disambiguate between different types of stream sources the
- * embedding might support.
- *
- * Note: the embedding is responsible for ensuring that the pointer to the
- * underlying source stays valid as long as the stream can be read from.
- * The underlying source can be freed if the tree is canceled or errored.
- * It can also be freed if the stream is destroyed. The embedding is notified
- * of that using ReadableStreamFinalizeCallback.
- *
- * Note: |underlyingSource| must have an even address.
- */
-extern JS_PUBLIC_API(JSObject*)
-NewReadableExternalSourceStreamObject(JSContext* cx, void* underlyingSource,
-                                      uint8_t flags = 0, HandleObject proto = nullptr);
-
-/**
- * Returns the flags that were passed to NewReadableExternalSourceStreamObject
- * when creating the given stream.
- *
- * Asserts that |stream| is a ReadableStream object or an unwrappable wrapper
- * for one.
-=======
  * The instance is a byte stream backed by an embedding-provided underlying
  * source, using the virtual methods of `underlyingSource` as callbacks. The
  * embedding must ensure that `*underlyingSource` lives as long as the new
@@ -235,32 +194,14 @@ NewReadableExternalSourceStreamObject(JSContext* cx, void* underlyingSource,
  *     passed as the `nsISupportsObject_alreadyAddreffed` parameter to this
  *     function. (This is how the cycle collector knows about it, so omitting
  *     this would again cause leaks.)
->>>>>>> upstream-releases
  *
-<<<<<<< HEAD
- * Note: The embedding must ensure that |*underlyingSource| lives as long as
- * the new stream object. The JS engine will call the finalize() method when
- * the stream object is destroyed.
-||||||| merged common ancestors
- * Asserts that the given stream has an embedding-provided underlying source.
-=======
  * If `proto` is non-null, it is used as the instance's [[Prototype]] instead
  * of the original value of `ReadableStream.prototype`.
->>>>>>> upstream-releases
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API JSObject* NewReadableExternalSourceStreamObject(
-    JSContext* cx, ReadableStreamUnderlyingSource* underlyingSource,
-    HandleObject proto = nullptr);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(bool)
-ReadableStreamGetEmbeddingFlags(JSContext* cx, const JSObject* stream, uint8_t* flags);
-=======
 extern JS_PUBLIC_API JSObject* NewReadableExternalSourceStreamObject(
     JSContext* cx, ReadableStreamUnderlyingSource* underlyingSource,
     void* nsISupportsObject_alreadyAddreffed = nullptr,
     HandleObject proto = nullptr);
->>>>>>> upstream-releases
 
 /**
  * Returns the embedding-provided underlying source of the given |stream|.
@@ -316,14 +257,6 @@ extern JS_PUBLIC_API bool ReadableStreamReleaseExternalUnderlyingSource(
  * Asserts that |stream| is a ReadableStream object or an unwrappable wrapper
  * for one.
  */
-<<<<<<< HEAD
-extern JS_PUBLIC_API bool ReadableStreamUpdateDataAvailableFromSource(
-    JSContext* cx, HandleObject stream, uint32_t availableData);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(bool)
-ReadableStreamUpdateDataAvailableFromSource(JSContext* cx, HandleObject stream,
-                                            uint32_t availableData);
-=======
 extern JS_PUBLIC_API bool ReadableStreamUpdateDataAvailableFromSource(
     JSContext* cx, HandleObject stream, uint32_t availableData);
 
@@ -333,7 +266,6 @@ extern JS_PUBLIC_API bool ReadableStreamUpdateDataAvailableFromSource(
  * NewReadableExternalSourceStreamObject().
  */
 extern JS_PUBLIC_API void ReadableStreamReleaseCCObject(JSObject* stream);
->>>>>>> upstream-releases
 
 /**
  * Returns true if the given object is a ReadableStream object or an

@@ -4,35 +4,6 @@
 
 //! The main cascading algorithm of the style system.
 
-<<<<<<< HEAD
-use crate::context::QuirksMode;
-use crate::custom_properties::CustomPropertiesBuilder;
-use crate::dom::TElement;
-use crate::font_metrics::FontMetricsProvider;
-use crate::logical_geometry::WritingMode;
-use crate::media_queries::Device;
-use crate::properties::{ComputedValues, StyleBuilder};
-use crate::properties::{LonghandId, LonghandIdSet};
-use crate::properties::{PropertyDeclaration, PropertyDeclarationId, DeclarationImportanceIterator};
-use crate::properties::CASCADE_PROPERTY;
-use crate::rule_cache::{RuleCache, RuleCacheConditions};
-use crate::rule_tree::{CascadeLevel, StrongRuleNode};
-use crate::selector_parser::PseudoElement;
-||||||| merged common ancestors
-use context::QuirksMode;
-use custom_properties::CustomPropertiesBuilder;
-use dom::TElement;
-use font_metrics::FontMetricsProvider;
-use logical_geometry::WritingMode;
-use media_queries::Device;
-use properties::{ComputedValues, StyleBuilder};
-use properties::{LonghandId, LonghandIdSet};
-use properties::{PropertyDeclaration, PropertyDeclarationId, DeclarationImportanceIterator};
-use properties::CASCADE_PROPERTY;
-use rule_cache::{RuleCache, RuleCacheConditions};
-use rule_tree::{CascadeLevel, StrongRuleNode};
-use selector_parser::PseudoElement;
-=======
 use crate::context::QuirksMode;
 use crate::custom_properties::CustomPropertiesBuilder;
 use crate::dom::TElement;
@@ -47,7 +18,6 @@ use crate::rule_cache::{RuleCache, RuleCacheConditions};
 use crate::rule_tree::{CascadeLevel, StrongRuleNode};
 use crate::selector_parser::PseudoElement;
 use crate::stylesheets::{Origin, PerOrigin};
->>>>>>> upstream-releases
 use servo_arc::Arc;
 use crate::shared_lock::StylesheetGuards;
 use smallbitvec::SmallBitVec;
@@ -736,33 +706,6 @@ impl<'a, 'b: 'a> Cascade<'a, 'b> {
                 )
             };
 
-<<<<<<< HEAD
-                // FIXME(emilio): Why both setting the generic and passing it
-                // down?
-                let pres_context = self.context.builder.device.pres_context();
-                let gecko_font = self.context.builder.mutate_font().gecko_mut();
-                gecko_font.mGenericID = generic;
-                unsafe {
-                    crate::gecko_bindings::bindings::Gecko_nsStyleFont_PrefillDefaultForGeneric(
-                        gecko_font,
-                        pres_context,
-                        generic,
-                    );
-                }
-||||||| merged common ancestors
-                // FIXME(emilio): Why both setting the generic and passing it
-                // down?
-                let pres_context = self.context.builder.device.pres_context();
-                let gecko_font = self.context.builder.mutate_font().gecko_mut();
-                gecko_font.mGenericID = generic;
-                unsafe {
-                    ::gecko_bindings::bindings::Gecko_nsStyleFont_PrefillDefaultForGeneric(
-                        gecko_font,
-                        pres_context,
-                        generic,
-                    );
-                }
-=======
             // We prioritize user fonts over document fonts if the pref is set,
             // and we don't have a generic family already (or we're using
             // cursive or fantasy, since they're ignored, see bug 789788), and
@@ -789,7 +732,6 @@ impl<'a, 'b: 'a> Cascade<'a, 'b> {
         if prioritize_user_fonts {
             unsafe {
                 bindings::Gecko_nsStyleFont_PrioritizeUserFonts(font, default_font_type)
->>>>>>> upstream-releases
             }
         }
     }
@@ -838,53 +780,6 @@ impl<'a, 'b: 'a> Cascade<'a, 'b> {
             return;
         }
 
-<<<<<<< HEAD
-        if let Some(declaration) = font_size {
-            self.apply_declaration_ignoring_phase(LonghandId::FontSize, &declaration);
-        } else {
-            #[cfg(feature = "gecko")]
-            {
-                if self.seen.contains(LonghandId::XLang) ||
-                    self.seen.contains(LonghandId::MozScriptLevel) ||
-                    self.seen.contains(LonghandId::MozMinFontSizeRatio) ||
-                    self.seen.contains(LonghandId::FontFamily)
-                {
-                    use crate::properties::{CSSWideKeyword, WideKeywordDeclaration};
-
-                    // font-size must be explicitly inherited to handle lang
-                    // changes and scriptlevel changes.
-                    //
-                    // FIXME(emilio): That looks a bit bogus...
-                    let inherit = PropertyDeclaration::CSSWideKeyword(WideKeywordDeclaration {
-                        id: LonghandId::FontSize,
-                        keyword: CSSWideKeyword::Inherit,
-                    });
-
-                    self.apply_declaration_ignoring_phase(LonghandId::FontSize, &inherit);
-||||||| merged common ancestors
-        if let Some(declaration) = font_size {
-            self.apply_declaration_ignoring_phase(LonghandId::FontSize, &declaration);
-        } else {
-            #[cfg(feature = "gecko")]
-            {
-                if self.seen.contains(LonghandId::XLang) ||
-                    self.seen.contains(LonghandId::MozScriptLevel) ||
-                    self.seen.contains(LonghandId::MozMinFontSizeRatio) ||
-                    self.seen.contains(LonghandId::FontFamily)
-                {
-                    use properties::{CSSWideKeyword, WideKeywordDeclaration};
-
-                    // font-size must be explicitly inherited to handle lang
-                    // changes and scriptlevel changes.
-                    //
-                    // FIXME(emilio): That looks a bit bogus...
-                    let inherit = PropertyDeclaration::CSSWideKeyword(WideKeywordDeclaration {
-                        id: LonghandId::FontSize,
-                        keyword: CSSWideKeyword::Inherit,
-                    });
-
-                    self.apply_declaration_ignoring_phase(LonghandId::FontSize, &inherit);
-=======
         let builder = &mut self.context.builder;
         let min_font_size = {
             let font = builder.get_font().gecko();
@@ -987,7 +882,6 @@ impl<'a, 'b: 'a> Cascade<'a, 'b> {
                     (parent_size, new_unconstrained_size)
                 } else {
                     (cmp::max(min, new_size), new_unconstrained_size)
->>>>>>> upstream-releases
                 }
             } else {
                 // If the new unconstrained size is larger than the min size,

@@ -4,18 +4,11 @@
 
 //! Specified types for CSS values related to backgrounds.
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::generics::background::BackgroundSize as GenericBackgroundSize;
-use crate::values::specified::length::NonNegativeLengthOrPercentageOrAuto;
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::generics::background::BackgroundSize as GenericBackgroundSize;
 use crate::values::specified::length::{
     NonNegativeLengthPercentage, NonNegativeLengthPercentageOrAuto,
 };
->>>>>>> upstream-releases
 use cssparser::Parser;
 use selectors::parser::SelectorParseErrorKind;
 use std::fmt::{self, Write};
@@ -71,20 +64,6 @@ pub enum BackgroundRepeatKeyword {
 /// axes.
 ///
 /// https://drafts.csswg.org/css-backgrounds/#the-background-repeat
-<<<<<<< HEAD
-#[derive(Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToComputedValue)]
-pub struct BackgroundRepeat(pub BackgroundRepeatKeyword, pub BackgroundRepeatKeyword);
-||||||| merged common ancestors
-#[derive(Clone, Copy, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToCss)]
-pub enum BackgroundRepeat {
-    /// `repeat-x`
-    RepeatX,
-    /// `repeat-y`
-    RepeatY,
-    /// `[repeat | space | round | no-repeat]{1,2}`
-    Keywords(BackgroundRepeatKeyword, Option<BackgroundRepeatKeyword>),
-}
-=======
 #[derive(
     Clone,
     Debug,
@@ -96,7 +75,6 @@ pub enum BackgroundRepeat {
     ToShmem,
 )]
 pub struct BackgroundRepeat(pub BackgroundRepeatKeyword, pub BackgroundRepeatKeyword);
->>>>>>> upstream-releases
 
 impl BackgroundRepeat {
     /// Returns the `repeat repeat` value.

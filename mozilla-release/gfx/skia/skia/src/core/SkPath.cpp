@@ -1180,52 +1180,6 @@ SkPath& SkPath::addRRect(const SkRRect &rrect, Direction dir, unsigned startInde
     bool isRRect = hasOnlyMoveTos();
     const SkRect& bounds = rrect.getBounds();
 
-<<<<<<< HEAD
-    if (rrect.isRect() || rrect.isEmpty()) {
-        // degenerate(rect) => radii points are collapsing
-        this->addRect(bounds, dir, (startIndex + 1) / 2);
-    } else if (rrect.isOval()) {
-        // degenerate(oval) => line points are collapsing
-        this->addOval(bounds, dir, startIndex / 2);
-    } else {
-        fFirstDirection = this->hasOnlyMoveTos() ?
-                            (SkPathPriv::FirstDirection)dir : SkPathPriv::kUnknown_FirstDirection;
-
-        SkAutoPathBoundsUpdate apbu(this, bounds);
-        SkAutoDisableDirectionCheck addc(this);
-
-        // we start with a conic on odd indices when moving CW vs. even indices when moving CCW
-        const bool startsWithConic = ((startIndex & 1) == (dir == kCW_Direction));
-        const SkScalar weight = SK_ScalarRoot2Over2;
-
-        SkDEBUGCODE(int initialVerbCount = this->countVerbs());
-        const int kVerbs = startsWithConic
-            ? 9   // moveTo + 4x conicTo + 3x lineTo + close
-            : 10; // moveTo + 4x lineTo + 4x conicTo + close
-        this->incReserve(kVerbs);
-
-        RRectPointIterator rrectIter(rrect, dir, startIndex);
-        // Corner iterator indices follow the collapsed radii model,
-        // adjusted such that the start pt is "behind" the radii start pt.
-        const unsigned rectStartIndex = startIndex / 2 + (dir == kCW_Direction ? 0 : 1);
-        RectPointIterator rectIter(bounds, dir, rectStartIndex);
-
-        this->moveTo(rrectIter.current());
-        if (startsWithConic) {
-            for (unsigned i = 0; i < 3; ++i) {
-                this->conicTo(rectIter.next(), rrectIter.next(), weight);
-                this->lineTo(rrectIter.next());
-            }
-            this->conicTo(rectIter.next(), rrectIter.next(), weight);
-            // final lineTo handled by close().
-||||||| merged common ancestors
-        if (rrect.isRect() || rrect.isEmpty()) {
-            // degenerate(rect) => radii points are collapsing
-            this->addRect(bounds, dir, (startIndex + 1) / 2);
-        } else if (rrect.isOval()) {
-            // degenerate(oval) => line points are collapsing
-            this->addOval(bounds, dir, startIndex / 2);
-=======
     if (rrect.isRect() || rrect.isEmpty()) {
         // degenerate(rect) => radii points are collapsing
         this->addRect(bounds, dir, (startIndex + 1) / 2);
@@ -1263,7 +1217,6 @@ SkPath& SkPath::addRRect(const SkRRect &rrect, Direction dir, unsigned startInde
             }
             this->conicTo(rectIter.next(), rrectIter.next(), weight);
             // final lineTo handled by close().
->>>>>>> upstream-releases
         } else {
             for (unsigned i = 0; i < 4; ++i) {
                 this->lineTo(rrectIter.next());
@@ -2551,22 +2504,12 @@ private:
 };
 
 SkPath::Convexity SkPath::internalGetConvexity() const {
-<<<<<<< HEAD
-    // Sometimes we think we need to calculate convexity but another thread already did.
-    for (auto c = (Convexity)fConvexity; c != kUnknown_Convexity; ) {
-        return c;
-    }
-
-||||||| merged common ancestors
-    SkASSERT(kUnknown_Convexity == fConvexity);
-=======
     // Sometimes we think we need to calculate convexity but another thread already did.
     auto c = this->getConvexityOrUnknown();
     if (c != kUnknown_Convexity) {
         return c;
     }
 
->>>>>>> upstream-releases
     SkPoint         pts[4];
     SkPath::Verb    verb;
     SkPath::Iter    iter(*this, true);
@@ -3886,14 +3829,8 @@ void SkPathPriv::CreateDrawArcPath(SkPath* path, const SkRect& oval, SkScalar st
     if (useCenter) {
         path->close();
     }
-<<<<<<< HEAD
-    path->setConvexity(convex ? SkPath::kConvex_Convexity : SkPath::kConcave_Convexity);
-    path->fFirstDirection.store(firstDir);
-||||||| merged common ancestors
-=======
     path->setConvexity(convex ? SkPath::kConvex_Convexity : SkPath::kConcave_Convexity);
     path->setFirstDirection(firstDir);
->>>>>>> upstream-releases
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

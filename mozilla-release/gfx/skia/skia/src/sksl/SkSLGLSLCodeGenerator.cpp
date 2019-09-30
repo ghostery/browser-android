@@ -90,26 +90,10 @@ String GLSLCodeGenerator::getTypeName(const Type& type) {
             else if (component == *fContext.fDouble_Type) {
                 result = "dvec";
             }
-<<<<<<< HEAD
-            else if (component == *fContext.fInt_Type ||
-                     component == *fContext.fShort_Type ||
-                     component == *fContext.fByte_Type) {
-||||||| merged common ancestors
-            else if (component == *fContext.fInt_Type || component == *fContext.fShort_Type) {
-=======
             else if (component.isSigned()) {
->>>>>>> upstream-releases
                 result = "ivec";
             }
-<<<<<<< HEAD
-            else if (component == *fContext.fUInt_Type ||
-                     component == *fContext.fUShort_Type ||
-                     component == *fContext.fUByte_Type) {
-||||||| merged common ancestors
-            else if (component == *fContext.fUInt_Type || component == *fContext.fUShort_Type) {
-=======
             else if (component.isUnsigned()) {
->>>>>>> upstream-releases
                 result = "uvec";
             }
             else if (component == *fContext.fBool_Type) {
@@ -465,84 +449,6 @@ void GLSLCodeGenerator::writeTransposeHack(const Expression& mat) {
 std::unordered_map<StringFragment, GLSLCodeGenerator::FunctionClass>*
                                                       GLSLCodeGenerator::fFunctionClasses = nullptr;
 
-<<<<<<< HEAD
-void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
-#ifdef SKSL_STANDALONE
-    if (!fFunctionClasses) {
-#else
-    static SkOnce once;
-    once([] {
-#endif
-        fFunctionClasses = new std::unordered_map<StringFragment, FunctionClass>();
-        (*fFunctionClasses)["abs"]         = FunctionClass::kAbs;
-        (*fFunctionClasses)["atan"]        = FunctionClass::kAtan;
-        (*fFunctionClasses)["determinant"] = FunctionClass::kDeterminant;
-        (*fFunctionClasses)["dFdx"]        = FunctionClass::kDerivative;
-        (*fFunctionClasses)["dFdy"]        = FunctionClass::kDerivative;
-        (*fFunctionClasses)["fract"]       = FunctionClass::kFract;
-        (*fFunctionClasses)["inverse"]     = FunctionClass::kInverse;
-        (*fFunctionClasses)["inverseSqrt"] = FunctionClass::kInverseSqrt;
-        (*fFunctionClasses)["min"]         = FunctionClass::kMin;
-        (*fFunctionClasses)["pow"]         = FunctionClass::kPow;
-        (*fFunctionClasses)["saturate"]    = FunctionClass::kSaturate;
-        (*fFunctionClasses)["texture"]     = FunctionClass::kTexture;
-        (*fFunctionClasses)["transpose"]   = FunctionClass::kTranspose;
-    }
-#ifndef SKSL_STANDALONE
-    );
-#endif
-    const auto found = c.fFunction.fBuiltin ? fFunctionClasses->find(c.fFunction.fName) :
-                                              fFunctionClasses->end();
-||||||| merged common ancestors
-        return;
-    }
-    if (fProgram.fSettings.fCaps->mustForceNegatedAtanParamToFloat() &&
-        c.fFunction.fName == "atan" &&
-        c.fFunction.fBuiltin && c.fArguments.size() == 2 &&
-        c.fArguments[1]->fKind == Expression::kPrefix_Kind) {
-        const PrefixExpression& p = (PrefixExpression&) *c.fArguments[1];
-        if (p.fOperator == Token::MINUS) {
-            this->write("atan(");
-            this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-            this->write(", -1.0 * ");
-            this->writeExpression(*p.fOperand, kMultiplicative_Precedence);
-            this->write(")");
-            return;
-        }
-    }
-    if (c.fFunction.fBuiltin && c.fFunction.fName == "determinant" &&
-        fProgram.fSettings.fCaps->generation() < k150_GrGLSLGeneration) {
-        ASSERT(c.fArguments.size() == 1);
-        this->writeDeterminantHack(*c.fArguments[0]);
-        return;
-    }
-    if (c.fFunction.fBuiltin && c.fFunction.fName == "inverse" &&
-        fProgram.fSettings.fCaps->generation() < k140_GrGLSLGeneration) {
-        ASSERT(c.fArguments.size() == 1);
-        this->writeInverseHack(*c.fArguments[0]);
-        return;
-    }
-    if (c.fFunction.fBuiltin && c.fFunction.fName == "inverseSqrt" &&
-        fProgram.fSettings.fCaps->generation() < k130_GrGLSLGeneration) {
-        ASSERT(c.fArguments.size() == 1);
-        this->writeInverseSqrtHack(*c.fArguments[0]);
-        return;
-    }
-    if (c.fFunction.fBuiltin && c.fFunction.fName == "transpose" &&
-        fProgram.fSettings.fCaps->generation() < k130_GrGLSLGeneration) {
-        ASSERT(c.fArguments.size() == 1);
-        this->writeTransposeHack(*c.fArguments[0]);
-        return;
-    }
-    if (!fFoundDerivatives && (c.fFunction.fName == "dFdx" || c.fFunction.fName == "dFdy") &&
-        c.fFunction.fBuiltin && fProgram.fSettings.fCaps->shaderDerivativeExtensionString()) {
-        ASSERT(fProgram.fSettings.fCaps->shaderDerivativeSupport());
-        fHeader.writeText("#extension ");
-        fHeader.writeText(fProgram.fSettings.fCaps->shaderDerivativeExtensionString());
-        fHeader.writeText(" : require\n");
-        fFoundDerivatives = true;
-    }
-=======
 void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
 #ifdef SKSL_STANDALONE
     if (!fFunctionClasses) {
@@ -572,43 +478,7 @@ void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
 #endif
     const auto found = c.fFunction.fBuiltin ? fFunctionClasses->find(c.fFunction.fName) :
                                               fFunctionClasses->end();
->>>>>>> upstream-releases
     bool isTextureFunctionWithBias = false;
-<<<<<<< HEAD
-    bool nameWritten = false;
-    if (found != fFunctionClasses->end()) {
-        switch (found->second) {
-            case FunctionClass::kAbs: {
-                if (!fProgram.fSettings.fCaps->emulateAbsIntFunction())
-                    break;
-                SkASSERT(c.fArguments.size() == 1);
-                if (c.fArguments[0]->fType != *fContext.fInt_Type)
-                  break;
-                // abs(int) on Intel OSX is incorrect, so emulate it:
-                String name = "_absemulation";
-                this->write(name);
-                nameWritten = true;
-                if (fWrittenIntrinsics.find(name) == fWrittenIntrinsics.end()) {
-                    fWrittenIntrinsics.insert(name);
-                    fExtraFunctions.writeText((
-                        "int " + name + "(int x) {\n"
-                        "    return x * sign(x);\n"
-                        "}\n"
-                    ).c_str());
-||||||| merged common ancestors
-    if (c.fFunction.fName == "texture" && c.fFunction.fBuiltin) {
-        const char* dim = "";
-        bool proj = false;
-        switch (c.fArguments[0]->fType.dimensions()) {
-            case SpvDim1D:
-                dim = "1D";
-                isTextureFunctionWithBias = true;
-                if (c.fArguments[1]->fType == *fContext.fFloat_Type) {
-                    proj = false;
-                } else {
-                    ASSERT(c.fArguments[1]->fType == *fContext.fFloat2_Type);
-                    proj = true;
-=======
     bool nameWritten = false;
     if (found != fFunctionClasses->end()) {
         switch (found->second) {
@@ -645,52 +515,14 @@ void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
                         this->write(")");
                         return;
                     }
->>>>>>> upstream-releases
                 }
                 break;
-<<<<<<< HEAD
-            }
-            case FunctionClass::kAtan:
-                if (fProgram.fSettings.fCaps->mustForceNegatedAtanParamToFloat() &&
-                    c.fArguments.size() == 2 &&
-                    c.fArguments[1]->fKind == Expression::kPrefix_Kind) {
-                    const PrefixExpression& p = (PrefixExpression&) *c.fArguments[1];
-                    if (p.fOperator == Token::MINUS) {
-                        this->write("atan(");
-                        this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-                        this->write(", -1.0 * ");
-                        this->writeExpression(*p.fOperand, kMultiplicative_Precedence);
-                        this->write(")");
-                        return;
-                    }
-||||||| merged common ancestors
-            case SpvDim2D:
-                dim = "2D";
-                if (c.fArguments[0]->fType != *fContext.fSamplerExternalOES_Type) {
-                    isTextureFunctionWithBias = true;
-=======
             case FunctionClass::kDFdy:
                 if (fProgram.fSettings.fFlipY) {
                     // Flipping Y also negates the Y derivatives.
                     this->write("-dFdy");
                     nameWritten = true;
->>>>>>> upstream-releases
                 }
-<<<<<<< HEAD
-                break;
-            case FunctionClass::kDerivative:
-                if (!fFoundDerivatives &&
-                    fProgram.fSettings.fCaps->shaderDerivativeExtensionString()) {
-                    SkASSERT(fProgram.fSettings.fCaps->shaderDerivativeSupport());
-                    this->writeExtension(fProgram.fSettings.fCaps->shaderDerivativeExtensionString());
-                    fFoundDerivatives = true;
-||||||| merged common ancestors
-                if (c.fArguments[1]->fType == *fContext.fFloat2_Type) {
-                    proj = false;
-                } else {
-                    ASSERT(c.fArguments[1]->fType == *fContext.fFloat3_Type);
-                    proj = true;
-=======
                 // fallthru
             case FunctionClass::kDFdx:
             case FunctionClass::kFwidth:
@@ -699,7 +531,6 @@ void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
                     SkASSERT(fProgram.fSettings.fCaps->shaderDerivativeSupport());
                     this->writeExtension(fProgram.fSettings.fCaps->shaderDerivativeExtensionString());
                     fFoundDerivatives = true;
->>>>>>> upstream-releases
                 }
                 break;
             case FunctionClass::kDeterminant:
@@ -709,23 +540,6 @@ void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
                     return;
                 }
                 break;
-<<<<<<< HEAD
-            case FunctionClass::kFract:
-                if (!fProgram.fSettings.fCaps->canUseFractForNegativeValues()) {
-                    SkASSERT(c.fArguments.size() == 1);
-                    this->write("(0.5 - sign(");
-                    this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-                    this->write(") * (0.5 - fract(abs(");
-                    this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-                    this->write("))))");
-                    return;
-                }
-||||||| merged common ancestors
-            case SpvDimCube:
-                dim = "Cube";
-                isTextureFunctionWithBias = true;
-                proj = false;
-=======
             case FunctionClass::kFMA:
                 if (!fProgram.fSettings.fCaps->builtinFMASupport()) {
                     SkASSERT(c.fArguments.size() == 3);
@@ -738,20 +552,7 @@ void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
                     this->write("))");
                     return;
                 }
->>>>>>> upstream-releases
                 break;
-<<<<<<< HEAD
-            case FunctionClass::kInverse:
-                if (fProgram.fSettings.fCaps->generation() < k140_GrGLSLGeneration) {
-                    SkASSERT(c.fArguments.size() == 1);
-                    this->writeInverseHack(*c.fArguments[0]);
-                    return;
-                }
-||||||| merged common ancestors
-            case SpvDimRect:
-                dim = "Rect";
-                proj = false;
-=======
             case FunctionClass::kFract:
                 if (!fProgram.fSettings.fCaps->canUseFractForNegativeValues()) {
                     SkASSERT(c.fArguments.size() == 1);
@@ -762,144 +563,14 @@ void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
                     this->write("))))");
                     return;
                 }
->>>>>>> upstream-releases
                 break;
-<<<<<<< HEAD
-            case FunctionClass::kInverseSqrt:
-                if (fProgram.fSettings.fCaps->generation() < k130_GrGLSLGeneration) {
-                    SkASSERT(c.fArguments.size() == 1);
-                    this->writeInverseSqrtHack(*c.fArguments[0]);
-                    return;
-                }
-||||||| merged common ancestors
-            case SpvDimBuffer:
-                ASSERT(false); // doesn't exist
-                dim = "Buffer";
-                proj = false;
-=======
             case FunctionClass::kInverse:
                 if (fProgram.fSettings.fCaps->generation() < k140_GrGLSLGeneration) {
                     SkASSERT(c.fArguments.size() == 1);
                     this->writeInverseHack(*c.fArguments[0]);
                     return;
                 }
->>>>>>> upstream-releases
                 break;
-<<<<<<< HEAD
-            case FunctionClass::kMin:
-                if (!fProgram.fSettings.fCaps->canUseMinAndAbsTogether()) {
-                    SkASSERT(c.fArguments.size() == 2);
-                    if (is_abs(*c.fArguments[0])) {
-                        this->writeMinAbsHack(*c.fArguments[0], *c.fArguments[1]);
-                        return;
-                    }
-                    if (is_abs(*c.fArguments[1])) {
-                        // note that this violates the GLSL left-to-right evaluation semantics.
-                        // I doubt it will ever end up mattering, but it's worth calling out.
-                        this->writeMinAbsHack(*c.fArguments[1], *c.fArguments[0]);
-                        return;
-                    }
-                }
-                break;
-            case FunctionClass::kPow:
-                if (!fProgram.fSettings.fCaps->removePowWithConstantExponent()) {
-                    break;
-                }
-                // pow(x, y) on some NVIDIA drivers causes crashes if y is a
-                // constant.  It's hard to tell what constitutes "constant" here
-                // so just replace in all cases.
-
-                // Change pow(x, y) into exp2(y * log2(x))
-                this->write("exp2(");
-                this->writeExpression(*c.fArguments[1], kMultiplicative_Precedence);
-                this->write(" * log2(");
-                this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-                this->write("))");
-                return;
-            case FunctionClass::kSaturate:
-                SkASSERT(c.fArguments.size() == 1);
-                this->write("clamp(");
-                this->writeExpression(*c.fArguments[0], kSequence_Precedence);
-                this->write(", 0.0, 1.0)");
-                return;
-            case FunctionClass::kTexture: {
-                const char* dim = "";
-                bool proj = false;
-                switch (c.fArguments[0]->fType.dimensions()) {
-                    case SpvDim1D:
-                        dim = "1D";
-                        isTextureFunctionWithBias = true;
-                        if (c.fArguments[1]->fType == *fContext.fFloat_Type) {
-                            proj = false;
-                        } else {
-                            SkASSERT(c.fArguments[1]->fType == *fContext.fFloat2_Type);
-                            proj = true;
-                        }
-                        break;
-                    case SpvDim2D:
-                        dim = "2D";
-                        if (c.fArguments[0]->fType != *fContext.fSamplerExternalOES_Type) {
-                            isTextureFunctionWithBias = true;
-                        }
-                        if (c.fArguments[1]->fType == *fContext.fFloat2_Type) {
-                            proj = false;
-                        } else {
-                            SkASSERT(c.fArguments[1]->fType == *fContext.fFloat3_Type);
-                            proj = true;
-                        }
-                        break;
-                    case SpvDim3D:
-                        dim = "3D";
-                        isTextureFunctionWithBias = true;
-                        if (c.fArguments[1]->fType == *fContext.fFloat3_Type) {
-                            proj = false;
-                        } else {
-                            SkASSERT(c.fArguments[1]->fType == *fContext.fFloat4_Type);
-                            proj = true;
-                        }
-                        break;
-                    case SpvDimCube:
-                        dim = "Cube";
-                        isTextureFunctionWithBias = true;
-                        proj = false;
-                        break;
-                    case SpvDimRect:
-                        dim = "Rect";
-                        proj = false;
-                        break;
-                    case SpvDimBuffer:
-                        SkASSERT(false); // doesn't exist
-                        dim = "Buffer";
-                        proj = false;
-                        break;
-                    case SpvDimSubpassData:
-                        SkASSERT(false); // doesn't exist
-                        dim = "SubpassData";
-                        proj = false;
-                        break;
-                }
-                this->write("texture");
-                if (fProgram.fSettings.fCaps->generation() < k130_GrGLSLGeneration) {
-                    this->write(dim);
-                }
-                if (proj) {
-                    this->write("Proj");
-                }
-                nameWritten = true;
-                break;
-            }
-            case FunctionClass::kTranspose:
-                if (fProgram.fSettings.fCaps->generation() < k130_GrGLSLGeneration) {
-                    SkASSERT(c.fArguments.size() == 1);
-                    this->writeTransposeHack(*c.fArguments[0]);
-                    return;
-                }
-||||||| merged common ancestors
-            case SpvDimSubpassData:
-                ASSERT(false); // doesn't exist
-                dim = "SubpassData";
-                proj = false;
-=======
             case FunctionClass::kInverseSqrt:
                 if (fProgram.fSettings.fCaps->generation() < k130_GrGLSLGeneration) {
                     SkASSERT(c.fArguments.size() == 1);
@@ -1015,7 +686,6 @@ void GLSLCodeGenerator::writeFunctionCall(const FunctionCall& c) {
                     this->writeTransposeHack(*c.fArguments[0]);
                     return;
                 }
->>>>>>> upstream-releases
                 break;
         }
     }
@@ -1091,45 +761,10 @@ void GLSLCodeGenerator::writeFragCoord() {
         }
         this->write("gl_FragCoord");
     } else {
-<<<<<<< HEAD
-        if (!fSetupFragPositionLocal) {
-            // The Adreno compiler seems to be very touchy about access to "gl_FragCoord".
-            // Accessing glFragCoord.zw can cause a program to fail to link. Additionally,
-            // depending on the surrounding code, accessing .xy with a uniform involved can
-            // do the same thing. Copying gl_FragCoord.xy into a temp float2 beforehand
-            // (and only accessing .xy) seems to "fix" things.
-            const char* precision = usesPrecisionModifiers() ? "highp " : "";
-            fFunctionHeader += precision;
-            fFunctionHeader += "    vec2 _sktmpCoord = gl_FragCoord.xy;\n";
-            fFunctionHeader += precision;
-            fFunctionHeader += "    vec4 sk_FragCoord = vec4(_sktmpCoord.x, " SKSL_RTHEIGHT_NAME
-                               " - _sktmpCoord.y, 1.0, 1.0);\n";
-||||||| merged common ancestors
-        if (!fSetupFragPositionGlobal) {
-            // The Adreno compiler seems to be very touchy about access to "gl_FragCoord".
-            // Accessing glFragCoord.zw can cause a program to fail to link. Additionally,
-            // depending on the surrounding code, accessing .xy with a uniform involved can
-            // do the same thing. Copying gl_FragCoord.xy into a temp float2 beforehand
-            // (and only accessing .xy) seems to "fix" things.
-            const char* precision = usesPrecisionModifiers() ? "highp " : "";
-            fHeader.writeText("uniform ");
-            fHeader.writeText(precision);
-            fHeader.writeText("float " SKSL_RTHEIGHT_NAME ";\n");
-            fSetupFragPositionGlobal = true;
-        }
-        if (!fSetupFragPositionLocal) {
-            const char* precision = usesPrecisionModifiers() ? "highp " : "";
-            fFunctionHeader += precision;
-            fFunctionHeader += "    vec2 _sktmpCoord = gl_FragCoord.xy;\n";
-            fFunctionHeader += precision;
-            fFunctionHeader += "    vec4 sk_FragCoord = vec4(_sktmpCoord.x, " SKSL_RTHEIGHT_NAME
-                               " - _sktmpCoord.y, 1.0, 1.0);\n";
-=======
         if (!fSetupFragPositionLocal) {
             fFunctionHeader += usesPrecisionModifiers() ? "highp " : "";
             fFunctionHeader += "    vec4 sk_FragCoord = vec4(gl_FragCoord.x, " SKSL_RTHEIGHT_NAME
                                " - gl_FragCoord.y, gl_FragCoord.z, gl_FragCoord.w);\n";
->>>>>>> upstream-releases
             fSetupFragPositionLocal = true;
         }
         this->write("sk_FragCoord");
@@ -1853,17 +1488,6 @@ void GLSLCodeGenerator::writeProgramElement(const ProgramElement& e) {
                     this->writeVarDeclarations(decl, true);
                     this->writeLine();
                 } else if (builtin == SK_FRAGCOLOR_BUILTIN &&
-<<<<<<< HEAD
-                           fProgram.fSettings.fCaps->mustDeclareFragmentShaderOutput()) {
-                    if (fProgram.fSettings.fFragColorIsInOut) {
-                        this->write("inout ");
-                    } else {
-                        this->write("out ");
-                    }
-||||||| merged common ancestors
-                           fProgram.fSettings.fCaps->mustDeclareFragmentShaderOutput()) {
-                    this->write("out ");
-=======
                            fProgram.fSettings.fCaps->mustDeclareFragmentShaderOutput() &&
                            ((VarDeclaration&) *decl.fVars[0]).fVar->fWriteCount) {
                     if (fProgram.fSettings.fFragColorIsInOut) {
@@ -1871,7 +1495,6 @@ void GLSLCodeGenerator::writeProgramElement(const ProgramElement& e) {
                     } else {
                         this->write("out ");
                     }
->>>>>>> upstream-releases
                     if (usesPrecisionModifiers()) {
                         this->write("mediump ");
                     }

@@ -25,12 +25,7 @@ mod send_recv;
 mod context;
 mod stream;
 
-<<<<<<< HEAD
-use audioipc::PlatformHandleType;
-||||||| merged common ancestors
-=======
 use audioipc::{PlatformHandleType, PlatformHandle};
->>>>>>> upstream-releases
 use context::ClientContext;
 use cubeb_backend::{capi, ffi};
 use std::os::raw::{c_char, c_int};
@@ -53,18 +48,12 @@ thread_local!(static IN_CALLBACK: std::cell::RefCell<bool> = std::cell::RefCell:
 thread_local!(static CPUPOOL_INIT_PARAMS: InitParamsTls = std::cell::RefCell::new(None));
 thread_local!(static G_PRIORITY_HANDLES: std::cell::RefCell<Vec<RtPriorityHandle>> = std::cell::RefCell::new(vec![]));
 
-<<<<<<< HEAD
-// This must match the definition of AudioIpcInitParams in
-// dom/media/CubebUtils.cpp in Gecko.
-||||||| merged common ancestors
-=======
 lazy_static! {
     static ref G_THREAD_POOL: Mutex<Option<CpuPool>> = Mutex::new(None);
 }
 
 // This must match the definition of AudioIpcInitParams in
 // dom/media/CubebUtils.cpp in Gecko.
->>>>>>> upstream-releases
 #[repr(C)]
 #[derive(Clone, Copy, Debug)]
 pub struct AudioIpcInitParams {

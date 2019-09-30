@@ -227,7 +227,6 @@ ARMRegister toWRegister(const T* a) {
 
 // FIXME: Uh, is this a static function? It looks like it is...
 template <typename T>
-<<<<<<< HEAD
 ARMRegister toXRegister(const T* a) {
   return ARMRegister(ToRegister(a), 64);
 }
@@ -309,222 +308,8 @@ void CodeGenerator::visitMulI(LMulI* ins) {
           (constant == 0) ? Assembler::LessThan : Assembler::Equal;
       masm.Cmp(toWRegister(lhs), Operand(0));
       bailoutIf(bailoutCond, ins->snapshot());
-||||||| merged common ancestors
-ARMRegister
-toXRegister(const T* a)
-{
-    return ARMRegister(ToRegister(a), 64);
-}
-
-Operand
-toWOperand(const LAllocation* a)
-{
-    if (a->isConstant()) {
-        return Operand(ToInt32(a));
-    }
-    return Operand(toWRegister(a));
-}
-
-vixl::CPURegister
-ToCPURegister(const LAllocation* a, Scalar::Type type)
-{
-    if (a->isFloatReg() && type == Scalar::Float64) {
-        return ARMFPRegister(ToFloatRegister(a), 64);
-    }
-    if (a->isFloatReg() && type == Scalar::Float32) {
-        return ARMFPRegister(ToFloatRegister(a), 32);
-    }
-    if (a->isGeneralReg()) {
-        return ARMRegister(ToRegister(a), 32);
-    }
-    MOZ_CRASH("Unknown LAllocation");
-}
-
-vixl::CPURegister
-ToCPURegister(const LDefinition* d, Scalar::Type type)
-{
-    return ToCPURegister(d->output(), type);
-}
-
-void
-CodeGenerator::visitAddI(LAddI* ins)
-{
-    const LAllocation* lhs = ins->getOperand(0);
-    const LAllocation* rhs = ins->getOperand(1);
-    const LDefinition* dest = ins->getDef(0);
-
-    // Platforms with three-operand arithmetic ops don't need recovery.
-    MOZ_ASSERT(!ins->recoversInput());
-
-    if (ins->snapshot()) {
-        masm.Adds(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-        bailoutIf(Assembler::Overflow, ins->snapshot());
-    } else {
-        masm.Add(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-    }
-}
-
-void
-CodeGenerator::visitSubI(LSubI* ins)
-{
-    const LAllocation* lhs = ins->getOperand(0);
-    const LAllocation* rhs = ins->getOperand(1);
-    const LDefinition* dest = ins->getDef(0);
-
-    // Platforms with three-operand arithmetic ops don't need recovery.
-    MOZ_ASSERT(!ins->recoversInput());
-
-    if (ins->snapshot()) {
-        masm.Subs(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-        bailoutIf(Assembler::Overflow, ins->snapshot());
-    } else {
-        masm.Sub(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-=======
-ARMRegister toXRegister(const T* a) {
-  return ARMRegister(ToRegister(a), 64);
-}
-
-Operand toWOperand(const LAllocation* a) {
-  if (a->isConstant()) {
-    return Operand(ToInt32(a));
-  }
-  return Operand(toWRegister(a));
-}
-
-vixl::CPURegister ToCPURegister(const LAllocation* a, Scalar::Type type) {
-  if (a->isFloatReg() && type == Scalar::Float64) {
-    return ARMFPRegister(ToFloatRegister(a), 64);
-  }
-  if (a->isFloatReg() && type == Scalar::Float32) {
-    return ARMFPRegister(ToFloatRegister(a), 32);
-  }
-  if (a->isGeneralReg()) {
-    return ARMRegister(ToRegister(a), 32);
-  }
-  MOZ_CRASH("Unknown LAllocation");
-}
-
-vixl::CPURegister ToCPURegister(const LDefinition* d, Scalar::Type type) {
-  return ToCPURegister(d->output(), type);
-}
-
-void CodeGenerator::visitAddI(LAddI* ins) {
-  const LAllocation* lhs = ins->getOperand(0);
-  const LAllocation* rhs = ins->getOperand(1);
-  const LDefinition* dest = ins->getDef(0);
-
-  // Platforms with three-operand arithmetic ops don't need recovery.
-  MOZ_ASSERT(!ins->recoversInput());
-
-  if (ins->snapshot()) {
-    masm.Adds(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-    bailoutIf(Assembler::Overflow, ins->snapshot());
-  } else {
-    masm.Add(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-  }
-}
-
-void CodeGenerator::visitSubI(LSubI* ins) {
-  const LAllocation* lhs = ins->getOperand(0);
-  const LAllocation* rhs = ins->getOperand(1);
-  const LDefinition* dest = ins->getDef(0);
-
-  // Platforms with three-operand arithmetic ops don't need recovery.
-  MOZ_ASSERT(!ins->recoversInput());
-
-  if (ins->snapshot()) {
-    masm.Subs(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-    bailoutIf(Assembler::Overflow, ins->snapshot());
-  } else {
-    masm.Sub(toWRegister(dest), toWRegister(lhs), toWOperand(rhs));
-  }
-}
-
-void CodeGenerator::visitMulI(LMulI* ins) {
-  const LAllocation* lhs = ins->getOperand(0);
-  const LAllocation* rhs = ins->getOperand(1);
-  const LDefinition* dest = ins->getDef(0);
-  MMul* mul = ins->mir();
-  MOZ_ASSERT_IF(mul->mode() == MMul::Integer,
-                !mul->canBeNegativeZero() && !mul->canOverflow());
-
-  Register lhsreg = ToRegister(lhs);
-  const ARMRegister lhsreg32 = ARMRegister(lhsreg, 32);
-  Register destreg = ToRegister(dest);
-  const ARMRegister destreg32 = ARMRegister(destreg, 32);
-
-  if (rhs->isConstant()) {
-    // Bailout on -0.0.
-    int32_t constant = ToInt32(rhs);
-    if (mul->canBeNegativeZero() && constant <= 0) {
-      Assembler::Condition bailoutCond =
-          (constant == 0) ? Assembler::LessThan : Assembler::Equal;
-      masm.Cmp(toWRegister(lhs), Operand(0));
-      bailoutIf(bailoutCond, ins->snapshot());
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    switch (constant) {
-      case -1:
-        masm.Negs(destreg32, Operand(lhsreg32));
-        break;  // Go to overflow check.
-      case 0:
-        masm.Mov(destreg32, wzr);
-        return;  // Avoid overflow check.
-      case 1:
-        // nop
-        return;  // Avoid overflow check.
-      case 2:
-        masm.Adds(destreg32, lhsreg32, Operand(lhsreg32));
-        break;  // Go to overflow check.
-      default:
-        // Use shift if cannot overflow and constant is a power of 2
-        if (!mul->canOverflow() && constant > 0) {
-          int32_t shift = FloorLog2(constant);
-          if ((1 << shift) == constant) {
-            masm.Lsl(destreg32, lhsreg32, shift);
-            return;
-          }
-||||||| merged common ancestors
-        switch (constant) {
-          case -1:
-            masm.neg32(lhsreg);
-            break;
-          case 0:
-            masm.Mov(ARMRegister(lhsreg, 32), wzr);
-            return; // escape overflow check;
-          case 1:
-            // nop
-            return; // escape overflow check;
-          case 2:
-            masm.add32(lhsreg, lhsreg);
-            break;
-          default:
-            // Use shift if cannot overflow and constant is a power of 2
-            if (!mul->canOverflow() && constant > 0) {
-                int32_t shift = FloorLog2(constant);
-                if ((1 << shift) == constant) {
-                    masm.lshift32(Imm32(shift), lhsreg);
-                    return;
-                }
-            }
-
-            // Otherwise, just multiply.
-            Label bailout;
-            Label* onZero = mul->canBeNegativeZero() ? &bailout : nullptr;
-            Label* onOverflow = mul->canOverflow() ? &bailout : nullptr;
-
-            vixl::UseScratchRegisterScope temps(&masm.asVIXL());
-            const Register scratch = temps.AcquireW().asUnsized();
-
-            masm.move32(Imm32(constant), scratch);
-            masm.mul32(lhsreg, scratch, ToRegister(dest), onOverflow, onZero);
-            if (onZero || onOverflow) {
-                bailoutFrom(&bailout, ins->snapshot());
-            }
-            return; // escape overflow check;
-=======
     switch (constant) {
       case -1:
         masm.Negs(destreg32, Operand(lhsreg32));
@@ -535,21 +320,7 @@ void CodeGenerator::visitMulI(LMulI* ins) {
       case 1:
         if (destreg != lhsreg) {
           masm.Mov(destreg32, lhsreg32);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-
-        // Otherwise, just multiply.
-||||||| merged common ancestors
-
-        // Overflow check.
-        if (mul->canOverflow()) {
-            bailoutIf(Assembler::Overflow, ins->snapshot());
-        }
-    } else {
-        Register rhsreg = ToRegister(rhs);
-
-=======
         return;  // Avoid overflow check.
       case 2:
         masm.Adds(destreg32, lhsreg32, Operand(lhsreg32));
@@ -565,7 +336,6 @@ void CodeGenerator::visitMulI(LMulI* ins) {
         }
 
         // Otherwise, just multiply.
->>>>>>> upstream-releases
         Label bailout;
         Label* onZero = mul->canBeNegativeZero() ? &bailout : nullptr;
         Label* onOverflow = mul->canOverflow() ? &bailout : nullptr;
@@ -580,7 +350,6 @@ void CodeGenerator::visitMulI(LMulI* ins) {
         }
         return;  // escape overflow check;
     }
-<<<<<<< HEAD
 
     // Overflow check.
     if (mul->canOverflow()) {
@@ -588,85 +357,12 @@ void CodeGenerator::visitMulI(LMulI* ins) {
     }
   } else {
     Register rhsreg = ToRegister(rhs);
-||||||| merged common ancestors
-}
 
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     Label bailout;
     // TODO: x64 (but not other platforms) have an OOL path for onZero.
     Label* onZero = mul->canBeNegativeZero() ? &bailout : nullptr;
     Label* onOverflow = mul->canOverflow() ? &bailout : nullptr;
 
-    masm.mul32(lhsreg, rhsreg, destreg, onOverflow, onZero);
-    if (onZero || onOverflow) {
-      bailoutFrom(&bailout, ins->snapshot());
-    }
-  }
-}
-
-void CodeGenerator::visitDivI(LDivI* ins) {
-  const Register lhs = ToRegister(ins->lhs());
-  const Register rhs = ToRegister(ins->rhs());
-  const Register output = ToRegister(ins->output());
-||||||| merged common ancestors
-void
-CodeGenerator::visitDivI(LDivI* ins)
-{
-    const Register lhs = ToRegister(ins->lhs());
-    const Register rhs = ToRegister(ins->rhs());
-    const Register output = ToRegister(ins->output());
-
-    const ARMRegister lhs32 = toWRegister(ins->lhs());
-    const ARMRegister rhs32 = toWRegister(ins->rhs());
-    const ARMRegister temp32 = toWRegister(ins->getTemp(0));
-    const ARMRegister output32 = toWRegister(ins->output());
-
-    MDiv* mir = ins->mir();
-=======
-    // Overflow check.
-    if (mul->canOverflow()) {
-      bailoutIf(Assembler::Overflow, ins->snapshot());
-    }
-  } else {
-    Register rhsreg = ToRegister(rhs);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  const ARMRegister lhs32 = toWRegister(ins->lhs());
-  const ARMRegister rhs32 = toWRegister(ins->rhs());
-  const ARMRegister temp32 = toWRegister(ins->getTemp(0));
-  const ARMRegister output32 = toWRegister(ins->output());
-||||||| merged common ancestors
-    Label done;
-=======
-    Label bailout;
-    // TODO: x64 (but not other platforms) have an OOL path for onZero.
-    Label* onZero = mul->canBeNegativeZero() ? &bailout : nullptr;
-    Label* onOverflow = mul->canOverflow() ? &bailout : nullptr;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  MDiv* mir = ins->mir();
-||||||| merged common ancestors
-    // Handle division by zero.
-    if (mir->canBeDivideByZero()) {
-        masm.test32(rhs, rhs);
-        // TODO: x64 has an additional mir->canTruncateInfinities() handler
-        // TODO: to avoid taking a bailout.
-        if (mir->trapOnError()) {
-            Label nonZero;
-            masm.j(Assembler::NonZero, &nonZero);
-            masm.wasmTrap(wasm::Trap::IntegerDivideByZero, mir->bytecodeOffset());
-            masm.bind(&nonZero);
-        } else {
-            MOZ_ASSERT(mir->fallible());
-            bailoutIf(Assembler::Zero, ins->snapshot());
-        }
-    }
-=======
     masm.mul32(lhsreg, rhsreg, destreg, onOverflow, onZero);
     if (onZero || onOverflow) {
       bailoutFrom(&bailout, ins->snapshot());
@@ -780,56 +476,7 @@ void CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins) {
       bailoutTest32(Assembler::NonZero, numerator,
                     Imm32(UINT32_MAX >> (32 - shift)), ins->snapshot());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Label done;
-
-  // Handle division by zero.
-  if (mir->canBeDivideByZero()) {
-    masm.test32(rhs, rhs);
-    // TODO: x64 has an additional mir->canTruncateInfinities() handler
-    // TODO: to avoid taking a bailout.
-    if (mir->trapOnError()) {
-      Label nonZero;
-      masm.j(Assembler::NonZero, &nonZero);
-      masm.wasmTrap(wasm::Trap::IntegerDivideByZero, mir->bytecodeOffset());
-      masm.bind(&nonZero);
-    } else {
-      MOZ_ASSERT(mir->fallible());
-      bailoutIf(Assembler::Zero, ins->snapshot());
-||||||| merged common ancestors
-    // Handle an integer overflow from (INT32_MIN / -1).
-    // The integer division gives INT32_MIN, but should be -(double)INT32_MIN.
-    if (mir->canBeNegativeOverflow()) {
-        Label notOverflow;
-
-        // Branch to handle the non-overflow cases.
-        masm.branch32(Assembler::NotEqual, lhs, Imm32(INT32_MIN), &notOverflow);
-        masm.branch32(Assembler::NotEqual, rhs, Imm32(-1), &notOverflow);
-
-        // Handle overflow.
-        if (mir->trapOnError()) {
-            masm.wasmTrap(wasm::Trap::IntegerOverflow, mir->bytecodeOffset());
-        } else if (mir->canTruncateOverflow()) {
-            // (-INT32_MIN)|0 == INT32_MIN, which is already in lhs.
-            masm.move32(lhs, output);
-            masm.jump(&done);
-        } else {
-            MOZ_ASSERT(mir->fallible());
-            bailout(ins->snapshot());
-        }
-        masm.bind(&notOverflow);
-    }
-
-    // Handle negative zero: lhs == 0 && rhs < 0.
-    if (!mir->canTruncateNegativeZero() && mir->canBeNegativeZero()) {
-        Label nonZero;
-        masm.branch32(Assembler::NotEqual, lhs, Imm32(0), &nonZero);
-        masm.cmp32(rhs, Imm32(0));
-        bailoutIf(Assembler::LessThan, ins->snapshot());
-        masm.bind(&nonZero);
-=======
     if (mir->isUnsigned()) {
       // shift right
       masm.Lsr(output32, numerator32, shift);
@@ -877,33 +524,7 @@ void CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins) {
     } else {
       // Do not set condition flags.
       masm.Neg(output32, numerator32);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  // Handle an integer overflow from (INT32_MIN / -1).
-  // The integer division gives INT32_MIN, but should be -(double)INT32_MIN.
-  if (mir->canBeNegativeOverflow()) {
-    Label notOverflow;
-
-    // Branch to handle the non-overflow cases.
-    masm.branch32(Assembler::NotEqual, lhs, Imm32(INT32_MIN), &notOverflow);
-    masm.branch32(Assembler::NotEqual, rhs, Imm32(-1), &notOverflow);
-
-    // Handle overflow.
-    if (mir->trapOnError()) {
-      masm.wasmTrap(wasm::Trap::IntegerOverflow, mir->bytecodeOffset());
-    } else if (mir->canTruncateOverflow()) {
-      // (-INT32_MIN)|0 == INT32_MIN, which is already in lhs.
-      masm.move32(lhs, output);
-      masm.jump(&done);
-||||||| merged common ancestors
-
-    // Perform integer division.
-    if (mir->canTruncateRemainder()) {
-        masm.Sdiv(output32, lhs32, rhs32);
-=======
   } else {
     if (mir->isUnsigned() && !mir->isTruncated()) {
       // Copy and set flags.
@@ -911,23 +532,7 @@ void CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins) {
       // Unsigned division by 1 can overflow if output is not truncated, as we
       // do not have an Unsigned type for MIR instructions.
       bailoutIf(Assembler::Signed, ins->snapshot());
->>>>>>> upstream-releases
     } else {
-<<<<<<< HEAD
-      MOZ_ASSERT(mir->fallible());
-      bailout(ins->snapshot());
-||||||| merged common ancestors
-        vixl::UseScratchRegisterScope temps(&masm.asVIXL());
-        ARMRegister scratch32 = temps.AcquireW();
-
-        // ARM does not automatically calculate the remainder.
-        // The ISR suggests multiplication to determine whether a remainder exists.
-        masm.Sdiv(scratch32, lhs32, rhs32);
-        masm.Mul(temp32, scratch32, rhs32);
-        masm.Cmp(lhs32, temp32);
-        bailoutIf(Assembler::NotEqual, ins->snapshot());
-        masm.Mov(output32, scratch32);
-=======
       // Copy the result.
       masm.Mov(output32, numerator32);
     }
@@ -1005,40 +610,8 @@ void CodeGenerator::visitDivConstantI(LDivConstantI* ins) {
       // '-- masm.Ccmp(.., .., vixl::ZFlag, ! bailoutCond)
       masm.Ccmp(lhs32, wzr, vixl::ZFlag, Assembler::Zero);
       bailoutCond = Assembler::Zero;
->>>>>>> upstream-releases
     }
-    masm.bind(&notOverflow);
-  }
 
-<<<<<<< HEAD
-  // Handle negative zero: lhs == 0 && rhs < 0.
-  if (!mir->canTruncateNegativeZero() && mir->canBeNegativeZero()) {
-    Label nonZero;
-    masm.branch32(Assembler::NotEqual, lhs, Imm32(0), &nonZero);
-    masm.cmp32(rhs, Imm32(0));
-    bailoutIf(Assembler::LessThan, ins->snapshot());
-    masm.bind(&nonZero);
-  }
-
-  // Perform integer division.
-  if (mir->canTruncateRemainder()) {
-    masm.Sdiv(output32, lhs32, rhs32);
-  } else {
-    vixl::UseScratchRegisterScope temps(&masm.asVIXL());
-    ARMRegister scratch32 = temps.AcquireW();
-
-    // ARM does not automatically calculate the remainder.
-    // The ISR suggests multiplication to determine whether a remainder exists.
-    masm.Sdiv(scratch32, lhs32, rhs32);
-    masm.Mul(temp32, scratch32, rhs32);
-    masm.Cmp(lhs32, temp32);
-    bailoutIf(Assembler::NotEqual, ins->snapshot());
-    masm.Mov(output32, scratch32);
-  }
-||||||| merged common ancestors
-    masm.bind(&done);
-}
-=======
     // bailout if (lhs - output * d != 0) or (d < 0 && lhs == 0)
     bailoutIf(bailoutCond, ins->snapshot());
   }
@@ -1157,84 +730,25 @@ void CodeGenerator::visitModI(LModI* ins) {
     masm.bind(&done);
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  masm.bind(&done);
-}
-||||||| merged common ancestors
-void
-CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins)
-{
-    MOZ_CRASH("CodeGenerator::visitDivPowTwoI");
-}
-=======
 void CodeGenerator::visitModPowTwoI(LModPowTwoI* ins) {
   Register lhs = ToRegister(ins->getOperand(0));
   ARMRegister lhsw = toWRegister(ins->getOperand(0));
   ARMRegister outw = toWRegister(ins->output());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitDivPowTwoI(LDivPowTwoI* ins) {
-  MOZ_CRASH("CodeGenerator::visitDivPowTwoI");
-}
-||||||| merged common ancestors
-void
-CodeGeneratorARM64::modICommon(MMod* mir, Register lhs, Register rhs, Register output,
-                               LSnapshot* snapshot, Label& done)
-{
-    MOZ_CRASH("CodeGeneratorARM64::modICommon");
-}
-=======
   int32_t shift = ins->shift();
   bool canBeNegative =
       !ins->mir()->isUnsigned() && ins->mir()->canBeNegativeDividend();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGeneratorARM64::modICommon(MMod* mir, Register lhs, Register rhs,
-                                    Register output, LSnapshot* snapshot,
-                                    Label& done) {
-  MOZ_CRASH("CodeGeneratorARM64::modICommon");
-}
-||||||| merged common ancestors
-void
-CodeGenerator::visitModI(LModI* ins)
-{
-    MOZ_CRASH("visitModI");
-}
-=======
   Label negative;
   if (canBeNegative) {
     // Switch based on sign of the lhs.
     // Positive numbers are just a bitmask.
     masm.branchTest32(Assembler::Signed, lhs, lhs, &negative);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitModI(LModI* ins) { MOZ_CRASH("visitModI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitModPowTwoI(LModPowTwoI* ins)
-{
-    Register lhs = ToRegister(ins->getOperand(0));
-    ARMRegister lhsw = toWRegister(ins->getOperand(0));
-    ARMRegister outw = toWRegister(ins->output());
-=======
   masm.And(outw, lhsw, Operand((uint32_t(1) << shift) - 1));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitModPowTwoI(LModPowTwoI* ins) {
-  Register lhs = ToRegister(ins->getOperand(0));
-  ARMRegister lhsw = toWRegister(ins->getOperand(0));
-  ARMRegister outw = toWRegister(ins->output());
-||||||| merged common ancestors
-    int32_t shift = ins->shift();
-    bool canBeNegative = !ins->mir()->isUnsigned() && ins->mir()->canBeNegativeDividend();
-=======
   if (canBeNegative) {
     Label done;
     masm.jump(&done);
@@ -1252,20 +766,7 @@ void CodeGenerator::visitModPowTwoI(LModPowTwoI* ins) {
     } else {
       masm.Neg(outw, Operand(outw));
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  int32_t shift = ins->shift();
-  bool canBeNegative =
-      !ins->mir()->isUnsigned() && ins->mir()->canBeNegativeDividend();
-||||||| merged common ancestors
-    Label negative;
-    if (canBeNegative) {
-        // Switch based on sign of the lhs.
-        // Positive numbers are just a bitmask.
-        masm.branchTest32(Assembler::Signed, lhs, lhs, &negative);
-    }
-=======
     masm.bind(&done);
   }
 }
@@ -1351,133 +852,14 @@ void CodeGenerator::visitModMaskI(LModMaskI* ins) {
   // Check the hold to see if we need to negate the result.
   {
     Label done;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Label negative;
-  if (canBeNegative) {
-    // Switch based on sign of the lhs.
-    // Positive numbers are just a bitmask.
-    masm.branchTest32(Assembler::Signed, lhs, lhs, &negative);
-  }
-
-  masm.And(outw, lhsw, Operand((uint32_t(1) << shift) - 1));
-
-  if (canBeNegative) {
-    Label done;
-    masm.jump(&done);
-
-    // Negative numbers need a negate, bitmask, negate.
-    masm.bind(&negative);
-    masm.Neg(outw, Operand(lhsw));
-    masm.And(outw, outw, Operand((uint32_t(1) << shift) - 1));
-
-    // Since a%b has the same sign as b, and a is negative in this branch,
-    // an answer of 0 means the correct result is actually -0. Bail out.
-    if (!ins->mir()->isTruncated()) {
-      masm.Negs(outw, Operand(outw));
-      bailoutIf(Assembler::Zero, ins->snapshot());
-    } else {
-      masm.Neg(outw, Operand(outw));
-    }
-||||||| merged common ancestors
-    masm.And(outw, lhsw, Operand((uint32_t(1) << shift) - 1));
-
-    if (canBeNegative) {
-        Label done;
-        masm.jump(&done);
-
-        // Negative numbers need a negate, bitmask, negate.
-        masm.bind(&negative);
-        masm.Neg(outw, Operand(lhsw));
-        masm.And(outw, outw, Operand((uint32_t(1) << shift) - 1));
-=======
     // If the hold was non-zero, negate the result to match JS expectations.
     masm.branchTest32(Assembler::NotSigned, hold, hold, &done);
     if (mir->canBeNegativeDividend() && !mir->isTruncated()) {
       // Bail in case of negative zero hold.
       bailoutTest32(Assembler::Zero, hold, hold, ins->snapshot());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    masm.bind(&done);
-  }
-}
-
-void CodeGenerator::visitModMaskI(LModMaskI* ins) {
-  MOZ_CRASH("CodeGenerator::visitModMaskI");
-}
-
-void CodeGenerator::visitBitNotI(LBitNotI* ins) {
-  const LAllocation* input = ins->getOperand(0);
-  const LDefinition* output = ins->getDef(0);
-  masm.Mvn(toWRegister(output), toWOperand(input));
-}
-
-void CodeGenerator::visitBitOpI(LBitOpI* ins) {
-  const ARMRegister lhs = toWRegister(ins->getOperand(0));
-  const Operand rhs = toWOperand(ins->getOperand(1));
-  const ARMRegister dest = toWRegister(ins->getDef(0));
-
-  switch (ins->bitop()) {
-    case JSOP_BITOR:
-      masm.Orr(dest, lhs, rhs);
-      break;
-    case JSOP_BITXOR:
-      masm.Eor(dest, lhs, rhs);
-      break;
-    case JSOP_BITAND:
-      masm.And(dest, lhs, rhs);
-      break;
-    default:
-      MOZ_CRASH("unexpected binary opcode");
-  }
-}
-
-void CodeGenerator::visitShiftI(LShiftI* ins) {
-  const ARMRegister lhs = toWRegister(ins->lhs());
-  const LAllocation* rhs = ins->rhs();
-  const ARMRegister dest = toWRegister(ins->output());
-
-  if (rhs->isConstant()) {
-    int32_t shift = ToInt32(rhs) & 0x1F;
-||||||| merged common ancestors
-        // Since a%b has the same sign as b, and a is negative in this branch,
-        // an answer of 0 means the correct result is actually -0. Bail out.
-        if (!ins->mir()->isTruncated()) {
-            masm.Negs(outw, Operand(outw));
-            bailoutIf(Assembler::Zero, ins->snapshot());
-        } else {
-            masm.Neg(outw, Operand(outw));
-        }
-
-        masm.bind(&done);
-    }
-}
-
-void
-CodeGenerator::visitModMaskI(LModMaskI* ins)
-{
-    MOZ_CRASH("CodeGenerator::visitModMaskI");
-}
-
-void
-CodeGenerator::visitBitNotI(LBitNotI* ins)
-{
-    const LAllocation* input = ins->getOperand(0);
-    const LDefinition* output = ins->getDef(0);
-    masm.Mvn(toWRegister(output), toWOperand(input));
-}
-
-void
-CodeGenerator::visitBitOpI(LBitOpI* ins)
-{
-    const ARMRegister lhs = toWRegister(ins->getOperand(0));
-    const Operand rhs = toWOperand(ins->getOperand(1));
-    const ARMRegister dest = toWRegister(ins->getDef(0));
-
-=======
     masm.neg32(dest);
     masm.bind(&done);
   }
@@ -1539,60 +921,6 @@ void CodeGenerator::visitShiftI(LShiftI* ins) {
     }
   } else {
     const ARMRegister rhsreg = toWRegister(rhs);
->>>>>>> upstream-releases
-    switch (ins->bitop()) {
-<<<<<<< HEAD
-      case JSOP_LSH:
-        masm.Lsl(dest, lhs, shift);
-||||||| merged common ancestors
-      case JSOP_BITOR:
-        masm.Orr(dest, lhs, rhs);
-=======
-      case JSOP_LSH:
-        masm.Lsl(dest, lhs, rhsreg);
->>>>>>> upstream-releases
-        break;
-<<<<<<< HEAD
-      case JSOP_RSH:
-        masm.Asr(dest, lhs, shift);
-||||||| merged common ancestors
-      case JSOP_BITXOR:
-        masm.Eor(dest, lhs, rhs);
-=======
-      case JSOP_RSH:
-        masm.Asr(dest, lhs, rhsreg);
->>>>>>> upstream-releases
-        break;
-<<<<<<< HEAD
-      case JSOP_URSH:
-        if (shift) {
-          masm.Lsr(dest, lhs, shift);
-        } else if (ins->mir()->toUrsh()->fallible()) {
-          // x >>> 0 can overflow.
-          masm.Ands(dest, lhs, Operand(0xFFFFFFFF));
-          bailoutIf(Assembler::Signed, ins->snapshot());
-        } else {
-          masm.Mov(dest, lhs);
-        }
-||||||| merged common ancestors
-      case JSOP_BITAND:
-        masm.And(dest, lhs, rhs);
-=======
-      case JSOP_URSH:
-        masm.Lsr(dest, lhs, rhsreg);
-        if (ins->mir()->toUrsh()->fallible()) {
-          /// x >>> 0 can overflow.
-          masm.Cmp(dest, Operand(0));
-          bailoutIf(Assembler::LessThan, ins->snapshot());
-        }
->>>>>>> upstream-releases
-        break;
-      default:
-        MOZ_CRASH("Unexpected shift op");
-    }
-<<<<<<< HEAD
-  } else {
-    const ARMRegister rhsreg = toWRegister(rhs);
     switch (ins->bitop()) {
       case JSOP_LSH:
         masm.Lsl(dest, lhs, rhsreg);
@@ -1604,24 +932,16 @@ void CodeGenerator::visitShiftI(LShiftI* ins) {
         masm.Lsr(dest, lhs, rhsreg);
         if (ins->mir()->toUrsh()->fallible()) {
           /// x >>> 0 can overflow.
-          Label nonzero;
-          masm.Cbnz(rhsreg, &nonzero);
           masm.Cmp(dest, Operand(0));
           bailoutIf(Assembler::LessThan, ins->snapshot());
-          masm.bind(&nonzero);
         }
         break;
       default:
         MOZ_CRASH("Unexpected shift op");
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 void CodeGenerator::visitUrshD(LUrshD* ins) {
   const ARMRegister lhs = toWRegister(ins->lhs());
   const LAllocation* rhs = ins->rhs();
@@ -1629,20 +949,7 @@ void CodeGenerator::visitUrshD(LUrshD* ins) {
 
   const Register temp = ToRegister(ins->temp());
   const ARMRegister temp32 = toWRegister(ins->temp());
-||||||| merged common ancestors
-void
-CodeGenerator::visitShiftI(LShiftI* ins)
-{
-    MOZ_CRASH("visitShiftI");
-}
-=======
-void CodeGenerator::visitUrshD(LUrshD* ins) {
-  const ARMRegister lhs = toWRegister(ins->lhs());
-  const LAllocation* rhs = ins->rhs();
-  const FloatRegister out = ToFloatRegister(ins->output());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (rhs->isConstant()) {
     int32_t shift = ToInt32(rhs) & 0x1F;
     if (shift) {
@@ -1657,63 +964,7 @@ void CodeGenerator::visitUrshD(LUrshD* ins) {
     masm.convertUInt32ToDouble(temp, out);
   }
 }
-||||||| merged common ancestors
-void
-CodeGenerator::visitUrshD(LUrshD* ins)
-{
-    MOZ_CRASH("visitUrshD");
-}
-=======
-  const Register temp = ToRegister(ins->temp());
-  const ARMRegister temp32 = toWRegister(ins->temp());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitPowHalfD(LPowHalfD* ins) {
-  MOZ_CRASH("visitPowHalfD");
-||||||| merged common ancestors
-void
-CodeGenerator::visitPowHalfD(LPowHalfD* ins)
-{
-    MOZ_CRASH("visitPowHalfD");
-=======
-  if (rhs->isConstant()) {
-    int32_t shift = ToInt32(rhs) & 0x1F;
-    if (shift) {
-      masm.Lsr(temp32, lhs, shift);
-      masm.convertUInt32ToDouble(temp, out);
-    } else {
-      masm.convertUInt32ToDouble(ToRegister(ins->lhs()), out);
-    }
-  } else {
-    masm.And(temp32, toWRegister(rhs), Operand(0x1F));
-    masm.Lsr(temp32, lhs, temp32);
-    masm.convertUInt32ToDouble(temp, out);
-  }
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-MoveOperand CodeGeneratorARM64::toMoveOperand(const LAllocation a) const {
-  if (a.isGeneralReg()) {
-    return MoveOperand(ToRegister(a));
-  }
-  if (a.isFloatReg()) {
-    return MoveOperand(ToFloatRegister(a));
-  }
-  return MoveOperand(AsRegister(masm.getStackPointer()), ToStackOffset(a));
-||||||| merged common ancestors
-MoveOperand
-CodeGeneratorARM64::toMoveOperand(const LAllocation a) const
-{
-    if (a.isGeneralReg()) {
-        return MoveOperand(ToRegister(a));
-    }
-    if (a.isFloatReg()) {
-        return MoveOperand(ToFloatRegister(a));
-    }
-    return MoveOperand(AsRegister(masm.getStackPointer()), ToStackOffset(a));
-=======
 void CodeGenerator::visitPowHalfD(LPowHalfD* ins) {
   FloatRegister input = ToFloatRegister(ins->input());
   FloatRegister output = ToFloatRegister(ins->output());
@@ -1751,20 +1002,8 @@ void CodeGenerator::visitPowHalfD(LPowHalfD* ins) {
   }
 
   masm.bind(&done);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-class js::jit::OutOfLineTableSwitch
-    : public OutOfLineCodeBase<CodeGeneratorARM64> {
-  MTableSwitch* mir_;
-  Vector<CodeLabel, 8, JitAllocPolicy> codeLabels_;
-||||||| merged common ancestors
-class js::jit::OutOfLineTableSwitch : public OutOfLineCodeBase<CodeGeneratorARM64>
-{
-    MTableSwitch* mir_;
-    Vector<CodeLabel, 8, JitAllocPolicy> codeLabels_;
-=======
 MoveOperand CodeGeneratorARM64::toMoveOperand(const LAllocation a) const {
   if (a.isGeneralReg()) {
     return MoveOperand(ToRegister(a));
@@ -1774,46 +1013,16 @@ MoveOperand CodeGeneratorARM64::toMoveOperand(const LAllocation a) const {
   }
   return MoveOperand(AsRegister(masm.getStackPointer()), ToStackOffset(a));
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void accept(CodeGeneratorARM64* codegen) override {
-    codegen->visitOutOfLineTableSwitch(this);
-  }
-||||||| merged common ancestors
-    void accept(CodeGeneratorARM64* codegen) override {
-        codegen->visitOutOfLineTableSwitch(this);
-    }
-=======
 class js::jit::OutOfLineTableSwitch
     : public OutOfLineCodeBase<CodeGeneratorARM64> {
   MTableSwitch* mir_;
   CodeLabel jumpLabel_;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  OutOfLineTableSwitch(TempAllocator& alloc, MTableSwitch* mir)
-      : mir_(mir), codeLabels_(alloc) {}
-||||||| merged common ancestors
-  public:
-    OutOfLineTableSwitch(TempAllocator& alloc, MTableSwitch* mir)
-      : mir_(mir),
-        codeLabels_(alloc)
-    { }
-=======
   void accept(CodeGeneratorARM64* codegen) override {
     codegen->visitOutOfLineTableSwitch(this);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MTableSwitch* mir() const { return mir_; }
-||||||| merged common ancestors
-    MTableSwitch* mir() const {
-        return mir_;
-    }
-=======
  public:
   explicit OutOfLineTableSwitch(MTableSwitch* mir) : mir_(mir) {}
 
@@ -1821,21 +1030,7 @@ class js::jit::OutOfLineTableSwitch
 
   CodeLabel* jumpLabel() { return &jumpLabel_; }
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool addCodeLabel(CodeLabel label) { return codeLabels_.append(label); }
-  CodeLabel codeLabel(unsigned i) { return codeLabels_[i]; }
-};
-||||||| merged common ancestors
-    bool addCodeLabel(CodeLabel label) {
-        return codeLabels_.append(label);
-    }
-    CodeLabel codeLabel(unsigned i) {
-        return codeLabels_[i];
-    }
-};
-=======
 void CodeGeneratorARM64::visitOutOfLineTableSwitch(OutOfLineTableSwitch* ool) {
   MTableSwitch* mir = ool->mir();
 
@@ -2093,19 +1288,7 @@ void CodeGenerator::visitRoundF(LRoundF* lir) {
       masm.Cmp(scratchGPR32, vixl::Operand(uint32_t(0x80000000)));
       bailoutIf(Assembler::Equal, lir->snapshot());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGeneratorARM64::visitOutOfLineTableSwitch(OutOfLineTableSwitch* ool) {
-  MOZ_CRASH("visitOutOfLineTableSwitch");
-}
-||||||| merged common ancestors
-void
-CodeGeneratorARM64::visitOutOfLineTableSwitch(OutOfLineTableSwitch* ool)
-{
-    MOZ_CRASH("visitOutOfLineTableSwitch");
-}
-=======
     masm.jump(&done);
   }
 
@@ -2146,149 +1329,36 @@ void CodeGenerator::visitTrunc(LTrunc* lir) {
   const Register output = ToRegister(lir->output());
   const ARMRegister output32(output, 32);
   const ARMRegister output64(output, 64);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGeneratorARM64::emitTableSwitchDispatch(MTableSwitch* mir,
-                                                 Register index_,
-                                                 Register base_) {
-  MOZ_CRASH("emitTableSwitchDispatch");
-}
-||||||| merged common ancestors
-void
-CodeGeneratorARM64::emitTableSwitchDispatch(MTableSwitch* mir, Register index_, Register base_)
-{
-    MOZ_CRASH("emitTableSwitchDispatch");
-}
-=======
   Label done, zeroCase;
 
   // Convert scalar to signed 32-bit fixed-point, rounding toward zero.
   // In the case of overflow, the output is saturated.
   // In the case of NaN and -0, the output is zero.
   masm.Fcvtzs(output32, input64);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitMathD(LMathD* math) {
-  ARMFPRegister lhs(ToFloatRegister(math->lhs()), 64);
-  ARMFPRegister rhs(ToFloatRegister(math->rhs()), 64);
-  ARMFPRegister output(ToFloatRegister(math->output()), 64);
-||||||| merged common ancestors
-void
-CodeGenerator::visitMathD(LMathD* math)
-{
-    MOZ_CRASH("visitMathD");
-}
-=======
   // If the output was zero, worry about special cases.
   masm.branch32(Assembler::Equal, output, Imm32(0), &zeroCase);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  switch (math->jsop()) {
-    case JSOP_ADD:
-      masm.Fadd(output, lhs, rhs);
-      break;
-    case JSOP_SUB:
-      masm.Fsub(output, lhs, rhs);
-      break;
-    case JSOP_MUL:
-      masm.Fmul(output, lhs, rhs);
-      break;
-    case JSOP_DIV:
-      masm.Fdiv(output, lhs, rhs);
-      break;
-    default:
-      MOZ_CRASH("unexpected opcode");
-  }
-}
-||||||| merged common ancestors
-void
-CodeGenerator::visitMathF(LMathF* math)
-{
-    MOZ_CRASH("visitMathF");
-}
-=======
   // Bail on overflow cases.
   bailoutCmp32(Assembler::Equal, output, Imm32(INT_MAX), lir->snapshot());
   bailoutCmp32(Assembler::Equal, output, Imm32(INT_MIN), lir->snapshot());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitMathF(LMathF* math) {
-  ARMFPRegister lhs(ToFloatRegister(math->lhs()), 32);
-  ARMFPRegister rhs(ToFloatRegister(math->rhs()), 32);
-  ARMFPRegister output(ToFloatRegister(math->output()), 32);
-||||||| merged common ancestors
-void
-CodeGenerator::visitFloor(LFloor* lir)
-{
-    FloatRegister input = ToFloatRegister(lir->input());
-    Register output = ToRegister(lir->output());
-=======
   // If the output was non-zero and wasn't saturated, just return it.
   masm.jump(&done);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  switch (math->jsop()) {
-    case JSOP_ADD:
-      masm.Fadd(output, lhs, rhs);
-      break;
-    case JSOP_SUB:
-      masm.Fsub(output, lhs, rhs);
-      break;
-    case JSOP_MUL:
-      masm.Fmul(output, lhs, rhs);
-      break;
-    case JSOP_DIV:
-      masm.Fdiv(output, lhs, rhs);
-      break;
-    default:
-      MOZ_CRASH("unexpected opcode");
-  }
-}
-||||||| merged common ancestors
-    Label bailout;
-    masm.floor(input, output, &bailout);
-    bailoutFrom(&bailout, lir->snapshot());
-}
-=======
   // Handle the case of a zero output:
   // 1. The input may have been NaN, requiring a bail.
   // 2. The input may have been in (-1,-0], requiring a bail.
   {
     masm.bind(&zeroCase);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitFloor(LFloor* lir) {
-  FloatRegister input = ToFloatRegister(lir->input());
-  Register output = ToRegister(lir->output());
-||||||| merged common ancestors
-void
-CodeGenerator::visitFloorF(LFloorF* lir)
-{
-    FloatRegister input = ToFloatRegister(lir->input());
-    Register output = ToRegister(lir->output());
-=======
     // If input is a negative number that truncated to zero, the real
     // output should be the non-integer -0.
     // The use of "lt" instead of "lo" also catches unordered NaN input.
     masm.Fcmp(input64, 0.0);
     bailoutIf(vixl::lt, lir->snapshot());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Label bailout;
-  masm.floor(input, output, &bailout);
-  bailoutFrom(&bailout, lir->snapshot());
-||||||| merged common ancestors
-    Label bailout;
-    masm.floorf(input, output, &bailout);
-    bailoutFrom(&bailout, lir->snapshot());
-=======
     // Check explicitly for -0, bitwise.
     masm.Fmov(output64, input64);
     bailoutTestPtr(Assembler::Signed, output, output, lir->snapshot());
@@ -2296,167 +1366,51 @@ CodeGenerator::visitFloorF(LFloorF* lir)
   }
 
   masm.bind(&done);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitFloorF(LFloorF* lir) {
-  FloatRegister input = ToFloatRegister(lir->input());
-  Register output = ToRegister(lir->output());
-||||||| merged common ancestors
-void
-CodeGenerator::visitCeil(LCeil* lir)
-{
-    FloatRegister input = ToFloatRegister(lir->input());
-    Register output = ToRegister(lir->output());
-=======
 void CodeGenerator::visitTruncF(LTruncF* lir) {
   const FloatRegister input = ToFloatRegister(lir->input());
   const ARMFPRegister input32(input, 32);
   const Register output = ToRegister(lir->output());
   const ARMRegister output32(output, 32);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Label bailout;
-  masm.floorf(input, output, &bailout);
-  bailoutFrom(&bailout, lir->snapshot());
-}
-||||||| merged common ancestors
-    Label bailout;
-    masm.ceil(input, output, &bailout);
-    bailoutFrom(&bailout, lir->snapshot());
-}
-=======
   Label done, zeroCase;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitCeil(LCeil* lir) {
-  FloatRegister input = ToFloatRegister(lir->input());
-  Register output = ToRegister(lir->output());
-||||||| merged common ancestors
-void
-CodeGenerator::visitCeilF(LCeilF* lir)
-{
-    FloatRegister input = ToFloatRegister(lir->input());
-    Register output = ToRegister(lir->output());
-=======
   // Convert scalar to signed 32-bit fixed-point, rounding toward zero.
   // In the case of overflow, the output is saturated.
   // In the case of NaN and -0, the output is zero.
   masm.Fcvtzs(output32, input32);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Label bailout;
-  masm.ceil(input, output, &bailout);
-  bailoutFrom(&bailout, lir->snapshot());
-}
-||||||| merged common ancestors
-    Label bailout;
-    masm.ceilf(input, output, &bailout);
-    bailoutFrom(&bailout, lir->snapshot());
-}
-=======
   // If the output was zero, worry about special cases.
   masm.branch32(Assembler::Equal, output, Imm32(0), &zeroCase);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitCeilF(LCeilF* lir) {
-  FloatRegister input = ToFloatRegister(lir->input());
-  Register output = ToRegister(lir->output());
-||||||| merged common ancestors
-void
-CodeGenerator::visitRound(LRound* lir)
-{
-    MOZ_CRASH("visitRound");
-}
-=======
   // Bail on overflow cases.
   bailoutCmp32(Assembler::Equal, output, Imm32(INT_MAX), lir->snapshot());
   bailoutCmp32(Assembler::Equal, output, Imm32(INT_MIN), lir->snapshot());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Label bailout;
-  masm.ceilf(input, output, &bailout);
-  bailoutFrom(&bailout, lir->snapshot());
-}
-||||||| merged common ancestors
-void
-CodeGenerator::visitRoundF(LRoundF* lir)
-{
-    MOZ_CRASH("visitRoundF");
-}
-=======
   // If the output was non-zero and wasn't saturated, just return it.
   masm.jump(&done);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitRound(LRound* lir) { MOZ_CRASH("visitRound"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitTrunc(LTrunc* lir)
-{
-    MOZ_CRASH("visitTrunc");
-}
-=======
   // Handle the case of a zero output:
   // 1. The input may have been NaN, requiring a bail.
   // 2. The input may have been in (-1,-0], requiring a bail.
   {
     masm.bind(&zeroCase);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitRoundF(LRoundF* lir) { MOZ_CRASH("visitRoundF"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitTruncF(LTruncF* lir)
-{
-    MOZ_CRASH("visitTruncF");
-}
-=======
     // If input is a negative number that truncated to zero, the real
     // output should be the non-integer -0.
     // The use of "lt" instead of "lo" also catches unordered NaN input.
     masm.Fcmp(input32, 0.0f);
     bailoutIf(vixl::lt, lir->snapshot());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitTrunc(LTrunc* lir) { MOZ_CRASH("visitTrunc"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitClzI(LClzI* lir)
-{
-    ARMRegister input = toWRegister(lir->input());
-    ARMRegister output = toWRegister(lir->output());
-    masm.Clz(output, input);
-}
-=======
     // Check explicitly for -0, bitwise.
     masm.Fmov(output32, input32);
     bailoutTest32(Assembler::Signed, output, output, lir->snapshot());
     masm.move32(Imm32(0), output);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitTruncF(LTruncF* lir) { MOZ_CRASH("visitTruncF"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitCtzI(LCtzI* lir)
-{
-    MOZ_CRASH("visitCtzI");
-}
-=======
   masm.bind(&done);
 }
->>>>>>> upstream-releases
 
 void CodeGenerator::visitClzI(LClzI* lir) {
   ARMRegister input = toWRegister(lir->input());
@@ -2470,23 +1424,6 @@ void CodeGenerator::visitCtzI(LCtzI* lir) {
   masm.ctz32(input, output, /* knownNotZero = */ false);
 }
 
-<<<<<<< HEAD
-void CodeGeneratorARM64::emitRoundDouble(FloatRegister src, Register dest,
-                                         Label* fail) {
-  MOZ_CRASH("CodeGeneratorARM64::emitRoundDouble");
-||||||| merged common ancestors
-void
-CodeGenerator::visitTruncateFToInt32(LTruncateFToInt32* ins)
-{
-    MOZ_CRASH("visitTruncateFToInt32");
-=======
-void CodeGenerator::visitTruncateDToInt32(LTruncateDToInt32* ins) {
-  emitTruncateDouble(ToFloatRegister(ins->input()), ToRegister(ins->output()),
-                     ins->mir());
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
 void CodeGenerator::visitTruncateDToInt32(LTruncateDToInt32* ins) {
   emitTruncateDouble(ToFloatRegister(ins->input()), ToRegister(ins->output()),
                      ins->mir());
@@ -2495,18 +1432,6 @@ void CodeGenerator::visitTruncateDToInt32(LTruncateDToInt32* ins) {
 void CodeGenerator::visitTruncateFToInt32(LTruncateFToInt32* ins) {
   emitTruncateFloat32(ToFloatRegister(ins->input()), ToRegister(ins->output()),
                       ins->mir());
-||||||| merged common ancestors
-static const uint32_t FrameSizes[] = { 128, 256, 512, 1024 };
-
-FrameSizeClass
-FrameSizeClass::FromDepth(uint32_t frameDepth)
-{
-    return FrameSizeClass::None();
-=======
-void CodeGenerator::visitTruncateFToInt32(LTruncateFToInt32* ins) {
-  emitTruncateFloat32(ToFloatRegister(ins->input()), ToRegister(ins->output()),
-                      ins->mir());
->>>>>>> upstream-releases
 }
 
 FrameSizeClass FrameSizeClass::FromDepth(uint32_t frameDepth) {
@@ -2559,38 +1484,14 @@ void CodeGenerator::visitUnbox(LUnbox* unbox) {
         cond = masm.testString(Assembler::NotEqual, value);
         break;
       case MIRType::Symbol:
-<<<<<<< HEAD
-        cond = masm.testSymbol(Assembler::NotEqual, value);
-||||||| merged common ancestors
-        masm.unboxSymbol(input, result);
-=======
         cond = masm.testSymbol(Assembler::NotEqual, value);
         break;
       case MIRType::BigInt:
         cond = masm.testBigInt(Assembler::NotEqual, value);
->>>>>>> upstream-releases
         break;
       default:
         MOZ_CRASH("Given MIRType cannot be unboxed.");
     }
-<<<<<<< HEAD
-    bailoutIf(cond, unbox->snapshot());
-  } else {
-#ifdef DEBUG
-    JSValueTag tag = MIRTypeToTag(mir->type());
-    Label ok;
-
-    ValueOperand input = ToValue(unbox, LUnbox::Input);
-    ScratchTagScope scratch(masm, input);
-    masm.splitTagForTest(input, scratch);
-    masm.branchTest32(Assembler::Condition::Equal, scratch, Imm32(tag), &ok);
-    masm.assumeUnreachable("Infallible unbox type mismatch");
-    masm.bind(&ok);
-#endif
-  }
-||||||| merged common ancestors
-}
-=======
     bailoutIf(cond, unbox->snapshot());
   } else {
 #ifdef DEBUG
@@ -2606,37 +1507,7 @@ void CodeGenerator::visitUnbox(LUnbox* unbox) {
     masm.bind(&ok);
 #endif
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  ValueOperand input = ToValue(unbox, LUnbox::Input);
-  Register result = ToRegister(unbox->output());
-  switch (mir->type()) {
-    case MIRType::Int32:
-      masm.unboxInt32(input, result);
-      break;
-    case MIRType::Boolean:
-      masm.unboxBoolean(input, result);
-      break;
-    case MIRType::Object:
-      masm.unboxObject(input, result);
-      break;
-    case MIRType::String:
-      masm.unboxString(input, result);
-      break;
-    case MIRType::Symbol:
-      masm.unboxSymbol(input, result);
-      break;
-    default:
-      MOZ_CRASH("Given MIRType cannot be unboxed.");
-  }
-||||||| merged common ancestors
-void
-CodeGenerator::visitDouble(LDouble* ins)
-{
-    ARMFPRegister output(ToFloatRegister(ins->getDef(0)), 64);
-    masm.Fmov(output, ins->getDouble());
-=======
   ValueOperand input = ToValue(unbox, LUnbox::Input);
   Register result = ToRegister(unbox->output());
   switch (mir->type()) {
@@ -2661,7 +1532,6 @@ CodeGenerator::visitDouble(LDouble* ins)
     default:
       MOZ_CRASH("Given MIRType cannot be unboxed.");
   }
->>>>>>> upstream-releases
 }
 
 void CodeGenerator::visitDouble(LDouble* ins) {
@@ -2822,20 +1692,6 @@ void CodeGenerator::visitCompareBitwiseAndBranch(
   emitBranch(cond, lir->ifTrue(), lir->ifFalse());
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitBitAndAndBranch(LBitAndAndBranch* baab) {
-  if (baab->right()->isConstant()) {
-    masm.Tst(toWRegister(baab->left()), Operand(ToInt32(baab->right())));
-  } else {
-    masm.Tst(toWRegister(baab->left()), toWRegister(baab->right()));
-  }
-  emitBranch(Assembler::NonZero, baab->ifTrue(), baab->ifFalse());
-||||||| merged common ancestors
-void
-CodeGenerator::visitBitAndAndBranch(LBitAndAndBranch* baab)
-{
-    MOZ_CRASH("visitBitAndAndBranch");
-=======
 void CodeGenerator::visitBitAndAndBranch(LBitAndAndBranch* baab) {
   if (baab->right()->isConstant()) {
     masm.Tst(toWRegister(baab->left()), Operand(ToInt32(baab->right())));
@@ -2843,7 +1699,6 @@ void CodeGenerator::visitBitAndAndBranch(LBitAndAndBranch* baab) {
     masm.Tst(toWRegister(baab->left()), toWRegister(baab->right()));
   }
   emitBranch(baab->cond(), baab->ifTrue(), baab->ifFalse());
->>>>>>> upstream-releases
 }
 
 void CodeGenerator::visitWasmUint32ToDouble(LWasmUint32ToDouble* lir) {
@@ -2905,7 +1760,6 @@ void CodeGeneratorARM64::storeElementTyped(const LAllocation* value,
   MOZ_CRASH("CodeGeneratorARM64::storeElementTyped");
 }
 
-<<<<<<< HEAD
 void CodeGeneratorARM64::generateInvalidateEpilogue() {
   // Ensure that there is enough space in the buffer for the OsiPoint patching
   // to occur. Otherwise, we could overwrite the invalidation epilogue.
@@ -2914,67 +1768,14 @@ void CodeGeneratorARM64::generateInvalidateEpilogue() {
   }
 
   masm.bind(&invalidate_);
-||||||| merged common ancestors
-void
-CodeGeneratorARM64::generateInvalidateEpilogue()
-{
-    // Ensure that there is enough space in the buffer for the OsiPoint patching
-    // to occur. Otherwise, we could overwrite the invalidation epilogue.
-    for (size_t i = 0; i < sizeof(void*); i += Assembler::NopSize()) {
-        masm.nop();
-    }
-=======
-void CodeGeneratorARM64::generateInvalidateEpilogue() {
-  // Ensure that there is enough space in the buffer for the OsiPoint patching
-  // to occur. Otherwise, we could overwrite the invalidation epilogue.
-  for (size_t i = 0; i < sizeof(void*); i += Assembler::NopSize()) {
-    masm.nop();
-  }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   // Push the return address of the point that we bailout out onto the stack.
   masm.push(lr);
-||||||| merged common ancestors
-    masm.bind(&invalidate_);
-=======
-  masm.bind(&invalidate_);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   // Push the Ion script onto the stack (when we determine what that pointer
   // is).
   invalidateEpilogueData_ = masm.pushWithPatch(ImmWord(uintptr_t(-1)));
-||||||| merged common ancestors
-    // Push the Ion script onto the stack (when we determine what that pointer is).
-    invalidateEpilogueData_ = masm.pushWithPatch(ImmWord(uintptr_t(-1)));
-=======
-  // Push the return address of the point that we bailout out onto the stack.
-  masm.push(lr);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  TrampolinePtr thunk = gen->jitRuntime()->getInvalidationThunk();
-  masm.call(thunk);
-||||||| merged common ancestors
-    TrampolinePtr thunk = gen->jitRuntime()->getInvalidationThunk();
-    masm.call(thunk);
-=======
-  // Push the Ion script onto the stack (when we determine what that pointer
-  // is).
-  invalidateEpilogueData_ = masm.pushWithPatch(ImmWord(uintptr_t(-1)));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // We should never reach this point in JIT code -- the invalidation thunk
-  // should pop the invalidated JS frame and return directly to its caller.
-  masm.assumeUnreachable(
-      "Should have returned directly to its caller instead of here.");
-||||||| merged common ancestors
-    // We should never reach this point in JIT code -- the invalidation thunk
-    // should pop the invalidated JS frame and return directly to its caller.
-    masm.assumeUnreachable("Should have returned directly to its caller instead of here.");
-=======
   TrampolinePtr thunk = gen->jitRuntime()->getInvalidationThunk();
   masm.call(thunk);
 
@@ -2982,7 +1783,6 @@ void CodeGeneratorARM64::generateInvalidateEpilogue() {
   // should pop the invalidated JS frame and return directly to its caller.
   masm.assumeUnreachable(
       "Should have returned directly to its caller instead of here.");
->>>>>>> upstream-releases
 }
 
 template <class U>
@@ -3015,15 +1815,6 @@ void CodeGenerator::visitWasmStackArg(LWasmStackArg* ins) {
   MOZ_CRASH("visitWasmStackArg");
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitUDiv(LUDiv* ins) { MOZ_CRASH("visitUDiv"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitUDiv(LUDiv* ins)
-{
-    MOZ_CRASH("visitUDiv");
-}
-=======
 void CodeGenerator::visitUDiv(LUDiv* ins) {
   MDiv* mir = ins->mir();
   Register lhs = ToRegister(ins->lhs());
@@ -3032,17 +1823,7 @@ void CodeGenerator::visitUDiv(LUDiv* ins) {
   ARMRegister lhs32 = ARMRegister(lhs, 32);
   ARMRegister rhs32 = ARMRegister(rhs, 32);
   ARMRegister output32 = ARMRegister(output, 32);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitUMod(LUMod* ins) { MOZ_CRASH("visitUMod"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitUMod(LUMod* ins)
-{
-    MOZ_CRASH("visitUMod");
-}
-=======
   // Prevent divide by zero.
   if (mir->canBeDivideByZero()) {
     if (mir->isTruncated()) {
@@ -3116,7 +1897,6 @@ void CodeGenerator::visitUMod(LUMod* ins) {
     masm.bind(&done);
   }
 }
->>>>>>> upstream-releases
 
 void CodeGenerator::visitEffectiveAddress(LEffectiveAddress* ins) {
   const MEffectiveAddress* mir = ins->mir();
@@ -3213,402 +1993,96 @@ void CodeGenerator::visitBitOpI64(LBitOpI64*) { MOZ_CRASH("NYI"); }
 
 void CodeGenerator::visitShiftI64(LShiftI64*) { MOZ_CRASH("NYI"); }
 
-<<<<<<< HEAD
-void CodeGenerator::visitSoftDivI(LSoftDivI*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitSoftDivI(LSoftDivI*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmLoad(LWasmLoad*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitSoftModI(LSoftModI*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitSoftModI(LSoftModI*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitCopySignD(LCopySignD*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmLoad(LWasmLoad*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmLoad(LWasmLoad*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitCopySignF(LCopySignF*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitCopySignD(LCopySignD*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitCopySignD(LCopySignD*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitNearbyInt(LNearbyInt*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitCopySignF(LCopySignF*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitCopySignF(LCopySignF*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitPopcntI64(LPopcntI64*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitNearbyInt(LNearbyInt*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitNearbyInt(LNearbyInt*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitRotateI64(LRotateI64*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitPopcntI64(LPopcntI64*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitPopcntI64(LPopcntI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmStore(LWasmStore*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitRotateI64(LRotateI64*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitRotateI64(LRotateI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitCompareI64(LCompareI64*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmStore(LWasmStore*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmStore(LWasmStore*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitNearbyIntF(LNearbyIntF*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitCompareI64(LCompareI64*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitCompareI64(LCompareI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmSelect(LWasmSelect*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitNearbyIntF(LNearbyIntF*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitNearbyIntF(LNearbyIntF*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmLoadI64(LWasmLoadI64*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmSelect(LWasmSelect*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmSelect(LWasmSelect*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmStoreI64(LWasmStoreI64*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmLoadI64(LWasmLoadI64*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmLoadI64(LWasmLoadI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitMemoryBarrier(LMemoryBarrier* ins) {
   masm.memoryBarrier(ins->type());
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmStoreI64(LWasmStoreI64*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmStoreI64(LWasmStoreI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmAddOffset(LWasmAddOffset*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitMemoryBarrier(LMemoryBarrier*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitMemoryBarrier(LMemoryBarrier*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmSelectI64(LWasmSelectI64*) { MOZ_CRASH("NYI"); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitSoftUDivOrMod(LSoftUDivOrMod*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitSoftUDivOrMod(LSoftUDivOrMod*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitSignExtendInt64(LSignExtendInt64*) {
   MOZ_CRASH("NYI");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmAddOffset(LWasmAddOffset*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmAddOffset(LWasmAddOffset*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmReinterpret(LWasmReinterpret*) {
   MOZ_CRASH("NYI");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmSelectI64(LWasmSelectI64*) { MOZ_CRASH("NYI"); }
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmSelectI64(LWasmSelectI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitWasmStackArgI64(LWasmStackArgI64*) {
   MOZ_CRASH("NYI");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitSignExtendInt64(LSignExtendInt64*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitSignExtendInt64(LSignExtendInt64*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitTestI64AndBranch(LTestI64AndBranch*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmReinterpret(LWasmReinterpret*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmReinterpret(LWasmReinterpret*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitWrapInt64ToInt32(LWrapInt64ToInt32*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmStackArgI64(LWasmStackArgI64*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmStackArgI64(LWasmStackArgI64*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitExtendInt32ToInt64(LExtendInt32ToInt64*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitTestI64AndBranch(LTestI64AndBranch*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitTestI64AndBranch(LTestI64AndBranch*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitCompareI64AndBranch(LCompareI64AndBranch*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitWrapInt64ToInt32(LWrapInt64ToInt32*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitWrapInt64ToInt32(LWrapInt64ToInt32*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitWasmTruncateToInt32(LWasmTruncateToInt32*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitExtendInt32ToInt64(LExtendInt32ToInt64*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitExtendInt32ToInt64(LExtendInt32ToInt64*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitWasmReinterpretToI64(LWasmReinterpretToI64*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitCompareI64AndBranch(LCompareI64AndBranch*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitCompareI64AndBranch(LCompareI64AndBranch*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitWasmAtomicExchangeHeap(LWasmAtomicExchangeHeap*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmTruncateToInt32(LWasmTruncateToInt32*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmTruncateToInt32(LWasmTruncateToInt32*)
-{
-    MOZ_CRASH("NYI");
-=======
 void CodeGenerator::visitWasmReinterpretFromI64(LWasmReinterpretFromI64*) {
   MOZ_CRASH("NYI");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmReinterpretToI64(LWasmReinterpretToI64*) {
-  MOZ_CRASH("NYI");
-}
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmReinterpretToI64(LWasmReinterpretToI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
 void CodeGenerator::visitAtomicTypedArrayElementBinop(
     LAtomicTypedArrayElementBinop* lir) {
   MOZ_ASSERT(lir->mir()->hasUses());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmAtomicExchangeHeap(LWasmAtomicExchangeHeap*) {
-  MOZ_CRASH("NYI");
-}
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmAtomicExchangeHeap(LWasmAtomicExchangeHeap*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
   AnyRegister output = ToAnyRegister(lir->output());
   Register elements = ToRegister(lir->elements());
   Register flagTemp = ToRegister(lir->temp1());
   Register outTemp =
       lir->temp2()->isBogusTemp() ? InvalidReg : ToRegister(lir->temp2());
   Register value = ToRegister(lir->value());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitWasmReinterpretFromI64(LWasmReinterpretFromI64*) {
-  MOZ_CRASH("NYI");
-}
-||||||| merged common ancestors
-void
-CodeGenerator::visitWasmReinterpretFromI64(LWasmReinterpretFromI64*)
-{
-    MOZ_CRASH("NYI");
-}
-=======
   Scalar::Type arrayType = lir->mir()->arrayType();
   size_t width = Scalar::byteSize(arrayType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void CodeGenerator::visitAtomicTypedArrayElementBinop(
-    LAtomicTypedArrayElementBinop*) {
-  MOZ_CRASH("NYI");
-||||||| merged common ancestors
-void
-CodeGenerator::visitAtomicTypedArrayElementBinop(LAtomicTypedArrayElementBinop*)
-{
-    MOZ_CRASH("NYI");
-=======
   if (lir->index()->isConstant()) {
     Address mem(elements, ToInt32(lir->index()) * width);
     masm.atomicFetchOpJS(arrayType, Synchronization::Full(),
@@ -3621,7 +2095,6 @@ CodeGenerator::visitAtomicTypedArrayElementBinop(LAtomicTypedArrayElementBinop*)
                          lir->mir()->operation(), value, mem, flagTemp, outTemp,
                          output);
   }
->>>>>>> upstream-releases
 }
 
 void CodeGenerator::visitWasmAtomicBinopHeapForEffect(

@@ -40,120 +40,38 @@ class _OldCacheEntryWrapper : public nsICacheEntry {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->SetExpirationTime(expirationTime);
   }
-<<<<<<< HEAD
-  nsresult OpenInputStream(uint32_t offset, nsIInputStream **_retval) {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER
-                     : mOldDesc->OpenInputStream(offset, _retval);
-||||||| merged common ancestors
-  nsresult OpenInputStream(uint32_t offset, nsIInputStream * *_retval)
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->OpenInputStream(offset, _retval);
-=======
   nsresult OpenInputStream(uint32_t offset, nsIInputStream** _retval) {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->OpenInputStream(offset, _retval);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  nsresult OpenOutputStream(uint32_t offset, nsIOutputStream **_retval) {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER
-                     : mOldDesc->OpenOutputStream(offset, _retval);
-||||||| merged common ancestors
-  nsresult OpenOutputStream(uint32_t offset, nsIOutputStream * *_retval)
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->OpenOutputStream(offset, _retval);
-=======
   nsresult OpenOutputStream(uint32_t offset, nsIOutputStream** _retval) {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->OpenOutputStream(offset, _retval);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  NS_IMETHOD OpenAlternativeOutputStream(const nsACString &type,
-                                         int64_t predictedSize,
-                                         nsIOutputStream **_retval) override {
-||||||| merged common ancestors
-  NS_IMETHOD OpenAlternativeOutputStream(const nsACString & type, int64_t predictedSize, nsIOutputStream * *_retval) override
-  {
-=======
   NS_IMETHOD OpenAlternativeOutputStream(
       const nsACString& type, int64_t predictedSize,
       nsIAsyncOutputStream** _retval) override {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
   }
-<<<<<<< HEAD
-  NS_IMETHOD OpenAlternativeInputStream(const nsACString &type,
-                                        nsIInputStream **_retval) override {
-||||||| merged common ancestors
-  NS_IMETHOD OpenAlternativeInputStream(const nsACString & type, nsIInputStream * *_retval) override
-  {
-=======
   NS_IMETHOD OpenAlternativeInputStream(const nsACString& type,
                                         nsIInputStream** _retval) override {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
   }
 
-<<<<<<< HEAD
-  NS_IMETHOD GetSecurityInfo(nsISupports **aSecurityInfo) override {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER
-                     : mOldDesc->GetSecurityInfo(aSecurityInfo);
-||||||| merged common ancestors
-  NS_IMETHOD GetSecurityInfo(nsISupports * *aSecurityInfo) override
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->GetSecurityInfo(aSecurityInfo);
-=======
   NS_IMETHOD GetSecurityInfo(nsISupports** aSecurityInfo) override {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->GetSecurityInfo(aSecurityInfo);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  NS_IMETHOD SetSecurityInfo(nsISupports *aSecurityInfo) override {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER
-                     : mOldDesc->SetSecurityInfo(aSecurityInfo);
-||||||| merged common ancestors
-  NS_IMETHOD SetSecurityInfo(nsISupports *aSecurityInfo) override
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->SetSecurityInfo(aSecurityInfo);
-=======
   NS_IMETHOD SetSecurityInfo(nsISupports* aSecurityInfo) override {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->SetSecurityInfo(aSecurityInfo);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetStorageDataSize(uint32_t *aStorageDataSize) override {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER
-                     : mOldDesc->GetStorageDataSize(aStorageDataSize);
-||||||| merged common ancestors
-  NS_IMETHOD GetStorageDataSize(uint32_t *aStorageDataSize) override
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->GetStorageDataSize(aStorageDataSize);
-=======
   NS_IMETHOD GetStorageDataSize(uint32_t* aStorageDataSize) override {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->GetStorageDataSize(aStorageDataSize);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  nsresult AsyncDoom(nsICacheListener *listener) {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER : mOldDesc->AsyncDoom(listener);
-||||||| merged common ancestors
-  nsresult AsyncDoom(nsICacheListener *listener)
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->AsyncDoom(listener);
-=======
   nsresult AsyncDoom(nsICacheListener* listener) {
     return !mOldDesc ? NS_ERROR_NULL_POINTER : mOldDesc->AsyncDoom(listener);
->>>>>>> upstream-releases
   }
   NS_IMETHOD MarkValid(void) override {
     return !mOldDesc ? NS_ERROR_NULL_POINTER : mOldDesc->MarkValid();
@@ -161,206 +79,69 @@ class _OldCacheEntryWrapper : public nsICacheEntry {
   NS_IMETHOD Close(void) override {
     return !mOldDesc ? NS_ERROR_NULL_POINTER : mOldDesc->Close();
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetMetaDataElement(const char *key, char **_retval) override {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER
-                     : mOldDesc->GetMetaDataElement(key, _retval);
-||||||| merged common ancestors
-  NS_IMETHOD GetMetaDataElement(const char * key, char * *_retval) override
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->GetMetaDataElement(key, _retval);
-=======
   NS_IMETHOD GetMetaDataElement(const char* key, char** _retval) override {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->GetMetaDataElement(key, _retval);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  NS_IMETHOD SetMetaDataElement(const char *key, const char *value) override {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER
-                     : mOldDesc->SetMetaDataElement(key, value);
-||||||| merged common ancestors
-  NS_IMETHOD SetMetaDataElement(const char * key, const char * value) override
-  {
-    return !mOldDesc ? NS_ERROR_NULL_POINTER :
-                       mOldDesc->SetMetaDataElement(key, value);
-=======
   NS_IMETHOD SetMetaDataElement(const char* key, const char* value) override {
     return !mOldDesc ? NS_ERROR_NULL_POINTER
                      : mOldDesc->SetMetaDataElement(key, value);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  NS_IMETHOD GetDiskStorageSizeInKB(uint32_t *aDiskStorageSize) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetDiskStorageSizeInKB(uint32_t *aDiskStorageSize) override
-  {
-=======
   NS_IMETHOD GetDiskStorageSizeInKB(uint32_t* aDiskStorageSize) override {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
   }
 
   // nsICacheEntryInfo
-<<<<<<< HEAD
-  NS_IMETHOD GetKey(nsACString &aKey) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetKey(nsACString & aKey) override
-  {
-=======
   NS_IMETHOD GetKey(nsACString& aKey) override {
->>>>>>> upstream-releases
     return mOldInfo->GetKey(aKey);
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetCacheEntryId(uint64_t *aCacheEntryId) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetCacheEntryId(uint64_t *aCacheEntryId) override
-  {
-=======
   NS_IMETHOD GetCacheEntryId(uint64_t* aCacheEntryId) override {
->>>>>>> upstream-releases
     *aCacheEntryId = mCacheEntryId;
     return NS_OK;
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetFetchCount(int32_t *aFetchCount) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetFetchCount(int32_t *aFetchCount) override
-  {
-=======
   NS_IMETHOD GetFetchCount(int32_t* aFetchCount) override {
->>>>>>> upstream-releases
     return mOldInfo->GetFetchCount(aFetchCount);
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetLastFetched(uint32_t *aLastFetched) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetLastFetched(uint32_t *aLastFetched) override
-  {
-=======
   NS_IMETHOD GetLastFetched(uint32_t* aLastFetched) override {
->>>>>>> upstream-releases
     return mOldInfo->GetLastFetched(aLastFetched);
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetLastModified(uint32_t *aLastModified) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetLastModified(uint32_t *aLastModified) override
-  {
-=======
   NS_IMETHOD GetLastModified(uint32_t* aLastModified) override {
->>>>>>> upstream-releases
     return mOldInfo->GetLastModified(aLastModified);
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetExpirationTime(uint32_t *aExpirationTime) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetExpirationTime(uint32_t *aExpirationTime) override
-  {
-=======
   NS_IMETHOD GetExpirationTime(uint32_t* aExpirationTime) override {
->>>>>>> upstream-releases
     return mOldInfo->GetExpirationTime(aExpirationTime);
   }
-<<<<<<< HEAD
-  nsresult GetDataSize(uint32_t *aDataSize) {
-||||||| merged common ancestors
-  nsresult GetDataSize(uint32_t *aDataSize)
-  {
-=======
   nsresult GetDataSize(uint32_t* aDataSize) {
->>>>>>> upstream-releases
     return mOldInfo->GetDataSize(aDataSize);
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetOnStartTime(uint64_t *aTime) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetOnStartTime(uint64_t *aTime) override
-  {
-=======
   NS_IMETHOD GetOnStartTime(uint64_t* aTime) override {
     return NS_ERROR_NOT_IMPLEMENTED;
   }
   NS_IMETHOD GetOnStopTime(uint64_t* aTime) override {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetOnStopTime(uint64_t *aTime) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetOnStopTime(uint64_t *aTime) override
-  {
-=======
   NS_IMETHOD SetNetworkTimes(uint64_t aOnStartTime,
                              uint64_t aOnStopTime) override {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
   }
-<<<<<<< HEAD
-  NS_IMETHOD SetNetworkTimes(uint64_t aOnStartTime,
-                             uint64_t aOnStopTime) override {
-||||||| merged common ancestors
-  NS_IMETHOD SetNetworkTimes(uint64_t aOnStartTime, uint64_t aOnStopTime) override
-  {
-=======
   NS_IMETHOD SetContentType(uint8_t aContentType) override {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
   }
-<<<<<<< HEAD
-  NS_IMETHOD GetLoadContextInfo(nsILoadContextInfo **aInfo) override {
-||||||| merged common ancestors
-  NS_IMETHOD GetLoadContextInfo(nsILoadContextInfo** aInfo) override
-  {
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  NS_IMETHOD Dismiss() override
-  {
-=======
   NS_IMETHOD AddBaseDomainAccess(uint32_t aSiteID) override {
     return NS_ERROR_NOT_IMPLEMENTED;
   }
   NS_IMETHOD GetLoadContextInfo(nsILoadContextInfo** aInfo) override {
->>>>>>> upstream-releases
     return NS_ERROR_NOT_IMPLEMENTED;
   }
   NS_IMETHOD Dismiss() override { return NS_ERROR_NOT_IMPLEMENTED; }
 
-<<<<<<< HEAD
-  NS_IMETHOD AsyncDoom(nsICacheEntryDoomCallback *listener) override;
-  NS_IMETHOD GetPersistent(bool *aPersistToDisk) override;
-  NS_IMETHOD GetIsForcedValid(bool *aIsForcedValid) override;
-||||||| merged common ancestors
-  NS_IMETHOD AsyncDoom(nsICacheEntryDoomCallback* listener) override;
-  NS_IMETHOD GetPersistent(bool *aPersistToDisk) override;
-  NS_IMETHOD GetIsForcedValid(bool *aIsForcedValid) override;
-=======
   NS_IMETHOD AsyncDoom(nsICacheEntryDoomCallback* listener) override;
   NS_IMETHOD GetPersistent(bool* aPersistToDisk) override;
   NS_IMETHOD GetIsForcedValid(bool* aIsForcedValid) override;
->>>>>>> upstream-releases
   NS_IMETHOD ForceValidFor(uint32_t aSecondsToTheFuture) override;
   NS_IMETHOD SetValid() override { return NS_OK; }
   NS_IMETHOD MetaDataReady() override { return NS_OK; }
-<<<<<<< HEAD
-  NS_IMETHOD Recreate(bool, nsICacheEntry **) override;
-  NS_IMETHOD GetDataSize(int64_t *size) override;
-  NS_IMETHOD GetAltDataSize(int64_t *size) override;
-  NS_IMETHOD GetAltDataType(nsACString &aType) override;
-  NS_IMETHOD OpenInputStream(int64_t offset, nsIInputStream **_retval) override;
-  NS_IMETHOD OpenOutputStream(int64_t offset, int64_t predictedSize,
-                              nsIOutputStream **_retval) override;
-||||||| merged common ancestors
-  NS_IMETHOD Recreate(bool, nsICacheEntry**) override;
-  NS_IMETHOD GetDataSize(int64_t *size) override;
-  NS_IMETHOD GetAltDataSize(int64_t *size) override;
-  NS_IMETHOD GetAltDataType(nsACString &aType) override;
-  NS_IMETHOD OpenInputStream(int64_t offset, nsIInputStream * *_retval) override;
-  NS_IMETHOD OpenOutputStream(int64_t offset, int64_t predictedSize, nsIOutputStream * *_retval) override;
-=======
   NS_IMETHOD Recreate(bool, nsICacheEntry**) override;
   NS_IMETHOD GetDataSize(int64_t* size) override;
   NS_IMETHOD GetAltDataSize(int64_t* size) override;
@@ -368,33 +149,18 @@ class _OldCacheEntryWrapper : public nsICacheEntry {
   NS_IMETHOD OpenInputStream(int64_t offset, nsIInputStream** _retval) override;
   NS_IMETHOD OpenOutputStream(int64_t offset, int64_t predictedSize,
                               nsIOutputStream** _retval) override;
->>>>>>> upstream-releases
   NS_IMETHOD MaybeMarkValid() override;
-<<<<<<< HEAD
-  NS_IMETHOD HasWriteAccess(bool aWriteOnly, bool *aWriteAccess) override;
-  NS_IMETHOD VisitMetaData(nsICacheEntryMetaDataVisitor *) override;
-||||||| merged common ancestors
-  NS_IMETHOD HasWriteAccess(bool aWriteOnly, bool *aWriteAccess) override;
-  NS_IMETHOD VisitMetaData(nsICacheEntryMetaDataVisitor*) override;
-=======
   NS_IMETHOD HasWriteAccess(bool aWriteOnly, bool* aWriteAccess) override;
   NS_IMETHOD VisitMetaData(nsICacheEntryMetaDataVisitor*) override;
->>>>>>> upstream-releases
 
-  explicit _OldCacheEntryWrapper(nsICacheEntryDescriptor *desc);
-  explicit _OldCacheEntryWrapper(nsICacheEntryInfo *info);
+  explicit _OldCacheEntryWrapper(nsICacheEntryDescriptor* desc);
+  explicit _OldCacheEntryWrapper(nsICacheEntryInfo* info);
 
  private:
   virtual ~_OldCacheEntryWrapper();
 
   _OldCacheEntryWrapper() = delete;
-<<<<<<< HEAD
-  nsICacheEntryDescriptor *mOldDesc;  // ref holded in mOldInfo
-||||||| merged common ancestors
-  nsICacheEntryDescriptor* mOldDesc; // ref holded in mOldInfo
-=======
   nsICacheEntryDescriptor* mOldDesc;  // ref holded in mOldInfo
->>>>>>> upstream-releases
   nsCOMPtr<nsICacheEntryInfo> mOldInfo;
 
   const uint64_t mCacheEntryId;
@@ -406,25 +172,10 @@ class _OldCacheLoad : public Runnable, public nsICacheListener {
   NS_DECL_NSIRUNNABLE
   NS_DECL_NSICACHELISTENER
 
-<<<<<<< HEAD
-  _OldCacheLoad(const nsACString &aScheme, const nsACString &aCacheKey,
-                nsICacheEntryOpenCallback *aCallback,
-                nsIApplicationCache *aAppCache, nsILoadContextInfo *aLoadInfo,
-                bool aWriteToDisk, uint32_t aFlags);
-||||||| merged common ancestors
-  _OldCacheLoad(const nsACString& aScheme,
-                const nsACString& aCacheKey,
-                nsICacheEntryOpenCallback* aCallback,
-                nsIApplicationCache* aAppCache,
-                nsILoadContextInfo* aLoadInfo,
-                bool aWriteToDisk,
-                uint32_t aFlags);
-=======
   _OldCacheLoad(const nsACString& aScheme, const nsACString& aCacheKey,
                 nsICacheEntryOpenCallback* aCallback,
                 nsIApplicationCache* aAppCache, nsILoadContextInfo* aLoadInfo,
                 bool aWriteToDisk, uint32_t aFlags);
->>>>>>> upstream-releases
 
   nsresult Start();
 
@@ -459,40 +210,16 @@ class _OldStorage : public nsICacheStorage {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSICACHESTORAGE
 
-<<<<<<< HEAD
- public:
-  _OldStorage(nsILoadContextInfo *aInfo, bool aAllowDisk, bool aLookupAppCache,
-              bool aOfflineStorage, nsIApplicationCache *aAppCache);
-||||||| merged common ancestors
-public:
-  _OldStorage(nsILoadContextInfo* aInfo,
-              bool aAllowDisk,
-              bool aLookupAppCache,
-              bool aOfflineStorage,
-              nsIApplicationCache* aAppCache);
-=======
  public:
   _OldStorage(nsILoadContextInfo* aInfo, bool aAllowDisk, bool aLookupAppCache,
               bool aOfflineStorage, nsIApplicationCache* aAppCache);
->>>>>>> upstream-releases
 
  private:
   virtual ~_OldStorage();
-<<<<<<< HEAD
-  nsresult AssembleCacheKey(nsIURI *aURI, nsACString const &aIdExtension,
-                            nsACString &aCacheKey, nsACString &aScheme);
-  nsresult ChooseApplicationCache(const nsACString &cacheKey,
-                                  nsIApplicationCache **aCache);
-||||||| merged common ancestors
-  nsresult AssembleCacheKey(nsIURI *aURI, nsACString const & aIdExtension,
-                            nsACString & aCacheKey, nsACString & aScheme);
-  nsresult ChooseApplicationCache(const nsACString& cacheKey, nsIApplicationCache** aCache);
-=======
   nsresult AssembleCacheKey(nsIURI* aURI, nsACString const& aIdExtension,
                             nsACString& aCacheKey, nsACString& aScheme);
   nsresult ChooseApplicationCache(const nsACString& cacheKey,
                                   nsIApplicationCache** aCache);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsILoadContextInfo> mLoadInfo;
   nsCOMPtr<nsIApplicationCache> mAppCache;
@@ -505,27 +232,6 @@ class _OldVisitCallbackWrapper : public nsICacheVisitor {
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSICACHEVISITOR
 
-<<<<<<< HEAD
-  _OldVisitCallbackWrapper(char const *deviceID, nsICacheStorageVisitor *cb,
-                           bool visitEntries, nsILoadContextInfo *aInfo)
-      : mCB(cb),
-        mVisitEntries(visitEntries),
-        mDeviceID(deviceID),
-        mLoadInfo(aInfo),
-        mHit(false) {}
-||||||| merged common ancestors
-  _OldVisitCallbackWrapper(char const * deviceID,
-                           nsICacheStorageVisitor * cb,
-                           bool visitEntries,
-                           nsILoadContextInfo * aInfo)
-  : mCB(cb)
-  , mVisitEntries(visitEntries)
-  , mDeviceID(deviceID)
-  , mLoadInfo(aInfo)
-  , mHit(false)
-  {
-  }
-=======
   _OldVisitCallbackWrapper(char const* deviceID, nsICacheStorageVisitor* cb,
                            bool visitEntries, nsILoadContextInfo* aInfo)
       : mCB(cb),
@@ -533,51 +239,23 @@ class _OldVisitCallbackWrapper : public nsICacheVisitor {
         mDeviceID(deviceID),
         mLoadInfo(aInfo),
         mHit(false) {}
->>>>>>> upstream-releases
 
  private:
   virtual ~_OldVisitCallbackWrapper();
   nsCOMPtr<nsICacheStorageVisitor> mCB;
   bool mVisitEntries;
-<<<<<<< HEAD
-  char const *mDeviceID;
-||||||| merged common ancestors
-  char const * mDeviceID;
-=======
   char const* mDeviceID;
->>>>>>> upstream-releases
   nsCOMPtr<nsILoadContextInfo> mLoadInfo;
   bool mHit;  // set to true when the device was found
 };
 
-<<<<<<< HEAD
-class _OldGetDiskConsumption : public Runnable, public nsICacheVisitor {
- public:
-  static nsresult Get(nsICacheStorageConsumptionObserver *aCallback);
-||||||| merged common ancestors
-class _OldGetDiskConsumption : public Runnable,
-                               public nsICacheVisitor
-{
-public:
-  static nsresult Get(nsICacheStorageConsumptionObserver* aCallback);
-=======
 class _OldGetDiskConsumption : public Runnable, public nsICacheVisitor {
  public:
   static nsresult Get(nsICacheStorageConsumptionObserver* aCallback);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  explicit _OldGetDiskConsumption(
-      nsICacheStorageConsumptionObserver *aCallback);
-||||||| merged common ancestors
-private:
-  explicit _OldGetDiskConsumption(nsICacheStorageConsumptionObserver* aCallback);
-=======
  private:
   explicit _OldGetDiskConsumption(
       nsICacheStorageConsumptionObserver* aCallback);
->>>>>>> upstream-releases
   virtual ~_OldGetDiskConsumption() = default;
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_NSICACHEVISITOR

@@ -280,15 +280,7 @@ static inline SkShader::TileMode ExtendModeToTileMode(ExtendMode aMode,
   return SkShader::kClamp_TileMode;
 }
 
-<<<<<<< HEAD
-static inline SkPaint::Hinting GfxHintingToSkiaHinting(FontHinting aHinting) {
-||||||| merged common ancestors
-static inline SkPaint::Hinting
-GfxHintingToSkiaHinting(FontHinting aHinting)
-{
-=======
 static inline SkFontHinting GfxHintingToSkiaHinting(FontHinting aHinting) {
->>>>>>> upstream-releases
   switch (aHinting) {
     case FontHinting::NONE:
       return kNo_SkFontHinting;

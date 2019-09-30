@@ -78,13 +78,7 @@
 
 #include "vm/BigIntType.h"
 
-<<<<<<< HEAD
 #include "mozilla/Casting.h"
-#include "mozilla/CheckedInt.h"
-||||||| merged common ancestors
-=======
-#include "mozilla/Casting.h"
->>>>>>> upstream-releases
 #include "mozilla/FloatingPoint.h"
 #include "mozilla/HashFunctions.h"
 #include "mozilla/MathAlgorithms.h"
@@ -108,84 +102,30 @@
 #include "vm/JSContext.h"
 #include "vm/SelfHosting.h"
 
-<<<<<<< HEAD
-#include "vm/JSContext-inl.h"
-
-||||||| merged common ancestors
-=======
 #include "gc/FreeOp-inl.h"
 #include "vm/JSContext-inl.h"
 
->>>>>>> upstream-releases
 using namespace js;
 
-<<<<<<< HEAD
-using mozilla::Abs;
-using mozilla::BitwiseCast;
-using mozilla::CheckedInt;
-||||||| merged common ancestors
-=======
 using JS::AutoStableStringChars;
 using mozilla::Abs;
 using mozilla::AssertedCast;
 using mozilla::BitwiseCast;
 using mozilla::IsFinite;
->>>>>>> upstream-releases
 using mozilla::Maybe;
-<<<<<<< HEAD
-using mozilla::Nothing;
-||||||| merged common ancestors
-=======
 using mozilla::NegativeInfinity;
 using mozilla::Nothing;
 using mozilla::PositiveInfinity;
->>>>>>> upstream-releases
 using mozilla::Range;
 using mozilla::RangedPtr;
-<<<<<<< HEAD
-using mozilla::Some;
-||||||| merged common ancestors
-=======
 using mozilla::Some;
 using mozilla::WrapToSigned;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// The following functions are wrappers for use with
-// mp_set_memory_functions. GMP passes extra arguments to the realloc
-// and free functions not needed by the JS allocation interface.
-// js_malloc has the signature expected for GMP's malloc function, so no
-// wrapper is required.
-
-static void* js_mp_realloc(void* ptr, size_t old_size, size_t new_size) {
-  return js_realloc(ptr, new_size);
-||||||| merged common ancestors
-// The following functions are wrappers for use with
-// mp_set_memory_functions. GMP passes extra arguments to the realloc
-// and free functions not needed by the JS allocation interface.
-// js_malloc has the signature expected for GMP's malloc function, so no
-// wrapper is required.
-
-static void*
-js_mp_realloc(void* ptr, size_t old_size, size_t new_size)
-{
-    return js_realloc(ptr, new_size);
-=======
 static inline unsigned DigitLeadingZeroes(BigInt::Digit x) {
   return sizeof(x) == 4 ? mozilla::CountLeadingZeroes32(x)
                         : mozilla::CountLeadingZeroes64(x);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void js_mp_free(void* ptr, size_t size) { return js_free(ptr); }
-||||||| merged common ancestors
-static void
-js_mp_free(void* ptr, size_t size)
-{
-    return js_free(ptr);
-}
-=======
 BigInt* BigInt::createUninitialized(JSContext* cx, size_t length,
                                     bool isNegative) {
   if (length > MaxDigitLength) {
@@ -193,7 +133,6 @@ BigInt* BigInt::createUninitialized(JSContext* cx, size_t length,
                               JSMSG_BIGINT_TOO_LARGE);
     return nullptr;
   }
->>>>>>> upstream-releases
 
   UniquePtr<Digit[], JS::FreePolicy> heapDigits;
   if (length > InlineDigitsLength) {
@@ -205,60 +144,11 @@ BigInt* BigInt::createUninitialized(JSContext* cx, size_t length,
     heapDigits = nullptr;
   }
 
-<<<<<<< HEAD
-JS_PUBLIC_API void JS::SetGMPMemoryFunctions(JS::GMPAllocFn allocFn,
-                                             JS::GMPReallocFn reallocFn,
-                                             JS::GMPFreeFn freeFn) {
-  MOZ_ASSERT(JS::detail::libraryInitState ==
-             JS::detail::InitState::Uninitialized);
-  memoryFunctionsInitialized = true;
-  mp_set_memory_functions(allocFn, reallocFn, freeFn);
-}
-
-void BigInt::init() {
-  // Don't override custom allocation functions if
-  // JS::SetGMPMemoryFunctions was called.
-  if (!memoryFunctionsInitialized) {
-    memoryFunctionsInitialized = true;
-    mp_set_memory_functions(js_malloc, js_mp_realloc, js_mp_free);
-  }
-}
-||||||| merged common ancestors
-JS_PUBLIC_API(void)
-JS::SetGMPMemoryFunctions(JS::GMPAllocFn allocFn,
-                          JS::GMPReallocFn reallocFn,
-                          JS::GMPFreeFn freeFn)
-{
-    MOZ_ASSERT(JS::detail::libraryInitState == JS::detail::InitState::Uninitialized);
-    memoryFunctionsInitialized = true;
-    mp_set_memory_functions(allocFn, reallocFn, freeFn);
-}
-=======
   BigInt* x = Allocate<BigInt>(cx);
   if (!x) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-BigInt* BigInt::create(JSContext* cx) {
-  BigInt* x = Allocate<BigInt>(cx);
-  if (!x) {
-    return nullptr;
-  }
-  mpz_init(x->num_);  // to zero
-  return x;
-||||||| merged common ancestors
-void
-BigInt::init()
-{
-    // Don't override custom allocation functions if
-    // JS::SetGMPMemoryFunctions was called.
-    if (!memoryFunctionsInitialized) {
-        memoryFunctionsInitialized = true;
-        mp_set_memory_functions(js_malloc, js_mp_realloc, js_mp_free);
-    }
-=======
   x->lengthSignAndReservedBits_ =
       (length << LengthShift) | (isNegative ? SignBit : 0);
   MOZ_ASSERT(x->digitLength() == length);
@@ -270,164 +160,34 @@ BigInt::init()
   }
 
   return x;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-BigInt* BigInt::createFromDouble(JSContext* cx, double d) {
-  BigInt* x = Allocate<BigInt>(cx);
-  if (!x) {
-    return nullptr;
-  }
-  mpz_init_set_d(x->num_, d);
-  return x;
-||||||| merged common ancestors
-BigInt*
-BigInt::create(JSContext* cx)
-{
-    BigInt* x = Allocate<BigInt>(cx);
-    if (!x) {
-        return nullptr;
-    }
-    mpz_init(x->num_); // to zero
-    return x;
-=======
 void BigInt::initializeDigitsToZero() {
   auto digs = digits();
   std::uninitialized_fill_n(digs.begin(), digs.Length(), 0);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-BigInt* BigInt::createFromBoolean(JSContext* cx, bool b) {
-  BigInt* x = Allocate<BigInt>(cx);
-  if (!x) {
-    return nullptr;
-  }
-  mpz_init_set_ui(x->num_, b);
-  return x;
-||||||| merged common ancestors
-BigInt*
-BigInt::createFromDouble(JSContext* cx, double d)
-{
-    BigInt* x = Allocate<BigInt>(cx);
-    if (!x) {
-        return nullptr;
-    }
-    mpz_init_set_d(x->num_, d);
-    return x;
-=======
 void BigInt::finalize(js::FreeOp* fop) {
   if (hasHeapDigits()) {
     size_t size = digitLength() * sizeof(Digit);
     fop->free_(this, heapDigits_, size, js::MemoryUse::BigIntDigits);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-BigInt* BigInt::createFromBytes(JSContext* cx, int sign, void* bytes,
-                                size_t nbytes) {
-  BigInt* x = Allocate<BigInt>(cx);
-  if (!x) {
-    return nullptr;
-  }
-  // Initialize num_ to zero before calling mpz_import.
-  mpz_init(x->num_);
-
-  if (nbytes == 0) {
-    return x;
-  }
-
-  mpz_import(x->num_, nbytes,
-             -1,  // order: least significant word first
-             1,   // size: one byte per "word"
-             0,   // endianness: native
-             0,   // nail bits: none; use full words
-             bytes);
-  if (sign < 0) {
-    mpz_neg(x->num_, x->num_);
-  }
-  return x;
-||||||| merged common ancestors
-BigInt*
-BigInt::createFromBoolean(JSContext* cx, bool b)
-{
-    BigInt* x = Allocate<BigInt>(cx);
-    if (!x) {
-        return nullptr;
-    }
-    mpz_init_set_ui(x->num_, b);
-    return x;
-=======
 js::HashNumber BigInt::hash() {
   js::HashNumber h =
       mozilla::HashBytes(digits().data(), digitLength() * sizeof(Digit));
   return mozilla::AddToHash(h, isNegative());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-BigInt* BigInt::createFromInt64(JSContext* cx, int64_t n) {
-  BigInt* res = createFromUint64(cx, Abs(n));
-  if (!res) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-BigInt*
-BigInt::createFromBytes(JSContext* cx, int sign, void* bytes, size_t nbytes)
-{
-    BigInt* x = Allocate<BigInt>(cx);
-    if (!x) {
-        return nullptr;
-    }
-    // Initialize num_ to zero before calling mpz_import.
-    mpz_init(x->num_);
-=======
 size_t BigInt::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
   return hasInlineDigits() ? 0 : mallocSizeOf(heapDigits_);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (n < 0) {
-    mpz_neg(res->num_, res->num_);
-  }
-||||||| merged common ancestors
-    if (nbytes == 0) {
-        return x;
-    }
-=======
 BigInt* BigInt::zero(JSContext* cx) {
   return createUninitialized(cx, 0, false);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return res;
-}
-
-BigInt* BigInt::createFromUint64(JSContext* cx, uint64_t n) {
-  BigInt* res = create(cx);
-  if (!res) {
-    return nullptr;
-  }
-
-  // cf. mpz_import parameters in createFromBytes, above.
-  mpz_import(res->num_, 1, 1, sizeof(uint64_t), 0, 0, &n);
-  return res;
-||||||| merged common ancestors
-    mpz_import(x->num_, nbytes,
-               -1, // order: least significant word first
-               1, // size: one byte per "word"
-               0, // endianness: native
-               0, // nail bits: none; use full words
-               bytes);
-    if (sign < 0) {
-        mpz_neg(x->num_, x->num_);
-    }
-    return x;
-=======
 BigInt* BigInt::createFromDigit(JSContext* cx, Digit d, bool isNegative) {
   MOZ_ASSERT(d != 0);
   BigInt* res = createUninitialized(cx, 1, isNegative);
@@ -436,99 +196,27 @@ BigInt* BigInt::createFromDigit(JSContext* cx, Digit d, bool isNegative) {
   }
   res->setDigit(0, d);
   return res;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 5.1.1
-static bool IsInteger(double d) {
-  // Step 1 is an assertion checked by the caller.
-  // Step 2.
-  if (!mozilla::IsFinite(d)) {
-    return false;
-  }
-||||||| merged common ancestors
-// BigInt proposal section 5.1.1
-static bool
-IsInteger(double d)
-{
-    // Step 1 is an assertion checked by the caller.
-    // Step 2.
-    if (!mozilla::IsFinite(d)) {
-        return false;
-    }
-=======
 BigInt* BigInt::one(JSContext* cx) { return createFromDigit(cx, 1, false); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 3.
-  double i = JS::ToInteger(d);
-||||||| merged common ancestors
-    // Step 3.
-    double i = JS::ToInteger(d);
-=======
 BigInt* BigInt::negativeOne(JSContext* cx) {
   return createFromDigit(cx, 1, true);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 4.
-  if (i != d) {
-    return false;
-  }
-||||||| merged common ancestors
-    // Step 4.
-    if (i != d) {
-        return false;
-    }
-=======
 BigInt* BigInt::neg(JSContext* cx, HandleBigInt x) {
   if (x->isZero()) {
     return x;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 5.
-  return true;
-||||||| merged common ancestors
-    // Step 5.
-    return true;
-=======
   BigInt* result = copy(cx, x);
   if (!result) {
     return nullptr;
   }
   result->lengthSignAndReservedBits_ ^= SignBit;
   return result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 5.1.2
-BigInt* js::NumberToBigInt(JSContext* cx, double d) {
-  // Step 1 is an assertion checked by the caller.
-  // Step 2.
-  if (!IsInteger(d)) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_NUMBER_TO_BIGINT);
-    return nullptr;
-  }
-||||||| merged common ancestors
-// BigInt proposal section 5.1.2
-BigInt*
-js::NumberToBigInt(JSContext* cx, double d)
-{
-    // Step 1 is an assertion checked by the caller.
-    // Step 2.
-    if (!IsInteger(d)) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                  JSMSG_NUMBER_TO_BIGINT);
-        return nullptr;
-    }
-=======
 #if !defined(JS_64BIT)
 #  define HAVE_TWO_DIGIT 1
 using TwoDigit = uint64_t;
@@ -536,15 +224,7 @@ using TwoDigit = uint64_t;
 #  define HAVE_TWO_DIGIT 1
 using TwoDigit = __uint128_t;
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 3.
-  return BigInt::createFromDouble(cx, d);
-||||||| merged common ancestors
-    // Step 3.
-    return BigInt::createFromDouble(cx, d);
-=======
 inline BigInt::Digit BigInt::digitMul(Digit a, Digit b, Digit* high) {
 #if defined(HAVE_TWO_DIGIT)
   TwoDigit result = static_cast<TwoDigit>(a) * static_cast<TwoDigit>(b);
@@ -580,28 +260,8 @@ inline BigInt::Digit BigInt::digitMul(Digit a, Digit b, Digit* high) {
 
   return low;
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-BigInt* BigInt::copy(JSContext* cx, HandleBigInt x) {
-  BigInt* bi = Allocate<BigInt>(cx);
-  if (!bi) {
-    return nullptr;
-  }
-  mpz_init_set(bi->num_, x->num_);
-  return bi;
-||||||| merged common ancestors
-BigInt*
-BigInt::copy(JSContext* cx, HandleBigInt x)
-{
-    BigInt* bi = Allocate<BigInt>(cx);
-    if (!bi) {
-        return nullptr;
-    }
-    mpz_init_set(bi->num_, x->num_);
-    return bi;
-=======
 BigInt::Digit BigInt::digitDiv(Digit high, Digit low, Digit divisor,
                                Digit* remainder) {
   MOZ_ASSERT(high < divisor, "division must not overflow");
@@ -691,30 +351,8 @@ BigInt::Digit BigInt::digitDiv(Digit high, Digit low, Digit divisor,
   *remainder = (un21 * HalfDigitBase + un0 - q0 * divisor) >> s;
   return q1 * HalfDigitBase + q0;
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.7
-BigInt* BigInt::add(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_add(z->num_, x->num_, y->num_);
-  return z;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.7
-BigInt*
-BigInt::add(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_add(z->num_, x->num_, y->num_);
-    return z;
-=======
 // Multiplies `source` with `factor` and adds `summand` to the result.
 // `result` and `source` may be the same BigInt for inplace modification.
 void BigInt::internalMultiplyAdd(BigInt* source, Digit factor, Digit summand,
@@ -752,57 +390,13 @@ void BigInt::internalMultiplyAdd(BigInt* source, Digit factor, Digit summand,
   } else {
     MOZ_ASSERT(!(carry + high));
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.8
-BigInt* BigInt::sub(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_sub(z->num_, x->num_, y->num_);
-  return z;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.8
-BigInt*
-BigInt::sub(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_sub(z->num_, x->num_, y->num_);
-    return z;
-=======
 // Multiplies `this` with `factor` and adds `summand` to the result.
 void BigInt::inplaceMultiplyAdd(Digit factor, Digit summand) {
   internalMultiplyAdd(this, factor, summand, digitLength(), this);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.4
-BigInt* BigInt::mul(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_mul(z->num_, x->num_, y->num_);
-  return z;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.4
-BigInt*
-BigInt::mul(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_mul(z->num_, x->num_, y->num_);
-    return z;
-=======
 // Multiplies `multiplicand` with `multiplier` and adds the result to
 // `accumulator`, starting at `accumulatorIndex` for the least-significant
 // digit.  Callers must ensure that `accumulator`'s digitLength and
@@ -848,103 +442,21 @@ void BigInt::multiplyAccumulate(BigInt* multiplicand, Digit multiplier,
     carry = newCarry;
     accumulatorIndex++;
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.5
-BigInt* BigInt::div(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  // Step 1.
-  if (mpz_size(y->num_) == 0) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_DIVISION_BY_ZERO);
-    return nullptr;
-  }
-||||||| merged common ancestors
-// BigInt proposal section 1.1.5
-BigInt*
-BigInt::div(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    // Step 1.
-    if (mpz_size(y->num_) == 0) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                  JSMSG_BIGINT_DIVISION_BY_ZERO);
-        return nullptr;
-    }
-=======
 inline int8_t BigInt::absoluteCompare(BigInt* x, BigInt* y) {
   MOZ_ASSERT(!x->digitLength() || x->digit(x->digitLength() - 1));
   MOZ_ASSERT(!y->digitLength() || y->digit(y->digitLength() - 1));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Steps 2-3.
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_tdiv_q(z->num_, x->num_, y->num_);
-  return z;
-}
-||||||| merged common ancestors
-    // Steps 2-3.
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_tdiv_q(z->num_, x->num_, y->num_);
-    return z;
-}
-=======
   // Sanity checks to catch negative zeroes escaping to the wild.
   MOZ_ASSERT(!x->isNegative() || !x->isZero());
   MOZ_ASSERT(!y->isNegative() || !y->isZero());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.6
-BigInt* BigInt::mod(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  // Step 1.
-  if (mpz_size(y->num_) == 0) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_DIVISION_BY_ZERO);
-    return nullptr;
-  }
-||||||| merged common ancestors
-// BigInt proposal section 1.1.6
-BigInt*
-BigInt::mod(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    // Step 1.
-    if (mpz_size(y->num_) == 0) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                  JSMSG_BIGINT_DIVISION_BY_ZERO);
-        return nullptr;
-    }
-=======
   int diff = x->digitLength() - y->digitLength();
   if (diff) {
     return diff < 0 ? -1 : 1;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Steps 2-4.
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_tdiv_r(z->num_, x->num_, y->num_);
-  return z;
-||||||| merged common ancestors
-    // Steps 2-4.
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_tdiv_r(z->num_, x->num_, y->num_);
-    return z;
-=======
   int i = x->digitLength() - 1;
   while (i >= 0 && x->digit(i) == y->digit(i)) {
     i--;
@@ -955,30 +467,8 @@ BigInt::mod(JSContext* cx, HandleBigInt x, HandleBigInt y)
   }
 
   return x->digit(i) > y->digit(i) ? 1 : -1;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.3
-BigInt* BigInt::pow(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  // Step 1.
-  if (mpz_sgn(y->num_) < 0) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_NEGATIVE_EXPONENT);
-    return nullptr;
-  }
-||||||| merged common ancestors
-// BigInt proposal section 1.1.3
-BigInt*
-BigInt::pow(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    // Step 1.
-    if (mpz_sgn(y->num_) < 0) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                  JSMSG_BIGINT_NEGATIVE_EXPONENT);
-        return nullptr;
-    }
-=======
 BigInt* BigInt::absoluteAdd(JSContext* cx, HandleBigInt x, HandleBigInt y,
                             bool resultNegative) {
   bool swap = x->digitLength() < y->digitLength();
@@ -1021,84 +511,20 @@ BigInt* BigInt::absoluteAdd(JSContext* cx, HandleBigInt x, HandleBigInt y,
 
   return destructivelyTrimHighZeroDigits(cx, result);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Throw a RangeError if the exponent is too large.
-  if (!mpz_fits_uint_p(y->num_)) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_TOO_LARGE);
-    return nullptr;
-  }
-  unsigned long int power = mpz_get_ui(y->num_);
-||||||| merged common ancestors
-    // Throw a RangeError if the exponent is too large.
-    if (!mpz_fits_uint_p(y->num_)) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                  JSMSG_BIGINT_TOO_LARGE);
-        return nullptr;
-    }
-    unsigned long int power = mpz_get_ui(y->num_);
-=======
 BigInt* BigInt::absoluteSub(JSContext* cx, HandleBigInt x, HandleBigInt y,
                             bool resultNegative) {
   MOZ_ASSERT(x->digitLength() >= y->digitLength());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Steps 2-3.
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    // Steps 2-3.
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-=======
   if (x->isZero()) {
     MOZ_ASSERT(y->isZero());
     return x;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mpz_pow_ui(z->num_, x->num_, power);
-  return z;
-}
-||||||| merged common ancestors
-    mpz_pow_ui(z->num_, x->num_, power);
-    return z;
-}
-=======
   if (y->isZero()) {
     return resultNegative == x->isNegative() ? x : neg(cx, x);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.1
-BigInt* BigInt::neg(JSContext* cx, HandleBigInt x) {
-  BigInt* res = create(cx);
-  if (!res) {
-    return nullptr;
-  }
-  mpz_neg(res->num_, x->num_);
-  return res;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.1
-BigInt*
-BigInt::neg(JSContext* cx, HandleBigInt x)
-{
-    BigInt* res = create(cx);
-    if (!res) {
-        return nullptr;
-    }
-    mpz_neg(res->num_, x->num_);
-    return res;
-=======
   int8_t comparisonResult = absoluteCompare(x, y);
   MOZ_ASSERT(comparisonResult >= 0);
   if (comparisonResult == 0) {
@@ -1129,32 +555,8 @@ BigInt::neg(JSContext* cx, HandleBigInt x)
 
   MOZ_ASSERT(!borrow);
   return destructivelyTrimHighZeroDigits(cx, result);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.9. BigInt::leftShift ( x, y )
-BigInt* BigInt::lsh(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-// BigInt proposal section 1.1.9. BigInt::leftShift ( x, y )
-BigInt*
-BigInt::lsh(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-
-    // Step 1.
-    if (mpz_sgn(y->num_) < 0) {
-        mpz_fdiv_q_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-        return z;
-    }
-=======
 // Divides `x` by `divisor`, returning the result in `quotient` and `remainder`.
 // Mathematically, the contract is:
 //
@@ -1200,47 +602,7 @@ bool BigInt::absoluteDivWithDigitDivisor(
       }
       quotient.value().set(q);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 1.
-  if (mpz_sgn(y->num_) < 0) {
-    mpz_fdiv_q_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-    return z;
-  }
-
-  // Step 2.
-  mpz_mul_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-  return z;
-}
-
-// BigInt proposal section 1.1.10. BigInt::signedRightShift ( x, y )
-BigInt* BigInt::rsh(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    // Step 2.
-    mpz_mul_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-    return z;
-}
-
-// BigInt proposal section 1.1.10. BigInt::signedRightShift ( x, y )
-BigInt*
-BigInt::rsh(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-
-    // Step 1 of BigInt::leftShift(x, -y).
-    if (mpz_sgn(y->num_) >= 0) {
-        mpz_fdiv_q_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-        return z;
-    }
-=======
     for (int i = length - 1; i >= 0; i--) {
       Digit q = digitDiv(*remainder, x->digit(i), divisor, remainder);
       quotient.value()->setDigit(i, q);
@@ -1250,48 +612,10 @@ BigInt::rsh(JSContext* cx, HandleBigInt x, HandleBigInt y)
       digitDiv(*remainder, x->digit(i), divisor, remainder);
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 1 of BigInt::leftShift(x, -y).
-  if (mpz_sgn(y->num_) >= 0) {
-    mpz_fdiv_q_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-    return z;
-  }
-
-  // Step 2 of BigInt::leftShift(x, -y).
-  mpz_mul_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-  return z;
-||||||| merged common ancestors
-    // Step 2 of BigInt::leftShift(x, -y).
-    mpz_mul_2exp(z->num_, x->num_, mpz_get_ui(y->num_));
-    return z;
-=======
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.17. BigInt::bitwiseAND ( x, y )
-BigInt* BigInt::bitAnd(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_and(z->num_, x->num_, y->num_);
-  return z;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.17. BigInt::bitwiseAND ( x, y )
-BigInt*
-BigInt::bitAnd(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_and(z->num_, x->num_, y->num_);
-    return z;
-=======
 // Adds `summand` onto `this`, starting with `summand`'s 0th digit
 // at `this`'s `startIndex`'th digit. Returns the "carry" (0 or 1).
 BigInt::Digit BigInt::absoluteInplaceAdd(BigInt* summand, unsigned startIndex) {
@@ -1311,30 +635,8 @@ BigInt::Digit BigInt::absoluteInplaceAdd(BigInt* summand, unsigned startIndex) {
   }
 
   return carry;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.18. BigInt::bitwiseXOR ( x, y )
-BigInt* BigInt::bitXor(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_xor(z->num_, x->num_, y->num_);
-  return z;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.18. BigInt::bitwiseXOR ( x, y )
-BigInt*
-BigInt::bitXor(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_xor(z->num_, x->num_, y->num_);
-    return z;
-=======
 // Subtracts `subtrahend` from this, starting with `subtrahend`'s 0th digit
 // at `this`'s `startIndex`-th digit. Returns the "borrow" (0 or 1).
 BigInt::Digit BigInt::absoluteInplaceSub(BigInt* subtrahend,
@@ -1356,62 +658,16 @@ BigInt::Digit BigInt::absoluteInplaceSub(BigInt* subtrahend,
   }
 
   return borrow;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.19. BigInt::bitwiseOR ( x, y )
-BigInt* BigInt::bitOr(JSContext* cx, HandleBigInt x, HandleBigInt y) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_ior(z->num_, x->num_, y->num_);
-  return z;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.19. BigInt::bitwiseOR ( x, y )
-BigInt*
-BigInt::bitOr(JSContext* cx, HandleBigInt x, HandleBigInt y)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_ior(z->num_, x->num_, y->num_);
-    return z;
-=======
 // Returns whether (factor1 * factor2) > (high << kDigitBits) + low.
 inline bool BigInt::productGreaterThan(Digit factor1, Digit factor2, Digit high,
                                        Digit low) {
   Digit resultHigh;
   Digit resultLow = digitMul(factor1, factor2, &resultHigh);
   return resultHigh > high || (resultHigh == high && resultLow > low);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.2. BigInt::bitwiseNOT ( x )
-BigInt* BigInt::bitNot(JSContext* cx, HandleBigInt x) {
-  BigInt* z = create(cx);
-  if (!z) {
-    return nullptr;
-  }
-  mpz_neg(z->num_, x->num_);
-  mpz_sub_ui(z->num_, z->num_, 1);
-  return z;
-||||||| merged common ancestors
-// BigInt proposal section 1.1.2. BigInt::bitwiseNOT ( x )
-BigInt*
-BigInt::bitNot(JSContext* cx, HandleBigInt x)
-{
-    BigInt* z = create(cx);
-    if (!z) {
-        return nullptr;
-    }
-    mpz_neg(z->num_, x->num_);
-    mpz_sub_ui(z->num_, z->num_, 1);
-    return z;
-=======
 void BigInt::inplaceRightShiftLowZeroBits(unsigned shift) {
   MOZ_ASSERT(shift < DigitBits);
   MOZ_ASSERT(!(digit(0) & ((static_cast<Digit>(1) << shift) - 1)),
@@ -1429,17 +685,8 @@ void BigInt::inplaceRightShiftLowZeroBits(unsigned shift) {
     carry = d >> shift;
   }
   setDigit(last, carry);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-int64_t BigInt::toInt64(BigInt* x) { return BitwiseCast<int64_t>(toUint64(x)); }
-||||||| merged common ancestors
-static bool
-ValidBigIntOperands(JSContext* cx, HandleValue lhs, HandleValue rhs)
-{
-    MOZ_ASSERT(lhs.isBigInt() || rhs.isBigInt());
-=======
 // Always copies the input, even when `shift` == 0.
 BigInt* BigInt::absoluteLeftShiftAlwaysCopy(JSContext* cx, HandleBigInt x,
                                             unsigned shift,
@@ -1454,19 +701,7 @@ BigInt* BigInt::absoluteLeftShiftAlwaysCopy(JSContext* cx, HandleBigInt x,
   if (!result) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-uint64_t BigInt::toUint64(BigInt* x) {
-  static_assert(GMP_LIMB_BITS == 32 || GMP_LIMB_BITS == 64,
-                "limbs must be either 32 or 64 bits");
-||||||| merged common ancestors
-    if (!lhs.isBigInt() || !rhs.isBigInt()) {
-        JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                  JSMSG_BIGINT_TO_NUMBER);
-        return false;
-    }
-=======
   if (!shift) {
     for (unsigned i = 0; i < n; i++) {
       result->setDigit(i, x->digit(i));
@@ -1474,86 +709,17 @@ uint64_t BigInt::toUint64(BigInt* x) {
     if (mode == LeftShiftMode::AlwaysAddOneDigit) {
       result->setDigit(n, 0);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint64_t digit;
-
-  if (GMP_LIMB_BITS == 32) {
-    uint64_t lo = mpz_getlimbn(x->num_, 0);
-    uint64_t hi = mpz_getlimbn(x->num_, 1);
-    digit = hi << 32 | lo;
-  } else {
-    digit = mpz_getlimbn(x->num_, 0);
-  }
-
-  // Return the two's complement if x is negative.
-  if (mpz_sgn(x->num_) < 0) {
-    return ~(digit - 1);
-  }
-
-  return digit;
-}
-||||||| merged common ancestors
-    return true;
-}
-=======
     return result;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-BigInt* BigInt::asUintN(JSContext* cx, HandleBigInt x, uint64_t bits) {
-  if (bits == 64) {
-    return createFromUint64(cx, toUint64(x));
-  }
-
-  if (bits == 0) {
-    return create(cx);
-  }
-
-  // Throw a RangeError if the bits argument is too large to represent using a
-  // GMP bit count.
-  CheckedInt<mp_bitcnt_t> bitCount = bits;
-  if (!bitCount.isValid()) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_TOO_LARGE);
-    return nullptr;
-  }
-||||||| merged common ancestors
-bool
-BigInt::add(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
   Digit carry = 0;
   for (unsigned i = 0; i < n; i++) {
     Digit d = x->digit(i);
     result->setDigit(i, (d << shift) | carry);
     carry = d >> (DigitBits - shift);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  BigInt* res = create(cx);
-  if (!res) {
-    return nullptr;
-  }
-
-  mpz_fdiv_r_2exp(res->num_, x->num_, bitCount.value());
-  return res;
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::add(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-=======
   if (mode == LeftShiftMode::AlwaysAddOneDigit) {
     result->setDigit(n, carry);
   } else {
@@ -1562,35 +728,8 @@ BigInt::add(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue 
   }
 
   return result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-BigInt* BigInt::asIntN(JSContext* cx, HandleBigInt x, uint64_t bits) {
-  if (bits == 64) {
-    return createFromInt64(cx, toInt64(x));
-  }
-
-  if (bits == 0) {
-    return create(cx);
-  }
-
-  // Throw a RangeError if the bits argument is too large to represent using a
-  // GMP bit count.
-  CheckedInt<mp_bitcnt_t> bitCount = bits;
-  if (!bitCount.isValid()) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_TOO_LARGE);
-    return nullptr;
-  }
-||||||| merged common ancestors
-bool
-BigInt::sub(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
 // Divides `dividend` by `divisor`, returning the result in `quotient` and
 // `remainder`. Mathematically, the contract is:
 //
@@ -1698,38 +837,7 @@ bool BigInt::absoluteDivWithBigIntDivisor(
         }
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CheckedInt<mp_bitcnt_t> bitIndex = bitCount - 1;
-  MOZ_ASSERT(bitIndex.isValid());
-
-  BigInt* res = create(cx);
-  if (!res) {
-    return nullptr;
-  }
-
-  // Choose the rounding mode based on x's sign bit. mpz_tstbit will simulate
-  // sign extension if the requested index is larger than the bit length of x.
-  if (mpz_tstbit(x->num_, bitIndex.value())) {
-    mpz_cdiv_r_2exp(res->num_, x->num_, bitCount.value());
-  } else {
-    mpz_fdiv_r_2exp(res->num_, x->num_, bitCount.value());
-  }
-
-  return res;
-}
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::sub(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-}
-=======
     // D4.
     // Multiply the divisor with the current quotient digit, and subtract
     // it from the dividend. If there was "borrow", then the quotient digit
@@ -1742,46 +850,12 @@ bool BigInt::absoluteDivWithBigIntDivisor(
       u->setDigit(j + n, u->digit(j + n) + c);
       qhat--;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool ValidBigIntOperands(JSContext* cx, HandleValue lhs,
-                                HandleValue rhs) {
-  MOZ_ASSERT(lhs.isBigInt() || rhs.isBigInt());
-||||||| merged common ancestors
-bool
-BigInt::mul(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
     if (quotient) {
       q->setDigit(j, qhat);
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!lhs.isBigInt() || !rhs.isBigInt()) {
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                              JSMSG_BIGINT_TO_NUMBER);
-    return false;
-  }
-
-  return true;
-}
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::mul(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-}
-=======
   if (quotient) {
     BigInt* bi = destructivelyTrimHighZeroDigits(cx, q);
     if (!bi) {
@@ -1789,65 +863,15 @@ BigInt::mul(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue 
     }
     quotient.value().set(q);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BigInt::add(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::div(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
   if (remainder) {
     u->inplaceRightShiftLowZeroBits(shift);
     remainder.value().set(u);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::add(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
   return true;
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::div(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-=======
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BigInt::sub(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::mod(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
 // Helper for Absolute{And,AndNot,Or,Xor}.
 // Performs the given binary `op` on digit pairs of `x` and `y`; when the
 // end of the shorter of the two is reached, `kind` configures how
@@ -1882,49 +906,12 @@ inline BigInt* BigInt::absoluteBitwiseOp(JSContext* cx, HandleBigInt x,
   if (!result) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::sub(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-}
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::mod(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-}
-=======
   unsigned i = 0;
   for (; i < numPairs; i++) {
     result->setDigit(i, op(x->digit(i), y->digit(i)));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BigInt::mul(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::pow(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
   if (kind != BitwiseOpKind::SymmetricTrim) {
     HandleBigInt& source =
         kind == BitwiseOpKind::AsymmetricFill ? x : xLength == i ? y : x;
@@ -1932,157 +919,33 @@ BigInt::pow(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue 
       result->setDigit(i, source->digit(i));
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::mul(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-}
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::pow(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-}
-=======
   MOZ_ASSERT(i == resultLength);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BigInt::div(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::neg(JSContext* cx, HandleValue operand, MutableHandleValue res)
-{
-    MOZ_ASSERT(operand.isBigInt());
-=======
   return destructivelyTrimHighZeroDigits(cx, result);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::div(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-||||||| merged common ancestors
-    RootedBigInt operandBigInt(cx, operand.toBigInt());
-    BigInt* resBigInt = BigInt::neg(cx, operandBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-=======
 BigInt* BigInt::absoluteAnd(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   return absoluteBitwiseOp<BitwiseOpKind::SymmetricTrim>(cx, x, y,
                                                          std::bit_and<Digit>());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BigInt::mod(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::lsh(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
 BigInt* BigInt::absoluteOr(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   return absoluteBitwiseOp<BitwiseOpKind::SymmetricFill>(cx, x, y,
                                                          std::bit_or<Digit>());
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::mod(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::lsh(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-=======
 BigInt* BigInt::absoluteAndNot(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   auto digitOperation = [](Digit a, Digit b) { return a & ~b; };
   return absoluteBitwiseOp<BitwiseOpKind::AsymmetricFill>(cx, x, y,
                                                           digitOperation);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BigInt::pow(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::rsh(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
 BigInt* BigInt::absoluteXor(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   return absoluteBitwiseOp<BitwiseOpKind::SymmetricFill>(cx, x, y,
                                                          std::bit_xor<Digit>());
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::pow(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::rsh(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-=======
 BigInt* BigInt::absoluteAddOne(JSContext* cx, HandleBigInt x,
                                bool resultNegative) {
   unsigned inputLength = x->digitLength();
@@ -2117,62 +980,14 @@ BigInt* BigInt::absoluteAddOne(JSContext* cx, HandleBigInt x,
   }
 
   return destructivelyTrimHighZeroDigits(cx, result);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BigInt::neg(JSContext* cx, HandleValue operand, MutableHandleValue res) {
-  MOZ_ASSERT(operand.isBigInt());
-||||||| merged common ancestors
-bool
-BigInt::bitAnd(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
 BigInt* BigInt::absoluteSubOne(JSContext* cx, HandleBigInt x,
                                bool resultNegative) {
   MOZ_ASSERT(!x->isZero());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt operandBigInt(cx, operand.toBigInt());
-  BigInt* resBigInt = BigInt::neg(cx, operandBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-}
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::bitAnd(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-}
-=======
   unsigned length = x->digitLength();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BigInt::lsh(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::bitXor(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
   if (length == 1) {
     Digit d = x->digit(0);
     if (d == 1) {
@@ -2181,49 +996,12 @@ BigInt::bitXor(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleVal
     }
     return createFromDigit(cx, d - 1, resultNegative);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::lsh(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-}
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::bitXor(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-}
-=======
   RootedBigInt result(cx, createUninitialized(cx, length, resultNegative));
   if (!result) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BigInt::rsh(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                 MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::bitOr(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValue res)
-{
-    if (!ValidBigIntOperands(cx, lhs, rhs)) {
-        return false;
-    }
-=======
   Digit borrow = 1;
   for (unsigned i = 0; i < length; i++) {
     Digit newBorrow = 0;
@@ -2231,137 +1009,23 @@ BigInt::bitOr(JSContext* cx, HandleValue lhs, HandleValue rhs, MutableHandleValu
     borrow = newBorrow;
   }
   MOZ_ASSERT(!borrow);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::rsh(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-||||||| merged common ancestors
-    RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    BigInt* resBigInt = BigInt::bitOr(cx, lhsBigInt, rhsBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-=======
   return destructivelyTrimHighZeroDigits(cx, result);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BigInt::bitAnd(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                    MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-BigInt::bitNot(JSContext* cx, HandleValue operand, MutableHandleValue res)
-{
-    MOZ_ASSERT(operand.isBigInt());
-=======
 BigInt* BigInt::inc(JSContext* cx, HandleBigInt x) {
   if (x->isZero()) {
     return one(cx);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::bitAnd(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-}
-
-bool BigInt::bitXor(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                    MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::bitXor(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-}
-
-bool BigInt::bitOr(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                   MutableHandleValue res) {
-  if (!ValidBigIntOperands(cx, lhs, rhs)) {
-    return false;
-  }
-
-  RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-  RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-  BigInt* resBigInt = BigInt::bitOr(cx, lhsBigInt, rhsBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-}
-
-bool BigInt::bitNot(JSContext* cx, HandleValue operand,
-                    MutableHandleValue res) {
-  MOZ_ASSERT(operand.isBigInt());
-
-  RootedBigInt operandBigInt(cx, operand.toBigInt());
-  BigInt* resBigInt = BigInt::bitNot(cx, operandBigInt);
-  if (!resBigInt) {
-    return false;
-  }
-  res.setBigInt(resBigInt);
-  return true;
-||||||| merged common ancestors
-    RootedBigInt operandBigInt(cx, operand.toBigInt());
-    BigInt* resBigInt = BigInt::bitNot(cx, operandBigInt);
-    if (!resBigInt) {
-        return false;
-    }
-    res.setBigInt(resBigInt);
-    return true;
-=======
   bool isNegative = x->isNegative();
   if (isNegative) {
     return absoluteSubOne(cx, x, isNegative);
   }
 
   return absoluteAddOne(cx, x, isNegative);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 7.3
-BigInt* js::ToBigInt(JSContext* cx, HandleValue val) {
-  RootedValue v(cx, val);
-||||||| merged common ancestors
-// BigInt proposal section 7.3
-BigInt*
-js::ToBigInt(JSContext* cx, HandleValue val)
-{
-    RootedValue v(cx, val);
-
-    // Step 1.
-    if (!ToPrimitive(cx, JSTYPE_NUMBER, &v)) {
-        return nullptr;
-    }
-=======
 BigInt* BigInt::dec(JSContext* cx, HandleBigInt x) {
   if (x->isZero()) {
     return negativeOne(cx);
@@ -2371,37 +1035,10 @@ BigInt* BigInt::dec(JSContext* cx, HandleBigInt x) {
   if (isNegative) {
     return absoluteAddOne(cx, x, isNegative);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 1.
-  if (!ToPrimitive(cx, JSTYPE_NUMBER, &v)) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    // Step 2.
-    if (v.isBigInt()) {
-        return v.toBigInt();
-    }
-=======
   return absoluteSubOne(cx, x, isNegative);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Step 2.
-  if (v.isBigInt()) {
-    return v.toBigInt();
-  }
-
-  if (v.isBoolean()) {
-    return BigInt::createFromBoolean(cx, v.toBoolean());
-  }
-||||||| merged common ancestors
-    if (v.isBoolean()) {
-        return BigInt::createFromBoolean(cx, v.toBoolean());
-    }
-=======
 // Lookup table for the maximum number of bits required per character of a
 // base-N string representation of a number. To increase accuracy, the array
 // value is the actual value multiplied by 32. To generate this table:
@@ -2469,33 +1106,7 @@ size_t BigInt::calculateMaximumCharactersRequired(HandleBigInt x,
 
   return AssertedCast<size_t>(maximumCharactersRequired);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (v.isString()) {
-    RootedString str(cx, v.toString());
-    BigInt* bi;
-    JS_TRY_VAR_OR_RETURN_NULL(cx, bi, StringToBigInt(cx, str, 0));
-    if (!bi) {
-      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                JSMSG_BIGINT_INVALID_SYNTAX);
-      return nullptr;
-    }
-    return bi;
-  }
-||||||| merged common ancestors
-    if (v.isString()) {
-        RootedString str(cx, v.toString());
-        BigInt* bi;
-        JS_TRY_VAR_OR_RETURN_NULL(cx, bi, StringToBigInt(cx, str, 0));
-        if (!bi) {
-            JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                      JSMSG_BIGINT_INVALID_SYNTAX);
-            return nullptr;
-        }
-        return bi;
-    }
-=======
 template <AllowGC allowGC>
 JSLinearString* BigInt::toStringBasePowerOfTwo(JSContext* cx, HandleBigInt x,
                                                unsigned radix) {
@@ -2518,15 +1129,7 @@ JSLinearString* BigInt::toStringBasePowerOfTwo(JSContext* cx, HandleBigInt x,
     ReportOutOfMemory(cx);
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_NOT_BIGINT);
-  return nullptr;
-||||||| merged common ancestors
-    JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_NOT_BIGINT);
-    return nullptr;
-=======
   auto resultChars = cx->make_pod_array<char>(charsRequired);
   if (!resultChars) {
     return nullptr;
@@ -2582,42 +1185,8 @@ JSLinearString* BigInt::toStringBasePowerOfTwo(JSContext* cx, HandleBigInt x,
 
   MOZ_ASSERT(pos == 0);
   return NewStringCopyN<allowGC>(cx, resultChars.get(), charsRequired);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// ES 2019 draft 6.1.6
-double BigInt::numberValue(BigInt* x) {
-  // mpz_get_d may cause a hardware overflow trap, so use
-  // mpz_get_d_2exp to get the fractional part and exponent
-  // separately.
-  signed long int exp;
-  double d = mpz_get_d_2exp(&exp, x->num_);
-  return ldexp(d, exp);
-||||||| merged common ancestors
-// ES 2019 draft 6.1.6
-double
-BigInt::numberValue(BigInt* x)
-{
-    // mpz_get_d may cause a hardware overflow trap, so use
-    // mpz_get_d_2exp to get the fractional part and exponent
-    // separately.
-    signed long int exp;
-    double d = mpz_get_d_2exp(&exp, x->num_);
-    return ldexp(d, exp);
-}
-
-bool
-BigInt::equal(BigInt* lhs, BigInt* rhs)
-{
-    if (lhs == rhs) {
-        return true;
-    }
-    if (mpz_cmp(lhs->num_, rhs->num_) == 0) {
-        return true;
-    }
-    return false;
-=======
 template <AllowGC allowGC>
 JSLinearString* BigInt::toStringSingleDigitBaseTen(JSContext* cx, Digit digit,
                                                    bool isNegative) {
@@ -2659,42 +1228,8 @@ static constexpr BigInt::Digit MaxPowerInDigit(uint8_t radix) {
     result *= radix;
   }
   return result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BigInt::equal(BigInt* lhs, BigInt* rhs) {
-  if (lhs == rhs) {
-    return true;
-  }
-  if (mpz_cmp(lhs->num_, rhs->num_) == 0) {
-    return true;
-  }
-  return false;
-}
-
-bool BigInt::equal(BigInt* lhs, double rhs) {
-  // The result of mpz_cmp_d is undefined for comparisons to NaN.
-  if (mozilla::IsNaN(rhs)) {
-    return false;
-  }
-  if (mpz_cmp_d(lhs->num_, rhs) == 0) {
-    return true;
-  }
-  return false;
-||||||| merged common ancestors
-bool
-BigInt::equal(BigInt* lhs, double rhs)
-{
-    // The result of mpz_cmp_d is undefined for comparisons to NaN.
-    if (mozilla::IsNaN(rhs)) {
-        return false;
-    }
-    if (mpz_cmp_d(lhs->num_, rhs) == 0) {
-        return true;
-    }
-    return false;
-=======
 static constexpr uint8_t MaxExponentInDigit(uint8_t radix) {
   uint8_t exp = 0;
   BigInt::Digit result = 1;
@@ -2703,60 +1238,8 @@ static constexpr uint8_t MaxExponentInDigit(uint8_t radix) {
     exp += 1;
   }
   return exp;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 3.2.5
-JS::Result<bool> BigInt::looselyEqual(JSContext* cx, HandleBigInt lhs,
-                                      HandleValue rhs) {
-  // Step 1.
-  if (rhs.isBigInt()) {
-    return equal(lhs, rhs.toBigInt());
-  }
-
-  // Steps 2-5 (not applicable).
-
-  // Steps 6-7.
-  if (rhs.isString()) {
-    RootedBigInt rhsBigInt(cx);
-    RootedString rhsString(cx, rhs.toString());
-    MOZ_TRY_VAR(rhsBigInt, StringToBigInt(cx, rhsString, 0));
-    if (!rhsBigInt) {
-      return false;
-    }
-    return equal(lhs, rhsBigInt);
-  }
-
-  // Steps 8-9 (not applicable).
-
-  // Steps 10-11.
-  if (rhs.isObject()) {
-    RootedValue rhsPrimitive(cx, rhs);
-    if (!ToPrimitive(cx, &rhsPrimitive)) {
-      return cx->alreadyReportedError();
-    }
-    return looselyEqual(cx, lhs, rhsPrimitive);
-  }
-
-  // Step 12.
-  if (rhs.isNumber()) {
-    return equal(lhs, rhs.toNumber());
-  }
-
-  // Step 13.
-  return false;
-}
-||||||| merged common ancestors
-// BigInt proposal section 3.2.5
-JS::Result<bool>
-BigInt::looselyEqual(JSContext* cx, HandleBigInt lhs, HandleValue rhs)
-{
-    // Step 1.
-    if (rhs.isBigInt()) {
-        return equal(lhs, rhs.toBigInt());
-    }
-=======
 struct RadixInfo {
   BigInt::Digit maxPowerInDigit;
   uint8_t maxExponentInDigit;
@@ -2790,16 +1273,7 @@ JSLinearString* BigInt::toStringGeneric(JSContext* cx, HandleBigInt x,
     ReportOutOfMemory(cx);
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// BigInt proposal section 1.1.12. BigInt::lessThan ( x, y )
-bool BigInt::lessThan(BigInt* x, BigInt* y) {
-  return mpz_cmp(x->num_, y->num_) < 0;
-}
-||||||| merged common ancestors
-    // Steps 2-5 (not applicable).
-=======
   UniqueChars resultString(js_pod_malloc<char>(maximumCharactersRequired));
   if (!resultString) {
     ReportOutOfMemory(cx);
@@ -2882,135 +1356,27 @@ bool BigInt::lessThan(BigInt* x, BigInt* y) {
   return NewStringCopyN<CanGC>(cx, resultString.get() + writePos,
                                maximumCharactersRequired - writePos);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-Maybe<bool> BigInt::lessThan(BigInt* lhs, double rhs) {
-  if (mozilla::IsNaN(rhs)) {
-    return Maybe<bool>(Nothing());
-  }
-  return Some(mpz_cmp_d(lhs->num_, rhs) < 0);
-}
-
-Maybe<bool> BigInt::lessThan(double lhs, BigInt* rhs) {
-  if (mozilla::IsNaN(lhs)) {
-    return Maybe<bool>(Nothing());
-  }
-  return Some(-mpz_cmp_d(rhs->num_, lhs) < 0);
-}
-
-bool BigInt::lessThan(JSContext* cx, HandleBigInt lhs, HandleString rhs,
-                      Maybe<bool>& res) {
-  RootedBigInt rhsBigInt(cx);
-  JS_TRY_VAR_OR_RETURN_FALSE(cx, rhsBigInt, StringToBigInt(cx, rhs, 0));
-  if (!rhsBigInt) {
-    res = Nothing();
-    return true;
-  }
-  res = Some(lessThan(lhs, rhsBigInt));
-  return true;
-}
-||||||| merged common ancestors
-    // Steps 6-7.
-    if (rhs.isString()) {
-        RootedBigInt rhsBigInt(cx);
-        RootedString rhsString(cx, rhs.toString());
-        MOZ_TRY_VAR(rhsBigInt, StringToBigInt(cx, rhsString, 0));
-        if (!rhsBigInt) {
-            return false;
-        }
-        return equal(lhs, rhsBigInt);
-    }
-=======
 BigInt* BigInt::trimHighZeroDigits(JSContext* cx, HandleBigInt x) {
   if (x->isZero()) {
     MOZ_ASSERT(!x->isNegative());
     return x;
   }
   MOZ_ASSERT(x->digitLength());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BigInt::lessThan(JSContext* cx, HandleString lhs, HandleBigInt rhs,
-                      Maybe<bool>& res) {
-  RootedBigInt lhsBigInt(cx);
-  JS_TRY_VAR_OR_RETURN_FALSE(cx, lhsBigInt, StringToBigInt(cx, lhs, 0));
-  if (!lhsBigInt) {
-    res = Nothing();
-    return true;
-  }
-  res = Some(lessThan(lhsBigInt, rhs));
-  return true;
-}
-||||||| merged common ancestors
-    // Steps 8-9 (not applicable).
-=======
   int nonZeroIndex = x->digitLength() - 1;
   while (nonZeroIndex >= 0 && x->digit(nonZeroIndex) == 0) {
     nonZeroIndex--;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool BigInt::lessThan(JSContext* cx, HandleValue lhs, HandleValue rhs,
-                      Maybe<bool>& res) {
-  if (lhs.isBigInt()) {
-    if (rhs.isString()) {
-      RootedBigInt lhsBigInt(cx, lhs.toBigInt());
-      RootedString rhsString(cx, rhs.toString());
-      return lessThan(cx, lhsBigInt, rhsString, res);
-    }
-||||||| merged common ancestors
-    // Steps 10-11.
-    if (rhs.isObject()) {
-        RootedValue rhsPrimitive(cx, rhs);
-        if (!ToPrimitive(cx, &rhsPrimitive)) {
-            return cx->alreadyReportedError();
-        }
-        return looselyEqual(cx, lhs, rhsPrimitive);
-    }
-=======
   if (nonZeroIndex < 0) {
     return zero(cx);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (rhs.isNumber()) {
-      res = lessThan(lhs.toBigInt(), rhs.toNumber());
-      return true;
-    }
-||||||| merged common ancestors
-    // Step 12.
-    if (rhs.isNumber()) {
-        return equal(lhs, rhs.toNumber());
-    }
-=======
   if (nonZeroIndex == static_cast<int>(x->digitLength() - 1)) {
     return x;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MOZ_ASSERT(rhs.isBigInt());
-    res = Some(lessThan(lhs.toBigInt(), rhs.toBigInt()));
-    return true;
-  }
-
-  MOZ_ASSERT(rhs.isBigInt());
-  if (lhs.isString()) {
-    RootedString lhsString(cx, lhs.toString());
-    RootedBigInt rhsBigInt(cx, rhs.toBigInt());
-    return lessThan(cx, lhsString, rhsBigInt, res);
-  }
-
-  MOZ_ASSERT(lhs.isNumber());
-  res = lessThan(lhs.toNumber(), rhs.toBigInt());
-  return true;
-||||||| merged common ancestors
-    // Step 13.
-    return false;
-=======
   unsigned newLength = nonZeroIndex + 1;
   BigInt* trimmedBigInt = createUninitialized(cx, newLength, x->isNegative());
   if (!trimmedBigInt) {
@@ -3021,34 +1387,8 @@ bool BigInt::lessThan(JSContext* cx, HandleValue lhs, HandleValue rhs,
   }
 
   return trimmedBigInt;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JSLinearString* BigInt::toString(JSContext* cx, BigInt* x, uint8_t radix) {
-  MOZ_ASSERT(2 <= radix && radix <= 36);
-  // We need two extra chars for '\0' and potentially '-'.
-  size_t strSize = mpz_sizeinbase(x->num_, 10) + 2;
-  UniqueChars str(js_pod_malloc<char>(strSize));
-  if (!str) {
-    ReportOutOfMemory(cx);
-    return nullptr;
-  }
-  mpz_get_str(str.get(), radix, x->num_);
-||||||| merged common ancestors
-JSLinearString*
-BigInt::toString(JSContext* cx, BigInt* x, uint8_t radix)
-{
-    MOZ_ASSERT(2 <= radix && radix <= 36);
-    // We need two extra chars for '\0' and potentially '-'.
-    size_t strSize = mpz_sizeinbase(x->num_, 10) + 2;
-    UniqueChars str(js_pod_malloc<char>(strSize));
-    if (!str) {
-        ReportOutOfMemory(cx);
-        return nullptr;
-    }
-    mpz_get_str(str.get(), radix, x->num_);
-=======
 BigInt* BigInt::destructivelyTrimHighZeroDigits(JSContext* cx, HandleBigInt x) {
   // TODO: Modify in place instead of allocating.
   return trimHighZeroDigits(cx, x);
@@ -3087,185 +1427,33 @@ bool BigInt::calculateMaximumDigitsRequired(JSContext* cx, uint8_t radix,
     ReportOutOfMemory(cx);
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return NewStringCopyZ<CanGC>(cx, str.get());
-||||||| merged common ancestors
-    return NewStringCopyZ<CanGC>(cx, str.get());
-=======
   *result = n;
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename CharT>
-<<<<<<< HEAD
-bool js::StringToBigIntImpl(const Range<const CharT>& chars, uint8_t radix,
-                            HandleBigInt res) {
-  const RangedPtr<const CharT> end = chars.end();
-  RangedPtr<const CharT> s = chars.begin();
-  Maybe<int8_t> sign;
-
-  s = SkipSpace(s.get(), end.get());
-
-  if (s != end && s[0] == '+') {
-    sign.emplace(1);
-    s++;
-  } else if (s != end && s[0] == '-') {
-    sign.emplace(-1);
-    s++;
-  }
-
-  if (!radix) {
-    radix = 10;
-
-    if (end - s >= 2 && s[0] == '0') {
-      if (s[1] == 'x' || s[1] == 'X') {
-        radix = 16;
-        s += 2;
-      } else if (s[1] == 'o' || s[1] == 'O') {
-        radix = 8;
-        s += 2;
-      } else if (s[1] == 'b' || s[1] == 'B') {
-        radix = 2;
-        s += 2;
-      }
-
-      if (radix != 10 && s == end) {
-        return false;
-      }
-    }
-  }
-
-  if (sign && radix != 10) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-js::StringToBigIntImpl(const Range<const CharT>& chars, uint8_t radix,
-                       HandleBigInt res)
-{
-    const RangedPtr<const CharT> end = chars.end();
-    RangedPtr<const CharT> s = chars.begin();
-    Maybe<int8_t> sign;
-
-    s = SkipSpace(s.get(), end.get());
-
-    if (s != end && s[0] == '+') {
-        sign.emplace(1);
-        s++;
-    } else if (s != end && s[0] == '-') {
-        sign.emplace(-1);
-        s++;
-    }
-
-    if (!radix) {
-        radix = 10;
-
-        if (end - s >= 2 && s[0] == '0') {
-            if (s[1] == 'x' || s[1] == 'X') {
-                radix = 16;
-                s += 2;
-            } else if (s[1] == 'o' || s[1] == 'O') {
-                radix = 8;
-                s += 2;
-            } else if (s[1] == 'b' || s[1] == 'B') {
-                radix = 2;
-                s += 2;
-            }
-
-            if (radix != 10 && s == end) {
-                return false;
-            }
-        }
-    }
-=======
 BigInt* BigInt::parseLiteralDigits(JSContext* cx,
                                    const Range<const CharT> chars,
                                    unsigned radix, bool isNegative,
                                    bool* haveParseError) {
   MOZ_ASSERT(chars.length());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mpz_set_ui(res->num_, 0);
-||||||| merged common ancestors
-    if (sign && radix != 10) {
-        return false;
-    }
-=======
   RangedPtr<const CharT> start = chars.begin();
   RangedPtr<const CharT> end = chars.end();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (; s < end; s++) {
-    unsigned digit;
-    if (!mozilla::IsAsciiAlphanumeric(s[0])) {
-      s = SkipSpace(s.get(), end.get());
-      if (s == end) {
-        break;
-      }
-      return false;
-||||||| merged common ancestors
-    mpz_set_ui(res->num_, 0);
-
-    for (; s < end; s++) {
-        unsigned digit;
-        if (!mozilla::IsAsciiAlphanumeric(s[0])) {
-            s = SkipSpace(s.get(), end.get());
-            if (s == end) {
-                break;
-            }
-            return false;
-        }
-        digit = mozilla::AsciiAlphanumericToNumber(s[0]);
-        if (digit >= radix) {
-            return false;
-        }
-        mpz_mul_ui(res->num_, res->num_, radix);
-        mpz_add_ui(res->num_, res->num_, digit);
-=======
   // Skipping leading zeroes.
   while (start[0] == '0') {
     start++;
     if (start == end) {
       return zero(cx);
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    digit = mozilla::AsciiAlphanumericToNumber(s[0]);
-    if (digit >= radix) {
-      return false;
-    }
-    mpz_mul_ui(res->num_, res->num_, radix);
-    mpz_add_ui(res->num_, res->num_, digit);
-  }
-||||||| merged common ancestors
-
-    if (sign.valueOr(1) < 0) {
-        mpz_neg(res->num_, res->num_);
-    }
-=======
   }
 
   unsigned limit0 = '0' + std::min(radix, 10u);
   unsigned limita = 'a' + (radix - 10);
   unsigned limitA = 'A' + (radix - 10);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (sign.valueOr(1) < 0) {
-    mpz_neg(res->num_, res->num_);
-  }
-
-  return true;
-}
-||||||| merged common ancestors
-    return true;
-}
-=======
   size_t length;
   if (!calculateMaximumDigitsRequired(cx, radix, end - start, &length)) {
     return nullptr;
@@ -3274,61 +1462,9 @@ BigInt* BigInt::parseLiteralDigits(JSContext* cx,
   if (!result) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-JS::Result<BigInt*, JS::OOM&> js::StringToBigInt(JSContext* cx,
-                                                 HandleString str,
-                                                 uint8_t radix) {
-  RootedBigInt res(cx, BigInt::create(cx));
-  if (!res) {
-    return cx->alreadyReportedOOM();
-  }
-
-  JSLinearString* linear = str->ensureLinear(cx);
-  if (!linear) {
-    return cx->alreadyReportedOOM();
-  }
-
-  {
-    JS::AutoCheckCannotGC nogc;
-    if (linear->hasLatin1Chars()) {
-      if (StringToBigIntImpl(linear->latin1Range(nogc), radix, res)) {
-        return res.get();
-      }
-    } else {
-      if (StringToBigIntImpl(linear->twoByteRange(nogc), radix, res)) {
-        return res.get();
-      }
-    }
-  }
-
-  return nullptr;
-}
-||||||| merged common ancestors
-JS::Result<BigInt*, JS::OOM&>
-js::StringToBigInt(JSContext* cx, HandleString str, uint8_t radix)
-{
-    RootedBigInt res(cx, BigInt::create(cx));
-    if (!res) {
-        return cx->alreadyReportedOOM();
-    }
-=======
   result->initializeDigitsToZero();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-BigInt* js::StringToBigInt(JSContext* cx, const Range<const char16_t>& chars) {
-  RootedBigInt res(cx, BigInt::create(cx));
-  if (!res) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    JSLinearString* linear = str->ensureLinear(cx);
-    if (!linear) {
-        return cx->alreadyReportedOOM();
-    }
-=======
   for (; start < end; start++) {
     uint32_t digit;
     CharT c = *start;
@@ -3342,56 +1478,14 @@ BigInt* js::StringToBigInt(JSContext* cx, const Range<const char16_t>& chars) {
       *haveParseError = true;
       return nullptr;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint8_t radix = 0;
-  if (StringToBigIntImpl(chars, radix, res)) {
-    return res.get();
-  }
-||||||| merged common ancestors
-    {
-        JS::AutoCheckCannotGC nogc;
-        if (linear->hasLatin1Chars()) {
-            if (StringToBigIntImpl(linear->latin1Range(nogc), radix, res)) {
-                return res.get();
-            }
-        } else {
-            if (StringToBigIntImpl(linear->twoByteRange(nogc), radix, res)) {
-                return res.get();
-            }
-        }
-    }
-=======
     result->inplaceMultiplyAdd(static_cast<Digit>(radix),
                                static_cast<Digit>(digit));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return nullptr;
-||||||| merged common ancestors
-    return nullptr;
-=======
   return destructivelyTrimHighZeroDigits(cx, result);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-size_t BigInt::byteLength(BigInt* x) {
-  if (mpz_sgn(x->num_) == 0) {
-    return 0;
-  }
-  return JS_HOWMANY(mpz_sizeinbase(x->num_, 2), 8);
-||||||| merged common ancestors
-size_t
-BigInt::byteLength(BigInt* x)
-{
-    if (mpz_sgn(x->num_) == 0) {
-        return 0;
-    }
-    return JS_HOWMANY(mpz_sizeinbase(x->num_, 2), 8);
-=======
 // BigInt proposal section 7.2
 template <typename CharT>
 BigInt* BigInt::parseLiteral(JSContext* cx, const Range<const CharT> chars,
@@ -3422,30 +1516,8 @@ BigInt* BigInt::parseLiteral(JSContext* cx, const Range<const CharT> chars,
 
   return parseLiteralDigits(cx, Range<const CharT>(start, end), 10, isNegative,
                             haveParseError);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void BigInt::writeBytes(BigInt* x, RangedPtr<uint8_t> buffer) {
-#ifdef DEBUG
-  // Check that the buffer being filled is large enough to hold the
-  // integer we're writing. The result of the RangedPtr addition is
-  // restricted to the buffer's range.
-  size_t reprSize = byteLength(x);
-  MOZ_ASSERT(buffer + reprSize, "out of bounds access to buffer");
-#endif
-||||||| merged common ancestors
-void
-BigInt::writeBytes(BigInt* x, RangedPtr<uint8_t> buffer)
-{
-#ifdef DEBUG
-    // Check that the buffer being filled is large enough to hold the
-    // integer we're writing. The result of the RangedPtr addition is
-    // restricted to the buffer's range.
-    size_t reprSize = byteLength(x);
-    MOZ_ASSERT(buffer + reprSize, "out of bounds access to buffer");
-#endif
-=======
 // BigInt proposal section 5.1.1
 static bool IsInteger(double d) {
   // Step 1 is an assertion checked by the caller.
@@ -3456,19 +1528,7 @@ static bool IsInteger(double d) {
 
   // Step 3.
   double i = JS::ToInteger(d);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  size_t count;
-  // cf. mpz_import parameters in createFromBytes, above.
-  mpz_export(buffer.get(), &count, -1, 1, 0, 0, x->num_);
-  MOZ_ASSERT(count == reprSize);
-||||||| merged common ancestors
-    size_t count;
-    // cf. mpz_import parameters in createFromBytes, above.
-    mpz_export(buffer.get(), &count, -1, 1, 0, 0, x->num_);
-    MOZ_ASSERT(count == reprSize);
-=======
   // Step 4.
   if (i != d) {
     return false;
@@ -3476,18 +1536,8 @@ static bool IsInteger(double d) {
 
   // Step 5.
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void BigInt::finalize(js::FreeOp* fop) { mpz_clear(num_); }
-||||||| merged common ancestors
-void
-BigInt::finalize(js::FreeOp* fop)
-{
-    mpz_clear(num_);
-}
-=======
 BigInt* BigInt::createFromDouble(JSContext* cx, double d) {
   MOZ_ASSERT(::IsInteger(d),
              "Only integer-valued doubles can convert to BigInt");
@@ -3565,25 +1615,7 @@ BigInt* BigInt::createFromDouble(JSContext* cx, double d) {
 
   return result;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-JSAtom* js::BigIntToAtom(JSContext* cx, BigInt* bi) {
-  JSString* str = BigInt::toString(cx, bi, 10);
-  if (!str) {
-    return nullptr;
-  }
-  return AtomizeString(cx, str);
-||||||| merged common ancestors
-JSAtom*
-js::BigIntToAtom(JSContext* cx, BigInt* bi)
-{
-    JSString* str = BigInt::toString(cx, bi, 10);
-    if (!str) {
-        return nullptr;
-    }
-    return AtomizeString(cx, str);
-=======
 BigInt* BigInt::createFromUint64(JSContext* cx, uint64_t n) {
   if (n == 0) {
     return zero(cx);
@@ -3608,18 +1640,8 @@ BigInt* BigInt::createFromUint64(JSContext* cx, uint64_t n) {
   }
 
   return createFromDigit(cx, n, isNegative);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BigInt::toBoolean() { return mpz_sgn(num_) != 0; }
-||||||| merged common ancestors
-bool
-BigInt::toBoolean()
-{
-    return mpz_sgn(num_) != 0;
-}
-=======
 BigInt* BigInt::createFromInt64(JSContext* cx, int64_t n) {
   BigInt* res = createFromUint64(cx, Abs(n));
   if (!res) {
@@ -3633,23 +1655,7 @@ BigInt* BigInt::createFromInt64(JSContext* cx, int64_t n) {
 
   return res;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-int8_t BigInt::sign() { return mpz_sgn(num_); }
-
-js::HashNumber BigInt::hash() {
-  const mp_limb_t* limbs = mpz_limbs_read(num_);
-  size_t limbCount = mpz_size(num_);
-  uint32_t hash = mozilla::HashBytes(limbs, limbCount * sizeof(mp_limb_t));
-  hash = mozilla::AddToHash(hash, mpz_sgn(num_));
-  return hash;
-||||||| merged common ancestors
-int8_t
-BigInt::sign()
-{
-    return mpz_sgn(num_);
-=======
 // BigInt proposal section 5.1.2
 BigInt* js::NumberToBigInt(JSContext* cx, double d) {
   // Step 1 is an assertion checked by the caller.
@@ -3677,26 +1683,8 @@ BigInt* BigInt::copy(JSContext* cx, HandleBigInt x) {
     result->setDigit(i, x->digit(i));
   }
   return result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-size_t BigInt::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const {
-  // Use the total number of limbs allocated when calculating the size
-  // (_mp_alloc), not the number of limbs currently in use (_mp_size).
-  // See the Info node `(gmp)Integer Internals` for details.
-  mpz_srcptr n = static_cast<mpz_srcptr>(num_);
-  return sizeof(*n) + sizeof(mp_limb_t) * n->_mp_alloc;
-||||||| merged common ancestors
-js::HashNumber
-BigInt::hash()
-{
-    const mp_limb_t* limbs = mpz_limbs_read(num_);
-    size_t limbCount = mpz_size(num_);
-    uint32_t hash = mozilla::HashBytes(limbs, limbCount * sizeof(mp_limb_t));
-    hash = mozilla::AddToHash(hash, mpz_sgn(num_));
-    return hash;
-=======
 // BigInt proposal section 1.1.7
 BigInt* BigInt::add(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   bool xNegative = x->isNegative();
@@ -3714,27 +1702,8 @@ BigInt* BigInt::add(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   }
 
   return absoluteSub(cx, y, x, !xNegative);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JS::ubi::Node::Size JS::ubi::Concrete<BigInt>::size(
-    mozilla::MallocSizeOf mallocSizeOf) const {
-  BigInt& bi = get();
-  MOZ_ASSERT(bi.isTenured());
-  size_t size = js::gc::Arena::thingSize(bi.asTenured().getAllocKind());
-  size += bi.sizeOfExcludingThis(mallocSizeOf);
-  return size;
-||||||| merged common ancestors
-size_t
-BigInt::sizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const
-{
-    // Use the total number of limbs allocated when calculating the size
-    // (_mp_alloc), not the number of limbs currently in use (_mp_size).
-    // See the Info node `(gmp)Integer Internals` for details.
-    mpz_srcptr n = static_cast<mpz_srcptr>(num_);
-    return sizeof(*n) + sizeof(mp_limb_t) * n->_mp_alloc;
-=======
 // BigInt proposal section 1.1.8
 BigInt* BigInt::sub(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   bool xNegative = x->isNegative();
@@ -3750,65 +1719,8 @@ BigInt* BigInt::sub(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   }
 
   return absoluteSub(cx, y, x, !xNegative);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <XDRMode mode>
-XDRResult js::XDRBigInt(XDRState<mode>* xdr, MutableHandleBigInt bi) {
-  JSContext* cx = xdr->cx();
-
-  uint8_t sign;
-  uint32_t length;
-
-  if (mode == XDR_ENCODE) {
-    cx->check(bi);
-    sign = static_cast<uint8_t>(bi->sign());
-    uint64_t sz = BigInt::byteLength(bi);
-    // As the maximum source code size is currently UINT32_MAX code units
-    // (see BytecodeCompiler::checkLength), any bigint literal's length in
-    // word-sized digits will be less than UINT32_MAX as well.  That could
-    // change or FoldConstants could start creating these though, so leave
-    // this as a release-enabled assert.
-    MOZ_RELEASE_ASSERT(sz <= UINT32_MAX);
-    length = static_cast<uint32_t>(sz);
-  }
-
-  MOZ_TRY(xdr->codeUint8(&sign));
-  MOZ_TRY(xdr->codeUint32(&length));
-
-  UniquePtr<uint8_t> buf(cx->pod_malloc<uint8_t>(length));
-  if (!buf) {
-    ReportOutOfMemory(cx);
-    return xdr->fail(JS::TranscodeResult_Throw);
-  }
-
-  if (mode == XDR_ENCODE) {
-    BigInt::writeBytes(bi, RangedPtr<uint8_t>(buf.get(), length));
-  }
-
-  MOZ_TRY(xdr->codeBytes(buf.get(), length));
-
-  if (mode == XDR_DECODE) {
-    BigInt* res = BigInt::createFromBytes(cx, static_cast<int8_t>(sign),
-                                          buf.get(), length);
-    if (!res) {
-      return xdr->fail(JS::TranscodeResult_Throw);
-    }
-    bi.set(res);
-  }
-
-  return Ok();
-||||||| merged common ancestors
-JS::ubi::Node::Size
-JS::ubi::Concrete<BigInt>::size(mozilla::MallocSizeOf mallocSizeOf) const
-{
-    BigInt& bi = get();
-    MOZ_ASSERT(bi.isTenured());
-    size_t size = js::gc::Arena::thingSize(bi.asTenured().getAllocKind());
-    size += bi.sizeOfExcludingThis(mallocSizeOf);
-    return size;
-=======
 // BigInt proposal section 1.1.4
 BigInt* BigInt::mul(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   if (x->isZero()) {
@@ -3832,17 +1744,7 @@ BigInt* BigInt::mul(JSContext* cx, HandleBigInt x, HandleBigInt y) {
   }
 
   return destructivelyTrimHighZeroDigits(cx, result);
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-
-template XDRResult js::XDRBigInt(XDRState<XDR_ENCODE>* xdr,
-                                 MutableHandleBigInt bi);
-
-template XDRResult js::XDRBigInt(XDRState<XDR_DECODE>* xdr,
-                                 MutableHandleBigInt bi);
-||||||| merged common ancestors
-=======
 
 // BigInt proposal section 1.1.5
 BigInt* BigInt::div(JSContext* cx, HandleBigInt x, HandleBigInt y) {
@@ -5546,4 +3448,3 @@ template XDRResult js::XDRBigInt(XDRState<XDR_ENCODE>* xdr,
 
 template XDRResult js::XDRBigInt(XDRState<XDR_DECODE>* xdr,
                                  MutableHandleBigInt bi);
->>>>>>> upstream-releases

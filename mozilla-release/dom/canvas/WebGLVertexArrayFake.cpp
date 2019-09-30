@@ -38,19 +38,9 @@ void WebGLVertexArrayFake::BindVertexArray() {
     ++i;
   }
 
-<<<<<<< HEAD
-  size_t len = prevVertexArray->mAttribs.Length();
-  for (; i < len; ++i) {
-    const auto& vd = prevVertexArray->mAttribs[i];
-||||||| merged common ancestors
-    size_t len = prevVertexArray->mAttribs.Length();
-    for (; i < len; ++i) {
-        const auto& vd = prevVertexArray->mAttribs[i];
-=======
   size_t len = prevVertexArray->mAttribs.size();
   for (; i < len; ++i) {
     const auto& vd = prevVertexArray->mAttribs[i];
->>>>>>> upstream-releases
 
     if (vd.mEnabled) {
       gl->fDisableVertexAttribArray(i);

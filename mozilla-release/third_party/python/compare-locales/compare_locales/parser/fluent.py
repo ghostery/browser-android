@@ -17,11 +17,6 @@ from .base import (
 )
 
 
-<<<<<<< HEAD
-class FluentAttribute(Entry):
-||||||| merged common ancestors
-class FluentAttribute(EntityBase):
-=======
 class WordCounter(ftl.Visitor):
     def __init__(self):
         self.word_count = 0
@@ -43,7 +38,6 @@ class WordCounter(ftl.Visitor):
 
 
 class FluentAttribute(Entry):
->>>>>>> upstream-releases
     ignored_fields = ['span']
 
     def __init__(self, entity, attr_node):

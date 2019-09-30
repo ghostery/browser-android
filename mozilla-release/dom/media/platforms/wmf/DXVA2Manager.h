@@ -43,34 +43,15 @@ class DXVA2Manager {
                               layers::Image** aOutImage) = 0;
 
   virtual HRESULT CopyToBGRATexture(ID3D11Texture2D* aInTexture,
-<<<<<<< HEAD
-                                    const GUID& aSubType,
                                     ID3D11Texture2D** aOutTexture) {
-||||||| merged common ancestors
-                                    const GUID& aSubType,
-                                    ID3D11Texture2D** aOutTexture)
-  {
-=======
-                                    ID3D11Texture2D** aOutTexture) {
->>>>>>> upstream-releases
     // Not implemented!
     MOZ_CRASH("CopyToBGRATexture not implemented on this manager.");
     return E_FAIL;
   }
 
-<<<<<<< HEAD
-  virtual HRESULT ConfigureForSize(IMFMediaType* aInputType, uint32_t aWidth,
-                                   uint32_t aHeight) {
-||||||| merged common ancestors
-  virtual HRESULT ConfigureForSize(IMFMediaType* aInputType,
-                                   uint32_t aWidth,
-                                   uint32_t aHeight)
-  {
-=======
   virtual HRESULT ConfigureForSize(IMFMediaType* aInputType,
                                    gfx::YUVColorSpace aColorSpace,
                                    uint32_t aWidth, uint32_t aHeight) {
->>>>>>> upstream-releases
     return S_OK;
   }
 

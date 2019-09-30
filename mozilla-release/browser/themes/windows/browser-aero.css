@@ -13,7 +13,6 @@
     #main-window[sizemode="normal"] > #navigator-toolbox > #titlebar > #toolbar-menubar[autohide="true"][inactive] + #TabsToolbar > .toolbar-items {
       margin-top: 1px;
     }
-<<<<<<< HEAD
     /**
      * Except for Windows 8, Windows 7 Aero and Windows 7 Aero Basic, the
      * -moz-window-button-box appearance on the .titlebar-buttonbox adds an
@@ -30,35 +29,6 @@
     #main-window[sizemode="normal"] .titlebar-buttonbox {
       -moz-appearance: -moz-window-button-box;
     }
-
-    @media (-moz-windows-compositor) {
-      #main-window[sizemode="maximized"] .titlebar-buttonbox {
-        -moz-appearance: -moz-window-button-box-maximized;
-      }
-    }
-  }
-}
-||||||| merged common ancestors
-  }
-}
-=======
-    /**
-     * Except for Windows 8, Windows 7 Aero and Windows 7 Aero Basic, the
-     * -moz-window-button-box appearance on the .titlebar-buttonbox adds an
-     * unwanted margin at the top of the button box.
-     *
-     * For Windows 8 and Windows Aero (which both use the compositor):
-     *   We want the -moz-window-button-box applied in the restored case,
-     *   and -moz-window-button-box-maximized in the maximized case.
-     *
-     * For Windows Aero Basic:
-     *   The margin is also unwanted in the maximized case, but we want
-     *   it in the restored window case.
-     */
-    #main-window[sizemode="normal"] .titlebar-buttonbox {
-      -moz-appearance: -moz-window-button-box;
-    }
->>>>>>> upstream-releases
 
     @media (-moz-windows-compositor) {
       #main-window[sizemode="maximized"] .titlebar-buttonbox {

@@ -4,31 +4,6 @@ add_task(async function() {
   info("Starting subResources test");
 
   await SpecialPowers.flushPrefEnv();
-<<<<<<< HEAD
-  await SpecialPowers.pushPrefEnv({"set": [
-    ["dom.storage_access.enabled", true],
-    ["browser.contentblocking.allowlist.annotations.enabled", true],
-    ["browser.contentblocking.allowlist.storage.enabled", true],
-    ["network.cookie.cookieBehavior", Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER],
-    ["privacy.trackingprotection.enabled", false],
-    ["privacy.trackingprotection.pbmode.enabled", false],
-    ["privacy.trackingprotection.annotate_channels", true],
-    ["privacy.restrict3rdpartystorage.userInteractionRequiredForHosts", "tracking.example.com,tracking.example.org"],
-  ]});
-||||||| merged common ancestors
-  await SpecialPowers.pushPrefEnv({"set": [
-    ["dom.storage_access.enabled", true],
-    ["browser.contentblocking.allowlist.annotations.enabled", true],
-    ["browser.contentblocking.allowlist.storage.enabled", true],
-    ["browser.contentblocking.enabled", true],
-    ["browser.contentblocking.ui.enabled", true],
-    ["browser.fastblock.enabled", false],
-    ["network.cookie.cookieBehavior", Ci.nsICookieService.BEHAVIOR_REJECT_TRACKER],
-    ["privacy.trackingprotection.enabled", false],
-    ["privacy.trackingprotection.pbmode.enabled", false],
-    ["privacy.trackingprotection.annotate_channels", true],
-  ]});
-=======
   await SpecialPowers.pushPrefEnv({
     set: [
       ["dom.storage_access.enabled", true],
@@ -47,7 +22,6 @@ add_task(async function() {
       ],
     ],
   });
->>>>>>> upstream-releases
 
   await UrlClassifierTestUtils.addTestTrackers();
 });
@@ -335,43 +309,6 @@ add_task(async function testUserInteractionHeuristic() {
       });
     }
   );
-
-  info("Now ensure that the storage access is removed if the cookie policy is changed.");
-  await SpecialPowers.pushPrefEnv({"set": [
-    ["network.cookie.cookieBehavior", Ci.nsICookieService.BEHAVIOR_REJECT],
-  ]});
-  await ContentTask.spawn(browser, {}, async obj => {
-    await new content.Promise(resolve => {
-      let ifr = content.document.querySelectorAll("iframe");
-      ifr = ifr[ifr.length - 1];
-
-      let msg = {};
-      msg.blockingCallback = (async _ => {
-        await noStorageAccessInitially();
-      }).toString();
-
-      content.addEventListener("message", function msg(event) {
-        if (event.data.type == "finish") {
-          content.removeEventListener("message", msg);
-          resolve();
-          return;
-        }
-
-        if (event.data.type == "ok") {
-          ok(event.data.what, event.data.msg);
-          return;
-        }
-
-        if (event.data.type == "info") {
-          info(event.data.msg);
-          return;
-        }
-
-        ok(false, "Unknown message");
-      });
-      ifr.contentWindow.postMessage({ callback: msg.blockingCallback }, "*");
-    });
-  });
 
   info("Removing the tab");
   BrowserTestUtils.removeTab(tab);

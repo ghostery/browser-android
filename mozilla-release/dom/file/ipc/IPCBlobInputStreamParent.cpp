@@ -13,25 +13,11 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-template <typename M>
-/* static */ already_AddRefed<IPCBlobInputStreamParent>
-IPCBlobInputStreamParent::Create(nsIInputStream* aInputStream, uint64_t aSize,
-                                 uint64_t aChildID, nsresult* aRv,
-                                 M* aManager) {
-||||||| merged common ancestors
-template<typename M>
-/* static */ already_AddRefed<IPCBlobInputStreamParent>
-IPCBlobInputStreamParent::Create(nsIInputStream* aInputStream, uint64_t aSize,
-                                 uint64_t aChildID, nsresult* aRv, M* aManager)
-{
-=======
 template <typename M>
 /* static */
 already_AddRefed<IPCBlobInputStreamParent> IPCBlobInputStreamParent::Create(
     nsIInputStream* aInputStream, uint64_t aSize, uint64_t aChildID,
     nsresult* aRv, M* aManager) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aInputStream);
   MOZ_ASSERT(aRv);
 
@@ -49,20 +35,9 @@ already_AddRefed<IPCBlobInputStreamParent> IPCBlobInputStreamParent::Create(
   return parent.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<IPCBlobInputStreamParent>
-IPCBlobInputStreamParent::Create(const nsID& aID, uint64_t aSize,
-                                 PBackgroundParent* aManager) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<IPCBlobInputStreamParent>
-IPCBlobInputStreamParent::Create(const nsID& aID, uint64_t aSize,
-                                 PBackgroundParent* aManager)
-{
-=======
 /* static */
 already_AddRefed<IPCBlobInputStreamParent> IPCBlobInputStreamParent::Create(
     const nsID& aID, uint64_t aSize, PBackgroundParent* aManager) {
->>>>>>> upstream-releases
   RefPtr<IPCBlobInputStreamParent> actor =
       new IPCBlobInputStreamParent(aID, aSize, aManager);
 
@@ -73,29 +48,12 @@ already_AddRefed<IPCBlobInputStreamParent> IPCBlobInputStreamParent::Create(
 
 IPCBlobInputStreamParent::IPCBlobInputStreamParent(const nsID& aID,
                                                    uint64_t aSize,
-<<<<<<< HEAD
-                                                   nsIContentParent* aManager)
-    : mID(aID),
-      mSize(aSize),
-      mContentManager(aManager),
-      mPBackgroundManager(nullptr),
-      mMigrating(false) {}
-||||||| merged common ancestors
-                                                   nsIContentParent* aManager)
-  : mID(aID)
-  , mSize(aSize)
-  , mContentManager(aManager)
-  , mPBackgroundManager(nullptr)
-  , mMigrating(false)
-{}
-=======
                                                    ContentParent* aManager)
     : mID(aID),
       mSize(aSize),
       mContentManager(aManager),
       mPBackgroundManager(nullptr),
       mMigrating(false) {}
->>>>>>> upstream-releases
 
 IPCBlobInputStreamParent::IPCBlobInputStreamParent(const nsID& aID,
                                                    uint64_t aSize,

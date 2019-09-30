@@ -19,22 +19,10 @@ PreloadedStyleSheet::PreloadedStyleSheet(nsIURI* aURI,
                                          css::SheetParsingMode aParsingMode)
     : mLoaded(false), mURI(aURI), mParsingMode(aParsingMode) {}
 
-<<<<<<< HEAD
-/* static */ nsresult PreloadedStyleSheet::Create(
-    nsIURI* aURI, css::SheetParsingMode aParsingMode,
-    PreloadedStyleSheet** aResult) {
-||||||| merged common ancestors
-/* static */ nsresult
-PreloadedStyleSheet::Create(nsIURI* aURI,
-                            css::SheetParsingMode aParsingMode,
-                            PreloadedStyleSheet** aResult)
-{
-=======
 /* static */
 nsresult PreloadedStyleSheet::Create(nsIURI* aURI,
                                      css::SheetParsingMode aParsingMode,
                                      PreloadedStyleSheet** aResult) {
->>>>>>> upstream-releases
   *aResult = nullptr;
 
   RefPtr<PreloadedStyleSheet> preloadedSheet =

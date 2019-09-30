@@ -71,20 +71,9 @@ nsresult NumericInputTypeBase::GetRangeOverflowMessage(nsAString& aMessage) {
   maxStr.AssignASCII(buf);
   MOZ_ASSERT(ok, "buf not big enough");
 
-<<<<<<< HEAD
-  const char16_t* params[] = {maxStr.get()};
-  return nsContentUtils::FormatLocalizedString(
-      nsContentUtils::eDOM_PROPERTIES, "FormValidationNumberRangeOverflow",
-      params, aMessage);
-||||||| merged common ancestors
-  const char16_t* params[] = { maxStr.get() };
-  return nsContentUtils::FormatLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-    "FormValidationNumberRangeOverflow", params, aMessage);
-=======
   return nsContentUtils::FormatLocalizedString(
       aMessage, nsContentUtils::eDOM_PROPERTIES,
       "FormValidationNumberRangeOverflow", maxStr);
->>>>>>> upstream-releases
 }
 
 nsresult NumericInputTypeBase::GetRangeUnderflowMessage(nsAString& aMessage) {
@@ -98,20 +87,9 @@ nsresult NumericInputTypeBase::GetRangeUnderflowMessage(nsAString& aMessage) {
   minStr.AssignASCII(buf);
   MOZ_ASSERT(ok, "buf not big enough");
 
-<<<<<<< HEAD
-  const char16_t* params[] = {minStr.get()};
-  return nsContentUtils::FormatLocalizedString(
-      nsContentUtils::eDOM_PROPERTIES, "FormValidationNumberRangeUnderflow",
-      params, aMessage);
-||||||| merged common ancestors
-  const char16_t* params[] = { minStr.get() };
-  return nsContentUtils::FormatLocalizedString(nsContentUtils::eDOM_PROPERTIES,
-    "FormValidationNumberRangeUnderflow", params, aMessage);
-=======
   return nsContentUtils::FormatLocalizedString(
       aMessage, nsContentUtils::eDOM_PROPERTIES,
       "FormValidationNumberRangeUnderflow", minStr);
->>>>>>> upstream-releases
 }
 
 bool NumericInputTypeBase::ConvertStringToNumber(

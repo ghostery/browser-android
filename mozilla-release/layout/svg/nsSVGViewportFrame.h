@@ -16,26 +16,6 @@ class gfxContext;
 /**
  * Superclass for inner SVG frames and symbol frames.
  */
-<<<<<<< HEAD
-class nsSVGViewportFrame : public nsSVGDisplayContainerFrame,
-                           public nsISVGSVGFrame {
- protected:
-  nsSVGViewportFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
-      : nsSVGDisplayContainerFrame(aStyle, aID) {}
-
- public:
-||||||| merged common ancestors
-class nsSVGViewportFrame
-  : public nsSVGDisplayContainerFrame
-  , public nsISVGSVGFrame
-{
-protected:
-  nsSVGViewportFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
-    : nsSVGDisplayContainerFrame(aStyle, aID)
-  {
-  }
-public:
-=======
 class nsSVGViewportFrame : public nsSVGDisplayContainerFrame,
                            public nsISVGSVGFrame {
  protected:
@@ -44,7 +24,6 @@ class nsSVGViewportFrame : public nsSVGDisplayContainerFrame,
       : nsSVGDisplayContainerFrame(aStyle, aPresContext, aID) {}
 
  public:
->>>>>>> upstream-releases
   NS_DECL_ABSTRACT_FRAME(nsSVGViewportFrame)
 
   virtual nsresult AttributeChanged(int32_t aNameSpaceID, nsAtom* aAttribute,

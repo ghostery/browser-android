@@ -10,14 +10,7 @@
 #include "nsJSUtils.h"
 #include "TCPSocketParent.h"
 #include "mozilla/Unused.h"
-<<<<<<< HEAD
-#include "mozilla/dom/TabParent.h"
-||||||| merged common ancestors
-#include "mozilla/dom/ContentParent.h"
-#include "mozilla/dom/TabParent.h"
-=======
 #include "mozilla/dom/BrowserParent.h"
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -58,19 +51,7 @@ void TCPServerSocketParent::Init() {
   NS_ENSURE_SUCCESS_VOID(mServerSocket->Init());
 }
 
-<<<<<<< HEAD
 nsresult TCPServerSocketParent::SendCallbackAccept(TCPSocketParent* socket) {
-  socket->AddIPDLReference();
-
-||||||| merged common ancestors
-nsresult
-TCPServerSocketParent::SendCallbackAccept(TCPSocketParent *socket)
-{
-  socket->AddIPDLReference();
-
-=======
-nsresult TCPServerSocketParent::SendCallbackAccept(TCPSocketParent* socket) {
->>>>>>> upstream-releases
   nsresult rv;
 
   nsString host;

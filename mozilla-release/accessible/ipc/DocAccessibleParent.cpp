@@ -425,13 +425,6 @@ mozilla::ipc::IPCResult DocAccessibleParent::RecvScrollingEvent(
   nsINode* node = nullptr;
   bool fromUser = true;  // XXX: Determine if this was from user input.
   RefPtr<xpcAccScrollingEvent> event =
-<<<<<<< HEAD
-      new xpcAccScrollingEvent(aType, xpcAcc, doc, node, fromUser, aScrollX,
-                               aScrollY, aMaxScrollX, aMaxScrollY);
-||||||| merged common ancestors
-    new xpcAccScrollingEvent(aType, xpcAcc, doc, node, fromUser, aScrollX,
-                             aScrollY, aMaxScrollX, aMaxScrollY);
-=======
       new xpcAccScrollingEvent(aType, xpcAcc, doc, node, fromUser, aScrollX,
                                aScrollY, aMaxScrollX, aMaxScrollY);
   nsCoreUtils::DispatchAccEvent(std::move(event));
@@ -463,7 +456,6 @@ mozilla::ipc::IPCResult DocAccessibleParent::RecvAnnouncementEvent(
   RefPtr<xpcAccAnnouncementEvent> event = new xpcAccAnnouncementEvent(
       nsIAccessibleEvent::EVENT_ANNOUNCEMENT, xpcAcc, doc, nullptr, false,
       aAnnouncement, aPriority);
->>>>>>> upstream-releases
   nsCoreUtils::DispatchAccEvent(std::move(event));
 
   return IPC_OK();
@@ -743,17 +735,9 @@ void DocAccessibleParent::MaybeInitWindowEmulation() {
           mscom::ToProxyUniquePtr(std::move(wrapped))));
     }
 
-<<<<<<< HEAD
-    Unused << SendEmulatedWindow(
-        reinterpret_cast<uintptr_t>(mEmulatedWindowHandle), hWndAccHolder);
-||||||| merged common ancestors
-    Unused << SendEmulatedWindow(reinterpret_cast<uintptr_t>(mEmulatedWindowHandle),
-                                 hWndAccHolder);
-=======
     Unused << thisRef->SendEmulatedWindow(
         reinterpret_cast<uintptr_t>(thisRef->mEmulatedWindowHandle),
         hWndAccHolder);
->>>>>>> upstream-releases
   });
 
   HWND parentWnd = reinterpret_cast<HWND>(rootDocument->GetNativeWindow());
@@ -763,21 +747,7 @@ void DocAccessibleParent::MaybeInitWindowEmulation() {
   MOZ_ASSERT(hWnd);
 }
 
-<<<<<<< HEAD
-/**
- * @param aCOMProxy COM Proxy to the document in the content process.
- */
-void DocAccessibleParent::SendParentCOMProxy() {
-||||||| merged common ancestors
-/**
- * @param aCOMProxy COM Proxy to the document in the content process.
- */
-void
-DocAccessibleParent::SendParentCOMProxy()
-{
-=======
 void DocAccessibleParent::SendParentCOMProxy(Accessible* aOuterDoc) {
->>>>>>> upstream-releases
   // Make sure that we're not racing with a tab shutdown
   auto tab = static_cast<dom::BrowserParent*>(Manager());
   MOZ_ASSERT(tab);
@@ -800,13 +770,7 @@ void DocAccessibleParent::SendParentCOMProxy(Accessible* aOuterDoc) {
 
 #  if defined(MOZ_SANDBOX)
   mParentProxyStream = holder.GetPreservedStream();
-<<<<<<< HEAD
-#endif  // defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#endif // defined(MOZ_CONTENT_SANDBOX)
-=======
 #  endif  // defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
 }
 
 void DocAccessibleParent::SetEmulatedWindowHandle(HWND aWindowHandle) {
@@ -816,21 +780,9 @@ void DocAccessibleParent::SetEmulatedWindowHandle(HWND aWindowHandle) {
   mEmulatedWindowHandle = aWindowHandle;
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult DocAccessibleParent::RecvGetWindowedPluginIAccessible(
-    const WindowsHandle& aHwnd, IAccessibleHolder* aPluginCOMProxy) {
-#if defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-DocAccessibleParent::RecvGetWindowedPluginIAccessible(
-      const WindowsHandle& aHwnd, IAccessibleHolder* aPluginCOMProxy)
-{
-#if defined(MOZ_CONTENT_SANDBOX)
-=======
 mozilla::ipc::IPCResult DocAccessibleParent::RecvGetWindowedPluginIAccessible(
     const WindowsHandle& aHwnd, IAccessibleHolder* aPluginCOMProxy) {
 #  if defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
   // We don't actually want the accessible object for aHwnd, but rather the
   // one that belongs to its child (see HTMLWin32ObjectAccessible).
   HWND childWnd = ::GetWindow(reinterpret_cast<HWND>(aHwnd), GW_CHILD);
@@ -916,20 +868,9 @@ mozilla::ipc::IPCResult DocAccessibleParent::RecvBatch(
     proxies.AppendElement(proxy);
   }
   ProxyBatch(this, aBatchType, proxies, aData);
-<<<<<<< HEAD
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#endif // defined(XP_WIN)
-=======
 #  endif  // defined(XP_WIN)
->>>>>>> upstream-releases
   return IPC_OK();
 }
-<<<<<<< HEAD
-#endif  // !defined(XP_WIN)
-||||||| merged common ancestors
-#endif // !defined(XP_WIN)
-=======
 #endif  // !defined(XP_WIN)
 
 Tuple<DocAccessibleParent*, uint64_t> DocAccessibleParent::GetRemoteEmbedder() {
@@ -949,7 +890,6 @@ Tuple<DocAccessibleParent*, uint64_t> DocAccessibleParent::GetRemoteEmbedder() {
   }
   return Tuple<DocAccessibleParent*, uint64_t>(doc, id);
 }
->>>>>>> upstream-releases
 
 }  // namespace a11y
 }  // namespace mozilla

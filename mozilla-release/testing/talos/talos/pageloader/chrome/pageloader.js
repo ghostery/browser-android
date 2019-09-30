@@ -5,21 +5,6 @@
 /* import-globals-from report.js */
 /* eslint mozilla/avoid-Date-timing: "off" */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/E10SUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "TalosParentProfiler",
-                               "resource://talos-powers/TalosParentProfiler.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/E10SUtils.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-
-XPCOMUtils.defineLazyScriptGetter(this, "TalosParentProfiler",
-                                  "resource://talos-powers/TalosParentProfiler.js");
-=======
 var { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
@@ -29,7 +14,6 @@ ChromeUtils.defineModuleGetter(
   "TalosParentProfiler",
   "resource://talos-powers/TalosParentProfiler.jsm"
 );
->>>>>>> upstream-releases
 
 var NUM_CYCLES = 5;
 var numPageCycles = 1;

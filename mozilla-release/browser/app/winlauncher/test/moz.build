@@ -6,18 +6,12 @@
 
 DisableStlWrapping()
 
-<<<<<<< HEAD
-GeckoCppUnitTests(['TestNativeNt'])
-||||||| merged common ancestors
-CppUnitTests(['TestNativeNt'])
-=======
 GeckoCppUnitTests(
     [
         'TestSameBinary',
     ],
     linkage=None
 )
->>>>>>> upstream-releases
 
 LOCAL_INCLUDES += [
     '/browser/app/winlauncher',

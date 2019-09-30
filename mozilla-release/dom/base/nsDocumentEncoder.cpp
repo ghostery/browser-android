@@ -51,14 +51,6 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-enum nsRangeIterationDirection { kDirectionOut = -1, kDirectionIn = 1 };
-||||||| merged common ancestors
-enum nsRangeIterationDirection {
-  kDirectionOut = -1,
-  kDirectionIn = 1
-};
-=======
 enum nsRangeIterationDirection { kDirectionOut = -1, kDirectionIn = 1 };
 
 class TextStreamer {
@@ -205,16 +197,7 @@ struct RangeBoundaryPathsAndOffsets {
   // Each other offset is the index of the child relative to its parent.
   ContainerOffsets mEndContainerOffsets;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class nsDocumentEncoder : public nsIDocumentEncoder {
- public:
-||||||| merged common ancestors
-class nsDocumentEncoder : public nsIDocumentEncoder
-{
-public:
-=======
 struct ContextInfoDepth {
   uint32_t mStart = 0;
   uint32_t mEnd = 0;
@@ -222,7 +205,6 @@ struct ContextInfoDepth {
 
 class nsDocumentEncoder : public nsIDocumentEncoder {
  public:
->>>>>>> upstream-releases
   nsDocumentEncoder();
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
@@ -252,17 +234,8 @@ class nsDocumentEncoder : public nsIDocumentEncoder {
 
   nsresult SerializeNodeStart(nsINode& aOriginalNode, int32_t aStartOffset,
                               int32_t aEndOffset, nsAString& aStr,
-<<<<<<< HEAD
-                              nsINode* aOriginalNode = nullptr);
-  nsresult SerializeToStringRecursive(nsINode* aNode, nsAString& aStr,
-||||||| merged common ancestors
-                              nsINode* aOriginalNode = nullptr);
-  nsresult SerializeToStringRecursive(nsINode* aNode,
-                                      nsAString& aStr,
-=======
                               nsINode* aFixupNode = nullptr);
   nsresult SerializeToStringRecursive(nsINode* aNode, nsAString& aStr,
->>>>>>> upstream-releases
                                       bool aDontSerializeRoot,
                                       uint32_t aMaxLength = 0);
   nsresult SerializeNodeEnd(nsINode& aNode, nsAString& aStr);
@@ -280,22 +253,7 @@ class nsDocumentEncoder : public nsIDocumentEncoder {
     return -1;
   }
 
-<<<<<<< HEAD
-  nsresult FlushText(nsAString& aString, bool aForce);
-
-  bool IsVisibleNode(nsINode* aNode) {
-    MOZ_ASSERT(aNode, "null node");
-
-||||||| merged common ancestors
-  nsresult FlushText(nsAString& aString, bool aForce);
-
-  bool IsVisibleNode(nsINode* aNode)
-  {
-    MOZ_ASSERT(aNode, "null node");
-
-=======
   bool IsInvisibleNodeAndShouldBeSkipped(nsINode& aNode) const {
->>>>>>> upstream-releases
     if (mFlags & SkipInvisibleContent) {
       // Treat the visibility of the ShadowRoot as if it were
       // the host content.
@@ -329,16 +287,9 @@ class nsDocumentEncoder : public nsIDocumentEncoder {
           return true;
         }
         bool isVisible = frame->StyleVisibility()->IsVisible();
-<<<<<<< HEAD
-        if (!isVisible && aNode->IsText()) return false;
-||||||| merged common ancestors
-        if (!isVisible && aNode->IsText())
-          return false;
-=======
         if (!isVisible && node->IsText()) {
           return true;
         }
->>>>>>> upstream-releases
       }
     }
     return false;
@@ -364,62 +315,15 @@ class nsDocumentEncoder : public nsIDocumentEncoder {
     nsDocumentEncoder* mEncoder;
   };
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> mDocument;
-  RefPtr<Selection> mSelection;
-  RefPtr<nsRange> mRange;
-  nsCOMPtr<nsINode> mNode;
-  nsCOMPtr<nsIOutputStream> mStream;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument>          mDocument;
-  RefPtr<Selection>              mSelection;
-  RefPtr<nsRange>              mRange;
-  nsCOMPtr<nsINode>              mNode;
-  nsCOMPtr<nsIOutputStream>      mStream;
-=======
   nsCOMPtr<Document> mDocument;
   EncodingScope mEncodingScope;
->>>>>>> upstream-releases
   nsCOMPtr<nsIContentSerializer> mSerializer;
-<<<<<<< HEAD
-  UniquePtr<Encoder> mUnicodeEncoder;
-  nsCOMPtr<nsINode> mCommonParent;
-||||||| merged common ancestors
-  UniquePtr<Encoder> mUnicodeEncoder;
-  nsCOMPtr<nsINode>              mCommonParent;
-=======
   Maybe<TextStreamer> mTextStreamer;
   nsCOMPtr<nsINode> mCommonAncestorOfRange;
->>>>>>> upstream-releases
   nsCOMPtr<nsIDocumentEncoderNodeFixup> mNodeFixup;
 
   nsString mMimeType;
   const Encoding* mEncoding;
-<<<<<<< HEAD
-  uint32_t mFlags;
-  uint32_t mWrapColumn;
-  uint32_t mStartDepth;
-  uint32_t mEndDepth;
-  int32_t mStartRootIndex;
-  int32_t mEndRootIndex;
-  AutoTArray<nsINode*, 8> mCommonAncestors;
-  AutoTArray<nsIContent*, 8> mStartNodes;
-  AutoTArray<int32_t, 8> mStartOffsets;
-  AutoTArray<nsIContent*, 8> mEndNodes;
-  AutoTArray<int32_t, 8> mEndOffsets;
-||||||| merged common ancestors
-  uint32_t          mFlags;
-  uint32_t          mWrapColumn;
-  uint32_t          mStartDepth;
-  uint32_t          mEndDepth;
-  int32_t           mStartRootIndex;
-  int32_t           mEndRootIndex;
-  AutoTArray<nsINode*, 8>    mCommonAncestors;
-  AutoTArray<nsIContent*, 8> mStartNodes;
-  AutoTArray<int32_t, 8>     mStartOffsets;
-  AutoTArray<nsIContent*, 8> mEndNodes;
-  AutoTArray<int32_t, 8>     mEndOffsets;
-=======
   uint32_t mFlags;
   uint32_t mWrapColumn;
   ContextInfoDepth mContextInfoDepth;
@@ -427,7 +331,6 @@ class nsDocumentEncoder : public nsIDocumentEncoder {
   int32_t mEndRootIndex;
   AutoTArray<nsINode*, 8> mCommonAncestors;
   RangeBoundaryPathsAndOffsets mRangeBoundaryPathsAndOffsets;
->>>>>>> upstream-releases
   AutoTArray<AutoTArray<nsINode*, 8>, 8> mRangeContexts;
   // Whether the serializer cares about being notified to scan elements to
   // keep track of whether they are preformatted.  This stores the out
@@ -436,23 +339,9 @@ class nsDocumentEncoder : public nsIDocumentEncoder {
   bool mHaltRangeHint;
   // Used when context has already been serialized for
   // table cell selections (where parent is <tr>)
-<<<<<<< HEAD
-  bool mDisableContextSerialize;
-  bool mIsCopying;  // Set to true only while copying
-  bool mNodeIsContainer;
-  bool mIsPlainText;
-  nsStringBuffer* mCachedBuffer;
-||||||| merged common ancestors
-  bool              mDisableContextSerialize;
-  bool              mIsCopying;  // Set to true only while copying
-  bool              mNodeIsContainer;
-  bool mIsPlainText;
-  nsStringBuffer*   mCachedBuffer;
-=======
   bool mDisableContextSerialize;
   bool mIsCopying;  // Set to true only while copying
   nsStringBuffer* mCachedBuffer;
->>>>>>> upstream-releases
 };
 
 NS_IMPL_CYCLE_COLLECTING_ADDREF(nsDocumentEncoder)
@@ -464,19 +353,10 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsDocumentEncoder)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION(nsDocumentEncoder, mDocument, mSelection, mRange,
-                         mNode, mSerializer, mCommonParent)
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION(nsDocumentEncoder,
-                         mDocument, mSelection, mRange, mNode, mSerializer,
-                         mCommonParent)
-=======
 NS_IMPL_CYCLE_COLLECTION(nsDocumentEncoder, mDocument,
                          mEncodingScope.mSelection, mEncodingScope.mRange,
                          mEncodingScope.mNode, mSerializer,
                          mCommonAncestorOfRange)
->>>>>>> upstream-releases
 
 nsDocumentEncoder::nsDocumentEncoder()
     : mEncoding(nullptr), mIsCopying(false), mCachedBuffer(nullptr) {
@@ -502,12 +382,6 @@ void nsDocumentEncoder::Initialize(bool aClearCachedSerializer) {
   }
 }
 
-<<<<<<< HEAD
-nsDocumentEncoder::~nsDocumentEncoder() {
-||||||| merged common ancestors
-nsDocumentEncoder::~nsDocumentEncoder()
-{
-=======
 static bool ParentIsTR(nsIContent* aContent) {
   mozilla::dom::Element* parent = aContent->GetParentElement();
   if (!parent) {
@@ -638,45 +512,21 @@ nsresult nsDocumentEncoder::SerializeWholeDocument(nsAString& aOutput,
 }
 
 nsDocumentEncoder::~nsDocumentEncoder() {
->>>>>>> upstream-releases
   if (mCachedBuffer) {
     mCachedBuffer->Release();
   }
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocumentEncoder::Init(nsIDocument* aDocument, const nsAString& aMimeType,
-                        uint32_t aFlags) {
-||||||| merged common ancestors
-nsDocumentEncoder::Init(nsIDocument* aDocument,
-                        const nsAString& aMimeType,
-                        uint32_t aFlags)
-{
-=======
 nsDocumentEncoder::Init(Document* aDocument, const nsAString& aMimeType,
                         uint32_t aFlags) {
->>>>>>> upstream-releases
   return NativeInit(aDocument, aMimeType, aFlags);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocumentEncoder::NativeInit(nsIDocument* aDocument,
-                              const nsAString& aMimeType, uint32_t aFlags) {
-  if (!aDocument) return NS_ERROR_INVALID_ARG;
-||||||| merged common ancestors
-nsDocumentEncoder::NativeInit(nsIDocument* aDocument,
-                              const nsAString& aMimeType,
-                              uint32_t aFlags)
-{
-  if (!aDocument)
-    return NS_ERROR_INVALID_ARG;
-=======
 nsDocumentEncoder::NativeInit(Document* aDocument, const nsAString& aMimeType,
                               uint32_t aFlags) {
   if (!aDocument) return NS_ERROR_INVALID_ARG;
->>>>>>> upstream-releases
 
   Initialize(!mMimeType.Equals(aMimeType));
 
@@ -697,68 +547,28 @@ nsDocumentEncoder::SetWrapColumn(uint32_t aWC) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocumentEncoder::SetSelection(Selection* aSelection) {
-  mSelection = aSelection;
-||||||| merged common ancestors
-nsDocumentEncoder::SetSelection(Selection* aSelection)
-{
-  mSelection = aSelection;
-=======
 nsDocumentEncoder::SetSelection(Selection* aSelection) {
   mEncodingScope.mSelection = aSelection;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocumentEncoder::SetRange(nsRange* aRange) {
-  mRange = aRange;
-||||||| merged common ancestors
-nsDocumentEncoder::SetRange(nsRange* aRange)
-{
-  mRange = aRange;
-=======
 nsDocumentEncoder::SetRange(nsRange* aRange) {
   mEncodingScope.mRange = aRange;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocumentEncoder::SetNode(nsINode* aNode) {
-  mNodeIsContainer = false;
-  mNode = aNode;
-||||||| merged common ancestors
-nsDocumentEncoder::SetNode(nsINode* aNode)
-{
-  mNodeIsContainer = false;
-  mNode = aNode;
-=======
 nsDocumentEncoder::SetNode(nsINode* aNode) {
   mEncodingScope.mNodeIsContainer = false;
   mEncodingScope.mNode = aNode;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocumentEncoder::SetContainerNode(nsINode* aContainer) {
-  mNodeIsContainer = true;
-  mNode = aContainer;
-||||||| merged common ancestors
-nsDocumentEncoder::SetContainerNode(nsINode* aContainer)
-{
-  mNodeIsContainer = true;
-  mNode = aContainer;
-=======
 nsDocumentEncoder::SetContainerNode(nsINode* aContainer) {
   mEncodingScope.mNodeIsContainer = true;
   mEncodingScope.mNode = aContainer;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -780,31 +590,6 @@ nsDocumentEncoder::GetMimeType(nsAString& aMimeType) {
 
 bool nsDocumentEncoder::IncludeInContext(nsINode* aNode) { return false; }
 
-<<<<<<< HEAD
-nsresult nsDocumentEncoder::SerializeNodeStart(nsINode* aNode,
-                                               int32_t aStartOffset,
-                                               int32_t aEndOffset,
-                                               nsAString& aStr,
-                                               nsINode* aOriginalNode) {
-  if (mNeedsPreformatScanning && aNode->IsElement()) {
-    mSerializer->ScanElementForPreformat(aNode->AsElement());
-||||||| merged common ancestors
-bool
-nsDocumentEncoder::IncludeInContext(nsINode *aNode)
-{
-  return false;
-}
-
-nsresult
-nsDocumentEncoder::SerializeNodeStart(nsINode* aNode,
-                                      int32_t aStartOffset,
-                                      int32_t aEndOffset,
-                                      nsAString& aStr,
-                                      nsINode* aOriginalNode)
-{
-  if (mNeedsPreformatScanning && aNode->IsElement()) {
-    mSerializer->ScanElementForPreformat(aNode->AsElement());
-=======
 class FixupNodeDeterminer {
  public:
   FixupNodeDeterminer(nsIDocumentEncoderNodeFixup* aNodeFixup,
@@ -825,15 +610,8 @@ class FixupNodeDeterminer {
 
   bool IsSerializationOfFixupChildrenNeeded() const {
     return mIsSerializationOfFixupChildrenNeeded;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (!IsVisibleNode(aNode)) return NS_OK;
-||||||| merged common ancestors
-  if (!IsVisibleNode(aNode))
-    return NS_OK;
-=======
   /**
    * @return The fixup node, if available, otherwise the original node. The
    * former is kept alive by this object.
@@ -841,7 +619,6 @@ class FixupNodeDeterminer {
   nsINode& GetFixupNodeFallBackToOriginalNode() const {
     return mFixupNode ? *mFixupNode : mOriginalNode;
   }
->>>>>>> upstream-releases
 
  private:
   bool mIsSerializationOfFixupChildrenNeeded;
@@ -866,16 +643,6 @@ nsresult nsDocumentEncoder::SerializeNodeStart(nsINode& aOriginalNode,
     }
   }
 
-<<<<<<< HEAD
-  // Either there was no fixed-up node,
-  // or the caller did fixup themselves and aNode is already fixed
-  if (!node) node = aNode;
-||||||| merged common ancestors
-  // Either there was no fixed-up node,
-  // or the caller did fixup themselves and aNode is already fixed
-  if (!node)
-    node = aNode;
-=======
   if (IsInvisibleNodeAndShouldBeSkipped(aOriginalNode)) {
     return NS_OK;
   }
@@ -885,7 +652,6 @@ nsresult nsDocumentEncoder::SerializeNodeStart(nsINode& aOriginalNode,
   nsINode* node = &fixupNodeDeterminer.GetFixupNodeFallBackToOriginalNode();
 
   nsresult rv = NS_OK;
->>>>>>> upstream-releases
 
   if (node->IsElement()) {
     if ((mFlags & (nsIDocumentEncoder::OutputPreformatted |
@@ -900,83 +666,29 @@ nsresult nsDocumentEncoder::SerializeNodeStart(nsINode& aOriginalNode,
   }
 
   switch (node->NodeType()) {
-<<<<<<< HEAD
-    case nsINode::TEXT_NODE: {
-      mSerializer->AppendText(static_cast<nsIContent*>(node), aStartOffset,
-                              aEndOffset, aStr);
-||||||| merged common ancestors
-    case nsINode::TEXT_NODE:
-    {
-      mSerializer->AppendText(static_cast<nsIContent*>(node),
-                              aStartOffset, aEndOffset, aStr);
-=======
     case nsINode::TEXT_NODE: {
       rv = mSerializer->AppendText(static_cast<nsIContent*>(node), aStartOffset,
                                    aEndOffset, aStr);
->>>>>>> upstream-releases
       break;
     }
-<<<<<<< HEAD
-    case nsINode::CDATA_SECTION_NODE: {
-      mSerializer->AppendCDATASection(static_cast<nsIContent*>(node),
-                                      aStartOffset, aEndOffset, aStr);
-||||||| merged common ancestors
-    case nsINode::CDATA_SECTION_NODE:
-    {
-      mSerializer->AppendCDATASection(static_cast<nsIContent*>(node),
-                                      aStartOffset, aEndOffset, aStr);
-=======
     case nsINode::CDATA_SECTION_NODE: {
       rv = mSerializer->AppendCDATASection(static_cast<nsIContent*>(node),
                                            aStartOffset, aEndOffset, aStr);
->>>>>>> upstream-releases
       break;
     }
-<<<<<<< HEAD
-    case nsINode::PROCESSING_INSTRUCTION_NODE: {
-      mSerializer->AppendProcessingInstruction(
-          static_cast<ProcessingInstruction*>(node), aStartOffset, aEndOffset,
-          aStr);
-||||||| merged common ancestors
-    case nsINode::PROCESSING_INSTRUCTION_NODE:
-    {
-      mSerializer->AppendProcessingInstruction(static_cast<ProcessingInstruction*>(node),
-                                               aStartOffset, aEndOffset, aStr);
-=======
     case nsINode::PROCESSING_INSTRUCTION_NODE: {
       rv = mSerializer->AppendProcessingInstruction(
           static_cast<ProcessingInstruction*>(node), aStartOffset, aEndOffset,
           aStr);
->>>>>>> upstream-releases
       break;
     }
-<<<<<<< HEAD
-    case nsINode::COMMENT_NODE: {
-      mSerializer->AppendComment(static_cast<Comment*>(node), aStartOffset,
-                                 aEndOffset, aStr);
-||||||| merged common ancestors
-    case nsINode::COMMENT_NODE:
-    {
-      mSerializer->AppendComment(static_cast<Comment*>(node),
-                                 aStartOffset, aEndOffset, aStr);
-=======
     case nsINode::COMMENT_NODE: {
       rv = mSerializer->AppendComment(static_cast<Comment*>(node), aStartOffset,
                                       aEndOffset, aStr);
->>>>>>> upstream-releases
       break;
     }
-<<<<<<< HEAD
-    case nsINode::DOCUMENT_TYPE_NODE: {
-      mSerializer->AppendDoctype(static_cast<DocumentType*>(node), aStr);
-||||||| merged common ancestors
-    case nsINode::DOCUMENT_TYPE_NODE:
-    {
-      mSerializer->AppendDoctype(static_cast<DocumentType*>(node), aStr);
-=======
     case nsINode::DOCUMENT_TYPE_NODE: {
       rv = mSerializer->AppendDoctype(static_cast<DocumentType*>(node), aStr);
->>>>>>> upstream-releases
       break;
     }
   }
@@ -984,18 +696,6 @@ nsresult nsDocumentEncoder::SerializeNodeStart(nsINode& aOriginalNode,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsDocumentEncoder::SerializeNodeEnd(nsINode* aNode, nsAString& aStr) {
-  if (mNeedsPreformatScanning && aNode->IsElement()) {
-    mSerializer->ForgetElementForPreformat(aNode->AsElement());
-||||||| merged common ancestors
-nsresult
-nsDocumentEncoder::SerializeNodeEnd(nsINode* aNode,
-                                    nsAString& aStr)
-{
-  if (mNeedsPreformatScanning && aNode->IsElement()) {
-    mSerializer->ForgetElementForPreformat(aNode->AsElement());
-=======
 nsresult nsDocumentEncoder::SerializeNodeEnd(nsINode& aNode, nsAString& aStr) {
   if (mNeedsPreformatScanning) {
     if (aNode.IsElement()) {
@@ -1006,19 +706,11 @@ nsresult nsDocumentEncoder::SerializeNodeEnd(nsINode& aNode, nsAString& aStr) {
         mSerializer->ForgetElementForPreformat(parent->AsElement());
       }
     }
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  if (!IsVisibleNode(aNode)) return NS_OK;
-||||||| merged common ancestors
-  if (!IsVisibleNode(aNode))
-    return NS_OK;
-=======
   if (IsInvisibleNodeAndShouldBeSkipped(aNode)) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   nsresult rv = NS_OK;
 
@@ -1037,37 +729,15 @@ nsresult nsDocumentEncoder::SerializeToStringRecursive(nsINode* aNode,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  if (!IsVisibleNode(aNode)) return NS_OK;
-
-  nsresult rv = NS_OK;
-  bool serializeClonedChildren = false;
-  nsINode* maybeFixedNode = nullptr;
-||||||| merged common ancestors
-  if (!IsVisibleNode(aNode))
-    return NS_OK;
-
-  nsresult rv = NS_OK;
-  bool serializeClonedChildren = false;
-  nsINode* maybeFixedNode = nullptr;
-=======
   NS_ENSURE_TRUE(aNode, NS_ERROR_NULL_POINTER);
->>>>>>> upstream-releases
 
   if (IsInvisibleNodeAndShouldBeSkipped(*aNode)) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  if (!maybeFixedNode) maybeFixedNode = aNode;
-||||||| merged common ancestors
-  if (!maybeFixedNode)
-    maybeFixedNode = aNode;
-=======
   FixupNodeDeterminer fixupNodeDeterminer{mNodeFixup, nullptr, *aNode};
   nsINode* maybeFixedNode =
       &fixupNodeDeterminer.GetFixupNodeFallBackToOriginalNode();
->>>>>>> upstream-releases
 
   if ((mFlags & SkipInvisibleContent) &&
       !(mFlags & OutputNonTextContentAsPlaceholder)) {
@@ -1148,183 +818,18 @@ nsresult nsDocumentEncoder::SerializeToStringIterative(nsINode* aNode,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static nsresult ConvertAndWrite(const nsAString& aString,
-                                nsIOutputStream* aStream, Encoder* aEncoder,
-                                bool aIsPlainText) {
-  NS_ENSURE_ARG_POINTER(aStream);
-  NS_ENSURE_ARG_POINTER(aEncoder);
-
-  if (!aString.Length()) {
-    return NS_OK;
-  }
-
-  uint8_t buffer[4096];
-  auto src = MakeSpan(aString);
-  auto bufferSpan = MakeSpan(buffer);
-  // Reserve space for terminator
-  auto dst = bufferSpan.To(bufferSpan.Length() - 1);
-  for (;;) {
-    uint32_t result;
-    size_t read;
-    size_t written;
-    bool hadErrors;
-    if (aIsPlainText) {
-      Tie(result, read, written) =
-          aEncoder->EncodeFromUTF16WithoutReplacement(src, dst, false);
-      if (result != kInputEmpty && result != kOutputFull) {
-        // There's always room for one byte in the case of
-        // an unmappable character, because otherwise
-        // we'd have gotten `kOutputFull`.
-        dst[written++] = '?';
-      }
-    } else {
-      Tie(result, read, written, hadErrors) =
-          aEncoder->EncodeFromUTF16(src, dst, false);
-    }
-    Unused << hadErrors;
-    src = src.From(read);
-    // Sadly, we still have test cases that implement nsIOutputStream in JS, so
-    // the buffer needs to be zero-terminated for XPConnect to do its thing.
-    // See bug 170416.
-    bufferSpan[written] = 0;
-    uint32_t streamWritten;
-    nsresult rv = aStream->Write(reinterpret_cast<char*>(dst.Elements()),
-                                 written, &streamWritten);
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-    if (result == kInputEmpty) {
-      return NS_OK;
-    }
-  }
-}
-||||||| merged common ancestors
-static nsresult
-ConvertAndWrite(const nsAString& aString,
-                nsIOutputStream* aStream,
-                Encoder* aEncoder,
-                bool aIsPlainText)
-{
-  NS_ENSURE_ARG_POINTER(aStream);
-  NS_ENSURE_ARG_POINTER(aEncoder);
-
-  if (!aString.Length()) {
-    return NS_OK;
-  }
-
-  uint8_t buffer[4096];
-  auto src = MakeSpan(aString);
-  auto bufferSpan = MakeSpan(buffer);
-  // Reserve space for terminator
-  auto dst = bufferSpan.To(bufferSpan.Length() - 1);
-  for (;;) {
-    uint32_t result;
-    size_t read;
-    size_t written;
-    bool hadErrors;
-    if (aIsPlainText) {
-      Tie(result, read, written) =
-        aEncoder->EncodeFromUTF16WithoutReplacement(src, dst, false);
-      if (result != kInputEmpty && result != kOutputFull) {
-        // There's always room for one byte in the case of
-        // an unmappable character, because otherwise
-        // we'd have gotten `kOutputFull`.
-        dst[written++] = '?';
-      }
-    } else {
-      Tie(result, read, written, hadErrors) =
-        aEncoder->EncodeFromUTF16(src, dst, false);
-    }
-    Unused << hadErrors;
-    src = src.From(read);
-    // Sadly, we still have test cases that implement nsIOutputStream in JS, so
-    // the buffer needs to be zero-terminated for XPConnect to do its thing.
-    // See bug 170416.
-    bufferSpan[written] = 0;
-    uint32_t streamWritten;
-    nsresult rv = aStream->Write(
-      reinterpret_cast<char*>(dst.Elements()), written, &streamWritten);
-    if (NS_FAILED(rv)) {
-      return rv;
-    }
-    if (result == kInputEmpty) {
-      return NS_OK;
-    }
-  }
-}
-=======
-static bool IsTextNode(nsINode* aNode) { return aNode && aNode->IsText(); }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-nsresult nsDocumentEncoder::FlushText(nsAString& aString, bool aForce) {
-  if (!mStream) return NS_OK;
-
-  nsresult rv = NS_OK;
-
-  if (aString.Length() > 1024 || aForce) {
-    rv = ConvertAndWrite(aString, mStream, mUnicodeEncoder.get(), mIsPlainText);
-
-    aString.Truncate();
-  }
-
-  return rv;
-}
-
 static bool IsTextNode(nsINode* aNode) { return aNode && aNode->IsText(); }
 
-nsresult nsDocumentEncoder::SerializeRangeNodes(nsRange* aRange, nsINode* aNode,
-                                                nsAString& aString,
-                                                int32_t aDepth) {
-||||||| merged common ancestors
-nsresult
-nsDocumentEncoder::FlushText(nsAString& aString, bool aForce)
-{
-  if (!mStream)
-    return NS_OK;
-
-  nsresult rv = NS_OK;
-
-  if (aString.Length() > 1024 || aForce) {
-    rv = ConvertAndWrite(aString, mStream, mUnicodeEncoder.get(), mIsPlainText);
-
-    aString.Truncate();
-  }
-
-  return rv;
-}
-
-static bool IsTextNode(nsINode *aNode)
-{
-  return aNode && aNode->IsText();
-}
-
-nsresult
-nsDocumentEncoder::SerializeRangeNodes(nsRange* aRange,
-                                       nsINode* aNode,
-                                       nsAString& aString,
-                                       int32_t aDepth)
-{
-=======
 nsresult nsDocumentEncoder::SerializeRangeNodes(nsRange* const aRange,
                                                 nsINode* const aNode,
                                                 nsAString& aString,
                                                 const int32_t aDepth) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIContent> content = do_QueryInterface(aNode);
   NS_ENSURE_TRUE(content, NS_ERROR_FAILURE);
 
-<<<<<<< HEAD
-  if (!IsVisibleNode(aNode)) return NS_OK;
-||||||| merged common ancestors
-  if (!IsVisibleNode(aNode))
-    return NS_OK;
-=======
   if (IsInvisibleNodeAndShouldBeSkipped(*aNode)) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   nsresult rv = NS_OK;
 
@@ -1364,28 +869,12 @@ nsresult nsDocumentEncoder::SerializeRangeNodes(nsRange* const aRange,
         rv = SerializeNodeStart(*aNode, 0, endOffset, aString);
         NS_ENSURE_SUCCESS(rv, rv);
       }
-<<<<<<< HEAD
-    } else {
-      if (aNode != mCommonParent) {
-        if (IncludeInContext(aNode)) {
-          // halt the incrementing of mStartDepth/mEndDepth.  This is
-||||||| merged common ancestors
-    }
-    else
-    {
-      if (aNode != mCommonParent)
-      {
-        if (IncludeInContext(aNode))
-        {
-          // halt the incrementing of mStartDepth/mEndDepth.  This is
-=======
       rv = SerializeNodeEnd(*aNode, aString);
       NS_ENSURE_SUCCESS(rv, rv);
     } else {
       if (aNode != mCommonAncestorOfRange) {
         if (IncludeInContext(aNode)) {
           // halt the incrementing of mContextInfoDepth.  This is
->>>>>>> upstream-releases
           // so paste client will include this node in paste.
           mHaltRangeHint = true;
         }
@@ -1458,17 +947,8 @@ nsresult nsDocumentEncoder::SerializeRangeNodes(nsRange* const aRange,
       }
 
       // serialize the end of this node
-<<<<<<< HEAD
-      if (aNode != mCommonParent) {
-        rv = SerializeNodeEnd(aNode, aString);
-||||||| merged common ancestors
-      if (aNode != mCommonParent)
-      {
-        rv = SerializeNodeEnd(aNode, aString);
-=======
       if (aNode != mCommonAncestorOfRange) {
         rv = SerializeNodeEnd(*aNode, aString);
->>>>>>> upstream-releases
         NS_ENSURE_SUCCESS(rv, rv);
       }
     }
@@ -1532,16 +1012,9 @@ nsresult nsDocumentEncoder::SerializeRangeToString(nsRange* aRange,
 
   mCommonAncestorOfRange = aRange->GetCommonAncestor();
 
-<<<<<<< HEAD
-  if (!mCommonParent) return NS_OK;
-||||||| merged common ancestors
-  if (!mCommonParent)
-    return NS_OK;
-=======
   if (!mCommonAncestorOfRange) {
     return NS_OK;
   }
->>>>>>> upstream-releases
 
   nsINode* startContainer = aRange->GetStartContainer();
   NS_ENSURE_TRUE(startContainer, NS_ERROR_FAILURE);
@@ -1554,27 +1027,6 @@ nsresult nsDocumentEncoder::SerializeRangeToString(nsRange* aRange,
   mContextInfoDepth = {};
   mCommonAncestors.Clear();
 
-<<<<<<< HEAD
-  nsContentUtils::GetAncestors(mCommonParent, mCommonAncestors);
-  nsContentUtils::GetAncestorsAndOffsets(startContainer, startOffset,
-                                         &mStartNodes, &mStartOffsets);
-  nsContentUtils::GetAncestorsAndOffsets(endContainer, endOffset, &mEndNodes,
-                                         &mEndOffsets);
-
-  nsCOMPtr<nsIContent> commonContent = do_QueryInterface(mCommonParent);
-  mStartRootIndex = mStartNodes.IndexOf(commonContent);
-  mEndRootIndex = mEndNodes.IndexOf(commonContent);
-||||||| merged common ancestors
-  nsContentUtils::GetAncestors(mCommonParent, mCommonAncestors);
-  nsContentUtils::GetAncestorsAndOffsets(startContainer, startOffset,
-                                         &mStartNodes, &mStartOffsets);
-  nsContentUtils::GetAncestorsAndOffsets(endContainer, endOffset,
-                                         &mEndNodes, &mEndOffsets);
-
-  nsCOMPtr<nsIContent> commonContent = do_QueryInterface(mCommonParent);
-  mStartRootIndex = mStartNodes.IndexOf(commonContent);
-  mEndRootIndex = mEndNodes.IndexOf(commonContent);
-=======
   mRangeBoundaryPathsAndOffsets = {};
   auto& startContainerPath = mRangeBoundaryPathsAndOffsets.mStartContainerPath;
   auto& startContainerOffsets =
@@ -1593,7 +1045,6 @@ nsresult nsDocumentEncoder::SerializeRangeToString(nsRange* aRange,
       do_QueryInterface(mCommonAncestorOfRange);
   mStartRootIndex = startContainerPath.IndexOf(commonContent);
   mEndRootIndex = endContainerPath.IndexOf(commonContent);
->>>>>>> upstream-releases
 
   nsresult rv = NS_OK;
 
@@ -1607,16 +1058,9 @@ nsresult nsDocumentEncoder::SerializeRangeToString(nsRange* aRange,
       nsCOMPtr<nsIContent> content = do_QueryInterface(startContainer);
       if (content && !content->GetPrimaryFrame()) {
         nsIContent* parent = content->GetParent();
-<<<<<<< HEAD
-        if (!parent || !IsVisibleNode(parent)) return NS_OK;
-||||||| merged common ancestors
-        if (!parent || !IsVisibleNode(parent))
-          return NS_OK;
-=======
         if (!parent || IsInvisibleNodeAndShouldBeSkipped(*parent)) {
           return NS_OK;
         }
->>>>>>> upstream-releases
       }
     }
     rv = SerializeNodeStart(*startContainer, startOffset, endOffset,
@@ -1634,16 +1078,8 @@ nsresult nsDocumentEncoder::SerializeRangeToString(nsRange* aRange,
   return rv;
 }
 
-<<<<<<< HEAD
-void nsDocumentEncoder::Clear() {
-||||||| merged common ancestors
-void
-nsDocumentEncoder::Clear()
-{
-=======
 void nsDocumentEncoder::ReleaseDocumentReferenceAndInitialize(
     bool aClearCachedSerializer) {
->>>>>>> upstream-releases
   mDocument = nullptr;
 
   Initialize(aClearCachedSerializer);
@@ -1674,18 +1110,9 @@ nsDocumentEncoder::EncodeToStringWithMaxLength(uint32_t aMaxLength,
       return NS_ERROR_OUT_OF_MEMORY;
     }
   }
-<<<<<<< HEAD
-  NS_ASSERTION(
-      !mCachedBuffer->IsReadonly(),
-      "DocumentEncoder shouldn't keep reference to non-readonly buffer!");
-||||||| merged common ancestors
-  NS_ASSERTION(!mCachedBuffer->IsReadonly(),
-               "DocumentEncoder shouldn't keep reference to non-readonly buffer!");
-=======
   NS_ASSERTION(
       !mCachedBuffer->IsReadonly(),
       "nsIDocumentEncoder shouldn't keep reference to non-readonly buffer!");
->>>>>>> upstream-releases
   static_cast<char16_t*>(mCachedBuffer->Data())[0] = char16_t(0);
   mCachedBuffer->ToString(0, output, true);
   // output owns the buffer now!
@@ -1701,198 +1128,11 @@ nsDocumentEncoder::EncodeToStringWithMaxLength(uint32_t aMaxLength,
 
   nsresult rv = NS_OK;
 
-<<<<<<< HEAD
-  bool rewriteEncodingDeclaration =
-      !(mSelection || mRange || mNode) &&
-      !(mFlags & OutputDontRewriteEncodingDeclaration);
-  mSerializer->Init(mFlags, mWrapColumn, mEncoding, mIsCopying,
-                    rewriteEncodingDeclaration, &mNeedsPreformatScanning);
-
-  if (mSelection) {
-    uint32_t count = mSelection->RangeCount();
-
-    nsCOMPtr<nsINode> node, prevNode;
-    uint32_t firstRangeStartDepth = 0;
-    for (uint32_t i = 0; i < count; ++i) {
-      RefPtr<nsRange> range = mSelection->GetRangeAt(i);
-
-      // Bug 236546: newlines not added when copying table cells into clipboard
-      // Each selected cell shows up as a range containing a row with a single
-      // cell get the row, compare it to previous row and emit </tr><tr> as
-      // needed Bug 137450: Problem copying/pasting a table from a web page to
-      // Excel. Each separate block of <tr></tr> produced above will be wrapped
-      // by the immediate context. This assumes that you can't select cells that
-      // are multiple selections from two tables simultaneously.
-      node = range->GetStartContainer();
-      NS_ENSURE_TRUE(node, NS_ERROR_FAILURE);
-      if (node != prevNode) {
-        if (prevNode) {
-          rv = SerializeNodeEnd(prevNode, output);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-        nsCOMPtr<nsIContent> content = do_QueryInterface(node);
-        if (content && content->IsHTMLElement(nsGkAtoms::tr) &&
-            !ParentIsTR(content)) {
-          if (!prevNode) {
-            // Went from a non-<tr> to a <tr>
-            mCommonAncestors.Clear();
-            nsContentUtils::GetAncestors(node->GetParentNode(),
-                                         mCommonAncestors);
-            rv = SerializeRangeContextStart(mCommonAncestors, output);
-            NS_ENSURE_SUCCESS(rv, rv);
-            // Don't let SerializeRangeToString serialize the context again
-            mDisableContextSerialize = true;
-          }
-
-          rv = SerializeNodeStart(node, 0, -1, output);
-          NS_ENSURE_SUCCESS(rv, rv);
-          prevNode = node;
-        } else if (prevNode) {
-          // Went from a <tr> to a non-<tr>
-          mDisableContextSerialize = false;
-          rv = SerializeRangeContextEnd(output);
-          NS_ENSURE_SUCCESS(rv, rv);
-          prevNode = nullptr;
-        }
-      }
-
-      rv = SerializeRangeToString(range, output);
-      NS_ENSURE_SUCCESS(rv, rv);
-      if (i == 0) {
-        firstRangeStartDepth = mStartDepth;
-      }
-    }
-    mStartDepth = firstRangeStartDepth;
-
-    if (prevNode) {
-      rv = SerializeNodeEnd(prevNode, output);
-      NS_ENSURE_SUCCESS(rv, rv);
-      mDisableContextSerialize = false;
-      rv = SerializeRangeContextEnd(output);
-      NS_ENSURE_SUCCESS(rv, rv);
-    }
-
-    // Just to be safe
-    mDisableContextSerialize = false;
-
-    mSelection = nullptr;
-  } else if (mRange) {
-    rv = SerializeRangeToString(mRange, output);
-
-    mRange = nullptr;
-  } else if (mNode) {
-    if (!mNodeFixup && !(mFlags & SkipInvisibleContent) && !mStream &&
-        mNodeIsContainer) {
-      rv = SerializeToStringIterative(mNode, output);
-    } else {
-      rv = SerializeToStringRecursive(mNode, output, mNodeIsContainer);
-    }
-    mNode = nullptr;
-  } else {
-    rv = mSerializer->AppendDocumentStart(mDocument, output);
-
-    if (NS_SUCCEEDED(rv)) {
-      rv = SerializeToStringRecursive(mDocument, output, false, aMaxLength);
-    }
-  }
-||||||| merged common ancestors
-  bool rewriteEncodingDeclaration = !(mSelection || mRange || mNode) && !(mFlags & OutputDontRewriteEncodingDeclaration);
-  mSerializer->Init(
-    mFlags, mWrapColumn, mEncoding, mIsCopying, rewriteEncodingDeclaration, &mNeedsPreformatScanning);
-
-  if (mSelection) {
-    uint32_t count = mSelection->RangeCount();
-
-    nsCOMPtr<nsINode> node, prevNode;
-    uint32_t firstRangeStartDepth = 0;
-    for (uint32_t i = 0; i < count; ++i) {
-      RefPtr<nsRange> range = mSelection->GetRangeAt(i);
-
-      // Bug 236546: newlines not added when copying table cells into clipboard
-      // Each selected cell shows up as a range containing a row with a single cell
-      // get the row, compare it to previous row and emit </tr><tr> as needed
-      // Bug 137450: Problem copying/pasting a table from a web page to Excel.
-      // Each separate block of <tr></tr> produced above will be wrapped by the
-      // immediate context. This assumes that you can't select cells that are
-      // multiple selections from two tables simultaneously.
-      node = range->GetStartContainer();
-      NS_ENSURE_TRUE(node, NS_ERROR_FAILURE);
-      if (node != prevNode) {
-        if (prevNode) {
-          rv = SerializeNodeEnd(prevNode, output);
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-        nsCOMPtr<nsIContent> content = do_QueryInterface(node);
-        if (content && content->IsHTMLElement(nsGkAtoms::tr) && !ParentIsTR(content)) {
-          if (!prevNode) {
-            // Went from a non-<tr> to a <tr>
-            mCommonAncestors.Clear();
-            nsContentUtils::GetAncestors(node->GetParentNode(),
-                                         mCommonAncestors);
-            rv = SerializeRangeContextStart(mCommonAncestors, output);
-            NS_ENSURE_SUCCESS(rv, rv);
-            // Don't let SerializeRangeToString serialize the context again
-            mDisableContextSerialize = true;
-          }
-
-          rv = SerializeNodeStart(node, 0, -1, output);
-          NS_ENSURE_SUCCESS(rv, rv);
-          prevNode = node;
-        } else if (prevNode) {
-          // Went from a <tr> to a non-<tr>
-          mDisableContextSerialize = false;
-          rv = SerializeRangeContextEnd(output);
-          NS_ENSURE_SUCCESS(rv, rv);
-          prevNode = nullptr;
-        }
-      }
-
-      rv = SerializeRangeToString(range, output);
-      NS_ENSURE_SUCCESS(rv, rv);
-      if (i == 0) {
-        firstRangeStartDepth = mStartDepth;
-      }
-    }
-    mStartDepth = firstRangeStartDepth;
-
-    if (prevNode) {
-      rv = SerializeNodeEnd(prevNode, output);
-      NS_ENSURE_SUCCESS(rv, rv);
-      mDisableContextSerialize = false;
-      rv = SerializeRangeContextEnd(output);
-      NS_ENSURE_SUCCESS(rv, rv);
-    }
-
-    // Just to be safe
-    mDisableContextSerialize = false;
-
-    mSelection = nullptr;
-  } else if (mRange) {
-      rv = SerializeRangeToString(mRange, output);
-
-      mRange = nullptr;
-  } else if (mNode) {
-    if (!mNodeFixup && !(mFlags & SkipInvisibleContent) && !mStream &&
-        mNodeIsContainer) {
-      rv = SerializeToStringIterative(mNode, output);
-    } else {
-      rv = SerializeToStringRecursive(mNode, output, mNodeIsContainer);
-    }
-    mNode = nullptr;
-  } else {
-    rv = mSerializer->AppendDocumentStart(mDocument, output);
-
-    if (NS_SUCCEEDED(rv)) {
-      rv = SerializeToStringRecursive(mDocument, output, false, aMaxLength);
-    }
-  }
-=======
   bool rewriteEncodingDeclaration =
       !mEncodingScope.IsLimited() &&
       !(mFlags & OutputDontRewriteEncodingDeclaration);
   mSerializer->Init(mFlags, mWrapColumn, mEncoding, mIsCopying,
                     rewriteEncodingDeclaration, &mNeedsPreformatScanning);
->>>>>>> upstream-releases
 
   rv = SerializeDependingOnScope(output, aMaxLength);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1927,17 +1167,9 @@ nsDocumentEncoder::EncodeToStringWithMaxLength(uint32_t aMaxLength,
 NS_IMETHODIMP
 nsDocumentEncoder::EncodeToStream(nsIOutputStream* aStream) {
   MOZ_ASSERT(mRangeContexts.IsEmpty(), "Re-entrant call to nsDocumentEncoder.");
-<<<<<<< HEAD
-  auto rangeContextGuard = MakeScopeExit([&] { mRangeContexts.Clear(); });
-||||||| merged common ancestors
-  auto rangeContextGuard = MakeScopeExit([&] {
-    mRangeContexts.Clear();
-  });
-=======
   auto rangeContextGuard = MakeScopeExit([&] { mRangeContexts.Clear(); });
   NS_ENSURE_ARG_POINTER(aStream);
 
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
 
   if (!mDocument) return NS_ERROR_NOT_INITIALIZED;
@@ -1999,15 +1231,8 @@ class nsHTMLCopyEncoder : public nsDocumentEncoder {
   nsHTMLCopyEncoder();
   virtual ~nsHTMLCopyEncoder();
 
-<<<<<<< HEAD
-  NS_IMETHOD Init(nsIDocument* aDocument, const nsAString& aMimeType,
-                  uint32_t aFlags) override;
-||||||| merged common ancestors
-  NS_IMETHOD Init(nsIDocument* aDocument, const nsAString& aMimeType, uint32_t aFlags) override;
-=======
   NS_IMETHOD Init(Document* aDocument, const nsAString& aMimeType,
                   uint32_t aFlags) override;
->>>>>>> upstream-releases
 
   // overridden methods from nsDocumentEncoder
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
@@ -2024,19 +1249,6 @@ class nsHTMLCopyEncoder : public nsDocumentEncoder {
   nsresult PromoteAncestorChain(nsCOMPtr<nsINode>* ioNode,
                                 int32_t* ioStartOffset, int32_t* ioEndOffset);
   nsresult GetPromotedPoint(Endpoint aWhere, nsINode* aNode, int32_t aOffset,
-<<<<<<< HEAD
-                            nsCOMPtr<nsINode>* outNode, int32_t* outOffset,
-                            nsINode* aCommon);
-  nsCOMPtr<nsINode> GetChildAt(nsINode* aParent, int32_t aOffset);
-  bool IsMozBR(Element* aNode);
-  nsresult GetNodeLocation(nsINode* inChild, nsCOMPtr<nsINode>* outParent,
-                           int32_t* outOffset);
-||||||| merged common ancestors
-                            nsCOMPtr<nsINode>* outNode, int32_t* outOffset, nsINode* aCommon);
-  nsCOMPtr<nsINode> GetChildAt(nsINode *aParent, int32_t aOffset);
-  bool IsMozBR(Element* aNode);
-  nsresult GetNodeLocation(nsINode *inChild, nsCOMPtr<nsINode> *outParent, int32_t *outOffset);
-=======
                             nsCOMPtr<nsINode>* outNode, int32_t* outOffset,
                             nsINode* aCommon);
   static nsCOMPtr<nsINode> GetChildAt(nsINode* aParent, int32_t aOffset);
@@ -2044,27 +1256,12 @@ class nsHTMLCopyEncoder : public nsDocumentEncoder {
   static nsresult GetNodeLocation(nsINode* inChild,
                                   nsCOMPtr<nsINode>* outParent,
                                   int32_t* outOffset);
->>>>>>> upstream-releases
   bool IsRoot(nsINode* aNode);
-<<<<<<< HEAD
-  bool IsFirstNode(nsINode* aNode);
-  bool IsLastNode(nsINode* aNode);
-  virtual bool IncludeInContext(nsINode* aNode) override;
-  virtual int32_t GetImmediateContextCount(
-      const nsTArray<nsINode*>& aAncestorArray) override;
-||||||| merged common ancestors
-  bool IsFirstNode(nsINode *aNode);
-  bool IsLastNode(nsINode *aNode);
-  virtual bool IncludeInContext(nsINode *aNode) override;
-  virtual int32_t
-  GetImmediateContextCount(const nsTArray<nsINode*>& aAncestorArray) override;
-=======
   static bool IsFirstNode(nsINode* aNode);
   static bool IsLastNode(nsINode* aNode);
   virtual bool IncludeInContext(nsINode* aNode) override;
   virtual int32_t GetImmediateContextCount(
       const nsTArray<nsINode*>& aAncestorArray) override;
->>>>>>> upstream-releases
 
   bool mIsTextWidget;
 };
@@ -2074,22 +1271,9 @@ nsHTMLCopyEncoder::nsHTMLCopyEncoder() { mIsTextWidget = false; }
 nsHTMLCopyEncoder::~nsHTMLCopyEncoder() {}
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLCopyEncoder::Init(nsIDocument* aDocument, const nsAString& aMimeType,
-                        uint32_t aFlags) {
-  if (!aDocument) return NS_ERROR_INVALID_ARG;
-||||||| merged common ancestors
-nsHTMLCopyEncoder::Init(nsIDocument* aDocument,
-                        const nsAString& aMimeType,
-                        uint32_t aFlags)
-{
-  if (!aDocument)
-    return NS_ERROR_INVALID_ARG;
-=======
 nsHTMLCopyEncoder::Init(Document* aDocument, const nsAString& aMimeType,
                         uint32_t aFlags) {
   if (!aDocument) return NS_ERROR_INVALID_ARG;
->>>>>>> upstream-releases
 
   mIsTextWidget = false;
   Initialize();
@@ -2152,107 +1336,11 @@ nsHTMLCopyEncoder::SetSelection(Selection* aSelection) {
       mIsTextWidget = true;
       break;
     }
-<<<<<<< HEAD
-#if defined(MOZ_THUNDERBIRD) || defined(MOZ_SUITE)
-    else if (selContent->IsHTMLElement(nsGkAtoms::body)) {
-      // Currently, setting mIsTextWidget to 'true' will result in the selection
-      // being encoded/copied as pre-formatted plain text.
-      // This is fine for copying pre-formatted plain text with Firefox, it is
-      // already not correct for copying pre-formatted "rich" text (bold,
-      // colour) with Firefox. As long as the serialisers aren't fixed, copying
-      // pre-formatted text in Firefox is broken. If we set mIsTextWidget,
-      // pre-formatted plain text is copied, but pre-formatted "rich" text loses
-      // the "rich" formatting. If we don't set mIsTextWidget, "rich" text
-      // attributes aren't lost, but white-space is lost.
-      // So far the story for Firefox.
-      //
-      // Thunderbird has two *conflicting* requirements.
-      // Case 1:
-      // When selecting and copying text, even pre-formatted text, as a quote
-      // to be placed into a reply, we *always* expect HTML to be copied.
-      // Case 2:
-      // When copying text in a so-called "plain text" message, that is
-      // one where the body carries style "white-space:pre-wrap", the text
-      // should be copied as pre-formatted plain text.
-      //
-      // Therefore the following code checks for "pre-wrap" on the body.
-      // This is a terrible hack.
-      //
-      // The proper fix would be this:
-      // For case 1:
-      // Communicate the fact that HTML is required to EncodeToString(),
-      // bug 1141786.
-      // For case 2:
-      // Wait for Firefox to get fixed to detect pre-formatting correctly,
-      // bug 1174452.
-      nsAutoString styleVal;
-      if (selContent->IsElement() &&
-          selContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::style,
-                                           styleVal) &&
-          styleVal.Find(NS_LITERAL_STRING("pre-wrap")) != kNotFound) {
-        mIsTextWidget = true;
-        break;
-      }
-    }
-#endif
-||||||| merged common ancestors
-#if defined(MOZ_THUNDERBIRD) || defined(MOZ_SUITE)
-    else if (selContent->IsHTMLElement(nsGkAtoms::body)) {
-      // Currently, setting mIsTextWidget to 'true' will result in the selection
-      // being encoded/copied as pre-formatted plain text.
-      // This is fine for copying pre-formatted plain text with Firefox, it is
-      // already not correct for copying pre-formatted "rich" text (bold, colour)
-      // with Firefox. As long as the serialisers aren't fixed, copying
-      // pre-formatted text in Firefox is broken. If we set mIsTextWidget,
-      // pre-formatted plain text is copied, but pre-formatted "rich" text loses
-      // the "rich" formatting. If we don't set mIsTextWidget, "rich" text
-      // attributes aren't lost, but white-space is lost.
-      // So far the story for Firefox.
-      //
-      // Thunderbird has two *conflicting* requirements.
-      // Case 1:
-      // When selecting and copying text, even pre-formatted text, as a quote
-      // to be placed into a reply, we *always* expect HTML to be copied.
-      // Case 2:
-      // When copying text in a so-called "plain text" message, that is
-      // one where the body carries style "white-space:pre-wrap", the text should
-      // be copied as pre-formatted plain text.
-      //
-      // Therefore the following code checks for "pre-wrap" on the body.
-      // This is a terrible hack.
-      //
-      // The proper fix would be this:
-      // For case 1:
-      // Communicate the fact that HTML is required to EncodeToString(),
-      // bug 1141786.
-      // For case 2:
-      // Wait for Firefox to get fixed to detect pre-formatting correctly,
-      // bug 1174452.
-      nsAutoString styleVal;
-      if (selContent->IsElement() &&
-          selContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::style, styleVal) &&
-          styleVal.Find(NS_LITERAL_STRING("pre-wrap")) != kNotFound) {
-        mIsTextWidget = true;
-        break;
-      }
-    }
-#endif
-=======
->>>>>>> upstream-releases
   }
 
   // normalize selection if we are not in a widget
-<<<<<<< HEAD
-  if (mIsTextWidget) {
-    mSelection = aSelection;
-||||||| merged common ancestors
-  if (mIsTextWidget)
-  {
-    mSelection = aSelection;
-=======
   if (mIsTextWidget) {
     mEncodingScope.mSelection = aSelection;
->>>>>>> upstream-releases
     mMimeType.AssignLiteral("text/plain");
     return NS_OK;
   }
@@ -2269,19 +1357,9 @@ nsHTMLCopyEncoder::SetSelection(Selection* aSelection) {
   }
 
   // there's no Clone() for selection! fix...
-<<<<<<< HEAD
-  // nsresult rv = aSelection->Clone(getter_AddRefs(mSelection);
-  // NS_ENSURE_SUCCESS(rv, rv);
-  mSelection = new Selection();
-||||||| merged common ancestors
-  //nsresult rv = aSelection->Clone(getter_AddRefs(mSelection);
-  //NS_ENSURE_SUCCESS(rv, rv);
-  mSelection = new Selection();
-=======
   // nsresult rv = aSelection->Clone(getter_AddRefs(mSelection);
   // NS_ENSURE_SUCCESS(rv, rv);
   mEncodingScope.mSelection = new Selection();
->>>>>>> upstream-releases
 
   // loop thru the ranges in the selection
   for (uint32_t rangeIdx = 0; rangeIdx < rangeCount; ++rangeIdx) {

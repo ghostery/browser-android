@@ -42,15 +42,8 @@ nsresult PresentationBuilderChild::Init() {
     return NS_ERROR_NOT_AVAILABLE;
   }
 
-<<<<<<< HEAD
-  nsPIDOMWindowInner* window =
-      nsGlobalWindowInner::GetInnerWindowWithId(windowId)->AsInner();
-||||||| merged common ancestors
-  nsPIDOMWindowInner* window = nsGlobalWindowInner::GetInnerWindowWithId(windowId)->AsInner();
-=======
   nsPIDOMWindowInner* window =
       nsGlobalWindowInner::GetInnerWindowWithId(windowId);
->>>>>>> upstream-releases
   if (NS_WARN_IF(!window)) {
     return NS_ERROR_NOT_AVAILABLE;
   }

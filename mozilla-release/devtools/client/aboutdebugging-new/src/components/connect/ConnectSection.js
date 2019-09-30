@@ -11,13 +11,7 @@ const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 class ConnectSection extends PureComponent {
   static get propTypes() {
     return {
-<<<<<<< HEAD
-      children: PropTypes.node.isRequired,
-||||||| merged common ancestors
-      children: PropTypes.any.isRequired,
-=======
       children: PropTypes.node,
->>>>>>> upstream-releases
       className: PropTypes.string,
       extraContent: PropTypes.node,
       icon: PropTypes.string.isRequired,
@@ -44,13 +38,7 @@ class ConnectSection extends PureComponent {
       },
       dom.header(
         {
-<<<<<<< HEAD
-          className: "alt-subheading",
-||||||| merged common ancestors
-          className: "page__section__title",
-=======
           className: "connect-section__header",
->>>>>>> upstream-releases
         },
         dom.img({
           className: "connect-section__header__icon",
@@ -58,24 +46,10 @@ class ConnectSection extends PureComponent {
         }),
         dom.h1(
           {
-<<<<<<< HEAD
-            className: "alt-subheading__icon",
-            src: this.props.icon,
-          }
-        ),
-        this.props.title
-||||||| merged common ancestors
-            className: "page__section__icon",
-            src: this.props.icon,
-          }
-        ),
-        this.props.title
-=======
             className: "card__heading connect-section__header__title",
           },
           this.props.title
         )
->>>>>>> upstream-releases
       ),
       this.props.children
         ? dom.div(

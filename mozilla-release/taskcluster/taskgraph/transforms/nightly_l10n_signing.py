@@ -36,15 +36,9 @@ def make_signing_description(config, jobs):
 @transforms.add
 def define_upstream_artifacts(config, jobs):
     for job in jobs:
-<<<<<<< HEAD
-        dep_job = job['primary-dependency']
-||||||| merged common ancestors
-        dep_job = job['dependent-task']
-=======
         dep_job = job['primary-dependency']
 
         job['attributes'] = copy_attributes_from_dependent_job(dep_job)
->>>>>>> upstream-releases
 
         locale_specifications = generate_specifications_of_artifacts_to_sign(
             config,

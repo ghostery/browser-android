@@ -221,37 +221,12 @@ var UrlbarTokenizer = {
   },
 };
 
-<<<<<<< HEAD
-const CHAR_TO_TYPE_MAP = new Map(
-  Object.entries(UrlbarTokenizer.RESTRICT).map(
-    ([type, char]) => [ char, UrlbarTokenizer.TYPE[`RESTRICT_${type}`] ]
-  )
-);
-||||||| merged common ancestors
-// The special characters below can be typed into the urlbar to restrict
-// the search to a certain category, like history, bookmarks or open pages; or
-// to force a match on just the title or url.
-// These restriction characters can be typed alone, or at word boundaries,
-// provided their meaning cannot be confused, for example # could be present
-// in a valid url, and thus it should not be interpreted as a restriction.
-UrlbarTokenizer.CHAR_TO_TYPE_MAP = new Map([
-  ["^", UrlbarTokenizer.TYPE.RESTRICT_HISTORY],
-  ["*", UrlbarTokenizer.TYPE.RESTRICT_BOOKMARK],
-  ["+", UrlbarTokenizer.TYPE.RESTRICT_TAG],
-  ["%", UrlbarTokenizer.TYPE.RESTRICT_OPENPAGE],
-  ["~", UrlbarTokenizer.TYPE.RESTRICT_TYPED],
-  ["?", UrlbarTokenizer.TYPE.RESTRICT_SEARCH],
-  ["#", UrlbarTokenizer.TYPE.RESTRICT_TITLE],
-  ["$", UrlbarTokenizer.TYPE.RESTRICT_URL],
-]);
-=======
 const CHAR_TO_TYPE_MAP = new Map(
   Object.entries(UrlbarTokenizer.RESTRICT).map(([type, char]) => [
     char,
     UrlbarTokenizer.TYPE[`RESTRICT_${type}`],
   ])
 );
->>>>>>> upstream-releases
 
 /**
  * Given a search string, splits it into string tokens.
@@ -325,31 +300,9 @@ function filterTokens(tokens) {
       lowerCaseValue: token.toLocaleLowerCase(),
       type: UrlbarTokenizer.TYPE.TEXT,
     };
-<<<<<<< HEAD
-    let restrictionType = CHAR_TO_TYPE_MAP.get(token);
-    if (tokens.length > 1 &&
-        restrictionType &&
-        foundRestriction.length == 0 ||
-        (foundRestriction.length == 1 &&
-         (combinables.has(foundRestriction[0]) && !combinables.has(restrictionType)) ||
-         (!combinables.has(foundRestriction[0]) && combinables.has(restrictionType)))) {
-      tokenObj.type = restrictionType;
-      foundRestriction.push(restrictionType);
-||||||| merged common ancestors
-    let restrictionType = UrlbarTokenizer.CHAR_TO_TYPE_MAP.get(token);
-    if (tokens.length > 1 &&
-        restrictionType &&
-        foundRestriction.length == 0 ||
-        (foundRestriction.length == 1 &&
-         (combinables.has(foundRestriction[0]) && !combinables.has(restrictionType)) ||
-         (!combinables.has(foundRestriction[0]) && combinables.has(restrictionType)))) {
-      tokenObj.type = restrictionType;
-      foundRestriction.push(restrictionType);
-=======
     let restrictionType = CHAR_TO_TYPE_MAP.get(token);
     if (restrictionType) {
       restrictions.push({ index: i, type: restrictionType });
->>>>>>> upstream-releases
     } else if (UrlbarTokenizer.looksLikeOrigin(token)) {
       tokenObj.type = UrlbarTokenizer.TYPE.POSSIBLE_ORIGIN;
     } else if (UrlbarTokenizer.looksLikeUrl(token, { requirePath: true })) {

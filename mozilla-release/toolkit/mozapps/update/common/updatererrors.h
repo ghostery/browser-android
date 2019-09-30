@@ -78,12 +78,7 @@
 #define SERVICE_INVALID_INSTALL_DIR_PATH_ERROR 55
 #define SERVICE_INVALID_WORKING_DIR_PATH_ERROR 56
 #define SERVICE_INSTALL_DIR_REG_ERROR 57
-<<<<<<< HEAD:mozilla-release/toolkit/mozapps/update/common/errors.h
-#define SERVICE_COULD_NOT_IMPERSONATE 58
-||||||| merged common ancestors
-=======
 #define SERVICE_UPDATE_STATUS_UNCHANGED 58
->>>>>>> upstream-releases:mozilla-release/toolkit/mozapps/update/common/updatererrors.h
 
 #define WRITE_ERROR_FILE_COPY 61
 #define WRITE_ERROR_DELETE_FILE 62

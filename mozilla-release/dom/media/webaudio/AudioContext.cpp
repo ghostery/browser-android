@@ -150,33 +150,6 @@ static float GetSampleRateForAudioContext(bool aIsOffline, float aSampleRate) {
 AudioContext::AudioContext(nsPIDOMWindowInner* aWindow, bool aIsOffline,
                            uint32_t aNumberOfChannels, uint32_t aLength,
                            float aSampleRate)
-<<<<<<< HEAD
-    : DOMEventTargetHelper(aWindow),
-      mId(gAudioContextId++),
-      mSampleRate(GetSampleRateForAudioContext(aIsOffline, aSampleRate)),
-      mAudioContextState(AudioContextState::Suspended),
-      mNumberOfChannels(aNumberOfChannels),
-      mIsOffline(aIsOffline),
-      mIsStarted(!aIsOffline),
-      mIsShutDown(false),
-      mCloseCalled(false),
-      mSuspendCalled(false),
-      mIsDisconnecting(false),
-      mWasAllowedToStart(true) {
-||||||| merged common ancestors
-  : DOMEventTargetHelper(aWindow)
-  , mId(gAudioContextId++)
-  , mSampleRate(GetSampleRateForAudioContext(aIsOffline, aSampleRate))
-  , mAudioContextState(AudioContextState::Suspended)
-  , mNumberOfChannels(aNumberOfChannels)
-  , mIsOffline(aIsOffline)
-  , mIsStarted(!aIsOffline)
-  , mIsShutDown(false)
-  , mCloseCalled(false)
-  , mSuspendCalled(false)
-  , mIsDisconnecting(false)
-{
-=======
     : DOMEventTargetHelper(aWindow),
       mId(gAudioContextId++),
       mSampleRate(GetSampleRateForAudioContext(aIsOffline, aSampleRate)),
@@ -193,24 +166,10 @@ AudioContext::AudioContext(nsPIDOMWindowInner* aWindow, bool aIsOffline,
       mWasEverAllowedToStart(false),
       mWasEverBlockedToStart(false),
       mWouldBeAllowedToStart(true) {
->>>>>>> upstream-releases
   bool mute = aWindow->AddAudioContext(this);
 
   // Note: AudioDestinationNode needs an AudioContext that must already be
   // bound to the window.
-<<<<<<< HEAD
-  const bool allowedToStart = AutoplayPolicy::IsAllowedToPlay(*this);
-  mDestination = new AudioDestinationNode(this, aIsOffline, allowedToStart,
-                                          aNumberOfChannels, aLength);
-||||||| merged common ancestors
-  bool allowedToStart = AutoplayPolicy::IsAllowedToPlay(*this);
-  mDestination = new AudioDestinationNode(this,
-                                          aIsOffline,
-                                          allowedToStart,
-                                          aNumberOfChannels,
-                                          aLength,
-                                          aSampleRate);
-=======
   const bool allowedToStart = AutoplayPolicy::IsAllowedToPlay(*this);
   // If an AudioContext is not allowed to start, we would postpone its state
   // transition from `suspended` to `running` until sites explicitly call
@@ -222,84 +181,25 @@ AudioContext::AudioContext(nsPIDOMWindowInner* aWindow, bool aIsOffline,
   }
   mDestination = new AudioDestinationNode(this, aIsOffline, allowedToStart,
                                           aNumberOfChannels, aLength);
->>>>>>> upstream-releases
 
   // The context can't be muted until it has a destination.
   if (mute) {
     Mute();
   }
 
-<<<<<<< HEAD
-  // If an AudioContext is not allowed to start, we would postpone its state
-  // transition from `suspended` to `running` until sites explicitly call
-  // AudioContext.resume() or AudioScheduledSourceNode.start().
-  if (!allowedToStart) {
-    AUTOPLAY_LOG("AudioContext %p is not allowed to start", this);
-    mWasAllowedToStart = false;
-    SuspendInternal(nullptr);
-    DispatchBlockedEvent();
-  }
-||||||| merged common ancestors
-  if (!allowedToStart) {
-    // Not allowed to start, delay the transition from `suspended` to `running`.
-    SuspendInternal(nullptr);
-    EnsureAutoplayRequested();
-  }
-=======
   UpdateAutoplayAssumptionStatus();
->>>>>>> upstream-releases
 
   FFTBlock::MainThreadInit();
 }
 
-<<<<<<< HEAD
-void AudioContext::NotifyScheduledSourceNodeStarted() {
-  MOZ_ASSERT(NS_IsMainThread());
-  // Only try to start AudioContext when AudioContext was not allowed to start.
-  if (mWasAllowedToStart) {
-    return;
-  }
-
-  const bool isAllowedToPlay = AutoplayPolicy::IsAllowedToPlay(*this);
-  AUTOPLAY_LOG("Trying to start AudioContext %p, IsAllowedToPlay=%d", this,
-               isAllowedToPlay);
-  if (isAllowedToPlay) {
-    ResumeInternal();
-  } else {
-    EnsureAutoplayRequested();
-  }
-}
-
-void AudioContext::EnsureAutoplayRequested() {
-  nsPIDOMWindowInner* parent = GetParentObject();
-  if (!parent || !parent->AsGlobal()) {
-||||||| merged common ancestors
-void
-AudioContext::EnsureAutoplayRequested()
-{
-  nsPIDOMWindowInner* parent = GetParentObject();
-  if (!parent || !parent->AsGlobal()) {
-=======
 void AudioContext::StartBlockedAudioContextIfAllowed() {
   MOZ_ASSERT(NS_IsMainThread());
   MaybeUpdateAutoplayTelemetry();
   // Only try to start AudioContext when AudioContext was not allowed to start.
   if (mWasAllowedToStart) {
->>>>>>> upstream-releases
     return;
   }
 
-<<<<<<< HEAD
-  RefPtr<AutoplayPermissionManager> request =
-      AutoplayPolicy::RequestFor(*(parent->GetExtantDoc()));
-  if (!request) {
-    return;
-||||||| merged common ancestors
-  RefPtr<AutoplayPermissionManager> request =
-    AutoplayPolicy::RequestFor(*(parent->GetExtantDoc()));
-  if (!request) {
-    return;
-=======
   const bool isAllowedToPlay = AutoplayPolicy::IsAllowedToPlay(*this);
   AUTOPLAY_LOG("Trying to start AudioContext %p, IsAllowedToPlay=%d", this,
                isAllowedToPlay);
@@ -311,63 +211,10 @@ void AudioContext::StartBlockedAudioContextIfAllowed() {
     ResumeInternal(AudioContextOperationFlags::SendStateChange);
   } else {
     ReportBlocked();
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-  AUTOPLAY_LOG("AudioContext %p EnsureAutoplayRequested %p", this,
-               request.get());
-  RefPtr<AudioContext> self = this;
-  request->RequestWithPrompt()->Then(
-      parent->AsGlobal()->AbstractMainThreadFor(TaskCategory::Other), __func__,
-      [self, request](bool aApproved) {
-        AUTOPLAY_LOG("%p Autoplay request approved request=%p", self.get(),
-                     request.get());
-        self->mWasAllowedToStart = true;
-        self->ResumeInternal();
-      },
-      [self, request](nsresult aError) {
-        AUTOPLAY_LOG("%p Autoplay request denied request=%p", self.get(),
-                     request.get());
-        self->mWasAllowedToStart = false;
-        self->DispatchBlockedEvent();
-        nsIDocument* doc = self->GetParentObject()
-                               ? self->GetParentObject()->GetExtantDoc()
-                               : nullptr;
-        nsContentUtils::ReportToConsole(
-            nsIScriptError::warningFlag, NS_LITERAL_CSTRING("Media"), doc,
-            nsContentUtils::eDOM_PROPERTIES, "BlockAutoplayError");
-      });
-}
-
 nsresult AudioContext::Init() {
-||||||| merged common ancestors
-  RefPtr<AudioContext> self = this;
-  request->RequestWithPrompt()
-    ->Then(parent->AsGlobal()->AbstractMainThreadFor(TaskCategory::Other),
-           __func__,
-           [ self, request ](
-             bool aApproved) {
-              AUTOPLAY_LOG("%p Autoplay request approved request=%p",
-                          self.get(),
-                          request.get());
-              self->ResumeInternal();
-           },
-           [self, request](nsresult aError) {
-              AUTOPLAY_LOG("%p Autoplay request denied request=%p",
-                          self.get(),
-                          request.get());
-              self->DispatchBlockedEvent();
-           });
-}
-
-nsresult
-AudioContext::Init()
-{
-=======
-nsresult AudioContext::Init() {
->>>>>>> upstream-releases
   if (!mIsOffline) {
     nsresult rv = mDestination->CreateAudioChannelAgent();
     if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -399,27 +246,12 @@ JSObject* AudioContext::WrapObject(JSContext* aCx,
   }
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioContext> AudioContext::Constructor(
-    const GlobalObject& aGlobal, const AudioContextOptions& aOptions,
-    ErrorResult& aRv) {
-  // Audio playback is not yet supported when recording or replaying. See bug
-  // 1304147.
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioContext>
-AudioContext::Constructor(const GlobalObject& aGlobal,
-                          const AudioContextOptions& aOptions,
-                          ErrorResult& aRv)
-{
-  // Audio playback is not yet supported when recording or replaying. See bug 1304147.
-=======
 /* static */
 already_AddRefed<AudioContext> AudioContext::Constructor(
     const GlobalObject& aGlobal, const AudioContextOptions& aOptions,
     ErrorResult& aRv) {
   // Audio playback is not yet supported when recording or replaying. See bug
   // 1304147.
->>>>>>> upstream-releases
   if (recordreplay::IsRecordingOrReplaying()) {
     aRv.Throw(NS_ERROR_NOT_AVAILABLE);
     return nullptr;
@@ -433,32 +265,11 @@ already_AddRefed<AudioContext> AudioContext::Constructor(
   }
 
   float sampleRate = MediaStreamGraph::REQUEST_DEFAULT_SAMPLE_RATE;
-<<<<<<< HEAD
-  if (Preferences::GetBool(
-          "media.webaudio.audiocontextoptions-samplerate.enabled")) {
-    if (aOptions.mSampleRate > 0 &&
-        (aOptions.mSampleRate - WebAudioUtils::MinSampleRate < 0.0 ||
-         WebAudioUtils::MaxSampleRate - aOptions.mSampleRate < 0.0)) {
-      aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
-      return nullptr;
-    }
-    sampleRate = aOptions.mSampleRate;
-||||||| merged common ancestors
-  if (Preferences::GetBool("media.webaudio.audiocontextoptions-samplerate.enabled")) {
-    if (aOptions.mSampleRate > 0 &&
-        (aOptions.mSampleRate - WebAudioUtils::MinSampleRate < 0.0 ||
-        WebAudioUtils::MaxSampleRate - aOptions.mSampleRate < 0.0)) {
-      aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
-      return nullptr;
-    }
-    sampleRate = aOptions.mSampleRate;
-=======
   if (aOptions.mSampleRate > 0 &&
       (aOptions.mSampleRate - WebAudioUtils::MinSampleRate < 0.0 ||
        WebAudioUtils::MaxSampleRate - aOptions.mSampleRate < 0.0)) {
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;
->>>>>>> upstream-releases
   }
   sampleRate = aOptions.mSampleRate;
 
@@ -476,41 +287,6 @@ already_AddRefed<AudioContext> AudioContext::Constructor(
   return object.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioContext> AudioContext::Constructor(
-    const GlobalObject& aGlobal, const OfflineAudioContextOptions& aOptions,
-    ErrorResult& aRv) {
-  return Constructor(aGlobal, aOptions.mNumberOfChannels, aOptions.mLength,
-                     aOptions.mSampleRate, aRv);
-}
-
-/* static */ already_AddRefed<AudioContext> AudioContext::Constructor(
-    const GlobalObject& aGlobal, uint32_t aNumberOfChannels, uint32_t aLength,
-    float aSampleRate, ErrorResult& aRv) {
-  // Audio playback is not yet supported when recording or replaying. See bug
-  // 1304147.
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioContext>
-AudioContext::Constructor(const GlobalObject& aGlobal,
-                          const OfflineAudioContextOptions& aOptions,
-                          ErrorResult& aRv)
-{
-  return Constructor(aGlobal,
-                     aOptions.mNumberOfChannels,
-                     aOptions.mLength,
-                     aOptions.mSampleRate,
-                     aRv);
-}
-
-/* static */ already_AddRefed<AudioContext>
-AudioContext::Constructor(const GlobalObject& aGlobal,
-                          uint32_t aNumberOfChannels,
-                          uint32_t aLength,
-                          float aSampleRate,
-                          ErrorResult& aRv)
-{
-  // Audio playback is not yet supported when recording or replaying. See bug 1304147.
-=======
 /* static */
 already_AddRefed<AudioContext> AudioContext::Constructor(
     const GlobalObject& aGlobal, const OfflineAudioContextOptions& aOptions,
@@ -525,7 +301,6 @@ already_AddRefed<AudioContext> AudioContext::Constructor(
     float aSampleRate, ErrorResult& aRv) {
   // Audio playback is not yet supported when recording or replaying. See bug
   // 1304147.
->>>>>>> upstream-releases
   if (recordreplay::IsRecordingOrReplaying()) {
     aRv.Throw(NS_ERROR_NOT_AVAILABLE);
     return nullptr;
@@ -555,64 +330,15 @@ already_AddRefed<AudioContext> AudioContext::Constructor(
   return object.forget();
 }
 
-<<<<<<< HEAD
-bool AudioContext::CheckClosed(ErrorResult& aRv) {
-  if (mAudioContextState == AudioContextState::Closed || mIsShutDown ||
-      mIsDisconnecting) {
-    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
-    return true;
-  }
-  return false;
-}
-
 already_AddRefed<AudioBufferSourceNode> AudioContext::CreateBufferSource(
     ErrorResult& aRv) {
-||||||| merged common ancestors
-bool AudioContext::CheckClosed(ErrorResult& aRv)
-{
-  if (mAudioContextState == AudioContextState::Closed ||
-      mIsShutDown ||
-      mIsDisconnecting) {
-    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
-    return true;
-  }
-  return false;
-}
-
-already_AddRefed<AudioBufferSourceNode>
-AudioContext::CreateBufferSource(ErrorResult& aRv)
-{
-=======
-already_AddRefed<AudioBufferSourceNode> AudioContext::CreateBufferSource(
-    ErrorResult& aRv) {
->>>>>>> upstream-releases
   return AudioBufferSourceNode::Create(nullptr, *this,
                                        AudioBufferSourceOptions(), aRv);
 }
 
-<<<<<<< HEAD
-already_AddRefed<ConstantSourceNode> AudioContext::CreateConstantSource(
-    ErrorResult& aRv) {
-  if (CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-  RefPtr<ConstantSourceNode> constantSourceNode = new ConstantSourceNode(this);
-||||||| merged common ancestors
-already_AddRefed<ConstantSourceNode>
-AudioContext::CreateConstantSource(ErrorResult& aRv)
-{
-  if (CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-  RefPtr<ConstantSourceNode> constantSourceNode =
-    new ConstantSourceNode(this);
-=======
 already_AddRefed<ConstantSourceNode> AudioContext::CreateConstantSource(
     ErrorResult& aRv) {
   RefPtr<ConstantSourceNode> constantSourceNode = new ConstantSourceNode(this);
->>>>>>> upstream-releases
   return constantSourceNode.forget();
 }
 
@@ -665,25 +391,8 @@ already_AddRefed<ScriptProcessorNode> AudioContext::CreateScriptProcessor(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  if (CheckClosed(aRv)) {
-    return nullptr;
-  }
-
   RefPtr<ScriptProcessorNode> scriptProcessor = new ScriptProcessorNode(
       this, aBufferSize, aNumberOfInputChannels, aNumberOfOutputChannels);
-||||||| merged common ancestors
-  if (CheckClosed(aRv)) {
-    return nullptr;
-  }
-
-  RefPtr<ScriptProcessorNode> scriptProcessor =
-    new ScriptProcessorNode(this, aBufferSize, aNumberOfInputChannels,
-                            aNumberOfOutputChannels);
-=======
-  RefPtr<ScriptProcessorNode> scriptProcessor = new ScriptProcessorNode(
-      this, aBufferSize, aNumberOfInputChannels, aNumberOfOutputChannels);
->>>>>>> upstream-releases
   return scriptProcessor.forget();
 }
 
@@ -714,13 +423,6 @@ AudioContext::CreateMediaStreamSource(DOMMediaStream& aMediaStream,
   return MediaStreamAudioSourceNode::Create(*this, options, aRv);
 }
 
-<<<<<<< HEAD
-already_AddRefed<GainNode> AudioContext::CreateGain(ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<GainNode>
-AudioContext::CreateGain(ErrorResult& aRv)
-{
-=======
 already_AddRefed<MediaStreamTrackAudioSourceNode>
 AudioContext::CreateMediaStreamTrackSource(MediaStreamTrack& aMediaStreamTrack,
                                            ErrorResult& aRv) {
@@ -731,7 +433,6 @@ AudioContext::CreateMediaStreamTrackSource(MediaStreamTrack& aMediaStreamTrack,
 }
 
 already_AddRefed<GainNode> AudioContext::CreateGain(ErrorResult& aRv) {
->>>>>>> upstream-releases
   return GainNode::Create(*this, GainOptions(), aRv);
 }
 
@@ -834,26 +535,11 @@ bool AudioContext::IsRunning() const {
   return mAudioContextState == AudioContextState::Running;
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> AudioContext::DecodeAudioData(
-    const ArrayBuffer& aBuffer,
-    const Optional<OwningNonNull<DecodeSuccessCallback> >& aSuccessCallback,
-    const Optional<OwningNonNull<DecodeErrorCallback> >& aFailureCallback,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-AudioContext::DecodeAudioData(const ArrayBuffer& aBuffer,
-                              const Optional<OwningNonNull<DecodeSuccessCallback> >& aSuccessCallback,
-                              const Optional<OwningNonNull<DecodeErrorCallback> >& aFailureCallback,
-                              ErrorResult& aRv)
-{
-=======
 already_AddRefed<Promise> AudioContext::DecodeAudioData(
     const ArrayBuffer& aBuffer,
     const Optional<OwningNonNull<DecodeSuccessCallback>>& aSuccessCallback,
     const Optional<OwningNonNull<DecodeErrorCallback>>& aFailureCallback,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> parentObject = do_QueryInterface(GetParentObject());
   RefPtr<Promise> promise;
   AutoJSAPI jsapi;
@@ -957,13 +643,6 @@ AudioNodeStream* AudioContext::DestinationStream() const {
   return nullptr;
 }
 
-<<<<<<< HEAD
-double AudioContext::CurrentTime() {
-||||||| merged common ancestors
-double
-AudioContext::CurrentTime()
-{
-=======
 void AudioContext::ShutdownWorklet() {
   if (mWorklet) {
     mWorklet->Impl()->NotifyWorkletFinished();
@@ -971,7 +650,6 @@ void AudioContext::ShutdownWorklet() {
 }
 
 double AudioContext::CurrentTime() {
->>>>>>> upstream-releases
   MediaStream* stream = Destination()->Stream();
 
   double rawTime = stream->StreamTimeToSeconds(stream->GetCurrentTime());
@@ -1012,19 +690,11 @@ void AudioContext::BindToOwner(nsIGlobalObject* aNew) {
   }
 }
 
-<<<<<<< HEAD
-void AudioContext::Shutdown() {
-||||||| merged common ancestors
-void
-AudioContext::Shutdown()
-{
-=======
 void AudioContext::Shutdown() {
   // Avoid resend the Telemetry data.
   if (!mIsShutDown) {
     MaybeUpdateAutoplayTelemetryWhenShutdown();
   }
->>>>>>> upstream-releases
   mIsShutDown = true;
 
   // We don't want to touch promises if the global is going away soon.
@@ -1170,19 +840,9 @@ void AudioContext::OnStateChanged(void* aPromise, AudioContextState aNewState) {
     return;
   }
 
-<<<<<<< HEAD
-#ifndef WIN32  // Bug 1170547
-#ifndef XP_MACOSX
-#ifdef DEBUG
-||||||| merged common ancestors
-#ifndef WIN32 // Bug 1170547
-#ifndef XP_MACOSX
-#ifdef DEBUG
-=======
 #ifndef WIN32  // Bug 1170547
 #  ifndef XP_MACOSX
 #    ifdef DEBUG
->>>>>>> upstream-releases
 
   if (!((mAudioContextState == AudioContextState::Suspended &&
          aNewState == AudioContextState::Running) ||
@@ -1199,19 +859,9 @@ void AudioContext::OnStateChanged(void* aPromise, AudioContextState aNewState) {
     MOZ_ASSERT(false);
   }
 
-<<<<<<< HEAD
-#endif  // DEBUG
-#endif  // XP_MACOSX
-#endif  // WIN32
-||||||| merged common ancestors
-#endif // DEBUG
-#endif // XP_MACOSX
-#endif // WIN32
-=======
 #    endif  // DEBUG
 #  endif    // XP_MACOSX
 #endif      // WIN32
->>>>>>> upstream-releases
 
   if (aPromise) {
     Promise* promise = reinterpret_cast<Promise*>(aPromise);
@@ -1288,13 +938,6 @@ already_AddRefed<Promise> AudioContext::Suspend(ErrorResult& aRv) {
   return promise.forget();
 }
 
-<<<<<<< HEAD
-void AudioContext::SuspendInternal(void* aPromise) {
-||||||| merged common ancestors
-void
-AudioContext::SuspendInternal(void* aPromise)
-{
-=======
 void AudioContext::SuspendFromChrome() {
   if (mIsOffline || mIsShutDown) {
     return;
@@ -1304,7 +947,6 @@ void AudioContext::SuspendFromChrome() {
 
 void AudioContext::SuspendInternal(void* aPromise,
                                    AudioContextOperationFlags aFlags) {
->>>>>>> upstream-releases
   Destination()->Suspend();
 
   nsTArray<MediaStream*> streams;
@@ -1315,30 +957,13 @@ void AudioContext::SuspendInternal(void* aPromise,
   if (!mSuspendCalled) {
     streams = GetAllStreams();
   }
-<<<<<<< HEAD
-  Graph()->ApplyAudioContextOperation(DestinationStream(), streams,
-                                      AudioContextOperation::Suspend, aPromise);
-||||||| merged common ancestors
-  Graph()->ApplyAudioContextOperation(DestinationStream()->AsAudioNodeStream(),
-                                      streams,
-                                      AudioContextOperation::Suspend,
-                                      aPromise);
-=======
   Graph()->ApplyAudioContextOperation(DestinationStream(), streams,
                                       AudioContextOperation::Suspend, aPromise,
                                       aFlags);
->>>>>>> upstream-releases
 
   mSuspendCalled = true;
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> AudioContext::Resume(ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-AudioContext::Resume(ErrorResult& aRv)
-{
-=======
 void AudioContext::ResumeFromChrome() {
   if (mIsOffline || mIsShutDown) {
     return;
@@ -1347,7 +972,6 @@ void AudioContext::ResumeFromChrome() {
 }
 
 already_AddRefed<Promise> AudioContext::Resume(ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> parentObject = do_QueryInterface(GetParentObject());
   RefPtr<Promise> promise;
   promise = Promise::Create(parentObject, aRv);
@@ -1372,46 +996,20 @@ already_AddRefed<Promise> AudioContext::Resume(ErrorResult& aRv) {
   AUTOPLAY_LOG("Trying to resume AudioContext %p, IsAllowedToPlay=%d", this,
                isAllowedToPlay);
   if (isAllowedToPlay) {
-<<<<<<< HEAD
-    mWasAllowedToStart = true;
-    ResumeInternal();
-  } else if (!isAllowedToPlay && !mWasAllowedToStart) {
-    EnsureAutoplayRequested();
-||||||| merged common ancestors
-    ResumeInternal();
-  } else {
-    DispatchBlockedEvent();
-=======
     ResumeInternal(AudioContextOperationFlags::SendStateChange);
   } else {
     ReportBlocked();
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-  AUTOPLAY_LOG("Resume AudioContext %p, IsAllowedToPlay=%d",
-    this, isAllowedToPlay);
-=======
   MaybeUpdateAutoplayTelemetry();
 
->>>>>>> upstream-releases
   return promise.forget();
 }
 
-<<<<<<< HEAD
-void AudioContext::ResumeInternal() {
-  AUTOPLAY_LOG("Allow to resume AudioContext %p", this);
-||||||| merged common ancestors
-void
-AudioContext::ResumeInternal()
-{
-=======
 void AudioContext::ResumeInternal(AudioContextOperationFlags aFlags) {
   AUTOPLAY_LOG("Allow to resume AudioContext %p", this);
   mWasAllowedToStart = true;
 
->>>>>>> upstream-releases
   Destination()->Resume();
 
   nsTArray<MediaStream*> streams;
@@ -1422,31 +1020,12 @@ void AudioContext::ResumeInternal(AudioContextOperationFlags aFlags) {
   if (mSuspendCalled) {
     streams = GetAllStreams();
   }
-<<<<<<< HEAD
-  Graph()->ApplyAudioContextOperation(DestinationStream(), streams,
-                                      AudioContextOperation::Resume, nullptr);
-||||||| merged common ancestors
-  Graph()->ApplyAudioContextOperation(DestinationStream()->AsAudioNodeStream(),
-                                      streams,
-                                      AudioContextOperation::Resume,
-                                      nullptr);
-=======
   Graph()->ApplyAudioContextOperation(DestinationStream(), streams,
                                       AudioContextOperation::Resume, nullptr,
                                       aFlags);
->>>>>>> upstream-releases
   mSuspendCalled = false;
 }
 
-<<<<<<< HEAD
-void AudioContext::DispatchBlockedEvent() {
-  if (!StaticPrefs::MediaBlockEventEnabled()) {
-||||||| merged common ancestors
-void
-AudioContext::DispatchBlockedEvent()
-{
-  if (!StaticPrefs::MediaBlockEventEnabled()) {
-=======
 void AudioContext::UpdateAutoplayAssumptionStatus() {
   if (AutoplayPolicy::WouldBeAllowedToPlayIfAutoplayDisabled(*this)) {
     mWasEverAllowedToStart |= true;
@@ -1460,54 +1039,9 @@ void AudioContext::UpdateAutoplayAssumptionStatus() {
 void AudioContext::MaybeUpdateAutoplayTelemetry() {
   // Exclude offline AudioContext because it's always allowed to start.
   if (mIsOffline) {
->>>>>>> upstream-releases
     return;
   }
 
-<<<<<<< HEAD
-  RefPtr<AudioContext> self = this;
-  RefPtr<nsIRunnable> r =
-      NS_NewRunnableFunction("AudioContext::AutoplayBlocked", [self]() {
-        nsPIDOMWindowInner* parent = self->GetParentObject();
-        if (!parent) {
-          return;
-        }
-
-        nsIDocument* doc = parent->GetExtantDoc();
-        if (!doc) {
-          return;
-        }
-
-        AUTOPLAY_LOG("Dispatch `blocked` event for AudioContext %p",
-                     self.get());
-        nsContentUtils::DispatchTrustedEvent(
-            doc, static_cast<DOMEventTargetHelper*>(self),
-            NS_LITERAL_STRING("blocked"), CanBubble::eNo, Cancelable::eNo);
-      });
-||||||| merged common ancestors
-  RefPtr<AudioContext> self = this;
-  RefPtr<nsIRunnable> r = NS_NewRunnableFunction(
-    "AudioContext::AutoplayBlocked",
-    [self] () {
-      nsPIDOMWindowInner* parent = self->GetParentObject();
-      if (!parent) {
-        return;
-      }
-
-      nsIDocument* doc = parent->GetExtantDoc();
-      if (!doc) {
-        return;
-      }
-
-      AUTOPLAY_LOG("Dispatch `blocked` event for AudioContext %p", self.get());
-      nsContentUtils::DispatchTrustedEvent(
-        doc,
-        static_cast<DOMEventTargetHelper*>(self),
-        NS_LITERAL_STRING("blocked"),
-        CanBubble::eNo,
-        Cancelable::eNo);
-  });
-=======
   if (AutoplayPolicy::WouldBeAllowedToPlayIfAutoplayDisabled(*this) &&
       !mWouldBeAllowedToStart) {
     AccumulateCategorical(
@@ -1559,7 +1093,6 @@ void AudioContext::ReportBlocked() {
             doc, static_cast<DOMEventTargetHelper*>(self),
             NS_LITERAL_STRING("blocked"), CanBubble::eNo, Cancelable::eNo);
       });
->>>>>>> upstream-releases
   Dispatch(r.forget());
 }
 
@@ -1603,16 +1136,8 @@ void AudioContext::CloseInternal(void* aPromise,
     if (!mSuspendCalled && !mCloseCalled) {
       streams = GetAllStreams();
     }
-<<<<<<< HEAD
-    Graph()->ApplyAudioContextOperation(ds, streams,
-                                        AudioContextOperation::Close, promise);
-||||||| merged common ancestors
-    Graph()->ApplyAudioContextOperation(ds->AsAudioNodeStream(), streams,
-                                        AudioContextOperation::Close, promise);
-=======
     Graph()->ApplyAudioContextOperation(
         ds, streams, AudioContextOperation::Close, aPromise, aFlags);
->>>>>>> upstream-releases
   }
   mCloseCalled = true;
 }
@@ -1627,37 +1152,7 @@ void AudioContext::UnregisterNode(AudioNode* aNode) {
   mAllNodes.RemoveEntry(aNode);
 }
 
-<<<<<<< HEAD
-JSObject* AudioContext::GetGlobalJSObject() const {
-  nsCOMPtr<nsIGlobalObject> parentObject = do_QueryInterface(GetParentObject());
-  if (!parentObject) {
-    return nullptr;
-  }
-
-  // This can also return null.
-  return parentObject->GetGlobalJSObject();
-}
-
 already_AddRefed<Promise> AudioContext::StartRendering(ErrorResult& aRv) {
-||||||| merged common ancestors
-JSObject*
-AudioContext::GetGlobalJSObject() const
-{
-  nsCOMPtr<nsIGlobalObject> parentObject = do_QueryInterface(GetParentObject());
-  if (!parentObject) {
-    return nullptr;
-  }
-
-  // This can also return null.
-  return parentObject->GetGlobalJSObject();
-}
-
-already_AddRefed<Promise>
-AudioContext::StartRendering(ErrorResult& aRv)
-{
-=======
-already_AddRefed<Promise> AudioContext::StartRendering(ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> parentObject = do_QueryInterface(GetParentObject());
 
   MOZ_ASSERT(mIsOffline, "This should only be called on OfflineAudioContext");
@@ -1697,14 +1192,6 @@ void AudioContext::Unmute() const {
   }
 }
 
-<<<<<<< HEAD
-size_t AudioContext::SizeOfIncludingThis(
-    mozilla::MallocSizeOf aMallocSizeOf) const {
-||||||| merged common ancestors
-size_t
-AudioContext::SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const
-{
-=======
 void AudioContext::SetParamMapForWorkletName(
     const nsAString& aName, AudioParamDescriptorMap* aParamMap) {
   MOZ_ASSERT(!mWorkletParamDescriptors.GetValue(aName));
@@ -1714,7 +1201,6 @@ void AudioContext::SetParamMapForWorkletName(
 
 size_t AudioContext::SizeOfIncludingThis(
     mozilla::MallocSizeOf aMallocSizeOf) const {
->>>>>>> upstream-releases
   // AudioNodes are tracked separately because we do not want the AudioContext
   // to track all of the AudioNodes it creates, so we wouldn't be able to
   // traverse them from here.

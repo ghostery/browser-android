@@ -114,19 +114,8 @@ void XULTreeAccessible::Value(nsString& aValue) const {
   if (currentIndex >= 0) {
     RefPtr<nsTreeColumn> keyCol;
 
-<<<<<<< HEAD
-    RefPtr<nsTreeColumns> cols;
-    mTree->GetColumns(getter_AddRefs(cols));
-    if (cols) keyCol = cols->GetKeyColumn();
-||||||| merged common ancestors
-    RefPtr<nsTreeColumns> cols;
-    mTree->GetColumns(getter_AddRefs(cols));
-    if (cols)
-      keyCol = cols->GetKeyColumn();
-=======
     RefPtr<nsTreeColumns> cols = mTree->GetColumns();
     if (cols) keyCol = cols->GetKeyColumn();
->>>>>>> upstream-releases
 
     mTreeView->GetCellText(currentIndex, keyCol, aValue);
   }
@@ -171,16 +160,8 @@ Accessible* XULTreeAccessible::ChildAtPoint(int32_t aX, int32_t aY,
   nsIFrame* frame = GetFrame();
   if (!frame) return nullptr;
 
-<<<<<<< HEAD
-  nsPresContext* presContext = frame->PresContext();
-  nsIPresShell* presShell = presContext->PresShell();
-||||||| merged common ancestors
-  nsPresContext *presContext = frame->PresContext();
-  nsIPresShell* presShell = presContext->PresShell();
-=======
   nsPresContext* presContext = frame->PresContext();
   PresShell* presShell = presContext->PresShell();
->>>>>>> upstream-releases
 
   nsIFrame* rootFrame = presShell->GetRootFrame();
   NS_ENSURE_TRUE(rootFrame, nullptr);
@@ -204,17 +185,8 @@ Accessible* XULTreeAccessible::ChildAtPoint(int32_t aX, int32_t aY,
     // Look for accessible cell for the found item accessible.
     RefPtr<XULTreeItemAccessibleBase> treeitem = do_QueryObject(child);
 
-<<<<<<< HEAD
-    Accessible* cell = treeitem->GetCellAccessible(column);
-    if (cell) child = cell;
-||||||| merged common ancestors
-    Accessible* cell = treeitem->GetCellAccessible(column);
-    if (cell)
-      child = cell;
-=======
     Accessible* cell = treeitem->GetCellAccessible(cellInfo.mCol);
     if (cell) child = cell;
->>>>>>> upstream-releases
   }
 
   return child;
@@ -435,30 +407,14 @@ bool XULTreeAccessible::AreItemsOperable() const {
   return true;
 }
 
-<<<<<<< HEAD
-Accessible* XULTreeAccessible::ContainerWidget() const {
-  if (IsAutoCompletePopup()) {
-||||||| merged common ancestors
-Accessible*
-XULTreeAccessible::ContainerWidget() const
-{
-  if (IsAutoCompletePopup()) {
-=======
 Accessible* XULTreeAccessible::ContainerWidget() const {
   if (IsAutoCompletePopup() && mContent->GetParent()) {
->>>>>>> upstream-releases
     // This works for XUL autocompletes. It doesn't work for HTML forms
     // autocomplete because of potential crossprocess calls (when autocomplete
     // lives in content process while popup lives in chrome process). If that's
     // a problem then rethink Widgets interface.
     nsCOMPtr<nsIDOMXULMenuListElement> menuListElm =
-<<<<<<< HEAD
-        do_QueryInterface(mContent->GetParent());
-||||||| merged common ancestors
-      do_QueryInterface(mContent->GetParent());
-=======
         mContent->GetParent()->AsElement()->AsXULMenuList();
->>>>>>> upstream-releases
     if (menuListElm) {
       RefPtr<mozilla::dom::Element> inputElm;
       menuListElm->GetInputField(getter_AddRefs(inputElm));
@@ -566,19 +522,8 @@ void XULTreeAccessible::TreeViewInvalidated(int32_t aStartRow, int32_t aEndRow,
     endRow = rowCount - 1;
   }
 
-<<<<<<< HEAD
-  RefPtr<nsTreeColumns> treeColumns;
-  mTree->GetColumns(getter_AddRefs(treeColumns));
-  if (!treeColumns) return;
-||||||| merged common ancestors
-  RefPtr<nsTreeColumns> treeColumns;
-  mTree->GetColumns(getter_AddRefs(treeColumns));
-  if (!treeColumns)
-    return;
-=======
   RefPtr<nsTreeColumns> treeColumns = mTree->GetColumns();
   if (!treeColumns) return;
->>>>>>> upstream-releases
 
   int32_t endCol = aEndCol;
 
@@ -637,23 +582,6 @@ already_AddRefed<Accessible> XULTreeAccessible::CreateTreeItemAccessible(
 // XULTreeItemAccessibleBase
 ////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-XULTreeItemAccessibleBase::XULTreeItemAccessibleBase(
-    nsIContent* aContent, DocAccessible* aDoc, Accessible* aParent,
-    nsITreeBoxObject* aTree, nsITreeView* aTreeView, int32_t aRow)
-    : AccessibleWrap(aContent, aDoc),
-      mTree(aTree),
-      mTreeView(aTreeView),
-      mRow(aRow) {
-||||||| merged common ancestors
-XULTreeItemAccessibleBase::
-  XULTreeItemAccessibleBase(nsIContent* aContent, DocAccessible* aDoc,
-                            Accessible* aParent, nsITreeBoxObject* aTree,
-                            nsITreeView* aTreeView, int32_t aRow) :
-  AccessibleWrap(aContent, aDoc),
-  mTree(aTree), mTreeView(aTreeView), mRow(aRow)
-{
-=======
 XULTreeItemAccessibleBase::XULTreeItemAccessibleBase(
     nsIContent* aContent, DocAccessible* aDoc, Accessible* aParent,
     dom::XULTreeElement* aTree, nsITreeView* aTreeView, int32_t aRow)
@@ -661,7 +589,6 @@ XULTreeItemAccessibleBase::XULTreeItemAccessibleBase(
       mTree(aTree),
       mTreeView(aTreeView),
       mRow(aRow) {
->>>>>>> upstream-releases
   mParent = aParent;
   mStateFlags |= eSharedNode;
 }
@@ -690,19 +617,9 @@ nsIntRect XULTreeItemAccessibleBase::BoundsInCSSPixels() const {
 
   RefPtr<nsTreeColumn> column = nsCoreUtils::GetFirstSensibleColumn(mTree);
 
-<<<<<<< HEAD
-  int32_t x = 0, y = 0, width = 0, height = 0;
-  nsresult rv = mTree->GetCoordsForCellItem(mRow, column, EmptyString(), &x, &y,
-                                            &width, &height);
-||||||| merged common ancestors
-  int32_t x = 0, y = 0, width = 0, height = 0;
-  nsresult rv = mTree->GetCoordsForCellItem(mRow, column, EmptyString(),
-                                            &x, &y, &width, &height);
-=======
   nsresult rv;
   nsIntRect rect =
       mTree->GetCoordsForCellItem(mRow, column, NS_LITERAL_STRING("cell"), rv);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return nsIntRect();
   }
@@ -917,19 +834,8 @@ void XULTreeItemAccessibleBase::DispatchClickEvent(
     nsIContent* aContent, uint32_t aActionIndex) const {
   if (IsDefunct()) return;
 
-<<<<<<< HEAD
-  RefPtr<nsTreeColumns> columns;
-  mTree->GetColumns(getter_AddRefs(columns));
-  if (!columns) return;
-||||||| merged common ancestors
-  RefPtr<nsTreeColumns> columns;
-  mTree->GetColumns(getter_AddRefs(columns));
-  if (!columns)
-    return;
-=======
   RefPtr<nsTreeColumns> columns = mTree->GetColumns();
   if (!columns) return;
->>>>>>> upstream-releases
 
   // Get column and pseudo element.
   RefPtr<nsTreeColumn> column;
@@ -944,17 +850,10 @@ void XULTreeItemAccessibleBase::DispatchClickEvent(
     pseudoElm = NS_LITERAL_STRING("twisty");
   }
 
-<<<<<<< HEAD
-  if (column) nsCoreUtils::DispatchClickEvent(mTree, mRow, column, pseudoElm);
-||||||| merged common ancestors
-  if (column)
-    nsCoreUtils::DispatchClickEvent(mTree, mRow, column, pseudoElm);
-=======
   if (column) {
     RefPtr<dom::XULTreeElement> tree = mTree;
     nsCoreUtils::DispatchClickEvent(tree, mRow, column, pseudoElm);
   }
->>>>>>> upstream-releases
 }
 
 Accessible* XULTreeItemAccessibleBase::GetSiblingAtOffset(
@@ -1003,26 +902,11 @@ void XULTreeItemAccessibleBase::GetCellName(nsTreeColumn* aColumn,
 // XULTreeItemAccessible
 ////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-XULTreeItemAccessible::XULTreeItemAccessible(
-    nsIContent* aContent, DocAccessible* aDoc, Accessible* aParent,
-    nsITreeBoxObject* aTree, nsITreeView* aTreeView, int32_t aRow)
-    : XULTreeItemAccessibleBase(aContent, aDoc, aParent, aTree, aTreeView,
-                                aRow) {
-||||||| merged common ancestors
-XULTreeItemAccessible::
-  XULTreeItemAccessible(nsIContent* aContent, DocAccessible* aDoc,
-                        Accessible* aParent, nsITreeBoxObject* aTree,
-                        nsITreeView* aTreeView, int32_t aRow) :
-  XULTreeItemAccessibleBase(aContent, aDoc, aParent, aTree, aTreeView, aRow)
-{
-=======
 XULTreeItemAccessible::XULTreeItemAccessible(
     nsIContent* aContent, DocAccessible* aDoc, Accessible* aParent,
     dom::XULTreeElement* aTree, nsITreeView* aTreeView, int32_t aRow)
     : XULTreeItemAccessibleBase(aContent, aDoc, aParent, aTree, aTreeView,
                                 aRow) {
->>>>>>> upstream-releases
   mStateFlags |= eNoKidsFromDOM;
   mColumn = nsCoreUtils::GetFirstSensibleColumn(mTree);
   GetCellName(mColumn, mCachedName);
@@ -1059,20 +943,8 @@ void XULTreeItemAccessible::Shutdown() {
   XULTreeItemAccessibleBase::Shutdown();
 }
 
-<<<<<<< HEAD
-role XULTreeItemAccessible::NativeRole() const {
-  RefPtr<nsTreeColumns> columns;
-  mTree->GetColumns(getter_AddRefs(columns));
-||||||| merged common ancestors
-role
-XULTreeItemAccessible::NativeRole() const
-{
-  RefPtr<nsTreeColumns> columns;
-  mTree->GetColumns(getter_AddRefs(columns));
-=======
 role XULTreeItemAccessible::NativeRole() const {
   RefPtr<nsTreeColumns> columns = mTree->GetColumns();
->>>>>>> upstream-releases
   if (!columns) {
     NS_ERROR("No tree columns object in the tree!");
     return roles::NOTHING;

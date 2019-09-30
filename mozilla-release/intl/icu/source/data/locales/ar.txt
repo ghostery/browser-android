@@ -377,13 +377,7 @@ ar{
         minimumGroupingDigits{"1"}
         native{"arab"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.50"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             eras{
@@ -1743,12 +1737,7 @@ ar{
                     "تيشو",
                     "شووا",
                     "هيسي",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "ريوا",
->>>>>>> upstream-releases
                 }
             }
         }

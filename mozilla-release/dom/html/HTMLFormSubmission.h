@@ -104,18 +104,12 @@ class HTMLFormSubmission {
    */
   void GetTarget(nsAString& aTarget) { aTarget = mTarget; }
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * Return true if this form submission was user-initiated.
    */
   bool IsInitiatedFromUserInput() const { return mInitiatedFromUserInput; }
 
  protected:
->>>>>>> upstream-releases
   /**
    * Can only be constructed by subclasses.
    *
@@ -125,24 +119,11 @@ protected:
   HTMLFormSubmission(nsIURI* aActionURL, const nsAString& aTarget,
                      mozilla::NotNull<const mozilla::Encoding*> aEncoding,
                      Element* aOriginatingElement)
-<<<<<<< HEAD
-      : mActionURL(aActionURL),
-        mTarget(aTarget),
-        mEncoding(aEncoding),
-        mOriginatingElement(aOriginatingElement) {
-||||||| merged common ancestors
-    : mActionURL(aActionURL)
-    , mTarget(aTarget)
-    , mEncoding(aEncoding)
-    , mOriginatingElement(aOriginatingElement)
-  {
-=======
       : mActionURL(aActionURL),
         mTarget(aTarget),
         mEncoding(aEncoding),
         mOriginatingElement(aOriginatingElement),
         mInitiatedFromUserInput(EventStateManager::IsHandlingUserInput()) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(HTMLFormSubmission);
   }
 

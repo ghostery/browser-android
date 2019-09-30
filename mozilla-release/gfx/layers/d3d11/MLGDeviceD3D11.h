@@ -47,16 +47,8 @@ class MLGRenderTargetD3D11 final : public MLGRenderTarget {
   bool CreateDepthBuffer(ID3D11Device* aDevice);
   void ForgetTexture();
 
-<<<<<<< HEAD
- private:
-  ~MLGRenderTargetD3D11() override;
-||||||| merged common ancestors
-private:
-  ~MLGRenderTargetD3D11() override;
-=======
  private:
   virtual ~MLGRenderTargetD3D11();
->>>>>>> upstream-releases
 
  private:
   RefPtr<ID3D11Texture2D> mTexture;

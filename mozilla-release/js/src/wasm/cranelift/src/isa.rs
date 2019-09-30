@@ -25,17 +25,6 @@ use std::env;
 
 use cranelift_codegen::isa;
 use cranelift_codegen::settings::{self, Configurable};
-<<<<<<< HEAD:mozilla-release/js/src/wasm/cranelift/src/cpu.rs
-use std::str::FromStr;
-use utils::{BasicError, DashResult};
-||||||| merged common ancestors
-use std::mem;
-use std::str::FromStr;
-use std::error;
-use target_lexicon;
-use utils::{DashResult, BasicError};
-=======
->>>>>>> upstream-releases:mozilla-release/js/src/wasm/cranelift/src/isa.rs
 
 use crate::bindings::StaticEnvironment;
 use crate::utils::{BasicError, DashResult};
@@ -151,9 +140,6 @@ fn make_shared_flags(env_flags: &Option<EnvVariableFlags>) -> settings::SetResul
         "jump_tables_enabled",
         if jump_tables_enabled { "true" } else { "false" },
     )?;
-
-    // TODO: Enable jump tables (requires emitting readonly data separately from text).
-    sb.set("jump_tables_enabled", "false")?;
 
     Ok(settings::Flags::new(sb))
 }

@@ -31,15 +31,9 @@ class MediaDecoderOwner;
 class VideoFrameContainer {
   virtual ~VideoFrameContainer();
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VideoFrameContainer)
 
  public:
->>>>>>> upstream-releases
   typedef layers::ImageContainer ImageContainer;
   typedef layers::Image Image;
 
@@ -86,19 +80,8 @@ public:
   ImageContainer::FrameID NewFrameID() { return ++mFrameID; }
 
   // Call on main thread
-<<<<<<< HEAD
-  enum { INVALIDATE_DEFAULT, INVALIDATE_FORCE };
-  void Invalidate() override { InvalidateWithFlags(INVALIDATE_DEFAULT); }
-||||||| merged common ancestors
-  enum {
-    INVALIDATE_DEFAULT,
-    INVALIDATE_FORCE
-  };
-  void Invalidate() override { InvalidateWithFlags(INVALIDATE_DEFAULT); }
-=======
   enum { INVALIDATE_DEFAULT, INVALIDATE_FORCE };
   void Invalidate() { InvalidateWithFlags(INVALIDATE_DEFAULT); }
->>>>>>> upstream-releases
   void InvalidateWithFlags(uint32_t aFlags);
   ImageContainer* GetImageContainer();
   void ForgetElement() { mOwner = nullptr; }

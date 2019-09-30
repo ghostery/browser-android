@@ -8,22 +8,10 @@
 #include <algorithm>      // for max
 #include "gfxASurface.h"  // for gfxASurface, etc
 #include "gfxContext.h"
-<<<<<<< HEAD
-#include "gfxFont.h"             // for gfxFontGroup
-#include "gfxImageSurface.h"     // for gfxImageSurface
-#include "gfxPoint.h"            // for gfxSize
-#include "mozilla/Attributes.h"  // for final
-||||||| merged common ancestors
-#include "gfxFont.h"                    // for gfxFontGroup
-#include "gfxImageSurface.h"            // for gfxImageSurface
-#include "gfxPoint.h"                   // for gfxSize
-#include "mozilla/Attributes.h"         // for final
-=======
 #include "gfxImageSurface.h"     // for gfxImageSurface
 #include "gfxPoint.h"            // for gfxSize
 #include "gfxTextRun.h"          // for gfxFontGroup
 #include "mozilla/Attributes.h"  // for final
->>>>>>> upstream-releases
 #include "mozilla/gfx/PathHelpers.h"
 #include "mozilla/gfx/PrintTarget.h"
 #include "mozilla/Preferences.h"  // for Preferences

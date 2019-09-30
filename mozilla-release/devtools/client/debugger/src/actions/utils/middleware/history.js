@@ -16,22 +16,10 @@ import type { ThunkArgs } from "../../types";
  */
 export const history = (log: Object[] = []) => ({
   dispatch,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/actions/utils/middleware/history.js
-  getState
-}: ThunkArgs) => {
-  return (next: Function) => (action: Object) => {
-    if (isDevelopment()) {
-||||||| merged common ancestors
-  getState
-}) => {
-  return next => action => {
-    if ((0, _devtoolsEnvironment.isDevelopment)()) {
-=======
   getState,
 }: ThunkArgs) => {
   return (next: Function) => (action: Object) => {
     if (isDevelopment()) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/actions/utils/middleware/history.js
       log.push(action);
     }
 

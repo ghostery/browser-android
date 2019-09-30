@@ -9,19 +9,9 @@
 #include "SkPDFShader.h"
 
 #include "SkData.h"
-<<<<<<< HEAD
-#include "SkPDFCanon.h"
-#include "SkPDFDevice.h"
-#include "SkPDFDocumentPriv.h"
-||||||| merged common ancestors
-#include "SkPDFCanon.h"
-#include "SkPDFDevice.h"
-#include "SkPDFDocument.h"
-=======
 #include "SkPDFDocument.h"
 #include "SkPDFDevice.h"
 #include "SkPDFDocumentPriv.h"
->>>>>>> upstream-releases
 #include "SkPDFFormXObject.h"
 #include "SkPDFGradientShader.h"
 #include "SkPDFGraphicState.h"
@@ -254,25 +244,12 @@ static SkPDFIndirectReference make_image_shader(SkPDFDocument* doc,
         }
     }
 
-<<<<<<< HEAD
-    auto imageShader = sk_make_sp<SkPDFStream>(patternDevice->content());
-    sk_sp<SkPDFDict> resourceDict = patternDevice->makeResourceDict();
-    SkPDFUtils::PopulateTilingPatternDict(imageShader->dict(), patternBBox,
-                                          std::move(resourceDict), finalMatrix);
-    return imageShader;
-||||||| merged common ancestors
-    auto imageShader = sk_make_sp<SkPDFStream>(patternDevice->content());
-    SkPDFUtils::PopulateTilingPatternDict(imageShader->dict(), patternBBox,
-                                          patternDevice->makeResourceDict(), finalMatrix);
-    return imageShader;
-=======
     auto imageShader = patternDevice->content();
     std::unique_ptr<SkPDFDict> resourceDict = patternDevice->makeResourceDict();
     std::unique_ptr<SkPDFDict> dict = SkPDFMakeDict();
     SkPDFUtils::PopulateTilingPatternDict(dict.get(), patternBBox,
                                           std::move(resourceDict), finalMatrix);
     return SkPDFStreamOut(std::move(dict), std::move(imageShader), doc);
->>>>>>> upstream-releases
 }
 
 // Generic fallback for unsupported shaders:

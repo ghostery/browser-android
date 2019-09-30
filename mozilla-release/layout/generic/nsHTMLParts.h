@@ -32,57 +32,24 @@ class ViewportFrame;
 // These are all the block specific frame bits, they are copied from
 // the prev-in-flow to a newly created next-in-flow, except for the
 // NS_BLOCK_FLAGS_NON_INHERITED_MASK bits below.
-<<<<<<< HEAD
-#define NS_BLOCK_FLAGS_MASK                                                    \
-  (NS_BLOCK_FORMATTING_CONTEXT_STATE_BITS | NS_BLOCK_CLIP_PAGINATED_OVERFLOW | \
-   NS_BLOCK_HAS_FIRST_LETTER_STYLE | NS_BLOCK_FRAME_HAS_OUTSIDE_BULLET |       \
-   NS_BLOCK_HAS_FIRST_LETTER_CHILD | NS_BLOCK_FRAME_HAS_INSIDE_BULLET)
-||||||| merged common ancestors
-#define NS_BLOCK_FLAGS_MASK (NS_BLOCK_FORMATTING_CONTEXT_STATE_BITS | \
-                             NS_BLOCK_CLIP_PAGINATED_OVERFLOW  | \
-                             NS_BLOCK_HAS_FIRST_LETTER_STYLE   | \
-                             NS_BLOCK_FRAME_HAS_OUTSIDE_BULLET | \
-                             NS_BLOCK_HAS_FIRST_LETTER_CHILD   | \
-                             NS_BLOCK_FRAME_HAS_INSIDE_BULLET)
-=======
 #define NS_BLOCK_FLAGS_MASK                                                    \
   (NS_BLOCK_FORMATTING_CONTEXT_STATE_BITS | NS_BLOCK_CLIP_PAGINATED_OVERFLOW | \
    NS_BLOCK_HAS_FIRST_LETTER_STYLE | NS_BLOCK_FRAME_HAS_OUTSIDE_MARKER |       \
    NS_BLOCK_HAS_FIRST_LETTER_CHILD | NS_BLOCK_FRAME_HAS_INSIDE_MARKER)
->>>>>>> upstream-releases
 
 // This is the subset of NS_BLOCK_FLAGS_MASK that is NOT inherited
 // by default.  They should only be set on the first-in-flow.
 // See nsBlockFrame::Init.
-<<<<<<< HEAD
-#define NS_BLOCK_FLAGS_NON_INHERITED_MASK                                \
-  (NS_BLOCK_FRAME_HAS_OUTSIDE_BULLET | NS_BLOCK_HAS_FIRST_LETTER_CHILD | \
-   NS_BLOCK_FRAME_HAS_INSIDE_BULLET)
-||||||| merged common ancestors
-#define NS_BLOCK_FLAGS_NON_INHERITED_MASK                        \
-                            (NS_BLOCK_FRAME_HAS_OUTSIDE_BULLET | \
-                             NS_BLOCK_HAS_FIRST_LETTER_CHILD   | \
-                             NS_BLOCK_FRAME_HAS_INSIDE_BULLET)
-=======
 #define NS_BLOCK_FLAGS_NON_INHERITED_MASK                                \
   (NS_BLOCK_FRAME_HAS_OUTSIDE_MARKER | NS_BLOCK_HAS_FIRST_LETTER_CHILD | \
    NS_BLOCK_FRAME_HAS_INSIDE_MARKER)
->>>>>>> upstream-releases
 
 // Factory methods for creating html layout objects
 
 // Create a frame that supports "display: block" layout behavior
 class nsBlockFrame;
-<<<<<<< HEAD
-nsBlockFrame* NS_NewBlockFrame(nsIPresShell* aPresShell,
-                               mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsBlockFrame*
-NS_NewBlockFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsBlockFrame* NS_NewBlockFrame(mozilla::PresShell* aPresShell,
                                mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
 // Special Generated Content Node. It contains text taken from an
 // attribute of its *grandparent* content node.
@@ -94,131 +61,35 @@ nsresult NS_NewAttributeContent(nsNodeInfoManager* aNodeInfoManager,
 // return the option frame
 // By default, area frames will extend
 // their height to cover any children that "stick out".
-<<<<<<< HEAD
-nsContainerFrame* NS_NewSelectsAreaFrame(nsIPresShell* aPresShell,
-                                         mozilla::ComputedStyle* aStyle,
-                                         nsFrameState aFlags);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewSelectsAreaFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle, nsFrameState aFlags);
-=======
 nsContainerFrame* NS_NewSelectsAreaFrame(mozilla::PresShell* aPresShell,
                                          mozilla::ComputedStyle* aStyle,
                                          nsFrameState aFlags);
->>>>>>> upstream-releases
 
 // Create a block formatting context blockframe
-<<<<<<< HEAD
-nsBlockFrame* NS_NewBlockFormattingContext(nsIPresShell* aPresShell,
-                                           mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsBlockFrame*
-NS_NewBlockFormattingContext(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsBlockFrame* NS_NewBlockFormattingContext(mozilla::PresShell* aPresShell,
                                            mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsIFrame* NS_NewBRFrame(nsIPresShell* aPresShell,
-                        mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewBRFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsIFrame* NS_NewBRFrame(mozilla::PresShell* aPresShell,
                         mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsIFrame* NS_NewCommentFrame(nsIPresShell* aPresShell,
-                             mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewCommentFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsIFrame* NS_NewCommentFrame(mozilla::PresShell* aPresShell,
                              mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
 // <frame> and <iframe>
-<<<<<<< HEAD
-nsIFrame* NS_NewSubDocumentFrame(nsIPresShell* aPresShell,
-                                 mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSubDocumentFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsIFrame* NS_NewSubDocumentFrame(mozilla::PresShell* aPresShell,
                                  mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 // <frameset>
-<<<<<<< HEAD
-nsIFrame* NS_NewHTMLFramesetFrame(nsIPresShell* aPresShell,
-                                  mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewHTMLFramesetFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsIFrame* NS_NewHTMLFramesetFrame(mozilla::PresShell* aPresShell,
                                   mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-mozilla::ViewportFrame* NS_NewViewportFrame(nsIPresShell* aPresShell,
-                                            mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-mozilla::ViewportFrame*
-NS_NewViewportFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 mozilla::ViewportFrame* NS_NewViewportFrame(mozilla::PresShell* aPresShell,
                                             mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsCanvasFrame;
-<<<<<<< HEAD
-nsCanvasFrame* NS_NewCanvasFrame(nsIPresShell* aPresShell,
-                                 mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewImageFrame(nsIPresShell* aPresShell,
-                           mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsCanvasFrame*
-NS_NewCanvasFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewImageFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsCanvasFrame* NS_NewCanvasFrame(mozilla::PresShell* aPresShell,
                                  mozilla::ComputedStyle* aStyle);
 nsIFrame* NS_NewImageFrame(mozilla::PresShell* aPresShell,
                            mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsInlineFrame;
-<<<<<<< HEAD
-nsInlineFrame* NS_NewInlineFrame(nsIPresShell* aPresShell,
-                                 mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewObjectFrame(nsIPresShell* aPresShell,
-                            mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewTextFrame(nsIPresShell* aPresShell,
-                          mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewContinuingTextFrame(nsIPresShell* aPresShell,
-                                    mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewEmptyFrame(nsIPresShell* aPresShell,
-                           mozilla::ComputedStyle* aStyle);
-inline nsIFrame* NS_NewWBRFrame(nsIPresShell* aPresShell,
-                                mozilla::ComputedStyle* aStyle) {
-||||||| merged common ancestors
-nsInlineFrame*
-NS_NewInlineFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewObjectFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewTextFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewContinuingTextFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewEmptyFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-inline nsIFrame*
-NS_NewWBRFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle) {
-=======
 nsInlineFrame* NS_NewInlineFrame(mozilla::PresShell* aPresShell,
                                  mozilla::ComputedStyle* aStyle);
 nsIFrame* NS_NewObjectFrame(mozilla::PresShell* aPresShell,
@@ -231,168 +102,35 @@ nsIFrame* NS_NewEmptyFrame(mozilla::PresShell* aPresShell,
                            mozilla::ComputedStyle* aStyle);
 inline nsIFrame* NS_NewWBRFrame(mozilla::PresShell* aPresShell,
                                 mozilla::ComputedStyle* aStyle) {
->>>>>>> upstream-releases
   return NS_NewEmptyFrame(aPresShell, aStyle);
 }
 
-<<<<<<< HEAD
-nsBlockFrame* NS_NewColumnSetWrapperFrame(nsIPresShell* aPresShell,
-                                          mozilla::ComputedStyle* aStyle,
-                                          nsFrameState aStateFlags);
-nsContainerFrame* NS_NewColumnSetFrame(nsIPresShell* aPresShell,
-                                       mozilla::ComputedStyle* aStyle,
-                                       nsFrameState aStateFlags);
-||||||| merged common ancestors
-nsBlockFrame*
-NS_NewColumnSetWrapperFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle, nsFrameState aStateFlags);
-nsContainerFrame*
-NS_NewColumnSetFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle, nsFrameState aStateFlags);
-=======
 nsBlockFrame* NS_NewColumnSetWrapperFrame(mozilla::PresShell* aPresShell,
                                           mozilla::ComputedStyle* aStyle,
                                           nsFrameState aStateFlags);
 nsContainerFrame* NS_NewColumnSetFrame(mozilla::PresShell* aPresShell,
                                        mozilla::ComputedStyle* aStyle,
                                        nsFrameState aStateFlags);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class nsSimplePageSequenceFrame;
-nsSimplePageSequenceFrame* NS_NewSimplePageSequenceFrame(
-    nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-class nsSimplePageSequenceFrame;
-nsSimplePageSequenceFrame*
-NS_NewSimplePageSequenceFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 class nsPageSequenceFrame;
 nsPageSequenceFrame* NS_NewPageSequenceFrame(mozilla::PresShell* aPresShell,
                                              mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsPageFrame;
-<<<<<<< HEAD
-nsPageFrame* NS_NewPageFrame(nsIPresShell* aPresShell,
-                             mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsPageFrame*
-NS_NewPageFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsPageFrame* NS_NewPageFrame(mozilla::PresShell* aPresShell,
                              mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsPageContentFrame;
-<<<<<<< HEAD
-nsPageContentFrame* NS_NewPageContentFrame(nsIPresShell* aPresShell,
-                                           mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewPageBreakFrame(nsIPresShell* aPresShell,
-                               mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsPageContentFrame*
-NS_NewPageContentFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewPageBreakFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsPageContentFrame* NS_NewPageContentFrame(mozilla::PresShell* aPresShell,
                                            mozilla::ComputedStyle* aStyle);
 nsIFrame* NS_NewPageBreakFrame(mozilla::PresShell* aPresShell,
                                mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsFirstLetterFrame;
-<<<<<<< HEAD
-nsFirstLetterFrame* NS_NewFirstLetterFrame(nsIPresShell* aPresShell,
-                                           mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsFirstLetterFrame*
-NS_NewFirstLetterFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsFirstLetterFrame* NS_NewFirstLetterFrame(mozilla::PresShell* aPresShell,
                                            mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsFirstLineFrame;
-<<<<<<< HEAD
-nsFirstLineFrame* NS_NewFirstLineFrame(nsIPresShell* aPresShell,
-                                       mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsFirstLineFrame*
-NS_NewFirstLineFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsFirstLineFrame* NS_NewFirstLineFrame(mozilla::PresShell* aPresShell,
                                        mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
 // forms
-<<<<<<< HEAD
-nsContainerFrame* NS_NewGfxButtonControlFrame(nsIPresShell* aPresShell,
-                                              mozilla::ComputedStyle* aStyle);
-nsCheckboxRadioFrame* NS_NewCheckboxRadioFrame(nsIPresShell* aPresShell,
-                                               mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewImageControlFrame(nsIPresShell* aPresShell,
-                                  mozilla::ComputedStyle* aStyle);
-nsContainerFrame* NS_NewHTMLButtonControlFrame(nsIPresShell* aPresShell,
-                                               mozilla::ComputedStyle* aStyle);
-nsContainerFrame* NS_NewFieldSetFrame(nsIPresShell* aPresShell,
-                                      mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewFileControlFrame(nsIPresShell* aPresShell,
-                                 mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewColorControlFrame(nsIPresShell* aPresShell,
-                                  mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewLegendFrame(nsIPresShell* aPresShell,
-                            mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewTextControlFrame(nsIPresShell* aPresShell,
-                                 mozilla::ComputedStyle* aStyle);
-nsContainerFrame* NS_NewListControlFrame(nsIPresShell* aPresShell,
-                                         mozilla::ComputedStyle* aStyle);
-nsComboboxControlFrame* NS_NewComboboxControlFrame(
-    nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle,
-    nsFrameState aFlags);
-nsIFrame* NS_NewProgressFrame(nsIPresShell* aPresShell,
-                              mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewMeterFrame(nsIPresShell* aPresShell,
-                           mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewRangeFrame(nsIPresShell* aPresShell,
-                           mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewNumberControlFrame(nsIPresShell* aPresShell,
-                                   mozilla::ComputedStyle* aStyle);
-nsIFrame* NS_NewDateTimeControlFrame(nsIPresShell* aPresShell,
-                                     mozilla::ComputedStyle* aStyle);
-nsBlockFrame* NS_NewDetailsFrame(nsIPresShell* aPresShell,
-                                 mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewGfxButtonControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsCheckboxRadioFrame*
-NS_NewCheckboxRadioFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewImageControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsContainerFrame*
-NS_NewHTMLButtonControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsContainerFrame*
-NS_NewFieldSetFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewFileControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewColorControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewLegendFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewTextControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsContainerFrame*
-NS_NewListControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsComboboxControlFrame*
-NS_NewComboboxControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle, nsFrameState aFlags);
-nsIFrame*
-NS_NewProgressFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewMeterFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewRangeFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewNumberControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsIFrame*
-NS_NewDateTimeControlFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsBlockFrame*
-NS_NewDetailsFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsContainerFrame* NS_NewGfxButtonControlFrame(mozilla::PresShell* aPresShell,
                                               mozilla::ComputedStyle* aStyle);
 nsCheckboxRadioFrame* NS_NewCheckboxRadioFrame(mozilla::PresShell* aPresShell,
@@ -430,98 +168,26 @@ nsBlockFrame* NS_NewDetailsFrame(mozilla::PresShell* aPresShell,
                                  mozilla::ComputedStyle* aStyle);
 nsIFrame* NS_NewBulletFrame(mozilla::PresShell* aPresShell,
                             mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
 // Table frame factories
 class nsTableWrapperFrame;
-<<<<<<< HEAD
-nsTableWrapperFrame* NS_NewTableWrapperFrame(nsIPresShell* aPresShell,
-                                             mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsTableWrapperFrame*
-NS_NewTableWrapperFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsTableWrapperFrame* NS_NewTableWrapperFrame(mozilla::PresShell* aPresShell,
                                              mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsTableFrame;
-<<<<<<< HEAD
-nsTableFrame* NS_NewTableFrame(nsIPresShell* aPresShell,
-                               mozilla::ComputedStyle* aStyle);
-nsTableColFrame* NS_NewTableColFrame(nsIPresShell* aPresShell,
-                                     mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsTableFrame*
-NS_NewTableFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-nsTableColFrame*
-NS_NewTableColFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsTableFrame* NS_NewTableFrame(mozilla::PresShell* aPresShell,
                                mozilla::ComputedStyle* aStyle);
 nsTableColFrame* NS_NewTableColFrame(mozilla::PresShell* aPresShell,
                                      mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsTableColGroupFrame;
-<<<<<<< HEAD
-nsTableColGroupFrame* NS_NewTableColGroupFrame(nsIPresShell* aPresShell,
-                                               mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsTableColGroupFrame*
-NS_NewTableColGroupFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsTableColGroupFrame* NS_NewTableColGroupFrame(mozilla::PresShell* aPresShell,
                                                mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsTableRowFrame;
-<<<<<<< HEAD
-nsTableRowFrame* NS_NewTableRowFrame(nsIPresShell* aPresShell,
-                                     mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsTableRowFrame*
-NS_NewTableRowFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsTableRowFrame* NS_NewTableRowFrame(mozilla::PresShell* aPresShell,
                                      mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsTableRowGroupFrame;
-<<<<<<< HEAD
-nsTableRowGroupFrame* NS_NewTableRowGroupFrame(nsIPresShell* aPresShell,
-                                               mozilla::ComputedStyle* aStyle);
-||||||| merged common ancestors
-nsTableRowGroupFrame*
-NS_NewTableRowGroupFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle);
-=======
 nsTableRowGroupFrame* NS_NewTableRowGroupFrame(mozilla::PresShell* aPresShell,
                                                mozilla::ComputedStyle* aStyle);
->>>>>>> upstream-releases
 class nsTableCellFrame;
-<<<<<<< HEAD
-nsTableCellFrame* NS_NewTableCellFrame(nsIPresShell* aPresShell,
-                                       mozilla::ComputedStyle* aStyle,
-                                       nsTableFrame* aTableFrame);
-
-nsresult NS_NewHTMLContentSink(nsIHTMLContentSink** aInstancePtrResult,
-                               nsIDocument* aDoc, nsIURI* aURL,
-                               nsISupports* aContainer,  // e.g. docshell
-                               nsIChannel* aChannel);
-nsresult NS_NewHTMLFragmentContentSink(
-    nsIFragmentContentSink** aInstancePtrResult);
-nsresult NS_NewHTMLFragmentContentSink2(
-    nsIFragmentContentSink** aInstancePtrResult);
-||||||| merged common ancestors
-nsTableCellFrame*
-NS_NewTableCellFrame(nsIPresShell* aPresShell, mozilla::ComputedStyle* aStyle, nsTableFrame* aTableFrame);
-
-nsresult
-NS_NewHTMLContentSink(nsIHTMLContentSink** aInstancePtrResult,
-                      nsIDocument* aDoc, nsIURI* aURL,
-                      nsISupports* aContainer, // e.g. docshell
-                      nsIChannel* aChannel);
-nsresult
-NS_NewHTMLFragmentContentSink(nsIFragmentContentSink** aInstancePtrResult);
-nsresult
-NS_NewHTMLFragmentContentSink2(nsIFragmentContentSink** aInstancePtrResult);
-=======
 nsTableCellFrame* NS_NewTableCellFrame(mozilla::PresShell* aPresShell,
                                        mozilla::ComputedStyle* aStyle,
                                        nsTableFrame* aTableFrame);
@@ -534,6 +200,5 @@ nsresult NS_NewHTMLFragmentContentSink(
     nsIFragmentContentSink** aInstancePtrResult);
 nsresult NS_NewHTMLFragmentContentSink2(
     nsIFragmentContentSink** aInstancePtrResult);
->>>>>>> upstream-releases
 
 #endif /* nsHTMLParts_h___ */

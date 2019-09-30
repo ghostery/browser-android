@@ -31,25 +31,12 @@ extern crate tokio_uds;
 #[cfg(windows)]
 extern crate winapi;
 
-<<<<<<< HEAD
-mod async;
-mod cmsg;
-||||||| merged common ancestors
-pub mod async;
-pub mod cmsg;
-=======
 mod async;
 #[cfg(unix)]
 mod cmsg;
->>>>>>> upstream-releases
 pub mod codec;
-<<<<<<< HEAD
-pub mod core;
-||||||| merged common ancestors
-=======
 pub mod core;
 #[allow(deprecated)]
->>>>>>> upstream-releases
 pub mod errors;
 #[cfg(unix)]
 pub mod fd_passing;
@@ -69,81 +56,6 @@ pub mod shm;
 pub use messages::{ClientMessage, ServerMessage};
 use std::env::temp_dir;
 use std::path::PathBuf;
-<<<<<<< HEAD
-||||||| merged common ancestors
-#[cfg(not(target_os = "linux"))]
-const MSG_CMSG_CLOEXEC: libc::c_int = 0;
-
-// Extend sys::os::unix::net::UnixStream to support sending and receiving a single file desc.
-// We can extend UnixStream by using traits, eliminating the need to introduce a new wrapped
-// UnixStream type.
-pub trait RecvMsg {
-    fn recv_msg(
-        &mut self,
-        iov: &mut [&mut IoVec],
-        cmsg: &mut [u8],
-    ) -> io::Result<(usize, usize, i32)>;
-}
-
-pub trait SendMsg {
-    fn send_msg(&mut self, iov: &[&IoVec], cmsg: &[u8]) -> io::Result<usize>;
-}
-
-impl<T: AsRawFd> RecvMsg for T {
-    fn recv_msg(
-        &mut self,
-        iov: &mut [&mut IoVec],
-        cmsg: &mut [u8],
-    ) -> io::Result<(usize, usize, i32)> {
-        msg::recv_msg_with_flags(self.as_raw_fd(), iov, cmsg, MSG_CMSG_CLOEXEC)
-    }
-}
-
-impl<T: AsRawFd> SendMsg for T {
-    fn send_msg(&mut self, iov: &[&IoVec], cmsg: &[u8]) -> io::Result<usize> {
-        msg::send_msg_with_flags(self.as_raw_fd(), iov, cmsg, 0)
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-#[derive(Debug)]
-pub struct AutoCloseFd(RawFd);
-
-impl Drop for AutoCloseFd {
-    fn drop(&mut self) {
-        unsafe {
-            libc::close(self.0);
-        }
-    }
-}
-
-impl FromRawFd for AutoCloseFd {
-    unsafe fn from_raw_fd(fd: RawFd) -> Self {
-        AutoCloseFd(fd)
-    }
-}
-
-impl IntoRawFd for AutoCloseFd {
-    fn into_raw_fd(self) -> RawFd {
-        let fd = self.0;
-        ::std::mem::forget(self);
-        fd
-    }
-}
-
-impl AsRawFd for AutoCloseFd {
-    fn as_raw_fd(&self) -> RawFd {
-        self.0
-    }
-}
-
-impl<'a> AsRawFd for &'a AutoCloseFd {
-    fn as_raw_fd(&self) -> RawFd {
-        self.0
-    }
-}
-=======
 
 #[cfg(windows)]
 use std::os::windows::io::{FromRawHandle, IntoRawHandle};
@@ -259,23 +171,11 @@ impl PlatformHandle {
 unsafe fn close_platformhandle(handle: PlatformHandleType) {
     libc::close(handle);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// This must match the definition of
-// ipc::FileDescriptor::PlatformHandleType in Gecko.
-#[cfg(target_os = "windows")]
-pub type PlatformHandleType = *mut std::os::raw::c_void;
-#[cfg(not(target_os = "windows"))]
-pub type PlatformHandleType = libc::c_int;
-||||||| merged common ancestors
-////////////////////////////////////////////////////////////////////////////////
-=======
 #[cfg(windows)]
 unsafe fn close_platformhandle(handle: PlatformHandleType) {
     winapi::um::handleapi::CloseHandle(handle);
 }
->>>>>>> upstream-releases
 
 pub fn get_shm_path(dir: &str) -> PathBuf {
     let pid = std::process::id();

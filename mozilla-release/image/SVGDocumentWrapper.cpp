@@ -161,24 +161,9 @@ void SVGDocumentWrapper::ResetAnimation() {
   svgElem->SetCurrentTime(0.0f);
 }
 
-<<<<<<< HEAD
-float SVGDocumentWrapper::GetCurrentTime() {
-||||||| merged common ancestors
-float
-SVGDocumentWrapper::GetCurrentTime()
-{
-=======
 float SVGDocumentWrapper::GetCurrentTimeAsFloat() {
->>>>>>> upstream-releases
   SVGSVGElement* svgElem = GetRootSVGElem();
-<<<<<<< HEAD
-  return svgElem ? svgElem->GetCurrentTime() : 0.0f;
-||||||| merged common ancestors
-  return svgElem ? svgElem->GetCurrentTime()
-                 : 0.0f;
-=======
   return svgElem ? svgElem->GetCurrentTimeAsFloat() : 0.0f;
->>>>>>> upstream-releases
 }
 
 void SVGDocumentWrapper::SetCurrentTime(float aTime) {
@@ -188,26 +173,9 @@ void SVGDocumentWrapper::SetCurrentTime(float aTime) {
   }
 }
 
-<<<<<<< HEAD
-void SVGDocumentWrapper::TickRefreshDriver() {
-  nsCOMPtr<nsIPresShell> presShell = mViewer->GetPresShell();
-  if (presShell) {
-    nsPresContext* presContext = presShell->GetPresContext();
-    if (presContext) {
-||||||| merged common ancestors
-void
-SVGDocumentWrapper::TickRefreshDriver()
-{
-  nsCOMPtr<nsIPresShell> presShell;
-  mViewer->GetPresShell(getter_AddRefs(presShell));
-  if (presShell) {
-    nsPresContext* presContext = presShell->GetPresContext();
-    if (presContext) {
-=======
 void SVGDocumentWrapper::TickRefreshDriver() {
   if (RefPtr<PresShell> presShell = mViewer->GetPresShell()) {
     if (RefPtr<nsPresContext> presContext = presShell->GetPresContext()) {
->>>>>>> upstream-releases
       presContext->RefreshDriver()->DoTick();
     }
   }
@@ -216,41 +184,16 @@ void SVGDocumentWrapper::TickRefreshDriver() {
 /** nsIStreamListener methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-SVGDocumentWrapper::OnDataAvailable(nsIRequest* aRequest, nsISupports* ctxt,
-                                    nsIInputStream* inStr,
-                                    uint64_t sourceOffset, uint32_t count) {
-  return mListener->OnDataAvailable(aRequest, ctxt, inStr, sourceOffset, count);
-||||||| merged common ancestors
-SVGDocumentWrapper::OnDataAvailable(nsIRequest* aRequest, nsISupports* ctxt,
-                                    nsIInputStream* inStr,
-                                    uint64_t sourceOffset,
-                                    uint32_t count)
-{
-  return mListener->OnDataAvailable(aRequest, ctxt, inStr,
-                                    sourceOffset, count);
-=======
 SVGDocumentWrapper::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* inStr,
                                     uint64_t sourceOffset, uint32_t count) {
   return mListener->OnDataAvailable(aRequest, inStr, sourceOffset, count);
->>>>>>> upstream-releases
 }
 
 /** nsIRequestObserver methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-SVGDocumentWrapper::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt) {
-  nsresult rv = SetupViewer(aRequest, getter_AddRefs(mViewer),
-||||||| merged common ancestors
-SVGDocumentWrapper::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt)
-{
-  nsresult rv = SetupViewer(aRequest,
-                            getter_AddRefs(mViewer),
-=======
 SVGDocumentWrapper::OnStartRequest(nsIRequest* aRequest) {
   nsresult rv = SetupViewer(aRequest, getter_AddRefs(mViewer),
->>>>>>> upstream-releases
                             getter_AddRefs(mLoadGroup));
 
   if (NS_SUCCEEDED(rv) && NS_SUCCEEDED(mListener->OnStartRequest(aRequest))) {
@@ -266,16 +209,7 @@ SVGDocumentWrapper::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-SVGDocumentWrapper::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
-                                  nsresult status) {
-||||||| merged common ancestors
-SVGDocumentWrapper::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
-                                  nsresult status)
-{
-=======
 SVGDocumentWrapper::OnStopRequest(nsIRequest* aRequest, nsresult status) {
->>>>>>> upstream-releases
   if (mListener) {
     mListener->OnStopRequest(aRequest, status);
     mListener = nullptr;

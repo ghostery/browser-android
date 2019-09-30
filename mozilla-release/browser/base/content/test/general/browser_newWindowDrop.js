@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-registerCleanupFunction(function cleanup() {
-  Services.search.defaultEngine = originalEngine;
-||||||| merged common ancestors
-registerCleanupFunction(function cleanup() {
-  Services.search.currentEngine = originalEngine;
-=======
 registerCleanupFunction(async function cleanup() {
   await Services.search.setDefault(originalEngine);
->>>>>>> upstream-releases
   let engine = Services.search.getEngineByName("MozSearch");
   await Services.search.removeEngine(engine);
 });
@@ -23,16 +15,8 @@ add_task(async function test_setup() {
     template: "http://example.com/?q={searchTerms}",
   });
   let engine = Services.search.getEngineByName("MozSearch");
-<<<<<<< HEAD
-  originalEngine = Services.search.defaultEngine;
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  originalEngine = Services.search.currentEngine;
-  Services.search.currentEngine = engine;
-=======
   originalEngine = await Services.search.getDefault();
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 
   // Move New Window button to nav bar, to make it possible to drag and drop.
   let { CustomizableUI } = ChromeUtils.import(
@@ -57,26 +41,10 @@ add_task(async function single_url() {
   await dropText("mochi.test/first", ["http://www.mochi.test/first"]);
 });
 add_task(async function single_javascript() {
-<<<<<<< HEAD
-  await dropText("javascript:'bad'",
-                 ["javascript:'bad'"]);
-||||||| merged common ancestors
-  await dropText("javascript:'bad'",
-                 ["about:blank"]);
-=======
   await dropText("javascript:'bad'", ["javascript:'bad'"]);
->>>>>>> upstream-releases
 });
 add_task(async function single_javascript_capital() {
-<<<<<<< HEAD
-  await dropText("jAvascript:'bad'",
-                 ["javascript:'bad'"]);
-||||||| merged common ancestors
-  await dropText("jAvascript:'bad'",
-                 ["about:blank"]);
-=======
   await dropText("jAvascript:'bad'", ["javascript:'bad'"]);
->>>>>>> upstream-releases
 });
 add_task(async function single_url2() {
   await dropText("mochi.test/second", ["http://www.mochi.test/second"]);

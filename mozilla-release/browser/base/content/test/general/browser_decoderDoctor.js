@@ -60,19 +60,11 @@ async function test_decoder_doctor_notification(
     }
     ok(notification, "Got decoder-doctor-notification notification");
 
-<<<<<<< HEAD
-    is(notification.messageText.textContent, notificationMessage,
-       "notification message should match expectation");
-||||||| merged common ancestors
-    is(notification.getAttribute("label"), notificationMessage,
-       "notification message should match expectation");
-=======
     is(
       notification.messageText.textContent,
       notificationMessage,
       "notification message should match expectation"
     );
->>>>>>> upstream-releases
 
     let button = notification.querySelector("button");
     if (!label) {

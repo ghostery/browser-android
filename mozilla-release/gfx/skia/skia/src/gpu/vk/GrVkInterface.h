@@ -10,18 +10,8 @@
 
 #include "SkRefCnt.h"
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/vk/GrVkInterface.h
 #include "vk/GrVkBackendContext.h"
 #include "vk/GrVkTypes.h"
-#include "vk/GrVkDefines.h"
-||||||| merged common ancestors
-#include "vk/GrVkDefines.h"
-=======
-#include "vk/GrVkBackendContext.h"
-#include "vk/GrVkTypes.h"
-
-class GrVkExtensions;
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/vk/GrVkInterface.h
 
 class GrVkExtensions;
 
@@ -201,45 +191,6 @@ public:
         VkPtr<PFN_vkCmdEndRenderPass> fCmdEndRenderPass;
         VkPtr<PFN_vkCmdExecuteCommands> fCmdExecuteCommands;
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/vk/GrVkInterface.h
-        // Functions for VK_KHR_get_physical_device_properties2 or vulkan 1.1
-        VkPtr<PFN_vkGetPhysicalDeviceFeatures2> fGetPhysicalDeviceFeatures2;
-        VkPtr<PFN_vkGetPhysicalDeviceProperties2> fGetPhysicalDeviceProperties2;
-        VkPtr<PFN_vkGetPhysicalDeviceFormatProperties2> fGetPhysicalDeviceFormatProperties2;
-        VkPtr<PFN_vkGetPhysicalDeviceImageFormatProperties2> fGetPhysicalDeviceImageFormatProperties2;
-        VkPtr<PFN_vkGetPhysicalDeviceQueueFamilyProperties2> fGetPhysicalDeviceQueueFamilyProperties2;
-        VkPtr<PFN_vkGetPhysicalDeviceMemoryProperties2> fGetPhysicalDeviceMemoryProperties2;
-        VkPtr<PFN_vkGetPhysicalDeviceSparseImageFormatProperties2> fGetPhysicalDeviceSparseImageFormatProperties2;
-
-        // Functions for VK_KHR_get_memory_requirements2 or vulkan 1.1
-        VkPtr<PFN_vkGetImageMemoryRequirements2> fGetImageMemoryRequirements2;
-        VkPtr<PFN_vkGetBufferMemoryRequirements2> fGetBufferMemoryRequirements2;
-        VkPtr<PFN_vkGetImageSparseMemoryRequirements2> fGetImageSparseMemoryRequirements2;
-
-        //Functions for VK_KHR_bind_memory2
-        VkPtr<PFN_vkBindBufferMemory2> fBindBufferMemory2;
-        VkPtr<PFN_vkBindImageMemory2> fBindImageMemory2;
-
-        // Functions for VK_KHR_maintenance1 or vulkan 1.1
-        VkPtr<PFN_vkTrimCommandPool> fTrimCommandPool;
-
-        // Functions for VK_KHR_maintenance3 or vulkan 1.1
-        VkPtr<PFN_vkGetDescriptorSetLayoutSupport> fGetDescriptorSetLayoutSupport;
-
-        // Functions for VK_KHR_external_memory_capabilities
-        VkPtr<PFN_vkGetPhysicalDeviceExternalBufferProperties> fGetPhysicalDeviceExternalBufferProperties;
-
-#ifdef SK_BUILD_FOR_ANDROID
-        // Functions for VK_ANDROID_external_memory_android_hardware_buffer
-        VkPtr<PFN_vkGetAndroidHardwareBufferPropertiesANDROID> fGetAndroidHardwareBufferProperties;
-        VkPtr<PFN_vkGetMemoryAndroidHardwareBufferANDROID> fGetMemoryAndroidHardwareBuffer;
-#endif
-||||||| merged common ancestors
-        VkPtr<PFN_vkCreateDebugReportCallbackEXT> fCreateDebugReportCallbackEXT;
-        VkPtr<PFN_vkDebugReportMessageEXT> fDebugReportMessageEXT;
-        VkPtr<PFN_vkDestroyDebugReportCallbackEXT> fDestroyDebugReportCallbackEXT;
-    } fFunctions;
-=======
         // Functions for VK_KHR_get_physical_device_properties2 or vulkan 1.1
         VkPtr<PFN_vkGetPhysicalDeviceFeatures2> fGetPhysicalDeviceFeatures2;
         VkPtr<PFN_vkGetPhysicalDeviceProperties2> fGetPhysicalDeviceProperties2;
@@ -276,7 +227,6 @@ public:
         VkPtr<PFN_vkGetAndroidHardwareBufferPropertiesANDROID> fGetAndroidHardwareBufferProperties;
         VkPtr<PFN_vkGetMemoryAndroidHardwareBufferANDROID> fGetMemoryAndroidHardwareBuffer;
 #endif
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/vk/GrVkInterface.h
 
 
     } fFunctions;

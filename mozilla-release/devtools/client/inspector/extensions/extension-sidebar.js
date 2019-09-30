@@ -70,21 +70,6 @@ class ExtensionSidebar {
           onExtensionPageUnmount: containerEl => {
             this.emit("extension-page-unmount", containerEl);
           },
-<<<<<<< HEAD
-          highlightDomElement: async (grip, options = {}) => {
-            const { highlighter } = this.inspector;
-            const nodeFront = await this.inspector.walker.gripToNodeFront(grip);
-            return highlighter.highlight(nodeFront, options);
-||||||| merged common ancestors
-          highlightDomElement: (grip, options = {}) => {
-            const { highlighterUtils } = this.inspector.toolbox;
-
-            if (!highlighterUtils) {
-              return null;
-            }
-
-            return highlighterUtils.highlightDomValueGrip(grip, options);
-=======
           serviceContainer: {
             createObjectClient: object => {
               return new ObjectClient(
@@ -124,56 +109,9 @@ class ExtensionSidebar {
 
               return Promise.all([onNodeFrontSet, onInspectorUpdated]);
             },
->>>>>>> upstream-releases
           },
-<<<<<<< HEAD
-          unHighlightDomElement: (forceHide = false) => {
-            const { highlighter } = this.inspector;
-            return highlighter.unhighlight(forceHide);
-          },
-          openNodeInInspector: async (grip) => {
-            const { walker } = this.inspector;
-            const front = await walker.gripToNodeFront(grip);
-            const onInspectorUpdated = this.inspector.once("inspector-updated");
-            const onNodeFrontSet = this.inspector.toolbox.selection.setNodeFront(front, {
-              reason: "inspector-extension-sidebar",
-            });
-
-            return Promise.all([onNodeFrontSet, onInspectorUpdated]);
-          },
-        },
-      }));
-||||||| merged common ancestors
-          unHighlightDomElement: (forceHide = false) => {
-            const { highlighterUtils } = this.inspector.toolbox;
-
-            if (!highlighterUtils) {
-              return null;
-            }
-
-            return highlighterUtils.unhighlight(forceHide);
-          },
-          openNodeInInspector: async (grip) => {
-            const { highlighterUtils } = this.inspector.toolbox;
-
-            if (!highlighterUtils) {
-              return null;
-            }
-
-            const front = await highlighterUtils.gripToNodeFront(grip);
-            const onInspectorUpdated = this.inspector.once("inspector-updated");
-            const onNodeFrontSet = this.inspector.toolbox.selection.setNodeFront(front, {
-              reason: "inspector-extension-sidebar"
-            });
-
-            return Promise.all([onNodeFrontSet, onInspectorUpdated]);
-          }
-        },
-      }));
-=======
         })
       );
->>>>>>> upstream-releases
     }
 
     return this._provider;

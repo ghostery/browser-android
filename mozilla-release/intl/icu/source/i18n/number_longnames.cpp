@@ -210,15 +210,7 @@ LongNameHandler::forMeasureUnit(const Locale &loc, const MeasureUnit &unitRef, c
     UnicodeString simpleFormats[ARRAY_LENGTH];
     getMeasureData(loc, unit, width, simpleFormats, status);
     if (U_FAILURE(status)) { return result; }
-<<<<<<< HEAD
-    // TODO: What field to use for units?
-    result->simpleFormatsToModifiers(simpleFormats, UNUM_FIELD_COUNT, status);
-||||||| merged common ancestors
-    // TODO: What field to use for units?
-    simpleFormatsToModifiers(simpleFormats, UNUM_FIELD_COUNT, result.fModifiers, status);
-=======
     result->simpleFormatsToModifiers(simpleFormats, UNUM_MEASURE_UNIT_FIELD, status);
->>>>>>> upstream-releases
     return result;
 }
 
@@ -256,23 +248,10 @@ LongNameHandler::forCompoundUnit(const Locale &loc, const MeasureUnit &unit, con
         compiled.format(UnicodeString(u"{0}"), secondaryString, perUnitFormat, status);
         if (U_FAILURE(status)) { return result; }
     }
-<<<<<<< HEAD
-    // TODO: What field to use for units?
-    result->multiSimpleFormatsToModifiers(primaryData, perUnitFormat, UNUM_FIELD_COUNT, status);
-||||||| merged common ancestors
-    // TODO: What field to use for units?
-    multiSimpleFormatsToModifiers(primaryData, perUnitFormat, UNUM_FIELD_COUNT, result.fModifiers, status);
-=======
     result->multiSimpleFormatsToModifiers(primaryData, perUnitFormat, UNUM_MEASURE_UNIT_FIELD, status);
->>>>>>> upstream-releases
     return result;
 }
 
-<<<<<<< HEAD
-LongNameHandler* LongNameHandler::forCurrencyLongNames(const Locale &loc, const CurrencyUnit &currency,
-||||||| merged common ancestors
-LongNameHandler LongNameHandler::forCurrencyLongNames(const Locale &loc, const CurrencyUnit &currency,
-=======
 UnicodeString LongNameHandler::getUnitDisplayName(
         const Locale& loc,
         const MeasureUnit& unit,
@@ -287,7 +266,6 @@ UnicodeString LongNameHandler::getUnitDisplayName(
 }
 
 LongNameHandler* LongNameHandler::forCurrencyLongNames(const Locale &loc, const CurrencyUnit &currency,
->>>>>>> upstream-releases
                                                       const PluralRules *rules,
                                                       const MicroPropsGenerator *parent,
                                                       UErrorCode &status) {
@@ -337,10 +315,6 @@ void LongNameHandler::processQuantity(DecimalQuantity &quantity, MicroProps &mic
     parent->processQuantity(quantity, micros, status);
     StandardPlural::Form pluralForm = utils::getPluralSafe(micros.rounder, rules, quantity, status);
     micros.modOuter = &fModifiers[pluralForm];
-}
-
-const Modifier* LongNameHandler::getModifier(int8_t /*signum*/, StandardPlural::Form plural) const {
-    return &fModifiers[plural];
 }
 
 const Modifier* LongNameHandler::getModifier(int8_t /*signum*/, StandardPlural::Form plural) const {

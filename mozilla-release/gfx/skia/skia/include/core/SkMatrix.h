@@ -591,22 +591,10 @@ public:
         Vector (sinValue, cosValue) describes the angle of rotation relative to (0, 1).
         Vector length specifies scale.
 
-<<<<<<< HEAD
-        @param sinValue  rotation vector x-axis component
-        @param cosValue  rotation vector y-axis component
-        @param px        pivot x-axis
-        @param py        pivot y-axis
-||||||| merged common ancestors
-        @param sinValue  rotation vector x component
-        @param cosValue  rotation vector y component
-        @param px        pivot x
-        @param py        pivot y
-=======
         @param sinValue  rotation vector x-axis component
         @param cosValue  rotation vector y-axis component
         @param px        pivot on x-axis
         @param py        pivot on y-axis
->>>>>>> upstream-releases
     */
     void setSinCos(SkScalar sinValue, SkScalar cosValue,
                    SkScalar px, SkScalar py);

@@ -3,42 +3,14 @@
 //! The `Function` struct defined in this module owns all of its extended basic blocks and
 //! instructions.
 
-<<<<<<< HEAD
-use binemit::CodeOffset;
-use entity::{PrimaryMap, SecondaryMap};
-use ir;
-use ir::{DataFlowGraph, ExternalName, Layout, Signature};
-use ir::{
-||||||| merged common ancestors
-use binemit::CodeOffset;
-use entity::{EntityMap, PrimaryMap};
-use ir;
-use ir::{DataFlowGraph, ExternalName, Layout, Signature};
-use ir::{
-=======
 use crate::binemit::CodeOffset;
 use crate::entity::{PrimaryMap, SecondaryMap};
 use crate::ir;
 use crate::ir::{DataFlowGraph, ExternalName, Layout, Signature};
 use crate::ir::{
->>>>>>> upstream-releases
     Ebb, ExtFuncData, FuncRef, GlobalValue, GlobalValueData, Heap, HeapData, JumpTable,
     JumpTableData, SigRef, StackSlot, StackSlotData, Table, TableData,
 };
-<<<<<<< HEAD
-use ir::{EbbOffsets, InstEncodings, SourceLocs, StackSlots, ValueLocations};
-use ir::{JumpTableOffsets, JumpTables};
-use isa::{CallConv, EncInfo, Encoding, Legalize, TargetIsa};
-use regalloc::RegDiversions;
-use std::fmt;
-use write::write_function;
-||||||| merged common ancestors
-use ir::{EbbOffsets, InstEncodings, JumpTables, SourceLocs, StackSlots, ValueLocations};
-use isa::{EncInfo, Encoding, Legalize, TargetIsa};
-use settings::CallConv;
-use std::fmt;
-use write::write_function;
-=======
 use crate::ir::{EbbOffsets, InstEncodings, SourceLocs, StackSlots, ValueLocations};
 use crate::ir::{JumpTableOffsets, JumpTables};
 use crate::isa::{CallConv, EncInfo, Encoding, Legalize, TargetIsa};
@@ -46,7 +18,6 @@ use crate::regalloc::RegDiversions;
 use crate::value_label::ValueLabelsRanges;
 use crate::write::write_function;
 use core::fmt;
->>>>>>> upstream-releases
 
 /// A function.
 ///

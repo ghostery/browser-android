@@ -35,17 +35,9 @@ class nsDocElementBoxFrame final : public nsBoxFrame,
   friend nsIFrame* NS_NewBoxFrame(mozilla::PresShell* aPresShell,
                                   ComputedStyle* aStyle);
 
-<<<<<<< HEAD
-  explicit nsDocElementBoxFrame(ComputedStyle* aStyle)
-      : nsBoxFrame(aStyle, kClassID, true) {}
-||||||| merged common ancestors
-  explicit nsDocElementBoxFrame(ComputedStyle* aStyle)
-    :nsBoxFrame(aStyle, kClassID, true) {}
-=======
   explicit nsDocElementBoxFrame(ComputedStyle* aStyle,
                                 nsPresContext* aPresContext)
       : nsBoxFrame(aStyle, aPresContext, kClassID, true) {}
->>>>>>> upstream-releases
 
   NS_DECL_QUERYFRAME
   NS_DECL_FRAMEARENA_HELPERS(nsDocElementBoxFrame)
@@ -73,21 +65,10 @@ class nsDocElementBoxFrame final : public nsBoxFrame,
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsContainerFrame* NS_NewDocElementBoxFrame(nsIPresShell* aPresShell,
-                                           ComputedStyle* aStyle) {
-  return new (aPresShell) nsDocElementBoxFrame(aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewDocElementBoxFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsDocElementBoxFrame(aStyle);
-=======
 nsContainerFrame* NS_NewDocElementBoxFrame(PresShell* aPresShell,
                                            ComputedStyle* aStyle) {
   return new (aPresShell)
       nsDocElementBoxFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsDocElementBoxFrame)
@@ -99,20 +80,9 @@ void nsDocElementBoxFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsBoxFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
-<<<<<<< HEAD
-nsresult nsDocElementBoxFrame::CreateAnonymousContent(
-    nsTArray<ContentInfo>& aElements) {
-  nsIDocument* doc = mContent->GetComposedDoc();
-||||||| merged common ancestors
-nsresult
-nsDocElementBoxFrame::CreateAnonymousContent(nsTArray<ContentInfo>& aElements)
-{
-  nsIDocument* doc = mContent->GetComposedDoc();
-=======
 nsresult nsDocElementBoxFrame::CreateAnonymousContent(
     nsTArray<ContentInfo>& aElements) {
   Document* doc = mContent->GetComposedDoc();
->>>>>>> upstream-releases
   if (!doc) {
     // The page is currently being torn down.  Why bother.
     return NS_ERROR_FAILURE;

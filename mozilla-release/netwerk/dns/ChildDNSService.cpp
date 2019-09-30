@@ -48,26 +48,10 @@ ChildDNSService::ChildDNSService()
   MOZ_ASSERT(IsNeckoChild());
 }
 
-<<<<<<< HEAD
-void ChildDNSService::GetDNSRecordHashKey(
-    const nsACString &aHost, uint16_t aType,
-    const OriginAttributes &aOriginAttributes, uint32_t aFlags,
-    nsIDNSListener *aListener, nsACString &aHashKey) {
-||||||| merged common ancestors
-void
-ChildDNSService::GetDNSRecordHashKey(const nsACString &aHost,
-                                     uint16_t aType,
-                                     const OriginAttributes &aOriginAttributes,
-                                     uint32_t aFlags,
-                                     nsIDNSListener* aListener,
-                                     nsACString &aHashKey)
-{
-=======
 void ChildDNSService::GetDNSRecordHashKey(
     const nsACString& aHost, uint16_t aType,
     const OriginAttributes& aOriginAttributes, uint32_t aFlags,
     nsIDNSListener* aListener, nsACString& aHashKey) {
->>>>>>> upstream-releases
   aHashKey.Assign(aHost);
   aHashKey.AppendInt(aType);
 
@@ -79,27 +63,10 @@ void ChildDNSService::GetDNSRecordHashKey(
   aHashKey.AppendPrintf("%p", aListener);
 }
 
-<<<<<<< HEAD
-nsresult ChildDNSService::AsyncResolveInternal(
-    const nsACString &hostname, uint16_t type, uint32_t flags,
-    nsIDNSListener *listener, nsIEventTarget *target_,
-    const OriginAttributes &aOriginAttributes, nsICancelable **result) {
-||||||| merged common ancestors
-nsresult
-ChildDNSService::AsyncResolveInternal(const nsACString        &hostname,
-                                      uint16_t                 type,
-                                      uint32_t                 flags,
-                                      nsIDNSListener          *listener,
-                                      nsIEventTarget          *target_,
-                                      const OriginAttributes  &aOriginAttributes,
-                                      nsICancelable          **result)
-{
-=======
 nsresult ChildDNSService::AsyncResolveInternal(
     const nsACString& hostname, uint16_t type, uint32_t flags,
     nsIDNSListener* listener, nsIEventTarget* target_,
     const OriginAttributes& aOriginAttributes, nsICancelable** result) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(gNeckoChild != nullptr, NS_ERROR_FAILURE);
 
   if (mDisablePrefetch && (flags & RESOLVE_SPECULATE)) {
@@ -134,7 +101,7 @@ nsresult ChildDNSService::AsyncResolveInternal(
       entry.Data()->AppendElement(childReq);
     } else {
       entry.OrInsert([&]() {
-        auto *hashEntry = new nsTArray<RefPtr<DNSRequestChild>>();
+        auto* hashEntry = new nsTArray<RefPtr<DNSRequestChild>>();
         hashEntry->AppendElement(childReq);
         return hashEntry;
       });
@@ -147,26 +114,10 @@ nsresult ChildDNSService::AsyncResolveInternal(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult ChildDNSService::CancelAsyncResolveInternal(
-    const nsACString &aHostname, uint16_t aType, uint32_t aFlags,
-    nsIDNSListener *aListener, nsresult aReason,
-    const OriginAttributes &aOriginAttributes) {
-||||||| merged common ancestors
-nsresult
-ChildDNSService::CancelAsyncResolveInternal(const nsACString       &aHostname,
-                                            uint16_t                aType,
-                                            uint32_t                aFlags,
-                                            nsIDNSListener         *aListener,
-                                            nsresult                aReason,
-                                            const OriginAttributes &aOriginAttributes)
-{
-=======
 nsresult ChildDNSService::CancelAsyncResolveInternal(
     const nsACString& aHostname, uint16_t aType, uint32_t aFlags,
     nsIDNSListener* aListener, nsresult aReason,
     const OriginAttributes& aOriginAttributes) {
->>>>>>> upstream-releases
   if (mDisablePrefetch && (aFlags & RESOLVE_SPECULATE)) {
     return NS_ERROR_DNS_LOOKUP_QUEUE_FULL;
   }
@@ -189,27 +140,10 @@ nsresult ChildDNSService::CancelAsyncResolveInternal(
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::AsyncResolve(const nsACString &hostname, uint32_t flags,
-                              nsIDNSListener *listener, nsIEventTarget *target_,
-                              JS::HandleValue aOriginAttributes, JSContext *aCx,
-                              uint8_t aArgc, nsICancelable **result) {
-||||||| merged common ancestors
-ChildDNSService::AsyncResolve(const nsACString  &hostname,
-                              uint32_t           flags,
-                              nsIDNSListener    *listener,
-                              nsIEventTarget    *target_,
-                              JS::HandleValue    aOriginAttributes,
-                              JSContext         *aCx,
-                              uint8_t            aArgc,
-                              nsICancelable    **result)
-{
-=======
 ChildDNSService::AsyncResolve(const nsACString& hostname, uint32_t flags,
                               nsIDNSListener* listener, nsIEventTarget* target_,
                               JS::HandleValue aOriginAttributes, JSContext* aCx,
                               uint8_t aArgc, nsICancelable** result) {
->>>>>>> upstream-releases
   OriginAttributes attrs;
 
   if (aArgc == 1) {
@@ -223,59 +157,23 @@ ChildDNSService::AsyncResolve(const nsACString& hostname, uint32_t flags,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::AsyncResolveNative(const nsACString &hostname, uint32_t flags,
-                                    nsIDNSListener *listener,
-                                    nsIEventTarget *target_,
-                                    const OriginAttributes &aOriginAttributes,
-                                    nsICancelable **result) {
-||||||| merged common ancestors
-ChildDNSService::AsyncResolveNative(const nsACString        &hostname,
-                                    uint32_t                 flags,
-                                    nsIDNSListener          *listener,
-                                    nsIEventTarget          *target_,
-                                    const OriginAttributes  &aOriginAttributes,
-                                    nsICancelable          **result)
-{
-=======
 ChildDNSService::AsyncResolveNative(const nsACString& hostname, uint32_t flags,
                                     nsIDNSListener* listener,
                                     nsIEventTarget* target_,
                                     const OriginAttributes& aOriginAttributes,
                                     nsICancelable** result) {
->>>>>>> upstream-releases
   return AsyncResolveInternal(hostname, nsIDNSService::RESOLVE_TYPE_DEFAULT,
                               flags, listener, target_, aOriginAttributes,
                               result);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::AsyncResolveByType(const nsACString &hostname, uint16_t type,
-                                    uint32_t flags, nsIDNSListener *listener,
-                                    nsIEventTarget *target_,
-                                    JS::HandleValue aOriginAttributes,
-                                    JSContext *aCx, uint8_t aArgc,
-                                    nsICancelable **result) {
-||||||| merged common ancestors
-ChildDNSService::AsyncResolveByType(const nsACString  &hostname,
-                                    uint16_t           type,
-                                    uint32_t           flags,
-                                    nsIDNSListener    *listener,
-                                    nsIEventTarget    *target_,
-                                    JS::HandleValue    aOriginAttributes,
-                                    JSContext         *aCx,
-                                    uint8_t            aArgc,
-                                    nsICancelable    **result)
-{
-=======
 ChildDNSService::AsyncResolveByType(const nsACString& hostname, uint16_t type,
                                     uint32_t flags, nsIDNSListener* listener,
                                     nsIEventTarget* target_,
                                     JS::HandleValue aOriginAttributes,
                                     JSContext* aCx, uint8_t aArgc,
                                     nsICancelable** result) {
->>>>>>> upstream-releases
   OriginAttributes attrs;
 
   if (aArgc == 1) {
@@ -289,53 +187,20 @@ ChildDNSService::AsyncResolveByType(const nsACString& hostname, uint16_t type,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::AsyncResolveByTypeNative(
-    const nsACString &hostname, uint16_t type, uint32_t flags,
-    nsIDNSListener *listener, nsIEventTarget *target_,
-    const OriginAttributes &aOriginAttributes, nsICancelable **result) {
-||||||| merged common ancestors
-ChildDNSService::AsyncResolveByTypeNative(const nsACString        &hostname,
-                                          uint16_t                 type,
-                                          uint32_t                 flags,
-                                          nsIDNSListener          *listener,
-                                          nsIEventTarget          *target_,
-                                          const OriginAttributes  &aOriginAttributes,
-                                          nsICancelable          **result)
-{
-=======
 ChildDNSService::AsyncResolveByTypeNative(
     const nsACString& hostname, uint16_t type, uint32_t flags,
     nsIDNSListener* listener, nsIEventTarget* target_,
     const OriginAttributes& aOriginAttributes, nsICancelable** result) {
->>>>>>> upstream-releases
   return AsyncResolveInternal(hostname, type, flags, listener, target_,
                               aOriginAttributes, result);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::CancelAsyncResolve(const nsACString &aHostname,
-                                    uint32_t aFlags, nsIDNSListener *aListener,
-                                    nsresult aReason,
-                                    JS::HandleValue aOriginAttributes,
-                                    JSContext *aCx, uint8_t aArgc) {
-||||||| merged common ancestors
-ChildDNSService::CancelAsyncResolve(const nsACString  &aHostname,
-                                    uint32_t           aFlags,
-                                    nsIDNSListener    *aListener,
-                                    nsresult           aReason,
-                                    JS::HandleValue    aOriginAttributes,
-                                    JSContext         *aCx,
-                                    uint8_t            aArgc)
-{
-=======
 ChildDNSService::CancelAsyncResolve(const nsACString& aHostname,
                                     uint32_t aFlags, nsIDNSListener* aListener,
                                     nsresult aReason,
                                     JS::HandleValue aOriginAttributes,
                                     JSContext* aCx, uint8_t aArgc) {
->>>>>>> upstream-releases
   OriginAttributes attrs;
 
   if (aArgc == 1) {
@@ -350,53 +215,21 @@ ChildDNSService::CancelAsyncResolve(const nsACString& aHostname,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::CancelAsyncResolveNative(
-    const nsACString &aHostname, uint32_t aFlags, nsIDNSListener *aListener,
-    nsresult aReason, const OriginAttributes &aOriginAttributes) {
-||||||| merged common ancestors
-ChildDNSService::CancelAsyncResolveNative(const nsACString       &aHostname,
-                                          uint32_t                aFlags,
-                                          nsIDNSListener         *aListener,
-                                          nsresult                aReason,
-                                          const OriginAttributes &aOriginAttributes)
-{
-=======
 ChildDNSService::CancelAsyncResolveNative(
     const nsACString& aHostname, uint32_t aFlags, nsIDNSListener* aListener,
     nsresult aReason, const OriginAttributes& aOriginAttributes) {
->>>>>>> upstream-releases
   return CancelAsyncResolveInternal(aHostname,
                                     nsIDNSService::RESOLVE_TYPE_DEFAULT, aFlags,
                                     aListener, aReason, aOriginAttributes);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::CancelAsyncResolveByType(const nsACString &aHostname,
-                                          uint16_t aType, uint32_t aFlags,
-                                          nsIDNSListener *aListener,
-                                          nsresult aReason,
-                                          JS::HandleValue aOriginAttributes,
-                                          JSContext *aCx, uint8_t aArgc) {
-||||||| merged common ancestors
-ChildDNSService::CancelAsyncResolveByType(const nsACString  &aHostname,
-                                          uint16_t           aType,
-                                          uint32_t           aFlags,
-                                          nsIDNSListener    *aListener,
-                                          nsresult           aReason,
-                                          JS::HandleValue    aOriginAttributes,
-                                          JSContext         *aCx,
-                                          uint8_t            aArgc)
-{
-=======
 ChildDNSService::CancelAsyncResolveByType(const nsACString& aHostname,
                                           uint16_t aType, uint32_t aFlags,
                                           nsIDNSListener* aListener,
                                           nsresult aReason,
                                           JS::HandleValue aOriginAttributes,
                                           JSContext* aCx, uint8_t aArgc) {
->>>>>>> upstream-releases
   OriginAttributes attrs;
 
   if (aArgc == 1) {
@@ -410,82 +243,33 @@ ChildDNSService::CancelAsyncResolveByType(const nsACString& aHostname,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::CancelAsyncResolveByTypeNative(
-    const nsACString &aHostname, uint16_t aType, uint32_t aFlags,
-    nsIDNSListener *aListener, nsresult aReason,
-    const OriginAttributes &aOriginAttributes) {
-||||||| merged common ancestors
-ChildDNSService::CancelAsyncResolveByTypeNative(const nsACString       &aHostname,
-                                                uint16_t                aType,
-                                                uint32_t                aFlags,
-                                                nsIDNSListener         *aListener,
-                                                nsresult                aReason,
-                                                const OriginAttributes &aOriginAttributes)
-{
-=======
 ChildDNSService::CancelAsyncResolveByTypeNative(
     const nsACString& aHostname, uint16_t aType, uint32_t aFlags,
     nsIDNSListener* aListener, nsresult aReason,
     const OriginAttributes& aOriginAttributes) {
->>>>>>> upstream-releases
   return CancelAsyncResolveInternal(aHostname, aType, aFlags, aListener,
                                     aReason, aOriginAttributes);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::Resolve(const nsACString &hostname, uint32_t flags,
-                         JS::HandleValue aOriginAttributes, JSContext *aCx,
-                         uint8_t aArgc, nsIDNSRecord **result) {
-||||||| merged common ancestors
-ChildDNSService::Resolve(const nsACString &hostname,
-                         uint32_t          flags,
-                         JS::HandleValue   aOriginAttributes,
-                         JSContext        *aCx,
-                         uint8_t           aArgc,
-                         nsIDNSRecord    **result)
-{
-=======
 ChildDNSService::Resolve(const nsACString& hostname, uint32_t flags,
                          JS::HandleValue aOriginAttributes, JSContext* aCx,
                          uint8_t aArgc, nsIDNSRecord** result) {
->>>>>>> upstream-releases
   // not planning to ever support this, since sync IPDL is evil.
   return NS_ERROR_NOT_AVAILABLE;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::ResolveNative(const nsACString &hostname, uint32_t flags,
-                               const OriginAttributes &aOriginAttributes,
-                               nsIDNSRecord **result) {
-||||||| merged common ancestors
-ChildDNSService::ResolveNative(const nsACString       &hostname,
-                               uint32_t                flags,
-                               const OriginAttributes &aOriginAttributes,
-                               nsIDNSRecord          **result)
-{
-=======
 ChildDNSService::ResolveNative(const nsACString& hostname, uint32_t flags,
                                const OriginAttributes& aOriginAttributes,
                                nsIDNSRecord** result) {
->>>>>>> upstream-releases
   // not planning to ever support this, since sync IPDL is evil.
   return NS_ERROR_NOT_AVAILABLE;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::GetDNSCacheEntries(
-    nsTArray<mozilla::net::DNSCacheEntries> *args) {
-||||||| merged common ancestors
-ChildDNSService::GetDNSCacheEntries(nsTArray<mozilla::net::DNSCacheEntries> *args)
-{
-=======
 ChildDNSService::GetDNSCacheEntries(
     nsTArray<mozilla::net::DNSCacheEntries>* args) {
->>>>>>> upstream-releases
   // Only used by networking dashboard, so may not ever need this in child.
   // (and would provide a way to spy on what hosts other apps are connecting to,
   // unless we start keeping per-app DNS caches).
@@ -493,30 +277,15 @@ ChildDNSService::GetDNSCacheEntries(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::GetMyHostName(nsACString &result) {
-||||||| merged common ancestors
-ChildDNSService::GetMyHostName(nsACString &result)
-{
-=======
 ChildDNSService::ClearCache(bool aTrrToo) { return NS_ERROR_NOT_AVAILABLE; }
 
 NS_IMETHODIMP
 ChildDNSService::GetMyHostName(nsACString& result) {
->>>>>>> upstream-releases
   // TODO: get value from parent during PNecko construction?
   return NS_ERROR_NOT_AVAILABLE;
 }
 
-<<<<<<< HEAD
-void ChildDNSService::NotifyRequestDone(DNSRequestChild *aDnsRequest) {
-||||||| merged common ancestors
-void
-ChildDNSService::NotifyRequestDone(DNSRequestChild *aDnsRequest)
-{
-=======
 void ChildDNSService::NotifyRequestDone(DNSRequestChild* aDnsRequest) {
->>>>>>> upstream-releases
   // We need the original flags and listener for the pending requests hash.
   uint32_t originalFlags = aDnsRequest->mFlags & ~RESOLVE_OFFLINE;
   nsCOMPtr<nsIDNSListener> originalListener = aDnsRequest->mListener;
@@ -585,14 +354,7 @@ nsresult ChildDNSService::Init() {
 nsresult ChildDNSService::Shutdown() { return NS_OK; }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::GetPrefetchEnabled(bool *outVal) {
-||||||| merged common ancestors
-ChildDNSService::GetPrefetchEnabled(bool *outVal)
-{
-=======
 ChildDNSService::GetPrefetchEnabled(bool* outVal) {
->>>>>>> upstream-releases
   *outVal = !mDisablePrefetch;
   return NS_OK;
 }
@@ -603,46 +365,13 @@ ChildDNSService::SetPrefetchEnabled(bool inVal) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool ChildDNSService::GetOffline() const {
-  bool offline = false;
-  nsCOMPtr<nsIIOService> io = do_GetService(NS_IOSERVICE_CONTRACTID);
-  if (io) {
-    io->GetOffline(&offline);
-  }
-  return offline;
-}
-
-||||||| merged common ancestors
-bool
-ChildDNSService::GetOffline() const
-{
-  bool offline = false;
-  nsCOMPtr<nsIIOService> io = do_GetService(NS_IOSERVICE_CONTRACTID);
-  if (io) {
-    io->GetOffline(&offline);
-  }
-  return offline;
-}
-
-=======
->>>>>>> upstream-releases
 //-----------------------------------------------------------------------------
 // ChildDNSService::nsIObserver
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChildDNSService::Observe(nsISupports *subject, const char *topic,
-                         const char16_t *data) {
-||||||| merged common ancestors
-ChildDNSService::Observe(nsISupports *subject, const char *topic,
-                         const char16_t *data)
-{
-=======
 ChildDNSService::Observe(nsISupports* subject, const char* topic,
                          const char16_t* data) {
->>>>>>> upstream-releases
   // we are only getting called if a preference has changed.
   NS_ASSERTION(strcmp(topic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID) == 0,
                "unexpected observe call");

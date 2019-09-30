@@ -13,41 +13,14 @@ use crate::translation_utils::{
 };
 use core::convert::TryFrom;
 use cranelift_codegen::cursor::FuncCursor;
-<<<<<<< HEAD
-use cranelift_codegen::ir::immediates::{Imm64, Offset32};
-||||||| merged common ancestors
-use cranelift_codegen::ir::immediates::Imm64;
-=======
 use cranelift_codegen::ir::immediates::{Offset32, Uimm64};
->>>>>>> upstream-releases
 use cranelift_codegen::ir::types::*;
 use cranelift_codegen::ir::{self, InstBuilder};
 use cranelift_codegen::isa::TargetFrontendConfig;
 use cranelift_entity::{EntityRef, PrimaryMap};
-<<<<<<< HEAD
-use environ::{FuncEnvironment, GlobalVariable, ModuleEnvironment, ReturnMode, WasmResult};
-use func_translator::FuncTranslator;
-||||||| merged common ancestors
-use environ::{FuncEnvironment, GlobalVariable, ModuleEnvironment, WasmResult};
-use func_translator::FuncTranslator;
-=======
 use std::boxed::Box;
->>>>>>> upstream-releases
 use std::string::String;
 use std::vec::Vec;
-<<<<<<< HEAD
-use translation_utils::{
-    DefinedFuncIndex, FuncIndex, Global, GlobalIndex, Memory, MemoryIndex, SignatureIndex, Table,
-    TableIndex,
-};
-||||||| merged common ancestors
-use target_lexicon::Triple;
-use translation_utils::{
-    DefinedFuncIndex, FuncIndex, Global, GlobalIndex, Memory, MemoryIndex, SignatureIndex, Table,
-    TableIndex,
-};
-=======
->>>>>>> upstream-releases
 
 /// Compute a `ir::ExternalName` for a given wasm function index.
 fn get_func_name(func_index: FuncIndex) -> ir::ExternalName {
@@ -145,59 +118,29 @@ pub struct DummyEnvironment {
 
     /// Vector of wasm bytecode size for each function.
     pub func_bytecode_sizes: Vec<usize>,
-<<<<<<< HEAD
-
-    /// How to return from functions.
-    return_mode: ReturnMode,
-||||||| merged common ancestors
-=======
 
     /// How to return from functions.
     return_mode: ReturnMode,
 
     /// Instructs to collect debug data during translation.
     debug_info: bool,
->>>>>>> upstream-releases
 }
 
 impl DummyEnvironment {
-<<<<<<< HEAD
-    /// Creates a new `DummyEnvironment` instance.
-    pub fn new(config: TargetFrontendConfig, return_mode: ReturnMode) -> Self {
-||||||| merged common ancestors
-    /// Allocates the data structures with default flags.
-    pub fn with_triple(triple: Triple) -> Self {
-        Self::with_triple_flags(triple, settings::Flags::new(settings::builder()))
-    }
-
-    /// Allocates the data structures with the given flags.
-    pub fn with_triple_flags(triple: Triple, flags: settings::Flags) -> Self {
-=======
     /// Creates a new `DummyEnvironment` instance.
     pub fn new(config: TargetFrontendConfig, return_mode: ReturnMode, debug_info: bool) -> Self {
->>>>>>> upstream-releases
         Self {
             info: DummyModuleInfo::new(config),
             trans: FuncTranslator::new(),
             func_bytecode_sizes: Vec::new(),
-<<<<<<< HEAD
-            return_mode,
-||||||| merged common ancestors
-=======
             return_mode,
             debug_info,
->>>>>>> upstream-releases
         }
     }
 
     /// Return a `DummyFuncEnvironment` for translating functions within this
     /// `DummyEnvironment`.
     pub fn func_env(&self) -> DummyFuncEnvironment {
-<<<<<<< HEAD
-        DummyFuncEnvironment::new(&self.info, self.return_mode)
-||||||| merged common ancestors
-        DummyFuncEnvironment::new(&self.info)
-=======
         DummyFuncEnvironment::new(&self.info, self.return_mode)
     }
 
@@ -208,7 +151,6 @@ impl DummyEnvironment {
     /// Return the number of imported functions within this `DummyEnvironment`.
     pub fn get_num_func_imports(&self) -> usize {
         self.info.imported_funcs.len()
->>>>>>> upstream-releases
     }
 }
 
@@ -240,24 +182,12 @@ impl<'dummy_environment> DummyFuncEnvironment<'dummy_environment> {
 }
 
 impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environment> {
-<<<<<<< HEAD
-    fn target_config(&self) -> TargetFrontendConfig {
-        self.mod_info.config
-||||||| merged common ancestors
-    fn triple(&self) -> &Triple {
-        &self.mod_info.triple
-    }
-
-    fn flags(&self) -> &settings::Flags {
-        &self.mod_info.flags
-=======
     fn target_config(&self) -> TargetFrontendConfig {
         self.mod_info.config
     }
 
     fn return_mode(&self) -> ReturnMode {
         self.return_mode
->>>>>>> upstream-releases
     }
 
     fn make_global(
@@ -266,28 +196,11 @@ impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environ
         index: GlobalIndex,
     ) -> WasmResult<GlobalVariable> {
         // Just create a dummy `vmctx` global.
-<<<<<<< HEAD
-        let offset = ((index.index() * 8) as i64 + 8).into();
-        let vmctx = func.create_global_value(ir::GlobalValueData::VMContext {});
-        let iadd = func.create_global_value(ir::GlobalValueData::IAddImm {
-            base: vmctx,
-            offset,
-            global_type: self.pointer_type(),
-        });
-        GlobalVariable::Memory {
-            gv: iadd,
-||||||| merged common ancestors
-        let offset = ((index * 8) as i32 + 8).into();
-        let gv = func.create_global_value(ir::GlobalValueData::VMContext { offset });
-        GlobalVariable::Memory {
-            gv,
-=======
         let offset = i32::try_from((index.index() * 8) + 8).unwrap().into();
         let vmctx = func.create_global_value(ir::GlobalValueData::VMContext {});
         Ok(GlobalVariable::Memory {
             gv: vmctx,
             offset,
->>>>>>> upstream-releases
             ty: self.mod_info.globals[index].entity.ty,
         })
     }
@@ -447,31 +360,11 @@ impl<'dummy_environment> FuncEnvironment for DummyFuncEnvironment<'dummy_environ
     ) -> WasmResult<ir::Value> {
         Ok(pos.ins().iconst(I32, -1))
     }
-
-    fn return_mode(&self) -> ReturnMode {
-        self.return_mode
-    }
 }
 
 impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
-<<<<<<< HEAD
     fn target_config(&self) -> TargetFrontendConfig {
         self.info.config
-    }
-
-    fn get_func_name(&self, func_index: FuncIndex) -> ir::ExternalName {
-        get_func_name(func_index)
-||||||| merged common ancestors
-    fn flags(&self) -> &settings::Flags {
-        &self.info.flags
-    }
-
-    fn get_func_name(&self, func_index: FuncIndex) -> ir::ExternalName {
-        get_func_name(func_index)
-=======
-    fn target_config(&self) -> TargetFrontendConfig {
-        self.info.config
->>>>>>> upstream-releases
     }
 
     fn declare_signature(&mut self, sig: ir::Signature) {
@@ -503,26 +396,11 @@ impl<'data> ModuleEnvironment<'data> for DummyEnvironment {
         self.info.globals.push(Exportable::new(global));
     }
 
-<<<<<<< HEAD
     fn declare_global_import(&mut self, global: Global, module: &'data str, field: &'data str) {
         self.info.globals.push(Exportable::new(global));
         self.info
             .imported_globals
             .push((String::from(module), String::from(field)));
-    }
-
-    fn get_global(&self, global_index: GlobalIndex) -> &Global {
-        &self.info.globals[global_index].entity
-||||||| merged common ancestors
-    fn get_global(&self, global_index: GlobalIndex) -> &Global {
-        &self.info.globals[global_index].entity
-=======
-    fn declare_global_import(&mut self, global: Global, module: &'data str, field: &'data str) {
-        self.info.globals.push(Exportable::new(global));
-        self.info
-            .imported_globals
-            .push((String::from(module), String::from(field)));
->>>>>>> upstream-releases
     }
 
     fn declare_table(&mut self, table: Table) {

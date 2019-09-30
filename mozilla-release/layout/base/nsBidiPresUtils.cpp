@@ -458,16 +458,8 @@ void MOZ_EXPORT DumpBidiLine(BidiLineData* aData, bool aVisualOrder) {
 /* Some helper methods for Resolve() */
 
 // Should this frame be split between text runs?
-<<<<<<< HEAD
-static bool IsBidiSplittable(nsIFrame* aFrame) {
-||||||| merged common ancestors
-static bool
-IsBidiSplittable(nsIFrame* aFrame)
-{
-=======
 static bool IsBidiSplittable(nsIFrame* aFrame) {
   MOZ_ASSERT(aFrame);
->>>>>>> upstream-releases
   // Bidi inline containers should be split, unless they're line frames.
   LayoutFrameType frameType = aFrame->Type();
   return (aFrame->IsFrameOfType(nsIFrame::eBidiInlineContainer) &&
@@ -582,23 +574,11 @@ static nsresult CreateContinuation(nsIFrame* aFrame, nsIFrame** aNewFrame,
 
   *aNewFrame = nullptr;
 
-<<<<<<< HEAD
-  nsPresContext* presContext = aFrame->PresContext();
-  nsIPresShell* presShell = presContext->PresShell();
-  NS_ASSERTION(presShell,
-               "PresShell must be set on PresContext before calling "
-               "nsBidiPresUtils::CreateContinuation");
-||||||| merged common ancestors
-  nsPresContext *presContext = aFrame->PresContext();
-  nsIPresShell *presShell = presContext->PresShell();
-  NS_ASSERTION(presShell, "PresShell must be set on PresContext before calling nsBidiPresUtils::CreateContinuation");
-=======
   nsPresContext* presContext = aFrame->PresContext();
   PresShell* presShell = presContext->PresShell();
   NS_ASSERTION(presShell,
                "PresShell must be set on PresContext before calling "
                "nsBidiPresUtils::CreateContinuation");
->>>>>>> upstream-releases
 
   nsContainerFrame* parent = aFrame->GetParent();
   NS_ASSERTION(
@@ -762,20 +742,6 @@ nsresult nsBidiPresUtils::ResolveParagraph(BidiParagraphData* aBpd) {
   nsLineBox* currentLine = nullptr;
 
 #ifdef DEBUG
-<<<<<<< HEAD
-#ifdef NOISY_BIDI
-  printf(
-      "Before Resolve(), mCurrentBlock=%p, mBuffer='%s', frameCount=%d, "
-      "runCount=%d\n",
-      (void*)aBpd->mCurrentBlock, NS_ConvertUTF16toUTF8(aBpd->mBuffer).get(),
-      frameCount, runCount);
-#ifdef REALLY_NOISY_BIDI
-||||||| merged common ancestors
-#ifdef NOISY_BIDI
-  printf("Before Resolve(), mCurrentBlock=%p, mBuffer='%s', frameCount=%d, runCount=%d\n",
-         (void*)aBpd->mCurrentBlock, NS_ConvertUTF16toUTF8(aBpd->mBuffer).get(), frameCount, runCount);
-#ifdef REALLY_NOISY_BIDI
-=======
 #  ifdef NOISY_BIDI
   printf(
       "Before Resolve(), mCurrentBlock=%p, mBuffer='%s', frameCount=%d, "
@@ -783,7 +749,6 @@ nsresult nsBidiPresUtils::ResolveParagraph(BidiParagraphData* aBpd) {
       (void*)aBpd->mCurrentBlock, NS_ConvertUTF16toUTF8(aBpd->mBuffer).get(),
       frameCount, runCount);
 #    ifdef REALLY_NOISY_BIDI
->>>>>>> upstream-releases
   printf(" block frame tree=:\n");
   aBpd->mCurrentBlock->List(stdout);
 #    endif
@@ -1310,18 +1275,9 @@ bool nsBidiPresUtils::ChildListMayRequireBidi(nsIFrame* aFirstChild,
         dom::Text* content = frame->GetContent()->AsText();
         if (content != *aCurrContent) {
           *aCurrContent = content;
-<<<<<<< HEAD
-          const nsTextFragment* txt = content->GetText();
-          if (txt->Is2b() &&
-              HasRTLChars(MakeSpan(txt->Get2b(), txt->GetLength()))) {
-||||||| merged common ancestors
-          const nsTextFragment* txt = content->GetText();
-          if (txt->Is2b() && HasRTLChars(MakeSpan(txt->Get2b(), txt->GetLength()))) {
-=======
           const nsTextFragment* txt = &content->TextFragment();
           if (txt->Is2b() &&
               HasRTLChars(MakeSpan(txt->Get2b(), txt->GetLength()))) {
->>>>>>> upstream-releases
             return true;
           }
         }
@@ -1341,26 +1297,12 @@ void nsBidiPresUtils::ResolveParagraphWithinBlock(BidiParagraphData* aBpd) {
   aBpd->ResetData();
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsBidiPresUtils::ReorderFrames(
-    nsIFrame* aFirstFrameOnLine, int32_t aNumFramesOnLine, WritingMode aLineWM,
-    const nsSize& aContainerSize, nscoord aStart) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsBidiPresUtils::ReorderFrames(nsIFrame* aFirstFrameOnLine,
-                               int32_t aNumFramesOnLine,
-                               WritingMode aLineWM,
-                               const nsSize& aContainerSize,
-                               nscoord aStart)
-{
-=======
 /* static */
 nscoord nsBidiPresUtils::ReorderFrames(nsIFrame* aFirstFrameOnLine,
                                        int32_t aNumFramesOnLine,
                                        WritingMode aLineWM,
                                        const nsSize& aContainerSize,
                                        nscoord aStart) {
->>>>>>> upstream-releases
   nsSize containerSize(aContainerSize);
 
   // If this line consists of a line frame, reorder the line frame's children.
@@ -1409,26 +1351,11 @@ nsBidiLevel nsBidiPresUtils::GetFrameBaseLevel(nsIFrame* aFrame) {
   return firstLeaf->GetBaseLevel();
 }
 
-<<<<<<< HEAD
-void nsBidiPresUtils::IsFirstOrLast(
-    nsIFrame* aFrame, const nsContinuationStates* aContinuationStates,
-    bool aSpanDirMatchesLineDir, bool& aIsFirst /* out */,
-    bool& aIsLast /* out */) {
-||||||| merged common ancestors
-void
-nsBidiPresUtils::IsFirstOrLast(nsIFrame* aFrame,
-                               const nsContinuationStates* aContinuationStates,
-                               bool aSpanDirMatchesLineDir,
-                               bool& aIsFirst /* out */,
-                               bool& aIsLast /* out */)
-{
-=======
 void nsBidiPresUtils::IsFirstOrLast(nsIFrame* aFrame,
                                     nsContinuationStates* aContinuationStates,
                                     bool aSpanDirMatchesLineDir,
                                     bool& aIsFirst /* out */,
                                     bool& aIsLast /* out */) {
->>>>>>> upstream-releases
   /*
    * Since we lay out frames in the line's direction, visiting a frame with
    * 'mFirstVisualFrame == nullptr', means it's the first appearance of one
@@ -1480,14 +1407,7 @@ void nsBidiPresUtils::IsFirstOrLast(nsIFrame* aFrame,
   } else {
     // aFrame is not the first visual frame of its continuation chain
     firstInLineOrder = false;
-<<<<<<< HEAD
-    firstFrameState =
-        aContinuationStates->GetEntry(frameState->mFirstVisualFrame);
-||||||| merged common ancestors
-    firstFrameState = aContinuationStates->GetEntry(frameState->mFirstVisualFrame);
-=======
     firstFrameState = aContinuationStates->Get(frameState->mFirstVisualFrame);
->>>>>>> upstream-releases
   }
 
   lastInLineOrder = (firstFrameState->mFrameCount == 1);
@@ -1545,21 +1465,10 @@ void nsBidiPresUtils::IsFirstOrLast(nsIFrame* aFrame,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void nsBidiPresUtils::RepositionRubyContentFrame(
-    nsIFrame* aFrame, WritingMode aFrameWM,
-    const LogicalMargin& aBorderPadding) {
-||||||| merged common ancestors
-/* static */ void
-nsBidiPresUtils::RepositionRubyContentFrame(
-  nsIFrame* aFrame, WritingMode aFrameWM, const LogicalMargin& aBorderPadding)
-{
-=======
 /* static */
 void nsBidiPresUtils::RepositionRubyContentFrame(
     nsIFrame* aFrame, WritingMode aFrameWM,
     const LogicalMargin& aBorderPadding) {
->>>>>>> upstream-releases
   const nsFrameList& childList = aFrame->PrincipalChildList();
   if (childList.IsEmpty()) {
     return;
@@ -1591,24 +1500,10 @@ void nsBidiPresUtils::RepositionRubyContentFrame(
   }
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsBidiPresUtils::RepositionRubyFrame(
-    nsIFrame* aFrame, const nsContinuationStates* aContinuationStates,
-    const WritingMode aContainerWM, const LogicalMargin& aBorderPadding) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsBidiPresUtils::RepositionRubyFrame(
-  nsIFrame* aFrame,
-  const nsContinuationStates* aContinuationStates,
-  const WritingMode aContainerWM,
-  const LogicalMargin& aBorderPadding)
-{
-=======
 /* static */
 nscoord nsBidiPresUtils::RepositionRubyFrame(
     nsIFrame* aFrame, nsContinuationStates* aContinuationStates,
     const WritingMode aContainerWM, const LogicalMargin& aBorderPadding) {
->>>>>>> upstream-releases
   LayoutFrameType frameType = aFrame->Type();
   MOZ_ASSERT(RubyUtils::IsRubyBox(frameType));
 
@@ -1667,26 +1562,6 @@ nscoord nsBidiPresUtils::RepositionRubyFrame(
   return icoord;
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsBidiPresUtils::RepositionFrame(
-    nsIFrame* aFrame, bool aIsEvenLevel, nscoord aStartOrEnd,
-    const nsContinuationStates* aContinuationStates, WritingMode aContainerWM,
-    bool aContainerReverseDir, const nsSize& aContainerSize) {
-  nscoord lineSize =
-      aContainerWM.IsVertical() ? aContainerSize.height : aContainerSize.width;
-||||||| merged common ancestors
-/* static */ nscoord
-nsBidiPresUtils::RepositionFrame(nsIFrame* aFrame,
-                                 bool aIsEvenLevel,
-                                 nscoord aStartOrEnd,
-                                 const nsContinuationStates* aContinuationStates,
-                                 WritingMode aContainerWM,
-                                 bool aContainerReverseDir,
-                                 const nsSize& aContainerSize)
-{
-  nscoord lineSize = aContainerWM.IsVertical() ?
-    aContainerSize.height : aContainerSize.width;
-=======
 /* static */
 nscoord nsBidiPresUtils::RepositionFrame(
     nsIFrame* aFrame, bool aIsEvenLevel, nscoord aStartOrEnd,
@@ -1694,7 +1569,6 @@ nscoord nsBidiPresUtils::RepositionFrame(
     bool aContainerReverseDir, const nsSize& aContainerSize) {
   nscoord lineSize =
       aContainerWM.IsVertical() ? aContainerSize.height : aContainerSize.width;
->>>>>>> upstream-releases
   NS_ASSERTION(lineSize != NS_UNCONSTRAINEDSIZE,
                "Unconstrained inline line size in bidi frame reordering");
   if (!aFrame) return 0;
@@ -1790,21 +1664,9 @@ nscoord nsBidiPresUtils::RepositionFrame(
   return icoord + margin.IStartEnd(aContainerWM);
 }
 
-<<<<<<< HEAD
-void nsBidiPresUtils::InitContinuationStates(
-    nsIFrame* aFrame, nsContinuationStates* aContinuationStates) {
-  aContinuationStates->PutEntry(aFrame);
-||||||| merged common ancestors
-void
-nsBidiPresUtils::InitContinuationStates(nsIFrame* aFrame,
-                                        nsContinuationStates* aContinuationStates)
-{
-  aContinuationStates->PutEntry(aFrame);
-=======
 void nsBidiPresUtils::InitContinuationStates(
     nsIFrame* aFrame, nsContinuationStates* aContinuationStates) {
   aContinuationStates->Insert(aFrame);
->>>>>>> upstream-releases
   if (!IsBidiLeaf(aFrame) || RubyUtils::IsRubyBox(aFrame->Type())) {
     // Continue for child frames
     for (nsIFrame* frame : aFrame->PrincipalChildList()) {
@@ -1813,24 +1675,11 @@ void nsBidiPresUtils::InitContinuationStates(
   }
 }
 
-<<<<<<< HEAD
-/* static */ nscoord nsBidiPresUtils::RepositionInlineFrames(
-    BidiLineData* aBld, WritingMode aLineWM, const nsSize& aContainerSize,
-    nscoord aStart) {
-||||||| merged common ancestors
-/* static */ nscoord
-nsBidiPresUtils::RepositionInlineFrames(BidiLineData *aBld,
-                                        WritingMode aLineWM,
-                                        const nsSize& aContainerSize,
-                                        nscoord aStart)
-{
-=======
 /* static */
 nscoord nsBidiPresUtils::RepositionInlineFrames(BidiLineData* aBld,
                                                 WritingMode aLineWM,
                                                 const nsSize& aContainerSize,
                                                 nscoord aStart) {
->>>>>>> upstream-releases
   nscoord start = aStart;
   nsIFrame* frame;
   int32_t count = aBld->mVisualFrames.Length();

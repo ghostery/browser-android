@@ -10,17 +10,9 @@ var { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
 
 var key;
 
-<<<<<<< HEAD
-var certdialogs = Cc[nsCertificateDialogs].getService(nsICertificateDialogs);
-||||||| merged common ancestors
-var certdialogs = Cc[nsCertificateDialogs].getService(nsICertificateDialogs);
-var strbundle = Cc[nsStringBundle].getService(nsIStringBundleService)
-                  .createBundle("chrome://pipnss/locale/pipnss.properties");
-=======
 var certdialogs = Cc["@mozilla.org/nsCertificateDialogs;1"].getService(
   Ci.nsICertificateDialogs
 );
->>>>>>> upstream-releases
 
 /**
  * List of certs currently selected in the active tab.
@@ -245,13 +237,7 @@ async function promptError(aErrorCode) {
       default:
         break;
     }
-<<<<<<< HEAD
-    let [message] = await document.l10n.formatValues([{id: msgName}]);
-||||||| merged common ancestors
-    let message = strbundle.GetStringFromName(msgName);
-=======
     let [message] = await document.l10n.formatValues([{ id: msgName }]);
->>>>>>> upstream-releases
     let prompter = Services.ww.getNewPrompter(window);
     prompter.alert(null, message);
   }
@@ -309,25 +295,6 @@ async function backupCerts() {
     return;
   }
 
-<<<<<<< HEAD
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  let [backupFileDialog, filePkcs12Spec] = await document.l10n.formatValues([
-    {id: "choose-p12-backup-file-dialog"},
-    {id: "file-browse-pkcs12-spec"},
-  ]);
-  fp.init(window, backupFileDialog, nsIFilePicker.modeSave);
-  fp.appendFilter(filePkcs12Spec, "*.p12");
-  fp.appendFilters(nsIFilePicker.filterAll);
-||||||| merged common ancestors
-  var bundle = document.getElementById("pippki_bundle");
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  fp.init(window,
-          bundle.getString("chooseP12BackupFileDialog"),
-          nsIFilePicker.modeSave);
-  fp.appendFilter(bundle.getString("file_browse_PKCS12_spec"),
-                  "*.p12");
-  fp.appendFilters(nsIFilePicker.filterAll);
-=======
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
   let [backupFileDialog, filePkcs12Spec] = await document.l10n.formatValues([
     { id: "choose-p12-backup-file-dialog" },
@@ -336,7 +303,6 @@ async function backupCerts() {
   fp.init(window, backupFileDialog, Ci.nsIFilePicker.modeSave);
   fp.appendFilter(filePkcs12Spec, "*.p12");
   fp.appendFilters(Ci.nsIFilePicker.filterAll);
->>>>>>> upstream-releases
   fp.defaultExtension = "p12";
   fp.open(rv => {
     if (
@@ -375,31 +341,6 @@ function editCerts() {
   }
 }
 
-<<<<<<< HEAD
-async function restoreCerts() {
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  let [restoreFileDialog, filePkcs12Spec, fileCertSpec] = await document.l10n.formatValues([
-    {id: "choose-p12-restore-file-dialog"},
-    {id: "file-browse-pkcs12-spec"},
-    {id: "file-browse-certificate-spec"},
-  ]);
-  fp.init(window, restoreFileDialog, nsIFilePicker.modeOpen);
-  fp.appendFilter(filePkcs12Spec, "*.p12; *.pfx");
-  fp.appendFilter(fileCertSpec, gCertFileTypes);
-  fp.appendFilters(nsIFilePicker.filterAll);
-||||||| merged common ancestors
-function restoreCerts() {
-  var bundle = document.getElementById("pippki_bundle");
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  fp.init(window,
-          bundle.getString("chooseP12RestoreFileDialog2"),
-          nsIFilePicker.modeOpen);
-  fp.appendFilter(bundle.getString("file_browse_PKCS12_spec"),
-                  "*.p12; *.pfx");
-  fp.appendFilter(bundle.getString("file_browse_Certificate_spec"),
-                  gCertFileTypes);
-  fp.appendFilters(nsIFilePicker.filterAll);
-=======
 async function restoreCerts() {
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
   let [
@@ -415,7 +356,6 @@ async function restoreCerts() {
   fp.appendFilter(filePkcs12Spec, "*.p12; *.pfx");
   fp.appendFilter(fileCertSpec, gCertFileTypes);
   fp.appendFilters(Ci.nsIFilePicker.filterAll);
->>>>>>> upstream-releases
   fp.open(rv => {
     if (rv != Ci.nsIFilePicker.returnOK) {
       return;
@@ -553,27 +493,6 @@ function viewCerts() {
   }
 }
 
-<<<<<<< HEAD
-async function addCACerts() {
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  let [importCa, fileCertSpec] = await document.l10n.formatValues([
-    {id: "import-ca-certs-prompt"},
-    {id: "file-browse-certificate-spec"},
-  ]);
-  fp.init(window, importCa, nsIFilePicker.modeOpen);
-  fp.appendFilter(fileCertSpec, gCertFileTypes);
-  fp.appendFilters(nsIFilePicker.filterAll);
-||||||| merged common ancestors
-function addCACerts() {
-  var bundle = document.getElementById("pippki_bundle");
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  fp.init(window,
-          bundle.getString("importCACertsPrompt"),
-          nsIFilePicker.modeOpen);
-  fp.appendFilter(bundle.getString("file_browse_Certificate_spec"),
-                  gCertFileTypes);
-  fp.appendFilters(nsIFilePicker.filterAll);
-=======
 async function addCACerts() {
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
   let [importCa, fileCertSpec] = await document.l10n.formatValues([
@@ -583,7 +502,6 @@ async function addCACerts() {
   fp.init(window, importCa, Ci.nsIFilePicker.modeOpen);
   fp.appendFilter(fileCertSpec, gCertFileTypes);
   fp.appendFilters(Ci.nsIFilePicker.filterAll);
->>>>>>> upstream-releases
   fp.open(rv => {
     if (rv == Ci.nsIFilePicker.returnOK) {
       certdb.importCertsFromFile(fp.file, Ci.nsIX509Cert.CA_CERT);
@@ -593,27 +511,6 @@ async function addCACerts() {
   });
 }
 
-<<<<<<< HEAD
-async function addEmailCert() {
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  let [importEmail, fileCertSpec] = await document.l10n.formatValues([
-    {id: "import-email-cert-prompt"},
-    {id: "file-browse-certificate-spec"},
-  ]);
-  fp.init(window, importEmail, nsIFilePicker.modeOpen);
-  fp.appendFilter(fileCertSpec, gCertFileTypes);
-  fp.appendFilters(nsIFilePicker.filterAll);
-||||||| merged common ancestors
-function addEmailCert() {
-  var bundle = document.getElementById("pippki_bundle");
-  var fp = Cc[nsFilePicker].createInstance(nsIFilePicker);
-  fp.init(window,
-          bundle.getString("importEmailCertPrompt"),
-          nsIFilePicker.modeOpen);
-  fp.appendFilter(bundle.getString("file_browse_Certificate_spec"),
-                  gCertFileTypes);
-  fp.appendFilters(nsIFilePicker.filterAll);
-=======
 async function addEmailCert() {
   var fp = Cc["@mozilla.org/filepicker;1"].createInstance(Ci.nsIFilePicker);
   let [importEmail, fileCertSpec] = await document.l10n.formatValues([
@@ -623,7 +520,6 @@ async function addEmailCert() {
   fp.init(window, importEmail, Ci.nsIFilePicker.modeOpen);
   fp.appendFilter(fileCertSpec, gCertFileTypes);
   fp.appendFilters(Ci.nsIFilePicker.filterAll);
->>>>>>> upstream-releases
   fp.open(rv => {
     if (rv == Ci.nsIFilePicker.returnOK) {
       certdb.importCertsFromFile(fp.file, Ci.nsIX509Cert.EMAIL_CERT);

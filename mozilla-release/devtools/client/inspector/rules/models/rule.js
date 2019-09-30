@@ -851,13 +851,6 @@ class Rule {
       }
     }
     return false;
-<<<<<<< HEAD
-  },
-};
-||||||| merged common ancestors
-  }
-};
-=======
   }
 
   /**
@@ -917,6 +910,5 @@ class Rule {
     );
   }
 }
->>>>>>> upstream-releases
 
 module.exports = Rule;

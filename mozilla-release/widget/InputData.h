@@ -332,15 +332,7 @@ class PanGestureInput : public InputData {
       // user has stopped the animation by putting their fingers on a touchpad.
       PANGESTURE_MOMENTUMEND
   ));
-  // clang-format on
 
-<<<<<<< HEAD
-  PanGestureInput(PanGestureType aType, uint32_t aTime, TimeStamp aTimeStamp,
-||||||| merged common ancestors
-  PanGestureInput(PanGestureType aType,
-                  uint32_t aTime,
-                  TimeStamp aTimeStamp,
-=======
   MOZ_DEFINE_ENUM_AT_CLASS_SCOPE(
     PanDeltaType, (
       // There are three kinds of scroll delta modes in Gecko: "page", "line"
@@ -354,7 +346,6 @@ class PanGestureInput : public InputData {
   // clang-format on
 
   PanGestureInput(PanGestureType aType, uint32_t aTime, TimeStamp aTimeStamp,
->>>>>>> upstream-releases
                   const ScreenPoint& aPanStartPoint,
                   const ScreenPoint& aPanDisplacement, Modifiers aModifiers);
 
@@ -453,49 +444,10 @@ class PinchGestureInput : public InputData {
   // clang-format on
 
   // Construct a pinch gesture from a Screen point.
-<<<<<<< HEAD
-  // (Technically, we should take the span values in Screen pixels as well,
-  // but that would require also storing them in Screen pixels and then
-  // converting them in TransformToLocal() like the focus point. Since pinch
-  // gesture events are processed by the root content APZC, the only transform
-  // between Screen and ParentLayer pixels should be a translation, which is
-  // irrelevant to span values, so we don't bother.)
-  PinchGestureInput(PinchGestureType aType, uint32_t aTime,
-                    TimeStamp aTimeStamp, const ScreenPoint& aFocusPoint,
-                    ParentLayerCoord aCurrentSpan,
-                    ParentLayerCoord aPreviousSpan, Modifiers aModifiers);
-
-  // Construct a pinch gesture from a ParentLayer point.
-  // mFocusPoint remains (0,0) unless it's set later.
-  PinchGestureInput(PinchGestureType aType, uint32_t aTime,
-                    TimeStamp aTimeStamp,
-                    const ParentLayerPoint& aLocalFocusPoint,
-                    ParentLayerCoord aCurrentSpan,
-                    ParentLayerCoord aPreviousSpan, Modifiers aModifiers);
-||||||| merged common ancestors
-  // (Technically, we should take the span values in Screen pixels as well,
-  // but that would require also storing them in Screen pixels and then
-  // converting them in TransformToLocal() like the focus point. Since pinch
-  // gesture events are processed by the root content APZC, the only transform
-  // between Screen and ParentLayer pixels should be a translation, which is
-  // irrelevant to span values, so we don't bother.)
-  PinchGestureInput(PinchGestureType aType, uint32_t aTime, TimeStamp aTimeStamp,
-                    const ScreenPoint& aFocusPoint,
-                    ParentLayerCoord aCurrentSpan,
-                    ParentLayerCoord aPreviousSpan, Modifiers aModifiers);
-
-  // Construct a pinch gesture from a ParentLayer point.
-  // mFocusPoint remains (0,0) unless it's set later.
-  PinchGestureInput(PinchGestureType aType, uint32_t aTime, TimeStamp aTimeStamp,
-                    const ParentLayerPoint& aLocalFocusPoint,
-                    ParentLayerCoord aCurrentSpan,
-                    ParentLayerCoord aPreviousSpan, Modifiers aModifiers);
-=======
   PinchGestureInput(PinchGestureType aType, uint32_t aTime,
                     TimeStamp aTimeStamp, const ExternalPoint& aScreenOffset,
                     const ScreenPoint& aFocusPoint, ScreenCoord aCurrentSpan,
                     ScreenCoord aPreviousSpan, Modifiers aModifiers);
->>>>>>> upstream-releases
 
   bool TransformToLocal(const ScreenToParentLayerMatrix4x4& aTransform);
 

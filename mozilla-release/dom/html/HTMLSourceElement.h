@@ -44,13 +44,7 @@ class HTMLSourceElement final : public nsGenericHTMLElement {
   // specified document. Used by the preloader to determine valid <source> tags
   // prior to DOM creation.
   static bool WouldMatchMediaForDocument(const nsAString& aMediaStr,
-<<<<<<< HEAD
-                                         const nsIDocument* aDocument);
-||||||| merged common ancestors
-                                         const nsIDocument *aDocument);
-=======
                                          const Document* aDocument);
->>>>>>> upstream-releases
 
   // Return the MediaSource object if any associated with the src attribute
   // when it was set.

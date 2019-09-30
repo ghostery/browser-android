@@ -25,12 +25,6 @@ add_task(async function basicGetAndPost() {
     comment: "test visit for http://s.example.com/search?q=firefox",
   };
 
-  await PlacesTestUtils.addVisits("http://s.example.com/search?q=firefox");
-  let historyMatch = {
-    value: "http://s.example.com/search?q=firefox",
-    comment: "test visit for http://s.example.com/search?q=firefox",
-  };
-
   for (let alias of ["get", "post"]) {
     await check_autocomplete({
       search: alias,
@@ -112,31 +106,6 @@ add_task(async function basicGetAndPost() {
         }),
       ],
     });
-<<<<<<< HEAD
-
-    // When a restriction token is used before the alias, the alias should *not*
-    // be recognized.  It should be treated as part of the search string.  Try
-    // all the restriction tokens to test that.  We should get a single "search
-    // with" heuristic result without an alias.
-    for (let restrictToken in UrlbarTokenizer.RESTRICT) {
-      let search = `${restrictToken} ${alias} query string`;
-      await check_autocomplete({
-        search,
-        searchParam: "enable-actions",
-        matches: [
-          makeSearchMatch(search, {
-            engineName: "MozSearch",
-            searchQuery: search,
-            heuristic: true,
-          }),
-        ],
-      });
-    }
-  }
-||||||| merged common ancestors
-  }
-=======
->>>>>>> upstream-releases
 
     // When a restriction token is used before the alias, the alias should *not*
     // be recognized.  It should be treated as part of the search string.  Try
@@ -169,24 +138,6 @@ add_task(async function basicGetAndPost() {
 add_task(async function engineWithSuggestions() {
   let engine = await addTestSuggestionsEngine();
 
-<<<<<<< HEAD
-  await PlacesTestUtils.addVisits(engine.searchForm);
-  let historyMatch = {
-    value: "http://localhost:9000/search",
-    comment: "test visit for http://localhost:9000/search",
-  };
-
-  // Use a normal alias and then one with an "@".  For the @ alias, the only
-  // matches should be the search suggestions -- no history matches.
-  for (let alias of ["moz", "@moz"]) {
-    engine.alias = alias;
-    Assert.equal(engine.alias, alias);
-||||||| merged common ancestors
-  // Use a normal alias and then one with an "@", the latter to simulate the
-  // built-in "@" engine aliases (e.g., "@google").
-  for (let alias of ["moz", "@moz"]) {
-    engine.alias = alias;
-=======
   // History matches should not appear with @ aliases, so this visit/match
   // should not appear when searching with the @ alias below.
   let historyTitle = "fire";
@@ -198,39 +149,7 @@ add_task(async function engineWithSuggestions() {
     value: "http://localhost:9000/search",
     comment: historyTitle,
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    let expectedMatches = [
-      makeSearchMatch(`${alias} `, {
-        engineName: SUGGESTIONS_ENGINE_NAME,
-        alias,
-        searchQuery: "",
-        heuristic: true,
-      }),
-    ];
-    if (alias[0] != "@") {
-      expectedMatches.push(historyMatch);
-    }
-    await check_autocomplete({
-      search: alias,
-      searchParam: "enable-actions",
-      matches: expectedMatches,
-    });
-||||||| merged common ancestors
-    await check_autocomplete({
-      search: alias,
-      searchParam: "enable-actions",
-      matches: [
-        makeSearchMatch(`${alias} `, {
-          engineName: SUGGESTIONS_ENGINE_NAME,
-          alias,
-          searchQuery: "",
-          heuristic: true,
-        }),
-      ],
-    });
-=======
   // Search in both a non-private and private context.
   for (let private of [false, true]) {
     let searchParam = "enable-actions";
@@ -261,39 +180,7 @@ add_task(async function engineWithSuggestions() {
         searchParam,
         matches: expectedMatches,
       });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    expectedMatches = [
-      makeSearchMatch(`${alias} `, {
-        engineName: SUGGESTIONS_ENGINE_NAME,
-        alias,
-        searchQuery: "",
-        heuristic: true,
-      }),
-    ];
-    if (alias[0] != "@") {
-      expectedMatches.push(historyMatch);
-    }
-    await check_autocomplete({
-      search: `${alias} `,
-      searchParam: "enable-actions",
-      matches: expectedMatches,
-    });
-||||||| merged common ancestors
-    await check_autocomplete({
-      search: `${alias} `,
-      searchParam: "enable-actions",
-      matches: [
-        makeSearchMatch(`${alias} `, {
-          engineName: SUGGESTIONS_ENGINE_NAME,
-          alias,
-          searchQuery: "",
-          heuristic: true,
-        }),
-      ],
-    });
-=======
       // Search for "alias " (trailing space)
       expectedMatches = [
         makeSearchMatch(`${alias} `, {
@@ -311,7 +198,6 @@ add_task(async function engineWithSuggestions() {
         searchParam,
         matches: expectedMatches,
       });
->>>>>>> upstream-releases
 
       // Search for "alias historyTitle" -- Include the history title so that
       // the history result is eligible to be shown.  Whether or not it's

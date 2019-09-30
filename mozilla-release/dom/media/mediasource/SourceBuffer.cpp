@@ -326,25 +326,6 @@ void SourceBuffer::RangeRemoval(double aStart, double aEnd) {
   StartUpdating();
 
   RefPtr<SourceBuffer> self = this;
-<<<<<<< HEAD
-  mTrackBuffersManager
-      ->RangeRemoval(TimeUnit::FromSeconds(aStart), TimeUnit::FromSeconds(aEnd))
-      ->Then(mAbstractMainThread, __func__,
-             [self](bool) {
-               self->mPendingRemoval.Complete();
-               self->StopUpdating();
-             },
-             []() { MOZ_ASSERT(false); })
-||||||| merged common ancestors
-    mTrackBuffersManager->RangeRemoval(TimeUnit::FromSeconds(aStart),
-                                       TimeUnit::FromSeconds(aEnd))
-      ->Then(mAbstractMainThread, __func__,
-             [self] (bool) {
-               self->mPendingRemoval.Complete();
-               self->StopUpdating();
-             },
-             []() { MOZ_ASSERT(false); })
-=======
   mTrackBuffersManager
       ->RangeRemoval(TimeUnit::FromSeconds(aStart), TimeUnit::FromSeconds(aEnd))
       ->Then(
@@ -354,7 +335,6 @@ void SourceBuffer::RangeRemoval(double aStart, double aEnd) {
             self->StopUpdating();
           },
           []() { MOZ_ASSERT(false); })
->>>>>>> upstream-releases
       ->Track(mPendingRemoval);
 }
 

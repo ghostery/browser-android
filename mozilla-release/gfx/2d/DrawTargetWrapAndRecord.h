@@ -16,15 +16,8 @@ namespace gfx {
 class DrawTargetWrapAndRecord : public DrawTarget {
  public:
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(DrawTargetWrapAndRecord, override)
-<<<<<<< HEAD
-  DrawTargetWrapAndRecord(DrawEventRecorder *aRecorder, DrawTarget *aDT,
-                          bool aHasData = false);
-||||||| merged common ancestors
-  DrawTargetWrapAndRecord(DrawEventRecorder *aRecorder, DrawTarget *aDT, bool aHasData = false);
-=======
   DrawTargetWrapAndRecord(DrawEventRecorder* aRecorder, DrawTarget* aDT,
                           bool aHasData = false);
->>>>>>> upstream-releases
 
   ~DrawTargetWrapAndRecord();
 
@@ -61,27 +54,6 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aOptions General draw options that are applied to the operation
    * aSurfOptions DrawSurface options that are applied
    */
-<<<<<<< HEAD
-  virtual void DrawSurface(
-      SourceSurface *aSurface, const Rect &aDest, const Rect &aSource,
-      const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
-      const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void DrawFilter(FilterNode *aNode, const Rect &aSourceRect,
-                          const Point &aDestPoint,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void DrawSurface(SourceSurface *aSurface,
-                           const Rect &aDest,
-                           const Rect &aSource,
-                           const DrawSurfaceOptions &aSurfOptions = DrawSurfaceOptions(),
-                           const DrawOptions &aOptions = DrawOptions()) override;
-
-  virtual void DrawFilter(FilterNode *aNode,
-                          const Rect &aSourceRect,
-                          const Point &aDestPoint,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void DrawSurface(
       SourceSurface* aSurface, const Rect& aDest, const Rect& aSource,
       const DrawSurfaceOptions& aSurfOptions = DrawSurfaceOptions(),
@@ -90,7 +62,6 @@ class DrawTargetWrapAndRecord : public DrawTarget {
   virtual void DrawFilter(FilterNode* aNode, const Rect& aSourceRect,
                           const Point& aDestPoint,
                           const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
   /*
    * Blend a surface to the draw target with a shadow. The shadow is drawn as a
@@ -106,21 +77,9 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aSigma Sigma used for the guassian filter kernel
    * aOperator Composition operator used
    */
-<<<<<<< HEAD
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
-                                     const Point &aDest, const Color &aColor,
-                                     const Point &aOffset, Float aSigma,
-||||||| merged common ancestors
-  virtual void DrawSurfaceWithShadow(SourceSurface *aSurface,
-                                     const Point &aDest,
-                                     const Color &aColor,
-                                     const Point &aOffset,
-                                     Float aSigma,
-=======
   virtual void DrawSurfaceWithShadow(SourceSurface* aSurface,
                                      const Point& aDest, const Color& aColor,
                                      const Point& aOffset, Float aSigma,
->>>>>>> upstream-releases
                                      CompositionOp aOperator) override;
 
   /*
@@ -140,17 +99,8 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aSourceRect Source rectangle to be copied
    * aDest Destination point to copy the surface to
    */
-<<<<<<< HEAD
-  virtual void CopySurface(SourceSurface *aSurface, const IntRect &aSourceRect,
-                           const IntPoint &aDestination) override;
-||||||| merged common ancestors
-  virtual void CopySurface(SourceSurface *aSurface,
-                           const IntRect &aSourceRect,
-                           const IntPoint &aDestination) override;
-=======
   virtual void CopySurface(SourceSurface* aSurface, const IntRect& aSourceRect,
                            const IntPoint& aDestination) override;
->>>>>>> upstream-releases
 
   /*
    * Fill a rectangle on the DrawTarget with a certain source pattern.
@@ -159,17 +109,8 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aPattern Pattern that forms the source of this filling operation
    * aOptions Options that are applied to this operation
    */
-<<<<<<< HEAD
-  virtual void FillRect(const Rect &aRect, const Pattern &aPattern,
-                        const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void FillRect(const Rect &aRect,
-                        const Pattern &aPattern,
-                        const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void FillRect(const Rect& aRect, const Pattern& aPattern,
                         const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
   /*
    * Stroke a rectangle on the DrawTarget with a certain source pattern.
@@ -178,20 +119,9 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aPattern Pattern that forms the source of this stroking operation
    * aOptions Options that are applied to this operation
    */
-<<<<<<< HEAD
-  virtual void StrokeRect(const Rect &aRect, const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void StrokeRect(const Rect &aRect,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void StrokeRect(const Rect& aRect, const Pattern& aPattern,
                           const StrokeOptions& aStrokeOptions = StrokeOptions(),
                           const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
   /*
    * Stroke a line on the DrawTarget with a certain source pattern.
@@ -201,23 +131,10 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aPattern Pattern that forms the source of this stroking operation
    * aOptions Options that are applied to this operation
    */
-<<<<<<< HEAD
-  virtual void StrokeLine(const Point &aStart, const Point &aEnd,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void StrokeLine(const Point &aStart,
-                          const Point &aEnd,
-                          const Pattern &aPattern,
-                          const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                          const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void StrokeLine(const Point& aStart, const Point& aEnd,
                           const Pattern& aPattern,
                           const StrokeOptions& aStrokeOptions = StrokeOptions(),
                           const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
   /*
    * Stroke a path on the draw target with a certain source pattern.
@@ -227,23 +144,10 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aStrokeOptions Stroke options used for this operation
    * aOptions Draw options used for this operation
    */
-<<<<<<< HEAD
-  virtual void Stroke(const Path *aPath, const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                      const DrawOptions &aOptions = DrawOptions()) override;
-
-||||||| merged common ancestors
-  virtual void Stroke(const Path *aPath,
-                      const Pattern &aPattern,
-                      const StrokeOptions &aStrokeOptions = StrokeOptions(),
-                      const DrawOptions &aOptions = DrawOptions()) override;
-  
-=======
   virtual void Stroke(const Path* aPath, const Pattern& aPattern,
                       const StrokeOptions& aStrokeOptions = StrokeOptions(),
                       const DrawOptions& aOptions = DrawOptions()) override;
 
->>>>>>> upstream-releases
   /*
    * Fill a path on the draw target with a certain source pattern.
    *
@@ -251,35 +155,15 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aPattern Pattern that should be used for the fill
    * aOptions Draw options used for this operation
    */
-<<<<<<< HEAD
-  virtual void Fill(const Path *aPath, const Pattern &aPattern,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void Fill(const Path *aPath,
-                    const Pattern &aPattern,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void Fill(const Path* aPath, const Pattern& aPattern,
                     const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
   /*
    * Fill a series of clyphs on the draw target with a certain source pattern.
    */
-<<<<<<< HEAD
-  virtual void FillGlyphs(ScaledFont *aFont, const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void FillGlyphs(ScaledFont *aFont,
-                          const GlyphBuffer &aBuffer,
-                          const Pattern &aPattern,
-                          const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void FillGlyphs(ScaledFont* aFont, const GlyphBuffer& aBuffer,
                           const Pattern& aPattern,
                           const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
   /*
    * This takes a source pattern and a mask, and composites the source pattern
@@ -290,32 +174,12 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aMask Mask pattern
    * aOptions Drawing options
    */
-<<<<<<< HEAD
-  virtual void Mask(const Pattern &aSource, const Pattern &aMask,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void Mask(const Pattern &aSource,
-                    const Pattern &aMask,
-                    const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void Mask(const Pattern& aSource, const Pattern& aMask,
                     const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void MaskSurface(
-      const Pattern &aSource, SourceSurface *aMask, Point aOffset,
-      const DrawOptions &aOptions = DrawOptions()) override;
-||||||| merged common ancestors
-  virtual void MaskSurface(const Pattern &aSource,
-                           SourceSurface *aMask,
-                           Point aOffset,
-                           const DrawOptions &aOptions = DrawOptions()) override;
-=======
   virtual void MaskSurface(
       const Pattern& aSource, SourceSurface* aMask, Point aOffset,
       const DrawOptions& aOptions = DrawOptions()) override;
->>>>>>> upstream-releases
 
   /*
    * Push a clip to the DrawTarget.
@@ -353,20 +217,9 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * @param aCopyBackground Whether to copy the background into the layer, this
    *                        is only supported when aOpaque is true.
    */
-<<<<<<< HEAD
-  virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface *aMask,
-                         const Matrix &aMaskTransform,
-                         const IntRect &aBounds = IntRect(),
-||||||| merged common ancestors
-  virtual void PushLayer(bool aOpaque, Float aOpacity,
-                         SourceSurface* aMask,
-                         const Matrix& aMaskTransform,
-                         const IntRect& aBounds = IntRect(),
-=======
   virtual void PushLayer(bool aOpaque, Float aOpacity, SourceSurface* aMask,
                          const Matrix& aMaskTransform,
                          const IntRect& aBounds = IntRect(),
->>>>>>> upstream-releases
                          bool aCopyBackground = false) override;
 
   /**
@@ -383,72 +236,35 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * The SourceSurface does not take ownership of aData, and may be freed at any
    * time.
    */
-<<<<<<< HEAD
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
-      unsigned char *aData, const IntSize &aSize, int32_t aStride,
-      SurfaceFormat aFormat) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(unsigned char *aData,
-                                                                  const IntSize &aSize,
-                                                                  int32_t aStride,
-                                                                  SurfaceFormat aFormat) const override;
-=======
   virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromData(
       unsigned char* aData, const IntSize& aSize, int32_t aStride,
       SurfaceFormat aFormat) const override;
->>>>>>> upstream-releases
 
   /*
    * Create a SourceSurface optimized for use with this DrawTarget from
    * an arbitrary other SourceSurface. This may return aSourceSurface or some
    * other existing surface.
    */
-<<<<<<< HEAD
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
-      SourceSurface *aSurface) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(SourceSurface *aSurface) const override;
-=======
   virtual already_AddRefed<SourceSurface> OptimizeSourceSurface(
       SourceSurface* aSurface) const override;
->>>>>>> upstream-releases
 
   /*
    * Create a SourceSurface for a type of NativeSurface. This may fail if the
    * draw target does not know how to deal with the type of NativeSurface passed
    * in.
    */
-<<<<<<< HEAD
-  virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
-      const NativeSurface &aSurface) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<SourceSurface>
-    CreateSourceSurfaceFromNativeSurface(const NativeSurface &aSurface) const override;
-=======
   virtual already_AddRefed<SourceSurface> CreateSourceSurfaceFromNativeSurface(
       const NativeSurface& aSurface) const override;
->>>>>>> upstream-releases
 
   /*
    * Create a DrawTarget whose snapshot is optimized for use with this
    * DrawTarget.
    */
-<<<<<<< HEAD
-  virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
-      const IntSize &aSize, SurfaceFormat aFormat) const override;
-
-  virtual bool CanCreateSimilarDrawTarget(const IntSize &aSize,
-                                          SurfaceFormat aFormat) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<DrawTarget>
-    CreateSimilarDrawTarget(const IntSize &aSize, SurfaceFormat aFormat) const override;
-=======
   virtual already_AddRefed<DrawTarget> CreateSimilarDrawTarget(
       const IntSize& aSize, SurfaceFormat aFormat) const override;
 
   virtual bool CanCreateSimilarDrawTarget(const IntSize& aSize,
                                           SurfaceFormat aFormat) const override;
->>>>>>> upstream-releases
 
   virtual RefPtr<DrawTarget> CreateClippedDrawTarget(
       const Rect& aBounds, SurfaceFormat aFormat) override;
@@ -472,20 +288,9 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    * aExtendNone This describes how to extend the stop color outside of the
    *             gradient area.
    */
-<<<<<<< HEAD
-  virtual already_AddRefed<GradientStops> CreateGradientStops(
-      GradientStop *aStops, uint32_t aNumStops,
-      ExtendMode aExtendMode = ExtendMode::CLAMP) const override;
-||||||| merged common ancestors
-  virtual already_AddRefed<GradientStops>
-    CreateGradientStops(GradientStop *aStops,
-                        uint32_t aNumStops,
-                        ExtendMode aExtendMode = ExtendMode::CLAMP) const override;
-=======
   virtual already_AddRefed<GradientStops> CreateGradientStops(
       GradientStop* aStops, uint32_t aNumStops,
       ExtendMode aExtendMode = ExtendMode::CLAMP) const override;
->>>>>>> upstream-releases
 
   virtual already_AddRefed<FilterNode> CreateFilter(FilterType aType) override;
 
@@ -498,17 +303,9 @@ class DrawTargetWrapAndRecord : public DrawTarget {
   /* Tries to get a native surface for a DrawTarget, this may fail if the
    * draw target cannot convert to this surface type.
    */
-<<<<<<< HEAD
-  virtual void *GetNativeSurface(NativeSurfaceType aType) override {
-    return mFinalDT->GetNativeSurface(aType);
-  }
-||||||| merged common ancestors
-  virtual void *GetNativeSurface(NativeSurfaceType aType) override { return mFinalDT->GetNativeSurface(aType); }
-=======
   virtual void* GetNativeSurface(NativeSurfaceType aType) override {
     return mFinalDT->GetNativeSurface(aType);
   }
->>>>>>> upstream-releases
 
   virtual bool IsCurrentGroupOpaque() override {
     return mFinalDT->IsCurrentGroupOpaque();
@@ -524,16 +321,8 @@ class DrawTargetWrapAndRecord : public DrawTarget {
    *            called
    * @param aSimilarDT Similar DrawTarget created from aDT.mFinalDT.
    */
-<<<<<<< HEAD
-  DrawTargetWrapAndRecord(const DrawTargetWrapAndRecord *aDT,
-                          DrawTarget *aSimilarDT);
-||||||| merged common ancestors
-  DrawTargetWrapAndRecord(const DrawTargetWrapAndRecord *aDT,
-                      DrawTarget *aSimilarDT);
-=======
   DrawTargetWrapAndRecord(const DrawTargetWrapAndRecord* aDT,
                           DrawTarget* aSimilarDT);
->>>>>>> upstream-releases
 
   Path* GetPathForPathRecording(const Path* aPath) const;
   already_AddRefed<PathRecording> EnsurePathStored(const Path* aPath);

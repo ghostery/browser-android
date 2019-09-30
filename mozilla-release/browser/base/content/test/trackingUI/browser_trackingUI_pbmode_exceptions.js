@@ -14,12 +14,7 @@ var browser = null;
 
 registerCleanupFunction(function() {
   Services.prefs.clearUserPref(TP_PB_PREF);
-<<<<<<< HEAD
-||||||| merged common ancestors
-  Services.prefs.clearUserPref(CB_PREF);
-=======
   Services.prefs.clearUserPref(DTSCBN_PREF);
->>>>>>> upstream-releases
   ContentBlocking = TrackingProtection = browser = null;
   UrlClassifierTestUtils.cleanupTestTrackers();
 });
@@ -81,21 +76,6 @@ function testTrackingPage(window) {
     );
   }
 
-<<<<<<< HEAD
-  ok(hidden("#identity-popup-content-blocking-not-detected"), "blocking not detected label is hidden");
-  ok(!hidden("#identity-popup-content-blocking-detected"), "blocking detected label is visible");
-||||||| merged common ancestors
-  ok(hidden("#identity-popup-content-blocking-not-detected"), "blocking not detected label is hidden");
-  ok(!hidden("#identity-popup-content-blocking-detected"), "blocking detected label is visible");
-
-  if (Services.prefs.getBoolPref(CB_UI_PREF)) {
-    ok(!hidden("#identity-popup-content-blocking-category-list"), "category list is visible");
-    ok(hidden("#identity-popup-content-blocking-category-tracking-protection > .identity-popup-content-blocking-category-add-blocking"),
-      "TP category item is not showing add blocking");
-    ok(!hidden("#identity-popup-content-blocking-category-tracking-protection > .identity-popup-content-blocking-category-state-label"),
-      "TP category item is set to blocked");
-  }
-=======
   ok(
     hidden("#identity-popup-content-blocking-not-detected"),
     "blocking not detected label is hidden"
@@ -104,7 +84,6 @@ function testTrackingPage(window) {
     !hidden("#identity-popup-content-blocking-detected"),
     "blocking detected label is visible"
   );
->>>>>>> upstream-releases
 }
 
 function testTrackingPageUnblocked() {
@@ -132,24 +111,6 @@ function testTrackingPageUnblocked() {
   );
   ok(!hidden("#tracking-action-block"), "blockButton is visible");
   ok(hidden("#tracking-action-unblock"), "unblockButton is hidden");
-<<<<<<< HEAD
-
-  ok(hidden("#identity-popup-content-blocking-not-detected"), "blocking not detected label is hidden");
-  ok(!hidden("#identity-popup-content-blocking-detected"), "blocking detected label is visible");
-||||||| merged common ancestors
-  ok(!hidden("#identity-popup-content-blocking-disabled-label"), "disabled label is visible");
-
-  ok(hidden("#identity-popup-content-blocking-not-detected"), "blocking not detected label is hidden");
-  ok(!hidden("#identity-popup-content-blocking-detected"), "blocking detected label is visible");
-
-  if (Services.prefs.getBoolPref(CB_UI_PREF)) {
-    ok(!hidden("#identity-popup-content-blocking-category-list"), "category list is visible");
-    ok(hidden("#identity-popup-content-blocking-category-tracking-protection > .identity-popup-content-blocking-category-add-blocking"),
-      "TP category item is not showing add blocking");
-    ok(hidden("#identity-popup-content-blocking-category-tracking-protection > .identity-popup-content-blocking-category-state-label"),
-      "TP category item is not set to blocked");
-  }
-=======
 
   ok(
     hidden("#identity-popup-content-blocking-not-detected"),
@@ -159,7 +120,6 @@ function testTrackingPageUnblocked() {
     !hidden("#identity-popup-content-blocking-detected"),
     "blocking detected label is visible"
   );
->>>>>>> upstream-releases
 }
 
 add_task(async function testExceptionAddition() {

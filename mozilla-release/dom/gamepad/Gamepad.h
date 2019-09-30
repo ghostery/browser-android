@@ -37,26 +37,6 @@ const int kLeftStickYAxis = 1;
 const int kRightStickXAxis = 2;
 const int kRightStickYAxis = 3;
 
-<<<<<<< HEAD
-class Gamepad final : public nsISupports, public nsWrapperCache {
- public:
-  Gamepad(nsISupports* aParent, const nsAString& aID, uint32_t aIndex,
-          uint32_t aHashKey, GamepadMappingType aMapping, GamepadHand aHand,
-          uint32_t aDisplayID, uint32_t aNumButtons, uint32_t aNumAxes,
-          uint32_t aNumHaptics);
-||||||| merged common ancestors
-
-class Gamepad final : public nsISupports,
-                      public nsWrapperCache
-{
-public:
-  Gamepad(nsISupports* aParent,
-          const nsAString& aID, uint32_t aIndex,
-          uint32_t aHashKey,
-          GamepadMappingType aMapping, GamepadHand aHand,
-          uint32_t aDisplayID, uint32_t aNumButtons,
-          uint32_t aNumAxes, uint32_t aNumHaptics);
-=======
 class Gamepad final : public nsISupports, public nsWrapperCache {
  public:
   Gamepad(nsISupports* aParent, const nsAString& aID, uint32_t aIndex,
@@ -64,7 +44,6 @@ class Gamepad final : public nsISupports, public nsWrapperCache {
           uint32_t aDisplayID, uint32_t aNumButtons, uint32_t aNumAxes,
           uint32_t aNumHaptics, uint32_t aNumLightIndicator,
           uint32_t aNumTouchEvents);
->>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Gamepad)
@@ -111,14 +90,6 @@ class Gamepad final : public nsISupports, public nsWrapperCache {
     aButtons = mButtons;
   }
 
-<<<<<<< HEAD
-  void GetAxes(nsTArray<double>& aAxes) const { aAxes = mAxes; }
-||||||| merged common ancestors
-  void GetAxes(nsTArray<double>& aAxes) const
-  {
-    aAxes = mAxes;
-  }
-=======
   void GetAxes(nsTArray<double>& aAxes) const { aAxes = mAxes; }
 
   GamepadPose* GetPose() const { return mPose; }
@@ -127,34 +98,14 @@ class Gamepad final : public nsISupports, public nsWrapperCache {
       nsTArray<RefPtr<GamepadHapticActuator>>& aHapticActuators) const {
     aHapticActuators = mHapticActuators;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  GamepadPose* GetPose() const { return mPose; }
-||||||| merged common ancestors
-  GamepadPose* GetPose() const
-  {
-    return mPose;
-  }
-=======
   void GetLightIndicators(
       nsTArray<RefPtr<GamepadLightIndicator>>& aLightIndicators) const {
     aLightIndicators = mLightIndicators;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void GetHapticActuators(
-      nsTArray<RefPtr<GamepadHapticActuator>>& aHapticActuators) const {
-    aHapticActuators = mHapticActuators;
-||||||| merged common ancestors
-  void GetHapticActuators(nsTArray<RefPtr<GamepadHapticActuator>>& aHapticActuators) const
-  {
-    aHapticActuators = mHapticActuators;
-=======
   void GetTouchEvents(nsTArray<RefPtr<GamepadTouch>>& aTouchEvents) const {
     aTouchEvents = mTouchEvents;
->>>>>>> upstream-releases
   }
 
  private:

@@ -11,53 +11,6 @@ add_task(async function setup() {
 add_task(async function test_1() {
   await restartWithLocales(["fr-FR"]);
 
-<<<<<<< HEAD
-  let xpi = AddonTestUtils.createTempWebExtensionFile({
-    manifest: {
-      "name": "__MSG_name__",
-      "description": "__MSG_description__",
-      default_locale: "en",
-
-      applications: {
-        gecko: {
-          "id": "addon1@tests.mozilla.org",
-        },
-      },
-    },
-
-    files: {
-      "_locales/en/messages.json": {
-        name: {
-          message: "Fallback Name",
-          description: "name",
-        },
-        description: {
-          message: "Fallback Description",
-          description: "description",
-        },
-      },
-      "_locales/fr_FR/messages.json": {
-        name: {
-          message: "fr-FR Name",
-          description: "name",
-        },
-        description: {
-          message: "fr-FR Description",
-          description: "description",
-        },
-      },
-      "_locales/de-DE/messages.json": {
-        name: {
-          message: "de-DE Name",
-          description: "name",
-        },
-      },
-    },
-  });
-
-||||||| merged common ancestors
-  let xpi = AddonTestUtils.createTempXPIFile(ADDONS.test_locale);
-=======
   let xpi = AddonTestUtils.createTempWebExtensionFile({
     manifest: {
       name: "__MSG_name__",
@@ -101,7 +54,6 @@ add_task(async function test_1() {
     },
   });
 
->>>>>>> upstream-releases
   let install = await AddonManager.getInstallForFile(xpi);
   Assert.equal(install.addon.name, "fr-FR Name");
   Assert.equal(install.addon.description, "fr-FR Description");

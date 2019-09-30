@@ -19,7 +19,7 @@ class TableAccessible;
 class ia2AccessibleTable : public IAccessibleTable, public IAccessibleTable2 {
  public:
   // IUnknown
-  STDMETHODIMP QueryInterface(REFIID, void **);
+  STDMETHODIMP QueryInterface(REFIID, void**);
 
   // IAccessibleTable
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_accessibleAt(
@@ -136,17 +136,8 @@ class ia2AccessibleTable : public IAccessibleTable, public IAccessibleTable2 {
       /* [retval][out] */ boolean* isSelected);
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_modelChange(
-<<<<<<< HEAD
-      /* [retval][out] */ IA2TableModelChange *modelChange);
-
-||||||| merged common ancestors
-      /* [retval][out] */ IA2TableModelChange *modelChange);
-
-
-=======
       /* [retval][out] */ IA2TableModelChange* modelChange);
 
->>>>>>> upstream-releases
   // IAccessibleTable2
 
   virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_cellAt(
@@ -169,18 +160,10 @@ class ia2AccessibleTable : public IAccessibleTable, public IAccessibleTable2 {
       /* [out, size_is(,*nRows)] */ long** selectedRows,
       /* [out, retval] */ long* nRows);
 
-<<<<<<< HEAD
- protected:
-  ia2AccessibleTable(TableAccessible *aTable) : mTable(aTable) {}
-||||||| merged common ancestors
-protected:
-  ia2AccessibleTable(TableAccessible* aTable) : mTable(aTable) {}
-=======
  protected:
   ia2AccessibleTable(TableAccessible* aTable) : mTable(aTable) {}
->>>>>>> upstream-releases
 
-  TableAccessible *mTable;
+  TableAccessible* mTable;
 };
 
 }  // namespace a11y

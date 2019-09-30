@@ -215,16 +215,8 @@ class EffectSet {
     return mPropertiesForAnimationsLevel;
   }
 
-<<<<<<< HEAD
- private:
-  static nsAtom* GetEffectSetPropertyAtom(CSSPseudoElementType aPseudoType);
-||||||| merged common ancestors
-private:
-  static nsAtom* GetEffectSetPropertyAtom(CSSPseudoElementType aPseudoType);
-=======
  private:
   static nsAtom* GetEffectSetPropertyAtom(PseudoStyleType aPseudoType);
->>>>>>> upstream-releases
 
   OwningEffectSet mEffects;
 

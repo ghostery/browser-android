@@ -12,10 +12,6 @@ use crate::Atom;
 use servo_arc::Arc;
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ToCss};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use values::serialize_atom_identifier;
-=======
 
 /// An <image> | <none> (for background-image, for example).
 #[derive(
@@ -46,7 +42,6 @@ impl<I> ImageLayer<I> {
         ImageLayer::None
     }
 }
->>>>>>> upstream-releases
 
 /// An [image].
 ///

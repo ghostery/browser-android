@@ -4,15 +4,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "Image.h"
-<<<<<<< HEAD
-#include "gfxPrefs.h"
-#include "Layers.h"  // for LayerManager
-||||||| merged common ancestors
-#include "Layers.h"               // for LayerManager
-=======
 
 #include "Layers.h"  // for LayerManager
->>>>>>> upstream-releases
 #include "nsRefreshDriver.h"
 #include "nsContentUtils.h"
 #include "mozilla/SizeOfState.h"
@@ -103,24 +96,6 @@ void ImageResource::SetCurrentImage(ImageContainer* aContainer,
   } else {
     aContainer->SetCurrentImages(imageList);
   }
-<<<<<<< HEAD
-
-  // If we are generating full frames, and we are animated, then we should
-  // request that the image container be treated as such, to avoid display
-  // list rebuilding to update frames for WebRender.
-  if (gfxPrefs::ImageAnimatedGenerateFullFrames() &&
-      mProgressTracker->GetProgress() & FLAG_IS_ANIMATED) {
-    if (aDirtyRect) {
-      layers::SharedSurfacesChild::UpdateAnimation(aContainer, aSurface,
-                                                   aDirtyRect.ref());
-    } else {
-      IntRect dirtyRect(IntPoint(0, 0), aSurface->GetSize());
-      layers::SharedSurfacesChild::UpdateAnimation(aContainer, aSurface,
-                                                   dirtyRect);
-    }
-  }
-||||||| merged common ancestors
-=======
 
   // If we are animated, then we should request that the image container be
   // treated as such, to avoid display list rebuilding to update frames for
@@ -135,7 +110,6 @@ void ImageResource::SetCurrentImage(ImageContainer* aContainer,
                                                    dirtyRect);
     }
   }
->>>>>>> upstream-releases
 }
 
 ImgDrawResult ImageResource::GetImageContainerImpl(
@@ -287,15 +261,7 @@ ImgDrawResult ImageResource::GetImageContainerImpl(
   return drawResult;
 }
 
-<<<<<<< HEAD
-void ImageResource::UpdateImageContainer(const Maybe<IntRect>& aDirtyRect) {
-||||||| merged common ancestors
-void
-ImageResource::UpdateImageContainer()
-{
-=======
 bool ImageResource::UpdateImageContainer(const Maybe<IntRect>& aDirtyRect) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   for (int i = mImageContainers.Length() - 1; i >= 0; --i) {
@@ -427,23 +393,6 @@ void ImageResource::SendOnUnlockedDraw(uint32_t aFlags) {
     NotNull<RefPtr<ImageResource>> image = WrapNotNull(this);
     nsCOMPtr<nsIEventTarget> eventTarget = mProgressTracker->GetEventTarget();
     nsCOMPtr<nsIRunnable> ev = NS_NewRunnableFunction(
-<<<<<<< HEAD
-        "image::ImageResource::SendOnUnlockedDraw", [=]() -> void {
-          RefPtr<ProgressTracker> tracker = image->GetProgressTracker();
-          if (tracker) {
-            tracker->OnUnlockedDraw();
-          }
-        });
-    eventTarget->Dispatch(ev.forget(), NS_DISPATCH_NORMAL);
-||||||| merged common ancestors
-      "image::ImageResource::SendOnUnlockedDraw", [=]() -> void {
-        RefPtr<ProgressTracker> tracker = image->GetProgressTracker();
-        if (tracker) {
-          tracker->OnUnlockedDraw();
-        }
-      });
-    eventTarget->Dispatch(ev.forget(), NS_DISPATCH_NORMAL);
-=======
         "image::ImageResource::SendOnUnlockedDraw", [=]() -> void {
           RefPtr<ProgressTracker> tracker = image->GetProgressTracker();
           if (tracker) {
@@ -452,7 +401,6 @@ void ImageResource::SendOnUnlockedDraw(uint32_t aFlags) {
         });
     eventTarget->Dispatch(CreateMediumHighRunnable(ev.forget()),
                           NS_DISPATCH_NORMAL);
->>>>>>> upstream-releases
   }
 }
 

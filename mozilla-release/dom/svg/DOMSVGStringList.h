@@ -50,21 +50,9 @@ class DOMSVGStringList final : public nsISupports, public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(DOMSVGStringList)
 
-<<<<<<< HEAD
-  nsSVGElement* GetParentObject() const { return mElement; }
-  virtual JSObject* WrapObject(JSContext* aCx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  nsSVGElement* GetParentObject() const
-  {
-    return mElement;
-  }
-  virtual JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-=======
   dom::SVGElement* GetParentObject() const { return mElement; }
   virtual JSObject* WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) override;
->>>>>>> upstream-releases
 
   uint32_t NumberOfItems() const;
   uint32_t Length() const;
@@ -91,34 +79,16 @@ class DOMSVGStringList final : public nsISupports, public nsWrapperCache {
    * call requesting the DOM wrapper for the SVGStringList will naturally
    * result in a new DOMSVGStringList being returned.
    */
-<<<<<<< HEAD
-  static already_AddRefed<DOMSVGStringList> GetDOMWrapper(
-      SVGStringList* aList, nsSVGElement* aElement,
-      bool aIsConditionalProcessingAttribute, uint8_t aAttrEnum);
-||||||| merged common ancestors
-  static already_AddRefed<DOMSVGStringList>
-    GetDOMWrapper(SVGStringList *aList,
-                  nsSVGElement *aElement,
-                  bool aIsConditionalProcessingAttribute,
-                  uint8_t aAttrEnum);
-=======
   static already_AddRefed<DOMSVGStringList> GetDOMWrapper(
       SVGStringList* aList, dom::SVGElement* aElement,
       bool aIsConditionalProcessingAttribute, uint8_t aAttrEnum);
->>>>>>> upstream-releases
 
  private:
   /**
    * Only our static GetDOMWrapper() factory method may create objects of our
    * type.
    */
-<<<<<<< HEAD
-  DOMSVGStringList(nsSVGElement* aElement,
-||||||| merged common ancestors
-  DOMSVGStringList(nsSVGElement *aElement,
-=======
   DOMSVGStringList(dom::SVGElement* aElement,
->>>>>>> upstream-releases
                    bool aIsConditionalProcessingAttribute, uint8_t aAttrEnum)
       : mElement(aElement),
         mAttrEnum(aAttrEnum),

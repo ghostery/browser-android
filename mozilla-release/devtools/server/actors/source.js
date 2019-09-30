@@ -15,7 +15,6 @@ const DevToolsUtils = require("devtools/shared/DevToolsUtils");
 const { assert, fetch } = DevToolsUtils;
 const { joinURI } = require("devtools/shared/path");
 const { sourceSpec } = require("devtools/shared/specs/source");
-const { findClosestScriptBySource } = require("devtools/server/actors/utils/closest-scripts");
 
 loader.lazyRequireGetter(
   this,
@@ -251,27 +250,6 @@ const SourceActor = ActorClassWithSpec(sourceSpec, {
       return this.dbg.replayingContent(this.url);
     }
 
-<<<<<<< HEAD
-      if (isWasm) {
-        const wasm = this.source.binary;
-        const buffer = wasm.buffer;
-        assert(
-          wasm.byteOffset === 0 && wasm.byteLength === buffer.byteLength,
-          "Typed array from wasm source binary must cover entire buffer"
-        );
-        return toResolvedContent(buffer);
-      }
-||||||| merged common ancestors
-      if (isWasm && this.dbg.allowWasmBinarySource) {
-        const wasm = this.source.binary;
-        const buffer = wasm.buffer;
-        assert(
-          wasm.byteOffset === 0 && wasm.byteLength === buffer.byteLength,
-          "Typed array from wasm source binary must cover entire buffer"
-        );
-        return toResolvedContent(buffer);
-      }
-=======
     // Use `source.text` if it exists, is not the "no source" string, and
     // the content type of the source is JavaScript or it is synthesized
     // wasm. It will be "no source" if the Debugger API wasn't able to load
@@ -287,7 +265,6 @@ const SourceActor = ActorClassWithSpec(sourceSpec, {
     ) {
       return toResolvedContent(this.source.text);
     }
->>>>>>> upstream-releases
 
     // Only load the HTML page source from cache (which exists when
     // there are inline sources). Otherwise, we can't trust the
@@ -554,74 +531,6 @@ const SourceActor = ActorClassWithSpec(sourceSpec, {
         script => !actor.hasScript(script)
       );
 
-<<<<<<< HEAD
-      // This is a column breakpoint, so we are interested in all column
-      // offsets that correspond to the given line *and* column number.
-      for (const [script, columnToOffsetMap] of columnToOffsetMaps) {
-        for (const { columnNumber: column, offset } of columnToOffsetMap) {
-          if (column >= generatedColumn && column <= generatedLastColumn) {
-            entryPoints.push({ script, offsets: [offset] });
-          }
-        }
-      }
-
-      // If we don't find any matching entrypoints,
-      // then we should see if the breakpoint comes before or after the column offsets.
-      if (entryPoints.length === 0) {
-        // It's not entirely clear if the scripts that make it here can come
-        // from a variety of sources. This function allows filtering by URL
-        // so it seems like it may be possible and we are erring on the side
-        // of caution by handling it here.
-        const closestScripts = findClosestScriptBySource(
-          columnToOffsetMaps.map(pair => pair[0]),
-          generatedLine,
-          generatedColumn,
-        );
-
-        const columnToOffsetLookup = new Map(columnToOffsetMaps);
-        for (const script of closestScripts) {
-          const columnToOffsetMap = columnToOffsetLookup.get(script);
-
-          if (columnToOffsetMap.length > 0) {
-            const firstColumnOffset = columnToOffsetMap[0];
-            const lastColumnOffset = columnToOffsetMap[columnToOffsetMap.length - 1];
-
-            if (generatedColumn < firstColumnOffset.columnNumber) {
-              entryPoints.push({ script, offsets: [firstColumnOffset.offset] });
-            }
-
-            if (generatedColumn > lastColumnOffset.columnNumber) {
-              entryPoints.push({ script, offsets: [lastColumnOffset.offset] });
-            }
-          }
-||||||| merged common ancestors
-      // This is a column breakpoint, so we are interested in all column
-      // offsets that correspond to the given line *and* column number.
-      for (const [script, columnToOffsetMap] of columnToOffsetMaps) {
-        for (const { columnNumber: column, offset } of columnToOffsetMap) {
-          if (column >= generatedColumn && column <= generatedLastColumn) {
-            entryPoints.push({ script, offsets: [offset] });
-          }
-        }
-      }
-
-      // If we don't find any matching entrypoints,
-      // then we should see if the breakpoint comes before or after the column offsets.
-      if (entryPoints.length === 0) {
-        for (const [script, columnToOffsetMap] of columnToOffsetMaps) {
-          if (columnToOffsetMap.length > 0) {
-            const firstColumnOffset = columnToOffsetMap[0];
-            const lastColumnOffset = columnToOffsetMap[columnToOffsetMap.length - 1];
-
-            if (generatedColumn < firstColumnOffset.columnNumber) {
-              entryPoints.push({ script, offsets: [firstColumnOffset.offset] });
-            }
-
-            if (generatedColumn > lastColumnOffset.columnNumber) {
-              entryPoints.push({ script, offsets: [lastColumnOffset.offset] });
-            }
-          }
-=======
       for (const script of scripts) {
         // Check to see if the script contains a breakpoint position at
         // this line and column.
@@ -636,7 +545,6 @@ const SourceActor = ActorClassWithSpec(sourceSpec, {
         if (possibleBreakpoint) {
           const { offset } = possibleBreakpoint;
           entryPoints.push({ script, offsets: [offset] });
->>>>>>> upstream-releases
         }
       }
     }

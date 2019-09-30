@@ -313,19 +313,9 @@ ${helpers.predefined_type(
 ${helpers.predefined_type(
     "-webkit-text-stroke-width",
     "BorderSideWidth",
-<<<<<<< HEAD
-    "crate::values::computed::NonNegativeLength::new(0.)",
-    initial_specified_value="specified::BorderSideWidth::Length(specified::Length::zero())",
-    computed_type="crate::values::computed::NonNegativeLength",
-||||||| merged common ancestors
-    "::values::computed::NonNegativeLength::new(0.)",
-    initial_specified_value="specified::BorderSideWidth::Length(specified::Length::zero())",
-    computed_type="::values::computed::NonNegativeLength",
-=======
     "crate::values::computed::NonNegativeLength::new(0.)",
     initial_specified_value="specified::BorderSideWidth::zero()",
     computed_type="crate::values::computed::NonNegativeLength",
->>>>>>> upstream-releases
     products="gecko",
     flags="APPLIES_TO_FIRST_LETTER APPLIES_TO_FIRST_LINE APPLIES_TO_PLACEHOLDER",
     spec="https://compat.spec.whatwg.org/#the-webkit-text-stroke-width",

@@ -550,20 +550,6 @@ nsresult nsStorageInputStream::Seek(uint32_t aPosition) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsStorageInputStream::Serialize(InputStreamParams& aParams,
-                                     FileDescriptorArray&) {
-  nsCString combined;
-  int64_t offset;
-  nsresult rv = Tell(&offset);
-||||||| merged common ancestors
-void
-nsStorageInputStream::Serialize(InputStreamParams& aParams, FileDescriptorArray&)
-{
-  nsCString combined;
-  int64_t offset;
-  nsresult rv = Tell(&offset);
-=======
 void nsStorageInputStream::Serialize(InputStreamParams& aParams,
                                      FileDescriptorArray&, bool aDelayedStart,
                                      uint32_t aMaxSize, uint32_t* aSizeUsed,
@@ -602,7 +588,6 @@ void nsStorageInputStream::SerializeInternal(InputStreamParams& aParams,
 
   uint64_t remaining = 0;
   nsresult rv = Available(&remaining);
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_SUCCEEDED(rv));
 
   if (remaining >= aMaxSize) {
@@ -637,42 +622,11 @@ void nsStorageInputStream::SerializeInternal(InputStreamParams& aParams,
   aParams = params;
 }
 
-<<<<<<< HEAD
-Maybe<uint64_t> nsStorageInputStream::ExpectedSerializedLength() {
-  uint64_t remaining = 0;
-  DebugOnly<nsresult> rv = Available(&remaining);
-  MOZ_ASSERT(NS_SUCCEEDED(rv));
-  return Some(remaining);
-}
-
 bool nsStorageInputStream::Deserialize(const InputStreamParams& aParams,
                                        const FileDescriptorArray&) {
   MOZ_ASSERT_UNREACHABLE(
       "We should never attempt to deserialize a storage "
       "input stream.");
-||||||| merged common ancestors
-Maybe<uint64_t>
-nsStorageInputStream::ExpectedSerializedLength()
-{
-  uint64_t remaining = 0;
-  DebugOnly<nsresult> rv = Available(&remaining);
-  MOZ_ASSERT(NS_SUCCEEDED(rv));
-  return Some(remaining);
-}
-
-bool
-nsStorageInputStream::Deserialize(const InputStreamParams& aParams,
-                                  const FileDescriptorArray&)
-{
-  MOZ_ASSERT_UNREACHABLE("We should never attempt to deserialize a storage "
-                         "input stream.");
-=======
-bool nsStorageInputStream::Deserialize(const InputStreamParams& aParams,
-                                       const FileDescriptorArray&) {
-  MOZ_ASSERT_UNREACHABLE(
-      "We should never attempt to deserialize a storage "
-      "input stream.");
->>>>>>> upstream-releases
   return false;
 }
 

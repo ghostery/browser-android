@@ -137,19 +137,7 @@ class nsHtml5Parser final : public nsIParser, public nsSupportsWeakReference {
    * @param   aKey a key unique to the script element that caused this call
    * @param   aLastCall true if .close() false if .write()
    */
-<<<<<<< HEAD
-  nsresult Parse(const nsAString& aSourceBuffer, void* aKey,
-                 const nsACString& aContentType, bool aLastCall,
-                 nsDTDMode aMode = eDTDMode_autodetect);
-||||||| merged common ancestors
-  nsresult Parse(const nsAString& aSourceBuffer,
-                 void* aKey,
-                 const nsACString& aContentType,
-                 bool aLastCall,
-                 nsDTDMode aMode = eDTDMode_autodetect);
-=======
   nsresult Parse(const nsAString& aSourceBuffer, void* aKey, bool aLastCall);
->>>>>>> upstream-releases
 
   /**
    * Stops the parser prematurely
@@ -226,18 +214,8 @@ class nsHtml5Parser final : public nsIParser, public nsSupportsWeakReference {
   /**
    * Initializes the parser to load from a channel.
    */
-<<<<<<< HEAD
-  virtual nsresult Initialize(nsIDocument* aDoc, nsIURI* aURI,
-                              nsISupports* aContainer, nsIChannel* aChannel);
-||||||| merged common ancestors
-  virtual nsresult Initialize(nsIDocument* aDoc,
-                              nsIURI* aURI,
-                              nsISupports* aContainer,
-                              nsIChannel* aChannel);
-=======
   virtual nsresult Initialize(mozilla::dom::Document* aDoc, nsIURI* aURI,
                               nsISupports* aContainer, nsIChannel* aChannel);
->>>>>>> upstream-releases
 
   inline nsHtml5Tokenizer* GetTokenizer() { return mTokenizer; }
 
@@ -272,11 +250,6 @@ class nsHtml5Parser final : public nsIParser, public nsSupportsWeakReference {
    */
   nsresult ParseUntilBlocked();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   /**
    * Start our executor.  This is meant to be used from document.open() _only_
    * and does some work similar to what nsHtml5StreamParser::OnStartRequest does
@@ -285,7 +258,6 @@ private:
   nsresult StartExecutor();
 
  private:
->>>>>>> upstream-releases
   virtual ~nsHtml5Parser();
 
   // State variables

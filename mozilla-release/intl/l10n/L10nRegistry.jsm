@@ -1,23 +1,9 @@
-<<<<<<< HEAD
-const { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm", {});
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-// eslint-disable-next-line mozilla/use-services
-const appinfo = Cc["@mozilla.org/xre/app-info;1"].getService(Ci.nsIXULRuntime);
-const { FluentBundle, FluentResource } = ChromeUtils.import("resource://gre/modules/Fluent.jsm", {});
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-||||||| merged common ancestors
-const { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm", {});
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-const { FluentBundle, FluentResource } = ChromeUtils.import("resource://gre/modules/Fluent.jsm", {});
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-=======
 const { AppConstants } = ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 // eslint-disable-next-line mozilla/use-services
 const appinfo = Cc["@mozilla.org/xre/app-info;1"].getService(Ci.nsIXULRuntime);
 const { FluentBundle, FluentResource } = ChromeUtils.import("resource://gre/modules/Fluent.jsm");
 const {XPCOMUtils} = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
->>>>>>> upstream-releases
 XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
 
 const isParentProcess = appinfo.processType === appinfo.PROCESS_TYPE_DEFAULT;
@@ -99,29 +85,6 @@ const isParentProcess = appinfo.processType === appinfo.PROCESS_TYPE_DEFAULT;
  * This API should be only used in very specialized cases and
  * the uses should be reviewed by the toolkit owner/peer.
  */
-<<<<<<< HEAD
-class L10nRegistryService {
-  constructor() {
-    this.sources = new Map();
-
-    if (!isParentProcess) {
-      this._setSourcesFromSharedData();
-      Services.cpmm.sharedData.addEventListener("change", this);
-    }
-  }
-
-  handleEvent(event) {
-    if (event.type === "change") {
-      if (event.changedKeys.includes("L10nRegistry:Sources")) {
-        this._setSourcesFromSharedData();
-      }
-    }
-  }
-||||||| merged common ancestors
-const L10nRegistry = {
-  sources: new Map(),
-  bootstrap: null,
-=======
 class L10nRegistryService {
   constructor() {
     this.sources = new Map();
@@ -153,7 +116,6 @@ class L10nRegistryService {
       }
     }
   }
->>>>>>> upstream-releases
 
   /**
    * Based on the list of requested languages and resource Ids,
@@ -184,11 +146,6 @@ class L10nRegistryService {
         yield bundle;
       }
     }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-  },
-=======
   }
 
   /**
@@ -232,7 +189,6 @@ class L10nRegistryService {
   hasSource(sourceName) {
     return this.sources.has(sourceName);
   }
->>>>>>> upstream-releases
 
   /**
    * Adds a new resource source to the L10nRegistry.
@@ -277,46 +233,6 @@ class L10nRegistryService {
    */
   removeSource(sourceName) {
     this.sources.delete(sourceName);
-<<<<<<< HEAD
-    if (isParentProcess) {
-      this._synchronizeSharedData();
-      Services.locale.availableLocales = this.getAvailableLocales();
-    }
-  }
-
-  _synchronizeSharedData() {
-    const sources = new Map();
-    for (const [name, source] of this.sources.entries()) {
-      if (source.indexed) {
-        continue;
-      }
-      sources.set(name, {
-        locales: source.locales,
-        prePath: source.prePath,
-      });
-    }
-    Services.ppmm.sharedData.set("L10nRegistry:Sources", sources);
-    Services.ppmm.sharedData.flush();
-  }
-
-  _setSourcesFromSharedData() {
-    let sources = Services.cpmm.sharedData.get("L10nRegistry:Sources");
-    for (let [name, data] of sources.entries()) {
-      if (!this.sources.has(name)) {
-        const source = new FileSource(name, data.locales, data.prePath);
-        this.registerSource(source);
-      }
-    }
-    for (let name of this.sources.keys()) {
-      if (!sources.has(name)) {
-        this.removeSource(name);
-      }
-    }
-  }
-||||||| merged common ancestors
-    Services.locale.availableLocales = this.getAvailableLocales();
-  },
-=======
     if (isParentProcess) {
       this._synchronizeSharedData();
       Services.locale.availableLocales = this.getAvailableLocales();
@@ -355,7 +271,6 @@ class L10nRegistryService {
       }
     }
   }
->>>>>>> upstream-releases
 
   /**
    * Returns a list of locales for which at least one source
@@ -816,10 +731,6 @@ this.L10nRegistry.load = function(url) {
   });
 };
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-this.L10nRegistry = L10nRegistry;
-=======
 /**
  * This is a synchronous version of the `load`
  * function and should stay completely in sync with it at all
@@ -842,7 +753,6 @@ this.L10nRegistry.loadSync = function(uri) {
   }
 };
 
->>>>>>> upstream-releases
 this.FileSource = FileSource;
 this.IndexedFileSource = IndexedFileSource;
 

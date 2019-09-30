@@ -105,16 +105,8 @@ nsresult AccessibleWrap::HandleAccEvent(AccEvent* aEvent) {
     }
   }
 
-<<<<<<< HEAD
-  SessionAccessibility* sessionAcc =
-      SessionAccessibility::GetInstanceFor(accessible);
-||||||| merged common ancestors
-  SessionAccessibility* sessionAcc =
-    SessionAccessibility::GetInstanceFor(accessible);
-=======
   RefPtr<SessionAccessibility> sessionAcc =
       SessionAccessibility::GetInstanceFor(accessible);
->>>>>>> upstream-releases
   if (!sessionAcc) {
     return NS_OK;
   }
@@ -330,22 +322,6 @@ void AccessibleWrap::GetRoleDescription(role aRole,
     return;
   }
 
-<<<<<<< HEAD
-  if (aRole == roles::HEADING) {
-    nsString level;
-    rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("level"), level);
-    if (NS_SUCCEEDED(rv)) {
-      const char16_t* formatString[] = {level.get()};
-      rv = bundle->FormatStringFromName("headingLevel", formatString, 1,
-                                        aRoleDescription);
-      if (NS_SUCCEEDED(rv)) {
-        return;
-      }
-    }
-  }
-
-||||||| merged common ancestors
-=======
   if (aRole == roles::HEADING && aAttributes) {
     // The heading level is an attribute, so we need that.
     AutoTArray<nsString, 1> formatString;
@@ -360,7 +336,6 @@ void AccessibleWrap::GetRoleDescription(role aRole,
     }
   }
 
->>>>>>> upstream-releases
   GetAccService()->GetStringRole(aRole, aGeckoRole);
   rv = bundle->GetStringFromName(NS_ConvertUTF16toUTF8(aGeckoRole).get(),
                                  aRoleDescription);
@@ -452,15 +427,7 @@ bool AccessibleWrap::WrapperRangeInfo(double* aCurVal, double* aMinVal,
   return false;
 }
 
-<<<<<<< HEAD
-mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle() {
-||||||| merged common ancestors
-mozilla::java::GeckoBundle::LocalRef
-AccessibleWrap::ToBundle()
-{
-=======
 mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(bool aSmall) {
->>>>>>> upstream-releases
   nsAutoString name;
   Name(name);
   nsAutoString textValue;
@@ -483,46 +450,16 @@ mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(bool aSmall) {
 
   nsCOMPtr<nsIPersistentProperties> attributes = Attributes();
 
-<<<<<<< HEAD
-  return ToBundle(State(), Bounds(), ActionCount(), name, textValue, nodeID,
-                  curValue, minValue, maxValue, step, attributes);
-||||||| merged common ancestors
-  return ToBundle(State(), Bounds(), name, textValue, nodeID,
-                  curValue, minValue, maxValue, step, attributes);
-=======
   return ToBundle(State(), Bounds(), ActionCount(), name, textValue, nodeID,
                   description, curValue, minValue, maxValue, step, attributes);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(
-    const uint64_t aState, const nsIntRect& aBounds, const uint8_t aActionCount,
-    const nsString& aName, const nsString& aTextValue,
-    const nsString& aDOMNodeID, const double& aCurVal, const double& aMinVal,
-    const double& aMaxVal, const double& aStep,
-    nsIPersistentProperties* aAttributes) {
-||||||| merged common ancestors
-mozilla::java::GeckoBundle::LocalRef
-AccessibleWrap::ToBundle(const uint64_t aState,
-                         const nsIntRect& aBounds,
-                         const nsString& aName,
-                         const nsString& aTextValue,
-                         const nsString& aDOMNodeID,
-                         const double& aCurVal,
-                         const double& aMinVal,
-                         const double& aMaxVal,
-                         const double& aStep,
-                         nsIPersistentProperties* aAttributes)
-{
-=======
 mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(
     const uint64_t aState, const nsIntRect& aBounds, const uint8_t aActionCount,
     const nsString& aName, const nsString& aTextValue,
     const nsString& aDOMNodeID, const nsString& aDescription,
     const double& aCurVal, const double& aMinVal, const double& aMaxVal,
     const double& aStep, nsIPersistentProperties* aAttributes) {
->>>>>>> upstream-releases
   if (!IsProxy() && IsDefunct()) {
     return nullptr;
   }
@@ -607,59 +544,6 @@ mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(
     GECKOBUNDLE_PUT(nodeInfo, "rangeInfo", rangeInfo);
   }
 
-<<<<<<< HEAD
-  nsString inputTypeAttr;
-  nsAccUtils::GetAccAttr(aAttributes, nsGkAtoms::textInputType, inputTypeAttr);
-  int32_t inputType = GetInputType(inputTypeAttr);
-  if (inputType) {
-    GECKOBUNDLE_PUT(nodeInfo, "inputType",
-                    java::sdk::Integer::ValueOf(inputType));
-  }
-
-  nsString posinset;
-  nsresult rv =
-      aAttributes->GetStringProperty(NS_LITERAL_CSTRING("posinset"), posinset);
-  if (NS_SUCCEEDED(rv)) {
-    int32_t rowIndex;
-    if (sscanf(NS_ConvertUTF16toUTF8(posinset).get(), "%d", &rowIndex) > 0) {
-      GECKOBUNDLE_START(collectionItemInfo);
-      GECKOBUNDLE_PUT(collectionItemInfo, "rowIndex",
-                      java::sdk::Integer::ValueOf(rowIndex));
-      GECKOBUNDLE_PUT(collectionItemInfo, "columnIndex",
-                      java::sdk::Integer::ValueOf(0));
-      GECKOBUNDLE_PUT(collectionItemInfo, "rowSpan",
-                      java::sdk::Integer::ValueOf(1));
-      GECKOBUNDLE_PUT(collectionItemInfo, "columnSpan",
-                      java::sdk::Integer::ValueOf(1));
-      GECKOBUNDLE_FINISH(collectionItemInfo);
-
-      GECKOBUNDLE_PUT(nodeInfo, "collectionItemInfo", collectionItemInfo);
-||||||| merged common ancestors
-  nsString inputTypeAttr;
-  nsAccUtils::GetAccAttr(aAttributes, nsGkAtoms::textInputType, inputTypeAttr);
-  int32_t inputType = GetInputType(inputTypeAttr);
-  if (inputType) {
-    GECKOBUNDLE_PUT(nodeInfo, "inputType", java::sdk::Integer::ValueOf(inputType));
-  }
-
-  nsString posinset;
-  nsresult rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("posinset"), posinset);
-  if (NS_SUCCEEDED(rv)) {
-    int32_t rowIndex;
-    if (sscanf(NS_ConvertUTF16toUTF8(posinset).get(), "%d", &rowIndex) > 0) {
-      GECKOBUNDLE_START(collectionItemInfo);
-      GECKOBUNDLE_PUT(
-        collectionItemInfo, "rowIndex", java::sdk::Integer::ValueOf(rowIndex));
-      GECKOBUNDLE_PUT(
-        collectionItemInfo, "columnIndex", java::sdk::Integer::ValueOf(0));
-      GECKOBUNDLE_PUT(
-        collectionItemInfo, "rowSpan", java::sdk::Integer::ValueOf(1));
-      GECKOBUNDLE_PUT(
-        collectionItemInfo, "columnSpan", java::sdk::Integer::ValueOf(1));
-      GECKOBUNDLE_FINISH(collectionItemInfo);
-
-      GECKOBUNDLE_PUT(nodeInfo, "collectionItemInfo", collectionItemInfo);
-=======
   if (aAttributes) {
     nsString inputTypeAttr;
     nsAccUtils::GetAccAttr(aAttributes, nsGkAtoms::textInputType,
@@ -668,48 +552,8 @@ mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(
     if (inputType) {
       GECKOBUNDLE_PUT(nodeInfo, "inputType",
                       java::sdk::Integer::ValueOf(inputType));
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-  nsString colSize;
-  rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("child-item-count"),
-                                      colSize);
-  if (NS_SUCCEEDED(rv)) {
-    int32_t rowCount;
-    if (sscanf(NS_ConvertUTF16toUTF8(colSize).get(), "%d", &rowCount) > 0) {
-      GECKOBUNDLE_START(collectionInfo);
-      GECKOBUNDLE_PUT(collectionInfo, "rowCount",
-                      java::sdk::Integer::ValueOf(rowCount));
-      GECKOBUNDLE_PUT(collectionInfo, "columnCount",
-                      java::sdk::Integer::ValueOf(1));
-
-      nsString unused;
-      rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("hierarchical"),
-                                          unused);
-      if (NS_SUCCEEDED(rv)) {
-        GECKOBUNDLE_PUT(collectionInfo, "isHierarchical",
-                        java::sdk::Boolean::TRUE());
-||||||| merged common ancestors
-  nsString colSize;
-  rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("child-item-count"),
-                                      colSize);
-  if (NS_SUCCEEDED(rv)) {
-    int32_t rowCount;
-    if (sscanf(NS_ConvertUTF16toUTF8(colSize).get(), "%d", &rowCount) > 0) {
-      GECKOBUNDLE_START(collectionInfo);
-      GECKOBUNDLE_PUT(
-        collectionInfo, "rowCount", java::sdk::Integer::ValueOf(rowCount));
-      GECKOBUNDLE_PUT(
-        collectionInfo, "columnCount", java::sdk::Integer::ValueOf(1));
-
-      nsString unused;
-      rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("hierarchical"),
-                                          unused);
-      if (NS_SUCCEEDED(rv)) {
-        GECKOBUNDLE_PUT(
-          collectionInfo, "isHierarchical", java::sdk::Boolean::TRUE());
-=======
     nsString posinset;
     nsresult rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("posinset"),
                                                  posinset);
@@ -728,26 +572,9 @@ mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(
         GECKOBUNDLE_FINISH(collectionItemInfo);
 
         GECKOBUNDLE_PUT(nodeInfo, "collectionItemInfo", collectionItemInfo);
->>>>>>> upstream-releases
       }
     }
 
-<<<<<<< HEAD
-      if (IsSelect()) {
-        int32_t selectionMode = (aState & states::MULTISELECTABLE) ? 2 : 1;
-        GECKOBUNDLE_PUT(collectionInfo, "selectionMode",
-                        java::sdk::Integer::ValueOf(selectionMode));
-      }
-      GECKOBUNDLE_FINISH(collectionInfo);
-||||||| merged common ancestors
-      if (IsSelect()) {
-        int32_t selectionMode = (aState & states::MULTISELECTABLE) ? 2 : 1;
-        GECKOBUNDLE_PUT(collectionInfo,
-                        "selectionMode",
-                        java::sdk::Integer::ValueOf(selectionMode));
-      }
-      GECKOBUNDLE_FINISH(collectionInfo);
-=======
     nsString colSize;
     rv = aAttributes->GetStringProperty(NS_LITERAL_CSTRING("child-item-count"),
                                         colSize);
@@ -767,7 +594,6 @@ mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(
           GECKOBUNDLE_PUT(collectionInfo, "isHierarchical",
                           java::sdk::Boolean::TRUE());
         }
->>>>>>> upstream-releases
 
         if (IsSelect()) {
           int32_t selectionMode = (aState & states::MULTISELECTABLE) ? 2 : 1;
@@ -795,29 +621,11 @@ mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToBundle(
                     jni::IntArray::New(children.Elements(), children.Length()));
   }
 
-<<<<<<< HEAD
-  GECKOBUNDLE_PUT(nodeInfo, "children",
-                  jni::IntArray::New(children.Elements(), children.Length()));
-||||||| merged common ancestors
-  GECKOBUNDLE_PUT(nodeInfo,
-                  "children",
-                  jni::IntArray::New(children.Elements(), children.Length()));
-=======
->>>>>>> upstream-releases
   GECKOBUNDLE_FINISH(nodeInfo);
 
   return nodeInfo;
 }
 
-<<<<<<< HEAD
-mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToSmallBundle() {
-  return ToSmallBundle(State(), Bounds(), ActionCount());
-||||||| merged common ancestors
-mozilla::java::GeckoBundle::LocalRef
-AccessibleWrap::ToSmallBundle()
-{
-  return ToSmallBundle(State(), Bounds());
-=======
 void AccessibleWrap::GetTextEquiv(nsString& aText) {
   if (nsTextEquivUtils::HasNameRule(this, eNameFromSubtreeIfReqRule)) {
     // This is an accessible that normally doesn't get its name from its
@@ -826,31 +634,8 @@ void AccessibleWrap::GetTextEquiv(nsString& aText) {
   } else {
     Name(aText);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-mozilla::java::GeckoBundle::LocalRef AccessibleWrap::ToSmallBundle(
-    const uint64_t aState, const nsIntRect& aBounds,
-    const uint8_t aActionCount) {
-  GECKOBUNDLE_START(nodeInfo);
-  GECKOBUNDLE_PUT(nodeInfo, "id", java::sdk::Integer::ValueOf(VirtualViewID()));
-
-  AccessibleWrap* parent = WrapperParent();
-  GECKOBUNDLE_PUT(
-      nodeInfo, "parentId",
-      java::sdk::Integer::ValueOf(parent ? parent->VirtualViewID() : 0));
-||||||| merged common ancestors
-mozilla::java::GeckoBundle::LocalRef
-AccessibleWrap::ToSmallBundle(const uint64_t aState, const nsIntRect& aBounds)
-{
-  GECKOBUNDLE_START(nodeInfo);
-  GECKOBUNDLE_PUT(nodeInfo, "id", java::sdk::Integer::ValueOf(VirtualViewID()));
-
-  AccessibleWrap* parent = WrapperParent();
-  GECKOBUNDLE_PUT(nodeInfo, "parentId",
-    java::sdk::Integer::ValueOf(parent ? parent->VirtualViewID() : 0));
-=======
 bool AccessibleWrap::HandleLiveRegionEvent(AccEvent* aEvent) {
   auto eventType = aEvent->GetEventType();
   if (eventType != nsIAccessibleEvent::EVENT_TEXT_INSERTED &&
@@ -862,33 +647,11 @@ bool AccessibleWrap::HandleLiveRegionEvent(AccEvent* aEvent) {
     // 2. https://bugzilla.mozilla.org/show_bug.cgi?id=1531189
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t flags = GetFlags(WrapperRole(), aState, aActionCount);
-  GECKOBUNDLE_PUT(nodeInfo, "flags", java::sdk::Integer::ValueOf(flags));
-  GECKOBUNDLE_PUT(nodeInfo, "className",
-                  java::sdk::Integer::ValueOf(AndroidClass()));
-||||||| merged common ancestors
-  uint32_t flags = GetFlags(WrapperRole(), aState);
-  GECKOBUNDLE_PUT(nodeInfo, "flags", java::sdk::Integer::ValueOf(flags));
-  GECKOBUNDLE_PUT(nodeInfo, "className", java::sdk::Integer::ValueOf(AndroidClass()));
-=======
   if (aEvent->IsFromUserInput()) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const int32_t data[4] = {aBounds.x, aBounds.y, aBounds.x + aBounds.width,
-                           aBounds.y + aBounds.height};
-  GECKOBUNDLE_PUT(nodeInfo, "bounds", jni::IntArray::New(data, 4));
-||||||| merged common ancestors
-  const int32_t data[4] = {
-    aBounds.x, aBounds.y, aBounds.x + aBounds.width, aBounds.y + aBounds.height
-  };
-  GECKOBUNDLE_PUT(nodeInfo, "bounds", jni::IntArray::New(data, 4));
-=======
   nsCOMPtr<nsIPersistentProperties> attributes = Attributes();
   nsString live;
   nsresult rv =
@@ -919,7 +682,6 @@ bool AccessibleWrap::HandleLiveRegionEvent(AccEvent* aEvent) {
         break;
       }
     }
->>>>>>> upstream-releases
 
     if (atomicAncestor) {
       announcementTarget = atomicAncestor;
@@ -929,23 +691,10 @@ bool AccessibleWrap::HandleLiveRegionEvent(AccEvent* aEvent) {
     GetTextEquiv(announcement);
   }
 
-<<<<<<< HEAD
-  GECKOBUNDLE_PUT(nodeInfo, "children",
-                  jni::IntArray::New(children.Elements(), children.Length()));
-
-  GECKOBUNDLE_FINISH(nodeInfo);
-||||||| merged common ancestors
-  GECKOBUNDLE_PUT(nodeInfo,
-                  "children",
-                  jni::IntArray::New(children.Elements(), children.Length()));
-
-  GECKOBUNDLE_FINISH(nodeInfo);
-=======
   announcement.CompressWhitespace();
   if (announcement.IsEmpty()) {
     return false;
   }
->>>>>>> upstream-releases
 
   announcementTarget->Announce(announcement, priority);
   return true;

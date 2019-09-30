@@ -1071,43 +1071,6 @@ function openConnection(options) {
 
     dbOptions = dbOptions.enumerator.hasMoreElements() ? dbOptions : null;
 
-<<<<<<< HEAD
-    Services.storage.openAsyncDatabase(file, dbOptions, (status, connection) => {
-      if (!connection) {
-        log.warn(`Could not open connection to ${path}: ${status}`);
-        let error = new Components.Exception(`Could not open connection to ${path}: ${status}`,
-                                              status);
-        reject(error);
-        return;
-      }
-      log.info("Connection opened");
-      try {
-        resolve(
-          new OpenedConnection(connection.QueryInterface(Ci.mozIStorageAsyncConnection),
-                               identifier, openedOptions));
-      } catch (ex) {
-        log.warn("Could not open database", ex);
-        connection.asyncClose();
-        reject(ex);
-||||||| merged common ancestors
-    Services.storage.openAsyncDatabase(file, dbOptions, (status, connection) => {
-      if (!connection) {
-        log.warn(`Could not open connection to ${path}: ${status}`);
-        let error = new Error(`Could not open connection to ${path}: ${status}`);
-        error.status = status;
-        reject(error);
-        return;
-      }
-      log.info("Connection opened");
-      try {
-        resolve(
-          new OpenedConnection(connection.QueryInterface(Ci.mozIStorageAsyncConnection),
-                               identifier, openedOptions));
-      } catch (ex) {
-        log.warn("Could not open database", ex);
-        connection.asyncClose();
-        reject(ex);
-=======
     Services.storage.openAsyncDatabase(
       file,
       dbOptions,
@@ -1135,7 +1098,6 @@ function openConnection(options) {
           connection.asyncClose();
           reject(ex);
         }
->>>>>>> upstream-releases
       }
     );
   });

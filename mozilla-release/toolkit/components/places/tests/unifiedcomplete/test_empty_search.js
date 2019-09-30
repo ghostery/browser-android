@@ -95,17 +95,7 @@ add_task(async function test_javascript_match() {
   await check_autocomplete({
     search: "",
     searchParam: "enable-actions",
-<<<<<<< HEAD
-    matches: [
-      makeSwitchToTabMatch("http://t.foo/6", { title: "title" }),
-    ],
-||||||| merged common ancestors
-    matches: [
-               makeSwitchToTabMatch("http://t.foo/6", { title: "title" }),
-             ],
-=======
     matches: [makeSwitchToTabMatch("http://t.foo/6", { title: "title" })],
->>>>>>> upstream-releases
   });
 
   Services.prefs.clearUserPref("browser.urlbar.suggest.history");

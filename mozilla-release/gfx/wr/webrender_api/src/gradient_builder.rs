@@ -36,20 +36,11 @@ impl GradientBuilder {
         self.stops.as_ref()
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/gradient_builder.rs
-    /// Return the gradient stops vector.
-    pub fn into_stops(self) -> Vec<GradientStop> {
-        self.stops
-    }
-
-||||||| merged common ancestors
-=======
     /// Return the gradient stops vector.
     pub fn into_stops(self) -> Vec<di::GradientStop> {
         self.stops
     }
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/gradient_builder.rs
     /// Produce a linear gradient, normalize the stops.
     pub fn gradient(
         &mut self,

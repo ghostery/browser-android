@@ -195,37 +195,15 @@ static void AssertActivityIsLegal() {
     }
   }
 }
-<<<<<<< HEAD
-#define ASSERT_ACTIVITY_IS_LEGAL \
-  do {                           \
-    AssertActivityIsLegal();     \
-  } while (0)
-||||||| merged common ancestors
-#  define ASSERT_ACTIVITY_IS_LEGAL              \
-  do {                                          \
-    AssertActivityIsLegal();                    \
-  } while(0)
-=======
 #  define ASSERT_ACTIVITY_IS_LEGAL \
     do {                           \
       AssertActivityIsLegal();     \
     } while (0)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define ASSERT_ACTIVITY_IS_LEGAL \
-  do {                           \
-  } while (0)
-#endif  // DEBUG
-||||||| merged common ancestors
-#  define ASSERT_ACTIVITY_IS_LEGAL do { } while(0)
-#endif // DEBUG
-=======
 #  define ASSERT_ACTIVITY_IS_LEGAL \
     do {                           \
     } while (0)
 #endif  // DEBUG
->>>>>>> upstream-releases
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -370,17 +348,8 @@ static BloatEntry* GetBloatEntry(const char* aTypeName,
   return entry;
 }
 
-<<<<<<< HEAD
-static void DumpSerialNumbers(const SerialHash::Iterator& aHashEntry,
-                              FILE* aFd) {
-||||||| merged common ancestors
-static void
-DumpSerialNumbers(const SerialHash::Iterator& aHashEntry, FILE* aFd)
-{
-=======
 static void DumpSerialNumbers(const SerialHash::Iterator& aHashEntry, FILE* aFd,
                               bool aDumpAsStringBuffer) {
->>>>>>> upstream-releases
   SerialNumberRecord* record = aHashEntry.Data();
   auto* outputFile = aFd;
 #ifdef HAVE_CPP_DYNAMIC_CAST_TO_VOID_PTR

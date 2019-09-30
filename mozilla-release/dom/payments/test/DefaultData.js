@@ -1,20 +1,4 @@
 // testing data declation
-<<<<<<< HEAD
-const defaultMethods = [{
-  supportedMethods: "basic-card",
-  data: {
-    supportedNetworks: ['unionpay', 'visa', 'mastercard', 'amex', 'discover',
-                        'diners', 'jcb', 'mir',
-    ],
-||||||| merged common ancestors
-const defaultMethods = [{
-  supportedMethods: "basic-card",
-  data: {
-    supportedNetworks: ['unionpay', 'visa', 'mastercard', 'amex', 'discover',
-                        'diners', 'jcb', 'mir',
-    ],
-    supportedTypes: ['prepaid', 'debit', 'credit'],
-=======
 const defaultMethods = [
   {
     supportedMethods: "basic-card",
@@ -33,7 +17,6 @@ const defaultMethods = [
   },
   {
     supportedMethods: "testing-payment-method",
->>>>>>> upstream-releases
   },
 ];
 

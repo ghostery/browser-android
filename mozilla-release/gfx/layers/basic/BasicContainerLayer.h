@@ -29,29 +29,13 @@ class BasicContainerLayer : public ContainerLayer, public BasicImplData {
  protected:
   virtual ~BasicContainerLayer();
 
-<<<<<<< HEAD
- public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override {
-||||||| merged common ancestors
-public:
-  virtual void SetVisibleRegion(const LayerIntRegion& aRegion) override
-  {
-=======
  public:
   void SetVisibleRegion(const LayerIntRegion& aRegion) override {
->>>>>>> upstream-releases
     NS_ASSERTION(BasicManager()->InConstruction(),
                  "Can only set properties in construction phase");
     ContainerLayer::SetVisibleRegion(aRegion);
   }
-<<<<<<< HEAD
-  virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override {
-||||||| merged common ancestors
-  virtual bool InsertAfter(Layer* aChild, Layer* aAfter) override
-  {
-=======
   bool InsertAfter(Layer* aChild, Layer* aAfter) override {
->>>>>>> upstream-releases
     if (!BasicManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -59,14 +43,7 @@ public:
     return ContainerLayer::InsertAfter(aChild, aAfter);
   }
 
-<<<<<<< HEAD
-  virtual bool RemoveChild(Layer* aChild) override {
-||||||| merged common ancestors
-  virtual bool RemoveChild(Layer* aChild) override
-  { 
-=======
   bool RemoveChild(Layer* aChild) override {
->>>>>>> upstream-releases
     if (!BasicManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -74,14 +51,7 @@ public:
     return ContainerLayer::RemoveChild(aChild);
   }
 
-<<<<<<< HEAD
-  virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override {
-||||||| merged common ancestors
-  virtual bool RepositionChild(Layer* aChild, Layer* aAfter) override
-  {
-=======
   bool RepositionChild(Layer* aChild, Layer* aAfter) override {
->>>>>>> upstream-releases
     if (!BasicManager()->InConstruction()) {
       NS_ERROR("Can only set properties in construction phase");
       return false;
@@ -89,15 +59,8 @@ public:
     return ContainerLayer::RepositionChild(aChild, aAfter);
   }
 
-<<<<<<< HEAD
-  virtual void ComputeEffectiveTransforms(
-      const gfx::Matrix4x4& aTransformToSurface) override;
-||||||| merged common ancestors
-  virtual void ComputeEffectiveTransforms(const gfx::Matrix4x4& aTransformToSurface) override;
-=======
   void ComputeEffectiveTransforms(
       const gfx::Matrix4x4& aTransformToSurface) override;
->>>>>>> upstream-releases
 
   /**
    * Returns true when:

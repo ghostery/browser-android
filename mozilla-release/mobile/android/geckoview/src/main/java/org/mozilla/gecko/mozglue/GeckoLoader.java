@@ -8,14 +8,7 @@ package org.mozilla.gecko.mozglue;
 import org.mozilla.gecko.GeckoAppShell;
 import org.mozilla.gecko.annotation.JNITarget;
 import org.mozilla.gecko.annotation.RobocopTarget;
-<<<<<<< HEAD
 import org.mozilla.gecko.util.HardwareUtils;
-import org.mozilla.geckoview.BuildConfig;
-||||||| merged common ancestors
-import org.mozilla.geckoview.BuildConfig;
-=======
-import org.mozilla.gecko.util.HardwareUtils;
->>>>>>> upstream-releases
 
 import android.content.Context;
 import android.os.Build;
@@ -97,34 +90,6 @@ public final class GeckoLoader {
         return tmpDir;
     }
 
-<<<<<<< HEAD
-    private static String escapeDoubleQuotes(final String str) {
-        return str.replaceAll("\"", "\\\"");
-    }
-
-    private static void setupInitialPrefs(final Map<String, Object> prefs) {
-        if (prefs != null) {
-            final StringBuilder prefsEnv = new StringBuilder("MOZ_DEFAULT_PREFS=");
-            for (final String key : prefs.keySet()) {
-                prefsEnv.append(String.format("pref(\"%s\",", escapeDoubleQuotes(key)));
-                final Object value = prefs.get(key);
-                if (value instanceof String) {
-                    prefsEnv.append(String.format("\"%s\"", escapeDoubleQuotes(value.toString())));
-                } else if (value instanceof Boolean) {
-                    prefsEnv.append((Boolean)value ? "true" : "false");
-                } else {
-                    prefsEnv.append(value.toString());
-                }
-
-                prefsEnv.append(");\n");
-            }
-
-            putenv(prefsEnv.toString());
-        }
-    }
-
-||||||| merged common ancestors
-=======
     private static String escapeDoubleQuotes(final String str) {
         return str.replaceAll("\"", "\\\"");
     }
@@ -151,7 +116,6 @@ public final class GeckoLoader {
     }
 
     @SuppressWarnings("deprecation") // for Build.CPU_ABI
->>>>>>> upstream-releases
     public synchronized static void setupGeckoEnvironment(final Context context,
                                                           final String profilePath,
                                                           final Collection<String> env,
@@ -216,20 +180,11 @@ public final class GeckoLoader {
 
         setupInitialPrefs(prefs);
 
-        setupInitialPrefs(prefs);
-
         // env from extras could have reset out linker flags; set them again.
         loadLibsSetupLocked(context);
     }
 
-<<<<<<< HEAD
-    private static void loadLibsSetupLocked(Context context) {
-||||||| merged common ancestors
-    private static void loadLibsSetupLocked(Context context) {
-        // setup the libs cache
-=======
     private static void loadLibsSetupLocked(final Context context) {
->>>>>>> upstream-releases
         putenv("GRE_HOME=" + getGREDir(context).getPath());
         putenv("MOZ_ANDROID_LIBDIR=" + context.getApplicationInfo().nativeLibraryDir);
     }

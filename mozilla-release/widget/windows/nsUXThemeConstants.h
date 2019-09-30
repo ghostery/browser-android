@@ -175,22 +175,10 @@
 #endif
 #define SPI_GETFLATMENU 0x1022
 #ifndef SPI_GETMENUSHOWDELAY
-<<<<<<< HEAD
-#define SPI_GETMENUSHOWDELAY 106
-#endif  // SPI_GETMENUSHOWDELAY
-#ifndef WS_EX_LAYOUTRTL
-#define WS_EX_LAYOUTRTL 0x00400000L  // Right to left mirroring
-||||||| merged common ancestors
-#define SPI_GETMENUSHOWDELAY      106
-#endif //SPI_GETMENUSHOWDELAY
-#ifndef WS_EX_LAYOUTRTL 
-#define WS_EX_LAYOUTRTL         0x00400000L // Right to left mirroring
-=======
 #  define SPI_GETMENUSHOWDELAY 106
 #endif  // SPI_GETMENUSHOWDELAY
 #ifndef WS_EX_LAYOUTRTL
 #  define WS_EX_LAYOUTRTL 0x00400000L  // Right to left mirroring
->>>>>>> upstream-releases
 #endif
 
 // Our extra constants for passing a little bit more info to the renderer.

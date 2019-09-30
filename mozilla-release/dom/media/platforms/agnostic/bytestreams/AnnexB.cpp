@@ -205,17 +205,8 @@ static Result<Ok, nsresult> FindStartCode(BufferReader& aBr,
   return Ok();
 }
 
-<<<<<<< HEAD
-static Result<mozilla::Ok, nsresult> ParseNALUnits(ByteWriter& aBw,
-                                                   BufferReader& aBr) {
-||||||| merged common ancestors
-static Result<mozilla::Ok, nsresult>
-ParseNALUnits(ByteWriter& aBw, BufferReader& aBr)
-{
-=======
 static Result<mozilla::Ok, nsresult> ParseNALUnits(ByteWriter<BigEndian>& aBw,
                                                    BufferReader& aBr) {
->>>>>>> upstream-releases
   size_t startSize;
 
   auto rv = FindStartCode(aBr, startSize);

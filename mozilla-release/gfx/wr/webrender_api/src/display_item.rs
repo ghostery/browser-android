@@ -35,42 +35,6 @@ pub type ItemTag = (u64, u16);
 /// A grouping of fields a lot of display items need, just to avoid
 /// repeating these over and over in this file.
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_item.rs
-pub struct GenericDisplayItem<T> {
-    pub item: T,
-    pub clip_and_scroll: ClipAndScrollInfo,
-    pub info: LayoutPrimitiveInfo,
-}
-
-pub type DisplayItem = GenericDisplayItem<SpecificDisplayItem>;
-
-/// A modified version of DI where every field is borrowed instead of owned.
-/// It allows us to reduce copies during serialization.
-#[derive(Serialize)]
-pub struct SerializedDisplayItem<'a> {
-    pub item: &'a SpecificDisplayItem,
-    pub clip_and_scroll: &'a ClipAndScrollInfo,
-    pub info: &'a LayoutPrimitiveInfo,
-}
-
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-pub struct PrimitiveInfo<T> {
-    pub rect: TypedRect<f32, T>,
-    pub clip_rect: TypedRect<f32, T>,
-||||||| merged common ancestors
-pub struct GenericDisplayItem<T> {
-    pub item: T,
-    pub clip_and_scroll: ClipAndScrollInfo,
-    pub info: LayoutPrimitiveInfo,
-}
-
-pub type DisplayItem = GenericDisplayItem<SpecificDisplayItem>;
-
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-pub struct PrimitiveInfo<T> {
-    pub rect: TypedRect<f32, T>,
-    pub clip_rect: TypedRect<f32, T>,
-=======
 pub struct CommonItemProperties {
     /// Bounds of the display item to clip to. Many items are logically
     /// infinite, and rely on this clip_rect to define their bounds
@@ -85,7 +49,6 @@ pub struct CommonItemProperties {
     /// wastes a single byte (for None).
     pub hit_info: Option<ItemTag>,
     /// The CSS backface-visibility property (yes, it can be really granular)
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_item.rs
     pub is_backface_visible: bool,
 }
 
@@ -163,8 +126,6 @@ pub enum DisplayItem {
     PopReferenceFrame,
     PopStackingContext,
     PopAllShadows,
-    PushCacheMarker(CacheMarkerDisplayItem),
-    PopCacheMarker,
 }
 
 /// This is a "complete" version of the DisplayItem, with all implicit trailing
@@ -202,8 +163,6 @@ pub enum DebugDisplayItem {
     PopReferenceFrame,
     PopStackingContext,
     PopAllShadows,
-    PushCacheMarker(CacheMarkerDisplayItem),
-    PopCacheMarker,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
@@ -427,16 +386,8 @@ impl NormalBorder {
     }
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_item.rs
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize, Eq, Hash)]
-||||||| merged common ancestors
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
-=======
 #[repr(u8)]
 #[derive(Debug, Copy, Clone, MallocSizeOf, PartialEq, Serialize, Deserialize, Eq, Hash)]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_item.rs
 pub enum RepeatMode {
     Stretch,
     Repeat,
@@ -581,16 +532,8 @@ pub struct Shadow {
     pub blur_radius: f32,
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender_api/src/display_item.rs
-#[repr(u8)]
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq, Serialize, Deserialize, Ord, PartialOrd)]
-||||||| merged common ancestors
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq, Serialize, Deserialize, Ord, PartialOrd)]
-=======
 #[repr(u8)]
 #[derive(Debug, Copy, Clone, Hash, Eq, MallocSizeOf, PartialEq, Serialize, Deserialize, Ord, PartialOrd)]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender_api/src/display_item.rs
 pub enum ExtendMode {
     Clamp,
     Repeat,
@@ -659,12 +602,6 @@ pub struct ReferenceFrameDisplayListItem {
     pub origin: LayoutPoint,
     pub parent_spatial_id: SpatialId,
     pub reference_frame: ReferenceFrame,
-}
-
-/// Provides a hint to WR that it should try to cache the items
-/// within a cache marker context in an off-screen surface.
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
-pub struct CacheMarkerDisplayItem {
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]

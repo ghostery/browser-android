@@ -4,11 +4,6 @@
 
 //! Generic types for CSS values related to length.
 
-<<<<<<< HEAD
-use crate::values::computed::ExtremumLength;
-||||||| merged common ancestors
-use values::computed::ExtremumLength;
-=======
 use crate::parser::{Parse, ParserContext};
 #[cfg(feature = "gecko")]
 use crate::values::computed::ExtremumLength;
@@ -95,7 +90,6 @@ impl<LengthPercentage: Parse> Parse for LengthPercentageOrAuto<LengthPercentage>
         Self::parse_with(context, input, LengthPercentage::parse)
     }
 }
->>>>>>> upstream-releases
 
 /// A generic value for the `width`, `height`, `min-width`, or `min-height` property.
 ///
@@ -159,15 +153,9 @@ impl<LengthPercentage> Size<LengthPercentage> {
     ToAnimatedValue,
     ToAnimatedZero,
     ToComputedValue,
-<<<<<<< HEAD
-    ToCss,
-||||||| merged common ancestors
-    ToCss
-=======
     ToCss,
     ToResolvedValue,
     ToShmem,
->>>>>>> upstream-releases
 )]
 #[repr(C, u8)]
 pub enum GenericMaxSize<LengthPercent> {

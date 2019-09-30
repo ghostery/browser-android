@@ -20,16 +20,7 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class StructuredCloneBlob final : public nsIMemoryReporter,
-                                  public StructuredCloneHolder {
-||||||| merged common ancestors
-class StructuredCloneBlob final : public nsIMemoryReporter
-                                , public StructuredCloneHolder
-{
-=======
 class StructuredCloneBlob final : public nsIMemoryReporter {
->>>>>>> upstream-releases
   MOZ_DEFINE_MALLOC_SIZE_OF(MallocSizeOf)
 
  public:
@@ -62,12 +53,6 @@ class StructuredCloneBlob final : public nsIMemoryReporter {
  private:
   explicit StructuredCloneBlob();
 
-<<<<<<< HEAD
-  static already_AddRefed<StructuredCloneBlob> Create() {
-||||||| merged common ancestors
-  static already_AddRefed<StructuredCloneBlob> Create()
-  {
-=======
   class Holder : public StructuredCloneHolder {
    public:
     using StructuredCloneHolder::StructuredCloneHolder;
@@ -83,22 +68,10 @@ class StructuredCloneBlob final : public nsIMemoryReporter {
   Maybe<Holder> mHolder;
 
   static already_AddRefed<StructuredCloneBlob> Create() {
->>>>>>> upstream-releases
     RefPtr<StructuredCloneBlob> holder = new StructuredCloneBlob();
     RegisterWeakMemoryReporter(holder);
     return holder.forget();
   }
-<<<<<<< HEAD
-
-  bool ReadStructuredCloneInternal(JSContext* aCx,
-                                   JSStructuredCloneReader* aReader,
-                                   StructuredCloneHolder* aHolder);
-||||||| merged common ancestors
-
-  bool ReadStructuredCloneInternal(JSContext* aCx, JSStructuredCloneReader* aReader,
-                                   StructuredCloneHolder* aHolder);
-=======
->>>>>>> upstream-releases
 };
 
 }  // namespace dom

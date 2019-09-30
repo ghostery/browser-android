@@ -520,10 +520,6 @@ class HTMLFormElement final : public nsGenericHTMLElement,
    */
   nsresult GetActionURL(nsIURI** aActionURL, Element* aOriginatingElement);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-=======
   // Returns a number for this form that is unique within its owner document.
   // This is used by nsContentUtils::GenerateStateKey to identify form controls
   // that are inserted into the document by the parser.
@@ -536,7 +532,6 @@ class HTMLFormElement final : public nsGenericHTMLElement,
   void NodeInfoChanged(Document* aOldDoc) override;
 
  protected:
->>>>>>> upstream-releases
   //
   // Data members
   //
@@ -617,25 +612,7 @@ class HTMLFormElement final : public nsGenericHTMLElement,
    */
   bool mEverTriedInvalidSubmit;
 
-<<<<<<< HEAD
- protected:
-  /** Detection of first form to notify observers */
-  static bool gFirstFormSubmitted;
-  /** Detection of first password input to initialize the password manager */
-  static bool gPasswordManagerInitialized;
-
  private:
-||||||| merged common ancestors
-protected:
-  /** Detection of first form to notify observers */
-  static bool gFirstFormSubmitted;
-  /** Detection of first password input to initialize the password manager */
-  static bool gPasswordManagerInitialized;
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   ~HTMLFormElement();
 };
 

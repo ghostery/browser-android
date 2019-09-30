@@ -57,25 +57,7 @@ class ClearSiteData final : public nsIObserver {
                             const nsTArray<nsString>& aParams) const;
 
   // This method converts a Type to the corrisponding string format.
-<<<<<<< HEAD
   void TypeToString(Type aType, nsAString& aStr) const;
-
-  // When called, after the cleanup, PendingCleanupHolder will reload all the
-  // browsing contexts.
-  void BrowsingContextsReload(PendingCleanupHolder* aHolder,
-                              nsIPrincipal* aPrincipal) const;
-||||||| merged common ancestors
-  void
-  TypeToString(Type aType, nsAString& aStr) const;
-
-  // When called, after the cleanup, PendingCleanupHolder will reload all the
-  // browsing contexts.
-  void
-  BrowsingContextsReload(PendingCleanupHolder* aHolder,
-                         nsIPrincipal* aPrincipal) const;
-=======
-  void TypeToString(Type aType, nsAString& aStr) const;
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

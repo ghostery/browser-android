@@ -54,73 +54,6 @@ static const float glinearRGBTosRGBMap[256] = {
 
 // c = n / 255
 // c <= 0.04045f ? c / 12.92f : powf((c + 0.055f) / 1.055f, 2.4f)
-<<<<<<< HEAD
-static const float gsRGBToLinearRGBMap[256] = {
-    0.000f, 0.000f, 0.001f, 0.001f, 0.001f, 0.002f, 0.002f, 0.002f, 0.002f,
-    0.003f, 0.003f, 0.003f, 0.004f, 0.004f, 0.004f, 0.005f, 0.005f, 0.006f,
-    0.006f, 0.007f, 0.007f, 0.007f, 0.008f, 0.009f, 0.009f, 0.010f, 0.010f,
-    0.011f, 0.012f, 0.012f, 0.013f, 0.014f, 0.014f, 0.015f, 0.016f, 0.017f,
-    0.018f, 0.019f, 0.019f, 0.020f, 0.021f, 0.022f, 0.023f, 0.024f, 0.025f,
-    0.026f, 0.027f, 0.028f, 0.030f, 0.031f, 0.032f, 0.033f, 0.034f, 0.036f,
-    0.037f, 0.038f, 0.040f, 0.041f, 0.042f, 0.044f, 0.045f, 0.047f, 0.048f,
-    0.050f, 0.051f, 0.053f, 0.054f, 0.056f, 0.058f, 0.060f, 0.061f, 0.063f,
-    0.065f, 0.067f, 0.068f, 0.070f, 0.072f, 0.074f, 0.076f, 0.078f, 0.080f,
-    0.082f, 0.084f, 0.087f, 0.089f, 0.091f, 0.093f, 0.095f, 0.098f, 0.100f,
-    0.102f, 0.105f, 0.107f, 0.109f, 0.112f, 0.114f, 0.117f, 0.120f, 0.122f,
-    0.125f, 0.127f, 0.130f, 0.133f, 0.136f, 0.138f, 0.141f, 0.144f, 0.147f,
-    0.150f, 0.153f, 0.156f, 0.159f, 0.162f, 0.165f, 0.168f, 0.171f, 0.175f,
-    0.178f, 0.181f, 0.184f, 0.188f, 0.191f, 0.195f, 0.198f, 0.202f, 0.205f,
-    0.209f, 0.212f, 0.216f, 0.220f, 0.223f, 0.227f, 0.231f, 0.235f, 0.238f,
-    0.242f, 0.246f, 0.250f, 0.254f, 0.258f, 0.262f, 0.266f, 0.270f, 0.275f,
-    0.279f, 0.283f, 0.287f, 0.292f, 0.296f, 0.301f, 0.305f, 0.309f, 0.314f,
-    0.319f, 0.323f, 0.328f, 0.332f, 0.337f, 0.342f, 0.347f, 0.352f, 0.356f,
-    0.361f, 0.366f, 0.371f, 0.376f, 0.381f, 0.386f, 0.392f, 0.397f, 0.402f,
-    0.407f, 0.413f, 0.418f, 0.423f, 0.429f, 0.434f, 0.440f, 0.445f, 0.451f,
-    0.456f, 0.462f, 0.468f, 0.474f, 0.479f, 0.485f, 0.491f, 0.497f, 0.503f,
-    0.509f, 0.515f, 0.521f, 0.527f, 0.533f, 0.539f, 0.546f, 0.552f, 0.558f,
-    0.565f, 0.571f, 0.578f, 0.584f, 0.591f, 0.597f, 0.604f, 0.610f, 0.617f,
-    0.624f, 0.631f, 0.638f, 0.644f, 0.651f, 0.658f, 0.665f, 0.672f, 0.680f,
-    0.687f, 0.694f, 0.701f, 0.708f, 0.716f, 0.723f, 0.730f, 0.738f, 0.745f,
-    0.753f, 0.761f, 0.768f, 0.776f, 0.784f, 0.791f, 0.799f, 0.807f, 0.815f,
-    0.823f, 0.831f, 0.839f, 0.847f, 0.855f, 0.863f, 0.871f, 0.880f, 0.888f,
-    0.896f, 0.905f, 0.913f, 0.922f, 0.930f, 0.939f, 0.947f, 0.956f, 0.965f,
-    0.973f, 0.982f, 0.991f, 1.000f};
-||||||| merged common ancestors
-static const float gsRGBToLinearRGBMap[256] = {
-  0.000f, 0.000f, 0.001f, 0.001f, 0.001f, 0.002f, 0.002f, 0.002f,
-  0.002f, 0.003f, 0.003f, 0.003f, 0.004f, 0.004f, 0.004f, 0.005f,
-  0.005f, 0.006f, 0.006f, 0.007f, 0.007f, 0.007f, 0.008f, 0.009f,
-  0.009f, 0.010f, 0.010f, 0.011f, 0.012f, 0.012f, 0.013f, 0.014f,
-  0.014f, 0.015f, 0.016f, 0.017f, 0.018f, 0.019f, 0.019f, 0.020f,
-  0.021f, 0.022f, 0.023f, 0.024f, 0.025f, 0.026f, 0.027f, 0.028f,
-  0.030f, 0.031f, 0.032f, 0.033f, 0.034f, 0.036f, 0.037f, 0.038f,
-  0.040f, 0.041f, 0.042f, 0.044f, 0.045f, 0.047f, 0.048f, 0.050f,
-  0.051f, 0.053f, 0.054f, 0.056f, 0.058f, 0.060f, 0.061f, 0.063f,
-  0.065f, 0.067f, 0.068f, 0.070f, 0.072f, 0.074f, 0.076f, 0.078f,
-  0.080f, 0.082f, 0.084f, 0.087f, 0.089f, 0.091f, 0.093f, 0.095f,
-  0.098f, 0.100f, 0.102f, 0.105f, 0.107f, 0.109f, 0.112f, 0.114f,
-  0.117f, 0.120f, 0.122f, 0.125f, 0.127f, 0.130f, 0.133f, 0.136f,
-  0.138f, 0.141f, 0.144f, 0.147f, 0.150f, 0.153f, 0.156f, 0.159f,
-  0.162f, 0.165f, 0.168f, 0.171f, 0.175f, 0.178f, 0.181f, 0.184f,
-  0.188f, 0.191f, 0.195f, 0.198f, 0.202f, 0.205f, 0.209f, 0.212f,
-  0.216f, 0.220f, 0.223f, 0.227f, 0.231f, 0.235f, 0.238f, 0.242f,
-  0.246f, 0.250f, 0.254f, 0.258f, 0.262f, 0.266f, 0.270f, 0.275f,
-  0.279f, 0.283f, 0.287f, 0.292f, 0.296f, 0.301f, 0.305f, 0.309f,
-  0.314f, 0.319f, 0.323f, 0.328f, 0.332f, 0.337f, 0.342f, 0.347f,
-  0.352f, 0.356f, 0.361f, 0.366f, 0.371f, 0.376f, 0.381f, 0.386f,
-  0.392f, 0.397f, 0.402f, 0.407f, 0.413f, 0.418f, 0.423f, 0.429f,
-  0.434f, 0.440f, 0.445f, 0.451f, 0.456f, 0.462f, 0.468f, 0.474f,
-  0.479f, 0.485f, 0.491f, 0.497f, 0.503f, 0.509f, 0.515f, 0.521f,
-  0.527f, 0.533f, 0.539f, 0.546f, 0.552f, 0.558f, 0.565f, 0.571f,
-  0.578f, 0.584f, 0.591f, 0.597f, 0.604f, 0.610f, 0.617f, 0.624f,
-  0.631f, 0.638f, 0.644f, 0.651f, 0.658f, 0.665f, 0.672f, 0.680f,
-  0.687f, 0.694f, 0.701f, 0.708f, 0.716f, 0.723f, 0.730f, 0.738f,
-  0.745f, 0.753f, 0.761f, 0.768f, 0.776f, 0.784f, 0.791f, 0.799f,
-  0.807f, 0.815f, 0.823f, 0.831f, 0.839f, 0.847f, 0.855f, 0.863f,
-  0.871f, 0.880f, 0.888f, 0.896f, 0.905f, 0.913f, 0.922f, 0.930f,
-  0.939f, 0.947f, 0.956f, 0.965f, 0.973f, 0.982f, 0.991f, 1.000f
-};
-=======
 extern const float gsRGBToLinearRGBMap[256] = {
     0.000f, 0.000f, 0.001f, 0.001f, 0.001f, 0.002f, 0.002f, 0.002f, 0.002f,
     0.003f, 0.003f, 0.003f, 0.004f, 0.004f, 0.004f, 0.005f, 0.005f, 0.006f,
@@ -151,7 +84,6 @@ extern const float gsRGBToLinearRGBMap[256] = {
     0.823f, 0.831f, 0.839f, 0.847f, 0.855f, 0.863f, 0.871f, 0.880f, 0.888f,
     0.896f, 0.905f, 0.913f, 0.922f, 0.930f, 0.939f, 0.947f, 0.956f, 0.965f,
     0.973f, 0.982f, 0.991f, 1.000f};
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace gfx {
@@ -277,50 +209,15 @@ static already_AddRefed<FilterNode> GaussianBlur(DrawTarget* aDT,
   return nullptr;
 }
 
-<<<<<<< HEAD
-static already_AddRefed<FilterNode> Clear(DrawTarget* aDT) {
-  RefPtr<FilterNode> filter = aDT->CreateFilter(FilterType::FLOOD);
-  if (filter) {
-    filter->SetAttribute(ATT_FLOOD_COLOR, Color(0, 0, 0, 0));
-    return filter.forget();
-||||||| merged common ancestors
-  static already_AddRefed<FilterNode>
-  Clear(DrawTarget* aDT)
-  {
-    RefPtr<FilterNode> filter = aDT->CreateFilter(FilterType::FLOOD);
-    if (filter) {
-      filter->SetAttribute(ATT_FLOOD_COLOR, Color(0, 0, 0, 0));
-      return filter.forget();
-    }
-    return nullptr;
-=======
 already_AddRefed<FilterNode> Clear(DrawTarget* aDT) {
   RefPtr<FilterNode> filter = aDT->CreateFilter(FilterType::FLOOD);
   if (filter) {
     filter->SetAttribute(ATT_FLOOD_COLOR, Color(0, 0, 0, 0));
     return filter.forget();
->>>>>>> upstream-releases
   }
   return nullptr;
 }
 
-<<<<<<< HEAD
-static already_AddRefed<FilterNode> ForSurface(
-    DrawTarget* aDT, SourceSurface* aSurface,
-    const IntPoint& aSurfacePosition) {
-  RefPtr<FilterNode> filter = aDT->CreateFilter(FilterType::TRANSFORM);
-  if (filter) {
-    filter->SetAttribute(
-        ATT_TRANSFORM_MATRIX,
-||||||| merged common ancestors
-  static already_AddRefed<FilterNode>
-  ForSurface(DrawTarget* aDT, SourceSurface* aSurface,
-             const IntPoint& aSurfacePosition)
-  {
-    RefPtr<FilterNode> filter = aDT->CreateFilter(FilterType::TRANSFORM);
-    if (filter) {
-      filter->SetAttribute(ATT_TRANSFORM_MATRIX,
-=======
 already_AddRefed<FilterNode> ForSurface(DrawTarget* aDT,
                                         SourceSurface* aSurface,
                                         const IntPoint& aSurfacePosition) {
@@ -328,7 +225,6 @@ already_AddRefed<FilterNode> ForSurface(DrawTarget* aDT,
   if (filter) {
     filter->SetAttribute(
         ATT_TRANSFORM_MATRIX,
->>>>>>> upstream-releases
         Matrix::Translation(aSurfacePosition.x, aSurfacePosition.y));
     filter->SetInput(IN_TRANSFORM_IN, aSurface);
     return filter.forget();
@@ -590,17 +486,9 @@ bool ComputeColorMatrix(const ColorMatrixAttributes& aMatrixAttributes,
       break;
     }
 
-<<<<<<< HEAD
-    default: { return false; }
-||||||| merged common ancestors
-    default:
-      return NS_ERROR_FAILURE;
-
-=======
     default: {
       return false;
     }
->>>>>>> upstream-releases
   }
 
   return !ArrayEqual(aOutMatrix, identityMatrix, 20);
@@ -782,27 +670,12 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
     nsTArray<IntRect>& mSourceRegions;
     nsTArray<RefPtr<SourceSurface>>& mInputImages;
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const EmptyAttributes& aEmptyAttributes) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const EmptyAttributes& aEmptyAttributes)
-    {
-=======
     already_AddRefed<FilterNode> operator()(
         const EmptyAttributes& aEmptyAttributes) {
->>>>>>> upstream-releases
       return nullptr;
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const BlendAttributes& aBlend) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const BlendAttributes& aBlend)
-    {
-=======
     already_AddRefed<FilterNode> operator()(const BlendAttributes& aBlend) {
->>>>>>> upstream-releases
       uint32_t mode = aBlend.mBlendMode;
       RefPtr<FilterNode> filter;
       if (mode == SVG_FEBLEND_MODE_UNKNOWN) {
@@ -847,17 +720,8 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const ColorMatrixAttributes& aMatrixAttributes) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const ColorMatrixAttributes& aColorMatrix)
-    {
-      uint32_t type = aColorMatrix.mType;
-=======
     already_AddRefed<FilterNode> operator()(
         const ColorMatrixAttributes& aMatrixAttributes) {
->>>>>>> upstream-releases
       float colorMatrix[20];
       if (!ComputeColorMatrix(aMatrixAttributes, colorMatrix)) {
         RefPtr<FilterNode> filter(mSources[0]);
@@ -882,16 +746,8 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const MorphologyAttributes& aMorphology) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const MorphologyAttributes& aMorphology)
-    {
-=======
     already_AddRefed<FilterNode> operator()(
         const MorphologyAttributes& aMorphology) {
->>>>>>> upstream-releases
       Size radii = aMorphology.mRadii;
       int32_t rx = radii.width;
       int32_t ry = radii.height;
@@ -921,14 +777,7 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const FloodAttributes& aFlood) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const FloodAttributes& aFlood)
-    {
-=======
     already_AddRefed<FilterNode> operator()(const FloodAttributes& aFlood) {
->>>>>>> upstream-releases
       Color color = aFlood.mColor;
       RefPtr<FilterNode> filter = mDT->CreateFilter(FilterType::FLOOD);
       if (!filter) {
@@ -938,14 +787,7 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const TileAttributes& aTile) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const TileAttributes& aTile)
-    {
-=======
     already_AddRefed<FilterNode> operator()(const TileAttributes& aTile) {
->>>>>>> upstream-releases
       RefPtr<FilterNode> filter = mDT->CreateFilter(FilterType::TILE);
       if (!filter) {
         return nullptr;
@@ -955,22 +797,6 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const ComponentTransferAttributes& aComponentTransfer) {
-      RefPtr<FilterNode> filters[4];  // one for each FILTER_*_TRANSFER type
-      bool useRgb = aComponentTransfer.mTypes[kChannelG] ==
-                        SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN &&
-                    aComponentTransfer.mTypes[kChannelB] ==
-                        SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN;
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const ComponentTransferAttributes& aComponentTransfer)
-    {
-      RefPtr<FilterNode> filters[4]; // one for each FILTER_*_TRANSFER type
-      bool useRgb =
-        aComponentTransfer.mTypes[kChannelG] == SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN &&
-        aComponentTransfer.mTypes[kChannelB] == SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN;
-=======
     already_AddRefed<FilterNode> operator()(
         const ComponentTransferAttributes& aComponentTransfer) {
       RefPtr<FilterNode> filters[4];  // one for each FILTER_*_TRANSFER type
@@ -978,7 +804,6 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
                         SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN &&
                     aComponentTransfer.mTypes[kChannelB] ==
                         SVG_FECOMPONENTTRANSFER_TYPE_UNKNOWN;
->>>>>>> upstream-releases
 
       for (int32_t i = 0; i < 4; i++) {
         int32_t inputIndex = useRgb && i < 3 ? 0 : i;
@@ -999,14 +824,7 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return lastFilter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const OpacityAttributes& aOpacity) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const OpacityAttributes& aOpacity)
-    {
-=======
     already_AddRefed<FilterNode> operator()(const OpacityAttributes& aOpacity) {
->>>>>>> upstream-releases
       RefPtr<FilterNode> filter = mDT->CreateFilter(FilterType::OPACITY);
       if (!filter) {
         return nullptr;
@@ -1016,21 +834,10 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const ConvolveMatrixAttributes& aConvolveMatrix) {
-      RefPtr<FilterNode> filter =
-          mDT->CreateFilter(FilterType::CONVOLVE_MATRIX);
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const ConvolveMatrixAttributes& aConvolveMatrix)
-    {
-      RefPtr<FilterNode> filter = mDT->CreateFilter(FilterType::CONVOLVE_MATRIX);
-=======
     already_AddRefed<FilterNode> operator()(
         const ConvolveMatrixAttributes& aConvolveMatrix) {
       RefPtr<FilterNode> filter =
           mDT->CreateFilter(FilterType::CONVOLVE_MATRIX);
->>>>>>> upstream-releases
       if (!filter) {
         return nullptr;
       }
@@ -1061,35 +868,14 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const OffsetAttributes& aOffset) {
-      return FilterWrappers::Offset(mDT, mSources[0], aOffset.mValue);
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const OffsetAttributes& aOffset)
-    {
-      return FilterWrappers::Offset(mDT, mSources[0],
-                                    aOffset.mValue);
-=======
     already_AddRefed<FilterNode> operator()(const OffsetAttributes& aOffset) {
       return FilterWrappers::Offset(mDT, mSources[0], aOffset.mValue);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const DisplacementMapAttributes& aDisplacementMap) {
-      RefPtr<FilterNode> filter =
-          mDT->CreateFilter(FilterType::DISPLACEMENT_MAP);
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const DisplacementMapAttributes& aDisplacementMap)
-    {
-      RefPtr<FilterNode> filter = mDT->CreateFilter(FilterType::DISPLACEMENT_MAP);
-=======
     already_AddRefed<FilterNode> operator()(
         const DisplacementMapAttributes& aDisplacementMap) {
       RefPtr<FilterNode> filter =
           mDT->CreateFilter(FilterType::DISPLACEMENT_MAP);
->>>>>>> upstream-releases
       if (!filter) {
         return nullptr;
       }
@@ -1110,16 +896,8 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const TurbulenceAttributes& aTurbulence) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const TurbulenceAttributes& aTurbulence)
-    {
-=======
     already_AddRefed<FilterNode> operator()(
         const TurbulenceAttributes& aTurbulence) {
->>>>>>> upstream-releases
       RefPtr<FilterNode> filter = mDT->CreateFilter(FilterType::TURBULENCE);
       if (!filter) {
         return nullptr;
@@ -1142,15 +920,8 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return FilterWrappers::Offset(mDT, filter, aTurbulence.mOffset);
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const CompositeAttributes& aComposite) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const CompositeAttributes& aComposite)
-    {
-=======
     already_AddRefed<FilterNode> operator()(
         const CompositeAttributes& aComposite) {
->>>>>>> upstream-releases
       RefPtr<FilterNode> filter;
       uint32_t op = aComposite.mOperator;
       if (op == SVG_FECOMPOSITE_OPERATOR_ARITHMETIC) {
@@ -1187,14 +958,7 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const MergeAttributes& aMerge) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const MergeAttributes& aMerge)
-    {
-=======
     already_AddRefed<FilterNode> operator()(const MergeAttributes& aMerge) {
->>>>>>> upstream-releases
       if (mSources.Length() == 0) {
         return nullptr;
       }
@@ -1214,30 +978,14 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const GaussianBlurAttributes& aGaussianBlur) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const GaussianBlurAttributes& aGaussianBlur)
-    {
-=======
     already_AddRefed<FilterNode> operator()(
         const GaussianBlurAttributes& aGaussianBlur) {
->>>>>>> upstream-releases
       return FilterWrappers::GaussianBlur(mDT, mSources[0],
                                           aGaussianBlur.mStdDeviation);
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const DropShadowAttributes& aDropShadow) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const DropShadowAttributes& aDropShadow)
-    {
-=======
     already_AddRefed<FilterNode> operator()(
         const DropShadowAttributes& aDropShadow) {
->>>>>>> upstream-releases
       RefPtr<FilterNode> alpha = FilterWrappers::ToAlpha(mDT, mSources[0]);
       RefPtr<FilterNode> blur =
           FilterWrappers::GaussianBlur(mDT, alpha, aDropShadow.mStdDeviation);
@@ -1275,33 +1023,14 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const SpecularLightingAttributes& aLighting) {
-      return match(
-          *(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const SpecularLightingAttributes& aLighting)
-    {
-      return match(*(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
-=======
     already_AddRefed<FilterNode> operator()(
         const SpecularLightingAttributes& aLighting) {
       return operator()(
           *(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(
-        const DiffuseLightingAttributes& aLighting) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const DiffuseLightingAttributes& aLighting)
-    {
-=======
     already_AddRefed<FilterNode> operator()(
         const DiffuseLightingAttributes& aLighting) {
->>>>>>> upstream-releases
       bool isSpecular =
           mDescription.Attributes().is<SpecularLightingAttributes>();
 
@@ -1391,14 +1120,7 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return filter.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const ImageAttributes& aImage) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const ImageAttributes& aImage)
-    {
-=======
     already_AddRefed<FilterNode> operator()(const ImageAttributes& aImage) {
->>>>>>> upstream-releases
       const Matrix& TM = aImage.mTransform;
       if (!TM.Determinant()) {
         return nullptr;
@@ -1418,14 +1140,7 @@ static already_AddRefed<FilterNode> FilterNodeFromPrimitiveDescription(
       return transform.forget();
     }
 
-<<<<<<< HEAD
-    already_AddRefed<FilterNode> match(const ToAlphaAttributes& aToAlpha) {
-||||||| merged common ancestors
-    already_AddRefed<FilterNode> match(const ToAlphaAttributes& aToAlpha)
-    {
-=======
     already_AddRefed<FilterNode> operator()(const ToAlphaAttributes& aToAlpha) {
->>>>>>> upstream-releases
       return FilterWrappers::ToAlpha(mDT, mSources[0]);
     }
   };
@@ -1492,35 +1207,12 @@ static AlphaModel OutputAlphaModelForPrimitive(
 }
 
 // Returns the output FilterNode, in premultiplied sRGB space.
-<<<<<<< HEAD
-static already_AddRefed<FilterNode> FilterNodeGraphFromDescription(
-    DrawTarget* aDT, const FilterDescription& aFilter,
-    const Rect& aResultNeededRect, SourceSurface* aSourceGraphic,
-    const IntRect& aSourceGraphicRect, SourceSurface* aFillPaint,
-    const IntRect& aFillPaintRect, SourceSurface* aStrokePaint,
-    const IntRect& aStrokePaintRect,
-    nsTArray<RefPtr<SourceSurface>>& aAdditionalImages) {
-||||||| merged common ancestors
-static already_AddRefed<FilterNode>
-FilterNodeGraphFromDescription(DrawTarget* aDT,
-                               const FilterDescription& aFilter,
-                               const Rect& aResultNeededRect,
-                               SourceSurface* aSourceGraphic,
-                               const IntRect& aSourceGraphicRect,
-                               SourceSurface* aFillPaint,
-                               const IntRect& aFillPaintRect,
-                               SourceSurface* aStrokePaint,
-                               const IntRect& aStrokePaintRect,
-                               nsTArray<RefPtr<SourceSurface>>& aAdditionalImages)
-{
-=======
 already_AddRefed<FilterNode> FilterNodeGraphFromDescription(
     DrawTarget* aDT, const FilterDescription& aFilter,
     const Rect& aResultNeededRect, FilterNode* aSourceGraphic,
     const IntRect& aSourceGraphicRect, FilterNode* aFillPaint,
     FilterNode* aStrokePaint,
     nsTArray<RefPtr<SourceSurface>>& aAdditionalImages) {
->>>>>>> upstream-releases
   const nsTArray<FilterPrimitiveDescription>& primitives = aFilter.mPrimitives;
   MOZ_RELEASE_ASSERT(!primitives.IsEmpty());
 
@@ -1559,38 +1251,12 @@ already_AddRefed<FilterNode> FilterNodeGraphFromDescription(
         if (!inputFilter) {
           RefPtr<FilterNode> sourceFilterNode;
 
-<<<<<<< HEAD
-          nsTArray<SourceSurface*> primitiveSurfaces;
-          nsTArray<IntRect> primitiveSurfaceRects;
-          RefPtr<SourceSurface> surf =
-              ElementForIndex(inputIndex, primitiveSurfaces, aSourceGraphic,
-                              aFillPaint, aStrokePaint);
-          IntRect surfaceRect = ElementForIndex(
-              inputIndex, primitiveSurfaceRects, aSourceGraphicRect,
-              aFillPaintRect, aStrokePaintRect);
-          if (surf) {
-            IntPoint offset = surfaceRect.TopLeft();
-            sourceFilterNode = FilterWrappers::ForSurface(aDT, surf, offset);
-||||||| merged common ancestors
-          nsTArray<SourceSurface*> primitiveSurfaces;
-          nsTArray<IntRect> primitiveSurfaceRects;
-          RefPtr<SourceSurface> surf =
-            ElementForIndex(inputIndex, primitiveSurfaces,
-                            aSourceGraphic, aFillPaint, aStrokePaint);
-          IntRect surfaceRect =
-            ElementForIndex(inputIndex, primitiveSurfaceRects,
-                            aSourceGraphicRect, aFillPaintRect, aStrokePaintRect);
-          if (surf) {
-            IntPoint offset = surfaceRect.TopLeft();
-            sourceFilterNode = FilterWrappers::ForSurface(aDT, surf, offset);
-=======
           nsTArray<FilterNode*> primitiveFilters;
           RefPtr<FilterNode> filt =
               ElementForIndex(inputIndex, primitiveFilters, aSourceGraphic,
                               aFillPaint, aStrokePaint);
           if (filt) {
             sourceFilterNode = filt;
->>>>>>> upstream-releases
 
             // Clip the original SourceGraphic to the first filter region if the
             // surface isn't already sized appropriately.
@@ -1648,37 +1314,6 @@ already_AddRefed<FilterNode> FilterNodeGraphFromDescription(
 
 // FilterSupport
 
-<<<<<<< HEAD
-void FilterSupport::RenderFilterDescription(
-    DrawTarget* aDT, const FilterDescription& aFilter, const Rect& aRenderRect,
-    SourceSurface* aSourceGraphic, const IntRect& aSourceGraphicRect,
-    SourceSurface* aFillPaint, const IntRect& aFillPaintRect,
-    SourceSurface* aStrokePaint, const IntRect& aStrokePaintRect,
-    nsTArray<RefPtr<SourceSurface>>& aAdditionalImages, const Point& aDestPoint,
-    const DrawOptions& aOptions) {
-  RefPtr<FilterNode> resultFilter = FilterNodeGraphFromDescription(
-      aDT, aFilter, aRenderRect, aSourceGraphic, aSourceGraphicRect, aFillPaint,
-      aFillPaintRect, aStrokePaint, aStrokePaintRect, aAdditionalImages);
-||||||| merged common ancestors
-void
-FilterSupport::RenderFilterDescription(DrawTarget* aDT,
-                                       const FilterDescription& aFilter,
-                                       const Rect& aRenderRect,
-                                       SourceSurface* aSourceGraphic,
-                                       const IntRect& aSourceGraphicRect,
-                                       SourceSurface* aFillPaint,
-                                       const IntRect& aFillPaintRect,
-                                       SourceSurface* aStrokePaint,
-                                       const IntRect& aStrokePaintRect,
-                                       nsTArray<RefPtr<SourceSurface>>& aAdditionalImages,
-                                       const Point& aDestPoint,
-                                       const DrawOptions& aOptions)
-{
-  RefPtr<FilterNode> resultFilter =
-    FilterNodeGraphFromDescription(aDT, aFilter, aRenderRect,
-                                   aSourceGraphic, aSourceGraphicRect, aFillPaint, aFillPaintRect,
-                                   aStrokePaint, aStrokePaintRect, aAdditionalImages);
-=======
 void FilterSupport::RenderFilterDescription(
     DrawTarget* aDT, const FilterDescription& aFilter, const Rect& aRenderRect,
     SourceSurface* aSourceGraphic, const IntRect& aSourceGraphicRect,
@@ -1702,7 +1337,6 @@ void FilterSupport::RenderFilterDescription(
   RefPtr<FilterNode> resultFilter = FilterNodeGraphFromDescription(
       aDT, aFilter, aRenderRect, sourceGraphic, aSourceGraphicRect, fillPaint,
       strokePaint, aAdditionalImages);
->>>>>>> upstream-releases
   if (!resultFilter) {
     gfxWarning() << "Filter is NULL.";
     return;
@@ -1736,47 +1370,19 @@ static nsIntRegion ResultChangeRegionForPrimitive(
     const FilterPrimitiveDescription& mDescription;
     const nsTArray<nsIntRegion>& mInputChangeRegions;
 
-<<<<<<< HEAD
-    nsIntRegion match(const EmptyAttributes& aEmptyAttributes) {
-||||||| merged common ancestors
-    nsIntRegion match(const EmptyAttributes& aEmptyAttributes)
-    {
-=======
     nsIntRegion operator()(const EmptyAttributes& aEmptyAttributes) {
->>>>>>> upstream-releases
       return nsIntRegion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const BlendAttributes& aBlend) {
-||||||| merged common ancestors
-    nsIntRegion match(const BlendAttributes& aBlend)
-    {
-=======
     nsIntRegion operator()(const BlendAttributes& aBlend) {
->>>>>>> upstream-releases
       return UnionOfRegions(mInputChangeRegions);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ColorMatrixAttributes& aColorMatrix) {
-||||||| merged common ancestors
-    nsIntRegion match(const ColorMatrixAttributes& aColorMatrix)
-    {
-=======
     nsIntRegion operator()(const ColorMatrixAttributes& aColorMatrix) {
->>>>>>> upstream-releases
       return mInputChangeRegions[0];
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const MorphologyAttributes& aMorphology) {
-||||||| merged common ancestors
-    nsIntRegion match(const MorphologyAttributes& aMorphology)
-    {
-=======
     nsIntRegion operator()(const MorphologyAttributes& aMorphology) {
->>>>>>> upstream-releases
       Size radii = aMorphology.mRadii;
       int32_t rx = clamped(int32_t(ceil(radii.width)), 0, kMorphologyMaxRadius);
       int32_t ry =
@@ -1784,61 +1390,24 @@ static nsIntRegion ResultChangeRegionForPrimitive(
       return mInputChangeRegions[0].Inflated(nsIntMargin(ry, rx, ry, rx));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const FloodAttributes& aFlood) { return nsIntRegion(); }
-||||||| merged common ancestors
-    nsIntRegion match(const FloodAttributes& aFlood)
-    {
-      return nsIntRegion();
-    }
-=======
     nsIntRegion operator()(const FloodAttributes& aFlood) {
       return nsIntRegion();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    nsIntRegion match(const TileAttributes& aTile) {
-||||||| merged common ancestors
-    nsIntRegion match(const TileAttributes& aTile)
-    {
-=======
     nsIntRegion operator()(const TileAttributes& aTile) {
->>>>>>> upstream-releases
       return mDescription.PrimitiveSubregion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ComponentTransferAttributes& aComponentTransfer) {
-||||||| merged common ancestors
-    nsIntRegion match(const ComponentTransferAttributes& aComponentTransfer)
-    {
-=======
     nsIntRegion operator()(
         const ComponentTransferAttributes& aComponentTransfer) {
->>>>>>> upstream-releases
       return mInputChangeRegions[0];
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const OpacityAttributes& aOpacity) {
-||||||| merged common ancestors
-    nsIntRegion match(const OpacityAttributes& aOpacity)
-    {
-=======
     nsIntRegion operator()(const OpacityAttributes& aOpacity) {
->>>>>>> upstream-releases
       return UnionOfRegions(mInputChangeRegions);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ConvolveMatrixAttributes& aConvolveMatrix) {
-||||||| merged common ancestors
-    nsIntRegion match(const ConvolveMatrixAttributes& aConvolveMatrix)
-    {
-=======
     nsIntRegion operator()(const ConvolveMatrixAttributes& aConvolveMatrix) {
->>>>>>> upstream-releases
       if (aConvolveMatrix.mEdgeMode != EDGE_MODE_NONE) {
         return mDescription.PrimitiveSubregion();
       }
@@ -1853,86 +1422,37 @@ static nsIntRegion ResultChangeRegionForPrimitive(
       return mInputChangeRegions[0].Inflated(m);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const OffsetAttributes& aOffset) {
-||||||| merged common ancestors
-    nsIntRegion match(const OffsetAttributes& aOffset)
-    {
-=======
     nsIntRegion operator()(const OffsetAttributes& aOffset) {
->>>>>>> upstream-releases
       IntPoint offset = aOffset.mValue;
       return mInputChangeRegions[0].MovedBy(offset.x, offset.y);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DisplacementMapAttributes& aDisplacementMap) {
-||||||| merged common ancestors
-    nsIntRegion match(const DisplacementMapAttributes& aDisplacementMap)
-    {
-=======
     nsIntRegion operator()(const DisplacementMapAttributes& aDisplacementMap) {
->>>>>>> upstream-releases
       int32_t scale = ceil(std::abs(aDisplacementMap.mScale));
       return mInputChangeRegions[0].Inflated(
           nsIntMargin(scale, scale, scale, scale));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const TurbulenceAttributes& aTurbulence) {
-||||||| merged common ancestors
-    nsIntRegion match(const TurbulenceAttributes& aTurbulence)
-    {
-=======
     nsIntRegion operator()(const TurbulenceAttributes& aTurbulence) {
->>>>>>> upstream-releases
       return nsIntRegion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const CompositeAttributes& aComposite) {
-||||||| merged common ancestors
-    nsIntRegion match(const CompositeAttributes& aComposite)
-    {
-=======
     nsIntRegion operator()(const CompositeAttributes& aComposite) {
->>>>>>> upstream-releases
       return UnionOfRegions(mInputChangeRegions);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const MergeAttributes& aMerge) {
-||||||| merged common ancestors
-    nsIntRegion match(const MergeAttributes& aMerge)
-    {
-=======
     nsIntRegion operator()(const MergeAttributes& aMerge) {
->>>>>>> upstream-releases
       return UnionOfRegions(mInputChangeRegions);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const GaussianBlurAttributes& aGaussianBlur) {
-||||||| merged common ancestors
-    nsIntRegion match(const GaussianBlurAttributes& aGaussianBlur)
-    {
-=======
     nsIntRegion operator()(const GaussianBlurAttributes& aGaussianBlur) {
->>>>>>> upstream-releases
       const Size& stdDeviation = aGaussianBlur.mStdDeviation;
       int32_t dx = InflateSizeForBlurStdDev(stdDeviation.width);
       int32_t dy = InflateSizeForBlurStdDev(stdDeviation.height);
       return mInputChangeRegions[0].Inflated(nsIntMargin(dy, dx, dy, dx));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DropShadowAttributes& aDropShadow) {
-||||||| merged common ancestors
-    nsIntRegion match(const DropShadowAttributes& aDropShadow)
-    {
-=======
     nsIntRegion operator()(const DropShadowAttributes& aDropShadow) {
->>>>>>> upstream-releases
       IntPoint offset = aDropShadow.mOffset;
       nsIntRegion offsetRegion =
           mInputChangeRegions[0].MovedBy(offset.x, offset.y);
@@ -1945,56 +1465,23 @@ static nsIntRegion ResultChangeRegionForPrimitive(
       return blurRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const SpecularLightingAttributes& aLighting) {
-      return match(
-          *(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
-||||||| merged common ancestors
-    nsIntRegion match(const SpecularLightingAttributes& aLighting)
-    {
-      return match(*(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
-=======
     nsIntRegion operator()(const SpecularLightingAttributes& aLighting) {
       return operator()(
           *(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DiffuseLightingAttributes& aLighting) {
-||||||| merged common ancestors
-    nsIntRegion match(const DiffuseLightingAttributes& aLighting)
-    {
-=======
     nsIntRegion operator()(const DiffuseLightingAttributes& aLighting) {
->>>>>>> upstream-releases
       Size kernelUnitLength = aLighting.mKernelUnitLength;
       int32_t dx = ceil(kernelUnitLength.width);
       int32_t dy = ceil(kernelUnitLength.height);
       return mInputChangeRegions[0].Inflated(nsIntMargin(dy, dx, dy, dx));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ImageAttributes& aImage) { return nsIntRegion(); }
-||||||| merged common ancestors
-    nsIntRegion match(const ImageAttributes& aImage)
-    {
-      return nsIntRegion();
-    }
-=======
     nsIntRegion operator()(const ImageAttributes& aImage) {
       return nsIntRegion();
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    nsIntRegion match(const ToAlphaAttributes& aToAlpha) {
-||||||| merged common ancestors
-    nsIntRegion match(const ToAlphaAttributes& aToAlpha)
-    {
-=======
     nsIntRegion operator()(const ToAlphaAttributes& aToAlpha) {
->>>>>>> upstream-releases
       return mInputChangeRegions[0];
     }
   };
@@ -2003,25 +1490,11 @@ static nsIntRegion ResultChangeRegionForPrimitive(
       PrimitiveAttributesMatcher(aDescription, aInputChangeRegions));
 }
 
-<<<<<<< HEAD
-/* static */ nsIntRegion FilterSupport::ComputeResultChangeRegion(
-    const FilterDescription& aFilter, const nsIntRegion& aSourceGraphicChange,
-    const nsIntRegion& aFillPaintChange,
-    const nsIntRegion& aStrokePaintChange) {
-||||||| merged common ancestors
-/* static */ nsIntRegion
-FilterSupport::ComputeResultChangeRegion(const FilterDescription& aFilter,
-                                         const nsIntRegion& aSourceGraphicChange,
-                                         const nsIntRegion& aFillPaintChange,
-                                         const nsIntRegion& aStrokePaintChange)
-{
-=======
 /* static */
 nsIntRegion FilterSupport::ComputeResultChangeRegion(
     const FilterDescription& aFilter, const nsIntRegion& aSourceGraphicChange,
     const nsIntRegion& aFillPaintChange,
     const nsIntRegion& aStrokePaintChange) {
->>>>>>> upstream-releases
   const nsTArray<FilterPrimitiveDescription>& primitives = aFilter.mPrimitives;
   MOZ_RELEASE_ASSERT(!primitives.IsEmpty());
 
@@ -2095,36 +1568,15 @@ nsIntRegion FilterSupport::PostFilterExtentsForPrimitive(
     const FilterPrimitiveDescription& mDescription;
     const nsTArray<nsIntRegion>& mInputExtents;
 
-<<<<<<< HEAD
-    nsIntRegion match(const EmptyAttributes& aEmptyAttributes) {
-||||||| merged common ancestors
-    nsIntRegion match(const EmptyAttributes& aEmptyAttributes)
-    {
-=======
     nsIntRegion operator()(const EmptyAttributes& aEmptyAttributes) {
->>>>>>> upstream-releases
       return IntRect();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const BlendAttributes& aBlend) {
-||||||| merged common ancestors
-    nsIntRegion match(const BlendAttributes& aBlend)
-    {
-=======
     nsIntRegion operator()(const BlendAttributes& aBlend) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ColorMatrixAttributes& aColorMatrix) {
-||||||| merged common ancestors
-    nsIntRegion match(const ColorMatrixAttributes& aColorMatrix)
-    {
-=======
     nsIntRegion operator()(const ColorMatrixAttributes& aColorMatrix) {
->>>>>>> upstream-releases
       if (aColorMatrix.mType == (uint32_t)SVG_FECOLORMATRIX_TYPE_MATRIX) {
         const nsTArray<float>& values = aColorMatrix.mValues;
         if (values.Length() == 20 && values[19] > 0.0f) {
@@ -2134,14 +1586,7 @@ nsIntRegion FilterSupport::PostFilterExtentsForPrimitive(
       return mInputExtents[0];
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const MorphologyAttributes& aMorphology) {
-||||||| merged common ancestors
-    nsIntRegion match(const MorphologyAttributes& aMorphology)
-    {
-=======
     nsIntRegion operator()(const MorphologyAttributes& aMorphology) {
->>>>>>> upstream-releases
       uint32_t op = aMorphology.mOperator;
       if (op == SVG_OPERATOR_ERODE) {
         return mInputExtents[0];
@@ -2153,116 +1598,47 @@ nsIntRegion FilterSupport::PostFilterExtentsForPrimitive(
       return mInputExtents[0].Inflated(nsIntMargin(ry, rx, ry, rx));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const FloodAttributes& aFlood) {
-||||||| merged common ancestors
-    nsIntRegion match(const FloodAttributes& aFlood)
-    {
-=======
     nsIntRegion operator()(const FloodAttributes& aFlood) {
->>>>>>> upstream-releases
       if (aFlood.mColor.a == 0.0f) {
         return IntRect();
       }
       return mDescription.PrimitiveSubregion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const TileAttributes& aTile) {
-||||||| merged common ancestors
-    nsIntRegion match(const TileAttributes& aTile)
-    {
-=======
     nsIntRegion operator()(const TileAttributes& aTile) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ComponentTransferAttributes& aComponentTransfer) {
-      if (ResultOfZeroUnderTransferFunction(aComponentTransfer, kChannelA) >
-          0.0f) {
-||||||| merged common ancestors
-    nsIntRegion match(const ComponentTransferAttributes& aComponentTransfer)
-    {
-      if (ResultOfZeroUnderTransferFunction(aComponentTransfer, kChannelA) > 0.0f) {
-=======
     nsIntRegion operator()(
         const ComponentTransferAttributes& aComponentTransfer) {
       if (ResultOfZeroUnderTransferFunction(aComponentTransfer, kChannelA) >
           0.0f) {
->>>>>>> upstream-releases
         return mDescription.PrimitiveSubregion();
       }
       return mInputExtents[0];
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const OpacityAttributes& aOpacity) {
-||||||| merged common ancestors
-    nsIntRegion match(const OpacityAttributes& aOpacity)
-    {
-      if (aOpacity.mOpacity == 0.0f) {
-        return IntRect();
-      }
-=======
     nsIntRegion operator()(const OpacityAttributes& aOpacity) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ConvolveMatrixAttributes& aConvolveMatrix) {
-||||||| merged common ancestors
-    nsIntRegion match(const ConvolveMatrixAttributes& aConvolveMatrix)
-    {
-=======
     nsIntRegion operator()(const ConvolveMatrixAttributes& aConvolveMatrix) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const OffsetAttributes& aOffset) {
-||||||| merged common ancestors
-    nsIntRegion match(const OffsetAttributes& aOffset)
-    {
-=======
     nsIntRegion operator()(const OffsetAttributes& aOffset) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DisplacementMapAttributes& aDisplacementMap) {
-||||||| merged common ancestors
-    nsIntRegion match(const DisplacementMapAttributes& aDisplacementMap)
-    {
-=======
     nsIntRegion operator()(const DisplacementMapAttributes& aDisplacementMap) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const TurbulenceAttributes& aTurbulence) {
-||||||| merged common ancestors
-    nsIntRegion match(const TurbulenceAttributes& aTurbulence)
-    {
-=======
     nsIntRegion operator()(const TurbulenceAttributes& aTurbulence) {
->>>>>>> upstream-releases
       return mDescription.PrimitiveSubregion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const CompositeAttributes& aComposite) {
-||||||| merged common ancestors
-    nsIntRegion match(const CompositeAttributes& aComposite)
-    {
-=======
     nsIntRegion operator()(const CompositeAttributes& aComposite) {
->>>>>>> upstream-releases
       uint32_t op = aComposite.mOperator;
       if (op == SVG_FECOMPOSITE_OPERATOR_ARITHMETIC) {
         // The arithmetic composite primitive can draw outside the bounding
@@ -2293,81 +1669,32 @@ nsIntRegion FilterSupport::PostFilterExtentsForPrimitive(
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const MergeAttributes& aMerge) {
-||||||| merged common ancestors
-    nsIntRegion match(const MergeAttributes& aMerge)
-    {
-=======
     nsIntRegion operator()(const MergeAttributes& aMerge) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const GaussianBlurAttributes& aGaussianBlur) {
-||||||| merged common ancestors
-    nsIntRegion match(const GaussianBlurAttributes& aGaussianBlur)
-    {
-=======
     nsIntRegion operator()(const GaussianBlurAttributes& aGaussianBlur) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DropShadowAttributes& aDropShadow) {
-||||||| merged common ancestors
-    nsIntRegion match(const DropShadowAttributes& aDropShadow)
-    {
-=======
     nsIntRegion operator()(const DropShadowAttributes& aDropShadow) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DiffuseLightingAttributes& aDiffuseLighting) {
-||||||| merged common ancestors
-    nsIntRegion match(const DiffuseLightingAttributes& aDiffuseLighting)
-    {
-=======
     nsIntRegion operator()(const DiffuseLightingAttributes& aDiffuseLighting) {
->>>>>>> upstream-releases
       return mDescription.PrimitiveSubregion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const SpecularLightingAttributes& aSpecularLighting) {
-||||||| merged common ancestors
-    nsIntRegion match(const SpecularLightingAttributes& aSpecularLighting)
-    {
-=======
     nsIntRegion operator()(
         const SpecularLightingAttributes& aSpecularLighting) {
->>>>>>> upstream-releases
       return mDescription.PrimitiveSubregion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ImageAttributes& aImage) {
-||||||| merged common ancestors
-    nsIntRegion match(const ImageAttributes& aImage)
-    {
-=======
     nsIntRegion operator()(const ImageAttributes& aImage) {
->>>>>>> upstream-releases
       return mDescription.PrimitiveSubregion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ToAlphaAttributes& aToAlpha) {
-||||||| merged common ancestors
-    nsIntRegion match(const ToAlphaAttributes& aToAlpha)
-    {
-=======
     nsIntRegion operator()(const ToAlphaAttributes& aToAlpha) {
->>>>>>> upstream-releases
       return ResultChangeRegionForPrimitive(mDescription, mInputExtents);
     }
   };
@@ -2376,21 +1703,10 @@ nsIntRegion FilterSupport::PostFilterExtentsForPrimitive(
       PrimitiveAttributesMatcher(aDescription, aInputExtents));
 }
 
-<<<<<<< HEAD
-/* static */ nsIntRegion FilterSupport::ComputePostFilterExtents(
-    const FilterDescription& aFilter,
-    const nsIntRegion& aSourceGraphicExtents) {
-||||||| merged common ancestors
-/* static */ nsIntRegion
-FilterSupport::ComputePostFilterExtents(const FilterDescription& aFilter,
-                                        const nsIntRegion& aSourceGraphicExtents)
-{
-=======
 /* static */
 nsIntRegion FilterSupport::ComputePostFilterExtents(
     const FilterDescription& aFilter,
     const nsIntRegion& aSourceGraphicExtents) {
->>>>>>> upstream-releases
   const nsTArray<FilterPrimitiveDescription>& primitives = aFilter.mPrimitives;
   MOZ_RELEASE_ASSERT(!primitives.IsEmpty());
   nsTArray<nsIntRegion> postFilterExtents;
@@ -2432,47 +1748,19 @@ static nsIntRegion SourceNeededRegionForPrimitive(
     const nsIntRegion& mResultNeededRegion;
     const int32_t mInputIndex;
 
-<<<<<<< HEAD
-    nsIntRegion match(const EmptyAttributes& aEmptyAttributes) {
-||||||| merged common ancestors
-    nsIntRegion match(const EmptyAttributes& aEmptyAttributes)
-    {
-=======
     nsIntRegion operator()(const EmptyAttributes& aEmptyAttributes) {
->>>>>>> upstream-releases
       return nsIntRegion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const BlendAttributes& aBlend) {
-||||||| merged common ancestors
-    nsIntRegion match(const BlendAttributes& aBlend)
-    {
-=======
     nsIntRegion operator()(const BlendAttributes& aBlend) {
->>>>>>> upstream-releases
       return mResultNeededRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ColorMatrixAttributes& aColorMatrix) {
-||||||| merged common ancestors
-    nsIntRegion match(const ColorMatrixAttributes& aColorMatrix)
-    {
-=======
     nsIntRegion operator()(const ColorMatrixAttributes& aColorMatrix) {
->>>>>>> upstream-releases
       return mResultNeededRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const MorphologyAttributes& aMorphology) {
-||||||| merged common ancestors
-    nsIntRegion match(const MorphologyAttributes& aMorphology)
-    {
-=======
     nsIntRegion operator()(const MorphologyAttributes& aMorphology) {
->>>>>>> upstream-releases
       Size radii = aMorphology.mRadii;
       int32_t rx = clamped(int32_t(ceil(radii.width)), 0, kMorphologyMaxRadius);
       int32_t ry =
@@ -2480,62 +1768,25 @@ static nsIntRegion SourceNeededRegionForPrimitive(
       return mResultNeededRegion.Inflated(nsIntMargin(ry, rx, ry, rx));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const FloodAttributes& aFlood) {
-||||||| merged common ancestors
-    nsIntRegion match(const FloodAttributes& aFlood)
-    {
-=======
     nsIntRegion operator()(const FloodAttributes& aFlood) {
->>>>>>> upstream-releases
       MOZ_CRASH("GFX: this shouldn't be called for filters without inputs");
       return nsIntRegion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const TileAttributes& aTile) {
-      return IntRect(INT32_MIN / 2, INT32_MIN / 2, INT32_MAX, INT32_MAX);
-||||||| merged common ancestors
-    nsIntRegion match(const TileAttributes& aTile)
-    {
-      return IntRect(INT32_MIN/2, INT32_MIN/2, INT32_MAX, INT32_MAX);
-=======
     nsIntRegion operator()(const TileAttributes& aTile) {
       return IntRect(INT32_MIN / 2, INT32_MIN / 2, INT32_MAX, INT32_MAX);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ComponentTransferAttributes& aComponentTransfer) {
-||||||| merged common ancestors
-    nsIntRegion match(const ComponentTransferAttributes& aComponentTransfer)
-    {
-=======
     nsIntRegion operator()(
         const ComponentTransferAttributes& aComponentTransfer) {
->>>>>>> upstream-releases
       return mResultNeededRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const OpacityAttributes& aOpacity) {
-||||||| merged common ancestors
-    nsIntRegion match(const OpacityAttributes& aOpacity)
-    {
-=======
     nsIntRegion operator()(const OpacityAttributes& aOpacity) {
->>>>>>> upstream-releases
       return mResultNeededRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ConvolveMatrixAttributes& aConvolveMatrix) {
-||||||| merged common ancestors
-    nsIntRegion match(const ConvolveMatrixAttributes& aConvolveMatrix)
-    {
-=======
     nsIntRegion operator()(const ConvolveMatrixAttributes& aConvolveMatrix) {
->>>>>>> upstream-releases
       Size kernelUnitLength = aConvolveMatrix.mKernelUnitLength;
       IntSize kernelSize = aConvolveMatrix.mKernelSize;
       IntPoint target = aConvolveMatrix.mTarget;
@@ -2547,26 +1798,12 @@ static nsIntRegion SourceNeededRegionForPrimitive(
       return mResultNeededRegion.Inflated(m);
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const OffsetAttributes& aOffset) {
-||||||| merged common ancestors
-    nsIntRegion match(const OffsetAttributes& aOffset)
-    {
-=======
     nsIntRegion operator()(const OffsetAttributes& aOffset) {
->>>>>>> upstream-releases
       IntPoint offset = aOffset.mValue;
       return mResultNeededRegion.MovedBy(-nsIntPoint(offset.x, offset.y));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DisplacementMapAttributes& aDisplacementMap) {
-||||||| merged common ancestors
-    nsIntRegion match(const DisplacementMapAttributes& aDisplacementMap)
-    {
-=======
     nsIntRegion operator()(const DisplacementMapAttributes& aDisplacementMap) {
->>>>>>> upstream-releases
       if (mInputIndex == 1) {
         return mResultNeededRegion;
       }
@@ -2575,62 +1812,27 @@ static nsIntRegion SourceNeededRegionForPrimitive(
           nsIntMargin(scale, scale, scale, scale));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const TurbulenceAttributes& aTurbulence) {
-||||||| merged common ancestors
-    nsIntRegion match(const TurbulenceAttributes& aTurbulence)
-    {
-=======
     nsIntRegion operator()(const TurbulenceAttributes& aTurbulence) {
->>>>>>> upstream-releases
       MOZ_CRASH("GFX: this shouldn't be called for filters without inputs");
       return nsIntRegion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const CompositeAttributes& aComposite) {
-||||||| merged common ancestors
-    nsIntRegion match(const CompositeAttributes& aComposite)
-    {
-=======
     nsIntRegion operator()(const CompositeAttributes& aComposite) {
->>>>>>> upstream-releases
       return mResultNeededRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const MergeAttributes& aMerge) {
-||||||| merged common ancestors
-    nsIntRegion match(const MergeAttributes& aMerge)
-    {
-=======
     nsIntRegion operator()(const MergeAttributes& aMerge) {
->>>>>>> upstream-releases
       return mResultNeededRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const GaussianBlurAttributes& aGaussianBlur) {
-||||||| merged common ancestors
-    nsIntRegion match(const GaussianBlurAttributes& aGaussianBlur)
-    {
-=======
     nsIntRegion operator()(const GaussianBlurAttributes& aGaussianBlur) {
->>>>>>> upstream-releases
       const Size& stdDeviation = aGaussianBlur.mStdDeviation;
       int32_t dx = InflateSizeForBlurStdDev(stdDeviation.width);
       int32_t dy = InflateSizeForBlurStdDev(stdDeviation.height);
       return mResultNeededRegion.Inflated(nsIntMargin(dy, dx, dy, dx));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DropShadowAttributes& aDropShadow) {
-||||||| merged common ancestors
-    nsIntRegion match(const DropShadowAttributes& aDropShadow)
-    {
-=======
     nsIntRegion operator()(const DropShadowAttributes& aDropShadow) {
->>>>>>> upstream-releases
       IntPoint offset = aDropShadow.mOffset;
       nsIntRegion offsetRegion =
           mResultNeededRegion.MovedBy(-nsIntPoint(offset.x, offset.y));
@@ -2643,55 +1845,24 @@ static nsIntRegion SourceNeededRegionForPrimitive(
       return blurRegion;
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const SpecularLightingAttributes& aLighting) {
-      return match(
-          *(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
-||||||| merged common ancestors
-    nsIntRegion match(const SpecularLightingAttributes& aLighting)
-    {
-      return match(*(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
-=======
     nsIntRegion operator()(const SpecularLightingAttributes& aLighting) {
       return operator()(
           *(static_cast<const DiffuseLightingAttributes*>(&aLighting)));
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const DiffuseLightingAttributes& aLighting) {
-||||||| merged common ancestors
-    nsIntRegion match(const DiffuseLightingAttributes& aLighting)
-    {
-=======
     nsIntRegion operator()(const DiffuseLightingAttributes& aLighting) {
->>>>>>> upstream-releases
       Size kernelUnitLength = aLighting.mKernelUnitLength;
       int32_t dx = ceil(kernelUnitLength.width);
       int32_t dy = ceil(kernelUnitLength.height);
       return mResultNeededRegion.Inflated(nsIntMargin(dy, dx, dy, dx));
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ImageAttributes& aImage) {
-||||||| merged common ancestors
-    nsIntRegion match(const ImageAttributes& aImage)
-    {
-=======
     nsIntRegion operator()(const ImageAttributes& aImage) {
->>>>>>> upstream-releases
       MOZ_CRASH("GFX: this shouldn't be called for filters without inputs");
       return nsIntRegion();
     }
 
-<<<<<<< HEAD
-    nsIntRegion match(const ToAlphaAttributes& aToAlpha) {
-||||||| merged common ancestors
-    nsIntRegion match(const ToAlphaAttributes& aToAlpha)
-    {
-=======
     nsIntRegion operator()(const ToAlphaAttributes& aToAlpha) {
->>>>>>> upstream-releases
       return mResultNeededRegion;
     }
   };
@@ -2700,28 +1871,12 @@ static nsIntRegion SourceNeededRegionForPrimitive(
       aDescription, aResultNeededRegion, aInputIndex));
 }
 
-<<<<<<< HEAD
-/* static */ void FilterSupport::ComputeSourceNeededRegions(
-    const FilterDescription& aFilter, const nsIntRegion& aResultNeededRegion,
-    nsIntRegion& aSourceGraphicNeededRegion,
-    nsIntRegion& aFillPaintNeededRegion,
-    nsIntRegion& aStrokePaintNeededRegion) {
-||||||| merged common ancestors
-/* static */ void
-FilterSupport::ComputeSourceNeededRegions(const FilterDescription& aFilter,
-                                          const nsIntRegion& aResultNeededRegion,
-                                          nsIntRegion& aSourceGraphicNeededRegion,
-                                          nsIntRegion& aFillPaintNeededRegion,
-                                          nsIntRegion& aStrokePaintNeededRegion)
-{
-=======
 /* static */
 void FilterSupport::ComputeSourceNeededRegions(
     const FilterDescription& aFilter, const nsIntRegion& aResultNeededRegion,
     nsIntRegion& aSourceGraphicNeededRegion,
     nsIntRegion& aFillPaintNeededRegion,
     nsIntRegion& aStrokePaintNeededRegion) {
->>>>>>> upstream-releases
   const nsTArray<FilterPrimitiveDescription>& primitives = aFilter.mPrimitives;
   MOZ_ASSERT(!primitives.IsEmpty());
   if (primitives.IsEmpty()) {

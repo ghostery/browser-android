@@ -95,11 +95,6 @@ size_t SkSafeMath::Add(size_t x, size_t y) {
 size_t SkSafeMath::Mul(size_t x, size_t y) {
     SkSafeMath tmp;
     size_t prod = tmp.mul(x, y);
-<<<<<<< HEAD
-    return tmp.ok() ? prod : SIZE_MAX;
-||||||| merged common ancestors
-    return tmp.ok() ? prod : SK_MaxSizeT;
-=======
     return tmp.ok() ? prod : SIZE_MAX;
 }
 
@@ -111,5 +106,4 @@ bool sk_floats_are_unit(const float array[], size_t count) {
         is_unit &= (array[i] >= 0) & (array[i] <= 1);
     }
     return is_unit;
->>>>>>> upstream-releases
 }

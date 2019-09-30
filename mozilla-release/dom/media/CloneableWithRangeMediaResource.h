@@ -31,16 +31,9 @@ class CloneableWithRangeMediaResource : public BaseMediaResource {
   void Suspend(bool aCloseImmediately) override {}
   void Resume() override {}
   already_AddRefed<nsIPrincipal> GetCurrentPrincipal() override;
-<<<<<<< HEAD
-  nsresult ReadFromCache(char* aBuffer, int64_t aOffset,
-                         uint32_t aCount) override;
-||||||| merged common ancestors
-  nsresult ReadFromCache(char* aBuffer, int64_t aOffset, uint32_t aCount) override;
-=======
   bool HadCrossOriginRedirects() override;
   nsresult ReadFromCache(char* aBuffer, int64_t aOffset,
                          uint32_t aCount) override;
->>>>>>> upstream-releases
 
   // These methods are called off the main thread.
 

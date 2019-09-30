@@ -47,16 +47,8 @@ class ImageBridgeParent final : public PImageBridgeParent,
  protected:
   ImageBridgeParent(MessageLoop* aLoop, ProcessId aChildProcessId);
 
-<<<<<<< HEAD
- public:
-  ~ImageBridgeParent();
-||||||| merged common ancestors
-public:
-  ~ImageBridgeParent();
-=======
  public:
   virtual ~ImageBridgeParent();
->>>>>>> upstream-releases
 
   /**
    * Creates the globals of ImageBridgeParent.
@@ -73,80 +65,15 @@ public:
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
   // CompositableParentManager
-<<<<<<< HEAD
-  virtual void SendAsyncMessage(
-      const InfallibleTArray<AsyncParentMessageData>& aMessage) override;
-||||||| merged common ancestors
-  virtual void SendAsyncMessage(const InfallibleTArray<AsyncParentMessageData>& aMessage) override;
-=======
   void SendAsyncMessage(
       const InfallibleTArray<AsyncParentMessageData>& aMessage) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void NotifyNotUsed(PTextureParent* aTexture,
-                             uint64_t aTransactionId) override;
-||||||| merged common ancestors
-  virtual void NotifyNotUsed(PTextureParent* aTexture, uint64_t aTransactionId) override;
-=======
   void NotifyNotUsed(PTextureParent* aTexture,
                      uint64_t aTransactionId) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual base::ProcessId GetChildProcessId() override { return OtherPid(); }
-||||||| merged common ancestors
-  virtual base::ProcessId GetChildProcessId() override
-  {
-    return OtherPid();
-  }
-=======
   base::ProcessId GetChildProcessId() override { return OtherPid(); }
->>>>>>> upstream-releases
 
   // PImageBridge
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvUpdate(
-      EditArray&& aEdits, OpDestroyArray&& aToDestroy,
-      const uint64_t& aFwdTransactionId) override;
-
-  virtual PTextureParent* AllocPTextureParent(
-      const SurfaceDescriptor& aSharedData, const ReadLockDescriptor& aReadLock,
-      const LayersBackend& aLayersBackend, const TextureFlags& aFlags,
-      const uint64_t& aSerial,
-      const wr::MaybeExternalImageId& aExternalImageId) override;
-  virtual bool DeallocPTextureParent(PTextureParent* actor) override;
-
-  virtual mozilla::ipc::IPCResult RecvNewCompositable(
-      const CompositableHandle& aHandle, const TextureInfo& aInfo,
-      const LayersBackend& aLayersBackend) override;
-  virtual mozilla::ipc::IPCResult RecvReleaseCompositable(
-      const CompositableHandle& aHandle) override;
-
-  PMediaSystemResourceManagerParent* AllocPMediaSystemResourceManagerParent()
-      override;
-  bool DeallocPMediaSystemResourceManagerParent(
-      PMediaSystemResourceManagerParent* aActor) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvUpdate(EditArray&& aEdits, OpDestroyArray&& aToDestroy,
-                                          const uint64_t& aFwdTransactionId) override;
-
-  virtual PTextureParent* AllocPTextureParent(const SurfaceDescriptor& aSharedData,
-                                              const ReadLockDescriptor& aReadLock,
-                                              const LayersBackend& aLayersBackend,
-                                              const TextureFlags& aFlags,
-                                              const uint64_t& aSerial,
-                                              const wr::MaybeExternalImageId& aExternalImageId) override;
-  virtual bool DeallocPTextureParent(PTextureParent* actor) override;
-
-  virtual mozilla::ipc::IPCResult RecvNewCompositable(const CompositableHandle& aHandle,
-                                                      const TextureInfo& aInfo,
-                                                      const LayersBackend& aLayersBackend) override;
-  virtual mozilla::ipc::IPCResult RecvReleaseCompositable(const CompositableHandle& aHandle) override;
-
-  PMediaSystemResourceManagerParent* AllocPMediaSystemResourceManagerParent() override;
-  bool DeallocPMediaSystemResourceManagerParent(PMediaSystemResourceManagerParent* aActor) override;
-=======
   mozilla::ipc::IPCResult RecvUpdate(EditArray&& aEdits,
                                      OpDestroyArray&& aToDestroy,
                                      const uint64_t& aFwdTransactionId);
@@ -167,7 +94,6 @@ public:
   PMediaSystemResourceManagerParent* AllocPMediaSystemResourceManagerParent();
   bool DeallocPMediaSystemResourceManagerParent(
       PMediaSystemResourceManagerParent* aActor);
->>>>>>> upstream-releases
 
   // Shutdown step 1
   mozilla::ipc::IPCResult RecvWillClose();

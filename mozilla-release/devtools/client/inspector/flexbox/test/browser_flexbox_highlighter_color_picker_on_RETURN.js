@@ -21,18 +21,10 @@ add_task(async function() {
   const cPicker = layoutView.swatchColorPickerTooltip;
   const spectrum = cPicker.spectrum;
 
-<<<<<<< HEAD
-  const onColorSwatchRendered = waitForDOM(doc,
-    ".layout-flexbox-wrapper .layout-color-swatch");
-||||||| merged common ancestors
-  const onColorSwatchRendered = waitForDOM(doc,
-    "#layout-flexbox-container .layout-color-swatch");
-=======
   const onColorSwatchRendered = waitForDOM(
     doc,
     ".layout-flexbox-wrapper .layout-color-swatch"
   );
->>>>>>> upstream-releases
   await selectNode("#container", inspector);
   const [swatch] = await onColorSwatchRendered;
 

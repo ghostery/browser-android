@@ -8,14 +8,7 @@
 #ifndef GrProcessorAnalysis_DEFINED
 #define GrProcessorAnalysis_DEFINED
 
-<<<<<<< HEAD
-#include "GrColor.h"
-#include "SkPM4f.h"
-||||||| merged common ancestors
-#include "GrColor.h"
-=======
 #include "SkColorData.h"
->>>>>>> upstream-releases
 
 class GrDrawOp;
 class GrFragmentProcessor;
@@ -130,27 +123,7 @@ public:
      * there are only N processors) sees its expected input. If this returns 0 then there are no
      * processors to eliminate.
      */
-<<<<<<< HEAD
-    int initialProcessorsToEliminate(GrColor* newPipelineInputColor) const {
-        if (fProcessorsToEliminate > 0) {
-            *newPipelineInputColor = GrColor4f::FromRGBA4f(fLastKnownOutputColor).toGrColor();
-        }
-        return fProcessorsToEliminate;
-    }
-
     int initialProcessorsToEliminate(SkPMColor4f* newPipelineInputColor) const {
-||||||| merged common ancestors
-    int initialProcessorsToEliminate(GrColor* newPipelineInputColor) const {
-        if (fProcessorsToEliminate > 0) {
-            *newPipelineInputColor = fLastKnownOutputColor.toGrColor();
-        }
-        return fProcessorsToEliminate;
-    }
-
-    int initialProcessorsToEliminate(GrColor4f* newPipelineInputColor) const {
-=======
-    int initialProcessorsToEliminate(SkPMColor4f* newPipelineInputColor) const {
->>>>>>> upstream-releases
         if (fProcessorsToEliminate > 0) {
             *newPipelineInputColor = fLastKnownOutputColor;
         }
@@ -162,13 +135,7 @@ public:
      */
     GrProcessorAnalysisColor outputColor() const {
         if (fKnowOutputColor) {
-<<<<<<< HEAD
-            return GrColor4f::FromRGBA4f(fLastKnownOutputColor).toGrColor();
-||||||| merged common ancestors
-            return fLastKnownOutputColor.toGrColor();
-=======
             return fLastKnownOutputColor;
->>>>>>> upstream-releases
         }
         return fIsOpaque ? GrProcessorAnalysisColor::Opaque::kYes
                          : GrProcessorAnalysisColor::Opaque::kNo;

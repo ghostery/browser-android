@@ -420,53 +420,6 @@ add_task(async function test_addCrash() {
   let crashes = await m.getCrashes();
   Assert.equal(crashes.length, 0);
 
-<<<<<<< HEAD
-  await m.addCrash(m.PROCESS_TYPE_MAIN, m.CRASH_TYPE_CRASH,
-                   "main-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_MAIN, m.CRASH_TYPE_HANG,
-                   "main-hang", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_CONTENT, m.CRASH_TYPE_CRASH,
-                   "content-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_CONTENT, m.CRASH_TYPE_HANG,
-                   "content-hang", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_PLUGIN, m.CRASH_TYPE_CRASH,
-                   "plugin-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_PLUGIN, m.CRASH_TYPE_HANG,
-                   "plugin-hang", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_GMPLUGIN, m.CRASH_TYPE_CRASH,
-                   "gmplugin-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_GPU, m.CRASH_TYPE_CRASH,
-                   "gpu-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_RDD, m.CRASH_TYPE_CRASH,
-                   "rdd-crash", DUMMY_DATE);
-
-  await m.addCrash(m.PROCESS_TYPE_MAIN, m.CRASH_TYPE_CRASH,
-                   "changing-item", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_CONTENT, m.CRASH_TYPE_HANG,
-                   "changing-item", DUMMY_DATE_2);
-||||||| merged common ancestors
-  await m.addCrash(m.PROCESS_TYPE_MAIN, m.CRASH_TYPE_CRASH,
-                   "main-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_MAIN, m.CRASH_TYPE_HANG,
-                   "main-hang", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_CONTENT, m.CRASH_TYPE_CRASH,
-                   "content-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_CONTENT, m.CRASH_TYPE_HANG,
-                   "content-hang", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_PLUGIN, m.CRASH_TYPE_CRASH,
-                   "plugin-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_PLUGIN, m.CRASH_TYPE_HANG,
-                   "plugin-hang", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_GMPLUGIN, m.CRASH_TYPE_CRASH,
-                   "gmplugin-crash", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_GPU, m.CRASH_TYPE_CRASH,
-                   "gpu-crash", DUMMY_DATE);
-
-  await m.addCrash(m.PROCESS_TYPE_MAIN, m.CRASH_TYPE_CRASH,
-                   "changing-item", DUMMY_DATE);
-  await m.addCrash(m.PROCESS_TYPE_CONTENT, m.CRASH_TYPE_HANG,
-                   "changing-item", DUMMY_DATE_2);
-=======
   await m.addCrash(
     m.PROCESS_TYPE_MAIN,
     m.CRASH_TYPE_CRASH,
@@ -546,16 +499,9 @@ add_task(async function test_addCrash() {
     "changing-item",
     DUMMY_DATE_2
   );
->>>>>>> upstream-releases
 
   crashes = await m.getCrashes();
-<<<<<<< HEAD
-  Assert.equal(crashes.length, 10);
-||||||| merged common ancestors
-  Assert.equal(crashes.length, 9);
-=======
   Assert.equal(crashes.length, 12);
->>>>>>> upstream-releases
 
   let map = new Map(crashes.map(crash => [crash.id, crash]));
 
@@ -607,15 +553,6 @@ add_task(async function test_addCrash() {
   Assert.equal(crash.type, m.PROCESS_TYPE_GPU + "-" + m.CRASH_TYPE_CRASH);
   Assert.ok(crash.isOfType(m.PROCESS_TYPE_GPU, m.CRASH_TYPE_CRASH));
 
-<<<<<<< HEAD
-  crash = map.get("rdd-crash");
-  Assert.ok(!!crash);
-  Assert.equal(crash.crashDate, DUMMY_DATE);
-  Assert.equal(crash.type, m.PROCESS_TYPE_RDD + "-" + m.CRASH_TYPE_CRASH);
-  Assert.ok(crash.isOfType(m.PROCESS_TYPE_RDD, m.CRASH_TYPE_CRASH));
-
-||||||| merged common ancestors
-=======
   crash = map.get("vr-crash");
   Assert.ok(!!crash);
   Assert.equal(crash.crashDate, DUMMY_DATE);
@@ -634,7 +571,6 @@ add_task(async function test_addCrash() {
   Assert.equal(crash.type, m.PROCESS_TYPE_SOCKET + "-" + m.CRASH_TYPE_CRASH);
   Assert.ok(crash.isOfType(m.PROCESS_TYPE_SOCKET, m.CRASH_TYPE_CRASH));
 
->>>>>>> upstream-releases
   crash = map.get("changing-item");
   Assert.ok(!!crash);
   Assert.equal(crash.crashDate, DUMMY_DATE_2);
@@ -647,14 +583,9 @@ add_task(async function test_child_process_crash_ping() {
   const EXPECTED_PROCESSES = [
     m.PROCESS_TYPE_CONTENT,
     m.PROCESS_TYPE_GPU,
-<<<<<<< HEAD
-    m.PROCESS_TYPE_RDD,
-||||||| merged common ancestors
-=======
     m.PROCESS_TYPE_VR,
     m.PROCESS_TYPE_RDD,
     m.PROCESS_TYPE_SOCKET,
->>>>>>> upstream-releases
   ];
 
   const UNEXPECTED_PROCESSES = [

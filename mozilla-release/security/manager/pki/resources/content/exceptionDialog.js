@@ -20,31 +20,11 @@ function initExceptionDialog() {
   gNeedReset = false;
   gDialog = document.documentElement;
   gSecHistogram = Services.telemetry.getHistogramById("SECURITY_UI");
-<<<<<<< HEAD
-  gNsISecTel = Ci.nsISecurityUITelemetry;
-  let warningText = document.getElementById("warningText");
-  document.l10n.setAttributes(warningText, "add-exception-branded-warning");
-  let confirmButton = gDialog.getButton("extra1");
-  let l10nUpdatedElements = [
-    confirmButton,
-    warningText,
-  ];
-  confirmButton.disabled = true;
-||||||| merged common ancestors
-  gNsISecTel = Ci.nsISecurityUITelemetry;
-
-  var brandName = gBundleBrand.getString("brandShortName");
-  setText("warningText",
-          gPKIBundle.getFormattedString("addExceptionBrandedWarning2",
-                                        [brandName]));
-  gDialog.getButton("extra1").disabled = true;
-=======
   let warningText = document.getElementById("warningText");
   document.l10n.setAttributes(warningText, "add-exception-branded-warning");
   let confirmButton = gDialog.getButton("extra1");
   let l10nUpdatedElements = [confirmButton, warningText];
   confirmButton.disabled = true;
->>>>>>> upstream-releases
 
   var args = window.arguments;
   if (args && args[0]) {
@@ -76,25 +56,6 @@ function initExceptionDialog() {
     // Set out parameter to false by default
     args[0].exceptionAdded = false;
   }
-<<<<<<< HEAD
-
-  for (let id of [
-    "warningSupplemental",
-    "certLocationLabel",
-    "checkCertButton",
-    "statusDescription",
-    "statusLongDescription",
-    "viewCertButton",
-    "permanent",
-  ]) {
-    let element = document.getElementById(id);
-    l10nUpdatedElements.push(element);
-  }
-
-  document.l10n.translateElements(l10nUpdatedElements).then(() => window.sizeToContent());
-||||||| merged common ancestors
-  window.sizeToContent();
-=======
 
   for (let id of [
     "warningSupplemental",
@@ -115,7 +76,6 @@ function initExceptionDialog() {
 
   document.addEventListener("dialogextra1", addException);
   document.addEventListener("dialogextra2", checkCert);
->>>>>>> upstream-releases
 }
 
 /**
@@ -137,15 +97,9 @@ function grabCert(req, evt) {
   }
   gBroken = evt.type == "error";
   gChecking = false;
-<<<<<<< HEAD
-  document.l10n.translateElements(updateCertStatus()).then(() => window.sizeToContent());
-||||||| merged common ancestors
-  updateCertStatus();
-=======
   document.l10n
     .translateElements(updateCertStatus())
     .then(() => window.sizeToContent());
->>>>>>> upstream-releases
 }
 
 /**
@@ -157,17 +111,8 @@ async function checkCert() {
   gSecInfo = null;
   gChecking = true;
   gBroken = false;
-<<<<<<< HEAD
   await document.l10n.translateElements(updateCertStatus());
   window.sizeToContent();
-
-  updateCertStatus();
-||||||| merged common ancestors
-  updateCertStatus();
-=======
-  await document.l10n.translateElements(updateCertStatus());
-  window.sizeToContent();
->>>>>>> upstream-releases
 
   let uri = getURI();
 
@@ -247,16 +192,9 @@ function updateCertStatus() {
   var shortDesc3, longDesc3;
   var use2 = false;
   var use3 = false;
-<<<<<<< HEAD
-  let bucketId = gNsISecTel.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_BASE;
-  let l10nUpdatedElements = [];
-||||||| merged common ancestors
-  let bucketId = gNsISecTel.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_BASE;
-=======
   let bucketId =
     Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_ADD_EXCEPTION_BASE;
   let l10nUpdatedElements = [];
->>>>>>> upstream-releases
   if (gCert) {
     if (gBroken) {
       var mms = "add-exception-domain-mismatch-short";
@@ -319,32 +257,15 @@ function updateCertStatus() {
       pe.disabled = inPrivateBrowsing;
       pe.checked = !inPrivateBrowsing;
 
-<<<<<<< HEAD
-      let headerDescription = document.getElementById("headerDescription");
-      document.l10n.setAttributes(headerDescription, "add-exception-invalid-header");
-      l10nUpdatedElements.push(headerDescription);
-||||||| merged common ancestors
-      setText("headerDescription",
-              gPKIBundle.getString("addExceptionInvalidHeader"));
-=======
       let headerDescription = document.getElementById("headerDescription");
       document.l10n.setAttributes(
         headerDescription,
         "add-exception-invalid-header"
       );
       l10nUpdatedElements.push(headerDescription);
->>>>>>> upstream-releases
     } else {
-<<<<<<< HEAD
-      shortDesc = "add-exception-valid-short";
-      longDesc  = "add-exception-valid-long";
-||||||| merged common ancestors
-      shortDesc = "addExceptionValidShort";
-      longDesc  = "addExceptionValidLong";
-=======
       shortDesc = "add-exception-valid-short";
       longDesc = "add-exception-valid-long";
->>>>>>> upstream-releases
       gDialog.getButton("extra1").disabled = true;
       document.getElementById("permanent").disabled = true;
     }
@@ -356,16 +277,8 @@ function updateCertStatus() {
     // Notify observers about the availability of the certificate
     Services.obs.notifyObservers(null, "cert-exception-ui-ready");
   } else if (gChecking) {
-<<<<<<< HEAD
-    shortDesc = "add-exception-checking-short";
-    longDesc  = "add-exception-checking-long";
-||||||| merged common ancestors
-    shortDesc = "addExceptionCheckingShort";
-    longDesc  = "addExceptionCheckingLong2";
-=======
     shortDesc = "add-exception-checking-short";
     longDesc = "add-exception-checking-long";
->>>>>>> upstream-releases
     // We're checking the certificate, so we disable the Get Certificate
     // button to make sure that the user can't interrupt the process and
     // trigger another certificate fetch.
@@ -374,16 +287,8 @@ function updateCertStatus() {
     gDialog.getButton("extra1").disabled = true;
     document.getElementById("permanent").disabled = true;
   } else {
-<<<<<<< HEAD
-    shortDesc = "add-exception-no-cert-short";
-    longDesc  = "add-exception-no-cert-long";
-||||||| merged common ancestors
-    shortDesc = "addExceptionNoCertShort";
-    longDesc  = "addExceptionNoCertLong2";
-=======
     shortDesc = "add-exception-no-cert-short";
     longDesc = "add-exception-no-cert-long";
->>>>>>> upstream-releases
     // We're done checking the certificate, so allow the user to check it again.
     document.getElementById("checkCertButton").disabled = false;
     document.getElementById("viewCertButton").disabled = true;
@@ -398,17 +303,6 @@ function updateCertStatus() {
   l10nUpdatedElements.push(statusLongDescription);
 
   if (use2) {
-<<<<<<< HEAD
-    let status2Description = document.getElementById("status2Description");
-    let status2LongDescription = document.getElementById("status2LongDescription");
-    document.l10n.setAttributes(status2Description, shortDesc2);
-    document.l10n.setAttributes(status2LongDescription, longDesc2);
-    l10nUpdatedElements.push(status2Description);
-    l10nUpdatedElements.push(status2LongDescription);
-||||||| merged common ancestors
-    setText("status2Description", gPKIBundle.getString(shortDesc2));
-    setText("status2LongDescription", gPKIBundle.getString(longDesc2));
-=======
     let status2Description = document.getElementById("status2Description");
     let status2LongDescription = document.getElementById(
       "status2LongDescription"
@@ -417,21 +311,9 @@ function updateCertStatus() {
     document.l10n.setAttributes(status2LongDescription, longDesc2);
     l10nUpdatedElements.push(status2Description);
     l10nUpdatedElements.push(status2LongDescription);
->>>>>>> upstream-releases
   }
 
   if (use3) {
-<<<<<<< HEAD
-    let status3Description = document.getElementById("status3Description");
-    let status3LongDescription = document.getElementById("status3LongDescription");
-    document.l10n.setAttributes(status3Description, shortDesc3);
-    document.l10n.setAttributes(status3LongDescription, longDesc3);
-    l10nUpdatedElements.push(status3Description);
-    l10nUpdatedElements.push(status3LongDescription);
-||||||| merged common ancestors
-    setText("status3Description", gPKIBundle.getString(shortDesc3));
-    setText("status3LongDescription", gPKIBundle.getString(longDesc3));
-=======
     let status3Description = document.getElementById("status3Description");
     let status3LongDescription = document.getElementById(
       "status3LongDescription"
@@ -440,7 +322,6 @@ function updateCertStatus() {
     document.l10n.setAttributes(status3LongDescription, longDesc3);
     l10nUpdatedElements.push(status3Description);
     l10nUpdatedElements.push(status3LongDescription);
->>>>>>> upstream-releases
   }
 
   gNeedReset = true;

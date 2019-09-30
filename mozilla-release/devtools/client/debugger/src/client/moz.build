@@ -8,14 +8,8 @@ DIRS += [
     'firefox',
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/client/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
     'chrome.js',
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/client/moz.build
     'firefox.js',
     'index.js',
 )

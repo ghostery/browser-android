@@ -263,16 +263,8 @@ def filter_args(command, argv, paths):
     return [filter_path(arg) for arg in args]
 
 
-<<<<<<< HEAD
-def gather_telemetry(command='', success=False, start_time=None, end_time=None,
-                     mach_context=None, substs={}, paths={}):
-||||||| merged common ancestors
-def gather_telemetry(command='', success=False, monitor=None, mach_context=None, substs={},
-                     paths=[]):
-=======
 def gather_telemetry(command='', success=False, start_time=None, end_time=None,
                      mach_context=None, substs={}, paths={}, command_attrs=None):
->>>>>>> upstream-releases
     '''
     Gather telemetry about the build and the user's system and pass it to the telemetry
     handler to be stored for later submission.

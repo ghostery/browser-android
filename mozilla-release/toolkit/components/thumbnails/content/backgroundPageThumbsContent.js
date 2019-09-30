@@ -108,24 +108,12 @@ const backgroundPageThumbsContent = {
     this._currentCapture.pageLoadStartDate = new Date();
 
     try {
-<<<<<<< HEAD
-      // Bug 1498603 verify usages of systemPrincipal here
-      let triggeringPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-      this._webNav.loadURI(this._currentCapture.url,
-                           Ci.nsIWebNavigation.LOAD_FLAGS_STOP_CONTENT,
-                           null, null, null, triggeringPrincipal);
-||||||| merged common ancestors
-      this._webNav.loadURI(this._currentCapture.url,
-                           Ci.nsIWebNavigation.LOAD_FLAGS_STOP_CONTENT,
-                           null, null, null);
-=======
       // Bug 1498603 verify usages of systemPrincipal here
       let loadURIOptions = {
         triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
         loadFlags: Ci.nsIWebNavigation.LOAD_FLAGS_STOP_CONTENT,
       };
       this._webNav.loadURI(this._currentCapture.url, loadURIOptions);
->>>>>>> upstream-releases
     } catch (e) {
       this._failCurrentCapture("BAD_URI");
     }
@@ -268,22 +256,11 @@ const backgroundPageThumbsContent = {
     if (!docShell) {
       return;
     }
-<<<<<<< HEAD
-    let triggeringPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-    this._webNav.loadURI("about:blank",
-                         Ci.nsIWebNavigation.LOAD_FLAGS_STOP_CONTENT,
-                         null, null, null, triggeringPrincipal);
-||||||| merged common ancestors
-    this._webNav.loadURI("about:blank",
-                         Ci.nsIWebNavigation.LOAD_FLAGS_STOP_CONTENT,
-                         null, null, null);
-=======
     let loadURIOptions = {
       triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
       loadFlags: Ci.nsIWebNavigation.LOAD_FLAGS_STOP_CONTENT,
     };
     this._webNav.loadURI("about:blank", loadURIOptions);
->>>>>>> upstream-releases
   },
 
   QueryInterface: ChromeUtils.generateQI([

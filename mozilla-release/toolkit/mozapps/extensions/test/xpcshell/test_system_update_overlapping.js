@@ -91,20 +91,8 @@ const TEST_CONDITIONS = {
 const TESTS = {
   // Tests that a set of system add-ons, some new, some existing gets installed
   overlapping: {
-<<<<<<< HEAD
-    // updateList is populated in setup() below
-    updateList: [ ],
-||||||| merged common ancestors
-    updateList: [
-      { id: "system1@tests.mozilla.org", version: "2.0", path: "system1_2.xpi" },
-      { id: "system2@tests.mozilla.org", version: "2.0", path: "system2_2.xpi" },
-      { id: "system3@tests.mozilla.org", version: "3.0", path: "system3_3.xpi" },
-      { id: "system4@tests.mozilla.org", version: "1.0", path: "system4_1.xpi" },
-    ],
-=======
     // updateList is populated in setup() below
     updateList: [],
->>>>>>> upstream-releases
     finalState: {
       blank: [
         { isUpgrade: true, version: "2.0" },
@@ -186,13 +174,7 @@ add_task(async function() {
       let setup = TEST_CONDITIONS[setupName];
       let test = TESTS[testName];
 
-<<<<<<< HEAD
-        await execSystemAddonTest(setupName, setup, test, distroDir);
-||||||| merged common ancestors
-        await execSystemAddonTest(setupName, setup, test, distroDir, root, testserver);
-=======
       await execSystemAddonTest(setupName, setup, test, distroDir);
->>>>>>> upstream-releases
     }
   }
 });

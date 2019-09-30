@@ -41,32 +41,6 @@ static const uint32_t kCacheEntryIsPinned = 1 << 0;
 #pragma pack(1)
 
 class CacheFileMetadataHeader {
-<<<<<<< HEAD
- public:
-  uint32_t mVersion;
-  uint32_t mFetchCount;
-  uint32_t mLastFetched;
-  uint32_t mLastModified;
-  uint32_t mFrecency;
-  uint32_t mExpirationTime;
-  uint32_t mKeySize;
-  uint32_t mFlags;
-
-  void WriteToBuf(void *aBuf) {
-||||||| merged common ancestors
-public:
-  uint32_t        mVersion;
-  uint32_t        mFetchCount;
-  uint32_t        mLastFetched;
-  uint32_t        mLastModified;
-  uint32_t        mFrecency;
-  uint32_t        mExpirationTime;
-  uint32_t        mKeySize;
-  uint32_t        mFlags;
-
-  void WriteToBuf(void *aBuf)
-  {
-=======
  public:
   uint32_t mVersion;
   uint32_t mFetchCount;
@@ -78,10 +52,9 @@ public:
   uint32_t mFlags;
 
   void WriteToBuf(void* aBuf) {
->>>>>>> upstream-releases
     EnsureCorrectClassSize();
 
-    uint8_t *ptr = static_cast<uint8_t *>(aBuf);
+    uint8_t* ptr = static_cast<uint8_t*>(aBuf);
     MOZ_ASSERT(mVersion == kCacheEntryVersion);
     NetworkEndian::writeUint32(ptr, mVersion);
     ptr += sizeof(uint32_t);
@@ -100,42 +73,9 @@ public:
     NetworkEndian::writeUint32(ptr, mFlags);
   }
 
-<<<<<<< HEAD
-  void ReadFromBuf(const void *aBuf) {
-||||||| merged common ancestors
-  void ReadFromBuf(const void *aBuf)
-  {
-=======
   void ReadFromBuf(const void* aBuf) {
->>>>>>> upstream-releases
     EnsureCorrectClassSize();
 
-<<<<<<< HEAD
-    const uint8_t *ptr = static_cast<const uint8_t *>(aBuf);
-    mVersion = BigEndian::readUint32(ptr);
-    ptr += sizeof(uint32_t);
-    mFetchCount = BigEndian::readUint32(ptr);
-    ptr += sizeof(uint32_t);
-    mLastFetched = BigEndian::readUint32(ptr);
-    ptr += sizeof(uint32_t);
-    mLastModified = BigEndian::readUint32(ptr);
-    ptr += sizeof(uint32_t);
-    mFrecency = BigEndian::readUint32(ptr);
-    ptr += sizeof(uint32_t);
-    mExpirationTime = BigEndian::readUint32(ptr);
-    ptr += sizeof(uint32_t);
-    mKeySize = BigEndian::readUint32(ptr);
-    ptr += sizeof(uint32_t);
-||||||| merged common ancestors
-    const uint8_t* ptr = static_cast<const uint8_t*>(aBuf);
-    mVersion = BigEndian::readUint32(ptr); ptr += sizeof(uint32_t);
-    mFetchCount = BigEndian::readUint32(ptr); ptr += sizeof(uint32_t);
-    mLastFetched = BigEndian::readUint32(ptr); ptr += sizeof(uint32_t);
-    mLastModified = BigEndian::readUint32(ptr); ptr += sizeof(uint32_t);
-    mFrecency = BigEndian::readUint32(ptr); ptr += sizeof(uint32_t);
-    mExpirationTime = BigEndian::readUint32(ptr); ptr += sizeof(uint32_t);
-    mKeySize = BigEndian::readUint32(ptr); ptr += sizeof(uint32_t);
-=======
     const uint8_t* ptr = static_cast<const uint8_t*>(aBuf);
     mVersion = BigEndian::readUint32(ptr);
     ptr += sizeof(uint32_t);
@@ -151,7 +91,6 @@ public:
     ptr += sizeof(uint32_t);
     mKeySize = BigEndian::readUint32(ptr);
     ptr += sizeof(uint32_t);
->>>>>>> upstream-releases
     if (mVersion >= 2) {
       mFlags = BigEndian::readUint32(ptr);
     } else {
@@ -196,19 +135,8 @@ class CacheFileMetadata final : public CacheFileIOListener,
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  CacheFileMetadata(CacheFileHandle *aHandle, const nsACString &aKey);
-  CacheFileMetadata(bool aMemoryOnly, bool aPinned, const nsACString &aKey);
-||||||| merged common ancestors
-  CacheFileMetadata(CacheFileHandle *aHandle,
-                    const nsACString &aKey);
-  CacheFileMetadata(bool aMemoryOnly,
-                    bool aPinned,
-                    const nsACString &aKey);
-=======
   CacheFileMetadata(CacheFileHandle* aHandle, const nsACString& aKey);
   CacheFileMetadata(bool aMemoryOnly, bool aPinned, const nsACString& aKey);
->>>>>>> upstream-releases
   CacheFileMetadata();
 
   void SetHandle(CacheFileHandle* aHandle);
@@ -221,37 +149,15 @@ class CacheFileMetadata final : public CacheFileIOListener,
                          CacheFileMetadataListener* aListener);
   nsresult SyncReadMetadata(nsIFile* aFile);
 
-<<<<<<< HEAD
-  bool IsAnonymous() const { return mAnonymous; }
-  mozilla::OriginAttributes const &OriginAttributes() const {
-    return mOriginAttributes;
-  }
-  bool Pinned() const { return !!(mMetaHdr.mFlags & kCacheEntryIsPinned); }
-||||||| merged common ancestors
-  bool     IsAnonymous() const { return mAnonymous; }
-  mozilla::OriginAttributes const & OriginAttributes() const { return mOriginAttributes; }
-  bool     Pinned() const      { return !!(mMetaHdr.mFlags & kCacheEntryIsPinned); }
-=======
   bool IsAnonymous() const { return mAnonymous; }
   mozilla::OriginAttributes const& OriginAttributes() const {
     return mOriginAttributes;
   }
   bool Pinned() const { return !!(mMetaHdr.mFlags & kCacheEntryIsPinned); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const char *GetElement(const char *aKey);
-  nsresult SetElement(const char *aKey, const char *aValue);
-  nsresult Visit(nsICacheEntryMetaDataVisitor *aVisitor);
-||||||| merged common ancestors
-  const char * GetElement(const char *aKey);
-  nsresult     SetElement(const char *aKey, const char *aValue);
-  nsresult     Visit(nsICacheEntryMetaDataVisitor *aVisitor);
-=======
   const char* GetElement(const char* aKey);
   nsresult SetElement(const char* aKey, const char* aValue);
   nsresult Visit(nsICacheEntryMetaDataVisitor* aVisitor);
->>>>>>> upstream-releases
 
   CacheHash::Hash16_t GetHash(uint32_t aIndex);
   nsresult SetHash(uint32_t aIndex, CacheHash::Hash16_t aHash);
@@ -282,22 +188,6 @@ class CacheFileMetadata final : public CacheFileIOListener,
   NS_IMETHOD OnFileOpened(CacheFileHandle* aHandle, nsresult aResult) override;
   NS_IMETHOD OnDataWritten(CacheFileHandle* aHandle, const char* aBuf,
                            nsresult aResult) override;
-<<<<<<< HEAD
-  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf,
-                        nsresult aResult) override;
-  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
-  virtual bool IsKilled() override {
-    return mListener && mListener->IsKilled();
-  }
-||||||| merged common ancestors
-  NS_IMETHOD OnDataRead(CacheFileHandle *aHandle, char *aBuf, nsresult aResult) override;
-  NS_IMETHOD OnFileDoomed(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnEOFSet(CacheFileHandle *aHandle, nsresult aResult) override;
-  NS_IMETHOD OnFileRenamed(CacheFileHandle *aHandle, nsresult aResult) override;
-  virtual bool IsKilled() override { return mListener && mListener->IsKilled(); }
-=======
   NS_IMETHOD OnDataRead(CacheFileHandle* aHandle, char* aBuf,
                         nsresult aResult) override;
   NS_IMETHOD OnFileDoomed(CacheFileHandle* aHandle, nsresult aResult) override;
@@ -306,7 +196,6 @@ class CacheFileMetadata final : public CacheFileIOListener,
   virtual bool IsKilled() override {
     return mListener && mListener->IsKilled();
   }
->>>>>>> upstream-releases
   void InitEmptyMetadata();
 
   // Memory reporting
@@ -316,62 +205,10 @@ class CacheFileMetadata final : public CacheFileIOListener,
  private:
   virtual ~CacheFileMetadata();
 
-<<<<<<< HEAD
-  nsresult ParseMetadata(uint32_t aMetaOffset, uint32_t aBufOffset,
-                         bool aHaveKey);
-  nsresult CheckElements(const char *aBuf, uint32_t aSize);
-||||||| merged common ancestors
-  nsresult ParseMetadata(uint32_t aMetaOffset, uint32_t aBufOffset, bool aHaveKey);
-  nsresult CheckElements(const char *aBuf, uint32_t aSize);
-=======
   nsresult ParseMetadata(uint32_t aMetaOffset, uint32_t aBufOffset,
                          bool aHaveKey);
   nsresult CheckElements(const char* aBuf, uint32_t aSize);
->>>>>>> upstream-releases
   nsresult EnsureBuffer(uint32_t aSize);
-<<<<<<< HEAD
-  nsresult ParseKey(const nsACString &aKey);
-
-  RefPtr<CacheFileHandle> mHandle;
-  nsCString mKey;
-  CacheHash::Hash16_t *mHashArray;
-  uint32_t mHashArraySize;
-  uint32_t mHashCount;
-  int64_t mOffset;
-  char *mBuf;  // used for parsing, then points
-               // to elements
-  uint32_t mBufSize;
-  char *mWriteBuf;
-  CacheFileMetadataHeader mMetaHdr;
-  uint32_t mElementsSize;
-  bool mIsDirty : 1;
-  bool mAnonymous : 1;
-  bool mAllocExactSize : 1;
-  bool mFirstRead : 1;
-  mozilla::OriginAttributes mOriginAttributes;
-  mozilla::TimeStamp mReadStart;
-||||||| merged common ancestors
-  nsresult ParseKey(const nsACString &aKey);
-
-  RefPtr<CacheFileHandle>             mHandle;
-  nsCString                           mKey;
-  CacheHash::Hash16_t                *mHashArray;
-  uint32_t                            mHashArraySize;
-  uint32_t                            mHashCount;
-  int64_t                             mOffset;
-  char                               *mBuf; // used for parsing, then points
-                                            // to elements
-  uint32_t                            mBufSize;
-  char                               *mWriteBuf;
-  CacheFileMetadataHeader             mMetaHdr;
-  uint32_t                            mElementsSize;
-  bool                                mIsDirty        : 1;
-  bool                                mAnonymous      : 1;
-  bool                                mAllocExactSize : 1;
-  bool                                mFirstRead      : 1;
-  mozilla::OriginAttributes           mOriginAttributes;
-  mozilla::TimeStamp                  mReadStart;
-=======
   nsresult ParseKey(const nsACString& aKey);
 
   RefPtr<CacheFileHandle> mHandle;
@@ -392,7 +229,6 @@ class CacheFileMetadata final : public CacheFileIOListener,
   bool mFirstRead : 1;
   mozilla::OriginAttributes mOriginAttributes;
   mozilla::TimeStamp mReadStart;
->>>>>>> upstream-releases
   nsCOMPtr<CacheFileMetadataListener> mListener;
 };
 

@@ -23,7 +23,6 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
 OffscreenCanvasCloneData::OffscreenCanvasCloneData(
     layers::AsyncCanvasRenderer* aRenderer, uint32_t aWidth, uint32_t aHeight,
     layers::LayersBackend aCompositorBackend, bool aNeutered, bool aIsWriteOnly)
@@ -37,41 +36,6 @@ OffscreenCanvasCloneData::OffscreenCanvasCloneData(
 OffscreenCanvasCloneData::~OffscreenCanvasCloneData() {}
 
 OffscreenCanvas::OffscreenCanvas(nsIGlobalObject* aGlobal, uint32_t aWidth,
-||||||| merged common ancestors
-OffscreenCanvasCloneData::OffscreenCanvasCloneData(layers::AsyncCanvasRenderer* aRenderer,
-                                                   uint32_t aWidth, uint32_t aHeight,
-                                                   layers::LayersBackend aCompositorBackend,
-                                                   bool aNeutered, bool aIsWriteOnly)
-  : mRenderer(aRenderer)
-  , mWidth(aWidth)
-  , mHeight(aHeight)
-  , mCompositorBackendType(aCompositorBackend)
-  , mNeutered(aNeutered)
-  , mIsWriteOnly(aIsWriteOnly)
-{
-}
-
-OffscreenCanvasCloneData::~OffscreenCanvasCloneData()
-{
-}
-
-OffscreenCanvas::OffscreenCanvas(nsIGlobalObject* aGlobal,
-                                 uint32_t aWidth,
-=======
-OffscreenCanvasCloneData::OffscreenCanvasCloneData(
-    layers::AsyncCanvasRenderer* aRenderer, uint32_t aWidth, uint32_t aHeight,
-    layers::LayersBackend aCompositorBackend, bool aNeutered, bool aIsWriteOnly)
-    : mRenderer(aRenderer),
-      mWidth(aWidth),
-      mHeight(aHeight),
-      mCompositorBackendType(aCompositorBackend),
-      mNeutered(aNeutered),
-      mIsWriteOnly(aIsWriteOnly) {}
-
-OffscreenCanvasCloneData::~OffscreenCanvasCloneData() {}
-
-OffscreenCanvas::OffscreenCanvas(nsIGlobalObject* aGlobal, uint32_t aWidth,
->>>>>>> upstream-releases
                                  uint32_t aHeight,
                                  layers::LayersBackend aCompositorBackend,
                                  layers::AsyncCanvasRenderer* aRenderer)
@@ -91,23 +55,10 @@ JSObject* OffscreenCanvas::WrapObject(JSContext* aCx,
   return OffscreenCanvas_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<OffscreenCanvas> OffscreenCanvas::Constructor(
-    const GlobalObject& aGlobal, uint32_t aWidth, uint32_t aHeight,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<OffscreenCanvas>
-OffscreenCanvas::Constructor(const GlobalObject& aGlobal,
-                             uint32_t aWidth,
-                             uint32_t aHeight,
-                             ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<OffscreenCanvas> OffscreenCanvas::Constructor(
     const GlobalObject& aGlobal, uint32_t aWidth, uint32_t aHeight,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<OffscreenCanvas> offscreenCanvas = new OffscreenCanvas(
       global, aWidth, aHeight, layers::LayersBackend::LAYERS_NONE, nullptr);
@@ -333,19 +284,9 @@ nsCOMPtr<nsIGlobalObject> OffscreenCanvas::GetGlobalObject() {
   return workerPrivate->GlobalScope();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<OffscreenCanvas>
-OffscreenCanvas::CreateFromCloneData(nsIGlobalObject* aGlobal,
-                                     OffscreenCanvasCloneData* aData) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<OffscreenCanvas>
-OffscreenCanvas::CreateFromCloneData(nsIGlobalObject* aGlobal, OffscreenCanvasCloneData* aData)
-{
-=======
 /* static */
 already_AddRefed<OffscreenCanvas> OffscreenCanvas::CreateFromCloneData(
     nsIGlobalObject* aGlobal, OffscreenCanvasCloneData* aData) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aData);
   RefPtr<OffscreenCanvas> wc =
       new OffscreenCanvas(aGlobal, aData->mWidth, aData->mHeight,
@@ -356,18 +297,9 @@ already_AddRefed<OffscreenCanvas> OffscreenCanvas::CreateFromCloneData(
   return wc.forget();
 }
 
-<<<<<<< HEAD
-/* static */ bool OffscreenCanvas::PrefEnabledOnWorkerThread(JSContext* aCx,
-                                                             JSObject* aObj) {
-||||||| merged common ancestors
-/* static */ bool
-OffscreenCanvas::PrefEnabledOnWorkerThread(JSContext* aCx, JSObject* aObj)
-{
-=======
 /* static */
 bool OffscreenCanvas::PrefEnabledOnWorkerThread(JSContext* aCx,
                                                 JSObject* aObj) {
->>>>>>> upstream-releases
   if (NS_IsMainThread()) {
     return true;
   }

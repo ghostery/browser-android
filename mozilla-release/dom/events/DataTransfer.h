@@ -294,26 +294,10 @@ class DataTransfer final : public nsISupports, public nsWrapperCache {
   // that DataTransfer type information may be read, but data may not be.
   bool IsProtected() const { return mMode == Mode::Protected; }
 
-<<<<<<< HEAD
-  int32_t ClipboardType() const { return mClipboardType; }
-  EventMessage GetEventMessage() const { return mEventMessage; }
-  bool IsCrossDomainSubFrameDrop() const { return mIsCrossDomainSubFrameDrop; }
-||||||| merged common ancestors
-  int32_t ClipboardType() const {
-    return mClipboardType;
-  }
-  EventMessage GetEventMessage() const {
-    return mEventMessage;
-  }
-  bool IsCrossDomainSubFrameDrop() const {
-    return mIsCrossDomainSubFrameDrop;
-  }
-=======
   nsITransferable* GetTransferable() const { return mTransferable; }
   int32_t ClipboardType() const { return mClipboardType; }
   EventMessage GetEventMessage() const { return mEventMessage; }
   bool IsCrossDomainSubFrameDrop() const { return mIsCrossDomainSubFrameDrop; }
->>>>>>> upstream-releases
 
   // converts the data into an array of nsITransferable objects to be used for
   // drag and drop or clipboard operations.
@@ -392,16 +376,6 @@ class DataTransfer final : public nsISupports, public nsWrapperCache {
   //
   // If kFileMime is supported, then it will be placed either at
   // index 0 or at index 1 in aResult
-<<<<<<< HEAD
-  static void GetExternalClipboardFormats(const int32_t& aWhichClipboard,
-                                          const bool& aPlainTextOnly,
-                                          nsTArray<nsCString>* aResult);
-||||||| merged common ancestors
-  static void
-  GetExternalClipboardFormats(const int32_t& aWhichClipboard,
-                              const bool& aPlainTextOnly,
-                              nsTArray<nsCString>* aResult);
-=======
   static void GetExternalClipboardFormats(const int32_t& aWhichClipboard,
                                           const bool& aPlainTextOnly,
                                           nsTArray<nsCString>* aResult);
@@ -413,7 +387,6 @@ class DataTransfer final : public nsISupports, public nsWrapperCache {
   static void GetExternalTransferableFormats(nsITransferable* aTransferable,
                                              bool aPlainTextOnly,
                                              nsTArray<nsCString>* aResult);
->>>>>>> upstream-releases
 
   // Returns true if moz* APIs should be exposed (true for chrome code or if
   // dom.datatransfer.moz pref is enabled).

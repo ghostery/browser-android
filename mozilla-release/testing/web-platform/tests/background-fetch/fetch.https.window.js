@@ -263,48 +263,6 @@ backgroundFetchTest(async (test, backgroundFetch) => {
   assert_equals(nullResponse, null);
 
 }, 'Fetches with mixed content should fail.');
-<<<<<<< HEAD
-
-backgroundFetchTest(async (test, backgroundFetch) => {
-  const registrationId = 'matchexistingrequest';
-  const registration =
-    await backgroundFetch.fetch(registrationId, 'resources/feature-name.txt');
-
-  assert_equals(registration.id, registrationId);
-
-  const {type, eventRegistration, results} = await getMessageFromServiceWorker();
-  assert_equals('backgroundfetchsuccess', type);
-  assert_equals(results.length, 1);
-
-  assert_equals(eventRegistration.id, registration.id);
-  assert_equals(eventRegistration.result, 'success');
-  assert_equals(eventRegistration.failureReason, '');
-
-  assert_true(results[0].url.includes('resources/feature-name.txt'));
-  assert_equals(results[0].status, 200);
-  assert_equals(results[0].text, 'Background Fetch');
-
-}, 'Matching to a single request should work');
-
-backgroundFetchTest(async (test, backgroundFetch) => {
-  const registrationId = 'matchmissingrequest';
-  const registration =
-    await backgroundFetch.fetch(registrationId, 'resources/feature-name.txt');
-
-  assert_equals(registration.id, registrationId);
-
-  const {type, eventRegistration, results} = await getMessageFromServiceWorker();
-  assert_equals('backgroundfetchsuccess', type);
-  assert_equals(results.length, 0);
-
-  assert_equals(eventRegistration.id, registration.id);
-  assert_equals(eventRegistration.result, 'success');
-  assert_equals(eventRegistration.failureReason, '');
-
-}, 'Matching to a non-existing request should work');
-
-||||||| merged common ancestors
-=======
 
 backgroundFetchTest(async (test, backgroundFetch) => {
   const filePath = '/background-fetch/resources/feature-name.txt';
@@ -320,4 +278,3 @@ backgroundFetchTest(async (test, backgroundFetch) => {
   assert_equals(eventRegistration.id, registration.id);
   assert_equals(eventRegistration.downloaded, 0);
 }, 'Responses failing CORS checks are not leaked');
->>>>>>> upstream-releases

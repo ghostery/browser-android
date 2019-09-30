@@ -105,30 +105,13 @@ class MediaCacheFlusher final : public nsIObserver,
   nsTArray<MediaCache*> mMediaCaches;
 };
 
-<<<<<<< HEAD
-/* static */ StaticRefPtr<MediaCacheFlusher>
-    MediaCacheFlusher::gMediaCacheFlusher;
-||||||| merged common ancestors
-/* static */ StaticRefPtr<MediaCacheFlusher>
-  MediaCacheFlusher::gMediaCacheFlusher;
-=======
 /* static */
 StaticRefPtr<MediaCacheFlusher> MediaCacheFlusher::gMediaCacheFlusher;
->>>>>>> upstream-releases
 
 NS_IMPL_ISUPPORTS(MediaCacheFlusher, nsIObserver, nsISupportsWeakReference)
 
-<<<<<<< HEAD
-/* static */ void MediaCacheFlusher::RegisterMediaCache(
-    MediaCache* aMediaCache) {
-||||||| merged common ancestors
-/* static */ void
-MediaCacheFlusher::RegisterMediaCache(MediaCache* aMediaCache)
-{
-=======
 /* static */
 void MediaCacheFlusher::RegisterMediaCache(MediaCache* aMediaCache) {
->>>>>>> upstream-releases
   NS_ASSERTION(NS_IsMainThread(), "Only call on main thread");
 
   if (!gMediaCacheFlusher) {
@@ -136,17 +119,6 @@ void MediaCacheFlusher::RegisterMediaCache(MediaCache* aMediaCache) {
     nsCOMPtr<nsIObserverService> observerService =
         mozilla::services::GetObserverService();
     if (observerService) {
-<<<<<<< HEAD
-      observerService->AddObserver(gMediaCacheFlusher, "last-pb-context-exited",
-                                   true);
-      observerService->AddObserver(gMediaCacheFlusher,
-                                   "cacheservice:empty-cache", true);
-||||||| merged common ancestors
-      observerService->AddObserver(
-        gMediaCacheFlusher, "last-pb-context-exited", true);
-      observerService->AddObserver(
-        gMediaCacheFlusher, "cacheservice:empty-cache", true);
-=======
       observerService->AddObserver(gMediaCacheFlusher, "last-pb-context-exited",
                                    true);
       observerService->AddObserver(gMediaCacheFlusher,
@@ -155,24 +127,14 @@ void MediaCacheFlusher::RegisterMediaCache(MediaCache* aMediaCache) {
           gMediaCacheFlusher, "contentchild:network-link-type-changed", true);
       observerService->AddObserver(gMediaCacheFlusher,
                                    NS_NETWORK_LINK_TYPE_TOPIC, true);
->>>>>>> upstream-releases
     }
   }
 
   gMediaCacheFlusher->mMediaCaches.AppendElement(aMediaCache);
 }
 
-<<<<<<< HEAD
-/* static */ void MediaCacheFlusher::UnregisterMediaCache(
-    MediaCache* aMediaCache) {
-||||||| merged common ancestors
-/* static */ void
-MediaCacheFlusher::UnregisterMediaCache(MediaCache* aMediaCache)
-{
-=======
 /* static */
 void MediaCacheFlusher::UnregisterMediaCache(MediaCache* aMediaCache) {
->>>>>>> upstream-releases
   NS_ASSERTION(NS_IsMainThread(), "Only call on main thread");
 
   gMediaCacheFlusher->mMediaCaches.RemoveElement(aMediaCache);
@@ -517,30 +479,15 @@ class MediaCache {
   // to access sThread on all threads.
   static bool sThreadInit;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   // MediaCache thread only. True if we're on a cellular network connection.
   static bool sOnCellular;
 
->>>>>>> upstream-releases
   // Used by MediaCacheStream::GetDebugInfo() only for debugging.
   // Don't add new callers to this function.
-<<<<<<< HEAD
-  friend nsCString MediaCacheStream::GetDebugInfo();
-  mozilla::Monitor& GetMonitorOnTheMainThread() {
-||||||| merged common ancestors
-  friend nsCString MediaCacheStream::GetDebugInfo();
-  mozilla::Monitor& GetMonitorOnTheMainThread()
-  {
-=======
   friend void MediaCacheStream::GetDebugInfo(
       dom::MediaCacheStreamDebugInfo& aInfo);
   mozilla::Monitor& GetMonitorOnTheMainThread() {
->>>>>>> upstream-releases
     MOZ_DIAGNOSTIC_ASSERT(NS_IsMainThread());
     return mMonitor;
   }
@@ -594,39 +541,6 @@ MediaCacheFlusher::Observe(nsISupports* aSubject, char const* aTopic,
 
 MediaCacheStream::MediaCacheStream(ChannelMediaResource* aClient,
                                    bool aIsPrivateBrowsing)
-<<<<<<< HEAD
-    : mMediaCache(nullptr),
-      mClient(aClient),
-      mIsTransportSeekable(false),
-      mCacheSuspended(false),
-      mChannelEnded(false),
-      mStreamOffset(0),
-      mPlaybackBytesPerSecond(10000),
-      mPinCount(0),
-      mNotifyDataEndedStatus(NS_ERROR_NOT_INITIALIZED),
-      mMetadataInPartialBlockBuffer(false),
-      mIsPrivateBrowsing(aIsPrivateBrowsing) {}
-
-size_t MediaCacheStream::SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const {
-||||||| merged common ancestors
-  : mMediaCache(nullptr)
-  , mClient(aClient)
-  , mIsTransportSeekable(false)
-  , mCacheSuspended(false)
-  , mChannelEnded(false)
-  , mStreamOffset(0)
-  , mPlaybackBytesPerSecond(10000)
-  , mPinCount(0)
-  , mNotifyDataEndedStatus(NS_ERROR_NOT_INITIALIZED)
-  , mMetadataInPartialBlockBuffer(false)
-  , mIsPrivateBrowsing(aIsPrivateBrowsing)
-{
-}
-
-size_t MediaCacheStream::SizeOfExcludingThis(
-                                MallocSizeOf aMallocSizeOf) const
-{
-=======
     : mMediaCache(nullptr),
       mClient(aClient),
       mIsTransportSeekable(false),
@@ -642,7 +556,6 @@ size_t MediaCacheStream::SizeOfExcludingThis(
 size_t MediaCacheStream::SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const {
   AutoLock lock(mMediaCache->Monitor());
 
->>>>>>> upstream-releases
   // Looks like these are not owned:
   // - mClient
   size_t size = mBlocks.ShallowSizeOfExcludingThis(aMallocSizeOf);
@@ -847,17 +760,8 @@ void MediaCache::CloseStreamsForPrivateBrowsing() {
       }));
 }
 
-<<<<<<< HEAD
-/* static */ RefPtr<MediaCache> MediaCache::GetMediaCache(
-    int64_t aContentLength) {
-||||||| merged common ancestors
-/* static */ RefPtr<MediaCache>
-MediaCache::GetMediaCache(int64_t aContentLength)
-{
-=======
 /* static */
 RefPtr<MediaCache> MediaCache::GetMediaCache(int64_t aContentLength) {
->>>>>>> upstream-releases
   NS_ASSERTION(NS_IsMainThread(), "Only call on main thread");
 
   if (!sThreadInit) {
@@ -886,15 +790,8 @@ RefPtr<MediaCache> MediaCache::GetMediaCache(int64_t aContentLength) {
   }
 
   if (aContentLength > 0 &&
-<<<<<<< HEAD
-      aContentLength <=
-          int64_t(StaticPrefs::MediaMemoryCacheMaxSize()) * 1024) {
-||||||| merged common ancestors
-      aContentLength <= int64_t(StaticPrefs::MediaMemoryCacheMaxSize()) * 1024) {
-=======
       aContentLength <=
           int64_t(StaticPrefs::media_memory_cache_max_size()) * 1024) {
->>>>>>> upstream-releases
     // Small-enough resource, use a new memory-backed MediaCache.
     RefPtr<MediaBlockCacheBase> bc = new MemoryBlockCache(aContentLength);
     nsresult rv = bc->Init();
@@ -2881,36 +2778,13 @@ double MediaCacheStream::GetDownloadRate(bool* aIsReliable) {
   return mDownloadStatistics.GetRate(aIsReliable);
 }
 
-<<<<<<< HEAD
-nsCString MediaCacheStream::GetDebugInfo() {
-||||||| merged common ancestors
-nsCString
-MediaCacheStream::GetDebugInfo()
-{
-=======
 void MediaCacheStream::GetDebugInfo(dom::MediaCacheStreamDebugInfo& aInfo) {
->>>>>>> upstream-releases
   AutoLock lock(mMediaCache->GetMonitorOnTheMainThread());
-<<<<<<< HEAD
-  return nsPrintfCString("mStreamLength=%" PRId64 " mChannelOffset=%" PRId64
-                         " mCacheSuspended=%d mChannelEnded=%d mLoadID=%u",
-                         mStreamLength, mChannelOffset, mCacheSuspended,
-                         mChannelEnded, mLoadID);
-||||||| merged common ancestors
-  return nsPrintfCString("mStreamLength=%" PRId64 " mChannelOffset=%" PRId64
-                         " mCacheSuspended=%d mChannelEnded=%d mLoadID=%u",
-                         mStreamLength,
-                         mChannelOffset,
-                         mCacheSuspended,
-                         mChannelEnded,
-                         mLoadID);
-=======
   aInfo.mStreamLength = mStreamLength;
   aInfo.mChannelOffset = mChannelOffset;
   aInfo.mCacheSuspended = mCacheSuspended;
   aInfo.mChannelEnded = mChannelEnded;
   aInfo.mLoadID = mLoadID;
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

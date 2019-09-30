@@ -32,26 +32,9 @@ SRC_DIR=$TOOLCHAIN_DIR/src
 
 make_flags="-j$(nproc)"
 
-<<<<<<< HEAD:mozilla-release/taskcluster/scripts/misc/build-clang-trunk-mingw.sh
-mingw_version=d66350ea60d043a8992ada752040fc4ea48537c3
-libunwind_version=1f89d78bb488bc71cfdee8281fc0834e9fbe5dce
-llvm_mingw_version=53db1c3a4c9c81972b70556a5ba5cd6ccd8e6e7d
-
-binutils_version=2.27
-binutils_ext=bz2
-binutils_sha=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
-||||||| merged common ancestors
-mingw_version=cfd85ebed773810429bf2164c3a985895b7dbfe3
-libunwind_version=1f89d78bb488bc71cfdee8281fc0834e9fbe5dce
-
-binutils_version=2.27
-binutils_ext=bz2
-binutils_sha=369737ce51587f92466041a97ab7d2358c6d9e1b6490b3940eb09fb0a9a6ac88
-=======
 mingw_version=8db8dd5aa1885e7807424a06bd14eebc9c0effd4
 libunwind_version=6ee92fcc97350ae32db3172a269e9afcc2bab686
 llvm_mingw_version=c3a16814bd26aa6702e1e5b482a3d9044bb0f725
->>>>>>> upstream-releases:mozilla-release/taskcluster/scripts/misc/build-clang-8-mingw.sh
 
 # This is default value of _WIN32_WINNT. Gecko configure script explicitly sets this,
 # so this is not used to build Gecko itself. We default to 0x601, which is Windows 7.
@@ -80,33 +63,10 @@ prepare() {
   git checkout $libunwind_version
   popd
 
-<<<<<<< HEAD:mozilla-release/taskcluster/scripts/misc/build-clang-trunk-mingw.sh
   git clone https://github.com/mstorsjo/llvm-mingw.git
   pushd llvm-mingw
   git checkout $llvm_mingw_version
   popd
-
-  wget -c --progress=dot:mega ftp://ftp.gnu.org/gnu/binutils/binutils-$binutils_version.tar.$binutils_ext
-  if [ "$(sha256sum binutils-$binutils_version.tar.$binutils_ext)" != "$binutils_sha  binutils-$binutils_version.tar.$binutils_ext" ];
-  then
-    echo Corrupted binutils archive
-    exit 1
-  fi
-  tar -jxf binutils-$binutils_version.tar.$binutils_ext
-||||||| merged common ancestors
-  wget -c --progress=dot:mega ftp://ftp.gnu.org/gnu/binutils/binutils-$binutils_version.tar.$binutils_ext
-  if [ "$(sha256sum binutils-$binutils_version.tar.$binutils_ext)" != "$binutils_sha  binutils-$binutils_version.tar.$binutils_ext" ];
-  then
-    echo Corrupted binutils archive
-    exit 1
-  fi
-  tar -jxf binutils-$binutils_version.tar.$binutils_ext
-=======
-  git clone https://github.com/mstorsjo/llvm-mingw.git
-  pushd llvm-mingw
-  git checkout $llvm_mingw_version
-  popd
->>>>>>> upstream-releases:mozilla-release/taskcluster/scripts/misc/build-clang-8-mingw.sh
 
   popd
 }
@@ -231,14 +191,8 @@ build_libcxx() {
       -DLIBUNWIND_ENABLE_THREADS=TRUE \
       -DLIBUNWIND_ENABLE_SHARED=FALSE \
       -DLIBUNWIND_ENABLE_CROSS_UNWINDING=FALSE \
-<<<<<<< HEAD:mozilla-release/taskcluster/scripts/misc/build-clang-trunk-mingw.sh
-      -DCMAKE_CXX_FLAGS="${DEBUG_FLAGS} -nostdinc++ -I$SRC_DIR/libcxx/include -DPSAPI_VERSION=2" \
-||||||| merged common ancestors
-      -DCMAKE_CXX_FLAGS="-nostdinc++ -I$SRC_DIR/libcxx/include -DPSAPI_VERSION=2" \
-=======
       -DCMAKE_CXX_FLAGS="${DEBUG_FLAGS} -Wno-dll-attribute-on-redeclaration -nostdinc++ -I$SRC_DIR/libcxx/include -DPSAPI_VERSION=2" \
       -DCMAKE_C_FLAGS="-Wno-dll-attribute-on-redeclaration" \
->>>>>>> upstream-releases:mozilla-release/taskcluster/scripts/misc/build-clang-8-mingw.sh
       $SRC_DIR/libunwind
   make $make_flags
   make $make_flags install
@@ -267,14 +221,8 @@ build_libcxx() {
       -DLIBCXXABI_LIBCXX_INCLUDES=$SRC_DIR/libcxx/include \
       -DLLVM_NO_OLD_LIBSTDCXX=TRUE \
       -DCXX_SUPPORTS_CXX11=TRUE \
-<<<<<<< HEAD:mozilla-release/taskcluster/scripts/misc/build-clang-trunk-mingw.sh
-      -DCMAKE_CXX_FLAGS="${DEBUG_FLAGS} -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -D_LIBCPP_HAS_THREAD_API_WIN32" \
-||||||| merged common ancestors
-      -DCMAKE_CXX_FLAGS="-D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -D_LIBCPP_HAS_THREAD_API_WIN32" \
-=======
       -DCXX_SUPPORTS_CXX_STD=TRUE \
       -DCMAKE_CXX_FLAGS="${DEBUG_FLAGS} -D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS -D_LIBCPP_HAS_THREAD_API_WIN32" \
->>>>>>> upstream-releases:mozilla-release/taskcluster/scripts/misc/build-clang-8-mingw.sh
       $SRC_DIR/libcxxabi
   make $make_flags VERBOSE=1
   popd
@@ -321,52 +269,13 @@ build_libcxx() {
   popd
 }
 
-<<<<<<< HEAD:mozilla-release/taskcluster/scripts/misc/build-clang-trunk-mingw.sh
 build_utils() {
-  mkdir binutils
-  pushd binutils
-  $SRC_DIR/binutils-$binutils_version/configure --prefix=$INSTALL_DIR \
-                                                --disable-multilib \
-                                                --disable-nls \
-                                                --target=$machine-w64-mingw32
-  make $make_flags
-
-  # Manually install only nm
-  cp binutils/nm-new $INSTALL_DIR/bin/$machine-w64-mingw32-nm
-
-||||||| merged common ancestors
-build_windres() {
-  # we build whole binutils, but use only windres in our toolchain
-  mkdir binutils
-  pushd binutils
-  $SRC_DIR/binutils-$binutils_version/configure --prefix=$INSTALL_DIR \
-                                                --disable-multilib \
-                                                --disable-nls \
-                                                --target=$machine-w64-mingw32
-  make $make_flags
-
-  # Manually install only nm and windres
-  cp binutils/windres $INSTALL_DIR/bin/$machine-w64-mingw32-windres
-  cp binutils/nm-new $INSTALL_DIR/bin/$machine-w64-mingw32-nm
-
-=======
-build_utils() {
->>>>>>> upstream-releases:mozilla-release/taskcluster/scripts/misc/build-clang-8-mingw.sh
   pushd $INSTALL_DIR/bin/
   ln -s llvm-nm $machine-w64-mingw32-nm
   ln -s llvm-strip $machine-w64-mingw32-strip
   ln -s llvm-readobj $machine-w64-mingw32-readobj
-<<<<<<< HEAD:mozilla-release/taskcluster/scripts/misc/build-clang-trunk-mingw.sh
-  ./clang $SRC_DIR/llvm-mingw/wrappers/windres-wrapper.c -O2 -Wl,-s -o $machine-w64-mingw32-windres
-  popd
-
-||||||| merged common ancestors
-  popd
-
-=======
   ln -s llvm-objcopy $machine-w64-mingw32-objcopy
   ./clang $SRC_DIR/llvm-mingw/wrappers/windres-wrapper.c -O2 -Wl,-s -o $machine-w64-mingw32-windres
->>>>>>> upstream-releases:mozilla-release/taskcluster/scripts/misc/build-clang-8-mingw.sh
   popd
 }
 

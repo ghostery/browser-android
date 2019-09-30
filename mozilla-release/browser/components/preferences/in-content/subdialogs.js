@@ -435,22 +435,10 @@ SubDialog.prototype = {
       // element is used to implement the subdialog instead.
       frameHeight = maxHeight + "px";
       frameMinHeight = maxHeight + "px";
-<<<<<<< HEAD
-      let contentPane =
-          this._frame.contentDocument.querySelector(".contentPane") ||
-          this._frame.contentDocument.documentElement;
-      contentPane.classList.add("doScroll");
-||||||| merged common ancestors
-      let containers = this._frame.contentDocument.querySelectorAll(".largeDialogContainer");
-      for (let container of containers) {
-        container.classList.add("doScroll");
-      }
-=======
       let contentPane =
         this._frame.contentDocument.querySelector(".contentPane") ||
         this._frame.contentDocument.documentElement;
       contentPane.classList.add("doScroll");
->>>>>>> upstream-releases
     }
 
     this._frame.style.height = frameHeight;

@@ -126,23 +126,10 @@ class HTMLOptionsCollection final : public nsIHTMLCollection,
     return NamedGetter(aName, aFound);
   }
   void Add(const HTMLOptionOrOptGroupElement& aElement,
-<<<<<<< HEAD
-           const Nullable<HTMLElementOrLong>& aBefore, ErrorResult& aError);
-  void Remove(int32_t aIndex, ErrorResult& aError);
-  int32_t GetSelectedIndex(ErrorResult& aError);
-  void SetSelectedIndex(int32_t aSelectedIndex, ErrorResult& aError);
-||||||| merged common ancestors
-           const Nullable<HTMLElementOrLong>& aBefore,
-           ErrorResult& aError);
-  void Remove(int32_t aIndex, ErrorResult& aError);
-  int32_t GetSelectedIndex(ErrorResult& aError);
-  void SetSelectedIndex(int32_t aSelectedIndex, ErrorResult& aError);
-=======
            const Nullable<HTMLElementOrLong>& aBefore, ErrorResult& aError);
   void Remove(int32_t aIndex);
   int32_t SelectedIndex();
   void SetSelectedIndex(int32_t aSelectedIndex);
->>>>>>> upstream-releases
   void IndexedSetter(uint32_t aIndex, HTMLOptionElement* aOption,
                      ErrorResult& aError);
   virtual void GetSupportedNames(nsTArray<nsString>& aNames) override;

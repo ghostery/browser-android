@@ -247,15 +247,6 @@ proto.report = function(
  *        (string) Short explanation of the expected result
  */
 proto.ok = function(value, message) {
-<<<<<<< HEAD
-  if (arguments.length > 2) {
-    this.report(true, false, true, "Too many arguments passed to `Assert.ok()`", "==");
-  } else {
-    this.report(!value, value, true, message, "==");
-  }
-||||||| merged common ancestors
-  this.report(!value, value, true, message, "==");
-=======
   if (arguments.length > 2) {
     this.report(
       true,
@@ -267,7 +258,6 @@ proto.ok = function(value, message) {
   } else {
     this.report(!value, value, true, message, "==");
   }
->>>>>>> upstream-releases
 };
 
 /**

@@ -66,13 +66,7 @@ pub mod attributes {
 
 /// Generates a proper type for a field or type with a given `Layout`, that is,
 /// a type with the correct size and alignment restrictions.
-<<<<<<< HEAD
-pub fn blob(ctx: &BindgenContext, layout: Layout) -> quote::Tokens {
-||||||| merged common ancestors
-pub fn blob(layout: Layout) -> quote::Tokens {
-=======
 pub fn blob(ctx: &BindgenContext, layout: Layout) -> TokenStream {
->>>>>>> upstream-releases
     let opaque = layout.opaque();
 
     // FIXME(emilio, #412): We fall back to byte alignment, but there are
@@ -103,19 +97,9 @@ pub fn blob(ctx: &BindgenContext, layout: Layout) -> TokenStream {
 }
 
 /// Integer type of the same size as the given `Layout`.
-<<<<<<< HEAD
-pub fn integer_type(ctx: &BindgenContext, layout: Layout) -> Option<quote::Tokens> {
-    let name = Layout::known_type_for_size(ctx, layout.size)?;
-    let name = Term::new(name, Span::call_site());
-||||||| merged common ancestors
-pub fn integer_type(layout: Layout) -> Option<quote::Tokens> {
-    let name = Layout::known_type_for_size(layout.size)?;
-    let name = Term::new(name, Span::call_site());
-=======
 pub fn integer_type(ctx: &BindgenContext, layout: Layout) -> Option<TokenStream> {
     let name = Layout::known_type_for_size(ctx, layout.size)?;
     let name = Ident::new(name, Span::call_site());
->>>>>>> upstream-releases
     Some(quote! { #name })
 }
 
@@ -168,21 +152,10 @@ pub mod ast_ty {
     pub fn float_kind_rust_type(
         ctx: &BindgenContext,
         fk: FloatKind,
-<<<<<<< HEAD
-        layout: Option<Layout>,
-    ) -> quote::Tokens {
-        // TODO: we probably should take the type layout into account more
-        // often?
-||||||| merged common ancestors
-    ) -> quote::Tokens {
-        // TODO: we probably should just take the type layout into
-        // account?
-=======
         layout: Option<Layout>,
     ) -> TokenStream {
         // TODO: we probably should take the type layout into account more
         // often?
->>>>>>> upstream-releases
         //
         // Also, maybe this one shouldn't be the default?
         match (fk, ctx.options().convert_floats) {

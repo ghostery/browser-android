@@ -323,27 +323,5 @@ async function run_test() {
     );
   });
 
-<<<<<<< HEAD
-function check_test_pt11() {
-  let bestUpdate = gAUS.selectUpdate(gUpdates, gUpdateCount);
-  Assert.ok(!!bestUpdate,
-            "there should be one update available");
-  Assert.equal(bestUpdate.appVersion, "1.0",
-               "the update appVersion attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(bestUpdate.displayVersion, "1.0",
-               "the update displayVersion attribute" + MSG_SHOULD_EQUAL);
   stop_httpserver(doTestFinish);
-||||||| merged common ancestors
-function check_test_pt11() {
-  let bestUpdate = gAUS.selectUpdate(gUpdates, gUpdateCount);
-  Assert.ok(!!bestUpdate,
-            "there should be one update available");
-  Assert.equal(bestUpdate.appVersion, "1.0",
-               "the update appVersion attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(bestUpdate.displayVersion, "1.0",
-               "the update displayVersion attribute" + MSG_SHOULD_EQUAL);
-  doTestFinish();
-=======
-  stop_httpserver(doTestFinish);
->>>>>>> upstream-releases
 }

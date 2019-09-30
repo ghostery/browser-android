@@ -16,19 +16,10 @@ namespace cache {
 
 class Manager;
 
-<<<<<<< HEAD
-class CacheParent final : public PCacheParent {
- public:
-||||||| merged common ancestors
-class CacheParent final : public PCacheParent
-{
-public:
-=======
 class CacheParent final : public PCacheParent {
   friend class PCacheParent;
 
  public:
->>>>>>> upstream-releases
   CacheParent(cache::Manager* aManager, CacheId aCacheId);
   virtual ~CacheParent();
 
@@ -36,36 +27,14 @@ class CacheParent final : public PCacheParent {
   // PCacheParent methods
   virtual void ActorDestroy(ActorDestroyReason aReason) override;
 
-<<<<<<< HEAD
-  virtual PCacheOpParent* AllocPCacheOpParent(
-      const CacheOpArgs& aOpArgs) override;
-||||||| merged common ancestors
-  virtual PCacheOpParent*
-  AllocPCacheOpParent(const CacheOpArgs& aOpArgs) override;
-=======
   PCacheOpParent* AllocPCacheOpParent(const CacheOpArgs& aOpArgs);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool DeallocPCacheOpParent(PCacheOpParent* aActor) override;
-||||||| merged common ancestors
-  virtual bool
-  DeallocPCacheOpParent(PCacheOpParent* aActor) override;
-=======
   bool DeallocPCacheOpParent(PCacheOpParent* aActor);
->>>>>>> upstream-releases
 
   virtual mozilla::ipc::IPCResult RecvPCacheOpConstructor(
       PCacheOpParent* actor, const CacheOpArgs& aOpArgs) override;
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvTeardown() override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvTeardown() override;
-=======
   mozilla::ipc::IPCResult RecvTeardown();
->>>>>>> upstream-releases
 
   RefPtr<cache::Manager> mManager;
   const CacheId mCacheId;

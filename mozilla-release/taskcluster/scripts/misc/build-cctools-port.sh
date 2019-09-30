@@ -48,15 +48,9 @@ export LDFLAGS="-lpthread -Wl,-rpath-link,$CLANG_DIR/lib"
 make -j `nproc --all` install
 strip $CROSSTOOLS_BUILD_DIR/bin/*
 # cctools-port doesn't include dsymutil but clang will need to find it.
-<<<<<<< HEAD
-cp $CLANG_DIR/bin/dsymutil $CROSSTOOLS_BUILD_DIR/bin/x86_64-apple-darwin11-dsymutil
-||||||| merged common ancestors
-cp $CLANG_DIR/bin/llvm-dsymutil $CROSSTOOLS_BUILD_DIR/bin/x86_64-apple-darwin11-dsymutil
-=======
 cp $CLANG_DIR/bin/dsymutil $CROSSTOOLS_BUILD_DIR/bin/x86_64-apple-darwin-dsymutil
 # various build scripts based on cmake want to find `lipo` without a prefix
 cp $CROSSTOOLS_BUILD_DIR/bin/x86_64-apple-darwin-lipo $CROSSTOOLS_BUILD_DIR/bin/lipo
->>>>>>> upstream-releases
 
 # Put a tarball in the artifacts dir
 mkdir -p $UPLOAD_DIR

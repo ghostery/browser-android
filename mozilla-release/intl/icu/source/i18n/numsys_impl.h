@@ -36,12 +36,6 @@ public:
     virtual int32_t count(UErrorCode& status) const override;
 private:
     int32_t pos;
-<<<<<<< HEAD
-    UVector *fNumsysNames = nullptr;
-||||||| merged common ancestors
-    UVector *fNumsysNames;
-=======
->>>>>>> upstream-releases
 };
 
 U_NAMESPACE_END

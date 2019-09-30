@@ -55,19 +55,9 @@
 #include "nsWindowsHelpers.h"
 
 #ifdef NS_ENABLE_TSF
-<<<<<<< HEAD
-#include <textstor.h>
-#include "TSFTextStore.h"
-#endif  // #ifdef NS_ENABLE_TSF
-||||||| merged common ancestors
-#include <textstor.h>
-#include "TSFTextStore.h"
-#endif // #ifdef NS_ENABLE_TSF
-=======
 #  include <textstor.h>
 #  include "TSFTextStore.h"
 #endif  // #ifdef NS_ENABLE_TSF
->>>>>>> upstream-releases
 
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -612,16 +602,8 @@ static bool SlowIsPerMonitorDPIAware() {
          dpiAwareness == PROCESS_PER_MONITOR_DPI_AWARE;
 }
 
-<<<<<<< HEAD
-/* static */ bool WinUtils::IsPerMonitorDPIAware() {
-||||||| merged common ancestors
-/* static */ bool
-WinUtils::IsPerMonitorDPIAware()
-{
-=======
 /* static */
 bool WinUtils::IsPerMonitorDPIAware() {
->>>>>>> upstream-releases
   static bool perMonitorDPIAware = SlowIsPerMonitorDPIAware();
   return perMonitorDPIAware;
 }
@@ -1236,16 +1218,6 @@ AsyncFaviconDataReady::OnComplete(nsIURI* aFaviconURI, uint32_t aDataLen,
     }
     dt->FillRect(Rect(0, 0, size.width, size.height),
                  ColorPattern(Color(1.0f, 1.0f, 1.0f, 1.0f)));
-<<<<<<< HEAD
-    dt->DrawSurface(surface, Rect(16, 16, 16, 16),
-                    Rect(Point(0, 0), Size(surface->GetSize().width,
-                                           surface->GetSize().height)));
-||||||| merged common ancestors
-    dt->DrawSurface(surface,
-                    Rect(16, 16, 16, 16),
-                    Rect(Point(0, 0),
-                         Size(surface->GetSize().width, surface->GetSize().height)));
-=======
     IntPoint point;
     point.x = (size.width - surface->GetSize().width) / 2;
     point.y = (size.height - surface->GetSize().height) / 2;
@@ -1254,7 +1226,6 @@ AsyncFaviconDataReady::OnComplete(nsIURI* aFaviconURI, uint32_t aDataLen,
                          surface->GetSize().height),
                     Rect(Point(0, 0), Size(surface->GetSize().width,
                                            surface->GetSize().height)));
->>>>>>> upstream-releases
 
     dataSurface->Unmap();
   } else {
@@ -1315,12 +1286,6 @@ NS_IMETHODIMP AsyncEncodeAndWriteIcon::Run() {
     nsresult rv = NS_ERROR_FAILURE;
     nsCOMPtr<nsIFile> comFile = do_CreateInstance("@mozilla.org/file/local;1");
     if (comFile) {
-<<<<<<< HEAD
-      // NS_ConvertUTF8toUTF16 utf16path(mIconPath);
-||||||| merged common ancestors
-      //NS_ConvertUTF8toUTF16 utf16path(mIconPath);
-=======
->>>>>>> upstream-releases
       rv = comFile->InitWithPath(mIconPath);
       if (NS_SUCCEEDED(rv)) {
         nsCOMPtr<nsIFile> dirPath;
@@ -1340,21 +1305,8 @@ NS_IMETHODIMP AsyncEncodeAndWriteIcon::Run() {
       return rv;
     }
   }
-<<<<<<< HEAD
-  nsresult rv = gfxUtils::EncodeSourceSurface(
-      surface, NS_LITERAL_CSTRING("image/vnd.microsoft.icon"), EmptyString(),
-      gfxUtils::eBinaryEncode, file);
-||||||| merged common ancestors
-  nsresult rv =
-    gfxUtils::EncodeSourceSurface(surface,
-                                  NS_LITERAL_CSTRING("image/vnd.microsoft.icon"),
-                                  EmptyString(),
-                                  gfxUtils::eBinaryEncode,
-                                  file);
-=======
   nsresult rv = gfxUtils::EncodeSourceSurface(
       surface, ImageType::ICO, EmptyString(), gfxUtils::eBinaryEncode, file);
->>>>>>> upstream-releases
   fclose(file);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -1713,33 +1665,6 @@ nsresult WinUtils::WriteBitmap(nsIFile* aFile, SourceSurface* surface) {
 
   // initialize these bitmap structs which we will later
   // serialize directly to the head of the bitmap file
-<<<<<<< HEAD
-  BITMAPINFOHEADER bmi;
-  bmi.biSize = sizeof(BITMAPINFOHEADER);
-  bmi.biWidth = width;
-  bmi.biHeight = height;
-  bmi.biPlanes = 1;
-  bmi.biBitCount = (WORD)bytesPerPixel * 8;
-  bmi.biCompression = BI_RGB;
-  bmi.biSizeImage = bytesPerRow * height;
-  bmi.biXPelsPerMeter = 0;
-  bmi.biYPelsPerMeter = 0;
-  bmi.biClrUsed = 0;
-  bmi.biClrImportant = 0;
-||||||| merged common ancestors
-  BITMAPINFOHEADER bmi;
-  bmi.biSize = sizeof(BITMAPINFOHEADER);
-  bmi.biWidth = width;
-  bmi.biHeight = height;
-  bmi.biPlanes = 1;
-  bmi.biBitCount = (WORD)bytesPerPixel*8;
-  bmi.biCompression = BI_RGB;
-  bmi.biSizeImage = bytesPerRow * height;
-  bmi.biXPelsPerMeter = 0;
-  bmi.biYPelsPerMeter = 0;
-  bmi.biClrUsed = 0;
-  bmi.biClrImportant = 0;
-=======
   BITMAPV4HEADER bmi;
   memset(&bmi, 0, sizeof(BITMAPV4HEADER));
   bmi.bV4Size = sizeof(BITMAPV4HEADER);
@@ -1756,17 +1681,10 @@ nsresult WinUtils::WriteBitmap(nsIFile* aFile, SourceSurface* surface) {
     bmi.bV4BlueMask = 0x000000FF;
     bmi.bV4AlphaMask = 0xFF000000;
   }
->>>>>>> upstream-releases
 
   BITMAPFILEHEADER bf;
-<<<<<<< HEAD
-  bf.bfType = 0x4D42;  // 'BM'
-||||||| merged common ancestors
-  bf.bfType = 0x4D42; // 'BM'
-=======
   DWORD colormask[3];
   bf.bfType = 0x4D42;  // 'BM'
->>>>>>> upstream-releases
   bf.bfReserved1 = 0;
   bf.bfReserved2 = 0;
   bf.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPV4HEADER) +

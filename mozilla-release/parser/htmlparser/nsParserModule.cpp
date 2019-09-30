@@ -5,50 +5,7 @@
 
 #include "nsHTMLTags.h"
 
-<<<<<<< HEAD
-//----------------------------------------------------------------------
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsParser)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSAXXMLReader)
-
-NS_DEFINE_NAMED_CID(NS_PARSER_CID);
-NS_DEFINE_NAMED_CID(NS_SAXXMLREADER_CID);
-
-static const mozilla::Module::CIDEntry kParserCIDs[] = {
-    {&kNS_PARSER_CID, false, nullptr, nsParserConstructor},
-    {&kNS_SAXXMLREADER_CID, false, nullptr, nsSAXXMLReaderConstructor},
-    {nullptr}};
-
-static const mozilla::Module::ContractIDEntry kParserContracts[] = {
-    {NS_SAXXMLREADER_CONTRACTID, &kNS_SAXXMLREADER_CID}, {nullptr}};
-
-static nsresult Initialize() {
-||||||| merged common ancestors
-//----------------------------------------------------------------------
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsParser)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsSAXXMLReader)
-
-NS_DEFINE_NAMED_CID(NS_PARSER_CID);
-NS_DEFINE_NAMED_CID(NS_SAXXMLREADER_CID);
-
-static const mozilla::Module::CIDEntry kParserCIDs[] = {
-  { &kNS_PARSER_CID, false, nullptr, nsParserConstructor },
-  { &kNS_SAXXMLREADER_CID, false, nullptr, nsSAXXMLReaderConstructor },
-  { nullptr }
-};
-
-static const mozilla::Module::ContractIDEntry kParserContracts[] = {
-  { NS_SAXXMLREADER_CONTRACTID, &kNS_SAXXMLREADER_CID },
-  { nullptr }
-};
-
-static nsresult
-Initialize()
-{
-=======
 nsresult nsParserInitialize() {
->>>>>>> upstream-releases
   nsresult rv = nsHTMLTags::AddRefTable();
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -59,37 +16,3 @@ nsresult nsParserInitialize() {
 
   return rv;
 }
-<<<<<<< HEAD
-
-static void Shutdown() { nsHTMLTags::ReleaseTable(); }
-
-static mozilla::Module kParserModule = {mozilla::Module::kVersion,
-                                        kParserCIDs,
-                                        kParserContracts,
-                                        nullptr,
-                                        nullptr,
-                                        Initialize,
-                                        Shutdown};
-
-NSMODULE_DEFN(nsParserModule) = &kParserModule;
-||||||| merged common ancestors
-
-static void
-Shutdown()
-{
-  nsHTMLTags::ReleaseTable();
-}
-
-static mozilla::Module kParserModule = {
-  mozilla::Module::kVersion,
-  kParserCIDs,
-  kParserContracts,
-  nullptr,
-  nullptr,
-  Initialize,
-  Shutdown
-};
-
-NSMODULE_DEFN(nsParserModule) = &kParserModule;
-=======
->>>>>>> upstream-releases

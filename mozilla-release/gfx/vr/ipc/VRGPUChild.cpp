@@ -5,31 +5,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "VRGPUChild.h"
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
 #include "mozilla/layers/CompositorThread.h"
 
->>>>>>> upstream-releases
 namespace mozilla {
 namespace gfx {
 
 static StaticRefPtr<VRGPUChild> sVRGPUChildSingleton;
 
-<<<<<<< HEAD
-/* static */ bool VRGPUChild::InitForGPUProcess(
-    Endpoint<PVRGPUChild>&& aEndpoint) {
-||||||| merged common ancestors
-/* static */ bool
-VRGPUChild::InitForGPUProcess(Endpoint<PVRGPUChild>&& aEndpoint)
-{
-=======
 /* static */
 bool VRGPUChild::InitForGPUProcess(Endpoint<PVRGPUChild>&& aEndpoint) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(!sVRGPUChildSingleton);
 
@@ -50,43 +34,17 @@ bool VRGPUChild::InitForGPUProcess(Endpoint<PVRGPUChild>&& aEndpoint) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool VRGPUChild::IsCreated() { return !!sVRGPUChildSingleton; }
-||||||| merged common ancestors
-/* static */ bool
-VRGPUChild::IsCreated()
-{
-  return !!sVRGPUChildSingleton;
-}
-=======
 /* static */
 bool VRGPUChild::IsCreated() { return !!sVRGPUChildSingleton; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ VRGPUChild* VRGPUChild::Get() {
-||||||| merged common ancestors
-/* static */ VRGPUChild*
-VRGPUChild::Get()
-{
-=======
 /* static */
 VRGPUChild* VRGPUChild::Get() {
->>>>>>> upstream-releases
   MOZ_ASSERT(IsCreated(), "VRGPUChild haven't initialized yet.");
   return sVRGPUChildSingleton;
 }
 
-<<<<<<< HEAD
-/*static*/ void VRGPUChild::ShutDown() {
-||||||| merged common ancestors
-/*static*/ void
-VRGPUChild::ShutDown()
-{
-=======
 /*static*/
 void VRGPUChild::Shutdown() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (sVRGPUChildSingleton && !sVRGPUChildSingleton->IsClosed()) {
     sVRGPUChildSingleton->Close();
@@ -94,13 +52,6 @@ void VRGPUChild::Shutdown() {
   sVRGPUChildSingleton = nullptr;
 }
 
-<<<<<<< HEAD
-}  // namespace gfx
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
 void VRGPUChild::ActorDestroy(ActorDestroyReason aWhy) {
   VRManager* vm = VRManager::Get();
   mozilla::layers::CompositorThreadHolder::Loop()->PostTask(
@@ -113,4 +64,3 @@ bool VRGPUChild::IsClosed() { return mClosed; }
 
 }  // namespace gfx
 }  // namespace mozilla
->>>>>>> upstream-releases

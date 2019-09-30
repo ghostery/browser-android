@@ -586,25 +586,9 @@ const proto = {
       }
     }
 
-<<<<<<< HEAD
-    let receiver;
-    if (receiverId) {
-      const receiverActor = this.conn.getActor(receiverId);
-      if (receiverActor) {
-        receiver = receiverActor.obj;
-      }
-    }
-
     const value = receiver
       ? this.obj.getProperty(name, receiver)
       : this.obj.getProperty(name);
-||||||| merged common ancestors
-    const value = this.obj.getProperty(name);
-=======
-    const value = receiver
-      ? this.obj.getProperty(name, receiver)
-      : this.obj.getProperty(name);
->>>>>>> upstream-releases
 
     return { value: this._buildCompletion(value) };
   },

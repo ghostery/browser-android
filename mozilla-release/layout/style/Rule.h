@@ -71,14 +71,7 @@ class Rule : public nsISupports, public nsWrapperCache {
   // Return the document the rule applies to, if any.
   //
   // Suitable for style updates, and that's about it.
-<<<<<<< HEAD
-  nsIDocument* GetComposedDoc() const {
-||||||| merged common ancestors
-  nsIDocument* GetComposedDoc() const
-  {
-=======
   dom::Document* GetComposedDoc() const {
->>>>>>> upstream-releases
     return mSheet ? mSheet->GetComposedDoc() : nullptr;
   }
 

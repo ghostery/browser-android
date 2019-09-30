@@ -33,13 +33,7 @@ const global = this;
 var EXPORTED_SYMBOLS = ["Kinto"];
 
 /*
-<<<<<<< HEAD
- * Version 12.2.4 - 8fb687a
-||||||| merged common ancestors
- * Version 12.2.0 - 266e100
-=======
  * Version 12.6.0 - f14a3e6
->>>>>>> upstream-releases
  */
 
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Kinto = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
@@ -74,29 +68,12 @@ var _utils = require("../src/utils");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Timer.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-XPCOMUtils.defineLazyGlobalGetters(global, ["fetch", "indexedDB"]);
-ChromeUtils.defineModuleGetter(global, "EventEmitter", "resource://gre/modules/EventEmitter.jsm"); // Use standalone kinto-http module landed in FFx.
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Timer.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-XPCOMUtils.defineLazyGlobalGetters(global, ["fetch", "indexedDB"]);
-const {
-  EventEmitter
-} = ChromeUtils.import("resource://gre/modules/EventEmitter.jsm", {});
-const {
-  generateUUID
-} = Cc["@mozilla.org/uuid-generator;1"].getService(Ci.nsIUUIDGenerator); // Use standalone kinto-http module landed in FFx.
-=======
 ChromeUtils.import("resource://gre/modules/Timer.jsm", global);
 const {
   XPCOMUtils
 } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 XPCOMUtils.defineLazyGlobalGetters(global, ["fetch", "indexedDB"]);
 ChromeUtils.defineModuleGetter(global, "EventEmitter", "resource://gre/modules/EventEmitter.jsm"); // Use standalone kinto-http module landed in FFx.
->>>>>>> upstream-releases
 
 ChromeUtils.defineModuleGetter(global, "KintoHttpClient", "resource://services-common/kinto-http-client.js");
 XPCOMUtils.defineLazyGetter(global, "generateUUID", () => {

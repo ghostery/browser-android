@@ -1697,72 +1697,11 @@ RENDER_AGAIN:
     }
 
     DrawThemeBackground(theme, hdc, part, state, &contentRect, &clipRect);
-<<<<<<< HEAD
   } else if (aAppearance == StyleAppearance::Menucheckbox ||
              aAppearance == StyleAppearance::Menuradio) {
     bool isChecked = false;
     isChecked = CheckBooleanAttr(aFrame, nsGkAtoms::checked);
 
-    if (isChecked) {
-      int bgState = MCB_NORMAL;
-      EventStates eventState = GetContentState(aFrame, aAppearance);
-
-      // the disabled states are offset by 1
-      if (IsDisabled(aFrame, eventState)) bgState += 1;
-||||||| merged common ancestors
-  }
-  else if (aWidgetType == StyleAppearance::Menucheckbox || aWidgetType == StyleAppearance::Menuradio)
-  {
-      bool isChecked = false;
-      isChecked = CheckBooleanAttr(aFrame, nsGkAtoms::checked);
-
-      if (isChecked)
-      {
-        int bgState = MCB_NORMAL;
-        EventStates eventState = GetContentState(aFrame, aWidgetType);
-
-        // the disabled states are offset by 1
-        if (IsDisabled(aFrame, eventState))
-          bgState += 1;
-=======
-  } else if (aAppearance == StyleAppearance::Menucheckbox ||
-             aAppearance == StyleAppearance::Menuradio) {
-    bool isChecked = false;
-    isChecked = CheckBooleanAttr(aFrame, nsGkAtoms::checked);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-      SIZE checkboxBGSize(GetCheckboxBGSize(theme, hdc));
-
-      RECT checkBGRect = widgetRect;
-      if (IsFrameRTL(aFrame)) {
-        checkBGRect.left = checkBGRect.right - checkboxBGSize.cx;
-      } else {
-        checkBGRect.right = checkBGRect.left + checkboxBGSize.cx;
-||||||| merged common ancestors
-        SIZE checkboxBGSize(GetCheckboxBGSize(theme, hdc));
-
-        RECT checkBGRect = widgetRect;
-        if (IsFrameRTL(aFrame)) {
-          checkBGRect.left = checkBGRect.right-checkboxBGSize.cx;
-        } else {
-          checkBGRect.right = checkBGRect.left+checkboxBGSize.cx;
-        }
-
-        // Center the checkbox background vertically in the menuitem
-        checkBGRect.top += (checkBGRect.bottom - checkBGRect.top)/2 - checkboxBGSize.cy/2;
-        checkBGRect.bottom = checkBGRect.top + checkboxBGSize.cy;
-
-        DrawThemeBackground(theme, hdc, MENU_POPUPCHECKBACKGROUND, bgState, &checkBGRect, &clipRect);
-
-        MARGINS checkMargins = GetCheckboxMargins(theme, hdc);
-        RECT checkRect = checkBGRect;
-        checkRect.left += checkMargins.cxLeftWidth;
-        checkRect.right -= checkMargins.cxRightWidth;
-        checkRect.top += checkMargins.cyTopHeight;
-        checkRect.bottom -= checkMargins.cyBottomHeight;
-        DrawThemeBackground(theme, hdc, MENU_POPUPCHECK, state, &checkRect, &clipRect);
-=======
     if (isChecked) {
       int bgState = MCB_NORMAL;
       EventStates eventState = GetContentState(aFrame, aAppearance);
@@ -1777,7 +1716,6 @@ RENDER_AGAIN:
         checkBGRect.left = checkBGRect.right - checkboxBGSize.cx;
       } else {
         checkBGRect.right = checkBGRect.left + checkboxBGSize.cx;
->>>>>>> upstream-releases
       }
 
       // Center the checkbox background vertically in the menuitem
@@ -3089,80 +3027,6 @@ nsresult nsNativeThemeWin::ClassicGetMinimumWidgetSize(
         (*aResult).width = (*aResult).height = 15;
       *aIsOverridable = false;
       break;
-<<<<<<< HEAD
-      case StyleAppearance::ScrollbarthumbVertical:
-        (*aResult).width = ::GetSystemMetrics(SM_CXVSCROLL);
-        (*aResult).height = ::GetSystemMetrics(SM_CYVTHUMB);
-        // Without theming, divide the thumb size by two in order to look more
-        // native
-        if (!GetTheme(aAppearance)) {
-          (*aResult).height >>= 1;
-        }
-        // If scrollbar-width is thin, divide the thickness by two to make
-        // it look more compact.
-        if (IsScrollbarWidthThin(aFrame)) {
-          aResult->width >>= 1;
-        }
-        *aIsOverridable = false;
-        break;
-      case StyleAppearance::ScrollbarthumbHorizontal:
-        (*aResult).width = ::GetSystemMetrics(SM_CXHTHUMB);
-        (*aResult).height = ::GetSystemMetrics(SM_CYHSCROLL);
-        // Without theming, divide the thumb size by two in order to look more
-        // native
-        if (!GetTheme(aAppearance)) {
-          (*aResult).width >>= 1;
-        }
-        // If scrollbar-width is thin, divide the thickness by two to make
-        // it look more compact.
-        if (IsScrollbarWidthThin(aFrame)) {
-          aResult->height >>= 1;
-        }
-        *aIsOverridable = false;
-        break;
-      case StyleAppearance::ScrollbarHorizontal:
-        (*aResult).width = ::GetSystemMetrics(SM_CXHTHUMB) << 1;
-        break;
-    }
-    case StyleAppearance::Menuseparator: {
-||||||| merged common ancestors
-    case StyleAppearance::ScrollbarthumbVertical:
-      (*aResult).width = ::GetSystemMetrics(SM_CXVSCROLL);
-      (*aResult).height = ::GetSystemMetrics(SM_CYVTHUMB);
-      // Without theming, divide the thumb size by two in order to look more
-      // native
-      if (!GetTheme(aWidgetType)) {
-        (*aResult).height >>= 1;
-      }
-      // If scrollbar-width is thin, divide the thickness by two to make
-      // it look more compact.
-      if (IsScrollbarWidthThin(aFrame)) {
-        aResult->width >>= 1;
-      }
-      *aIsOverridable = false;
-      break;
-    case StyleAppearance::ScrollbarthumbHorizontal:
-      (*aResult).width = ::GetSystemMetrics(SM_CXHTHUMB);
-      (*aResult).height = ::GetSystemMetrics(SM_CYHSCROLL);
-      // Without theming, divide the thumb size by two in order to look more
-      // native
-      if (!GetTheme(aWidgetType)) {
-        (*aResult).width >>= 1;
-      }
-      // If scrollbar-width is thin, divide the thickness by two to make
-      // it look more compact.
-      if (IsScrollbarWidthThin(aFrame)) {
-        aResult->height >>= 1;
-      }
-      *aIsOverridable = false;
-      break;
-    case StyleAppearance::ScrollbarHorizontal:
-      (*aResult).width = ::GetSystemMetrics(SM_CXHTHUMB) << 1;
-      break;
-    }
-    case StyleAppearance::Menuseparator:
-    {
-=======
     }
     case StyleAppearance::ScrollbarthumbVertical:
       (*aResult).width = ::GetSystemMetrics(SM_CXVSCROLL);
@@ -3198,7 +3062,6 @@ nsresult nsNativeThemeWin::ClassicGetMinimumWidgetSize(
       (*aResult).width = ::GetSystemMetrics(SM_CXHTHUMB) << 1;
       break;
     case StyleAppearance::Menuseparator: {
->>>>>>> upstream-releases
       aResult->width = 0;
       aResult->height = 10;
       break;
@@ -4309,23 +4172,11 @@ nsresult nsNativeThemeWin::DrawCustomScrollbarPart(
       ThebesRect(LayoutDevicePixel::FromAppUnits(aRect, p2a).ToUnknownRect());
 
   const nsStyleUI* ui = aStyle->StyleUI();
-<<<<<<< HEAD
-  nscolor trackColor = ui->mScrollbarTrackColor.IsAuto()
-                           ? NS_RGB(240, 240, 240)
-                           : ui->mScrollbarTrackColor.CalcColor(aStyle);
-  switch (aAppearance) {
-||||||| merged common ancestors
-  nscolor trackColor = ui->mScrollbarTrackColor.IsAuto()
-    ? GetScrollbarTrackColorForAuto(aStyle)
-    : ui->mScrollbarTrackColor.CalcColor(aStyle);
-  switch (aWidgetType) {
-=======
   auto* customColors =
       ui->mScrollbarColor.IsAuto() ? nullptr : &ui->mScrollbarColor.AsColors();
   nscolor trackColor = customColors ? customColors->track.CalcColor(*aStyle)
                                     : NS_RGB(240, 240, 240);
   switch (aAppearance) {
->>>>>>> upstream-releases
     case StyleAppearance::ScrollbarHorizontal:
     case StyleAppearance::ScrollbarVertical:
     case StyleAppearance::Scrollcorner: {
@@ -4359,18 +4210,8 @@ nsresult nsNativeThemeWin::DrawCustomScrollbarPart(
   switch (aAppearance) {
     case StyleAppearance::ScrollbarthumbVertical:
     case StyleAppearance::ScrollbarthumbHorizontal: {
-<<<<<<< HEAD
-      nscolor faceColor = ui->mScrollbarFaceColor.IsAuto()
-                              ? NS_RGB(205, 205, 205)
-                              : ui->mScrollbarFaceColor.CalcColor(aStyle);
-||||||| merged common ancestors
-      nscolor faceColor = ui->mScrollbarFaceColor.IsAuto()
-        ? GetScrollbarFaceColorForAuto(aStyle)
-        : ui->mScrollbarFaceColor.CalcColor(aStyle);
-=======
       nscolor faceColor = customColors ? customColors->thumb.CalcColor(*aStyle)
                                        : NS_RGB(205, 205, 205);
->>>>>>> upstream-releases
       faceColor = AdjustScrollbarFaceColor(faceColor, eventStates);
       ctx->SetColor(Color::FromABGR(faceColor));
       ctx->Rectangle(bgRect);

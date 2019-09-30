@@ -80,22 +80,10 @@ class nsListEventListener final : public nsIDOMEventListener {
 };
 
 //---------------------------------------------------------
-<<<<<<< HEAD
-nsContainerFrame* NS_NewListControlFrame(nsIPresShell* aPresShell,
-                                         ComputedStyle* aStyle) {
-  nsListControlFrame* it = new (aPresShell) nsListControlFrame(aStyle);
-||||||| merged common ancestors
-nsContainerFrame*
-NS_NewListControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  nsListControlFrame* it =
-    new (aPresShell) nsListControlFrame(aStyle);
-=======
 nsContainerFrame* NS_NewListControlFrame(PresShell* aPresShell,
                                          ComputedStyle* aStyle) {
   nsListControlFrame* it =
       new (aPresShell) nsListControlFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 
   it->AddStateBits(NS_FRAME_INDEPENDENT_SELECTION);
 
@@ -105,28 +93,6 @@ nsContainerFrame* NS_NewListControlFrame(PresShell* aPresShell,
 NS_IMPL_FRAMEARENA_HELPERS(nsListControlFrame)
 
 //---------------------------------------------------------
-<<<<<<< HEAD
-nsListControlFrame::nsListControlFrame(ComputedStyle* aStyle)
-    : nsHTMLScrollFrame(aStyle, kClassID, false),
-      mView(nullptr),
-      mMightNeedSecondPass(false),
-      mHasPendingInterruptAtStartOfReflow(false),
-      mDropdownCanGrow(false),
-      mForceSelection(false),
-      mLastDropdownComputedBSize(NS_UNCONSTRAINEDSIZE) {
-  mComboboxFrame = nullptr;
-||||||| merged common ancestors
-nsListControlFrame::nsListControlFrame(ComputedStyle* aStyle)
-  : nsHTMLScrollFrame(aStyle, kClassID, false)
-  , mView(nullptr)
-  , mMightNeedSecondPass(false)
-  , mHasPendingInterruptAtStartOfReflow(false)
-  , mDropdownCanGrow(false)
-  , mForceSelection(false)
-  , mLastDropdownComputedBSize(NS_UNCONSTRAINEDSIZE)
-{
-  mComboboxFrame      = nullptr;
-=======
 nsListControlFrame::nsListControlFrame(ComputedStyle* aStyle,
                                        nsPresContext* aPresContext)
     : nsHTMLScrollFrame(aStyle, aPresContext, kClassID, false),
@@ -137,7 +103,6 @@ nsListControlFrame::nsListControlFrame(ComputedStyle* aStyle,
       mForceSelection(false),
       mLastDropdownComputedBSize(NS_UNCONSTRAINEDSIZE) {
   mComboboxFrame = nullptr;
->>>>>>> upstream-releases
   mChangesSinceDragStart = false;
   mButtonDown = false;
 
@@ -208,21 +173,9 @@ void nsListControlFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     // XXX Because we have an opaque widget and we get called to paint with
     // this frame as the root of a stacking context we need make sure to draw
     // some opaque color over the whole widget. (Bug 511323)
-<<<<<<< HEAD
-    aLists.BorderBackground()->AppendToBottom(
-        MakeDisplayItem<nsDisplaySolidColor>(
-            aBuilder, this, nsRect(aBuilder->ToReferenceFrame(this), GetSize()),
-            mLastDropdownBackstopColor));
-||||||| merged common ancestors
-    aLists.BorderBackground()->AppendToBottom(
-      MakeDisplayItem<nsDisplaySolidColor>(aBuilder,
-        this, nsRect(aBuilder->ToReferenceFrame(this), GetSize()),
-        mLastDropdownBackstopColor));
-=======
     aLists.BorderBackground()->AppendNewToBottom<nsDisplaySolidColor>(
         aBuilder, this, nsRect(aBuilder->ToReferenceFrame(this), GetSize()),
         mLastDropdownBackstopColor);
->>>>>>> upstream-releases
   }
 
   nsHTMLScrollFrame::BuildDisplayList(aBuilder, aLists);
@@ -276,20 +229,9 @@ void nsListControlFrame::PaintFocus(DrawTarget* aDrawTarget, nsPoint aPt) {
   }
 
   // set up back stop colors and then ask L&F service for the real colors
-<<<<<<< HEAD
-  nscolor color = LookAndFeel::GetColor(
-      lastItemIsSelected ? LookAndFeel::eColorID_WidgetSelectForeground
-                         : LookAndFeel::eColorID_WidgetSelectBackground);
-||||||| merged common ancestors
-  nscolor color =
-    LookAndFeel::GetColor(lastItemIsSelected ?
-                            LookAndFeel::eColorID_WidgetSelectForeground :
-                            LookAndFeel::eColorID_WidgetSelectBackground);
-=======
   nscolor color = LookAndFeel::GetColor(
       lastItemIsSelected ? LookAndFeel::ColorID::WidgetSelectForeground
                          : LookAndFeel::ColorID::WidgetSelectBackground);
->>>>>>> upstream-releases
 
   nsCSSRendering::PaintFocus(presContext, aDrawTarget, fRect, color);
 }
@@ -374,21 +316,11 @@ nscoord nsListControlFrame::GetPrefISize(gfxContext* aRenderingContext) {
   // dropdown, and standalone listboxes are overflow:scroll so they need
   // it too.
   WritingMode wm = GetWritingMode();
-<<<<<<< HEAD
-  result = GetScrolledFrame()->GetPrefISize(aRenderingContext);
-  LogicalMargin scrollbarSize(
-      wm, GetDesiredScrollbarSizes(PresContext(), aRenderingContext));
-||||||| merged common ancestors
-  result = GetScrolledFrame()->GetPrefISize(aRenderingContext);
-  LogicalMargin scrollbarSize(wm, GetDesiredScrollbarSizes(PresContext(),
-                                                           aRenderingContext));
-=======
   result = StyleDisplay()->IsContainSize()
                ? 0
                : GetScrolledFrame()->GetPrefISize(aRenderingContext);
   LogicalMargin scrollbarSize(
       wm, GetDesiredScrollbarSizes(PresContext(), aRenderingContext));
->>>>>>> upstream-releases
   result = NSCoordSaturatingAdd(result, scrollbarSize.IStartEnd(wm));
   return result;
 }
@@ -402,21 +334,11 @@ nscoord nsListControlFrame::GetMinISize(gfxContext* aRenderingContext) {
   // dropdown, and standalone listboxes are overflow:scroll so they need
   // it too.
   WritingMode wm = GetWritingMode();
-<<<<<<< HEAD
-  result = GetScrolledFrame()->GetMinISize(aRenderingContext);
-  LogicalMargin scrollbarSize(
-      wm, GetDesiredScrollbarSizes(PresContext(), aRenderingContext));
-||||||| merged common ancestors
-  result = GetScrolledFrame()->GetMinISize(aRenderingContext);
-  LogicalMargin scrollbarSize(wm, GetDesiredScrollbarSizes(PresContext(),
-                                                           aRenderingContext));
-=======
   result = StyleDisplay()->IsContainSize()
                ? 0
                : GetScrolledFrame()->GetMinISize(aRenderingContext);
   LogicalMargin scrollbarSize(
       wm, GetDesiredScrollbarSizes(PresContext(), aRenderingContext));
->>>>>>> upstream-releases
   result += scrollbarSize.IStartEnd(wm);
 
   return result;
@@ -678,26 +600,10 @@ void nsListControlFrame::ReflowAsDropdown(nsPresContext* aPresContext,
   nsHTMLScrollFrame::Reflow(aPresContext, aDesiredSize, state, aStatus);
 }
 
-<<<<<<< HEAD
-ScrollStyles nsListControlFrame::GetScrollStyles() const {
-  // We can't express this in the style system yet; when we can, this can go
-  // away and GetScrollStyles can be devirtualized
-  int32_t style =
-      IsInDropDownMode() ? NS_STYLE_OVERFLOW_AUTO : NS_STYLE_OVERFLOW_SCROLL;
-||||||| merged common ancestors
-ScrollStyles
-nsListControlFrame::GetScrollStyles() const
-{
-  // We can't express this in the style system yet; when we can, this can go away
-  // and GetScrollStyles can be devirtualized
-  int32_t style = IsInDropDownMode() ? NS_STYLE_OVERFLOW_AUTO
-                                     : NS_STYLE_OVERFLOW_SCROLL;
-=======
 ScrollStyles nsListControlFrame::GetScrollStyles() const {
   // We can't express this in the style system yet; when we can, this can go
   // away and GetScrollStyles can be devirtualized
   auto style = IsInDropDownMode() ? StyleOverflow::Auto : StyleOverflow::Scroll;
->>>>>>> upstream-releases
   if (GetWritingMode().IsVertical()) {
     return ScrollStyles(style, StyleOverflow::Hidden);
   } else {
@@ -935,19 +841,9 @@ void nsListControlFrame::CaptureMouseEvents(bool aGrabMouseEvents) {
       // capturing (or if the dropdown is hidden, in which case NO-ONE should
       // be capturing anything - it could be a scrollbar inside this listbox
       // which is actually grabbing
-<<<<<<< HEAD
-      // This shouldn't be necessary. We should simply ensure that events
-      // targeting scrollbars are never visible to DOM consumers.
-      nsIPresShell::SetCapturingContent(nullptr, 0);
-||||||| merged common ancestors
-      // This shouldn't be necessary. We should simply ensure that events targeting
-      // scrollbars are never visible to DOM consumers.
-      nsIPresShell::SetCapturingContent(nullptr, 0);
-=======
       // This shouldn't be necessary. We should simply ensure that events
       // targeting scrollbars are never visible to DOM consumers.
       PresShell::ReleaseCapturingContent();
->>>>>>> upstream-releases
     }
   }
 }
@@ -1023,16 +919,7 @@ void nsListControlFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
                               nsIFrame* aPrevInFlow) {
   nsHTMLScrollFrame::Init(aContent, aParent, aPrevInFlow);
 
-<<<<<<< HEAD
-  if (!nsLayoutUtils::IsContentSelectEnabled() && IsInDropDownMode()) {
-    // TODO(kuoe0) Remove the following code when content-select is enabled.
-||||||| merged common ancestors
-  if (!nsLayoutUtils::IsContentSelectEnabled() &&
-      IsInDropDownMode()) {
-    // TODO(kuoe0) Remove the following code when content-select is enabled.
-=======
   if (IsInDropDownMode()) {
->>>>>>> upstream-releases
     AddStateBits(NS_FRAME_IN_POPUP);
     CreateView();
   }
@@ -1409,17 +1296,8 @@ void nsListControlFrame::FireOnInputAndOnChange() {
                                        CanBubble::eYes, Cancelable::eNo);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsListControlFrame::OnSetSelectedIndex(int32_t aOldIndex, int32_t aNewIndex) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsListControlFrame::OnSetSelectedIndex(int32_t aOldIndex, int32_t aNewIndex)
-{
-=======
 NS_IMETHODIMP_(void)
 nsListControlFrame::OnSetSelectedIndex(int32_t aOldIndex, int32_t aNewIndex) {
->>>>>>> upstream-releases
   if (mComboboxFrame) {
     // UpdateRecentIndex with NS_SKIP_NOTIFY_INDEX, so that we won't fire an
     // onchange event for this setting of selectedIndex.
@@ -1940,20 +1818,6 @@ void nsListControlFrame::ScrollToFrame(dom::HTMLOptionElement& aOptElement) {
   // otherwise we find the content's frame and scroll to it
   nsIFrame* childFrame = aOptElement.GetPrimaryFrame();
   if (childFrame) {
-<<<<<<< HEAD
-    PresShell()->ScrollFrameRectIntoView(
-        childFrame, nsRect(nsPoint(0, 0), childFrame->GetSize()),
-        nsIPresShell::ScrollAxis(), nsIPresShell::ScrollAxis(),
-        nsIPresShell::SCROLL_OVERFLOW_HIDDEN |
-            nsIPresShell::SCROLL_FIRST_ANCESTOR_ONLY);
-||||||| merged common ancestors
-    PresShell()->
-      ScrollFrameRectIntoView(childFrame,
-                              nsRect(nsPoint(0, 0), childFrame->GetSize()),
-                              nsIPresShell::ScrollAxis(), nsIPresShell::ScrollAxis(),
-                              nsIPresShell::SCROLL_OVERFLOW_HIDDEN |
-                              nsIPresShell::SCROLL_FIRST_ANCESTOR_ONLY);
-=======
     RefPtr<mozilla::PresShell> presShell = PresShell();
     presShell->ScrollFrameRectIntoView(
         childFrame, nsRect(nsPoint(0, 0), childFrame->GetSize()), ScrollAxis(),
@@ -1961,7 +1825,6 @@ void nsListControlFrame::ScrollToFrame(dom::HTMLOptionElement& aOptElement) {
         ScrollFlags::ScrollOverflowHidden |
             ScrollFlags::ScrollFirstAncestorOnly |
             ScrollFlags::IgnoreMarginAndPadding);
->>>>>>> upstream-releases
   }
 }
 

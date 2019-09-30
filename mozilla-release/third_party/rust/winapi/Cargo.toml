@@ -26,83 +26,6 @@ winapi-i686-pc-windows-gnu = { version = "0.4", path = "i686" }
 winapi-x86_64-pc-windows-gnu = { version = "0.4", path = "x86_64" }
 
 [features]
-<<<<<<< HEAD
-debug = []
-everything = []
-impl-default = []
-std = []
-#km
-#mmos
-#shared
-basetsd = []
-bcrypt = []
-bugcodes = []
-cderr = []
-cfg = []
-d3d9 = []
-d3d9caps = []
-d3d9types = []
-dcomptypes = []
-devguid = []
-devpkey = []
-devpropdef = []
-dinputd = []
-dxgi = []
-dxgi1_2 = []
-dxgi1_3 = []
-dxgi1_4 = []
-dxgi1_5 = []
-dxgi1_6 = []
-dxgiformat = []
-dxgitype = []
-evntprov = []
-evntrace = []
-exdisp = []
-guiddef = []
-hidclass = []
-hidpi = []
-hidsdi = []
-hidusage = []
-in6addr = []
-inaddr = []
-intsafe = []
-ks = []
-ksmedia = []
-ktmtypes = []
-lmcons = []
-minwindef = []
-mmreg = []
-mstcpip = []
-ntddscsi = []
-ntddser = []
-ntdef = []
-ntstatus = []
-qos = []
-rpc = []
-rpcdce = []
-rpcndr = []
-sddl = []
-sspi = []
-stralign = []
-transportsettingcommon = []
-tvout = []
-usb = []
-usbiodef = []
-usbspec = []
-windef = []
-windowsx = []
-winerror = []
-winusbio = []
-wmistr = []
-wnnc = []
-ws2def = []
-ws2ipdef = []
-wtypes = []
-wtypesbase = []
-#ucrt
-#um
-||||||| merged common ancestors
-=======
 debug = ["impl-debug"]
 everything = []
 impl-debug = []
@@ -183,7 +106,6 @@ wtypes = []
 wtypesbase = []
 #ucrt
 #um
->>>>>>> upstream-releases
 accctrl = []
 aclapi = []
 appmgmt = []
@@ -260,12 +182,7 @@ ddrawint = []
 debugapi = []
 devicetopology = []
 dinput = []
-<<<<<<< HEAD
-||||||| merged common ancestors
-dinputd = []
-=======
 dispex = []
->>>>>>> upstream-releases
 dmksctl = []
 dmusicc = []
 docobj = []
@@ -332,12 +249,7 @@ msaatext = []
 mscat = []
 mschapp = []
 mssip = []
-<<<<<<< HEAD
-||||||| merged common ancestors
-mstcpip = []
-=======
 mswsock = []
->>>>>>> upstream-releases
 namedpipeapi = []
 namespaceapi = []
 nb30 = []
@@ -461,13 +373,7 @@ winusb = []
 winuser = []
 winver = []
 wow64apiset = []
-<<<<<<< HEAD
-||||||| merged common ancestors
-ws2def = []
-ws2ipdef = []
-=======
 wpdmtpextensions = []
->>>>>>> upstream-releases
 ws2spi = []
 ws2tcpip = []
 xinput = []

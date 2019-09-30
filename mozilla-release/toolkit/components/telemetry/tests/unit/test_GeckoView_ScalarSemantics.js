@@ -54,39 +54,6 @@ add_task(async function test_MultiprocessScalarSemantics() {
   let child = run_in_child("test_GeckoView_content_scalars.js");
 
   // Wait for the data to be collected by the parent process.
-<<<<<<< HEAD
-  await waitForScalarSnapshotData(ALL_PROCESSES_UINT_SCALAR, "parent", false /* aKeyed */);
-  await waitForScalarSnapshotData(CONTENT_ONLY_UINT_SCALAR, "content", false /* aKeyed */);
-  await waitForScalarSnapshotData(ALL_PROCESSES_UINT_SCALAR, "content", false /* aKeyed */);
-  await waitForScalarSnapshotData(CHILD_KEYED_UNSIGNED_INT, "content", true /* aKeyed */);
-
-  let snapshot = Telemetry.getSnapshotForScalars("main", false /* clear */);
-  let keyedSnapshot = Telemetry.getSnapshotForKeyedScalars("main", false /* clear */);
-  Assert.equal(snapshot.content[CONTENT_ONLY_UINT_SCALAR], 14,
-            `The ${CONTENT_ONLY_UINT_SCALAR} scalar must have the expected value in the content section.`);
-  Assert.equal(snapshot.content[ALL_PROCESSES_UINT_SCALAR], 24,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must have the expected value in the content section.`);
-  Assert.equal(snapshot.parent[ALL_PROCESSES_UINT_SCALAR], 34,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must have the expected value in the parent section.`);
-  Assert.equal(keyedSnapshot.content[CHILD_KEYED_UNSIGNED_INT].chewbacca, 44,
-            `The ${CHILD_KEYED_UNSIGNED_INT} keyed scalar must have the expected value in the content section.`);
-||||||| merged common ancestors
-  await waitForScalarSnapshotData(ALL_PROCESSES_UINT_SCALAR, "parent", false /* aKeyed */);
-  await waitForScalarSnapshotData(CONTENT_ONLY_UINT_SCALAR, "content", false /* aKeyed */);
-  await waitForScalarSnapshotData(ALL_PROCESSES_UINT_SCALAR, "content", false /* aKeyed */);
-  await waitForScalarSnapshotData(CHILD_KEYED_UNSIGNED_INT, "content", true /* aKeyed */);
-
-  let snapshot = Telemetry.snapshotScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, false /* clear */);
-  let keyedSnapshot = Telemetry.snapshotKeyedScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, false /* clear */);
-  Assert.equal(snapshot.content[CONTENT_ONLY_UINT_SCALAR], 14,
-            `The ${CONTENT_ONLY_UINT_SCALAR} scalar must have the expected value in the content section.`);
-  Assert.equal(snapshot.content[ALL_PROCESSES_UINT_SCALAR], 24,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must have the expected value in the content section.`);
-  Assert.equal(snapshot.parent[ALL_PROCESSES_UINT_SCALAR], 34,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must have the expected value in the parent section.`);
-  Assert.equal(keyedSnapshot.content[CHILD_KEYED_UNSIGNED_INT].chewbacca, 44,
-            `The ${CHILD_KEYED_UNSIGNED_INT} keyed scalar must have the expected value in the content section.`);
-=======
   await waitForScalarSnapshotData(
     ALL_PROCESSES_UINT_SCALAR,
     "parent",
@@ -133,7 +100,6 @@ add_task(async function test_MultiprocessScalarSemantics() {
     44,
     `The ${CHILD_KEYED_UNSIGNED_INT} keyed scalar must have the expected value in the content section.`
   );
->>>>>>> upstream-releases
 
   // Force persisting the measurements to file.
   TelemetryGeckoView.forcePersist();
@@ -167,59 +133,6 @@ add_task(async function test_MultiprocessScalarSemantics() {
   );
 
   // Validate the snapshot data.
-<<<<<<< HEAD
-  snapshot = Telemetry.getSnapshotForScalars("main", false /* clear */);
-  keyedSnapshot = Telemetry.getSnapshotForKeyedScalars("main", false /* clear */);
-
-  Assert.ok("parent" in snapshot, "The snapshot object must have a 'content' entry.");
-  Assert.ok("content" in snapshot, "The snapshot object must have a 'content' entry.");
-  Assert.ok("content" in keyedSnapshot, "The keyed snapshot object must have a 'content' entry.");
-
-  Assert.ok(ALL_PROCESSES_UINT_SCALAR in snapshot.parent,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must exist in the parent section.`);
-  Assert.ok(CONTENT_ONLY_UINT_SCALAR in snapshot.content,
-            `The ${CONTENT_ONLY_UINT_SCALAR} scalar must exist in the content section.`);
-  Assert.ok(ALL_PROCESSES_UINT_SCALAR in snapshot.content,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must exist in the content section.`);
-
-  Assert.equal(snapshot.content[CONTENT_ONLY_UINT_SCALAR], 24,
-               `The ${CONTENT_ONLY_UINT_SCALAR} must have the expected value in the content section.`);
-  Assert.equal(snapshot.content[ALL_PROCESSES_UINT_SCALAR], 34,
-               `The ${ALL_PROCESSES_UINT_SCALAR} must have the expected value in the content section.`);
-
-  Assert.equal(snapshot.parent[ALL_PROCESSES_UINT_SCALAR], 44,
-               `The ${ALL_PROCESSES_UINT_SCALAR} must have the expected value in the parent section.`);
-
-  Assert.equal(keyedSnapshot.content[CHILD_KEYED_UNSIGNED_INT].chewbacca, 54,
-            `The ${CHILD_KEYED_UNSIGNED_INT} keyed scalar must have the expected value in the content section.`);
-||||||| merged common ancestors
-  snapshot =
-    Telemetry.snapshotScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, false /* clear */);
-  keyedSnapshot =
-    Telemetry.snapshotKeyedScalars(Ci.nsITelemetry.DATASET_RELEASE_CHANNEL_OPTIN, false /* clear */);
-
-  Assert.ok("parent" in snapshot, "The snapshot object must have a 'content' entry.");
-  Assert.ok("content" in snapshot, "The snapshot object must have a 'content' entry.");
-  Assert.ok("content" in keyedSnapshot, "The keyed snapshot object must have a 'content' entry.");
-
-  Assert.ok(ALL_PROCESSES_UINT_SCALAR in snapshot.parent,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must exist in the parent section.`);
-  Assert.ok(CONTENT_ONLY_UINT_SCALAR in snapshot.content,
-            `The ${CONTENT_ONLY_UINT_SCALAR} scalar must exist in the content section.`);
-  Assert.ok(ALL_PROCESSES_UINT_SCALAR in snapshot.content,
-            `The ${ALL_PROCESSES_UINT_SCALAR} scalar must exist in the content section.`);
-
-  Assert.equal(snapshot.content[CONTENT_ONLY_UINT_SCALAR], 24,
-               `The ${CONTENT_ONLY_UINT_SCALAR} must have the expected value in the content section.`);
-  Assert.equal(snapshot.content[ALL_PROCESSES_UINT_SCALAR], 34,
-               `The ${ALL_PROCESSES_UINT_SCALAR} must have the expected value in the content section.`);
-
-  Assert.equal(snapshot.parent[ALL_PROCESSES_UINT_SCALAR], 44,
-               `The ${ALL_PROCESSES_UINT_SCALAR} must have the expected value in the parent section.`);
-
-  Assert.equal(keyedSnapshot.content[CHILD_KEYED_UNSIGNED_INT].chewbacca, 54,
-            `The ${CHILD_KEYED_UNSIGNED_INT} keyed scalar must have the expected value in the content section.`);
-=======
   snapshot = Telemetry.getSnapshotForScalars("main", false /* clear */);
   keyedSnapshot = Telemetry.getSnapshotForKeyedScalars(
     "main",
@@ -274,7 +187,6 @@ add_task(async function test_MultiprocessScalarSemantics() {
     54,
     `The ${CHILD_KEYED_UNSIGNED_INT} keyed scalar must have the expected value in the content section.`
   );
->>>>>>> upstream-releases
 
   TelemetryGeckoView.deInitPersistence();
 });

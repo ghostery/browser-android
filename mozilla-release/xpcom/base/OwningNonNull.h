@@ -32,62 +32,16 @@ class MOZ_IS_SMARTPTR_TO_REFCOUNTED OwningNonNull {
   }
 
   // This is no worse than get() in terms of const handling.
-<<<<<<< HEAD
-  operator T&() const {
-    MOZ_ASSERT(mInited);
-    MOZ_ASSERT(mPtr, "OwningNonNull<T> was set to null");
-    return *mPtr;
-  }
-||||||| merged common ancestors
-  operator T&() const
-  {
-    MOZ_ASSERT(mInited);
-    MOZ_ASSERT(mPtr, "OwningNonNull<T> was set to null");
-    return *mPtr;
-  }
-=======
   operator T&() const { return ref(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  operator T*() const {
-    MOZ_ASSERT(mInited);
-    MOZ_ASSERT(mPtr, "OwningNonNull<T> was set to null");
-    return mPtr;
-  }
-||||||| merged common ancestors
-  operator T*() const
-  {
-    MOZ_ASSERT(mInited);
-    MOZ_ASSERT(mPtr, "OwningNonNull<T> was set to null");
-    return mPtr;
-  }
-=======
   operator T*() const { return get(); }
->>>>>>> upstream-releases
 
   // Conversion to bool is always true, so delete to catch errors
   explicit operator bool() const = delete;
 
-<<<<<<< HEAD
-  T* operator->() const {
-    MOZ_ASSERT(mInited);
-    MOZ_ASSERT(mPtr, "OwningNonNull<T> was set to null");
-    return mPtr;
-  }
-||||||| merged common ancestors
-  T*
-  operator->() const
-  {
-    MOZ_ASSERT(mInited);
-    MOZ_ASSERT(mPtr, "OwningNonNull<T> was set to null");
-    return mPtr;
-  }
-=======
   T* operator->() const { return get(); }
 
   T& operator*() const { return ref(); }
->>>>>>> upstream-releases
 
   OwningNonNull<T>& operator=(T* aValue) {
     init(aValue);

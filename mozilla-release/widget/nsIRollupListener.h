@@ -31,17 +31,9 @@ class nsIRollupListener {
    *
    * Returns true if the event that the caller is processing should be consumed.
    */
-<<<<<<< HEAD
-  virtual bool Rollup(uint32_t aCount, bool aFlush, const nsIntPoint* aPoint,
-                      nsIContent** aLastRolledUp) = 0;
-||||||| merged common ancestors
-  virtual bool Rollup(uint32_t aCount, bool aFlush,
-                      const nsIntPoint* aPoint, nsIContent** aLastRolledUp) = 0;
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual bool Rollup(uint32_t aCount, bool aFlush, const nsIntPoint* aPoint,
                       nsIContent** aLastRolledUp) = 0;
->>>>>>> upstream-releases
 
   /**
    * Asks the RollupListener if it should rollup on mouse wheel events

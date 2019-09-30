@@ -133,20 +133,9 @@ public:
      * that owns a processor set is recorded to ensure pending and writes are propagated to
      * resources referred to by the processors. Otherwise, data hazards may occur.
      */
-<<<<<<< HEAD
-    Analysis finalize(const GrProcessorAnalysisColor& colorInput,
-                      const GrProcessorAnalysisCoverage coverageInput, const GrAppliedClip*,
-                      bool isMixedSamples, const GrCaps&, GrColor* inputColorOverride);
-||||||| merged common ancestors
-    Analysis finalize(const GrProcessorAnalysisColor& colorInput,
-                      const GrProcessorAnalysisCoverage coverageInput, const GrAppliedClip*,
-                      bool isMixedSamples, const GrCaps&, GrPixelConfigIsClamped,
-                      GrColor* inputColorOverride);
-=======
     Analysis finalize(const GrProcessorAnalysisColor&, const GrProcessorAnalysisCoverage,
                       const GrAppliedClip*, const GrUserStencilSettings*, GrFSAAType, const GrCaps&,
                       SkPMColor4f* inputColorOverride);
->>>>>>> upstream-releases
 
     bool isFinalized() const { return SkToBool(kFinalized_Flag & fFlags); }
 

@@ -37,13 +37,7 @@ function waitForNotificationClose(notification, cb) {
       }
     }
   });
-<<<<<<< HEAD
-  observer.observe(notification.control.stack, {childList: true});
-||||||| merged common ancestors
-  observer.observe(parent, {childList: true});
-=======
   observer.observe(notification.control.stack, { childList: true });
->>>>>>> upstream-releases
 }
 
 function closeAllNotifications() {

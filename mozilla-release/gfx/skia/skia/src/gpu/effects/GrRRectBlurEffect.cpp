@@ -88,25 +88,11 @@ public:
                 args.fUniformHandler->getUniformCStr(fProxyRectVar),
                 args.fUniformHandler->getUniformCStr(fProxyRectVar));
         fragBuilder->codeAppendf(
-<<<<<<< HEAD
-                "agPos.y = threshold;\n} else if (translatedFragPos.y >= middle.y + threshold) {\n "
-                "   translatedFragPos.y -= float(middle.y) - 1.0;\n}\nhalf2 proxyDims = "
-                "half2(half(2.0 * float(threshold) + 1.0));\nhalf2 texCoord = translatedFragPos / "
-                "proxyDims;\n%s = %s * texture(%s, float2(texCoord)).%s;\n",
-                args.fOutputColor, args.fInputColor,
-||||||| merged common ancestors
-                "agPos.y = threshold;\n} else if (translatedFragPos.y >= middle.y + threshold) {\n "
-                "   translatedFragPos.y -= float(middle.y) - 1.0;\n}\nhalf2 proxyDims = "
-                "half2(half(2.0 * float(threshold) + 1.0));\nhalf2 texCoord = translatedFragPos / "
-                "proxyDims;\n%s = %s * texture(%s, float2(texCoord)).%s;\n",
-                args.fOutputColor, args.fInputColor ? args.fInputColor : "half4(1)",
-=======
                 "\n} else if (translatedFragPos.y >= middle.y + threshold) {\n    "
                 "translatedFragPos.y -= middle.y - 1.0;\n}\nhalf2 proxyDims = half2(2.0 * "
                 "threshold + 1.0);\nhalf2 texCoord = translatedFragPos / proxyDims;\n%s = %s * "
                 "texture(%s, float2(texCoord)).%s;\n",
                 args.fOutputColor, args.fInputColor,
->>>>>>> upstream-releases
                 fragBuilder->getProgramBuilder()->samplerVariable(args.fTexSamplers[0]).c_str(),
                 fragBuilder->getProgramBuilder()->samplerSwizzle(args.fTexSamplers[0]).c_str());
     }

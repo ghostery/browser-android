@@ -14,34 +14,14 @@ NS_IMPL_ISUPPORTS(nsColorPickerProxy, nsIColorPicker)
 
 NS_IMETHODIMP
 nsColorPickerProxy::Init(mozIDOMWindowProxy* aParent, const nsAString& aTitle,
-<<<<<<< HEAD
-                         const nsAString& aInitialColor) {
-  TabChild* tabChild = TabChild::GetFrom(aParent);
-  if (!tabChild) {
-||||||| merged common ancestors
-                         const nsAString& aInitialColor)
-{
-  TabChild* tabChild = TabChild::GetFrom(aParent);
-  if (!tabChild) {
-=======
                          const nsAString& aInitialColor) {
   BrowserChild* browserChild = BrowserChild::GetFrom(aParent);
   if (!browserChild) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  tabChild->SendPColorPickerConstructor(this, nsString(aTitle),
-                                        nsString(aInitialColor));
-||||||| merged common ancestors
-  tabChild->SendPColorPickerConstructor(this,
-                                        nsString(aTitle),
-                                        nsString(aInitialColor));
-=======
   browserChild->SendPColorPickerConstructor(this, nsString(aTitle),
                                             nsString(aInitialColor));
->>>>>>> upstream-releases
   NS_ADDREF_THIS();
   return NS_OK;
 }

@@ -36,17 +36,6 @@ add_task(async function() {
     ".flex-outline-container .flex-outline"
   );
   await selectNode(".container.column .item", inspector);
-<<<<<<< HEAD
-  await waitUntil(() => {
-    flexOutline = doc.querySelector(".flex-outline-container .flex-outline.column");
-    return flexOutline;
-  });
-  ok(true, "The flex outline has the column class");
-||||||| merged common ancestors
-  ([flexOutline] = await onFlexItemOutlineRendered);
-
-  ok(flexOutline.classList.contains("column"), "The flex outline has the column class");
-=======
   await waitUntil(() => {
     flexOutline = doc.querySelector(
       ".flex-outline-container .flex-outline.vertical-tb"
@@ -54,7 +43,6 @@ add_task(async function() {
     return flexOutline;
   });
   ok(true, "The flex outline has the vertical-tb class");
->>>>>>> upstream-releases
 
   // Check that the outline is taller than it is wide in the configuration.
   bounds = flexOutline.getBoxQuads()[0].getBounds();

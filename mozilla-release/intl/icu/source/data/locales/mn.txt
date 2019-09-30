@@ -208,13 +208,7 @@ mn{
         }
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -265,27 +259,6 @@ mn{
                 ms{"mm:ss"}
                 y{"G y"}
                 yyyy{"G y"}
-<<<<<<< HEAD
-                yyyyM{"GGGGG y MMMMM"}
-                yyyyMEd{"GGGGG y.MM.dd. E"}
-                yyyyMMM{"G y 'оны' MMM"}
-                yyyyMMMEd{"G y 'оны' MMM'ын' d. E"}
-                yyyyMMMM{"G y 'оны' MMM"}
-                yyyyMMMd{"G y 'оны' MMM'ын' d"}
-                yyyyMd{"GGGGG y.MM.dd"}
-                yyyyQQQ{"G y 'оны' QQQ"}
-                yyyyQQQQ{"G y 'оны' QQQQ"}
-||||||| merged common ancestors
-                yyyyM{"GGGGG y-MM"}
-                yyyyMEd{"GGGGG y-MM-dd, E"}
-                yyyyMMM{"G y MMM"}
-                yyyyMMMEd{"G y MMM d, E"}
-                yyyyMMMM{"G y MMMM"}
-                yyyyMMMd{"G y MMM d"}
-                yyyyMd{"GGGGG y-MM-dd"}
-                yyyyQQQ{"G y QQQ"}
-                yyyyQQQQ{"G y QQQQ"}
-=======
                 yyyyM{"GGGGG y MMMMM"}
                 yyyyMEd{"GGGGG y.MM.dd. E"}
                 yyyyMMM{"G y 'оны' MMM"}
@@ -295,7 +268,6 @@ mn{
                 yyyyMd{"GGGGG y.MM.dd"}
                 yyyyQQQ{"G y 'оны' QQQ"}
                 yyyyQQQQ{"G y 'оны' QQQQ"}
->>>>>>> upstream-releases
             }
             intervalFormats{
                 Bh{
@@ -514,19 +486,9 @@ mn{
                 yM{"y MMMMM"}
                 yMEd{"y.MM.dd. E"}
                 yMMM{"y 'оны' MMM"}
-<<<<<<< HEAD
-                yMMMEd{"y 'оны' MMM'ын' d. E"}
-                yMMMM{"y 'оны' MMM"}
-                yMMMd{"y 'оны' MMM'ын' d"}
-||||||| merged common ancestors
-                yMMMEd{"y.MM.dd, E"}
-                yMMMM{"y 'оны' MMM"}
-                yMMMd{"y.MM.dd"}
-=======
                 yMMMEd{"y 'оны' MMM'ын' d. E"}
                 yMMMM{"y 'оны' MMMM"}
                 yMMMd{"y 'оны' MMM'ын' d"}
->>>>>>> upstream-releases
                 yMd{"y.MM.dd"}
                 yQQQ{"y 'оны' QQQ"}
                 yQQQQ{"y 'оны' QQQQ"}

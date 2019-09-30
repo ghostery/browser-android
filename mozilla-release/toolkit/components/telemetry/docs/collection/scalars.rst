@@ -179,11 +179,6 @@ Optional Fields
   - ``geckoview``
   - ``all`` (record on all products)
 
-<<<<<<< HEAD
-- ``record_into_store``: A list of stores this scalar should be recorded into. It defaults to ``[main]`` (*Note: This field is not yet ready to use*).
-
-||||||| merged common ancestors
-=======
 - ``record_into_store``: A list of stores this scalar should be recorded into. It defaults to ``[main]``.
 - ``operating_systems``: This field restricts recording to certain operating systems only. Use that in-place of previous ``cpp_guards`` to avoid inclusion on not-specified operating systems. It defaults to ``all``. Currently supported values are:
 
@@ -194,7 +189,6 @@ Optional Fields
    - ``unix``
    - ``all`` (record on all operating systems)
 
->>>>>>> upstream-releases
 String type restrictions
 ------------------------
 To prevent abuses, the content of a string scalar is limited to 50 characters in length. Trying

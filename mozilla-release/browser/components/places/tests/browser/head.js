@@ -481,37 +481,19 @@ function getToolbarNodeForItemGuid(itemGuid) {
 }
 
 // Open the bookmarks Star UI by clicking the star button on the address bar.
-<<<<<<< HEAD
-async function clickBookmarkStar(win = window) {
-  let shownPromise = promisePopupShown(win.document.getElementById("editBookmarkPanel"));
-  win.BookmarkingUI.star.click();
-||||||| merged common ancestors
-async function clickBookmarkStar() {
-  let shownPromise = promisePopupShown(document.getElementById("editBookmarkPanel"));
-  BookmarkingUI.star.click();
-=======
 async function clickBookmarkStar(win = window) {
   let shownPromise = promisePopupShown(
     win.document.getElementById("editBookmarkPanel")
   );
   win.BookmarkingUI.star.click();
->>>>>>> upstream-releases
   await shownPromise;
 }
 
 // Close the bookmarks Star UI by clicking the "Done" button.
-<<<<<<< HEAD
-async function hideBookmarksPanel(win = window) {
-  let hiddenPromise = promisePopupHidden(win.document.getElementById("editBookmarkPanel"));
-||||||| merged common ancestors
-async function hideBookmarksPanel() {
-  let hiddenPromise = promisePopupHidden(document.getElementById("editBookmarkPanel"));
-=======
 async function hideBookmarksPanel(win = window) {
   let hiddenPromise = promisePopupHidden(
     win.document.getElementById("editBookmarkPanel")
   );
->>>>>>> upstream-releases
   // Confirm and close the dialog.
   win.document.getElementById("editBookmarkPanelDoneButton").click();
   await hiddenPromise;

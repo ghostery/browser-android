@@ -14,25 +14,12 @@ var gDataNotificationInfoBar = {
   _DATA_REPORTING_NOTIFICATION: "data-reporting",
 
   get _log() {
-<<<<<<< HEAD
-    let { Log } = ChromeUtils.import("resource://gre/modules/Log.jsm", {});
-||||||| merged common ancestors
-    let Log = ChromeUtils.import("resource://gre/modules/Log.jsm", {}).Log;
-=======
     let { Log } = ChromeUtils.import("resource://gre/modules/Log.jsm");
->>>>>>> upstream-releases
     delete this._log;
-<<<<<<< HEAD
-    return this._log = Log.repository.getLoggerWithMessagePrefix(
-      "Toolkit.Telemetry", "DataNotificationInfoBar::");
-||||||| merged common ancestors
-    return this._log = Log.repository.getLoggerWithMessagePrefix(LOGGER_NAME, LOGGER_PREFIX);
-=======
     return (this._log = Log.repository.getLoggerWithMessagePrefix(
       "Toolkit.Telemetry",
       "DataNotificationInfoBar::"
     ));
->>>>>>> upstream-releases
   },
 
   init() {

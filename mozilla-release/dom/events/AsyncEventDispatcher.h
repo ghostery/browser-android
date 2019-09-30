@@ -152,16 +152,8 @@ class LoadBlockingAsyncEventDispatcher final : public AsyncEventDispatcher {
 
   ~LoadBlockingAsyncEventDispatcher();
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<nsIDocument> mBlockedDoc;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsIDocument> mBlockedDoc;
-=======
  private:
   RefPtr<dom::Document> mBlockedDoc;
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

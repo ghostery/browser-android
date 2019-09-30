@@ -122,30 +122,6 @@ class TracingMarkerPayload : public ProfilerMarkerPayload {
   TracingKind mKind;
 };
 
-<<<<<<< HEAD
-class IOMarkerPayload : public ProfilerMarkerPayload {
- public:
-  IOMarkerPayload(const char* aSource, const char* aFilename,
-                  const mozilla::TimeStamp& aStartTime,
-                  const mozilla::TimeStamp& aEndTime,
-                  UniqueProfilerBacktrace aStack)
-      : ProfilerMarkerPayload(aStartTime, aEndTime, mozilla::Nothing(),
-                              mozilla::Nothing(), std::move(aStack)),
-        mSource(aSource),
-        mFilename(aFilename ? strdup(aFilename) : nullptr) {
-||||||| merged common ancestors
-class IOMarkerPayload : public ProfilerMarkerPayload
-{
-public:
-  IOMarkerPayload(const char* aSource, const char* aFilename,
-                  const mozilla::TimeStamp& aStartTime,
-                  const mozilla::TimeStamp& aEndTime,
-                  UniqueProfilerBacktrace aStack)
-    : ProfilerMarkerPayload(aStartTime, aEndTime, std::move(aStack))
-    , mSource(aSource)
-    , mFilename(aFilename ? strdup(aFilename) : nullptr)
-  {
-=======
 class FileIOMarkerPayload : public ProfilerMarkerPayload {
  public:
   FileIOMarkerPayload(const char* aOperation, const char* aSource,
@@ -158,7 +134,6 @@ class FileIOMarkerPayload : public ProfilerMarkerPayload {
         mSource(aSource),
         mOperation(aOperation ? strdup(aOperation) : nullptr),
         mFilename(aFilename ? strdup(aFilename) : nullptr) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aSource);
   }
 
@@ -386,13 +361,6 @@ class LongTaskMarkerPayload : public ProfilerMarkerPayload {
  public:
   LongTaskMarkerPayload(const mozilla::TimeStamp& aStartTime,
                         const mozilla::TimeStamp& aEndTime)
-<<<<<<< HEAD
-      : ProfilerMarkerPayload(aStartTime, aEndTime) {}
-||||||| merged common ancestors
-    : ProfilerMarkerPayload(aStartTime, aEndTime)
-  {
-  }
-=======
       : ProfilerMarkerPayload(aStartTime, aEndTime) {}
 
   DECL_STREAM_PAYLOAD
@@ -426,7 +394,6 @@ class TextMarkerPayload : public ProfilerMarkerPayload {
       : ProfilerMarkerPayload(aStartTime, aEndTime, aDocShellId,
                               aDocShellHistoryId, std::move(aCause)),
         mText(aText) {}
->>>>>>> upstream-releases
 
   DECL_STREAM_PAYLOAD
 

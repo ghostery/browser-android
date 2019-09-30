@@ -20,22 +20,10 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-/* static */ bool FramingChecker::CheckOneFrameOptionsPolicy(
-    nsIHttpChannel* aHttpChannel, const nsAString& aPolicy,
-    nsIDocShell* aDocShell) {
-||||||| merged common ancestors
-/* static */ bool
-FramingChecker::CheckOneFrameOptionsPolicy(nsIHttpChannel* aHttpChannel,
-                                           const nsAString& aPolicy,
-                                           nsIDocShell* aDocShell)
-{
-=======
 /* static */
 bool FramingChecker::CheckOneFrameOptionsPolicy(nsIHttpChannel* aHttpChannel,
                                                 const nsAString& aPolicy,
                                                 nsIDocShell* aDocShell) {
->>>>>>> upstream-releases
   static const char allowFrom[] = "allow-from";
   const uint32_t allowFromLen = ArrayLength(allowFrom) - 1;
   bool isAllowFrom =
@@ -107,17 +95,7 @@ bool FramingChecker::CheckOneFrameOptionsPolicy(nsIHttpChannel* aHttpChannel,
 
     topDoc = parentDocShellItem->GetDocument();
     if (topDoc) {
-<<<<<<< HEAD
-      if (NS_SUCCEEDED(
-              ssm->IsSystemPrincipal(topDoc->NodePrincipal(), &system)) &&
-          system) {
-||||||| merged common ancestors
-      if (NS_SUCCEEDED(
-            ssm->IsSystemPrincipal(topDoc->NodePrincipal(), &system)) &&
-          system) {
-=======
       if (topDoc->NodePrincipal()->IsSystemPrincipal()) {
->>>>>>> upstream-releases
         // Found a system-principled doc: last docshell was top.
         break;
       }
@@ -183,17 +161,8 @@ bool FramingChecker::CheckOneFrameOptionsPolicy(nsIHttpChannel* aHttpChannel,
 }
 
 // Ignore x-frame-options if CSP with frame-ancestors exists
-<<<<<<< HEAD
-static bool ShouldIgnoreFrameOptions(nsIChannel* aChannel,
-                                     nsIPrincipal* aPrincipal) {
-||||||| merged common ancestors
-static bool
-ShouldIgnoreFrameOptions(nsIChannel* aChannel, nsIPrincipal* aPrincipal)
-{
-=======
 static bool ShouldIgnoreFrameOptions(nsIChannel* aChannel,
                                      nsIContentSecurityPolicy* aCSP) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(aChannel, false);
   NS_ENSURE_TRUE(aCSP, false);
 
@@ -206,31 +175,6 @@ static bool ShouldIgnoreFrameOptions(nsIChannel* aChannel,
   }
 
   // log warning to console that xfo is ignored because of CSP
-<<<<<<< HEAD
-  nsCOMPtr<nsILoadInfo> loadInfo = aChannel->GetLoadInfo();
-  uint64_t innerWindowID = loadInfo ? loadInfo->GetInnerWindowID() : 0;
-  bool privateWindow =
-      loadInfo ? !!loadInfo->GetOriginAttributes().mPrivateBrowsingId : false;
-  const char16_t* params[] = {u"x-frame-options", u"frame-ancestors"};
-  CSP_LogLocalizedStr("IgnoringSrcBecauseOfDirective", params,
-                      ArrayLength(params),
-                      EmptyString(),  // no sourcefile
-                      EmptyString(),  // no scriptsample
-                      0,              // no linenumber
-                      0,              // no columnnumber
-||||||| merged common ancestors
-  nsCOMPtr<nsILoadInfo> loadInfo = aChannel->GetLoadInfo();
-  uint64_t innerWindowID = loadInfo ? loadInfo->GetInnerWindowID() : 0;
-  bool privateWindow = loadInfo ?  !!loadInfo->GetOriginAttributes().mPrivateBrowsingId : false;
-  const char16_t* params[] = { u"x-frame-options",
-                               u"frame-ancestors" };
-  CSP_LogLocalizedStr("IgnoringSrcBecauseOfDirective",
-                      params, ArrayLength(params),
-                      EmptyString(), // no sourcefile
-                      EmptyString(), // no scriptsample
-                      0,             // no linenumber
-                      0,             // no columnnumber
-=======
   nsCOMPtr<nsILoadInfo> loadInfo = aChannel->LoadInfo();
   uint64_t innerWindowID = loadInfo->GetInnerWindowID();
   bool privateWindow = !!loadInfo->GetOriginAttributes().mPrivateBrowsingId;
@@ -241,7 +185,6 @@ static bool ShouldIgnoreFrameOptions(nsIChannel* aChannel,
                       EmptyString(),  // no scriptsample
                       0,              // no linenumber
                       0,              // no columnnumber
->>>>>>> upstream-releases
                       nsIScriptError::warningFlag,
                       NS_LITERAL_CSTRING("IgnoringSrcBecauseOfDirective"),
                       innerWindowID, privateWindow);
@@ -252,22 +195,10 @@ static bool ShouldIgnoreFrameOptions(nsIChannel* aChannel,
 // Check if X-Frame-Options permits this document to be loaded as a subdocument.
 // This will iterate through and check any number of X-Frame-Options policies
 // in the request (comma-separated in a header, multiple headers, etc).
-<<<<<<< HEAD
-/* static */ bool FramingChecker::CheckFrameOptions(nsIChannel* aChannel,
-                                                    nsIDocShell* aDocShell,
-                                                    nsIPrincipal* aPrincipal) {
-||||||| merged common ancestors
-/* static */ bool
-FramingChecker::CheckFrameOptions(nsIChannel* aChannel,
-                                  nsIDocShell* aDocShell,
-                                  nsIPrincipal* aPrincipal)
-{
-=======
 /* static */
 bool FramingChecker::CheckFrameOptions(nsIChannel* aChannel,
                                        nsIDocShell* aDocShell,
                                        nsIContentSecurityPolicy* aCsp) {
->>>>>>> upstream-releases
   if (!aChannel || !aDocShell) {
     return true;
   }
@@ -314,25 +245,12 @@ bool FramingChecker::CheckFrameOptions(nsIChannel* aChannel,
         if (webNav) {
           nsCOMPtr<nsILoadInfo> loadInfo = httpChannel->LoadInfo();
           RefPtr<NullPrincipal> principal =
-<<<<<<< HEAD
-              NullPrincipal::CreateWithInheritedAttributes(
-                  loadInfo->TriggeringPrincipal());
-          webNav->LoadURI(NS_LITERAL_STRING("about:blank"), 0, nullptr, nullptr,
-                          nullptr, principal);
-||||||| merged common ancestors
-            NullPrincipal::CreateWithInheritedAttributes(
-              loadInfo->TriggeringPrincipal());
-          webNav->LoadURI(NS_LITERAL_STRING("about:blank"),
-                          0, nullptr, nullptr, nullptr,
-                          principal);
-=======
               NullPrincipal::CreateWithInheritedAttributes(
                   loadInfo->TriggeringPrincipal());
 
           LoadURIOptions loadURIOptions;
           loadURIOptions.mTriggeringPrincipal = principal;
           webNav->LoadURI(NS_LITERAL_STRING("about:blank"), loadURIOptions);
->>>>>>> upstream-releases
         }
       }
       return false;
@@ -342,21 +260,9 @@ bool FramingChecker::CheckFrameOptions(nsIChannel* aChannel,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void FramingChecker::ReportXFOViolation(
-    nsIDocShellTreeItem* aTopDocShellItem, nsIURI* aThisURI,
-    XFOHeader aHeader) {
-||||||| merged common ancestors
-/* static */ void
-FramingChecker::ReportXFOViolation(nsIDocShellTreeItem* aTopDocShellItem,
-                                   nsIURI* aThisURI,
-                                   XFOHeader aHeader)
-{
-=======
 /* static */
 void FramingChecker::ReportXFOViolation(nsIDocShellTreeItem* aTopDocShellItem,
                                         nsIURI* aThisURI, XFOHeader aHeader) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aTopDocShellItem, "Need a top docshell");
 
   nsCOMPtr<nsPIDOMWindowOuter> topOuterWindow = aTopDocShellItem->GetWindow();

@@ -23,12 +23,7 @@
 #include "nsXULAppAPI.h"
 #include "nsIXULAppInfo.h"
 #include "mozilla/Preferences.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "mozilla/dom/ContentChild.h"
-=======
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 #include "mozilla/gfx/2D.h"
 #include "mozilla/gfx/GPUProcessManager.h"
 #include "mozilla/gfx/Logging.h"
@@ -90,18 +85,8 @@ class ShutdownObserver : public nsIObserver {
 
 NS_IMPL_ISUPPORTS(ShutdownObserver, nsIObserver)
 
-<<<<<<< HEAD
-void InitGfxDriverInfoShutdownObserver() {
-  if (GfxInfoBase::sDriverInfoObserverInitialized) return;
-||||||| merged common ancestors
-void InitGfxDriverInfoShutdownObserver()
-{
-  if (GfxInfoBase::sDriverInfoObserverInitialized)
-    return;
-=======
 static void InitGfxDriverInfoShutdownObserver() {
   if (GfxInfoBase::sDriverInfoObserverInitialized) return;
->>>>>>> upstream-releases
 
   GfxInfoBase::sDriverInfoObserverInitialized = true;
 
@@ -614,19 +599,9 @@ nsresult GfxInfoBase::Init() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-GfxInfoBase::GetFeatureStatus(int32_t aFeature, nsACString& aFailureId,
-                              int32_t* aStatus) {
-  int32_t blocklistAll = gfxPrefs::BlocklistAll();
-||||||| merged common ancestors
-GfxInfoBase::GetFeatureStatus(int32_t aFeature, nsACString& aFailureId, int32_t* aStatus)
-{
-  int32_t blocklistAll = gfxPrefs::BlocklistAll();
-=======
 GfxInfoBase::GetFeatureStatus(int32_t aFeature, nsACString& aFailureId,
                               int32_t* aStatus) {
   int32_t blocklistAll = StaticPrefs::gfx_blocklist_all();
->>>>>>> upstream-releases
   if (blocklistAll > 0) {
     gfxCriticalErrorOnce(gfxCriticalError::DefaultOptions(false))
         << "Forcing blocklisting all features";
@@ -715,23 +690,6 @@ int32_t GfxInfoBase::FindBlocklistedDeviceInList(
   nsAutoString adapterDriverVersionString[2];
   bool adapterInfoFailed[2];
 
-<<<<<<< HEAD
-  adapterInfoFailed[0] =
-      (NS_FAILED(GetAdapterVendorID(adapterVendorID[0])) ||
-       NS_FAILED(GetAdapterDeviceID(adapterDeviceID[0])) ||
-       NS_FAILED(GetAdapterDriverVersion(adapterDriverVersionString[0])));
-  adapterInfoFailed[1] =
-      (NS_FAILED(GetAdapterVendorID2(adapterVendorID[1])) ||
-       NS_FAILED(GetAdapterDeviceID2(adapterDeviceID[1])) ||
-       NS_FAILED(GetAdapterDriverVersion2(adapterDriverVersionString[1])));
-||||||| merged common ancestors
-  adapterInfoFailed[0] = (NS_FAILED(GetAdapterVendorID(adapterVendorID[0])) ||
-			  NS_FAILED(GetAdapterDeviceID(adapterDeviceID[0])) ||
-			  NS_FAILED(GetAdapterDriverVersion(adapterDriverVersionString[0])));
-  adapterInfoFailed[1] = (NS_FAILED(GetAdapterVendorID2(adapterVendorID[1])) ||
-			  NS_FAILED(GetAdapterDeviceID2(adapterDeviceID[1])) ||
-			  NS_FAILED(GetAdapterDriverVersion2(adapterDriverVersionString[1])));
-=======
   adapterInfoFailed[0] =
       (NS_FAILED(GetAdapterVendorID(adapterVendorID[0])) ||
        NS_FAILED(GetAdapterDeviceID(adapterDeviceID[0])) ||
@@ -742,7 +700,6 @@ int32_t GfxInfoBase::FindBlocklistedDeviceInList(
        NS_FAILED(GetAdapterDeviceID2(adapterDeviceID[1])) ||
        NS_FAILED(GetAdapterDriverVendor2(adapterDriverVendor[1])) ||
        NS_FAILED(GetAdapterDriverVersion2(adapterDriverVersionString[1])));
->>>>>>> upstream-releases
   // No point in going on if we don't have adapter info
   if (adapterInfoFailed[0] && adapterInfoFailed[1]) {
     return 0;
@@ -781,58 +738,15 @@ int32_t GfxInfoBase::FindBlocklistedDeviceInList(
       continue;
     }
 
-<<<<<<< HEAD
-    if (!info[i].mAdapterVendor.Equals(
-            GfxDriverInfo::GetDeviceVendor(VendorAll),
-            nsCaseInsensitiveStringComparator()) &&
-        !info[i].mAdapterVendor.Equals(adapterVendorID[infoIndex],
-                                       nsCaseInsensitiveStringComparator())) {
-||||||| merged common ancestors
-    if (!info[i].mAdapterVendor.Equals(GfxDriverInfo::GetDeviceVendor(VendorAll), nsCaseInsensitiveStringComparator()) &&
-        !info[i].mAdapterVendor.Equals(adapterVendorID[infoIndex], nsCaseInsensitiveStringComparator())) {
-=======
     if (!DoesVendorMatch(info[i].mAdapterVendor, adapterVendorID[infoIndex])) {
->>>>>>> upstream-releases
       continue;
     }
 
-<<<<<<< HEAD
-    if (info[i].mDevices != GfxDriverInfo::allDevices &&
-        info[i].mDevices->Length()) {
-      bool deviceMatches = false;
-      for (uint32_t j = 0; j < info[i].mDevices->Length(); j++) {
-        if ((*info[i].mDevices)[j].Equals(
-                adapterDeviceID[infoIndex],
-                nsCaseInsensitiveStringComparator())) {
-          deviceMatches = true;
-          break;
-        }
-      }
-||||||| merged common ancestors
-    if (info[i].mDevices != GfxDriverInfo::allDevices && info[i].mDevices->Length()) {
-        bool deviceMatches = false;
-        for (uint32_t j = 0; j < info[i].mDevices->Length(); j++) {
-            if ((*info[i].mDevices)[j].Equals(adapterDeviceID[infoIndex], nsCaseInsensitiveStringComparator())) {
-                deviceMatches = true;
-                break;
-            }
-        }
-=======
     if (!DoesDriverVendorMatch(info[i].mDriverVendor,
                                adapterDriverVendor[infoIndex])) {
       continue;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (!deviceMatches) {
-        continue;
-      }
-||||||| merged common ancestors
-        if (!deviceMatches) {
-            continue;
-        }
-=======
     if (info[i].mDevices != GfxDriverInfo::allDevices &&
         info[i].mDevices->Length()) {
       bool deviceMatches = false;
@@ -848,7 +762,6 @@ int32_t GfxInfoBase::FindBlocklistedDeviceInList(
       if (!deviceMatches) {
         continue;
       }
->>>>>>> upstream-releases
     }
 
     bool match = false;
@@ -981,21 +894,6 @@ void GfxInfoBase::SetFeatureStatus(
   sFeatureStatus = new nsTArray<dom::GfxInfoFeatureStatus>(aFS);
 }
 
-<<<<<<< HEAD
-nsresult GfxInfoBase::GetFeatureStatusImpl(
-    int32_t aFeature, int32_t* aStatus, nsAString& aSuggestedVersion,
-    const nsTArray<GfxDriverInfo>& aDriverInfo, nsACString& aFailureId,
-    OperatingSystem* aOS /* = nullptr */) {
-||||||| merged common ancestors
-nsresult
-GfxInfoBase::GetFeatureStatusImpl(int32_t aFeature,
-                                  int32_t* aStatus,
-                                  nsAString& aSuggestedVersion,
-                                  const nsTArray<GfxDriverInfo>& aDriverInfo,
-                                  nsACString& aFailureId,
-                                  OperatingSystem* aOS /* = nullptr */)
-{
-=======
 bool GfxInfoBase::DoesVendorMatch(const nsAString& aBlocklistVendor,
                                   const nsAString& aAdapterVendor) {
   return aBlocklistVendor.Equals(aAdapterVendor,
@@ -1017,7 +915,6 @@ nsresult GfxInfoBase::GetFeatureStatusImpl(
     int32_t aFeature, int32_t* aStatus, nsAString& aSuggestedVersion,
     const nsTArray<GfxDriverInfo>& aDriverInfo, nsACString& aFailureId,
     OperatingSystem* aOS /* = nullptr */) {
->>>>>>> upstream-releases
   if (aFeature <= 0) {
     gfxWarning() << "Invalid feature <= 0";
     return NS_OK;
@@ -1177,20 +1074,8 @@ GfxInfoBase::LogFailure(const nsACString& failure) {
       << "(LF) " << failure.BeginReading();
 }
 
-<<<<<<< HEAD
-/* XPConnect method of returning arrays is very ugly. Would not recommend. */
-NS_IMETHODIMP GfxInfoBase::GetFailures(uint32_t* failureCount,
-                                       int32_t** indices, char*** failures) {
-||||||| merged common ancestors
-/* XPConnect method of returning arrays is very ugly. Would not recommend. */
-NS_IMETHODIMP GfxInfoBase::GetFailures(uint32_t* failureCount,
-                                       int32_t** indices,
-                                       char ***failures)
-{
-=======
 NS_IMETHODIMP GfxInfoBase::GetFailures(nsTArray<int32_t>& indices,
                                        nsTArray<nsCString>& failures) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
 
   LogForwarder* logForwarder = Factory::GetLogForwarder();
@@ -1205,47 +1090,11 @@ NS_IMETHODIMP GfxInfoBase::GetFailures(nsTArray<int32_t>& indices,
   // Technically, we don't need the mutex lock after the StringVectorCopy()
   // call.
   LoggingRecord loggedStrings = logForwarder->LoggingRecordCopy();
-<<<<<<< HEAD
-  *failureCount = loggedStrings.size();
-
-  if (*failureCount != 0) {
-    *failures = (char**)moz_xmalloc(*failureCount * sizeof(char*));
-    if (indices) {
-      *indices = (int32_t*)moz_xmalloc(*failureCount * sizeof(int32_t));
-    }
-
-    /* copy over the failure messages into the array we just allocated */
-    LoggingRecord::const_iterator it;
-    uint32_t i = 0;
-    for (it = loggedStrings.begin(); it != loggedStrings.end(); ++it, i++) {
-      (*failures)[i] =
-          (char*)moz_xmemdup(Get<1>(*it).c_str(), Get<1>(*it).size() + 1);
-      if (indices) (*indices)[i] = Get<0>(*it);
-    }
-||||||| merged common ancestors
-  *failureCount = loggedStrings.size();
-
-  if (*failureCount != 0) {
-    *failures = (char**)moz_xmalloc(*failureCount * sizeof(char*));
-    if (indices) {
-      *indices = (int32_t*)moz_xmalloc(*failureCount * sizeof(int32_t));
-    }
-
-    /* copy over the failure messages into the array we just allocated */
-    LoggingRecord::const_iterator it;
-    uint32_t i=0;
-    for(it = loggedStrings.begin() ; it != loggedStrings.end(); ++it, i++) {
-      (*failures)[i] =
-        (char*) moz_xmemdup(Get<1>(*it).c_str(), Get<1>(*it).size() + 1);
-      if (indices) (*indices)[i] = Get<0>(*it);
-    }
-=======
   LoggingRecord::const_iterator it;
   for (it = loggedStrings.begin(); it != loggedStrings.end(); ++it) {
     failures.AppendElement(
         nsDependentCSubstring(Get<1>(*it).c_str(), Get<1>(*it).size()));
     indices.AppendElement(Get<0>(*it));
->>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -1641,12 +1490,6 @@ GfxInfoBase::GetOffMainThreadPaintWorkerCount(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-GfxInfoBase::GetIsHeadless(bool* aIsHeadless) {
-||||||| merged common ancestors
-GfxInfoBase::GetIsHeadless(bool* aIsHeadless)
-{
-=======
 GfxInfoBase::GetTargetFrameRate(uint32_t* aTargetFrameRate) {
   *aTargetFrameRate = gfxPlatform::TargetFrameRate();
   return NS_OK;
@@ -1654,7 +1497,6 @@ GfxInfoBase::GetTargetFrameRate(uint32_t* aTargetFrameRate) {
 
 NS_IMETHODIMP
 GfxInfoBase::GetIsHeadless(bool* aIsHeadless) {
->>>>>>> upstream-releases
   *aIsHeadless = gfxPlatform::IsHeadless();
   return NS_OK;
 }

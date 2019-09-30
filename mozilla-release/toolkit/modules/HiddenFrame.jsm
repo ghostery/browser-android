@@ -111,25 +111,12 @@ HiddenFrame.prototype = {
       Ci.nsIWebProgress.NOTIFY_STATE_DOCUMENT
     );
     let docShell = this._browser.docShell;
-<<<<<<< HEAD
-    let systemPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-    docShell.createAboutBlankContentViewer(systemPrincipal);
-||||||| merged common ancestors
-    docShell.createAboutBlankContentViewer(Services.scriptSecurityManager.getSystemPrincipal());
-=======
     let systemPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
     docShell.createAboutBlankContentViewer(systemPrincipal, systemPrincipal);
->>>>>>> upstream-releases
     docShell.useGlobalHistory = false;
-<<<<<<< HEAD
-    this._browser.loadURI(XUL_PAGE, 0, null, null, null, systemPrincipal);
-||||||| merged common ancestors
-    this._browser.loadURI(XUL_PAGE, 0, null, null, null);
-=======
     let loadURIOptions = {
       triggeringPrincipal: systemPrincipal,
     };
     this._browser.loadURI(XUL_PAGE, loadURIOptions);
->>>>>>> upstream-releases
   },
 };

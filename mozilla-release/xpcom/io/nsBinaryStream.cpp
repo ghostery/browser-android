@@ -811,18 +811,9 @@ nsBinaryInputStream::ReadArrayBuffer(uint32_t aLength,
       return NS_ERROR_FAILURE;
     }
 
-<<<<<<< HEAD
-    char* data =
-        reinterpret_cast<char*>(JS_GetArrayBufferData(buffer, &isShared, nogc));
-    MOZ_ASSERT(!isShared);  // Implied by JS_GetArrayBufferData()
-||||||| merged common ancestors
-    char* data = reinterpret_cast<char*>(JS_GetArrayBufferData(buffer, &isShared, nogc));
-    MOZ_ASSERT(!isShared);      // Implied by JS_GetArrayBufferData()
-=======
     char* data = reinterpret_cast<char*>(
         JS::GetArrayBufferData(buffer, &isShared, nogc));
     MOZ_ASSERT(!isShared);  // Implied by JS::GetArrayBufferData()
->>>>>>> upstream-releases
     if (!data) {
       return NS_ERROR_FAILURE;
     }

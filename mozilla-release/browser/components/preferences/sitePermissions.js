@@ -439,20 +439,6 @@ var gSitePermissionsManager = {
 
   onPermissionSelect() {
     this._setRemoveButtonState();
-<<<<<<< HEAD
-
-    // If any item is selected, it should be the only item tabable
-    // in the richlistbox for accessibility reasons.
-    this._list.itemChildren.forEach((item) => {
-      let menulist = item.getElementsByTagName("menulist")[0];
-      if (!item.selected) {
-        menulist.setAttribute("tabindex", -1);
-      } else {
-        menulist.removeAttribute("tabindex");
-      }
-    });
-||||||| merged common ancestors
-=======
 
     // If any item is selected, it should be the only item tabable
     // in the richlistbox for accessibility reasons.
@@ -464,7 +450,6 @@ var gSitePermissionsManager = {
         menulist.removeAttribute("tabindex");
       }
     });
->>>>>>> upstream-releases
   },
 
   onPermissionChange(perm, capability) {

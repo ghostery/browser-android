@@ -4,43 +4,14 @@
 
 //! Specified types for UI properties.
 
-<<<<<<< HEAD
 use crate::parser::{Parse, ParserContext};
 use crate::values::generics::ui as generics;
 use crate::values::specified::color::Color;
 use crate::values::specified::url::SpecifiedImageUrl;
 use crate::values::specified::Number;
-use crate::values::{Auto, Either};
-||||||| merged common ancestors
-=======
-use crate::parser::{Parse, ParserContext};
-use crate::values::generics::ui as generics;
-use crate::values::specified::color::Color;
-use crate::values::specified::url::SpecifiedImageUrl;
-use crate::values::specified::Number;
->>>>>>> upstream-releases
 use cssparser::Parser;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-use style_traits::cursor::CursorKind;
 use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
-
-/// auto | <color>
-pub type ColorOrAuto = Either<Color, Auto>;
-||||||| merged common ancestors
-use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
-use style_traits::cursor::CursorKind;
-use values::{Auto, Either};
-use values::generics::ui as generics;
-use values::specified::Number;
-use values::specified::color::Color;
-use values::specified::url::SpecifiedImageUrl;
-
-/// auto | <color>
-pub type ColorOrAuto = Either<Color, Auto>;
-=======
-use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
->>>>>>> upstream-releases
 
 /// A specified value for the `cursor` property.
 pub type Cursor = generics::Cursor<CursorImage>;
@@ -162,35 +133,6 @@ impl Parse for ScrollbarColor {
         })
     }
 }
-<<<<<<< HEAD
-
-/// The specified value for the `user-select` property.
-///
-/// https://drafts.csswg.org/css-ui-4/#propdef-user-select
-#[allow(missing_docs)]
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    MallocSizeOf,
-    Parse,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToComputedValue,
-    ToCss,
-)]
-#[repr(u8)]
-pub enum UserSelect {
-    Auto,
-    Text,
-    #[parse(aliases = "-moz-none")]
-    None,
-    /// Force selection of all children.
-    All,
-}
-||||||| merged common ancestors
-=======
 
 /// The specified value for the `user-select` property.
 ///
@@ -282,4 +224,3 @@ pub enum CursorKind {
     ZoomOut,
     Auto,
 }
->>>>>>> upstream-releases

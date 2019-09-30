@@ -100,26 +100,11 @@ void GrSoftwarePathRenderer::DrawNonAARect(GrRenderTargetContext* renderTargetCo
                                            const SkMatrix& viewMatrix,
                                            const SkRect& rect,
                                            const SkMatrix& localMatrix) {
-<<<<<<< HEAD
-    GrContext* context = renderTargetContext->surfPriv().getContext();
-||||||| merged common ancestors
-=======
     auto context = renderTargetContext->surfPriv().getContext();
->>>>>>> upstream-releases
     renderTargetContext->addDrawOp(clip,
-<<<<<<< HEAD
-                                   GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
-                                           context, std::move(paint), viewMatrix, localMatrix, rect,
-                                           GrAAType::kNone, &userStencilSettings));
-||||||| merged common ancestors
-                                   GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
-                                           std::move(paint), viewMatrix, localMatrix, rect,
-                                           GrAAType::kNone, &userStencilSettings));
-=======
                                    GrFillRectOp::MakeWithLocalMatrix(
                                            context, std::move(paint), GrAAType::kNone, viewMatrix,
                                            localMatrix, rect, &userStencilSettings));
->>>>>>> upstream-releases
 }
 
 void GrSoftwarePathRenderer::DrawAroundInvPath(GrRenderTargetContext* renderTargetContext,
@@ -204,16 +189,8 @@ static sk_sp<GrTextureProxy> make_deferred_mask_texture_proxy(GrRecordingContext
 
     // MDB TODO: We're going to fill this proxy with an ASAP upload (which is out of order wrt to
     // ops), so it can't have any pending IO.
-<<<<<<< HEAD
-    return proxyProvider->createProxy(desc, kTopLeft_GrSurfaceOrigin, fit, SkBudgeted::kYes,
-                                      GrInternalSurfaceFlags::kNoPendingIO);
-||||||| merged common ancestors
-    return proxyProvider->createProxy(desc, fit, SkBudgeted::kYes,
-                                      GrResourceProvider::kNoPendingIO_Flag);
-=======
     return proxyProvider->createProxy(format, desc, kTopLeft_GrSurfaceOrigin, fit, SkBudgeted::kYes,
                                       GrInternalSurfaceFlags::kNoPendingIO);
->>>>>>> upstream-releases
 }
 
 namespace {
@@ -403,15 +380,8 @@ bool GrSoftwarePathRenderer::onDrawPath(const DrawPathArgs& args) {
         if (useCache) {
             SkASSERT(proxy->origin() == kTopLeft_GrSurfaceOrigin);
             fProxyProvider->assignUniqueKeyToProxy(maskKey, proxy.get());
-<<<<<<< HEAD
-            args.fShape->addGenIDChangeListener(
-                    sk_make_sp<PathInvalidator>(maskKey, args.fContext->uniqueID()));
-||||||| merged common ancestors
-            args.fShape->addGenIDChangeListener(new PathInvalidator(maskKey));
-=======
             args.fShape->addGenIDChangeListener(
                     sk_make_sp<PathInvalidator>(maskKey, args.fContext->priv().contextID()));
->>>>>>> upstream-releases
         }
     }
     if (inverseFilled) {

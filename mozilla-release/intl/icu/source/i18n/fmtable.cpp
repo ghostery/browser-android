@@ -738,14 +738,8 @@ CharString *Formattable::internalGetCharString(UErrorCode &status) {
         fDecimalStr->append("NaN", status);
       } else if (fDecimalQuantity->isZero()) {
         fDecimalStr->append("0", -1, status);
-<<<<<<< HEAD
-      } else if (fDecimalQuantity->getMagnitude() != INT32_MIN && std::abs(fDecimalQuantity->getMagnitude()) < 5) {
-||||||| merged common ancestors
-      } else if (std::abs(fDecimalQuantity->getMagnitude()) < 5) {
-=======
       } else if (fType==kLong || fType==kInt64 || // use toPlainString for integer types
                   (fDecimalQuantity->getMagnitude() != INT32_MIN && std::abs(fDecimalQuantity->getMagnitude()) < 5)) {
->>>>>>> upstream-releases
         fDecimalStr->appendInvariantChars(fDecimalQuantity->toPlainString(), status);
       } else {
         fDecimalStr->appendInvariantChars(fDecimalQuantity->toScientificString(), status);

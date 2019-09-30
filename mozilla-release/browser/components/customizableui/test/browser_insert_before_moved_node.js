@@ -34,13 +34,6 @@ add_task(async function() {
     let button = document.getElementById("real-button");
     ok(button, "Button should exist");
     if (button) {
-<<<<<<< HEAD
-      let expectedContainer = CustomizableUI.getCustomizationTarget(document.getElementById(toolbar));
-      is(button.parentNode, expectedContainer, "Button should be in the toolbar");
-||||||| merged common ancestors
-      let expectedContainer = document.getElementById(toolbar).customizationTarget;
-      is(button.parentNode, expectedContainer, "Button should be in the toolbar");
-=======
       let expectedContainer = CustomizableUI.getCustomizationTarget(
         document.getElementById(toolbar)
       );
@@ -49,7 +42,6 @@ add_task(async function() {
         expectedContainer,
         "Button should be in the toolbar"
       );
->>>>>>> upstream-releases
     }
 
     CustomizableUI.destroyWidget("real-button");

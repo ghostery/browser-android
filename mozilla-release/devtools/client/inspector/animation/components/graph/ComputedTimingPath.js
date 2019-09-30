@@ -94,13 +94,7 @@ class ComputedTimingPath extends TimingPath {
       {
         className: "animation-computed-timing-path",
         style: { opacity },
-<<<<<<< HEAD
-        transform: `translate(${ offset })`,
-||||||| merged common ancestors
-        transform: `translate(${ offset })`
-=======
         transform: `translate(${offset})`,
->>>>>>> upstream-releases
       },
       super.renderGraph(state, helper)
     );

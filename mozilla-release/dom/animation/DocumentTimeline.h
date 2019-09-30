@@ -12,15 +12,7 @@
 #include "mozilla/LinkedList.h"
 #include "mozilla/TimeStamp.h"
 #include "AnimationTimeline.h"
-<<<<<<< HEAD
-#include "nsIDocument.h"
 #include "nsDOMNavigationTiming.h"  // for DOMHighResTimeStamp
-||||||| merged common ancestors
-#include "nsIDocument.h"
-#include "nsDOMNavigationTiming.h" // for DOMHighResTimeStamp
-=======
-#include "nsDOMNavigationTiming.h"  // for DOMHighResTimeStamp
->>>>>>> upstream-releases
 #include "nsRefreshDriver.h"
 
 struct JSContext;
@@ -28,32 +20,6 @@ struct JSContext;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class DocumentTimeline final : public AnimationTimeline,
-                               public nsARefreshObserver,
-                               public nsATimerAdjustmentObserver,
-                               public LinkedListElement<DocumentTimeline> {
- public:
-  DocumentTimeline(nsIDocument* aDocument, const TimeDuration& aOriginTime)
-      : AnimationTimeline(aDocument->GetParentObject()),
-        mDocument(aDocument),
-        mIsObservingRefreshDriver(false),
-        mOriginTime(aOriginTime) {
-||||||| merged common ancestors
-class DocumentTimeline final
-  : public AnimationTimeline
-  , public nsARefreshObserver
-  , public nsATimerAdjustmentObserver
-  , public LinkedListElement<DocumentTimeline>
-{
-public:
-  DocumentTimeline(nsIDocument* aDocument, const TimeDuration& aOriginTime)
-    : AnimationTimeline(aDocument->GetParentObject())
-    , mDocument(aDocument)
-    , mIsObservingRefreshDriver(false)
-    , mOriginTime(aOriginTime)
-  {
-=======
 class DocumentTimeline final : public AnimationTimeline,
                                public nsARefreshObserver,
                                public nsATimerAdjustmentObserver,
@@ -64,7 +30,6 @@ class DocumentTimeline final : public AnimationTimeline,
         mDocument(aDocument),
         mIsObservingRefreshDriver(false),
         mOriginTime(aOriginTime) {
->>>>>>> upstream-releases
     if (mDocument) {
       mDocument->Timelines().insertBack(this);
     }

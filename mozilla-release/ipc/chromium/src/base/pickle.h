@@ -98,17 +98,8 @@ class Pickle {
   MOZ_MUST_USE bool ReadShort(PickleIterator* iter, short* result) const;
   MOZ_MUST_USE bool ReadInt(PickleIterator* iter, int* result) const;
   MOZ_MUST_USE bool ReadLong(PickleIterator* iter, long* result) const;
-<<<<<<< HEAD
   MOZ_MUST_USE bool ReadULong(PickleIterator* iter,
                               unsigned long* result) const;
-  MOZ_MUST_USE bool ReadSize(PickleIterator* iter, size_t* result) const;
-||||||| merged common ancestors
-  MOZ_MUST_USE bool ReadULong(PickleIterator* iter, unsigned long* result) const;
-  MOZ_MUST_USE bool ReadSize(PickleIterator* iter, size_t* result) const;
-=======
-  MOZ_MUST_USE bool ReadULong(PickleIterator* iter,
-                              unsigned long* result) const;
->>>>>>> upstream-releases
   MOZ_MUST_USE bool ReadInt32(PickleIterator* iter, int32_t* result) const;
   MOZ_MUST_USE bool ReadUInt32(PickleIterator* iter, uint32_t* result) const;
   MOZ_MUST_USE bool ReadInt64(PickleIterator* iter, int64_t* result) const;

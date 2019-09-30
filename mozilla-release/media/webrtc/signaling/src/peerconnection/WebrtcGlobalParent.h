@@ -27,18 +27,6 @@ class WebrtcGlobalParent : public PWebrtcGlobalParent {
   static WebrtcGlobalParent* Alloc();
   static bool Dealloc(WebrtcGlobalParent* aActor);
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvGetStatsResult(
-      const int& aRequestId,
-      nsTArray<RTCStatsReportInternal>&& aStats) override;
-  virtual mozilla::ipc::IPCResult RecvGetLogResult(
-      const int& aRequestId, const WebrtcGlobalLog& aLog) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult RecvGetStatsResult(const int& aRequestId,
-                                                     nsTArray<RTCStatsReportInternal>&& aStats) override;
-  virtual mozilla::ipc::IPCResult RecvGetLogResult(const int& aRequestId,
-                                                   const WebrtcGlobalLog& aLog) override;
-=======
   // MOZ_CAN_RUN_SCRIPT_BOUNDARY because we can't do MOZ_CAN_RUN_SCRIPT in
   // ipdl-generated things yet.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
@@ -50,7 +38,6 @@ class WebrtcGlobalParent : public PWebrtcGlobalParent {
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   virtual mozilla::ipc::IPCResult RecvGetLogResult(
       const int& aRequestId, const WebrtcGlobalLog& aLog) override;
->>>>>>> upstream-releases
 
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
   virtual mozilla::ipc::IPCResult Recv__delete__() override;

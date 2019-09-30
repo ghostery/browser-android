@@ -187,24 +187,11 @@ add_task(async function test_check_synchronization_with_signatures() {
   }
 
   // set up prefs so the kinto updater talks to the test server
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  Services.prefs.setCharPref(PREF_SETTINGS_SERVER,
-    `http://localhost:${server.identity.primaryPort}/v1`);
-
-||||||| merged common ancestors
-  Services.prefs.setCharPref(PREF_SETTINGS_SERVER,
-    `http://localhost:${server.identity.primaryPort}/v1`);
-
-  // Set up some data we need for our test
-  let startTime = Date.now();
-
-=======
   Services.prefs.setCharPref(
     PREF_SETTINGS_SERVER,
     `http://localhost:${server.identity.primaryPort}/v1`
   );
 
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
   // These are records we'll use in the test collections
   const RECORD1 = {
     details: {
@@ -356,15 +343,7 @@ add_task(async function test_check_synchronization_with_signatures() {
 
   // With all of this set up, we attempt a sync. This will resolve if all is
   // well and throw if something goes wrong.
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  // We don't want to load initial json dumps in this test suite.
-  await OneCRLBlocklistClient.maybeSync(1000, { loadDump: false });
-||||||| merged common ancestors
-  // We don't want to load initial json dumps in this test suite.
-  await OneCRLBlocklistClient.maybeSync(1000, startTime, {loadDump: false});
-=======
   await client.maybeSync(1000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
 
   let endHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
 
@@ -407,15 +386,7 @@ add_task(async function test_check_synchronization_with_signatures() {
     ],
   };
   registerHandlers(twoItemsResponses);
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  await OneCRLBlocklistClient.maybeSync(3000);
-
-||||||| merged common ancestors
-  await OneCRLBlocklistClient.maybeSync(3000, startTime);
-
-=======
   await client.maybeSync(3000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
 
   // Check the collection with one addition and one removal has a valid
   // signature
@@ -452,13 +423,7 @@ add_task(async function test_check_synchronization_with_signatures() {
     ],
   };
   registerHandlers(oneAddedOneRemovedResponses);
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  await OneCRLBlocklistClient.maybeSync(4000);
-||||||| merged common ancestors
-  await OneCRLBlocklistClient.maybeSync(4000, startTime);
-=======
   await client.maybeSync(4000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
 
   // Check the signature is still valid with no operation (no changes)
 
@@ -482,15 +447,7 @@ add_task(async function test_check_synchronization_with_signatures() {
     ],
   };
   registerHandlers(noOpResponses);
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  await OneCRLBlocklistClient.maybeSync(4100);
-
-||||||| merged common ancestors
-  await OneCRLBlocklistClient.maybeSync(4100, startTime);
-
-=======
   await client.maybeSync(4100);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
 
   // Check the collection is reset when the signature is invalid
 
@@ -562,13 +519,7 @@ add_task(async function test_check_synchronization_with_signatures() {
     syncEventSent = true;
   });
 
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  await OneCRLBlocklistClient.maybeSync(5000);
-||||||| merged common ancestors
-  await OneCRLBlocklistClient.maybeSync(5000, startTime);
-=======
   await client.maybeSync(5000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
 
   endHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
 
@@ -614,13 +565,7 @@ add_task(async function test_check_synchronization_with_signatures() {
     syncEventSent = true;
   });
 
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  await OneCRLBlocklistClient.maybeSync(5000);
-||||||| merged common ancestors
-  await OneCRLBlocklistClient.maybeSync(5000, startTime);
-=======
   await client.maybeSync(5000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
 
   // Local data was unchanged, since it was never than the one returned by the server,
   // thus the sync event is not sent.
@@ -665,13 +610,7 @@ add_task(async function test_check_synchronization_with_signatures() {
     syncData = data;
   });
 
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-  await OneCRLBlocklistClient.maybeSync(5000, { loadDump: false });
-||||||| merged common ancestors
-  await OneCRLBlocklistClient.maybeSync(5000, startTime, { loadDump: false });
-=======
   await client.maybeSync(5000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
 
   // Local data was unchanged, since it was never than the one returned by the server.
   equal(syncData.current.length, 2);
@@ -704,13 +643,7 @@ add_task(async function test_check_synchronization_with_signatures() {
   startHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
   registerHandlers(allBadSigResponses);
   try {
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-    await OneCRLBlocklistClient.maybeSync(6000);
-||||||| merged common ancestors
-    await OneCRLBlocklistClient.maybeSync(6000, startTime);
-=======
     await client.maybeSync(6000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
     do_throw("Sync should fail (the signature is intentionally bad)");
   } catch (e) {
     equal((await client.get()).length, 2);
@@ -732,13 +665,7 @@ add_task(async function test_check_synchronization_with_signatures() {
   startHistogram = getUptakeTelemetrySnapshot(TELEMETRY_HISTOGRAM_KEY);
   registerHandlers(missingSigResponses);
   try {
-<<<<<<< HEAD:mozilla-release/services/common/tests/unit/test_blocklist_signatures.js
-    await OneCRLBlocklistClient.maybeSync(6000);
-||||||| merged common ancestors
-    await OneCRLBlocklistClient.maybeSync(6000, startTime);
-=======
     await client.maybeSync(6000);
->>>>>>> upstream-releases:mozilla-release/services/settings/test/unit/test_remote_settings_signatures.js
     do_throw("Sync should fail (the signature is missing)");
   } catch (e) {
     equal((await client.get()).length, 2);

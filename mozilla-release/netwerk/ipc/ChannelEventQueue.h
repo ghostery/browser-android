@@ -81,26 +81,6 @@ class ChannelEventQueue final {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(ChannelEventQueue)
 
  public:
-<<<<<<< HEAD
-  explicit ChannelEventQueue(nsISupports* owner)
-      : mSuspendCount(0),
-        mSuspended(false),
-        mForcedCount(0),
-        mFlushing(false),
-        mOwner(owner),
-        mMutex("ChannelEventQueue::mMutex"),
-        mRunningMutex("ChannelEventQueue::mRunningMutex") {}
-||||||| merged common ancestors
-  explicit ChannelEventQueue(nsISupports *owner)
-    : mSuspendCount(0)
-    , mSuspended(false)
-    , mForcedCount(0)
-    , mFlushing(false)
-    , mOwner(owner)
-    , mMutex("ChannelEventQueue::mMutex")
-    , mRunningMutex("ChannelEventQueue::mRunningMutex")
-  {}
-=======
   explicit ChannelEventQueue(nsISupports* owner)
       : mSuspendCount(0),
         mSuspended(false),
@@ -111,7 +91,6 @@ class ChannelEventQueue final {
         mOwner(owner),
         mMutex("ChannelEventQueue::mMutex"),
         mRunningMutex("ChannelEventQueue::mRunningMutex") {}
->>>>>>> upstream-releases
 
   // Puts IPDL-generated channel event into queue, to be run later
   // automatically when EndForcedQueueing and/or Resume is called.
@@ -201,16 +180,9 @@ inline void ChannelEventQueue::RunOrEnqueue(ChannelEvent* aCallback,
   {
     MutexAutoLock lock(mMutex);
 
-<<<<<<< HEAD
-    bool enqueue =
-        !!mForcedCount || mSuspended || mFlushing || !mEventQueue.IsEmpty();
-||||||| merged common ancestors
-    bool enqueue =  !!mForcedCount || mSuspended || mFlushing || !mEventQueue.IsEmpty();
-=======
     bool enqueue = !!mForcedCount || mSuspended || mFlushing ||
                    !mEventQueue.IsEmpty() ||
                    MaybeSuspendIfEventsAreSuppressed();
->>>>>>> upstream-releases
 
     if (enqueue) {
       mEventQueue.AppendElement(std::move(event));
@@ -329,16 +301,8 @@ inline void ChannelEventQueue::MaybeFlushQueue() {
 
   {
     MutexAutoLock lock(mMutex);
-<<<<<<< HEAD
-    flushQueue =
-        !mForcedCount && !mFlushing && !mSuspended && !mEventQueue.IsEmpty();
-||||||| merged common ancestors
-    flushQueue = !mForcedCount && !mFlushing && !mSuspended &&
-                 !mEventQueue.IsEmpty();
-=======
     flushQueue = !mForcedCount && !mFlushing && !mSuspended &&
                  !mEventQueue.IsEmpty() && !MaybeSuspendIfEventsAreSuppressed();
->>>>>>> upstream-releases
 
     // Only one thread is allowed to run FlushQueue at a time.
     if (flushQueue) {

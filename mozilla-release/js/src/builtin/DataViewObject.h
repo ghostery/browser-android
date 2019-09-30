@@ -101,143 +101,39 @@ class DataViewObject : public ArrayBufferViewObject {
   static bool getUint32Impl(JSContext* cx, const CallArgs& args);
   static bool fun_getUint32(JSContext* cx, unsigned argc, Value* vp);
 
-<<<<<<< HEAD
-  static bool getFloat32Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_getFloat32(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool getFloat32Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_getFloat32(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool getBigInt64Impl(JSContext* cx, const CallArgs& args);
   static bool fun_getBigInt64(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool getFloat64Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_getFloat64(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool getFloat64Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_getFloat64(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool getBigUint64Impl(JSContext* cx, const CallArgs& args);
   static bool fun_getBigUint64(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setInt8Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setInt8(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setInt8Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setInt8(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool getFloat32Impl(JSContext* cx, const CallArgs& args);
   static bool fun_getFloat32(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setUint8Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setUint8(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setUint8Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setUint8(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool getFloat64Impl(JSContext* cx, const CallArgs& args);
   static bool fun_getFloat64(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setInt16Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setInt16(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setInt16Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setInt16(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool setInt8Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setInt8(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setUint16Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setUint16(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setUint16Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setUint16(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool setUint8Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setUint8(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setInt32Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setInt32(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setInt32Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setInt32(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool setInt16Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setInt16(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setUint32Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setUint32(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setUint32Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setUint32(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool setUint16Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setUint16(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setFloat32Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setFloat32(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setFloat32Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setFloat32(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool setInt32Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setInt32(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool setFloat64Impl(JSContext* cx, const CallArgs& args);
-  static bool fun_setFloat64(JSContext* cx, unsigned argc, Value* vp);
-||||||| merged common ancestors
-    static bool setFloat64Impl(JSContext* cx, const CallArgs& args);
-    static bool fun_setFloat64(JSContext* cx, unsigned argc, Value* vp);
-=======
   static bool setUint32Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setUint32(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  template <typename NativeType>
-  static bool read(JSContext* cx, Handle<DataViewObject*> obj,
-                   const CallArgs& args, NativeType* val);
-  template <typename NativeType>
-  static bool write(JSContext* cx, Handle<DataViewObject*> obj,
-                    const CallArgs& args);
-||||||| merged common ancestors
-    template<typename NativeType>
-    static bool read(JSContext* cx, Handle<DataViewObject*> obj, const CallArgs& args,
-                     NativeType* val);
-    template<typename NativeType>
-    static bool write(JSContext* cx, Handle<DataViewObject*> obj, const CallArgs& args);
-=======
   static bool setBigInt64Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setBigInt64(JSContext* cx, unsigned argc, Value* vp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  static const JSFunctionSpec methods[];
-  static const JSPropertySpec properties[];
-||||||| merged common ancestors
-  private:
-    static const JSFunctionSpec methods[];
-    static const JSPropertySpec properties[];
-=======
   static bool setBigUint64Impl(JSContext* cx, const CallArgs& args);
   static bool fun_setBigUint64(JSContext* cx, unsigned argc, Value* vp);
 
@@ -257,7 +153,6 @@ class DataViewObject : public ArrayBufferViewObject {
  private:
   static const JSFunctionSpec methods[];
   static const JSPropertySpec properties[];
->>>>>>> upstream-releases
 };
 
 }  // namespace js

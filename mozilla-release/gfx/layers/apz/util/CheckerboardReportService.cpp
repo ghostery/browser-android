@@ -6,24 +6,10 @@
 
 #include "CheckerboardReportService.h"
 
-<<<<<<< HEAD
-#include "gfxPrefs.h"                 // for gfxPrefs
 #include "jsapi.h"                    // for JS_Now
 #include "MainThreadUtils.h"          // for NS_IsMainThread
 #include "mozilla/Assertions.h"       // for MOZ_ASSERT
 #include "mozilla/ClearOnShutdown.h"  // for ClearOnShutdown
-||||||| merged common ancestors
-#include "gfxPrefs.h" // for gfxPrefs
-#include "jsapi.h" // for JS_Now
-#include "MainThreadUtils.h" // for NS_IsMainThread
-#include "mozilla/Assertions.h" // for MOZ_ASSERT
-#include "mozilla/ClearOnShutdown.h" // for ClearOnShutdown
-=======
-#include "jsapi.h"                    // for JS_Now
-#include "MainThreadUtils.h"          // for NS_IsMainThread
-#include "mozilla/Assertions.h"       // for MOZ_ASSERT
-#include "mozilla/ClearOnShutdown.h"  // for ClearOnShutdown
->>>>>>> upstream-releases
 #include "mozilla/Unused.h"
 #include "mozilla/dom/CheckerboardReportServiceBinding.h"  // for dom::CheckerboardReports
 #include "mozilla/gfx/GPUParent.h"
@@ -34,28 +20,12 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-/*static*/ StaticRefPtr<CheckerboardEventStorage>
-    CheckerboardEventStorage::sInstance;
-||||||| merged common ancestors
-/*static*/ StaticRefPtr<CheckerboardEventStorage> CheckerboardEventStorage::sInstance;
-=======
 /*static*/
 StaticRefPtr<CheckerboardEventStorage> CheckerboardEventStorage::sInstance;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<CheckerboardEventStorage>
-CheckerboardEventStorage::GetInstance() {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<CheckerboardEventStorage>
-CheckerboardEventStorage::GetInstance()
-{
-=======
 /*static*/
 already_AddRefed<CheckerboardEventStorage>
 CheckerboardEventStorage::GetInstance() {
->>>>>>> upstream-releases
   // The instance in the parent process does all the work, so if this is getting
   // called in the child process something is likely wrong.
   MOZ_ASSERT(XRE_IsParentProcess());
@@ -182,17 +152,8 @@ NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(CheckerboardReportService, mParent)
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(CheckerboardReportService, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(CheckerboardReportService, Release)
 
-<<<<<<< HEAD
-/*static*/ bool CheckerboardReportService::IsEnabled(JSContext* aCtx,
-                                                     JSObject* aGlobal) {
-||||||| merged common ancestors
-/*static*/ bool
-CheckerboardReportService::IsEnabled(JSContext* aCtx, JSObject* aGlobal)
-{
-=======
 /*static*/
 bool CheckerboardReportService::IsEnabled(JSContext* aCtx, JSObject* aGlobal) {
->>>>>>> upstream-releases
   // Only allow this in the parent process
   if (!XRE_IsParentProcess()) {
     return false;
@@ -202,25 +163,12 @@ bool CheckerboardReportService::IsEnabled(JSContext* aCtx, JSObject* aGlobal) {
          nsContentUtils::IsSpecificAboutPage(aGlobal, "about:checkerboard");
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<CheckerboardReportService>
-CheckerboardReportService::Constructor(const dom::GlobalObject& aGlobal,
-                                       ErrorResult& aRv) {
-  RefPtr<CheckerboardReportService> ces =
-      new CheckerboardReportService(aGlobal.GetAsSupports());
-||||||| merged common ancestors
-/*static*/ already_AddRefed<CheckerboardReportService>
-CheckerboardReportService::Constructor(const dom::GlobalObject& aGlobal, ErrorResult& aRv)
-{
-  RefPtr<CheckerboardReportService> ces = new CheckerboardReportService(aGlobal.GetAsSupports());
-=======
 /*static*/
 already_AddRefed<CheckerboardReportService>
 CheckerboardReportService::Constructor(const dom::GlobalObject& aGlobal,
                                        ErrorResult& aRv) {
   RefPtr<CheckerboardReportService> ces =
       new CheckerboardReportService(aGlobal.GetAsSupports());
->>>>>>> upstream-releases
   return ces.forget();
 }
 
@@ -242,32 +190,12 @@ void CheckerboardReportService::GetReports(
   instance->GetReports(aOutReports);
 }
 
-<<<<<<< HEAD
-bool CheckerboardReportService::IsRecordingEnabled() const {
-  return gfxPrefs::APZRecordCheckerboarding();
-||||||| merged common ancestors
-bool
-CheckerboardReportService::IsRecordingEnabled() const
-{
-  return gfxPrefs::APZRecordCheckerboarding();
-=======
 bool CheckerboardReportService::IsRecordingEnabled() const {
   return StaticPrefs::apz_record_checkerboarding();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CheckerboardReportService::SetRecordingEnabled(bool aEnabled) {
-  gfxPrefs::SetAPZRecordCheckerboarding(aEnabled);
-||||||| merged common ancestors
-void
-CheckerboardReportService::SetRecordingEnabled(bool aEnabled)
-{
-  gfxPrefs::SetAPZRecordCheckerboarding(aEnabled);
-=======
 void CheckerboardReportService::SetRecordingEnabled(bool aEnabled) {
   Preferences::SetBool("apz.record_checkerboarding", aEnabled);
->>>>>>> upstream-releases
 }
 
 void CheckerboardReportService::FlushActiveReports() {

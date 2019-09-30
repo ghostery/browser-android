@@ -780,17 +780,10 @@ function getChartsFromToolId(id) {
       timerHist = `DEVTOOLS_${id}_TIME_ACTIVE_SECONDS`;
       countHist = `DEVTOOLS_${id}_OPENED_COUNT`;
       break;
-<<<<<<< HEAD
-    case "FLEXBOX_HIGHLIGHTER":
-      timerHist = `DEVTOOLS_${id}_TIME_ACTIVE_SECONDS`;
-      break;
-||||||| merged common ancestors
-=======
     case "FLEXBOX_HIGHLIGHTER":
     case "GRID_HIGHLIGHTER":
       timerHist = `DEVTOOLS_${id}_TIME_ACTIVE_SECONDS`;
       break;
->>>>>>> upstream-releases
     default:
       timerHist = `DEVTOOLS_CUSTOM_TIME_ACTIVE_SECONDS`;
       countHist = `DEVTOOLS_CUSTOM_OPENED_COUNT`;

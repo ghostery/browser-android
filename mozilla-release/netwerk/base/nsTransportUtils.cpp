@@ -16,65 +16,6 @@ using namespace mozilla;
 
 class nsTransportStatusEvent;
 
-<<<<<<< HEAD
-class nsTransportEventSinkProxy : public nsITransportEventSink {
- public:
-  NS_DECL_THREADSAFE_ISUPPORTS
-  NS_DECL_NSITRANSPORTEVENTSINK
-
-  nsTransportEventSinkProxy(nsITransportEventSink *sink, nsIEventTarget *target)
-      : mSink(sink),
-        mTarget(target),
-        mLock("nsTransportEventSinkProxy.mLock"),
-        mLastEvent(nullptr) {
-    NS_ADDREF(mSink);
-  }
-
- private:
-  virtual ~nsTransportEventSinkProxy() {
-    // our reference to mSink could be the last, so be sure to release
-    // it on the target thread.  otherwise, we could get into trouble.
-    NS_ProxyRelease("nsTransportEventSinkProxy::mSink", mTarget,
-                    dont_AddRef(mSink));
-  }
-
- public:
-  nsITransportEventSink *mSink;
-  nsCOMPtr<nsIEventTarget> mTarget;
-  Mutex mLock;
-  nsTransportStatusEvent *mLastEvent;
-||||||| merged common ancestors
-class nsTransportEventSinkProxy : public nsITransportEventSink
-{
-public:
-    NS_DECL_THREADSAFE_ISUPPORTS
-    NS_DECL_NSITRANSPORTEVENTSINK
-
-    nsTransportEventSinkProxy(nsITransportEventSink *sink,
-                              nsIEventTarget *target)
-        : mSink(sink)
-        , mTarget(target)
-        , mLock("nsTransportEventSinkProxy.mLock")
-        , mLastEvent(nullptr)
-    {
-        NS_ADDREF(mSink);
-    }
-
-private:
-    virtual ~nsTransportEventSinkProxy()
-    {
-        // our reference to mSink could be the last, so be sure to release
-        // it on the target thread.  otherwise, we could get into trouble.
-        NS_ProxyRelease(
-          "nsTransportEventSinkProxy::mSink", mTarget, dont_AddRef(mSink));
-    }
-
-public:
-    nsITransportEventSink           *mSink;
-    nsCOMPtr<nsIEventTarget>         mTarget;
-    Mutex                            mLock;
-    nsTransportStatusEvent          *mLastEvent;
-=======
 class nsTransportEventSinkProxy : public nsITransportEventSink {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
@@ -101,48 +42,8 @@ class nsTransportEventSinkProxy : public nsITransportEventSink {
   nsCOMPtr<nsIEventTarget> mTarget;
   Mutex mLock;
   nsTransportStatusEvent* mLastEvent;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-class nsTransportStatusEvent : public Runnable {
- public:
-  nsTransportStatusEvent(nsTransportEventSinkProxy *proxy,
-                         nsITransport *transport, nsresult status,
-                         int64_t progress, int64_t progressMax)
-      : Runnable("nsTransportStatusEvent"),
-        mProxy(proxy),
-        mTransport(transport),
-        mStatus(status),
-        mProgress(progress),
-        mProgressMax(progressMax) {}
-
-  ~nsTransportStatusEvent() = default;
-
-  NS_IMETHOD Run() override {
-    // since this event is being handled, we need to clear the proxy's ref.
-    // if not coalescing all, then last event may not equal self!
-||||||| merged common ancestors
-class nsTransportStatusEvent : public Runnable
-{
-public:
-    nsTransportStatusEvent(nsTransportEventSinkProxy *proxy,
-                           nsITransport *transport,
-                           nsresult status,
-                           int64_t progress,
-                           int64_t progressMax)
-        : Runnable("nsTransportStatusEvent")
-        , mProxy(proxy)
-        , mTransport(transport)
-        , mStatus(status)
-        , mProgress(progress)
-        , mProgressMax(progressMax)
-    {}
-
-    ~nsTransportStatusEvent() = default;
-
-    NS_IMETHOD Run() override
-=======
 class nsTransportStatusEvent : public Runnable {
  public:
   nsTransportStatusEvent(nsTransportEventSinkProxy* proxy,
@@ -160,7 +61,6 @@ class nsTransportStatusEvent : public Runnable {
   NS_IMETHOD Run() override {
     // since this event is being handled, we need to clear the proxy's ref.
     // if not coalescing all, then last event may not equal self!
->>>>>>> upstream-releases
     {
       MutexAutoLock lock(mProxy->mLock);
       if (mProxy->mLastEvent == this) mProxy->mLastEvent = nullptr;
@@ -183,50 +83,6 @@ class nsTransportStatusEvent : public Runnable {
 NS_IMPL_ISUPPORTS(nsTransportEventSinkProxy, nsITransportEventSink)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsTransportEventSinkProxy::OnTransportStatus(nsITransport *transport,
-                                             nsresult status, int64_t progress,
-                                             int64_t progressMax) {
-  nsresult rv = NS_OK;
-  RefPtr<nsTransportStatusEvent> event;
-  {
-    MutexAutoLock lock(mLock);
-
-    // try to coalesce events! ;-)
-    if (mLastEvent && (mLastEvent->mStatus == status)) {
-      mLastEvent->mStatus = status;
-      mLastEvent->mProgress = progress;
-      mLastEvent->mProgressMax = progressMax;
-    } else {
-      event = new nsTransportStatusEvent(this, transport, status, progress,
-                                         progressMax);
-      if (!event) rv = NS_ERROR_OUT_OF_MEMORY;
-      mLastEvent = event;  // weak ref
-||||||| merged common ancestors
-nsTransportEventSinkProxy::OnTransportStatus(nsITransport *transport,
-                                             nsresult status,
-                                             int64_t progress,
-                                             int64_t progressMax)
-{
-    nsresult rv = NS_OK;
-    RefPtr<nsTransportStatusEvent> event;
-    {
-        MutexAutoLock lock(mLock);
-
-        // try to coalesce events! ;-)
-        if (mLastEvent && (mLastEvent->mStatus == status)) {
-            mLastEvent->mStatus = status;
-            mLastEvent->mProgress = progress;
-            mLastEvent->mProgressMax = progressMax;
-        }
-        else {
-            event = new nsTransportStatusEvent(this, transport, status,
-                                               progress, progressMax);
-            if (!event)
-                rv = NS_ERROR_OUT_OF_MEMORY;
-            mLastEvent = event;  // weak ref
-        }
-=======
 nsTransportEventSinkProxy::OnTransportStatus(nsITransport* transport,
                                              nsresult status, int64_t progress,
                                              int64_t progressMax) {
@@ -245,7 +101,6 @@ nsTransportEventSinkProxy::OnTransportStatus(nsITransport* transport,
                                          progressMax);
       if (!event) rv = NS_ERROR_OUT_OF_MEMORY;
       mLastEvent = event;  // weak ref
->>>>>>> upstream-releases
     }
   }
   if (event) {
@@ -262,26 +117,6 @@ nsTransportEventSinkProxy::OnTransportStatus(nsITransport* transport,
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsresult net_NewTransportEventSinkProxy(nsITransportEventSink **result,
-                                        nsITransportEventSink *sink,
-                                        nsIEventTarget *target) {
-  *result = new nsTransportEventSinkProxy(sink, target);
-  if (!*result) return NS_ERROR_OUT_OF_MEMORY;
-  NS_ADDREF(*result);
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-net_NewTransportEventSinkProxy(nsITransportEventSink **result,
-                               nsITransportEventSink *sink,
-                               nsIEventTarget *target)
-{
-    *result = new nsTransportEventSinkProxy(sink, target);
-    if (!*result)
-        return NS_ERROR_OUT_OF_MEMORY;
-    NS_ADDREF(*result);
-    return NS_OK;
-=======
 nsresult net_NewTransportEventSinkProxy(nsITransportEventSink** result,
                                         nsITransportEventSink* sink,
                                         nsIEventTarget* target) {
@@ -289,5 +124,4 @@ nsresult net_NewTransportEventSinkProxy(nsITransportEventSink** result,
   if (!*result) return NS_ERROR_OUT_OF_MEMORY;
   NS_ADDREF(*result);
   return NS_OK;
->>>>>>> upstream-releases
 }

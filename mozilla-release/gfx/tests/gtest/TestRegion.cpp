@@ -123,27 +123,11 @@ TEST(Gfx, RegionSingleRect)
   TestLargestRegion::TestSingleRect(nsRect(-10, -10, 20, 20));
 }
 
-<<<<<<< HEAD
-TEST(Gfx, RegionNonRectangular) { TestLargestRegion::TestNonRectangular(); }
-||||||| merged common ancestors
-TEST(Gfx, RegionNonRectangular) {
-  TestLargestRegion::TestNonRectangular();
-}
-=======
 TEST(Gfx, RegionNonRectangular)
 { TestLargestRegion::TestNonRectangular(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-TEST(Gfx, RegionTwoRectTest) { TestLargestRegion::TwoRectTest(); }
-||||||| merged common ancestors
-TEST(Gfx, RegionTwoRectTest) {
-  TestLargestRegion::TwoRectTest();
-}
-=======
 TEST(Gfx, RegionTwoRectTest)
 { TestLargestRegion::TwoRectTest(); }
->>>>>>> upstream-releases
 
 TEST(Gfx, RegionContainsSpecifiedRect)
 { TestLargestRegion::TestContainsSpecifiedRect(); }
@@ -151,17 +135,9 @@ TEST(Gfx, RegionContainsSpecifiedRect)
 TEST(Gfx, RegionTestContainsSpecifiedOverflowingRect)
 { TestLargestRegion::TestContainsSpecifiedOverflowingRect(); }
 
-<<<<<<< HEAD
-TEST(Gfx, RegionScaleToInside) {
-  {  // no rectangles
-||||||| merged common ancestors
-TEST(Gfx, RegionScaleToInside) {
-  { // no rectangles
-=======
 TEST(Gfx, RegionScaleToInside)
 {
   {  // no rectangles
->>>>>>> upstream-releases
     nsRegion r;
 
     nsIntRegion scaled = r.ScaleToInsidePixels(1, 1, 60);
@@ -202,7 +178,8 @@ TEST(Gfx, RegionScaleToInside)
   }
 }
 
-TEST(Gfx, RegionIsEqual) {
+TEST(Gfx, RegionIsEqual)
+{
   {
     nsRegion r(nsRect(0, 0, 50, 50));
     EXPECT_FALSE(nsRegion().IsEqual(r));
@@ -994,20 +971,10 @@ TEST(Gfx, RegionAnd)
 #endif
 }
 
-<<<<<<< HEAD
-TEST(Gfx, RegionSimplify) {
-  {  // ensure simplify works on a single rect
-    nsRegion r(nsRect(0, 100, 200, 100));
-||||||| merged common ancestors
-TEST(Gfx, RegionSimplify) {
-  { // ensure simplify works on a single rect
-    nsRegion r(nsRect(0,100,200,100));
-=======
 TEST(Gfx, RegionSimplify)
 {
   {  // ensure simplify works on a single rect
     nsRegion r(nsRect(0, 100, 200, 100));
->>>>>>> upstream-releases
 
     r.SimplifyOutwardByArea(100 * 100);
 
@@ -1107,18 +1074,9 @@ TEST(Gfx, RegionSimplify)
   }
 }
 
-<<<<<<< HEAD
-TEST(Gfx, RegionContains) {
-  {  // ensure Contains works on a simple region
-||||||| merged common ancestors
-TEST(Gfx, RegionContains)
-{
-  { // ensure Contains works on a simple region
-=======
 TEST(Gfx, RegionContains)
 {
   {  // ensure Contains works on a simple region
->>>>>>> upstream-releases
     nsRegion r(nsRect(0, 0, 100, 100));
 
     EXPECT_TRUE(r.Contains(0, 0));
@@ -1193,15 +1151,8 @@ TEST(Gfx, RegionContains)
 #define REGION_VALUE 0xff
 
 struct RegionBitmap {
-<<<<<<< HEAD
-  RegionBitmap(unsigned char *bitmap, int width, int height)
-      : bitmap(bitmap), width(width), height(height) {}
-||||||| merged common ancestors
-  RegionBitmap(unsigned char *bitmap, int width, int height) : bitmap(bitmap), width(width), height(height) {}
-=======
   RegionBitmap(unsigned char* bitmap, int width, int height)
       : bitmap(bitmap), width(width), height(height) {}
->>>>>>> upstream-releases
 
   void clear() {
     for (int y = 0; y < height; y++) {
@@ -1214,7 +1165,7 @@ struct RegionBitmap {
   void set(nsRegion& region) {
     clear();
     for (auto iter = region.RectIter(); !iter.Done(); iter.Next()) {
-      const nsRect &r = iter.Get();
+      const nsRect& r = iter.Get();
       for (int y = r.Y(); y < r.YMost(); y++) {
         for (int x = r.X(); x < r.XMost(); x++) {
           bitmap[x + y * width] = REGION_VALUE;
@@ -1250,26 +1201,11 @@ struct RegionBitmap {
   int height;
 };
 
-<<<<<<< HEAD
-void VisitEdge(void *closure, VisitSide side, int x1, int y1, int x2, int y2) {
-||||||| merged common ancestors
-void VisitEdge(void *closure, VisitSide side, int x1, int y1, int x2, int y2)
-{
-=======
 static void VisitEdge(void* closure, VisitSide side, int x1, int y1, int x2,
                       int y2) {
->>>>>>> upstream-releases
   EXPECT_GE(x2, x1);
-<<<<<<< HEAD
-  RegionBitmap *visitor = static_cast<RegionBitmap *>(closure);
-  unsigned char *bitmap = visitor->bitmap;
-||||||| merged common ancestors
-  RegionBitmap *visitor = static_cast<RegionBitmap*>(closure);
-  unsigned char *bitmap = visitor->bitmap;
-=======
   RegionBitmap* visitor = static_cast<RegionBitmap*>(closure);
   unsigned char* bitmap = visitor->bitmap;
->>>>>>> upstream-releases
   const int width = visitor->width;
 
   if (side == VisitSide::TOP) {
@@ -1295,14 +1231,7 @@ static void VisitEdge(void* closure, VisitSide side, int x1, int y1, int x2,
   }
 }
 
-<<<<<<< HEAD
-void TestVisit(nsRegion &r) {
-||||||| merged common ancestors
-void TestVisit(nsRegion &r)
-{
-=======
 static void TestVisit(nsRegion& r) {
->>>>>>> upstream-releases
   auto reference = mozilla::MakeUnique<unsigned char[]>(600 * 600);
   auto result = mozilla::MakeUnique<unsigned char[]>(600 * 600);
   RegionBitmap ref(reference.get(), 600, 600);
@@ -1316,17 +1245,9 @@ static void TestVisit(nsRegion& r) {
   res.compare(ref);
 }
 
-<<<<<<< HEAD
-TEST(Gfx, RegionVisitEdges) {
-  {  // visit edges
-||||||| merged common ancestors
-TEST(Gfx, RegionVisitEdges) {
-  { // visit edges
-=======
 TEST(Gfx, RegionVisitEdges)
 {
   {  // visit edges
->>>>>>> upstream-releases
     nsRegion r(nsRect(20, 20, 100, 100));
     r.Or(r, nsRect(20, 120, 200, 100));
     TestVisit(r);

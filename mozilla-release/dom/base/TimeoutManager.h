@@ -24,23 +24,12 @@ class TimeoutExecutor;
 class TimeoutHandler;
 
 // This class manages the timeouts in a Window's setTimeout/setInterval pool.
-<<<<<<< HEAD
-class TimeoutManager final {
- public:
-  explicit TimeoutManager(nsGlobalWindowInner& aWindow);
-||||||| merged common ancestors
-class TimeoutManager final
-{
-public:
-  explicit TimeoutManager(nsGlobalWindowInner& aWindow);
-=======
 class TimeoutManager final {
  private:
   struct Timeouts;
 
  public:
   TimeoutManager(nsGlobalWindowInner& aWindow, uint32_t aMaxIdleDeferMS);
->>>>>>> upstream-releases
   ~TimeoutManager();
   TimeoutManager(const TimeoutManager& rhs) = delete;
   void operator=(const TimeoutManager& rhs) = delete;
@@ -50,42 +39,17 @@ class TimeoutManager final {
   static uint32_t GetNestingLevel() { return sNestingLevel; }
   static void SetNestingLevel(uint32_t aLevel) { sNestingLevel = aLevel; }
 
-<<<<<<< HEAD
-  bool HasTimeouts() const { return !mTimeouts.IsEmpty(); }
-||||||| merged common ancestors
-  bool HasTimeouts() const
-  {
-    return !mTimeouts.IsEmpty();
-  }
-=======
   bool HasTimeouts() const {
     return !mTimeouts.IsEmpty() || !mIdleTimeouts.IsEmpty();
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult SetTimeout(nsITimeoutHandler* aHandler, int32_t interval,
-                      bool aIsInterval, mozilla::dom::Timeout::Reason aReason,
-||||||| merged common ancestors
-  nsresult SetTimeout(nsITimeoutHandler* aHandler,
-                      int32_t interval, bool aIsInterval,
-                      mozilla::dom::Timeout::Reason aReason,
-=======
   nsresult SetTimeout(TimeoutHandler* aHandler, int32_t interval,
                       bool aIsInterval, mozilla::dom::Timeout::Reason aReason,
->>>>>>> upstream-releases
                       int32_t* aReturn);
-<<<<<<< HEAD
-  void ClearTimeout(int32_t aTimerId, mozilla::dom::Timeout::Reason aReason);
-||||||| merged common ancestors
-  void ClearTimeout(int32_t aTimerId,
-                    mozilla::dom::Timeout::Reason aReason);
-=======
   void ClearTimeout(int32_t aTimerId, mozilla::dom::Timeout::Reason aReason);
   bool ClearTimeoutInternal(int32_t aTimerId,
                             mozilla::dom::Timeout::Reason aReason,
                             bool aIsIdle);
->>>>>>> upstream-releases
 
   // The timeout implementation functions.
   MOZ_CAN_RUN_SCRIPT
@@ -126,15 +90,8 @@ class TimeoutManager final {
   // Run some code for each Timeout in our list.  Note that this function
   // doesn't guarantee that Timeouts are iterated in any particular order.
   template <class Callable>
-<<<<<<< HEAD
-  void ForEachUnorderedTimeout(Callable c) {
-||||||| merged common ancestors
-  void ForEachUnorderedTimeout(Callable c)
-  {
-=======
   void ForEachUnorderedTimeout(Callable c) {
     mIdleTimeouts.ForEach(c);
->>>>>>> upstream-releases
     mTimeouts.ForEach(c);
   }
 
@@ -147,15 +104,9 @@ class TimeoutManager final {
 
   static const uint32_t InvalidFiringId;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   void SetLoading(bool value);
 
  private:
->>>>>>> upstream-releases
   void MaybeStartThrottleTimeout();
 
   // Return true if |aTimeout| needs to be reinserted into the timeout list.
@@ -246,29 +197,10 @@ private:
   // The executor is specific to the nsGlobalWindow/TimeoutManager, but it
   // can live past the destruction of the window if its scheduled.  Therefore
   // it must be a separate ref-counted object.
-<<<<<<< HEAD
-  RefPtr<TimeoutExecutor> mExecutor;
-||||||| merged common ancestors
-  RefPtr<TimeoutExecutor>     mExecutor;
-=======
   RefPtr<TimeoutExecutor> mExecutor;
   // For timeouts run off the idle queue
   RefPtr<TimeoutExecutor> mIdleExecutor;
->>>>>>> upstream-releases
   // The list of timeouts coming from non-tracking scripts.
-<<<<<<< HEAD
-  Timeouts mTimeouts;
-  uint32_t mTimeoutIdCounter;
-  uint32_t mNextFiringId;
-  AutoTArray<uint32_t, 2> mFiringIdStack;
-  mozilla::dom::Timeout* mRunningTimeout;
-||||||| merged common ancestors
-  Timeouts                    mTimeouts;
-  uint32_t                    mTimeoutIdCounter;
-  uint32_t                    mNextFiringId;
-  AutoTArray<uint32_t, 2>     mFiringIdStack;
-  mozilla::dom::Timeout*      mRunningTimeout;
-=======
   Timeouts mTimeouts;
   uint32_t mTimeoutIdCounter;
   uint32_t mNextFiringId;
@@ -285,45 +217,16 @@ private:
 
   // The current idle request callback timeout handle
   uint32_t mIdleCallbackTimeoutCounter;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The current idle request callback timeout handle
-  uint32_t mIdleCallbackTimeoutCounter;
-||||||| merged common ancestors
-   // The current idle request callback timeout handle
-  uint32_t                    mIdleCallbackTimeoutCounter;
-=======
   nsCOMPtr<nsITimer> mThrottleTimeoutsTimer;
   mozilla::TimeStamp mLastBudgetUpdate;
   mozilla::TimeDuration mExecutionBudget;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsCOMPtr<nsITimer> mThrottleTimeoutsTimer;
-  mozilla::TimeStamp mLastBudgetUpdate;
-  mozilla::TimeDuration mExecutionBudget;
-||||||| merged common ancestors
-  nsCOMPtr<nsITimer>          mThrottleTimeoutsTimer;
-  mozilla::TimeStamp          mLastBudgetUpdate;
-  mozilla::TimeDuration       mExecutionBudget;
-=======
   bool mThrottleTimeouts;
   bool mThrottleTrackingTimeouts;
   bool mBudgetThrottleTimeouts;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool mThrottleTimeouts;
-  bool mThrottleTrackingTimeouts;
-  bool mBudgetThrottleTimeouts;
-||||||| merged common ancestors
-  bool                        mThrottleTimeouts;
-  bool                        mThrottleTrackingTimeouts;
-  bool                        mBudgetThrottleTimeouts;
-=======
   bool mIsLoading;
->>>>>>> upstream-releases
 
   static uint32_t sNestingLevel;
 };

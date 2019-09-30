@@ -10,15 +10,7 @@
 #include "nscore.h"
 #include "nsID.h"
 #include "nsIFactory.h"
-<<<<<<< HEAD
 #include "nsCOMPtr.h"  // for already_AddRefed
-#include "mozilla/Attributes.h"
-||||||| merged common ancestors
-#include "nsCOMPtr.h" // for already_AddRefed
-#include "mozilla/Attributes.h"
-=======
-#include "nsCOMPtr.h"  // for already_AddRefed
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -28,17 +20,8 @@ namespace mozilla {
  * (cids/contractids/categoryentries) are unused for modules which are loaded
  * via a module loader.
  */
-<<<<<<< HEAD
-struct Module {
-  static const unsigned int kVersion = 65;
-||||||| merged common ancestors
-struct Module
-{
-  static const unsigned int kVersion = 64;
-=======
 struct Module {
   static const unsigned int kVersion = 69;
->>>>>>> upstream-releases
 
   struct CIDEntry;
 
@@ -55,22 +38,11 @@ struct Module {
    * This selector allows CIDEntrys to be marked so that they're only loaded
    * into certain kinds of processes. Selectors can be combined.
    */
-<<<<<<< HEAD
-  enum ProcessSelector {
-    ANY_PROCESS = 0x0,
-    MAIN_PROCESS_ONLY = 0x1,
-||||||| merged common ancestors
-  enum ProcessSelector
-  {
-    ANY_PROCESS          = 0x0,
-    MAIN_PROCESS_ONLY    = 0x1,
-=======
   // Note: This must be kept in sync with the selector matching in
   // nsComponentManager.cpp.
   enum ProcessSelector {
     ANY_PROCESS = 0x0,
     MAIN_PROCESS_ONLY = 0x1,
->>>>>>> upstream-releases
     CONTENT_PROCESS_ONLY = 0x2,
 
     /**
@@ -78,13 +50,6 @@ struct Module {
      * ANY_PROCESS is specified. This flag enables a module in the
      * GPU process.
      */
-<<<<<<< HEAD
-    ALLOW_IN_GPU_PROCESS = 0x4,
-    ALLOW_IN_VR_PROCESS = 0x8,
-    ALLOW_IN_GPU_AND_VR_PROCESS = ALLOW_IN_GPU_PROCESS | ALLOW_IN_VR_PROCESS
-||||||| merged common ancestors
-    ALLOW_IN_GPU_PROCESS = 0x4
-=======
     ALLOW_IN_GPU_PROCESS = 0x4,
     ALLOW_IN_VR_PROCESS = 0x8,
     ALLOW_IN_SOCKET_PROCESS = 0x10,
@@ -101,7 +66,6 @@ struct Module {
     ALLOW_IN_GPU_RDD_VR_AND_SOCKET_PROCESS =
         ALLOW_IN_GPU_PROCESS | ALLOW_IN_RDD_PROCESS | ALLOW_IN_VR_PROCESS |
         ALLOW_IN_SOCKET_PROCESS
->>>>>>> upstream-releases
   };
 
   static constexpr size_t kMaxProcessSelector =
@@ -178,76 +142,6 @@ struct Module {
   ProcessSelector selector;
 };
 
-<<<<<<< HEAD
-}  // namespace mozilla
-
-#if defined(MOZILLA_INTERNAL_API)
-#define NSMODULE_NAME(_name) _name##_NSModule
-#if defined(_MSC_VER) || (defined(__clang__) && defined(__MINGW32__))
-#pragma section(".kPStaticModules$M", read)
-#pragma comment(linker, "/merge:.kPStaticModules=.rdata")
-#define NSMODULE_SECTION __declspec(allocate(".kPStaticModules$M"), dllexport)
-#elif defined(__GNUC__)
-#if defined(__ELF__)
-#define NSMODULE_SECTION \
-  __attribute__((section("kPStaticModules"), visibility("default")))
-#elif defined(__MACH__)
-#define NSMODULE_SECTION \
-  __attribute__((section("__DATA, .kPStaticModules"), visibility("default")))
-#elif defined(_WIN32)
-#define NSMODULE_SECTION __attribute__((section("kPStaticModules"), dllexport))
-#endif
-#endif
-#if !defined(NSMODULE_SECTION)
-#error Do not know how to define sections.
-#endif
-#if defined(MOZ_HAVE_ASAN_BLACKLIST)
-#define NSMODULE_ASAN_BLACKLIST __attribute__((no_sanitize_address))
-#else
-#define NSMODULE_ASAN_BLACKLIST
-#endif
-#define NSMODULE_DEFN(_name)                      \
-  extern NSMODULE_SECTION NSMODULE_ASAN_BLACKLIST \
-      mozilla::Module const* const NSMODULE_NAME(_name)
-#else
-#error Building binary XPCOM components is not supported anymore.
-#endif
-
-#endif  // mozilla_Module_h
-||||||| merged common ancestors
-} // namespace mozilla
-
-#if defined(MOZILLA_INTERNAL_API)
-#  define NSMODULE_NAME(_name) _name##_NSModule
-#  if defined(_MSC_VER) || (defined(__clang__) && defined(__MINGW32__))
-#    pragma section(".kPStaticModules$M", read)
-#    pragma comment(linker, "/merge:.kPStaticModules=.rdata")
-#    define NSMODULE_SECTION __declspec(allocate(".kPStaticModules$M"), dllexport)
-#  elif defined(__GNUC__)
-#    if defined(__ELF__)
-#      define NSMODULE_SECTION __attribute__((section("kPStaticModules"), visibility("default")))
-#    elif defined(__MACH__)
-#      define NSMODULE_SECTION __attribute__((section("__DATA, .kPStaticModules"), visibility("default")))
-#    elif defined (_WIN32)
-#      define NSMODULE_SECTION __attribute__((section("kPStaticModules"), dllexport))
-#    endif
-#  endif
-#  if !defined(NSMODULE_SECTION)
-#    error Do not know how to define sections.
-#  endif
-#  if defined(MOZ_HAVE_ASAN_BLACKLIST)
-#    define NSMODULE_ASAN_BLACKLIST __attribute__((no_sanitize_address))
-#  else
-#    define NSMODULE_ASAN_BLACKLIST
-#  endif
-#  define NSMODULE_DEFN(_name) extern NSMODULE_SECTION NSMODULE_ASAN_BLACKLIST mozilla::Module const *const NSMODULE_NAME(_name)
-#else
-#  error Building binary XPCOM components is not supported anymore.
-#endif
-
-#endif // mozilla_Module_h
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_Module_h
->>>>>>> upstream-releases

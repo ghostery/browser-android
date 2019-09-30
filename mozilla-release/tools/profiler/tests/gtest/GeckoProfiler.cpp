@@ -44,14 +44,8 @@ static void InactiveFeaturesAndParamsCheck() {
   ASSERT_TRUE(!profiler_feature_active(ProfilerFeature::MainThreadIO));
   ASSERT_TRUE(!profiler_feature_active(ProfilerFeature::Privacy));
 
-<<<<<<< HEAD
-  profiler_get_start_params(&entries, &duration, &interval, &features, &filters);
-||||||| merged common ancestors
-  profiler_get_start_params(&entries, &interval, &features, &filters);
-=======
   profiler_get_start_params(&entries, &duration, &interval, &features,
                             &filters);
->>>>>>> upstream-releases
 
   ASSERT_TRUE(entries == 0);
   ASSERT_TRUE(duration == Nothing());
@@ -60,37 +54,18 @@ static void InactiveFeaturesAndParamsCheck() {
   ASSERT_TRUE(filters.empty());
 }
 
-<<<<<<< HEAD
-static void
-ActiveParamsCheck(int aEntries, double aInterval, uint32_t aFeatures,
-                  const char** aFilters, size_t aFiltersLen,
-                  const Maybe<double>& aDuration = Nothing())
-{
-||||||| merged common ancestors
-static void
-ActiveParamsCheck(int aEntries, double aInterval, uint32_t aFeatures,
-                  const char** aFilters, size_t aFiltersLen)
-{
-=======
 static void ActiveParamsCheck(int aEntries, double aInterval,
                               uint32_t aFeatures, const char** aFilters,
                               size_t aFiltersLen,
                               const Maybe<double>& aDuration = Nothing()) {
->>>>>>> upstream-releases
   int entries;
   Maybe<double> duration;
   double interval;
   uint32_t features;
   StrVec filters;
 
-<<<<<<< HEAD
-  profiler_get_start_params(&entries, &duration, &interval, &features, &filters);
-||||||| merged common ancestors
-  profiler_get_start_params(&entries, &interval, &features, &filters);
-=======
   profiler_get_start_params(&entries, &duration, &interval, &features,
                             &filters);
->>>>>>> upstream-releases
 
   ASSERT_TRUE(entries == aEntries);
   ASSERT_TRUE(duration == aDuration);
@@ -111,37 +86,17 @@ TEST(GeckoProfiler, FeaturesAndParams)
     uint32_t features = ProfilerFeature::JS | ProfilerFeature::Threads;
     const char* filters[] = {"GeckoMain", "Compositor"};
 
-<<<<<<< HEAD
-    profiler_start(PROFILER_DEFAULT_ENTRIES,
-                   PROFILER_DEFAULT_INTERVAL, features, filters,
-                   MOZ_ARRAY_LENGTH(filters),
-                   Some(PROFILER_DEFAULT_DURATION));
-||||||| merged common ancestors
-    profiler_start(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
-                   features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     profiler_start(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
                    features, filters, MOZ_ARRAY_LENGTH(filters),
                    Some(PROFILER_DEFAULT_DURATION));
->>>>>>> upstream-releases
 
     ASSERT_TRUE(profiler_is_active());
     ASSERT_TRUE(!profiler_feature_active(ProfilerFeature::MainThreadIO));
     ASSERT_TRUE(!profiler_feature_active(ProfilerFeature::Privacy));
 
-<<<<<<< HEAD
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES,
-                      PROFILER_DEFAULT_INTERVAL, features, filters,
-                      MOZ_ARRAY_LENGTH(filters),
-                      Some(PROFILER_DEFAULT_DURATION));
-||||||| merged common ancestors
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
-                      features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     ActiveParamsCheck(
         PROFILER_DEFAULT_ENTRIES.Value(), PROFILER_DEFAULT_INTERVAL, features,
         filters, MOZ_ARRAY_LENGTH(filters), Some(PROFILER_DEFAULT_DURATION));
->>>>>>> upstream-releases
 
     profiler_stop();
 
@@ -154,36 +109,6 @@ TEST(GeckoProfiler, FeaturesAndParams)
         ProfilerFeature::MainThreadIO | ProfilerFeature::Privacy;
     const char* filters[] = {"GeckoMain", "Foo", "Bar"};
 
-<<<<<<< HEAD
-    profiler_start(999999, 3,
-                   features, filters, MOZ_ARRAY_LENGTH(filters), Some(25.0));
-
-    ASSERT_TRUE(profiler_is_active());
-    ASSERT_TRUE(profiler_feature_active(ProfilerFeature::MainThreadIO));
-    ASSERT_TRUE(profiler_feature_active(ProfilerFeature::Privacy));
-
-    // Profiler::Threads is added because filters has multiple entries.
-    ActiveParamsCheck(999999, 3,
-                      features | ProfilerFeature::Threads,
-                      filters, MOZ_ARRAY_LENGTH(filters), Some(25.0));
-
-    profiler_stop();
-
-    InactiveFeaturesAndParamsCheck();
-  }
-
-  // Try with no duration
-  {
-    uint32_t features = ProfilerFeature::MainThreadIO |
-                        ProfilerFeature::Privacy;
-    const char* filters[] = { "GeckoMain", "Foo", "Bar" };
-
-    profiler_start(999999, 3,
-                    features, filters, MOZ_ARRAY_LENGTH(filters), Nothing());
-||||||| merged common ancestors
-    profiler_start(999999, 3,
-                   features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     // Testing with some arbitrary buffer size (as could be provided by
     // external code), which we convert to the appropriate power of 2.
     profiler_start(PowerOfTwo32(999999), 3, features, filters,
@@ -211,26 +136,15 @@ TEST(GeckoProfiler, FeaturesAndParams)
 
     profiler_start(PowerOfTwo32(999999), 3, features, filters,
                    MOZ_ARRAY_LENGTH(filters), Nothing());
->>>>>>> upstream-releases
 
     ASSERT_TRUE(profiler_is_active());
     ASSERT_TRUE(profiler_feature_active(ProfilerFeature::MainThreadIO));
     ASSERT_TRUE(profiler_feature_active(ProfilerFeature::Privacy));
 
     // Profiler::Threads is added because filters has multiple entries.
-<<<<<<< HEAD
-    ActiveParamsCheck(999999, 3,
-                      features | ProfilerFeature::Threads,
-                      filters, MOZ_ARRAY_LENGTH(filters), Nothing());
-||||||| merged common ancestors
-    ActiveParamsCheck(999999, 3,
-                      features | ProfilerFeature::Threads,
-                      filters, MOZ_ARRAY_LENGTH(filters));
-=======
     ActiveParamsCheck(PowerOfTwo32(999999).Value(), 3,
                       features | ProfilerFeature::Threads, filters,
                       MOZ_ARRAY_LENGTH(filters), Nothing());
->>>>>>> upstream-releases
 
     profiler_stop();
 
@@ -242,33 +156,15 @@ TEST(GeckoProfiler, FeaturesAndParams)
     uint32_t availableFeatures = profiler_get_available_features();
     const char* filters[] = {""};
 
-<<<<<<< HEAD
-    profiler_start(88888, 10,
-                   availableFeatures, filters, MOZ_ARRAY_LENGTH(filters),
-                   Some(15.0));
-||||||| merged common ancestors
-    profiler_start(88888, 10,
-                   availableFeatures, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     profiler_start(PowerOfTwo32(88888), 10, availableFeatures, filters,
                    MOZ_ARRAY_LENGTH(filters), Some(15.0));
->>>>>>> upstream-releases
 
     ASSERT_TRUE(profiler_is_active());
     ASSERT_TRUE(profiler_feature_active(ProfilerFeature::MainThreadIO));
     ASSERT_TRUE(profiler_feature_active(ProfilerFeature::Privacy));
 
-<<<<<<< HEAD
-    ActiveParamsCheck(88888, 10,
-                      availableFeatures, filters, MOZ_ARRAY_LENGTH(filters),
-                      Some(15.0));
-||||||| merged common ancestors
-    ActiveParamsCheck(88888, 10,
-                      availableFeatures, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     ActiveParamsCheck(PowerOfTwo32(88888).Value(), 10, availableFeatures,
                       filters, MOZ_ARRAY_LENGTH(filters), Some(15.0));
->>>>>>> upstream-releases
 
     // Don't call profiler_stop() here.
   }
@@ -280,38 +176,18 @@ TEST(GeckoProfiler, FeaturesAndParams)
 
     // Second profiler_start() call in a row without an intervening
     // profiler_stop(); this will do an implicit profiler_stop() and restart.
-<<<<<<< HEAD
-    profiler_start(0, 0,
-                   features, filters, MOZ_ARRAY_LENGTH(filters), Some(0.0));
-||||||| merged common ancestors
-    profiler_start(0, 0,
-                   features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     profiler_start(PowerOfTwo32(0), 0, features, filters,
                    MOZ_ARRAY_LENGTH(filters), Some(0.0));
->>>>>>> upstream-releases
 
     ASSERT_TRUE(profiler_is_active());
     ASSERT_TRUE(!profiler_feature_active(ProfilerFeature::MainThreadIO));
     ASSERT_TRUE(!profiler_feature_active(ProfilerFeature::Privacy));
 
     // Entries and intervals go to defaults if 0 is specified.
-<<<<<<< HEAD
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES,
-                      PROFILER_DEFAULT_INTERVAL,
-                      features | ProfilerFeature::Threads,
-                      filters, MOZ_ARRAY_LENGTH(filters),
-                      Nothing());
-||||||| merged common ancestors
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
-                      features | ProfilerFeature::Threads,
-                      filters, MOZ_ARRAY_LENGTH(filters));
-=======
     ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES.Value(),
                       PROFILER_DEFAULT_INTERVAL,
                       features | ProfilerFeature::Threads, filters,
                       MOZ_ARRAY_LENGTH(filters), Nothing());
->>>>>>> upstream-releases
 
     profiler_stop();
 
@@ -333,33 +209,13 @@ TEST(GeckoProfiler, EnsureStarted)
   const char* filters[] = {"GeckoMain", "Compositor"};
   {
     // Inactive -> Active
-<<<<<<< HEAD
-    profiler_ensure_started(PROFILER_DEFAULT_ENTRIES,
-                            PROFILER_DEFAULT_INTERVAL,
-                            features, filters, MOZ_ARRAY_LENGTH(filters),
-                            Some(PROFILER_DEFAULT_DURATION));
-||||||| merged common ancestors
-    profiler_ensure_started(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
-                            features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     profiler_ensure_started(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
                             features, filters, MOZ_ARRAY_LENGTH(filters),
                             Some(PROFILER_DEFAULT_DURATION));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES,
-                      PROFILER_DEFAULT_INTERVAL,
-                      features, filters, MOZ_ARRAY_LENGTH(filters),
-                      Some(PROFILER_DEFAULT_DURATION));
-||||||| merged common ancestors
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
-                      features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     ActiveParamsCheck(
         PROFILER_DEFAULT_ENTRIES.Value(), PROFILER_DEFAULT_INTERVAL, features,
         filters, MOZ_ARRAY_LENGTH(filters), Some(PROFILER_DEFAULT_DURATION));
->>>>>>> upstream-releases
   }
 
   {
@@ -373,33 +229,13 @@ TEST(GeckoProfiler, EnsureStarted)
 
     // Call profiler_ensure_started with the same settings as before.
     // This operation must not clear our buffer!
-<<<<<<< HEAD
-    profiler_ensure_started(PROFILER_DEFAULT_ENTRIES,
-                            PROFILER_DEFAULT_INTERVAL,
-                            features, filters, MOZ_ARRAY_LENGTH(filters),
-                            Some(PROFILER_DEFAULT_DURATION));
-||||||| merged common ancestors
-    profiler_ensure_started(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
-                            features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     profiler_ensure_started(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
                             features, filters, MOZ_ARRAY_LENGTH(filters),
                             Some(PROFILER_DEFAULT_DURATION));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES,
-                      PROFILER_DEFAULT_INTERVAL,
-                      features, filters, MOZ_ARRAY_LENGTH(filters),
-                      Some(PROFILER_DEFAULT_DURATION));
-||||||| merged common ancestors
-    ActiveParamsCheck(PROFILER_DEFAULT_ENTRIES, PROFILER_DEFAULT_INTERVAL,
-                      features, filters, MOZ_ARRAY_LENGTH(filters));
-=======
     ActiveParamsCheck(
         PROFILER_DEFAULT_ENTRIES.Value(), PROFILER_DEFAULT_INTERVAL, features,
         filters, MOZ_ARRAY_LENGTH(filters), Some(PROFILER_DEFAULT_DURATION));
->>>>>>> upstream-releases
 
     // Check that our position in the buffer stayed the same or advanced.
     // In particular, it shouldn't have reverted to the start.
@@ -646,28 +482,6 @@ TEST(GeckoProfiler, Markers)
 
   { AUTO_PROFILER_TRACING("C", "A", OTHER); }
 
-<<<<<<< HEAD
-  profiler_add_marker("M1");
-  profiler_add_marker(
-    "M2", MakeUnique<TracingMarkerPayload>("C", TRACING_EVENT));
-  PROFILER_ADD_MARKER("M3");
-  profiler_add_marker(
-    "M4",
-    MakeUnique<TracingMarkerPayload>("C",
-                                     TRACING_EVENT,
-                                     mozilla::Nothing(),
-                                     mozilla::Nothing(),
-                                     profiler_get_backtrace()));
-||||||| merged common ancestors
-  profiler_add_marker("M1");
-  profiler_add_marker(
-    "M2", MakeUnique<TracingMarkerPayload>("C", TRACING_EVENT));
-  PROFILER_ADD_MARKER("M3");
-  profiler_add_marker(
-    "M4",
-    MakeUnique<TracingMarkerPayload>("C", TRACING_EVENT,
-                                     profiler_get_backtrace()));
-=======
   profiler_add_marker("M1", JS::ProfilingCategoryPair::OTHER);
   profiler_add_marker("M2", JS::ProfilingCategoryPair::OTHER,
                       MakeUnique<TracingMarkerPayload>("C", TRACING_EVENT));
@@ -676,7 +490,6 @@ TEST(GeckoProfiler, Markers)
                       MakeUnique<TracingMarkerPayload>(
                           "C", TRACING_EVENT, mozilla::Nothing(),
                           mozilla::Nothing(), profiler_get_backtrace()));
->>>>>>> upstream-releases
 
   for (int i = 0; i < 10; i++) {
     profiler_add_marker("M5", JS::ProfilingCategoryPair::OTHER,
@@ -756,37 +569,6 @@ TEST(GeckoProfiler, Markers)
   ASSERT_TRUE(GTestMarkerPayload::sNumDestroyed == 20);
 }
 
-<<<<<<< HEAD
-TEST(GeckoProfiler, DurationLimit)
-{
-  uint32_t features = ProfilerFeature::StackWalk;
-  const char* filters[] = { "GeckoMain" };
-
-  profiler_start(PROFILER_DEFAULT_ENTRIES,
-                 PROFILER_DEFAULT_INTERVAL, features, filters,
-                 MOZ_ARRAY_LENGTH(filters), Some(1.5));
-
-  // Clear up the counters after the last test.
-  GTestMarkerPayload::sNumCreated = 0;
-  GTestMarkerPayload::sNumStreamed = 0;
-  GTestMarkerPayload::sNumDestroyed = 0;
-
-  profiler_add_marker("M1", MakeUnique<GTestMarkerPayload>(1));
-  PR_Sleep(PR_MillisecondsToInterval(1100));
-  profiler_add_marker("M2", MakeUnique<GTestMarkerPayload>(2));
-  PR_Sleep(PR_MillisecondsToInterval(500));
-
-  SpliceableChunkedJSONWriter w;
-  ASSERT_TRUE(profiler_stream_json_for_this_process(w));
-
-  // The first marker should be destroyed.
-  ASSERT_TRUE(GTestMarkerPayload::sNumCreated == 2);
-  ASSERT_TRUE(GTestMarkerPayload::sNumStreamed == 1);
-  ASSERT_TRUE(GTestMarkerPayload::sNumDestroyed == 1);
-}
-
-||||||| merged common ancestors
-=======
 TEST(GeckoProfiler, DurationLimit)
 {
   uint32_t features = ProfilerFeature::StackWalk;
@@ -816,7 +598,6 @@ TEST(GeckoProfiler, DurationLimit)
   ASSERT_TRUE(GTestMarkerPayload::sNumDestroyed == 1);
 }
 
->>>>>>> upstream-releases
 #define COUNTER_NAME "TestCounter"
 #define COUNTER_DESCRIPTION "Test of counters in profiles"
 #define COUNTER_NAME2 "Counter2"
@@ -1023,21 +804,9 @@ TEST(GeckoProfiler, ProfilingStack)
     ASSERT_TRUE(profiler_get_backtrace());
   }
 
-<<<<<<< HEAD
-  AutoProfilerLabel label1("A", nullptr,
-                           js::ProfilingStackFrame::Category::DOM);
-  AutoProfilerLabel label2("A", dynamic.get(),
-                           js::ProfilingStackFrame::Category::NETWORK);
-||||||| merged common ancestors
-  AutoProfilerLabel label1("A", nullptr, 888,
-                           js::ProfilingStackFrame::Category::DOM);
-  AutoProfilerLabel label2("A", dynamic.get(), 888,
-                           js::ProfilingStackFrame::Category::NETWORK);
-=======
   AutoProfilerLabel label1("A", nullptr, JS::ProfilingCategoryPair::DOM);
   AutoProfilerLabel label2("A", dynamic.get(),
                            JS::ProfilingCategoryPair::NETWORK);
->>>>>>> upstream-releases
   ASSERT_TRUE(profiler_get_backtrace());
 
   profiler_stop();

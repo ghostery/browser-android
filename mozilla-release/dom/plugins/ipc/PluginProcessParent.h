@@ -37,22 +37,9 @@ class LaunchCompleteTask : public Runnable {
   bool mLaunchSucceeded;
 };
 
-<<<<<<< HEAD
-class PluginProcessParent : public mozilla::ipc::GeckoChildProcessHost {
- public:
-  explicit PluginProcessParent(const std::string& aPluginFilePath);
-  ~PluginProcessParent();
-||||||| merged common ancestors
-class PluginProcessParent : public mozilla::ipc::GeckoChildProcessHost
-{
-public:
-    explicit PluginProcessParent(const std::string& aPluginFilePath);
-    ~PluginProcessParent();
-=======
 class PluginProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
  public:
   explicit PluginProcessParent(const std::string& aPluginFilePath);
->>>>>>> upstream-releases
 
   /**
    * Launch the plugin process. If the process fails to launch,
@@ -69,86 +56,25 @@ class PluginProcessParent final : public mozilla::ipc::GeckoChildProcessHost {
                   UniquePtr<LaunchCompleteTask>(),
               int32_t aSandboxLevel = 0, bool aIsSandboxLoggingEnabled = false);
 
-<<<<<<< HEAD
-  void Delete();
-||||||| merged common ancestors
-    void Delete();
-=======
   virtual bool CanShutdown() override { return true; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool CanShutdown() override { return true; }
-||||||| merged common ancestors
-    virtual bool CanShutdown() override
-    {
-        return true;
-    }
-=======
   const std::string& GetPluginFilePath() { return mPluginFilePath; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const std::string& GetPluginFilePath() { return mPluginFilePath; }
-||||||| merged common ancestors
-    const std::string& GetPluginFilePath() { return mPluginFilePath; }
-=======
   using mozilla::ipc::GeckoChildProcessHost::GetChannel;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  using mozilla::ipc::GeckoChildProcessHost::GetChannel;
-||||||| merged common ancestors
-    using mozilla::ipc::GeckoChildProcessHost::GetChannel;
-=======
   virtual bool WaitUntilConnected(int32_t aTimeoutMs = 0) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool WaitUntilConnected(int32_t aTimeoutMs = 0) override;
-||||||| merged common ancestors
-    virtual bool WaitUntilConnected(int32_t aTimeoutMs = 0) override;
-=======
   virtual void OnChannelConnected(int32_t peer_pid) override;
   virtual void OnChannelError() override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void OnChannelConnected(int32_t peer_pid) override;
-  virtual void OnChannelError() override;
-||||||| merged common ancestors
-    virtual void OnChannelConnected(int32_t peer_pid) override;
-    virtual void OnChannelError() override;
-=======
   bool IsConnected();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool IsConnected();
-||||||| merged common ancestors
-    bool IsConnected();
-=======
   static bool IsPluginProcessId(base::ProcessId procId);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static bool IsPluginProcessId(base::ProcessId procId);
-||||||| merged common ancestors
-    static bool IsPluginProcessId(base::ProcessId procId);
-=======
  private:
   ~PluginProcessParent();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
   void RunLaunchCompleteTask();
-||||||| merged common ancestors
-private:
-    void RunLaunchCompleteTask();
-=======
-  void RunLaunchCompleteTask();
->>>>>>> upstream-releases
 
   std::string mPluginFilePath;
   ipc::TaskFactory<PluginProcessParent> mTaskFactory;

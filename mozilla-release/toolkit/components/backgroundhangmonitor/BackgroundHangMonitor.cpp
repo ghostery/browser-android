@@ -498,17 +498,8 @@ void BackgroundHangThread::ReportHang(TimeDuration aHangTime) {
     TimeStamp endTime = TimeStamp::Now();
     TimeStamp startTime = endTime - aHangTime;
     profiler_add_marker_for_thread(
-<<<<<<< HEAD
-        mStackHelper.GetThreadId(), "BHR-detected hang",
-        MakeUnique<HangMarkerPayload>(startTime, endTime));
-||||||| merged common ancestors
-      mStackHelper.GetThreadId(),
-      "BHR-detected hang",
-      MakeUnique<HangMarkerPayload>(startTime, endTime));
-=======
         mStackHelper.GetThreadId(), JS::ProfilingCategoryPair::OTHER,
         "BHR-detected hang", MakeUnique<HangMarkerPayload>(startTime, endTime));
->>>>>>> upstream-releases
   }
 #endif
 }
@@ -580,22 +571,6 @@ bool BackgroundHangMonitor::ShouldDisableOnBeta(const nsCString& clientID) {
   return strtol(suffix, NULL, 16) % BHR_BETA_MOD;
 }
 
-<<<<<<< HEAD
-bool BackgroundHangMonitor::IsDisabled() {
-#ifdef MOZ_ENABLE_BACKGROUND_HANG_MONITOR
-  return BackgroundHangManager::sDisabled;
-#else
-  return true;
-#endif
-||||||| merged common ancestors
-bool
-BackgroundHangMonitor::IsDisabled() {
-#ifdef MOZ_ENABLE_BACKGROUND_HANG_MONITOR
-  return BackgroundHangManager::sDisabled;
-#else
-  return true;
-#endif
-=======
 bool BackgroundHangMonitor::IsDisabled() {
   static bool sPrefCached = false;
   static bool sPrefCacheValue = false;
@@ -606,7 +581,6 @@ bool BackgroundHangMonitor::IsDisabled() {
   }
 
   return sPrefCacheValue;
->>>>>>> upstream-releases
 }
 
 bool BackgroundHangMonitor::DisableOnBeta() {
@@ -689,13 +663,7 @@ BackgroundHangMonitor::BackgroundHangMonitor(const char* aName,
     : mThread(aThreadType == THREAD_SHARED ? BackgroundHangThread::FindThread()
                                            : nullptr) {
 #ifdef MOZ_ENABLE_BACKGROUND_HANG_MONITOR
-<<<<<<< HEAD
-#ifdef MOZ_VALGRIND
-||||||| merged common ancestors
-# ifdef MOZ_VALGRIND
-=======
 #  ifdef MOZ_VALGRIND
->>>>>>> upstream-releases
   // If we're running on Valgrind, we'll be making forward progress at a
   // rate of somewhere between 1/25th and 1/50th of normal.  This causes the
   // BHR to capture a lot of stacks, which slows us down even more.  As an
@@ -716,13 +684,7 @@ BackgroundHangMonitor::BackgroundHangMonitor(const char* aName,
       aMaxTimeoutMs += extraMs;
     }
   }
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-# endif
-=======
 #  endif
->>>>>>> upstream-releases
 
   if (!BackgroundHangManager::sDisabled && !mThread &&
       !recordreplay::IsMiddleman()) {

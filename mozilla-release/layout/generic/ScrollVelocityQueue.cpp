@@ -13,23 +13,11 @@
 namespace mozilla {
 namespace layout {
 
-<<<<<<< HEAD
-void ScrollVelocityQueue::Sample(const nsPoint& aScrollPosition) {
-  float flingSensitivity = gfxPrefs::ScrollSnapPredictionSensitivity();
-  int maxVelocity = gfxPrefs::ScrollSnapPredictionMaxVelocity();
-||||||| merged common ancestors
-void
-ScrollVelocityQueue::Sample(const nsPoint& aScrollPosition)
-{
-  float flingSensitivity = gfxPrefs::ScrollSnapPredictionSensitivity();
-  int maxVelocity = gfxPrefs::ScrollSnapPredictionMaxVelocity();
-=======
 void ScrollVelocityQueue::Sample(const nsPoint& aScrollPosition) {
   float flingSensitivity =
       StaticPrefs::layout_css_scroll_snap_prediction_sensitivity();
   int maxVelocity =
       StaticPrefs::layout_css_scroll_snap_prediction_max_velocity();
->>>>>>> upstream-releases
   maxVelocity = nsPresContext::CSSPixelsToAppUnits(maxVelocity);
   int maxOffset = maxVelocity * flingSensitivity;
   TimeStamp currentRefreshTime =

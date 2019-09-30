@@ -24,7 +24,8 @@ pub fn without_defaults(generics: &syn::Generics) -> syn::Generics {
                     ..param.clone()
                 }),
                 _ => param.clone(),
-            }).collect(),
+            })
+            .collect(),
         ..generics.clone()
     }
 }
@@ -187,7 +188,8 @@ pub fn with_bound(
         .map(|id| syn::TypePath {
             qself: None,
             path: id.into(),
-        }).chain(associated_type_usage.into_iter().cloned())
+        })
+        .chain(associated_type_usage.into_iter().cloned())
         .map(|bounded_ty| {
             syn::WherePredicate::Type(syn::PredicateType {
                 lifetimes: None,
@@ -200,17 +202,9 @@ pub fn with_bound(
                     modifier: syn::TraitBoundModifier::None,
                     lifetimes: None,
                     path: bound.clone(),
-<<<<<<< HEAD
-                })].into_iter()
-                .collect(),
-||||||| merged common ancestors
-                })].into_iter()
-                    .collect(),
-=======
                 })]
                 .into_iter()
                 .collect(),
->>>>>>> upstream-releases
             })
         });
 
@@ -242,17 +236,9 @@ pub fn with_self_bound(
                 modifier: syn::TraitBoundModifier::None,
                 lifetimes: None,
                 path: bound.clone(),
-<<<<<<< HEAD
-            })].into_iter()
-            .collect(),
-||||||| merged common ancestors
-            })].into_iter()
-                .collect(),
-=======
             })]
             .into_iter()
             .collect(),
->>>>>>> upstream-releases
         }));
     generics
 }
@@ -281,7 +267,8 @@ pub fn with_lifetime_bound(generics: &syn::Generics, lifetime: &str) -> syn::Gen
                 syn::GenericParam::Const(_) => {}
             }
             param
-        })).collect();
+        }))
+        .collect();
 
     syn::Generics {
         params: params,
@@ -317,31 +304,14 @@ fn type_of_item(cont: &Container) -> syn::Type {
                                 syn::GenericParam::Const(_) => {
                                     panic!("Serde does not support const generics yet");
                                 }
-<<<<<<< HEAD
-                            }).collect(),
-                        gt_token: <Token![>]>::default(),
-||||||| merged common ancestors
-                            })
-                            .collect(),
-                        gt_token: Default::default(),
-=======
                             })
                             .collect(),
                         gt_token: <Token![>]>::default(),
->>>>>>> upstream-releases
                     },
                 ),
-<<<<<<< HEAD
-            }].into_iter()
-            .collect(),
-||||||| merged common ancestors
-            }].into_iter()
-                .collect(),
-=======
             }]
             .into_iter()
             .collect(),
->>>>>>> upstream-releases
         },
     })
 }

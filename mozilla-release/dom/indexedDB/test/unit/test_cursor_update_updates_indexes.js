@@ -89,19 +89,11 @@ function* testSteps() {
     request.onsuccess = grabEventAndContinueHandler;
     event = yield undefined;
     ok(true, "6");
-<<<<<<< HEAD
-    is(obj.data, event.target.result.data,
-                  "Non-unique index was properly updated.");
-||||||| merged common ancestors
-    ok(obj.data, event.target.result.data,
-                  "Non-unique index was properly updated.");
-=======
     is(
       obj.data,
       event.target.result.data,
       "Non-unique index was properly updated."
     );
->>>>>>> upstream-releases
 
     request = uniqueIndex.get(END_DATA);
     request.onerror = errorHandler;
@@ -109,19 +101,11 @@ function* testSteps() {
     event = yield undefined;
 
     ok(true, "7");
-<<<<<<< HEAD
-    is(obj.data, event.target.result.data,
-                  "Unique index was properly updated.");
-||||||| merged common ancestors
-    ok(obj.data, event.target.result.data,
-                  "Unique index was properly updated.");
-=======
     is(
       obj.data,
       event.target.result.data,
       "Unique index was properly updated."
     );
->>>>>>> upstream-releases
 
     // Wait for success
     yield undefined;

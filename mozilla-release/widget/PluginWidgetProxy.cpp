@@ -12,26 +12,10 @@
 // #define PWLOG(...) printf_stderr(__VA_ARGS__)
 
 /* static */
-<<<<<<< HEAD
-already_AddRefed<nsIWidget> nsIWidget::CreatePluginProxyWidget(
-    TabChild* aTabChild, mozilla::plugins::PluginWidgetChild* aActor) {
-||||||| merged common ancestors
-already_AddRefed<nsIWidget>
-nsIWidget::CreatePluginProxyWidget(TabChild* aTabChild,
-                                   mozilla::plugins::PluginWidgetChild* aActor)
-{
-=======
 already_AddRefed<nsIWidget> nsIWidget::CreatePluginProxyWidget(
     BrowserChild* aBrowserChild, mozilla::plugins::PluginWidgetChild* aActor) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIWidget> widget =
-<<<<<<< HEAD
-      new mozilla::widget::PluginWidgetProxy(aTabChild, aActor);
-||||||| merged common ancestors
-    new mozilla::widget::PluginWidgetProxy(aTabChild, aActor);
-=======
       new mozilla::widget::PluginWidgetProxy(aBrowserChild, aActor);
->>>>>>> upstream-releases
   return widget.forget();
 }
 
@@ -42,33 +26,6 @@ using mozilla::plugins::PluginInstanceParent;
 
 NS_IMPL_ISUPPORTS_INHERITED(PluginWidgetProxy, PuppetWidget, nsIWidget)
 
-<<<<<<< HEAD
-#define ENSURE_CHANNEL                             \
-  do {                                             \
-    if (!mActor) {                                 \
-      NS_WARNING("called on an invalid channel."); \
-      return NS_ERROR_FAILURE;                     \
-    }                                              \
-  } while (0)
-
-PluginWidgetProxy::PluginWidgetProxy(
-    dom::TabChild* aTabChild, mozilla::plugins::PluginWidgetChild* aActor)
-    : PuppetWidget(aTabChild), mActor(aActor), mCachedPluginPort(0) {
-||||||| merged common ancestors
-#define ENSURE_CHANNEL do {                                   \
-  if (!mActor) {                                              \
-    NS_WARNING("called on an invalid channel.");              \
-    return NS_ERROR_FAILURE;                                  \
-  }                                                           \
-} while (0)
-
-PluginWidgetProxy::PluginWidgetProxy(dom::TabChild* aTabChild,
-                                     mozilla::plugins::PluginWidgetChild* aActor) :
-  PuppetWidget(aTabChild),
-  mActor(aActor),
-  mCachedPluginPort(0)
-{
-=======
 #define ENSURE_CHANNEL                             \
   do {                                             \
     if (!mActor) {                                 \
@@ -81,7 +38,6 @@ PluginWidgetProxy::PluginWidgetProxy(
     dom::BrowserChild* aBrowserChild,
     mozilla::plugins::PluginWidgetChild* aActor)
     : PuppetWidget(aBrowserChild), mActor(aActor), mCachedPluginPort(0) {
->>>>>>> upstream-releases
   // See ChannelDestroyed() in the header
   mActor->SetWidget(this);
 }
@@ -205,27 +161,11 @@ void PluginWidgetProxy::SetNativeData(uint32_t aDataType, uintptr_t aVal) {
   }
 }
 
-<<<<<<< HEAD
-nsresult PluginWidgetProxy::SetFocus(bool aRaise) {
-  ENSURE_CHANNEL;
-  PWLOG("PluginWidgetProxy::SetFocus(%d)\n", aRaise);
-  mActor->SendSetFocus(aRaise);
-  return NS_OK;
-||||||| merged common ancestors
-nsresult
-PluginWidgetProxy::SetFocus(bool aRaise)
-{
-  ENSURE_CHANNEL;
-  PWLOG("PluginWidgetProxy::SetFocus(%d)\n", aRaise);
-  mActor->SendSetFocus(aRaise);
-  return NS_OK;
-=======
 void PluginWidgetProxy::SetFocus(Raise aRaise) {
   if (mActor) {
     PWLOG("PluginWidgetProxy::SetFocus(%d)\n", aRaise == Raise::Yes);
     mActor->SendSetFocus(aRaise == Raise::Yes);
   }
->>>>>>> upstream-releases
 }
 
 }  // namespace widget

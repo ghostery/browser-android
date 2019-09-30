@@ -71,20 +71,10 @@ nsresult nsDataObj::CStream::Init(nsIURI* pSourceURI,
   rv = NS_NewChannel(getter_AddRefs(mChannel), pSourceURI, aRequestingPrincipal,
                      nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_INHERITS,
                      aContentPolicyType,
-<<<<<<< HEAD
-                     nullptr,  // PerformanceStorage
-                     nullptr,  // loadGroup
-                     nullptr,  // aCallbacks
-||||||| merged common ancestors
-                     nullptr,   // PerformanceStorage
-                     nullptr,   // loadGroup
-                     nullptr,   // aCallbacks
-=======
                      nullptr,  // nsICookieSettings
                      nullptr,  // PerformanceStorage
                      nullptr,  // loadGroup
                      nullptr,  // aCallbacks
->>>>>>> upstream-releases
                      nsIRequest::LOAD_FROM_CACHE);
 
   NS_ENSURE_SUCCESS(rv, rv);
@@ -115,34 +105,6 @@ STDMETHODIMP nsDataObj::CStream::QueryInterface(REFIID refiid,
 
 // nsIStreamListener implementation
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDataObj::CStream::OnDataAvailable(
-    nsIRequest* aRequest, nsISupports* aContext, nsIInputStream* aInputStream,
-    uint64_t aOffset,  // offset within the stream
-    uint32_t aCount)   // bytes available on this call
-{
-  // Extend the write buffer for the incoming data.
-  uint8_t* buffer = mChannelData.AppendElements(aCount, fallible);
-  if (!buffer) {
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-  NS_ASSERTION((mChannelData.Length() == (aOffset + aCount)),
-               "stream length mismatch w/write buffer");
-||||||| merged common ancestors
-nsDataObj::CStream::OnDataAvailable(nsIRequest *aRequest,
-                                    nsISupports *aContext,
-                                    nsIInputStream *aInputStream,
-                                    uint64_t aOffset, // offset within the stream
-                                    uint32_t aCount) // bytes available on this call
-{
-    // Extend the write buffer for the incoming data.
-    uint8_t* buffer = mChannelData.AppendElements(aCount, fallible);
-    if (!buffer) {
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
-    NS_ASSERTION((mChannelData.Length() == (aOffset + aCount)),
-      "stream length mismatch w/write buffer");
-=======
 nsDataObj::CStream::OnDataAvailable(
     nsIRequest* aRequest, nsIInputStream* aInputStream,
     uint64_t aOffset,  // offset within the stream
@@ -155,7 +117,6 @@ nsDataObj::CStream::OnDataAvailable(
   }
   NS_ASSERTION((mChannelData.Length() == (aOffset + aCount)),
                "stream length mismatch w/write buffer");
->>>>>>> upstream-releases
 
   // Read() may not return aCount on a single call, so loop until we've
   // accumulated all the data OnDataAvailable has promised.
@@ -170,46 +131,16 @@ nsDataObj::CStream::OnDataAvailable(
   return rv;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDataObj::CStream::OnStartRequest(nsIRequest* aRequest,
-                                                 nsISupports* aContext) {
-  mChannelResult = NS_OK;
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP nsDataObj::CStream::OnStartRequest(nsIRequest *aRequest,
-                                                 nsISupports *aContext)
-{
-    mChannelResult = NS_OK;
-    return NS_OK;
-=======
 NS_IMETHODIMP nsDataObj::CStream::OnStartRequest(nsIRequest* aRequest) {
   mChannelResult = NS_OK;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDataObj::CStream::OnStopRequest(nsIRequest* aRequest,
-                                                nsISupports* aContext,
-                                                nsresult aStatusCode) {
-  mChannelRead = true;
-  mChannelResult = aStatusCode;
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP nsDataObj::CStream::OnStopRequest(nsIRequest *aRequest,
-                                                nsISupports *aContext,
-                                                nsresult aStatusCode)
-{
-    mChannelRead = true;
-    mChannelResult = aStatusCode;
-    return NS_OK;
-=======
 NS_IMETHODIMP nsDataObj::CStream::OnStopRequest(nsIRequest* aRequest,
                                                 nsresult aStatusCode) {
   mChannelRead = true;
   mChannelResult = aStatusCode;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 // Pumps thread messages while waiting for the async listener operation to
@@ -382,19 +313,7 @@ HRESULT nsDataObj::CreateStream(IStream** outStream) {
   return S_OK;
 }
 
-<<<<<<< HEAD
-static GUID CLSID_nsDataObj = {
-    0x1bba7640, 0xdf52, 0x11cf, {0x82, 0x7b, 0, 0xa0, 0x24, 0x3a, 0xe5, 0x05}};
-
 /*
-||||||| merged common ancestors
-static GUID CLSID_nsDataObj =
-	{ 0x1bba7640, 0xdf52, 0x11cf, { 0x82, 0x7b, 0, 0xa0, 0x24, 0x3a, 0xe5, 0x05 } };
-
-/* 
-=======
-/*
->>>>>>> upstream-releases
  * deliberately not using MAX_PATH. This is because on platforms < XP
  * a file created with a long filename may be mishandled by the shell
  * resulting in it not being able to be deleted or moved.
@@ -447,28 +366,6 @@ nsDataObj::~nsDataObj() {
 //-----------------------------------------------------
 // IUnknown interface methods - see inknown.h for documentation
 //-----------------------------------------------------
-<<<<<<< HEAD
-STDMETHODIMP nsDataObj::QueryInterface(REFIID riid, void** ppv) {
-  *ppv = nullptr;
-
-  if ((IID_IUnknown == riid) || (IID_IDataObject == riid)) {
-    *ppv = this;
-    AddRef();
-    return S_OK;
-  } else if (IID_IAsyncOperation == riid) {
-    *ppv = static_cast<IAsyncOperation*>(this);
-||||||| merged common ancestors
-STDMETHODIMP nsDataObj::QueryInterface(REFIID riid, void** ppv)
-{
-	*ppv=nullptr;
-
-	if ( (IID_IUnknown == riid) || (IID_IDataObject	== riid) ) {
-		*ppv = this;
-		AddRef();
-		return S_OK;
-  } else if (IID_IAsyncOperation == riid) {
-    *ppv = static_cast<IAsyncOperation*>(this);
-=======
 STDMETHODIMP nsDataObj::QueryInterface(REFIID riid, void** ppv) {
   *ppv = nullptr;
 
@@ -478,7 +375,6 @@ STDMETHODIMP nsDataObj::QueryInterface(REFIID riid, void** ppv) {
     return S_OK;
   } else if (IID_IDataObjectAsyncCapability == riid) {
     *ppv = static_cast<IDataObjectAsyncCapability*>(this);
->>>>>>> upstream-releases
     AddRef();
     return S_OK;
   }
@@ -865,21 +761,9 @@ STDMETHODIMP nsDataObj::EnumDAdvise(LPENUMSTATDATA* ppEnum) {
   return OLE_E_ADVISENOTSUPPORTED;
 }
 
-<<<<<<< HEAD
-// IAsyncOperation methods
-STDMETHODIMP nsDataObj::EndOperation(HRESULT hResult, IBindCtx* pbcReserved,
-                                     DWORD dwEffects) {
-||||||| merged common ancestors
-// IAsyncOperation methods
-STDMETHODIMP nsDataObj::EndOperation(HRESULT hResult,
-                                     IBindCtx *pbcReserved,
-                                     DWORD dwEffects)
-{
-=======
 // IDataObjectAsyncCapability methods
 STDMETHODIMP nsDataObj::EndOperation(HRESULT hResult, IBindCtx* pbcReserved,
                                      DWORD dwEffects) {
->>>>>>> upstream-releases
   mIsInOperation = FALSE;
   return S_OK;
 }
@@ -906,125 +790,16 @@ STDMETHODIMP nsDataObj::StartOperation(IBindCtx* pbcReserved) {
   return S_OK;
 }
 
-<<<<<<< HEAD
-//-----------------------------------------------------
-// GetData and SetData helper functions
-//-----------------------------------------------------
-HRESULT nsDataObj::AddSetFormat(FORMATETC& aFE) { return S_OK; }
-
-//-----------------------------------------------------
-HRESULT nsDataObj::AddGetFormat(FORMATETC& aFE) { return S_OK; }
-
-||||||| merged common ancestors
-//-----------------------------------------------------
-// GetData and SetData helper functions
-//-----------------------------------------------------
-HRESULT nsDataObj::AddSetFormat(FORMATETC& aFE)
-{
-  return S_OK;
-}
-
-//-----------------------------------------------------
-HRESULT nsDataObj::AddGetFormat(FORMATETC& aFE)
-{
-  return S_OK;
-}
-
-=======
->>>>>>> upstream-releases
 //
 // GetDIB
 //
 // Someone is asking for a bitmap. The data in the transferable will be a
 // straight imgIContainer, so just QI it.
 //
-<<<<<<< HEAD
 HRESULT
 nsDataObj::GetDib(const nsACString& inFlavor, FORMATETC& aFormat,
                   STGMEDIUM& aSTG) {
-  ULONG result = E_FAIL;
-||||||| merged common ancestors
-HRESULT 
-nsDataObj::GetDib(const nsACString& inFlavor,
-                  FORMATETC &aFormat,
-                  STGMEDIUM & aSTG)
-{
-  ULONG result = E_FAIL;
-  uint32_t len = 0;
-=======
-HRESULT
-nsDataObj::GetDib(const nsACString& inFlavor, FORMATETC& aFormat,
-                  STGMEDIUM& aSTG) {
->>>>>>> upstream-releases
   nsCOMPtr<nsISupports> genericDataWrapper;
-<<<<<<< HEAD
-  mTransferable->GetTransferData(PromiseFlatCString(inFlavor).get(),
-                                 getter_AddRefs(genericDataWrapper));
-  nsCOMPtr<imgIContainer> image(do_QueryInterface(genericDataWrapper));
-  if (image) {
-    nsCOMPtr<imgITools> imgTools =
-        do_CreateInstance("@mozilla.org/image/tools;1");
-
-    nsAutoString options;
-    if (aFormat.cfFormat == CF_DIBV5) {
-      options.AppendLiteral("version=5");
-    } else {
-      options.AppendLiteral("version=3");
-    }
-
-    nsCOMPtr<nsIInputStream> inputStream;
-    nsresult rv = imgTools->EncodeImage(image, NS_LITERAL_CSTRING(IMAGE_BMP),
-                                        options, getter_AddRefs(inputStream));
-    if (NS_FAILED(rv) || !inputStream) {
-      return E_FAIL;
-    }
-
-    nsCOMPtr<imgIEncoder> encoder = do_QueryInterface(inputStream);
-    if (!encoder) {
-      return E_FAIL;
-    }
-
-    uint32_t size = 0;
-    rv = encoder->GetImageBufferUsed(&size);
-    if (NS_FAILED(rv) || size <= BFH_LENGTH) {
-      return E_FAIL;
-    }
-
-    char* src = nullptr;
-    rv = encoder->GetImageBuffer(&src);
-    if (NS_FAILED(rv) || !src) {
-      return E_FAIL;
-    }
-
-    // We don't want the file header.
-    src += BFH_LENGTH;
-    size -= BFH_LENGTH;
-
-    HGLOBAL glob = ::GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT, size);
-    if (!glob) {
-      DWORD err = ::GetLastError();
-      return E_FAIL;
-    }
-||||||| merged common ancestors
-  mTransferable->GetTransferData(PromiseFlatCString(inFlavor).get(), getter_AddRefs(genericDataWrapper), &len);
-  nsCOMPtr<imgIContainer> image ( do_QueryInterface(genericDataWrapper) );
-  if ( image ) {
-    // use the |nsImageToClipboard| helper class to build up a bitmap. We now own
-    // the bits, and pass them back to the OS in |aSTG|.
-    nsImageToClipboard converter(image, aFormat.cfFormat == CF_DIBV5);
-    HANDLE bits = nullptr;
-    nsresult rv = converter.GetPicture ( &bits );
-    if ( NS_SUCCEEDED(rv) && bits ) {
-      aSTG.hGlobal = bits;
-      aSTG.tymed = TYMED_HGLOBAL;
-      result = S_OK;
-    }
-  } // if we have an image
-  else  
-    NS_WARNING ( "Definitely not an image on clipboard" );
-	return result;
-}
-=======
   if (NS_FAILED(
           mTransferable->GetTransferData(PromiseFlatCString(inFlavor).get(),
                                          getter_AddRefs(genericDataWrapper)))) {
@@ -1073,14 +848,7 @@ nsDataObj::GetDib(const nsACString& inFlavor, FORMATETC& aFormat,
   // We don't want the file header.
   src += BFH_LENGTH;
   size -= BFH_LENGTH;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    char* dst = (char*)::GlobalLock(glob);
-    ::CopyMemory(dst, src, size);
-    ::GlobalUnlock(glob);
-||||||| merged common ancestors
-=======
   HGLOBAL glob = ::GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT, size);
   if (!glob) {
     return E_FAIL;
@@ -1089,24 +857,11 @@ nsDataObj::GetDib(const nsACString& inFlavor, FORMATETC& aFormat,
   char* dst = (char*)::GlobalLock(glob);
   ::CopyMemory(dst, src, size);
   ::GlobalUnlock(glob);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    aSTG.hGlobal = glob;
-    aSTG.tymed = TYMED_HGLOBAL;
-    result = S_OK;
-  } else {
-    NS_WARNING("Definitely not an image on clipboard");
-  }
-  return result;
-}
-||||||| merged common ancestors
-=======
   aSTG.hGlobal = glob;
   aSTG.tymed = TYMED_HGLOBAL;
   return S_OK;
 }
->>>>>>> upstream-releases
 
 //
 // GetFileDescriptor
@@ -1507,18 +1262,6 @@ HRESULT nsDataObj::GetText(const nsACString& aDataFlavor, FORMATETC& aFE,
 
   // NOTE: CreateDataFromPrimitive creates new memory, that needs to be deleted
   nsCOMPtr<nsISupports> genericDataWrapper;
-<<<<<<< HEAD
-  mTransferable->GetTransferData(flavorStr, getter_AddRefs(genericDataWrapper));
-  if (!genericDataWrapper) return E_FAIL;
-||||||| merged common ancestors
-  mTransferable->GetTransferData(flavorStr, getter_AddRefs(genericDataWrapper), &len);
-  if ( !len )
-    return E_FAIL;
-  nsPrimitiveHelpers::CreateDataFromPrimitive(
-    nsDependentCString(flavorStr), genericDataWrapper, &data, len);
-  if ( !data )
-    return E_FAIL;
-=======
   nsresult rv = mTransferable->GetTransferData(
       flavorStr, getter_AddRefs(genericDataWrapper));
   if (NS_FAILED(rv) || !genericDataWrapper) {
@@ -1529,28 +1272,10 @@ HRESULT nsDataObj::GetText(const nsACString& aDataFlavor, FORMATETC& aFE,
   nsPrimitiveHelpers::CreateDataFromPrimitive(nsDependentCString(flavorStr),
                                               genericDataWrapper, &data, &len);
   if (!data) return E_FAIL;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t len;
-  nsPrimitiveHelpers::CreateDataFromPrimitive(nsDependentCString(flavorStr),
-                                              genericDataWrapper, &data, &len);
-  if (!data) return E_FAIL;
-||||||| merged common ancestors
-  HGLOBAL     hGlobalMemory = nullptr;
-=======
-  HGLOBAL hGlobalMemory = nullptr;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   HGLOBAL hGlobalMemory = nullptr;
 
   aSTG.tymed = TYMED_HGLOBAL;
-||||||| merged common ancestors
-  aSTG.tymed          = TYMED_HGLOBAL;
-=======
-  aSTG.tymed = TYMED_HGLOBAL;
->>>>>>> upstream-releases
   aSTG.pUnkForRelease = nullptr;
 
   // We play games under the hood and advertise flavors that we know we
@@ -1646,24 +1371,12 @@ HRESULT nsDataObj::DropFile(FORMATETC& aFE, STGMEDIUM& aSTG) {
   nsresult rv;
   nsCOMPtr<nsISupports> genericDataWrapper;
 
-<<<<<<< HEAD
-  mTransferable->GetTransferData(kFileMime, getter_AddRefs(genericDataWrapper));
-  nsCOMPtr<nsIFile> file(do_QueryInterface(genericDataWrapper));
-  if (!file) return E_FAIL;
-||||||| merged common ancestors
-  mTransferable->GetTransferData(kFileMime, getter_AddRefs(genericDataWrapper),
-                                 &len);
-  nsCOMPtr<nsIFile> file ( do_QueryInterface(genericDataWrapper) );
-  if (!file)
-    return E_FAIL;
-=======
   if (NS_FAILED(mTransferable->GetTransferData(
           kFileMime, getter_AddRefs(genericDataWrapper)))) {
     return E_FAIL;
   }
   nsCOMPtr<nsIFile> file(do_QueryInterface(genericDataWrapper));
   if (!file) return E_FAIL;
->>>>>>> upstream-releases
 
   aSTG.tymed = TYMED_HGLOBAL;
   aSTG.pUnkForRelease = nullptr;
@@ -1710,31 +1423,11 @@ HRESULT nsDataObj::DropImage(FORMATETC& aFE, STGMEDIUM& aSTG) {
   if (!mCachedTempFile) {
     nsCOMPtr<nsISupports> genericDataWrapper;
 
-<<<<<<< HEAD
-    mTransferable->GetTransferData(kNativeImageMime,
-                                   getter_AddRefs(genericDataWrapper));
-||||||| merged common ancestors
-    mTransferable->GetTransferData(kNativeImageMime, getter_AddRefs(genericDataWrapper), &len);
-=======
     if (NS_FAILED(mTransferable->GetTransferData(
             kNativeImageMime, getter_AddRefs(genericDataWrapper)))) {
       return E_FAIL;
     }
->>>>>>> upstream-releases
     nsCOMPtr<imgIContainer> image(do_QueryInterface(genericDataWrapper));
-<<<<<<< HEAD
-    if (!image) return E_FAIL;
-
-    nsCOMPtr<imgITools> imgTools =
-        do_CreateInstance("@mozilla.org/image/tools;1");
-    nsCOMPtr<nsIInputStream> inputStream;
-    rv = imgTools->EncodeImage(image, NS_LITERAL_CSTRING(IMAGE_BMP),
-                               NS_LITERAL_STRING("version=3"),
-                               getter_AddRefs(inputStream));
-    if (NS_FAILED(rv) || !inputStream) {
-||||||| merged common ancestors
-    if (!image) 
-=======
     if (!image) return E_FAIL;
 
     nsCOMPtr<imgITools> imgTools =
@@ -1744,7 +1437,6 @@ HRESULT nsDataObj::DropImage(FORMATETC& aFE, STGMEDIUM& aSTG) {
                                NS_LITERAL_STRING("bpp=32;version=3"),
                                getter_AddRefs(inputStream));
     if (NS_FAILED(rv) || !inputStream) {
->>>>>>> upstream-releases
       return E_FAIL;
     }
 
@@ -1946,68 +1638,6 @@ HRESULT nsDataObj::DropTempFile(FORMATETC& aFE, STGMEDIUM& aSTG) {
 }
 
 //-----------------------------------------------------
-<<<<<<< HEAD
-HRESULT nsDataObj::GetMetafilePict(FORMATETC&, STGMEDIUM&) { return E_NOTIMPL; }
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetBitmap(FORMATETC&, STGMEDIUM&) { return E_NOTIMPL; }
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetDib(FORMATETC&, STGMEDIUM&) { return E_FAIL; }
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetText(FORMATETC& aFE, STGMEDIUM& aSTG) { return E_FAIL; }
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetMetafilePict(FORMATETC&, STGMEDIUM&) { return E_FAIL; }
-
-//-----------------------------------------------------
-//-----------------------------------------------------
-CLSID nsDataObj::GetClassID() const { return CLSID_nsDataObj; }
-
-//-----------------------------------------------------
-||||||| merged common ancestors
-HRESULT nsDataObj::GetMetafilePict(FORMATETC&, STGMEDIUM&)
-{
-	return E_NOTIMPL;
-}
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetBitmap(FORMATETC&, STGMEDIUM&)
-{
-	return E_NOTIMPL;
-}
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetDib(FORMATETC&, STGMEDIUM&)
-{
-	return E_FAIL;
-}
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetText  (FORMATETC& aFE, STGMEDIUM& aSTG)
-{
-	return E_FAIL;
-}
-
-//-----------------------------------------------------
-HRESULT nsDataObj::SetMetafilePict(FORMATETC&, STGMEDIUM&)
-{
-	return E_FAIL;
-}
-
-
-
-//-----------------------------------------------------
-//-----------------------------------------------------
-CLSID nsDataObj::GetClassID() const
-{
-	return CLSID_nsDataObj;
-}
-
-//-----------------------------------------------------
-=======
->>>>>>> upstream-releases
 // Registers the DataFlavor/FE pair.
 //-----------------------------------------------------
 void nsDataObj::AddDataFlavor(const char* aDataFlavor, LPFORMATETC aFE) {
@@ -2291,17 +1921,9 @@ HRESULT nsDataObj::GetDownloadDetails(nsIURI** aSourceURI,
 
   // get the URI from the kFilePromiseURLMime flavor
   nsCOMPtr<nsISupports> urlPrimitive;
-<<<<<<< HEAD
-  mTransferable->GetTransferData(kFilePromiseURLMime,
-                                 getter_AddRefs(urlPrimitive));
-||||||| merged common ancestors
-  uint32_t dataSize = 0;
-  mTransferable->GetTransferData(kFilePromiseURLMime, getter_AddRefs(urlPrimitive), &dataSize);
-=======
   nsresult rv = mTransferable->GetTransferData(kFilePromiseURLMime,
                                                getter_AddRefs(urlPrimitive));
   NS_ENSURE_SUCCESS(rv, E_FAIL);
->>>>>>> upstream-releases
   nsCOMPtr<nsISupportsString> srcUrlPrimitive = do_QueryInterface(urlPrimitive);
   NS_ENSURE_TRUE(srcUrlPrimitive, E_FAIL);
 
@@ -2313,20 +1935,10 @@ HRESULT nsDataObj::GetDownloadDetails(nsIURI** aSourceURI,
 
   nsAutoString srcFileName;
   nsCOMPtr<nsISupports> fileNamePrimitive;
-<<<<<<< HEAD
-  mTransferable->GetTransferData(kFilePromiseDestFilename,
-                                 getter_AddRefs(fileNamePrimitive));
-  nsCOMPtr<nsISupportsString> srcFileNamePrimitive =
-      do_QueryInterface(fileNamePrimitive);
-||||||| merged common ancestors
-  mTransferable->GetTransferData(kFilePromiseDestFilename, getter_AddRefs(fileNamePrimitive), &dataSize);
-  nsCOMPtr<nsISupportsString> srcFileNamePrimitive = do_QueryInterface(fileNamePrimitive);
-=======
   Unused << mTransferable->GetTransferData(kFilePromiseDestFilename,
                                            getter_AddRefs(fileNamePrimitive));
   nsCOMPtr<nsISupportsString> srcFileNamePrimitive =
       do_QueryInterface(fileNamePrimitive);
->>>>>>> upstream-releases
   if (srcFileNamePrimitive) {
     srcFileNamePrimitive->GetData(srcFileName);
   } else {

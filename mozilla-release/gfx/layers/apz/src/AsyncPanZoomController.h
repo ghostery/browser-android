@@ -9,13 +9,8 @@
 
 #include "CrossProcessMutex.h"
 #include "mozilla/layers/GeckoContentController.h"
-<<<<<<< HEAD
-#include "mozilla/layers/RepaintRequest.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/layers/RepaintRequest.h"
 #include "mozilla/layers/ZoomConstraints.h"
->>>>>>> upstream-releases
 #include "mozilla/Attributes.h"
 #include "mozilla/EventForwards.h"
 #include "mozilla/Monitor.h"
@@ -792,12 +787,6 @@ class AsyncPanZoomController {
   ParentLayerPoint GetFirstTouchPoint(const MultiTouchInput& aEvent);
 
   /**
-<<<<<<< HEAD
-   * Sets the panning state basing on the pan direction angle and current
-   * touch-action value.
-||||||| merged common ancestors
-   * Sets the panning state basing on the pan direction angle and current touch-action value.
-=======
    * Gets the relevant point in the event
    * (eg. first touch, or pinch focus point) of the given InputData.
    */
@@ -811,7 +800,6 @@ class AsyncPanZoomController {
   /**
    * Sets the panning state basing on the pan direction angle and current
    * touch-action value.
->>>>>>> upstream-releases
    */
   void HandlePanningWithTouchAction(double angle);
 
@@ -1043,18 +1031,6 @@ class AsyncPanZoomController {
 
   UniquePtr<OverscrollEffectBase> mOverscrollEffect;
 
-<<<<<<< HEAD
-  // Zoom animation id, used for zooming in WebRender. This should only be
-  // set on the APZC instance for the root content document (i.e. the one we
-  // support zooming on), and is only used if WebRender is enabled. The
-  // animation id itself refers to the transform animation id that was set on
-  // the stacking context in the WR display list. By changing the transform
-  // associated with this id, we can adjust the scaling that WebRender applies,
-  // thereby controlling the zoom.
-  Maybe<uint64_t> mZoomAnimationId;
-
-||||||| merged common ancestors
-=======
   // Zoom animation id, used for zooming in WebRender. This should only be
   // set on the APZC instance for the root content document (i.e. the one we
   // support zooming on), and is only used if WebRender is enabled. The
@@ -1067,7 +1043,6 @@ class AsyncPanZoomController {
   // Position on screen where user first put their finger down.
   ExternalPoint mStartTouch;
 
->>>>>>> upstream-releases
   friend class Axis;
 
  public:
@@ -1140,34 +1115,8 @@ class AsyncPanZoomController {
    * Return a visual effect that reflects this apzc's
    * overscrolled state, if any.
    */
-<<<<<<< HEAD
   AsyncTransformComponentMatrix GetOverscrollTransform(
       AsyncTransformConsumer aMode) const;
-
-  /**
-   * Returns the incremental transformation corresponding to the async
-   * panning/zooming of the layout viewport (unlike GetCurrentAsyncTransform,
-   * which deals with async movement of the visual viewport). That is, when
-   * this transform is multiplied with the layer's existing transform, it will
-   * make the layer appear with the desired pan/zoom amount.
-   */
-  AsyncTransform GetCurrentAsyncViewportTransform(
-      AsyncTransformConsumer aMode) const;
-||||||| merged common ancestors
-  AsyncTransformComponentMatrix GetOverscrollTransform(AsyncTransformConsumer aMode) const;
-
-  /**
-   * Returns the incremental transformation corresponding to the async
-   * panning/zooming of the layout viewport (unlike GetCurrentAsyncTransform,
-   * which deals with async movement of the visual viewport). That is, when
-   * this transform is multiplied with the layer's existing transform, it will
-   * make the layer appear with the desired pan/zoom amount.
-   */
-  AsyncTransform GetCurrentAsyncViewportTransform(AsyncTransformConsumer aMode) const;
-=======
-  AsyncTransformComponentMatrix GetOverscrollTransform(
-      AsyncTransformConsumer aMode) const;
->>>>>>> upstream-releases
 
   /**
    * Returns the incremental transformation corresponding to the async pan/zoom
@@ -1192,16 +1141,9 @@ class AsyncPanZoomController {
    * Returns the same transform as GetCurrentAsyncTransform(), but includes
    * any transform due to axis over-scroll.
    */
-<<<<<<< HEAD
-  AsyncTransformComponentMatrix GetCurrentAsyncTransformWithOverscroll(
-      AsyncTransformConsumer aMode) const;
-||||||| merged common ancestors
-  AsyncTransformComponentMatrix GetCurrentAsyncTransformWithOverscroll(AsyncTransformConsumer aMode) const;
-=======
   AsyncTransformComponentMatrix GetCurrentAsyncTransformWithOverscroll(
       AsyncTransformConsumer aMode,
       AsyncTransformComponents aComponents = LayoutAndVisual) const;
->>>>>>> upstream-releases
 
   /**
    * Returns the "zoom" bits of the transform. This includes both the rasterized
@@ -1298,11 +1240,6 @@ class AsyncPanZoomController {
   // held whenever this is updated. In practice though... see bug 897017.
   PanZoomState mState;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   /**
    * Returns whether the specified PanZoomState does not need to be reset when
    * a scroll offset update is processed.
@@ -1310,7 +1247,6 @@ private:
   static bool CanHandleScrollOffsetUpdate(PanZoomState aState);
 
  private:
->>>>>>> upstream-releases
   friend class StateChangeNotificationBlocker;
   /**
    * A counter of how many StateChangeNotificationBlockers are active.
@@ -1488,13 +1424,6 @@ private:
    * The functions and members in this section are used for scrolling,
    * including handing off scroll to another APZC, and overscrolling.
    */
-<<<<<<< HEAD
- public:
-  ScrollableLayerGuid::ViewID GetScrollHandoffParentId() const {
-||||||| merged common ancestors
-public:
-  FrameMetrics::ViewID GetScrollHandoffParentId() const {
-=======
 
   ScrollableLayerGuid::ViewID GetScrollId() const {
     RecursiveMutexAutoLock lock(mRecursiveMutex);
@@ -1503,7 +1432,6 @@ public:
 
  public:
   ScrollableLayerGuid::ViewID GetScrollHandoffParentId() const {
->>>>>>> upstream-releases
     return mScrollMetadata.GetScrollParentId();
   }
 
@@ -1678,28 +1606,13 @@ public:
     return mAsyncTransformAppliedToContent;
   }
 
-<<<<<<< HEAD
-  LayersId GetLayersId() const { return mLayersId; }
-||||||| merged common ancestors
-  LayersId GetLayersId() const
-  {
-    return mLayersId;
-  }
-=======
   LayersId GetLayersId() const { return mLayersId; }
 
   wr::RenderRoot GetRenderRoot() const { return mRenderRoot; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   bool IsPinchZooming() const { return mState == PINCHING; }
 
  private:
->>>>>>> upstream-releases
   // Extra offset to add to the async scroll position for testing
   CSSPoint mTestAsyncScrollOffset;
   // Extra zoom to include in the aync zoom for testing

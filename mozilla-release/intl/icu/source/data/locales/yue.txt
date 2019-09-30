@@ -250,13 +250,7 @@ yue{
         native{"hanidec"}
         traditional{"hant"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -2446,12 +2440,7 @@ yue{
                     "大正",
                     "昭和",
                     "平成",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "令和",
->>>>>>> upstream-releases
                 }
             }
         }

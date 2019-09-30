@@ -49,47 +49,11 @@ PageThumbsProtocol::GetProtocolFlags(uint32_t* aProtocolFlags) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// PageThumbsProtocol::NewURI
-
-NS_IMETHODIMP
-PageThumbsProtocol::NewURI(const nsACString& aSpec, const char* aOriginCharset,
-                           nsIURI* aBaseURI, nsIURI** _retval) {
-  return NS_MutateURI(NS_SIMPLEURIMUTATOR_CONTRACTID)
-      .SetSpec(aSpec)
-      .Finalize(_retval);
-}
-
-||||||| merged common ancestors
-// PageThumbsProtocol::NewURI
-
-NS_IMETHODIMP
-PageThumbsProtocol::NewURI(const nsACString& aSpec,
-                           const char *aOriginCharset,
-                           nsIURI *aBaseURI, nsIURI **_retval)
-{
-  return NS_MutateURI(NS_SIMPLEURIMUTATOR_CONTRACTID)
-           .SetSpec(aSpec)
-           .Finalize(_retval);
-}
-
-=======
->>>>>>> upstream-releases
 // PageThumbsProtocol::NewChannel
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PageThumbsProtocol::NewChannel2(nsIURI* aURI, nsILoadInfo* aLoadInfo,
-                                nsIChannel** _retval) {
-||||||| merged common ancestors
-PageThumbsProtocol::NewChannel2(nsIURI* aURI,
-                                nsILoadInfo *aLoadInfo,
-                                nsIChannel** _retval)
-{
-=======
 PageThumbsProtocol::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
                                nsIChannel** _retval) {
->>>>>>> upstream-releases
   // Get the file path for the URL
   nsCOMPtr<nsIFile> filePath;
   nsresult rv = GetFilePathForURL(aURI, getter_AddRefs(filePath));
@@ -112,21 +76,6 @@ PageThumbsProtocol::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP
-PageThumbsProtocol::NewChannel(nsIURI* aURI, nsIChannel** _retval) {
-  return NewChannel2(aURI, nullptr, _retval);
-}
-
-||||||| merged common ancestors
-NS_IMETHODIMP
-PageThumbsProtocol::NewChannel(nsIURI* aURI, nsIChannel** _retval)
-{
-  return NewChannel2(aURI, nullptr, _retval);
-}
-
-=======
->>>>>>> upstream-releases
 // PageThumbsProtocol::AllowPort
 
 NS_IMETHODIMP

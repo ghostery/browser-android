@@ -60,18 +60,12 @@ class PerformanceObserver final : public nsISupports, public nsWrapperCache {
   MOZ_CAN_RUN_SCRIPT void Notify();
   void QueueEntry(PerformanceEntry* aEntry);
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   bool ObservesTypeOfEntry(PerformanceEntry* aEntry);
 
  private:
   void ReportUnsupportedTypesErrorToConsole(bool aIsMainThread,
                                             const char* msgId,
                                             const nsString& aInvalidTypes);
->>>>>>> upstream-releases
   ~PerformanceObserver();
 
   nsCOMPtr<nsISupports> mOwner;

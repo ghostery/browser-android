@@ -278,37 +278,16 @@ void FormData::SetNameDirectoryPair(FormDataTuple* aData,
   aData->value.SetAsDirectory() = aDirectory;
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* FormData::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-FormData::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* FormData::WrapObject(JSContext* aCx,
                                JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return FormData_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<FormData> FormData::Constructor(
-    const GlobalObject& aGlobal,
-    const Optional<NonNull<HTMLFormElement> >& aFormElement, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<FormData>
-FormData::Constructor(const GlobalObject& aGlobal,
-                      const Optional<NonNull<HTMLFormElement> >& aFormElement,
-                      ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<FormData> FormData::Constructor(
     const GlobalObject& aGlobal,
     const Optional<NonNull<HTMLFormElement> >& aFormElement, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<FormData> formData = new FormData(aGlobal.GetAsSupports());
   if (aFormElement.WasPassed()) {
     aRv = aFormElement.Value().WalkFormElements(formData);

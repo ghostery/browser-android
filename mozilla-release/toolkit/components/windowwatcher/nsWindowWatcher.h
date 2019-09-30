@@ -80,33 +80,12 @@ class nsWindowWatcher : public nsIWindowWatcher,
 
   // Just like OpenWindowJS, but knows whether it got called via OpenWindowJS
   // (which means called from script) or called via OpenWindow.
-<<<<<<< HEAD
-  nsresult OpenWindowInternal(mozIDOMWindowProxy* aParent, const char* aUrl,
-                              const char* aName, const char* aFeatures,
-                              bool aCalledFromJS, bool aDialog, bool aNavigate,
-                              nsIArray* aArgv, bool aIsPopupSpam,
-                              bool aForceNoOpener,
-                              nsDocShellLoadState* aLoadState,
-||||||| merged common ancestors
-  nsresult OpenWindowInternal(mozIDOMWindowProxy* aParent,
-                              const char* aUrl,
-                              const char* aName,
-                              const char* aFeatures,
-                              bool aCalledFromJS,
-                              bool aDialog,
-                              bool aNavigate,
-                              nsIArray* aArgv,
-                              bool aIsPopupSpam,
-                              bool aForceNoOpener,
-                              nsDocShellLoadInfo* aLoadInfo,
-=======
   nsresult OpenWindowInternal(mozIDOMWindowProxy* aParent, const char* aUrl,
                               const char* aName, const char* aFeatures,
                               bool aCalledFromJS, bool aDialog, bool aNavigate,
                               nsIArray* aArgv, bool aIsPopupSpam,
                               bool aForceNoOpener, bool aForceNoReferrer,
                               nsDocShellLoadState* aLoadState,
->>>>>>> upstream-releases
                               mozIDOMWindowProxy** aResult);
 
   static nsresult URIfromURL(const char* aURL, mozIDOMWindowProxy* aParent,

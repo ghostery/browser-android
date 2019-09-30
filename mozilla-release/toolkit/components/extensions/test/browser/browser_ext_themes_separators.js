@@ -11,37 +11,10 @@ add_task(async function test_support_separator_properties() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "images": {
-          "theme_frame": "image1.png",
-||||||| merged common ancestors
-      "theme": {
-        "images": {
-          "headerURL": "image1.png",
-=======
       theme: {
         images: {
           theme_frame: "image1.png",
->>>>>>> upstream-releases
         },
-<<<<<<< HEAD
-        "colors": {
-          "frame": ACCENT_COLOR,
-          "tab_background_text": TEXT_COLOR,
-          "toolbar_top_separator": SEPARATOR_TOP_COLOR,
-          "toolbar_vertical_separator": SEPARATOR_VERTICAL_COLOR,
-          "toolbar_field_separator": SEPARATOR_FIELD_COLOR,
-          "toolbar_bottom_separator": SEPARATOR_BOTTOM_COLOR,
-||||||| merged common ancestors
-        "colors": {
-          "accentcolor": ACCENT_COLOR,
-          "textcolor": TEXT_COLOR,
-          "toolbar_top_separator": SEPARATOR_TOP_COLOR,
-          "toolbar_vertical_separator": SEPARATOR_VERTICAL_COLOR,
-          "toolbar_field_separator": SEPARATOR_FIELD_COLOR,
-          "toolbar_bottom_separator": SEPARATOR_BOTTOM_COLOR,
-=======
         colors: {
           frame: ACCENT_COLOR,
           tab_background_text: TEXT_COLOR,
@@ -49,7 +22,6 @@ add_task(async function test_support_separator_properties() {
           toolbar_vertical_separator: SEPARATOR_VERTICAL_COLOR,
           toolbar_field_separator: SEPARATOR_FIELD_COLOR,
           toolbar_bottom_separator: SEPARATOR_BOTTOM_COLOR,
->>>>>>> upstream-releases
         },
       },
     },

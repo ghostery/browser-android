@@ -152,18 +152,9 @@ class nsAutoRef : public nsAutoRefBase<T> {
 
   // Conversion to a raw reference allow the nsAutoRef<T> to often be used
   // like a raw reference.
-<<<<<<< HEAD
-  operator typename SimpleRef::RawRef() const { return this->get(); }
-||||||| merged common ancestors
-  operator typename SimpleRef::RawRef() const
-  {
-    return this->get();
-  }
-=======
   operator typename SimpleRef::RawRef() const { return this->get(); }
 
   explicit operator bool() const { return this->HaveResource(); }
->>>>>>> upstream-releases
 
   // Transfer ownership from another smart reference.
   void steal(ThisClass& aOtherRef) { BaseClass::steal(aOtherRef); }

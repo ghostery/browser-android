@@ -24,19 +24,8 @@ class NS_NO_VTABLE IPCBlobInputStreamParentCallback {
   virtual ~IPCBlobInputStreamParentCallback() {}
 };
 
-<<<<<<< HEAD
-class IPCBlobInputStreamParent final
-    : public mozilla::ipc::PIPCBlobInputStreamParent {
- public:
-||||||| merged common ancestors
-class IPCBlobInputStreamParent final
-  : public mozilla::ipc::PIPCBlobInputStreamParent
-{
-public:
-=======
 class IPCBlobInputStreamParent final : public PIPCBlobInputStreamParent {
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(IPCBlobInputStreamParent)
 
   // The size of the inputStream must be passed as argument in order to avoid
@@ -59,32 +48,11 @@ class IPCBlobInputStreamParent final : public PIPCBlobInputStreamParent {
 
   void SetCallback(IPCBlobInputStreamParentCallback* aCallback);
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvStreamNeeded() override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvStreamNeeded() override;
-=======
   mozilla::ipc::IPCResult RecvStreamNeeded();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvLengthNeeded() override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvLengthNeeded() override;
-=======
   mozilla::ipc::IPCResult RecvLengthNeeded();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvClose() override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvClose() override;
-=======
   mozilla::ipc::IPCResult RecvClose();
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult Recv__delete__() override;
 
@@ -115,10 +83,4 @@ class IPCBlobInputStreamParent final : public PIPCBlobInputStreamParent {
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_ipc_IPCBlobInputStreamParent_h
-||||||| merged common ancestors
-#endif // mozilla_dom_ipc_IPCBlobInputStreamParent_h
-=======
 #endif  // mozilla_dom_IPCBlobInputStreamParent_h
->>>>>>> upstream-releases

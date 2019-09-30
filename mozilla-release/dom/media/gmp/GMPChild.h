@@ -19,19 +19,10 @@ namespace gmp {
 
 class GMPContentChild;
 
-<<<<<<< HEAD
-class GMPChild : public PGMPChild {
- public:
-||||||| merged common ancestors
-class GMPChild : public PGMPChild
-{
-public:
-=======
 class GMPChild : public PGMPChild {
   friend class PGMPChild;
 
  public:
->>>>>>> upstream-releases
   GMPChild();
   virtual ~GMPChild();
 
@@ -52,14 +43,7 @@ class GMPChild : public PGMPChild {
 
   bool GetUTF8LibPath(nsACString& aOutLibPath);
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvProvideStorageId(
-      const nsCString& aStorageId) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvProvideStorageId(const nsCString& aStorageId) override;
-=======
   mozilla::ipc::IPCResult RecvProvideStorageId(const nsCString& aStorageId);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult AnswerStartPlugin(const nsString& aAdapter);
   mozilla::ipc::IPCResult RecvPreloadLibs(const nsCString& aLibs);
@@ -75,15 +59,8 @@ class GMPChild : public PGMPChild {
   mozilla::ipc::IPCResult RecvCrashPluginNow();
   mozilla::ipc::IPCResult RecvCloseActive();
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvInitGMPContentChild(
-      Endpoint<PGMPContentChild>&& aEndpoint) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvInitGMPContentChild(Endpoint<PGMPContentChild>&& aEndpoint) override;
-=======
   mozilla::ipc::IPCResult RecvInitGMPContentChild(
       Endpoint<PGMPContentChild>&& aEndpoint);
->>>>>>> upstream-releases
 
   void ActorDestroy(ActorDestroyReason aWhy) override;
   void ProcessingError(Result aCode, const char* aReason) override;

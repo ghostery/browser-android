@@ -77,31 +77,15 @@ class MigrateActorRunnable final : public Runnable {
 
 NS_IMPL_ISUPPORTS(IPCBlobInputStreamThread, nsIObserver, nsIEventTarget)
 
-<<<<<<< HEAD
-/* static */ bool IPCBlobInputStreamThread::IsOnFileEventTarget(
-    nsIEventTarget* aEventTarget) {
-||||||| merged common ancestors
-/* static */ bool
-IPCBlobInputStreamThread::IsOnFileEventTarget(nsIEventTarget* aEventTarget)
-{
-=======
 /* static */
 bool IPCBlobInputStreamThread::IsOnFileEventTarget(
     nsIEventTarget* aEventTarget) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aEventTarget);
 
   mozilla::StaticMutexAutoLock lock(gIPCBlobThreadMutex);
   return gIPCBlobThread && aEventTarget == gIPCBlobThread->mThread;
 }
 
-<<<<<<< HEAD
-/* static */ IPCBlobInputStreamThread* IPCBlobInputStreamThread::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ IPCBlobInputStreamThread*
-IPCBlobInputStreamThread::GetOrCreate()
-{
-=======
 /* static */
 IPCBlobInputStreamThread* IPCBlobInputStreamThread::Get() {
   mozilla::StaticMutexAutoLock lock(gIPCBlobThreadMutex);
@@ -115,7 +99,6 @@ IPCBlobInputStreamThread* IPCBlobInputStreamThread::Get() {
 
 /* static */
 IPCBlobInputStreamThread* IPCBlobInputStreamThread::GetOrCreate() {
->>>>>>> upstream-releases
   mozilla::StaticMutexAutoLock lock(gIPCBlobThreadMutex);
 
   if (gShutdownHasStarted) {

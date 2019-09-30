@@ -88,14 +88,6 @@ void ClearScalars();
 size_t GetMapShallowSizesOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf);
 size_t GetScalarSizesOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf);
 
-<<<<<<< HEAD
-void UpdateChildData(
-    mozilla::Telemetry::ProcessID aProcessType,
-    const nsTArray<mozilla::Telemetry::ScalarAction>& aScalarActions);
-||||||| merged common ancestors
-void UpdateChildData(mozilla::Telemetry::ProcessID aProcessType,
-                     const nsTArray<mozilla::Telemetry::ScalarAction>& aScalarActions);
-=======
 void UpdateChildData(
     mozilla::Telemetry::ProcessID aProcessType,
     const nsTArray<mozilla::Telemetry::ScalarAction>& aScalarActions);
@@ -103,50 +95,21 @@ void UpdateChildData(
 void UpdateChildKeyedData(
     mozilla::Telemetry::ProcessID aProcessType,
     const nsTArray<mozilla::Telemetry::KeyedScalarAction>& aScalarActions);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void UpdateChildKeyedData(
-    mozilla::Telemetry::ProcessID aProcessType,
-    const nsTArray<mozilla::Telemetry::KeyedScalarAction>& aScalarActions);
-||||||| merged common ancestors
-void UpdateChildKeyedData(mozilla::Telemetry::ProcessID aProcessType,
-                          const nsTArray<mozilla::Telemetry::KeyedScalarAction>& aScalarActions);
-=======
 void RecordDiscardedData(
     mozilla::Telemetry::ProcessID aProcessType,
     const mozilla::Telemetry::DiscardedData& aDiscardedData);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void RecordDiscardedData(
-    mozilla::Telemetry::ProcessID aProcessType,
-    const mozilla::Telemetry::DiscardedData& aDiscardedData);
-||||||| merged common ancestors
-void RecordDiscardedData(mozilla::Telemetry::ProcessID aProcessType,
-                         const mozilla::Telemetry::DiscardedData& aDiscardedData);
-=======
 void GetDynamicScalarDefinitions(
     nsTArray<mozilla::Telemetry::DynamicScalarDefinition>&);
 void AddDynamicScalarDefinitions(
     const nsTArray<mozilla::Telemetry::DynamicScalarDefinition>&);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void GetDynamicScalarDefinitions(
-    nsTArray<mozilla::Telemetry::DynamicScalarDefinition>&);
-void AddDynamicScalarDefinitions(
-    const nsTArray<mozilla::Telemetry::DynamicScalarDefinition>&);
-||||||| merged common ancestors
-void GetDynamicScalarDefinitions(nsTArray<mozilla::Telemetry::DynamicScalarDefinition>&);
-void AddDynamicScalarDefinitions(const nsTArray<mozilla::Telemetry::DynamicScalarDefinition>&);
-=======
 /**
  * Append the list of registered stores to the given set.
  * This includes dynamic stores.
  */
 nsresult GetAllStores(mozilla::Telemetry::Common::StringHashSet& set);
->>>>>>> upstream-releases
 
 // They are responsible for updating in-memory probes with the data persisted
 // on the disk and vice-versa.

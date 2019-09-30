@@ -30,14 +30,7 @@ class APZCPinchTester : public APZCBasicTester {
   }
 
   void DoPinchTest(bool aShouldTriggerPinch,
-<<<<<<< HEAD
-                   nsTArray<uint32_t> *aAllowedTouchBehaviors = nullptr) {
-||||||| merged common ancestors
-                   nsTArray<uint32_t> *aAllowedTouchBehaviors = nullptr)
-  {
-=======
                    nsTArray<uint32_t>* aAllowedTouchBehaviors = nullptr) {
->>>>>>> upstream-releases
     apzc->SetFrameMetrics(GetPinchableFrameMetrics());
     MakeApzcZoomable();
 
@@ -160,76 +153,36 @@ class APZCPinchLockingTester : public APZCPinchTester {
     MakeApzcZoomable();
 
     apzc->ReceiveInputEvent(
-<<<<<<< HEAD
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_START, mFocus,
-                                mSpan, mSpan),
-||||||| merged common ancestors
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_START,
-                                mFocus, mSpan, mSpan),
-=======
         CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_START, mFocus,
                                 mSpan, mSpan, mcc->Time()),
->>>>>>> upstream-releases
         nullptr);
     mcc->AdvanceBy(TimeDuration::FromMilliseconds(51));
   }
 
   void twoFingerPan() {
-<<<<<<< HEAD
-    ScreenCoord panDistance =
-        gfxPrefs::APZPinchLockScrollLockThreshold() * 1.2 * tm->GetDPI();
-||||||| merged common ancestors
-    ScreenCoord panDistance
-      = gfxPrefs::APZPinchLockScrollLockThreshold() * 1.2 * tm->GetDPI();
-=======
     ScreenCoord panDistance =
         StaticPrefs::apz_pinch_lock_scroll_lock_threshold() * 1.2 *
         tm->GetDPI();
->>>>>>> upstream-releases
 
     mFocus = ScreenIntPoint((int)(mFocus.x + panDistance), (int)(mFocus.y));
 
     apzc->ReceiveInputEvent(
-<<<<<<< HEAD
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE, mFocus,
-                                mSpan, mSpan),
-||||||| merged common ancestors
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE,
-                                mFocus, mSpan, mSpan),
-=======
         CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE, mFocus,
                                 mSpan, mSpan, mcc->Time()),
->>>>>>> upstream-releases
         nullptr);
     mcc->AdvanceBy(TimeDuration::FromMilliseconds(51));
   }
 
   void twoFingerZoom() {
-<<<<<<< HEAD
-    float pinchDistance =
-        gfxPrefs::APZPinchLockSpanBreakoutThreshold() * 1.2 * tm->GetDPI();
-||||||| merged common ancestors
-    float pinchDistance
-      = gfxPrefs::APZPinchLockSpanBreakoutThreshold() * 1.2 * tm->GetDPI();
-=======
     float pinchDistance =
         StaticPrefs::apz_pinch_lock_span_breakout_threshold() * 1.2 *
         tm->GetDPI();
->>>>>>> upstream-releases
 
     float newSpan = mSpan + pinchDistance;
 
     apzc->ReceiveInputEvent(
-<<<<<<< HEAD
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE, mFocus,
-                                newSpan, mSpan),
-||||||| merged common ancestors
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE,
-                                mFocus, newSpan, mSpan),
-=======
         CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE, mFocus,
                                 newSpan, mSpan, mcc->Time()),
->>>>>>> upstream-releases
         nullptr);
     mcc->AdvanceBy(TimeDuration::FromMilliseconds(51));
     mSpan = newSpan;
@@ -239,28 +192,12 @@ class APZCPinchLockingTester : public APZCPinchTester {
     FrameMetrics originalMetrics = apzc->GetFrameMetrics();
 
     // Send a small scale input to the APZC
-<<<<<<< HEAD
-    float pinchDistance =
-        gfxPrefs::APZPinchLockSpanBreakoutThreshold() * 0.8 * tm->GetDPI();
-||||||| merged common ancestors
-    float pinchDistance
-      = gfxPrefs::APZPinchLockSpanBreakoutThreshold() * 0.8 * tm->GetDPI();
-=======
     float pinchDistance =
         StaticPrefs::apz_pinch_lock_span_breakout_threshold() * 0.8 *
         tm->GetDPI();
->>>>>>> upstream-releases
     apzc->ReceiveInputEvent(
-<<<<<<< HEAD
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE, mFocus,
-                                mSpan + pinchDistance, mSpan),
-||||||| merged common ancestors
-        CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE,
-                                mFocus, mSpan + pinchDistance, mSpan),
-=======
         CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_SCALE, mFocus,
                                 mSpan + pinchDistance, mSpan, mcc->Time()),
->>>>>>> upstream-releases
         nullptr);
 
     FrameMetrics result = apzc->GetFrameMetrics();
@@ -285,78 +222,36 @@ TEST_F(APZCPinchGestureDetectorTester, Pinch_UseGestureDetector_NoTouchAction) {
   DoPinchTest(true);
 }
 
-<<<<<<< HEAD
-TEST_F(APZCPinchGestureDetectorTester,
-       Pinch_UseGestureDetector_TouchActionNone) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-  nsTArray<uint32_t> behaviors = {mozilla::layers::AllowedTouchBehavior::NONE,
-                                  mozilla::layers::AllowedTouchBehavior::NONE};
-||||||| merged common ancestors
-TEST_F(APZCPinchGestureDetectorTester, Pinch_UseGestureDetector_TouchActionNone) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-  nsTArray<uint32_t> behaviors = { mozilla::layers::AllowedTouchBehavior::NONE,
-                                   mozilla::layers::AllowedTouchBehavior::NONE };
-=======
 TEST_F(APZCPinchGestureDetectorTester,
        Pinch_UseGestureDetector_TouchActionNone) {
   SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", true);
   nsTArray<uint32_t> behaviors = {mozilla::layers::AllowedTouchBehavior::NONE,
                                   mozilla::layers::AllowedTouchBehavior::NONE};
->>>>>>> upstream-releases
   DoPinchTest(false, &behaviors);
 }
 
-<<<<<<< HEAD
-TEST_F(APZCPinchGestureDetectorTester,
-       Pinch_UseGestureDetector_TouchActionZoom) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-||||||| merged common ancestors
-TEST_F(APZCPinchGestureDetectorTester, Pinch_UseGestureDetector_TouchActionZoom) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-=======
 TEST_F(APZCPinchGestureDetectorTester,
        Pinch_UseGestureDetector_TouchActionZoom) {
   SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", true);
->>>>>>> upstream-releases
   nsTArray<uint32_t> behaviors;
   behaviors.AppendElement(mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
   behaviors.AppendElement(mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
   DoPinchTest(true, &behaviors);
 }
 
-<<<<<<< HEAD
-TEST_F(APZCPinchGestureDetectorTester,
-       Pinch_UseGestureDetector_TouchActionNotAllowZoom) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-||||||| merged common ancestors
-TEST_F(APZCPinchGestureDetectorTester, Pinch_UseGestureDetector_TouchActionNotAllowZoom) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-=======
 TEST_F(APZCPinchGestureDetectorTester,
        Pinch_UseGestureDetector_TouchActionNotAllowZoom) {
   SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", true);
->>>>>>> upstream-releases
   nsTArray<uint32_t> behaviors;
   behaviors.AppendElement(mozilla::layers::AllowedTouchBehavior::NONE);
   behaviors.AppendElement(mozilla::layers::AllowedTouchBehavior::PINCH_ZOOM);
   DoPinchTest(false, &behaviors);
 }
 
-<<<<<<< HEAD
-TEST_F(APZCPinchGestureDetectorTester,
-       Pinch_UseGestureDetector_TouchActionNone_NoAPZZoom) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-  SCOPED_GFX_PREF(APZAllowZooming, bool, false);
-||||||| merged common ancestors
-TEST_F(APZCPinchGestureDetectorTester, Pinch_UseGestureDetector_TouchActionNone_NoAPZZoom) {
-  SCOPED_GFX_PREF(TouchActionEnabled, bool, true);
-  SCOPED_GFX_PREF(APZAllowZooming, bool, false);
-=======
 TEST_F(APZCPinchGestureDetectorTester,
        Pinch_UseGestureDetector_TouchActionNone_NoAPZZoom) {
   SCOPED_GFX_PREF_BOOL("layout.css.touch_action.enabled", true);
   SCOPED_GFX_PREF_BOOL("apz.allow_zooming", false);
->>>>>>> upstream-releases
 
   // Since we are preventing the pinch action via touch-action we should not be
   // sending the pinch gesture notifications that would normally be sent when
@@ -414,18 +309,9 @@ TEST_F(APZCPinchGestureDetectorTester, Panning_TwoFingerFling_ZoomEnabled) {
   apzc->AssertStateIsReset();
 }
 
-<<<<<<< HEAD
-TEST_F(APZCPinchGestureDetectorTester,
-       Panning_TwoThenOneFingerFling_ZoomEnabled) {
-  SCOPED_GFX_PREF(APZFlingMinVelocityThreshold, float, 0.0f);
-||||||| merged common ancestors
-TEST_F(APZCPinchGestureDetectorTester, Panning_TwoThenOneFingerFling_ZoomEnabled) {
-  SCOPED_GFX_PREF(APZFlingMinVelocityThreshold, float, 0.0f);
-=======
 TEST_F(APZCPinchGestureDetectorTester,
        Panning_TwoThenOneFingerFling_ZoomEnabled) {
   SCOPED_GFX_PREF_FLOAT("apz.fling_min_velocity_threshold", 0.0f);
->>>>>>> upstream-releases
 
   apzc->SetFrameMetrics(GetPinchableFrameMetrics());
   MakeApzcZoomable();
@@ -614,68 +500,35 @@ TEST_F(APZCPinchGestureDetectorTester, Pinch_NoSpan) {
 
   // Do a pinch holding a zero span and moving the focus by y=100
 
-<<<<<<< HEAD
-  MultiTouchInput mtiStart =
-      MultiTouchInput(MultiTouchInput::MULTITOUCH_START, 0, TimeStamp(), 0);
-||||||| merged common ancestors
-  MultiTouchInput mtiStart = MultiTouchInput(MultiTouchInput::MULTITOUCH_START, 0, TimeStamp(), 0);
-=======
   const TimeDuration TIME_BETWEEN_TOUCH_EVENT =
       TimeDuration::FromMilliseconds(50);
 
   MultiTouchInput mtiStart =
       MultiTouchInput(MultiTouchInput::MULTITOUCH_START, 0, mcc->Time(), 0);
->>>>>>> upstream-releases
   mtiStart.mTouches.AppendElement(CreateSingleTouchData(inputId, focus));
   mtiStart.mTouches.AppendElement(CreateSingleTouchData(inputId + 1, focus));
   apzc->ReceiveInputEvent(mtiStart, nullptr);
   mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
-<<<<<<< HEAD
-  focus.y -= 35 + 1;  // this is to get over the PINCH_START_THRESHOLD in
-                      // GestureEventListener.cpp
-  MultiTouchInput mtiMove1 =
-      MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
-||||||| merged common ancestors
-  focus.y -= 35 + 1; // this is to get over the PINCH_START_THRESHOLD in GestureEventListener.cpp
-  MultiTouchInput mtiMove1 = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
-=======
   focus.y -= 35 + 1;  // this is to get over the PINCH_START_THRESHOLD in
                       // GestureEventListener.cpp
   MultiTouchInput mtiMove1 =
       MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, mcc->Time(), 0);
->>>>>>> upstream-releases
   mtiMove1.mTouches.AppendElement(CreateSingleTouchData(inputId, focus));
   mtiMove1.mTouches.AppendElement(CreateSingleTouchData(inputId + 1, focus));
   apzc->ReceiveInputEvent(mtiMove1, nullptr);
   mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
-<<<<<<< HEAD
-  focus.y -= 100;  // do a two-finger scroll of 100 screen pixels
-  MultiTouchInput mtiMove2 =
-      MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
-||||||| merged common ancestors
-  focus.y -= 100; // do a two-finger scroll of 100 screen pixels
-  MultiTouchInput mtiMove2 = MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, TimeStamp(), 0);
-=======
   focus.y -= 100;  // do a two-finger scroll of 100 screen pixels
   MultiTouchInput mtiMove2 =
       MultiTouchInput(MultiTouchInput::MULTITOUCH_MOVE, 0, mcc->Time(), 0);
->>>>>>> upstream-releases
   mtiMove2.mTouches.AppendElement(CreateSingleTouchData(inputId, focus));
   mtiMove2.mTouches.AppendElement(CreateSingleTouchData(inputId + 1, focus));
   apzc->ReceiveInputEvent(mtiMove2, nullptr);
   mcc->AdvanceBy(TIME_BETWEEN_TOUCH_EVENT);
 
-<<<<<<< HEAD
-  MultiTouchInput mtiEnd =
-      MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, TimeStamp(), 0);
-||||||| merged common ancestors
-  MultiTouchInput mtiEnd = MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, TimeStamp(), 0);
-=======
   MultiTouchInput mtiEnd =
       MultiTouchInput(MultiTouchInput::MULTITOUCH_END, 0, mcc->Time(), 0);
->>>>>>> upstream-releases
   mtiEnd.mTouches.AppendElement(CreateSingleTouchData(inputId, focus));
   mtiEnd.mTouches.AppendElement(CreateSingleTouchData(inputId + 1, focus));
   apzc->ReceiveInputEvent(mtiEnd, nullptr);
@@ -707,16 +560,8 @@ TEST_F(APZCPinchTester, Pinch_TwoFinger_APZZoom_Disabled_Bug1354185) {
   ScreenIntPoint aSecondFocus(200, 300);
   float aScale = 10;
   apzc->ReceiveInputEvent(
-<<<<<<< HEAD
-      CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_START, aFocus,
-                              10.0, 10.0),
-||||||| merged common ancestors
-      CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_START,
-                              aFocus, 10.0, 10.0),
-=======
       CreatePinchGestureInput(PinchGestureInput::PINCHGESTURE_START, aFocus,
                               10.0, 10.0, mcc->Time()),
->>>>>>> upstream-releases
       nullptr);
 
   apzc->ReceiveInputEvent(
@@ -726,39 +571,21 @@ TEST_F(APZCPinchTester, Pinch_TwoFinger_APZZoom_Disabled_Bug1354185) {
 }
 
 TEST_F(APZCPinchLockingTester, Pinch_Locking_Free) {
-<<<<<<< HEAD
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 0);  // PINCH_FREE
-||||||| merged common ancestors
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 0); // PINCH_FREE
-=======
   SCOPED_GFX_PREF_INT("apz.pinch_lock.mode", 0);  // PINCH_FREE
->>>>>>> upstream-releases
 
   twoFingerPan();
   EXPECT_FALSE(isPinchLockActive());
 }
 
 TEST_F(APZCPinchLockingTester, Pinch_Locking_Normal_Lock) {
-<<<<<<< HEAD
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 1);  // PINCH_NORMAL
-||||||| merged common ancestors
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 1); // PINCH_NORMAL
-=======
   SCOPED_GFX_PREF_INT("apz.pinch_lock.mode", 1);  // PINCH_NORMAL
->>>>>>> upstream-releases
 
   twoFingerPan();
   EXPECT_TRUE(isPinchLockActive());
 }
 
 TEST_F(APZCPinchLockingTester, Pinch_Locking_Normal_Lock_Break) {
-<<<<<<< HEAD
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 1);  // PINCH_NORMAL
-||||||| merged common ancestors
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 1); // PINCH_NORMAL
-=======
   SCOPED_GFX_PREF_INT("apz.pinch_lock.mode", 1);  // PINCH_NORMAL
->>>>>>> upstream-releases
 
   twoFingerPan();
   twoFingerZoom();
@@ -766,26 +593,14 @@ TEST_F(APZCPinchLockingTester, Pinch_Locking_Normal_Lock_Break) {
 }
 
 TEST_F(APZCPinchLockingTester, Pinch_Locking_Sticky_Lock) {
-<<<<<<< HEAD
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 2);  // PINCH_STICKY
-||||||| merged common ancestors
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 2); // PINCH_STICKY
-=======
   SCOPED_GFX_PREF_INT("apz.pinch_lock.mode", 2);  // PINCH_STICKY
->>>>>>> upstream-releases
 
   twoFingerPan();
   EXPECT_TRUE(isPinchLockActive());
 }
 
 TEST_F(APZCPinchLockingTester, Pinch_Locking_Sticky_Lock_Break) {
-<<<<<<< HEAD
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 2);  // PINCH_STICKY
-||||||| merged common ancestors
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 2); // PINCH_STICKY
-=======
   SCOPED_GFX_PREF_INT("apz.pinch_lock.mode", 2);  // PINCH_STICKY
->>>>>>> upstream-releases
 
   twoFingerPan();
   twoFingerZoom();
@@ -793,13 +608,7 @@ TEST_F(APZCPinchLockingTester, Pinch_Locking_Sticky_Lock_Break) {
 }
 
 TEST_F(APZCPinchLockingTester, Pinch_Locking_Sticky_Lock_Break_Lock) {
-<<<<<<< HEAD
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 2);  // PINCH_STICKY
-||||||| merged common ancestors
-  SCOPED_GFX_PREF(APZPinchLockMode, int32_t, 2); // PINCH_STICKY
-=======
   SCOPED_GFX_PREF_INT("apz.pinch_lock.mode", 2);  // PINCH_STICKY
->>>>>>> upstream-releases
 
   twoFingerPan();
   twoFingerZoom();

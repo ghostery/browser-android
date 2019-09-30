@@ -79,16 +79,8 @@ class ScriptLoader final : public nsISupports {
   friend class ScriptLoadHandler;
   friend class AutoCurrentScriptUpdater;
 
-<<<<<<< HEAD
- public:
-  explicit ScriptLoader(nsIDocument* aDocument);
-||||||| merged common ancestors
-public:
-  explicit ScriptLoader(nsIDocument* aDocument);
-=======
  public:
   explicit ScriptLoader(Document* aDocument);
->>>>>>> upstream-releases
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_CLASS(ScriptLoader)
@@ -212,27 +204,6 @@ public:
   static nsresult ConvertToUTF16(nsIChannel* aChannel, const uint8_t* aData,
                                  uint32_t aLength,
                                  const nsAString& aHintCharset,
-<<<<<<< HEAD
-                                 nsIDocument* aDocument, char16_t*& aBufOut,
-                                 size_t& aLengthOut);
-
-  static inline nsresult ConvertToUTF16(nsIChannel* aChannel,
-                                        const uint8_t* aData, uint32_t aLength,
-                                        const nsAString& aHintCharset,
-                                        nsIDocument* aDocument,
-                                        JS::UniqueTwoByteChars& aBufOut,
-                                        size_t& aLengthOut) {
-||||||| merged common ancestors
-                                 nsIDocument* aDocument,
-                                 char16_t*& aBufOut, size_t& aLengthOut);
-
-  static inline nsresult
-  ConvertToUTF16(nsIChannel* aChannel, const uint8_t* aData,
-                 uint32_t aLength, const nsAString& aHintCharset,
-                 nsIDocument* aDocument,
-                 JS::UniqueTwoByteChars& aBufOut, size_t& aLengthOut)
-  {
-=======
                                  Document* aDocument, char16_t*& aBufOut,
                                  size_t& aLengthOut);
 
@@ -242,7 +213,6 @@ public:
                                         Document* aDocument,
                                         JS::UniqueTwoByteChars& aBufOut,
                                         size_t& aLengthOut) {
->>>>>>> upstream-releases
     char16_t* bufOut;
     nsresult rv = ConvertToUTF16(aChannel, aData, aLength, aHintCharset,
                                  aDocument, bufOut, aLengthOut);
@@ -370,14 +340,6 @@ public:
    * any references to the JSScript or to the Request which might be used for
    * caching the encoded bytecode.
    */
-<<<<<<< HEAD
-  void Destroy() { GiveUpBytecodeEncoding(); }
-||||||| merged common ancestors
-  void Destroy()
-  {
-    GiveUpBytecodeEncoding();
-  }
-=======
   void Destroy() { GiveUpBytecodeEncoding(); }
 
   /**
@@ -407,34 +369,12 @@ public:
    * executing timeout handler scripts.
    */
   static LoadedScript* GetActiveScript(JSContext* aCx);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   Document* GetDocument() const { return mDocument; }
 
  private:
->>>>>>> upstream-releases
   virtual ~ScriptLoader();
 
-<<<<<<< HEAD
-  ScriptLoadRequest* CreateLoadRequest(
-      ScriptKind aKind, nsIURI* aURI, nsIScriptElement* aElement,
-      nsIPrincipal* aTriggeringPrincipal, mozilla::CORSMode aCORSMode,
-      const SRIMetadata& aIntegrity,
-      mozilla::net::ReferrerPolicy aReferrerPolicy);
-||||||| merged common ancestors
-  ScriptLoadRequest* CreateLoadRequest(ScriptKind aKind,
-                                       nsIURI* aURI,
-                                       nsIScriptElement* aElement,
-                                       nsIPrincipal* aTriggeringPrincipal,
-                                       mozilla::CORSMode aCORSMode,
-                                       const SRIMetadata& aIntegrity,
-                                       mozilla::net::ReferrerPolicy aReferrerPolicy);
-=======
   void EnsureModuleHooksInitialized();
 
   ScriptLoadRequest* CreateLoadRequest(
@@ -442,7 +382,6 @@ private:
       nsIPrincipal* aTriggeringPrincipal, mozilla::CORSMode aCORSMode,
       const SRIMetadata& aIntegrity,
       mozilla::net::ReferrerPolicy aReferrerPolicy);
->>>>>>> upstream-releases
 
   /**
    * Unblocks the creator parser of the parser-blocking scripts.
@@ -475,17 +414,6 @@ private:
   /**
    * Helper function to check the content policy for a given request.
    */
-<<<<<<< HEAD
-  static nsresult CheckContentPolicy(nsIDocument* aDocument,
-                                     nsISupports* aContext, nsIURI* aURI,
-                                     const nsAString& aType, bool aIsPreLoad);
-||||||| merged common ancestors
-  static nsresult CheckContentPolicy(nsIDocument* aDocument,
-                                     nsISupports* aContext,
-                                     nsIURI* aURI,
-                                     const nsAString& aType,
-                                     bool aIsPreLoad);
-=======
   static nsresult CheckContentPolicy(Document* aDocument, nsISupports* aContext,
                                      const nsAString& aType,
                                      ScriptLoadRequest* aRequest);
@@ -498,7 +426,6 @@ private:
    *     (e.g. the function will return false for about:blank or about:srcdoc)
    */
   static bool IsAboutPageLoadingChromeURI(ScriptLoadRequest* aRequest);
->>>>>>> upstream-releases
 
   /**
    * Start a load for aRequest's URI.
@@ -512,30 +439,7 @@ private:
    */
   nsresult RestartLoad(ScriptLoadRequest* aRequest);
 
-<<<<<<< HEAD
   void HandleLoadError(ScriptLoadRequest* aRequest, nsresult aResult);
-
-  static bool BinASTEncodingEnabled() {
-#ifdef JS_BUILD_BINAST
-    return StaticPrefs::dom_script_loader_binast_encoding_enabled();
-#else
-    return false;
-#endif
-  }
-||||||| merged common ancestors
-  void HandleLoadError(ScriptLoadRequest *aRequest, nsresult aResult);
-
-  static bool BinASTEncodingEnabled()
-  {
-#ifdef JS_BUILD_BINAST
-    return StaticPrefs::dom_script_loader_binast_encoding_enabled();
-#else
-    return false;
-#endif
-  }
-=======
-  void HandleLoadError(ScriptLoadRequest* aRequest, nsresult aResult);
->>>>>>> upstream-releases
 
   /**
    * Process any pending requests asynchronously (i.e. off an event) if there
@@ -574,16 +478,9 @@ private:
   nsresult SaveSRIHash(ScriptLoadRequest* aRequest,
                        SRICheckDataVerifier* aSRIDataVerifier) const;
 
-<<<<<<< HEAD
-  void ReportErrorToConsole(ScriptLoadRequest* aRequest,
-                            nsresult aResult) const;
-||||||| merged common ancestors
-  void ReportErrorToConsole(ScriptLoadRequest *aRequest, nsresult aResult) const;
-=======
   void ReportErrorToConsole(ScriptLoadRequest* aRequest,
                             nsresult aResult) const;
   void ReportPreloadErrorsToConsole(ScriptLoadRequest* aRequest);
->>>>>>> upstream-releases
 
   nsresult AttemptAsyncScriptCompile(ScriptLoadRequest* aRequest,
                                      bool* aCouldCompileOut);
@@ -635,13 +532,6 @@ private:
 
   void MaybeMoveToLoadedList(ScriptLoadRequest* aRequest);
 
-<<<<<<< HEAD
-  mozilla::Maybe<JS::SourceText<char16_t>> GetScriptSource(
-      JSContext* aCx, ScriptLoadRequest* aRequest);
-||||||| merged common ancestors
-  mozilla::Maybe<JS::SourceBufferHolder> GetScriptSource(JSContext* aCx,
-                                                         ScriptLoadRequest* aRequest);
-=======
   using MaybeSourceText =
       mozilla::MaybeOneOf<JS::SourceText<char16_t>, JS::SourceText<Utf8Unit>>;
 
@@ -650,7 +540,6 @@ private:
   MOZ_MUST_USE nsresult GetScriptSource(JSContext* aCx,
                                         ScriptLoadRequest* aRequest,
                                         MaybeSourceText* aMaybeSource);
->>>>>>> upstream-releases
 
   void SetModuleFetchStarted(ModuleLoadRequest* aRequest);
   void SetModuleFetchFinishedAndResumeWaitingRequests(
@@ -684,15 +573,9 @@ private:
   nsresult InitDebuggerDataForModuleTree(JSContext* aCx,
                                          ModuleLoadRequest* aRequest);
 
-<<<<<<< HEAD
-  nsIDocument* mDocument;  // [WEAK]
-||||||| merged common ancestors
-  nsIDocument* mDocument;                   // [WEAK]
-=======
   void RunScriptWhenSafe(ScriptLoadRequest* aRequest);
 
   Document* mDocument;  // [WEAK]
->>>>>>> upstream-releases
   nsCOMArray<nsIScriptLoaderObserver> mObservers;
   ScriptLoadRequestList mNonAsyncExternalScriptInsertedRequests;
   // mLoadingAsyncRequests holds async requests while they're loading; when they
@@ -746,15 +629,8 @@ private:
   bool mGiveUpEncoding;
 
   // Module map
-<<<<<<< HEAD
-  nsRefPtrHashtable<nsURIHashKey, mozilla::GenericPromise::Private>
-      mFetchingModules;
-||||||| merged common ancestors
-  nsRefPtrHashtable<nsURIHashKey, mozilla::GenericPromise::Private> mFetchingModules;
-=======
   nsRefPtrHashtable<nsURIHashKey, mozilla::GenericNonExclusivePromise::Private>
       mFetchingModules;
->>>>>>> upstream-releases
   nsRefPtrHashtable<nsURIHashKey, ModuleScript> mFetchedModules;
 
   nsCOMPtr<nsIConsoleReportCollector> mReporter;
@@ -765,21 +641,9 @@ private:
   static LazyLogModule gScriptLoaderLog;
 };
 
-<<<<<<< HEAD
-class nsAutoScriptLoaderDisabler {
- public:
-  explicit nsAutoScriptLoaderDisabler(nsIDocument* aDoc) {
-||||||| merged common ancestors
-class nsAutoScriptLoaderDisabler
-{
-public:
-  explicit nsAutoScriptLoaderDisabler(nsIDocument* aDoc)
-  {
-=======
 class nsAutoScriptLoaderDisabler {
  public:
   explicit nsAutoScriptLoaderDisabler(Document* aDoc) {
->>>>>>> upstream-releases
     mLoader = aDoc->ScriptLoader();
     mWasEnabled = mLoader->GetEnabled();
     if (mWasEnabled) {

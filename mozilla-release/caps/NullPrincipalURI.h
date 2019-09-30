@@ -32,21 +32,8 @@ namespace mozilla {
 
 class Encoding;
 
-<<<<<<< HEAD
-class NullPrincipalURI final : public nsIURI,
-                               public nsISizeOf,
-                               public nsIIPCSerializableURI {
- public:
-||||||| merged common ancestors
-class NullPrincipalURI final : public nsIURI
-                             , public nsISizeOf
-                             , public nsIIPCSerializableURI
-{
-public:
-=======
 class NullPrincipalURI final : public nsIURI, public nsISizeOf {
  public:
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIURI
 
@@ -59,7 +46,7 @@ class NullPrincipalURI final : public nsIURI, public nsISizeOf {
 
  private:
   NullPrincipalURI();
-  NullPrincipalURI(const NullPrincipalURI &aOther);
+  NullPrincipalURI(const NullPrincipalURI& aOther);
 
   ~NullPrincipalURI() {}
 
@@ -67,25 +54,6 @@ class NullPrincipalURI final : public nsIURI, public nsISizeOf {
 
   nsAutoCStringN<NSID_LENGTH> mPath;
 
-<<<<<<< HEAD
-  nsresult Clone(nsIURI **aURI);
-  nsresult SetSpecInternal(const nsACString &input);
-  nsresult SetScheme(const nsACString &input);
-  nsresult SetUserPass(const nsACString &input);
-  nsresult SetUsername(const nsACString &input);
-  nsresult SetPassword(const nsACString &input);
-  nsresult SetHostPort(const nsACString &aValue);
-  nsresult SetHost(const nsACString &input);
-||||||| merged common ancestors
-  nsresult Clone(nsIURI** aURI);
-  nsresult SetSpecInternal(const nsACString &input);
-  nsresult SetScheme(const nsACString &input);
-  nsresult SetUserPass(const nsACString &input);
-  nsresult SetUsername(const nsACString &input);
-  nsresult SetPassword(const nsACString &input);
-  nsresult SetHostPort(const nsACString &aValue);
-  nsresult SetHost(const nsACString &input);
-=======
   nsresult Clone(nsIURI** aURI);
   nsresult SetSpecInternal(const nsACString& input);
   nsresult SetScheme(const nsACString& input);
@@ -94,34 +62,7 @@ class NullPrincipalURI final : public nsIURI, public nsISizeOf {
   nsresult SetPassword(const nsACString& input);
   nsresult SetHostPort(const nsACString& aValue);
   nsresult SetHost(const nsACString& input);
->>>>>>> upstream-releases
   nsresult SetPort(int32_t port);
-<<<<<<< HEAD
-  nsresult SetPathQueryRef(const nsACString &input);
-  nsresult SetRef(const nsACString &input);
-  nsresult SetFilePath(const nsACString &input);
-  nsresult SetQuery(const nsACString &input);
-  nsresult SetQueryWithEncoding(const nsACString &input,
-                                const Encoding *encoding);
-  bool Deserialize(const mozilla::ipc::URIParams &);
-
- public:
-  class Mutator final : public nsIURIMutator,
-                        public BaseURIMutator<NullPrincipalURI> {
-||||||| merged common ancestors
-  nsresult SetPathQueryRef(const nsACString &input);
-  nsresult SetRef(const nsACString &input);
-  nsresult SetFilePath(const nsACString &input);
-  nsresult SetQuery(const nsACString &input);
-  nsresult SetQueryWithEncoding(const nsACString &input, const Encoding* encoding);
-  bool Deserialize(const mozilla::ipc::URIParams&);
-
-public:
-  class Mutator final
-      : public nsIURIMutator
-      , public BaseURIMutator<NullPrincipalURI>
-  {
-=======
   nsresult SetPathQueryRef(const nsACString& input);
   nsresult SetRef(const nsACString& input);
   nsresult SetFilePath(const nsACString& input);
@@ -133,43 +74,20 @@ public:
  public:
   class Mutator final : public nsIURIMutator,
                         public BaseURIMutator<NullPrincipalURI> {
->>>>>>> upstream-releases
     NS_DECL_ISUPPORTS
     NS_FORWARD_SAFE_NSIURISETTERS_RET(mURI)
 
-<<<<<<< HEAD
-    NS_IMETHOD Deserialize(const mozilla::ipc::URIParams &aParams) override {
-||||||| merged common ancestors
-    NS_IMETHOD Deserialize(const mozilla::ipc::URIParams& aParams) override
-    {
-=======
     NS_IMETHOD Deserialize(const mozilla::ipc::URIParams& aParams) override {
->>>>>>> upstream-releases
       return InitFromIPCParams(aParams);
     }
 
-<<<<<<< HEAD
-    NS_IMETHOD Finalize(nsIURI **aURI) override {
-||||||| merged common ancestors
-    NS_IMETHOD Finalize(nsIURI** aURI) override
-    {
-=======
     NS_IMETHOD Finalize(nsIURI** aURI) override {
->>>>>>> upstream-releases
       mURI.forget(aURI);
       return NS_OK;
     }
 
-<<<<<<< HEAD
-    NS_IMETHOD SetSpec(const nsACString &aSpec,
-                       nsIURIMutator **aMutator) override {
-||||||| merged common ancestors
-    NS_IMETHOD SetSpec(const nsACString & aSpec, nsIURIMutator** aMutator) override
-    {
-=======
     NS_IMETHOD SetSpec(const nsACString& aSpec,
                        nsIURIMutator** aMutator) override {
->>>>>>> upstream-releases
       if (aMutator) {
         nsCOMPtr<nsIURIMutator> mutator = this;
         mutator.forget(aMutator);

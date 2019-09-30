@@ -15,15 +15,7 @@ const {
 
 add_task(async function() {
   const target1 = await addTabTarget(MAIN_DOMAIN + "doc_perf.html");
-<<<<<<< HEAD
   const firstFront = await target1.getFront("performance");
-  await firstFront.connect();
-||||||| merged common ancestors
-  const firstFront = target1.getFront("performance");
-  await firstFront.connect();
-=======
-  const firstFront = await target1.getFront("performance");
->>>>>>> upstream-releases
 
   pmmLoadFrameScripts(gBrowser);
 

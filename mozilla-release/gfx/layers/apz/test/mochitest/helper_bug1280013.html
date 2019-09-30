@@ -37,21 +37,9 @@ function* test(testDriver) {
   yield flushApzRepaints(testDriver);
   is(window.scrollY, 0, "Main-thread scroll position is still at 0");
 
-<<<<<<< HEAD
-  // Scroll the iframe by 300px.
-  var subframe = document.getElementById('subframe');
-  yield synthesizeNativeTouchDrag(subframe, 10, 200, 0, -300);
-||||||| merged common ancestors
-  // Scroll the iframe by 300px. Note that since the main-thread scroll position
-  // is still 0, the subframe's getBoundingClientRect is going to be off by
-  // 700 pixels, so we compensate for that here.
-  var subframe = document.getElementById('subframe');
-  yield synthesizeNativeTouchDrag(subframe, 10, 200 - 700, 0, -300);
-=======
   // Scroll the iframe by 300px.
   var subframe = document.getElementById("subframe");
   yield synthesizeNativeTouchDrag(subframe, 10, 200, 0, -300);
->>>>>>> upstream-releases
 
   // Remove the observer, we don't need it any more.
   SpecialPowers.Services.obs.removeObserver(testDriver, "APZ:TransformEnd");

@@ -1,19 +1,3 @@
-<<<<<<< HEAD
-import {addLocaleData, IntlProvider} from "react-intl";
-import {actionCreators as ac} from "common/Actions.jsm";
-import {OUTGOING_MESSAGE_NAME as AS_GENERAL_OUTGOING_MESSAGE_NAME} from "content-src/lib/init-store";
-import {generateMessages} from "./rich-text-strings";
-import {ImpressionsWrapper} from "./components/ImpressionsWrapper/ImpressionsWrapper";
-import {LocalizationProvider} from "fluent-react";
-import {OnboardingMessage} from "./templates/OnboardingMessage/OnboardingMessage";
-||||||| merged common ancestors
-import {actionCreators as ac} from "common/Actions.jsm";
-import {OUTGOING_MESSAGE_NAME as AS_GENERAL_OUTGOING_MESSAGE_NAME} from "content-src/lib/init-store";
-import {generateMessages} from "./rich-text-strings";
-import {ImpressionsWrapper} from "./components/ImpressionsWrapper/ImpressionsWrapper";
-import {LocalizationProvider} from "fluent-react";
-import {OnboardingMessage} from "./templates/OnboardingMessage/OnboardingMessage";
-=======
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -28,19 +12,10 @@ import { generateBundles } from "./rich-text-strings";
 import { ImpressionsWrapper } from "./components/ImpressionsWrapper/ImpressionsWrapper";
 import { LocalizationProvider } from "fluent-react";
 import { NEWTAB_DARK_THEME } from "content-src/lib/constants";
->>>>>>> upstream-releases
 import React from "react";
 import ReactDOM from "react-dom";
-<<<<<<< HEAD
-import {ReturnToAMO} from "./templates/ReturnToAMO/ReturnToAMO";
-import {SnippetsTemplates} from "./templates/template-manifest";
-import {StartupOverlay} from "./templates/StartupOverlay/StartupOverlay";
-||||||| merged common ancestors
-import {SnippetsTemplates} from "./templates/template-manifest";
-=======
 import { SnippetsTemplates } from "./templates/template-manifest";
 import { FirstRun } from "./templates/FirstRun/FirstRun";
->>>>>>> upstream-releases
 
 const INCOMING_MESSAGE_NAME = "ASRouter:parent-to-child";
 const OUTGOING_MESSAGE_NAME = "ASRouter:child-to-parent";
@@ -76,19 +51,7 @@ export const ASRouterUtils = {
     });
   },
   dismissById(id) {
-<<<<<<< HEAD
-    ASRouterUtils.sendMessage({type: "DISMISS_MESSAGE_BY_ID", data: {id}});
-  },
-  dismissBundle(bundle) {
-    ASRouterUtils.sendMessage({type: "DISMISS_BUNDLE", data: {bundle}});
-||||||| merged common ancestors
-    ASRouterUtils.sendMessage({type: "DISMISS_MESSAGE_BY_ID", data: {id}});
-  },
-  blockBundle(bundle) {
-    ASRouterUtils.sendMessage({type: "BLOCK_BUNDLE", data: {bundle}});
-=======
     ASRouterUtils.sendMessage({ type: "DISMISS_MESSAGE_BY_ID", data: { id } });
->>>>>>> upstream-releases
   },
   executeAction(button_action) {
     ASRouterUtils.sendMessage({
@@ -263,24 +226,12 @@ export class ASRouterUISurface extends React.PureComponent {
     return () => ASRouterUtils.dismissById(id);
   }
 
-<<<<<<< HEAD
-  dismissBundle(bundle) {
-    return () => ASRouterUtils.dismissBundle(bundle);
-  }
-
-  triggerOnboarding() {
-    ASRouterUtils.sendMessage({type: "TRIGGER", data: {trigger: {id: "showOnboarding"}}});
-||||||| merged common ancestors
-  clearBundle(bundle) {
-    return () => ASRouterUtils.blockBundle(bundle);
-=======
   clearMessage(id) {
     if (id === this.state.message.id) {
       this.setState({ message: {} });
       // Remove any styles related to the RTAMO message
       document.body.classList.remove("welcome", "hide-main", "amo");
     }
->>>>>>> upstream-releases
   }
 
   onMessageFromParent({ data: action }) {
@@ -309,9 +260,6 @@ export class ASRouterUISurface extends React.PureComponent {
   }
 
   componentWillMount() {
-    // Add locale data for StartupOverlay because it uses react-intl
-    addLocaleData(global.document.documentElement.lang);
-
     const endpoint = ASRouterUtils.getPreviewEndpoint();
     if (endpoint && endpoint.theme === "dark") {
       global.window.dispatchEvent(
@@ -370,25 +318,12 @@ export class ASRouterUISurface extends React.PureComponent {
   }
 
   renderSnippets() {
-<<<<<<< HEAD
-    if (this.state.bundle.template === "onboarding" ||
-        this.state.message.template === "fxa_overlay" ||
-        this.state.message.template === "return_to_amo_overlay") {
-      return null;
-    }
-    const SnippetComponent = SnippetsTemplates[this.state.message.template];
-    const {content} = this.state.message;
-||||||| merged common ancestors
-    const SnippetComponent = SnippetsTemplates[this.state.message.template];
-    const {content} = this.state.message;
-=======
     const { message } = this.state;
     if (!SnippetsTemplates[message.template]) {
       return null;
     }
     const SnippetComponent = SnippetsTemplates[message.template];
     const { content } = this.state.message;
->>>>>>> upstream-releases
 
     return (
       <ImpressionsWrapper
@@ -397,84 +332,6 @@ export class ASRouterUISurface extends React.PureComponent {
         sendImpression={this.sendImpression}
         shouldSendImpressionOnUpdate={shouldSendImpressionOnUpdate}
         // This helps with testing
-<<<<<<< HEAD
-        document={this.props.document}>
-          <LocalizationProvider messages={generateMessages(content)}>
-            <SnippetComponent
-              {...this.state.message}
-              UISurface="NEWTAB_FOOTER_BAR"
-              onBlock={this.onBlockById(this.state.message.id)}
-              onDismiss={this.onDismissById(this.state.message.id)}
-              onAction={ASRouterUtils.executeAction}
-              sendClick={this.sendClick}
-              sendUserActionTelemetry={this.sendUserActionTelemetry} />
-          </LocalizationProvider>
-      </ImpressionsWrapper>);
-  }
-
-  renderOnboarding() {
-    if (this.state.bundle.template === "onboarding") {
-      return (
-        <OnboardingMessage
-          {...this.state.bundle}
-          UISurface="NEWTAB_OVERLAY"
-          onAction={ASRouterUtils.executeAction}
-          onDoneButton={this.dismissBundle(this.state.bundle.bundle)}
-          sendUserActionTelemetry={this.sendUserActionTelemetry} />);
-    }
-    return null;
-  }
-
-  renderFirstRunOverlay() {
-    const {message} = this.state;
-    if (message.template === "fxa_overlay") {
-      global.document.body.classList.add("fxa");
-      return (
-        <IntlProvider locale={global.document.documentElement.lang} messages={global.gActivityStreamStrings}>
-          <StartupOverlay
-            onReady={this.triggerOnboarding}
-            onBlock={this.onDismissById(message.id)}
-            dispatch={this.props.activityStreamStore.dispatch}
-            store={this.props.activityStreamStore} />
-        </IntlProvider>
-      );
-    } else if (message.template === "return_to_amo_overlay") {
-      global.document.body.classList.add("amo");
-      return (
-        <LocalizationProvider messages={generateMessages({"amo_html": message.content.text})}>
-          <ReturnToAMO
-            {...message}
-            onReady={this.triggerOnboarding}
-            onBlock={this.onDismissById(message.id)}
-            onAction={ASRouterUtils.executeAction} />
-        </LocalizationProvider>
-      );
-    }
-    return null;
-||||||| merged common ancestors
-        document={this.props.document}>
-          <LocalizationProvider messages={generateMessages(content)}>
-            <SnippetComponent
-              {...this.state.message}
-              UISurface="NEWTAB_FOOTER_BAR"
-              onBlock={this.onBlockById(this.state.message.id)}
-              onDismiss={this.onDismissById(this.state.message.id)}
-              onAction={ASRouterUtils.executeAction}
-              sendClick={this.sendClick}
-              sendUserActionTelemetry={this.sendUserActionTelemetry} />
-          </LocalizationProvider>
-      </ImpressionsWrapper>);
-  }
-
-  renderOnboarding() {
-    return (
-      <OnboardingMessage
-        {...this.state.bundle}
-        UISurface="NEWTAB_OVERLAY"
-        onAction={ASRouterUtils.executeAction}
-        onDoneButton={this.clearBundle(this.state.bundle.bundle)}
-        sendUserActionTelemetry={this.sendUserActionTelemetry} />);
-=======
         document={this.props.document}
       >
         <LocalizationProvider bundles={generateBundles(content)}>
@@ -490,7 +347,6 @@ export class ASRouterUISurface extends React.PureComponent {
         </LocalizationProvider>
       </ImpressionsWrapper>
     );
->>>>>>> upstream-releases
   }
 
   renderPreviewBanner() {
@@ -506,65 +362,6 @@ export class ASRouterUISurface extends React.PureComponent {
     );
   }
 
-<<<<<<< HEAD
-  render() {
-    const {message, bundle} = this.state;
-    if (!message.id && !bundle.template) { return null; }
-    return (
-      <React.Fragment>
-        {this.renderPreviewBanner()}
-        {this.renderFirstRunOverlay()}
-        {this.renderOnboarding()}
-        {this.renderSnippets()}
-      </React.Fragment>
-    );
-  }
-}
-
-ASRouterUISurface.defaultProps = {document: global.document};
-
-export class ASRouterContent {
-  constructor() {
-    this.initialized = false;
-    this.containerElement = null;
-  }
-
-  _mount() {
-    this.containerElement = global.document.getElementById(ASR_CONTAINER_ID);
-    if (!this.containerElement) {
-      this.containerElement = global.document.createElement("div");
-      this.containerElement.id = ASR_CONTAINER_ID;
-      this.containerElement.style.zIndex = 1;
-      global.document.body.appendChild(this.containerElement);
-||||||| merged common ancestors
-  render() {
-    const {message, bundle} = this.state;
-    if (!message.id && !bundle.template) { return null; }
-    return (
-      <React.Fragment>
-        {this.renderPreviewBanner()}
-        {bundle.template === "onboarding" ? this.renderOnboarding() : this.renderSnippets()}
-      </React.Fragment>
-    );
-  }
-}
-
-ASRouterUISurface.defaultProps = {document: global.document};
-
-export class ASRouterContent {
-  constructor() {
-    this.initialized = false;
-    this.containerElement = null;
-  }
-
-  _mount() {
-    this.containerElement = global.document.getElementById(ASR_CONTAINER_ID);
-    if (!this.containerElement) {
-      this.containerElement = global.document.createElement("div");
-      this.containerElement.id = ASR_CONTAINER_ID;
-      this.containerElement.style.zIndex = 1;
-      global.document.body.appendChild(this.containerElement);
-=======
   renderFirstRun() {
     const { message } = this.state;
     if (FIRST_RUN_TEMPLATES.includes(message.template)) {
@@ -591,36 +388,8 @@ export class ASRouterContent {
           />
         </ImpressionsWrapper>
       );
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-
-    ReactDOM.render(<ASRouterUISurface activityStreamStore={this._activityStreamStore} />, this.containerElement);
-  }
-
-  _unmount() {
-    ReactDOM.unmountComponentAtNode(this.containerElement);
-  }
-
-  init(store) {
-    this._activityStreamStore = store;
-    this._mount();
-    this.initialized = true;
-||||||| merged common ancestors
-
-    ReactDOM.render(<ASRouterUISurface />, this.containerElement);
-  }
-
-  _unmount() {
-    ReactDOM.unmountComponentAtNode(this.containerElement);
-  }
-
-  init() {
-    this._mount();
-    this.initialized = true;
-=======
     return null;
->>>>>>> upstream-releases
   }
 
   render() {

@@ -37,15 +37,7 @@ function run_test() {
   runHttpTests(tests, done);
 }
 
-<<<<<<< HEAD
-
 /** **********
-||||||| merged common ancestors
-
-/************
-=======
-/** **********
->>>>>>> upstream-releases
  * HANDLERS *
  ************/
 
@@ -82,73 +74,12 @@ function pathHandler(request, response) {
   response.setHeader("X-New-Shared-Value", sharedValue, false);
 }
 
-<<<<<<< HEAD
-
 /** *************
-||||||| merged common ancestors
-
-/***************
-=======
-/** *************
->>>>>>> upstream-releases
  * BEGIN TESTS *
  ***************/
 
 XPCOMUtils.defineLazyGetter(this, "tests", function() {
   return [
-<<<<<<< HEAD
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=newShared&newPrivate=newPrivate",
-                    null, start_initial, null),
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=newShared2&newPrivate=newPrivate2",
-                    null, start_overwrite, null),
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=&newPrivate=newPrivate3",
-                    null, start_remove, null),
-    new Test(URL + "/path-handler",
-                    null, start_handler, null),
-    new Test(URL + "/path-handler",
-                    null, start_handler_again, null),
-    new Test(URL + "/state2.sjs?" +
-                    "newShared=newShared4&newPrivate=newPrivate4",
-                    null, start_other_initial, null),
-    new Test(URL + "/state2.sjs?" +
-                    "newShared=",
-                    null, start_other_remove_ignore, null),
-    new Test(URL + "/state2.sjs?" +
-                    "newShared=newShared5&newPrivate=newPrivate5",
-                    null, start_other_set_new, null),
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=done!&newPrivate=",
-                    null, start_set_remove_original, null),
-||||||| merged common ancestors
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=newShared&newPrivate=newPrivate",
-                    null, start_initial, null),
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=newShared2&newPrivate=newPrivate2",
-                    null, start_overwrite, null),
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=&newPrivate=newPrivate3",
-                    null, start_remove, null),
-    new Test(URL + "/path-handler",
-                    null, start_handler, null),
-    new Test(URL + "/path-handler",
-                    null, start_handler_again, null),
-    new Test(URL + "/state2.sjs?" +
-                    "newShared=newShared4&newPrivate=newPrivate4",
-                    null, start_other_initial, null),
-    new Test(URL + "/state2.sjs?" +
-                    "newShared=",
-                    null, start_other_remove_ignore, null),
-    new Test(URL + "/state2.sjs?" +
-                    "newShared=newShared5&newPrivate=newPrivate5",
-                    null, start_other_set_new, null),
-    new Test(URL + "/state1.sjs?" +
-                    "newShared=done!&newPrivate=",
-                    null, start_set_remove_original, null)
-=======
     new Test(
       // eslint-disable-next-line no-useless-concat
       URL + "/state1.sjs?" + "newShared=newShared&newPrivate=newPrivate",
@@ -200,7 +131,6 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
       start_set_remove_original,
       null
     ),
->>>>>>> upstream-releases
   ];
 });
 
@@ -209,18 +139,8 @@ function getHeaderFunction(ch) {
   function getHeader(name) {
     try {
       return ch.getResponseHeader(name);
-<<<<<<< HEAD
-    } catch (e) {
-      if (e.result !== Cr.NS_ERROR_NOT_AVAILABLE)
-||||||| merged common ancestors
-    }
-    catch (e)
-    {
-      if (e.result !== Cr.NS_ERROR_NOT_AVAILABLE)
-=======
     } catch (e) {
       if (e.result !== Cr.NS_ERROR_NOT_AVAILABLE) {
->>>>>>> upstream-releases
         throw e;
       }
     }
@@ -239,63 +159,23 @@ function expectValues(ch, oldShared, newShared, oldPrivate, newPrivate) {
   Assert.equal(getHeader("X-New-Private-Value"), newPrivate);
 }
 
-<<<<<<< HEAD
-function start_initial(ch, cx) {
-dumpn("XXX start_initial");
-||||||| merged common ancestors
-function start_initial(ch, cx)
-{
-dumpn("XXX start_initial");
-=======
 function start_initial(ch) {
   dumpn("XXX start_initial");
->>>>>>> upstream-releases
   expectValues(ch, "", "newShared", "", "newPrivate");
 }
 
-<<<<<<< HEAD
-function start_overwrite(ch, cx) {
-||||||| merged common ancestors
-function start_overwrite(ch, cx)
-{
-=======
 function start_overwrite(ch) {
->>>>>>> upstream-releases
   expectValues(ch, "newShared", "newShared2", "newPrivate", "newPrivate2");
 }
 
-<<<<<<< HEAD
-function start_remove(ch, cx) {
-||||||| merged common ancestors
-function start_remove(ch, cx)
-{
-=======
 function start_remove(ch) {
->>>>>>> upstream-releases
   expectValues(ch, "newShared2", "", "newPrivate2", "newPrivate3");
 }
 
-<<<<<<< HEAD
-function start_handler(ch, cx) {
-||||||| merged common ancestors
-function start_handler(ch, cx)
-{
-=======
 function start_handler(ch) {
->>>>>>> upstream-releases
   expectValues(ch, "", "pathHandlerShared", "", "pathHandlerPrivate");
 }
 
-<<<<<<< HEAD
-function start_handler_again(ch, cx) {
-  expectValues(ch, "pathHandlerShared", "",
-               "pathHandlerPrivate", "pathHandlerPrivate2");
-||||||| merged common ancestors
-function start_handler_again(ch, cx)
-{
-  expectValues(ch, "pathHandlerShared", "",
-               "pathHandlerPrivate", "pathHandlerPrivate2");
-=======
 function start_handler_again(ch) {
   expectValues(
     ch,
@@ -304,49 +184,20 @@ function start_handler_again(ch) {
     "pathHandlerPrivate",
     "pathHandlerPrivate2"
   );
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-function start_other_initial(ch, cx) {
-||||||| merged common ancestors
-function start_other_initial(ch, cx)
-{
-=======
 function start_other_initial(ch) {
->>>>>>> upstream-releases
   expectValues(ch, "", "newShared4", "", "newPrivate4");
 }
 
-<<<<<<< HEAD
-function start_other_remove_ignore(ch, cx) {
-||||||| merged common ancestors
-function start_other_remove_ignore(ch, cx)
-{
-=======
 function start_other_remove_ignore(ch) {
->>>>>>> upstream-releases
   expectValues(ch, "newShared4", "", "newPrivate4", "");
 }
 
-<<<<<<< HEAD
-function start_other_set_new(ch, cx) {
-||||||| merged common ancestors
-function start_other_set_new(ch, cx)
-{
-=======
 function start_other_set_new(ch) {
->>>>>>> upstream-releases
   expectValues(ch, "", "newShared5", "newPrivate4", "newPrivate5");
 }
 
-<<<<<<< HEAD
-function start_set_remove_original(ch, cx) {
-||||||| merged common ancestors
-function start_set_remove_original(ch, cx)
-{
-=======
 function start_set_remove_original(ch) {
->>>>>>> upstream-releases
   expectValues(ch, "newShared5", "done!", "newPrivate3", "");
 }

@@ -61,18 +61,8 @@ class TransportLayerDtls final : public TransportLayer {
 
   virtual ~TransportLayerDtls();
 
-<<<<<<< HEAD
   enum Role { CLIENT, SERVER };
   enum Verification { VERIFY_UNSET, VERIFY_ALLOW_ALL, VERIFY_DIGEST };
-  const static size_t kMaxDigestLength = HASH_LENGTH_MAX;
-||||||| merged common ancestors
-  enum Role { CLIENT, SERVER};
-  enum Verification { VERIFY_UNSET, VERIFY_ALLOW_ALL, VERIFY_DIGEST};
-  const static size_t kMaxDigestLength = HASH_LENGTH_MAX;
-=======
-  enum Role { CLIENT, SERVER };
-  enum Verification { VERIFY_UNSET, VERIFY_ALLOW_ALL, VERIFY_DIGEST };
->>>>>>> upstream-releases
 
   // DTLS-specific operations
   void SetRole(Role role) { role_ = role; }
@@ -86,18 +76,8 @@ class TransportLayerDtls final : public TransportLayer {
   const std::string& GetNegotiatedAlpn() const { return alpn_; }
 
   nsresult SetVerificationAllowAll();
-<<<<<<< HEAD
-  nsresult SetVerificationDigest(const std::string digest_algorithm,
-                                 const unsigned char* digest_value,
-                                 size_t digest_len);
-||||||| merged common ancestors
-  nsresult SetVerificationDigest(const std::string digest_algorithm,
-                                 const unsigned char *digest_value,
-                                 size_t digest_len);
-=======
 
   nsresult SetVerificationDigest(const DtlsDigest& digest);
->>>>>>> upstream-releases
 
   nsresult GetCipherSuite(uint16_t* cipherSuite) const;
 
@@ -132,57 +112,6 @@ class TransportLayerDtls final : public TransportLayer {
  private:
   DISALLOW_COPY_ASSIGN(TransportLayerDtls);
 
-<<<<<<< HEAD
-  // A single digest to check
-  class VerificationDigest {
-   public:
-    VerificationDigest(std::string algorithm, const unsigned char* value,
-                       size_t len) {
-      MOZ_ASSERT(len <= sizeof(value_));
-
-      algorithm_ = algorithm;
-      memcpy(value_, value, len);
-      len_ = len;
-    }
-
-    NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VerificationDigest)
-
-    std::string algorithm_;
-    size_t len_;
-    unsigned char value_[kMaxDigestLength];
-
-   private:
-    ~VerificationDigest() {}
-    DISALLOW_COPY_ASSIGN(VerificationDigest);
-  };
-
-||||||| merged common ancestors
-  // A single digest to check
-  class VerificationDigest {
-   public:
-    VerificationDigest(std::string algorithm,
-                       const unsigned char *value, size_t len) {
-      MOZ_ASSERT(len <= sizeof(value_));
-
-      algorithm_ = algorithm;
-      memcpy(value_, value, len);
-      len_ = len;
-    }
-
-    NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VerificationDigest)
-
-    std::string algorithm_;
-    size_t len_;
-    unsigned char value_[kMaxDigestLength];
-
-   private:
-    ~VerificationDigest() {}
-    DISALLOW_COPY_ASSIGN(VerificationDigest);
-  };
-
-
-=======
->>>>>>> upstream-releases
   bool Setup();
   bool SetupCipherSuites(UniquePRFileDesc& ssl_fd);
   bool SetupAlpn(UniquePRFileDesc& ssl_fd) const;

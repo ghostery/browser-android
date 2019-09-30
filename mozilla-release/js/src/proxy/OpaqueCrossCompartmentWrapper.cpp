@@ -23,22 +23,9 @@ bool OpaqueCrossCompartmentWrapper::defineProperty(
   return result.succeed();
 }
 
-<<<<<<< HEAD
-bool OpaqueCrossCompartmentWrapper::ownPropertyKeys(JSContext* cx,
-                                                    HandleObject wrapper,
-                                                    AutoIdVector& props) const {
-  return true;
-||||||| merged common ancestors
-bool
-OpaqueCrossCompartmentWrapper::ownPropertyKeys(JSContext* cx, HandleObject wrapper,
-                                               AutoIdVector& props) const
-{
-    return true;
-=======
 bool OpaqueCrossCompartmentWrapper::ownPropertyKeys(
     JSContext* cx, HandleObject wrapper, MutableHandleIdVector props) const {
   return true;
->>>>>>> upstream-releases
 }
 
 bool OpaqueCrossCompartmentWrapper::delete_(JSContext* cx, HandleObject wrapper,
@@ -47,20 +34,9 @@ bool OpaqueCrossCompartmentWrapper::delete_(JSContext* cx, HandleObject wrapper,
   return result.succeed();
 }
 
-<<<<<<< HEAD
-JSObject* OpaqueCrossCompartmentWrapper::enumerate(JSContext* cx,
-                                                   HandleObject wrapper) const {
-  return BaseProxyHandler::enumerate(cx, wrapper);
-||||||| merged common ancestors
-JSObject*
-OpaqueCrossCompartmentWrapper::enumerate(JSContext* cx, HandleObject wrapper) const
-{
-    return BaseProxyHandler::enumerate(cx, wrapper);
-=======
 bool OpaqueCrossCompartmentWrapper::enumerate(
     JSContext* cx, HandleObject proxy, MutableHandleIdVector props) const {
   return BaseProxyHandler::enumerate(cx, proxy, props);
->>>>>>> upstream-releases
 }
 
 bool OpaqueCrossCompartmentWrapper::getPrototype(
@@ -134,47 +110,14 @@ bool OpaqueCrossCompartmentWrapper::construct(JSContext* cx,
   return false;
 }
 
-<<<<<<< HEAD
-bool OpaqueCrossCompartmentWrapper::getPropertyDescriptor(
-    JSContext* cx, HandleObject wrapper, HandleId id,
-    MutableHandle<PropertyDescriptor> desc) const {
-  return BaseProxyHandler::getPropertyDescriptor(cx, wrapper, id, desc);
-||||||| merged common ancestors
-bool
-OpaqueCrossCompartmentWrapper::getPropertyDescriptor(JSContext* cx,
-                                                     HandleObject wrapper,
-                                                     HandleId id,
-                                                     MutableHandle<PropertyDescriptor> desc) const
-{
-    return BaseProxyHandler::getPropertyDescriptor(cx, wrapper, id, desc);
-=======
 bool OpaqueCrossCompartmentWrapper::hasOwn(JSContext* cx, HandleObject wrapper,
                                            HandleId id, bool* bp) const {
   return BaseProxyHandler::hasOwn(cx, wrapper, id, bp);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool OpaqueCrossCompartmentWrapper::hasOwn(JSContext* cx, HandleObject wrapper,
-                                           HandleId id, bool* bp) const {
-  return BaseProxyHandler::hasOwn(cx, wrapper, id, bp);
-||||||| merged common ancestors
-bool
-OpaqueCrossCompartmentWrapper::hasOwn(JSContext* cx, HandleObject wrapper, HandleId id,
-                                      bool* bp) const
-{
-    return BaseProxyHandler::hasOwn(cx, wrapper, id, bp);
-=======
 bool OpaqueCrossCompartmentWrapper::getOwnEnumerablePropertyKeys(
     JSContext* cx, HandleObject wrapper, MutableHandleIdVector props) const {
   return BaseProxyHandler::getOwnEnumerablePropertyKeys(cx, wrapper, props);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool OpaqueCrossCompartmentWrapper::getOwnEnumerablePropertyKeys(
-    JSContext* cx, HandleObject wrapper, AutoIdVector& props) const {
-  return BaseProxyHandler::getOwnEnumerablePropertyKeys(cx, wrapper, props);
 }
 
 bool OpaqueCrossCompartmentWrapper::getBuiltinClass(JSContext* cx,
@@ -183,21 +126,6 @@ bool OpaqueCrossCompartmentWrapper::getBuiltinClass(JSContext* cx,
   *cls = ESClass::Other;
   return true;
 }
-||||||| merged common ancestors
-bool
-OpaqueCrossCompartmentWrapper::getOwnEnumerablePropertyKeys(JSContext* cx, HandleObject wrapper,
-                                                            AutoIdVector& props) const
-{
-    return BaseProxyHandler::getOwnEnumerablePropertyKeys(cx, wrapper, props);
-}
-=======
-bool OpaqueCrossCompartmentWrapper::getBuiltinClass(JSContext* cx,
-                                                    HandleObject wrapper,
-                                                    ESClass* cls) const {
-  *cls = ESClass::Other;
-  return true;
-}
->>>>>>> upstream-releases
 
 bool OpaqueCrossCompartmentWrapper::isArray(JSContext* cx, HandleObject obj,
                                             JS::IsArrayAnswer* answer) const {

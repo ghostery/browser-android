@@ -75,18 +75,6 @@ class Promise : public nsISupports, public SupportsWeakPtr<Promise> {
   typedef void (Promise::*MaybeFunc)(JSContext* aCx,
                                      JS::Handle<JS::Value> aValue);
 
-<<<<<<< HEAD
-  void MaybeResolve(JSContext* aCx, JS::Handle<JS::Value> aValue);
-  void MaybeReject(JSContext* aCx, JS::Handle<JS::Value> aValue);
-
-||||||| merged common ancestors
-  void MaybeResolve(JSContext* aCx,
-                    JS::Handle<JS::Value> aValue);
-  void MaybeReject(JSContext* aCx,
-                   JS::Handle<JS::Value> aValue);
-
-=======
->>>>>>> upstream-releases
   // Helpers for using Promise from C++.
   // Most DOM objects are handled already.  To add a new type T, add a
   // ToJSValue overload in ToJSValue.h.
@@ -132,16 +120,7 @@ class Promise : public nsISupports, public SupportsWeakPtr<Promise> {
 
   // WebIDL
 
-<<<<<<< HEAD
-  nsIGlobalObject* GetParentObject() const { return mGlobal; }
-||||||| merged common ancestors
-  nsIGlobalObject* GetParentObject() const
-  {
-    return mGlobal;
-  }
-=======
   nsIGlobalObject* GetParentObject() const { return GetGlobalObject(); }
->>>>>>> upstream-releases
 
   // Do the equivalent of Promise.resolve in the compartment of aGlobal.  The
   // compartment of aCx is ignored.  Errors are reported on the ErrorResult; if
@@ -254,24 +233,12 @@ class Promise : public nsISupports, public SupportsWeakPtr<Promise> {
   // input events in case we are currently handling user input events.
   void CreateWrapper(JS::Handle<JSObject*> aDesiredProto, ErrorResult& aRv,
                      PropagateUserInteraction aPropagateUserInteraction =
-<<<<<<< HEAD
-                         eDontPropagateUserInteraction);
-||||||| merged common ancestors
-                       eDontPropagateUserInteraction);
-=======
                          eDontPropagateUserInteraction);
 
  private:
   void MaybeResolve(JSContext* aCx, JS::Handle<JS::Value> aValue);
   void MaybeReject(JSContext* aCx, JS::Handle<JS::Value> aValue);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
->>>>>>> upstream-releases
   template <typename T>
   void MaybeSomething(T&& aArgument, MaybeFunc aFunc) {
     MOZ_ASSERT(PromiseObj());  // It was preserved!

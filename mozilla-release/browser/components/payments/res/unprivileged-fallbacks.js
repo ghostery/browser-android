@@ -84,34 +84,14 @@ var PaymentDialogUtils = {
           { fieldId: "address-level2" },
         ],
         postalCodePattern: "\\d{5}",
-<<<<<<< HEAD
-        countryRequiredFields: ["street-address", "address-level2", "postal-code"],
-||||||| merged common ancestors
-=======
         countryRequiredFields: [
           "street-address",
           "address-level2",
           "postal-code",
         ],
->>>>>>> upstream-releases
       };
     }
 
-<<<<<<< HEAD
-    let fieldsOrder = [
-      {fieldId: "name", newLine: true},
-      {fieldId: "street-address", newLine: true},
-      {fieldId: "address-level2"},
-      {fieldId: "address-level1"},
-      {fieldId: "postal-code"},
-      {fieldId: "organization"},
-    ];
-    if (country == "BR") {
-      fieldsOrder.splice(2, 0, {fieldId: "address-level3"});
-    }
-
-||||||| merged common ancestors
-=======
     let addressLevel1Options = null;
     if (country == "US") {
       addressLevel1Options = new Map([
@@ -139,7 +119,6 @@ var PaymentDialogUtils = {
       fieldsOrder.splice(2, 0, { fieldId: "address-level3" });
     }
 
->>>>>>> upstream-releases
     return {
       addressLevel3Label: "suburb",
       addressLevel2Label: "city",
@@ -149,14 +128,6 @@ var PaymentDialogUtils = {
       fieldsOrder,
       // The following values come from addressReferences.js and should not be changed.
       /* eslint-disable-next-line max-len */
-<<<<<<< HEAD
-      postalCodePattern: country == "US" ? "(\\d{5})(?:[ \\-](\\d{4}))?" : "[ABCEGHJKLMNPRSTVXY]\\d[ABCEGHJ-NPRSTV-Z] ?\\d[ABCEGHJ-NPRSTV-Z]\\d",
-      countryRequiredFields: country == "US" || country == "CA" ?
-        ["street-address", "address-level2", "address-level1", "postal-code"] :
-        ["street-address", "address-level2", "postal-code"],
-||||||| merged common ancestors
-      postalCodePattern: country == "US" ? "(\\d{5})(?:[ \\-](\\d{4}))?" : "[ABCEGHJKLMNPRSTVXY]\\d[ABCEGHJ-NPRSTV-Z] ?\\d[ABCEGHJ-NPRSTV-Z]\\d",
-=======
       postalCodePattern:
         country == "US"
           ? "(\\d{5})(?:[ \\-](\\d{4}))?"
@@ -170,7 +141,6 @@ var PaymentDialogUtils = {
               "postal-code",
             ]
           : ["street-address", "address-level2", "postal-code"],
->>>>>>> upstream-releases
     };
   },
   findAddressSelectOption(selectEl, address, fieldName) {

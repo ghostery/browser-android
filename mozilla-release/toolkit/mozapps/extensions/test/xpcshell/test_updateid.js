@@ -7,53 +7,6 @@
 // The test extension uses an insecure update url.
 Services.prefs.setBoolPref("extensions.checkUpdateSecurity", false);
 
-<<<<<<< HEAD
-let testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
-||||||| merged common ancestors
-const profileDir = gProfD.clone();
-profileDir.append("extensions");
-
-const ADDONS = {
-  test_updateid1: {
-    "install.rdf": {
-      "id": "addon1@tests.mozilla.org",
-      "updateURL": "http://example.com/data/test_updateid.rdf",
-      "name": "Test Addon 1",
-    },
-  },
-  test_updateid2: {
-    "install.rdf": {
-      "id": "addon1.changed@tests.mozilla.org",
-      "version": "2.0",
-      "name": "Test Addon 1",
-    },
-  },
-};
-
-function promiseInstallUpdate(install) {
-  return new Promise((resolve, reject) => {
-    install.addListener({
-      onDownloadFailed: () => {
-        let err = new Error("download error");
-        err.code = install.error;
-        reject(err);
-      },
-      onInstallFailed: () => {
-        let err = new Error("install error");
-        err.code = install.error;
-        reject(err);
-      },
-      onInstallEnded: resolve,
-    });
-
-    install.install();
-  });
-}
-
-// Create and configure the HTTP server.
-let testserver = AddonTestUtils.createHttpServer({hosts: ["example.com"]});
-testserver.registerDirectory("/data/", do_get_file("data"));
-=======
 let testserver = AddonTestUtils.createHttpServer({ hosts: ["example.com"] });
 
 const ID = "updateid@tests.mozilla.org";
@@ -74,54 +27,13 @@ add_task(async function test_update_new_id() {
       },
     },
   });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const ID = "updateid@tests.mozilla.org";
-
-// Verify that an update to an add-on with a new ID fails
-add_task(async function test_update_new_id() {
-  createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1");
-  await promiseStartupManager();
-||||||| merged common ancestors
-const XPIS = {};
-for (let [name, files] of Object.entries(ADDONS)) {
-  XPIS[name] = AddonTestUtils.createTempXPIFile(files);
-  testserver.registerFile(`/addons/${name}.xpi`, XPIS[name]);
-}
-
-add_task(async function setup() {
-  createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1");
-  await promiseStartupManager();
-});
-=======
   let xpi = await createTempWebExtensionFile({
     manifest: {
       version: "2.0",
       applications: { gecko: { id: "differentid@tests.mozilla.org" } },
     },
   });
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  await promiseInstallWebExtension({
-    manifest: {
-      version: "1.0",
-      applications: {
-        gecko: {
-          id: ID,
-          update_url: "http://example.com/update.json",
-        },
-      },
-    },
-  });
-
-  let xpi = await createTempWebExtensionFile({
-    manifest: {
-      version: "2.0",
-      applications: { gecko: {id: "differentid@tests.mozilla.org"}},
-    },
-  });
 
   testserver.registerFile("/addon.xpi", xpi);
   AddonTestUtils.registerJSON(testserver, "/update.json", {
@@ -142,31 +54,6 @@ add_task(async function setup() {
       },
     },
   });
-||||||| merged common ancestors
-// Verify that an update to an add-on with a new ID fails
-add_task(async function test_update_new_id() {
-  await AddonTestUtils.promiseInstallXPI(ADDONS.test_updateid1);
-=======
-  testserver.registerFile("/addon.xpi", xpi);
-  AddonTestUtils.registerJSON(testserver, "/update.json", {
-    addons: {
-      [ID]: {
-        updates: [
-          {
-            version: "2.0",
-            update_link: "http://example.com/addon.xpi",
-            applications: {
-              gecko: {
-                strict_min_version: "1",
-                strict_max_version: "10",
-              },
-            },
-          },
-        ],
-      },
-    },
-  });
->>>>>>> upstream-releases
 
   let addon = await promiseAddonByID(ID);
   Assert.notEqual(addon, null);
@@ -183,21 +70,11 @@ add_task(async function test_update_new_id() {
   Assert.equal(install.state, AddonManager.STATE_AVAILABLE);
   Assert.equal(install.existingAddon, addon);
 
-<<<<<<< HEAD
-  await Assert.rejects(install.install(),
-                       err => (install.error == AddonManager.ERROR_INCORRECT_ID),
-                       "Upgrade to a different ID fails");
-||||||| merged common ancestors
-  await Assert.rejects(promiseInstallUpdate(install),
-                       function(err) { return err.code == AddonManager.ERROR_INCORRECT_ID; },
-                       "Upgrade to a different ID fails");
-=======
   await Assert.rejects(
     install.install(),
     err => install.error == AddonManager.ERROR_INCORRECT_ID,
     "Upgrade to a different ID fails"
   );
->>>>>>> upstream-releases
 
   await addon.uninstall();
 });

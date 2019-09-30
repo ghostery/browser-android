@@ -14,17 +14,8 @@ DevToolsModules(
     'accessibility.js',
     'actor-registry.js',
     'animation.js',
-<<<<<<< HEAD
-    'breakpoint.js',
-    'canvas.js',
-    'changes.js',
-||||||| merged common ancestors
-    'breakpoint.js',
-    'canvas.js',
-=======
     'array-buffer.js',
     'changes.js',
->>>>>>> upstream-releases
     'css-properties.js',
     'device.js',
     'emulation.js',

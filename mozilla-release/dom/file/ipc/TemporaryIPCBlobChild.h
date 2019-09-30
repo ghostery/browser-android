@@ -23,20 +23,10 @@ class TemporaryIPCBlobChildCallback {
   virtual void OperationFailed(nsresult aRv) = 0;
 };
 
-<<<<<<< HEAD
-class TemporaryIPCBlobChild final
-    : public mozilla::ipc::PTemporaryIPCBlobChild {
- public:
-||||||| merged common ancestors
-class TemporaryIPCBlobChild final : public mozilla::ipc::PTemporaryIPCBlobChild
-{
-public:
-=======
 class TemporaryIPCBlobChild final : public PTemporaryIPCBlobChild {
   friend class PTemporaryIPCBlobChild;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(TemporaryIPCBlobChild)
 
   explicit TemporaryIPCBlobChild(MutableBlobStorage* aMutableBlobStorage);
@@ -47,14 +37,7 @@ class TemporaryIPCBlobChild final : public PTemporaryIPCBlobChild {
  private:
   ~TemporaryIPCBlobChild();
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvFileDesc(const FileDescriptor& aFD) override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult
-  RecvFileDesc(const FileDescriptor& aFD) override;
-=======
   mozilla::ipc::IPCResult RecvFileDesc(const FileDescriptor& aFD);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult Recv__delete__(
       const IPCBlobOrError& aBlobOrError) override;
@@ -69,10 +52,4 @@ class TemporaryIPCBlobChild final : public PTemporaryIPCBlobChild {
 }  // namespace dom
 }  // namespace mozilla
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_ipc_TemporaryIPCBlobChild_h
-||||||| merged common ancestors
-#endif // mozilla_dom_ipc_TemporaryIPCBlobChild_h
-=======
 #endif  // mozilla_dom_TemporaryIPCBlobChild_h
->>>>>>> upstream-releases

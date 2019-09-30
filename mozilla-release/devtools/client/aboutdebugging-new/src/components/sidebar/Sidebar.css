@@ -12,17 +12,6 @@
   display: block;
   padding: 12px 0;
   text-align: center;
-<<<<<<< HEAD
-  width: 100%;
-}
-
-.sidebar__refresh-usb {
-  text-align: center;
-}
-||||||| merged common ancestors
-  width: 100%;
-}
-=======
   font-size: var(--message-font-size);
 }
 
@@ -50,4 +39,3 @@
   width: calc(var(--base-unit) * 4);
   height: calc(var(--base-unit) * 4);
 }
->>>>>>> upstream-releases

@@ -69,26 +69,12 @@ const GMP_PLUGINS = [
     id: WIDEVINE_ID,
     name: "widevine_description",
     // Describe the purpose of both CDMs in the same way.
-<<<<<<< HEAD
-    description:     "cdm_description2",
-    licenseURL:      "https://www.google.com/policies/privacy/",
-    homepageURL:     "https://www.widevine.com/",
-    isEME:           true,
-  }];
-||||||| merged common ancestors
-    description:     "cdm_description",
-    licenseURL:      "https://www.google.com/policies/privacy/",
-    homepageURL:     "https://www.widevine.com/",
-    isEME:           true,
-  }];
-=======
     description: "cdm_description2",
     licenseURL: "https://www.google.com/policies/privacy/",
     homepageURL: "https://www.widevine.com/",
     isEME: true,
   },
 ];
->>>>>>> upstream-releases
 XPCOMUtils.defineConstant(this, "GMP_PLUGINS", GMP_PLUGINS);
 
 XPCOMUtils.defineLazyGetter(this, "pluginsBundle", () =>

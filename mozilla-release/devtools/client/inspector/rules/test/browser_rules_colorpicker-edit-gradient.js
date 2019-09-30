@@ -60,17 +60,9 @@ async function testPickingNewColor(view) {
   const change = {
     selector: "body",
     name: "background-image",
-<<<<<<< HEAD
-    value: "linear-gradient(to left, rgb(1, 1, 1) 25%, " +
-           "rgb(51, 51, 51) 95%, rgb(0, 0, 0) 100%)",
-||||||| merged common ancestors
-    value: "linear-gradient(to left, rgb(1, 1, 1) 25%, " +
-           "rgb(51, 51, 51) 95%, rgb(0, 0, 0) 100%)"
-=======
     value:
       "linear-gradient(to left, rgb(1, 1, 1) 25%, " +
       "rgb(51, 51, 51) 95%, rgb(0, 0, 0) 100%)",
->>>>>>> upstream-releases
   };
   await simulateColorPickerChange(view, cPicker, [1, 1, 1, 1], change);
 

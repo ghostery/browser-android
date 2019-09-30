@@ -7,25 +7,14 @@
 
 
 #include "GrPathRendererChain.h"
+
 #include "GrCaps.h"
-<<<<<<< HEAD
-#include "GrShaderCaps.h"
-||||||| merged common ancestors
-#include "GrShaderCaps.h"
-#include "gl/GrGLCaps.h"
-=======
->>>>>>> upstream-releases
 #include "GrContext.h"
 #include "GrContextPriv.h"
 #include "GrGpu.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 #include "GrRecordingContext.h"
 #include "GrRecordingContextPriv.h"
 #include "GrShaderCaps.h"
->>>>>>> upstream-releases
 #include "ccpr/GrCoverageCountingPathRenderer.h"
 #include "ops/GrAAConvexPathRenderer.h"
 #include "ops/GrAAHairLinePathRenderer.h"
@@ -36,16 +25,8 @@
 #include "ops/GrStencilAndCoverPathRenderer.h"
 #include "ops/GrTessellatingPathRenderer.h"
 
-<<<<<<< HEAD
-GrPathRendererChain::GrPathRendererChain(GrContext* context, const Options& options) {
-    const GrCaps& caps = *context->contextPriv().caps();
-||||||| merged common ancestors
-GrPathRendererChain::GrPathRendererChain(GrContext* context, const Options& options) {
-    const GrCaps& caps = *context->caps();
-=======
 GrPathRendererChain::GrPathRendererChain(GrRecordingContext* context, const Options& options) {
     const GrCaps& caps = *context->priv().caps();
->>>>>>> upstream-releases
     if (options.fGpuPathRenderers & GpuPathRenderers::kDashLine) {
         fChain.push_back(sk_make_sp<GrDashLinePathRenderer>());
     }
@@ -61,57 +42,21 @@ GrPathRendererChain::GrPathRendererChain(GrRecordingContext* context, const Opti
             }
         }
     }
-<<<<<<< HEAD
-||||||| merged common ancestors
-#ifndef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    if (options.fGpuPathRenderers & GpuPathRenderers::kMSAA) {
-        if (caps.sampleShadingSupport()) {
-            fChain.push_back(sk_make_sp<GrMSAAPathRenderer>());
-        }
-    }
-#endif
-
-    // AA hairline path renderer is very specialized - no other renderer can do this job well
-    fChain.push_back(sk_make_sp<GrAAHairLinePathRenderer>());
-
-=======
     if (options.fGpuPathRenderers & GpuPathRenderers::kAAConvex) {
         fChain.push_back(sk_make_sp<GrAAConvexPathRenderer>());
     }
->>>>>>> upstream-releases
     if (options.fGpuPathRenderers & GpuPathRenderers::kCoverageCounting) {
-<<<<<<< HEAD
-        using AllowCaching = GrCoverageCountingPathRenderer::AllowCaching;
-        if (auto ccpr = GrCoverageCountingPathRenderer::CreateIfSupported(
-                                caps, AllowCaching(options.fAllowPathMaskCaching))) {
-||||||| merged common ancestors
-        bool drawCachablePaths = !options.fAllowPathMaskCaching;
-        if (auto ccpr = GrCoverageCountingPathRenderer::CreateIfSupported(*context->caps(),
-                                                                          drawCachablePaths)) {
-=======
         using AllowCaching = GrCoverageCountingPathRenderer::AllowCaching;
         if (auto ccpr = GrCoverageCountingPathRenderer::CreateIfSupported(
                                 caps, AllowCaching(options.fAllowPathMaskCaching),
                                 context->priv().contextID())) {
->>>>>>> upstream-releases
             fCoverageCountingPathRenderer = ccpr.get();
             context->priv().addOnFlushCallbackObject(fCoverageCountingPathRenderer);
             fChain.push_back(std::move(ccpr));
         }
     }
-<<<<<<< HEAD
     if (options.fGpuPathRenderers & GpuPathRenderers::kAAHairline) {
         fChain.push_back(sk_make_sp<GrAAHairLinePathRenderer>());
-    }
-    if (options.fGpuPathRenderers & GpuPathRenderers::kAAConvex) {
-        fChain.push_back(sk_make_sp<GrAAConvexPathRenderer>());
-||||||| merged common ancestors
-    if (options.fGpuPathRenderers & GpuPathRenderers::kAAConvex) {
-        fChain.push_back(sk_make_sp<GrAAConvexPathRenderer>());
-=======
-    if (options.fGpuPathRenderers & GpuPathRenderers::kAAHairline) {
-        fChain.push_back(sk_make_sp<GrAAHairLinePathRenderer>());
->>>>>>> upstream-releases
     }
     if (options.fGpuPathRenderers & GpuPathRenderers::kAALinearizing) {
         fChain.push_back(sk_make_sp<GrAALinearizingConvexPathRenderer>());

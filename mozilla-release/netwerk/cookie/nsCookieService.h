@@ -64,47 +64,6 @@ class CookieServiceParent;
 using mozilla::net::nsCookieKey;
 // Inherit from nsCookieKey so this can be stored in nsTHashTable
 // TODO: why aren't we using nsClassHashTable<nsCookieKey, ArrayType>?
-<<<<<<< HEAD
-class nsCookieEntry : public nsCookieKey {
- public:
-  // Hash methods
-  typedef nsTArray<RefPtr<nsCookie> > ArrayType;
-  typedef ArrayType::index_type IndexType;
-
-  explicit nsCookieEntry(KeyTypePointer aKey) : nsCookieKey(aKey) {}
-
-  nsCookieEntry(const nsCookieEntry &toCopy) {
-    // if we end up here, things will break. nsTHashtable shouldn't
-    // allow this, since we set ALLOW_MEMMOVE to true.
-    MOZ_ASSERT_UNREACHABLE("nsCookieEntry copy constructor is forbidden!");
-  }
-
-  ~nsCookieEntry() = default;
-
-  inline ArrayType &GetCookies() { return mCookies; }
-||||||| merged common ancestors
-class nsCookieEntry : public nsCookieKey
-{
-  public:
-    // Hash methods
-    typedef nsTArray< RefPtr<nsCookie> > ArrayType;
-    typedef ArrayType::index_type IndexType;
-
-    explicit nsCookieEntry(KeyTypePointer aKey)
-     : nsCookieKey(aKey)
-    {}
-
-    nsCookieEntry(const nsCookieEntry& toCopy)
-    {
-      // if we end up here, things will break. nsTHashtable shouldn't
-      // allow this, since we set ALLOW_MEMMOVE to true.
-      MOZ_ASSERT_UNREACHABLE("nsCookieEntry copy constructor is forbidden!");
-    }
-
-    ~nsCookieEntry() = default;
-
-    inline ArrayType& GetCookies() { return mCookies; }
-=======
 class nsCookieEntry : public nsCookieKey {
  public:
   // Hash methods
@@ -118,78 +77,12 @@ class nsCookieEntry : public nsCookieKey {
     // allow this, since we set ALLOW_MEMMOVE to true.
     MOZ_ASSERT_UNREACHABLE("nsCookieEntry copy constructor is forbidden!");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  size_t SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
-||||||| merged common ancestors
-    size_t SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
-=======
   ~nsCookieEntry() = default;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  ArrayType mCookies;
-};
-||||||| merged common ancestors
-  private:
-    ArrayType mCookies;
-};
-=======
   inline ArrayType& GetCookies() { return mCookies; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// struct for a constant cookie for threadsafe
-struct ConstCookie {
-  ConstCookie(const nsCString &aName, const nsCString &aValue,
-              const nsCString &aHost, const nsCString &aPath, int64_t aExpiry,
-              int64_t aLastAccessed, int64_t aCreationTime, bool aIsSecure,
-              bool aIsHttpOnly, const OriginAttributes &aOriginAttributes,
-              int32_t aSameSite)
-      : name(aName),
-        value(aValue),
-        host(aHost),
-        path(aPath),
-        expiry(aExpiry),
-        lastAccessed(aLastAccessed),
-        creationTime(aCreationTime),
-        isSecure(aIsSecure),
-        isHttpOnly(aIsHttpOnly),
-        originAttributes(aOriginAttributes),
-        sameSite(aSameSite) {}
-||||||| merged common ancestors
-// struct for a constant cookie for threadsafe
-struct ConstCookie
-{
-  ConstCookie(const nsCString& aName,
-              const nsCString& aValue,
-              const nsCString& aHost,
-              const nsCString& aPath,
-              int64_t aExpiry,
-              int64_t aLastAccessed,
-              int64_t aCreationTime,
-              bool aIsSecure,
-              bool aIsHttpOnly,
-              const OriginAttributes &aOriginAttributes,
-              int32_t aSameSite)
-    : name(aName)
-    , value(aValue)
-    , host(aHost)
-    , path(aPath)
-    , expiry(aExpiry)
-    , lastAccessed(aLastAccessed)
-    , creationTime(aCreationTime)
-    , isSecure(aIsSecure)
-    , isHttpOnly(aIsHttpOnly)
-    , originAttributes(aOriginAttributes)
-    , sameSite(aSameSite)
-  {
-  }
-=======
   size_t SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
->>>>>>> upstream-releases
 
  private:
   ArrayType mCookies;
@@ -243,13 +136,7 @@ struct DBState final {
   nsCOMPtr<mozIStorageStatement> stmtReadDomain;
   // The asynchronous read listener. This is a weak ref (storage has ownership)
   // since it may need to outlive the DBState's database connection.
-<<<<<<< HEAD
-  ReadCookieDBListener *readListener;
-||||||| merged common ancestors
-  ReadCookieDBListener*                 readListener;
-=======
   ReadCookieDBListener* readListener;
->>>>>>> upstream-releases
 
   // DB completion handlers.
   nsCOMPtr<mozIStorageStatementCallback> insertListener;
@@ -281,22 +168,6 @@ enum OpenDBResult { RESULT_OK, RESULT_RETRY, RESULT_FAILURE };
  * class declaration
  ******************************************************************************/
 
-<<<<<<< HEAD
-// struct for temporarily storing cookie attributes during header parsing
-struct nsCookieAttributes {
-  nsAutoCString name;
-  nsAutoCString value;
-  nsAutoCString host;
-  nsAutoCString path;
-  nsAutoCString expires;
-  nsAutoCString maxage;
-  int64_t expiryTime;
-  bool isSession;
-  bool isSecure;
-  bool isHttpOnly;
-  int8_t sameSite;
-};
-
 class nsCookieService final : public nsICookieService,
                               public nsICookieManager,
                               public nsIObserver,
@@ -304,40 +175,6 @@ class nsCookieService final : public nsICookieService,
                               public nsIMemoryReporter {
  private:
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
-||||||| merged common ancestors
-// struct for temporarily storing cookie attributes during header parsing
-struct nsCookieAttributes
-{
-  nsAutoCString name;
-  nsAutoCString value;
-  nsAutoCString host;
-  nsAutoCString path;
-  nsAutoCString expires;
-  nsAutoCString maxage;
-  int64_t expiryTime;
-  bool isSession;
-  bool isSecure;
-  bool isHttpOnly;
-  int8_t sameSite;
-};
-
-class nsCookieService final : public nsICookieService
-                            , public nsICookieManager
-                            , public nsIObserver
-                            , public nsSupportsWeakReference
-                            , public nsIMemoryReporter
-{
-  private:
-    size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
-=======
-class nsCookieService final : public nsICookieService,
-                              public nsICookieManager,
-                              public nsIObserver,
-                              public nsSupportsWeakReference,
-                              public nsIMemoryReporter {
- private:
-  size_t SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
->>>>>>> upstream-releases
 
   static bool sSameSiteEnabled;  // cached pref
 
@@ -359,314 +196,6 @@ class nsCookieService final : public nsICookieService,
    * app.
    */
   static void AppClearDataObserverInit();
-<<<<<<< HEAD
-  static nsAutoCString GetPathFromURI(nsIURI *aHostURI);
-  static nsresult GetBaseDomain(nsIEffectiveTLDService *aTLDService,
-                                nsIURI *aHostURI, nsCString &aBaseDomain,
-                                bool &aRequireHostMatch);
-  static nsresult GetBaseDomainFromHost(nsIEffectiveTLDService *aTLDService,
-                                        const nsACString &aHost,
-                                        nsCString &aBaseDomain);
-  static bool DomainMatches(nsCookie *aCookie, const nsACString &aHost);
-  static bool IsSameSiteEnabled();
-  static bool PathMatches(nsCookie *aCookie, const nsACString &aPath);
-  static bool CanSetCookie(nsIURI *aHostURI, const nsCookieKey &aKey,
-                           nsCookieAttributes &aCookieAttributes,
-                           bool aRequireHostMatch, CookieStatus aStatus,
-                           nsDependentCString &aCookieHeader,
-                           int64_t aServerTime, bool aFromHttp,
-                           nsIChannel *aChannel, bool aLeaveSercureAlone,
-                           bool &aSetCookie,
-                           mozIThirdPartyUtil *aThirdPartyUtil);
-  static CookieStatus CheckPrefs(
-      nsICookiePermission *aPermissionServices, uint8_t aCookieBehavior,
-      bool aThirdPartySession, bool aThirdPartyNonsecureSession,
-      nsIURI *aHostURI, bool aIsForeign, bool aIsTrackingResource,
-      bool aIsFirstPartyStorageAccessGranted, const char *aCookieHeader,
-      const int aNumOfCookies, const OriginAttributes &aOriginAttrs,
-      uint32_t *aRejectedReason);
-  static int64_t ParseServerTime(const nsCString &aServerTime);
-  void GetCookiesForURI(nsIURI *aHostURI, bool aIsForeign,
-                        bool aIsTrackingResource,
-                        bool aFirstPartyStorageAccessGranted,
-                        bool aIsSafeTopLevelNav, bool aIsTopLevelForeign,
-                        bool aHttpBound, const OriginAttributes &aOriginAttrs,
-                        nsTArray<nsCookie *> &aCookieList);
-
- protected:
-  virtual ~nsCookieService();
-
-  void PrefChanged(nsIPrefBranch *aPrefBranch);
-  void InitDBStates();
-  OpenDBResult TryInitDB(bool aDeleteExistingDB);
-  void InitDBConn();
-  nsresult InitDBConnInternal();
-  nsresult CreateTableWorker(const char *aName);
-  nsresult CreateIndex();
-  nsresult CreateTable();
-  nsresult CreateTableForSchemaVersion6();
-  nsresult CreateTableForSchemaVersion5();
-  void CloseDBStates();
-  void CleanupCachedStatements();
-  void CleanupDefaultDBConnection();
-  void HandleDBClosed(DBState *aDBState);
-  void HandleCorruptDB(DBState *aDBState);
-  void RebuildCorruptDB(DBState *aDBState);
-  OpenDBResult Read();
-  mozilla::UniquePtr<ConstCookie> GetCookieFromRow(
-      mozIStorageStatement *aRow, const OriginAttributes &aOriginAttributes);
-  void EnsureReadComplete(bool aInitDBConn);
-  nsresult NormalizeHost(nsCString &aHost);
-  nsresult GetCookieStringCommon(nsIURI *aHostURI, nsIChannel *aChannel,
-                                 bool aHttpBound, char **aCookie);
-  void GetCookieStringInternal(nsIURI *aHostURI, bool aIsForeign,
-                               bool aIsTrackingResource,
-                               bool aFirstPartyStorageAccessGranted,
-                               bool aIsSafeTopLevelNav, bool aIsTopLevelForeign,
-                               bool aHttpBound,
-                               const OriginAttributes &aOriginAttrs,
-                               nsCString &aCookie);
-  nsresult SetCookieStringCommon(nsIURI *aHostURI, const char *aCookieHeader,
-                                 const char *aServerTime, nsIChannel *aChannel,
-                                 bool aFromHttp);
-  void SetCookieStringInternal(nsIURI *aHostURI, bool aIsForeign,
-                               bool aIsTrackingResource,
-                               bool aFirstPartyStorageAccessGranted,
-                               nsDependentCString &aCookieHeader,
-                               const nsCString &aServerTime, bool aFromHttp,
-                               const OriginAttributes &aOriginAttrs,
-                               nsIChannel *aChannel);
-  bool SetCookieInternal(nsIURI *aHostURI, const nsCookieKey &aKey,
-                         bool aRequireHostMatch, CookieStatus aStatus,
-                         nsDependentCString &aCookieHeader, int64_t aServerTime,
-                         bool aFromHttp, nsIChannel *aChannel);
-  void AddInternal(const nsCookieKey &aKey, nsCookie *aCookie,
-                   int64_t aCurrentTimeInUsec, nsIURI *aHostURI,
-                   const char *aCookieHeader, bool aFromHttp);
-  void RemoveCookieFromList(
-      const nsListIter &aIter,
-      mozIStorageBindingParamsArray *aParamsArray = nullptr);
-  void AddCookieToList(const nsCookieKey &aKey, nsCookie *aCookie,
-                       DBState *aDBState,
-                       mozIStorageBindingParamsArray *aParamsArray,
-                       bool aWriteToDB = true);
-  void UpdateCookieInList(nsCookie *aCookie, int64_t aLastAccessed,
-                          mozIStorageBindingParamsArray *aParamsArray);
-  static bool GetTokenValue(nsACString::const_char_iterator &aIter,
-                            nsACString::const_char_iterator &aEndIter,
-                            nsDependentCSubstring &aTokenString,
-                            nsDependentCSubstring &aTokenValue,
-                            bool &aEqualsFound);
-  static bool ParseAttributes(nsDependentCString &aCookieHeader,
-                              nsCookieAttributes &aCookie);
-  bool RequireThirdPartyCheck();
-  static bool CheckDomain(nsCookieAttributes &aCookie, nsIURI *aHostURI,
-                          const nsCString &aBaseDomain, bool aRequireHostMatch);
-  static bool CheckPath(nsCookieAttributes &aCookie, nsIURI *aHostURI);
-  static bool CheckPrefixes(nsCookieAttributes &aCookie, bool aSecureRequest);
-  static bool GetExpiry(nsCookieAttributes &aCookie, int64_t aServerTime,
-                        int64_t aCurrentTime);
-  void RemoveAllFromMemory();
-  already_AddRefed<nsIArray> PurgeCookies(int64_t aCurrentTimeInUsec);
-  bool FindCookie(const nsCookieKey &aKey, const nsCString &aHost,
-                  const nsCString &aName, const nsCString &aPath,
-                  nsListIter &aIter);
-  bool FindSecureCookie(const nsCookieKey &aKey, nsCookie *aCookie);
-  void FindStaleCookies(nsCookieEntry *aEntry, int64_t aCurrentTime,
-                        const mozilla::Maybe<bool> &aIsSecure,
-                        nsTArray<nsListIter> &aOutput, uint32_t aLimit);
-  void TelemetryForEvictingStaleCookie(nsCookie *aEvicted,
-                                       int64_t oldestCookieTime);
-  void NotifyAccepted(nsIChannel *aChannel);
-  void NotifyRejected(nsIURI *aHostURI, nsIChannel *aChannel,
-                      uint32_t aRejectedReason);
-  void NotifyThirdParty(nsIURI *aHostURI, bool aAccepted, nsIChannel *aChannel);
-  void NotifyChanged(nsISupports *aSubject, const char16_t *aData,
-                     bool aOldCookieIsSession = false, bool aFromHttp = false);
-  void NotifyPurged(nsICookie2 *aCookie);
-  already_AddRefed<nsIArray> CreatePurgeList(nsICookie2 *aCookie);
-  void CreateOrUpdatePurgeList(nsIArray **aPurgeList, nsICookie2 *aCookie);
-  void UpdateCookieOldestTime(DBState *aDBState, nsCookie *aCookie);
-
-  nsresult GetCookiesWithOriginAttributes(
-      const mozilla::OriginAttributesPattern &aPattern,
-      const nsCString &aBaseDomain, nsISimpleEnumerator **aEnumerator);
-  nsresult RemoveCookiesWithOriginAttributes(
-      const mozilla::OriginAttributesPattern &aPattern,
-      const nsCString &aBaseDomain);
-
-  /**
-   * This method is a helper that allows calling nsICookieManager::Remove()
-   * with OriginAttributes parameter.
-   * NOTE: this could be added to a public interface if we happen to need it.
-   */
-  nsresult Remove(const nsACString &aHost, const OriginAttributes &aAttrs,
-                  const nsACString &aName, const nsACString &aPath,
-                  bool aBlocked);
-
- protected:
-  // cached members.
-  nsCOMPtr<nsICookiePermission> mPermissionService;
-  nsCOMPtr<mozIThirdPartyUtil> mThirdPartyUtil;
-  nsCOMPtr<nsIEffectiveTLDService> mTLDService;
-  nsCOMPtr<nsIIDNService> mIDNService;
-  nsCOMPtr<mozIStorageService> mStorageService;
-
-  // we have two separate DB states: one for normal browsing and one for
-  // private browsing, switching between them on a per-cookie-request basis.
-  // this state encapsulates both the in-memory table and the on-disk DB.
-  // note that the private states' dbConn should always be null - we never
-  // want to be dealing with the on-disk DB when in private browsing.
-  DBState *mDBState;
-  RefPtr<DBState> mDefaultDBState;
-  RefPtr<DBState> mPrivateDBState;
-
-  // cached prefs
-  uint8_t mCookieBehavior;  // BEHAVIOR_{ACCEPT, REJECTFOREIGN, REJECT,
-                            // LIMITFOREIGN}
-  bool mThirdPartySession;
-  bool mThirdPartyNonsecureSession;
-  bool mLeaveSecureAlone;
-  uint16_t mMaxNumberOfCookies;
-  uint16_t mMaxCookiesPerHost;
-  uint16_t mCookieQuotaPerHost;
-  int64_t mCookiePurgeAge;
-
-  // thread
-  nsCOMPtr<nsIThread> mThread;
-  mozilla::Monitor mMonitor;
-  mozilla::Atomic<bool> mInitializedDBStates;
-  mozilla::Atomic<bool> mInitializedDBConn;
-  mozilla::TimeStamp mEndInitDBConn;
-  nsTArray<CookieDomainTuple> mReadArray;
-
-  // friends!
-  friend class DBListenerErrorHandler;
-  friend class ReadCookieDBListener;
-  friend class CloseCookieDBListener;
-
-  static already_AddRefed<nsCookieService> GetSingleton();
-  friend class mozilla::net::CookieServiceParent;
-||||||| merged common ancestors
-  static nsAutoCString GetPathFromURI(nsIURI *aHostURI);
-  static nsresult GetBaseDomain(nsIEffectiveTLDService *aTLDService, nsIURI *aHostURI, nsCString &aBaseDomain, bool &aRequireHostMatch);
-  static nsresult GetBaseDomainFromHost(nsIEffectiveTLDService *aTLDService, const nsACString &aHost, nsCString &aBaseDomain);
-  static bool DomainMatches(nsCookie* aCookie, const nsACString& aHost);
-  static bool IsSameSiteEnabled();
-  static bool PathMatches(nsCookie* aCookie, const nsACString& aPath);
-  static bool CanSetCookie(nsIURI *aHostURI, const nsCookieKey& aKey, nsCookieAttributes &aCookieAttributes, bool aRequireHostMatch, CookieStatus aStatus, nsDependentCString &aCookieHeader, int64_t aServerTime, bool aFromHttp, nsIChannel* aChannel, bool aLeaveSercureAlone, bool &aSetCookie, mozIThirdPartyUtil* aThirdPartyUtil);
-  static CookieStatus CheckPrefs(nsICookiePermission *aPermissionServices, uint8_t aCookieBehavior, bool aThirdPartySession, bool aThirdPartyNonsecureSession, nsIURI *aHostURI, bool aIsForeign, bool aIsTrackingResource, bool aIsFirstPartyStorageAccessGranted, const char *aCookieHeader, const int aNumOfCookies, const OriginAttributes& aOriginAttrs, uint32_t* aRejectedReason);
-  static int64_t ParseServerTime(const nsCString &aServerTime);
-  void GetCookiesForURI(nsIURI *aHostURI, bool aIsForeign, bool aIsTrackingResource, bool aFirstPartyStorageAccessGranted, bool aIsSafeTopLevelNav, bool aIsTopLevelForeign, bool aHttpBound, const OriginAttributes& aOriginAttrs, nsTArray<nsCookie*>& aCookieList);
-
-  protected:
-    virtual ~nsCookieService();
-
-    void                          PrefChanged(nsIPrefBranch *aPrefBranch);
-    void                          InitDBStates();
-    OpenDBResult                  TryInitDB(bool aDeleteExistingDB);
-    void                          InitDBConn();
-    nsresult                      InitDBConnInternal();
-    nsresult                      CreateTableWorker(const char* aName);
-    nsresult                      CreateIndex();
-    nsresult                      CreateTable();
-    nsresult                      CreateTableForSchemaVersion6();
-    nsresult                      CreateTableForSchemaVersion5();
-    void                          CloseDBStates();
-    void                          CleanupCachedStatements();
-    void                          CleanupDefaultDBConnection();
-    void                          HandleDBClosed(DBState* aDBState);
-    void                          HandleCorruptDB(DBState* aDBState);
-    void                          RebuildCorruptDB(DBState* aDBState);
-    OpenDBResult                  Read();
-    mozilla::UniquePtr<ConstCookie> GetCookieFromRow(mozIStorageStatement *aRow, const OriginAttributes &aOriginAttributes);
-    void                          EnsureReadComplete(bool aInitDBConn);
-    nsresult                      NormalizeHost(nsCString &aHost);
-    nsresult                      GetCookieStringCommon(nsIURI *aHostURI, nsIChannel *aChannel, bool aHttpBound, char** aCookie);
-    void                          GetCookieStringInternal(nsIURI *aHostURI, bool aIsForeign, bool aIsTrackingResource, bool aFirstPartyStorageAccessGranted, bool aIsSafeTopLevelNav, bool aIsTopLevelForeign, bool aHttpBound, const OriginAttributes& aOriginAttrs, nsCString &aCookie);
-    nsresult                      SetCookieStringCommon(nsIURI *aHostURI, const char *aCookieHeader, const char *aServerTime, nsIChannel *aChannel, bool aFromHttp);
-    void                          SetCookieStringInternal(nsIURI *aHostURI, bool aIsForeign, bool aIsTrackingResource, bool aFirstPartyStorageAccessGranted, nsDependentCString &aCookieHeader, const nsCString &aServerTime, bool aFromHttp, const OriginAttributes &aOriginAttrs, nsIChannel* aChannel);
-    bool                          SetCookieInternal(nsIURI *aHostURI, const nsCookieKey& aKey, bool aRequireHostMatch, CookieStatus aStatus, nsDependentCString &aCookieHeader, int64_t aServerTime, bool aFromHttp, nsIChannel* aChannel);
-    void                          AddInternal(const nsCookieKey& aKey, nsCookie *aCookie, int64_t aCurrentTimeInUsec, nsIURI *aHostURI, const char *aCookieHeader, bool aFromHttp);
-    void                          RemoveCookieFromList(const nsListIter &aIter, mozIStorageBindingParamsArray *aParamsArray = nullptr);
-    void                          AddCookieToList(const nsCookieKey& aKey, nsCookie *aCookie, DBState *aDBState, mozIStorageBindingParamsArray *aParamsArray, bool aWriteToDB = true);
-    void                          UpdateCookieInList(nsCookie *aCookie, int64_t aLastAccessed, mozIStorageBindingParamsArray *aParamsArray);
-    static bool                   GetTokenValue(nsACString::const_char_iterator &aIter, nsACString::const_char_iterator &aEndIter, nsDependentCSubstring &aTokenString, nsDependentCSubstring &aTokenValue, bool &aEqualsFound);
-    static bool                   ParseAttributes(nsDependentCString &aCookieHeader, nsCookieAttributes &aCookie);
-    bool                          RequireThirdPartyCheck();
-    static bool                   CheckDomain(nsCookieAttributes &aCookie, nsIURI *aHostURI, const nsCString &aBaseDomain, bool aRequireHostMatch);
-    static bool                   CheckPath(nsCookieAttributes &aCookie, nsIURI *aHostURI);
-    static bool                   CheckPrefixes(nsCookieAttributes &aCookie, bool aSecureRequest);
-    static bool                   GetExpiry(nsCookieAttributes &aCookie, int64_t aServerTime, int64_t aCurrentTime);
-    void                          RemoveAllFromMemory();
-    already_AddRefed<nsIArray>    PurgeCookies(int64_t aCurrentTimeInUsec);
-    bool                          FindCookie(const nsCookieKey& aKey, const nsCString& aHost, const nsCString& aName, const nsCString& aPath, nsListIter &aIter);
-    bool                          FindSecureCookie(const nsCookieKey& aKey, nsCookie* aCookie);
-    void                          FindStaleCookies(nsCookieEntry *aEntry, int64_t aCurrentTime, const mozilla::Maybe<bool> &aIsSecure, nsTArray<nsListIter>& aOutput, uint32_t aLimit);
-    void                          TelemetryForEvictingStaleCookie(nsCookie* aEvicted, int64_t oldestCookieTime);
-    void                          NotifyRejected(nsIURI *aHostURI, nsIChannel* aChannel, uint32_t aRejectedReason);
-    void                          NotifyThirdParty(nsIURI *aHostURI, bool aAccepted, nsIChannel *aChannel);
-    void                          NotifyChanged(nsISupports *aSubject, const char16_t *aData, bool aOldCookieIsSession = false, bool aFromHttp = false);
-    void                          NotifyPurged(nsICookie2* aCookie);
-    already_AddRefed<nsIArray>    CreatePurgeList(nsICookie2* aCookie);
-    void                          CreateOrUpdatePurgeList(nsIArray** aPurgeList, nsICookie2* aCookie);
-    void                          UpdateCookieOldestTime(DBState* aDBState, nsCookie* aCookie);
-
-    nsresult                      GetCookiesWithOriginAttributes(const mozilla::OriginAttributesPattern& aPattern, const nsCString& aBaseDomain, nsISimpleEnumerator **aEnumerator);
-    nsresult                      RemoveCookiesWithOriginAttributes(const mozilla::OriginAttributesPattern& aPattern, const nsCString& aBaseDomain);
-
-    /**
-     * This method is a helper that allows calling nsICookieManager::Remove()
-     * with OriginAttributes parameter.
-     * NOTE: this could be added to a public interface if we happen to need it.
-     */
-    nsresult Remove(const nsACString& aHost, const OriginAttributes& aAttrs,
-                    const nsACString& aName, const nsACString& aPath,
-                    bool aBlocked);
-
-  protected:
-    // cached members.
-    nsCOMPtr<nsICookiePermission>    mPermissionService;
-    nsCOMPtr<mozIThirdPartyUtil>     mThirdPartyUtil;
-    nsCOMPtr<nsIEffectiveTLDService> mTLDService;
-    nsCOMPtr<nsIIDNService>          mIDNService;
-    nsCOMPtr<mozIStorageService>     mStorageService;
-
-    // we have two separate DB states: one for normal browsing and one for
-    // private browsing, switching between them on a per-cookie-request basis.
-    // this state encapsulates both the in-memory table and the on-disk DB.
-    // note that the private states' dbConn should always be null - we never
-    // want to be dealing with the on-disk DB when in private browsing.
-    DBState                      *mDBState;
-    RefPtr<DBState>             mDefaultDBState;
-    RefPtr<DBState>             mPrivateDBState;
-
-    // cached prefs
-    uint8_t                       mCookieBehavior; // BEHAVIOR_{ACCEPT, REJECTFOREIGN, REJECT, LIMITFOREIGN}
-    bool                          mThirdPartySession;
-    bool                          mThirdPartyNonsecureSession;
-    bool                          mLeaveSecureAlone;
-    uint16_t                      mMaxNumberOfCookies;
-    uint16_t                      mMaxCookiesPerHost;
-    uint16_t                      mCookieQuotaPerHost;
-    int64_t                       mCookiePurgeAge;
-
-    // thread
-    nsCOMPtr<nsIThread>           mThread;
-    mozilla::Monitor              mMonitor;
-    mozilla::Atomic<bool>         mInitializedDBStates;
-    mozilla::Atomic<bool>         mInitializedDBConn;
-    mozilla::TimeStamp            mEndInitDBConn;
-    nsTArray<CookieDomainTuple>   mReadArray;
-
-    // friends!
-    friend class DBListenerErrorHandler;
-    friend class ReadCookieDBListener;
-    friend class CloseCookieDBListener;
-
-    static already_AddRefed<nsCookieService> GetSingleton();
-    friend class mozilla::net::CookieServiceParent;
-=======
   static nsAutoCString GetPathFromURI(nsIURI* aHostURI);
   static nsresult GetBaseDomain(nsIEffectiveTLDService* aTLDService,
                                 nsIURI* aHostURI, nsCString& aBaseDomain,
@@ -857,7 +386,6 @@ class nsCookieService final : public nsICookieService,
 
   static already_AddRefed<nsCookieService> GetSingleton();
   friend class mozilla::net::CookieServiceParent;
->>>>>>> upstream-releases
 };
 
 #endif  // nsCookieService_h__

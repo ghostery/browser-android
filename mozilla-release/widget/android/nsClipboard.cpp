@@ -22,46 +22,6 @@ NS_IMPL_ISUPPORTS(nsClipboard, nsIClipboard)
 nsClipboard::nsClipboard() {}
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsClipboard::SetData(nsITransferable *aTransferable, nsIClipboardOwner *anOwner,
-                     int32_t aWhichClipboard) {
-  if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
-
-  nsCOMPtr<nsISupports> tmp;
-  nsresult rv =
-      aTransferable->GetTransferData(kUnicodeMime, getter_AddRefs(tmp));
-  NS_ENSURE_SUCCESS(rv, rv);
-  nsCOMPtr<nsISupportsString> supportsString = do_QueryInterface(tmp);
-  // No support for non-text data
-  NS_ENSURE_TRUE(supportsString, NS_ERROR_NOT_IMPLEMENTED);
-  nsAutoString buffer;
-  supportsString->GetData(buffer);
-
-  java::Clipboard::SetText(java::GeckoAppShell::GetApplicationContext(),
-                           buffer);
-  return NS_OK;
-||||||| merged common ancestors
-nsClipboard::SetData(nsITransferable *aTransferable,
-                     nsIClipboardOwner *anOwner, int32_t aWhichClipboard)
-{
-  if (aWhichClipboard != kGlobalClipboard)
-    return NS_ERROR_NOT_IMPLEMENTED;
-
-  nsCOMPtr<nsISupports> tmp;
-  uint32_t len;
-  nsresult rv  = aTransferable->GetTransferData(kUnicodeMime, getter_AddRefs(tmp),
-                                                &len);
-  NS_ENSURE_SUCCESS(rv, rv);
-  nsCOMPtr<nsISupportsString> supportsString = do_QueryInterface(tmp);
-  // No support for non-text data
-  NS_ENSURE_TRUE(supportsString, NS_ERROR_NOT_IMPLEMENTED);
-  nsAutoString buffer;
-  supportsString->GetData(buffer);
-
-  java::Clipboard::SetText(java::GeckoAppShell::GetApplicationContext(),
-                           buffer);
-  return NS_OK;
-=======
 nsClipboard::SetData(nsITransferable* aTransferable, nsIClipboardOwner* anOwner,
                      int32_t aWhichClipboard) {
   if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
@@ -113,66 +73,11 @@ nsClipboard::SetData(nsITransferable* aTransferable, nsIClipboardOwner* anOwner,
   }
 
   return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsClipboard::GetData(nsITransferable *aTransferable, int32_t aWhichClipboard) {
-  if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
-
-  nsAutoString buffer;
-  if (!AndroidBridge::Bridge()) return NS_ERROR_NOT_IMPLEMENTED;
-  if (!AndroidBridge::Bridge()->GetClipboardText(buffer))
-    return NS_ERROR_UNEXPECTED;
-
-  nsresult rv;
-  nsCOMPtr<nsISupportsString> dataWrapper =
-      do_CreateInstance(NS_SUPPORTS_STRING_CONTRACTID, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = dataWrapper->SetData(buffer);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // If our data flavor has already been added, this will fail. But we don't
-  // care
-  aTransferable->AddDataFlavor(kUnicodeMime);
-
-  nsCOMPtr<nsISupports> nsisupportsDataWrapper = do_QueryInterface(dataWrapper);
-  rv = aTransferable->SetTransferData(kUnicodeMime, nsisupportsDataWrapper);
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-nsClipboard::GetData(nsITransferable *aTransferable, int32_t aWhichClipboard)
-{
-  if (aWhichClipboard != kGlobalClipboard)
-    return NS_ERROR_NOT_IMPLEMENTED;
-
-  nsAutoString buffer;
-  if (!AndroidBridge::Bridge())
-    return NS_ERROR_NOT_IMPLEMENTED;
-  if (!AndroidBridge::Bridge()->GetClipboardText(buffer))
-    return NS_ERROR_UNEXPECTED;
-
-  nsresult rv;
-  nsCOMPtr<nsISupportsString> dataWrapper =
-    do_CreateInstance(NS_SUPPORTS_STRING_CONTRACTID, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = dataWrapper->SetData(buffer);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // If our data flavor has already been added, this will fail. But we don't care
-  aTransferable->AddDataFlavor(kUnicodeMime);
-
-  nsCOMPtr<nsISupports> nsisupportsDataWrapper =
-    do_QueryInterface(dataWrapper);
-  rv = aTransferable->SetTransferData(kUnicodeMime, nsisupportsDataWrapper,
-                                      buffer.Length() * sizeof(char16_t));
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
 nsClipboard::GetData(nsITransferable* aTransferable, int32_t aWhichClipboard) {
   if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 
   if (!jni::IsAvailable()) {
     return NS_ERROR_NOT_AVAILABLE;
@@ -208,15 +113,6 @@ nsClipboard::GetData(nsITransferable* aTransferable, int32_t aWhichClipboard) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsClipboard::EmptyClipboard(int32_t aWhichClipboard) {
-  if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsClipboard::EmptyClipboard(int32_t aWhichClipboard)
-{
-  if (aWhichClipboard != kGlobalClipboard)
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsClipboard::EmptyClipboard(int32_t aWhichClipboard) {
   if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
 
@@ -224,44 +120,15 @@ nsClipboard::EmptyClipboard(int32_t aWhichClipboard) {
     return NS_ERROR_NOT_AVAILABLE;
   }
 
->>>>>>> upstream-releases
   java::Clipboard::ClearText(java::GeckoAppShell::GetApplicationContext());
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsClipboard::HasDataMatchingFlavors(const char **aFlavorList, uint32_t aLength,
-                                    int32_t aWhichClipboard, bool *aHasText) {
-||||||| merged common ancestors
-nsClipboard::HasDataMatchingFlavors(const char **aFlavorList,
-                                    uint32_t aLength, int32_t aWhichClipboard,
-                                    bool *aHasText)
-{
-=======
 nsClipboard::HasDataMatchingFlavors(const nsTArray<nsCString>& aFlavorList,
                                     int32_t aWhichClipboard, bool* aHasText) {
->>>>>>> upstream-releases
   *aHasText = false;
-<<<<<<< HEAD
-  if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
-
-  for (uint32_t k = 0; k < aLength; k++) {
-    if (strcmp(aFlavorList[k], kUnicodeMime) == 0) {
-      *aHasText = java::Clipboard::HasText(
-          java::GeckoAppShell::GetApplicationContext());
-      break;
-||||||| merged common ancestors
-  if (aWhichClipboard != kGlobalClipboard)
-    return NS_ERROR_NOT_IMPLEMENTED;
-
-  for (uint32_t k = 0; k < aLength; k++) {
-    if (strcmp(aFlavorList[k], kUnicodeMime) == 0) {
-      *aHasText = java::Clipboard::HasText(
-          java::GeckoAppShell::GetApplicationContext());
-      break;
-=======
   if (aWhichClipboard != kGlobalClipboard) return NS_ERROR_NOT_IMPLEMENTED;
 
   if (!jni::IsAvailable()) {
@@ -275,7 +142,6 @@ nsClipboard::HasDataMatchingFlavors(const nsTArray<nsCString>& aFlavorList,
     if (hasData) {
       *aHasText = true;
       return NS_OK;
->>>>>>> upstream-releases
     }
   }
 
@@ -283,27 +149,13 @@ nsClipboard::HasDataMatchingFlavors(const nsTArray<nsCString>& aFlavorList,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsClipboard::SupportsSelectionClipboard(bool *aIsSupported) {
-||||||| merged common ancestors
-nsClipboard::SupportsSelectionClipboard(bool *aIsSupported)
-{
-=======
 nsClipboard::SupportsSelectionClipboard(bool* aIsSupported) {
->>>>>>> upstream-releases
   *aIsSupported = false;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsClipboard::SupportsFindClipboard(bool *_retval) {
-||||||| merged common ancestors
-nsClipboard::SupportsFindClipboard(bool* _retval)
-{
-=======
 nsClipboard::SupportsFindClipboard(bool* _retval) {
->>>>>>> upstream-releases
   *_retval = false;
   return NS_OK;
 }

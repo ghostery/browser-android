@@ -478,33 +478,19 @@ var Impl = {
   },
 
   getHistograms: function getHistograms(clearSubsession) {
-<<<<<<< HEAD
-    return Telemetry.getSnapshotForHistograms("main", clearSubsession, !this._testing);
-||||||| merged common ancestors
-    let hls = Telemetry.snapshotHistograms(this.getDatasetType(), clearSubsession);
-    return TelemetryUtils.packHistograms(hls, this._testing);
-=======
     return Telemetry.getSnapshotForHistograms(
       "main",
       clearSubsession,
       !this._testing
     );
->>>>>>> upstream-releases
   },
 
   getKeyedHistograms(clearSubsession) {
-<<<<<<< HEAD
-    return Telemetry.getSnapshotForKeyedHistograms("main", clearSubsession, !this._testing);
-||||||| merged common ancestors
-    let khs = Telemetry.snapshotKeyedHistograms(this.getDatasetType(), clearSubsession);
-    return TelemetryUtils.packKeyedHistograms(khs, this._testing);
-=======
     return Telemetry.getSnapshotForKeyedHistograms(
       "main",
       clearSubsession,
       !this._testing
     );
->>>>>>> upstream-releases
   },
 
   /**
@@ -523,34 +509,6 @@ var Impl = {
       return {};
     }
 
-<<<<<<< HEAD
-    let scalarsSnapshot = keyed ?
-      Telemetry.getSnapshotForKeyedScalars("main", clearSubsession, !this._testing) :
-      Telemetry.getSnapshotForScalars("main", clearSubsession, !this._testing);
-
-    return scalarsSnapshot;
-||||||| merged common ancestors
-    let scalarsSnapshot = keyed ?
-      Telemetry.snapshotKeyedScalars(this.getDatasetType(), clearSubsession) :
-      Telemetry.snapshotScalars(this.getDatasetType(), clearSubsession);
-
-    // Don't return the test scalars.
-    let ret = {};
-    for (let processName in scalarsSnapshot) {
-      for (let name in scalarsSnapshot[processName]) {
-        if (name.startsWith("telemetry.test") && !this._testing) {
-          continue;
-        }
-        // Finally arrange the data in the returned object.
-        if (!(processName in ret)) {
-          ret[processName] = {};
-        }
-        ret[processName][name] = scalarsSnapshot[processName][name];
-      }
-    }
-
-    return ret;
-=======
     let scalarsSnapshot = keyed
       ? Telemetry.getSnapshotForKeyedScalars(
           "main",
@@ -564,7 +522,6 @@ var Impl = {
         );
 
     return scalarsSnapshot;
->>>>>>> upstream-releases
   },
 
   /**
@@ -1481,98 +1438,4 @@ var Impl = {
     this._newProfilePingSent = true;
     return TelemetryStorage.saveSessionData(this._getSessionDataObject());
   },
-<<<<<<< HEAD
-
-  /**
-   * Encodes data for experimental Prio pilot project.
-   *
-   * @param {Object} measurements - measurements taken until now. Histograms will have been cleared if
-   *                 this is a subsession, so use this to get the correct values.
-   * @return {Object} An object containing Prio-encoded data.
-   */
-  _prioEncode(payloadObj) {
-    // First, map the Telemetry histogram names to the params PrioEncoder expects.
-    const prioEncodedHistograms = [
-      "BROWSER_IS_USER_DEFAULT",
-      "NEWTAB_PAGE_ENABLED",
-      "PDF_VIEWER_USED",
-    ];
-
-    // Build list of Prio parameters, using the first value recorded in each histogram.
-    let prioParams = { booleans: [] };
-    for (const [i, histogramName] of prioEncodedHistograms.entries()) {
-      try {
-        if (histogramName in payloadObj.histograms) {
-          const histogram = payloadObj.histograms[histogramName];
-          prioParams.booleans[i] = Boolean(histogram.sum);
-        } else {
-          prioParams.booleans[i] = false;
-        }
-
-      } catch (ex) {
-        this._log.error(ex);
-      }
-    }
-
-    // Prio encode the data and add to payload.
-    const batchID = Services.appinfo.appBuildID;
-
-    let prioEncodedData;
-
-    try {
-      prioEncodedData = Policy.prioEncode(batchID, prioParams);
-    } catch (ex) {
-      this._log.error(ex);
-    }
-
-    return prioEncodedData;
-  },
-||||||| merged common ancestors
-
-  /**
-   * Encodes data for experimental Prio pilot project.
-   *
-   * @param {Object} measurements - measurements taken until now. Histograms will have been cleared if
-   *                 this is a subsession, so use this to get the correct values.
-   * @return {Object} An object containing Prio-encoded data.
-   */
-  _prioEncode(payloadObj) {
-    // First, map the Telemetry histogram names to the params PrioEncoder expects.
-    const prioEncodedHistograms = {
-      "BROWSER_IS_USER_DEFAULT": "browserIsUserDefault",
-      "NEWTAB_PAGE_ENABLED": "newTabPageEnabled",
-      "PDF_VIEWER_USED": "pdfViewerUsed",
-    };
-
-    // Build list of Prio parameters, using the first value recorded in each histogram.
-    let prioParams = {};
-    for (const [histogramName, prioName] of Object.entries(prioEncodedHistograms)) {
-      try {
-        if (histogramName in payloadObj.histograms) {
-          const histogram = payloadObj.histograms[histogramName];
-          prioParams[prioName] = Boolean(histogram.sum);
-        } else {
-          prioParams[prioName] = false;
-        }
-
-      } catch (ex) {
-        this._log.error(ex);
-      }
-    }
-
-    // Prio encode the data and add to payload.
-    const batchID = Services.appinfo.appBuildID;
-
-    let prioEncodedData;
-
-    try {
-      prioEncodedData = Policy.prioEncode(batchID, prioParams);
-    } catch (ex) {
-      this._log.error(ex);
-    }
-
-    return prioEncodedData;
-  },
-=======
->>>>>>> upstream-releases
 };

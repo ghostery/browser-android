@@ -14,20 +14,10 @@ class APZHitTestingTester : public APZCTreeManagerTester {
   ScreenToParentLayerMatrix4x4 transformToApzc;
   ParentLayerToScreenMatrix4x4 transformToGecko;
 
-<<<<<<< HEAD
-  already_AddRefed<AsyncPanZoomController> GetTargetAPZC(
-      const ScreenPoint& aPoint) {
-    RefPtr<AsyncPanZoomController> hit =
-        manager->GetTargetAPZC(aPoint, nullptr);
-||||||| merged common ancestors
-  already_AddRefed<AsyncPanZoomController> GetTargetAPZC(const ScreenPoint& aPoint) {
-    RefPtr<AsyncPanZoomController> hit = manager->GetTargetAPZC(aPoint, nullptr);
-=======
   already_AddRefed<AsyncPanZoomController> GetTargetAPZC(
       const ScreenPoint& aPoint) {
     RefPtr<AsyncPanZoomController> hit =
         manager->GetTargetAPZC(aPoint, nullptr, nullptr);
->>>>>>> upstream-releases
     if (hit) {
       transformToApzc = manager->GetScreenToApzcTransform(hit.get());
       transformToGecko = manager->GetApzcToGeckoTransform(hit.get());
@@ -156,18 +146,9 @@ TEST_F(APZHitTestingTester, HitTesting1) {
   uint32_t paintSequenceNumber = 0;
 
   // Now we have a root APZC that will match the page
-<<<<<<< HEAD
-  SetScrollableFrameMetrics(root, ScrollableLayerGuid::START_SCROLL_ID);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0},
-                                paintSequenceNumber++);
-||||||| merged common ancestors
-  SetScrollableFrameMetrics(root, FrameMetrics::START_SCROLL_ID);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, paintSequenceNumber++);
-=======
   SetScrollableFrameMetrics(root, ScrollableLayerGuid::START_SCROLL_ID);
   manager->UpdateHitTestingTree(root, false, LayersId{0},
                                 paintSequenceNumber++);
->>>>>>> upstream-releases
   hit = GetTargetAPZC(ScreenPoint(15, 15));
   EXPECT_EQ(ApzcOf(root), hit.get());
   // expect hit point at LayerIntPoint(15, 15)
@@ -177,20 +158,10 @@ TEST_F(APZHitTestingTester, HitTesting1) {
             transformToGecko.TransformPoint(ParentLayerPoint(15, 15)));
 
   // Now we have a sub APZC with a better fit
-<<<<<<< HEAD
-  SetScrollableFrameMetrics(layers[3],
-                            ScrollableLayerGuid::START_SCROLL_ID + 1);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0},
-                                paintSequenceNumber++);
-||||||| merged common ancestors
-  SetScrollableFrameMetrics(layers[3], FrameMetrics::START_SCROLL_ID + 1);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, paintSequenceNumber++);
-=======
   SetScrollableFrameMetrics(layers[3],
                             ScrollableLayerGuid::START_SCROLL_ID + 1);
   manager->UpdateHitTestingTree(root, false, LayersId{0},
                                 paintSequenceNumber++);
->>>>>>> upstream-releases
   EXPECT_NE(ApzcOf(root), ApzcOf(layers[3]));
   hit = GetTargetAPZC(ScreenPoint(25, 25));
   EXPECT_EQ(ApzcOf(layers[3]), hit.get());
@@ -206,20 +177,10 @@ TEST_F(APZHitTestingTester, HitTesting1) {
   EXPECT_EQ(ApzcOf(root), hit.get());
 
   // Now test hit testing when we have two scrollable layers
-<<<<<<< HEAD
-  SetScrollableFrameMetrics(layers[4],
-                            ScrollableLayerGuid::START_SCROLL_ID + 2);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0},
-                                paintSequenceNumber++);
-||||||| merged common ancestors
-  SetScrollableFrameMetrics(layers[4], FrameMetrics::START_SCROLL_ID + 2);
-  manager->UpdateHitTestingTree(LayersId{0}, root, false, LayersId{0}, paintSequenceNumber++);
-=======
   SetScrollableFrameMetrics(layers[4],
                             ScrollableLayerGuid::START_SCROLL_ID + 2);
   manager->UpdateHitTestingTree(root, false, LayersId{0},
                                 paintSequenceNumber++);
->>>>>>> upstream-releases
   hit = GetTargetAPZC(ScreenPoint(15, 15));
   EXPECT_EQ(ApzcOf(layers[4]), hit.get());
   // expect hit point at LayerIntPoint(15, 15)
@@ -251,15 +212,8 @@ TEST_F(APZHitTestingTester, HitTesting1) {
 // A more involved hit testing test that involves css and async transforms.
 TEST_F(APZHitTestingTester, HitTesting2) {
   SCOPED_GFX_VAR(UseWebRender, bool, false);
-<<<<<<< HEAD
-  SCOPED_GFX_PREF(APZVelocityBias, float,
-                  0.0);  // Velocity bias can cause extra repaint requests
-||||||| merged common ancestors
-  SCOPED_GFX_PREF(APZVelocityBias, float, 0.0); // Velocity bias can cause extra repaint requests
-=======
   // Velocity bias can cause extra repaint requests.
   SCOPED_GFX_PREF_FLOAT("apz.velocity_bias", 0.0);
->>>>>>> upstream-releases
 
   CreateHitTesting2LayerTree();
   ScopedLayerTreeRegistration registration(manager, LayersId{0}, root, mcc);

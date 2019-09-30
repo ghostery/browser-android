@@ -52,38 +52,9 @@ void ShareableCanvasRenderer::Initialize(const CanvasInitializeData& aData) {
   }
 
   UniquePtr<gl::SurfaceFactory> factory =
-<<<<<<< HEAD
-      gl::GLScreenBuffer::CreateFactory(mGLContext, caps, forwarder, mFlags);
-
-  if (mGLFrontbuffer) {
-    // We're using a source other than the one in the default screen.
-    // (SkiaGL)
-    mFactory = std::move(factory);
-    if (!mFactory) {
-      // Absolutely must have a factory here, so create a basic one
-      mFactory = MakeUnique<gl::SurfaceFactory_Basic>(mGLContext, caps, mFlags);
-    }
-  } else {
-    if (factory) screen->Morph(std::move(factory));
-||||||| merged common ancestors
-    gl::GLScreenBuffer::CreateFactory(mGLContext, caps, forwarder, mFlags);
-
-  if (mGLFrontbuffer) {
-    // We're using a source other than the one in the default screen.
-    // (SkiaGL)
-    mFactory = std::move(factory);
-    if (!mFactory) {
-      // Absolutely must have a factory here, so create a basic one
-      mFactory = MakeUnique<gl::SurfaceFactory_Basic>(mGLContext, caps, mFlags);
-    }
-  } else {
-    if (factory)
-      screen->Morph(std::move(factory));
-=======
       gl::GLScreenBuffer::CreateFactory(mGLContext, caps, forwarder, mFlags);
   if (factory) {
     screen->Morph(std::move(factory));
->>>>>>> upstream-releases
   }
 }
 
@@ -206,16 +177,8 @@ CanvasClient::CanvasClientType ShareableCanvasRenderer::GetCanvasClientType() {
   return CanvasClient::CanvasClientSurface;
 }
 
-<<<<<<< HEAD
-void ShareableCanvasRenderer::UpdateCompositableClient() {
-||||||| merged common ancestors
-void
-ShareableCanvasRenderer::UpdateCompositableClient()
-{
-=======
 void ShareableCanvasRenderer::UpdateCompositableClient(
     wr::RenderRoot aRenderRoot) {
->>>>>>> upstream-releases
   if (!CreateCompositable()) {
     return;
   }

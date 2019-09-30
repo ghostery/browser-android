@@ -20,63 +20,27 @@ namespace CacheFileUtils {
 
 extern const char* kAltDataKey;
 
-<<<<<<< HEAD
-already_AddRefed<nsILoadContextInfo> ParseKey(const nsACString &aKey,
-                                              nsACString *aIdEnhance = nullptr,
-                                              nsACString *aURISpec = nullptr);
-||||||| merged common ancestors
-already_AddRefed<nsILoadContextInfo>
-ParseKey(const nsACString& aKey,
-         nsACString* aIdEnhance = nullptr,
-         nsACString* aURISpec = nullptr);
-=======
 already_AddRefed<nsILoadContextInfo> ParseKey(const nsACString& aKey,
                                               nsACString* aIdEnhance = nullptr,
                                               nsACString* aURISpec = nullptr);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void AppendKeyPrefix(nsILoadContextInfo *aInfo, nsACString &_retval);
-||||||| merged common ancestors
-void
-AppendKeyPrefix(nsILoadContextInfo *aInfo, nsACString &_retval);
-=======
 void AppendKeyPrefix(nsILoadContextInfo* aInfo, nsACString& _retval);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void AppendTagWithValue(nsACString &aTarget, char const aTag,
-                        const nsACString &aValue);
-||||||| merged common ancestors
-void
-AppendTagWithValue(nsACString& aTarget, char const aTag, const nsACString& aValue);
-=======
 void AppendTagWithValue(nsACString& aTarget, char const aTag,
                         const nsACString& aValue);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult KeyMatchesLoadContextInfo(const nsACString &aKey,
-                                   nsILoadContextInfo *aInfo, bool *_retval);
-||||||| merged common ancestors
-nsresult
-KeyMatchesLoadContextInfo(const nsACString &aKey,
-                          nsILoadContextInfo *aInfo,
-                          bool *_retval);
-=======
 nsresult KeyMatchesLoadContextInfo(const nsACString& aKey,
                                    nsILoadContextInfo* aInfo, bool* _retval);
->>>>>>> upstream-releases
 
 class ValidityPair {
  public:
   ValidityPair(uint32_t aOffset, uint32_t aLen);
 
-  ValidityPair &operator=(const ValidityPair &aOther) = default;
+  ValidityPair& operator=(const ValidityPair& aOther) = default;
 
   // Returns true when two pairs can be merged, i.e. they do overlap or the one
   // ends exactly where the other begins.
-  bool CanBeMerged(const ValidityPair &aOther) const;
+  bool CanBeMerged(const ValidityPair& aOther) const;
 
   // Returns true when aOffset is placed anywhere in the validity interval or
   // exactly after its end.
@@ -85,10 +49,10 @@ class ValidityPair {
   // Returns true when this pair has lower offset than the other pair. In case
   // both pairs have the same offset it returns true when this pair has a
   // shorter length.
-  bool LessThan(const ValidityPair &aOther) const;
+  bool LessThan(const ValidityPair& aOther) const;
 
   // Merges two pair into one.
-  void Merge(const ValidityPair &aOther);
+  void Merge(const ValidityPair& aOther);
 
   uint32_t Offset() const { return mOffset; }
   uint32_t Len() const { return mLen; }
@@ -115,7 +79,7 @@ class ValidityMap {
 
   size_t SizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
 
-  ValidityPair &operator[](uint32_t aIdx);
+  ValidityPair& operator[](uint32_t aIdx);
 
  private:
   nsTArray<ValidityPair> mMap;
@@ -190,18 +154,8 @@ class CachePerfStats {
   static void AddValue(EDataType aType, uint32_t aValue, bool aShortOnly);
   static uint32_t GetAverage(EDataType aType, bool aFiltered);
   static uint32_t GetStdDev(EDataType aType, bool aFiltered);
-<<<<<<< HEAD
-  static bool IsCacheSlow();
-  static void GetSlowStats(uint32_t *aSlow, uint32_t *aNotSlow);
-||||||| merged common ancestors
-  static bool     IsCacheSlow();
-  static void     GetSlowStats(uint32_t *aSlow, uint32_t *aNotSlow);
-
-private:
-=======
   static bool IsCacheSlow();
   static void GetSlowStats(uint32_t* aSlow, uint32_t* aNotSlow);
->>>>>>> upstream-releases
 
  private:
   // This class computes average and standard deviation, it returns an
@@ -255,32 +209,6 @@ private:
   static uint32_t sCacheNotSlowCnt;
 };
 
-<<<<<<< HEAD
-void FreeBuffer(void *aBuf);
-
-nsresult ParseAlternativeDataInfo(const char *aInfo, int64_t *_offset,
-                                  nsACString *_type);
-
-void BuildAlternativeDataInfo(const char *aInfo, int64_t aOffset,
-                              nsACString &_retval);
-
-}  // namespace CacheFileUtils
-}  // namespace net
-}  // namespace mozilla
-||||||| merged common ancestors
-void
-FreeBuffer(void *aBuf);
-
-nsresult
-ParseAlternativeDataInfo(const char *aInfo, int64_t *_offset, nsACString *_type);
-
-void
-BuildAlternativeDataInfo(const char *aInfo, int64_t aOffset, nsACString &_retval);
-
-} // namespace CacheFileUtils
-} // namespace net
-} // namespace mozilla
-=======
 void FreeBuffer(void* aBuf);
 
 nsresult ParseAlternativeDataInfo(const char* aInfo, int64_t* _offset,
@@ -309,6 +237,5 @@ void BuildOrAppendBaseDomainAccessInfo(const char* aOldInfo, uint32_t aTrID,
 }  // namespace CacheFileUtils
 }  // namespace net
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif

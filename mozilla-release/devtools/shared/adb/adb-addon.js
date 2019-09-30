@@ -106,20 +106,12 @@ class ADBAddon extends EventEmitter {
    *        String passed to the AddonManager for telemetry.
    */
   async install(source) {
-<<<<<<< HEAD
-    if (!source) {
-      throw new Error("Missing mandatory `source` parameter for adb-addon.install");
-    }
-
-||||||| merged common ancestors
-=======
     if (!source) {
       throw new Error(
         "Missing mandatory `source` parameter for adb-addon.install"
       );
     }
 
->>>>>>> upstream-releases
     const addon = await this._getAddon();
     if (addon && !addon.userDisabled) {
       this.status = ADB_ADDON_STATES.INSTALLED;

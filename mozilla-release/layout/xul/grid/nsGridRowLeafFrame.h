@@ -42,22 +42,10 @@ class nsGridRowLeafFrame : public nsBoxFrame {
   }
 #endif
 
-<<<<<<< HEAD
-  nsGridRowLeafFrame(ComputedStyle* aStyle, bool aIsRoot,
-                     nsBoxLayout* aLayoutManager, ClassID aID = kClassID)
-      : nsBoxFrame(aStyle, aID, aIsRoot, aLayoutManager) {}
-||||||| merged common ancestors
-  nsGridRowLeafFrame(ComputedStyle* aStyle,
-                     bool aIsRoot,
-                     nsBoxLayout* aLayoutManager,
-                     ClassID aID = kClassID) :
-    nsBoxFrame(aStyle, aID, aIsRoot, aLayoutManager) {}
-=======
   nsGridRowLeafFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                      bool aIsRoot, nsBoxLayout* aLayoutManager,
                      ClassID aID = kClassID)
       : nsBoxFrame(aStyle, aPresContext, aID, aIsRoot, aLayoutManager) {}
->>>>>>> upstream-releases
 
   virtual nsresult GetXULBorderAndPadding(nsMargin& aBorderAndPadding) override;
 

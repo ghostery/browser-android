@@ -238,15 +238,7 @@ bool IDBIndex::IsAutoLocale() const {
   return mMetadata->autoLocale();
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowInner* IDBIndex::GetParentObject() const {
-||||||| merged common ancestors
-nsPIDOMWindowInner*
-IDBIndex::GetParentObject() const
-{
-=======
 nsIGlobalObject* IDBIndex::GetParentObject() const {
->>>>>>> upstream-releases
   AssertIsOnOwningThread();
 
   return mObjectStore->GetParentObject();

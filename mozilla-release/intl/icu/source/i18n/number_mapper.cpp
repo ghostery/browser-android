@@ -243,21 +243,6 @@ MacroProps NumberPropertyMapper::oldToNew(const DecimalFormatProperties& propert
                 // Patterns like "#.##E0" (no zeros in the mantissa), which mean round to maxFrac+1
                 macros.precision = Precision::constructSignificant(1, maxFrac_ + 1);
             } else {
-<<<<<<< HEAD
-                int maxSig_ = minInt_ + maxFrac_;
-                // Bug #20058: if maxInt_ > minInt_ > 1, then minInt_ should be 1.
-                if (maxInt_ > minInt_ && minInt_ > 1) {
-                    minInt_ = 1;
-                }
-                int minSig_ = minInt_ + minFrac_;
-                // To avoid regression, maxSig is not reset when minInt_ set to 1.
-                // TODO: Reset maxSig_ = 1 + minFrac_ to follow the spec.
-                macros.precision = Precision::constructSignificant(minSig_, maxSig_).withMode(roundingMode);
-||||||| merged common ancestors
-                // All other scientific patterns, which mean round to minInt+maxFrac
-                macros.precision = Precision::constructSignificant(
-                        minInt_ + minFrac_, minInt_ + maxFrac_).withMode(roundingMode);
-=======
                 int maxSig_ = minInt_ + maxFrac_;
                 // Bug #20058: if maxInt_ > minInt_ > 1, then minInt_ should be 1.
                 if (maxInt_ > minInt_ && minInt_ > 1) {
@@ -267,7 +252,6 @@ MacroProps NumberPropertyMapper::oldToNew(const DecimalFormatProperties& propert
                 // To avoid regression, maxSig is not reset when minInt_ set to 1.
                 // TODO: Reset maxSig_ = 1 + minFrac_ to follow the spec.
                 macros.precision = Precision::constructSignificant(minSig_, maxSig_);
->>>>>>> upstream-releases
             }
             macros.precision.fRoundingMode = roundingMode;
         }

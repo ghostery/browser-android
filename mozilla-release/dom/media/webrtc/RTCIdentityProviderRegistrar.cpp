@@ -28,15 +28,7 @@ RTCIdentityProviderRegistrar::RTCIdentityProviderRegistrar(
       mGenerateAssertionCallback(nullptr),
       mValidateAssertionCallback(nullptr) {}
 
-<<<<<<< HEAD
-RTCIdentityProviderRegistrar::~RTCIdentityProviderRegistrar() {}
-||||||| merged common ancestors
-RTCIdentityProviderRegistrar::~RTCIdentityProviderRegistrar()
-{
-}
-=======
 RTCIdentityProviderRegistrar::~RTCIdentityProviderRegistrar() = default;
->>>>>>> upstream-releases
 
 nsIGlobalObject* RTCIdentityProviderRegistrar::GetParentObject() const {
   return mGlobal;

@@ -16,13 +16,6 @@ XPIDL_MODULE = 'places'
 if CONFIG['MOZ_PLACES']:
     XPIDL_SOURCES += [
         'mozIAsyncHistory.idl',
-<<<<<<< HEAD
-        'mozIColorAnalyzer.idl',
-||||||| merged common ancestors
-        'mozIAsyncLivemarks.idl',
-        'mozIColorAnalyzer.idl',
-=======
->>>>>>> upstream-releases
         'mozIPlacesAutoComplete.idl',
         'mozIPlacesPendingOperation.idl',
         'mozISyncedBookmarksMirror.idl',
@@ -83,29 +76,8 @@ if CONFIG['MOZ_PLACES']:
         'UnifiedComplete.jsm',
     ]
 
-<<<<<<< HEAD
-    EXTRA_COMPONENTS += [
-        'ColorAnalyzer.js',
-        'nsPlacesExpiration.js',
-        'nsTaggingService.js',
-        'PageIconProtocolHandler.js',
-        'PlacesCategoriesStarter.js',
-        'toolkitplaces.manifest',
-        'UnifiedComplete.js',
-||||||| merged common ancestors
-    EXTRA_COMPONENTS += [
-        'ColorAnalyzer.js',
-        'nsLivemarkService.js',
-        'nsPlacesExpiration.js',
-        'nsTaggingService.js',
-        'PageIconProtocolHandler.js',
-        'PlacesCategoriesStarter.js',
-        'toolkitplaces.manifest',
-        'UnifiedComplete.js',
-=======
     XPCOM_MANIFESTS += [
         'components.conf',
->>>>>>> upstream-releases
     ]
 
     FINAL_LIBRARY = 'xul'

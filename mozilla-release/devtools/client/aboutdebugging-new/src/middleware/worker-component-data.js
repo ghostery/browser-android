@@ -48,48 +48,18 @@ function toComponentData(workers, isServiceWorker) {
     // Here `worker` is the worker object created by RootFront.listAllWorkers
     const type = DEBUG_TARGETS.WORKER;
     const icon = "chrome://devtools/skin/images/debugging-workers.svg";
-<<<<<<< HEAD
-    let { fetch, name, registrationActor, scope, workerTargetFront } = worker;
-
-    // For registering service workers, workerTargetFront will not be available.
-    // The only valid identifier we can use at that point is the actorID for the
-    // service worker registration.
-    const id = workerTargetFront ? workerTargetFront.actorID : registrationActor;
-
-    let isActive = false;
-    let isRunning = false;
-||||||| merged common ancestors
-    let { fetch, name, registrationActor, scope } = worker;
-    let isActive = false;
-    let isRunning = false;
-=======
     let { fetch } = worker;
     const { id, name, registrationFront, scope, subscription } = worker;
 
     let pushServiceEndpoint = null;
->>>>>>> upstream-releases
     let status = null;
 
     if (isServiceWorker) {
-<<<<<<< HEAD
-      fetch = fetch ? SERVICE_WORKER_FETCH_STATES.LISTENING
-                    : SERVICE_WORKER_FETCH_STATES.NOT_LISTENING;
-      isActive = worker.active;
-      isRunning = !!worker.workerTargetFront;
-      status = getServiceWorkerStatus(isActive, isRunning);
-||||||| merged common ancestors
-      fetch = fetch ? SERVICE_WORKER_FETCH_STATES.LISTENING
-                    : SERVICE_WORKER_FETCH_STATES.NOT_LISTENING;
-      isActive = worker.active;
-      isRunning = !!worker.workerTargetActor;
-      status = getServiceWorkerStatus(isActive, isRunning);
-=======
       fetch = fetch
         ? SERVICE_WORKER_FETCH_STATES.LISTENING
         : SERVICE_WORKER_FETCH_STATES.NOT_LISTENING;
       status = getServiceWorkerStatus(worker);
       pushServiceEndpoint = subscription ? subscription.endpoint : null;
->>>>>>> upstream-releases
     }
 
     return {

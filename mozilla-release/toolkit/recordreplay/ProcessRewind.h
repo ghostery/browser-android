@@ -79,81 +79,9 @@ namespace recordreplay {
 // rewind.
 ///////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-// The ID of a checkpoint in a child process. Checkpoints are either normal or
-// temporary. Normal checkpoints occur at the same point in the recording and
-// all replays, while temporary checkpoints are not used while recording and
-// may be at different points in different replays.
-struct CheckpointId {
-  // ID of the most recent normal checkpoint, which are numbered in sequence
-  // starting at FirstCheckpointId.
-  size_t mNormal;
-
-  // Special IDs for normal checkpoints.
-  static const size_t Invalid = 0;
-  static const size_t First = 1;
-
-  // How many temporary checkpoints have been generated since the most recent
-  // normal checkpoint, zero if this represents the normal checkpoint itself.
-  size_t mTemporary;
-
-  explicit CheckpointId(size_t aNormal = Invalid, size_t aTemporary = 0)
-      : mNormal(aNormal), mTemporary(aTemporary) {}
-
-  inline bool operator==(const CheckpointId& o) const {
-    return mNormal == o.mNormal && mTemporary == o.mTemporary;
-  }
-
-  inline bool operator!=(const CheckpointId& o) const {
-    return mNormal != o.mNormal || mTemporary != o.mTemporary;
-  }
-
-  CheckpointId NextCheckpoint(bool aTemporary) const {
-    return CheckpointId(aTemporary ? mNormal : mNormal + 1,
-                        aTemporary ? mTemporary + 1 : 0);
-  }
-};
-||||||| merged common ancestors
-// The ID of a checkpoint in a child process. Checkpoints are either normal or
-// temporary. Normal checkpoints occur at the same point in the recording and
-// all replays, while temporary checkpoints are not used while recording and
-// may be at different points in different replays.
-struct CheckpointId
-{
-  // ID of the most recent normal checkpoint, which are numbered in sequence
-  // starting at FirstCheckpointId.
-  size_t mNormal;
-
-  // Special IDs for normal checkpoints.
-  static const size_t Invalid = 0;
-  static const size_t First = 1;
-
-  // How many temporary checkpoints have been generated since the most recent
-  // normal checkpoint, zero if this represents the normal checkpoint itself.
-  size_t mTemporary;
-
-  explicit CheckpointId(size_t aNormal = Invalid, size_t aTemporary = 0)
-    : mNormal(aNormal), mTemporary(aTemporary)
-  {}
-
-  inline bool operator==(const CheckpointId& o) const {
-    return mNormal == o.mNormal && mTemporary == o.mTemporary;
-  }
-
-  inline bool operator!=(const CheckpointId& o) const {
-    return mNormal != o.mNormal || mTemporary != o.mTemporary;
-  }
-
-  CheckpointId NextCheckpoint(bool aTemporary) const {
-    return CheckpointId(aTemporary ? mNormal : mNormal + 1,
-                        aTemporary ? mTemporary + 1 : 0);
-  }
-};
-=======
 // Special IDs for normal checkpoints.
 static const size_t InvalidCheckpointId = 0;
 static const size_t FirstCheckpointId = 1;
->>>>>>> upstream-releases
 
 // Initialize state needed for rewinding.
 void InitializeRewindState();

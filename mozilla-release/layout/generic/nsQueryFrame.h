@@ -19,31 +19,6 @@
       nsQueryFrame::classname##_id;               \
   typedef classname Has_NS_DECL_QUERYFRAME_TARGET;
 
-<<<<<<< HEAD
-#define NS_DECL_QUERYFRAME void* QueryFrame(FrameIID id) override;
-
-#define NS_QUERYFRAME_HEAD(class)         \
-  void* class ::QueryFrame(FrameIID id) { \
-    switch (id) {
-#define NS_QUERYFRAME_ENTRY(class)                                            \
-  case class ::kFrameIID: {                                                   \
-    static_assert(                                                            \
-        mozilla::IsSame<class, class ::Has_NS_DECL_QUERYFRAME_TARGET>::value, \
-        #class " must declare itself as a queryframe target");                \
-    return static_cast<class*>(this);                                         \
-||||||| merged common ancestors
-#define NS_DECL_QUERYFRAME                                      \
-  void* QueryFrame(FrameIID id) override;
-
-#define NS_QUERYFRAME_HEAD(class)                               \
-  void* class::QueryFrame(FrameIID id) { switch (id) {
-
-#define NS_QUERYFRAME_ENTRY(class)                              \
-  case class::kFrameIID: {                                      \
-    static_assert(mozilla::IsSame<class, class::Has_NS_DECL_QUERYFRAME_TARGET>::value, \
-                  #class " must declare itself as a queryframe target"); \
-    return static_cast<class*>(this);                           \
-=======
 #define NS_DECL_QUERYFRAME void* QueryFrame(FrameIID id) const override;
 
 #define NS_QUERYFRAME_HEAD(class)               \
@@ -55,43 +30,8 @@
         mozilla::IsSame<class, class ::Has_NS_DECL_QUERYFRAME_TARGET>::value, \
         #class " must declare itself as a queryframe target");                \
     return const_cast<class*>(static_cast<const class*>(this));               \
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-#define NS_QUERYFRAME_ENTRY_CONDITIONAL(class, condition)                \
-  case class ::kFrameIID:                                                \
-    if (condition) {                                                     \
-      static_assert(                                                     \
-          mozilla::IsSame<class,                                         \
-                          class ::Has_NS_DECL_QUERYFRAME_TARGET>::value, \
-          #class " must declare itself as a queryframe target");         \
-      return static_cast<class*>(this);                                  \
-    }                                                                    \
-    break;
-
-#define NS_QUERYFRAME_TAIL_INHERITING(class) \
-  default:                                   \
-    break;                                   \
-    }                                        \
-    return class ::QueryFrame(id);           \
-    }
-||||||| merged common ancestors
-#define NS_QUERYFRAME_ENTRY_CONDITIONAL(class, condition)       \
-  case class::kFrameIID:                                        \
-  if (condition) {                                              \
-    static_assert(mozilla::IsSame<class, class::Has_NS_DECL_QUERYFRAME_TARGET>::value, \
-                  #class " must declare itself as a queryframe target"); \
-    return static_cast<class*>(this);                           \
-  }                                                             \
-  break;
-
-#define NS_QUERYFRAME_TAIL_INHERITING(class)                    \
-  default: break;                                               \
-  }                                                             \
-  return class::QueryFrame(id);                                 \
-}
-=======
 #define NS_QUERYFRAME_ENTRY_CONDITIONAL(class, condition)                \
   case class ::kFrameIID:                                                \
     if (condition) {                                                     \
@@ -109,7 +49,6 @@
     }                                        \
     return class ::QueryFrame(id);           \
     }
->>>>>>> upstream-releases
 
 #define NS_QUERYFRAME_TAIL_INHERITANCE_ROOT                          \
   default:                                                           \
@@ -164,20 +103,10 @@ class do_QueryFrameHelper {
 
   template <class Dest>
   operator Dest*() {
-<<<<<<< HEAD
-    static_assert(
-        mozilla::IsSame<Dest,
-                        typename Dest::Has_NS_DECL_QUERYFRAME_TARGET>::value,
-        "Dest must declare itself as a queryframe target");
-||||||| merged common ancestors
-    static_assert(mozilla::IsSame<Dest, typename Dest::Has_NS_DECL_QUERYFRAME_TARGET>::value,
-                  "Dest must declare itself as a queryframe target");
-=======
     static_assert(
         mozilla::IsSame<typename mozilla::RemoveConst<Dest>::Type,
                         typename Dest::Has_NS_DECL_QUERYFRAME_TARGET>::value,
         "Dest must declare itself as a queryframe target");
->>>>>>> upstream-releases
     if (!mRawPtr) {
       return nullptr;
     }

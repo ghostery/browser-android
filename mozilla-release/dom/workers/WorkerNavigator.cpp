@@ -43,17 +43,8 @@ WorkerNavigator::WorkerNavigator(const NavigatorProperties& aProperties,
 
 WorkerNavigator::~WorkerNavigator() {}
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<WorkerNavigator> WorkerNavigator::Create(
-    bool aOnLine) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<WorkerNavigator>
-WorkerNavigator::Create(bool aOnLine)
-{
-=======
 /* static */
 already_AddRefed<WorkerNavigator> WorkerNavigator::Create(bool aOnLine) {
->>>>>>> upstream-releases
   RuntimeService* rts = RuntimeService::GetService();
   MOZ_ASSERT(rts);
 

@@ -3,33 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
-{ // start private scope for gBrowser
-
-/**
- * A set of known icons to use for internal pages. These are hardcoded so we can
- * start loading them faster than ContentLinkHandler would normally find them.
- */
-const FAVICON_DEFAULTS = {
-  "about:newtab": "chrome://branding/content/icon32.png",
-  "about:home": "chrome://branding/content/icon32.png",
-  "about:welcome": "chrome://branding/content/icon32.png",
-  "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
-};
-||||||| merged common ancestors
-/* eslint-env mozilla/browser-window */
-
-/**
- * A set of known icons to use for internal pages. These are hardcoded so we can
- * start loading them faster than ContentLinkHandler would normally find them.
- */
-const FAVICON_DEFAULTS = {
-  "about:newtab": "chrome://branding/content/icon32.png",
-  "about:home": "chrome://branding/content/icon32.png",
-  "about:welcome": "chrome://branding/content/icon32.png",
-  "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
-};
-=======
 {
   // start private scope for gBrowser
   /**
@@ -56,20 +29,9 @@ const FAVICON_DEFAULTS = {
         "UrlbarProviderOpenTabs",
         "resource:///modules/UrlbarProviderOpenTabs.jsm"
       );
->>>>>>> upstream-releases
 
       Services.obs.addObserver(this, "contextual-identity-updated");
 
-<<<<<<< HEAD
-    Services.obs.addObserver(this, "contextual-identity-updated");
-||||||| merged common ancestors
-    XPCOMUtils.defineLazyServiceGetters(this, {
-      serializationHelper: ["@mozilla.org/network/serialization-helper;1", "nsISerializationHelper"],
-      mURIFixup: ["@mozilla.org/docshell/urifixup;1", "nsIURIFixup"],
-    });
-
-    Services.obs.addObserver(this, "contextual-identity-updated");
-=======
       Services.els.addSystemEventListener(document, "keydown", this, false);
       if (AppConstants.platform == "macosx") {
         Services.els.addSystemEventListener(document, "keypress", this, false);
@@ -80,7 +42,6 @@ const FAVICON_DEFAULTS = {
 
       this.tabContainer.init();
       this._setupInitialBrowserAndTab();
->>>>>>> upstream-releases
 
       if (Services.prefs.getBoolPref("browser.display.use_system_colors")) {
         this.tabpanels.style.backgroundColor = "-moz-default-background-color";
@@ -116,21 +77,11 @@ const FAVICON_DEFAULTS = {
         E10SUtils: "resource://gre/modules/E10SUtils.jsm",
       });
 
-<<<<<<< HEAD
-    XPCOMUtils.defineLazyPreferenceGetter(this, "animationsEnabled",
-      "toolkit.cosmeticAnimations.enabled");
-||||||| merged common ancestors
-    XPCOMUtils.defineLazyPreferenceGetter(this, "animationsEnabled",
-      "toolkit.cosmeticAnimations.enabled");
-    XPCOMUtils.defineLazyPreferenceGetter(this, "schedulePressureDefaultCount",
-      "browser.schedulePressure.defaultCount");
-=======
       XPCOMUtils.defineLazyPreferenceGetter(
         this,
         "animationsEnabled",
         "toolkit.cosmeticAnimations.enabled"
       );
->>>>>>> upstream-releases
 
       this._setupEventListeners();
       this._initialized = true;
@@ -502,114 +453,9 @@ const FAVICON_DEFAULTS = {
       return this.selectedBrowser.goBack();
     },
 
-<<<<<<< HEAD
-  _setupInitialBrowserAndTab() {
-    // See browser.js for the meaning of window.arguments.
-    // Bug 1485961 covers making this more sane.
-    let userContextId = window.arguments && window.arguments[6];
-
-    // We default to a remote content browser, except if:
-    // - e10s is disabled.
-    // - there's a parent process opener (e.g. parent process about: page) for
-    //   the content tab.
-    let remoteType;
-    if (gMultiProcessBrowser && !window.hasOpenerForInitialContentBrowser) {
-      remoteType = E10SUtils.DEFAULT_REMOTE_TYPE;
-    } else {
-      remoteType = E10SUtils.NOT_REMOTE;
-    }
-
-    // We only need sameProcessAsFrameLoader in the case where we're passed a tab
-    let sameProcessAsFrameLoader;
-    let tabArgument = gBrowserInit.getTabToAdopt();
-    if (tabArgument) {
-      // The window's first argument is a tab if and only if we are swapping tabs.
-      // We must set the browser's usercontextid so that the newly created remote
-      // tab child has the correct usercontextid.
-      if (tabArgument.hasAttribute("usercontextid")) {
-        userContextId = parseInt(tabArgument.getAttribute("usercontextid"), 10);
-      }
-
-      let linkedBrowser = tabArgument.linkedBrowser;
-      if (linkedBrowser) {
-        remoteType = linkedBrowser.remoteType;
-        sameProcessAsFrameLoader = linkedBrowser.frameLoader;
-      }
-    }
-    let createOptions = {
-      uriIsAboutBlank: false,
-      userContextId,
-      sameProcessAsFrameLoader,
-      remoteType,
-    };
-    let browser = this._createBrowser(createOptions);
-    browser.setAttribute("primary", "true");
-    if (!tabArgument) {
-      browser.setAttribute("blank", "true");
-    }
-    if (gBrowserAllowScriptsToCloseInitialTabs) {
-      browser.setAttribute("allowscriptstoclose", "true");
-    }
-    browser.droppedLinkHandler = handleDroppedLink;
-    browser.loadURI = _loadURI.bind(null, browser);
-
-    let uniqueId = this._generateUniquePanelID();
-    let panel = this.getPanel(browser);
-    panel.id = uniqueId;
-    this.tabpanels.appendChild(panel);
-
-    let tab = this.tabs[0];
-    tab.linkedPanel = uniqueId;
-    this._selectedTab = tab;
-    this._selectedBrowser = browser;
-    tab.permanentKey = browser.permanentKey;
-    tab._tPos = 0;
-    tab._fullyOpen = true;
-    tab.linkedBrowser = browser;
-
-    if (userContextId) {
-      tab.setAttribute("usercontextid", userContextId);
-      ContextualIdentityService.setTabStyle(tab);
-    }
-||||||| merged common ancestors
-  _setupInitialBrowserAndTab() {
-    // See browser.js for the meaning of window.arguments.
-    let userContextId = window.arguments && window.arguments[6];
-
-    // Bug 1362774 will adjust this to only set `uriIsAboutBlank` when
-    // necessary. For now, we always pass it.
-    let browser = this._createBrowser({uriIsAboutBlank: true, userContextId});
-    browser.setAttribute("primary", "true");
-    browser.setAttribute("blank", "true");
-    if (gBrowserAllowScriptsToCloseInitialTabs) {
-      browser.setAttribute("allowscriptstoclose", "true");
-    }
-    browser.droppedLinkHandler = handleDroppedLink;
-    browser.loadURI = _loadURI.bind(null, browser);
-
-    let uniqueId = this._generateUniquePanelID();
-    let notificationbox = this.getNotificationBox(browser);
-    notificationbox.id = uniqueId;
-    this.tabpanels.appendChild(notificationbox);
-
-    let tab = this.tabs[0];
-    tab.linkedPanel = uniqueId;
-    this._selectedTab = tab;
-    this._selectedBrowser = browser;
-    tab.permanentKey = browser.permanentKey;
-    tab._tPos = 0;
-    tab._fullyOpen = true;
-    tab.linkedBrowser = browser;
-
-    if (userContextId) {
-      tab.setAttribute("usercontextid", userContextId);
-      ContextualIdentityService.setTabStyle(tab);
-    }
-=======
     goForward() {
       return this.selectedBrowser.goForward();
     },
->>>>>>> upstream-releases
 
     reload() {
       return this.selectedBrowser.reload();
@@ -619,21 +465,9 @@ const FAVICON_DEFAULTS = {
       return this.selectedBrowser.reloadWithFlags(aFlags);
     },
 
-<<<<<<< HEAD
-    // This is the initial browser, so it's usually active; the default is false
-    // so we have to update it:
-    browser.docShellIsActive = this.shouldActivateDocShell(browser);
-
-    // Only necessary because of pageloader talos tests which access this.
-    // Bug 1508171 covers removing this.
-    this.initialBrowser = browser;
-||||||| merged common ancestors
-    this.initialBrowser = browser;
-=======
     stop() {
       return this.selectedBrowser.stop();
     },
->>>>>>> upstream-releases
 
     /**
      * throws exception for unknown schemes
@@ -818,53 +652,11 @@ const FAVICON_DEFAULTS = {
       );
     },
 
-<<<<<<< HEAD
-  /**
-   * Create a findbar instance.
-   * @param aTab the tab to create the find bar for.
-   * @return the created findbar, or null if the window or tab is closed/closing.
-   */
-  async _createFindBar(aTab) {
-    let findBar = document.createXULElement("findbar");
-    let browser = this.getBrowserForTab(aTab);
-
-    // The findbar should be inserted after the browserStack and, if present for
-    // this tab, after the StatusPanel as well.
-    let insertAfterElement = browser.parentNode;
-    if (insertAfterElement.nextElementSibling == StatusPanel.panel) {
-      insertAfterElement = StatusPanel.panel;
-    }
-    insertAfterElement.insertAdjacentElement("afterend", findBar);
-
-    await new Promise(r => requestAnimationFrame(r));
-    delete aTab._pendingFindBar;
-    if (window.closed || aTab.closing) {
-      return null;
-    }
-||||||| merged common ancestors
-  /**
-   * Create a findbar instance.
-   * @param aTab the tab to create the find bar for.
-   * @return the created findbar, or null if the window or tab is closed/closing.
-   */
-  async _createFindBar(aTab) {
-    let findBar = document.createXULElement("findbar");
-    let browser = this.getBrowserForTab(aTab);
-    let browserContainer = this.getBrowserContainer(browser);
-    browserContainer.appendChild(findBar);
-
-    await new Promise(r => requestAnimationFrame(r));
-    delete aTab._pendingFindBar;
-    if (window.closed || aTab.closing) {
-      return null;
-    }
-=======
     _updateTabBarForPinnedTabs() {
       this.tabContainer._unlockTabSizing();
       this.tabContainer._positionPinnedTabs();
       this.tabContainer._updateCloseButtons();
     },
->>>>>>> upstream-releases
 
     _notifyPinnedStatus(aTab) {
       aTab.linkedBrowser.sendMessageToActor(
@@ -887,24 +679,11 @@ const FAVICON_DEFAULTS = {
         this.showTab(aTab);
       }
 
-<<<<<<< HEAD
-  _appendStatusPanel() {
-    this.selectedBrowser.parentNode.insertAdjacentElement("afterend",
-                                                          StatusPanel.panel);
-  },
-||||||| merged common ancestors
-  _appendStatusPanel() {
-    let browser = this.selectedBrowser;
-    let browserContainer = this.getBrowserContainer(browser);
-    browserContainer.insertBefore(StatusPanel.panel, browser.parentNode.nextElementSibling);
-  },
-=======
       this.moveTabTo(aTab, this._numPinnedTabs);
       aTab.setAttribute("pinned", "true");
       this._updateTabBarForPinnedTabs();
       this._notifyPinnedStatus(aTab);
     },
->>>>>>> upstream-releases
 
     unpinTab(aTab) {
       if (!aTab.pinned) {
@@ -1031,110 +810,6 @@ const FAVICON_DEFAULTS = {
       return tab;
     },
 
-<<<<<<< HEAD
-  getTabForBrowser(aBrowser) {
-    return this._tabForBrowser.get(aBrowser);
-  },
-
-  getPanel(aBrowser) {
-    return this.getBrowserContainer(aBrowser).parentNode;
-  },
-
-  getBrowserContainer(aBrowser) {
-    return (aBrowser || this.selectedBrowser).parentNode.parentNode;
-  },
-
-  getNotificationBox(aBrowser) {
-    let browser = aBrowser || this.selectedBrowser;
-    if (!browser._notificationBox) {
-      browser._notificationBox = new MozElements.NotificationBox(element => {
-        element.setAttribute("notificationside", "top");
-        this.getBrowserContainer(browser).prepend(element);
-      });
-    }
-    return browser._notificationBox;
-  },
-
-  getTabModalPromptBox(aBrowser) {
-    let browser = (aBrowser || this.selectedBrowser);
-    if (!browser.tabModalPromptBox) {
-      browser.tabModalPromptBox = new TabModalPromptBox(browser);
-    }
-    return browser.tabModalPromptBox;
-  },
-
-  getTabFromAudioEvent(aEvent) {
-    if (!Services.prefs.getBoolPref("browser.tabs.showAudioPlayingIcon") ||
-        !aEvent.isTrusted) {
-      return null;
-    }
-
-    var browser = aEvent.originalTarget;
-    var tab = this.getTabForBrowser(browser);
-    return tab;
-  },
-
-  _callProgressListeners(aBrowser, aMethod, aArguments, aCallGlobalListeners = true, aCallTabsListeners = true) {
-    var rv = true;
-
-    function callListeners(listeners, args) {
-      for (let p of listeners) {
-        if (aMethod in p) {
-          try {
-            if (!p[aMethod].apply(p, args))
-              rv = false;
-          } catch (e) {
-            // don't inhibit other listeners
-            Cu.reportError(e);
-||||||| merged common ancestors
-  getTabForBrowser(aBrowser) {
-    return this._tabForBrowser.get(aBrowser);
-  },
-
-  getNotificationBox(aBrowser) {
-    return this.getSidebarContainer(aBrowser).parentNode;
-  },
-
-  getSidebarContainer(aBrowser) {
-    return this.getBrowserContainer(aBrowser).parentNode;
-  },
-
-  getBrowserContainer(aBrowser) {
-    return (aBrowser || this.selectedBrowser).parentNode.parentNode;
-  },
-
-  getTabModalPromptBox(aBrowser) {
-    let browser = (aBrowser || this.selectedBrowser);
-    if (!browser.tabModalPromptBox) {
-      browser.tabModalPromptBox = new TabModalPromptBox(browser);
-    }
-    return browser.tabModalPromptBox;
-  },
-
-  getTabFromAudioEvent(aEvent) {
-    if (!Services.prefs.getBoolPref("browser.tabs.showAudioPlayingIcon") ||
-        !aEvent.isTrusted) {
-      return null;
-    }
-
-    var browser = aEvent.originalTarget;
-    var tab = this.getTabForBrowser(browser);
-    return tab;
-  },
-
-  _callProgressListeners(aBrowser, aMethod, aArguments, aCallGlobalListeners = true, aCallTabsListeners = true) {
-    var rv = true;
-
-    function callListeners(listeners, args) {
-      for (let p of listeners) {
-        if (aMethod in p) {
-          try {
-            if (!p[aMethod].apply(p, args))
-              rv = false;
-          } catch (e) {
-            // don't inhibit other listeners
-            Cu.reportError(e);
-=======
     _callProgressListeners(
       aBrowser,
       aMethod,
@@ -1155,7 +830,6 @@ const FAVICON_DEFAULTS = {
               // don't inhibit other listeners
               Cu.reportError(e);
             }
->>>>>>> upstream-releases
           }
         }
       }
@@ -1169,26 +843,8 @@ const FAVICON_DEFAULTS = {
       if (aCallTabsListeners) {
         aArguments.unshift(aBrowser);
 
-<<<<<<< HEAD
-  /**
-   * Determine if a URI is an about: page pointing to a local resource.
-   */
-  isLocalAboutURI(aURI, aResolvedURI) {
-    if (!aURI.schemeIs("about")) {
-      return false;
-    }
-||||||| merged common ancestors
-  /**
-   * Determine if a URI is an about: page pointing to a local resource.
-   */
-  _isLocalAboutURI(aURI, aResolvedURI) {
-    if (!aURI.schemeIs("about")) {
-      return false;
-    }
-=======
         callListeners(this.mTabsProgressListeners, aArguments);
       }
->>>>>>> upstream-releases
 
       return rv;
     },
@@ -1201,27 +857,10 @@ const FAVICON_DEFAULTS = {
         return false;
       }
 
-<<<<<<< HEAD
-  /**
-   * Sets an icon for the tab if the URI is defined in FAVICON_DEFAULTS.
-   */
-  setDefaultIcon(aTab, aURI) {
-    if (aURI && aURI.spec in FAVICON_DEFAULTS) {
-      this.setIcon(aTab, FAVICON_DEFAULTS[aURI.spec]);
-    }
-  },
-
-  setIcon(aTab, aIconURL = "", aOriginalURL = aIconURL, aLoadingPrincipal = null) {
-    let makeString = (url) => url instanceof Ci.nsIURI ? url.spec : url;
-||||||| merged common ancestors
-  setIcon(aTab, aIconURL = "", aOriginalURL = aIconURL, aLoadingPrincipal = null) {
-    let makeString = (url) => url instanceof Ci.nsIURI ? url.spec : url;
-=======
       // Specially handle about:blank as local
       if (aURI.pathQueryRef === "blank") {
         return true;
       }
->>>>>>> upstream-releases
 
       try {
         // Use the passed in resolvedURI if we have one
@@ -1330,63 +969,9 @@ const FAVICON_DEFAULTS = {
         docTitle = tab.getAttribute("label").replace(/\0/g, "");
       }
 
-<<<<<<< HEAD
-    var modifier = docElement.getAttribute("titlemodifier");
-    if (docTitle) {
-      newTitle += docElement.getAttribute("titlepreface");
-      newTitle += docTitle;
-      if (modifier)
-        newTitle += sep;
-    }
-    newTitle += modifier;
-
-    // If location bar is hidden and the URL type supports a host,
-    // add the scheme and host to the title to prevent spoofing.
-    // XXX https://bugzilla.mozilla.org/show_bug.cgi?id=22183#c239
-    try {
-      if (docElement.getAttribute("chromehidden").includes("location")) {
-        var uri = Services.uriFixup.createExposableURI(
-          aBrowser.currentURI);
-        if (uri.scheme == "about")
-          newTitle = uri.spec + sep + newTitle;
-        else
-          newTitle = uri.prePath + sep + newTitle;
-      }
-    } catch (e) {}
-
-    return newTitle;
-  },
-||||||| merged common ancestors
-    var modifier = docElement.getAttribute("titlemodifier");
-    if (docTitle) {
-      newTitle += docElement.getAttribute("titlepreface");
-      newTitle += docTitle;
-      if (modifier)
-        newTitle += sep;
-    }
-    newTitle += modifier;
-
-    // If location bar is hidden and the URL type supports a host,
-    // add the scheme and host to the title to prevent spoofing.
-    // XXX https://bugzilla.mozilla.org/show_bug.cgi?id=22183#c239
-    try {
-      if (docElement.getAttribute("chromehidden").includes("location")) {
-        var uri = this.mURIFixup.createExposableURI(
-          aBrowser.currentURI);
-        if (uri.scheme == "about")
-          newTitle = uri.spec + sep + newTitle;
-        else
-          newTitle = uri.prePath + sep + newTitle;
-      }
-    } catch (e) {}
-
-    return newTitle;
-  },
-=======
       if (!docTitle) {
         docTitle = docElement.getAttribute("titledefault");
       }
->>>>>>> upstream-releases
 
       var modifier = docElement.getAttribute("titlemodifier");
       if (docTitle) {
@@ -1476,32 +1061,7 @@ const FAVICON_DEFAULTS = {
         { once: true }
       );
 
-<<<<<<< HEAD
-    let securityUI = newBrowser.securityUI;
-    if (securityUI) {
-      // Include the true final argument to indicate that this event is
-      // simulated (instead of being observed by the webProgressListener).
-      this._callProgressListeners(null, "onSecurityChange",
-                                  [webProgress, null, securityUI.state, true],
-                                  true, false);
-    }
-||||||| merged common ancestors
-    let securityUI = newBrowser.securityUI;
-    if (securityUI) {
-      // Include the true final argument to indicate that this event is
-      // simulated (instead of being observed by the webProgressListener).
-      // Note: check state first to make sure the security UI object updates its
-      // state from the docshell correctly.
-      let state = securityUI.state;
-      let oldState = securityUI.oldState;
-      this._callProgressListeners(null, "onSecurityChange",
-                                  [webProgress, null, oldState, state,
-                                   securityUI.contentBlockingLogJSON, true],
-                                  true, false);
-    }
-=======
       this._appendStatusPanel();
->>>>>>> upstream-releases
 
       if (
         (oldBrowser.blockedPopups && !newBrowser.blockedPopups) ||
@@ -1791,20 +1351,12 @@ const FAVICON_DEFAULTS = {
         return;
       }
 
-<<<<<<< HEAD
-      if (!window.fullScreen || newTab.isEmpty) {
-        focusAndSelectUrlBar();
-||||||| merged common ancestors
-      if (!window.fullScreen || isTabEmpty(newTab)) {
-        focusAndSelectUrlBar();
-=======
       // Don't focus the content area if something has been focused after the
       // tab switch was initiated.
       if (
         gMultiProcessBrowser &&
         document.activeElement != document.documentElement
       ) {
->>>>>>> upstream-releases
         return;
       }
 
@@ -1900,41 +1452,6 @@ const FAVICON_DEFAULTS = {
       }
     },
 
-<<<<<<< HEAD
-    let isContentTitle = false;
-    if (title) {
-      isContentTitle = true;
-    } else if (aTab.hasAttribute("customizemode")) {
-      let brandBundle = document.getElementById("bundle_brand");
-      let brandShortName = brandBundle.getString("brandShortName");
-      title = gNavigatorBundle.getFormattedString("customizeMode.tabTitle",
-                                                  [brandShortName]);
-      isContentTitle = true;
-    } else {
-      // See if we can use the URI as the title.
-      if (browser.currentURI.displaySpec) {
-        try {
-          title = Services.uriFixup.createExposableURI(browser.currentURI).displaySpec;
-        } catch (ex) {
-          title = browser.currentURI.displaySpec;
-||||||| merged common ancestors
-    let isContentTitle = false;
-    if (title) {
-      isContentTitle = true;
-    } else if (aTab.hasAttribute("customizemode")) {
-      let brandBundle = document.getElementById("bundle_brand");
-      let brandShortName = brandBundle.getString("brandShortName");
-      title = gNavigatorBundle.getFormattedString("customizeMode.tabTitle",
-                                                  [brandShortName]);
-      isContentTitle = true;
-    } else {
-      // See if we can use the URI as the title.
-      if (browser.currentURI.displaySpec) {
-        try {
-          title = this.mURIFixup.createExposableURI(browser.currentURI).displaySpec;
-        } catch (ex) {
-          title = browser.currentURI.displaySpec;
-=======
     setTabTitle(aTab) {
       var browser = this.getBrowserForTab(aTab);
       var title = browser.contentTitle;
@@ -1944,7 +1461,6 @@ const FAVICON_DEFAULTS = {
       if (aTab._labelIsInitialTitle) {
         if (!title) {
           return false;
->>>>>>> upstream-releases
         }
         delete aTab._labelIsInitialTitle;
       }
@@ -2483,84 +1999,6 @@ const FAVICON_DEFAULTS = {
         false
       );
 
-<<<<<<< HEAD
-    aBrowser.droppedLinkHandler = oldDroppedLinkHandler;
-
-    // Switching a browser's remoteness will create a new frameLoader.
-    // As frameLoaders start out with an active docShell we have to
-    // deactivate it if this is not the selected tab's browser or the
-    // browser window is minimized.
-    aBrowser.docShellIsActive = this.shouldActivateDocShell(aBrowser);
-
-    // Create a new tab progress listener for the new browser we just injected,
-    // since tab progress listeners have logic for handling the initial about:blank
-    // load
-    listener = new TabProgressListener(tab, aBrowser, true, false);
-    this._tabListeners.set(tab, listener);
-    filter.addProgressListener(listener, Ci.nsIWebProgress.NOTIFY_ALL);
-
-    // Restore the progress listener.
-    aBrowser.webProgress.addProgressListener(filter, Ci.nsIWebProgress.NOTIFY_ALL);
-
-    // Restore the securityUI state.
-    let securityUI = aBrowser.securityUI;
-    let state = securityUI ? securityUI.state :
-      Ci.nsIWebProgressListener.STATE_IS_INSECURE;
-    // Include the true final argument to indicate that this event is
-    // simulated (instead of being observed by the webProgressListener).
-    this._callProgressListeners(aBrowser, "onSecurityChange",
-                                [aBrowser.webProgress, null, state, true],
-                                true, false);
-
-    if (aShouldBeRemote) {
-      // Switching the browser to be remote will connect to a new child
-      // process so the browser can no longer be considered to be
-      // crashed.
-      tab.removeAttribute("crashed");
-    } else {
-      aBrowser.messageManager.sendAsyncMessage("Browser:AppTab", { isAppTab: tab.pinned });
-||||||| merged common ancestors
-    aBrowser.droppedLinkHandler = oldDroppedLinkHandler;
-
-    // Switching a browser's remoteness will create a new frameLoader.
-    // As frameLoaders start out with an active docShell we have to
-    // deactivate it if this is not the selected tab's browser or the
-    // browser window is minimized.
-    aBrowser.docShellIsActive = this.shouldActivateDocShell(aBrowser);
-
-    // Create a new tab progress listener for the new browser we just injected,
-    // since tab progress listeners have logic for handling the initial about:blank
-    // load
-    listener = new TabProgressListener(tab, aBrowser, true, false);
-    this._tabListeners.set(tab, listener);
-    filter.addProgressListener(listener, Ci.nsIWebProgress.NOTIFY_ALL);
-
-    // Restore the progress listener.
-    aBrowser.webProgress.addProgressListener(filter, Ci.nsIWebProgress.NOTIFY_ALL);
-
-    // Restore the securityUI state.
-    let securityUI = aBrowser.securityUI;
-    // Make sure to call the state getter before the oldState getter to give
-    // the securityUI object a chance to sync its state with the docshell
-    let state = securityUI ? securityUI.state :
-      Ci.nsIWebProgressListener.STATE_IS_INSECURE;
-    let oldState = securityUI ? securityUI.oldState :
-      Ci.nsIWebProgressListener.STATE_IS_INSECURE;
-    // Include the true final argument to indicate that this event is
-    // simulated (instead of being observed by the webProgressListener).
-    this._callProgressListeners(aBrowser, "onSecurityChange",
-                                [aBrowser.webProgress, null, oldState, state,
-                                 securityUI.contentBlockingLogJSON, true],
-                                true, false);
-
-    if (aShouldBeRemote) {
-      // Switching the browser to be remote will connect to a new child
-      // process so the browser can no longer be considered to be
-      // crashed.
-      tab.removeAttribute("crashed");
-    } else {
-      aBrowser.messageManager.sendAsyncMessage("Browser:AppTab", { isAppTab: tab.pinned });
-=======
       if (shouldBeRemote) {
         // Switching the browser to be remote will connect to a new child
         // process so the browser can no longer be considered to be
@@ -2572,7 +2010,6 @@ const FAVICON_DEFAULTS = {
           { isAppTab: tab.pinned },
           "BrowserTab"
         );
->>>>>>> upstream-releases
 
         // Register the new outerWindowID.
         this._outerWindowIDBrowserMap.set(aBrowser.outerWindowID, aBrowser);
@@ -2614,255 +2051,8 @@ const FAVICON_DEFAULTS = {
         gMultiProcessBrowser,
         gFissionBrowser,
         oldRemoteType,
-<<<<<<< HEAD
-        aBrowser.currentURI);
-
-    // If this URL can't load in the current browser then flip it to the
-    // correct type.
-    if (oldRemoteType != aOptions.remoteType ||
-        aOptions.newFrameloader) {
-      let remote = aOptions.remoteType != E10SUtils.NOT_REMOTE;
-      return this.updateBrowserRemoteness(aBrowser, remote, aOptions);
-    }
-
-    return false;
-  },
-
-  removePreloadedBrowser() {
-    if (!this._isPreloadingEnabled()) {
-      return;
-    }
-
-    let browser = this._getPreloadedBrowser();
-
-    if (browser) {
-      this.getPanel(browser).remove();
-    }
-  },
-
-  _getPreloadedBrowser() {
-    if (!this._isPreloadingEnabled()) {
-      return null;
-    }
-
-    // The preloaded browser might be null.
-    let browser = this._preloadedBrowser;
-
-    // Consume the browser.
-    this._preloadedBrowser = null;
-
-    // Attach the nsIFormFillController now that we know the browser
-    // will be used. If we do that before and the preloaded browser
-    // won't be consumed until shutdown then we leak a docShell.
-    // Also, we do not need to take care of attaching nsIFormFillControllers
-    // in the case that the browser is remote, as remote browsers take
-    // care of that themselves.
-    if (browser) {
-      browser.setAttribute("preloadedState", "consumed");
-      browser.setAttribute("autocompletepopup", "PopupAutoComplete");
-    }
-
-    return browser;
-  },
-
-  _isPreloadingEnabled() {
-    // Preloading for the newtab page is enabled when the prefs are true
-    // and the URL is "about:newtab". We do not support preloading for
-    // custom newtab URLs -- only for the default Firefox Home page.
-    return Services.prefs.getBoolPref("browser.newtab.preload") &&
-      Services.prefs.getBoolPref("browser.newtabpage.enabled") &&
-      !aboutNewTabService.overridden;
-  },
-
-  _createPreloadBrowser() {
-    // Do nothing if we have a preloaded browser already
-    // or preloading of newtab pages is disabled.
-    if (this._preloadedBrowser || !this._isPreloadingEnabled()) {
-      return;
-    }
-
-    let remoteType =
-      E10SUtils.getRemoteTypeForURI(BROWSER_NEW_TAB_URL,
-        gMultiProcessBrowser);
-    let browser = this._createBrowser({ isPreloadBrowser: true, remoteType });
-    this._preloadedBrowser = browser;
-
-    let panel = this.getPanel(browser);
-    this.tabpanels.appendChild(panel);
-
-    if (remoteType != E10SUtils.NOT_REMOTE) {
-      // For remote browsers, we need to make sure that the webProgress is
-      // instantiated, otherwise the parent won't get informed about the state
-      // of the preloaded browser until it gets attached to a tab.
-      browser.webProgress;
-    }
-
-    browser.loadURI(BROWSER_NEW_TAB_URL, {
-      triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
-    });
-    browser.docShellIsActive = false;
-    browser._urlbarFocused = true;
-
-    // Make sure the preloaded browser is loaded with desired zoom level
-    let tabURI = Services.io.newURI(BROWSER_NEW_TAB_URL);
-    FullZoom.onLocationChange(tabURI, false, browser);
-  },
-
-  _createBrowser({
-    isPreloadBrowser,
-    name,
-    nextTabParentId,
-    openerWindow,
-    recordExecution,
-    remoteType,
-    replayExecution,
-    sameProcessAsFrameLoader,
-    uriIsAboutBlank,
-    userContextId,
-  } = {}) {
-    let b = document.createXULElement("browser");
-    // Use the JSM global to create the permanentKey, so that if the
-    // permanentKey is held by something after this window closes, it
-    // doesn't keep the window alive.
-    b.permanentKey = new (Cu.getGlobalForObject(Services).Object);
-
-    const defaultBrowserAttributes = {
-      contextmenu: "contentAreaContextMenu",
-      datetimepicker: "DateTimePickerPanel",
-      message: "true",
-      messagemanagergroup: "browsers",
-      selectmenulist: "ContentSelectDropdown",
-      tooltip: "aHTMLTooltip",
-      type: "content",
-    };
-    for (let attribute in defaultBrowserAttributes) {
-      b.setAttribute(attribute, defaultBrowserAttributes[attribute]);
-    }
-||||||| merged common ancestors
-        aBrowser.currentURI);
-
-    // If this URL can't load in the current browser then flip it to the
-    // correct type.
-    if (oldRemoteType != aOptions.remoteType ||
-        aOptions.newFrameloader) {
-      let remote = aOptions.remoteType != E10SUtils.NOT_REMOTE;
-      return this.updateBrowserRemoteness(aBrowser, remote, aOptions);
-    }
-
-    return false;
-  },
-
-  removePreloadedBrowser() {
-    if (!this._isPreloadingEnabled()) {
-      return;
-    }
-
-    let browser = this._getPreloadedBrowser();
-
-    if (browser) {
-      browser.remove();
-    }
-  },
-
-  _getPreloadedBrowser() {
-    if (!this._isPreloadingEnabled()) {
-      return null;
-    }
-
-    // The preloaded browser might be null.
-    let browser = this._preloadedBrowser;
-
-    // Consume the browser.
-    this._preloadedBrowser = null;
-
-    // Attach the nsIFormFillController now that we know the browser
-    // will be used. If we do that before and the preloaded browser
-    // won't be consumed until shutdown then we leak a docShell.
-    // Also, we do not need to take care of attaching nsIFormFillControllers
-    // in the case that the browser is remote, as remote browsers take
-    // care of that themselves.
-    if (browser) {
-      browser.setAttribute("preloadedState", "consumed");
-      browser.setAttribute("autocompletepopup", "PopupAutoComplete");
-    }
-
-    return browser;
-  },
-
-  _isPreloadingEnabled() {
-    // Preloading for the newtab page is enabled when the prefs are true
-    // and the URL is "about:newtab". We do not support preloading for
-    // custom newtab URLs -- only for the default Firefox Home page.
-    return Services.prefs.getBoolPref("browser.newtab.preload") &&
-      Services.prefs.getBoolPref("browser.newtabpage.enabled") &&
-      !aboutNewTabService.overridden;
-  },
-
-  _createPreloadBrowser() {
-    // Do nothing if we have a preloaded browser already
-    // or preloading of newtab pages is disabled.
-    if (this._preloadedBrowser || !this._isPreloadingEnabled()) {
-      return;
-    }
-
-    let remoteType =
-      E10SUtils.getRemoteTypeForURI(BROWSER_NEW_TAB_URL,
-        gMultiProcessBrowser);
-    let browser = this._createBrowser({ isPreloadBrowser: true, remoteType });
-    this._preloadedBrowser = browser;
-
-    let notificationbox = this.getNotificationBox(browser);
-    this.tabpanels.appendChild(notificationbox);
-
-    if (remoteType != E10SUtils.NOT_REMOTE) {
-      // For remote browsers, we need to make sure that the webProgress is
-      // instantiated, otherwise the parent won't get informed about the state
-      // of the preloaded browser until it gets attached to a tab.
-      browser.webProgress;
-    }
-
-    browser.loadURI(BROWSER_NEW_TAB_URL, {
-      triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
-    });
-    browser.docShellIsActive = false;
-    browser._urlbarFocused = true;
-
-    // Make sure the preloaded browser is loaded with desired zoom level
-    let tabURI = Services.io.newURI(BROWSER_NEW_TAB_URL);
-    FullZoom.onLocationChange(tabURI, false, browser);
-  },
-
-  _createBrowser({
-    isPreloadBrowser,
-    name,
-    nextTabParentId,
-    openerWindow,
-    recordExecution,
-    remoteType,
-    replayExecution,
-    sameProcessAsFrameLoader,
-    uriIsAboutBlank,
-    userContextId,
-  } = {}) {
-    let b = document.createXULElement("browser");
-    b.permanentKey = {};
-
-    const defaultBrowserAttributes = {
-      contextmenu: "contentAreaContextMenu",
-      datetimepicker: "DateTimePickerPanel",
-      message: "true",
-      messagemanagergroup: "browsers",
-      selectmenulist: "ContentSelectDropdown",
-      tooltip: "aHTMLTooltip",
-      type: "content",
-    };
-    for (let attribute in defaultBrowserAttributes) {
-      b.setAttribute(attribute, defaultBrowserAttributes[attribute]);
-    }
-=======
         aBrowser.currentURI
       );
->>>>>>> upstream-releases
 
       // If this URL can't load in the current browser then flip it to the
       // correct type.
@@ -2977,71 +2167,6 @@ const FAVICON_DEFAULTS = {
       let notificationbox = document.createXULElement("notificationbox");
       notificationbox.setAttribute("notificationside", "top");
 
-<<<<<<< HEAD
-    let notificationbox = document.createXULElement("notificationbox");
-    notificationbox.setAttribute("notificationside", "top");
-
-    // We set large flex on both containers to allow the devtools toolbox to
-    // set a flex attribute. We don't want the toolbox to actually take up free
-    // space, but we do want it to collapse when the window shrinks, and with
-    // flex=0 it can't. When the toolbox is on the bottom it's a sibling of
-    // browserStack, and when it's on the side it's a sibling of
-    // browserContainer.
-    let stack = document.createXULElement("stack");
-    stack.className = "browserStack";
-    stack.appendChild(b);
-    stack.setAttribute("flex", "10000");
-
-    let browserContainer = document.createXULElement("vbox");
-    browserContainer.className = "browserContainer";
-    browserContainer.appendChild(notificationbox);
-    browserContainer.appendChild(stack);
-    browserContainer.setAttribute("flex", "10000");
-
-    let browserSidebarContainer = document.createXULElement("hbox");
-    browserSidebarContainer.className = "browserSidebarContainer";
-    browserSidebarContainer.appendChild(browserContainer);
-
-    // Prevent the superfluous initial load of a blank document
-    // if we're going to load something other than about:blank.
-    if (!uriIsAboutBlank) {
-      b.setAttribute("nodefaultsrc", "true");
-    }
-||||||| merged common ancestors
-    // Create the browserStack container
-    let stack = document.createXULElement("stack");
-    stack.className = "browserStack";
-    stack.appendChild(b);
-    stack.setAttribute("flex", "1");
-
-    // We set large flex on both containers to allow the devtools toolbox to
-    // set a flex attribute. We don't want the toolbox to actually take up free
-    // space, but we do want it to collapse when the window shrinks, and with
-    // flex=0 it can't. When the toolbox is on the bottom it's a sibling of
-    // browserSidebarContainer, and when it's on the side it's a sibling of
-    // browserContainer.
-    let browserContainer = document.createXULElement("vbox");
-    browserContainer.className = "browserContainer";
-    browserContainer.appendChild(stack);
-    browserContainer.setAttribute("flex", "10000");
-
-    let browserSidebarContainer = document.createXULElement("hbox");
-    browserSidebarContainer.className = "browserSidebarContainer";
-    browserSidebarContainer.appendChild(browserContainer);
-    browserSidebarContainer.setAttribute("flex", "10000");
-
-    // Add the Message and the Browser to the box
-    let notificationbox = document.createXULElement("notificationbox");
-    notificationbox.setAttribute("flex", "1");
-    notificationbox.setAttribute("notificationside", "top");
-    notificationbox.appendChild(browserSidebarContainer);
-
-    // Prevent the superfluous initial load of a blank document
-    // if we're going to load something other than about:blank.
-    if (!uriIsAboutBlank) {
-      b.setAttribute("nodefaultsrc", "true");
-    }
-=======
       // We set large flex on both containers to allow the devtools toolbox to
       // set a flex attribute. We don't want the toolbox to actually take up free
       // space, but we do want it to collapse when the window shrinks, and with
@@ -3052,7 +2177,6 @@ const FAVICON_DEFAULTS = {
       stack.className = "browserStack";
       stack.appendChild(b);
       stack.setAttribute("flex", "10000");
->>>>>>> upstream-releases
 
       let browserContainer = document.createXULElement("vbox");
       browserContainer.className = "browserContainer";
@@ -3197,47 +2321,6 @@ const FAVICON_DEFAULTS = {
         }
       }
 
-<<<<<<< HEAD
-    let { uriIsAboutBlank, remoteType, usingPreloadedContent } =
-    aTab._browserParams;
-    delete aTab._browserParams;
-    delete aTab._cachedCurrentURI;
-
-    let panel = this.getPanel(browser);
-    let uniqueId = this._generateUniquePanelID();
-    panel.id = uniqueId;
-    aTab.linkedPanel = uniqueId;
-
-    // Inject the <browser> into the DOM if necessary.
-    if (!panel.parentNode) {
-      // NB: this appendChild call causes us to run constructors for the
-      // browser element, which fires off a bunch of notifications. Some
-      // of those notifications can cause code to run that inspects our
-      // state, so it is important that the tab element is fully
-      // initialized by this point.
-      this.tabpanels.appendChild(panel);
-    }
-||||||| merged common ancestors
-    let { uriIsAboutBlank, remoteType, usingPreloadedContent } =
-    aTab._browserParams;
-    delete aTab._browserParams;
-    delete aTab._cachedCurrentURI;
-
-    let notificationbox = this.getNotificationBox(browser);
-    let uniqueId = this._generateUniquePanelID();
-    notificationbox.id = uniqueId;
-    aTab.linkedPanel = uniqueId;
-
-    // Inject the <browser> into the DOM if necessary.
-    if (!notificationbox.parentNode) {
-      // NB: this appendChild call causes us to run constructors for the
-      // browser element, which fires off a bunch of notifications. Some
-      // of those notifications can cause code to run that inspects our
-      // state, so it is important that the tab element is fully
-      // initialized by this point.
-      this.tabpanels.appendChild(notificationbox);
-    }
-=======
       let {
         uriIsAboutBlank,
         remoteType,
@@ -3304,7 +2387,6 @@ const FAVICON_DEFAULTS = {
       if (remoteType == E10SUtils.NOT_REMOTE) {
         this._outerWindowIDBrowserMap.set(browser.outerWindowID, browser);
       }
->>>>>>> upstream-releases
 
       // If we transitioned from one browser to two browsers, we need to set
       // hasSiblings=false on both the existing browser and the new browser.
@@ -3399,19 +2481,9 @@ const FAVICON_DEFAULTS = {
         delete aTab._findBar;
       }
 
-<<<<<<< HEAD
-    aBrowser.destroy();
-    this.getPanel(aBrowser).remove();
-    tab.removeAttribute("linkedpanel");
-||||||| merged common ancestors
-    aBrowser.destroy();
-    this.getNotificationBox(aBrowser).remove();
-    tab.removeAttribute("linkedpanel");
-=======
       browser.destroy();
       this.getPanel(browser).remove();
       aTab.removeAttribute("linkedpanel");
->>>>>>> upstream-releases
 
       this._createLazyBrowser(aTab);
 
@@ -3967,38 +3039,6 @@ const FAVICON_DEFAULTS = {
         if (tabs[i] == aTab || tabs[i].pinned) {
           break;
         }
-<<<<<<< HEAD
-      } else {
-        this._insertBrowser(t, true);
-      }
-    } catch (e) {
-      Cu.reportError("Failed to create tab");
-      Cu.reportError(e);
-      t.remove();
-      if (t.linkedBrowser) {
-        this._tabFilters.delete(t);
-        this._tabListeners.delete(t);
-        this.getPanel(t.linkedBrowser).remove();
-      }
-      throw e;
-    }
-||||||| merged common ancestors
-      } else {
-        this._insertBrowser(t, true);
-      }
-    } catch (e) {
-      Cu.reportError("Failed to create tab");
-      Cu.reportError(e);
-      t.remove();
-      if (t.linkedBrowser) {
-        this._tabFilters.delete(t);
-        this._tabListeners.delete(t);
-        let notificationbox = this.getNotificationBox(t.linkedBrowser);
-        notificationbox.remove();
-      }
-      throw e;
-    }
-=======
         // In a multi-select context, select all unselected tabs
         // starting from the context tab.
         if (aTab.multiselected && tabs[i].multiselected) {
@@ -4008,19 +3048,7 @@ const FAVICON_DEFAULTS = {
       }
       return tabsToEnd;
     },
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Hack to ensure that the about:newtab, and about:welcome favicon is loaded
-    // instantaneously, to avoid flickering and improve perceived performance.
-    this.setDefaultIcon(t, aURIObject);
-||||||| merged common ancestors
-    // Hack to ensure that the about:newtab, and about:welcome favicon is loaded
-    // instantaneously, to avoid flickering and improve perceived performance.
-    if (aURI in FAVICON_DEFAULTS) {
-      this.setIcon(t, FAVICON_DEFAULTS[aURI]);
-    }
-=======
     /**
      * In a multi-select context, the tabs (except pinned tabs) that are located to the
      * right of the rightmost selected tab will be removed.
@@ -4032,7 +3060,6 @@ const FAVICON_DEFAULTS = {
       ) {
         return;
       }
->>>>>>> upstream-releases
 
       this.removeTabs(tabs);
     },
@@ -4100,27 +3127,6 @@ const FAVICON_DEFAULTS = {
           this.removeTab(tab, aParams);
         }
 
-<<<<<<< HEAD
-  moveTabsToStart(contextTab) {
-    let tabs = contextTab.multiselected ?
-      this.selectedTabs :
-      [contextTab];
-    // Walk the array in reverse order so the tabs are kept in order.
-    for (let i = tabs.length - 1; i >= 0; i--) {
-      let tab = tabs[i];
-      if (tab._tPos > 0) {
-        this.moveTabTo(tab, 0);
-||||||| merged common ancestors
-  moveTabsToStart(contextTab) {
-    let tabs = contextTab.multiselected ?
-      gBrowser.selectedTabs :
-      [contextTab];
-    // Walk the array in reverse order so the tabs are kept in order.
-    for (let i = tabs.length - 1; i >= 0; i--) {
-      let tab = tabs[i];
-      if (tab._tPos > 0) {
-        this.moveTabTo(tab, 0);
-=======
         // Avoid changing the selected browser several times by removing it,
         // if appropriate, lastly.
         if (lastToClose) {
@@ -4128,50 +3134,15 @@ const FAVICON_DEFAULTS = {
         }
       } catch (e) {
         Cu.reportError(e);
->>>>>>> upstream-releases
       }
 
-<<<<<<< HEAD
-  moveTabsToEnd(contextTab) {
-    let tabs = contextTab.multiselected ?
-      this.selectedTabs :
-      [contextTab];
-    for (let tab of tabs) {
-      if (tab._tPos < this.tabs.length - 1) {
-        this.moveTabTo(tab, this.tabs.length - 1);
-      }
-    }
-  },
-||||||| merged common ancestors
-  moveTabsToEnd(contextTab) {
-    let tabs = contextTab.multiselected ?
-      gBrowser.selectedTabs :
-      [contextTab];
-    for (let tab of tabs) {
-      if (tab._tPos < this.tabs.length - 1) {
-        this.moveTabTo(tab, this.tabs.length - 1);
-      }
-    }
-  },
-=======
       this._clearMultiSelectionLocked = false;
       this.avoidSingleSelectedTab();
     },
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  warnAboutClosingTabs(tabsToClose, aCloseTabs) {
-    if (tabsToClose <= 1)
-      return true;
-||||||| merged common ancestors
-  warnAboutClosingTabs(tabsToClose, aCloseTabs, aOptionalMessage) {
-    if (tabsToClose <= 1)
-      return true;
-=======
     removeCurrentTab(aParams) {
       this.removeTab(this.selectedTab, aParams);
     },
->>>>>>> upstream-releases
 
     removeTab(aTab, { animate, byMouse, skipPermitUnload } = {}) {
       // Telemetry stopwatches may already be running if removeTab gets
@@ -4212,57 +3183,6 @@ const FAVICON_DEFAULTS = {
         return;
       }
 
-<<<<<<< HEAD
-    // focus the window before prompting.
-    // this will raise any minimized window, which will
-    // make it obvious which window the prompt is for and will
-    // solve the problem of windows "obscuring" the prompt.
-    // see bug #350299 for more details
-    window.focus();
-    let warningMessage = gTabBrowserBundle.GetStringFromName("tabs.closeWarningMultiple");
-    warningMessage = PluralForm.get(tabsToClose, warningMessage).replace("#1", tabsToClose);
-    let flags = (ps.BUTTON_TITLE_IS_STRING * ps.BUTTON_POS_0) +
-      (ps.BUTTON_TITLE_CANCEL * ps.BUTTON_POS_1);
-    let checkboxLabel = aCloseTabs == this.closingTabsEnum.ALL ?
-      gTabBrowserBundle.GetStringFromName("tabs.closeWarningPromptMe") : null;
-    var buttonPressed =
-      ps.confirmEx(window,
-        gTabBrowserBundle.GetStringFromName("tabs.closeTitleTabs"),
-        warningMessage,
-        flags,
-        gTabBrowserBundle.GetStringFromName("tabs.closeButtonMultiple"),
-        null, null,
-        checkboxLabel,
-        warnOnClose);
-    var reallyClose = (buttonPressed == 0);
-||||||| merged common ancestors
-    // focus the window before prompting.
-    // this will raise any minimized window, which will
-    // make it obvious which window the prompt is for and will
-    // solve the problem of windows "obscuring" the prompt.
-    // see bug #350299 for more details
-    window.focus();
-    var warningMessage;
-    if (aOptionalMessage) {
-      warningMessage = aOptionalMessage;
-    } else {
-      warningMessage =
-        PluralForm.get(tabsToClose, gTabBrowserBundle.GetStringFromName("tabs.closeWarningMultiple"))
-          .replace("#1", tabsToClose);
-    }
-    var buttonPressed =
-      ps.confirmEx(window,
-        gTabBrowserBundle.GetStringFromName("tabs.closeWarningTitle"),
-        warningMessage,
-        (ps.BUTTON_TITLE_IS_STRING * ps.BUTTON_POS_0) +
-        (ps.BUTTON_TITLE_CANCEL * ps.BUTTON_POS_1),
-        gTabBrowserBundle.GetStringFromName("tabs.closeButtonMultiple"),
-        null, null,
-        aCloseTabs == this.closingTabsEnum.ALL ?
-        gTabBrowserBundle.GetStringFromName("tabs.closeWarningPromptMe") : null,
-        warnOnClose);
-    var reallyClose = (buttonPressed == 0);
-=======
       if (!aTab.pinned && !aTab.hidden && aTab._fullyOpen && byMouse) {
         this.tabContainer._lockTabSizing(aTab, tabWidth);
       } else {
@@ -4287,7 +3207,6 @@ const FAVICON_DEFAULTS = {
         this._endRemoveTab(aTab);
         return;
       }
->>>>>>> upstream-releases
 
       // We're animating, so we can cancel the non-animation stopwatch.
       TelemetryStopwatch.cancel("FX_TAB_CLOSE_TIME_NO_ANIM_MS", aTab);
@@ -4625,49 +3544,6 @@ const FAVICON_DEFAULTS = {
 
       var panel = this.getPanel(browser);
 
-<<<<<<< HEAD
-    // update tab positional properties and attributes
-    this.selectedTab._selected = true;
-    this.tabContainer._setPositionalAttributes();
-
-    // Removing the panel requires fixing up selectedPanel immediately
-    // (see below), which would be hindered by the potentially expensive
-    // browser removal. So we remove the browser and the panel in two
-    // steps.
-
-    var panel = this.getPanel(browser);
-
-    // In the multi-process case, it's possible an asynchronous tab switch
-    // is still underway. If so, then it's possible that the last visible
-    // browser is the one we're in the process of removing. There's the
-    // risk of displaying preloaded browsers that are at the end of the
-    // deck if we remove the browser before the switch is complete, so
-    // we alert the switcher in order to show a spinner instead.
-    if (this._switcher) {
-      this._switcher.onTabRemoved(aTab);
-    }
-||||||| merged common ancestors
-    // update tab positional properties and attributes
-    this.selectedTab._selected = true;
-    this.tabContainer._setPositionalAttributes();
-
-    // Removing the panel requires fixing up selectedPanel immediately
-    // (see below), which would be hindered by the potentially expensive
-    // browser removal. So we remove the browser and the panel in two
-    // steps.
-
-    var panel = this.getNotificationBox(browser);
-
-    // In the multi-process case, it's possible an asynchronous tab switch
-    // is still underway. If so, then it's possible that the last visible
-    // browser is the one we're in the process of removing. There's the
-    // risk of displaying preloaded browsers that are at the end of the
-    // deck if we remove the browser before the switch is complete, so
-    // we alert the switcher in order to show a spinner instead.
-    if (this._switcher) {
-      this._switcher.onTabRemoved(aTab);
-    }
-=======
       // In the multi-process case, it's possible an asynchronous tab switch
       // is still underway. If so, then it's possible that the last visible
       // browser is the one we're in the process of removing. There's the
@@ -4677,7 +3553,6 @@ const FAVICON_DEFAULTS = {
       if (this._switcher) {
         this._switcher.onTabRemoved(aTab);
       }
->>>>>>> upstream-releases
 
       // This will unload the document. An unload handler could remove
       // dependant tabs, so it's important that the tabbrowser is now in
@@ -5504,26 +4379,6 @@ const FAVICON_DEFAULTS = {
         this._multiSelectChangeAdditions.add(aTab);
       }
 
-<<<<<<< HEAD
-  moveTabOver(aEvent) {
-    if ((!RTL_UI && aEvent.keyCode == KeyEvent.DOM_VK_RIGHT) ||
-        (RTL_UI && aEvent.keyCode == KeyEvent.DOM_VK_LEFT)) {
-      this.moveTabForward();
-    } else {
-      this.moveTabBackward();
-    }
-  },
-||||||| merged common ancestors
-  moveTabOver(aEvent) {
-    let direction = window.getComputedStyle(document.documentElement).direction;
-    if ((direction == "ltr" && aEvent.keyCode == KeyEvent.DOM_VK_RIGHT) ||
-        (direction == "rtl" && aEvent.keyCode == KeyEvent.DOM_VK_LEFT)) {
-      this.moveTabForward();
-    } else {
-      this.moveTabBackward();
-    }
-  },
-=======
       if (!multiSelectMayChangeMore) {
         let { selectedTab } = this;
         if (!selectedTab.multiselected) {
@@ -5532,7 +4387,6 @@ const FAVICON_DEFAULTS = {
         this.tabContainer._setPositionalAttributes();
       }
     },
->>>>>>> upstream-releases
 
     /**
      * Adds two given tabs and all tabs between them into the (multi) selected tabs collection
@@ -5875,27 +4729,6 @@ const FAVICON_DEFAULTS = {
         return;
       }
 
-<<<<<<< HEAD
-      var offset = 1;
-      switch (aEvent.charCode) {
-        case "}".charCodeAt(0):
-          offset = -1;
-        case "{".charCodeAt(0):
-          if (!RTL_UI)
-            offset *= -1;
-          this.tabContainer.advanceSelectedTab(offset, true);
-          aEvent.preventDefault();
-||||||| merged common ancestors
-      var offset = 1;
-      switch (aEvent.charCode) {
-        case "}".charCodeAt(0):
-          offset = -1;
-        case "{".charCodeAt(0):
-          if (window.getComputedStyle(document.documentElement).direction == "ltr")
-            offset *= -1;
-          this.tabContainer.advanceSelectedTab(offset, true);
-          aEvent.preventDefault();
-=======
       if (AppConstants.platform == "macosx") {
         switch (
           ShortcutUtils.getSystemActionForEvent(aEvent, { rtl: RTL_UI })
@@ -5909,7 +4742,6 @@ const FAVICON_DEFAULTS = {
             aEvent.preventDefault();
             break;
         }
->>>>>>> upstream-releases
       }
     },
 
@@ -6703,22 +5535,8 @@ const FAVICON_DEFAULTS = {
         return true;
       }
 
-<<<<<<< HEAD
-    // Don't show progress indicators in tabs for about: URIs
-    // pointing to local resources.
-    if ((aRequest instanceof Ci.nsIChannel) &&
-        gBrowser.isLocalAboutURI(aRequest.originalURI, aRequest.URI)) {
-      return false;
-||||||| merged common ancestors
-    // Don't show progress indicators in tabs for about: URIs
-    // pointing to local resources.
-    if ((aRequest instanceof Ci.nsIChannel) &&
-        gBrowser._isLocalAboutURI(aRequest.originalURI, aRequest.URI)) {
-      return false;
-=======
       let location = aLocation ? aLocation.spec : "";
       return location == "about:blank";
->>>>>>> upstream-releases
     }
 
     onProgressChange(
@@ -6913,105 +5731,6 @@ const FAVICON_DEFAULTS = {
             // request was stopped (possibly from a content script)
             // before the location changed.
 
-<<<<<<< HEAD
-    if (aStateFlags & Ci.nsIWebProgressListener.STATE_START &&
-        aStateFlags & Ci.nsIWebProgressListener.STATE_IS_NETWORK) {
-      if (aWebProgress.isTopLevel) {
-        // Need to use originalLocation rather than location because things
-        // like about:home and about:privatebrowsing arrive with nsIRequest
-        // pointing to their resolved jar: or file: URIs.
-        if (!(originalLocation && gInitialPages.includes(originalLocation.spec) &&
-            originalLocation != "about:blank" &&
-            this.mBrowser.initialPageLoadedFromURLBar != originalLocation.spec &&
-            this.mBrowser.currentURI && this.mBrowser.currentURI.spec == "about:blank")) {
-          // Indicating that we started a load will allow the location
-          // bar to be cleared when the load finishes.
-          // In order to not overwrite user-typed content, we avoid it
-          // (see if condition above) in a very specific case:
-          // If the load is of an 'initial' page (e.g. about:privatebrowsing,
-          // about:newtab, etc.), was not explicitly typed in the location
-          // bar by the user, is not about:blank (because about:blank can be
-          // loaded by websites under their principal), and the current
-          // page in the browser is about:blank (indicating it is a newly
-          // created or re-created browser, e.g. because it just switched
-          // remoteness or is a new tab/window).
-          this.mBrowser.urlbarChangeTracker.startedLoad();
-        }
-        delete this.mBrowser.initialPageLoadedFromURLBar;
-        // If the browser is loading it must not be crashed anymore
-        this.mTab.removeAttribute("crashed");
-      }
-
-      if (this._shouldShowProgress(aRequest)) {
-        if (!(aStateFlags & Ci.nsIWebProgressListener.STATE_RESTORING) &&
-            aWebProgress && aWebProgress.isTopLevel) {
-          this.mTab.setAttribute("busy", "true");
-          gBrowser._tabAttrModified(this.mTab, ["busy"]);
-          this.mTab._notselectedsinceload = !this.mTab.selected;
-          gBrowser.syncThrobberAnimations(this.mTab);
-||||||| merged common ancestors
-    if (aStateFlags & Ci.nsIWebProgressListener.STATE_START &&
-        aStateFlags & Ci.nsIWebProgressListener.STATE_IS_NETWORK) {
-      if (aWebProgress.isTopLevel) {
-        // Need to use originalLocation rather than location because things
-        // like about:home and about:privatebrowsing arrive with nsIRequest
-        // pointing to their resolved jar: or file: URIs.
-        if (!(originalLocation && gInitialPages.includes(originalLocation.spec) &&
-            originalLocation != "about:blank" &&
-            this.mBrowser.initialPageLoadedFromURLBar != originalLocation.spec &&
-            this.mBrowser.currentURI && this.mBrowser.currentURI.spec == "about:blank")) {
-          // Indicating that we started a load will allow the location
-          // bar to be cleared when the load finishes.
-          // In order to not overwrite user-typed content, we avoid it
-          // (see if condition above) in a very specific case:
-          // If the load is of an 'initial' page (e.g. about:privatebrowsing,
-          // about:newtab, etc.), was not explicitly typed in the location
-          // bar by the user, is not about:blank (because about:blank can be
-          // loaded by websites under their principal), and the current
-          // page in the browser is about:blank (indicating it is a newly
-          // created or re-created browser, e.g. because it just switched
-          // remoteness or is a new tab/window).
-          this.mBrowser.urlbarChangeTracker.startedLoad();
-        }
-        delete this.mBrowser.initialPageLoadedFromURLBar;
-        // If the browser is loading it must not be crashed anymore
-        this.mTab.removeAttribute("crashed");
-      }
-
-      if (this._shouldShowProgress(aRequest)) {
-        if (!(aStateFlags & Ci.nsIWebProgressListener.STATE_RESTORING) &&
-            aWebProgress && aWebProgress.isTopLevel) {
-          this.mTab.setAttribute("busy", "true");
-          gBrowser._tabAttrModified(this.mTab, ["busy"]);
-          this.mTab._notselectedsinceload = !this.mTab.selected;
-          SchedulePressure.startMonitoring(window, {
-            highPressureFn() {
-              // Only switch back to the SVG loading indicator after getting
-              // three consecutive low pressure callbacks. Used to prevent
-              // switching quickly between the SVG and APNG loading indicators.
-              gBrowser.tabContainer._schedulePressureCount = gBrowser.schedulePressureDefaultCount;
-              gBrowser.tabContainer.setAttribute("schedulepressure", "true");
-            },
-            lowPressureFn() {
-              if (!gBrowser.tabContainer._schedulePressureCount ||
-                --gBrowser.tabContainer._schedulePressureCount <= 0) {
-                gBrowser.tabContainer.removeAttribute("schedulepressure");
-              }
-
-              // If tabs are closed while they are loading we need to
-              // stop monitoring schedule pressure. We don't stop monitoring
-              // during high pressure times because we want to eventually
-              // return to the SVG tab loading animations.
-              let continueMonitoring = true;
-              if (!document.querySelector(".tabbrowser-tab[busy]")) {
-                SchedulePressure.stopMonitoring(window);
-                continueMonitoring = false;
-              }
-              return { continueMonitoring };
-            },
-          });
-          gBrowser.syncThrobberAnimations(this.mTab);
-=======
             this.mBrowser.userTypedValue = null;
 
             let isNavigating = this.mBrowser.isNavigating;
@@ -7021,7 +5740,6 @@ const FAVICON_DEFAULTS = {
           } else if (isSuccessful) {
             this.mBrowser.urlbarChangeTracker.finishedLoad();
           }
->>>>>>> upstream-releases
         }
 
         // If we don't already have an icon for this tab then clear the tab's
@@ -7037,26 +5755,10 @@ const FAVICON_DEFAULTS = {
           this.mTab.removeAttribute("image");
         }
 
-<<<<<<< HEAD
-      let modifiedAttrs = [];
-      if (this.mTab.hasAttribute("busy")) {
-        this.mTab.removeAttribute("busy");
-        modifiedAttrs.push("busy");
-||||||| merged common ancestors
-      let modifiedAttrs = [];
-      if (this.mTab.hasAttribute("busy")) {
-        this.mTab.removeAttribute("busy");
-        modifiedAttrs.push("busy");
-        if (!document.querySelector(".tabbrowser-tab[busy]")) {
-          SchedulePressure.stopMonitoring(window);
-          gBrowser.tabContainer.removeAttribute("schedulepressure");
-        }
-=======
         // For keyword URIs clear the user typed value since they will be changed into real URIs
         if (location.scheme == "keyword") {
           this.mBrowser.userTypedValue = null;
         }
->>>>>>> upstream-releases
 
         if (this.mTab.selected) {
           gBrowser._isBusy = false;
@@ -7099,26 +5801,10 @@ const FAVICON_DEFAULTS = {
     }
     /* eslint-enable complexity */
 
-<<<<<<< HEAD
-      if (aWebProgress.isTopLevel) {
-        let isSuccessful = Components.isSuccessCode(aStatus);
-        if (!isSuccessful && !this.mTab.isEmpty) {
-          // Restore the current document's location in case the
-          // request was stopped (possibly from a content script)
-          // before the location changed.
-||||||| merged common ancestors
-      if (aWebProgress.isTopLevel) {
-        let isSuccessful = Components.isSuccessCode(aStatus);
-        if (!isSuccessful && !isTabEmpty(this.mTab)) {
-          // Restore the current document's location in case the
-          // request was stopped (possibly from a content script)
-          // before the location changed.
-=======
     onLocationChange(aWebProgress, aRequest, aLocation, aFlags) {
       // OnLocationChange is called for both the top-level content
       // and the subframes.
       let topLevel = aWebProgress.isTopLevel;
->>>>>>> upstream-releases
 
       let isSameDocument = !!(
         aFlags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT
@@ -7252,20 +5938,10 @@ const FAVICON_DEFAULTS = {
         }
       }
 
-<<<<<<< HEAD
-    if (!this.mBlank || this.mBrowser.hasContentOpener) {
-      this._callProgressListeners("onLocationChange",
-                                  [aWebProgress, aRequest, aLocation, aFlags]);
-||||||| merged common ancestors
-    if (!this.mBlank) {
-      this._callProgressListeners("onLocationChange",
-                                  [aWebProgress, aRequest, aLocation, aFlags]);
-=======
       if (topLevel) {
         this.mBrowser.lastURI = aLocation;
         this.mBrowser.lastLocationChange = Date.now();
       }
->>>>>>> upstream-releases
     }
 
     onStatusChange(aWebProgress, aRequest, aStatus, aMessage) {
@@ -7291,18 +5967,6 @@ const FAVICON_DEFAULTS = {
       ]);
     }
 
-<<<<<<< HEAD
-  onSecurityChange(aWebProgress, aRequest, aState) {
-    this._callProgressListeners("onSecurityChange",
-                                [aWebProgress, aRequest, aState]);
-  }
-||||||| merged common ancestors
-  onSecurityChange(aWebProgress, aRequest, aOldState, aState, aContentBlockingLogJSON) {
-    this._callProgressListeners("onSecurityChange",
-                                [aWebProgress, aRequest, aOldState, aState,
-                                 aContentBlockingLogJSON]);
-  }
-=======
     onContentBlockingEvent(aWebProgress, aRequest, aEvent) {
       this._callProgressListeners("onContentBlockingEvent", [
         aWebProgress,
@@ -7310,7 +5974,6 @@ const FAVICON_DEFAULTS = {
         aEvent,
       ]);
     }
->>>>>>> upstream-releases
 
     onRefreshAttempted(aWebProgress, aURI, aDelay, aSameURI) {
       return this._callProgressListeners("onRefreshAttempted", [
@@ -7326,8 +5989,6 @@ const FAVICON_DEFAULTS = {
     "nsIWebProgressListener2",
     "nsISupportsWeakReference",
   ]);
-} // end private scope for gBrowser
-
 } // end private scope for gBrowser
 
 var StatusPanel = {
@@ -7416,23 +6077,6 @@ var StatusPanel = {
   },
 
   getMouseTargetRect() {
-<<<<<<< HEAD
-    let container = this.panel.parentNode;
-    let panelRect = window.windowUtils.getBoundsWithoutFlushing(this.panel);
-    let containerRect = window.windowUtils.getBoundsWithoutFlushing(container);
-
-    return {
-      top:    panelRect.top,
-      bottom: panelRect.bottom,
-      left:   RTL_UI ? containerRect.right - panelRect.width : containerRect.left,
-      right:  RTL_UI ? containerRect.right : containerRect.left + panelRect.width,
-    };
-||||||| merged common ancestors
-    if (!this._mouseTargetRect) {
-      this._calcMouseTargetRect();
-    }
-    return this._mouseTargetRect;
-=======
     let container = this.panel.parentNode;
     let panelRect = window.windowUtils.getBoundsWithoutFlushing(this.panel);
     let containerRect = window.windowUtils.getBoundsWithoutFlushing(container);
@@ -7445,7 +6089,6 @@ var StatusPanel = {
         ? containerRect.right
         : containerRect.left + panelRect.width,
     };
->>>>>>> upstream-releases
   },
 
   onMouseEnter() {
@@ -7611,15 +6254,6 @@ var TabContextMenu = {
       tabsToMove[0] == visibleTabs[gBrowser._numPinnedTabs];
     contextMoveTabToStart.disabled = isFirstTab && allSelectedTabsAdjacent;
 
-<<<<<<< HEAD
-    // Only one of "Duplicate Tab"/"Duplicate Tabs" should be visible.
-    document.getElementById("context_duplicateTab").hidden = multiselectionContext;
-    document.getElementById("context_duplicateTabs").hidden = !multiselectionContext;
-||||||| merged common ancestors
-    // Hide the "Duplicate Tab" if there is a selection present
-    let contextDuplicateTab = document.getElementById("context_duplicateTab");
-    contextDuplicateTab.hidden = multiselectionContext;
-=======
     // Only one of "Duplicate Tab"/"Duplicate Tabs" should be visible.
     document.getElementById(
       "context_duplicateTab"
@@ -7627,7 +6261,6 @@ var TabContextMenu = {
     document.getElementById(
       "context_duplicateTabs"
     ).hidden = !multiselectionContext;
->>>>>>> upstream-releases
 
     // Disable "Close Tabs to the Right" if there are no tabs
     // following it.
@@ -7689,35 +6322,19 @@ var TabContextMenu = {
         "playTabs.accesskey"
       );
     } else if (this.contextTab.hasAttribute("muted")) {
-<<<<<<< HEAD
-      toggleMultiSelectMute.label = gNavigatorBundle.getString("unmuteSelectedTabs2.label");
-      toggleMultiSelectMute.accessKey = gNavigatorBundle.getString("unmuteSelectedTabs2.accesskey");
-||||||| merged common ancestors
-      toggleMultiSelectMute.label = gNavigatorBundle.getString("unmuteSelectedTabs.label");
-      toggleMultiSelectMute.accessKey = gNavigatorBundle.getString("unmuteSelectedTabs.accesskey");
-=======
       toggleMultiSelectMute.label = gNavigatorBundle.getString(
         "unmuteSelectedTabs2.label"
       );
       toggleMultiSelectMute.accessKey = gNavigatorBundle.getString(
         "unmuteSelectedTabs2.accesskey"
       );
->>>>>>> upstream-releases
     } else {
-<<<<<<< HEAD
-      toggleMultiSelectMute.label = gNavigatorBundle.getString("muteSelectedTabs2.label");
-      toggleMultiSelectMute.accessKey = gNavigatorBundle.getString("muteSelectedTabs2.accesskey");
-||||||| merged common ancestors
-      toggleMultiSelectMute.label = gNavigatorBundle.getString("muteSelectedTabs.label");
-      toggleMultiSelectMute.accessKey = gNavigatorBundle.getString("muteSelectedTabs.accesskey");
-=======
       toggleMultiSelectMute.label = gNavigatorBundle.getString(
         "muteSelectedTabs2.label"
       );
       toggleMultiSelectMute.accessKey = gNavigatorBundle.getString(
         "muteSelectedTabs2.accesskey"
       );
->>>>>>> upstream-releases
     }
 
     this.contextTab.toggleMuteMenuItem = toggleMute;

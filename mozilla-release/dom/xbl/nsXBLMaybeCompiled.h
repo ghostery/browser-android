@@ -73,88 +73,23 @@ class nsXBLMaybeCompiled {
   friend struct js::BarrierMethods<nsXBLMaybeCompiled<UncompiledT>>;
 };
 
-<<<<<<< HEAD
-/* Add support for JS::Heap<nsXBLMaybeCompiled>. */
-namespace JS {
-
-template <class UncompiledT>
-struct GCPolicy<nsXBLMaybeCompiled<UncompiledT>> {
-  static nsXBLMaybeCompiled<UncompiledT> initial() {
-    return nsXBLMaybeCompiled<UncompiledT>();
-  }
-};
-
-}  // namespace JS
-
-||||||| merged common ancestors
-/* Add support for JS::Heap<nsXBLMaybeCompiled>. */
-namespace JS {
-
-template <class UncompiledT>
-struct GCPolicy<nsXBLMaybeCompiled<UncompiledT>>
-{
-  static nsXBLMaybeCompiled<UncompiledT> initial() { return nsXBLMaybeCompiled<UncompiledT>(); }
-};
-
-} // namespace JS
-
-=======
->>>>>>> upstream-releases
 namespace js {
 
 template <class UncompiledT>
-<<<<<<< HEAD
-struct BarrierMethods<nsXBLMaybeCompiled<UncompiledT>> {
-  typedef struct BarrierMethods<JSObject*> Base;
-
-  static void postBarrier(nsXBLMaybeCompiled<UncompiledT>* functionp,
-                          nsXBLMaybeCompiled<UncompiledT> prev,
-                          nsXBLMaybeCompiled<UncompiledT> next) {
-||||||| merged common ancestors
-struct BarrierMethods<nsXBLMaybeCompiled<UncompiledT>>
-{
-  typedef struct BarrierMethods<JSObject *> Base;
-
-  static void postBarrier(nsXBLMaybeCompiled<UncompiledT>* functionp,
-                          nsXBLMaybeCompiled<UncompiledT> prev,
-                          nsXBLMaybeCompiled<UncompiledT> next)
-  {
-=======
 struct BarrierMethods<nsXBLMaybeCompiled<UncompiledT>> {
   typedef struct BarrierMethods<JSObject*> Base;
 
   static void writeBarriers(nsXBLMaybeCompiled<UncompiledT>* functionp,
                             nsXBLMaybeCompiled<UncompiledT> prev,
                             nsXBLMaybeCompiled<UncompiledT> next) {
->>>>>>> upstream-releases
     if (next.IsCompiled()) {
-<<<<<<< HEAD
-      Base::postBarrier(
-          &functionp->UnsafeGetJSFunction(),
-          prev.IsCompiled() ? prev.UnsafeGetJSFunction() : nullptr,
-          next.UnsafeGetJSFunction());
-||||||| merged common ancestors
-      Base::postBarrier(&functionp->UnsafeGetJSFunction(),
-                        prev.IsCompiled() ? prev.UnsafeGetJSFunction() : nullptr,
-                        next.UnsafeGetJSFunction());
-=======
       Base::writeBarriers(
           &functionp->UnsafeGetJSFunction(),
           prev.IsCompiled() ? prev.UnsafeGetJSFunction() : nullptr,
           next.UnsafeGetJSFunction());
->>>>>>> upstream-releases
     } else if (prev.IsCompiled()) {
-<<<<<<< HEAD
-      Base::postBarrier(&prev.UnsafeGetJSFunction(), prev.UnsafeGetJSFunction(),
-                        nullptr);
-||||||| merged common ancestors
-      Base::postBarrier(&prev.UnsafeGetJSFunction(),
-                        prev.UnsafeGetJSFunction(),
-                        nullptr);
-=======
       Base::writeBarriers(&prev.UnsafeGetJSFunction(),
                           prev.UnsafeGetJSFunction(), nullptr);
->>>>>>> upstream-releases
     }
   }
   static void exposeToJS(nsXBLMaybeCompiled<UncompiledT> fun) {

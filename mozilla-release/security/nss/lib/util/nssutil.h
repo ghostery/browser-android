@@ -19,24 +19,10 @@
  * The format of the version string should be
  *     "<major version>.<minor version>[.<patch level>[.<build number>]][ <Beta>]"
  */
-<<<<<<< HEAD
-#define NSSUTIL_VERSION "3.41"
-||||||| merged common ancestors
-#define NSSUTIL_VERSION "3.40.1"
-=======
 #define NSSUTIL_VERSION "3.45"
->>>>>>> upstream-releases
 #define NSSUTIL_VMAJOR 3
-<<<<<<< HEAD
-#define NSSUTIL_VMINOR 41
-#define NSSUTIL_VPATCH 0
-||||||| merged common ancestors
-#define NSSUTIL_VMINOR 40
-#define NSSUTIL_VPATCH 1
-=======
 #define NSSUTIL_VMINOR 45
 #define NSSUTIL_VPATCH 0
->>>>>>> upstream-releases
 #define NSSUTIL_VBUILD 0
 #define NSSUTIL_BETA PR_FALSE
 

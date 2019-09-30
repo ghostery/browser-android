@@ -493,30 +493,15 @@ win32-rusttests/opt:
     treeherder:
         platform: windows2012-32/opt
         symbol: BR
-<<<<<<< HEAD
-        tier: 1
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-||||||| merged common ancestors
-        tier: 2
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-=======
         tier: 1
     worker-type: b-win2012
->>>>>>> upstream-releases
     worker:
         max-run-time: 5400
         env:
             PERFHERDER_EXTRA_OPTIONS: rusttests
             TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win32/releng.manifest"
     run:
-<<<<<<< HEAD
-        using: mozharness
-        actions: [build]
-||||||| merged common ancestors
-        using: mozharness
-=======
         actions: [get-secrets, build]
->>>>>>> upstream-releases
         options: [append-env-variables-from-configs]
         script: mozharness/scripts/fx_desktop_build.py
         secrets: true
@@ -526,16 +511,8 @@ win32-rusttests/opt:
             - builds/taskcluster_base_win32.py
         extra-config:
             stage_platform: win32-rusttests
-<<<<<<< HEAD
-            artifact_flag_build_variant_in_try: null
             build_targets: ['pre-export', 'export', 'recurse_rusttests']
             disable_package_metrics: true
-||||||| merged common ancestors
-            artifact_flag_build_variant_in_try: null
-=======
-            build_targets: ['pre-export', 'export', 'recurse_rusttests']
-            disable_package_metrics: true
->>>>>>> upstream-releases
         mozconfig-variant: rusttests
     run-on-projects: ['trunk', 'try']
     toolchains:
@@ -582,44 +559,6 @@ win32-rusttests/debug:
         - win64-cbindgen
         - win64-sccache
         - win64-nasm
-        - win64-node
-
-win32-rusttests/debug:
-    description: "Win32 Rust Tests Debug"
-    index:
-        product: firefox
-        job-name: win32-rusttests-debug
-    treeherder:
-        platform: windows2012-32/debug
-        symbol: BR
-        tier: 1
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-    worker:
-        max-run-time: 5400
-        env:
-            PERFHERDER_EXTRA_OPTIONS: rusttests
-            TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win32/releng.manifest"
-    run:
-        using: mozharness
-        actions: [build]
-        options: [append-env-variables-from-configs]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/taskcluster_base_windows.py
-            - builds/taskcluster_base_win32.py
-        extra-config:
-            stage_platform: win32-rusttests
-            artifact_flag_build_variant_in_try: null
-            build_targets: ['pre-export', 'export', 'recurse_rusttests']
-            disable_package_metrics: true
-        mozconfig-variant: rusttests-debug
-    run-on-projects: ['trunk', 'try']
-    toolchains:
-        - win64-clang-cl
-        - win64-rust
-        - win64-cbindgen
-        - win64-sccache
         - win64-node
 
 win64-rusttests/opt:
@@ -630,16 +569,8 @@ win64-rusttests/opt:
     treeherder:
         platform: windows2012-64/opt
         symbol: BR
-<<<<<<< HEAD
-        tier: 1
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-||||||| merged common ancestors
-        tier: 2
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-=======
         tier: 1
     worker-type: b-win2012
->>>>>>> upstream-releases
     worker:
         max-run-time: 5400
         env:
@@ -698,39 +629,6 @@ win64-rusttests/debug:
         - win64-cbindgen
         - win64-sccache
         - win64-nasm
-        - win64-node
-
-win64-rusttests/debug:
-    description: "Win64 Rust Tests Debug"
-    index:
-        product: firefox
-        job-name: win64-rusttests-debug
-    treeherder:
-        platform: windows2012-64/debug
-        symbol: BR
-        tier: 1
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-    worker:
-        max-run-time: 5400
-        env:
-            PERFHERDER_EXTRA_OPTIONS: rusttests
-            TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win64/releng.manifest"
-    run:
-        using: mozharness
-        options: [append-env-variables-from-configs]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/taskcluster_base_windows.py
-            - builds/taskcluster_base_win64.py
-            - builds/taskcluster_sub_win64/rusttests_opt.py
-        mozconfig-variant: rusttests-debug
-    run-on-projects: ['trunk', 'try']
-    toolchains:
-        - win64-clang-cl
-        - win64-rust
-        - win64-cbindgen
-        - win64-sccache
         - win64-node
 
 win64-ccov/debug:
@@ -1183,86 +1081,8 @@ win64-aarch64-shippable/opt:
     toolchains:
         - win64-node
 
-<<<<<<< HEAD
-win64-aarch64-msvc/debug:
-    description: "AArch64 Win64 MSVC Debug"
-    index:
-        product: firefox
-        job-name: win64-aarch64-msvc-debug
-    treeherder:
-        platform: windows2012-aarch64/debug
-        symbol: Bmsvc
-        tier: 1
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-    worker:
-        max-run-time: 7200
-        env:
-            TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win64/aarch64.manifest"
-            PERFHERDER_EXTRA_OPTIONS: msvc-aarch64
-    run:
-        using: mozharness
-        actions: [get-secrets, build]
-        options: [append-env-variables-from-configs]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/taskcluster_base_windows.py
-            - builds/taskcluster_sub_win64/debug.py
-        extra-config:
-            mozconfig_platform: win64-aarch64
-        mozconfig-variant: debug-msvc
-    run-on-projects: ['mozilla-central', 'trunk', 'try']
-    toolchains:
-        - win64-clang-cl
-        - win64-aarch64-rust-nightly
-        - win64-cbindgen
-        - win64-sccache
-        - win64-node
-
-win64-aarch64-msvc/opt:
-    description: "AArch64 Win64 MSVC Opt"
-    index:
-        product: firefox
-        job-name: win64-aarch64-msvc-opt
-    treeherder:
-        platform: windows2012-aarch64/opt
-        symbol: Bmsvc
-        tier: 1
-    worker-type: aws-provisioner-v1/gecko-{level}-b-win2012
-    worker:
-        max-run-time: 7200
-        env:
-            TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win64/aarch64.manifest"
-            PERFHERDER_EXTRA_OPTIONS: msvc-aarch64
-    run:
-        using: mozharness
-        actions: [get-secrets, build]
-        options: [append-env-variables-from-configs]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/taskcluster_base_windows.py
-        extra-config:
-            stage_platform: win64
-            mozconfig_platform: win64-aarch64
-        mozconfig-variant: opt-msvc
-    run-on-projects: ['mozilla-central', 'trunk', 'try']
-    toolchains:
-        - win64-clang-cl
-        - win64-aarch64-rust-nightly
-        - win64-cbindgen
-        - win64-sccache
-        - win64-node
-
-win32-mingwclang/opt:
-    description: "Win32 MinGW-Clang Opt"
-||||||| merged common ancestors
-win32-mingwclang/opt:
-    description: "Win32 MinGW-Clang Opt"
-=======
 win64-aarch64-shippable-no-eme/opt:
     description: "AArch64 Win64 Shippable w/o EME"
->>>>>>> upstream-releases
     index:
         product: firefox
         job-name: win64-aarch64-no-eme-opt
@@ -1295,109 +1115,13 @@ win64-aarch64-shippable-no-eme/opt:
             mozconfig_platform: win64-aarch64
     run-on-projects: []
     toolchains:
-<<<<<<< HEAD
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x86
-        - linux64-mingw32-nsis
-        - linux64-mingw-fxc2-x86
-||||||| merged common ancestors
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x86
-        - linux64-mingw32-nsis
-        - linux64-mingw32-fxc2
-=======
         - win64-clang-cl
         - win64-rust
         - win64-rust-size
         - win64-cbindgen
         - win64-nasm
         - win64-node
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-win32-mingwclang/debug:
-    description: "Win32 MinGW-Clang Debug"
-    index:
-        product: firefox
-        job-name: win32-mingwclang-debug
-    treeherder:
-        platform: windows-mingw32/all
-        symbol: WMC32(Bd)
-        tier: 2
-    worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-    worker:
-        docker-image: {in-tree: mingw32-build}
-        max-run-time: 72000
-        env:
-            PERFHERDER_EXTRA_OPTIONS: "debug 32 clang"
-    run:
-        using: mozharness
-        actions: [build]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/releng_base_windows_32_mingw_builds.py
-            - builds/releng_sub_windows_configs/32_mingwclang.py
-        mozconfig-variant: mingwclang-debug
-        need-xvfb: false
-    toolchains:
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x86
-        - linux64-mingw32-nsis
-        - linux64-mingw-fxc2-x86
-||||||| merged common ancestors
-win32-mingwclang/debug:
-    description: "Win32 MinGW-Clang Debug"
-    index:
-        product: firefox
-        job-name: win32-mingwclang-debug
-    treeherder:
-        platform: windows-mingw32/all
-        symbol: WMC32(Bd)
-        tier: 2
-    worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-    worker:
-        docker-image: {in-tree: mingw32-build}
-        max-run-time: 72000
-        env:
-            PERFHERDER_EXTRA_OPTIONS: "debug 32 clang"
-    run:
-        using: mozharness
-        actions: [build]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/releng_base_windows_32_mingw_builds.py
-            - builds/releng_sub_windows_configs/32_mingwclang.py
-        mozconfig-variant: mingwclang-debug
-        need-xvfb: false
-    toolchains:
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x86
-        - linux64-mingw32-nsis
-        - linux64-mingw32-fxc2
-=======
->>>>>>> upstream-releases
 
 win64-aarch64-devedition-nightly/opt:
     description: "AArch64 Win64 MSVC Devedition Nightly"
@@ -1418,86 +1142,8 @@ win64-aarch64-devedition-nightly/opt:
     worker:
         max-run-time: 7200
         env:
-<<<<<<< HEAD
-            PERFHERDER_EXTRA_OPTIONS: "opt 64 clang"
-    run:
-        using: mozharness
-        actions: [build]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/releng_base_windows_64_mingw_builds.py
-            - builds/releng_sub_windows_configs/64_mingwclang.py
-        mozconfig-variant: mingwclang
-        need-xvfb: false
-    toolchains:
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x64
-        - linux64-mingw32-nsis
-        - linux64-mingw-fxc2-x86
-
-win64-mingwclang/debug:
-    description: "Win64 MinGW-Clang Debug"
-    index:
-        product: firefox
-        job-name: win64-mingwclang-debug
-    treeherder:
-        platform: windows-mingw32/all
-        symbol: WMC64(Bd)
-        tier: 2
-    worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-    worker:
-        docker-image: {in-tree: mingw32-build}
-        max-run-time: 72000
-        env:
-            PERFHERDER_EXTRA_OPTIONS: "debug 64 clang"
-||||||| merged common ancestors
-            PERFHERDER_EXTRA_OPTIONS: "opt 64 clang"
-    run:
-        using: mozharness
-        actions: [build]
-        script: mozharness/scripts/fx_desktop_build.py
-        config:
-            - builds/releng_base_firefox.py
-            - builds/releng_base_windows_64_mingw_builds.py
-            - builds/releng_sub_windows_configs/64_mingwclang.py
-        mozconfig-variant: mingwclang
-        need-xvfb: false
-    toolchains:
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x64
-        - linux64-mingw32-nsis
-        - linux64-mingw32-fxc2
-
-win64-mingwclang/debug:
-    description: "Win64 MinGW-Clang Debug"
-    index:
-        product: firefox
-        job-name: win64-mingwclang-debug
-    treeherder:
-        platform: windows-mingw32/all
-        symbol: WMC64(Bd)
-        tier: 2
-    worker-type: aws-provisioner-v1/gecko-{level}-b-linux
-    worker:
-        docker-image: {in-tree: mingw32-build}
-        max-run-time: 72000
-        env:
-            PERFHERDER_EXTRA_OPTIONS: "debug 64 clang"
-=======
             TOOLTOOL_MANIFEST: "browser/config/tooltool-manifests/win64/aarch64.manifest"
             PERFHERDER_EXTRA_OPTIONS: aarch64-devedition
->>>>>>> upstream-releases
     run:
         actions: [get-secrets, build]
         options: [append-env-variables-from-configs]
@@ -1513,31 +1159,9 @@ win64-mingwclang/debug:
         mozconfig-variant: devedition
     run-on-projects: ['mozilla-beta']
     toolchains:
-<<<<<<< HEAD
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x64
-        - linux64-mingw32-nsis
-        - linux64-mingw-fxc2-x86
-||||||| merged common ancestors
-        - mingw32-rust
-        - linux64-upx
-        - linux64-wine
-        - linux64-sccache
-        - linux64-cbindgen
-        - linux64-node
-        - linux64-clang-trunk-mingw-x64
-        - linux64-mingw32-nsis
-        - linux64-mingw32-fxc2
-=======
         - win64-clang-cl
         - win64-rust
         - win64-rust-size
         - win64-cbindgen
         - win64-nasm
         - win64-node
->>>>>>> upstream-releases

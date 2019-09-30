@@ -165,15 +165,10 @@ union TransformFunction {
 union Animatable {
   null_t;
   float;
-<<<<<<< HEAD
-  nscolor;
-||||||| merged common ancestors
-=======
   nscolor;
   Rotate;
   Scale;
   Translation;
->>>>>>> upstream-releases
   TransformFunction[];
 };
 
@@ -555,22 +550,12 @@ struct TransactionInfo
   bool scheduleComposite;
   uint32_t paintSequenceNumber;
   bool isRepeatTransaction;
-<<<<<<< HEAD
-  VsyncId vsyncId;
-||||||| merged common ancestors
-=======
   VsyncId vsyncId;
   TimeStamp vsyncStart;
->>>>>>> upstream-releases
   TimeStamp refreshStart;
   TimeStamp transactionStart;
-<<<<<<< HEAD
-  nsCString url;
-||||||| merged common ancestors
-=======
   bool containsSVG;
   nsCString url;
->>>>>>> upstream-releases
   TimeStamp fwdTime;
   /* This provides some timing information on any content that is meant to be
    * presented during this transaction.

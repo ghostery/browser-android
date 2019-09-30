@@ -34,36 +34,6 @@ using namespace mozilla::dom;
 //----------------------------------------------------------------------
 // nsISupports methods:
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS_INHERITED(nsMathMLElement, nsMathMLElementBase, Link)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS_INHERITED(nsMathMLElement, nsMathMLElementBase,
-                            Link)
-
-static nsresult
-WarnDeprecated(const char16_t* aDeprecatedAttribute,
-               const char16_t* aFavoredAttribute, nsIDocument* aDocument)
-{
-  const char16_t *argv[] =
-    { aDeprecatedAttribute, aFavoredAttribute };
-  return nsContentUtils::
-          ReportToConsole(nsIScriptError::warningFlag,
-                          NS_LITERAL_CSTRING("MathML"), aDocument,
-                          nsContentUtils::eMATHML_PROPERTIES,
-                          "DeprecatedSupersededBy", argv, 2);
-}
-
-static nsresult
-ReportLengthParseError(const nsString& aValue, nsIDocument* aDocument)
-{
-  const char16_t *arg = aValue.get();
-  return nsContentUtils::
-         ReportToConsole(nsIScriptError::errorFlag,
-                         NS_LITERAL_CSTRING("MathML"), aDocument,
-                         nsContentUtils::eMATHML_PROPERTIES,
-                         "LengthParsingError", &arg, 1);
-}
-=======
 NS_IMPL_ISUPPORTS_INHERITED(nsMathMLElement, nsMathMLElementBase, Link)
 
 static nsresult WarnDeprecated(const char16_t* aDeprecatedAttribute,
@@ -84,87 +54,15 @@ static nsresult ReportLengthParseError(const nsString& aValue,
       nsIScriptError::errorFlag, NS_LITERAL_CSTRING("MathML"), aDocument,
       nsContentUtils::eMATHML_PROPERTIES, "LengthParsingError", arg);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static nsresult WarnDeprecated(const char16_t* aDeprecatedAttribute,
-                               const char16_t* aFavoredAttribute,
-                               nsIDocument* aDocument) {
-  const char16_t* argv[] = {aDeprecatedAttribute, aFavoredAttribute};
-  return nsContentUtils::ReportToConsole(
-      nsIScriptError::warningFlag, NS_LITERAL_CSTRING("MathML"), aDocument,
-      nsContentUtils::eMATHML_PROPERTIES, "DeprecatedSupersededBy", argv, 2);
-||||||| merged common ancestors
-static nsresult
-ReportParseErrorNoTag(const nsString& aValue,
-                      nsAtom*        aAtom,
-                      nsIDocument*    aDocument)
-{
-  const char16_t *argv[] =
-    { aValue.get(), aAtom->GetUTF16String() };
-  return nsContentUtils::
-         ReportToConsole(nsIScriptError::errorFlag,
-                         NS_LITERAL_CSTRING("MathML"), aDocument,
-                         nsContentUtils::eMATHML_PROPERTIES,
-                         "AttributeParsingErrorNoTag", argv, 2);
-=======
 static nsresult ReportParseErrorNoTag(const nsString& aValue, nsAtom* aAtom,
                                       Document* aDocument) {
   AutoTArray<nsString, 2> argv = {aValue, nsDependentAtomString(aAtom)};
   return nsContentUtils::ReportToConsole(
       nsIScriptError::errorFlag, NS_LITERAL_CSTRING("MathML"), aDocument,
       nsContentUtils::eMATHML_PROPERTIES, "AttributeParsingErrorNoTag", argv);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static nsresult ReportLengthParseError(const nsString& aValue,
-                                       nsIDocument* aDocument) {
-  const char16_t* arg = aValue.get();
-  return nsContentUtils::ReportToConsole(
-      nsIScriptError::errorFlag, NS_LITERAL_CSTRING("MathML"), aDocument,
-      nsContentUtils::eMATHML_PROPERTIES, "LengthParsingError", &arg, 1);
-}
-||||||| merged common ancestors
-nsMathMLElement::nsMathMLElement(already_AddRefed<mozilla::dom::NodeInfo>& aNodeInfo)
-: nsMathMLElementBase(std::move(aNodeInfo)),
-  ALLOW_THIS_IN_INITIALIZER_LIST(Link(this)),
-  mIncrementScriptLevel(false)
-{
-}
-=======
-nsMathMLElement::nsMathMLElement(
-    already_AddRefed<mozilla::dom::NodeInfo>& aNodeInfo)
-    : nsMathMLElementBase(std::move(aNodeInfo)),
-      ALLOW_THIS_IN_INITIALIZER_LIST(Link(this)),
-      mIncrementScriptLevel(false) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-static nsresult ReportParseErrorNoTag(const nsString& aValue, nsAtom* aAtom,
-                                      nsIDocument* aDocument) {
-  const char16_t* argv[] = {aValue.get(), aAtom->GetUTF16String()};
-  return nsContentUtils::ReportToConsole(
-      nsIScriptError::errorFlag, NS_LITERAL_CSTRING("MathML"), aDocument,
-      nsContentUtils::eMATHML_PROPERTIES, "AttributeParsingErrorNoTag", argv,
-      2);
-}
-||||||| merged common ancestors
-nsMathMLElement::nsMathMLElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
- : nsMathMLElementBase(std::move(aNodeInfo)),
-  ALLOW_THIS_IN_INITIALIZER_LIST(Link(this)),
-  mIncrementScriptLevel(false)
-{
-}
-=======
-nsMathMLElement::nsMathMLElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : nsMathMLElementBase(std::move(aNodeInfo)),
-      ALLOW_THIS_IN_INITIALIZER_LIST(Link(this)),
-      mIncrementScriptLevel(false) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 nsMathMLElement::nsMathMLElement(
     already_AddRefed<mozilla::dom::NodeInfo>& aNodeInfo)
     : nsMathMLElementBase(std::move(aNodeInfo)),
@@ -177,28 +75,10 @@ nsMathMLElement::nsMathMLElement(
       ALLOW_THIS_IN_INITIALIZER_LIST(Link(this)),
       mIncrementScriptLevel(false) {}
 
-nsresult nsMathMLElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-||||||| merged common ancestors
-nsresult
-nsMathMLElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                            nsIContent* aBindingParent)
-{
-=======
 nsresult nsMathMLElement::BindToTree(BindContext& aContext, nsINode& aParent) {
->>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
 
-<<<<<<< HEAD
-  nsresult rv =
-      nsMathMLElementBase::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  nsresult rv = nsMathMLElementBase::BindToTree(aDocument, aParent,
-                                                aBindingParent);
-=======
   nsresult rv = nsMathMLElementBase::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // FIXME(emilio): Probably should be composed, this uses all the other link
@@ -215,21 +95,9 @@ nsresult nsMathMLElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return rv;
 }
 
-<<<<<<< HEAD
-void nsMathMLElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  // If this link is ever reinserted into a document, it might
-  // be under a different xml:base, so forget the cached state now.
-||||||| merged common ancestors
-void
-nsMathMLElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  // If this link is ever reinserted into a document, it might
-  // be under a different xml:base, so forget the cached state now.
-=======
 void nsMathMLElement::UnbindFromTree(bool aNullParent) {
   // Without removing the link state we risk a dangling pointer
   // in the mStyledLinks hashtable
->>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
 
   nsMathMLElementBase::UnbindFromTree(aNullParent);
@@ -342,95 +210,6 @@ nsMapRuleToAttributesFunc nsMathMLElement::GetAttributeMappingFunction() const {
   return &MapMathMLAttributesInto;
 }
 
-<<<<<<< HEAD
-/* static */ bool nsMathMLElement::ParseNamedSpaceValue(const nsString& aString,
-                                                        nsCSSValue& aCSSValue,
-                                                        uint32_t aFlags) {
-  int32_t i = 0;
-  // See if it is one of the 'namedspace' (ranging -7/18em, -6/18, ... 7/18em)
-  if (aString.EqualsLiteral("veryverythinmathspace")) {
-    i = 1;
-  } else if (aString.EqualsLiteral("verythinmathspace")) {
-    i = 2;
-  } else if (aString.EqualsLiteral("thinmathspace")) {
-    i = 3;
-  } else if (aString.EqualsLiteral("mediummathspace")) {
-    i = 4;
-  } else if (aString.EqualsLiteral("thickmathspace")) {
-    i = 5;
-  } else if (aString.EqualsLiteral("verythickmathspace")) {
-    i = 6;
-  } else if (aString.EqualsLiteral("veryverythickmathspace")) {
-    i = 7;
-  } else if (aFlags & PARSE_ALLOW_NEGATIVE) {
-    if (aString.EqualsLiteral("negativeveryverythinmathspace")) {
-      i = -1;
-    } else if (aString.EqualsLiteral("negativeverythinmathspace")) {
-      i = -2;
-    } else if (aString.EqualsLiteral("negativethinmathspace")) {
-      i = -3;
-    } else if (aString.EqualsLiteral("negativemediummathspace")) {
-      i = -4;
-    } else if (aString.EqualsLiteral("negativethickmathspace")) {
-      i = -5;
-    } else if (aString.EqualsLiteral("negativeverythickmathspace")) {
-      i = -6;
-    } else if (aString.EqualsLiteral("negativeveryverythickmathspace")) {
-      i = -7;
-    }
-  }
-  if (0 != i) {
-    aCSSValue.SetFloatValue(float(i) / float(18), eCSSUnit_EM);
-    return true;
-  }
-
-  return false;
-||||||| merged common ancestors
-/* static */ bool
-nsMathMLElement::ParseNamedSpaceValue(const nsString& aString,
-                                      nsCSSValue&     aCSSValue,
-                                      uint32_t        aFlags)
-{
-   int32_t i = 0;
-   // See if it is one of the 'namedspace' (ranging -7/18em, -6/18, ... 7/18em)
-   if (aString.EqualsLiteral("veryverythinmathspace")) {
-     i = 1;
-   } else if (aString.EqualsLiteral("verythinmathspace")) {
-     i = 2;
-   } else if (aString.EqualsLiteral("thinmathspace")) {
-     i = 3;
-   } else if (aString.EqualsLiteral("mediummathspace")) {
-     i = 4;
-   } else if (aString.EqualsLiteral("thickmathspace")) {
-     i = 5;
-   } else if (aString.EqualsLiteral("verythickmathspace")) {
-     i = 6;
-   } else if (aString.EqualsLiteral("veryverythickmathspace")) {
-     i = 7;
-   } else if (aFlags & PARSE_ALLOW_NEGATIVE) {
-     if (aString.EqualsLiteral("negativeveryverythinmathspace")) {
-       i = -1;
-     } else if (aString.EqualsLiteral("negativeverythinmathspace")) {
-       i = -2;
-     } else if (aString.EqualsLiteral("negativethinmathspace")) {
-       i = -3;
-     } else if (aString.EqualsLiteral("negativemediummathspace")) {
-       i = -4;
-     } else if (aString.EqualsLiteral("negativethickmathspace")) {
-       i = -5;
-     } else if (aString.EqualsLiteral("negativeverythickmathspace")) {
-       i = -6;
-     } else if (aString.EqualsLiteral("negativeveryverythickmathspace")) {
-       i = -7;
-     }
-   }
-   if (0 != i) {
-     aCSSValue.SetFloatValue(float(i)/float(18), eCSSUnit_EM);
-     return true;
-   }
-
-   return false;
-=======
 /* static */
 bool nsMathMLElement::ParseNamedSpaceValue(const nsString& aString,
                                            nsCSSValue& aCSSValue,
@@ -474,7 +253,6 @@ bool nsMathMLElement::ParseNamedSpaceValue(const nsString& aString,
   }
 
   return false;
->>>>>>> upstream-releases
 }
 
 // The REC says:
@@ -513,24 +291,10 @@ bool nsMathMLElement::ParseNamedSpaceValue(const nsString& aString,
 //   number, representing a terminating decimal number (a type of rational
 //   number)"
 //
-<<<<<<< HEAD
-/* static */ bool nsMathMLElement::ParseNumericValue(const nsString& aString,
-                                                     nsCSSValue& aCSSValue,
-                                                     uint32_t aFlags,
-                                                     nsIDocument* aDocument) {
-||||||| merged common ancestors
-/* static */ bool
-nsMathMLElement::ParseNumericValue(const nsString& aString,
-                                   nsCSSValue&     aCSSValue,
-                                   uint32_t        aFlags,
-                                   nsIDocument*    aDocument)
-{
-=======
 /* static */
 bool nsMathMLElement::ParseNumericValue(const nsString& aString,
                                         nsCSSValue& aCSSValue, uint32_t aFlags,
                                         Document* aDocument) {
->>>>>>> upstream-releases
   nsAutoString str(aString);
   str.CompressWhitespace();  // aString is const in this code...
 

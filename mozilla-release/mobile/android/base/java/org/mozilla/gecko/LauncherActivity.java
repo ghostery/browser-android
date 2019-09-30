@@ -21,15 +21,8 @@ import android.util.Log;
 
 import org.mozilla.gecko.home.HomeConfig;
 import org.mozilla.gecko.mma.MmaDelegate;
-<<<<<<< HEAD
-import org.mozilla.gecko.switchboard.SwitchBoard;
-import org.mozilla.gecko.util.FileUtils;
-||||||| merged common ancestors
-import org.mozilla.gecko.switchboard.SwitchBoard;
-=======
 import org.mozilla.gecko.search.SearchWidgetConfigurationActivity;
 import org.mozilla.gecko.search.SearchWidgetProvider;
->>>>>>> upstream-releases
 import org.mozilla.gecko.webapps.WebAppActivity;
 import org.mozilla.gecko.webapps.WebAppIndexer;
 import org.mozilla.gecko.customtabs.CustomTabsActivity;
@@ -57,13 +50,8 @@ import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_SEARCH_WIDGET;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_SIGN_UP;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.SUMO_DEFAULT_BROWSER;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_FXA_SIGNIN;
-<<<<<<< HEAD
-import static org.mozilla.gecko.util.FileUtils.isContentUri;
-||||||| merged common ancestors
-=======
 import static org.mozilla.gecko.deeplink.DeepLinkContract.URL_PARAM;
 import static org.mozilla.gecko.util.FileUtils.isContentUri;
->>>>>>> upstream-releases
 
 import org.mozilla.gecko.deeplink.DeepLinkContract;
 
@@ -189,10 +177,7 @@ public class LauncherActivity extends Activity {
     }
 
     private static boolean isCustomTabsEnabled(@NonNull final Context context) {
-        /* Cliqz Start */
-        // return GeckoPreferences.getBooleanPref(context, GeckoPreferences.PREFS_CUSTOM_TABS, true);
-        return false;
-        /* Cliqz End */
+        return GeckoPreferences.getBooleanPref(context, GeckoPreferences.PREFS_CUSTOM_TABS, true);
     }
 
     private static boolean isCustomTabsIntent(@NonNull final SafeIntent safeIntent) {

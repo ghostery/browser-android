@@ -31,58 +31,6 @@
   _(GCLock, 400)                      \
                                       \
   _(SharedImmutableStringsCache, 500) \
-<<<<<<< HEAD
-  _(FutexThread, 500)                 \
-  _(GeckoProfilerStrings, 500)        \
-  _(ProtectedRegionTree, 500)         \
-  _(ShellOffThreadState, 500)         \
-  _(ShellStreamCacheEntryState, 500)  \
-  _(SimulatorCacheLock, 500)          \
-  _(Arm64SimulatorLock, 500)          \
-  _(IonSpewer, 500)                   \
-  _(PerfSpewer, 500)                  \
-  _(CacheIRSpewer, 500)               \
-  _(TraceLoggerThreadState, 500)      \
-  _(DateTimeInfoMutex, 500)           \
-  _(ProcessExecutableRegion, 500)     \
-  _(OffThreadPromiseState, 500)       \
-  _(BufferStreamState, 500)           \
-  _(SharedArrayGrow, 500)             \
-  _(RuntimeScriptData, 500)           \
-  _(WasmFuncTypeIdSet, 500)           \
-  _(WasmCodeProfilingLabels, 500)     \
-  _(WasmCompileTaskState, 500)        \
-  _(WasmCodeBytesEnd, 500)            \
-  _(WasmStreamEnd, 500)               \
-  _(WasmStreamStatus, 500)            \
-  _(WasmRuntimeInstances, 500)        \
-  _(WasmSignalInstallState, 500)      \
-||||||| merged common ancestors
-  _(FutexThread,                 500) \
-  _(GeckoProfilerStrings,        500) \
-  _(ProtectedRegionTree,         500) \
-  _(ShellOffThreadState,         500) \
-  _(ShellStreamCacheEntryState,  500) \
-  _(SimulatorCacheLock,          500) \
-  _(Arm64SimulatorLock,          500) \
-  _(IonSpewer,                   500) \
-  _(PerfSpewer,                  500) \
-  _(CacheIRSpewer,               500) \
-  _(TraceLoggerThreadState,      500) \
-  _(DateTimeInfoMutex,           500) \
-  _(ProcessExecutableRegion,     500) \
-  _(OffThreadPromiseState,       500) \
-  _(BufferStreamState,           500) \
-  _(SharedArrayGrow,             500) \
-  _(RuntimeScriptData,           500) \
-  _(WasmFuncTypeIdSet,           500) \
-  _(WasmCodeProfilingLabels,     500) \
-  _(WasmCompileTaskState,        500) \
-  _(WasmCodeBytesEnd,            500) \
-  _(WasmStreamEnd,               500) \
-  _(WasmStreamStatus,            500) \
-  _(WasmRuntimeInstances,        500) \
-=======
   _(FutexThread, 500)                 \
   _(GeckoProfilerStrings, 500)        \
   _(ProtectedRegionTree, 500)         \
@@ -109,29 +57,12 @@
   _(WasmRuntimeInstances, 500)        \
   _(WasmSignalInstallState, 500)      \
   _(MemoryTracker, 500)               \
->>>>>>> upstream-releases
                                       \
-<<<<<<< HEAD
-  _(IcuTimeZoneStateMutex, 600)       \
-  _(ThreadId, 600)                    \
-  _(WasmCodeSegmentMap, 600)          \
-  _(WasmDeferredValidation, 600)      \
-  _(TraceLoggerGraphState, 600)       \
-  _(VTuneLock, 600)
-||||||| merged common ancestors
-  _(IcuTimeZoneStateMutex,       600) \
-  _(ThreadId,                    600) \
-  _(WasmCodeSegmentMap,          600) \
-  _(WasmDeferredValidation,      600) \
-  _(TraceLoggerGraphState,       600) \
-  _(VTuneLock,                   600)
-=======
   _(IcuTimeZoneStateMutex, 600)       \
   _(ThreadId, 600)                    \
   _(WasmCodeSegmentMap, 600)          \
   _(TraceLoggerGraphState, 600)       \
   _(VTuneLock, 600)
->>>>>>> upstream-releases
 
 namespace js {
 namespace mutexid {

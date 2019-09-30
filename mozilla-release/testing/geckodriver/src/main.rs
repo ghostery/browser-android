@@ -49,19 +49,9 @@ mod prefs;
 #[cfg(test)]
 pub mod test;
 
-<<<<<<< HEAD
-use crate::build::BuildInfo;
-use crate::command::extension_routes;
-use crate::marionette::{MarionetteHandler, MarionetteSettings};
-||||||| merged common ancestors
-use build::BuildInfo;
-use command::extension_routes;
-use marionette::{MarionetteHandler, MarionetteSettings};
-=======
 use crate::command::extension_routes;
 use crate::logging::Level;
 use crate::marionette::{MarionetteHandler, MarionetteSettings};
->>>>>>> upstream-releases
 
 const EXIT_SUCCESS: i32 = 0;
 const EXIT_USAGE: i32 = 64;
@@ -278,26 +268,11 @@ fn make_app<'a, 'b>() -> App<'a, 'b> {
                 .help("Host to use to connect to Gecko"),
         )
         .arg(
-            Arg::with_name("marionette_host")
-                .long("marionette-host")
-                .value_name("HOST")
-                .help("Host to use to connect to Gecko (default: 127.0.0.1)")
-                .takes_value(true)
-        )
-        .arg(
             Arg::with_name("marionette_port")
                 .long("marionette-port")
                 .takes_value(true)
                 .value_name("PORT")
-<<<<<<< HEAD
-                .help("Port to use to connect to Gecko (default: system-allocated port)")
-                .takes_value(true),
-||||||| merged common ancestors
-                .help("Port to use to connect to Gecko (default: random free port)")
-                .takes_value(true),
-=======
                 .help("Port to use to connect to Gecko [default: system-allocated port]"),
->>>>>>> upstream-releases
         )
         .arg(
             Arg::with_name("connect_existing")
@@ -339,135 +314,8 @@ fn make_app<'a, 'b>() -> App<'a, 'b> {
         )
 }
 
-<<<<<<< HEAD
-fn run() -> ProgramResult {
-    let matches = app().get_matches();
-
-    if matches.is_present("version") {
-        print_version();
-        return Ok(());
-    }
-
-    let host = matches.value_of("webdriver_host").unwrap_or("127.0.0.1");
-    let port = match u16::from_str(
-        matches
-            .value_of("webdriver_port")
-            .or(matches.value_of("webdriver_port_alias"))
-            .unwrap_or("4444"),
-    ) {
-        Ok(x) => x,
-        Err(_) => return Err((ExitCode::Usage, "invalid WebDriver port".into())),
-    };
-    let addr = match IpAddr::from_str(host) {
-        Ok(addr) => SocketAddr::new(addr, port),
-        Err(_) => return Err((ExitCode::Usage, "invalid host address".into())),
-    };
-
-    let binary = matches.value_of("binary").map(PathBuf::from);
-
-    let marionette_host = matches.value_of("marionette_host")
-        .unwrap_or("127.0.0.1").to_string();
-    let marionette_port = match matches.value_of("marionette_port") {
-        Some(x) => match u16::from_str(x) {
-            Ok(x) => Some(x),
-            Err(_) => return Err((ExitCode::Usage, "invalid Marionette port".into())),
-        },
-        None => None,
-    };
-
-    let log_level = if matches.is_present("log_level") {
-        logging::Level::from_str(matches.value_of("log_level").unwrap()).ok()
-    } else {
-        match matches.occurrences_of("verbosity") {
-            0 => Some(logging::Level::Info),
-            1 => Some(logging::Level::Debug),
-            _ => Some(logging::Level::Trace),
-        }
-    };
-    if let Some(ref level) = log_level {
-        logging::init_with_level(*level).unwrap();
-    } else {
-        logging::init().unwrap();
-    }
-
-    let settings = MarionetteSettings {
-        host: marionette_host,
-        port: marionette_port,
-        binary,
-        connect_existing: matches.is_present("connect_existing"),
-        jsdebugger: matches.is_present("jsdebugger"),
-    };
-    let handler = MarionetteHandler::new(settings);
-    let listening = webdriver::server::start(addr, handler, &extension_routes()[..])
-        .map_err(|err| (ExitCode::Unavailable, err.to_string()))?;
-    debug!("Listening on {}", listening.socket);
-
-    Ok(())
-||||||| merged common ancestors
-fn run() -> ProgramResult {
-    let matches = app().get_matches();
-
-    if matches.is_present("version") {
-        print_version();
-        return Ok(());
-    }
-
-    let host = matches.value_of("webdriver_host").unwrap_or("127.0.0.1");
-    let port = match u16::from_str(
-        matches
-            .value_of("webdriver_port")
-            .or(matches.value_of("webdriver_port_alias"))
-            .unwrap_or("4444"),
-    ) {
-        Ok(x) => x,
-        Err(_) => return Err((ExitCode::Usage, "invalid WebDriver port".into())),
-    };
-    let addr = match IpAddr::from_str(host) {
-        Ok(addr) => SocketAddr::new(addr, port),
-        Err(_) => return Err((ExitCode::Usage, "invalid host address".into())),
-    };
-
-    let binary = matches.value_of("binary").map(PathBuf::from);
-
-    let marionette_port = match matches.value_of("marionette_port") {
-        Some(x) => match u16::from_str(x) {
-            Ok(x) => Some(x),
-            Err(_) => return Err((ExitCode::Usage, "invalid Marionette port".into())),
-        },
-        None => None,
-    };
-
-    let log_level = if matches.is_present("log_level") {
-        logging::Level::from_str(matches.value_of("log_level").unwrap()).ok()
-    } else {
-        match matches.occurrences_of("verbosity") {
-            0 => Some(logging::Level::Info),
-            1 => Some(logging::Level::Debug),
-            _ => Some(logging::Level::Trace),
-        }
-    };
-    if let Some(ref level) = log_level {
-        logging::init_with_level(*level).unwrap();
-    } else {
-        logging::init().unwrap();
-    }
-
-    let settings = MarionetteSettings {
-        port: marionette_port,
-        binary,
-        connect_existing: matches.is_present("connect_existing"),
-        jsdebugger: matches.is_present("jsdebugger"),
-    };
-    let handler = MarionetteHandler::new(settings);
-    let listening = webdriver::server::start(addr, handler, &extension_routes()[..])
-        .map_err(|err| (ExitCode::Unavailable, err.to_string()))?;
-    debug!("Listening on {}", listening.socket);
-
-    Ok(())
-=======
 fn get_program_name() -> String {
     env::args().next().unwrap()
->>>>>>> upstream-releases
 }
 
 fn print_help(app: &mut App) {

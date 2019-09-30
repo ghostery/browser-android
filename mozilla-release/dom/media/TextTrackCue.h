@@ -280,37 +280,11 @@ class TextTrackCue final : public DOMEventTargetHelper {
 
   void SetTrackElement(HTMLTrackElement* aTrackElement);
 
-<<<<<<< HEAD
-  void SetActive(bool aActive) {
-    if (mActive == aActive) {
-      return;
-    }
-||||||| merged common ancestors
-  void SetActive(bool aActive)
-  {
-    if (mActive == aActive) {
-      return;
-    }
-=======
   void SetActive(bool aActive);
->>>>>>> upstream-releases
 
   bool GetActive() { return mActive; }
 
-<<<<<<< HEAD
-  bool GetActive() { return mActive; }
-
  private:
-||||||| merged common ancestors
-  bool GetActive()
-  {
-    return mActive;
-  }
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   ~TextTrackCue();
 
   void NotifyCueUpdated(TextTrackCue* aCue) {

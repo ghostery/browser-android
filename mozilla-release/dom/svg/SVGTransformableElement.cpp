@@ -25,32 +25,12 @@ using namespace mozilla::gfx;
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-already_AddRefed<SVGAnimatedTransformList>
-SVGTransformableElement::Transform() {
-||||||| merged common ancestors
-already_AddRefed<SVGAnimatedTransformList>
-SVGTransformableElement::Transform()
-{
-=======
 already_AddRefed<DOMSVGAnimatedTransformList>
 SVGTransformableElement::Transform() {
->>>>>>> upstream-releases
   // We're creating a DOM wrapper, so we must tell GetAnimatedTransformList
-<<<<<<< HEAD
-  // to allocate the SVGAnimatedTransformList if it hasn't already done so:
-  return SVGAnimatedTransformList::GetDOMWrapper(
-      GetAnimatedTransformList(DO_ALLOCATE), this);
-||||||| merged common ancestors
-  // to allocate the SVGAnimatedTransformList if it hasn't already done so:
-  return SVGAnimatedTransformList::GetDOMWrapper(
-           GetAnimatedTransformList(DO_ALLOCATE), this);
-
-=======
   // to allocate the DOMSVGAnimatedTransformList if it hasn't already done so:
   return DOMSVGAnimatedTransformList::GetDOMWrapper(
       GetAnimatedTransformList(DO_ALLOCATE), this);
->>>>>>> upstream-releases
 }
 
 //----------------------------------------------------------------------
@@ -62,25 +42,13 @@ SVGTransformableElement::IsAttributeMapped(const nsAtom* name) const {
                                                     sGraphicsMap};
 
   return FindAttributeDependence(name, map) ||
-<<<<<<< HEAD
-         nsSVGElement::IsAttributeMapped(name);
-||||||| merged common ancestors
-    nsSVGElement::IsAttributeMapped(name);
-=======
          SVGElement::IsAttributeMapped(name);
->>>>>>> upstream-releases
 }
 
 nsChangeHint SVGTransformableElement::GetAttributeChangeHint(
     const nsAtom* aAttribute, int32_t aModType) const {
   nsChangeHint retval =
-<<<<<<< HEAD
-      nsSVGElement::GetAttributeChangeHint(aAttribute, aModType);
-||||||| merged common ancestors
-    nsSVGElement::GetAttributeChangeHint(aAttribute, aModType);
-=======
       SVGElement::GetAttributeChangeHint(aAttribute, aModType);
->>>>>>> upstream-releases
   if (aAttribute == nsGkAtoms::transform ||
       aAttribute == nsGkAtoms::mozAnimateMotionDummyAttr) {
     nsIFrame* frame =
@@ -172,59 +140,24 @@ void SVGTransformableElement::SetAnimateMotionTransform(
   }
 }
 
-<<<<<<< HEAD
-nsSVGAnimatedTransformList* SVGTransformableElement::GetAnimatedTransformList(
-    uint32_t aFlags) {
-||||||| merged common ancestors
-nsSVGAnimatedTransformList*
-SVGTransformableElement::GetAnimatedTransformList(uint32_t aFlags)
-{
-=======
 SVGAnimatedTransformList* SVGTransformableElement::GetAnimatedTransformList(
     uint32_t aFlags) {
->>>>>>> upstream-releases
   if (!mTransforms && (aFlags & DO_ALLOCATE)) {
     mTransforms = new SVGAnimatedTransformList();
   }
   return mTransforms;
 }
 
-<<<<<<< HEAD
-nsSVGElement* SVGTransformableElement::GetNearestViewportElement() {
-||||||| merged common ancestors
-nsSVGElement*
-SVGTransformableElement::GetNearestViewportElement()
-{
-=======
 SVGElement* SVGTransformableElement::GetNearestViewportElement() {
->>>>>>> upstream-releases
   return SVGContentUtils::GetNearestViewportElement(this);
 }
 
-<<<<<<< HEAD
-nsSVGElement* SVGTransformableElement::GetFarthestViewportElement() {
-||||||| merged common ancestors
-nsSVGElement*
-SVGTransformableElement::GetFarthestViewportElement()
-{
-=======
 SVGElement* SVGTransformableElement::GetFarthestViewportElement() {
->>>>>>> upstream-releases
   return SVGContentUtils::GetOuterSVGElement(this);
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGIRect> SVGTransformableElement::GetBBox(
-    const SVGBoundingBoxOptions& aOptions, ErrorResult& rv) {
-||||||| merged common ancestors
-already_AddRefed<SVGIRect>
-SVGTransformableElement::GetBBox(const SVGBoundingBoxOptions& aOptions,
-                                 ErrorResult& rv)
-{
-=======
 already_AddRefed<SVGRect> SVGTransformableElement::GetBBox(
     const SVGBoundingBoxOptions& aOptions, ErrorResult& rv) {
->>>>>>> upstream-releases
   nsIFrame* frame = GetPrimaryFrame(FlushType::Layout);
 
   if (!frame || (frame->GetStateBits() & NS_FRAME_IS_NONDISPLAY)) {
@@ -234,13 +167,6 @@ already_AddRefed<SVGRect> SVGTransformableElement::GetBBox(
   nsSVGDisplayableFrame* svgframe = do_QueryFrame(frame);
 
   if (!svgframe) {
-<<<<<<< HEAD
-    rv.Throw(NS_ERROR_NOT_IMPLEMENTED);  // XXX: outer svg
-    return nullptr;
-||||||| merged common ancestors
-    rv.Throw(NS_ERROR_NOT_IMPLEMENTED); // XXX: outer svg
-    return nullptr;
-=======
     if (!nsSVGUtils::IsInSVGTextSubtree(frame)) {
       rv.Throw(NS_ERROR_NOT_IMPLEMENTED);  // XXX: outer svg
       return nullptr;
@@ -274,71 +200,13 @@ already_AddRefed<SVGRect> SVGTransformableElement::GetBBox(
     rec.y += float(text->GetPosition().y) / AppUnitsPerCSSPixel();
 
     return do_AddRef(new SVGRect(this, ToRect(rec)));
->>>>>>> upstream-releases
   }
 
   if (!NS_SVGNewGetBBoxEnabled()) {
-<<<<<<< HEAD
-    return NS_NewSVGRect(
-        this, ToRect(nsSVGUtils::GetBBox(
-                  frame, nsSVGUtils::eBBoxIncludeFillGeometry |
-                             nsSVGUtils::eUseUserSpaceOfUseElement)));
-  } else {
-    uint32_t flags = 0;
-    if (aOptions.mFill) {
-      flags |= nsSVGUtils::eBBoxIncludeFill;
-    }
-    if (aOptions.mStroke) {
-      flags |= nsSVGUtils::eBBoxIncludeStroke;
-    }
-    if (aOptions.mMarkers) {
-      flags |= nsSVGUtils::eBBoxIncludeMarkers;
-    }
-    if (aOptions.mClipped) {
-      flags |= nsSVGUtils::eBBoxIncludeClipped;
-    }
-    if (flags == 0) {
-      return NS_NewSVGRect(this, 0, 0, 0, 0);
-    }
-    if (flags == nsSVGUtils::eBBoxIncludeMarkers ||
-        flags == nsSVGUtils::eBBoxIncludeClipped) {
-      flags |= nsSVGUtils::eBBoxIncludeFill;
-    }
-    flags |= nsSVGUtils::eUseUserSpaceOfUseElement;
-    return NS_NewSVGRect(this, ToRect(nsSVGUtils::GetBBox(frame, flags)));
-||||||| merged common ancestors
-    return NS_NewSVGRect(this, ToRect(nsSVGUtils::GetBBox(frame,
-                                      nsSVGUtils::eBBoxIncludeFillGeometry |
-                                      nsSVGUtils::eUseUserSpaceOfUseElement)));
-  } else {
-    uint32_t flags = 0;
-    if (aOptions.mFill) {
-      flags |= nsSVGUtils::eBBoxIncludeFill;
-    }
-    if (aOptions.mStroke) {
-      flags |= nsSVGUtils::eBBoxIncludeStroke;
-    }
-    if (aOptions.mMarkers) {
-      flags |= nsSVGUtils::eBBoxIncludeMarkers;
-    }
-    if (aOptions.mClipped) {
-      flags |= nsSVGUtils::eBBoxIncludeClipped;
-    }
-    if (flags == 0) {
-      return NS_NewSVGRect(this,0,0,0,0);
-    }
-    if (flags == nsSVGUtils::eBBoxIncludeMarkers ||
-        flags == nsSVGUtils::eBBoxIncludeClipped) {
-      flags |= nsSVGUtils::eBBoxIncludeFill;
-    }
-    flags |= nsSVGUtils::eUseUserSpaceOfUseElement;
-    return NS_NewSVGRect(this, ToRect(nsSVGUtils::GetBBox(frame, flags)));
-=======
     return do_AddRef(new SVGRect(
         this, ToRect(nsSVGUtils::GetBBox(
                   frame, nsSVGUtils::eBBoxIncludeFillGeometry |
                              nsSVGUtils::eUseUserSpaceOfUseElement))));
->>>>>>> upstream-releases
   }
   uint32_t flags = 0;
   if (aOptions.mFill) {
@@ -365,18 +233,8 @@ already_AddRefed<SVGRect> SVGTransformableElement::GetBBox(
       new SVGRect(this, ToRect(nsSVGUtils::GetBBox(frame, flags))));
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGMatrix> SVGTransformableElement::GetCTM() {
-  nsIDocument* currentDoc = GetComposedDoc();
-||||||| merged common ancestors
-already_AddRefed<SVGMatrix>
-SVGTransformableElement::GetCTM()
-{
-  nsIDocument* currentDoc = GetComposedDoc();
-=======
 already_AddRefed<SVGMatrix> SVGTransformableElement::GetCTM() {
   Document* currentDoc = GetComposedDoc();
->>>>>>> upstream-releases
   if (currentDoc) {
     // Flush all pending notifications so that our frames are up to date
     currentDoc->FlushPendingNotifications(FlushType::Layout);
@@ -387,18 +245,8 @@ already_AddRefed<SVGMatrix> SVGTransformableElement::GetCTM() {
   return mat.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<SVGMatrix> SVGTransformableElement::GetScreenCTM() {
-  nsIDocument* currentDoc = GetComposedDoc();
-||||||| merged common ancestors
-already_AddRefed<SVGMatrix>
-SVGTransformableElement::GetScreenCTM()
-{
-  nsIDocument* currentDoc = GetComposedDoc();
-=======
 already_AddRefed<SVGMatrix> SVGTransformableElement::GetScreenCTM() {
   Document* currentDoc = GetComposedDoc();
->>>>>>> upstream-releases
   if (currentDoc) {
     // Flush all pending notifications so that our frames are up to date
     currentDoc->FlushPendingNotifications(FlushType::Layout);
@@ -425,22 +273,10 @@ already_AddRefed<SVGMatrix> SVGTransformableElement::GetTransformToElement(
   return mat.forget();
 }
 
-<<<<<<< HEAD
-/* static */ gfxMatrix SVGTransformableElement::GetUserToParentTransform(
-    const gfx::Matrix* aAnimateMotionTransform,
-    const nsSVGAnimatedTransformList* aTransforms) {
-||||||| merged common ancestors
-/* static */ gfxMatrix
-SVGTransformableElement::GetUserToParentTransform(
-                           const gfx::Matrix* aAnimateMotionTransform,
-                           const nsSVGAnimatedTransformList* aTransforms)
-{
-=======
 /* static */
 gfxMatrix SVGTransformableElement::GetUserToParentTransform(
     const gfx::Matrix* aAnimateMotionTransform,
     const SVGAnimatedTransformList* aTransforms) {
->>>>>>> upstream-releases
   gfxMatrix result;
 
   if (aAnimateMotionTransform) {

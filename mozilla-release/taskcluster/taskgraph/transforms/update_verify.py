@@ -10,16 +10,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 from copy import deepcopy
 
 from taskgraph.transforms.base import TransformSequence
-<<<<<<< HEAD
-from taskgraph.util.schema import resolve_keyed_by
-from taskgraph.util.treeherder import add_suffix
-||||||| merged common ancestors
-from taskgraph.util.schema import resolve_keyed_by
-from taskgraph.util.taskcluster import get_taskcluster_artifact_prefix
-from taskgraph.util.treeherder import add_suffix
-=======
 from taskgraph.util.treeherder import add_suffix, inherit_treeherder_from_dep
->>>>>>> upstream-releases
 
 transforms = TransformSequence()
 
@@ -51,71 +42,6 @@ def add_command(config, tasks):
             )
             if not chunked["worker"].get("env"):
                 chunked["worker"]["env"] = {}
-<<<<<<< HEAD
-            chunked["run"] = {
-                'using': 'run-task',
-                'command': 'cd /builds/worker/checkouts/gecko && '
-                           'tools/update-verify/scripts/chunked-verify.sh '
-                           '{} {}'.format(
-                               total_chunks,
-                               this_chunk,
-                           ),
-                'sparse-profile': 'update-verify',
-            }
-            for thing in ("CHANNEL", "VERIFY_CONFIG", "BUILD_TOOLS_REPO"):
-                thing = "worker.env.{}".format(thing)
-                resolve_keyed_by(
-                    chunked, thing, thing,
-                    **{
-                        'project': config.params['project'],
-                        'release-type': config.params['release_type'],
-                    }
-                )
-
-            for upstream in chunked.get("dependencies", {}).keys():
-                if 'update-verify-config' in upstream:
-                    chunked.setdefault('fetches', {})[upstream] = [
-                        "update-verify.cfg",
-                    ]
-                    break
-            else:
-                raise Exception("Couldn't find upate verify config")
-
-||||||| merged common ancestors
-            chunked["worker"]["command"] = [
-                "/bin/bash",
-                "-c",
-                "hg clone $BUILD_TOOLS_REPO tools && " +
-                "tools/scripts/release/updates/chunked-verify.sh " +
-                "UNUSED UNUSED {} {}".format(
-                    total_chunks,
-                    this_chunk,
-                )
-            ]
-            for thing in ("CHANNEL", "VERIFY_CONFIG", "BUILD_TOOLS_REPO"):
-                thing = "worker.env.{}".format(thing)
-                resolve_keyed_by(
-                    chunked, thing, thing,
-                    **{
-                        'project': config.params['project'],
-                        'release-type': config.params['release_type'],
-                    }
-                )
-
-            update_verify_config = None
-            for upstream in chunked.get("dependencies", {}).keys():
-                if 'update-verify-config' in upstream:
-                    update_verify_config = "{}update-verify.cfg".format(
-                        get_taskcluster_artifact_prefix(task, "<{}>".format(upstream))
-                    )
-            if not update_verify_config:
-                raise Exception("Couldn't find upate verify config")
-
-            chunked["worker"]["env"]["TASKCLUSTER_VERIFY_CONFIG"] = {
-                "task-reference": update_verify_config
-            }
-
-=======
             chunked["run"] = {
                 'using': 'run-task',
                 'command': 'cd /builds/worker/checkouts/gecko && '
@@ -127,5 +53,4 @@ def add_command(config, tasks):
                 'sparse-profile': 'update-verify',
             }
 
->>>>>>> upstream-releases
             yield chunked

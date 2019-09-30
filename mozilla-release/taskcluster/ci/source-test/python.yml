@@ -7,16 +7,9 @@ job-defaults:
     always-target: true
     worker-type:
         by-platform:
-<<<<<<< HEAD
-            linux64.*: aws-provisioner-v1/gecko-t-linux-xlarge
-            windows10-64.*: aws-provisioner-v1/gecko-t-win10-64
-||||||| merged common ancestors
-            linux64.*: aws-provisioner-v1/gecko-t-linux-xlarge
-=======
             linux64.*: t-linux-xlarge
             macosx1014-64.*: t-osx-1014
             windows10-64.*: t-win10-64
->>>>>>> upstream-releases
     worker:
         by-platform:
             linux64.*:
@@ -123,17 +116,10 @@ mochitest-harness:
 
 mozbase:
     description: testing/mozbase unit tests
-<<<<<<< HEAD
-    platform:
-        - linux64/opt
-        - windows10-64/opt
-||||||| merged common ancestors
-=======
     platform:
         - linux64/opt
         - macosx1014-64/opt
         - windows10-64/opt
->>>>>>> upstream-releases
     python-version: [2, 3]
     treeherder:
         symbol: mb
@@ -160,17 +146,10 @@ mozharness:
 
 mozlint:
     description: python/mozlint unit tests
-<<<<<<< HEAD
-    platform:
-        - linux64/opt
-        - windows10-64/opt
-||||||| merged common ancestors
-=======
     platform:
         - linux64/opt
         - macosx1014-64/opt
         - windows10-64/opt
->>>>>>> upstream-releases
     python-version: [2]
     treeherder:
         symbol: ml

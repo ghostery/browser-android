@@ -29,25 +29,12 @@ class DrawEventRecorderPrivate : public DrawEventRecorder {
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(DrawEventRecorderPrivate, override)
 
   DrawEventRecorderPrivate();
-<<<<<<< HEAD
-  virtual ~DrawEventRecorderPrivate() {}
-  virtual bool Finish() override {
-    ClearResources();
-    return true;
-  }
-  virtual void FlushItem(IntRect) {}
-||||||| merged common ancestors
-  virtual ~DrawEventRecorderPrivate() { }
-  virtual bool Finish() override { ClearResources(); return true; }
-  virtual void FlushItem(IntRect) { }
-=======
   virtual ~DrawEventRecorderPrivate() = default;
   bool Finish() override {
     ClearResources();
     return true;
   }
   virtual void FlushItem(IntRect) {}
->>>>>>> upstream-releases
   void DetachResources() {
     // The iteration is a bit awkward here because our iterator will
     // be invalidated by the removal
@@ -223,16 +210,8 @@ class DrawEventRecorderMemory : public DrawEventRecorderPrivate {
    */
   MemStream mIndex;
 
-<<<<<<< HEAD
- protected:
-  ~DrawEventRecorderMemory(){};
-||||||| merged common ancestors
-protected:
-  ~DrawEventRecorderMemory() {};
-=======
  protected:
   virtual ~DrawEventRecorderMemory(){};
->>>>>>> upstream-releases
 
  private:
   SerializeResourcesFn mSerializeCallback;

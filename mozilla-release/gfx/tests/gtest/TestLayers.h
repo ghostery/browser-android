@@ -13,23 +13,10 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-class TestSurfaceAllocator final : public ISurfaceAllocator {
- public:
-  TestSurfaceAllocator() {}
-  ~TestSurfaceAllocator() override {}
-||||||| merged common ancestors
-class TestSurfaceAllocator final : public ISurfaceAllocator
-{
-public:
-  TestSurfaceAllocator() {}
-  ~TestSurfaceAllocator() override {}
-=======
 class TestSurfaceAllocator final : public ISurfaceAllocator {
  public:
   TestSurfaceAllocator() = default;
   virtual ~TestSurfaceAllocator() = default;
->>>>>>> upstream-releases
 
   bool IsSameProcess() const override { return true; }
 };

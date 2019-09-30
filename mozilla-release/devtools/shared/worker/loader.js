@@ -562,32 +562,6 @@ var {
 this.worker = new WorkerDebuggerLoader({
   createSandbox: createSandbox,
   globals: {
-<<<<<<< HEAD
-    "isWorker": true,
-    "dump": dump,
-    "loader": loader,
-    "reportError": reportError,
-    "rpc": rpc,
-    "URL": URL,
-    "setImmediate": setImmediate,
-    "lazyRequire": lazyRequire,
-    "lazyRequireModule": lazyRequireModule,
-    "retrieveConsoleEvents": this.retrieveConsoleEvents,
-    "setConsoleEventHandler": this.setConsoleEventHandler,
-    "console": console,
-||||||| merged common ancestors
-    "isWorker": true,
-    "dump": dump,
-    "loader": loader,
-    "reportError": reportError,
-    "rpc": rpc,
-    "URL": URL,
-    "setImmediate": setImmediate,
-    "lazyRequire": lazyRequire,
-    "lazyRequireModule": lazyRequireModule,
-    "retrieveConsoleEvents": this.retrieveConsoleEvents,
-    "setConsoleEventHandler": this.setConsoleEventHandler,
-=======
     isWorker: true,
     isReplaying: false,
     dump: dump,
@@ -603,7 +577,6 @@ this.worker = new WorkerDebuggerLoader({
     console: console,
     btoa: this.btoa,
     atob: this.atob,
->>>>>>> upstream-releases
   },
   loadSubScript: loadSubScript,
   modules: {

@@ -3,32 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
-<<<<<<< HEAD
-const {browsingContextTargetSpec} = require("devtools/shared/specs/targets/browsing-context");
-const protocol = require("devtools/shared/protocol");
-const {custom} = protocol;
-
-loader.lazyRequireGetter(this, "ThreadClient", "devtools/shared/client/thread-client");
-
-const BrowsingContextTargetFront =
-protocol.FrontClassWithSpec(browsingContextTargetSpec, {
-  initialize: function(client, form) {
-    protocol.Front.prototype.initialize.call(this, client, form);
-
-    this.thread = null;
-||||||| merged common ancestors
-const {browsingContextTargetSpec} = require("devtools/shared/specs/targets/browsing-context");
-const protocol = require("devtools/shared/protocol");
-const {custom} = protocol;
-
-loader.lazyRequireGetter(this, "ThreadClient", "devtools/shared/client/thread-client");
-
-const BrowsingContextFront = protocol.FrontClassWithSpec(browsingContextTargetSpec, {
-  initialize: function(client, form) {
-    protocol.Front.prototype.initialize.call(this, client, form);
-
-    this.thread = null;
-=======
 const {
   browsingContextTargetSpec,
 } = require("devtools/shared/specs/targets/browsing-context");
@@ -43,7 +17,6 @@ class BrowsingContextTargetFront extends TargetMixin(
 ) {
   constructor(client) {
     super(client);
->>>>>>> upstream-releases
 
     // Cache the value of some target properties that are being returned by `attach`
     // request and then keep them up-to-date in `reconfigure` request.
@@ -51,19 +24,6 @@ class BrowsingContextTargetFront extends TargetMixin(
       javascriptEnabled: null,
     };
 
-<<<<<<< HEAD
-    // TODO: remove once ThreadClient becomes a front
-    this.client = client;
-
-    // Save the full form for Target class usage
-    // Do not use `form` name to avoid colliding with protocol.js's `form` method
-    this.targetForm = form;
-  },
-||||||| merged common ancestors
-    // TODO: remove once ThreadClient becomes a front
-    this.client = client;
-  },
-=======
     // RootFront.listTabs is going to update this state via `setIsSelected`  method
     this._selected = false;
 
@@ -94,7 +54,6 @@ class BrowsingContextTargetFront extends TargetMixin(
   setIsSelected(selected) {
     this._selected = selected;
   }
->>>>>>> upstream-releases
 
   /**
    * Event listener for `frameUpdate` event.
@@ -183,21 +142,6 @@ class BrowsingContextTargetFront extends TargetMixin(
     this.off("frameUpdate", this._onFrameUpdate);
 
     return response;
-<<<<<<< HEAD
-  }, {
-    impl: "_detach",
-  }),
-});
-||||||| merged common ancestors
-  }, {
-    impl: "_detach",
-  }),
-
-  attachWorker: function(workerTargetActor) {
-    return this.client.attachWorker(workerTargetActor);
-  },
-});
-=======
   }
 
   destroy() {
@@ -211,13 +155,6 @@ class BrowsingContextTargetFront extends TargetMixin(
     return promise;
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-exports.BrowsingContextTargetFront = BrowsingContextTargetFront;
-||||||| merged common ancestors
-exports.BrowsingContextFront = BrowsingContextFront;
-=======
 exports.BrowsingContextTargetFront = BrowsingContextTargetFront;
 registerFront(exports.BrowsingContextTargetFront);
->>>>>>> upstream-releases

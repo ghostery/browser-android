@@ -17,41 +17,14 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-template <typename BaseProtocol>
-class URLClassifierChildBase : public BaseProtocol {
- public:
-  URLClassifierChildBase() = default;
-
-  void SetCallback(nsIURIClassifierCallback* aCallback) {
-||||||| merged common ancestors
-template<typename BaseProtocol>
-class URLClassifierChildBase : public BaseProtocol
-{
-public:
-  URLClassifierChildBase() = default;
-
-  void SetCallback(nsIURIClassifierCallback* aCallback)
-  {
-=======
 class URLClassifierChild : public PURLClassifierChild {
  public:
   void SetCallback(nsIURIClassifierCallback* aCallback) {
->>>>>>> upstream-releases
     mCallback = aCallback;
   }
 
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult Recv__delete__(const MaybeInfo& aInfo,
-                                         const nsresult& aResult) override {
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult Recv__delete__(const MaybeInfo& aInfo,
-                                         const nsresult& aResult) override
-  {
-=======
   mozilla::ipc::IPCResult Recv__delete__(const Maybe<ClassifierInfo>& aInfo,
                                          const nsresult& aResult) override {
->>>>>>> upstream-releases
     MOZ_ASSERT(mCallback);
     if (aInfo.isSome()) {
       mCallback->OnClassifyComplete(aResult, aInfo.ref().list(),
@@ -61,28 +34,10 @@ class URLClassifierChild : public PURLClassifierChild {
     return IPC_OK();
   }
 
-<<<<<<< HEAD
  private:
-  ~URLClassifierChildBase() = default;
-
-||||||| merged common ancestors
-private:
-  ~URLClassifierChildBase() = default;
-
-=======
- private:
->>>>>>> upstream-releases
   nsCOMPtr<nsIURIClassifierCallback> mCallback;
 };
 
-<<<<<<< HEAD
-using URLClassifierChild = URLClassifierChildBase<PURLClassifierChild>;
-using URLClassifierLocalChild =
-    URLClassifierChildBase<PURLClassifierLocalChild>;
-||||||| merged common ancestors
-using URLClassifierChild = URLClassifierChildBase<PURLClassifierChild>;
-using URLClassifierLocalChild = URLClassifierChildBase<PURLClassifierLocalChild>;
-=======
 class URLClassifierLocalChild : public PURLClassifierLocalChild {
  public:
   void SetFeaturesAndCallback(
@@ -130,7 +85,6 @@ class URLClassifierLocalChild : public PURLClassifierLocalChild {
   nsCOMPtr<nsIUrlClassifierFeatureCallback> mCallback;
   nsTArray<RefPtr<nsIUrlClassifierFeature>> mFeatures;
 };
->>>>>>> upstream-releases
 
 }  // namespace dom
 }  // namespace mozilla

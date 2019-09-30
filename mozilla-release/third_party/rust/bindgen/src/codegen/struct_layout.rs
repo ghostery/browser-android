@@ -309,16 +309,8 @@ impl<'a> StructLayoutTracker<'a> {
         align_to(self.latest_offset, layout.align) - self.latest_offset
     }
 
-<<<<<<< HEAD
-    fn padding_field(&mut self, layout: Layout) -> quote::Tokens {
-        let ty = helpers::blob(self.ctx, layout);
-||||||| merged common ancestors
-    fn padding_field(&mut self, layout: Layout) -> quote::Tokens {
-        let ty = helpers::blob(layout);
-=======
     fn padding_field(&mut self, layout: Layout) -> proc_macro2::TokenStream {
         let ty = helpers::blob(self.ctx, layout);
->>>>>>> upstream-releases
         let padding_count = self.padding_count;
 
         self.padding_count += 1;

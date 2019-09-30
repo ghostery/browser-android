@@ -11,30 +11,12 @@
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-ClientWindowState::ClientWindowState(
-    mozilla::dom::VisibilityState aVisibilityState,
-    const TimeStamp& aLastFocusTime,
-    nsContentUtils::StorageAccess aStorageAccess, bool aFocused)
-    : mData(MakeUnique<IPCClientWindowState>(aVisibilityState, aLastFocusTime,
-                                             aStorageAccess, aFocused)) {}
-||||||| merged common ancestors
-ClientWindowState::ClientWindowState(mozilla::dom::VisibilityState aVisibilityState,
-                                     const TimeStamp& aLastFocusTime,
-                                     nsContentUtils::StorageAccess aStorageAccess,
-                                     bool aFocused)
-  : mData(MakeUnique<IPCClientWindowState>(aVisibilityState, aLastFocusTime,
-                                           aStorageAccess, aFocused))
-{
-}
-=======
 ClientWindowState::ClientWindowState(
     mozilla::dom::VisibilityState aVisibilityState,
     const TimeStamp& aLastFocusTime, StorageAccess aStorageAccess,
     bool aFocused)
     : mData(MakeUnique<IPCClientWindowState>(aVisibilityState, aLastFocusTime,
                                              aStorageAccess, aFocused)) {}
->>>>>>> upstream-releases
 
 ClientWindowState::ClientWindowState(const IPCClientWindowState& aData)
     : mData(MakeUnique<IPCClientWindowState>(aData)) {}
@@ -71,33 +53,14 @@ const TimeStamp& ClientWindowState::LastFocusTime() const {
 
 bool ClientWindowState::Focused() const { return mData->focused(); }
 
-<<<<<<< HEAD
-nsContentUtils::StorageAccess ClientWindowState::GetStorageAccess() const {
-||||||| merged common ancestors
-nsContentUtils::StorageAccess
-ClientWindowState::GetStorageAccess() const
-{
-=======
 StorageAccess ClientWindowState::GetStorageAccess() const {
->>>>>>> upstream-releases
   return mData->storageAccess();
 }
 
 const IPCClientWindowState& ClientWindowState::ToIPC() const { return *mData; }
 
-<<<<<<< HEAD
-ClientWorkerState::ClientWorkerState(
-    nsContentUtils::StorageAccess aStorageAccess)
-    : mData(MakeUnique<IPCClientWorkerState>(aStorageAccess)) {}
-||||||| merged common ancestors
-ClientWorkerState::ClientWorkerState(nsContentUtils::StorageAccess aStorageAccess)
-  : mData(MakeUnique<IPCClientWorkerState>(aStorageAccess))
-{
-}
-=======
 ClientWorkerState::ClientWorkerState(StorageAccess aStorageAccess)
     : mData(MakeUnique<IPCClientWorkerState>(aStorageAccess)) {}
->>>>>>> upstream-releases
 
 ClientWorkerState::ClientWorkerState(const IPCClientWorkerState& aData)
     : mData(MakeUnique<IPCClientWorkerState>(aData)) {}
@@ -124,15 +87,7 @@ ClientWorkerState& ClientWorkerState::operator=(ClientWorkerState&& aRight) {
 
 ClientWorkerState::~ClientWorkerState() {}
 
-<<<<<<< HEAD
-nsContentUtils::StorageAccess ClientWorkerState::GetStorageAccess() const {
-||||||| merged common ancestors
-nsContentUtils::StorageAccess
-ClientWorkerState::GetStorageAccess() const
-{
-=======
 StorageAccess ClientWorkerState::GetStorageAccess() const {
->>>>>>> upstream-releases
   return mData->storageAccess();
 }
 
@@ -194,15 +149,7 @@ const ClientWorkerState& ClientState::AsWorkerState() const {
   return mData.ref().as<ClientWorkerState>();
 }
 
-<<<<<<< HEAD
-nsContentUtils::StorageAccess ClientState::GetStorageAccess() const {
-||||||| merged common ancestors
-nsContentUtils::StorageAccess
-ClientState::GetStorageAccess() const
-{
-=======
 StorageAccess ClientState::GetStorageAccess() const {
->>>>>>> upstream-releases
   if (IsWindowState()) {
     return AsWindowState().GetStorageAccess();
   }

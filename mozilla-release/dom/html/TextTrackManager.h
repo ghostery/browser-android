@@ -155,18 +155,11 @@ class TextTrackManager final : public nsIDOMEventListener {
   // report the usage of cue to Telemetry.
   bool mCueTelemetryReported;
 
-<<<<<<< HEAD
-  class ShutdownObserverProxy final : public nsIObserver {
-||||||| merged common ancestors
-  class ShutdownObserverProxy final : public nsIObserver
-  {
-=======
   // This function will check media element's show poster flag to decide whether
   // we need to run `TimeMarchesOn`.
   void MaybeRunTimeMarchesOn();
 
   class ShutdownObserverProxy final : public nsIObserver {
->>>>>>> upstream-releases
     NS_DECL_ISUPPORTS
 
    public:

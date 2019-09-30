@@ -14,53 +14,6 @@ using namespace js;
 using namespace js::jit;
 
 ABIArgGenerator::ABIArgGenerator()
-<<<<<<< HEAD
-    : usedArgSlots_(0),
-      firstArgFloatSize_(0),
-      useGPRForFloats_(false),
-      current_() {}
-
-ABIArg ABIArgGenerator::next(MIRType type) {
-  Register destReg;
-  switch (type) {
-    case MIRType::Int32:
-    case MIRType::Pointer:
-      if (GetIntArgReg(usedArgSlots_, &destReg)) {
-        current_ = ABIArg(destReg);
-      } else {
-        current_ = ABIArg(usedArgSlots_ * sizeof(intptr_t));
-      }
-      usedArgSlots_++;
-      break;
-    case MIRType::Int64:
-      if (!usedArgSlots_) {
-        current_ = ABIArg(a0, a1);
-        usedArgSlots_ = 2;
-      } else if (usedArgSlots_ <= 2) {
-        current_ = ABIArg(a2, a3);
-        usedArgSlots_ = 4;
-      } else {
-        if (usedArgSlots_ < NumIntArgRegs) {
-          usedArgSlots_ = NumIntArgRegs;
-||||||| merged common ancestors
-  : usedArgSlots_(0),
-    firstArgFloatSize_(0),
-    useGPRForFloats_(false),
-    current_()
-{}
-
-ABIArg
-ABIArgGenerator::next(MIRType type)
-{
-    Register destReg;
-    switch (type) {
-      case MIRType::Int32:
-      case MIRType::Pointer:
-        if (GetIntArgReg(usedArgSlots_, &destReg)) {
-            current_ = ABIArg(destReg);
-        } else {
-            current_ = ABIArg(usedArgSlots_ * sizeof(intptr_t));
-=======
     : usedArgSlots_(0),
       firstArgFloatSize_(0),
       useGPRForFloats_(false),
@@ -89,7 +42,6 @@ ABIArg ABIArgGenerator::next(MIRType type) {
       } else {
         if (usedArgSlots_ < NumIntArgRegs) {
           usedArgSlots_ = NumIntArgRegs;
->>>>>>> upstream-releases
         }
         usedArgSlots_ += usedArgSlots_ % 2;
         current_ = ABIArg(usedArgSlots_ * sizeof(intptr_t));
@@ -209,38 +161,6 @@ static void TraceOneDataRelocation(JSTracer* trc, Instruction* inst) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void Assembler::TraceDataRelocations(JSTracer* trc, JitCode* code,
-                                                  CompactBufferReader& reader) {
-  while (reader.more()) {
-    size_t offset = reader.readUnsigned();
-    Instruction* inst = (Instruction*)(code->raw() + offset);
-    TraceOneDataRelocation(trc, inst);
-  }
-||||||| merged common ancestors
-Assembler::Condition
-Assembler::UnsignedCondition(Condition cond)
-{
-    switch (cond) {
-      case Zero:
-      case NonZero:
-        return cond;
-      case LessThan:
-      case Below:
-        return Below;
-      case LessThanOrEqual:
-      case BelowOrEqual:
-        return BelowOrEqual;
-      case GreaterThan:
-      case Above:
-        return Above;
-      case AboveOrEqual:
-      case GreaterThanOrEqual:
-        return AboveOrEqual;
-      default:
-        MOZ_CRASH("unexpected condition");
-    }
-=======
 /* static */
 void Assembler::TraceDataRelocations(JSTracer* trc, JitCode* code,
                                      CompactBufferReader& reader) {
@@ -249,7 +169,6 @@ void Assembler::TraceDataRelocations(JSTracer* trc, JitCode* code,
     Instruction* inst = (Instruction*)(code->raw() + offset);
     TraceOneDataRelocation(trc, inst);
   }
->>>>>>> upstream-releases
 }
 
 Assembler::Condition Assembler::UnsignedCondition(Condition cond) {

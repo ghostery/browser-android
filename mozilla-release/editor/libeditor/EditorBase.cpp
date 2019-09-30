@@ -5,81 +5,6 @@
 
 #include "mozilla/EditorBase.h"
 
-<<<<<<< HEAD
-#include "mozilla/DebugOnly.h"  // for DebugOnly
-#include "mozilla/Encoding.h"   // for Encoding
-
-#include <stdio.h>   // for nullptr, stdout
-#include <string.h>  // for strcmp
-
-#include "ChangeAttributeTransaction.h"     // for ChangeAttributeTransaction
-#include "CompositionTransaction.h"         // for CompositionTransaction
-#include "CreateElementTransaction.h"       // for CreateElementTransaction
-#include "DeleteNodeTransaction.h"          // for DeleteNodeTransaction
-#include "DeleteRangeTransaction.h"         // for DeleteRangeTransaction
-#include "DeleteTextTransaction.h"          // for DeleteTextTransaction
-#include "EditAggregateTransaction.h"       // for EditAggregateTransaction
-#include "EditorEventListener.h"            // for EditorEventListener
-#include "HTMLEditRules.h"                  // for HTMLEditRules
-#include "InsertNodeTransaction.h"          // for InsertNodeTransaction
-#include "InsertTextTransaction.h"          // for InsertTextTransaction
-#include "JoinNodeTransaction.h"            // for JoinNodeTransaction
-#include "PlaceholderTransaction.h"         // for PlaceholderTransaction
-#include "SplitNodeTransaction.h"           // for SplitNodeTransaction
-#include "TextEditUtils.h"                  // for TextEditUtils
-#include "mozilla/CheckedInt.h"             // for CheckedInt
-#include "mozilla/ComputedStyle.h"          // for ComputedStyle
-#include "mozilla/CSSEditUtils.h"           // for CSSEditUtils
-#include "mozilla/EditAction.h"             // for EditSubAction
-#include "mozilla/EditorDOMPoint.h"         // for EditorDOMPoint
-#include "mozilla/EditorSpellCheck.h"       // for EditorSpellCheck
-#include "mozilla/EditorUtils.h"            // for various helper classes.
-#include "mozilla/EditTransactionBase.h"    // for EditTransactionBase
-#include "mozilla/FlushType.h"              // for FlushType::Frames
-#include "mozilla/IMEContentObserver.h"     // for IMEContentObserver
-#include "mozilla/IMEStateManager.h"        // for IMEStateManager
-#include "mozilla/mozalloc.h"               // for operator new, etc.
-#include "mozilla/mozInlineSpellChecker.h"  // for mozInlineSpellChecker
-#include "mozilla/mozSpellChecker.h"        // for mozSpellChecker
-#include "mozilla/Preferences.h"            // for Preferences
-||||||| merged common ancestors
-#include "mozilla/DebugOnly.h"          // for DebugOnly
-#include "mozilla/Encoding.h"           // for Encoding
-
-#include <stdio.h>                      // for nullptr, stdout
-#include <string.h>                     // for strcmp
-
-#include "ChangeAttributeTransaction.h" // for ChangeAttributeTransaction
-#include "CompositionTransaction.h"     // for CompositionTransaction
-#include "CreateElementTransaction.h"   // for CreateElementTransaction
-#include "DeleteNodeTransaction.h"      // for DeleteNodeTransaction
-#include "DeleteRangeTransaction.h"     // for DeleteRangeTransaction
-#include "DeleteTextTransaction.h"      // for DeleteTextTransaction
-#include "EditAggregateTransaction.h"   // for EditAggregateTransaction
-#include "EditorEventListener.h"        // for EditorEventListener
-#include "HTMLEditRules.h"              // for HTMLEditRules
-#include "InsertNodeTransaction.h"      // for InsertNodeTransaction
-#include "InsertTextTransaction.h"      // for InsertTextTransaction
-#include "JoinNodeTransaction.h"        // for JoinNodeTransaction
-#include "PlaceholderTransaction.h"     // for PlaceholderTransaction
-#include "SplitNodeTransaction.h"       // for SplitNodeTransaction
-#include "TextEditUtils.h"              // for TextEditUtils
-#include "mozilla/CheckedInt.h"         // for CheckedInt
-#include "mozilla/ComputedStyle.h"      // for ComputedStyle
-#include "mozilla/CSSEditUtils.h"       // for CSSEditUtils
-#include "mozilla/EditAction.h"         // for EditSubAction
-#include "mozilla/EditorDOMPoint.h"     // for EditorDOMPoint
-#include "mozilla/EditorSpellCheck.h"   // for EditorSpellCheck
-#include "mozilla/EditorUtils.h"        // for various helper classes.
-#include "mozilla/EditTransactionBase.h" // for EditTransactionBase
-#include "mozilla/FlushType.h"          // for FlushType::Frames
-#include "mozilla/IMEContentObserver.h" // for IMEContentObserver
-#include "mozilla/IMEStateManager.h"    // for IMEStateManager
-#include "mozilla/mozalloc.h"           // for operator new, etc.
-#include "mozilla/mozInlineSpellChecker.h" // for mozInlineSpellChecker
-#include "mozilla/mozSpellChecker.h"    // for mozSpellChecker
-#include "mozilla/Preferences.h"        // for Preferences
-=======
 #include "mozilla/DebugOnly.h"  // for DebugOnly
 #include "mozilla/Encoding.h"   // for Encoding
 
@@ -117,7 +42,6 @@
 #include "mozilla/mozSpellChecker.h"        // for mozSpellChecker
 #include "mozilla/Preferences.h"            // for Preferences
 #include "mozilla/PresShell.h"              // for PresShell
->>>>>>> upstream-releases
 #include "mozilla/RangeBoundary.h"      // for RawRangeBoundary, RangeBoundary
 #include "mozilla/dom/Selection.h"      // for Selection, etc.
 #include "mozilla/Services.h"           // for GetObserverService
@@ -126,23 +50,11 @@
 #include "mozilla/TextInputListener.h"  // for TextInputListener
 #include "mozilla/TextServicesDocument.h"  // for TextServicesDocument
 #include "mozilla/TextEvents.h"
-<<<<<<< HEAD
-#include "mozilla/TransactionManager.h"  // for TransactionManager
-#include "mozilla/dom/CharacterData.h"   // for CharacterData
-#include "mozilla/dom/Element.h"         // for Element, nsINode::AsElement
-#include "mozilla/dom/EventTarget.h"     // for EventTarget
-||||||| merged common ancestors
-#include "mozilla/TransactionManager.h" // for TransactionManager
-#include "mozilla/dom/CharacterData.h"  // for CharacterData
-#include "mozilla/dom/Element.h"        // for Element, nsINode::AsElement
-#include "mozilla/dom/EventTarget.h"    // for EventTarget
-=======
 #include "mozilla/TransactionManager.h"  // for TransactionManager
 #include "mozilla/dom/CharacterData.h"   // for CharacterData
 #include "mozilla/dom/DataTransfer.h"    // for DataTransfer
 #include "mozilla/dom/Element.h"         // for Element, nsINode::AsElement
 #include "mozilla/dom/EventTarget.h"     // for EventTarget
->>>>>>> upstream-releases
 #include "mozilla/dom/HTMLBodyElement.h"
 #include "mozilla/dom/Text.h"
 #include "mozilla/dom/Event.h"
@@ -150,55 +62,6 @@
 #include "nsCCUncollectableMarker.h"  // for nsCCUncollectableMarker
 #include "nsCaret.h"                  // for nsCaret
 #include "nsCaseTreatment.h"
-<<<<<<< HEAD
-#include "nsCharTraits.h"              // for NS_IS_HIGH_SURROGATE, etc.
-#include "nsComponentManagerUtils.h"   // for do_CreateInstance
-#include "nsComputedDOMStyle.h"        // for nsComputedDOMStyle
-#include "nsContentUtils.h"            // for nsContentUtils
-#include "nsDOMString.h"               // for DOMStringIsNull
-#include "nsDebug.h"                   // for NS_ENSURE_TRUE, etc.
-#include "nsError.h"                   // for NS_OK, etc.
-#include "nsFocusManager.h"            // for nsFocusManager
-#include "nsFrameSelection.h"          // for nsFrameSelection
-#include "nsGenericHTMLElement.h"      // for nsGenericHTMLElement
-#include "nsGkAtoms.h"                 // for nsGkAtoms, nsGkAtoms::dir
-#include "nsIAbsorbingTransaction.h"   // for nsIAbsorbingTransaction
-#include "nsAtom.h"                    // for nsAtom
-#include "nsIContent.h"                // for nsIContent
-#include "nsIDocument.h"               // for nsIDocument
-#include "nsIDOMEventListener.h"       // for nsIDOMEventListener
-#include "nsIDocumentStateListener.h"  // for nsIDocumentStateListener
-#include "nsIEditActionListener.h"     // for nsIEditActionListener
-#include "nsIEditorObserver.h"         // for nsIEditorObserver
-#include "nsIEditorSpellCheck.h"       // for nsIEditorSpellCheck
-#include "nsIFrame.h"                  // for nsIFrame
-#include "nsIHTMLDocument.h"           // for nsIHTMLDocument
-#include "nsIInlineSpellChecker.h"     // for nsIInlineSpellChecker, etc.
-||||||| merged common ancestors
-#include "nsCharTraits.h"               // for NS_IS_HIGH_SURROGATE, etc.
-#include "nsComponentManagerUtils.h"    // for do_CreateInstance
-#include "nsComputedDOMStyle.h"         // for nsComputedDOMStyle
-#include "nsContentUtils.h"             // for nsContentUtils
-#include "nsDOMString.h"                // for DOMStringIsNull
-#include "nsDebug.h"                    // for NS_ENSURE_TRUE, etc.
-#include "nsError.h"                    // for NS_OK, etc.
-#include "nsFocusManager.h"             // for nsFocusManager
-#include "nsFrameSelection.h"           // for nsFrameSelection
-#include "nsGenericHTMLElement.h"       // for nsGenericHTMLElement
-#include "nsGkAtoms.h"                  // for nsGkAtoms, nsGkAtoms::dir
-#include "nsIAbsorbingTransaction.h"    // for nsIAbsorbingTransaction
-#include "nsAtom.h"                     // for nsAtom
-#include "nsIContent.h"                 // for nsIContent
-#include "nsIDocument.h"                // for nsIDocument
-#include "nsIDOMEventListener.h"        // for nsIDOMEventListener
-#include "nsIDocumentStateListener.h"   // for nsIDocumentStateListener
-#include "nsIEditActionListener.h"      // for nsIEditActionListener
-#include "nsIEditorObserver.h"          // for nsIEditorObserver
-#include "nsIEditorSpellCheck.h"        // for nsIEditorSpellCheck
-#include "nsIFrame.h"                   // for nsIFrame
-#include "nsIHTMLDocument.h"            // for nsIHTMLDocument
-#include "nsIInlineSpellChecker.h"      // for nsIInlineSpellChecker, etc.
-=======
 #include "nsCharTraits.h"              // for NS_IS_HIGH_SURROGATE, etc.
 #include "nsComponentManagerUtils.h"   // for do_CreateInstance
 #include "nsComputedDOMStyle.h"        // for nsComputedDOMStyle
@@ -221,27 +84,7 @@
 #include "nsIEditorSpellCheck.h"       // for nsIEditorSpellCheck
 #include "nsIFrame.h"                  // for nsIFrame
 #include "nsIInlineSpellChecker.h"     // for nsIInlineSpellChecker, etc.
->>>>>>> upstream-releases
 #include "nsNameSpaceManager.h"        // for kNameSpaceID_None, etc.
-<<<<<<< HEAD
-#include "nsINode.h"                   // for nsINode, etc.
-#include "nsIPlaintextEditor.h"        // for nsIPlaintextEditor, etc.
-#include "nsIPresShell.h"              // for nsIPresShell
-#include "nsISelectionController.h"    // for nsISelectionController, etc.
-#include "nsISelectionDisplay.h"       // for nsISelectionDisplay, etc.
-#include "nsISupportsBase.h"           // for nsISupports
-#include "nsISupportsUtils.h"          // for NS_ADDREF, NS_IF_ADDREF
-#include "nsITransaction.h"            // for nsITransaction
-||||||| merged common ancestors
-#include "nsINode.h"                    // for nsINode, etc.
-#include "nsIPlaintextEditor.h"         // for nsIPlaintextEditor, etc.
-#include "nsIPresShell.h"               // for nsIPresShell
-#include "nsISelectionController.h"     // for nsISelectionController, etc.
-#include "nsISelectionDisplay.h"        // for nsISelectionDisplay, etc.
-#include "nsISupportsBase.h"            // for nsISupports
-#include "nsISupportsUtils.h"           // for NS_ADDREF, NS_IF_ADDREF
-#include "nsITransaction.h"             // for nsITransaction
-=======
 #include "nsINode.h"                   // for nsINode, etc.
 #include "nsIPlaintextEditor.h"        // for nsIPlaintextEditor, etc.
 #include "nsISelectionController.h"    // for nsISelectionController, etc.
@@ -250,39 +93,7 @@
 #include "nsISupportsUtils.h"          // for NS_ADDREF, NS_IF_ADDREF
 #include "nsITransferable.h"           // for nsITransferable
 #include "nsITransaction.h"            // for nsITransaction
->>>>>>> upstream-releases
 #include "nsITransactionManager.h"
-<<<<<<< HEAD
-#include "nsIWeakReference.h"  // for nsISupportsWeakReference
-#include "nsIWidget.h"         // for nsIWidget, IMEState, etc.
-#include "nsPIDOMWindow.h"     // for nsPIDOMWindow
-#include "nsPresContext.h"     // for nsPresContext
-#include "nsRange.h"           // for nsRange
-#include "nsReadableUtils.h"   // for EmptyString, ToNewCString
-#include "nsString.h"          // for nsAutoString, nsString, etc.
-#include "nsStringFwd.h"       // for nsString
-#include "nsStyleConsts.h"     // for NS_STYLE_DIRECTION_RTL, etc.
-#include "nsStyleStruct.h"     // for nsStyleDisplay, nsStyleText, etc.
-#include "nsStyleStructFwd.h"  // for nsIFrame::StyleUIReset, etc.
-#include "nsTextNode.h"        // for nsTextNode
-#include "nsThreadUtils.h"     // for nsRunnable
-#include "prtime.h"            // for PR_Now
-||||||| merged common ancestors
-#include "nsIWeakReference.h"           // for nsISupportsWeakReference
-#include "nsIWidget.h"                  // for nsIWidget, IMEState, etc.
-#include "nsPIDOMWindow.h"              // for nsPIDOMWindow
-#include "nsPresContext.h"              // for nsPresContext
-#include "nsRange.h"                    // for nsRange
-#include "nsReadableUtils.h"            // for EmptyString, ToNewCString
-#include "nsString.h"                   // for nsAutoString, nsString, etc.
-#include "nsStringFwd.h"                // for nsString
-#include "nsStyleConsts.h"              // for NS_STYLE_DIRECTION_RTL, etc.
-#include "nsStyleStruct.h"              // for nsStyleDisplay, nsStyleText, etc.
-#include "nsStyleStructFwd.h"           // for nsIFrame::StyleUIReset, etc.
-#include "nsTextNode.h"                 // for nsTextNode
-#include "nsThreadUtils.h"              // for nsRunnable
-#include "prtime.h"                     // for PR_Now
-=======
 #include "nsIWeakReference.h"  // for nsISupportsWeakReference
 #include "nsIWidget.h"         // for nsIWidget, IMEState, etc.
 #include "nsPIDOMWindow.h"     // for nsPIDOMWindow
@@ -298,7 +109,6 @@
 #include "nsTextNode.h"        // for nsTextNode
 #include "nsThreadUtils.h"     // for nsRunnable
 #include "prtime.h"            // for PR_Now
->>>>>>> upstream-releases
 
 class nsIOutputStream;
 class nsITransferable;
@@ -312,69 +122,6 @@ using namespace widget;
  * mozilla::EditorBase
  *****************************************************************************/
 
-<<<<<<< HEAD
-template already_AddRefed<Element> EditorBase::CreateNodeWithTransaction(
-    nsAtom& aTag, const EditorDOMPoint& aPointToInsert);
-template already_AddRefed<Element> EditorBase::CreateNodeWithTransaction(
-    nsAtom& aTag, const EditorRawDOMPoint& aPointToInsert);
-template nsresult EditorBase::InsertNodeWithTransaction(
-    nsIContent& aContentToInsert, const EditorDOMPoint& aPointToInsert);
-template nsresult EditorBase::InsertNodeWithTransaction(
-    nsIContent& aContentToInsert, const EditorRawDOMPoint& aPointToInsert);
-template already_AddRefed<nsIContent> EditorBase::SplitNodeWithTransaction(
-    const EditorDOMPoint& aStartOfRightNode, ErrorResult& aError);
-template already_AddRefed<nsIContent> EditorBase::SplitNodeWithTransaction(
-    const EditorRawDOMPoint& aStartOfRightNode, ErrorResult& aError);
-template SplitNodeResult EditorBase::SplitNodeDeepWithTransaction(
-    nsIContent& aMostAncestorToSplit,
-    const EditorDOMPoint& aStartOfDeepestRightNode, SplitAtEdges aSplitAtEdges);
-template SplitNodeResult EditorBase::SplitNodeDeepWithTransaction(
-    nsIContent& aMostAncestorToSplit,
-    const EditorRawDOMPoint& aStartOfDeepestRightNode,
-    SplitAtEdges aSplitAtEdges);
-template nsresult EditorBase::MoveNodeWithTransaction(
-    nsIContent& aContent, const EditorDOMPoint& aPointToInsert);
-template nsresult EditorBase::MoveNodeWithTransaction(
-    nsIContent& aContent, const EditorRawDOMPoint& aPointToInsert);
-
-||||||| merged common ancestors
-template already_AddRefed<Element>
-EditorBase::CreateNodeWithTransaction(nsAtom& aTag,
-                                      const EditorDOMPoint& aPointToInsert);
-template already_AddRefed<Element>
-EditorBase::CreateNodeWithTransaction(nsAtom& aTag,
-                                      const EditorRawDOMPoint& aPointToInsert);
-template nsresult
-EditorBase::InsertNodeWithTransaction(nsIContent& aContentToInsert,
-                                      const EditorDOMPoint& aPointToInsert);
-template nsresult
-EditorBase::InsertNodeWithTransaction(nsIContent& aContentToInsert,
-                                      const EditorRawDOMPoint& aPointToInsert);
-template already_AddRefed<nsIContent>
-EditorBase::SplitNodeWithTransaction(const EditorDOMPoint& aStartOfRightNode,
-                                     ErrorResult& aError);
-template already_AddRefed<nsIContent>
-EditorBase::SplitNodeWithTransaction(const EditorRawDOMPoint& aStartOfRightNode,
-                                     ErrorResult& aError);
-template SplitNodeResult
-EditorBase::SplitNodeDeepWithTransaction(
-              nsIContent& aMostAncestorToSplit,
-              const EditorDOMPoint& aStartOfDeepestRightNode,
-              SplitAtEdges aSplitAtEdges);
-template SplitNodeResult
-EditorBase::SplitNodeDeepWithTransaction(
-              nsIContent& aMostAncestorToSplit,
-              const EditorRawDOMPoint& aStartOfDeepestRightNode,
-              SplitAtEdges aSplitAtEdges);
-template nsresult
-EditorBase::MoveNodeWithTransaction(nsIContent& aContent,
-                                    const EditorDOMPoint& aPointToInsert);
-template nsresult
-EditorBase::MoveNodeWithTransaction(nsIContent& aContent,
-                                    const EditorRawDOMPoint& aPointToInsert);
-
-=======
->>>>>>> upstream-releases
 EditorBase::EditorBase()
     : mEditActionData(nullptr),
       mPlaceholderName(nullptr),
@@ -432,51 +179,6 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(EditorBase)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(EditorBase)
-<<<<<<< HEAD
-  nsIDocument* currentDoc =
-      tmp->mRootElement ? tmp->mRootElement->GetUncomposedDoc() : nullptr;
-  if (currentDoc && nsCCUncollectableMarker::InGeneration(
-                        cb, currentDoc->GetMarkedCCGeneration())) {
-    return NS_SUCCESS_INTERRUPTED_TRAVERSE;
-  }
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mRootElement)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mSelectionController)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocument)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mIMEContentObserver)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mInlineSpellChecker)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mTextServicesDocument)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mTextInputListener)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mTransactionManager)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mActionListeners)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEditorObservers)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocStateListeners)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEventTarget)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEventListener)
-  NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mPlaceholderTransaction)
-||||||| merged common ancestors
- nsIDocument* currentDoc =
-   tmp->mRootElement ? tmp->mRootElement->GetUncomposedDoc() : nullptr;
- if (currentDoc &&
-     nsCCUncollectableMarker::InGeneration(cb, currentDoc->GetMarkedCCGeneration())) {
-   return NS_SUCCESS_INTERRUPTED_TRAVERSE;
- }
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mRootElement)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mSelectionController)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocument)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mIMEContentObserver)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mInlineSpellChecker)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mTextServicesDocument)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mTextInputListener)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mTransactionManager)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mActionListeners)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEditorObservers)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mDocStateListeners)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEventTarget)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEventListener)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mPlaceholderTransaction)
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mSavedSel);
- NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mRangeUpdater);
-=======
   Document* currentDoc =
       tmp->mRootElement ? tmp->mRootElement->GetUncomposedDoc() : nullptr;
   if (currentDoc && nsCCUncollectableMarker::InGeneration(
@@ -497,7 +199,6 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(EditorBase)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEventTarget)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mEventListener)
   NS_IMPL_CYCLE_COLLECTION_TRAVERSE(mPlaceholderTransaction)
->>>>>>> upstream-releases
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(EditorBase)
@@ -510,27 +211,10 @@ NS_INTERFACE_MAP_END
 NS_IMPL_CYCLE_COLLECTING_ADDREF(EditorBase)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(EditorBase)
 
-<<<<<<< HEAD
-nsresult EditorBase::Init(nsIDocument& aDocument, Element* aRoot,
-                          nsISelectionController* aSelectionController,
-                          uint32_t aFlags, const nsAString& aValue) {
-  MOZ_ASSERT(GetTopLevelEditSubAction() == EditSubAction::eNone,
-||||||| merged common ancestors
-
-nsresult
-EditorBase::Init(nsIDocument& aDocument,
-                 Element* aRoot,
-                 nsISelectionController* aSelectionController,
-                 uint32_t aFlags,
-                 const nsAString& aValue)
-{
-  MOZ_ASSERT(mTopLevelEditSubAction == EditSubAction::eNone,
-=======
 nsresult EditorBase::Init(Document& aDocument, Element* aRoot,
                           nsISelectionController* aSelectionController,
                           uint32_t aFlags, const nsAString& aValue) {
   MOZ_ASSERT(GetTopLevelEditSubAction() == EditSubAction::eNone,
->>>>>>> upstream-releases
              "Initializing during an edit action is an error");
 
   // First only set flags, but other stuff shouldn't be initialized now.
@@ -774,14 +458,7 @@ bool EditorBase::GetDesiredSpellCheckState() {
     // Some of the page content might be editable and some not, if spellcheck=
     // is explicitly set anywhere, so if there's anything editable on the page,
     // return true and let the spellchecker figure it out.
-<<<<<<< HEAD
-    nsCOMPtr<nsIHTMLDocument> doc =
-        do_QueryInterface(content->GetComposedDoc());
-||||||| merged common ancestors
-    nsCOMPtr<nsIHTMLDocument> doc = do_QueryInterface(content->GetComposedDoc());
-=======
     Document* doc = content->GetComposedDoc();
->>>>>>> upstream-releases
     return doc && doc->IsEditingOn();
   }
 
@@ -943,42 +620,17 @@ EditorBase::GetIsDocumentEditable(bool* aIsDocumentEditable) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::GetDocument(nsIDocument** aDoc) {
-||||||| merged common ancestors
-EditorBase::GetDocument(nsIDocument** aDoc)
-{
-=======
 EditorBase::GetDocument(Document** aDoc) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aDoc = mDocument);
   return *aDoc ? NS_OK : NS_ERROR_NOT_INITIALIZED;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIWidget> EditorBase::GetWidget() {
-  nsCOMPtr<nsIPresShell> ps = GetPresShell();
-  NS_ENSURE_TRUE(ps, nullptr);
-  nsPresContext* pc = ps->GetPresContext();
-  NS_ENSURE_TRUE(pc, nullptr);
-  nsCOMPtr<nsIWidget> widget = pc->GetRootWidget();
-||||||| merged common ancestors
-already_AddRefed<nsIWidget>
-EditorBase::GetWidget()
-{
-  nsCOMPtr<nsIPresShell> ps = GetPresShell();
-  NS_ENSURE_TRUE(ps, nullptr);
-  nsPresContext* pc = ps->GetPresContext();
-  NS_ENSURE_TRUE(pc, nullptr);
-  nsCOMPtr<nsIWidget> widget = pc->GetRootWidget();
-=======
 already_AddRefed<nsIWidget> EditorBase::GetWidget() {
   nsPresContext* presContext = GetPresContext();
   if (NS_WARN_IF(!presContext)) {
     return nullptr;
   }
   nsCOMPtr<nsIWidget> widget = presContext->GetRootWidget();
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(widget.get(), nullptr);
   return widget.forget();
 }
@@ -1042,19 +694,6 @@ nsresult EditorBase::GetSelection(SelectionType aSelectionType,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::DoTransaction(nsITransaction* aTxn) {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eUnknown);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_FAILURE;
-  }
-
-  return DoTransactionInternal(aTxn);
-||||||| merged common ancestors
-EditorBase::DoTransaction(nsITransaction* aTxn)
-{
-  return DoTransaction(nullptr, aTxn);
-=======
 EditorBase::DoTransaction(nsITransaction* aTxn) {
   AutoEditActionDataSetter editActionData(*this, EditAction::eUnknown);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -1063,7 +702,6 @@ EditorBase::DoTransaction(nsITransaction* aTxn) {
   // This is a low level API.  So, the caller might require raw error code.
   // Therefore, don't need to use EditorBase::ToGenericNSResult().
   return DoTransactionInternal(aTxn);
->>>>>>> upstream-releases
 }
 
 nsresult EditorBase::DoTransactionInternal(nsITransaction* aTxn) {
@@ -1073,15 +711,9 @@ nsresult EditorBase::DoTransactionInternal(nsITransaction* aTxn) {
     MOZ_ASSERT(mSelState.isNothing());
 
     // We will recurse, but will not hit this case in the nested call
-<<<<<<< HEAD
-    DoTransactionInternal(mPlaceholderTransaction);
-||||||| merged common ancestors
-    DoTransaction(mPlaceholderTransaction);
-=======
     RefPtr<PlaceholderTransaction> placeholderTransaction =
         mPlaceholderTransaction;
     DoTransactionInternal(placeholderTransaction);
->>>>>>> upstream-releases
 
     if (mTransactionManager) {
       nsCOMPtr<nsITransaction> topTransaction =
@@ -1171,20 +803,11 @@ EditorBase::GetTransactionManager(nsITransactionManager** aTransactionManager) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::Undo(uint32_t aCount) { return NS_ERROR_NOT_IMPLEMENTED; }
-||||||| merged common ancestors
-EditorBase::Undo(uint32_t aCount)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-=======
 EditorBase::Undo(uint32_t aCount) {
   nsresult rv = MOZ_KnownLive(AsTextEditor())->UndoAsAction(aCount);
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to do Undo");
   return rv;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 EditorBase::CanUndo(bool* aIsEnabled, bool* aCanUndo) {
@@ -1197,20 +820,11 @@ EditorBase::CanUndo(bool* aIsEnabled, bool* aCanUndo) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::Redo(uint32_t aCount) { return NS_ERROR_NOT_IMPLEMENTED; }
-||||||| merged common ancestors
-EditorBase::Redo(uint32_t aCount)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-=======
 EditorBase::Redo(uint32_t aCount) {
   nsresult rv = MOZ_KnownLive(AsTextEditor())->RedoAsAction(aCount);
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to do Redo");
   return rv;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 EditorBase::CanRedo(bool* aIsEnabled, bool* aCanRedo) {
@@ -1422,19 +1036,6 @@ EditorBase::BeginningOfDocument() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::EndOfDocument() {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-  return CollapseSelectionToEnd();
-||||||| merged common ancestors
-EditorBase::EndOfDocument()
-{
-  RefPtr<Selection> selection = GetSelection();
-  return CollapseSelectionToEnd(selection);
-=======
 EditorBase::EndOfDocument() {
   AutoEditActionDataSetter editActionData(*this, EditAction::eNotEditing);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -1447,7 +1048,6 @@ EditorBase::EndOfDocument() {
     return rv;
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult EditorBase::CollapseSelectionToEnd() {
@@ -1490,18 +1090,8 @@ EditorBase::GetDocumentCharacterSet(nsACString& aCharset) {
   return GetDocumentCharsetInternal(aCharset);
 }
 
-<<<<<<< HEAD
-nsresult EditorBase::GetDocumentCharsetInternal(nsACString& aCharset) const {
-  nsCOMPtr<nsIDocument> document = GetDocument();
-||||||| merged common ancestors
-nsresult
-EditorBase::GetDocumentCharsetInternal(nsACString& aCharset) const
-{
-  nsCOMPtr<nsIDocument> document = GetDocument();
-=======
 nsresult EditorBase::GetDocumentCharsetInternal(nsACString& aCharset) const {
   RefPtr<Document> document = GetDocument();
->>>>>>> upstream-releases
   if (NS_WARN_IF(!document)) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -1510,17 +1100,8 @@ nsresult EditorBase::GetDocumentCharsetInternal(nsACString& aCharset) const {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::SetDocumentCharacterSet(const nsACString& characterSet) {
-  nsCOMPtr<nsIDocument> document = GetDocument();
-||||||| merged common ancestors
-EditorBase::SetDocumentCharacterSet(const nsACString& characterSet)
-{
-  nsCOMPtr<nsIDocument> document = GetDocument();
-=======
 EditorBase::SetDocumentCharacterSet(const nsACString& characterSet) {
   RefPtr<Document> document = GetDocument();
->>>>>>> upstream-releases
   if (NS_WARN_IF(!document)) {
     return NS_ERROR_UNEXPECTED;
   }
@@ -1535,30 +1116,13 @@ EditorBase::SetDocumentCharacterSet(const nsACString& characterSet) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::Cut() { return NS_ERROR_NOT_IMPLEMENTED; }
-||||||| merged common ancestors
-EditorBase::Cut()
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-=======
 EditorBase::Cut() {
   nsresult rv = MOZ_KnownLive(AsTextEditor())->CutAsAction();
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to do Cut");
   return rv;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::CanCut(bool* aCanCut) { return NS_ERROR_NOT_IMPLEMENTED; }
-||||||| merged common ancestors
-EditorBase::CanCut(bool* aCanCut)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-=======
 EditorBase::CanCut(bool* aCanCut) {
   if (NS_WARN_IF(!aCanCut)) {
     return NS_ERROR_INVALID_ARG;
@@ -1566,20 +1130,11 @@ EditorBase::CanCut(bool* aCanCut) {
   *aCanCut = AsTextEditor()->CanCut();
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
 EditorBase::Copy() { return NS_ERROR_NOT_IMPLEMENTED; }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::CanCopy(bool* aCanCut) { return NS_ERROR_NOT_IMPLEMENTED; }
-||||||| merged common ancestors
-EditorBase::CanCopy(bool* aCanCut)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-=======
 EditorBase::CanCopy(bool* aCanCopy) {
   if (NS_WARN_IF(!aCanCopy)) {
     return NS_ERROR_INVALID_ARG;
@@ -1587,17 +1142,8 @@ EditorBase::CanCopy(bool* aCanCopy) {
   *aCanCopy = AsTextEditor()->CanCopy();
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::CanDelete(bool* aCanDelete) { return NS_ERROR_NOT_IMPLEMENTED; }
-||||||| merged common ancestors
-EditorBase::CanDelete(bool* aCanDelete)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-=======
 EditorBase::CanDelete(bool* aCanDelete) {
   if (NS_WARN_IF(!aCanDelete)) {
     return NS_ERROR_INVALID_ARG;
@@ -1605,66 +1151,30 @@ EditorBase::CanDelete(bool* aCanDelete) {
   *aCanDelete = AsTextEditor()->CanDelete();
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::Paste(int32_t aClipboardType) {
-  nsresult rv = AsTextEditor()->PasteAsAction(aClipboardType, true);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-EditorBase::Paste(int32_t aClipboardType)
-{
-  nsresult rv = AsTextEditor()->PasteAsAction(aClipboardType, true);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-=======
 EditorBase::Paste(int32_t aClipboardType) {
   nsresult rv =
       MOZ_KnownLive(AsTextEditor())->PasteAsAction(aClipboardType, true);
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to do Paste");
   return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::PasteTransferable(nsITransferable* aTransferable) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-EditorBase::PasteTransferable(nsITransferable* aTransferable)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-=======
 EditorBase::PasteTransferable(nsITransferable* aTransferable) {
   nsresult rv =
       MOZ_KnownLive(AsTextEditor())->PasteTransferableAsAction(aTransferable);
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to do Paste transferable");
   return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::CanPaste(int32_t aSelectionType, bool* aCanPaste) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-EditorBase::CanPaste(int32_t aSelectionType, bool* aCanPaste)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-=======
 EditorBase::CanPaste(int32_t aClipboardType, bool* aCanPaste) {
   if (NS_WARN_IF(!aCanPaste)) {
     return NS_ERROR_INVALID_ARG;
   }
   *aCanPaste = AsTextEditor()->CanPaste(aClipboardType);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1831,25 +1341,10 @@ EditorBase::SetSpellcheckUserOverride(bool enable) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-already_AddRefed<Element> EditorBase::CreateNodeWithTransaction(
-    nsAtom& aTagName, const EditorDOMPointBase<PT, CT>& aPointToInsert) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-||||||| merged common ancestors
-template<typename PT, typename CT>
-already_AddRefed<Element>
-EditorBase::CreateNodeWithTransaction(
-              nsAtom& aTagName,
-              const EditorDOMPointBase<PT, CT>& aPointToInsert)
-{
-=======
 already_AddRefed<Element> EditorBase::CreateNodeWithTransaction(
     nsAtom& aTagName, const EditorDOMPoint& aPointToInsert) {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
->>>>>>> upstream-releases
   MOZ_ASSERT(aPointToInsert.IsSetAndValid());
 
   // XXX We need offset at new node for RangeUpdaterRef().  Therefore, we need
@@ -1914,34 +1409,6 @@ EditorBase::InsertNode(nsINode* aNodeToInsert, nsINode* aContainer,
   }
 
   int32_t offset =
-<<<<<<< HEAD
-      aOffset < 0
-          ? static_cast<int32_t>(aContainer->Length())
-          : std::min(aOffset, static_cast<int32_t>(aContainer->Length()));
-  return InsertNodeWithTransaction(*contentToInsert,
-                                   EditorRawDOMPoint(aContainer, offset));
-}
-
-template <typename PT, typename CT>
-nsresult EditorBase::InsertNodeWithTransaction(
-    nsIContent& aContentToInsert,
-    const EditorDOMPointBase<PT, CT>& aPointToInsert) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-||||||| merged common ancestors
-    aOffset < 0 ? static_cast<int32_t>(aContainer->Length()) :
-                  std::min(aOffset, static_cast<int32_t>(aContainer->Length()));
-  return InsertNodeWithTransaction(*contentToInsert,
-                                   EditorRawDOMPoint(aContainer, offset));
-}
-
-template<typename PT, typename CT>
-nsresult
-EditorBase::InsertNodeWithTransaction(
-              nsIContent& aContentToInsert,
-              const EditorDOMPointBase<PT, CT>& aPointToInsert)
-{
-=======
       aOffset < 0
           ? static_cast<int32_t>(aContainer->Length())
           : std::min(aOffset, static_cast<int32_t>(aContainer->Length()));
@@ -1957,7 +1424,6 @@ nsresult EditorBase::InsertNodeWithTransaction(
     nsIContent& aContentToInsert, const EditorDOMPoint& aPointToInsert) {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aPointToInsert.IsSet())) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -2002,13 +1468,7 @@ EditorBase::SplitNode(nsINode* aNode, int32_t aOffset, nsINode** aNewLeftNode) {
       std::min(std::max(aOffset, 0), static_cast<int32_t>(aNode->Length()));
   ErrorResult error;
   nsCOMPtr<nsIContent> newNode =
-<<<<<<< HEAD
-      SplitNodeWithTransaction(EditorRawDOMPoint(aNode, offset), error);
-||||||| merged common ancestors
-    SplitNodeWithTransaction(EditorRawDOMPoint(aNode, offset), error);
-=======
       SplitNodeWithTransaction(EditorDOMPoint(aNode, offset), error);
->>>>>>> upstream-releases
   newNode.forget(aNewLeftNode);
   if (NS_WARN_IF(error.Failed())) {
     return EditorBase::ToGenericNSResult(error.StealNSResult());
@@ -2016,25 +1476,10 @@ EditorBase::SplitNode(nsINode* aNode, int32_t aOffset, nsINode** aNewLeftNode) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-already_AddRefed<nsIContent> EditorBase::SplitNodeWithTransaction(
-    const EditorDOMPointBase<PT, CT>& aStartOfRightNode, ErrorResult& aError) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-||||||| merged common ancestors
-template<typename PT, typename CT>
-already_AddRefed<nsIContent>
-EditorBase::SplitNodeWithTransaction(
-              const EditorDOMPointBase<PT, CT>& aStartOfRightNode,
-              ErrorResult& aError)
-{
-=======
 already_AddRefed<nsIContent> EditorBase::SplitNodeWithTransaction(
     const EditorDOMPoint& aStartOfRightNode, ErrorResult& aError) {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aStartOfRightNode.IsSet()) ||
       NS_WARN_IF(!aStartOfRightNode.GetContainerAsContent())) {
     aError.Throw(NS_ERROR_INVALID_ARG);
@@ -2087,39 +1532,6 @@ already_AddRefed<nsIContent> EditorBase::SplitNodeWithTransaction(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::JoinNodes(nsINode* aLeftNode, nsINode* aRightNode, nsINode*) {
-  if (NS_WARN_IF(!aLeftNode) || NS_WARN_IF(!aRightNode) ||
-      NS_WARN_IF(!aLeftNode->GetParentNode())) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eJoinNodes);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  return JoinNodesWithTransaction(*aLeftNode, *aRightNode);
-}
-
-nsresult EditorBase::JoinNodesWithTransaction(nsINode& aLeftNode,
-                                              nsINode& aRightNode) {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-||||||| merged common ancestors
-EditorBase::JoinNodes(nsINode* aLeftNode,
-                      nsINode* aRightNode,
-                      nsINode*)
-{
-  NS_ENSURE_STATE(aLeftNode && aRightNode && aLeftNode->GetParentNode());
-  return JoinNodesWithTransaction(*aLeftNode, *aRightNode);
-}
-
-nsresult
-EditorBase::JoinNodesWithTransaction(nsINode& aLeftNode,
-                                     nsINode& aRightNode)
-{
-=======
 EditorBase::JoinNodes(nsINode* aLeftNode, nsINode* aRightNode, nsINode*) {
   if (NS_WARN_IF(!aLeftNode) || NS_WARN_IF(!aRightNode) ||
       NS_WARN_IF(!aLeftNode->GetParentNode())) {
@@ -2142,7 +1554,6 @@ nsresult EditorBase::JoinNodesWithTransaction(nsINode& aLeftNode,
                                               nsINode& aRightNode) {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
->>>>>>> upstream-releases
   nsCOMPtr<nsINode> parent = aLeftNode.GetParentNode();
   MOZ_ASSERT(parent);
 
@@ -2202,17 +1613,6 @@ EditorBase::DeleteNode(nsINode* aNode) {
   if (NS_WARN_IF(!aNode)) {
     return NS_ERROR_INVALID_ARG;
   }
-<<<<<<< HEAD
-
-  AutoEditActionDataSetter editActionData(*this, EditAction::eRemoveNode);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  return DeleteNodeWithTransaction(*aNode);
-||||||| merged common ancestors
-  return DeleteNodeWithTransaction(*aNode);
-=======
 
   AutoEditActionDataSetter editActionData(*this, EditAction::eRemoveNode);
   if (NS_WARN_IF(!editActionData.CanHandle())) {
@@ -2224,7 +1624,6 @@ EditorBase::DeleteNode(nsINode* aNode) {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult EditorBase::DeleteNodeWithTransaction(nsINode& aNode) {
@@ -2307,17 +1706,8 @@ already_AddRefed<Element> EditorBase::ReplaceContainerWithTransactionInternal(
         return nullptr;
       }
 
-<<<<<<< HEAD
-      rv = InsertNodeWithTransaction(
-          *child, EditorRawDOMPoint(newContainer, newContainer->Length()));
-||||||| merged common ancestors
-      rv = InsertNodeWithTransaction(*child,
-                                     EditorRawDOMPoint(newContainer,
-                                                       newContainer->Length()));
-=======
       rv = InsertNodeWithTransaction(
           *child, EditorDOMPoint(newContainer, newContainer->Length()));
->>>>>>> upstream-releases
       if (NS_WARN_IF(NS_FAILED(rv))) {
         return nullptr;
       }
@@ -2368,20 +1758,9 @@ nsresult EditorBase::RemoveContainerWithTransaction(Element& aElement) {
     // Insert the last child before the previous last child.  So, we need to
     // use offset here because previous child might have been moved to
     // container.
-<<<<<<< HEAD
-    rv = InsertNodeWithTransaction(
-        *child, EditorRawDOMPoint(pointToInsertChildren.GetContainer(),
-                                  pointToInsertChildren.Offset()));
-||||||| merged common ancestors
-    rv = InsertNodeWithTransaction(*child,
-                                   EditorRawDOMPoint(
-                                     pointToInsertChildren.GetContainer(),
-                                     pointToInsertChildren.Offset()));
-=======
     rv = InsertNodeWithTransaction(
         *child, EditorDOMPoint(pointToInsertChildren.GetContainer(),
                                pointToInsertChildren.Offset()));
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return rv;
     }
@@ -2436,15 +1815,7 @@ already_AddRefed<Element> EditorBase::InsertContainerWithTransactionInternal(
 
   {
     AutoTransactionsConserveSelection conserveSelection(*this);
-<<<<<<< HEAD
-    rv =
-        InsertNodeWithTransaction(aContent, EditorRawDOMPoint(newContainer, 0));
-||||||| merged common ancestors
-    rv = InsertNodeWithTransaction(aContent,
-                                   EditorRawDOMPoint(newContainer, 0));
-=======
     rv = InsertNodeWithTransaction(aContent, EditorDOMPoint(newContainer, 0));
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       return nullptr;
     }
@@ -2459,21 +1830,8 @@ already_AddRefed<Element> EditorBase::InsertContainerWithTransactionInternal(
   return newContainer.forget();
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-nsresult EditorBase::MoveNodeWithTransaction(
-    nsIContent& aContent, const EditorDOMPointBase<PT, CT>& aPointToInsert) {
-||||||| merged common ancestors
-template<typename PT, typename CT>
-nsresult
-EditorBase::MoveNodeWithTransaction(
-              nsIContent& aContent,
-              const EditorDOMPointBase<PT, CT>& aPointToInsert)
-{
-=======
 nsresult EditorBase::MoveNodeWithTransaction(
     nsIContent& aContent, const EditorDOMPoint& aPointToInsert) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aPointToInsert.IsSetAndValid());
 
   EditorDOMPoint oldPoint(&aContent);
@@ -2487,15 +1845,7 @@ nsresult EditorBase::MoveNodeWithTransaction(
   }
 
   // Notify our internal selection state listener
-<<<<<<< HEAD
-  EditorDOMPoint newPoint(aPointToInsert);
-  AutoMoveNodeSelNotify selNotify(RangeUpdaterRef(), oldPoint, newPoint);
-||||||| merged common ancestors
-  EditorDOMPoint newPoint(aPointToInsert);
-  AutoMoveNodeSelNotify selNotify(mRangeUpdater, oldPoint, newPoint);
-=======
   AutoMoveNodeSelNotify selNotify(RangeUpdaterRef(), oldPoint, aPointToInsert);
->>>>>>> upstream-releases
 
   // Hold a reference so aNode doesn't go away when we remove it (bug 772282)
   nsresult rv = DeleteNodeWithTransaction(aContent);
@@ -2660,18 +2010,8 @@ EditorBase::RemoveEditorObserver(nsIEditorObserver* aObserver) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EditorBase::NotifySelectionChanged(nsIDocument* aDocument,
-                                   Selection* aSelection, int16_t aReason) {
-||||||| merged common ancestors
-EditorBase::NotifySelectionChanged(nsIDocument* aDocument,
-                                   Selection* aSelection,
-                                   int16_t aReason)
-{
-=======
 EditorBase::NotifySelectionChanged(Document* aDocument, Selection* aSelection,
                                    int16_t aReason) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(!aDocument) || NS_WARN_IF(!aSelection)) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -2745,35 +2085,6 @@ void EditorBase::NotifyEditorObservers(
   }
 }
 
-<<<<<<< HEAD
-void EditorBase::FireInputEvent() {
-  RefPtr<Element> targetElement = GetInputEventTargetElement();
-  if (NS_WARN_IF(!targetElement)) {
-    return;
-  }
-  RefPtr<TextEditor> textEditor = AsTextEditor();
-  DebugOnly<nsresult> rvIgnored =
-      nsContentUtils::DispatchInputEvent(targetElement, textEditor);
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rvIgnored),
-                       "Failed to dispatch input event");
-||||||| merged common ancestors
-void
-EditorBase::FireInputEvent()
-{
-  // We don't need to dispatch multiple input events if there is a pending
-  // input event.  However, it may have different event target.  If we resolved
-  // this issue, we need to manage the pending events in an array.  But it's
-  // overwork.  We don't need to do it for the very rare case.
-
-  nsCOMPtr<nsIContent> target = GetInputEventTargetContent();
-  NS_ENSURE_TRUE_VOID(target);
-
-  // NOTE: Don't refer IsIMEComposing() because it returns false even before
-  //       compositionend.  However, DOM Level 3 Events defines it should be
-  //       true after compositionstart and before compositionend.
-  nsContentUtils::AddScriptRunner(
-    new EditorInputEventDispatcher(this, target, !!GetComposition()));
-=======
 void EditorBase::FireInputEvent() {
   RefPtr<DataTransfer> dataTransfer = GetInputEventDataTransfer();
   FireInputEvent(GetEditAction(), GetInputEventData(), dataTransfer);
@@ -2802,7 +2113,6 @@ void EditorBase::FireInputEvent(EditAction aEditAction, const nsAString& aData,
                     : nsContentUtils::InputEventOptions(aData));
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rvIgnored),
                        "Failed to dispatch input event");
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -2884,99 +2194,21 @@ EditorBase::OutputToString(const nsAString& aFormatType, uint32_t aFlags,
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-<<<<<<< HEAD
 bool EditorBase::ArePreservingSelection() {
   return IsEditActionDataAvailable() && !SavedSelectionRef().IsEmpty();
 }
 
 void EditorBase::PreserveSelectionAcrossActions() {
   MOZ_ASSERT(IsEditActionDataAvailable());
-||||||| merged common ancestors
-NS_IMETHODIMP
-EditorBase::DumpContentTree()
-{
-#ifdef DEBUG
-  if (mRootElement) {
-    mRootElement->List(stdout);
-  }
-#endif
-  return NS_OK;
-}
 
-NS_IMETHODIMP
-EditorBase::DebugDumpContent()
-{
-#ifdef DEBUG
-  nsCOMPtr<nsIDocument> document = GetDocument();
-  if (NS_WARN_IF(!document)) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-  Element* body = document->GetBody();
-  if (body) {
-    body->List();
-  }
-#endif
-  return NS_OK;
-}
-=======
-bool EditorBase::ArePreservingSelection() {
-  return IsEditActionDataAvailable() && !SavedSelectionRef().IsEmpty();
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   SavedSelectionRef().SaveSelection(SelectionRefPtr());
   RangeUpdaterRef().RegisterSelectionState(SavedSelectionRef());
 }
-||||||| merged common ancestors
-NS_IMETHODIMP
-EditorBase::DebugUnitTests(int32_t* outNumTests,
-                           int32_t* outNumTestsFailed)
-{
-  MOZ_ASSERT_UNREACHABLE("This should never get called. Overridden by "
-                         "subclasses");
-  return NS_OK;
-}
-=======
-void EditorBase::PreserveSelectionAcrossActions() {
-  MOZ_ASSERT(IsEditActionDataAvailable());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult EditorBase::RestorePreservedSelection() {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-||||||| merged common ancestors
-bool
-EditorBase::ArePreservingSelection()
-{
-  return !(mSavedSel.IsEmpty());
-}
-=======
-  SavedSelectionRef().SaveSelection(SelectionRefPtr());
-  RangeUpdaterRef().RegisterSelectionState(SavedSelectionRef());
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (SavedSelectionRef().IsEmpty()) {
-||||||| merged common ancestors
-void
-EditorBase::PreserveSelectionAcrossActions(Selection* aSel)
-{
-  mSavedSel.SaveSelection(aSel);
-  mRangeUpdater.RegisterSelectionState(mSavedSel);
-}
-
-nsresult
-EditorBase::RestorePreservedSelection(Selection* aSel)
-{
-  if (mSavedSel.IsEmpty()) {
-=======
 nsresult EditorBase::RestorePreservedSelection() {
   MOZ_ASSERT(IsEditActionDataAvailable());
 
   if (SavedSelectionRef().IsEmpty()) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
   SavedSelectionRef().RestoreSelection(SelectionRefPtr());
@@ -3081,19 +2313,12 @@ EditorBase::CloneAttribute(const nsAString& aAttribute, Element* aDestElement,
   }
 
   RefPtr<nsAtom> attribute = NS_Atomize(aAttribute);
-<<<<<<< HEAD
-  return CloneAttributeWithTransaction(*attribute, *aDestElement,
-                                       *aSourceElement);
-||||||| merged common ancestors
-  return CloneAttributeWithTransaction(*attribute, *aDestElement, *aSourceElement);
-=======
   nsresult rv =
       CloneAttributeWithTransaction(*attribute, *aDestElement, *aSourceElement);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return EditorBase::ToGenericNSResult(rv);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult EditorBase::CloneAttributeWithTransaction(nsAtom& aAttribute,
@@ -3275,28 +2500,6 @@ EditorRawDOMPoint EditorBase::FindBetterInsertionPoint(
   return aPoint;
 }
 
-<<<<<<< HEAD
-nsresult EditorBase::InsertTextWithTransaction(
-    nsIDocument& aDocument, const nsAString& aStringToInsert,
-    const EditorRawDOMPoint& aPointToInsert,
-    EditorRawDOMPoint* aPointAfterInsertedString) {
-  MOZ_ASSERT(
-      ShouldHandleIMEComposition() || !AllowsTransactionsToChangeSelection(),
-      "caller must have already used AutoTransactionsConserveSelection "
-      "if this is not for updating composition string");
-||||||| merged common ancestors
-nsresult
-EditorBase::InsertTextWithTransaction(
-              nsIDocument& aDocument,
-              const nsAString& aStringToInsert,
-              const EditorRawDOMPoint& aPointToInsert,
-              EditorRawDOMPoint* aPointAfterInsertedString)
-{
-  MOZ_ASSERT(ShouldHandleIMEComposition() ||
-             !AllowsTransactionsToChangeSelection(),
-             "caller must have already used AutoTransactionsConserveSelection "
-             "if this is not for updating composition string");
-=======
 nsresult EditorBase::InsertTextWithTransaction(
     Document& aDocument, const nsAString& aStringToInsert,
     const EditorRawDOMPoint& aPointToInsert,
@@ -3305,7 +2508,6 @@ nsresult EditorBase::InsertTextWithTransaction(
       ShouldHandleIMEComposition() || !AllowsTransactionsToChangeSelection(),
       "caller must have already used AutoTransactionsConserveSelection "
       "if this is not for updating composition string");
->>>>>>> upstream-releases
 
   if (NS_WARN_IF(!aPointToInsert.IsSet())) {
     return NS_ERROR_INVALID_ARG;
@@ -3362,20 +2564,9 @@ nsresult EditorBase::InsertTextWithTransaction(
       newOffset = lengthToInsert + pointToInsert.Offset();
       NS_ENSURE_TRUE(newOffset.isValid(), NS_ERROR_FAILURE);
     }
-<<<<<<< HEAD
-    nsresult rv = InsertTextIntoTextNodeWithTransaction(
-        aStringToInsert, *pointToInsert.GetContainerAsText(),
-        pointToInsert.Offset());
-||||||| merged common ancestors
-    nsresult rv =
-      InsertTextIntoTextNodeWithTransaction(aStringToInsert,
-                                            *pointToInsert.GetContainerAsText(),
-                                            pointToInsert.Offset());
-=======
     nsresult rv = InsertTextIntoTextNodeWithTransaction(
         aStringToInsert, MOZ_KnownLive(*pointToInsert.GetContainerAsText()),
         pointToInsert.Offset());
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
     if (aPointAfterInsertedString) {
       aPointAfterInsertedString->Set(pointToInsert.GetContainer(),
@@ -3388,20 +2579,9 @@ nsresult EditorBase::InsertTextWithTransaction(
     CheckedInt<int32_t> newOffset = lengthToInsert + pointToInsert.Offset();
     NS_ENSURE_TRUE(newOffset.isValid(), NS_ERROR_FAILURE);
     // we are inserting text into an existing text node.
-<<<<<<< HEAD
-    nsresult rv = InsertTextIntoTextNodeWithTransaction(
-        aStringToInsert, *pointToInsert.GetContainerAsText(),
-        pointToInsert.Offset());
-||||||| merged common ancestors
-    nsresult rv =
-      InsertTextIntoTextNodeWithTransaction(aStringToInsert,
-                                            *pointToInsert.GetContainerAsText(),
-                                            pointToInsert.Offset());
-=======
     nsresult rv = InsertTextIntoTextNodeWithTransaction(
         aStringToInsert, MOZ_KnownLive(*pointToInsert.GetContainerAsText()),
         pointToInsert.Offset());
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
     if (aPointAfterInsertedString) {
       aPointAfterInsertedString->Set(pointToInsert.GetContainer(),
@@ -3496,45 +2676,7 @@ nsresult EditorBase::InsertTextIntoTextNodeWithTransaction(
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult EditorBase::SelectEntireDocument() {
-  MOZ_ASSERT(IsEditActionDataAvailable());
-
-  Element* rootElement = GetRoot();
-  if (!rootElement) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  ErrorResult errorResult;
-  SelectionRefPtr()->SelectAllChildren(*rootElement, errorResult);
-  return errorResult.StealNSResult();
-}
-
 nsINode* EditorBase::GetFirstEditableNode(nsINode* aRoot) {
-||||||| merged common ancestors
-nsresult
-EditorBase::SelectEntireDocument(Selection* aSelection)
-{
-  if (!aSelection) {
-    return NS_ERROR_NULL_POINTER;
-  }
-
-  Element* rootElement = GetRoot();
-  if (!rootElement) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  ErrorResult errorResult;
-  aSelection->SelectAllChildren(*rootElement, errorResult);
-  return errorResult.StealNSResult();
-}
-
-nsINode*
-EditorBase::GetFirstEditableNode(nsINode* aRoot)
-{
-=======
-nsINode* EditorBase::GetFirstEditableNode(nsINode* aRoot) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aRoot);
 
   nsIContent* node = GetLeftmostChild(aRoot);
@@ -3862,28 +3004,10 @@ void EditorBase::DoSplitNode(const EditorDOMPoint& aStartOfRightNode,
       }
     }
 
-<<<<<<< HEAD
-    RefPtr<nsRange> newRange;
-    nsresult rv = nsRange::CreateRange(
-        range.mStartContainer, range.mStartOffset, range.mEndContainer,
-        range.mEndOffset, getter_AddRefs(newRange));
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      aError.Throw(rv);
-||||||| merged common ancestors
-    RefPtr<nsRange> newRange;
-    nsresult rv = nsRange::CreateRange(range.mStartContainer,
-                                       range.mStartOffset,
-                                       range.mEndContainer,
-                                       range.mEndOffset,
-                                       getter_AddRefs(newRange));
-    if (NS_WARN_IF(NS_FAILED(rv))) {
-      aError.Throw(rv);
-=======
     RefPtr<nsRange> newRange =
         nsRange::Create(range.mStartContainer, range.mStartOffset,
                         range.mEndContainer, range.mEndOffset, aError);
     if (NS_WARN_IF(aError.Failed())) {
->>>>>>> upstream-releases
       return;
     }
     range.mSelection->AddRangeAndSelectFramesAndNotifyListeners(*newRange,
@@ -4045,21 +3169,6 @@ nsresult EditorBase::DoJoinNodes(nsINode* aNodeToKeep, nsINode* aNodeToJoin,
       range.mEndOffset += firstNodeLength;
     }
 
-<<<<<<< HEAD
-    RefPtr<nsRange> newRange;
-    nsresult rv = nsRange::CreateRange(
-        range.mStartContainer, range.mStartOffset, range.mEndContainer,
-        range.mEndOffset, getter_AddRefs(newRange));
-    NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-    RefPtr<nsRange> newRange;
-    nsresult rv = nsRange::CreateRange(range.mStartContainer,
-                                       range.mStartOffset,
-                                       range.mEndContainer,
-                                       range.mEndOffset,
-                                       getter_AddRefs(newRange));
-    NS_ENSURE_SUCCESS(rv, rv);
-=======
     RefPtr<nsRange> newRange =
         nsRange::Create(range.mStartContainer, range.mStartOffset,
                         range.mEndContainer, range.mEndOffset, IgnoreErrors());
@@ -4067,7 +3176,6 @@ nsresult EditorBase::DoJoinNodes(nsINode* aNodeToKeep, nsINode* aNodeToJoin,
       return NS_ERROR_FAILURE;
     }
 
->>>>>>> upstream-releases
     ErrorResult err;
     range.mSelection->AddRangeAndSelectFramesAndNotifyListeners(*newRange, err);
     if (NS_WARN_IF(err.Failed())) {
@@ -4613,26 +3721,10 @@ bool EditorBase::IsPreformatted(nsINode* aNode) {
   return styleText->WhiteSpaceIsSignificant();
 }
 
-<<<<<<< HEAD
-template <typename PT, typename CT>
-SplitNodeResult EditorBase::SplitNodeDeepWithTransaction(
-    nsIContent& aMostAncestorToSplit,
-    const EditorDOMPointBase<PT, CT>& aStartOfDeepestRightNode,
-    SplitAtEdges aSplitAtEdges) {
-||||||| merged common ancestors
-template<typename PT, typename CT>
-SplitNodeResult
-EditorBase::SplitNodeDeepWithTransaction(
-              nsIContent& aMostAncestorToSplit,
-              const EditorDOMPointBase<PT, CT>& aStartOfDeepestRightNode,
-              SplitAtEdges aSplitAtEdges)
-{
-=======
 SplitNodeResult EditorBase::SplitNodeDeepWithTransaction(
     nsIContent& aMostAncestorToSplit,
     const EditorDOMPoint& aStartOfDeepestRightNode,
     SplitAtEdges aSplitAtEdges) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStartOfDeepestRightNode.IsSetAndValid());
   MOZ_ASSERT(
       aStartOfDeepestRightNode.GetContainer() == &aMostAncestorToSplit ||
@@ -4810,17 +3902,6 @@ void EditorBase::EndUpdateViewBatch() {
   // to a document may result in multiple events, some of them quite hard
   // to listen too (in particular when an ancestor of the selection is
   // changed but the selection itself is not changed).
-<<<<<<< HEAD
-  DebugOnly<nsresult> rv = htmlEditor->RefereshEditingUI();
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "RefereshEditingUI() failed");
-||||||| merged common ancestors
-  if (NS_WARN_IF(!selection)) {
-    return;
-  }
-
-  DebugOnly<nsresult> rv = htmlEditor->RefereshEditingUI(*selection);
-  NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "RefereshEditingUI() failed");
-=======
   DebugOnly<nsresult> rv = MOZ_KnownLive(htmlEditor)->RefreshEditingUI();
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "RefreshEditingUI() failed");
 }
@@ -4830,23 +3911,12 @@ TextComposition* EditorBase::GetComposition() const { return mComposition; }
 EditorRawDOMPoint EditorBase::GetCompositionStartPoint() const {
   return mComposition ? EditorRawDOMPoint(mComposition->GetStartRef())
                       : EditorRawDOMPoint();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-TextComposition* EditorBase::GetComposition() const { return mComposition; }
-||||||| merged common ancestors
-TextComposition*
-EditorBase::GetComposition() const
-{
-  return mComposition;
-}
-=======
 EditorRawDOMPoint EditorBase::GetCompositionEndPoint() const {
   return mComposition ? EditorRawDOMPoint(mComposition->GetEndRef())
                       : EditorRawDOMPoint();
 }
->>>>>>> upstream-releases
 
 bool EditorBase::IsIMEComposing() const {
   return mComposition && mComposition->IsComposing();
@@ -5124,23 +4194,6 @@ already_AddRefed<EditTransactionBase> EditorBase::CreateTxnForDeleteRange(
   return deleteNodeTransaction.forget();
 }
 
-<<<<<<< HEAD
-nsresult EditorBase::CreateRange(nsINode* aStartContainer, int32_t aStartOffset,
-                                 nsINode* aEndContainer, int32_t aEndOffset,
-                                 nsRange** aRange) {
-  return nsRange::CreateRange(aStartContainer, aStartOffset, aEndContainer,
-                              aEndOffset, aRange);
-||||||| merged common ancestors
-nsresult
-EditorBase::CreateRange(nsINode* aStartContainer,
-                        int32_t aStartOffset,
-                        nsINode* aEndContainer,
-                        int32_t aEndOffset,
-                        nsRange** aRange)
-{
-  return nsRange::CreateRange(aStartContainer, aStartOffset,
-                              aEndContainer, aEndOffset, aRange);
-=======
 nsresult EditorBase::CreateRange(nsINode* aStartContainer, int32_t aStartOffset,
                                  nsINode* aEndContainer, int32_t aEndOffset,
                                  nsRange** aRange) {
@@ -5151,7 +4204,6 @@ nsresult EditorBase::CreateRange(nsINode* aStartContainer, int32_t aStartOffset,
   }
   range.forget(aRange);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult EditorBase::AppendNodeToSelectionAsRange(nsINode* aNode) {
@@ -5179,15 +4231,8 @@ nsresult EditorBase::AppendNodeToSelectionAsRange(nsINode* aNode) {
   }
 
   ErrorResult err;
-<<<<<<< HEAD
-  SelectionRefPtr()->AddRange(*range, err);
-  NS_WARNING_ASSERTION(!err.Failed(), "Failed to add range to Selection");
-||||||| merged common ancestors
-  selection->AddRange(*range, err);
-=======
   SelectionRefPtr()->AddRangeAndSelectFramesAndNotifyListeners(*range, err);
   NS_WARNING_ASSERTION(!err.Failed(), "Failed to add range to Selection");
->>>>>>> upstream-releases
   return err.StealNSResult();
 }
 
@@ -5223,18 +4268,8 @@ already_AddRefed<Element> EditorBase::CreateHTMLContent(const nsAtom* aTag) {
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<nsTextNode> EditorBase::CreateTextNode(
-    nsIDocument& aDocument, const nsAString& aData) {
-||||||| merged common ancestors
-already_AddRefed<nsTextNode>
-EditorBase::CreateTextNode(nsIDocument& aDocument,
-                           const nsAString& aData)
-{
-=======
 already_AddRefed<nsTextNode> EditorBase::CreateTextNode(
     Document& aDocument, const nsAString& aData) {
->>>>>>> upstream-releases
   RefPtr<nsTextNode> text = aDocument.CreateEmptyTextNode();
   text->MarkAsMaybeModifiedFrequently();
   // Don't notify; this node is still being created.
@@ -5360,21 +4395,6 @@ nsresult EditorBase::InitializeSelection(EventTarget* aFocusEventTarget) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  if (NS_WARN_IF(!presShell)) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-||||||| merged common ancestors
-  RefPtr<Selection> selection = GetSelection();
-  NS_ENSURE_STATE(selection);
-
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  NS_ENSURE_TRUE(presShell, NS_ERROR_NOT_INITIALIZED);
-
-=======
->>>>>>> upstream-releases
   nsCOMPtr<nsISelectionController> selectionController =
       GetSelectionController();
   if (NS_WARN_IF(!selectionController)) {
@@ -5382,24 +4402,11 @@ nsresult EditorBase::InitializeSelection(EventTarget* aFocusEventTarget) {
   }
 
   // Init the caret
-<<<<<<< HEAD
-  RefPtr<nsCaret> caret = presShell->GetCaret();
-  if (NS_WARN_IF(!caret)) {
-    return NS_ERROR_FAILURE;
-  }
-  caret->SetSelection(SelectionRefPtr());
-||||||| merged common ancestors
-  RefPtr<nsCaret> caret = presShell->GetCaret();
-  NS_ENSURE_TRUE(caret, NS_ERROR_UNEXPECTED);
-  caret->SetIgnoreUserModify(false);
-  caret->SetSelection(selection);
-=======
   RefPtr<nsCaret> caret = GetCaret();
   if (NS_WARN_IF(!caret)) {
     return NS_ERROR_FAILURE;
   }
   caret->SetSelection(SelectionRefPtr());
->>>>>>> upstream-releases
   selectionController->SetCaretReadOnly(IsReadonly());
   selectionController->SetCaretEnabled(true);
   // NOTE(emilio): It's important for this call to be after
@@ -5491,10 +4498,6 @@ nsresult EditorBase::FinalizeSelection() {
   }
 
   if (RefPtr<nsCaret> caret = GetCaret()) {
-    caret->SetIgnoreUserModify(true);
-  }
-
-  if (RefPtr<nsCaret> caret = presShell->GetCaret()) {
     caret->SetIgnoreUserModify(true);
   }
 
@@ -5604,18 +4607,6 @@ nsresult EditorBase::DetermineCurrentDirection() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult EditorBase::ToggleTextDirection() {
-  AutoEditActionDataSetter editActionData(*this, EditAction::eSetTextDirection);
-  if (NS_WARN_IF(!editActionData.CanHandle())) {
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-||||||| merged common ancestors
-nsresult
-EditorBase::ToggleTextDirection()
-{
-=======
 nsresult EditorBase::ToggleTextDirectionAsAction(nsIPrincipal* aPrincipal) {
   AutoEditActionDataSetter editActionData(*this, EditAction::eSetTextDirection,
                                           aPrincipal);
@@ -5623,7 +4614,6 @@ nsresult EditorBase::ToggleTextDirectionAsAction(nsIPrincipal* aPrincipal) {
     return NS_ERROR_NOT_INITIALIZED;
   }
 
->>>>>>> upstream-releases
   // XXX Oddly, Chrome does not dispatch beforeinput event in this case but
   //     dispatches input event.
 
@@ -5844,94 +4834,7 @@ void EditorBase::OnFocus(EventTarget* aFocusEventTarget) {
   }
 }
 
-<<<<<<< HEAD
-int32_t EditorBase::GetIMESelectionStartOffsetIn(nsINode* aTextNode) {
-  MOZ_ASSERT(aTextNode, "aTextNode must not be nullptr");
-
-  nsISelectionController* selectionController = GetSelectionController();
-  if (NS_WARN_IF(!selectionController)) {
-    return -1;
-  }
-
-  uint32_t minOffset = UINT32_MAX;
-  static const SelectionType kIMESelectionTypes[] = {
-      SelectionType::eIMERawClause, SelectionType::eIMESelectedRawClause,
-      SelectionType::eIMEConvertedClause, SelectionType::eIMESelectedClause};
-  for (auto selectionType : kIMESelectionTypes) {
-    RefPtr<Selection> selection = GetSelection(selectionType);
-    if (!selection) {
-      continue;
-    }
-    for (uint32_t i = 0; i < selection->RangeCount(); i++) {
-      RefPtr<nsRange> range = selection->GetRangeAt(i);
-      if (NS_WARN_IF(!range)) {
-        continue;
-      }
-      if (NS_WARN_IF(range->GetStartContainer() != aTextNode)) {
-        // ignore the start offset...
-      } else {
-        minOffset = std::min(minOffset, range->StartOffset());
-      }
-      if (NS_WARN_IF(range->GetEndContainer() != aTextNode)) {
-        // ignore the end offset...
-      } else {
-        minOffset = std::min(minOffset, range->EndOffset());
-      }
-    }
-  }
-  return minOffset < INT32_MAX ? minOffset : -1;
-}
-
 void EditorBase::HideCaret(bool aHide) {
-||||||| merged common ancestors
-int32_t
-EditorBase::GetIMESelectionStartOffsetIn(nsINode* aTextNode)
-{
-  MOZ_ASSERT(aTextNode, "aTextNode must not be nullptr");
-
-  nsISelectionController* selectionController = GetSelectionController();
-  if (NS_WARN_IF(!selectionController)) {
-    return -1;
-  }
-
-  uint32_t minOffset = UINT32_MAX;
-  static const SelectionType kIMESelectionTypes[] = {
-    SelectionType::eIMERawClause,
-    SelectionType::eIMESelectedRawClause,
-    SelectionType::eIMEConvertedClause,
-    SelectionType::eIMESelectedClause
-  };
-  for (auto selectionType : kIMESelectionTypes) {
-    RefPtr<Selection> selection = GetSelection(selectionType);
-    if (!selection) {
-      continue;
-    }
-    for (uint32_t i = 0; i < selection->RangeCount(); i++) {
-      RefPtr<nsRange> range = selection->GetRangeAt(i);
-      if (NS_WARN_IF(!range)) {
-        continue;
-      }
-      if (NS_WARN_IF(range->GetStartContainer() != aTextNode)) {
-        // ignore the start offset...
-      } else {
-        minOffset = std::min(minOffset, range->StartOffset());
-      }
-      if (NS_WARN_IF(range->GetEndContainer() != aTextNode)) {
-        // ignore the end offset...
-      } else {
-        minOffset = std::min(minOffset, range->EndOffset());
-      }
-    }
-  }
-  return minOffset < INT32_MAX ? minOffset : -1;
-}
-
-void
-EditorBase::HideCaret(bool aHide)
-{
-=======
-void EditorBase::HideCaret(bool aHide) {
->>>>>>> upstream-releases
   if (mHidingCaret == aHide) {
     return;
   }
@@ -5949,80 +4852,6 @@ void EditorBase::HideCaret(bool aHide) {
   }
 }
 
-<<<<<<< HEAD
-/******************************************************************************
- * EditorBase::AutoSelectionRestorer
- *****************************************************************************/
-
-EditorBase::AutoSelectionRestorer::AutoSelectionRestorer(
-    EditorBase& aEditorBase MOZ_GUARD_OBJECT_NOTIFIER_PARAM_IN_IMPL)
-    : mEditorBase(nullptr) {
-  MOZ_GUARD_OBJECT_NOTIFIER_INIT;
-  if (aEditorBase.ArePreservingSelection()) {
-    // We already have initialized mParentData::mSavedSelection, so this must
-    // be nested call.
-    return;
-  }
-  MOZ_ASSERT(aEditorBase.IsEditActionDataAvailable());
-  mEditorBase = &aEditorBase;
-  mEditorBase->PreserveSelectionAcrossActions();
-}
-
-EditorBase::AutoSelectionRestorer::~AutoSelectionRestorer() {
-  if (mEditorBase && mEditorBase->ArePreservingSelection()) {
-    mEditorBase->RestorePreservedSelection();
-  }
-}
-
-void EditorBase::AutoSelectionRestorer::Abort() {
-  if (mEditorBase) {
-    mEditorBase->StopPreservingSelection();
-  }
-}
-
-/*****************************************************************************
- * mozilla::EditorBase::AutoEditActionDataSetter
- *****************************************************************************/
-
-EditorBase::AutoEditActionDataSetter::AutoEditActionDataSetter(
-    const EditorBase& aEditorBase, EditAction aEditAction)
-    : mEditorBase(const_cast<EditorBase&>(aEditorBase)),
-      mParentData(aEditorBase.mEditActionData),
-      mTopLevelEditSubAction(EditSubAction::eNone) {
-  // If we're nested edit action, copies necessary data from the parent.
-  if (mParentData) {
-    mSelection = mParentData->mSelection;
-    // If we're eNotEditing, we should inherit the parent's edit action.
-    // This may occur if creator or its callee use public methods which
-    // just returns something.
-    if (aEditAction != EditAction::eNotEditing) {
-      mEditAction = aEditAction;
-    }
-    mTopLevelEditSubAction = mParentData->mTopLevelEditSubAction;
-    mDirectionOfTopLevelEditSubAction =
-        mParentData->mDirectionOfTopLevelEditSubAction;
-  } else {
-    mSelection = mEditorBase.GetSelection();
-    if (NS_WARN_IF(!mSelection)) {
-      return;
-    }
-    mEditAction = aEditAction;
-    mDirectionOfTopLevelEditSubAction = eNone;
-  }
-  mEditorBase.mEditActionData = this;
-}
-
-EditorBase::AutoEditActionDataSetter::~AutoEditActionDataSetter() {
-  if (!mSelection || NS_WARN_IF(mEditorBase.mEditActionData != this)) {
-    return;
-  }
-  mEditorBase.mEditActionData = mParentData;
-}
-
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 /******************************************************************************
  * EditorBase::AutoSelectionRestorer
  *****************************************************************************/
@@ -6170,4 +4999,3 @@ void EditorBase::AutoEditActionDataSetter::InitializeDataTransferWithClipboard(
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

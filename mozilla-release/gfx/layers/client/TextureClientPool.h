@@ -22,25 +22,11 @@ class ISurfaceAllocator;
 class TextureForwarder;
 class TextureReadLock;
 
-<<<<<<< HEAD
-class TextureClientAllocator {
- protected:
-  virtual ~TextureClientAllocator() {}
-
- public:
-||||||| merged common ancestors
-class TextureClientAllocator
-{
-protected:
-  virtual ~TextureClientAllocator() {}
-public:
-=======
 class TextureClientAllocator {
  protected:
   virtual ~TextureClientAllocator() = default;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(TextureClientAllocator)
 
   virtual already_AddRefed<TextureClient> GetTextureClient() = 0;
@@ -57,28 +43,6 @@ class TextureClientAllocator {
 class TextureClientPool final : public TextureClientAllocator {
   virtual ~TextureClientPool();
 
-<<<<<<< HEAD
- public:
-  TextureClientPool(LayersBackend aBackend, bool aSupportsTextureDirectMapping,
-                    int32_t aMaxTextureSize, gfx::SurfaceFormat aFormat,
-                    gfx::IntSize aSize, TextureFlags aFlags,
-                    uint32_t aShrinkTimeoutMsec, uint32_t aClearTimeoutMsec,
-                    uint32_t aInitialPoolSize, uint32_t aPoolUnusedSize,
-                    TextureForwarder *aAllocator);
-||||||| merged common ancestors
-public:
-  TextureClientPool(LayersBackend aBackend,
-                    bool aSupportsTextureDirectMapping,
-                    int32_t aMaxTextureSize,
-                    gfx::SurfaceFormat aFormat,
-                    gfx::IntSize aSize,
-                    TextureFlags aFlags,
-                    uint32_t aShrinkTimeoutMsec,
-                    uint32_t aClearTimeoutMsec,
-                    uint32_t aInitialPoolSize,
-                    uint32_t aPoolUnusedSize,
-                    TextureForwarder* aAllocator);
-=======
  public:
   TextureClientPool(LayersBackend aBackend, bool aSupportsTextureDirectMapping,
                     int32_t aMaxTextureSize, gfx::SurfaceFormat aFormat,
@@ -86,7 +50,6 @@ public:
                     uint32_t aShrinkTimeoutMsec, uint32_t aClearTimeoutMsec,
                     uint32_t aInitialPoolSize, uint32_t aPoolUnusedSize,
                     TextureForwarder* aAllocator);
->>>>>>> upstream-releases
 
   /**
    * Gets an allocated TextureClient of size and format that are determined
@@ -197,7 +160,7 @@ public:
   RefPtr<nsITimer> mShrinkTimer;
   RefPtr<nsITimer> mClearTimer;
   // This mSurfaceAllocator owns us, so no need to hold a ref to it
-  TextureForwarder *mSurfaceAllocator;
+  TextureForwarder* mSurfaceAllocator;
 
   // Keep track of whether this pool has been destroyed or not. If it has,
   // we won't accept returns of TextureClients anymore, and the refcounting

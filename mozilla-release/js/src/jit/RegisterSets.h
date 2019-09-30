@@ -114,54 +114,6 @@ struct AnyRegister {
 // platforms, two registers on 32 bit platforms.
 class ValueOperand {
 #if defined(JS_NUNBOX32)
-<<<<<<< HEAD
-  Register type_;
-  Register payload_;
-
- public:
-  constexpr ValueOperand(Register type, Register payload)
-      : type_(type), payload_(payload) {}
-
-  Register typeReg() const { return type_; }
-  Register payloadReg() const { return payload_; }
-  constexpr bool aliases(Register reg) const {
-    return type_ == reg || payload_ == reg;
-  }
-  Register payloadOrValueReg() const { return payloadReg(); }
-  constexpr bool operator==(const ValueOperand& o) const {
-    return type_ == o.type_ && payload_ == o.payload_;
-  }
-  constexpr bool operator!=(const ValueOperand& o) const {
-    return !(*this == o);
-  }
-||||||| merged common ancestors
-    Register type_;
-    Register payload_;
-
-  public:
-    constexpr ValueOperand(Register type, Register payload)
-      : type_(type), payload_(payload)
-    { }
-
-    Register typeReg() const {
-        return type_;
-    }
-    Register payloadReg() const {
-        return payload_;
-    }
-    constexpr bool aliases(Register reg) const {
-        return type_ == reg || payload_ == reg;
-    }
-    Register payloadOrValueReg() const {
-        return payloadReg();
-    }
-    constexpr bool operator==(const ValueOperand& o) const {
-        return type_ == o.type_ && payload_ == o.payload_;
-    }
-    constexpr bool operator!=(const ValueOperand& o) const {
-        return !(*this == o);
-    }
-=======
   Register type_;
   Register payload_;
 
@@ -181,48 +133,8 @@ class ValueOperand {
   constexpr bool operator!=(const ValueOperand& o) const {
     return !(*this == o);
   }
->>>>>>> upstream-releases
 
 #elif defined(JS_PUNBOX64)
-<<<<<<< HEAD
-  Register value_;
-
- public:
-  explicit constexpr ValueOperand(Register value) : value_(value) {}
-
-  Register valueReg() const { return value_; }
-  constexpr bool aliases(Register reg) const { return value_ == reg; }
-  Register payloadOrValueReg() const { return valueReg(); }
-  constexpr bool operator==(const ValueOperand& o) const {
-    return value_ == o.value_;
-  }
-  constexpr bool operator!=(const ValueOperand& o) const {
-    return !(*this == o);
-  }
-||||||| merged common ancestors
-    Register value_;
-
-  public:
-    explicit constexpr ValueOperand(Register value)
-      : value_(value)
-    { }
-
-    Register valueReg() const {
-        return value_;
-    }
-    constexpr bool aliases(Register reg) const {
-        return value_ == reg;
-    }
-    Register payloadOrValueReg() const {
-        return valueReg();
-    }
-    constexpr bool operator==(const ValueOperand& o) const {
-        return value_ == o.value_;
-    }
-    constexpr bool operator!=(const ValueOperand& o) const {
-        return !(*this == o);
-    }
-=======
   Register value_;
 
  public:
@@ -237,18 +149,9 @@ class ValueOperand {
   constexpr bool operator!=(const ValueOperand& o) const {
     return !(*this == o);
   }
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-  Register scratchReg() const { return payloadOrValueReg(); }
-||||||| merged common ancestors
-    Register scratchReg() const {
-        return payloadOrValueReg();
-    }
-=======
   constexpr Register scratchReg() const { return payloadOrValueReg(); }
->>>>>>> upstream-releases
 
   ValueOperand() = default;
 };

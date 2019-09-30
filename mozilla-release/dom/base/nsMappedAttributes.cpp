@@ -270,16 +270,7 @@ size_t nsMappedAttributes::SizeOfIncludingThis(
   return n;
 }
 
-<<<<<<< HEAD
-void nsMappedAttributes::LazilyResolveServoDeclaration(nsIDocument* aDoc) {
-||||||| merged common ancestors
-void
-nsMappedAttributes::LazilyResolveServoDeclaration(nsIDocument* aDoc)
-{
-
-=======
 void nsMappedAttributes::LazilyResolveServoDeclaration(dom::Document* aDoc) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mServoStyle,
              "LazilyResolveServoDeclaration should not be called if "
              "mServoStyle is already set");

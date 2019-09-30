@@ -33,30 +33,12 @@ struct LoremField {
 
 #[test]
 fn bad_type_and_missing_fields() {
-<<<<<<< HEAD
-    let input = syn::parse_str(
-        r#"
-    #[accrue(ipsum = true, dolor(amet = "Hi"))]
-    pub struct NonConforming {
-        foo: ()
-    }
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    let input = syn::parse_str(r#"
-    #[accrue(ipsum = true, dolor(amet = "Hi"))]
-    pub struct NonConforming {
-        foo: ()
-    }
-    "#).unwrap();
-=======
     let input = parse_quote! {
         #[accrue(ipsum = true, dolor(amet = "Hi"))]
         pub struct NonConforming {
             foo: ()
         }
     };
->>>>>>> upstream-releases
 
     let s_result: ::darling::Error = Lorem::from_derive_input(&input).unwrap_err();
     let err = s_result.flatten();
@@ -66,25 +48,6 @@ fn bad_type_and_missing_fields() {
 
 #[test]
 fn body_only_issues() {
-<<<<<<< HEAD
-    let input = syn::parse_str(
-        r#"
-    #[accrue(ipsum = "Hello", dolor(sit))]
-    pub struct NonConforming {
-        foo: (),
-        bar: bool,
-    }
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    let input = syn::parse_str(r#"
-    #[accrue(ipsum = "Hello", dolor(sit))]
-    pub struct NonConforming {
-        foo: (),
-        bar: bool,
-    }
-    "#).unwrap();
-=======
     let input = parse_quote! {
         #[accrue(ipsum = "Hello", dolor(sit))]
         pub struct NonConforming {
@@ -92,7 +55,6 @@ fn body_only_issues() {
             bar: bool,
         }
     };
->>>>>>> upstream-releases
 
     let s_err = Lorem::from_derive_input(&input).unwrap_err();
     println!("{:?}", s_err);
@@ -114,25 +76,6 @@ struct Month {
 
 #[test]
 fn error_in_enum_fields() {
-<<<<<<< HEAD
-    let input = syn::parse_str(
-        r#"
-    #[accrue(schedule(tuesday(morning = "yes")))]
-    pub struct NonConforming {
-        foo: (),
-        bar: bool,
-    }
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    let input = syn::parse_str(r#"
-    #[accrue(schedule(tuesday(morning = "yes")))]
-    pub struct NonConforming {
-        foo: (),
-        bar: bool,
-    }
-    "#).unwrap();
-=======
     let input = parse_quote! {
         #[accrue(schedule(tuesday(morning = "yes")))]
         pub struct NonConforming {
@@ -140,7 +83,6 @@ fn error_in_enum_fields() {
             bar: bool,
         }
     };
->>>>>>> upstream-releases
 
     let s_err = Month::from_derive_input(&input).unwrap_err();
     assert_eq!(2, s_err.len());
@@ -151,25 +93,6 @@ fn error_in_enum_fields() {
 
 #[test]
 fn error_in_newtype_variant() {
-<<<<<<< HEAD
-    let input = syn::parse_str(
-        r#"
-    #[accrue(schedule(wednesday(sit = "yes")))]
-    pub struct NonConforming {
-        foo: (),
-        bar: bool,
-    }
-    "#,
-    ).unwrap();
-||||||| merged common ancestors
-    let input = syn::parse_str(r#"
-    #[accrue(schedule(wednesday(sit = "yes")))]
-    pub struct NonConforming {
-        foo: (),
-        bar: bool,
-    }
-    "#).unwrap();
-=======
     let input = parse_quote! {
         #[accrue(schedule(wednesday(sit = "yes")))]
         pub struct NonConforming {
@@ -177,7 +100,6 @@ fn error_in_newtype_variant() {
             bar: bool,
         }
     };
->>>>>>> upstream-releases
 
     let s_err = Month::from_derive_input(&input).unwrap_err();
     assert_eq!(1, s_err.len());

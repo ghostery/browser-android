@@ -1,42 +1,16 @@
 import itertools
+import json
 import os
-<<<<<<< HEAD
-from collections import defaultdict
-from six import iteritems, iterkeys, itervalues, string_types
-||||||| merged common ancestors
-from collections import defaultdict
-from six import iteritems, itervalues, viewkeys, string_types
-=======
 from collections import MutableMapping, defaultdict
 from six import iteritems, iterkeys, itervalues, string_types, binary_type, text_type
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-from . import vcs
-from .item import (ManualTest, WebDriverSpecTest, Stub, RefTestNode, RefTest,
-                   TestharnessTest, SupportFile, ConformanceCheckerTest, VisualTest)
-||||||| merged common ancestors
-from .item import ManualTest, WebDriverSpecTest, Stub, RefTestNode, RefTest, TestharnessTest, SupportFile, ConformanceCheckerTest, VisualTest
-=======
 from . import vcs
 from .item import (ConformanceCheckerTest, ManifestItem, ManualTest, RefTest, RefTestNode, Stub,
                    SupportFile, TestharnessTest, VisualTest, WebDriverSpecTest)
->>>>>>> upstream-releases
 from .log import get_logger
 from .sourcefile import SourceFile
 from .utils import from_os_path, to_os_path
 
-<<<<<<< HEAD
-try:
-    import ujson as json
-except ImportError:
-    import json
-
-CURRENT_VERSION = 5
-||||||| merged common ancestors
-
-CURRENT_VERSION = 5
-=======
 MYPY = False
 if MYPY:
     # MYPY is set to True when run under Mypy.
@@ -63,7 +37,6 @@ except ImportError:
     fast_json = json  # type: ignore
 
 CURRENT_VERSION = 6
->>>>>>> upstream-releases
 
 
 class ManifestError(Exception):
@@ -268,218 +241,25 @@ class ManifestData(ManifestDataType):
         return rv
 
 
-item_classes = {"testharness": TestharnessTest,
-                "reftest": RefTest,
-                "reftest_node": RefTestNode,
-                "manual": ManualTest,
-                "stub": Stub,
-                "wdspec": WebDriverSpecTest,
-                "conformancechecker": ConformanceCheckerTest,
-                "visual": VisualTest,
-                "support": SupportFile}
-
-
-class TypeData(object):
-    def __init__(self, manifest, type_cls, meta_filters):
-        """Dict-like object containing the TestItems for each test type.
-
-        Loading an actual Item class for each test is unnecessarily
-        slow, so this class allows lazy-loading of the test
-        items. When the manifest is loaded we store the raw json
-        corresponding to the test type, and only create an Item
-        subclass when the test is accessed. In order to remain
-        API-compatible with consumers that depend on getting an Item
-        from iteration, we do egerly load all items when iterating
-        over the class."""
-        self.manifest = manifest
-        self.type_cls = type_cls
-        self.json_data = {}
-        self.tests_root = None
-        self.data = {}
-        self.meta_filters = meta_filters or []
-
-    def __getitem__(self, key):
-        if key not in self.data:
-            self.load(key)
-        return self.data[key]
-
-    def __bool__(self):
-        return bool(self.data)
-
-    def __len__(self):
-        rv = len(self.data)
-        if self.json_data is not None:
-            rv += len(self.json_data)
-        return rv
-
-    def __delitem__(self, key):
-        del self.data[key]
-
-    def __setitem__(self, key, value):
-        self.data[key] = value
-
-    def __contains__(self, key):
-        self.load_all()
-        return key in self.data
-
-    def __iter__(self):
-        self.load_all()
-        return self.data.__iter__()
-
-    def pop(self, key, default=None):
-        try:
-            value = self[key]
-        except ValueError:
-            value = default
-        else:
-            del self.data[key]
-        return value
-
-    def get(self, key, default=None):
-        try:
-            return self[key]
-        except ValueError:
-            return default
-
-    def itervalues(self):
-        self.load_all()
-        return itervalues(self.data)
-
-    def iteritems(self):
-        self.load_all()
-        return iteritems(self.data)
-
-    def values(self):
-        return self.itervalues()
-
-    def items(self):
-        return self.iteritems()
-
-    def load(self, key):
-        """Load a specific Item given a path"""
-        if self.json_data is not None:
-            data = set()
-            path = from_os_path(key)
-            for test in iterfilter(self.meta_filters, self.json_data.get(path, [])):
-                manifest_item = self.type_cls.from_json(self.manifest,
-                                                        self.tests_root,
-                                                        path,
-                                                        test)
-                data.add(manifest_item)
-            try:
-                del self.json_data[path]
-            except KeyError:
-                pass
-            self.data[key] = data
-        else:
-            raise ValueError
-
-    def load_all(self):
-        """Load all test items in this class"""
-        if self.json_data is not None:
-            for path, value in iteritems(self.json_data):
-                key = to_os_path(path)
-                if key in self.data:
-                    continue
-                data = set()
-                for test in iterfilter(self.meta_filters, self.json_data.get(path, [])):
-                    manifest_item = self.type_cls.from_json(self.manifest,
-                                                            self.tests_root,
-                                                            path,
-                                                            test)
-                    data.add(manifest_item)
-                self.data[key] = data
-            self.json_data = None
-
-    def set_json(self, tests_root, data):
-        if not isinstance(data, dict):
-            raise ValueError("Got a %s expected a dict" % (type(data)))
-        self.tests_root = tests_root
-        self.json_data = data
-
-    def paths(self):
-        """Get a list of all paths containing items of this type,
-        without actually constructing all the items"""
-        rv = set(iterkeys(self.data))
-        if self.json_data:
-            rv |= set(to_os_path(item) for item in iterkeys(self.json_data))
-        return rv
-
-
-class ManifestData(dict):
-    def __init__(self, manifest, meta_filters=None):
-        """Dictionary subclass containing a TypeData instance for each test type,
-        keyed by type name"""
-        self.initialized = False
-        for key, value in iteritems(item_classes):
-            self[key] = TypeData(manifest, value, meta_filters=meta_filters)
-        self.initialized = True
-        self.json_obj = None
-
-    def __setitem__(self, key, value):
-        if self.initialized:
-            raise AttributeError
-        dict.__setitem__(self, key, value)
-
-    def paths(self):
-        """Get a list of all paths containing test items
-        without actually constructing all the items"""
-        rv = set()
-        for item_data in itervalues(self):
-            rv |= set(item_data.paths())
-        return rv
-
-
 class Manifest(object):
-<<<<<<< HEAD
-    def __init__(self, url_base="/", meta_filters=None):
-||||||| merged common ancestors
-    def __init__(self, url_base="/"):
-=======
     def __init__(self, tests_root=None, url_base="/"):
         # type: (Optional[str], Text) -> None
->>>>>>> upstream-releases
         assert url_base is not None
-<<<<<<< HEAD
-        self._path_hash = {}
-        self._data = ManifestData(self, meta_filters)
-        self._reftest_nodes_by_url = None
-        self.url_base = url_base
-||||||| merged common ancestors
-        self._path_hash = {}
-        self._data = defaultdict(dict)
-        self._reftest_nodes_by_url = None
-        self.url_base = url_base
-=======
         self._path_hash = {}  # type: Dict[Text, Tuple[Text, Text]]
         self._data = ManifestData(self)  # type: ManifestData
         self._reftest_nodes_by_url = None  # type: Optional[Dict[Text, Union[RefTest, RefTestNode]]]
         self.tests_root = tests_root  # type: Optional[str]
         self.url_base = url_base  # type: Text
->>>>>>> upstream-releases
 
     def __iter__(self):
         # type: () -> Iterable[Tuple[str, Text, Set[ManifestItem]]]
         return self.itertypes()
 
     def itertypes(self, *types):
-<<<<<<< HEAD
-        if not types:
-            types = sorted(self._data.keys())
-        for item_type in types:
-            for path in sorted(self._data[item_type]):
-                tests = self._data[item_type][path]
-||||||| merged common ancestors
-        if not types:
-            types = sorted(self._data.keys())
-        for item_type in types:
-            for path, tests in sorted(iteritems(self._data[item_type])):
-=======
         # type: (*str) -> Iterable[Tuple[str, Text, Set[ManifestItem]]]
         for item_type in (types or sorted(self._data.keys())):
             for path in sorted(self._data[item_type]):
                 tests = self._data[item_type][path]
->>>>>>> upstream-releases
                 yield item_type, path, tests
 
     def iterpath(self, path):
@@ -518,28 +298,9 @@ class Manifest(object):
         return self.reftest_nodes_by_url.get(url)
 
     def update(self, tree):
-<<<<<<< HEAD
-        """Update the manifest given an iterable of items that make up the updated manifest.
-||||||| merged common ancestors
-        new_data = defaultdict(dict)
-        new_hashes = {}
-=======
         # type: (Iterable[Tuple[Union[SourceFile, bytes], bool]]) -> bool
         """Update the manifest given an iterable of items that make up the updated manifest.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        The iterable must either generate tuples of the form (SourceFile, True) for paths
-        that are to be updated, or (path, False) for items that are not to be updated. This
-        unusual API is designed as an optimistaion meaning that SourceFile items need not be
-        constructed in the case we are not updating a path, but the absence of an item from
-        the iterator may be used to remove defunct entries from the manifest."""
-        reftest_nodes = []
-        seen_files = set()
-||||||| merged common ancestors
-        reftest_nodes = []
-        old_files = defaultdict(set, {k: set(viewkeys(v)) for k, v in iteritems(self._data)})
-=======
         The iterable must either generate tuples of the form (SourceFile, True) for paths
         that are to be updated, or (path, False) for items that are not to be updated. This
         unusual API is designed as an optimistaion meaning that SourceFile items need not be
@@ -547,39 +308,10 @@ class Manifest(object):
         the iterator may be used to remove defunct entries from the manifest."""
         all_reftest_nodes = []  # type: List[Tuple[ManifestItem, Text]]
         seen_files = set()  # type: Set[Text]
->>>>>>> upstream-releases
 
         changed = False
         reftest_changes = False
 
-<<<<<<< HEAD
-        prev_files = self._data.paths()
-
-        reftest_types = ("reftest", "reftest_node")
-
-        for source_file, update in tree:
-            if not update:
-                rel_path = source_file
-                seen_files.add(rel_path)
-||||||| merged common ancestors
-        for source_file in tree:
-            rel_path = source_file.rel_path
-            file_hash = source_file.hash
-
-            is_new = rel_path not in self._path_hash
-            hash_changed = False
-
-            if not is_new:
-                old_hash, old_type = self._path_hash[rel_path]
-                old_files[old_type].remove(rel_path)
-                if old_hash != file_hash:
-                    new_type, manifest_items = source_file.manifest_items()
-                    hash_changed = True
-                else:
-                    new_type, manifest_items = old_type, self._data[old_type][rel_path]
-                if old_type in ("reftest", "reftest_node") and new_type != old_type:
-                    reftest_changes = True
-=======
         # Create local variable references to these dicts so we avoid the
         # attribute access in the hot loop below
         path_hash = self._path_hash  # type: Dict[Text, Tuple[Text, Text]]
@@ -599,47 +331,7 @@ class Manifest(object):
                 if old_type in reftest_types:
                     manifest_items = data[old_type][rel_path]  # type: Iterable[ManifestItem]
                     all_reftest_nodes.extend((item, old_hash) for item in manifest_items)
->>>>>>> upstream-releases
             else:
-<<<<<<< HEAD
-                rel_path = source_file.rel_path
-                seen_files.add(rel_path)
-
-                file_hash = source_file.hash
-
-                is_new = rel_path not in self._path_hash
-                hash_changed = False
-
-                if not is_new:
-                    old_hash, old_type = self._path_hash[rel_path]
-                    if old_hash != file_hash:
-                        new_type, manifest_items = source_file.manifest_items()
-                        hash_changed = True
-                    else:
-                        new_type, manifest_items = old_type, self._data[old_type][rel_path]
-                    if old_type in reftest_types and new_type != old_type:
-                        reftest_changes = True
-                else:
-                    new_type, manifest_items = source_file.manifest_items()
-
-                if new_type in ("reftest", "reftest_node"):
-                    reftest_nodes.extend(manifest_items)
-                    if is_new or hash_changed:
-                        reftest_changes = True
-                elif new_type:
-                    self._data[new_type][rel_path] = set(manifest_items)
-||||||| merged common ancestors
-                new_type, manifest_items = source_file.manifest_items()
-
-            if new_type in ("reftest", "reftest_node"):
-                reftest_nodes.extend(manifest_items)
-                if is_new or hash_changed:
-                    reftest_changes = True
-            elif new_type:
-                new_data[new_type][rel_path] = set(manifest_items)
-
-            new_hashes[rel_path] = (file_hash, new_type)
-=======
                 assert not isinstance(source_file, bytes)
                 rel_path = source_file.rel_path
                 seen_files.add(rel_path)
@@ -664,63 +356,21 @@ class Manifest(object):
                             manifest_items = data[old_type][rel_path]
                 else:
                     new_type, manifest_items = source_file.manifest_items()
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-                self._path_hash[rel_path] = (file_hash, new_type)
-||||||| merged common ancestors
-            if is_new or hash_changed:
-                changed = True
-=======
                 if new_type in reftest_types:
                     all_reftest_nodes.extend((item, file_hash) for item in manifest_items)
                     if is_new or hash_changed:
                         reftest_changes = True
                 elif is_new or hash_changed:
                     data[new_type][rel_path] = set(manifest_items)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-                if is_new or hash_changed:
-                    changed = True
-||||||| merged common ancestors
-        if reftest_changes or old_files["reftest"] or old_files["reftest_node"]:
-            reftests, reftest_nodes, changed_hashes = self._compute_reftests(reftest_nodes)
-            new_data["reftest"] = reftests
-            new_data["reftest_node"] = reftest_nodes
-            new_hashes.update(changed_hashes)
-        else:
-            new_data["reftest"] = self._data["reftest"]
-            new_data["reftest_node"] = self._data["reftest_node"]
-=======
                 if is_new or hash_changed:
                     path_hash[rel_path] = (file_hash, new_type)
                     changed = True
->>>>>>> upstream-releases
 
         deleted = prev_files - seen_files
         if deleted:
             changed = True
-<<<<<<< HEAD
-            for rel_path in deleted:
-                if rel_path in self._path_hash:
-                    _, old_type = self._path_hash[rel_path]
-                    if old_type in reftest_types:
-                        reftest_changes = True
-                    try:
-                        del self._path_hash[rel_path]
-                    except KeyError:
-                        pass
-                    try:
-                        del self._data[old_type][rel_path]
-                    except KeyError:
-                        pass
-                else:
-                    for test_data in itervalues(self._data):
-                        if rel_path in test_data:
-                            del test_data[rel_path]
-||||||| merged common ancestors
-=======
             for rel_path in deleted:
                 if rel_path in path_hash:
                     _, old_type = path_hash[rel_path]
@@ -745,18 +395,7 @@ class Manifest(object):
                     reftest_data[path] = cast(Set[ManifestItem], items)
                 else:
                     reftest_data[path] = items
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        if reftest_changes:
-            reftests, reftest_nodes, changed_hashes = self._compute_reftests(reftest_nodes)
-            self._data["reftest"].data = reftests
-            self._data["reftest_node"].data = reftest_nodes
-            self._path_hash.update(changed_hashes)
-||||||| merged common ancestors
-        self._data = new_data
-        self._path_hash = new_hashes
-=======
             reftest_node_data = data["reftest_node"]
             reftest_node_data.clear()
             for node_path, node_items in iteritems(reftest_nodes):
@@ -766,7 +405,6 @@ class Manifest(object):
                     reftest_node_data[node_path] = node_items
 
             path_hash.update(changed_hashes)
->>>>>>> upstream-releases
 
         return changed
 
@@ -810,24 +448,8 @@ class Manifest(object):
     def to_json(self):
         # type: () -> Dict[Text, Any]
         out_items = {
-<<<<<<< HEAD
-            test_type: {
-                from_os_path(path):
-                [t for t in sorted(test.to_json() for test in tests)]
-                for path, tests in iteritems(type_paths)
-            }
-            for test_type, type_paths in iteritems(self._data) if type_paths
-||||||| merged common ancestors
-            test_type: {
-                from_os_path(path):
-                [t for t in sorted(test.to_json() for test in tests)]
-                for path, tests in iteritems(type_paths)
-            }
-            for test_type, type_paths in iteritems(self._data)
-=======
             test_type: type_paths.to_json()
             for test_type, type_paths in iteritems(self._data) if type_paths
->>>>>>> upstream-releases
         }
         rv = {"url_base": self.url_base,
               "paths": {from_os_path(k): v for k, v in iteritems(self._path_hash)},
@@ -842,13 +464,7 @@ class Manifest(object):
         if version != CURRENT_VERSION:
             raise ManifestVersionMismatch
 
-<<<<<<< HEAD
-        self = cls(url_base=obj.get("url_base", "/"), meta_filters=meta_filters)
-||||||| merged common ancestors
-        self = cls(url_base=obj.get("url_base", "/"))
-=======
         self = cls(tests_root, url_base=obj.get("url_base", "/"))
->>>>>>> upstream-releases
         if not hasattr(obj, "items") and hasattr(obj, "paths"):
             raise ManifestError
 
@@ -870,16 +486,6 @@ def load(tests_root, manifest, types=None):
     # type: (str, Union[IO[bytes], str], Optional[Container[Text]]) -> Optional[Manifest]
     logger = get_logger()
 
-<<<<<<< HEAD
-    logger.warning("Prefer load_and_update instead")
-    return _load(logger, tests_root, manifest, types, meta_filters)
-
-
-def _load(logger, tests_root, manifest, types=None, meta_filters=None):
-    # "manifest" is a path or file-like object.
-||||||| merged common ancestors
-    # "manifest" is a path or file-like object.
-=======
     logger.warning("Prefer load_and_update instead")
     return _load(logger, tests_root, manifest, types)
 
@@ -899,28 +505,16 @@ def _load(logger,  # type: Logger
     if allow_cached and manifest_path in __load_cache:
         return __load_cache[manifest_path]
 
->>>>>>> upstream-releases
     if isinstance(manifest, string_types):
         if os.path.exists(manifest):
             logger.debug("Opening manifest at %s" % manifest)
         else:
             logger.debug("Creating new manifest at %s" % manifest)
         try:
-<<<<<<< HEAD
-            with open(manifest) as f:
-                rv = Manifest.from_json(tests_root,
-                                        json.load(f),
-                                        types=types,
-                                        meta_filters=meta_filters)
-||||||| merged common ancestors
-            with open(manifest) as f:
-                rv = Manifest.from_json(tests_root, json.load(f), types=types, meta_filters=meta_filters)
-=======
             with open(manifest, "rb") as f:
                 rv = Manifest.from_json(tests_root,
                                         fast_json.load(f),
                                         types=types)
->>>>>>> upstream-releases
         except IOError:
             return None
         except ValueError:
@@ -951,56 +545,6 @@ def load_and_update(tests_root,  # type: bytes
     # type: (...) -> Manifest
     logger = get_logger()
 
-<<<<<<< HEAD
-    return Manifest.from_json(tests_root,
-                              json.load(manifest),
-                              types=types,
-                              meta_filters=meta_filters)
-
-
-def load_and_update(tests_root,
-                    manifest_path,
-                    url_base,
-                    update=True,
-                    rebuild=False,
-                    metadata_path=None,
-                    cache_root=None,
-                    working_copy=False,
-                    types=None,
-                    meta_filters=None,
-                    write_manifest=True):
-    logger = get_logger()
-
-    manifest = None
-    if not rebuild:
-        try:
-            manifest = _load(logger,
-                             tests_root,
-                             manifest_path,
-                             types=types,
-                             meta_filters=meta_filters)
-        except ManifestVersionMismatch:
-            logger.info("Manifest version changed, rebuilding")
-
-        if manifest is not None and manifest.url_base != url_base:
-            logger.info("Manifest url base did not match, rebuilding")
-
-    if manifest is None:
-        manifest = Manifest(url_base, meta_filters=meta_filters)
-        update = True
-
-    if update:
-        tree = vcs.get_tree(tests_root, manifest, manifest_path, cache_root,
-                            working_copy, rebuild)
-        changed = manifest.update(tree)
-        if write_manifest and changed:
-            write(manifest, manifest_path)
-        tree.dump_caches()
-
-    return manifest
-||||||| merged common ancestors
-    return Manifest.from_json(tests_root, json.load(manifest), types=types, meta_filters=meta_filters)
-=======
     manifest = None
     if not rebuild:
         try:
@@ -1030,7 +574,6 @@ def load_and_update(tests_root,
         tree.dump_caches()
 
     return manifest
->>>>>>> upstream-releases
 
 
 def write(manifest, manifest_path):
@@ -1039,14 +582,8 @@ def write(manifest, manifest_path):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
     with open(manifest_path, "wb") as f:
-<<<<<<< HEAD
-        json.dump(manifest.to_json(), f, sort_keys=True, indent=1)
-||||||| merged common ancestors
-        json.dump(manifest.to_json(), f, sort_keys=True, indent=1, separators=(',', ': '))
-=======
         # Use ',' instead of the default ', ' separator to prevent trailing
         # spaces: https://docs.python.org/2/library/json.html#json.dump
         json.dump(manifest.to_json(), f,
                   sort_keys=True, indent=1, separators=(',', ': '))
->>>>>>> upstream-releases
         f.write("\n")

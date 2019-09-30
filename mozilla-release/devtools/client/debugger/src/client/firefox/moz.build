@@ -4,17 +4,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 DIRS += [
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/moz.build
-  'dist',
-  'images',
-  'src',
-]
-||||||| merged common ancestors
-  'dist',
-  'src',
-]
-=======
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/client/firefox/moz.build
 
 ]
 

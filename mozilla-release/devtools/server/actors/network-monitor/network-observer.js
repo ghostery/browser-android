@@ -616,13 +616,6 @@ NetworkObserver.prototype = {
     ).toISOString();
     event.fromCache = fromCache;
     event.fromServiceWorker = fromServiceWorker;
-<<<<<<< HEAD
-    event.isThirdPartyTrackingResource = channel.isThirdPartyTrackingResource;
-    event.referrerPolicy =
-      Services.netUtils.getReferrerPolicyString(channel.referrerPolicy);
-||||||| merged common ancestors
-    event.isThirdPartyTrackingResource = channel.isThirdPartyTrackingResource;
-=======
     event.isThirdPartyTrackingResource = channel.isThirdPartyTrackingResource();
     const referrerInfo = channel.referrerInfo;
     event.referrerPolicy = Services.netUtils.getReferrerPolicyString(
@@ -630,7 +623,6 @@ NetworkObserver.prototype = {
         ? referrerInfo.referrerPolicy
         : Ci.nsIHttpChannel.REFERRER_POLICY_UNSET
     );
->>>>>>> upstream-releases
     httpActivity.fromServiceWorker = fromServiceWorker;
 
     if (extraStringData) {
@@ -1367,15 +1359,6 @@ const LOAD_CAUSE_STRINGS = {
 function causeTypeToString(causeType) {
   return LOAD_CAUSE_STRINGS[causeType] || "unknown";
 }
-<<<<<<< HEAD
-
-function stringToCauseType(value) {
-  return Object.keys(LOAD_CAUSE_STRINGS)
-  .find(key => LOAD_CAUSE_STRINGS[key] === value);
-}
-exports.stringToCauseType = stringToCauseType;
-||||||| merged common ancestors
-=======
 
 function stringToCauseType(value) {
   return Object.keys(LOAD_CAUSE_STRINGS).find(
@@ -1383,4 +1366,3 @@ function stringToCauseType(value) {
   );
 }
 exports.stringToCauseType = stringToCauseType;
->>>>>>> upstream-releases

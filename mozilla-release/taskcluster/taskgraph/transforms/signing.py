@@ -10,13 +10,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 from taskgraph.loader.single_dep import schema
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.attributes import copy_attributes_from_dependent_job
-<<<<<<< HEAD
-||||||| merged common ancestors
-from taskgraph.util.schema import validate_schema, Schema
-=======
 from taskgraph.util.keyed_by import evaluate_keyed_by
 from taskgraph.util.schema import taskref_or_string
->>>>>>> upstream-releases
 from taskgraph.util.scriptworker import (
     get_signing_cert_scope_per_platform,
     get_worker_type_for_scope,
@@ -27,26 +22,7 @@ from voluptuous import Required, Optional
 
 transforms = TransformSequence()
 
-<<<<<<< HEAD
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
 signing_description_schema = schema.extend({
-||||||| merged common ancestors
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
-signing_description_schema = Schema({
-    # the dependant task (object) for this signing job, used to inform signing.
-    Required('dependent-task'): object,
-
-=======
-signing_description_schema = schema.extend({
->>>>>>> upstream-releases
     # Artifacts from dep task to sign - Sync with taskgraph/transforms/task.py
     # because this is passed directly into the signingscript worker
     Required('upstream-artifacts'): [{
@@ -102,18 +78,6 @@ def set_defaults(config, jobs):
         yield job
 
 
-<<<<<<< HEAD
-transforms.add_validate(signing_description_schema)
-||||||| merged common ancestors
-@transforms.add
-def validate(config, jobs):
-    for job in jobs:
-        label = job.get('dependent-task', object).__dict__.get('label', '?no-label?')
-        validate_schema(
-            signing_description_schema, job,
-            "In signing ({!r} kind) task for {!r}:".format(config.kind, label))
-        yield job
-=======
 transforms.add_validate(signing_description_schema)
 
 
@@ -133,7 +97,6 @@ def add_entitlements_link(config, jobs):
                 entitlements_path, endpoint="raw-file"
             )
         yield job
->>>>>>> upstream-releases
 
 
 @transforms.add

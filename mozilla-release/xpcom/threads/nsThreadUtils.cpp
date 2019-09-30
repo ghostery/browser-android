@@ -15,27 +15,11 @@
 #include "prsystem.h"
 
 #ifdef MOZILLA_INTERNAL_API
-<<<<<<< HEAD
-#include "nsThreadManager.h"
-||||||| merged common ancestors
-# include "nsThreadManager.h"
-=======
 #  include "nsThreadManager.h"
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#include "nsXPCOMCIDInternal.h"
-#include "nsIThreadManager.h"
-#include "nsServiceManagerUtils.h"
-||||||| merged common ancestors
-# include "nsXPCOMCIDInternal.h"
-# include "nsIThreadManager.h"
-# include "nsServiceManagerUtils.h"
-=======
 #  include "nsXPCOMCIDInternal.h"
 #  include "nsIThreadManager.h"
 #  include "nsServiceManagerUtils.h"
->>>>>>> upstream-releases
 #endif
 
 #ifdef XP_WIN
@@ -101,24 +85,6 @@ NS_IMPL_ISUPPORTS_INHERITED(IdleRunnable, CancelableRunnable, nsIIdleRunnable)
 NS_IMPL_ISUPPORTS_INHERITED(PrioritizableRunnable, Runnable,
                             nsIRunnablePriority)
 
-<<<<<<< HEAD
-PrioritizableRunnable::PrioritizableRunnable(
-    already_AddRefed<nsIRunnable>&& aRunnable, uint32_t aPriority)
-    // Real runnable name is managed by overridding the GetName function.
-    : Runnable("PrioritizableRunnable"),
-      mRunnable(std::move(aRunnable)),
-      mPriority(aPriority) {
-#if DEBUG
-||||||| merged common ancestors
-PrioritizableRunnable::PrioritizableRunnable(already_AddRefed<nsIRunnable>&& aRunnable,
-                                             uint32_t aPriority)
- // Real runnable name is managed by overridding the GetName function.
- : Runnable("PrioritizableRunnable")
- , mRunnable(std::move(aRunnable))
- , mPriority(aPriority)
-{
-#if DEBUG
-=======
 PrioritizableRunnable::PrioritizableRunnable(
     already_AddRefed<nsIRunnable>&& aRunnable, uint32_t aPriority)
     // Real runnable name is managed by overridding the GetName function.
@@ -126,7 +92,6 @@ PrioritizableRunnable::PrioritizableRunnable(
       mRunnable(std::move(aRunnable)),
       mPriority(aPriority) {
 #  if DEBUG
->>>>>>> upstream-releases
   nsCOMPtr<nsIRunnablePriority> runnablePrio = do_QueryInterface(mRunnable);
   MOZ_ASSERT(!runnablePrio);
 #  endif
@@ -313,19 +278,9 @@ nsresult NS_DelayedDispatchToCurrentThread(
   return thread->DelayedDispatch(event.forget(), aDelayMs);
 }
 
-<<<<<<< HEAD
-nsresult NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                                 nsIThread* aThread) {
-||||||| merged common ancestors
-nsresult
-NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                        nsIThread* aThread)
-{
-=======
 nsresult NS_DispatchToThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
                                   nsIThread* aThread,
                                   EventQueuePriority aQueue) {
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIRunnable> event(aEvent);
   NS_ENSURE_TRUE(event, NS_ERROR_INVALID_ARG);
@@ -346,35 +301,14 @@ nsresult NS_DispatchToThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult NS_IdleDispatchToCurrentThread(
-    already_AddRefed<nsIRunnable>&& aEvent) {
-  return NS_IdleDispatchToThread(std::move(aEvent), NS_GetCurrentThread());
-||||||| merged common ancestors
-nsresult
-NS_IdleDispatchToCurrentThread(already_AddRefed<nsIRunnable>&& aEvent)
-{
-  return NS_IdleDispatchToThread(std::move(aEvent),
-                                 NS_GetCurrentThread());
-=======
 nsresult NS_DispatchToCurrentThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
                                          EventQueuePriority aQueue) {
   return NS_DispatchToThreadQueue(std::move(aEvent), NS_GetCurrentThread(),
                                   aQueue);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToMainThread(
-    already_AddRefed<nsIRunnable>&& aEvent) {
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToMainThread(already_AddRefed<nsIRunnable>&& aEvent)
-{
-=======
 extern nsresult NS_DispatchToMainThreadQueue(
     already_AddRefed<nsIRunnable>&& aEvent, EventQueuePriority aQueue) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIThread> mainThread;
   nsresult rv = NS_GetMainThread(getter_AddRefs(mainThread));
   if (NS_SUCCEEDED(rv)) {
@@ -439,20 +373,9 @@ class IdleRunnableWrapper final : public IdleRunnable {
   nsCOMPtr<nsIRunnable> mRunnable;
 };
 
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                                        uint32_t aTimeout, nsIThread* aThread) {
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToThread(already_AddRefed<nsIRunnable>&& aEvent,
-                        uint32_t aTimeout,
-                        nsIThread* aThread)
-{
-=======
 extern nsresult NS_DispatchToThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
                                          uint32_t aTimeout, nsIThread* aThread,
                                          EventQueuePriority aQueue) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIRunnable> event(std::move(aEvent));
   NS_ENSURE_TRUE(event, NS_ERROR_INVALID_ARG);
   MOZ_ASSERT(aQueue == EventQueuePriority::Idle ||
@@ -476,25 +399,11 @@ extern nsresult NS_DispatchToThreadQueue(already_AddRefed<nsIRunnable>&& aEvent,
   return NS_DispatchToThreadQueue(event.forget(), aThread, aQueue);
 }
 
-<<<<<<< HEAD
-extern nsresult NS_IdleDispatchToCurrentThread(
-    already_AddRefed<nsIRunnable>&& aEvent, uint32_t aTimeout) {
-  return NS_IdleDispatchToThread(std::move(aEvent), aTimeout,
-                                 NS_GetCurrentThread());
-||||||| merged common ancestors
-extern nsresult
-NS_IdleDispatchToCurrentThread(already_AddRefed<nsIRunnable>&& aEvent,
-                               uint32_t aTimeout)
-{
-  return NS_IdleDispatchToThread(std::move(aEvent), aTimeout,
-                                 NS_GetCurrentThread());
-=======
 extern nsresult NS_DispatchToCurrentThreadQueue(
     already_AddRefed<nsIRunnable>&& aEvent, uint32_t aTimeout,
     EventQueuePriority aQueue) {
   return NS_DispatchToThreadQueue(std::move(aEvent), aTimeout,
                                   NS_GetCurrentThread(), aQueue);
->>>>>>> upstream-releases
 }
 
 #ifndef XPCOM_GLUE_AVOID_NSPR
@@ -577,20 +486,12 @@ bool NS_ProcessNextEvent(nsIThread* aThread, bool aMayWait) {
   return NS_SUCCEEDED(aThread->ProcessNextEvent(aMayWait, &val)) && val;
 }
 
-<<<<<<< HEAD
-void NS_SetCurrentThreadName(const char* aName) {
-||||||| merged common ancestors
-void
-NS_SetCurrentThreadName(const char* aName)
-{
-=======
 void NS_SetCurrentThreadName(const char* aName) {
 #if defined(ANDROID)
   // Workaround for Bug 1541216 - PR_SetCurrentThreadName() Fails to set the
   // thread name on Android.
   prctl(PR_SET_NAME, reinterpret_cast<unsigned long>(aName));
 #else
->>>>>>> upstream-releases
   PR_SetCurrentThreadName(aName);
 #endif
   CrashReporter::SetCurrentThreadName(aName);
@@ -687,11 +588,6 @@ nsISerialEventTarget* GetMainThreadSerialEventTarget() {
   return thread->SerialEventTarget();
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 size_t GetNumberOfProcessors() {
 #if defined(XP_LINUX) && defined(MOZ_SANDBOX)
   static const PRInt32 procs = PR_GetNumberOfProcessors();
@@ -703,7 +599,6 @@ size_t GetNumberOfProcessors() {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 bool nsIEventTarget::IsOnCurrentThread() {
   if (mVirtualThread) {

@@ -18,21 +18,6 @@ namespace mozilla {
 namespace Telemetry {
 namespace Common {
 
-<<<<<<< HEAD
-enum class RecordedProcessType : uint8_t {
-  Main = (1 << GeckoProcessType_Default),  // Also known as "parent process"
-  Content = (1 << GeckoProcessType_Content),
-  Gpu = (1 << GeckoProcessType_GPU),
-  AllChildren = 0xFF - 1,  // All the child processes (i.e. content, gpu, ...)
-  All = 0xFF               // All the processes
-||||||| merged common ancestors
-enum class RecordedProcessType : uint8_t {
-  Main         = (1 << GeckoProcessType_Default),  // Also known as "parent process"
-  Content      = (1 << GeckoProcessType_Content),
-  Gpu          = (1 << GeckoProcessType_GPU),
-  AllChildren  = 0xFF - 1,  // All the child processes (i.e. content, gpu, ...)
-  All          = 0xFF       // All the processes
-=======
 typedef nsTHashtable<nsCStringHashKey> StringHashSet;
 
 enum class RecordedProcessType : uint16_t {
@@ -43,7 +28,6 @@ enum class RecordedProcessType : uint16_t {
   AllChildren = 0xFFFF - 1,  // All the child processes (i.e. content, gpu, ...)
                              // Always `All-Main` to allow easy matching.
   All = 0xFFFF               // All the processes
->>>>>>> upstream-releases
 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(RecordedProcessType);
 static_assert(static_cast<uint16_t>(RecordedProcessType::Main) == 1,

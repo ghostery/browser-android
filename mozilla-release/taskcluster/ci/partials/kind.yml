@@ -10,16 +10,8 @@ transforms:
     - taskgraph.transforms.task:transforms
 
 kind-dependencies:
-<<<<<<< HEAD
-   - repackage
-   - repackage-l10n
-||||||| merged common ancestors
-   - repackage-signing
-   - repackage-signing-l10n
-=======
     - repackage
     - repackage-l10n
->>>>>>> upstream-releases
 
 only-for-attributes:
     - nightly

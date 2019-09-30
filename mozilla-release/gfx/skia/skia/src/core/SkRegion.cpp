@@ -7,14 +7,7 @@
 
 #include "SkRegion.h"
 
-<<<<<<< HEAD
-#include "SkAtomics.h"
 #include "SkMacros.h"
-||||||| merged common ancestors
-#include "SkAtomics.h"
-=======
-#include "SkMacros.h"
->>>>>>> upstream-releases
 #include "SkRegionPriv.h"
 #include "SkSafeMath.h"
 #include "SkTemplates.h"
@@ -142,19 +135,7 @@ SkRegion::~SkRegion() {
 void SkRegion::freeRuns() {
     if (this->isComplex()) {
         SkASSERT(fRunHead->fRefCnt >= 1);
-<<<<<<< HEAD
         if (--fRunHead->fRefCnt == 0) {
-            //SkASSERT(gRgnAllocCounter > 0);
-            //SkDEBUGCODE(sk_atomic_dec(&gRgnAllocCounter));
-            //SkDEBUGF("************** gRgnAllocCounter::free %d\n", gRgnAllocCounter);
-||||||| merged common ancestors
-        if (sk_atomic_dec(&fRunHead->fRefCnt) == 1) {
-            //SkASSERT(gRgnAllocCounter > 0);
-            //SkDEBUGCODE(sk_atomic_dec(&gRgnAllocCounter));
-            //SkDEBUGF(("************** gRgnAllocCounter::free %d\n", gRgnAllocCounter));
-=======
-        if (--fRunHead->fRefCnt == 0) {
->>>>>>> upstream-releases
             sk_free(fRunHead);
         }
     }

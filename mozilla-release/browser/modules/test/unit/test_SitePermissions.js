@@ -40,15 +40,6 @@ add_task(async function testNsIURI() {
 });
 
 add_task(async function testPermissionsListing() {
-<<<<<<< HEAD
-  let expectedPermissions = ["autoplay-media", "camera", "cookie", "desktop-notification", "focus-tab-by-prompt",
-     "geo", "image", "install", "microphone", "plugin:flash", "popup", "screen", "shortcuts",
-     "persistent-storage", "storage-access"];
-||||||| merged common ancestors
-  let expectedPermissions = ["autoplay-media", "camera", "cookie", "desktop-notification", "focus-tab-by-prompt",
-     "geo", "image", "install", "microphone", "plugin:flash", "popup", "screen", "shortcuts",
-     "persistent-storage"];
-=======
   let expectedPermissions = [
     "autoplay-media",
     "camera",
@@ -65,7 +56,6 @@ add_task(async function testPermissionsListing() {
     "persistent-storage",
     "storage-access",
   ];
->>>>>>> upstream-releases
   if (RESIST_FINGERPRINTING_ENABLED) {
     // Canvas permission should be hidden unless privacy.resistFingerprinting
     // is true.
@@ -218,12 +208,6 @@ add_task(async function testExactHostMatch() {
     exactHostMatched.push("midi");
     exactHostMatched.push("midi-sysex");
   }
-<<<<<<< HEAD
-  let nonExactHostMatched = ["image", "cookie", "plugin:flash", "popup", "install", "shortcuts",
-                             "storage-access"];
-||||||| merged common ancestors
-  let nonExactHostMatched = ["image", "cookie", "plugin:flash", "popup", "install", "shortcuts"];
-=======
   let nonExactHostMatched = [
     "image",
     "cookie",
@@ -232,7 +216,6 @@ add_task(async function testExactHostMatch() {
     "shortcuts",
     "storage-access",
   ];
->>>>>>> upstream-releases
 
   let permissions = SitePermissions.listPermissions();
   for (let permission of permissions) {

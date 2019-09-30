@@ -70,20 +70,9 @@ class ChannelMediaDecoder
 
   explicit ChannelMediaDecoder(MediaDecoderInit& aInit);
 
-<<<<<<< HEAD
-  nsCString GetDebugInfo() override;
-
- public:
-||||||| merged common ancestors
-  nsCString GetDebugInfo() override;
-
-public:
-
-=======
   void GetDebugInfo(dom::MediaDecoderDebugInfo& aInfo);
 
  public:
->>>>>>> upstream-releases
   // Create a decoder for the given aType. Returns null if we were unable
   // to create the decoder, for example because the requested MIME type in
   // the init struct was unsupported.

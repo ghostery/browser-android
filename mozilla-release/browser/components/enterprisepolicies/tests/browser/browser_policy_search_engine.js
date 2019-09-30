@@ -43,22 +43,8 @@ async function test_opensearch(shouldWork) {
 
   searchBarButton.click();
   await promiseSearchPopupShown;
-<<<<<<< HEAD
-  let oneOffsContainer = document.getAnonymousElementByAttribute(searchPopup,
-                                                                 "anonid",
-                                                                 "search-one-off-buttons");
-  let engineListElement = oneOffsContainer.querySelector(".search-add-engines");
-||||||| merged common ancestors
-  let oneOffsContainer = document.getAnonymousElementByAttribute(searchPopup,
-                                                                 "anonid",
-                                                                 "search-one-off-buttons");
-  let engineListElement = document.getAnonymousElementByAttribute(oneOffsContainer,
-                                                                  "anonid",
-                                                                  "add-engines");
-=======
   let oneOffsContainer = searchPopup.searchOneOffsContainer;
   let engineListElement = oneOffsContainer.querySelector(".search-add-engines");
->>>>>>> upstream-releases
   if (shouldWork) {
     ok(
       engineListElement.firstElementChild,
@@ -85,17 +71,6 @@ async function test_opensearch(shouldWork) {
 add_task(async function test_install_and_set_default() {
   // Make sure we are starting in an expected state to avoid false positive
   // test results.
-<<<<<<< HEAD
-  isnot(Services.search.defaultEngine.name, "MozSearch",
-        "Default search engine should not be MozSearch when test starts");
-  is(Services.search.getEngineByName("Foo"), null,
-     "Engine \"Foo\" should not be present when test starts");
-||||||| merged common ancestors
-  isnot(Services.search.currentEngine.name, "MozSearch",
-        "Default search engine should not be MozSearch when test starts");
-  is(Services.search.getEngineByName("Foo"), null,
-     "Engine \"Foo\" should not be present when test starts");
-=======
   isnot(
     (await Services.search.getDefault()).name,
     "MozSearch",
@@ -106,7 +81,6 @@ add_task(async function test_install_and_set_default() {
     null,
     'Engine "Foo" should not be present when test starts'
   );
->>>>>>> upstream-releases
 
   await setupPolicyEngineWithJson({
     policies: {
@@ -126,45 +100,20 @@ add_task(async function test_install_and_set_default() {
 
   // If this passes, it means that the new search engine was properly installed
   // *and* was properly set as the default.
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "MozSearch",
-     "Specified search engine should be the default");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "MozSearch",
-     "Specified search engine should be the default");
-=======
   is(
     (await Services.search.getDefault()).name,
     "MozSearch",
     "Specified search engine should be the default"
   );
->>>>>>> upstream-releases
 
   // Clean up
-<<<<<<< HEAD
-  Services.search.removeEngine(Services.search.defaultEngine);
-||||||| merged common ancestors
-  Services.search.removeEngine(Services.search.currentEngine);
-=======
   await Services.search.removeEngine(await Services.search.getDefault());
->>>>>>> upstream-releases
   EnterprisePolicyTesting.resetRunOnceState();
 });
 
 // Same as the last test, but with "PreventInstalls" set to true to make sure
 // it does not prevent search engines from being installed properly
 add_task(async function test_install_and_set_default_prevent_installs() {
-<<<<<<< HEAD
-  isnot(Services.search.defaultEngine.name, "MozSearch",
-        "Default search engine should not be MozSearch when test starts");
-  is(Services.search.getEngineByName("Foo"), null,
-     "Engine \"Foo\" should not be present when test starts");
-||||||| merged common ancestors
-  isnot(Services.search.currentEngine.name, "MozSearch",
-        "Default search engine should not be MozSearch when test starts");
-  is(Services.search.getEngineByName("Foo"), null,
-     "Engine \"Foo\" should not be present when test starts");
-=======
   isnot(
     (await Services.search.getDefault()).name,
     "MozSearch",
@@ -175,7 +124,6 @@ add_task(async function test_install_and_set_default_prevent_installs() {
     null,
     'Engine "Foo" should not be present when test starts'
   );
->>>>>>> upstream-releases
 
   await setupPolicyEngineWithJson({
     policies: {
@@ -194,28 +142,14 @@ add_task(async function test_install_and_set_default_prevent_installs() {
   // Get in line, because the Search policy callbacks are async.
   await TestUtils.waitForTick();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "MozSearch",
-     "Specified search engine should be the default");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "MozSearch",
-     "Specified search engine should be the default");
-=======
   is(
     (await Services.search.getDefault()).name,
     "MozSearch",
     "Specified search engine should be the default"
   );
->>>>>>> upstream-releases
 
   // Clean up
-<<<<<<< HEAD
-  Services.search.removeEngine(Services.search.defaultEngine);
-||||||| merged common ancestors
-  Services.search.removeEngine(Services.search.currentEngine);
-=======
   await Services.search.removeEngine(await Services.search.getDefault());
->>>>>>> upstream-releases
   EnterprisePolicyTesting.resetRunOnceState();
 });
 

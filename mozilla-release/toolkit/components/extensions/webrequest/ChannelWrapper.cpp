@@ -138,28 +138,12 @@ already_AddRefed<ChannelWrapper> ChannelWrapper::Get(const GlobalObject& global,
   return wrapper.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<ChannelWrapper> ChannelWrapper::GetRegisteredChannel(
-    const GlobalObject& global, uint64_t aChannelId,
-    const WebExtensionPolicy& aAddon, nsITabParent* aTabParent) {
-  nsIContentParent* contentParent = nullptr;
-  if (TabParent* parent = static_cast<TabParent*>(aTabParent)) {
-    contentParent = static_cast<nsIContentParent*>(parent->Manager());
-||||||| merged common ancestors
-already_AddRefed<ChannelWrapper>
-ChannelWrapper::GetRegisteredChannel(const GlobalObject& global, uint64_t aChannelId, const WebExtensionPolicy& aAddon, nsITabParent* aTabParent)
-{
-  nsIContentParent* contentParent = nullptr;
-  if (TabParent* parent = static_cast<TabParent*>(aTabParent)) {
-    contentParent = static_cast<nsIContentParent*>(parent->Manager());
-=======
 already_AddRefed<ChannelWrapper> ChannelWrapper::GetRegisteredChannel(
     const GlobalObject& global, uint64_t aChannelId,
     const WebExtensionPolicy& aAddon, nsIRemoteTab* aRemoteTab) {
   ContentParent* contentParent = nullptr;
   if (BrowserHost* host = BrowserHost::GetFrom(aRemoteTab)) {
     contentParent = host->GetActor()->Manager();
->>>>>>> upstream-releases
   }
 
   auto& webreq = WebRequestService::GetSingleton();
@@ -545,12 +529,6 @@ bool ChannelWrapper::Matches(
   }
 
   if (aExtension) {
-<<<<<<< HEAD
-    bool isProxy =
-        aOptions.mIsProxy && aExtension->HasPermission(nsGkAtoms::proxy);
-||||||| merged common ancestors
-    bool isProxy = aOptions.mIsProxy && aExtension->HasPermission(nsGkAtoms::proxy);
-=======
     // Verify extension access to private requests
     if (isPrivate && !aExtension->PrivateBrowsingAllowed()) {
       return false;
@@ -558,7 +536,6 @@ bool ChannelWrapper::Matches(
 
     bool isProxy =
         aOptions.mIsProxy && aExtension->HasPermission(nsGkAtoms::proxy);
->>>>>>> upstream-releases
     // Proxies are allowed access to all urls, including restricted urls.
     if (!aExtension->CanAccessURI(urlInfo, false, !isProxy)) {
       return false;
@@ -688,17 +665,8 @@ nsresult ChannelWrapper::GetFrameAncestors(
  * Response filtering
  *****************************************************************************/
 
-<<<<<<< HEAD
-void ChannelWrapper::RegisterTraceableChannel(const WebExtensionPolicy& aAddon,
-                                              nsITabParent* aTabParent) {
-||||||| merged common ancestors
-void
-ChannelWrapper::RegisterTraceableChannel(const WebExtensionPolicy& aAddon, nsITabParent* aTabParent)
-{
-=======
 void ChannelWrapper::RegisterTraceableChannel(const WebExtensionPolicy& aAddon,
                                               nsIRemoteTab* aBrowserParent) {
->>>>>>> upstream-releases
   // We can't attach new listeners after the response has started, so don't
   // bother registering anything.
   if (mResponseStarted || !CanModify()) {
@@ -712,26 +680,6 @@ void ChannelWrapper::RegisterTraceableChannel(const WebExtensionPolicy& aAddon,
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsITraceableChannel> ChannelWrapper::GetTraceableChannel(
-    nsAtom* aAddonId, dom::nsIContentParent* aContentParent) const {
-  nsCOMPtr<nsITabParent> tabParent;
-  if (mAddonEntries.Get(aAddonId, getter_AddRefs(tabParent))) {
-    nsIContentParent* contentParent = nullptr;
-    if (tabParent) {
-      contentParent = static_cast<nsIContentParent*>(
-          static_cast<TabParent*>(tabParent.get())->Manager());
-||||||| merged common ancestors
-already_AddRefed<nsITraceableChannel>
-ChannelWrapper::GetTraceableChannel(nsAtom* aAddonId, dom::nsIContentParent* aContentParent) const
-{
-  nsCOMPtr<nsITabParent> tabParent;
-  if (mAddonEntries.Get(aAddonId, getter_AddRefs(tabParent))) {
-    nsIContentParent* contentParent = nullptr;
-    if (tabParent) {
-      contentParent = static_cast<nsIContentParent*>(
-          static_cast<TabParent*>(tabParent.get())->Manager());
-=======
 already_AddRefed<nsITraceableChannel> ChannelWrapper::GetTraceableChannel(
     nsAtom* aAddonId, dom::ContentParent* aContentParent) const {
   nsCOMPtr<nsIRemoteTab> remoteTab;
@@ -740,7 +688,6 @@ already_AddRefed<nsITraceableChannel> ChannelWrapper::GetTraceableChannel(
     if (remoteTab) {
       contentParent =
           BrowserHost::GetFrom(remoteTab.get())->GetActor()->Manager();
->>>>>>> upstream-releases
     }
 
     if (contentParent == aContentParent) {
@@ -983,15 +930,7 @@ nsresult ChannelWrapper::RequestListener::Init() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChannelWrapper::RequestListener::OnStartRequest(nsIRequest* request,
-                                                nsISupports* aCtxt) {
-||||||| merged common ancestors
-ChannelWrapper::RequestListener::OnStartRequest(nsIRequest *request, nsISupports * aCtxt)
-{
-=======
 ChannelWrapper::RequestListener::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mOrigStreamListener, "Should have mOrigStreamListener");
 
   mChannelWrapper->mChannelEntry = nullptr;
@@ -1003,18 +942,8 @@ ChannelWrapper::RequestListener::OnStartRequest(nsIRequest* request) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChannelWrapper::RequestListener::OnStopRequest(nsIRequest* request,
-                                               nsISupports* aCtxt,
-                                               nsresult aStatus) {
-||||||| merged common ancestors
-ChannelWrapper::RequestListener::OnStopRequest(nsIRequest *request, nsISupports *aCtxt,
-                                               nsresult aStatus)
-{
-=======
 ChannelWrapper::RequestListener::OnStopRequest(nsIRequest* request,
                                                nsresult aStatus) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mOrigStreamListener, "Should have mOrigStreamListener");
 
   mChannelWrapper->mChannelEntry = nullptr;
@@ -1025,33 +954,13 @@ ChannelWrapper::RequestListener::OnStopRequest(nsIRequest* request,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ChannelWrapper::RequestListener::OnDataAvailable(nsIRequest* request,
-                                                 nsISupports* aCtxt,
-                                                 nsIInputStream* inStr,
-                                                 uint64_t sourceOffset,
-                                                 uint32_t count) {
-||||||| merged common ancestors
-ChannelWrapper::RequestListener::OnDataAvailable(nsIRequest *request, nsISupports * aCtxt,
-                                             nsIInputStream * inStr,
-                                             uint64_t sourceOffset, uint32_t count)
-{
-=======
 ChannelWrapper::RequestListener::OnDataAvailable(nsIRequest* request,
                                                  nsIInputStream* inStr,
                                                  uint64_t sourceOffset,
                                                  uint32_t count) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mOrigStreamListener, "Should have mOrigStreamListener");
-<<<<<<< HEAD
-  return mOrigStreamListener->OnDataAvailable(request, aCtxt, inStr,
-                                              sourceOffset, count);
-||||||| merged common ancestors
-  return mOrigStreamListener->OnDataAvailable(request, aCtxt, inStr, sourceOffset, count);
-=======
   return mOrigStreamListener->OnDataAvailable(request, inStr, sourceOffset,
                                               count);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

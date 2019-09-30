@@ -11,19 +11,8 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-CacheIndexIterator::CacheIndexIterator(CacheIndex *aIndex, bool aAddNew)
-    : mStatus(NS_OK), mIndex(aIndex), mAddNew(aAddNew) {
-||||||| merged common ancestors
-CacheIndexIterator::CacheIndexIterator(CacheIndex *aIndex, bool aAddNew)
-  : mStatus(NS_OK)
-  , mIndex(aIndex)
-  , mAddNew(aAddNew)
-{
-=======
 CacheIndexIterator::CacheIndexIterator(CacheIndex* aIndex, bool aAddNew)
     : mStatus(NS_OK), mIndex(aIndex), mAddNew(aAddNew) {
->>>>>>> upstream-releases
   LOG(("CacheIndexIterator::CacheIndexIterator() [this=%p]", this));
 }
 
@@ -33,15 +22,7 @@ CacheIndexIterator::~CacheIndexIterator() {
   Close();
 }
 
-<<<<<<< HEAD
-nsresult CacheIndexIterator::GetNextHash(SHA1Sum::Hash *aHash) {
-||||||| merged common ancestors
-nsresult
-CacheIndexIterator::GetNextHash(SHA1Sum::Hash *aHash)
-{
-=======
 nsresult CacheIndexIterator::GetNextHash(SHA1Sum::Hash* aHash) {
->>>>>>> upstream-releases
   LOG(("CacheIndexIterator::GetNextHash() [this=%p]", this));
 
   StaticMutexAutoLock lock(CacheIndex::sLock);
@@ -90,57 +71,25 @@ nsresult CacheIndexIterator::CloseInternal(nsresult aStatus) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void CacheIndexIterator::AddRecord(CacheIndexRecord *aRecord) {
-||||||| merged common ancestors
-void
-CacheIndexIterator::AddRecord(CacheIndexRecord *aRecord)
-{
-=======
 void CacheIndexIterator::AddRecord(CacheIndexRecord* aRecord) {
->>>>>>> upstream-releases
   LOG(("CacheIndexIterator::AddRecord() [this=%p, record=%p]", this, aRecord));
 
   mRecords.AppendElement(aRecord);
 }
 
-<<<<<<< HEAD
-bool CacheIndexIterator::RemoveRecord(CacheIndexRecord *aRecord) {
-||||||| merged common ancestors
-bool
-CacheIndexIterator::RemoveRecord(CacheIndexRecord *aRecord)
-{
-=======
 bool CacheIndexIterator::RemoveRecord(CacheIndexRecord* aRecord) {
->>>>>>> upstream-releases
   LOG(("CacheIndexIterator::RemoveRecord() [this=%p, record=%p]", this,
        aRecord));
 
   return mRecords.RemoveElement(aRecord);
 }
 
-<<<<<<< HEAD
-bool CacheIndexIterator::ReplaceRecord(CacheIndexRecord *aOldRecord,
-                                       CacheIndexRecord *aNewRecord) {
-  LOG(
-      ("CacheIndexIterator::ReplaceRecord() [this=%p, oldRecord=%p, "
-       "newRecord=%p]",
-       this, aOldRecord, aNewRecord));
-||||||| merged common ancestors
-bool
-CacheIndexIterator::ReplaceRecord(CacheIndexRecord *aOldRecord,
-                                  CacheIndexRecord *aNewRecord)
-{
-  LOG(("CacheIndexIterator::ReplaceRecord() [this=%p, oldRecord=%p, "
-       "newRecord=%p]", this, aOldRecord, aNewRecord));
-=======
 bool CacheIndexIterator::ReplaceRecord(CacheIndexRecord* aOldRecord,
                                        CacheIndexRecord* aNewRecord) {
   LOG(
       ("CacheIndexIterator::ReplaceRecord() [this=%p, oldRecord=%p, "
        "newRecord=%p]",
        this, aOldRecord, aNewRecord));
->>>>>>> upstream-releases
 
   if (RemoveRecord(aOldRecord)) {
     AddRecord(aNewRecord);

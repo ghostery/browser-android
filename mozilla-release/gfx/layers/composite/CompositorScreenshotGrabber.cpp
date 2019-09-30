@@ -147,18 +147,10 @@ void CompositorScreenshotGrabberImpl::GrabScreenshot(Compositor* aCompositor) {
       aCompositor->GetWindowRenderTarget();
 
   if (!windowTarget) {
-<<<<<<< HEAD
-    PROFILER_ADD_MARKER(
-        "NoCompositorScreenshot because of unsupported compositor "
-        "configuration");
-||||||| merged common ancestors
-    PROFILER_ADD_MARKER("NoCompositorScreenshot because of unsupported compositor configuration");
-=======
     PROFILER_ADD_MARKER(
         "NoCompositorScreenshot because of unsupported compositor "
         "configuration",
         GRAPHICS);
->>>>>>> upstream-releases
     return;
   }
 
@@ -173,31 +165,17 @@ void CompositorScreenshotGrabberImpl::GrabScreenshot(Compositor* aCompositor) {
   aCompositor->SetRenderTarget(previousTarget);
 
   if (!scaledTarget) {
-<<<<<<< HEAD
-    PROFILER_ADD_MARKER(
-        "NoCompositorScreenshot because ScaleDownWindowTargetToSize failed");
-||||||| merged common ancestors
-    PROFILER_ADD_MARKER("NoCompositorScreenshot because ScaleDownWindowTargetToSize failed");
-=======
     PROFILER_ADD_MARKER(
         "NoCompositorScreenshot because ScaleDownWindowTargetToSize failed",
         GRAPHICS);
->>>>>>> upstream-releases
     return;
   }
 
   RefPtr<AsyncReadbackBuffer> buffer = TakeNextBuffer(aCompositor);
   if (!buffer) {
-<<<<<<< HEAD
-    PROFILER_ADD_MARKER(
-        "NoCompositorScreenshot because AsyncReadbackBuffer creation failed");
-||||||| merged common ancestors
-    PROFILER_ADD_MARKER("NoCompositorScreenshot because AsyncReadbackBuffer creation failed");
-=======
     PROFILER_ADD_MARKER(
         "NoCompositorScreenshot because AsyncReadbackBuffer creation failed",
         GRAPHICS);
->>>>>>> upstream-releases
     return;
   }
 

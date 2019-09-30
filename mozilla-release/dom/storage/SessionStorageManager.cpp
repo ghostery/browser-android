@@ -63,15 +63,8 @@ SessionStorageManager::~SessionStorageManager() {
 
 NS_IMETHODIMP
 SessionStorageManager::PrecacheStorage(nsIPrincipal* aPrincipal,
-<<<<<<< HEAD
-                                       Storage** aRetval) {
-||||||| merged common ancestors
-                                       Storage** aRetval)
-{
-=======
                                        nsIPrincipal* aStoragePrincipal,
                                        Storage** aRetval) {
->>>>>>> upstream-releases
   // Nothing to preload.
   return NS_OK;
 }
@@ -103,17 +96,9 @@ SessionStorageManager::CreateStorage(mozIDOMWindow* aWindow,
 
   nsCOMPtr<nsPIDOMWindowInner> inner = nsPIDOMWindowInner::From(aWindow);
 
-<<<<<<< HEAD
-  RefPtr<SessionStorage> storage = new SessionStorage(
-      inner, aPrincipal, cache, this, aDocumentURI, aPrivate);
-||||||| merged common ancestors
-  RefPtr<SessionStorage> storage =
-    new SessionStorage(inner, aPrincipal, cache, this, aDocumentURI, aPrivate);
-=======
   // No StoragePrincipal for sessionStorage.
   RefPtr<SessionStorage> storage = new SessionStorage(
       inner, aPrincipal, cache, this, aDocumentURI, aPrivate);
->>>>>>> upstream-releases
 
   storage.forget(aRetval);
   return NS_OK;
@@ -121,19 +106,9 @@ SessionStorageManager::CreateStorage(mozIDOMWindow* aWindow,
 
 NS_IMETHODIMP
 SessionStorageManager::GetStorage(mozIDOMWindow* aWindow,
-<<<<<<< HEAD
-                                  nsIPrincipal* aPrincipal, bool aPrivate,
-                                  Storage** aRetval) {
-||||||| merged common ancestors
-                                  nsIPrincipal* aPrincipal,
-                                  bool aPrivate,
-                                  Storage** aRetval)
-{
-=======
                                   nsIPrincipal* aPrincipal,
                                   nsIPrincipal* aStoragePrincipal,
                                   bool aPrivate, Storage** aRetval) {
->>>>>>> upstream-releases
   *aRetval = nullptr;
 
   nsAutoCString originKey;

@@ -600,15 +600,6 @@ nsresult NS_CancelAsyncCopy(nsISupports* aCopierCtx, nsresult aReason) {
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsresult NS_ConsumeStream(nsIInputStream* aStream, uint32_t aMaxCount,
-                          nsACString& aResult) {
-||||||| merged common ancestors
-nsresult
-NS_ConsumeStream(nsIInputStream* aStream, uint32_t aMaxCount,
-                 nsACString& aResult)
-{
-=======
 namespace {
 template <typename T>
 struct ResultTraits {};
@@ -635,7 +626,6 @@ struct ResultTraits<nsTArray<uint8_t>> {
 template <typename T>
 nsresult DoConsumeStream(nsIInputStream* aStream, uint32_t aMaxCount,
                          T& aResult) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   ResultTraits<T>::Clear(aResult);
 

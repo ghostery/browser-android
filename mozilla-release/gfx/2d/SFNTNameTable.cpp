@@ -67,17 +67,8 @@ enum ENameDecoder : int {
 };
 
 /* static */
-<<<<<<< HEAD
-UniquePtr<SFNTNameTable> SFNTNameTable::Create(const uint8_t *aNameData,
-                                               uint32_t aDataLength) {
-||||||| merged common ancestors
-UniquePtr<SFNTNameTable>
-SFNTNameTable::Create(const uint8_t *aNameData, uint32_t aDataLength)
-{
-=======
 UniquePtr<SFNTNameTable> SFNTNameTable::Create(const uint8_t* aNameData,
                                                uint32_t aDataLength) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aNameData);
 
   if (aDataLength < sizeof(NameHeader)) {
@@ -85,14 +76,7 @@ UniquePtr<SFNTNameTable> SFNTNameTable::Create(const uint8_t* aNameData,
     return nullptr;
   }
 
-<<<<<<< HEAD
-  const NameHeader *nameHeader =
-      reinterpret_cast<const NameHeader *>(aNameData);
-||||||| merged common ancestors
-  const NameHeader *nameHeader = reinterpret_cast<const NameHeader*>(aNameData);
-=======
   const NameHeader* nameHeader = reinterpret_cast<const NameHeader*>(aNameData);
->>>>>>> upstream-releases
   if (nameHeader->format != FORMAT_0) {
     gfxWarning() << "Only Name Table Format 0 is supported.";
     return nullptr;
@@ -115,26 +99,6 @@ UniquePtr<SFNTNameTable> SFNTNameTable::Create(const uint8_t* aNameData,
       new SFNTNameTable(nameHeader, aNameData, aDataLength));
 }
 
-<<<<<<< HEAD
-SFNTNameTable::SFNTNameTable(const NameHeader *aNameHeader,
-                             const uint8_t *aNameData, uint32_t aDataLength)
-    : mFirstRecord(
-          reinterpret_cast<const NameRecord *>(aNameData + sizeof(NameHeader))),
-      mEndOfRecords(mFirstRecord + aNameHeader->count),
-      mStringData(aNameData + aNameHeader->stringOffset),
-      mStringDataLength(aDataLength - aNameHeader->stringOffset) {
-  MOZ_ASSERT(reinterpret_cast<const uint8_t *>(aNameHeader) == aNameData);
-||||||| merged common ancestors
-SFNTNameTable::SFNTNameTable(const NameHeader *aNameHeader,
-                             const uint8_t *aNameData, uint32_t aDataLength)
-  : mFirstRecord(reinterpret_cast<const NameRecord*>(aNameData
-                                                     + sizeof(NameHeader)))
-  , mEndOfRecords(mFirstRecord + aNameHeader->count)
-  , mStringData(aNameData + aNameHeader->stringOffset)
-  , mStringDataLength(aDataLength - aNameHeader->stringOffset)
-{
-  MOZ_ASSERT(reinterpret_cast<const uint8_t*>(aNameHeader) == aNameData);
-=======
 SFNTNameTable::SFNTNameTable(const NameHeader* aNameHeader,
                              const uint8_t* aNameData, uint32_t aDataLength)
     : mFirstRecord(
@@ -143,18 +107,9 @@ SFNTNameTable::SFNTNameTable(const NameHeader* aNameHeader,
       mStringData(aNameData + aNameHeader->stringOffset),
       mStringDataLength(aDataLength - aNameHeader->stringOffset) {
   MOZ_ASSERT(reinterpret_cast<const uint8_t*>(aNameHeader) == aNameData);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool IsUTF16Encoding(const NameRecord *aNameRecord) {
-||||||| merged common ancestors
-static bool
-IsUTF16Encoding(const NameRecord *aNameRecord)
-{
-=======
 static bool IsUTF16Encoding(const NameRecord* aNameRecord) {
->>>>>>> upstream-releases
   if (aNameRecord->platformID == PLATFORM_ID_MICROSOFT &&
       (aNameRecord->encodingID == ENCODING_ID_MICROSOFT_UNICODEBMP ||
        aNameRecord->encodingID == ENCODING_ID_MICROSOFT_SYMBOL)) {
@@ -169,15 +124,7 @@ static bool IsUTF16Encoding(const NameRecord* aNameRecord) {
 }
 
 #if defined(XP_MACOSX)
-<<<<<<< HEAD
-static bool IsMacRomanEncoding(const NameRecord *aNameRecord) {
-||||||| merged common ancestors
-static bool
-IsMacRomanEncoding(const NameRecord *aNameRecord)
-{
-=======
 static bool IsMacRomanEncoding(const NameRecord* aNameRecord) {
->>>>>>> upstream-releases
   if (aNameRecord->platformID == PLATFORM_ID_MAC &&
       aNameRecord->encodingID == ENCODING_ID_MAC_ROMAN) {
     return true;
@@ -187,17 +134,8 @@ static bool IsMacRomanEncoding(const NameRecord* aNameRecord) {
 }
 #endif
 
-<<<<<<< HEAD
-static NameRecordMatchers *CreateCanonicalMatchers(
-    const BigEndianUint16 &aNameID) {
-||||||| merged common ancestors
-static NameRecordMatchers*
-CreateCanonicalMatchers(const BigEndianUint16& aNameID)
-{
-=======
 static NameRecordMatchers* CreateCanonicalMatchers(
     const BigEndianUint16& aNameID) {
->>>>>>> upstream-releases
   // For Windows, we return only Microsoft platform name record
   // matchers. On Mac, we return matchers for both Microsoft platform
   // records and Mac platform records.
@@ -205,14 +143,7 @@ static NameRecordMatchers* CreateCanonicalMatchers(
 
 #if defined(XP_MACOSX)
   // First, look for the English name.
-<<<<<<< HEAD
-  if (!matchers->append([=](const NameRecord *aNameRecord) {
-||||||| merged common ancestors
-  if (!matchers->append(
-    [=](const NameRecord *aNameRecord) {
-=======
   if (!matchers->append([=](const NameRecord* aNameRecord) {
->>>>>>> upstream-releases
         if (aNameRecord->nameID == aNameID &&
             aNameRecord->languageID == LANG_ID_MAC_ENGLISH &&
             aNameRecord->platformID == PLATFORM_ID_MAC &&
@@ -226,14 +157,7 @@ static NameRecordMatchers* CreateCanonicalMatchers(
   }
 
   // Second, look for all languages.
-<<<<<<< HEAD
-  if (!matchers->append([=](const NameRecord *aNameRecord) {
-||||||| merged common ancestors
-  if (!matchers->append(
-    [=](const NameRecord *aNameRecord) {
-=======
   if (!matchers->append([=](const NameRecord* aNameRecord) {
->>>>>>> upstream-releases
         if (aNameRecord->nameID == aNameID &&
             aNameRecord->platformID == PLATFORM_ID_MAC &&
             IsMacRomanEncoding(aNameRecord)) {
@@ -247,14 +171,7 @@ static NameRecordMatchers* CreateCanonicalMatchers(
 #endif /* defined(XP_MACOSX) */
 
   // First, look for the English name (this will normally succeed).
-<<<<<<< HEAD
-  if (!matchers->append([=](const NameRecord *aNameRecord) {
-||||||| merged common ancestors
-  if (!matchers->append(
-    [=](const NameRecord *aNameRecord) {
-=======
   if (!matchers->append([=](const NameRecord* aNameRecord) {
->>>>>>> upstream-releases
         if (aNameRecord->nameID == aNameID &&
             aNameRecord->languageID == LANG_ID_MICROSOFT_EN_US &&
             aNameRecord->platformID == PLATFORM_ID_MICROSOFT &&
@@ -268,14 +185,7 @@ static NameRecordMatchers* CreateCanonicalMatchers(
   }
 
   // Second, look for all languages.
-<<<<<<< HEAD
-  if (!matchers->append([=](const NameRecord *aNameRecord) {
-||||||| merged common ancestors
-  if (!matchers->append(
-    [=](const NameRecord *aNameRecord) {
-=======
   if (!matchers->append([=](const NameRecord* aNameRecord) {
->>>>>>> upstream-releases
         if (aNameRecord->nameID == aNameID &&
             aNameRecord->platformID == PLATFORM_ID_MICROSOFT &&
             IsUTF16Encoding(aNameRecord)) {
@@ -290,69 +200,25 @@ static NameRecordMatchers* CreateCanonicalMatchers(
   return matchers;
 }
 
-<<<<<<< HEAD
-static const NameRecordMatchers &FullNameMatchers() {
-  static const NameRecordMatchers *sFullNameMatchers =
-      CreateCanonicalMatchers(NAME_ID_FULL);
-||||||| merged common ancestors
-static const NameRecordMatchers&
-FullNameMatchers()
-{
-  static const NameRecordMatchers *sFullNameMatchers =
-    CreateCanonicalMatchers(NAME_ID_FULL);
-=======
 static const NameRecordMatchers& FullNameMatchers() {
   static const NameRecordMatchers* sFullNameMatchers =
       CreateCanonicalMatchers(NAME_ID_FULL);
->>>>>>> upstream-releases
   return *sFullNameMatchers;
 }
 
-<<<<<<< HEAD
-static const NameRecordMatchers &FamilyMatchers() {
-  static const NameRecordMatchers *sFamilyMatchers =
-      CreateCanonicalMatchers(NAME_ID_FAMILY);
-||||||| merged common ancestors
-static const NameRecordMatchers&
-FamilyMatchers()
-{
-  static const NameRecordMatchers *sFamilyMatchers =
-    CreateCanonicalMatchers(NAME_ID_FAMILY);
-=======
 static const NameRecordMatchers& FamilyMatchers() {
   static const NameRecordMatchers* sFamilyMatchers =
       CreateCanonicalMatchers(NAME_ID_FAMILY);
->>>>>>> upstream-releases
   return *sFamilyMatchers;
 }
 
-<<<<<<< HEAD
-static const NameRecordMatchers &StyleMatchers() {
-  static const NameRecordMatchers *sStyleMatchers =
-      CreateCanonicalMatchers(NAME_ID_STYLE);
-||||||| merged common ancestors
-static const NameRecordMatchers&
-StyleMatchers()
-{
-  static const NameRecordMatchers *sStyleMatchers =
-    CreateCanonicalMatchers(NAME_ID_STYLE);
-=======
 static const NameRecordMatchers& StyleMatchers() {
   static const NameRecordMatchers* sStyleMatchers =
       CreateCanonicalMatchers(NAME_ID_STYLE);
->>>>>>> upstream-releases
   return *sStyleMatchers;
 }
 
-<<<<<<< HEAD
-bool SFNTNameTable::GetU16FullName(mozilla::u16string &aU16FullName) {
-||||||| merged common ancestors
-bool
-SFNTNameTable::GetU16FullName(mozilla::u16string& aU16FullName)
-{
-=======
 bool SFNTNameTable::GetU16FullName(mozilla::u16string& aU16FullName) {
->>>>>>> upstream-releases
   if (ReadU16Name(FullNameMatchers(), aU16FullName)) {
     return true;
   }
@@ -375,22 +241,12 @@ bool SFNTNameTable::GetU16FullName(mozilla::u16string& aU16FullName) {
   return true;
 }
 
-<<<<<<< HEAD
-bool SFNTNameTable::ReadU16Name(const NameRecordMatchers &aMatchers,
-                                mozilla::u16string &aU16Name) {
-||||||| merged common ancestors
-bool
-SFNTNameTable::ReadU16Name(const NameRecordMatchers& aMatchers,
-                           mozilla::u16string& aU16Name)
-{
-=======
 bool SFNTNameTable::ReadU16Name(const NameRecordMatchers& aMatchers,
                                 mozilla::u16string& aU16Name) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!aMatchers.empty());
 
   for (size_t i = 0; i < aMatchers.length(); ++i) {
-    const NameRecord *record = mFirstRecord;
+    const NameRecord* record = mFirstRecord;
     while (record != mEndOfRecords) {
       switch (aMatchers[i](record)) {
         case eNameDecoderUTF16:
@@ -412,18 +268,8 @@ bool SFNTNameTable::ReadU16Name(const NameRecordMatchers& aMatchers,
   return false;
 }
 
-<<<<<<< HEAD
-bool SFNTNameTable::ReadU16NameFromU16Record(const NameRecord *aNameRecord,
-                                             mozilla::u16string &aU16Name) {
-||||||| merged common ancestors
-bool
-SFNTNameTable::ReadU16NameFromU16Record(const NameRecord *aNameRecord,
-                                        mozilla::u16string& aU16Name)
-{
-=======
 bool SFNTNameTable::ReadU16NameFromU16Record(const NameRecord* aNameRecord,
                                              mozilla::u16string& aU16Name) {
->>>>>>> upstream-releases
   uint32_t offset = aNameRecord->offset;
   uint32_t length = aNameRecord->length;
   if (mStringDataLength < offset + length) {
@@ -442,18 +288,8 @@ bool SFNTNameTable::ReadU16NameFromU16Record(const NameRecord* aNameRecord,
 }
 
 #if defined(XP_MACOSX)
-<<<<<<< HEAD
-bool SFNTNameTable::ReadU16NameFromMacRomanRecord(
-    const NameRecord *aNameRecord, mozilla::u16string &aU16Name) {
-||||||| merged common ancestors
-bool
-SFNTNameTable::ReadU16NameFromMacRomanRecord(const NameRecord *aNameRecord,
-                                             mozilla::u16string& aU16Name)
-{
-=======
 bool SFNTNameTable::ReadU16NameFromMacRomanRecord(
     const NameRecord* aNameRecord, mozilla::u16string& aU16Name) {
->>>>>>> upstream-releases
   uint32_t offset = aNameRecord->offset;
   uint32_t length = aNameRecord->length;
   if (mStringDataLength < offset + length) {
@@ -484,7 +320,7 @@ bool SFNTNameTable::ReadU16NameFromMacRomanRecord(
 
   CFRelease(cfString);
 
-  aU16Name.assign(reinterpret_cast<char16_t *>(u16Buffer.get()), decodedLength);
+  aU16Name.assign(reinterpret_cast<char16_t*>(u16Buffer.get()), decodedLength);
 
   return true;
 }

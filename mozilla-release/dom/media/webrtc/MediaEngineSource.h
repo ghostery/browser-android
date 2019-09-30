@@ -46,16 +46,8 @@ class MediaEnginePhotoCallback {
   // It is called on main thread. aRv is the error code.
   virtual nsresult PhotoError(nsresult aRv) = 0;
 
-<<<<<<< HEAD
- protected:
-  virtual ~MediaEnginePhotoCallback() {}
-||||||| merged common ancestors
-protected:
-  virtual ~MediaEnginePhotoCallback() {}
-=======
  protected:
   virtual ~MediaEnginePhotoCallback() = default;
->>>>>>> upstream-releases
 };
 
 /**
@@ -74,53 +66,7 @@ enum MediaEngineSourceState {
  * Most sources are helped by the defaults implemented in MediaEngineSource.
  */
 class MediaEngineSourceInterface {
-<<<<<<< HEAD
  public:
-  /**
-   * Returns true if this source requires sharing to support multiple
-   * allocations.
-   *
-   * If this returns true, the MediaEngine is expected to do subsequent
-   * allocations on the first instance of this source.
-   *
-   * If this returns false, the MediaEngine is expected to instantiate one
-   * source instance per allocation.
-   *
-   * Sharing means that the source gets multiple simultaneous calls to
-   * Allocate(), Start(), Stop(), Deallocate(), etc. These are all keyed off
-   * the AllocationHandle returned by Allocate() so the source can keep
-   * allocations apart.
-   *
-   * A source typically requires sharing when the underlying hardware doesn't
-   * allow multiple users, or when having multiple users would be inefficient.
-   */
-  virtual bool RequiresSharing() const = 0;
-
-||||||| merged common ancestors
-public:
-  /**
-   * Returns true if this source requires sharing to support multiple
-   * allocations.
-   *
-   * If this returns true, the MediaEngine is expected to do subsequent
-   * allocations on the first instance of this source.
-   *
-   * If this returns false, the MediaEngine is expected to instantiate one
-   * source instance per allocation.
-   *
-   * Sharing means that the source gets multiple simultaneous calls to
-   * Allocate(), Start(), Stop(), Deallocate(), etc. These are all keyed off
-   * the AllocationHandle returned by Allocate() so the source can keep
-   * allocations apart.
-   *
-   * A source typically requires sharing when the underlying hardware doesn't
-   * allow multiple users, or when having multiple users would be inefficient.
-   */
-  virtual bool RequiresSharing() const = 0;
-
-=======
- public:
->>>>>>> upstream-releases
   /**
    * Return true if this is a fake source. I.e., if it is generating media
    * itself rather than being an interface to underlying hardware.
@@ -156,13 +102,6 @@ public:
    * Override w/a promise if source has frames, in order to potentially allow
    * deferring success of source acquisition until first frame has arrived.
    */
-<<<<<<< HEAD
-  virtual nsresult Allocate(const dom::MediaTrackConstraints& aConstraints,
-                            const MediaEnginePrefs& aPrefs,
-||||||| merged common ancestors
-  virtual nsresult Allocate(const dom::MediaTrackConstraints &aConstraints,
-                            const MediaEnginePrefs &aPrefs,
-=======
   virtual RefPtr<GenericNonExclusivePromise> GetFirstFramePromise() const {
     return nullptr;
   }
@@ -172,7 +111,6 @@ public:
    */
   virtual nsresult Allocate(const dom::MediaTrackConstraints& aConstraints,
                             const MediaEnginePrefs& aPrefs,
->>>>>>> upstream-releases
                             const nsString& aDeviceId,
                             const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
                             const char** aOutBadConstraint) = 0;
@@ -183,36 +121,14 @@ public:
    *
    * This must be called before Start.
    */
-<<<<<<< HEAD
-  virtual void SetTrack(const RefPtr<const AllocationHandle>& aHandle,
-                        const RefPtr<SourceMediaStream>& aStream,
-                        TrackID aTrackID,
-                        const PrincipalHandle& aPrincipal) = 0;
-||||||| merged common ancestors
-  virtual nsresult SetTrack(const RefPtr<const AllocationHandle>& aHandle,
-                            const RefPtr<SourceMediaStream>& aStream,
-                            TrackID aTrackID,
-                            const PrincipalHandle& aPrincipal) = 0;
-=======
   virtual void SetTrack(const RefPtr<SourceMediaStream>& aStream,
                         TrackID aTrackID,
                         const PrincipalHandle& aPrincipal) = 0;
->>>>>>> upstream-releases
 
   /**
    * Called by MediaEngine to start feeding data to the track.
    *
-<<<<<<< HEAD
-   * If this is the first AllocationHandle to start, the underlying device
-   * will be started.
-   *
    * NB: Audio sources handle the enabling of pulling themselves.
-||||||| merged common ancestors
-   * If this is the first AllocationHandle to start, the underlying device
-   * will be started.
-=======
-   * NB: Audio sources handle the enabling of pulling themselves.
->>>>>>> upstream-releases
    */
   virtual nsresult Start() = 0;
 
@@ -227,14 +143,7 @@ public:
    *                            is not yet implemented.
    * NS_ERROR_FAILURE         - Failures reported from underlying code.
    */
-<<<<<<< HEAD
-  virtual nsresult FocusOnSelectedSource(
-      const RefPtr<const AllocationHandle>& aHandle) = 0;
-||||||| merged common ancestors
-  virtual nsresult FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle) = 0;
-=======
   virtual nsresult FocusOnSelectedSource() = 0;
->>>>>>> upstream-releases
 
   /**
    * Applies new constraints to the capability selection for the underlying
@@ -263,31 +172,14 @@ public:
    * Double-stopping is allowed and will return NS_OK. This is necessary
    * sometimes during shutdown.
    *
-<<<<<<< HEAD
-   * Double-stopping a given allocation handle is allowed and will return NS_OK.
-   * This is necessary sometimes during shutdown.
-   *
    * NB: Audio sources handle the disabling of pulling themselves.
-||||||| merged common ancestors
-   * Double-stopping a given allocation handle is allowed and will return NS_OK.
-   * This is necessary sometimes during shutdown.
-=======
-   * NB: Audio sources handle the disabling of pulling themselves.
->>>>>>> upstream-releases
    */
   virtual nsresult Stop() = 0;
 
   /**
    * Called by MediaEngine to deallocate an underlying device.
    */
-<<<<<<< HEAD
-  virtual nsresult Deallocate(
-      const RefPtr<const AllocationHandle>& aHandle) = 0;
-||||||| merged common ancestors
-  virtual nsresult Deallocate(const RefPtr<const AllocationHandle>& aHandle) = 0;
-=======
   virtual nsresult Deallocate() = 0;
->>>>>>> upstream-releases
 
   /**
    * Called by MediaEngine when it knows this MediaEngineSource won't be used
@@ -325,31 +217,6 @@ public:
    * device settings as seen by js.
    */
   virtual void GetSettings(dom::MediaTrackSettings& aOutSettings) const = 0;
-<<<<<<< HEAD
-
-  /**
-   * Pulls data from the MediaEngineSource into the track.
-   *
-   * Driven by MediaStreamTrackListener::NotifyPull.
-   */
-  virtual void Pull(const RefPtr<const AllocationHandle>& aHandle,
-                    const RefPtr<SourceMediaStream>& aStream, TrackID aTrackID,
-                    StreamTime aEndOfAppendedData, StreamTime aDesiredTime,
-                    const PrincipalHandle& aPrincipalHandle) = 0;
-||||||| merged common ancestors
-
-  /**
-   * Pulls data from the MediaEngineSource into the track.
-   *
-   * Driven by MediaStreamListener::NotifyPull.
-   */
-  virtual void Pull(const RefPtr<const AllocationHandle>& aHandle,
-                    const RefPtr<SourceMediaStream>& aStream,
-                    TrackID aTrackID,
-                    StreamTime aDesiredTime,
-                    const PrincipalHandle& aPrincipalHandle) = 0;
-=======
->>>>>>> upstream-releases
 };
 
 /**
@@ -386,14 +253,7 @@ class MediaEngineSource : public MediaEngineSourceInterface {
   bool GetScary() const override;
 
   // Returns NS_ERROR_NOT_AVAILABLE by default.
-<<<<<<< HEAD
-  nsresult FocusOnSelectedSource(
-      const RefPtr<const AllocationHandle>& aHandle) override;
-||||||| merged common ancestors
-  nsresult FocusOnSelectedSource(const RefPtr<const AllocationHandle>& aHandle) override;
-=======
   nsresult FocusOnSelectedSource() override;
->>>>>>> upstream-releases
 
   // Shutdown does nothing by default.
   void Shutdown() override;
@@ -402,19 +262,7 @@ class MediaEngineSource : public MediaEngineSourceInterface {
   // to tell the caller to fallback to other methods.
   nsresult TakePhoto(MediaEnginePhotoCallback* aCallback) override;
 
-<<<<<<< HEAD
-  // Makes aOutSettings empty by default.
-  void GetSettings(dom::MediaTrackSettings& aOutSettings) const override;
-
  protected:
-||||||| merged common ancestors
-  // Makes aOutSettings empty by default.
-  void GetSettings(dom::MediaTrackSettings& aOutSettings) const override;
-
-protected:
-=======
- protected:
->>>>>>> upstream-releases
   virtual ~MediaEngineSource();
 };
 

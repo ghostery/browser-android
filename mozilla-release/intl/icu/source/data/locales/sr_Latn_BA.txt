@@ -1,13 +1,7 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 sr_Latn_BA{
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.38.69"}
-=======
     Version{"2.1.48.77"}
->>>>>>> upstream-releases
     calendar{
         generic{
             intervalFormats{
@@ -127,7 +121,6 @@ sr_Latn_BA{
                     "nove ere",
                 }
             }
-<<<<<<< HEAD
             intervalFormats{
                 MEd{
                     M{"E, MM-dd – E, MM-dd"}
@@ -145,52 +138,6 @@ sr_Latn_BA{
                     M{"E, y-MM-dd – E, y-MM-dd"}
                     d{"E, y-MM-dd – E, y-MM-dd"}
                     y{"E, y-MM-dd – E, y-MM-dd"}
-||||||| merged common ancestors
-            monthNames{
-                format{
-                    abbreviated{
-                        "jan.",
-                        "feb.",
-                        "mart",
-                        "apr.",
-                        "maj",
-                        "jun",
-                        "jul",
-                        "avg.",
-                        "sept.",
-                        "okt.",
-                        "nov.",
-                        "dec.",
-                    }
-=======
-            intervalFormats{
-                MEd{
-                    M{"E, MM-dd – E, MM-dd"}
-                    d{"E, MM-dd – E, MM-dd"}
-                }
-                Md{
-                    M{"MM-dd – MM-dd"}
-                    d{"MM-dd – MM-dd"}
->>>>>>> upstream-releases
-                }
-<<<<<<< HEAD
-                yMd{
-                    M{"y-MM-dd – y-MM-dd"}
-                    d{"y-MM-dd – y-MM-dd"}
-                    y{"y-MM-dd – y-MM-dd"}
-                }
-            }
-            monthNames{
-||||||| merged common ancestors
-=======
-                yM{
-                    M{"y-MM – y-MM"}
-                    y{"y-MM – y-MM"}
-                }
-                yMEd{
-                    M{"E, y-MM-dd – E, y-MM-dd"}
-                    d{"E, y-MM-dd – E, y-MM-dd"}
-                    y{"E, y-MM-dd – E, y-MM-dd"}
                 }
                 yMd{
                     M{"y-MM-dd – y-MM-dd"}
@@ -199,7 +146,6 @@ sr_Latn_BA{
                 }
             }
             monthNames{
->>>>>>> upstream-releases
                 stand-alone{
                     abbreviated{
                         "jan",

@@ -49,18 +49,9 @@ nsDOMDataChannel::~nsDOMDataChannel() {
   mDataChannel->Close();
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* nsDOMDataChannel::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-nsDOMDataChannel::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* nsDOMDataChannel::WrapObject(JSContext* aCx,
                                        JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return RTCDataChannel_Binding::Wrap(aCx, this, aGivenProto);
 }
 
@@ -108,21 +99,10 @@ nsresult nsDOMDataChannel::Init(nsPIDOMWindowInner* aDOMWindow) {
   nsCOMPtr<nsIPrincipal> principal = scriptPrincipal->GetPrincipal();
   NS_ENSURE_STATE(principal);
 
-<<<<<<< HEAD
-  // Attempt to kill "ghost" DataChannel (if one can happen): but usually too
-  // early for check to fail
-  rv = CheckInnerWindowCorrectness();
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  // Attempt to kill "ghost" DataChannel (if one can happen): but usually too early for check to fail
-  rv = CheckInnerWindowCorrectness();
-  NS_ENSURE_SUCCESS(rv,rv);
-=======
   // Attempt to kill "ghost" DataChannel (if one can happen): but usually too
   // early for check to fail
   rv = CheckCurrentGlobalCorrectness();
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   rv = nsContentUtils::GetUTFOrigin(principal, mOrigin);
   LOG(("%s: origin = %s\n", __FUNCTION__,
@@ -140,15 +120,6 @@ void nsDOMDataChannel::GetProtocol(nsAString& aProtocol) {
   mDataChannel->GetProtocol(aProtocol);
 }
 
-<<<<<<< HEAD
-uint16_t nsDOMDataChannel::Id() const { return mDataChannel->GetStream(); }
-||||||| merged common ancestors
-uint16_t
-nsDOMDataChannel::Id() const
-{
-  return mDataChannel->GetStream();
-}
-=======
 mozilla::dom::Nullable<uint16_t> nsDOMDataChannel::GetId() const {
   mozilla::dom::Nullable<uint16_t> result = mDataChannel->GetStream();
   if (result.Value() == 65535) {
@@ -156,7 +127,6 @@ mozilla::dom::Nullable<uint16_t> nsDOMDataChannel::GetId() const {
   }
   return result;
 }
->>>>>>> upstream-releases
 
 // XXX should be GetType()?  Open question for the spec
 bool nsDOMDataChannel::Reliable() const {
@@ -172,31 +142,13 @@ mozilla::dom::Nullable<uint16_t> nsDOMDataChannel::GetMaxRetransmits() const {
   return mDataChannel->GetMaxRetransmits();
 }
 
-<<<<<<< HEAD
-bool nsDOMDataChannel::Ordered() const { return mDataChannel->GetOrdered(); }
-||||||| merged common ancestors
-bool
-nsDOMDataChannel::Ordered() const
-{
-  return mDataChannel->GetOrdered();
-}
-=======
 bool nsDOMDataChannel::Negotiated() const {
   return mDataChannel->GetNegotiated();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-RTCDataChannelState nsDOMDataChannel::ReadyState() const {
-||||||| merged common ancestors
-RTCDataChannelState
-nsDOMDataChannel::ReadyState() const
-{
-=======
 bool nsDOMDataChannel::Ordered() const { return mDataChannel->GetOrdered(); }
 
 RTCDataChannelState nsDOMDataChannel::ReadyState() const {
->>>>>>> upstream-releases
   return static_cast<RTCDataChannelState>(mDataChannel->GetReadyState());
 }
 
@@ -276,22 +228,9 @@ void nsDOMDataChannel::Send(const ArrayBufferView& aData, ErrorResult& aRv) {
   Send(nullptr, &msgString, true, aRv);
 }
 
-<<<<<<< HEAD
-void nsDOMDataChannel::Send(nsIInputStream* aMsgStream,
-                            const nsACString& aMsgString, bool aIsBinary,
-                            ErrorResult& aRv) {
-||||||| merged common ancestors
-void
-nsDOMDataChannel::Send(nsIInputStream* aMsgStream,
-                       const nsACString& aMsgString,
-                       bool aIsBinary,
-                       ErrorResult& aRv)
-{
-=======
 void nsDOMDataChannel::Send(mozilla::dom::Blob* aMsgBlob,
                             const nsACString* aMsgString, bool aIsBinary,
                             mozilla::ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   uint16_t state = mozilla::DataChannel::CLOSED;
   if (!mSentClose) {
@@ -458,24 +397,6 @@ nsresult nsDOMDataChannel::NotBuffered(nsISupports* aContext) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsDOMDataChannel::AppReady() {
-  if (!mSentClose) {  // may not be possible, simpler to just test anyways
-    mDataChannel->AppReady();
-  }
-}
-
-||||||| merged common ancestors
-void
-nsDOMDataChannel::AppReady()
-{
-  if (!mSentClose) { // may not be possible, simpler to just test anyways
-    mDataChannel->AppReady();
-  }
-}
-
-=======
->>>>>>> upstream-releases
 //-----------------------------------------------------------------------------
 // Methods that keep alive the DataChannel object when:
 //   1. the object has registered event listeners that can be triggered
@@ -493,20 +414,8 @@ void nsDOMDataChannel::UpdateMustKeepAlive() {
   bool shouldKeepAlive = false;
   uint16_t readyState = mDataChannel->GetReadyState();
 
-<<<<<<< HEAD
-  switch (readyState) {
-    case DataChannel::CONNECTING:
-    case DataChannel::WAITING_TO_OPEN: {
-||||||| merged common ancestors
-  switch (readyState)
-  {
-    case DataChannel::CONNECTING:
-    case DataChannel::WAITING_TO_OPEN:
-    {
-=======
   switch (readyState) {
     case DataChannel::CONNECTING: {
->>>>>>> upstream-releases
       if (mListenerManager &&
           (mListenerManager->HasListenersFor(nsGkAtoms::onopen) ||
            mListenerManager->HasListenersFor(nsGkAtoms::onmessage) ||

@@ -22,16 +22,6 @@ NS_INTERFACE_MAP_END_INHERITING(SVGGraphicsElementBase)
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
-SVGGraphicsElement::SVGGraphicsElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGGraphicsElementBase(std::move(aNodeInfo)) {}
-||||||| merged common ancestors
-SVGGraphicsElement::SVGGraphicsElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-: SVGGraphicsElementBase(std::move(aNodeInfo))
-{
-}
-=======
 SVGGraphicsElement::SVGGraphicsElement(
     already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
     : SVGGraphicsElementBase(std::move(aNodeInfo)) {}
@@ -62,22 +52,13 @@ bool SVGGraphicsElement::IsSVGFocusable(bool* aIsFocusable,
 
   return false;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-SVGGraphicsElement::~SVGGraphicsElement() {}
-||||||| merged common ancestors
-SVGGraphicsElement::~SVGGraphicsElement()
-{
-}
-=======
 bool SVGGraphicsElement::IsFocusableInternal(int32_t* aTabIndex,
                                              bool aWithMouse) {
   bool isFocusable = false;
   IsSVGFocusable(&isFocusable, aTabIndex);
   return isFocusable;
 }
->>>>>>> upstream-releases
 
 }  // namespace dom
 }  // namespace mozilla

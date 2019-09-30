@@ -32,15 +32,6 @@ class SessionStorage final : public Storage {
 
   SessionStorageCache* Cache() const { return mCache; }
 
-<<<<<<< HEAD
-  already_AddRefed<SessionStorage> Clone() const;
-
-||||||| merged common ancestors
-  already_AddRefed<SessionStorage>
-  Clone() const;
-
-=======
->>>>>>> upstream-releases
   int64_t GetOriginQuotaUsage() const override;
 
   bool IsForkOf(const Storage* aStorage) const override;

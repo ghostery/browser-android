@@ -67,16 +67,9 @@ class AnonymousContent final {
 
   void GetComputedStylePropertyValue(const nsAString& aElementId,
                                      const nsAString& aPropertyName,
-<<<<<<< HEAD
-                                     DOMString& aResult, ErrorResult& aRv);
-||||||| merged common ancestors
-                                     DOMString& aResult,
-                                     ErrorResult& aRv);
-=======
                                      DOMString& aResult, ErrorResult& aRv);
 
   void GetTargetIdForEvent(Event& aEvent, DOMString& aResult);
->>>>>>> upstream-releases
 
  private:
   ~AnonymousContent();

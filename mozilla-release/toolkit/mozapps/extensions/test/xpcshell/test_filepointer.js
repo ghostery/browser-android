@@ -51,19 +51,6 @@ add_task(async function setup() {
 
 // Tests that installing a new add-on by pointer works
 add_task(async function test_new_pointer_install() {
-<<<<<<< HEAD
-  let target = OS.Path.join(sourceDir.path, ID1);
-  await promiseWriteWebExtension(target, {
-    manifest: {
-      version: "1.0",
-      applications: {gecko: {id: ID1}},
-    },
-  });
-  await promiseWritePointer(ID1);
-||||||| merged common ancestors
-  await promiseWriteInstallRDFForExtension(addon1, sourceDir);
-  await promiseWritePointer(addon1.id);
-=======
   let target = OS.Path.join(sourceDir.path, ID1);
   await promiseWriteWebExtension(target, {
     manifest: {
@@ -72,7 +59,6 @@ add_task(async function test_new_pointer_install() {
     },
   });
   await promiseWritePointer(ID1);
->>>>>>> upstream-releases
   await promiseStartupManager();
 
   let addon = await AddonManager.getAddonByID(ID1);
@@ -82,16 +68,8 @@ add_task(async function test_new_pointer_install() {
   let file = getAddonFile(addon);
   equal(file.parent.path, sourceDir.path);
 
-<<<<<<< HEAD
-  let rootUri = do_get_addon_root_uri(sourceDir, ID1);
-  let uri = addon.getResourceURI("/");
-||||||| merged common ancestors
-  let rootUri = do_get_addon_root_uri(sourceDir, addon1.id);
-  let uri = addon.getResourceURI("/");
-=======
   let rootUri = do_get_addon_root_uri(sourceDir, ID1);
   let uri = addon.getResourceURI();
->>>>>>> upstream-releases
   equal(uri.spec, rootUri);
 
   // Check that upgrade is disabled for addons installed by file-pointers.
@@ -104,56 +82,15 @@ add_task(async function test_addon_over_pointer() {
   let xpi = AddonTestUtils.createTempWebExtensionFile({
     manifest: {
       version: "2.0",
-<<<<<<< HEAD
-      applications: {gecko: {id: ID1}},
-||||||| merged common ancestors
-      name: "File Pointer Test",
-      bootstrap: true,
-
-      targetApplications: [{
-          id: "xpcshell@tests.mozilla.org",
-          minVersion: "1",
-          maxVersion: "1"}],
-=======
       applications: { gecko: { id: ID1 } },
->>>>>>> upstream-releases
     },
   });
 
-<<<<<<< HEAD
-  let install = await AddonManager.getInstallForFile(xpi, "application/x-xpinstall");
-  await install.install();
-||||||| merged common ancestors
-  testserver.registerFile("/addons/test_filepointer.xpi", xpi);
-
-  let url = "http://example.com/addons/test_filepointer.xpi";
-  let install = await AddonManager.getInstallForURL(url, "application/x-xpinstall");
-  await new Promise(resolve => {
-    ensure_test_completed();
-
-    prepare_test({
-      "addon1@tests.mozilla.org": [
-        ["onInstalling", false],
-        ["onInstalled", false],
-      ],
-    }, [
-      "onDownloadStarted",
-      "onDownloadEnded",
-      "onInstallStarted",
-      "onInstallEnded",
-    ], callback_soon(resolve));
-
-    install.install();
-  });
-
-  await promiseRestartManager();
-=======
   let install = await AddonManager.getInstallForFile(
     xpi,
     "application/x-xpinstall"
   );
   await install.install();
->>>>>>> upstream-releases
 
   let addon = await AddonManager.getAddonByID(ID1);
   notEqual(addon, null);
@@ -166,16 +103,8 @@ add_task(async function test_addon_over_pointer() {
   let { file } = url.QueryInterface(Ci.nsIFileURL);
   equal(file.parent.path, profileDir.path);
 
-<<<<<<< HEAD
-  let rootUri = do_get_addon_root_uri(profileDir, ID1);
-  let uri = addon.getResourceURI("/");
-||||||| merged common ancestors
-  let rootUri = do_get_addon_root_uri(profileDir, addon1.id);
-  let uri = addon.getResourceURI("/");
-=======
   let rootUri = do_get_addon_root_uri(profileDir, ID1);
   let uri = addon.getResourceURI();
->>>>>>> upstream-releases
   equal(uri.spec, rootUri);
 
   let source = sourceDir.clone();
@@ -232,18 +161,6 @@ add_task(async function test_bad_pointer_id() {
   notEqual(addon, null);
   equal(addon.version, "1.0");
 
-<<<<<<< HEAD
-  await promiseWriteWebExtension(dir.path, {
-    manifest: {
-      version: "1.0",
-      applications: {gecko: {id: ID2}},
-    },
-  });
-  setExtensionModifiedTime(dir, dir.lastModifiedTime - 5000);
-||||||| merged common ancestors
-  await promiseWriteInstallRDFForExtension(addon2, sourceDir, addon1.id);
-  setExtensionModifiedTime(dest, dest.lastModifiedTime - 5000);
-=======
   await promiseWriteWebExtension(dir.path, {
     manifest: {
       version: "1.0",
@@ -251,7 +168,6 @@ add_task(async function test_bad_pointer_id() {
     },
   });
   setExtensionModifiedTime(dir, dir.lastModifiedTime - 5000);
->>>>>>> upstream-releases
 
   await promiseRestartManager();
 
@@ -270,25 +186,6 @@ add_task(async function test_bad_pointer_id() {
 
 // Removing the pointer file should uninstall the add-on
 add_task(async function test_remove_pointer() {
-<<<<<<< HEAD
-  let dir = sourceDir.clone();
-  dir.append(ID1);
-
-  await promiseWriteWebExtension(dir.path, {
-    manifest: {
-      version: "1.0",
-      applications: {gecko: {id: ID1}},
-    },
-  });
-
-  setExtensionModifiedTime(dir, dir.lastModifiedTime - 5000);
-  await promiseWritePointer(ID1);
-||||||| merged common ancestors
-  var dest = await promiseWriteInstallRDFForExtension(addon1, sourceDir);
-  // Make sure the modification time changes enough to be detected in run_test_8.
-  setExtensionModifiedTime(dest, dest.lastModifiedTime - 5000);
-  await promiseWritePointer(addon1.id);
-=======
   let dir = sourceDir.clone();
   dir.append(ID1);
 
@@ -301,7 +198,6 @@ add_task(async function test_remove_pointer() {
 
   setExtensionModifiedTime(dir, dir.lastModifiedTime - 5000);
   await promiseWritePointer(ID1);
->>>>>>> upstream-releases
 
   await promiseRestartManager();
 
@@ -332,23 +228,12 @@ add_task(async function test_replace_pointer() {
   pointer.append(ID1);
   pointer.remove(false);
 
-<<<<<<< HEAD
-  await promiseWriteWebExtension(OS.Path.join(profileDir.path, ID1), {
-    manifest: {
-      version: "2.0",
-      applications: {gecko: {id: ID1}},
-    },
-  });
-||||||| merged common ancestors
-  await promiseWriteInstallRDFForExtension(addon1_2, profileDir);
-=======
   await promiseWriteWebExtension(OS.Path.join(profileDir.path, ID1), {
     manifest: {
       version: "2.0",
       applications: { gecko: { id: ID1 } },
     },
   });
->>>>>>> upstream-releases
 
   await promiseRestartManager();
 
@@ -368,20 +253,6 @@ add_task(async function test_change_pointer_sources() {
   notEqual(addon, null);
   equal(addon.version, "1.0");
 
-<<<<<<< HEAD
-  let dir = sourceDir.clone();
-  dir.append(ID1);
-  await promiseWriteWebExtension(dir.path, {
-    manifest: {
-      version: "2.0",
-      applications: {gecko: {id: ID1}},
-    },
-  });
-  setExtensionModifiedTime(dir, dir.lastModifiedTime - 5000);
-||||||| merged common ancestors
-  let dest = await promiseWriteInstallRDFForExtension(addon1_2, sourceDir);
-  setExtensionModifiedTime(dest, dest.lastModifiedTime - 5000);
-=======
   let dir = sourceDir.clone();
   dir.append(ID1);
   await promiseWriteWebExtension(dir.path, {
@@ -391,7 +262,6 @@ add_task(async function test_change_pointer_sources() {
     },
   });
   setExtensionModifiedTime(dir, dir.lastModifiedTime - 5000);
->>>>>>> upstream-releases
 
   await promiseRestartManager();
 
@@ -404,20 +274,6 @@ add_task(async function test_change_pointer_sources() {
 
 // Removing the add-on the pointer file points at should uninstall the add-on
 add_task(async function test_remove_pointer_target() {
-<<<<<<< HEAD
-  let target = OS.Path.join(sourceDir.path, ID1);
-  await promiseWriteWebExtension(target, {
-    manifest: {
-      version: "1.0",
-      applications: {gecko: {id: ID1}},
-    },
-  });
-  await promiseWritePointer(ID1);
-||||||| merged common ancestors
-  await promiseRestartManager();
-  var dest = await promiseWriteInstallRDFForExtension(addon1, sourceDir);
-  await promiseWritePointer(addon1.id);
-=======
   let target = OS.Path.join(sourceDir.path, ID1);
   await promiseWriteWebExtension(target, {
     manifest: {
@@ -426,7 +282,6 @@ add_task(async function test_remove_pointer_target() {
     },
   });
   await promiseWritePointer(ID1);
->>>>>>> upstream-releases
   await promiseRestartManager();
 
   let addon = await AddonManager.getAddonByID(ID1);
@@ -445,22 +300,8 @@ add_task(async function test_remove_pointer_target() {
   ok(!pointer.exists());
 });
 
-
 // Tests that installing a new add-on by pointer with a relative path works
 add_task(async function test_new_relative_pointer() {
-<<<<<<< HEAD
-  let target = OS.Path.join(sourceDir.path, ID1);
-  await promiseWriteWebExtension(target, {
-    manifest: {
-      version: "1.0",
-      applications: {gecko: {id: ID1}},
-    },
-  });
-  await promiseWriteRelativePointer(ID1);
-||||||| merged common ancestors
-  await promiseWriteInstallRDFForExtension(addon1, sourceDir);
-  await promiseWriteRelativePointer(addon1.id);
-=======
   let target = OS.Path.join(sourceDir.path, ID1);
   await promiseWriteWebExtension(target, {
     manifest: {
@@ -469,7 +310,6 @@ add_task(async function test_new_relative_pointer() {
     },
   });
   await promiseWriteRelativePointer(ID1);
->>>>>>> upstream-releases
   await promiseRestartManager();
 
   let addon = await AddonManager.getAddonByID(ID1);
@@ -478,16 +318,8 @@ add_task(async function test_new_relative_pointer() {
   let { file } = addon.getResourceURI().QueryInterface(Ci.nsIFileURL);
   equal(file.parent.path, sourceDir.path);
 
-<<<<<<< HEAD
-  let rootUri = do_get_addon_root_uri(sourceDir, ID1);
-  let uri = addon.getResourceURI("/");
-||||||| merged common ancestors
-  let rootUri = do_get_addon_root_uri(sourceDir, addon1.id);
-  let uri = addon.getResourceURI("/");
-=======
   let rootUri = do_get_addon_root_uri(sourceDir, ID1);
   let uri = addon.getResourceURI();
->>>>>>> upstream-releases
   equal(uri.spec, rootUri);
 
   // Check that upgrade is disabled for addons installed by file-pointers.

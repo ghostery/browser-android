@@ -5,32 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if !defined(MediaSourceDemuxer_h_)
-<<<<<<< HEAD
-#define MediaSourceDemuxer_h_
-
-#include "MediaDataDemuxer.h"
-#include "MediaResource.h"
-#include "MediaSource.h"
-#include "TrackBuffersManager.h"
-#include "mozilla/Atomics.h"
-#include "mozilla/Maybe.h"
-#include "mozilla/Monitor.h"
-#include "mozilla/TaskQueue.h"
-
-||||||| merged common ancestors
-#define MediaSourceDemuxer_h_
-
-#include "MediaDataDemuxer.h"
-#include "MediaResource.h"
-#include "MediaSource.h"
-#include "TrackBuffersManager.h"
-#include "mozilla/Atomics.h"
-#include "mozilla/Maybe.h"
-#include "mozilla/Monitor.h"
-#include "mozilla/TaskQueue.h"
-
-
-=======
 #  define MediaSourceDemuxer_h_
 
 #  include "MediaDataDemuxer.h"
@@ -43,7 +17,6 @@
 #  include "mozilla/TaskQueue.h"
 #  include "mozilla/dom/MediaDebugInfoBinding.h"
 
->>>>>>> upstream-releases
 namespace mozilla {
 
 class AbstractThread;

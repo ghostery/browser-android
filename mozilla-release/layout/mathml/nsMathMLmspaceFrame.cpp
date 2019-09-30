@@ -16,21 +16,10 @@ using namespace mozilla;
 // <mspace> -- space - implementation
 //
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMathMLmspaceFrame(nsIPresShell* aPresShell,
-                                  ComputedStyle* aStyle) {
-  return new (aPresShell) nsMathMLmspaceFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMathMLmspaceFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsMathMLmspaceFrame(aStyle);
-=======
 nsIFrame* NS_NewMathMLmspaceFrame(PresShell* aPresShell,
                                   ComputedStyle* aStyle) {
   return new (aPresShell)
       nsMathMLmspaceFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmspaceFrame)
@@ -121,19 +110,9 @@ void nsMathMLmspaceFrame::Reflow(nsPresContext* aPresContext,
   NS_FRAME_SET_TRUNCATION(aStatus, aReflowInput, aDesiredSize);
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult nsMathMLmspaceFrame::MeasureForWidth(
-    DrawTarget* aDrawTarget, ReflowOutput& aDesiredSize) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-nsMathMLmspaceFrame::MeasureForWidth(DrawTarget* aDrawTarget,
-                                     ReflowOutput& aDesiredSize)
-{
-=======
 /* virtual */
 nsresult nsMathMLmspaceFrame::MeasureForWidth(DrawTarget* aDrawTarget,
                                               ReflowOutput& aDesiredSize) {
->>>>>>> upstream-releases
   ProcessAttributes(PresContext());
   mBoundingMetrics = nsBoundingMetrics();
   mBoundingMetrics.width = mWidth;

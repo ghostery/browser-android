@@ -84,27 +84,6 @@ void SetGeckoThreadEnv(JNIEnv* aEnv);
 JNIEnv* GetEnvForThread();
 
 #ifdef MOZ_CHECK_JNI
-<<<<<<< HEAD
-#define MOZ_ASSERT_JNI_THREAD(thread)                            \
-  do {                                                           \
-    if ((thread) == mozilla::jni::CallingThread::GECKO) {        \
-      MOZ_RELEASE_ASSERT(::NS_IsMainThread());                   \
-    } else if ((thread) == mozilla::jni::CallingThread::UI) {    \
-      const bool isOnUiThread = (GetUIThreadId() == ::gettid()); \
-      MOZ_RELEASE_ASSERT(isOnUiThread);                          \
-    }                                                            \
-  } while (0)
-||||||| merged common ancestors
-#define MOZ_ASSERT_JNI_THREAD(thread) \
-    do { \
-        if ((thread) == mozilla::jni::CallingThread::GECKO) { \
-            MOZ_RELEASE_ASSERT(::NS_IsMainThread()); \
-        } else if ((thread) == mozilla::jni::CallingThread::UI) { \
-            const bool isOnUiThread = (GetUIThreadId() == ::gettid()); \
-            MOZ_RELEASE_ASSERT(isOnUiThread); \
-        } \
-    } while (0)
-=======
 #  define MOZ_ASSERT_JNI_THREAD(thread)                            \
     do {                                                           \
       if ((thread) == mozilla::jni::CallingThread::GECKO) {        \
@@ -114,19 +93,10 @@ JNIEnv* GetEnvForThread();
         MOZ_RELEASE_ASSERT(isOnUiThread);                          \
       }                                                            \
     } while (0)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_ASSERT_JNI_THREAD(thread) \
-  do {                                \
-  } while (0)
-||||||| merged common ancestors
-#define MOZ_ASSERT_JNI_THREAD(thread) do {} while (0)
-=======
 #  define MOZ_ASSERT_JNI_THREAD(thread) \
     do {                                \
     } while (0)
->>>>>>> upstream-releases
 #endif
 
 bool ThrowException(JNIEnv* aEnv, const char* aClass, const char* aMessage);

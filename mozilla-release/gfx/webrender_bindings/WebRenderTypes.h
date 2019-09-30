@@ -134,13 +134,6 @@ class NonDefaultRenderRootArray : public Array<T, kRenderRootCount - 1> {
     return (*(Super*)this)[(size_t)aIndex - 1];
   }
 
-<<<<<<< HEAD
-inline Maybe<wr::ImageFormat> SurfaceFormatToImageFormat(
-    gfx::SurfaceFormat aFormat) {
-||||||| merged common ancestors
-inline Maybe<wr::ImageFormat>
-SurfaceFormatToImageFormat(gfx::SurfaceFormat aFormat) {
-=======
   const T& operator[](wr::RenderRoot aIndex) const {
     return (*(Super*)this)[(size_t)aIndex - 1];
   }
@@ -155,7 +148,6 @@ inline DebugFlags NewDebugFlags(uint32_t aFlags) { return {aFlags}; }
 
 inline Maybe<wr::ImageFormat> SurfaceFormatToImageFormat(
     gfx::SurfaceFormat aFormat) {
->>>>>>> upstream-releases
   switch (aFormat) {
     case gfx::SurfaceFormat::R8G8B8X8:
       // WebRender not support RGBX8. Assert here.
@@ -313,7 +305,6 @@ static inline FontRenderMode ToFontRenderMode(gfx::AntialiasMode aMode,
       return FontRenderMode::Alpha;
     case gfx::AntialiasMode::SUBPIXEL:
     default:
-<<<<<<< HEAD
       return aPermitSubpixelAA ? FontRenderMode::Subpixel
                                : FontRenderMode::Alpha;
   }
@@ -357,97 +348,6 @@ static inline MixBlendMode ToMixBlendMode(gfx::CompositionOp compositionOp) {
 }
 
 static inline wr::ColorF ToColorF(const gfx::Color& color) {
-||||||| merged common ancestors
-      return aPermitSubpixelAA ? FontRenderMode::Subpixel : FontRenderMode::Alpha;
-  }
-}
-
-static inline MixBlendMode ToMixBlendMode(gfx::CompositionOp compositionOp)
-{
-  switch (compositionOp)
-  {
-      case gfx::CompositionOp::OP_MULTIPLY:
-        return MixBlendMode::Multiply;
-      case gfx::CompositionOp::OP_SCREEN:
-        return MixBlendMode::Screen;
-      case gfx::CompositionOp::OP_OVERLAY:
-        return MixBlendMode::Overlay;
-      case gfx::CompositionOp::OP_DARKEN:
-        return MixBlendMode::Darken;
-      case gfx::CompositionOp::OP_LIGHTEN:
-        return MixBlendMode::Lighten;
-      case gfx::CompositionOp::OP_COLOR_DODGE:
-        return MixBlendMode::ColorDodge;
-      case gfx::CompositionOp::OP_COLOR_BURN:
-        return MixBlendMode::ColorBurn;
-      case gfx::CompositionOp::OP_HARD_LIGHT:
-        return MixBlendMode::HardLight;
-      case gfx::CompositionOp::OP_SOFT_LIGHT:
-        return MixBlendMode::SoftLight;
-      case gfx::CompositionOp::OP_DIFFERENCE:
-        return MixBlendMode::Difference;
-      case gfx::CompositionOp::OP_EXCLUSION:
-        return MixBlendMode::Exclusion;
-      case gfx::CompositionOp::OP_HUE:
-        return MixBlendMode::Hue;
-      case gfx::CompositionOp::OP_SATURATION:
-        return MixBlendMode::Saturation;
-      case gfx::CompositionOp::OP_COLOR:
-        return MixBlendMode::Color;
-      case gfx::CompositionOp::OP_LUMINOSITY:
-        return MixBlendMode::Luminosity;
-      default:
-        return MixBlendMode::Normal;
-  }
-}
-
-static inline wr::ColorF ToColorF(const gfx::Color& color)
-{
-=======
-      return aPermitSubpixelAA ? FontRenderMode::Subpixel
-                               : FontRenderMode::Alpha;
-  }
-}
-
-static inline MixBlendMode ToMixBlendMode(gfx::CompositionOp compositionOp) {
-  switch (compositionOp) {
-    case gfx::CompositionOp::OP_MULTIPLY:
-      return MixBlendMode::Multiply;
-    case gfx::CompositionOp::OP_SCREEN:
-      return MixBlendMode::Screen;
-    case gfx::CompositionOp::OP_OVERLAY:
-      return MixBlendMode::Overlay;
-    case gfx::CompositionOp::OP_DARKEN:
-      return MixBlendMode::Darken;
-    case gfx::CompositionOp::OP_LIGHTEN:
-      return MixBlendMode::Lighten;
-    case gfx::CompositionOp::OP_COLOR_DODGE:
-      return MixBlendMode::ColorDodge;
-    case gfx::CompositionOp::OP_COLOR_BURN:
-      return MixBlendMode::ColorBurn;
-    case gfx::CompositionOp::OP_HARD_LIGHT:
-      return MixBlendMode::HardLight;
-    case gfx::CompositionOp::OP_SOFT_LIGHT:
-      return MixBlendMode::SoftLight;
-    case gfx::CompositionOp::OP_DIFFERENCE:
-      return MixBlendMode::Difference;
-    case gfx::CompositionOp::OP_EXCLUSION:
-      return MixBlendMode::Exclusion;
-    case gfx::CompositionOp::OP_HUE:
-      return MixBlendMode::Hue;
-    case gfx::CompositionOp::OP_SATURATION:
-      return MixBlendMode::Saturation;
-    case gfx::CompositionOp::OP_COLOR:
-      return MixBlendMode::Color;
-    case gfx::CompositionOp::OP_LUMINOSITY:
-      return MixBlendMode::Luminosity;
-    default:
-      return MixBlendMode::Normal;
-  }
-}
-
-static inline wr::ColorF ToColorF(const gfx::Color& color) {
->>>>>>> upstream-releases
   wr::ColorF c;
   c.r = color.r;
   c.g = color.g;
@@ -837,16 +737,8 @@ void Assign_WrVecU8(wr::WrVecU8& aVec, mozilla::ipc::ByteBuf&& aOther);
 template <typename T>
 struct Vec;
 
-<<<<<<< HEAD
-template <>
-struct Vec<uint8_t> {
-||||||| merged common ancestors
-template<>
-struct Vec<uint8_t> {
-=======
 template <>
 struct Vec<uint8_t> final {
->>>>>>> upstream-releases
   wr::WrVecU8 inner;
   Vec() { SetEmpty(); }
   Vec(Vec&) = delete;
@@ -963,114 +855,17 @@ struct BuiltDisplayList {
   wr::BuiltDisplayListDescriptor dl_desc;
 };
 
-<<<<<<< HEAD
-static inline wr::WrFilterOpType ToWrFilterOpType(uint32_t type) {
-  switch (type) {
-    case NS_STYLE_FILTER_BLUR:
-      return wr::WrFilterOpType::Blur;
-    case NS_STYLE_FILTER_BRIGHTNESS:
-      return wr::WrFilterOpType::Brightness;
-    case NS_STYLE_FILTER_CONTRAST:
-      return wr::WrFilterOpType::Contrast;
-    case NS_STYLE_FILTER_GRAYSCALE:
-      return wr::WrFilterOpType::Grayscale;
-    case NS_STYLE_FILTER_HUE_ROTATE:
-      return wr::WrFilterOpType::HueRotate;
-    case NS_STYLE_FILTER_INVERT:
-      return wr::WrFilterOpType::Invert;
-    case NS_STYLE_FILTER_OPACITY:
-      return wr::WrFilterOpType::Opacity;
-    case NS_STYLE_FILTER_SATURATE:
-      return wr::WrFilterOpType::Saturate;
-    case NS_STYLE_FILTER_SEPIA:
-      return wr::WrFilterOpType::Sepia;
-    case NS_STYLE_FILTER_DROP_SHADOW:
-      return wr::WrFilterOpType::DropShadow;
-  }
-  MOZ_ASSERT_UNREACHABLE("Tried to convert unknown filter type.");
-  return wr::WrFilterOpType::Grayscale;
-}
-
-extern WrClipId RootScrollNode();
-
-||||||| merged common ancestors
-static inline wr::WrFilterOpType ToWrFilterOpType(uint32_t type) {
-  switch (type) {
-    case NS_STYLE_FILTER_BLUR:
-      return wr::WrFilterOpType::Blur;
-    case NS_STYLE_FILTER_BRIGHTNESS:
-      return wr::WrFilterOpType::Brightness;
-    case NS_STYLE_FILTER_CONTRAST:
-      return wr::WrFilterOpType::Contrast;
-    case NS_STYLE_FILTER_GRAYSCALE:
-      return wr::WrFilterOpType::Grayscale;
-    case NS_STYLE_FILTER_HUE_ROTATE:
-      return wr::WrFilterOpType::HueRotate;
-    case NS_STYLE_FILTER_INVERT:
-      return wr::WrFilterOpType::Invert;
-    case NS_STYLE_FILTER_OPACITY:
-      return wr::WrFilterOpType::Opacity;
-    case NS_STYLE_FILTER_SATURATE:
-      return wr::WrFilterOpType::Saturate;
-    case NS_STYLE_FILTER_SEPIA:
-      return wr::WrFilterOpType::Sepia;
-    case NS_STYLE_FILTER_DROP_SHADOW:
-      return wr::WrFilterOpType::DropShadow;
-  }
-  MOZ_ASSERT_UNREACHABLE("Tried to convert unknown filter type.");
-  return wr::WrFilterOpType::Grayscale;
-}
-
-// Corresponds to an "internal" webrender clip id. That is, a
-// ClipId::Clip(x,pipeline_id) maps to a WrClipId{x}. We use a struct wrapper
-// instead of a typedef so that this is a distinct type from ids generated
-// by scroll and position:sticky nodes and the compiler will catch accidental
-// conversions between them.
-struct WrClipId {
-  size_t id;
-
-  bool operator==(const WrClipId& other) const {
-    return id == other.id;
-  }
-
-  bool operator!=(const WrClipId& other) const {
-    return !(*this == other);
-  }
-
-  static WrClipId RootScrollNode();
-
-  // Helper struct that allows this class to be used as a key in
-  // std::unordered_map like so:
-  //   std::unordered_map<WrClipId, ValueType, WrClipId::HashFn> myMap;
-  struct HashFn {
-    std::size_t operator()(const WrClipId& aKey) const
-    {
-      return std::hash<size_t>{}(aKey.id);
-    }
-  };
-};
-
-=======
->>>>>>> upstream-releases
 // Corresponds to a clip id for a clip chain in webrender. Similar to
 // WrClipId but a separate struct so we don't get them mixed up in C++.
 struct WrClipChainId {
   uint64_t id;
 
-<<<<<<< HEAD
-  bool operator==(const WrClipChainId& other) const { return id == other.id; }
-||||||| merged common ancestors
-  bool operator==(const WrClipChainId& other) const {
-    return id == other.id;
-  }
-=======
   bool operator==(const WrClipChainId& other) const { return id == other.id; }
 
   static WrClipChainId Empty() {
     WrClipChainId id = {0};
     return id;
   }
->>>>>>> upstream-releases
 };
 
 WrSpaceAndClip RootScrollNode();
@@ -1084,15 +879,8 @@ enum class WebRenderError : int8_t {
   Sentinel /* this must be last for serialization purposes. */
 };
 
-<<<<<<< HEAD
-static inline wr::WrYuvColorSpace ToWrYuvColorSpace(
-    YUVColorSpace aYUVColorSpace) {
-||||||| merged common ancestors
-static inline wr::WrYuvColorSpace ToWrYuvColorSpace(YUVColorSpace aYUVColorSpace) {
-=======
 static inline wr::WrYuvColorSpace ToWrYuvColorSpace(
     gfx::YUVColorSpace aYUVColorSpace) {
->>>>>>> upstream-releases
   switch (aYUVColorSpace) {
     case gfx::YUVColorSpace::BT601:
       return wr::WrYuvColorSpace::Rec601;
@@ -1129,22 +917,6 @@ static inline wr::SyntheticItalics DegreesToSyntheticItalics(float aDegrees) {
   return synthetic_italics;
 }
 
-<<<<<<< HEAD
-}  // namespace wr
-}  // namespace mozilla
-
-namespace std {
-template <>
-struct hash<mozilla::wr::WrClipId> {
-  std::size_t operator()(mozilla::wr::WrClipId const& aKey) const noexcept {
-    return std::hash<size_t>{}(aKey.id);
-  }
-};
-}  // namespace std
-||||||| merged common ancestors
-} // namespace wr
-} // namespace mozilla
-=======
 }  // namespace wr
 }  // namespace mozilla
 
@@ -1156,6 +928,5 @@ struct hash<mozilla::wr::WrSpatialId> {
   }
 };
 }  // namespace std
->>>>>>> upstream-releases
 
 #endif /* GFX_WEBRENDERTYPES_H */

@@ -59,17 +59,6 @@ SourceMapURLService.prototype._getLoadingPromise = function() {
       }
       this._stylesheetsFront = await this._target.getFront("stylesheets");
       this._stylesheetsFront.on("stylesheet-added", this._onNewStyleSheet);
-<<<<<<< HEAD
-      const styleSheetsLoadingPromise =
-          this._stylesheetsFront.getStyleSheets().then(sheets => {
-            sheets.forEach(this._registerNewStyleSheet, this);
-          }, () => {
-||||||| merged common ancestors
-      const styleSheetsLoadingPromise =
-          this._stylesheetsFront.getStyleSheets().then(sheets => {
-            sheets.forEach(this._onNewStyleSheet);
-          }, () => {
-=======
       const styleSheetsLoadingPromise = this._stylesheetsFront
         .getStyleSheets()
         .then(
@@ -77,25 +66,11 @@ SourceMapURLService.prototype._getLoadingPromise = function() {
             sheets.forEach(this._registerNewStyleSheet, this);
           },
           () => {
->>>>>>> upstream-releases
             // Ignore any protocol-based errors.
           }
         );
 
       // Start fetching the sources now.
-<<<<<<< HEAD
-      const loadingPromise = this._toolbox.threadClient.getSources().then(({sources}) => {
-        // Ignore errors.  Register the sources we got; we can't rely on
-        // an event to arrive if the source actor already existed.
-        for (const source of sources) {
-          this._registerNewSource(source);
-||||||| merged common ancestors
-      const loadingPromise = this._toolbox.threadClient.getSources().then(({sources}) => {
-        // Ignore errors.  Register the sources we got; we can't rely on
-        // an event to arrive if the source actor already existed.
-        for (const source of sources) {
-          this._onSourceUpdated({source});
-=======
       const loadingPromise = this._toolbox.threadClient.getSources().then(
         ({ sources }) => {
           // Ignore errors.  Register the sources we got; we can't rely on
@@ -106,7 +81,6 @@ SourceMapURLService.prototype._getLoadingPromise = function() {
         },
         e => {
           // Also ignore any protocol-based errors.
->>>>>>> upstream-releases
         }
       );
 

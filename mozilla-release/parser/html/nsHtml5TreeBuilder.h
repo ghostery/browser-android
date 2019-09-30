@@ -309,17 +309,8 @@ class nsHtml5TreeBuilder : public nsAHtml5TreeBuilderState {
   int32_t listPtr;
   nsIContentHandle* formPointer;
   nsIContentHandle* headPointer;
-<<<<<<< HEAD
-  nsIContentHandle* deepTreeSurrogateParent;
 
  protected:
-||||||| merged common ancestors
-  nsIContentHandle* deepTreeSurrogateParent;
-protected:
-=======
-
- protected:
->>>>>>> upstream-releases
   autoJArray<char16_t, int32_t> charBuffer;
   int32_t charBufferLen;
 

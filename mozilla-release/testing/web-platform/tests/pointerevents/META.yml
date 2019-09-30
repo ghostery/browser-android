@@ -2,12 +2,5 @@ spec: https://w3c.github.io/pointerevents/
 suggested_reviewers:
   - Steditor
   - plehegar
-<<<<<<< HEAD
-  - scottgonzalez
-||||||| merged common ancestors
-  - scottgonzalez
-  - staktrace
-=======
->>>>>>> upstream-releases
   - RByers
   - NavidZ

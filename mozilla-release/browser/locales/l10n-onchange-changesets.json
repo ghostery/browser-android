@@ -1,26 +1,6 @@
 {
     "en-CA": {
         "platforms": [
-<<<<<<< HEAD
-            "linux",
-            "linux-devedition",
-            "linux64",
-            "linux64-devedition",
-            "macosx64",
-            "macosx64-devedition",
-            "win32",
-            "win32-devedition",
-            "win64",
-            "win64-devedition"
-        ],
-||||||| merged common ancestors
-            "linux", 
-            "linux64", 
-            "macosx64", 
-            "win32", 
-            "win64"
-        ], 
-=======
             "linux",
             "linux-devedition",
             "linux64",
@@ -34,31 +14,10 @@
             "win64-aarch64-devedition",
             "win64-devedition"
         ],
->>>>>>> upstream-releases
         "revision": "default"
     },
     "he": {
         "platforms": [
-<<<<<<< HEAD
-            "linux",
-            "linux-devedition",
-            "linux64",
-            "linux64-devedition",
-            "macosx64",
-            "macosx64-devedition",
-            "win32",
-            "win32-devedition",
-            "win64",
-            "win64-devedition"
-        ],
-||||||| merged common ancestors
-            "linux", 
-            "linux64", 
-            "macosx64", 
-            "win32", 
-            "win64"
-        ], 
-=======
             "linux",
             "linux-devedition",
             "linux64",
@@ -72,31 +31,10 @@
             "win64-aarch64-devedition",
             "win64-devedition"
         ],
->>>>>>> upstream-releases
         "revision": "default"
     },
     "it": {
         "platforms": [
-<<<<<<< HEAD
-            "linux",
-            "linux-devedition",
-            "linux64",
-            "linux64-devedition",
-            "macosx64",
-            "macosx64-devedition",
-            "win32",
-            "win32-devedition",
-            "win64",
-            "win64-devedition"
-        ],
-||||||| merged common ancestors
-            "linux", 
-            "linux64", 
-            "macosx64", 
-            "win32", 
-            "win64"
-        ], 
-=======
             "linux",
             "linux-devedition",
             "linux64",
@@ -110,28 +48,10 @@
             "win64-aarch64-devedition",
             "win64-devedition"
         ],
->>>>>>> upstream-releases
         "revision": "default"
     },
     "ja": {
         "platforms": [
-<<<<<<< HEAD
-            "linux",
-            "linux-devedition",
-            "linux64",
-            "linux64-devedition",
-            "win32",
-            "win32-devedition",
-            "win64",
-            "win64-devedition"
-        ],
-||||||| merged common ancestors
-            "linux", 
-            "linux64", 
-            "win32", 
-            "win64"
-        ], 
-=======
             "linux",
             "linux-devedition",
             "linux64",
@@ -143,7 +63,6 @@
             "win64-aarch64-devedition",
             "win64-devedition"
         ],
->>>>>>> upstream-releases
         "revision": "default"
     },
     "ja-JP-mac": {

@@ -19,13 +19,8 @@
 class GrClip;
 struct GrFPArgs;
 class GrFragmentProcessor;
-<<<<<<< HEAD
-class GrPaint;
-||||||| merged common ancestors
-=======
 class GrPaint;
 class GrRecordingContext;
->>>>>>> upstream-releases
 class GrRenderTarget;
 class GrRenderTargetContext;
 class GrResourceProvider;
@@ -113,16 +108,8 @@ public:
      *  Try to directly render the mask filter into the target. Returns true if drawing was
      *  successful. If false is returned then paint is unmodified.
      */
-<<<<<<< HEAD
-    virtual bool directFilterMaskGPU(GrContext*,
-                                     GrRenderTargetContext*,
-||||||| merged common ancestors
-    virtual bool directFilterMaskGPU(GrContext*,
-                                     GrRenderTargetContext* renderTargetContext,
-=======
     virtual bool directFilterMaskGPU(GrRecordingContext*,
                                      GrRenderTargetContext*,
->>>>>>> upstream-releases
                                      GrPaint&& paint,
                                      const GrClip&,
                                      const SkMatrix& viewMatrix,

@@ -198,44 +198,6 @@ txStylesheetSink::DidBuildModel(bool aTerminated) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-txStylesheetSink::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-                                  nsIInputStream* aInputStream,
-                                  uint64_t aOffset, uint32_t aCount) {
-  if (!mCheckedForXML) {
-    nsCOMPtr<nsIDTD> dtd;
-    mParser->GetDTD(getter_AddRefs(dtd));
-    if (dtd) {
-      mCheckedForXML = true;
-      if (!(dtd->GetType() & NS_IPARSER_FLAG_XML)) {
-        nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
-        nsAutoString spec;
-        getSpec(channel, spec);
-        mCompiler->cancel(NS_ERROR_XSLT_WRONG_MIME_TYPE, nullptr, spec.get());
-
-        return NS_ERROR_XSLT_WRONG_MIME_TYPE;
-      }
-||||||| merged common ancestors
-txStylesheetSink::OnDataAvailable(nsIRequest *aRequest, nsISupports *aContext,
-                                  nsIInputStream *aInputStream,
-                                  uint64_t aOffset, uint32_t aCount)
-{
-    if (!mCheckedForXML) {
-        nsCOMPtr<nsIDTD> dtd;
-        mParser->GetDTD(getter_AddRefs(dtd));
-        if (dtd) {
-            mCheckedForXML = true;
-            if (!(dtd->GetType() & NS_IPARSER_FLAG_XML)) {
-                nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
-                nsAutoString spec;
-                getSpec(channel, spec);
-                mCompiler->cancel(NS_ERROR_XSLT_WRONG_MIME_TYPE, nullptr,
-                                  spec.get());
-
-                return NS_ERROR_XSLT_WRONG_MIME_TYPE;
-            }
-        }
-=======
 txStylesheetSink::OnDataAvailable(nsIRequest* aRequest,
                                   nsIInputStream* aInputStream,
                                   uint64_t aOffset, uint32_t aCount) {
@@ -252,55 +214,13 @@ txStylesheetSink::OnDataAvailable(nsIRequest* aRequest,
 
         return NS_ERROR_XSLT_WRONG_MIME_TYPE;
       }
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  return mListener->OnDataAvailable(aRequest, mParser, aInputStream, aOffset,
-                                    aCount);
-||||||| merged common ancestors
-    return mListener->OnDataAvailable(aRequest, mParser, aInputStream,
-                                      aOffset, aCount);
-=======
   return mListener->OnDataAvailable(aRequest, aInputStream, aOffset, aCount);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-txStylesheetSink::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-  int32_t charsetSource = kCharsetFromDocTypeDefault;
-
-  nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
-
-  // check channel's charset...
-  const Encoding* encoding = nullptr;
-  nsAutoCString charsetVal;
-  if (NS_SUCCEEDED(channel->GetContentCharset(charsetVal))) {
-    encoding = Encoding::ForLabel(charsetVal);
-    if (encoding) {
-      charsetSource = kCharsetFromChannel;
-||||||| merged common ancestors
-txStylesheetSink::OnStartRequest(nsIRequest *aRequest, nsISupports *aContext)
-{
-    int32_t charsetSource = kCharsetFromDocTypeDefault;
-
-    nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
-
-    // check channel's charset...
-    const Encoding* encoding = nullptr;
-    nsAutoCString charsetVal;
-    if (NS_SUCCEEDED(channel->GetContentCharset(charsetVal))) {
-        encoding = Encoding::ForLabel(charsetVal);
-        if (encoding) {
-            charsetSource = kCharsetFromChannel;
-        }
-    }
-
-    if (!encoding) {
-        encoding = UTF_8_ENCODING;
-=======
 txStylesheetSink::OnStartRequest(nsIRequest* aRequest) {
   int32_t charsetSource = kCharsetFromDocTypeDefault;
 
@@ -313,7 +233,6 @@ txStylesheetSink::OnStartRequest(nsIRequest* aRequest) {
     encoding = Encoding::ForLabel(charsetVal);
     if (encoding) {
       charsetSource = kCharsetFromChannel;
->>>>>>> upstream-releases
     }
   }
 
@@ -346,62 +265,10 @@ txStylesheetSink::OnStartRequest(nsIRequest* aRequest) {
     }
   }
 
-<<<<<<< HEAD
-  return mListener->OnStartRequest(aRequest, mParser);
-||||||| merged common ancestors
-    return mListener->OnStartRequest(aRequest, mParser);
-=======
   return mListener->OnStartRequest(aRequest);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-txStylesheetSink::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                                nsresult aStatusCode) {
-  bool success = true;
-
-  nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(aRequest);
-  if (httpChannel) {
-    Unused << httpChannel->GetRequestSucceeded(&success);
-  }
-
-  nsresult result = aStatusCode;
-  if (!success) {
-    // XXX We sometimes want to use aStatusCode here, but the parser resets
-    //     it to NS_ERROR_NOINTERFACE because we don't implement
-    //     nsIHTMLContentSink.
-    result = NS_ERROR_XSLT_NETWORK_ERROR;
-  } else if (!mCheckedForXML) {
-    nsCOMPtr<nsIDTD> dtd;
-    mParser->GetDTD(getter_AddRefs(dtd));
-    if (dtd && !(dtd->GetType() & NS_IPARSER_FLAG_XML)) {
-      result = NS_ERROR_XSLT_WRONG_MIME_TYPE;
-||||||| merged common ancestors
-txStylesheetSink::OnStopRequest(nsIRequest *aRequest, nsISupports *aContext,
-                                nsresult aStatusCode)
-{
-    bool success = true;
-
-    nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(aRequest);
-    if (httpChannel) {
-        Unused << httpChannel->GetRequestSucceeded(&success);
-    }
-
-    nsresult result = aStatusCode;
-    if (!success) {
-        // XXX We sometimes want to use aStatusCode here, but the parser resets
-        //     it to NS_ERROR_NOINTERFACE because we don't implement
-        //     nsIHTMLContentSink.
-        result = NS_ERROR_XSLT_NETWORK_ERROR;
-    }
-    else if (!mCheckedForXML) {
-        nsCOMPtr<nsIDTD> dtd;
-        mParser->GetDTD(getter_AddRefs(dtd));
-        if (dtd && !(dtd->GetType() & NS_IPARSER_FLAG_XML)) {
-            result = NS_ERROR_XSLT_WRONG_MIME_TYPE;
-        }
-=======
 txStylesheetSink::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
   bool success = true;
 
@@ -421,35 +288,9 @@ txStylesheetSink::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
     mParser->GetDTD(getter_AddRefs(dtd));
     if (dtd && !(dtd->GetType() & NS_IPARSER_FLAG_XML)) {
       result = NS_ERROR_XSLT_WRONG_MIME_TYPE;
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  if (NS_FAILED(result)) {
-    nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
-    nsAutoString spec;
-    getSpec(channel, spec);
-    mCompiler->cancel(result, nullptr, spec.get());
-  }
-
-  nsresult rv = mListener->OnStopRequest(aRequest, mParser, aStatusCode);
-  mListener = nullptr;
-  mParser = nullptr;
-  return rv;
-||||||| merged common ancestors
-    if (NS_FAILED(result)) {
-        nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
-        nsAutoString spec;
-        getSpec(channel, spec);
-        mCompiler->cancel(result, nullptr, spec.get());
-    }
-
-    nsresult rv = mListener->OnStopRequest(aRequest, mParser, aStatusCode);
-    mListener = nullptr;
-    mParser = nullptr;
-    return rv;
-=======
   if (NS_FAILED(result)) {
     nsCOMPtr<nsIChannel> channel = do_QueryInterface(aRequest);
     nsAutoString spec;
@@ -461,7 +302,6 @@ txStylesheetSink::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
   mListener = nullptr;
   mParser = nullptr;
   return rv;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -487,23 +327,10 @@ txStylesheetSink::GetInterface(const nsIID& aIID, void** aResult) {
   return NS_ERROR_NO_INTERFACE;
 }
 
-<<<<<<< HEAD
-class txCompileObserver final : public txACompileObserver {
- public:
-  txCompileObserver(txMozillaXSLTProcessor* aProcessor,
-                    nsIDocument* aLoaderDocument);
-||||||| merged common ancestors
-class txCompileObserver final : public txACompileObserver
-{
-public:
-    txCompileObserver(txMozillaXSLTProcessor* aProcessor,
-                      nsIDocument* aLoaderDocument);
-=======
 class txCompileObserver final : public txACompileObserver {
  public:
   txCompileObserver(txMozillaXSLTProcessor* aProcessor,
                     Document* aLoaderDocument);
->>>>>>> upstream-releases
 
   TX_DECL_ACOMPILEOBSERVER
   NS_INLINE_DECL_REFCOUNTING(txCompileObserver, override)
@@ -512,19 +339,9 @@ class txCompileObserver final : public txACompileObserver {
                      nsIPrincipal* aSourcePrincipal,
                      ReferrerPolicy aReferrerPolicy);
 
-<<<<<<< HEAD
- private:
-  RefPtr<txMozillaXSLTProcessor> mProcessor;
-  nsCOMPtr<nsIDocument> mLoaderDocument;
-||||||| merged common ancestors
-private:
-    RefPtr<txMozillaXSLTProcessor> mProcessor;
-    nsCOMPtr<nsIDocument> mLoaderDocument;
-=======
  private:
   RefPtr<txMozillaXSLTProcessor> mProcessor;
   nsCOMPtr<Document> mLoaderDocument;
->>>>>>> upstream-releases
 
   // This exists solely to suppress a warning from nsDerivedSafe
   txCompileObserver();
@@ -534,56 +351,6 @@ private:
 };
 
 txCompileObserver::txCompileObserver(txMozillaXSLTProcessor* aProcessor,
-<<<<<<< HEAD
-                                     nsIDocument* aLoaderDocument)
-    : mProcessor(aProcessor), mLoaderDocument(aLoaderDocument) {}
-
-nsresult txCompileObserver::loadURI(const nsAString& aUri,
-                                    const nsAString& aReferrerUri,
-                                    ReferrerPolicy aReferrerPolicy,
-                                    txStylesheetCompiler* aCompiler) {
-  if (mProcessor->IsLoadDisabled()) {
-    return NS_ERROR_XSLT_LOAD_BLOCKED_ERROR;
-  }
-
-  nsCOMPtr<nsIURI> uri;
-  nsresult rv = NS_NewURI(getter_AddRefs(uri), aUri);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nsCOMPtr<nsIURI> referrerUri;
-  rv = NS_NewURI(getter_AddRefs(referrerUri), aReferrerUri);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  OriginAttributes attrs;
-  nsCOMPtr<nsIPrincipal> referrerPrincipal =
-||||||| merged common ancestors
-                                     nsIDocument* aLoaderDocument)
-    : mProcessor(aProcessor),
-      mLoaderDocument(aLoaderDocument)
-{
-}
-
-nsresult
-txCompileObserver::loadURI(const nsAString& aUri,
-                           const nsAString& aReferrerUri,
-                           ReferrerPolicy aReferrerPolicy,
-                           txStylesheetCompiler* aCompiler)
-{
-    if (mProcessor->IsLoadDisabled()) {
-        return NS_ERROR_XSLT_LOAD_BLOCKED_ERROR;
-    }
-
-    nsCOMPtr<nsIURI> uri;
-    nsresult rv = NS_NewURI(getter_AddRefs(uri), aUri);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nsCOMPtr<nsIURI> referrerUri;
-    rv = NS_NewURI(getter_AddRefs(referrerUri), aReferrerUri);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    OriginAttributes attrs;
-    nsCOMPtr<nsIPrincipal> referrerPrincipal =
-=======
                                      Document* aLoaderDocument)
     : mProcessor(aProcessor), mLoaderDocument(aLoaderDocument) {}
 
@@ -605,7 +372,6 @@ nsresult txCompileObserver::loadURI(const nsAString& aUri,
 
   OriginAttributes attrs;
   nsCOMPtr<nsIPrincipal> referrerPrincipal =
->>>>>>> upstream-releases
       BasePrincipal::CreateCodebasePrincipal(referrerUri, attrs);
   NS_ENSURE_TRUE(referrerPrincipal, NS_ERROR_FAILURE);
 
@@ -623,50 +389,6 @@ void txCompileObserver::onDoneCompiling(txStylesheetCompiler* aCompiler,
   }
 }
 
-<<<<<<< HEAD
-nsresult txCompileObserver::startLoad(nsIURI* aUri,
-                                      txStylesheetCompiler* aCompiler,
-                                      nsIPrincipal* aReferrerPrincipal,
-                                      ReferrerPolicy aReferrerPolicy) {
-  nsCOMPtr<nsILoadGroup> loadGroup = mLoaderDocument->GetDocumentLoadGroup();
-  if (!loadGroup) {
-    return NS_ERROR_FAILURE;
-  }
-
-  nsCOMPtr<nsIChannel> channel;
-  nsresult rv = NS_NewChannelWithTriggeringPrincipal(
-      getter_AddRefs(channel), aUri, mLoaderDocument,
-      aReferrerPrincipal,  // triggeringPrincipal
-      nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS, nsIContentPolicy::TYPE_XSLT,
-      nullptr,  // aPerformanceStorage
-      loadGroup);
-
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  channel->SetContentType(NS_LITERAL_CSTRING("text/xml"));
-
-  nsCOMPtr<nsIHttpChannel> httpChannel(do_QueryInterface(channel));
-  if (httpChannel) {
-    DebugOnly<nsresult> rv;
-    rv = httpChannel->SetRequestHeader(NS_LITERAL_CSTRING("Accept"),
-                                       NS_LITERAL_CSTRING("*/*"), false);
-    MOZ_ASSERT(NS_SUCCEEDED(rv));
-
-    nsCOMPtr<nsIURI> referrerURI;
-    aReferrerPrincipal->GetURI(getter_AddRefs(referrerURI));
-    if (referrerURI) {
-      rv = httpChannel->SetReferrerWithPolicy(referrerURI, aReferrerPolicy);
-      MOZ_ASSERT(NS_SUCCEEDED(rv));
-||||||| merged common ancestors
-nsresult
-txCompileObserver::startLoad(nsIURI* aUri, txStylesheetCompiler* aCompiler,
-                             nsIPrincipal* aReferrerPrincipal,
-                             ReferrerPolicy aReferrerPolicy)
-{
-    nsCOMPtr<nsILoadGroup> loadGroup = mLoaderDocument->GetDocumentLoadGroup();
-    if (!loadGroup) {
-        return NS_ERROR_FAILURE;
-=======
 nsresult txCompileObserver::startLoad(nsIURI* aUri,
                                       txStylesheetCompiler* aCompiler,
                                       nsIPrincipal* aReferrerPrincipal,
@@ -698,7 +420,6 @@ nsresult txCompileObserver::startLoad(nsIURI* aUri,
           new dom::ReferrerInfo(referrerURI, aReferrerPolicy);
       rv = httpChannel->SetReferrerInfoWithoutClone(referrerInfo);
       MOZ_ASSERT(NS_SUCCEEDED(rv));
->>>>>>> upstream-releases
     }
   }
 
@@ -714,41 +435,13 @@ nsresult txCompileObserver::startLoad(nsIURI* aUri,
   parser->SetContentSink(sink);
   parser->Parse(aUri);
 
-<<<<<<< HEAD
-  return channel->AsyncOpen2(sink);
-||||||| merged common ancestors
-    RefPtr<txStylesheetSink> sink = new txStylesheetSink(aCompiler, parser);
-    NS_ENSURE_TRUE(sink, NS_ERROR_OUT_OF_MEMORY);
-
-    channel->SetNotificationCallbacks(sink);
-
-    parser->SetCommand(kLoadAsData);
-    parser->SetContentSink(sink);
-    parser->Parse(aUri);
-
-    return channel->AsyncOpen2(sink);
-=======
   return channel->AsyncOpen(sink);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult TX_LoadSheet(nsIURI* aUri, txMozillaXSLTProcessor* aProcessor,
-                      nsIDocument* aLoaderDocument,
-                      ReferrerPolicy aReferrerPolicy) {
-  nsIPrincipal* principal = aLoaderDocument->NodePrincipal();
-||||||| merged common ancestors
-nsresult
-TX_LoadSheet(nsIURI* aUri, txMozillaXSLTProcessor* aProcessor,
-             nsIDocument* aLoaderDocument, ReferrerPolicy aReferrerPolicy)
-{
-    nsIPrincipal* principal = aLoaderDocument->NodePrincipal();
-=======
 nsresult TX_LoadSheet(nsIURI* aUri, txMozillaXSLTProcessor* aProcessor,
                       Document* aLoaderDocument,
                       ReferrerPolicy aReferrerPolicy) {
   nsIPrincipal* principal = aLoaderDocument->NodePrincipal();
->>>>>>> upstream-releases
 
   nsAutoCString spec;
   aUri->GetSpec(spec);
@@ -856,38 +549,6 @@ nsresult txSyncCompileObserver::loadURI(const nsAString& aUri,
   rv = NS_NewURI(getter_AddRefs(referrerUri), aReferrerUri);
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIPrincipal> referrerPrincipal =
-      BasePrincipal::CreateCodebasePrincipal(referrerUri, OriginAttributes());
-  NS_ENSURE_TRUE(referrerPrincipal, NS_ERROR_FAILURE);
-
-  // This is probably called by js, a loadGroup for the channel doesn't
-  // make sense.
-  nsCOMPtr<nsINode> source;
-  if (mProcessor) {
-    source = mProcessor->GetSourceContentModel();
-  }
-  nsAutoSyncOperation sync(source ? source->OwnerDoc() : nullptr);
-  nsCOMPtr<nsIDocument> document;
-
-  rv = nsSyncLoadService::LoadDocument(
-      uri, nsIContentPolicy::TYPE_XSLT, referrerPrincipal,
-      nsILoadInfo::SEC_REQUIRE_CORS_DATA_INHERITS, nullptr, false,
-      aReferrerPolicy, getter_AddRefs(document));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  rv = handleNode(document, aCompiler);
-  if (NS_FAILED(rv)) {
-    nsAutoCString spec;
-    uri->GetSpec(spec);
-    aCompiler->cancel(rv, nullptr, NS_ConvertUTF8toUTF16(spec).get());
-    return rv;
-  }
-||||||| merged common ancestors
-    RefPtr<txStylesheetCompiler> compiler =
-        new txStylesheetCompiler(stylesheetURI, doc->GetReferrerPolicy(), obs);
-    NS_ENSURE_TRUE(compiler, NS_ERROR_OUT_OF_MEMORY);
-=======
   nsCOMPtr<nsIPrincipal> referrerPrincipal =
       BasePrincipal::CreateCodebasePrincipal(referrerUri, OriginAttributes());
   NS_ENSURE_TRUE(referrerPrincipal, NS_ERROR_FAILURE);
@@ -915,69 +576,11 @@ nsresult txSyncCompileObserver::loadURI(const nsAString& aUri,
     aCompiler->cancel(rv, nullptr, NS_ConvertUTF8toUTF16(spec).get());
     return rv;
   }
->>>>>>> upstream-releases
 
   rv = aCompiler->doneLoading();
   return rv;
 }
 
-<<<<<<< HEAD
-void txSyncCompileObserver::onDoneCompiling(txStylesheetCompiler* aCompiler,
-                                            nsresult aResult,
-                                            const char16_t* aErrorText,
-                                            const char16_t* aParam) {}
-
-nsresult TX_CompileStylesheet(nsINode* aNode,
-                              txMozillaXSLTProcessor* aProcessor,
-                              txStylesheet** aStylesheet) {
-  // If we move GetBaseURI to nsINode this can be simplified.
-  nsCOMPtr<nsIDocument> doc = aNode->OwnerDoc();
-
-  nsCOMPtr<nsIURI> uri;
-  if (aNode->IsContent()) {
-    uri = aNode->AsContent()->GetBaseURI();
-  } else {
-    NS_ASSERTION(aNode->IsDocument(), "not a doc");
-    uri = aNode->AsDocument()->GetBaseURI();
-  }
-  NS_ENSURE_TRUE(uri, NS_ERROR_FAILURE);
-
-  nsAutoCString spec;
-  uri->GetSpec(spec);
-  NS_ConvertUTF8toUTF16 baseURI(spec);
-
-  nsIURI* docUri = doc->GetDocumentURI();
-  NS_ENSURE_TRUE(docUri, NS_ERROR_FAILURE);
-
-  // We need to remove the ref, a URI with a ref would mean that we have an
-  // embedded stylesheet.
-  NS_GetURIWithoutRef(docUri, getter_AddRefs(uri));
-  NS_ENSURE_TRUE(uri, NS_ERROR_FAILURE);
-
-  uri->GetSpec(spec);
-  NS_ConvertUTF8toUTF16 stylesheetURI(spec);
-
-  RefPtr<txSyncCompileObserver> obs = new txSyncCompileObserver(aProcessor);
-  NS_ENSURE_TRUE(obs, NS_ERROR_OUT_OF_MEMORY);
-
-  RefPtr<txStylesheetCompiler> compiler =
-      new txStylesheetCompiler(stylesheetURI, doc->GetReferrerPolicy(), obs);
-  NS_ENSURE_TRUE(compiler, NS_ERROR_OUT_OF_MEMORY);
-
-  compiler->setBaseURI(baseURI);
-
-  nsresult rv = handleNode(aNode, compiler);
-  if (NS_FAILED(rv)) {
-    compiler->cancel(rv);
-    return rv;
-  }
-||||||| merged common ancestors
-    nsresult rv = handleNode(aNode, compiler);
-    if (NS_FAILED(rv)) {
-        compiler->cancel(rv);
-        return rv;
-    }
-=======
 void txSyncCompileObserver::onDoneCompiling(txStylesheetCompiler* aCompiler,
                                             nsresult aResult,
                                             const char16_t* aErrorText,
@@ -1027,7 +630,6 @@ nsresult TX_CompileStylesheet(nsINode* aNode,
     compiler->cancel(rv);
     return rv;
   }
->>>>>>> upstream-releases
 
   rv = compiler->doneLoading();
   NS_ENSURE_SUCCESS(rv, rv);

@@ -16,32 +16,14 @@ namespace gfx {
 class VRGPUParent final : public PVRGPUParent {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(VRGPUParent)
 
-<<<<<<< HEAD
- public:
-  explicit VRGPUParent(ProcessId aChildProcessId);
-||||||| merged common ancestors
-public:
-  explicit VRGPUParent(ProcessId aChildProcessId);
-=======
   friend class PVRGPUParent;
->>>>>>> upstream-releases
 
  public:
   static RefPtr<VRGPUParent> CreateForGPU(Endpoint<PVRGPUParent>&& aEndpoint);
   virtual void ActorDestroy(ActorDestroyReason aWhy) override;
   bool IsClosed();
 
-<<<<<<< HEAD
  protected:
-  ~VRGPUParent() {}
-
-||||||| merged common ancestors
-protected:
-  ~VRGPUParent() {}
-
-=======
- protected:
->>>>>>> upstream-releases
   void Bind(Endpoint<PVRGPUParent>&& aEndpoint);
   mozilla::ipc::IPCResult RecvStartVRService();
   mozilla::ipc::IPCResult RecvStopVRService();
@@ -50,12 +32,6 @@ protected:
   explicit VRGPUParent(ProcessId aChildProcessId);
   ~VRGPUParent();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
->>>>>>> upstream-releases
   void DeferredDestroy();
 
   RefPtr<VRGPUParent> mSelfRef;

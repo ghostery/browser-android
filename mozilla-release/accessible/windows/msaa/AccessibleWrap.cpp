@@ -483,17 +483,8 @@ AccessibleWrap::get_accRole(
     if (roleString.IsEmpty()) {
       // No role attribute (or it is an empty string).
       // Use the tag name.
-<<<<<<< HEAD
-      nsIDocument* document = content->GetUncomposedDoc();
-      if (!document) return E_FAIL;
-||||||| merged common ancestors
-      nsIDocument * document = content->GetUncomposedDoc();
-      if (!document)
-        return E_FAIL;
-=======
       dom::Document* document = content->GetUncomposedDoc();
       if (!document) return E_FAIL;
->>>>>>> upstream-releases
 
       dom::NodeInfo* nodeInfo = content->NodeInfo();
       nodeInfo->GetName(roleString);
@@ -755,17 +746,6 @@ AccessibleWrap::get_accSelection(VARIANT __RPC_FAR* pvarChildren) {
     return S_OK;
   }
 
-<<<<<<< HEAD
-    // 1) Create and initialize the enumeration
-    RefPtr<AccessibleEnumerator> pEnum =
-        new AccessibleEnumerator(selectedItems);
-    pvarChildren->vt =
-        VT_UNKNOWN;  // this must be VT_UNKNOWN for an IEnumVARIANT
-||||||| merged common ancestors
-    // 1) Create and initialize the enumeration
-    RefPtr<AccessibleEnumerator> pEnum = new AccessibleEnumerator(selectedItems);
-    pvarChildren->vt = VT_UNKNOWN;    // this must be VT_UNKNOWN for an IEnumVARIANT
-=======
   AutoTArray<Accessible*, 10> selectedItems;
   SelectedItems(&selectedItems);
   uint32_t count = selectedItems.Length();
@@ -777,7 +757,6 @@ AccessibleWrap::get_accSelection(VARIANT __RPC_FAR* pvarChildren) {
         new AccessibleEnumerator(selectedItems);
     pvarChildren->vt =
         VT_UNKNOWN;  // this must be VT_UNKNOWN for an IEnumVARIANT
->>>>>>> upstream-releases
     NS_ADDREF(pvarChildren->punkVal = pEnum);
   }
   // If count == 0, vt is already VT_EMPTY, so there's nothing else to do.
@@ -1335,16 +1314,8 @@ static already_AddRefed<IDispatch> GetProxiedAccessibleInSubtree(
     auto tab = static_cast<dom::BrowserParent*>(aDoc->Manager());
     MOZ_ASSERT(tab);
     DocAccessibleParent* topLevelDoc = tab->GetTopLevelDocAccessible();
-<<<<<<< HEAD
-    MOZ_ASSERT(topLevelDoc && topLevelDoc->IsTopLevel());
-    VARIANT docId = {{{VT_I4}}};
-||||||| merged common ancestors
-    MOZ_ASSERT(topLevelDoc && topLevelDoc->IsTopLevel());
-    VARIANT docId = {VT_I4};
-=======
     MOZ_ASSERT(topLevelDoc && topLevelDoc->IsTopLevelInContentProcess());
     VARIANT docId = {{{VT_I4}}};
->>>>>>> upstream-releases
     docId.lVal = docWrapperChildId;
     RefPtr<IDispatch> disp = GetProxiedAccessibleInSubtree(topLevelDoc, docId);
     if (!disp) {
@@ -1416,20 +1387,10 @@ already_AddRefed<IAccessible> AccessibleWrap::GetIAccessibleFor(
   }
 
   if (varChild.ulVal != GetExistingID() &&
-<<<<<<< HEAD
-      (IsProxy() ? Proxy()->MustPruneChildren()
-                 : nsAccUtils::MustPrune(this))) {
-    // This accessible should have no subtree in platform, return null for its
-    // children.
-||||||| merged common ancestors
-      (IsProxy() ? Proxy()->MustPruneChildren() : nsAccUtils::MustPrune(this))) {
-    // This accessible should have no subtree in platform, return null for its children.
-=======
       (IsProxy() ? nsAccUtils::MustPrune(Proxy())
                  : nsAccUtils::MustPrune(this))) {
     // This accessible should have no subtree in platform, return null for its
     // children.
->>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -1518,14 +1479,6 @@ already_AddRefed<IAccessible> AccessibleWrap::GetIAccessibleFor(
   return nullptr;
 }
 
-<<<<<<< HEAD
-already_AddRefed<IAccessible> AccessibleWrap::GetRemoteIAccessibleFor(
-    const VARIANT& aVarChild) {
-||||||| merged common ancestors
-already_AddRefed<IAccessible>
-AccessibleWrap::GetRemoteIAccessibleFor(const VARIANT& aVarChild)
-{
-=======
 /**
  * Visit DocAccessibleParent descendants of `aBrowser` that are at the top
  * level of their content process.
@@ -1562,7 +1515,6 @@ static bool VisitDocAccessibleParentDescendantsAtTopLevelInContentProcess(
 
 already_AddRefed<IAccessible> AccessibleWrap::GetRemoteIAccessibleFor(
     const VARIANT& aVarChild) {
->>>>>>> upstream-releases
   a11y::RootAccessible* root = RootAccessible();
   const nsTArray<DocAccessibleParent*>* remoteDocs =
       DocManager::TopLevelRemoteDocs();
@@ -1587,13 +1539,6 @@ already_AddRefed<IAccessible> AccessibleWrap::GetRemoteIAccessibleFor(
       continue;
     }
 
-<<<<<<< HEAD
-    RefPtr<IDispatch> disp =
-        GetProxiedAccessibleInSubtree(remoteDoc, aVarChild);
-||||||| merged common ancestors
-    RefPtr<IDispatch> disp =
-      GetProxiedAccessibleInSubtree(remoteDoc, aVarChild);
-=======
     RefPtr<IDispatch> disp;
     auto checkDoc = [&aVarChild,
                      &disp](DocAccessibleParent* aRemoteDoc) -> bool {
@@ -1616,7 +1561,6 @@ already_AddRefed<IAccessible> AccessibleWrap::GetRemoteIAccessibleFor(
           static_cast<dom::BrowserParent*>(topRemoteDoc->Manager()), checkDoc);
     }
 
->>>>>>> upstream-releases
     if (!disp) {
       continue;
     }
@@ -1650,19 +1594,9 @@ void AccessibleWrap::UpdateSystemCaretFor(Accessible* aAccessible) {
   UpdateSystemCaretFor(caretWnd, caretRect);
 }
 
-<<<<<<< HEAD
-/* static */ void AccessibleWrap::UpdateSystemCaretFor(
-    ProxyAccessible* aProxy, const LayoutDeviceIntRect& aCaretRect) {
-||||||| merged common ancestors
-/* static */ void
-AccessibleWrap::UpdateSystemCaretFor(ProxyAccessible* aProxy,
-                                     const LayoutDeviceIntRect& aCaretRect)
-{
-=======
 /* static */
 void AccessibleWrap::UpdateSystemCaretFor(
     ProxyAccessible* aProxy, const LayoutDeviceIntRect& aCaretRect) {
->>>>>>> upstream-releases
   ::DestroyCaret();
 
   // The HWND should be the real widget HWND, not an emulated HWND.
@@ -1671,19 +1605,9 @@ void AccessibleWrap::UpdateSystemCaretFor(
   UpdateSystemCaretFor(GetHWNDFor(outerDoc), aCaretRect);
 }
 
-<<<<<<< HEAD
-/* static */ void AccessibleWrap::UpdateSystemCaretFor(
-    HWND aCaretWnd, const LayoutDeviceIntRect& aCaretRect) {
-||||||| merged common ancestors
-/* static */ void
-AccessibleWrap::UpdateSystemCaretFor(HWND aCaretWnd,
-                                     const LayoutDeviceIntRect& aCaretRect)
-{
-=======
 /* static */
 void AccessibleWrap::UpdateSystemCaretFor(
     HWND aCaretWnd, const LayoutDeviceIntRect& aCaretRect) {
->>>>>>> upstream-releases
   if (!aCaretWnd || aCaretRect.IsEmpty()) {
     return;
   }
@@ -1832,30 +1756,12 @@ bool AccessibleWrap::DispatchTextChangeToHandler(bool aIsInsert,
   return SUCCEEDED(hr);
 }
 
-<<<<<<< HEAD
-/* static */ void AccessibleWrap::AssignChildIDTo(
-    NotNull<sdnAccessible*> aSdnAcc) {
-||||||| merged common ancestors
-/* static */ void
-AccessibleWrap::AssignChildIDTo(NotNull<sdnAccessible*> aSdnAcc)
-{
-=======
 /* static */
 void AccessibleWrap::AssignChildIDTo(NotNull<sdnAccessible*> aSdnAcc) {
->>>>>>> upstream-releases
   aSdnAcc->SetUniqueID(sIDGen.GetID());
 }
 
-<<<<<<< HEAD
-/* static */ void AccessibleWrap::ReleaseChildID(
-    NotNull<sdnAccessible*> aSdnAcc) {
-||||||| merged common ancestors
-/* static */ void
-AccessibleWrap::ReleaseChildID(NotNull<sdnAccessible*> aSdnAcc)
-{
-=======
 /* static */
 void AccessibleWrap::ReleaseChildID(NotNull<sdnAccessible*> aSdnAcc) {
->>>>>>> upstream-releases
   sIDGen.ReleaseID(aSdnAcc);
 }

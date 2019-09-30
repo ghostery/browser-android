@@ -129,27 +129,14 @@ fr_CA{
                     }
                 }
             }
-<<<<<<< HEAD
-            symbols{
-                group{" "}
-            }
-||||||| merged common ancestors
-=======
             symbols{
                 group{" "}
                 minusSign{"-"}
                 plusSign{"+"}
             }
->>>>>>> upstream-releases
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.73"}
-=======
     Version{"2.1.47.86"}
->>>>>>> upstream-releases
     calendar{
         coptic{
             monthNames{
@@ -894,22 +881,7 @@ fr_CA{
         alternateQuotationStart{"”"}
     }
     fields{
-<<<<<<< HEAD
         day{
-            relative{
-                "-1"{"hier"}
-                "-2"{"avant-hier"}
-                "0"{"aujourd’hui"}
-                "1"{"demain"}
-                "2"{"après-demain"}
-            }
-        }
-        day-narrow{
-||||||| merged common ancestors
-        day-narrow{
-=======
-        day{
->>>>>>> upstream-releases
             relative{
                 "-1"{"hier"}
                 "-2"{"avant-hier"}
@@ -919,24 +891,6 @@ fr_CA{
             }
         }
         day-short{
-<<<<<<< HEAD
-            relative{
-                "-1"{"hier"}
-                "-2"{"avant-hier"}
-                "0"{"aujourd’hui"}
-                "1"{"demain"}
-                "2"{"après-demain"}
-||||||| merged common ancestors
-            relative{
-                "-2"{"avant-hier"}
-                "2"{"après-demain"}
-=======
-            relativeTime{
-                future{
-                    other{"dans {0} j"}
-                }
->>>>>>> upstream-releases
-            }
             relativeTime{
                 future{
                     other{"dans {0} j"}
@@ -980,23 +934,6 @@ fr_CA{
                 "1"{"le trimestre prochain"}
             }
         }
-<<<<<<< HEAD
-        quarter-narrow{
-            relative{
-                "-1"{"trim. dernier"}
-                "0"{"ce trim."}
-                "1"{"trim.prochain"}
-            }
-        }
-        quarter-short{
-            relative{
-                "-1"{"trim. dernier"}
-                "0"{"ce trim."}
-                "1"{"trim. prochain"}
-            }
-        }
-||||||| merged common ancestors
-=======
         quarter-narrow{
             relative{
                 "-1"{"trim. dernier"}
@@ -1009,7 +946,6 @@ fr_CA{
                 "1"{"trim. prochain"}
             }
         }
->>>>>>> upstream-releases
         sat-narrow{
             relative{
                 "-1"{"sam. dernier"}

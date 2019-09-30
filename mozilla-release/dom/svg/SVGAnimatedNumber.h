@@ -25,70 +25,27 @@ namespace dom {
 class SVGAnimationElement;
 }  // namespace dom
 
-<<<<<<< HEAD
-class SVGAnimatedNumber : public nsISupports, public nsWrapperCache {
- public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(SVGAnimatedNumber)
-||||||| merged common ancestors
-class SVGAnimatedNumber : public nsISupports
-                        , public nsWrapperCache
-{
-public:
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(SVGAnimatedNumber)
-=======
 class SVGAnimatedNumber {
  public:
   typedef mozilla::SMILAttr SMILAttr;
   typedef mozilla::SMILValue SMILValue;
   typedef mozilla::dom::SVGElement SVGElement;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsSVGElement* GetParentObject() const { return mSVGElement; }
-||||||| merged common ancestors
-  nsSVGElement* GetParentObject() const
-  {
-    return mSVGElement;
-  }
-=======
   void Init(uint8_t aAttrEnum = 0xff, float aValue = 0) {
     mAnimVal = mBaseVal = aValue;
     mAttrEnum = aAttrEnum;
     mIsAnimated = false;
     mIsBaseSet = false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) final;
-||||||| merged common ancestors
-  JSObject* WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-    final;
-=======
   nsresult SetBaseValueString(const nsAString& aValue, SVGElement* aSVGElement);
   void GetBaseValueString(nsAString& aValue);
->>>>>>> upstream-releases
 
   void SetBaseValue(float aValue, SVGElement* aSVGElement);
   float GetBaseValue() const { return mBaseVal; }
   void SetAnimValue(float aValue, SVGElement* aSVGElement);
   float GetAnimValue() const { return mAnimVal; }
 
-<<<<<<< HEAD
- protected:
-  explicit SVGAnimatedNumber(nsSVGElement* aSVGElement)
-      : mSVGElement(aSVGElement) {}
-  virtual ~SVGAnimatedNumber(){};
-||||||| merged common ancestors
-protected:
-  explicit SVGAnimatedNumber(nsSVGElement* aSVGElement)
-    : mSVGElement(aSVGElement)
-  {
-  }
-  virtual ~SVGAnimatedNumber() {};
-=======
   // Returns true if the animated value of this number has been explicitly
   // set (either by animation, or by taking on the base value which has been
   // explicitly set by markup or a DOM call), false otherwise.
@@ -141,7 +98,6 @@ protected:
     // die during that.
     SVGAnimatedNumber* mVal;
     SVGElement* mSVGElement;
->>>>>>> upstream-releases
 
     // SMILAttr methods
     virtual nsresult ValueFromString(
@@ -154,20 +110,6 @@ protected:
   };
 };
 
-<<<<<<< HEAD
-}  // namespace dom
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#endif  // mozilla_dom_SVGAnimatedNumber_h
-||||||| merged common ancestors
-#endif // mozilla_dom_SVGAnimatedNumber_h
-=======
 #endif  //  mozilla_SVGAnimatedNumber_h
->>>>>>> upstream-releases

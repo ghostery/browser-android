@@ -26,32 +26,16 @@ impl InputField {
     pub fn as_codegen_field<'a>(&'a self) -> codegen::Field<'a> {
         codegen::Field {
             ident: &self.ident,
-<<<<<<< HEAD
-            name_in_attr: self.attr_name
-                .clone()
-                .unwrap_or(self.ident.to_string()),
-||||||| merged common ancestors
-            name_in_attr: self.attr_name.as_ref().map(|n| n.as_str()).unwrap_or(self.ident.as_ref()),
-=======
             name_in_attr: self
                 .attr_name
                 .as_ref()
                 .map_or_else(|| Cow::Owned(self.ident.to_string()), Cow::Borrowed),
->>>>>>> upstream-releases
             ty: &self.ty,
             default_expression: self.as_codegen_default(),
-<<<<<<< HEAD
-            with_path: self.with
-                .clone()
-                .unwrap_or(parse_quote!(::darling::FromMeta::from_meta)),
-||||||| merged common ancestors
-            with_path: self.with.clone().unwrap_or(parse_quote!(::darling::FromMetaItem::from_meta_item)),
-=======
             with_path: self.with.as_ref().map_or_else(
                 || Cow::Owned(parse_quote!(::darling::FromMeta::from_meta)),
                 Cow::Borrowed,
             ),
->>>>>>> upstream-releases
             skip: self.skip,
             map: self.map.as_ref(),
             multiple: self.multiple,
@@ -82,19 +66,10 @@ impl InputField {
     }
 
     pub fn from_field(f: &syn::Field, parent: Option<&Core>) -> Result<Self> {
-<<<<<<< HEAD
-        let ident = f.ident.clone().unwrap_or(syn::Ident::new(
-            "__unnamed",
-            ::proc_macro2::Span::call_site(),
-        ));
-||||||| merged common ancestors
-        let ident = f.ident.clone().unwrap_or(syn::Ident::new("__unnamed", ::proc_macro2::Span::call_site()));
-=======
         let ident = f
             .ident
             .clone()
             .unwrap_or_else(|| syn::Ident::new("__unnamed", ::proc_macro2::Span::call_site()));
->>>>>>> upstream-releases
         let ty = f.ty.clone();
         let base = Self::new(ident, ty).parse_attributes(&f.attrs)?;
 
@@ -142,41 +117,6 @@ impl ParseAttribute for InputField {
     fn parse_nested(&mut self, mi: &syn::Meta) -> Result<()> {
         let name = mi.name().to_string();
         match name.as_str() {
-<<<<<<< HEAD
-            "rename" => {
-                self.attr_name = FromMeta::from_meta(mi)?;
-                Ok(())
-            }
-            "default" => {
-                self.default = FromMeta::from_meta(mi)?;
-                Ok(())
-            }
-            "with" => {
-                self.with = Some(FromMeta::from_meta(mi)?);
-                Ok(())
-            }
-            "skip" => {
-                self.skip = FromMeta::from_meta(mi)?;
-                Ok(())
-            }
-            "map" => {
-                self.map = Some(FromMeta::from_meta(mi)?);
-                Ok(())
-            }
-            "multiple" => {
-                self.multiple = FromMeta::from_meta(mi)?;
-                Ok(())
-            }
-            n => Err(Error::unknown_field(n)),
-||||||| merged common ancestors
-            "rename" => { self.attr_name = FromMetaItem::from_meta_item(mi)?; Ok(()) }
-            "default" => { self.default = FromMetaItem::from_meta_item(mi)?; Ok(()) }
-            "with" => { self.with = Some(FromMetaItem::from_meta_item(mi)?); Ok(()) }
-            "skip" => { self.skip = FromMetaItem::from_meta_item(mi)?; Ok(()) }
-            "map" => { self.map = Some(FromMetaItem::from_meta_item(mi)?); Ok(()) }
-            "multiple" => { self.multiple = FromMetaItem::from_meta_item(mi)?; Ok(()) }
-            n => Err(Error::unknown_field(n)),
-=======
             "rename" => {
                 self.attr_name = FromMeta::from_meta(mi)?;
                 Ok(())
@@ -202,7 +142,6 @@ impl ParseAttribute for InputField {
                 Ok(())
             }
             n => Err(Error::unknown_field(n).with_span(mi)),
->>>>>>> upstream-releases
         }
     }
 }

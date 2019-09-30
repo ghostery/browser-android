@@ -78,21 +78,7 @@ function attachToTab() {
     let targetFront = tabs.find(tab => tab.selected);
 
     // Attach to the tab.
-<<<<<<< HEAD
-    client.attachTarget(tab).then(([response, targetFront]) => {
-      if (!targetFront) {
-        return;
-      }
-
-||||||| merged common ancestors
-    client.attachTarget(tab.actor).then(([response, targetFront]) => {
-      if (!targetFront) {
-        return;
-      }
-
-=======
     targetFront.attach().then(() => {
->>>>>>> upstream-releases
       // Now the targetFront is ready and can be used.
 
       // Attach listeners for client events.
@@ -192,21 +178,7 @@ function debugTab() {
     // Find the active tab.
     let targetFront = tabs.find(tab => tab.selected);
     // Attach to the tab.
-<<<<<<< HEAD
-    client.attachTarget(tab).then(([response, targetFront]) => {
-      if (!targetFront) {
-        return;
-      }
-
-||||||| merged common ancestors
-    client.attachTarget(tab.actor).then(([response, targetFront]) => {
-      if (!targetFront) {
-        return;
-      }
-
-=======
     targetFront.attach().then(() => {
->>>>>>> upstream-releases
       // Attach to the thread (context).
       targetFront.attachThread().then(([response, threadClient]) => {
         // Attach listeners for thread events.

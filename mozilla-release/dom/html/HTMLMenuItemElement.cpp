@@ -269,25 +269,10 @@ nsresult HTMLMenuItemElement::PostHandleEvent(EventChainPostVisitor& aVisitor) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult HTMLMenuItemElement::BindToTree(nsIDocument* aDocument,
-                                         nsIContent* aParent,
-                                         nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLMenuItemElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLMenuItemElement::BindToTree(BindContext& aContext,
                                          nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
   NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
 
   if (IsInUncomposedDoc() && mType == CMD_TYPE_RADIO) {
     AddedToRadioGroup();

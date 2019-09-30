@@ -40,28 +40,11 @@ nsresult nsNetworkInfoService::ListNetworkAddresses(
   }
 
   uint32_t addrCount = addrMap.Count();
-<<<<<<< HEAD
-  const char** addrStrings =
-      (const char**)malloc(sizeof(*addrStrings) * addrCount);
-  if (!addrStrings) {
-||||||| merged common ancestors
-  const char** addrStrings = (const char**) malloc(sizeof(*addrStrings) * addrCount);
-  if (!addrStrings) {
-=======
   nsTArray<nsCString> addrStrings;
   if (!addrStrings.SetCapacity(addrCount, fallible)) {
->>>>>>> upstream-releases
     aListener->OnListNetworkAddressesFailed();
     return NS_OK;
   }
-<<<<<<< HEAD
-  auto autoFreeAddrStrings = MakeScopeExit([&] { free(addrStrings); });
-||||||| merged common ancestors
-  auto autoFreeAddrStrings = MakeScopeExit([&] {
-    free(addrStrings);
-  });
-=======
->>>>>>> upstream-releases
 
   for (auto iter = addrMap.Iter(); !iter.Done(); iter.Next()) {
     addrStrings.AppendElement(iter.Data());

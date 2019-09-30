@@ -91,11 +91,6 @@ class nsHtml5TreeOpExecutor final
    */
   bool mAlreadyComplainedAboutCharset;
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
   /**
    * Whether this executor has already complained about the tree being too
    * deep.
@@ -103,7 +98,6 @@ public:
   bool mAlreadyComplainedAboutDeepTree;
 
  public:
->>>>>>> upstream-releases
   nsHtml5TreeOpExecutor();
 
  protected:
@@ -286,16 +280,10 @@ public:
    * list of preloaded URIs
    */
   bool ShouldPreloadURI(nsIURI* aURI);
-<<<<<<< HEAD
-
-  ReferrerPolicy GetPreloadReferrerPolicy(const nsAString& aReferrerPolicy);
-||||||| merged common ancestors
-=======
 
   ReferrerPolicy GetPreloadReferrerPolicy(const nsAString& aReferrerPolicy);
 
   ReferrerPolicy GetPreloadReferrerPolicy(ReferrerPolicy aReferrerPolicy);
->>>>>>> upstream-releases
 };
 
 #endif  // nsHtml5TreeOpExecutor_h

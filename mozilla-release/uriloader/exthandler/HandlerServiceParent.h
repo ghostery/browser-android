@@ -13,37 +13,6 @@ class HandlerServiceParent final : public mozilla::dom::PHandlerServiceParent {
 
  private:
   virtual ~HandlerServiceParent();
-<<<<<<< HEAD
-  virtual void ActorDestroy(ActorDestroyReason aWhy) override;
-
-  virtual mozilla::ipc::IPCResult RecvFillHandlerInfo(
-      const HandlerInfo& aHandlerInfoData, const nsCString& aOverrideType,
-      HandlerInfo* handlerInfoData) override;
-  virtual mozilla::ipc::IPCResult RecvExists(const HandlerInfo& aHandlerInfo,
-                                             bool* exits) override;
-
-  virtual mozilla::ipc::IPCResult RecvGetTypeFromExtension(
-      const nsCString& aFileExtension, nsCString* type) override;
-
-  virtual mozilla::ipc::IPCResult RecvExistsForProtocol(
-      const nsCString& aProtocolScheme, bool* aHandlerExists) override;
-||||||| merged common ancestors
-  virtual void ActorDestroy(ActorDestroyReason aWhy) override;
-
-
-  virtual mozilla::ipc::IPCResult RecvFillHandlerInfo(const HandlerInfo& aHandlerInfoData,
-                                                      const nsCString& aOverrideType,
-                                                      HandlerInfo* handlerInfoData) override;
-  virtual mozilla::ipc::IPCResult RecvExists(const HandlerInfo& aHandlerInfo,
-                                             bool* exits) override;
-
-  virtual mozilla::ipc::IPCResult RecvGetTypeFromExtension(const nsCString& aFileExtension,
-                                                           nsCString* type) override;
-
-  virtual mozilla::ipc::IPCResult RecvExistsForProtocol(const nsCString& aProtocolScheme,
-                                                        bool* aHandlerExists) override;
-
-=======
   void ActorDestroy(ActorDestroyReason aWhy) override;
 
   mozilla::ipc::IPCResult RecvFillHandlerInfo(
@@ -86,7 +55,6 @@ class HandlerServiceParent final : public mozilla::dom::PHandlerServiceParent {
   static const size_t MAX_SCHEME_LENGTH = 1024;  /* Arbitratily chosen to be
                                                     longer than any known
                                                     protocol scheme */
->>>>>>> upstream-releases
 };
 
 #endif

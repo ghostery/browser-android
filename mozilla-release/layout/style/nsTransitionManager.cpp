@@ -340,23 +340,10 @@ bool CSSTransition::HasLowerCompositeOrderThan(
          nsCSSProps::GetStringValue(aOther.TransitionProperty());
 }
 
-<<<<<<< HEAD
-/* static */ Nullable<TimeDuration> CSSTransition::GetCurrentTimeAt(
-    const dom::DocumentTimeline& aTimeline, const TimeStamp& aBaseTime,
-    const TimeDuration& aStartTime, double aPlaybackRate) {
-||||||| merged common ancestors
-/* static */ Nullable<TimeDuration>
-CSSTransition::GetCurrentTimeAt(const dom::DocumentTimeline& aTimeline,
-                                const TimeStamp& aBaseTime,
-                                const TimeDuration& aStartTime,
-                                double aPlaybackRate)
-{
-=======
 /* static */
 Nullable<TimeDuration> CSSTransition::GetCurrentTimeAt(
     const dom::DocumentTimeline& aTimeline, const TimeStamp& aBaseTime,
     const TimeDuration& aStartTime, double aPlaybackRate) {
->>>>>>> upstream-releases
   Nullable<TimeDuration> result;
 
   Nullable<TimeDuration> timelineTime = aTimeline.ToTimelineTime(aBaseTime);
@@ -395,80 +382,27 @@ static inline bool ExtractNonDiscreteComputedValue(
   return !!aAnimationValue.mServo;
 }
 
-<<<<<<< HEAD
-bool nsTransitionManager::UpdateTransitions(dom::Element* aElement,
-                                            CSSPseudoElementType aPseudoType,
-                                            const ComputedStyle& aOldStyle,
-                                            const ComputedStyle& aNewStyle) {
-||||||| merged common ancestors
-
-bool
-nsTransitionManager::UpdateTransitions(
-  dom::Element *aElement,
-  CSSPseudoElementType aPseudoType,
-  const ComputedStyle& aOldStyle,
-  const ComputedStyle& aNewStyle)
-{
-=======
 bool nsTransitionManager::UpdateTransitions(dom::Element* aElement,
                                             PseudoStyleType aPseudoType,
                                             const ComputedStyle& aOldStyle,
                                             const ComputedStyle& aNewStyle) {
->>>>>>> upstream-releases
   if (!mPresContext->IsDynamic()) {
     // For print or print preview, ignore transitions.
     return false;
   }
 
   CSSTransitionCollection* collection =
-<<<<<<< HEAD
-      CSSTransitionCollection::GetAnimationCollection(aElement, aPseudoType);
-  const nsStyleDisplay* disp = aNewStyle.ComputedData()->GetStyleDisplay();
-  return DoUpdateTransitions(*disp, aElement, aPseudoType, collection,
-                             aOldStyle, aNewStyle);
-||||||| merged common ancestors
-    CSSTransitionCollection::GetAnimationCollection(aElement, aPseudoType);
-  const nsStyleDisplay* disp =
-      aNewStyle.ComputedData()->GetStyleDisplay();
-  return DoUpdateTransitions(*disp,
-                             aElement, aPseudoType,
-                             collection,
-                             aOldStyle, aNewStyle);
-=======
       CSSTransitionCollection::GetAnimationCollection(aElement, aPseudoType);
   return DoUpdateTransitions(*aNewStyle.StyleDisplay(), aElement, aPseudoType,
                              collection, aOldStyle, aNewStyle);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool nsTransitionManager::DoUpdateTransitions(
-    const nsStyleDisplay& aDisp, dom::Element* aElement,
-    CSSPseudoElementType aPseudoType,
-    CSSTransitionCollection*& aElementTransitions,
-    const ComputedStyle& aOldStyle, const ComputedStyle& aNewStyle) {
-  MOZ_ASSERT(!aElementTransitions || aElementTransitions->mElement == aElement,
-             "Element mismatch");
-||||||| merged common ancestors
-bool
-nsTransitionManager::DoUpdateTransitions(
-  const nsStyleDisplay& aDisp,
-  dom::Element* aElement,
-  CSSPseudoElementType aPseudoType,
-  CSSTransitionCollection*& aElementTransitions,
-  const ComputedStyle& aOldStyle,
-  const ComputedStyle& aNewStyle)
-{
-  MOZ_ASSERT(!aElementTransitions ||
-             aElementTransitions->mElement == aElement, "Element mismatch");
-=======
 bool nsTransitionManager::DoUpdateTransitions(
     const nsStyleDisplay& aDisp, dom::Element* aElement,
     PseudoStyleType aPseudoType, CSSTransitionCollection*& aElementTransitions,
     const ComputedStyle& aOldStyle, const ComputedStyle& aNewStyle) {
   MOZ_ASSERT(!aElementTransitions || aElementTransitions->mElement == aElement,
              "Element mismatch");
->>>>>>> upstream-releases
 
   // Per http://lists.w3.org/Archives/Public/www-style/2009Aug/0109.html
   // I'll consider only the transitions from the number of items in
@@ -498,17 +432,8 @@ bool nsTransitionManager::DoUpdateTransitions(
     // we should probably remove eCSSPropertyExtra_all_properties.
     if (property == eCSSPropertyExtra_all_properties) {
       for (nsCSSPropertyID p = nsCSSPropertyID(0);
-<<<<<<< HEAD
-           p < eCSSProperty_COUNT_no_shorthands; p = nsCSSPropertyID(p + 1)) {
-        if (!nsCSSProps::IsEnabled(p, CSSEnabledState::eForAllContent)) {
-||||||| merged common ancestors
-           p < eCSSProperty_COUNT_no_shorthands;
-           p = nsCSSPropertyID(p + 1)) {
-        if (!nsCSSProps::IsEnabled(p, CSSEnabledState::eForAllContent)) {
-=======
            p < eCSSProperty_COUNT_no_shorthands; p = nsCSSPropertyID(p + 1)) {
         if (!nsCSSProps::IsEnabled(p, CSSEnabledState::ForAllContent)) {
->>>>>>> upstream-releases
           continue;
         }
         startedAny |= ConsiderInitiatingTransition(
@@ -517,25 +442,10 @@ bool nsTransitionManager::DoUpdateTransitions(
       }
     } else if (nsCSSProps::IsShorthand(property)) {
       CSSPROPS_FOR_SHORTHAND_SUBPROPERTIES(subprop, property,
-<<<<<<< HEAD
-                                           CSSEnabledState::eForAllContent) {
-        startedAny |= ConsiderInitiatingTransition(
-            *subprop, aDisp, i, aElement, aPseudoType, aElementTransitions,
-            aOldStyle, aNewStyle, propertiesChecked);
-||||||| merged common ancestors
-                                           CSSEnabledState::eForAllContent)
-      {
-        startedAny |=
-          ConsiderInitiatingTransition(*subprop, aDisp, i, aElement, aPseudoType,
-                                       aElementTransitions,
-                                       aOldStyle, aNewStyle,
-                                       propertiesChecked);
-=======
                                            CSSEnabledState::ForAllContent) {
         startedAny |= ConsiderInitiatingTransition(
             *subprop, aDisp, i, aElement, aPseudoType, aElementTransitions,
             aOldStyle, aNewStyle, propertiesChecked);
->>>>>>> upstream-releases
       }
     } else {
       startedAny |= ConsiderInitiatingTransition(
@@ -659,35 +569,12 @@ static bool IsTransitionable(nsCSSPropertyID aProperty) {
   return Servo_Property_IsTransitionable(aProperty);
 }
 
-<<<<<<< HEAD
-bool nsTransitionManager::ConsiderInitiatingTransition(
-    nsCSSPropertyID aProperty, const nsStyleDisplay& aStyleDisplay,
-    uint32_t transitionIdx, dom::Element* aElement,
-    CSSPseudoElementType aPseudoType,
-    CSSTransitionCollection*& aElementTransitions,
-    const ComputedStyle& aOldStyle, const ComputedStyle& aNewStyle,
-    nsCSSPropertyIDSet& aPropertiesChecked) {
-||||||| merged common ancestors
-bool
-nsTransitionManager::ConsiderInitiatingTransition(
-  nsCSSPropertyID aProperty,
-  const nsStyleDisplay& aStyleDisplay,
-  uint32_t transitionIdx,
-  dom::Element* aElement,
-  CSSPseudoElementType aPseudoType,
-  CSSTransitionCollection*& aElementTransitions,
-  const ComputedStyle& aOldStyle,
-  const ComputedStyle& aNewStyle,
-  nsCSSPropertyIDSet& aPropertiesChecked)
-{
-=======
 bool nsTransitionManager::ConsiderInitiatingTransition(
     nsCSSPropertyID aProperty, const nsStyleDisplay& aStyleDisplay,
     uint32_t transitionIdx, dom::Element* aElement, PseudoStyleType aPseudoType,
     CSSTransitionCollection*& aElementTransitions,
     const ComputedStyle& aOldStyle, const ComputedStyle& aNewStyle,
     nsCSSPropertyIDSet& aPropertiesChecked) {
->>>>>>> upstream-releases
   // IsShorthand itself will assert if aProperty is not a property.
   MOZ_ASSERT(!nsCSSProps::IsShorthand(aProperty), "property out of range");
   NS_ASSERTION(
@@ -780,19 +667,9 @@ bool nsTransitionManager::ConsiderInitiatingTransition(
       // currently in the 'transition-delay').  It also might happen because we
       // just got a style change to a value that can't be interpolated.
       OwningCSSTransitionPtrArray& animations =
-<<<<<<< HEAD
-          aElementTransitions->mAnimations;
-      animations[currentIndex]->CancelFromStyle();
-      oldPT = nullptr;  // Clear pointer so it doesn't dangle
-||||||| merged common ancestors
-        aElementTransitions->mAnimations;
-      animations[currentIndex]->CancelFromStyle();
-      oldPT = nullptr; // Clear pointer so it doesn't dangle
-=======
           aElementTransitions->mAnimations;
       animations[currentIndex]->CancelFromStyle(PostRestyleMode::IfNeeded);
       oldPT = nullptr;  // Clear pointer so it doesn't dangle
->>>>>>> upstream-releases
       animations.RemoveElementAt(currentIndex);
       EffectSet* effectSet = EffectSet::GetEffectSet(aElement, aPseudoType);
       if (effectSet) {
@@ -924,16 +801,8 @@ bool nsTransitionManager::ConsiderInitiatingTransition(
                oldPT->GetAnimation()->PlaybackRate(), oldPT->SpecifiedTiming(),
                segment.mTimingFunction, segment.mFromValue, segment.mToValue}));
     }
-<<<<<<< HEAD
-    animations[currentIndex]->CancelFromStyle();
-    oldPT = nullptr;  // Clear pointer so it doesn't dangle
-||||||| merged common ancestors
-    animations[currentIndex]->CancelFromStyle();
-    oldPT = nullptr; // Clear pointer so it doesn't dangle
-=======
     animations[currentIndex]->CancelFromStyle(PostRestyleMode::IfNeeded);
     oldPT = nullptr;  // Clear pointer so it doesn't dangle
->>>>>>> upstream-releases
     animations[currentIndex] = animation;
   } else {
     if (!animations.AppendElement(animation)) {

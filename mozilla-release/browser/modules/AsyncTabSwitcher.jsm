@@ -372,17 +372,9 @@ class AsyncTabSwitcher {
       // For (2), "finished loading a non-local-about: page" is
       // determined by the busy state on the tab element and checking
       // if the loaded URI is local.
-<<<<<<< HEAD
-      let hasSufficientlyLoaded = !this.requestedTab.hasAttribute("busy") &&
-        !this.tabbrowser.isLocalAboutURI(requestedBrowser.currentURI);
-||||||| merged common ancestors
-      let hasSufficientlyLoaded = !this.requestedTab.hasAttribute("busy") &&
-        !this.tabbrowser._isLocalAboutURI(requestedBrowser.currentURI);
-=======
       let hasSufficientlyLoaded =
         !this.requestedTab.hasAttribute("busy") &&
         !this.tabbrowser.isLocalAboutURI(requestedBrowser.currentURI);
->>>>>>> upstream-releases
 
       let fl = requestedBrowser.frameLoader;
       shouldBeBlank =
@@ -801,23 +793,6 @@ class AsyncTabSwitcher {
   // previously are done, so there's no need to keep the old layers
   // around.
   onPaint(event) {
-<<<<<<< HEAD
-    if (this.switchPaintId != -1 &&
-        event.transactionId >= this.switchPaintId) {
-      if (TelemetryStopwatch.running("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window)) {
-        let time = TelemetryStopwatch.timeElapsed("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
-        if (time != -1) {
-          TelemetryStopwatch.finish("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
-          this.log("DEBUG: tab switch time including compositing = " + time);
-        }
-||||||| merged common ancestors
-    if (this.switchPaintId != -1 &&
-        event.transactionId >= this.switchPaintId) {
-      let time = TelemetryStopwatch.timeElapsed("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
-      if (time != -1) {
-        TelemetryStopwatch.finish("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
-        this.log("DEBUG: tab switch time including compositing = " + time);
-=======
     if (this.switchPaintId != -1 && event.transactionId >= this.switchPaintId) {
       if (
         TelemetryStopwatch.running(
@@ -836,7 +811,6 @@ class AsyncTabSwitcher {
           );
           this.log("DEBUG: tab switch time including compositing = " + time);
         }
->>>>>>> upstream-releases
       }
       this.addMarker("AsyncTabSwitch:Composited");
       this.switchPaintId = -1;
@@ -1183,19 +1157,11 @@ class AsyncTabSwitcher {
     TelemetryStopwatch.cancel("FX_TAB_SWITCH_TOTAL_E10S_MS", this.window);
     TelemetryStopwatch.start("FX_TAB_SWITCH_TOTAL_E10S_MS", this.window);
 
-<<<<<<< HEAD
-    if (TelemetryStopwatch.running("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window)) {
-      TelemetryStopwatch.cancel("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
-    }
-||||||| merged common ancestors
-    TelemetryStopwatch.cancel("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
-=======
     if (
       TelemetryStopwatch.running("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window)
     ) {
       TelemetryStopwatch.cancel("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
     }
->>>>>>> upstream-releases
     TelemetryStopwatch.start("FX_TAB_SWITCH_COMPOSITE_E10S_MS", this.window);
     this.addMarker("AsyncTabSwitch:Start");
     this.switchInProgress = true;

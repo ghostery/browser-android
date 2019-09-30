@@ -19,21 +19,12 @@ var gCert;
 function onLoad() {
   gCert = window.arguments[0];
 
-<<<<<<< HEAD
-  let certMsg = document.getElementById("certmsg");
-  document.l10n.setAttributes(certMsg, "edit-trust-ca", { certName: gCert.commonName});
-||||||| merged common ancestors
-  let bundle = document.getElementById("pippki_bundle");
-  setText("certmsg",
-          bundle.getFormattedString("editTrustCA", [gCert.commonName]));
-=======
   document.addEventListener("dialogaccept", onDialogAccept);
 
   let certMsg = document.getElementById("certmsg");
   document.l10n.setAttributes(certMsg, "edit-trust-ca", {
     certName: gCert.commonName,
   });
->>>>>>> upstream-releases
 
   let sslCheckbox = document.getElementById("trustSSL");
   sslCheckbox.checked = gCertDB.isCertTrusted(

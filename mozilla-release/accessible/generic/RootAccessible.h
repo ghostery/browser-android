@@ -20,16 +20,8 @@ namespace a11y {
 class RootAccessible : public DocAccessibleWrap, public nsIDOMEventListener {
   NS_DECL_ISUPPORTS_INHERITED
 
-<<<<<<< HEAD
- public:
-  RootAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell);
-||||||| merged common ancestors
-public:
-  RootAccessible(nsIDocument* aDocument, nsIPresShell* aPresShell);
-=======
  public:
   RootAccessible(dom::Document* aDocument, PresShell* aPresShell);
->>>>>>> upstream-releases
 
   // nsIDOMEventListener
   NS_DECL_NSIDOMEVENTLISTENER

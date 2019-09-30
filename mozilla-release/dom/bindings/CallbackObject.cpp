@@ -193,24 +193,11 @@ CallbackObject::CallSetup::CallSetup(CallbackObject* aCallback,
     if (win) {
       // We don't want to run script in windows that have been navigated away
       // from.
-<<<<<<< HEAD
-      if (!win->AsInner()->HasActiveDocument()) {
-        aRv.ThrowDOMException(
-            NS_ERROR_DOM_NOT_SUPPORTED_ERR,
-            NS_LITERAL_CSTRING("Refusing to execute function from window "
-                               "whose document is no longer active."));
-||||||| merged common ancestors
-      if (!win->AsInner()->HasActiveDocument()) {
-        aRv.ThrowDOMException(NS_ERROR_DOM_NOT_SUPPORTED_ERR,
-          NS_LITERAL_CSTRING("Refusing to execute function from window "
-                             "whose document is no longer active."));
-=======
       if (!win->HasActiveDocument()) {
         aRv.ThrowDOMException(
             NS_ERROR_DOM_NOT_SUPPORTED_ERR,
             NS_LITERAL_CSTRING("Refusing to execute function from window "
                                "whose document is no longer active."));
->>>>>>> upstream-releases
         return;
       }
       globalObject = win;
@@ -222,24 +209,11 @@ CallbackObject::CallSetup::CallSetup(CallbackObject* aCallback,
   }
 
   // Bail out if there's no useful global.
-<<<<<<< HEAD
-  if (!globalObject->GetGlobalJSObject()) {
-    aRv.ThrowDOMException(
-        NS_ERROR_DOM_NOT_SUPPORTED_ERR,
-        NS_LITERAL_CSTRING("Refusing to execute function from global which is "
-                           "being torn down."));
-||||||| merged common ancestors
-  if (!globalObject->GetGlobalJSObject()) {
-    aRv.ThrowDOMException(NS_ERROR_DOM_NOT_SUPPORTED_ERR,
-      NS_LITERAL_CSTRING("Refusing to execute function from global which is "
-                         "being torn down."));
-=======
   if (!globalObject->HasJSGlobal()) {
     aRv.ThrowDOMException(
         NS_ERROR_DOM_NOT_SUPPORTED_ERR,
         NS_LITERAL_CSTRING("Refusing to execute function from global which is "
                            "being torn down."));
->>>>>>> upstream-releases
     return;
   }
 
@@ -252,24 +226,11 @@ CallbackObject::CallSetup::CallSetup(CallbackObject* aCallback,
     // of the same IPC global weirdness described above, wherein the
     // nsIGlobalObject has severed its reference to the JS global. Let's just
     // be safe here, so that nobody has to waste a day debugging gaia-ui tests.
-<<<<<<< HEAD
-    if (!incumbent->GetGlobalJSObject()) {
-      aRv.ThrowDOMException(
-          NS_ERROR_DOM_NOT_SUPPORTED_ERR,
-          NS_LITERAL_CSTRING("Refusing to execute function because our "
-                             "incumbent global is being torn down."));
-||||||| merged common ancestors
-    if (!incumbent->GetGlobalJSObject()) {
-      aRv.ThrowDOMException(NS_ERROR_DOM_NOT_SUPPORTED_ERR,
-        NS_LITERAL_CSTRING("Refusing to execute function because our "
-                           "incumbent global is being torn down."));
-=======
     if (!incumbent->HasJSGlobal()) {
       aRv.ThrowDOMException(
           NS_ERROR_DOM_NOT_SUPPORTED_ERR,
           NS_LITERAL_CSTRING("Refusing to execute function because our "
                              "incumbent global is being torn down."));
->>>>>>> upstream-releases
       return;
     }
     mAutoIncumbentScript.emplace(incumbent);

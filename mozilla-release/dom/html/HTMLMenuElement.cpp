@@ -42,19 +42,8 @@ HTMLMenuElement::~HTMLMenuElement() {}
 
 NS_IMPL_ELEMENT_CLONE(HTMLMenuElement)
 
-<<<<<<< HEAD
-void HTMLMenuElement::SendShowEvent() {
-  nsCOMPtr<nsIDocument> document = GetComposedDoc();
-||||||| merged common ancestors
-
-void
-HTMLMenuElement::SendShowEvent()
-{
-  nsCOMPtr<nsIDocument> document = GetComposedDoc();
-=======
 void HTMLMenuElement::SendShowEvent() {
   nsCOMPtr<Document> document = GetComposedDoc();
->>>>>>> upstream-releases
   if (!document) {
     return;
   }

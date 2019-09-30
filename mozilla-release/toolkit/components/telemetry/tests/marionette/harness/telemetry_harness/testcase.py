@@ -4,25 +4,10 @@
 
 import contextlib
 import os
-<<<<<<< HEAD
-import re
-import simplejson as json
-||||||| merged common ancestors
-import simplejson as json
-=======
 import re
 import textwrap
->>>>>>> upstream-releases
 import time
 
-<<<<<<< HEAD
-from firefox_puppeteer import PuppeteerMixin
-||||||| merged common ancestors
-from multiprocessing import Process
-
-from firefox_puppeteer import PuppeteerMixin
-=======
->>>>>>> upstream-releases
 from marionette_driver.addons import Addons
 from marionette_driver.errors import MarionetteException
 from marionette_driver.wait import Wait
@@ -33,22 +18,10 @@ from marionette_harness.runner.mixins.window_manager import WindowManagerMixin
 from ping_server import PingServer
 
 
-<<<<<<< HEAD
 CANARY_CLIENT_ID = "c0ffeec0-ffee-c0ff-eec0-ffeec0ffeec0"
 UUID_PATTERN = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 )
-
-
-class TelemetryTestCase(PuppeteerMixin, MarionetteTestCase):
-||||||| merged common ancestors
-class TelemetryTestCase(PuppeteerMixin, MarionetteTestCase):
-=======
-CANARY_CLIENT_ID = "c0ffeec0-ffee-c0ff-eec0-ffeec0ffeec0"
-UUID_PATTERN = re.compile(
-    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-)
->>>>>>> upstream-releases
 
 
 class TelemetryTestCase(WindowManagerMixin, MarionetteTestCase):
@@ -108,49 +81,6 @@ class TelemetryTestCase(WindowManagerMixin, MarionetteTestCase):
     def assertIsValidUUID(self, value):
         """Check if the given UUID is valid."""
 
-<<<<<<< HEAD
-        telemetry_prefs = {
-            'toolkit.telemetry.server': self.ping_server_url,
-            'toolkit.telemetry.initDelay': 1,
-            'toolkit.telemetry.minSubsessionLength': 0,
-            'datareporting.healthreport.uploadEnabled': True,
-            'datareporting.policy.dataSubmissionEnabled': True,
-            'datareporting.policy.dataSubmissionPolicyBypassNotification': True,
-            'toolkit.telemetry.log.level': 'Trace',
-            'toolkit.telemetry.log.dump': True,
-            'toolkit.telemetry.send.overrideOfficialCheck': True,
-            'toolkit.telemetry.testing.disableFuzzingDelay': True,
-        }
-||||||| merged common ancestors
-        telemetry_prefs = {
-            'toolkit.telemetry.server': self.ping_server_url,
-            'toolkit.telemetry.initDelay': 1,
-            'toolkit.telemetry.minSubsessionLength': 0,
-            'datareporting.healthreport.uploadEnabled': True,
-            'datareporting.policy.dataSubmissionEnabled': True,
-            'datareporting.policy.dataSubmissionPolicyBypassNotification': True,
-            'toolkit.telemetry.log.level': 0,
-            'toolkit.telemetry.log.dump': True,
-            'toolkit.telemetry.send.overrideOfficialCheck': True
-        }
-=======
-        self.assertIsNotNone(value)
-        self.assertNotEqual(value, "")
->>>>>>> upstream-releases
-
-        # Check for client ID that is used when Telemetry upload is disabled
-        self.assertNotEqual(
-            value, CANARY_CLIENT_ID, msg="UUID is CANARY CLIENT ID"
-        )
-
-        self.assertIsNotNone(
-            re.match(UUID_PATTERN, value),
-            msg="UUID does not match regular expression",
-        )
-
-<<<<<<< HEAD
-    def assertIsValidUUID(self, value):
-        """Check if the given UUID is valid."""
         self.assertIsNotNone(value)
         self.assertNotEqual(value, "")
 
@@ -165,11 +95,6 @@ class TelemetryTestCase(WindowManagerMixin, MarionetteTestCase):
         )
 
     def wait_for_pings(self, action_func, ping_filter, count):
-||||||| merged common ancestors
-    def wait_for_pings(self, action_func, ping_filter_func, count):
-=======
-    def wait_for_pings(self, action_func, ping_filter, count):
->>>>>>> upstream-releases
         """Call the given action and wait for pings to come in and return
         the `count` number of pings, that match the given filter.
         """
@@ -216,38 +141,12 @@ class TelemetryTestCase(WindowManagerMixin, MarionetteTestCase):
         return self.marionette.restart(clean=False, in_app=True)
 
     def install_addon(self):
-<<<<<<< HEAD
-        """Install a minimal addon."""
-
-        resources_dir = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "resources"
-        )
-
-        addon_path = os.path.abspath(os.path.join(resources_dir, "helloworld"))
-
-||||||| merged common ancestors
-        trigger = Process(target=self._install_addon)
-        trigger.start()
-
-    def _install_addon(self):
-        # The addon that gets installed here is the easyscreenshot addon taken from AMO.
-        # It has high compatibility with firefox and doesn't cause any adverse side affects that
-        # could affect our tests like tabs opening, etc.
-        # Developed by: MozillaOnline
-        # Addon URL: https://addons.mozilla.org/en-US/firefox/addon/easyscreenshot/
-=======
         """Install a minimal addon and add its ID to self.addon_ids."""
 
         resources_dir = os.path.join(os.path.dirname(__file__), "resources")
         addon_path = os.path.abspath(os.path.join(resources_dir, "helloworld"))
 
->>>>>>> upstream-releases
         try:
-<<<<<<< HEAD
-||||||| merged common ancestors
-            # TODO: Replace Resources_dir with default directory
-            addon_path = os.path.join('resources_dir', 'easyscreenshot.xpi')
-=======
             # Ensure the Environment has init'd so the installed addon
             # triggers an "environment-change" ping.
             script = """\
@@ -259,29 +158,14 @@ class TelemetryTestCase(WindowManagerMixin, MarionetteTestCase):
             with self.marionette.using_context(self.marionette.CONTEXT_CHROME):
                 self.marionette.execute_async_script(textwrap.dedent(script))
 
->>>>>>> upstream-releases
             addons = Addons(self.marionette)
-<<<<<<< HEAD
-            addons.install(addon_path, temp=True)
-||||||| merged common ancestors
-            addons.install(addon_path)
-=======
             addon_id = addons.install(addon_path, temp=True)
->>>>>>> upstream-releases
         except MarionetteException as e:
-<<<<<<< HEAD
-            self.fail(
-                "{} - Error installing addon: {} - ".format(e.cause, e.message)
-            )
-||||||| merged common ancestors
-            self.fail('{} - Error installing addon: {} - '.format(e.cause, e.message))
-=======
             self.fail(
                 "{} - Error installing addon: {} - ".format(e.cause, e.message)
             )
         else:
             self.addon_ids.append(addon_id)
->>>>>>> upstream-releases
 
     @property
     def client_id(self):

@@ -156,80 +156,6 @@ void GrOpList::validate() const {
     // TODO: check for loops and duplicates
 
     for (int i = 0; i < fDependencies.count(); ++i) {
-<<<<<<< HEAD
-        SkASSERT(fDependencies[i]->isDependedent(this));
-    }
-}
-#endif
-
-bool GrOpList::isInstantiated() const { return fTarget.get()->isInstantiated(); }
-
-void GrOpList::closeThoseWhoDependOnMe(const GrCaps& caps) {
-    for (int i = 0; i < fDependents.count(); ++i) {
-        if (!fDependents[i]->isClosed()) {
-            fDependents[i]->makeClosed(caps);
-        }
-    }
-}
-
-bool GrOpList::isFullyInstantiated() const {
-    if (!this->isInstantiated()) {
-        return false;
-    }
-
-    GrSurfaceProxy* proxy = fTarget.get();
-    bool needsStencil = proxy->asRenderTargetProxy()
-                                        ? proxy->asRenderTargetProxy()->needsStencil()
-                                        : false;
-
-    if (needsStencil) {
-        GrRenderTarget* rt = proxy->peekRenderTarget();
-
-        if (!rt->renderTargetPriv().getStencilAttachment()) {
-            return false;
-        }
-    }
-
-    GrSurface* surface = proxy->peekSurface();
-    if (surface->wasDestroyed()) {
-        return false;
-    }
-
-    return true;
-}
-
-#ifdef SK_DEBUG
-static const char* op_to_name(GrLoadOp op) {
-    return GrLoadOp::kLoad == op ? "load" : GrLoadOp::kClear == op ? "clear" : "discard";
-}
-
-void GrOpList::dump(bool printDependencies) const {
-    SkDebugf("--------------------------------------------------------------\n");
-    SkDebugf("opListID: %d - proxyID: %d - surfaceID: %d\n", fUniqueID,
-             fTarget.get() ? fTarget.get()->uniqueID().asUInt() : -1,
-             fTarget.get() && fTarget.get()->peekSurface()
-                     ? fTarget.get()->peekSurface()->uniqueID().asUInt()
-                     : -1);
-    SkDebugf("ColorLoadOp: %s %x StencilLoadOp: %s\n",
-             op_to_name(fColorLoadOp),
-             GrLoadOp::kClear == fColorLoadOp ? fLoadClearColor : 0x0,
-             op_to_name(fStencilLoadOp));
-
-    if (printDependencies) {
-        SkDebugf("I rely On (%d): ", fDependencies.count());
-        for (int i = 0; i < fDependencies.count(); ++i) {
-            SkDebugf("%d, ", fDependencies[i]->fUniqueID);
-        }
-        SkDebugf("\n");
-
-        SkDebugf("(%d) Rely On Me: ", fDependents.count());
-        for (int i = 0; i < fDependents.count(); ++i) {
-            SkDebugf("%d, ", fDependents[i]->fUniqueID);
-        }
-        SkDebugf("\n");
-||||||| merged common ancestors
-        SkDebugf("%d, ", fDependencies[i]->fUniqueID);
-=======
         SkASSERT(fDependencies[i]->isDependedent(this));
     }
 }
@@ -300,7 +226,6 @@ void GrOpList::dump(bool printDependencies) const {
             SkDebugf("%d, ", fDependents[i]->fUniqueID);
         }
         SkDebugf("\n");
->>>>>>> upstream-releases
     }
 }
 #endif

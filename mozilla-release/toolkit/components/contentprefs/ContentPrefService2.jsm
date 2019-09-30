@@ -71,45 +71,6 @@ function executeStatementsInTransaction(conn, stmts) {
   });
 }
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/contentprefs/ContentPrefService2.js
-function HostnameGrouper_group(aURI) {
-  var group;
-
-  try {
-    // Accessing the host property of the URI will throw an exception
-    // if the URI is of a type that doesn't have a host property.
-    // Otherwise, we manually throw an exception if the host is empty,
-    // since the effect is the same (we can't derive a group from it).
-
-    group = aURI.host;
-    if (!group)
-      throw new Error("can't derive group from host; no host in URI");
-  } catch (ex) {
-    // If we don't have a host, then use the entire URI (minus the query,
-    // reference, and hash, if possible) as the group.  This means that URIs
-    // like about:mozilla and about:blank will be considered separate groups,
-    // but at least they'll be grouped somehow.
-
-    // This also means that each individual file: URL will be considered
-    // its own group.  This seems suboptimal, but so does treating the entire
-    // file: URL space as a single group (especially if folks start setting
-    // group-specific capabilities prefs).
-
-    // XXX Is there something better we can do here?
-
-    try {
-      var url = aURI.QueryInterface(Ci.nsIURL);
-      group = aURI.prePath + url.filePath;
-    } catch (ex) {
-      group = aURI.spec;
-    }
-  }
-
-  return group;
-}
-
-||||||| merged common ancestors
-=======
 function HostnameGrouper_group(aURI) {
   var group;
 
@@ -147,7 +108,6 @@ function HostnameGrouper_group(aURI) {
   return group;
 }
 
->>>>>>> upstream-releases:mozilla-release/toolkit/components/contentprefs/ContentPrefService2.jsm
 ContentPrefService2.prototype = {
   // XPCOM Plumbing
 
@@ -1423,12 +1383,4 @@ function invalidArg(msg) {
 
 // XPCOM Plumbing
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/contentprefs/ContentPrefService2.js
-var components = [ContentPrefService2];
-this.NSGetFactory = XPCOMUtils.generateNSGetFactory(components);
-||||||| merged common ancestors
-var components = [ContentPrefService2, HostnameGrouper];
-this.NSGetFactory = XPCOMUtils.generateNSGetFactory(components);
-=======
 var EXPORTED_SYMBOLS = ["ContentPrefService2"];
->>>>>>> upstream-releases:mozilla-release/toolkit/components/contentprefs/ContentPrefService2.jsm

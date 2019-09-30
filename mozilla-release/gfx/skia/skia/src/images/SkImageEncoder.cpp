@@ -48,14 +48,6 @@ bool SkEncodeImage(SkWStream* dst, const SkPixmap& src,
             }
             case SkEncodedImageFormat::kWEBP: {
                 SkWebpEncoder::Options opts;
-<<<<<<< HEAD
-                opts.fCompression = SkWebpEncoder::Compression::kLossy;
-                opts.fQuality = quality;
-||||||| merged common ancestors
-                opts.fCompression = SkWebpEncoder::Compression::kLossy;
-                opts.fQuality = quality;
-                opts.fUnpremulBehavior = SkTransferFunctionBehavior::kIgnore;
-=======
                 if (quality == 100) {
                     opts.fCompression = SkWebpEncoder::Compression::kLossless;
                     // Note: SkEncodeImage treats 0 quality as the lowest quality
@@ -75,7 +67,6 @@ bool SkEncodeImage(SkWStream* dst, const SkPixmap& src,
                     opts.fCompression = SkWebpEncoder::Compression::kLossy;
                     opts.fQuality = quality;
                 }
->>>>>>> upstream-releases
                 return SkWebpEncoder::Encode(dst, src, opts);
             }
             default:

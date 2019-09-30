@@ -6,14 +6,6 @@ config = {
     'env': {
         'XPCOM_DEBUG_BREAK': 'stack-and-abort',
     },
-<<<<<<< HEAD
     'build_targets': ['pre-export', 'export', 'recurse_rusttests'],
     'disable_package_metrics': True,
-    'artifact_flag_build_variant_in_try': None,
-||||||| merged common ancestors
-    'artifact_flag_build_variant_in_try': None,
-=======
-    'build_targets': ['pre-export', 'export', 'recurse_rusttests'],
-    'disable_package_metrics': True,
->>>>>>> upstream-releases
 }

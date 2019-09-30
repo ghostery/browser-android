@@ -66,30 +66,12 @@ BEGIN_TEST(testArrayBufferView_type) {
   return true;
 }
 
-<<<<<<< HEAD
-static JSObject* CreateDataView(JSContext* cx) {
-  JS::Rooted<JSObject*> buffer(cx, JS_NewArrayBuffer(cx, 8));
-  if (!buffer) {
-    return nullptr;
-  }
-  return JS_NewDataView(cx, buffer, 0, 8);
-||||||| merged common ancestors
-static JSObject*
-CreateDataView(JSContext* cx)
-{
-    JS::Rooted<JSObject*> buffer(cx, JS_NewArrayBuffer(cx, 8));
-    if (!buffer) {
-        return nullptr;
-    }
-    return JS_NewDataView(cx, buffer, 0, 8);
-=======
 static JSObject* CreateDataView(JSContext* cx) {
   JS::Rooted<JSObject*> buffer(cx, JS::NewArrayBuffer(cx, 8));
   if (!buffer) {
     return nullptr;
   }
   return JS_NewDataView(cx, buffer, 0, 8);
->>>>>>> upstream-releases
 }
 
 template <JSObject* CreateTypedArray(JSContext* cx, uint32_t length),
@@ -98,146 +80,6 @@ static JSObject* Create(JSContext* cx) {
   return CreateTypedArray(cx, Length);
 }
 
-<<<<<<< HEAD
-template <typename T, JSObject* CreateViewType(JSContext* cx),
-          JSObject* GetObjectAs(JSObject* obj, uint32_t* length,
-                                bool* isSharedMemory, T** data),
-          js::Scalar::Type ExpectedType, uint32_t ExpectedLength,
-          uint32_t ExpectedByteLength>
-bool TestViewType(JSContext* cx) {
-  JS::Rooted<JSObject*> obj(cx, CreateViewType(cx));
-  CHECK(obj);
-
-  CHECK(JS_IsArrayBufferViewObject(obj));
-
-  CHECK(JS_GetArrayBufferViewType(obj) == ExpectedType);
-
-  CHECK(JS_GetArrayBufferViewByteLength(obj) == ExpectedByteLength);
-
-  {
-    JS::AutoCheckCannotGC nogc;
-    bool shared1;
-    T* data1 = static_cast<T*>(JS_GetArrayBufferViewData(obj, &shared1, nogc));
-
-    T* data2;
-    bool shared2;
-    uint32_t len;
-    CHECK(obj == GetObjectAs(obj, &len, &shared2, &data2));
-    CHECK(data1 == data2);
-    CHECK(shared1 == shared2);
-    CHECK(len == ExpectedLength);
-  }
-
-  JS::RealmOptions options;
-  JS::RootedObject otherGlobal(
-      cx, JS_NewGlobalObject(cx, basicGlobalClass(), nullptr,
-                             JS::DontFireOnNewGlobalHook, options));
-  CHECK(otherGlobal);
-
-  JS::Rooted<JSObject*> buffer(cx);
-  {
-    AutoRealm ar(cx, otherGlobal);
-    buffer = JS_NewArrayBuffer(cx, 8);
-    CHECK(buffer);
-    CHECK(buffer->as<ArrayBufferObject>().byteLength() == 8);
-  }
-  CHECK(buffer->compartment() == otherGlobal->compartment());
-  CHECK(JS_WrapObject(cx, &buffer));
-  CHECK(buffer->compartment() == global->compartment());
-
-  JS::Rooted<JSObject*> dataview(cx, JS_NewDataView(cx, buffer, 4, 4));
-  CHECK(dataview);
-  CHECK(dataview->is<ProxyObject>());
-
-  JS::Rooted<JS::Value> val(cx);
-
-  val = ObjectValue(*dataview);
-  CHECK(JS_SetProperty(cx, global, "view", val));
-
-  EVAL("view.buffer", &val);
-  CHECK(val.toObject().is<ProxyObject>());
-
-  CHECK(dataview->compartment() == global->compartment());
-  JS::Rooted<JSObject*> otherView(cx, js::UncheckedUnwrap(dataview));
-  CHECK(otherView->compartment() == otherGlobal->compartment());
-  JS::Rooted<JSObject*> otherBuffer(cx, js::UncheckedUnwrap(&val.toObject()));
-  CHECK(otherBuffer->compartment() == otherGlobal->compartment());
-
-  EVAL("Object.getPrototypeOf(view) === DataView.prototype", &val);
-  CHECK(val.toBoolean() == true);
-
-  return true;
-||||||| merged common ancestors
-template<typename T,
-         JSObject * CreateViewType(JSContext* cx),
-         JSObject * GetObjectAs(JSObject* obj, uint32_t* length, bool* isSharedMemory, T** data),
-         js::Scalar::Type ExpectedType,
-         uint32_t ExpectedLength,
-         uint32_t ExpectedByteLength>
-bool TestViewType(JSContext* cx)
-{
-    JS::Rooted<JSObject*> obj(cx, CreateViewType(cx));
-    CHECK(obj);
-
-    CHECK(JS_IsArrayBufferViewObject(obj));
-
-    CHECK(JS_GetArrayBufferViewType(obj) == ExpectedType);
-
-    CHECK(JS_GetArrayBufferViewByteLength(obj) == ExpectedByteLength);
-
-    {
-        JS::AutoCheckCannotGC nogc;
-        bool shared1;
-        T* data1 = static_cast<T*>(JS_GetArrayBufferViewData(obj, &shared1, nogc));
-
-        T* data2;
-        bool shared2;
-        uint32_t len;
-        CHECK(obj == GetObjectAs(obj, &len, &shared2, &data2));
-        CHECK(data1 == data2);
-        CHECK(shared1 == shared2);
-        CHECK(len == ExpectedLength);
-    }
-
-    JS::RealmOptions options;
-    JS::RootedObject otherGlobal(cx, JS_NewGlobalObject(cx, basicGlobalClass(), nullptr,
-                                                        JS::DontFireOnNewGlobalHook, options));
-    CHECK(otherGlobal);
-
-    JS::Rooted<JSObject*> buffer(cx);
-    {
-        AutoRealm ar(cx, otherGlobal);
-        buffer = JS_NewArrayBuffer(cx, 8);
-        CHECK(buffer);
-        CHECK(buffer->as<ArrayBufferObject>().byteLength() == 8);
-    }
-    CHECK(buffer->compartment() == otherGlobal->compartment());
-    CHECK(JS_WrapObject(cx, &buffer));
-    CHECK(buffer->compartment() == global->compartment());
-
-    JS::Rooted<JSObject*> dataview(cx, JS_NewDataView(cx, buffer, 4, 4));
-    CHECK(dataview);
-    CHECK(dataview->is<ProxyObject>());
-
-    JS::Rooted<JS::Value> val(cx);
-
-    val = ObjectValue(*dataview);
-    CHECK(JS_SetProperty(cx, global, "view", val));
-
-    EVAL("view.buffer", &val);
-    CHECK(val.toObject().is<ProxyObject>());
-
-    CHECK(dataview->compartment() == global->compartment());
-    JS::Rooted<JSObject*> otherView(cx, js::UncheckedUnwrap(dataview));
-    CHECK(otherView->compartment() == otherGlobal->compartment());
-    JS::Rooted<JSObject*> otherBuffer(cx, js::UncheckedUnwrap(&val.toObject()));
-    CHECK(otherBuffer->compartment() == otherGlobal->compartment());
-
-    EVAL("Object.getPrototypeOf(view) === DataView.prototype", &val);
-    CHECK(val.toBoolean() == true);
-
-    return true;
-=======
 template <typename T, JSObject* CreateViewType(JSContext* cx),
           JSObject* GetObjectAs(JSObject* obj, uint32_t* length,
                                 bool* isSharedMemory, T** data),
@@ -306,7 +148,6 @@ bool TestViewType(JSContext* cx) {
   CHECK(val.toBoolean() == true);
 
   return true;
->>>>>>> upstream-releases
 }
 
 END_TEST(testArrayBufferView_type)

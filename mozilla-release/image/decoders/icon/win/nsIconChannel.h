@@ -40,11 +40,6 @@ class nsIconChannel final : public nsIChannel, public nsIStreamListener {
 
   nsresult Init(nsIURI* uri);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
  protected:
   class IconAsyncOpenTask;
   class IconSyncOpenTask;
@@ -53,7 +48,6 @@ protected:
   void FinishAsyncOpen(HICON aIcon, nsresult aStatus);
   nsresult EnsurePipeCreated(uint32_t aIconSize, bool aNonBlocking);
 
->>>>>>> upstream-releases
   nsCOMPtr<nsIURI> mUrl;
   nsCOMPtr<nsIURI> mOriginalURI;
   nsCOMPtr<nsILoadGroup> mLoadGroup;
@@ -62,16 +56,10 @@ protected:
   nsCOMPtr<nsILoadInfo> mLoadInfo;
 
   nsCOMPtr<nsIInputStreamPump> mPump;
-<<<<<<< HEAD
-  nsCOMPtr<nsIStreamListener> mListener;
-||||||| merged common ancestors
-  nsCOMPtr<nsIStreamListener>  mListener;
-=======
   nsCOMPtr<nsIInputStream> mInputStream;
   nsCOMPtr<nsIOutputStream> mOutputStream;
   nsCOMPtr<nsIStreamListener> mListener;
   nsCOMPtr<nsIEventTarget> mListenerTarget;
->>>>>>> upstream-releases
 
   nsresult ExtractIconInfoFromUrl(nsIFile** aLocalFile,
                                   uint32_t* aDesiredImageSize,

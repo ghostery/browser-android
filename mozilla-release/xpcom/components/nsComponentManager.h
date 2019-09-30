@@ -269,13 +269,7 @@ class nsComponentManagerImpl final : public nsIComponentManager,
     SHUTDOWN_COMPLETE
   } mStatus;
 
-<<<<<<< HEAD
-  mozilla::ArenaAllocator<1024 * 8, 8> mArena;
-||||||| merged common ancestors
-  mozilla::ArenaAllocator<1024*8, 8> mArena;
-=======
   mozilla::ArenaAllocator<1024 * 1, 8> mArena;
->>>>>>> upstream-releases
 
   struct PendingServiceInfo {
     const nsCID* cid;
@@ -296,18 +290,11 @@ class nsComponentManagerImpl final : public nsIComponentManager,
  private:
   ~nsComponentManagerImpl();
 
-<<<<<<< HEAD
-#define NS_MAX_FILENAME_LEN 1024
-||||||| merged common ancestors
-
-#define NS_MAX_FILENAME_LEN     1024
-=======
   nsresult GetServiceLocked(MutexLock& aLock, EntryWrapper& aEntry,
                             const nsIID& aIID, void** aResult);
 };
 
 #define NS_MAX_FILENAME_LEN 1024
->>>>>>> upstream-releases
 
 #define NS_ERROR_IS_DIR NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_XPCOM, 24)
 

@@ -1734,61 +1734,6 @@ var Scratchpad = {
 
     this.editor = new Editor(config);
     const editorElement = document.querySelector("#scratchpad-editor");
-<<<<<<< HEAD
-    this.editor.appendTo(editorElement).then(() => {
-      var lines = initialText.split("\n");
-
-      this.editor.setFontSize(Services.prefs.getIntPref(EDITOR_FONT_SIZE));
-
-      this.editor.on("change", this._onChanged);
-      // Keep a reference to the bound version for use in onUnload.
-      this.updateStatusBar = Scratchpad.updateStatusBar.bind(this);
-      this.editor.on("cursorActivity", this.updateStatusBar);
-      const okstring = this.strings.GetStringFromName("selfxss.okstring");
-      const msg = this.strings.formatStringFromName("selfxss.msg", [okstring], 1);
-      this._onPaste = WebConsoleUtils.pasteHandlerGen(this.editor.container.contentDocument.body,
-                                                      this.notificationBox,
-                                                      msg, okstring);
-      editorElement.addEventListener("paste", this._onPaste, true);
-      editorElement.addEventListener("drop", this._onPaste);
-      this.editor.on("saveRequested", () => this.saveFile());
-      this.editor.focus();
-      this.editor.setCursor({ line: lines.length, ch: lines.pop().length });
-
-      // Add the commands controller for the source-editor.
-      this.editor.insertCommandsController();
-
-      if (state) {
-        this.dirty = !state.saved;
-      }
-||||||| merged common ancestors
-    this.editor.appendTo(editorElement).then(() => {
-      var lines = initialText.split("\n");
-
-      this.editor.setFontSize(Services.prefs.getIntPref(EDITOR_FONT_SIZE));
-
-      this.editor.on("change", this._onChanged);
-      // Keep a reference to the bound version for use in onUnload.
-      this.updateStatusBar = Scratchpad.updateStatusBar.bind(this);
-      this.editor.on("cursorActivity", this.updateStatusBar);
-      const okstring = this.strings.GetStringFromName("selfxss.okstring");
-      const msg = this.strings.formatStringFromName("selfxss.msg", [okstring], 1);
-      this._onPaste = WebConsoleUtils.pasteHandlerGen(this.editor.container.contentDocument.body,
-                                                      document.querySelector("#scratchpad-notificationbox"),
-                                                      msg, okstring);
-      editorElement.addEventListener("paste", this._onPaste, true);
-      editorElement.addEventListener("drop", this._onPaste);
-      this.editor.on("saveRequested", () => this.saveFile());
-      this.editor.focus();
-      this.editor.setCursor({ line: lines.length, ch: lines.pop().length });
-
-      // Add the commands controller for the source-editor.
-      this.editor.insertCommandsController();
-
-      if (state) {
-        this.dirty = !state.saved;
-      }
-=======
     this.editor
       .appendTo(editorElement)
       .then(() => {
@@ -1823,7 +1768,6 @@ var Scratchpad = {
         if (state) {
           this.dirty = !state.saved;
         }
->>>>>>> upstream-releases
 
         this.initialized = true;
         this._triggerObservers("Ready");
@@ -2269,21 +2213,9 @@ ScratchpadWindow.prototype = extend(ScratchpadTab.prototype, {
 
     const client = new DebuggerClient(DebuggerServer.connectPipe());
     await client.connect();
-<<<<<<< HEAD
-    const front = await client.mainRoot.getMainProcess();
-    const target = await TargetFactory.forRemoteTab({
-      activeTab: front,
-      client,
-    });
-    return target;
-||||||| merged common ancestors
-    const response = await client.mainRoot.getProcess(0);
-    return { form: response.form, client };
-=======
     const target = await client.mainRoot.getMainProcess();
     await target.attach();
     return target;
->>>>>>> upstream-releases
   },
 });
 

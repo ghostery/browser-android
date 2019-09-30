@@ -22,10 +22,6 @@
 #  include <string.h>
 #endif
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 // Extensions that should be considered 'executable', ie will not allow users
 // to open immediately without first saving to disk, and potentially provoke
 // other warnings. PLEASE read the longer comment in
@@ -126,7 +122,6 @@ const char* const sExecutableExts[] = {
     // clang-format on
 };
 
->>>>>>> upstream-releases
 #if !defined(MOZ_WIDGET_COCOA) && !defined(XP_WIN)
 NS_IMETHODIMP
 nsLocalFile::InitWithFile(nsIFile* aFile) {

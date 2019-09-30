@@ -17,21 +17,10 @@ struct KeyboardScrollAction;
 
 class nsControllerCommandTable;
 
-<<<<<<< HEAD
-class nsWindowCommandRegistration {
- public:
-  static nsresult RegisterWindowCommands(nsIControllerCommandTable* ccm);
-||||||| merged common ancestors
-class nsWindowCommandRegistration
-{
-public:
-  static nsresult  RegisterWindowCommands(nsIControllerCommandTable *ccm);
-=======
 class nsWindowCommandRegistration {
  public:
   static nsresult RegisterWindowCommands(
       nsControllerCommandTable* aCommandTable);
->>>>>>> upstream-releases
 };
 
 class nsGlobalWindowCommands {

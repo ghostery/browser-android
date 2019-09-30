@@ -16,14 +16,9 @@ const reasons = {
   exception: "whyPaused.exception",
   resumeLimit: "whyPaused.resumeLimit",
   breakpointConditionThrown: "whyPaused.breakpointConditionThrown",
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/why.js
-
-||||||| merged common ancestors
-=======
   eventBreakpoint: "whyPaused.eventBreakpoint",
   mutationBreakpoint: "whyPaused.mutationBreakpoint",
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/why.js
   // V8
   DOM: "whyPaused.breakpoint",
   EventListener: "whyPaused.pauseOnDOMEvents",

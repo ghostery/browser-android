@@ -221,24 +221,12 @@ CustomizeMode.prototype = {
 
   async _updateThemeButtonIcon() {
     let lwthemeButton = this.$("customization-lwtheme-button");
-<<<<<<< HEAD
-    let lwthemeIcon = this.document.getAnonymousElementByAttribute(lwthemeButton,
-                        "class", "button-icon");
-    let theme = LightweightThemeManager.currentTheme;
-    lwthemeIcon.style.backgroundImage = theme ? "url(" + theme.iconURL + ")" : "";
-||||||| merged common ancestors
-    let lwthemeIcon = this.document.getAnonymousElementByAttribute(lwthemeButton,
-                        "class", "button-icon");
-    lwthemeIcon.style.backgroundImage = LightweightThemeManager.currentTheme ?
-      "url(" + LightweightThemeManager.currentTheme.iconURL + ")" : "";
-=======
     let lwthemeIcon = lwthemeButton.icon;
     let theme = (await AddonManager.getAddonsByTypes(["theme"])).find(
       addon => addon.isActive
     );
     lwthemeIcon.style.backgroundImage =
       theme && theme.iconURL ? "url(" + theme.iconURL + ")" : "";
->>>>>>> upstream-releases
   },
 
   setTab(aTab) {
@@ -431,15 +419,8 @@ CustomizeMode.prototype = {
       }, 0);
       this._updateEmptyPaletteNotice();
 
-<<<<<<< HEAD
-      this._updateLWThemeButtonIcon();
-      Services.obs.addObserver(this, "lightweight-theme-changed");
-||||||| merged common ancestors
-      this._updateLWThemeButtonIcon();
-=======
       this._updateThemeButtonIcon();
       AddonManager.addAddonListener(this);
->>>>>>> upstream-releases
 
       this._setupDownloadAutoHideToggle();
 
@@ -486,12 +467,7 @@ CustomizeMode.prototype = {
 
     this._teardownDownloadAutoHideToggle();
 
-<<<<<<< HEAD
-    Services.obs.removeObserver(this, "lightweight-theme-changed");
-||||||| merged common ancestors
-=======
     AddonManager.removeAddonListener(this);
->>>>>>> upstream-releases
     CustomizableUI.removeListener(this);
 
     this.document.removeEventListener("keypress", this);
@@ -1737,13 +1713,6 @@ CustomizeMode.prototype = {
           this._updateDragSpaceCheckbox();
         }
         break;
-      case "lightweight-theme-changed":
-        this._updateLWThemeButtonIcon();
-        if (this._nextThemeChangeUserTriggered) {
-          this._onUIChange();
-        }
-        this._nextThemeChangeUserTriggered = false;
-        break;
     }
   },
 
@@ -1999,15 +1968,9 @@ CustomizeMode.prototype = {
               ((parseInt(dragOverItem.style.borderInlineEndWidth) || 0) / 2) *
               dirFactor;
           }
-<<<<<<< HEAD
-          let before = this.window.RTL_UI ? aEvent.clientX > dropTargetCenter : aEvent.clientX < dropTargetCenter;
-||||||| merged common ancestors
-          let before = this._dir == "ltr" ? aEvent.clientX < dropTargetCenter : aEvent.clientX > dropTargetCenter;
-=======
           let before = this.window.RTL_UI
             ? aEvent.clientX > dropTargetCenter
             : aEvent.clientX < dropTargetCenter;
->>>>>>> upstream-releases
           dragValue = before ? "before" : "after";
         } else if (targetAreaType == "menu-panel") {
           let itemRect = this._getBoundsWithoutFlushing(dragOverItem);
@@ -2031,15 +1994,6 @@ CustomizeMode.prototype = {
       this._cancelDragActive(this._dragOverItem, dragOverItem);
     }
 
-<<<<<<< HEAD
-    if (dragOverItem != this._dragOverItem || dragValue != dragOverItem.getAttribute("dragover")) {
-      if (dragOverItem != CustomizableUI.getCustomizationTarget(targetArea)) {
-        this._setDragActive(dragOverItem, dragValue, draggedItemId, targetAreaType);
-||||||| merged common ancestors
-    if (dragOverItem != this._dragOverItem || dragValue != dragOverItem.getAttribute("dragover")) {
-      if (dragOverItem != targetArea.customizationTarget) {
-        this._setDragActive(dragOverItem, dragValue, draggedItemId, targetAreaType);
-=======
     if (
       dragOverItem != this._dragOverItem ||
       dragValue != dragOverItem.getAttribute("dragover")
@@ -2051,7 +2005,6 @@ CustomizeMode.prototype = {
           draggedItemId,
           targetAreaType
         );
->>>>>>> upstream-releases
       }
       this._dragOverItem = dragOverItem;
       targetArea.setAttribute("draggingover", "true");
@@ -2172,15 +2125,9 @@ CustomizeMode.prototype = {
     }
 
     // Skipintoolbarset items won't really be moved:
-<<<<<<< HEAD
-    let areaCustomizationTarget =
-      CustomizableUI.getCustomizationTarget(aTargetArea);
-||||||| merged common ancestors
-=======
     let areaCustomizationTarget = CustomizableUI.getCustomizationTarget(
       aTargetArea
     );
->>>>>>> upstream-releases
     if (draggedItem.getAttribute("skipintoolbarset") == "true") {
       // These items should never leave their area:
       if (aTargetArea != aOriginArea) {
@@ -2844,18 +2791,10 @@ CustomizeMode.prototype = {
     function updatePlayers() {
       if (keydown) {
         let p1Adj = 1;
-<<<<<<< HEAD
-        if ((keydown == 37 && !window.RTL_UI) ||
-            (keydown == 39 && window.RTL_UI)) {
-||||||| merged common ancestors
-        if ((keydown == 37 && !isRTL) ||
-            (keydown == 39 && isRTL)) {
-=======
         if (
           (keydown == 37 && !window.RTL_UI) ||
           (keydown == 39 && window.RTL_UI)
         ) {
->>>>>>> upstream-releases
           p1Adj = -1;
         }
         p1 += p1Adj * 10 * keydownAdj;
@@ -2894,17 +2833,6 @@ CustomizeMode.prototype = {
     }
 
     function draw() {
-<<<<<<< HEAD
-      let xAdj = window.RTL_UI ? -1 : 1;
-      elements["wp-player1"].style.transform = "translate(" + (xAdj * p1) + "px, -37px)";
-      elements["wp-player2"].style.transform = "translate(" + (xAdj * p2) + "px, " + gameSide + "px)";
-      elements["wp-ball"].style.transform = "translate(" + (xAdj * ball[0]) + "px, " + ball[1] + "px)";
-||||||| merged common ancestors
-      let xAdj = isRTL ? -1 : 1;
-      elements["wp-player1"].style.transform = "translate(" + (xAdj * p1) + "px, -37px)";
-      elements["wp-player2"].style.transform = "translate(" + (xAdj * p2) + "px, " + gameSide + "px)";
-      elements["wp-ball"].style.transform = "translate(" + (xAdj * ball[0]) + "px, " + ball[1] + "px)";
-=======
       let xAdj = window.RTL_UI ? -1 : 1;
       elements["wp-player1"].style.transform =
         "translate(" + xAdj * p1 + "px, -37px)";
@@ -2912,21 +2840,14 @@ CustomizeMode.prototype = {
         "translate(" + xAdj * p2 + "px, " + gameSide + "px)";
       elements["wp-ball"].style.transform =
         "translate(" + xAdj * ball[0] + "px, " + ball[1] + "px)";
->>>>>>> upstream-releases
       elements["wp-score"].textContent = score;
       elements["wp-lives"].setAttribute("lives", lives);
       if (score >= winScore) {
         let arena = elements.arena;
         let image = "url(chrome://browser/skin/customizableui/whimsy.png)";
-<<<<<<< HEAD
-        let position = `${(window.RTL_UI ? gameSide : 0) + (xAdj * ball[0]) - 10}px ${ball[1] - 10}px`;
-||||||| merged common ancestors
-        let position = `${(isRTL ? gameSide : 0) + (xAdj * ball[0]) - 10}px ${ball[1] - 10}px`;
-=======
         let position = `${(window.RTL_UI ? gameSide : 0) +
           xAdj * ball[0] -
           10}px ${ball[1] - 10}px`;
->>>>>>> upstream-releases
         let repeat = "no-repeat";
         let size = "20px";
         if (arena.style.backgroundImage) {

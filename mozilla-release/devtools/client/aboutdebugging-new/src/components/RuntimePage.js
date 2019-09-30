@@ -15,12 +15,7 @@ const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const FluentReact = require("devtools/client/shared/vendor/fluent-react");
 const Localized = createFactory(FluentReact.Localized);
 
-<<<<<<< HEAD
-const ConnectionPromptSetting = createFactory(require("./ConnectionPromptSetting"));
-||||||| merged common ancestors
-=======
 const CompatibilityWarning = createFactory(require("./CompatibilityWarning"));
->>>>>>> upstream-releases
 const DebugTargetPane = createFactory(require("./debugtarget/DebugTargetPane"));
 const ExtensionDetail = createFactory(require("./debugtarget/ExtensionDetail"));
 const InspectAction = createFactory(require("./debugtarget/InspectAction"));
@@ -47,20 +42,6 @@ const TemporaryExtensionInstallSection = createFactory(
 );
 const WorkerDetail = createFactory(require("./debugtarget/WorkerDetail"));
 
-<<<<<<< HEAD
-const Actions = require("../actions/index");
-const { DEBUG_TARGET_PANE, PAGE_TYPES, RUNTIMES } = require("../constants");
-
-const {
-  getCurrentConnectionPromptSetting,
-  getCurrentRuntimeInfo,
-} = require("../modules/runtimes-state-helper");
-const { isSupportedDebugTargetPane } = require("../modules/debug-target-support");
-||||||| merged common ancestors
-const { DEBUG_TARGET_PANE } = require("../constants");
-const { getCurrentRuntimeInfo } = require("../modules/runtimes-state-helper");
-const { isSupportedDebugTargetPane } = require("../modules/debug-target-support");
-=======
 const Actions = require("../actions/index");
 const {
   DEBUG_TARGETS,
@@ -75,32 +56,17 @@ const {
 const {
   isSupportedDebugTargetPane,
 } = require("../modules/debug-target-support");
->>>>>>> upstream-releases
 
 class RuntimePage extends PureComponent {
   static get propTypes() {
     return {
-<<<<<<< HEAD
-      collapsibilities: PropTypes.object.isRequired,
-      connectionPromptEnabled: PropTypes.bool.isRequired,
-||||||| merged common ancestors
-      collapsibilities: PropTypes.object.isRequired,
-=======
       collapsibilities: Types.collapsibilities.isRequired,
->>>>>>> upstream-releases
       dispatch: PropTypes.func.isRequired,
       installedExtensions: PropTypes.arrayOf(PropTypes.object).isRequired,
       otherWorkers: PropTypes.arrayOf(PropTypes.object).isRequired,
-<<<<<<< HEAD
-      runtimeId: PropTypes.string.isRequired,
-      runtimeInfo: PropTypes.object,
-||||||| merged common ancestors
-      runtimeInfo: PropTypes.object,
-=======
       runtimeDetails: Types.runtimeDetails,
       runtimeId: PropTypes.string.isRequired,
       processes: PropTypes.arrayOf(PropTypes.object).isRequired,
->>>>>>> upstream-releases
       serviceWorkers: PropTypes.arrayOf(PropTypes.object).isRequired,
       sharedWorkers: PropTypes.arrayOf(PropTypes.object).isRequired,
       showProfilerDialog: PropTypes.bool.isRequired,
@@ -110,33 +76,6 @@ class RuntimePage extends PureComponent {
     };
   }
 
-<<<<<<< HEAD
-  // TODO: avoid the use of this method
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=1508688
-  componentWillMount() {
-    const { dispatch, runtimeId } = this.props;
-    dispatch(Actions.selectPage(PAGE_TYPES.RUNTIME, runtimeId));
-  }
-
-  renderConnectionPromptSetting() {
-    const { connectionPromptEnabled, dispatch } = this.props;
-
-    return dom.div(
-      {
-        className: "connection-prompt-setting",
-      },
-      ConnectionPromptSetting({ connectionPromptEnabled, dispatch }),
-    );
-  }
-
-  renderDebugTargetPane(name, targets, actionComponent,
-                        detailComponent, paneKey, localizationId) {
-    const { collapsibilities, dispatch, runtimeInfo } = this.props;
-||||||| merged common ancestors
-  renderDebugTargetPane(name, targets, actionComponent,
-                        detailComponent, paneKey, localizationId) {
-    const { collapsibilities, dispatch, runtimeInfo } = this.props;
-=======
   // TODO: avoid the use of this method
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1508688
   componentWillMount() {
@@ -171,7 +110,6 @@ class RuntimePage extends PureComponent {
     localizationId
   ) {
     const { collapsibilities, dispatch, runtimeDetails } = this.props;
->>>>>>> upstream-releases
 
     if (!isSupportedDebugTargetPane(runtimeDetails.info.type, paneKey)) {
       return null;
@@ -221,16 +159,9 @@ class RuntimePage extends PureComponent {
       dispatch,
       installedExtensions,
       otherWorkers,
-<<<<<<< HEAD
-      runtimeId,
-      runtimeInfo,
-||||||| merged common ancestors
-      runtimeInfo,
-=======
       processes,
       runtimeDetails,
       runtimeId,
->>>>>>> upstream-releases
       serviceWorkers,
       sharedWorkers,
       showProfilerDialog,
@@ -244,105 +175,12 @@ class RuntimePage extends PureComponent {
       return null;
     }
 
-<<<<<<< HEAD
-    // do not show the connection prompt setting in 'This Firefox'
-    const shallShowPromptSetting = runtimeId !== RUNTIMES.THIS_FIREFOX;
-
-||||||| merged common ancestors
-=======
     const { compatibilityReport } = runtimeDetails;
 
->>>>>>> upstream-releases
     return dom.article(
       {
         className: "page qa-runtime-page",
       },
-<<<<<<< HEAD
-      RuntimeInfo(runtimeInfo),
-      shallShowPromptSetting
-        ? this.renderConnectionPromptSetting()
-        : null,
-      isSupportedDebugTargetPane(runtimeInfo.type, DEBUG_TARGET_PANE.TEMPORARY_EXTENSION)
-        ? TemporaryExtensionInstaller({ dispatch })
-        : null,
-      this.renderDebugTargetPane("Temporary Extensions",
-                                 temporaryExtensions,
-                                 TemporaryExtensionAction,
-                                 ExtensionDetail,
-                                 DEBUG_TARGET_PANE.TEMPORARY_EXTENSION,
-                                 "about-debugging-runtime-temporary-extensions"),
-      this.renderDebugTargetPane("Extensions",
-                                 installedExtensions,
-                                 InspectAction,
-                                 ExtensionDetail,
-                                 DEBUG_TARGET_PANE.INSTALLED_EXTENSION,
-                                 "about-debugging-runtime-extensions"),
-      this.renderDebugTargetPane("Tabs",
-                                 tabs,
-                                 InspectAction,
-                                 TabDetail,
-                                 DEBUG_TARGET_PANE.TAB,
-                                 "about-debugging-runtime-tabs"),
-      this.renderDebugTargetPane("Service Workers",
-                                 serviceWorkers,
-                                 ServiceWorkerAction,
-                                 WorkerDetail,
-                                 DEBUG_TARGET_PANE.SERVICE_WORKER,
-                                 "about-debugging-runtime-service-workers"),
-      this.renderDebugTargetPane("Shared Workers",
-                                 sharedWorkers,
-                                 InspectAction,
-                                 WorkerDetail,
-                                 DEBUG_TARGET_PANE.SHARED_WORKER,
-                                 "about-debugging-runtime-shared-workers"),
-      this.renderDebugTargetPane("Other Workers",
-                                 otherWorkers,
-                                 InspectAction,
-                                 WorkerDetail,
-                                 DEBUG_TARGET_PANE.OTHER_WORKER,
-                                 "about-debugging-runtime-other-workers"),
-||||||| merged common ancestors
-      RuntimeInfo(runtimeInfo),
-      isSupportedDebugTargetPane(runtimeInfo.type, DEBUG_TARGET_PANE.TEMPORARY_EXTENSION)
-        ? TemporaryExtensionInstaller({ dispatch })
-        : null,
-      this.renderDebugTargetPane("Temporary Extensions",
-                                 temporaryExtensions,
-                                 TemporaryExtensionAction,
-                                 ExtensionDetail,
-                                 DEBUG_TARGET_PANE.TEMPORARY_EXTENSION,
-                                 "about-debugging-runtime-temporary-extensions"),
-      this.renderDebugTargetPane("Extensions",
-                                 installedExtensions,
-                                 InspectAction,
-                                 ExtensionDetail,
-                                 DEBUG_TARGET_PANE.INSTALLED_EXTENSION,
-                                 "about-debugging-runtime-extensions"),
-      this.renderDebugTargetPane("Tabs",
-                                 tabs,
-                                 InspectAction,
-                                 TabDetail,
-                                 DEBUG_TARGET_PANE.TAB,
-                                 "about-debugging-runtime-tabs"),
-      this.renderDebugTargetPane("Service Workers",
-                                 serviceWorkers,
-                                 ServiceWorkerAction,
-                                 WorkerDetail,
-                                 DEBUG_TARGET_PANE.SERVICE_WORKER,
-                                 "about-debugging-runtime-service-workers"),
-      this.renderDebugTargetPane("Shared Workers",
-                                 sharedWorkers,
-                                 InspectAction,
-                                 WorkerDetail,
-                                 DEBUG_TARGET_PANE.SHARED_WORKER,
-                                 "about-debugging-runtime-shared-workers"),
-      this.renderDebugTargetPane("Other Workers",
-                                 otherWorkers,
-                                 InspectAction,
-                                 WorkerDetail,
-                                 DEBUG_TARGET_PANE.OTHER_WORKER,
-                                 "about-debugging-runtime-other-workers"),
-=======
       RuntimeInfo({ ...runtimeDetails.info, runtimeId, dispatch }),
       RuntimeActions({ dispatch, runtimeId, runtimeDetails }),
       runtimeDetails.serviceWorkersAvailable ? null : ServiceWorkersWarning(),
@@ -426,14 +264,12 @@ class RuntimePage extends PureComponent {
       ),
 
       showProfilerDialog ? ProfilerDialog({ dispatch, runtimeDetails }) : null
->>>>>>> upstream-releases
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    connectionPromptEnabled: getCurrentConnectionPromptSetting(state.runtimes),
     collapsibilities: state.ui.debugTargetCollapsibilities,
     installedExtensions: state.debugTargets.installedExtensions,
     processes: state.debugTargets.processes,

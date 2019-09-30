@@ -49,28 +49,6 @@ function ContentControl(aContentScope) {
 }
 
 this.ContentControl.prototype = {
-<<<<<<< HEAD
-  messagesOfInterest: ["AccessFu:Activate",
-                       "AccessFu:AndroidScroll",
-                       "AccessFu:AutoMove",
-                       "AccessFu:ClearCursor",
-                       "AccessFu:Clipboard",
-                       "AccessFu:MoveByGranularity",
-                       "AccessFu:MoveCursor",
-                       "AccessFu:MoveToPoint",
-                       "AccessFu:SetSelection"],
-||||||| merged common ancestors
-  messagesOfInterest: ["AccessFu:Activate",
-                       "AccessFu:AndroidScroll",
-                       "AccessFu:AutoMove",
-                       "AccessFu:ClearCursor",
-                       "AccessFu:Clipboard",
-                       "AccessFu:MoveByGranularity",
-                       "AccessFu:MoveCursor",
-                       "AccessFu:MoveToPoint",
-                       "AccessFu:Select",
-                       "AccessFu:SetSelection"],
-=======
   messagesOfInterest: [
     "AccessFu:Activate",
     "AccessFu:AndroidScroll",
@@ -82,7 +60,6 @@ this.ContentControl.prototype = {
     "AccessFu:MoveToPoint",
     "AccessFu:SetSelection",
   ],
->>>>>>> upstream-releases
 
   start: function cc_start() {
     let cs = this._contentScope.get();

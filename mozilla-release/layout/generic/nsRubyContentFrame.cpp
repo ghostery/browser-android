@@ -19,40 +19,18 @@ using namespace mozilla;
 // nsRubyContentFrame Method Implementations
 // ======================================
 
-<<<<<<< HEAD
-/* virtual */ bool nsRubyContentFrame::IsFrameOfType(uint32_t aFlags) const {
-||||||| merged common ancestors
-/* virtual */ bool
-nsRubyContentFrame::IsFrameOfType(uint32_t aFlags) const
-{
-=======
 /* virtual */
 bool nsRubyContentFrame::IsFrameOfType(uint32_t aFlags) const {
->>>>>>> upstream-releases
   if (aFlags & eBidiInlineContainer) {
     return false;
   }
   return nsInlineFrame::IsFrameOfType(aFlags);
 }
 
-<<<<<<< HEAD
-bool nsRubyContentFrame::IsIntraLevelWhitespace() const {
-  nsAtom* pseudoType = Style()->GetPseudo();
-  if (pseudoType != nsCSSAnonBoxes::rubyBase() &&
-      pseudoType != nsCSSAnonBoxes::rubyText()) {
-||||||| merged common ancestors
-bool
-nsRubyContentFrame::IsIntraLevelWhitespace() const
-{
-  nsAtom* pseudoType = Style()->GetPseudo();
-  if (pseudoType != nsCSSAnonBoxes::rubyBase() &&
-      pseudoType != nsCSSAnonBoxes::rubyText()) {
-=======
 bool nsRubyContentFrame::IsIntraLevelWhitespace() const {
   auto pseudoType = Style()->GetPseudoType();
   if (pseudoType != PseudoStyleType::rubyBase &&
       pseudoType != PseudoStyleType::rubyText) {
->>>>>>> upstream-releases
     return false;
   }
 

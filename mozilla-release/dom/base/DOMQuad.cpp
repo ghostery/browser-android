@@ -27,14 +27,6 @@ DOMQuad::DOMQuad(nsISupports* aParent, CSSPoint aPoints[4]) : mParent(aParent) {
   }
 }
 
-<<<<<<< HEAD
-DOMQuad::DOMQuad(nsISupports* aParent) : mParent(aParent) {}
-||||||| merged common ancestors
-DOMQuad::DOMQuad(nsISupports* aParent)
-  : mParent(aParent)
-{
-}
-=======
 DOMQuad::DOMQuad(nsISupports* aParent) : mParent(aParent) {}
 
 DOMQuad::~DOMQuad() {}
@@ -43,15 +35,7 @@ JSObject* DOMQuad::WrapObject(JSContext* aCx,
                               JS::Handle<JSObject*> aGivenProto) {
   return DOMQuad_Binding::Wrap(aCx, this, aGivenProto);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-DOMQuad::~DOMQuad() {}
-||||||| merged common ancestors
-DOMQuad::~DOMQuad()
-{
-}
-=======
 already_AddRefed<DOMQuad> DOMQuad::FromRect(const GlobalObject& aGlobal,
                                             const DOMRectInit& aInit) {
   nsISupports* parent = aGlobal.GetAsSupports();
@@ -65,18 +49,7 @@ already_AddRefed<DOMQuad> DOMQuad::FromRect(const GlobalObject& aGlobal,
       new DOMPoint(parent, aInit.mX, aInit.mY + aInit.mHeight, 0, 1);
   return obj.forget();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-JSObject* DOMQuad::WrapObject(JSContext* aCx,
-                              JS::Handle<JSObject*> aGivenProto) {
-  return DOMQuad_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-DOMQuad::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-  return DOMQuad_Binding::Wrap(aCx, this, aGivenProto);
-=======
 already_AddRefed<DOMQuad> DOMQuad::FromQuad(const GlobalObject& aGlobal,
                                             const DOMQuadInit& aInit) {
   RefPtr<DOMQuad> obj = new DOMQuad(aGlobal.GetAsSupports());
@@ -85,7 +58,6 @@ already_AddRefed<DOMQuad> DOMQuad::FromQuad(const GlobalObject& aGlobal,
   obj->mPoints[2] = DOMPoint::FromPoint(aGlobal, aInit.mP3);
   obj->mPoints[3] = DOMPoint::FromPoint(aGlobal, aInit.mP4);
   return obj.forget();
->>>>>>> upstream-releases
 }
 
 already_AddRefed<DOMQuad> DOMQuad::Constructor(const GlobalObject& aGlobal,
@@ -139,31 +111,7 @@ void DOMQuad::GetVerticalMinMax(double* aY1, double* aY2) const {
   *aY2 = y2;
 }
 
-<<<<<<< HEAD
-DOMRectReadOnly* DOMQuad::Bounds() {
-  if (!mBounds) {
-    mBounds = GetBounds();
-  }
-  return mBounds;
-}
-
 already_AddRefed<DOMRectReadOnly> DOMQuad::GetBounds() const {
-||||||| merged common ancestors
-DOMRectReadOnly*
-DOMQuad::Bounds()
-{
-  if (!mBounds) {
-    mBounds = GetBounds();
-  }
-  return mBounds;
-}
-
-already_AddRefed<DOMRectReadOnly>
-DOMQuad::GetBounds() const
-{
-=======
-already_AddRefed<DOMRectReadOnly> DOMQuad::GetBounds() const {
->>>>>>> upstream-releases
   double x1, x2;
   double y1, y2;
 
@@ -175,21 +123,6 @@ already_AddRefed<DOMRectReadOnly> DOMQuad::GetBounds() const {
   return rval.forget();
 }
 
-<<<<<<< HEAD
-void DOMQuad::ToJSON(DOMQuadJSON& aInit) {
-  aInit.mP1.Construct(RefPtr<DOMPoint>(P1()).forget());
-  aInit.mP2.Construct(RefPtr<DOMPoint>(P2()).forget());
-  aInit.mP3.Construct(RefPtr<DOMPoint>(P3()).forget());
-  aInit.mP4.Construct(RefPtr<DOMPoint>(P4()).forget());
-||||||| merged common ancestors
-void
-DOMQuad::ToJSON(DOMQuadJSON& aInit)
-{
-  aInit.mP1.Construct(RefPtr<DOMPoint>(P1()).forget());
-  aInit.mP2.Construct(RefPtr<DOMPoint>(P2()).forget());
-  aInit.mP3.Construct(RefPtr<DOMPoint>(P3()).forget());
-  aInit.mP4.Construct(RefPtr<DOMPoint>(P4()).forget());
-=======
 // https://drafts.fxtf.org/geometry/#structured-serialization
 bool DOMQuad::WriteStructuredClone(JSContext* aCx,
                                    JSStructuredCloneWriter* aWriter) const {
@@ -213,5 +146,4 @@ already_AddRefed<DOMQuad> DOMQuad::ReadStructuredClone(
     }
   }
   return quad.forget();
->>>>>>> upstream-releases
 }

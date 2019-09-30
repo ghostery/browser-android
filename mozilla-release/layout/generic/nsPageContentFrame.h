@@ -49,21 +49,10 @@ class nsPageContentFrame final : public mozilla::ViewportFrame {
   virtual nsresult GetFrameName(nsAString& aResult) const override;
 #endif
 
-<<<<<<< HEAD
- protected:
-  explicit nsPageContentFrame(ComputedStyle* aStyle)
-      : ViewportFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-protected:
-  explicit nsPageContentFrame(ComputedStyle* aStyle)
-    : ViewportFrame(aStyle, kClassID)
-  {}
-=======
  protected:
   explicit nsPageContentFrame(ComputedStyle* aStyle,
                               nsPresContext* aPresContext)
       : ViewportFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
   nsSharedPageData* mPD;
 };

@@ -51,34 +51,17 @@ class UniqueStringUniverse;
 // Find all the unwind information in OBJ_FILE, an ELF executable
 // or shared library, and add it to SMAP.
 bool ReadSymbolData(const std::string& obj_file,
-<<<<<<< HEAD
-                    const std::vector<std::string>& debug_dirs, SecMap* smap,
-                    void* rx_avma, size_t rx_size, void (*log)(const char*));
-||||||| merged common ancestors
-                    const std::vector<std::string>& debug_dirs,
-                    SecMap* smap,
-                    void* rx_avma, size_t rx_size,
-                    void (*log)(const char*));
-=======
                     const std::vector<std::string>& debug_dirs, SecMap* smap,
                     void* rx_avma, size_t rx_size, UniqueStringUniverse* usu,
                     void (*log)(const char*));
->>>>>>> upstream-releases
 
 // The same as ReadSymbolData, except that OBJ_FILE is assumed to
 // point to a mapped-in image of OBJ_FILENAME.
 bool ReadSymbolDataInternal(const uint8_t* obj_file,
                             const std::string& obj_filename,
                             const std::vector<std::string>& debug_dirs,
-<<<<<<< HEAD
-                            SecMap* smap, void* rx_avma, size_t rx_size,
-||||||| merged common ancestors
-                            SecMap* smap,
-                            void* rx_avma, size_t rx_size,
-=======
                             SecMap* smap, void* rx_avma, size_t rx_size,
                             UniqueStringUniverse* usu,
->>>>>>> upstream-releases
                             void (*log)(const char*));
 
 }  // namespace lul

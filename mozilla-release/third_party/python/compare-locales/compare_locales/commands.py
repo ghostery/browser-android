@@ -129,21 +129,12 @@ Be careful to specify the right merge directory when using this option.""")
                     config = TOMLParser().parse(config_path, env=config_env)
                 except ConfigNotFound as e:
                     self.parser.exit('config file %s not found' % e.filename)
-<<<<<<< HEAD
-                if locales:
-                    config.set_locales(locales, deep=locales_deep)
-||||||| merged common ancestors
-                config.add_global_environment(l10n_base=l10n_base_dir)
-                if locales:
-                    config.set_locales(locales, deep=locales_deep)
-=======
                 if locales_deep:
                     if not locales:
                         # no explicit locales given, force all locales
                         config.set_locales(config.all_locales, deep=True)
                     else:
                         config.set_locales(locales, deep=True)
->>>>>>> upstream-releases
                 configs.append(config)
             else:
                 app = EnumerateApp(config_path, l10n_base_dir)
@@ -151,13 +142,8 @@ Be careful to specify the right merge directory when using this option.""")
         try:
             observers = compareProjects(
                 configs,
-<<<<<<< HEAD
-                l10n_base_dir,
-||||||| merged common ancestors
-=======
                 locales,
                 l10n_base_dir,
->>>>>>> upstream-releases
                 quiet=quiet,
                 merge_stage=merge, clobber_merge=clobber)
         except (OSError, IOError) as exc:

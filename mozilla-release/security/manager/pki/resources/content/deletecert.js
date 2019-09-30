@@ -51,18 +51,10 @@ function getLabelForCertTreeItem(certTreeItem) {
     }
   }
 
-<<<<<<< HEAD
-  document.l10n.setAttributes(element, "cert-with-serial", { serialNumber: cert.serialNumber});
-  return element;
-||||||| merged common ancestors
-  let bundle = document.getElementById("pippki_bundle");
-  return bundle.getFormattedString("certWithSerial", [cert.serialNumber]);
-=======
   document.l10n.setAttributes(element, "cert-with-serial", {
     serialNumber: cert.serialNumber,
   });
   return element;
->>>>>>> upstream-releases
 }
 
 /**
@@ -90,15 +82,6 @@ function onLoad() {
       return;
   }
 
-<<<<<<< HEAD
-  document.l10n.setAttributes(document.documentElement, prefixForType + "title");
-  document.l10n.setAttributes(confirm, prefixForType + "confirm");
-  document.l10n.setAttributes(impact, prefixForType + "impact");
-||||||| merged common ancestors
-  document.title = title;
-
-  setText("confirm", confirm);
-=======
   document.l10n.setAttributes(
     document.documentElement,
     prefixForType + "title"
@@ -108,7 +91,6 @@ function onLoad() {
 
   document.addEventListener("dialogaccept", onDialogAccept);
   document.addEventListener("dialogcancel", onDialogCancel);
->>>>>>> upstream-releases
 
   let box = document.getElementById("certlist");
   let certTreeItems = window.arguments[1];

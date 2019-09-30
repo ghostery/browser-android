@@ -50,48 +50,12 @@ static inline ExtensionPolicyService& EPS() {
 
 NS_IMPL_CLASSINFO(ContentPrincipal, nullptr, nsIClassInfo::MAIN_THREAD_ONLY,
                   NS_PRINCIPAL_CID)
-<<<<<<< HEAD
 NS_IMPL_QUERY_INTERFACE_CI(ContentPrincipal, nsIPrincipal, nsISerializable)
 NS_IMPL_CI_INTERFACE_GETTER(ContentPrincipal, nsIPrincipal, nsISerializable)
 
-ContentPrincipal::ContentPrincipal() : BasePrincipal(eCodebasePrincipal) {}
-||||||| merged common ancestors
-NS_IMPL_QUERY_INTERFACE_CI(ContentPrincipal,
-                           nsIPrincipal,
-                           nsISerializable)
-NS_IMPL_CI_INTERFACE_GETTER(ContentPrincipal,
-                            nsIPrincipal,
-                            nsISerializable)
-
-ContentPrincipal::ContentPrincipal()
-  : BasePrincipal(eCodebasePrincipal)
-{
-}
-=======
-NS_IMPL_QUERY_INTERFACE_CI(ContentPrincipal, nsIPrincipal, nsISerializable)
-NS_IMPL_CI_INTERFACE_GETTER(ContentPrincipal, nsIPrincipal, nsISerializable)
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-ContentPrincipal::~ContentPrincipal() {
-  // let's clear the principal within the csp to avoid a tangling pointer
-  if (mCSP) {
-    static_cast<nsCSPContext*>(mCSP.get())->clearLoadingPrincipal();
-  }
-}
-||||||| merged common ancestors
-ContentPrincipal::~ContentPrincipal()
-{
-  // let's clear the principal within the csp to avoid a tangling pointer
-  if (mCSP) {
-    static_cast<nsCSPContext*>(mCSP.get())->clearLoadingPrincipal();
-  }
-}
-=======
 ContentPrincipal::ContentPrincipal() : BasePrincipal(eCodebasePrincipal) {}
 
 ContentPrincipal::~ContentPrincipal() {}
->>>>>>> upstream-releases
 
 nsresult ContentPrincipal::Init(nsIURI* aCodebase,
                                 const OriginAttributes& aOriginAttributes,
@@ -117,13 +81,6 @@ nsresult ContentPrincipal::Init(nsIURI* aCodebase,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult ContentPrincipal::GetScriptLocation(nsACString& aStr) {
-||||||| merged common ancestors
-nsresult
-ContentPrincipal::GetScriptLocation(nsACString &aStr)
-{
-=======
 nsresult ContentPrincipal::Init(ContentPrincipal* aOther,
                                 const OriginAttributes& aOriginAttributes) {
   NS_ENSURE_ARG(aOther);
@@ -137,23 +94,12 @@ nsresult ContentPrincipal::Init(ContentPrincipal* aOther,
 }
 
 nsresult ContentPrincipal::GetScriptLocation(nsACString& aStr) {
->>>>>>> upstream-releases
   return mCodebase->GetSpec(aStr);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult ContentPrincipal::GenerateOriginNoSuffixFromURI(
-    nsIURI* aURI, nsACString& aOriginNoSuffix) {
-||||||| merged common ancestors
-/* static */ nsresult
-ContentPrincipal::GenerateOriginNoSuffixFromURI(nsIURI* aURI,
-                                                nsACString& aOriginNoSuffix)
-{
-=======
 /* static */
 nsresult ContentPrincipal::GenerateOriginNoSuffixFromURI(
     nsIURI* aURI, nsACString& aOriginNoSuffix) {
->>>>>>> upstream-releases
   if (!aURI) {
     return NS_ERROR_FAILURE;
   }
@@ -203,24 +149,11 @@ nsresult ContentPrincipal::GenerateOriginNoSuffixFromURI(
       (NS_SUCCEEDED(origin->SchemeIs("moz-safe-about", &isBehaved)) &&
        isBehaved &&
        // We generally consider two about:foo origins to be same-origin, but
-<<<<<<< HEAD
-       // about:blank is special since it can be generated from different
-       // sources. We check for moz-safe-about:blank since origin is an
-       // innermost URI.
-       !origin->GetSpecOrDefault().EqualsLiteral("moz-safe-about:blank")) ||
-      (NS_SUCCEEDED(origin->SchemeIs("indexeddb", &isBehaved)) && isBehaved)) {
-||||||| merged common ancestors
-       // about:blank is special since it can be generated from different sources.
-       // We check for moz-safe-about:blank since origin is an innermost URI.
-       !origin->GetSpecOrDefault().EqualsLiteral("moz-safe-about:blank")) ||
-      (NS_SUCCEEDED(origin->SchemeIs("indexeddb", &isBehaved)) && isBehaved)) {
-=======
        // about:blank is special since it can be generated from different
        // sources. We check for moz-safe-about:blank since origin is an
        // innermost URI.
        !StringBeginsWith(origin->GetSpecOrDefault(),
                          NS_LITERAL_CSTRING("moz-safe-about:blank")))) {
->>>>>>> upstream-releases
     rv = origin->GetAsciiSpec(aOriginNoSuffix);
     NS_ENSURE_SUCCESS(rv, rv);
 
@@ -428,35 +361,6 @@ ContentPrincipal::SetDomain(nsIURI* aDomain) {
   mDomain = aDomain;
   SetHasExplicitDomain();
 
-<<<<<<< HEAD
-  // Recompute all wrappers between compartments using this principal and other
-  // non-chrome compartments.
-  AutoSafeJSContext cx;
-  JSPrincipals* principals =
-      nsJSPrincipals::get(static_cast<nsIPrincipal*>(this));
-  bool success =
-      js::RecomputeWrappers(cx, js::ContentCompartmentsOnly(),
-                            js::CompartmentsWithPrincipals(principals));
-  NS_ENSURE_TRUE(success, NS_ERROR_FAILURE);
-  success =
-      js::RecomputeWrappers(cx, js::CompartmentsWithPrincipals(principals),
-                            js::ContentCompartmentsOnly());
-  NS_ENSURE_TRUE(success, NS_ERROR_FAILURE);
-
-||||||| merged common ancestors
-  // Recompute all wrappers between compartments using this principal and other
-  // non-chrome compartments.
-  AutoSafeJSContext cx;
-  JSPrincipals *principals = nsJSPrincipals::get(static_cast<nsIPrincipal*>(this));
-  bool success = js::RecomputeWrappers(cx, js::ContentCompartmentsOnly(),
-                                       js::CompartmentsWithPrincipals(principals));
-  NS_ENSURE_TRUE(success, NS_ERROR_FAILURE);
-  success = js::RecomputeWrappers(cx, js::CompartmentsWithPrincipals(principals),
-                                  js::ContentCompartmentsOnly());
-  NS_ENSURE_TRUE(success, NS_ERROR_FAILURE);
-
-=======
->>>>>>> upstream-releases
   // Set the changed-document-domain flag on compartments containing realms
   // using this principal.
   auto cb = [](JSContext*, void*, JS::Handle<JS::Realm*> aRealm) {
@@ -708,30 +612,11 @@ ContentPrincipal::Read(nsIObjectInputStream* aStream) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ContentPrincipal::Write(nsIObjectOutputStream* aStream) {
-  NS_ENSURE_STATE(mCodebase);
-  nsresult rv = NS_WriteOptionalCompoundObject(aStream, mCodebase,
-                                               NS_GET_IID(nsIURI), true);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-||||||| merged common ancestors
-ContentPrincipal::Write(nsIObjectOutputStream* aStream)
-{
-  NS_ENSURE_STATE(mCodebase);
-  nsresult rv = NS_WriteOptionalCompoundObject(aStream, mCodebase, NS_GET_IID(nsIURI),
-                                               true);
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-=======
 ContentPrincipal::Write(nsIObjectOutputStream* aStream) {
   // Read is used still for legacy principals
   MOZ_RELEASE_ASSERT(false, "Old style serialization is removed");
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 nsresult ContentPrincipal::PopulateJSONObject(Json::Value& aObject) {
   nsAutoCString codebase;
@@ -778,14 +663,6 @@ already_AddRefed<BasePrincipal> ContentPrincipal::FromProperties(
   nsCOMPtr<nsIContentSecurityPolicy> csp;
   OriginAttributes attrs;
 
-<<<<<<< HEAD
-  rv = NS_WriteOptionalCompoundObject(
-      aStream, mCSP, NS_GET_IID(nsIContentSecurityPolicy), true);
-||||||| merged common ancestors
-  rv = NS_WriteOptionalCompoundObject(aStream, mCSP,
-                                      NS_GET_IID(nsIContentSecurityPolicy),
-                                      true);
-=======
   // The odd structure here is to make the code to not compile
   // if all the switch enum cases haven't been codified
   for (const auto& field : aFields) {
@@ -833,7 +710,6 @@ already_AddRefed<BasePrincipal> ContentPrincipal::FromProperties(
   nsAutoCString originNoSuffix;
   rv = ContentPrincipal::GenerateOriginNoSuffixFromURI(codebaseURI,
                                                        originNoSuffix);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     return nullptr;
   }

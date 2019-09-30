@@ -19,44 +19,11 @@
 SkBitmapController::State* SkBitmapController::RequestBitmap(const SkBitmapProvider& provider,
                                                              const SkMatrix& inv,
                                                              SkFilterQuality quality,
-<<<<<<< HEAD
                                                              SkArenaAlloc* alloc) {
     auto* state = alloc->make<SkBitmapController::State>(provider, inv, quality);
 
     return state->pixmap().addr() ? state : nullptr;
 }
-||||||| merged common ancestors
-                                                             void* storage, size_t storageSize) {
-    State* state = this->onRequestBitmap(provider, inv, quality, storage, storageSize);
-    if (state) {
-        if (nullptr == state->fPixmap.addr()) {
-            SkInPlaceDeleteCheck(state, storage);
-            state = nullptr;
-        }
-    }
-    return state;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-class SkDefaultBitmapControllerState : public SkBitmapController::State {
-public:
-    SkDefaultBitmapControllerState(const SkBitmapProvider&, const SkMatrix& inv, SkFilterQuality);
-
-private:
-    SkBitmap                fResultBitmap;
-    sk_sp<const SkMipMap>   fCurrMip;
-
-    bool processHighRequest(const SkBitmapProvider&);
-    bool processMediumRequest(const SkBitmapProvider&);
-};
-=======
-                                                             SkArenaAlloc* alloc) {
-    auto* state = alloc->make<SkBitmapController::State>(provider, inv, quality);
-
-    return state->pixmap().addr() ? state : nullptr;
-}
->>>>>>> upstream-releases
 
 bool SkBitmapController::State::processHighRequest(const SkBitmapProvider& provider) {
     if (fQuality != kHigh_SkFilterQuality) {
@@ -111,21 +78,7 @@ bool SkBitmapController::State::processMediumRequest(const SkBitmapProvider& pro
     if (invScaleSize.width() > SK_Scalar1 || invScaleSize.height() > SK_Scalar1) {
         fCurrMip.reset(SkMipMapCache::FindAndRef(provider.makeCacheDesc()));
         if (nullptr == fCurrMip.get()) {
-<<<<<<< HEAD
-            SkBitmap orig;
-            if (!provider.asBitmap(&orig)) {
-                return false;
-            }
-            fCurrMip.reset(SkMipMapCache::AddAndRef(orig));
-||||||| merged common ancestors
-            SkBitmap orig;
-            if (!provider.asBitmap(&orig)) {
-                return false;
-            }
-            fCurrMip.reset(SkMipMapCache::AddAndRef(orig, colorMode));
-=======
             fCurrMip.reset(SkMipMapCache::AddAndRef(provider));
->>>>>>> upstream-releases
             if (nullptr == fCurrMip.get()) {
                 return false;
             }

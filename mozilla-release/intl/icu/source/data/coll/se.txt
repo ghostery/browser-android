@@ -8,13 +8,7 @@ se{
                 "[import und-u-co-search]"
                 "[import se-u-co-standard]"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         standard{
             Sequence{
@@ -59,13 +53,7 @@ se{
                 "<<<Ô<<ǫ"
                 "<<<Ǫ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

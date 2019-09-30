@@ -13,37 +13,18 @@
 #include "nsContentUtils.h"
 #include "WorkerPrivate.h"
 
-<<<<<<< HEAD
-#ifdef XP_WIN
-#undef PostMessage
-#endif
-
-||||||| merged common ancestors
-=======
 #ifdef XP_WIN
 #  undef PostMessage
 #endif
 
->>>>>>> upstream-releases
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Worker> Worker::Constructor(
-    const GlobalObject& aGlobal, const nsAString& aScriptURL,
-    const WorkerOptions& aOptions, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Worker>
-Worker::Constructor(const GlobalObject& aGlobal, const nsAString& aScriptURL,
-                    const WorkerOptions& aOptions, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Worker> Worker::Constructor(const GlobalObject& aGlobal,
                                              const nsAString& aScriptURL,
                                              const WorkerOptions& aOptions,
                                              ErrorResult& aRv) {
->>>>>>> upstream-releases
   JSContext* cx = aGlobal.Context();
 
   RefPtr<WorkerPrivate> workerPrivate = WorkerPrivate::Constructor(

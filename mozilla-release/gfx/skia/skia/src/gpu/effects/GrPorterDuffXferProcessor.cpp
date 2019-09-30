@@ -619,13 +619,7 @@ private:
 
 class GLPDLCDXferProcessor : public GrGLSLXferProcessor {
 public:
-<<<<<<< HEAD
-    GLPDLCDXferProcessor(const GrProcessor&) : fLastAlpha(UINT32_MAX) {}
-||||||| merged common ancestors
-    GLPDLCDXferProcessor(const GrProcessor&) : fLastAlpha(SK_MaxU32) {}
-=======
     GLPDLCDXferProcessor(const GrProcessor&) : fLastAlpha(SK_FloatNaN) {}
->>>>>>> upstream-releases
 
     ~GLPDLCDXferProcessor() override {}
 

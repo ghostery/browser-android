@@ -155,32 +155,6 @@ ExecutablePool* ExecutableAllocator::poolForSize(size_t n) {
   return pool;
 }
 
-<<<<<<< HEAD
-/* static */ size_t ExecutableAllocator::roundUpAllocationSize(
-    size_t request, size_t granularity) {
-  if ((std::numeric_limits<size_t>::max() - granularity) <= request) {
-    return OVERSIZE_ALLOCATION;
-  }
-
-  // Round up to next page boundary
-  size_t size = request + (granularity - 1);
-  size = size & ~(granularity - 1);
-  MOZ_ASSERT(size >= request);
-  return size;
-||||||| merged common ancestors
-/* static */ size_t
-ExecutableAllocator::roundUpAllocationSize(size_t request, size_t granularity)
-{
-    if ((std::numeric_limits<size_t>::max() - granularity) <= request) {
-        return OVERSIZE_ALLOCATION;
-    }
-
-    // Round up to next page boundary
-    size_t size = request + (granularity - 1);
-    size = size & ~(granularity - 1);
-    MOZ_ASSERT(size >= request);
-    return size;
-=======
 /* static */
 size_t ExecutableAllocator::roundUpAllocationSize(size_t request,
                                                   size_t granularity) {
@@ -193,7 +167,6 @@ size_t ExecutableAllocator::roundUpAllocationSize(size_t request,
   size = size & ~(granularity - 1);
   MOZ_ASSERT(size >= request);
   return size;
->>>>>>> upstream-releases
 }
 
 ExecutablePool* ExecutableAllocator::createPool(size_t n) {
@@ -286,22 +259,6 @@ void ExecutableAllocator::addSizeOfCode(JS::CodeSizes* sizes) const {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ExecutableAllocator::reprotectPool(
-    JSRuntime* rt, ExecutablePool* pool, ProtectionSetting protection) {
-  char* start = pool->m_allocation.pages;
-  if (!ReprotectRegion(start, pool->m_freePtr - start, protection)) {
-    MOZ_CRASH();
-  }
-||||||| merged common ancestors
-/* static */ void
-ExecutableAllocator::reprotectPool(JSRuntime* rt, ExecutablePool* pool, ProtectionSetting protection)
-{
-    char* start = pool->m_allocation.pages;
-    if (!ReprotectRegion(start, pool->m_freePtr - start, protection)) {
-        MOZ_CRASH();
-    }
-=======
 /* static */
 void ExecutableAllocator::reprotectPool(JSRuntime* rt, ExecutablePool* pool,
                                         ProtectionSetting protection) {
@@ -309,24 +266,12 @@ void ExecutableAllocator::reprotectPool(JSRuntime* rt, ExecutablePool* pool,
   if (!ReprotectRegion(start, pool->m_freePtr - start, protection)) {
     MOZ_CRASH();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void ExecutableAllocator::poisonCode(
-    JSRuntime* rt, JitPoisonRangeVector& ranges) {
-  MOZ_ASSERT(CurrentThreadCanAccessRuntime(rt));
-||||||| merged common ancestors
-/* static */ void
-ExecutableAllocator::poisonCode(JSRuntime* rt, JitPoisonRangeVector& ranges)
-{
-    MOZ_ASSERT(CurrentThreadCanAccessRuntime(rt));
-=======
 /* static */
 void ExecutableAllocator::poisonCode(JSRuntime* rt,
                                      JitPoisonRangeVector& ranges) {
   MOZ_ASSERT(CurrentThreadCanAccessRuntime(rt));
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   // Make sure no pools have the mark bit set.
@@ -352,30 +297,6 @@ void ExecutableAllocator::poisonCode(JSRuntime* rt,
       pool->mark();
     }
 
-<<<<<<< HEAD
-    // Note: we use memset instead of JS_POISON because we want to poison
-    // JIT code in release builds too. Furthermore, we don't want the
-    // invalid-ObjectValue poisoning JS_POISON does in debug builds.
-    memset(ranges[i].start, JS_SWEPT_CODE_PATTERN, ranges[i].size);
-    MOZ_MAKE_MEM_NOACCESS(ranges[i].start, ranges[i].size);
-  }
-
-  // Make the pools executable again and drop references.
-  for (size_t i = 0; i < ranges.length(); i++) {
-    ExecutablePool* pool = ranges[i].pool;
-    if (pool->isMarked()) {
-      reprotectPool(rt, pool, ProtectionSetting::Executable);
-      pool->unmark();
-||||||| merged common ancestors
-    // Make the pools executable again and drop references.
-    for (size_t i = 0; i < ranges.length(); i++) {
-        ExecutablePool* pool = ranges[i].pool;
-        if (pool->isMarked()) {
-            reprotectPool(rt, pool, ProtectionSetting::Executable);
-            pool->unmark();
-        }
-        pool->release();
-=======
     // Note: we use memset instead of js::Poison because we want to poison
     // JIT code in release builds too. Furthermore, we don't want the
     // invalid-ObjectValue poisoning js::Poison does in debug builds.
@@ -389,7 +310,6 @@ void ExecutableAllocator::poisonCode(JSRuntime* rt,
     if (pool->isMarked()) {
       reprotectPool(rt, pool, ProtectionSetting::Executable);
       pool->unmark();
->>>>>>> upstream-releases
     }
     pool->release();
   }

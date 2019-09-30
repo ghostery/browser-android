@@ -15,24 +15,6 @@ namespace dom {
 
 typedef SVGTransformableElement SVGGraphicsElementBase;
 
-<<<<<<< HEAD
-class SVGGraphicsElement : public SVGGraphicsElementBase, public SVGTests {
- protected:
-  explicit SVGGraphicsElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  ~SVGGraphicsElement();
-
- public:
-||||||| merged common ancestors
-class SVGGraphicsElement : public SVGGraphicsElementBase,
-                           public SVGTests
-{
-protected:
-  explicit SVGGraphicsElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-  ~SVGGraphicsElement();
-
-public:
-=======
 class SVGGraphicsElement : public SVGGraphicsElementBase, public SVGTests {
  protected:
   explicit SVGGraphicsElement(
@@ -40,7 +22,6 @@ class SVGGraphicsElement : public SVGGraphicsElementBase, public SVGTests {
   ~SVGGraphicsElement() = default;
 
  public:
->>>>>>> upstream-releases
   // interfaces:
   NS_DECL_ISUPPORTS_INHERITED
 

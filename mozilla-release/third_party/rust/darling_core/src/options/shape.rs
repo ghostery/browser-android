@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-use proc_macro2::TokenStream;
-use quote::{TokenStreamExt, ToTokens};
-||||||| merged common ancestors
-use quote::{Tokens, ToTokens};
-=======
 //! Types for "shape" validation. This allows types deriving `FromDeriveInput` etc. to declare
 //! that they only work on - for example - structs with named fields, or newtype enum variants.
 
 use proc_macro2::TokenStream;
 use quote::{ToTokens, TokenStreamExt};
->>>>>>> upstream-releases
 use syn::{Meta, NestedMeta};
 
 use {Error, FromMeta, Result};
@@ -52,19 +45,10 @@ impl FromMeta for Shape {
                 let word = word.as_str();
                 if word == "any" {
                     new.any = true;
-<<<<<<< HEAD
-                } else if word.starts_with("enum_") {
-                    new.enum_values.set_word(word)?;
-||||||| merged common ancestors
-                }
-                else if word.starts_with("enum_") {
-                    new.enum_values.set_word(word)?;
-=======
                 } else if word.starts_with("enum_") {
                     new.enum_values
                         .set_word(word)
                         .map_err(|e| e.with_span(ident))?;
->>>>>>> upstream-releases
                 } else if word.starts_with("struct_") {
                     new.struct_values
                         .set_word(word)
@@ -82,16 +66,8 @@ impl FromMeta for Shape {
 }
 
 impl ToTokens for Shape {
-<<<<<<< HEAD
-    fn to_tokens(&self, tokens: &mut TokenStream) {
-        let fn_body = if self.any == true {
-||||||| merged common ancestors
-    fn to_tokens(&self, tokens: &mut Tokens) {
-        let fn_body = if self.any == true {
-=======
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let fn_body = if self.any {
->>>>>>> upstream-releases
             quote!(::darling::export::Ok(()))
         } else {
             let en = &self.enum_values;
@@ -191,15 +167,9 @@ impl FromMeta for DataShape {
 
         for item in items {
             if let NestedMeta::Meta(Meta::Word(ref ident)) = *item {
-<<<<<<< HEAD
-                new.set_word(ident.to_string().as_str())?;
-||||||| merged common ancestors
-                new.set_word(ident.as_ref())?;
-=======
                 if let Err(e) = new.set_word(&ident.to_string()) {
                     errors.push(e.with_span(ident));
                 }
->>>>>>> upstream-releases
             } else {
                 errors.push(Error::unsupported_format("non-word").with_span(item));
             }
@@ -218,16 +188,8 @@ impl ToTokens for DataShape {
         let body = if self.any {
             quote!(::darling::export::Ok(()))
         } else if self.supports_none() {
-<<<<<<< HEAD
-            let ty = self.prefix.trim_right_matches("_");
-            quote!(::darling::export::Err(::darling::Error::unsupported_shape(#ty)))
-||||||| merged common ancestors
-            let ty = self.prefix.trim_right_matches("_");
-            quote!(::darling::export::Err(::darling::Error::unsupported_format(#ty)))
-=======
             let ty = self.prefix.trim_right_matches('_');
             quote!(::darling::export::Err(::darling::Error::unsupported_shape(#ty)))
->>>>>>> upstream-releases
         } else {
             let unit = match_arm("unit", self.unit);
             let newtype = match_arm("newtype", self.newtype);

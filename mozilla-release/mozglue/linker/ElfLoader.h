@@ -20,131 +20,43 @@
  * dlfcn.h replacement functions
  */
 extern "C" {
-<<<<<<< HEAD
-void *__wrap_dlopen(const char *path, int flags);
-const char *__wrap_dlerror(void);
-void *__wrap_dlsym(void *handle, const char *symbol);
-int __wrap_dlclose(void *handle);
-||||||| merged common ancestors
-  void *__wrap_dlopen(const char *path, int flags);
-  const char *__wrap_dlerror(void);
-  void *__wrap_dlsym(void *handle, const char *symbol);
-  int __wrap_dlclose(void *handle);
-=======
 void* __wrap_dlopen(const char* path, int flags);
 const char* __wrap_dlerror(void);
 void* __wrap_dlsym(void* handle, const char* symbol);
 int __wrap_dlclose(void* handle);
->>>>>>> upstream-releases
 
 #ifndef HAVE_DLADDR
-<<<<<<< HEAD
-typedef struct {
-  const char *dli_fname;
-  void *dli_fbase;
-  const char *dli_sname;
-  void *dli_saddr;
-} Dl_info;
-||||||| merged common ancestors
-  typedef struct {
-    const char *dli_fname;
-    void *dli_fbase;
-    const char *dli_sname;
-    void *dli_saddr;
-  } Dl_info;
-=======
 typedef struct {
   const char* dli_fname;
   void* dli_fbase;
   const char* dli_sname;
   void* dli_saddr;
 } Dl_info;
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-int __wrap_dladdr(void *addr, Dl_info *info);
-||||||| merged common ancestors
-  int __wrap_dladdr(void *addr, Dl_info *info);
-=======
 int __wrap_dladdr(void* addr, Dl_info* info);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-struct dl_phdr_info {
-  Elf::Addr dlpi_addr;
-  const char *dlpi_name;
-  const Elf::Phdr *dlpi_phdr;
-  Elf::Half dlpi_phnum;
-};
-||||||| merged common ancestors
-  struct dl_phdr_info {
-    Elf::Addr dlpi_addr;
-    const char *dlpi_name;
-    const Elf::Phdr *dlpi_phdr;
-    Elf::Half dlpi_phnum;
-  };
-=======
 struct dl_phdr_info {
   Elf::Addr dlpi_addr;
   const char* dlpi_name;
   const Elf::Phdr* dlpi_phdr;
   Elf::Half dlpi_phnum;
 };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-typedef int (*dl_phdr_cb)(struct dl_phdr_info *, size_t, void *);
-int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void *data);
-||||||| merged common ancestors
-  typedef int (*dl_phdr_cb)(struct dl_phdr_info *, size_t, void *);
-  int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void *data);
-=======
 typedef int (*dl_phdr_cb)(struct dl_phdr_info*, size_t, void*);
 int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void* data);
->>>>>>> upstream-releases
 
 #ifdef __ARM_EABI__
-<<<<<<< HEAD
-const void *__wrap___gnu_Unwind_Find_exidx(void *pc, int *pcount);
-||||||| merged common ancestors
-  const void *__wrap___gnu_Unwind_Find_exidx(void *pc, int *pcount);
-=======
 const void* __wrap___gnu_Unwind_Find_exidx(void* pc, int* pcount);
->>>>>>> upstream-releases
 #endif
 
 /**
  * faulty.lib public API
  */
-<<<<<<< HEAD
-MFBT_API size_t __dl_get_mappable_length(void *handle);
-||||||| merged common ancestors
-MFBT_API size_t
-__dl_get_mappable_length(void *handle);
-=======
 MFBT_API size_t __dl_get_mappable_length(void* handle);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-MFBT_API void *__dl_mmap(void *handle, void *addr, size_t length, off_t offset);
-||||||| merged common ancestors
-MFBT_API void *
-__dl_mmap(void *handle, void *addr, size_t length, off_t offset);
-=======
 MFBT_API void* __dl_mmap(void* handle, void* addr, size_t length, off_t offset);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-MFBT_API void __dl_munmap(void *handle, void *addr, size_t length);
-||||||| merged common ancestors
-MFBT_API void
-__dl_munmap(void *handle, void *addr, size_t length);
-
-MFBT_API bool
-IsSignalHandlingBroken();
-=======
 MFBT_API void __dl_munmap(void* handle, void* addr, size_t length);
->>>>>>> upstream-releases
 
 MFBT_API bool IsSignalHandlingBroken();
 }
@@ -187,22 +99,10 @@ class LibHandle : public mozilla::external::AtomicRefCounted<LibHandle> {
    * Constructor. Takes the path of the loaded library and will store a copy
    * of the leaf name.
    */
-<<<<<<< HEAD
-  LibHandle(const char *path)
-      : directRefCnt(0),
-        path(path ? strdup(path) : nullptr),
-        mappable(nullptr) {}
-||||||| merged common ancestors
-  LibHandle(const char *path)
-  : directRefCnt(0), path(path ? strdup(path) : nullptr), mappable(nullptr)
-  {
-  }
-=======
   LibHandle(const char* path)
       : directRefCnt(0),
         path(path ? strdup(path) : nullptr),
         mappable(nullptr) {}
->>>>>>> upstream-releases
 
   /**
    * Destructor.
@@ -236,16 +136,7 @@ class LibHandle : public mozilla::external::AtomicRefCounted<LibHandle> {
    * Returns the full path of the library, when available. Otherwise, returns
    * the file name.
    */
-<<<<<<< HEAD
-  const char *GetPath() const { return path; }
-||||||| merged common ancestors
-  const char *GetPath() const
-  {
-    return path;
-  }
-=======
   const char* GetPath() const { return path; }
->>>>>>> upstream-releases
 
   /**
    * Library handles can be referenced from other library handles or
@@ -352,7 +243,7 @@ inline void RefCounted<LibHandle, AtomicRefCount>::Release() const {
 #else
       mRefCnt = 1;
 #endif
-      delete static_cast<const LibHandle *>(this);
+      delete static_cast<const LibHandle*>(this);
     }
   }
 }
@@ -383,16 +274,8 @@ class SystemElf : public LibHandle {
   virtual const void* FindExidx(int* pcount) const;
 #endif
 
-<<<<<<< HEAD
- protected:
-  virtual Mappable *GetMappable() const;
-||||||| merged common ancestors
-protected:
-  virtual Mappable *GetMappable() const;
-=======
  protected:
   virtual Mappable* GetMappable() const;
->>>>>>> upstream-releases
 
   /**
    * Returns the instance, casted as SystemElf. (short of a better way to do
@@ -411,16 +294,8 @@ protected:
   /**
    * Private constructor
    */
-<<<<<<< HEAD
-  SystemElf(const char *path, void *handle)
-      : LibHandle(path), dlhandle(handle) {}
-||||||| merged common ancestors
-  SystemElf(const char *path, void *handle)
-  : LibHandle(path), dlhandle(handle) { }
-=======
   SystemElf(const char* path, void* handle)
       : LibHandle(path), dlhandle(handle) {}
->>>>>>> upstream-releases
 
   /* Handle as returned by system dlopen() */
   void* dlhandle;
@@ -509,16 +384,8 @@ class ElfLoader : public SEGVHandler {
    * requesting the given library to be loaded. The loader may look in the
    * directory containing that parent library for the library to load.
    */
-<<<<<<< HEAD
-  already_AddRefed<LibHandle> Load(const char *path, int flags,
-                                   LibHandle *parent = nullptr);
-||||||| merged common ancestors
-  already_AddRefed<LibHandle> Load(const char *path, int flags,
-                                        LibHandle *parent = nullptr);
-=======
   already_AddRefed<LibHandle> Load(const char* path, int flags,
                                    LibHandle* parent = nullptr);
->>>>>>> upstream-releases
 
   /**
    * Returns the handle of the library containing the given address in
@@ -563,7 +430,7 @@ class ElfLoader : public SEGVHandler {
   friend int __wrap_dlclose(void* handle);
   /* __wrap_dlerror() returns this custom last error if non-null or the system
    * dlerror() value if this is null. Must refer to a string constant. */
-  mozilla::Atomic<const char *, mozilla::Relaxed> lastError;
+  mozilla::Atomic<const char*, mozilla::Relaxed> lastError;
 
  private:
   ElfLoader() : expect_shutdown(true), lastError(nullptr) {
@@ -634,19 +501,9 @@ class ElfLoader : public SEGVHandler {
    * associated object to call it with, and DSO handle.
    */
   class DestructorCaller {
-<<<<<<< HEAD
-   public:
-    DestructorCaller(Destructor destructor, void *object, void *dso_handle)
-        : destructor(destructor), object(object), dso_handle(dso_handle) {}
-||||||| merged common ancestors
-  public:
-    DestructorCaller(Destructor destructor, void *object, void *dso_handle)
-    : destructor(destructor), object(object), dso_handle(dso_handle) { }
-=======
    public:
     DestructorCaller(Destructor destructor, void* object, void* dso_handle)
         : destructor(destructor), object(object), dso_handle(dso_handle) {}
->>>>>>> upstream-releases
 
     /**
      * Call the destructor function with the associated object.
@@ -657,16 +514,7 @@ class ElfLoader : public SEGVHandler {
     /**
      * Returns whether the destructor is associated to the given DSO handle
      */
-<<<<<<< HEAD
-    bool IsForHandle(void *handle) const { return handle == dso_handle; }
-||||||| merged common ancestors
-    bool IsForHandle(void *handle) const
-    {
-      return handle == dso_handle;
-    }
-=======
     bool IsForHandle(void* handle) const { return handle == dso_handle; }
->>>>>>> upstream-releases
 
    private:
     Destructor destructor;
@@ -745,96 +593,37 @@ class ElfLoader : public SEGVHandler {
     void Remove(link_map* map);
 
     /* Iterates over all link_maps */
-<<<<<<< HEAD
-    class iterator {
-     public:
-      const link_map *operator->() const { return item; }
-||||||| merged common ancestors
-    class iterator
-    {
-    public:
-      const link_map *operator ->() const
-      {
-        return item;
-      }
-=======
     class iterator {
      public:
       const link_map* operator->() const { return item; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      const link_map &operator++() {
-||||||| merged common ancestors
-      const link_map &operator ++()
-      {
-=======
       const link_map& operator++() {
->>>>>>> upstream-releases
         item = item->l_next;
         return *item;
       }
 
-<<<<<<< HEAD
-      bool operator<(const iterator &other) const {
-        if (other.item == nullptr) return item ? true : false;
-        MOZ_CRASH(
-            "DebuggerHelper::iterator::operator< called with something else "
-            "than DebuggerHelper::end()");
-||||||| merged common ancestors
-      bool operator<(const iterator &other) const
-      {
-        if (other.item == nullptr)
-          return item ? true : false;
-        MOZ_CRASH("DebuggerHelper::iterator::operator< called with something else than DebuggerHelper::end()");
-=======
       bool operator<(const iterator& other) const {
         if (other.item == nullptr) return item ? true : false;
         MOZ_CRASH(
             "DebuggerHelper::iterator::operator< called with something else "
             "than DebuggerHelper::end()");
->>>>>>> upstream-releases
       }
 
      protected:
       friend class DebuggerHelper;
-<<<<<<< HEAD
-      explicit iterator(const link_map *item) : item(item) {}
-||||||| merged common ancestors
-      explicit iterator(const link_map *item): item(item) { }
-=======
       explicit iterator(const link_map* item) : item(item) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-     private:
-      const link_map *item;
-||||||| merged common ancestors
-    private:
-      const link_map *item;
-=======
      private:
       const link_map* item;
->>>>>>> upstream-releases
     };
 
     iterator begin() const { return iterator(dbg ? dbg->r_map : nullptr); }
 
     iterator end() const { return iterator(nullptr); }
 
-<<<<<<< HEAD
-   private:
-    r_debug *dbg;
-    link_map *firstAdded;
-||||||| merged common ancestors
-  private:
-    r_debug *dbg;
-    link_map *firstAdded;
-=======
    private:
     r_debug* dbg;
     link_map* firstAdded;
->>>>>>> upstream-releases
   };
   friend int __wrap_dl_iterate_phdr(dl_phdr_cb callback, void* data);
   DebuggerHelper dbg;

@@ -14,35 +14,14 @@ namespace mozilla {
 namespace dom {
 
 MediaElementAudioSourceNode::MediaElementAudioSourceNode(AudioContext* aContext)
-<<<<<<< HEAD
-    : MediaStreamAudioSourceNode(aContext) {}
-||||||| merged common ancestors
-  : MediaStreamAudioSourceNode(aContext)
-{
-}
-=======
     : MediaStreamAudioSourceNode(aContext, TrackChangeBehavior::FollowChanges) {
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MediaElementAudioSourceNode>
-MediaElementAudioSourceNode::Create(
-    AudioContext& aAudioContext, const MediaElementAudioSourceOptions& aOptions,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MediaElementAudioSourceNode>
-MediaElementAudioSourceNode::Create(AudioContext& aAudioContext,
-                                    const MediaElementAudioSourceOptions& aOptions,
-                                    ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MediaElementAudioSourceNode>
 MediaElementAudioSourceNode::Create(
     AudioContext& aAudioContext, const MediaElementAudioSourceOptions& aOptions,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (aAudioContext.IsOffline()) {
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;
@@ -71,13 +50,6 @@ JSObject* MediaElementAudioSourceNode::WrapObject(
   return MediaElementAudioSourceNode_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 void MediaElementAudioSourceNode::ListenForAllowedToPlay(
     const MediaElementAudioSourceOptions& aOptions) {
   aOptions.mMediaElement->GetAllowedToPlayPromise()
@@ -101,4 +73,3 @@ void MediaElementAudioSourceNode::Destroy() {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

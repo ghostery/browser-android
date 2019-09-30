@@ -77,15 +77,7 @@ nsresult convertResultCode(int aSQLiteResultCode) {
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-void checkAndLogStatementPerformance(sqlite3_stmt *aStatement) {
-||||||| merged common ancestors
-void
-checkAndLogStatementPerformance(sqlite3_stmt *aStatement)
-{
-=======
 void checkAndLogStatementPerformance(sqlite3_stmt* aStatement) {
->>>>>>> upstream-releases
   // Check to see if the query performed sorting operations or not.  If it
   // did, it may need to be optimized!
   int count = ::sqlite3_stmt_status(aStatement, SQLITE_STMTSTATUS_SORT, 1);
@@ -116,21 +108,8 @@ void checkAndLogStatementPerformance(sqlite3_stmt* aStatement) {
   NS_WARNING(message.get());
 }
 
-<<<<<<< HEAD
-nsIVariant *convertJSValToVariant(JSContext *aCtx, const JS::Value &aValue) {
-  if (aValue.isInt32()) return new IntegerVariant(aValue.toInt32());
-||||||| merged common ancestors
-nsIVariant *
-convertJSValToVariant(
-  JSContext *aCtx,
-  const JS::Value& aValue)
-{
-  if (aValue.isInt32())
-    return new IntegerVariant(aValue.toInt32());
-=======
 nsIVariant* convertJSValToVariant(JSContext* aCtx, const JS::Value& aValue) {
   if (aValue.isInt32()) return new IntegerVariant(aValue.toInt32());
->>>>>>> upstream-releases
 
   if (aValue.isDouble()) return new FloatVariant(aValue.toDouble());
 
@@ -145,7 +124,7 @@ nsIVariant* convertJSValToVariant(JSContext* aCtx, const JS::Value& aValue) {
   if (aValue.isNull()) return new NullVariant();
 
   if (aValue.isObject()) {
-    JS::Rooted<JSObject *> obj(aCtx, &aValue.toObject());
+    JS::Rooted<JSObject*> obj(aCtx, &aValue.toObject());
     // We only support Date instances, all others fail.
     bool valid;
     if (!js::DateIsValid(aCtx, obj, &valid) || !valid) return nullptr;
@@ -162,15 +141,7 @@ nsIVariant* convertJSValToVariant(JSContext* aCtx, const JS::Value& aValue) {
   return nullptr;
 }
 
-<<<<<<< HEAD
-Variant_base *convertVariantToStorageVariant(nsIVariant *aVariant) {
-||||||| merged common ancestors
-Variant_base *
-convertVariantToStorageVariant(nsIVariant* aVariant)
-{
-=======
 Variant_base* convertVariantToStorageVariant(nsIVariant* aVariant) {
->>>>>>> upstream-releases
   RefPtr<Variant_base> variant = do_QueryObject(aVariant);
   if (variant) {
     // JS helpers already convert the JS representation to a Storage Variant,
@@ -254,26 +225,10 @@ Variant_base* convertVariantToStorageVariant(nsIVariant* aVariant) {
 }
 
 namespace {
-<<<<<<< HEAD
-class CallbackEvent : public Runnable {
- public:
-  explicit CallbackEvent(mozIStorageCompletionCallback *aCallback)
-      : Runnable("storage::CallbackEvent"), mCallback(aCallback) {}
-||||||| merged common ancestors
-class CallbackEvent : public Runnable
-{
-public:
-  explicit CallbackEvent(mozIStorageCompletionCallback* aCallback)
-    : Runnable("storage::CallbackEvent")
-    , mCallback(aCallback)
-  {
-  }
-=======
 class CallbackEvent : public Runnable {
  public:
   explicit CallbackEvent(mozIStorageCompletionCallback* aCallback)
       : Runnable("storage::CallbackEvent"), mCallback(aCallback) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     (void)mCallback->Complete(NS_OK, nullptr);
@@ -283,20 +238,9 @@ class CallbackEvent : public Runnable {
  private:
   nsCOMPtr<mozIStorageCompletionCallback> mCallback;
 };
-<<<<<<< HEAD
-}  // namespace
-already_AddRefed<nsIRunnable> newCompletionEvent(
-    mozIStorageCompletionCallback *aCallback) {
-||||||| merged common ancestors
-} // namespace
-already_AddRefed<nsIRunnable>
-newCompletionEvent(mozIStorageCompletionCallback *aCallback)
-{
-=======
 }  // namespace
 already_AddRefed<nsIRunnable> newCompletionEvent(
     mozIStorageCompletionCallback* aCallback) {
->>>>>>> upstream-releases
   NS_ASSERTION(aCallback, "Passing a null callback is a no-no!");
   nsCOMPtr<nsIRunnable> event = new CallbackEvent(aCallback);
   return event.forget();

@@ -20,16 +20,8 @@
 // allowing Rust to access constant metadata and produce output.
 //
 // This file is input to Rust's bindgen, so as to create primitive APIs for the
-<<<<<<< HEAD
-// Cranelift pipeline to access compilation metadata. The actual Rust API then
-// wraps these primitive APIs.  See src/baldrdash.rs.
-||||||| merged common ancestors
-// Cranelift pipeline to access compilation metadata. The actual Rust API then wraps these primitive
-// APIs.  See src/baldrdash.rs.
-=======
 // Cranelift pipeline to access compilation metadata. The actual Rust API then
 // wraps these primitive APIs.  See src/bindings/mod.rs.
->>>>>>> upstream-releases
 //
 // This file can be included in SpiderMonkey's C++ code, where all the prefixes
 // must be obeyed.  The purpose of the prefixes is to avoid type confusion.  See
@@ -91,17 +83,9 @@ struct CraneliftStaticEnvironment {
 // contains.
 
 struct CraneliftModuleEnvironment {
-<<<<<<< HEAD
-  const js::wasm::ModuleEnvironment& env;
-  uint32_t min_memory_length;
-||||||| merged common ancestors
-    const js::wasm::ModuleEnvironment& env;
-    uint32_t min_memory_length;
-=======
   // This is a pointer and not a reference to work-around a bug in bindgen.
   const js::wasm::ModuleEnvironment* env;
   uint32_t min_memory_length;
->>>>>>> upstream-releases
 
   // Not bindgen'd because it's inlined.
   explicit inline CraneliftModuleEnvironment(
@@ -112,24 +96,11 @@ struct CraneliftModuleEnvironment {
 // This information is all from the corresponding `js::wasm::FuncCompileInput`
 // struct, but formatted in a Rust-friendly way.
 
-<<<<<<< HEAD
-struct CraneliftFuncCompileInput {
-  const uint8_t* bytecode;
-  size_t bytecodeSize;
-  uint32_t index;
-||||||| merged common ancestors
-struct CraneliftFuncCompileInput
-{
-    const uint8_t* bytecode;
-    size_t bytecodeSize;
-    uint32_t index;
-=======
 struct CraneliftFuncCompileInput {
   const uint8_t* bytecode;
   size_t bytecodeSize;
   uint32_t index;
   uint32_t offset_in_module;
->>>>>>> upstream-releases
 
   // Not bindgen'd because it's inlined.
   explicit inline CraneliftFuncCompileInput(const js::wasm::FuncCompileInput&);
@@ -143,29 +114,6 @@ struct CraneliftFuncCompileInput {
 // handle them, with a lot of unsafe'ing.
 
 struct CraneliftMetadataEntry {
-<<<<<<< HEAD
-  enum Which {
-    DirectCall,
-    IndirectCall,
-    Trap,
-    MemoryAccess,
-    SymbolicAccess
-  } which;
-  uint32_t offset;
-  uint32_t srcLoc;
-  size_t extra;
-||||||| merged common ancestors
-    enum Which {
-        DirectCall,
-        IndirectCall,
-        Trap,
-        MemoryAccess,
-        SymbolicAccess
-    } which;
-    uint32_t offset;
-    uint32_t srcLoc;
-    size_t extra;
-=======
   enum Which {
     DirectCall,
     IndirectCall,
@@ -176,7 +124,6 @@ struct CraneliftMetadataEntry {
   uint32_t codeOffset;
   uint32_t moduleBytecodeOffset;
   size_t extra;
->>>>>>> upstream-releases
 };
 
 // The result of a single function compilation, containing the machine code
@@ -184,25 +131,6 @@ struct CraneliftMetadataEntry {
 // prologue/epilogue etc.
 
 struct CraneliftCompiledFunc {
-<<<<<<< HEAD
-  size_t numMetadata;
-  const CraneliftMetadataEntry* metadatas;
-
-  size_t framePushed;
-  bool containsCalls;
-
-  size_t codeSize;
-  const uint8_t* code;
-||||||| merged common ancestors
-    size_t numMetadata;
-    const CraneliftMetadataEntry* metadatas;
-
-    size_t framePushed;
-    bool containsCalls;
-
-    size_t codeSize;
-    const uint8_t* code;
-=======
   size_t numMetadata;
   const CraneliftMetadataEntry* metadatas;
 
@@ -224,7 +152,6 @@ struct CraneliftCompiledFunc {
   // machine-specific.
   size_t numRodataRelocs;
   const uint32_t* rodataRelocs;
->>>>>>> upstream-releases
 };
 
 // Possible constant values for initializing globals.
@@ -247,34 +174,6 @@ struct BD_ValType {
 // XXX this is not quite maintenable, because the number of values in this
 // enum is hardcoded in wasm2clif.rs.
 
-<<<<<<< HEAD
-enum class BD_SymbolicAddress {
-  GrowMemory,
-  CurrentMemory,
-  FloorF32,
-  FloorF64,
-  CeilF32,
-  CeilF64,
-  NearestF32,
-  NearestF64,
-  TruncF32,
-  TruncF64,
-  Limit
-||||||| merged common ancestors
-enum class BD_SymbolicAddress
-{
-    GrowMemory,
-    CurrentMemory,
-    FloorF32,
-    FloorF64,
-    CeilF32,
-    CeilF64,
-    NearestF32,
-    NearestF64,
-    TruncF32,
-    TruncF64,
-    Limit
-=======
 enum class BD_SymbolicAddress {
   MemoryGrow,
   MemorySize,
@@ -287,7 +186,6 @@ enum class BD_SymbolicAddress {
   TruncF32,
   TruncF64,
   Limit
->>>>>>> upstream-releases
 };
 
 extern "C" {

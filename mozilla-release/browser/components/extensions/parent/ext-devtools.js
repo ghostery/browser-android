@@ -38,15 +38,9 @@ function getDevToolsPrefBranchName(extensionId) {
 global.getDevToolsTargetForContext = async context => {
   if (!context.devToolsTargetPromise) {
     if (!context.devToolsToolbox || !context.devToolsToolbox.target) {
-<<<<<<< HEAD
-      throw new Error("Unable to get a Target for a context not associated to any toolbox");
-||||||| merged common ancestors
-      throw new Error("Unable to get a TabTarget for a context not associated to any toolbox");
-=======
       throw new Error(
         "Unable to get a Target for a context not associated to any toolbox"
       );
->>>>>>> upstream-releases
     }
 
     if (!context.devToolsToolbox.target.isLocalTab) {

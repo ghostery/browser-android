@@ -181,19 +181,8 @@ with Files('tests/mochitest/*autocomplete*'):
     BUG_COMPONENT = ('Toolkit', 'Autocomplete')
 
 with Files('tests/mochitest/*mousecapture*'):
-<<<<<<< HEAD
-    BUG_COMPONENT = ('Core', 'Event Handling')
-
-||||||| merged common ancestors
-    BUG_COMPONENT = ('Core', 'Event Handling')
-
-with Files('tests/reftests/*progress*'):
-    BUG_COMPONENT = ('Toolkit', 'XUL Widgets')
-
-=======
     BUG_COMPONENT = ('Core', 'User events and focus handling')
 
->>>>>>> upstream-releases
 with Files('tests/reftests/*multiline*'):
     BUG_COMPONENT = ('Core', 'XBL')
 

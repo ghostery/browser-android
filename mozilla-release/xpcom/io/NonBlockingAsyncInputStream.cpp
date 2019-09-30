@@ -57,21 +57,10 @@ NS_INTERFACE_MAP_BEGIN(NonBlockingAsyncInputStream)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIInputStream)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* static */ nsresult NonBlockingAsyncInputStream::Create(
-    already_AddRefed<nsIInputStream> aInputStream,
-    nsIAsyncInputStream** aResult) {
-||||||| merged common ancestors
-/* static */ nsresult
-NonBlockingAsyncInputStream::Create(already_AddRefed<nsIInputStream> aInputStream,
-                                    nsIAsyncInputStream** aResult)
-{
-=======
 /* static */
 nsresult NonBlockingAsyncInputStream::Create(
     already_AddRefed<nsIInputStream> aInputStream,
     nsIAsyncInputStream** aResult) {
->>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(aResult);
 
   nsCOMPtr<nsIInputStream> inputStream = std::move(aInputStream);
@@ -328,16 +317,6 @@ NonBlockingAsyncInputStream::AsyncWait(nsIInputStreamCallback* aCallback,
 
 // nsIIPCSerializableInputStream
 
-<<<<<<< HEAD
-void NonBlockingAsyncInputStream::Serialize(
-    mozilla::ipc::InputStreamParams& aParams,
-    FileDescriptorArray& aFileDescriptors) {
-||||||| merged common ancestors
-void
-NonBlockingAsyncInputStream::Serialize(mozilla::ipc::InputStreamParams& aParams,
-                                       FileDescriptorArray& aFileDescriptors)
-{
-=======
 void NonBlockingAsyncInputStream::Serialize(
     mozilla::ipc::InputStreamParams& aParams,
     FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
@@ -379,7 +358,6 @@ void NonBlockingAsyncInputStream::SerializeInternal(
     mozilla::ipc::InputStreamParams& aParams,
     FileDescriptorArray& aFileDescriptors, bool aDelayedStart,
     uint32_t aMaxSize, uint32_t* aSizeUsed, M* aManager) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mWeakIPCSerializableInputStream);
   InputStreamHelper::SerializeInputStream(mInputStream, aParams,
                                           aFileDescriptors, aDelayedStart,
@@ -393,22 +371,6 @@ bool NonBlockingAsyncInputStream::Deserialize(
   return true;
 }
 
-<<<<<<< HEAD
-Maybe<uint64_t> NonBlockingAsyncInputStream::ExpectedSerializedLength() {
-  NS_ENSURE_TRUE(mWeakIPCSerializableInputStream, Nothing());
-  return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
-}
-
-||||||| merged common ancestors
-Maybe<uint64_t>
-NonBlockingAsyncInputStream::ExpectedSerializedLength()
-{
-  NS_ENSURE_TRUE(mWeakIPCSerializableInputStream, Nothing());
-  return mWeakIPCSerializableInputStream->ExpectedSerializedLength();
-}
-
-=======
->>>>>>> upstream-releases
 // nsISeekableStream
 
 NS_IMETHODIMP

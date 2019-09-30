@@ -9,17 +9,8 @@
 
 #include "Units.h"
 
-<<<<<<< HEAD
-class nsIDocument;
-template <class T>
-class nsCOMPtr;
-||||||| merged common ancestors
-class nsIDocument;
-template<class T> class nsCOMPtr;
-=======
 template <class T>
 class RefPtr;
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {

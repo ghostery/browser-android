@@ -6,17 +6,10 @@
 
 // Test that the HostOnly values displayed in the table are correct.
 
-<<<<<<< HEAD
-SpecialPowers.pushPrefEnv({"set": [["security.allow_eval_with_system_principal",
-                                    true]]});
-
-||||||| merged common ancestors
-=======
 SpecialPowers.pushPrefEnv({
   set: [["security.allow_eval_with_system_principal", true]],
 });
 
->>>>>>> upstream-releases
 add_task(async function() {
   await openTabAndSetupStorage(MAIN_DOMAIN + "storage-complex-values.html");
 

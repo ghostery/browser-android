@@ -66,16 +66,8 @@ class ReadStream final : public nsIInputStream {
     NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
   };
 
-<<<<<<< HEAD
-  static already_AddRefed<ReadStream> Create(
-      const CacheReadStreamOrVoid& aReadStreamOrVoid);
-||||||| merged common ancestors
-  static already_AddRefed<ReadStream>
-  Create(const CacheReadStreamOrVoid& aReadStreamOrVoid);
-=======
   static already_AddRefed<ReadStream> Create(
       const Maybe<CacheReadStream>& aMaybeReadStream);
->>>>>>> upstream-releases
 
   static already_AddRefed<ReadStream> Create(
       const CacheReadStream& aReadStream);
@@ -84,23 +76,6 @@ class ReadStream final : public nsIInputStream {
       PCacheStreamControlParent* aControl, const nsID& aId,
       nsIInputStream* aStream);
 
-<<<<<<< HEAD
-  void Serialize(
-      CacheReadStreamOrVoid* aReadStreamOut,
-      nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
-      ErrorResult& aRv);
-  void Serialize(
-      CacheReadStream* aReadStreamOut,
-      nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
-      ErrorResult& aRv);
-||||||| merged common ancestors
-  void Serialize(CacheReadStreamOrVoid* aReadStreamOut,
-                 nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
-                 ErrorResult& aRv);
-  void Serialize(CacheReadStream* aReadStreamOut,
-                 nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
-                 ErrorResult& aRv);
-=======
   void Serialize(
       Maybe<CacheReadStream>* aReadStreamOut,
       nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
@@ -109,7 +84,6 @@ class ReadStream final : public nsIInputStream {
       CacheReadStream* aReadStreamOut,
       nsTArray<UniquePtr<mozilla::ipc::AutoIPCStream>>& aStreamCleanupList,
       ErrorResult& aRv);
->>>>>>> upstream-releases
 
  private:
   class Inner;

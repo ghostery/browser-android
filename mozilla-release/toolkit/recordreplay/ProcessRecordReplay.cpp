@@ -81,39 +81,6 @@ MOZ_EXPORT void RecordReplayInterface_Initialize(int aArgc, char* aArgv[]) {
   gRecordingFilename = strdup(recordingFile.ref());
 
   switch (processKind.ref()) {
-<<<<<<< HEAD
-    case ProcessKind::Recording:
-      gIsRecording = gIsRecordingOrReplaying = true;
-      fprintf(stderr, "RECORDING %d %s\n", getpid(), recordingFile.ref());
-      break;
-    case ProcessKind::Replaying:
-      gIsReplaying = gIsRecordingOrReplaying = true;
-      fprintf(stderr, "REPLAYING %d %s\n", getpid(), recordingFile.ref());
-      break;
-    case ProcessKind::MiddlemanRecording:
-    case ProcessKind::MiddlemanReplaying:
-      gIsMiddleman = true;
-      fprintf(stderr, "MIDDLEMAN %d %s\n", getpid(), recordingFile.ref());
-      break;
-    default:
-      MOZ_CRASH("Bad ProcessKind");
-||||||| merged common ancestors
-  case ProcessKind::Recording:
-    gIsRecording = gIsRecordingOrReplaying = true;
-    fprintf(stderr, "RECORDING %d %s\n", getpid(), recordingFile.ref());
-    break;
-  case ProcessKind::Replaying:
-    gIsReplaying = gIsRecordingOrReplaying = true;
-    fprintf(stderr, "REPLAYING %d %s\n", getpid(), recordingFile.ref());
-    break;
-  case ProcessKind::MiddlemanRecording:
-  case ProcessKind::MiddlemanReplaying:
-    gIsMiddleman = true;
-    fprintf(stderr, "MIDDLEMAN %d %s\n", getpid(), recordingFile.ref());
-    break;
-  default:
-    MOZ_CRASH("Bad ProcessKind");
-=======
     case ProcessKind::Recording:
       gIsRecording = gIsRecordingOrReplaying = true;
       fprintf(stderr, "RECORDING %d %s\n", getpid(), recordingFile.ref());
@@ -133,7 +100,6 @@ MOZ_EXPORT void RecordReplayInterface_Initialize(int aArgc, char* aArgv[]) {
 
   if (IsRecording() && TestEnv("MOZ_RECORDING_WAIT_AT_START")) {
     BusyWait();
->>>>>>> upstream-releases
   }
 
   if (IsReplaying() && TestEnv("MOZ_REPLAYING_WAIT_AT_START")) {
@@ -242,19 +208,7 @@ MOZ_EXPORT void RecordReplayInterface_InternalInvalidateRecording(
   Unreachable();
 }
 
-<<<<<<< HEAD
 }  // extern "C"
-
-// How many recording endpoints have been flushed to the recording.
-static size_t gNumEndpoints;
-||||||| merged common ancestors
-} // extern "C"
-
-// How many recording endpoints have been flushed to the recording.
-static size_t gNumEndpoints;
-=======
-}  // extern "C"
->>>>>>> upstream-releases
 
 void FlushRecording() {
   MOZ_RELEASE_ASSERT(IsRecording());
@@ -294,73 +248,7 @@ static bool LoadNextRecordingIndex() {
   return found;
 }
 
-<<<<<<< HEAD
-bool HitRecordingEndpoint() {
-  MOZ_RELEASE_ASSERT(IsReplaying());
-  MOZ_RELEASE_ASSERT(Thread::CurrentIsMainThread());
-
-  // The debugger will call this method in a loop, so we don't have to do
-  // anything fancy to try to get the most up to date endpoint. As long as we
-  // can make some progress in attempting to find a later endpoint, we can
-  // return control to the debugger.
-
-  // Check if there is a new endpoint in the endpoint data stream.
-  Stream* endpointStream = gRecordingFile->OpenStream(StreamName::Main, 0);
-  if (!endpointStream->AtEnd()) {
-    js::ExecutionPoint endpoint;
-    size_t index = endpointStream->ReadScalar();
-    endpointStream->ReadBytes(&endpoint, sizeof(endpoint));
-    navigation::SetRecordingEndpoint(index, endpoint);
-    return true;
-  }
-
-  // Check if there is more data in the recording.
-  if (LoadNextRecordingIndex()) {
-    return true;
-  }
-
-  // OK, we hit the most up to date endpoint in the recording.
-  return false;
-}
-
 void HitEndOfRecording() {
-||||||| merged common ancestors
-bool
-HitRecordingEndpoint()
-{
-  MOZ_RELEASE_ASSERT(IsReplaying());
-  MOZ_RELEASE_ASSERT(Thread::CurrentIsMainThread());
-
-  // The debugger will call this method in a loop, so we don't have to do
-  // anything fancy to try to get the most up to date endpoint. As long as we
-  // can make some progress in attempting to find a later endpoint, we can
-  // return control to the debugger.
-
-  // Check if there is a new endpoint in the endpoint data stream.
-  Stream* endpointStream = gRecordingFile->OpenStream(StreamName::Main, 0);
-  if (!endpointStream->AtEnd()) {
-    js::ExecutionPoint endpoint;
-    size_t index = endpointStream->ReadScalar();
-    endpointStream->ReadBytes(&endpoint, sizeof(endpoint));
-    navigation::SetRecordingEndpoint(index, endpoint);
-    return true;
-  }
-
-  // Check if there is more data in the recording.
-  if (LoadNextRecordingIndex()) {
-    return true;
-  }
-
-  // OK, we hit the most up to date endpoint in the recording.
-  return false;
-}
-
-void
-HitEndOfRecording()
-{
-=======
-void HitEndOfRecording() {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(IsReplaying());
   MOZ_RELEASE_ASSERT(!AreThreadEventsPassedThrough());
 
@@ -376,15 +264,6 @@ void HitEndOfRecording() {
   }
 }
 
-<<<<<<< HEAD
-bool SpewEnabled() { return gSpewEnabled; }
-||||||| merged common ancestors
-bool
-SpewEnabled()
-{
-  return gSpewEnabled;
-}
-=======
 // When replaying, the last endpoint loaded from the recording.
 static size_t gRecordingEndpoint;
 
@@ -399,19 +278,10 @@ size_t RecordingEndpoint() {
 
   return gRecordingEndpoint;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void InternalPrint(const char* aFormat, va_list aArgs) {
-||||||| merged common ancestors
-void
-InternalPrint(const char* aFormat, va_list aArgs)
-{
-=======
 bool SpewEnabled() { return gSpewEnabled; }
 
 void InternalPrint(const char* aFormat, va_list aArgs) {
->>>>>>> upstream-releases
   char buf1[2048];
   VsprintfLiteral(buf1, aFormat, aArgs);
   char buf2[2048];
@@ -432,20 +302,10 @@ const char* ThreadEventName(ThreadEvent aEvent) {
   return GetRedirection(callId).mName;
 }
 
-<<<<<<< HEAD
-int GetRecordingPid() { return gRecordingPid; }
-||||||| merged common ancestors
-int
-GetRecordingPid()
-{
-  return gRecordingPid;
-}
-=======
 int GetRecordingPid() { return gRecordingPid; }
 
 bool IsMainChild() { return gMainChild; }
 void SetMainChild() { gMainChild = true; }
->>>>>>> upstream-releases
 
 ///////////////////////////////////////////////////////////////////////////////
 // Record/Replay Assertions

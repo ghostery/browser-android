@@ -4,30 +4,6 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 /* jshint esnext: true, moz: true */
 
-<<<<<<< HEAD
-"use strict";
-
-var EXPORTED_SYMBOLS = ["DNSResourceRecord"];
-
-ChromeUtils.import("resource://gre/modules/DataReader.jsm");
-ChromeUtils.import("resource://gre/modules/DataWriter.jsm");
-ChromeUtils.import("resource://gre/modules/DNSRecord.jsm");
-ChromeUtils.import("resource://gre/modules/DNSTypes.jsm");
-||||||| merged common ancestors
-'use strict';
-
-var EXPORTED_SYMBOLS = ['DNSResourceRecord'];
-
-ChromeUtils.import('resource://gre/modules/Services.jsm');
-ChromeUtils.import('resource://gre/modules/DataReader.jsm');
-ChromeUtils.import('resource://gre/modules/DataWriter.jsm');
-ChromeUtils.import('resource://gre/modules/DNSRecord.jsm');
-ChromeUtils.import('resource://gre/modules/DNSTypes.jsm');
-
-function debug(msg) {
-  Services.console.logStringMessage('MulticastDNS: ' + msg);
-}
-=======
 "use strict";
 
 var EXPORTED_SYMBOLS = ["DNSResourceRecord"];
@@ -44,7 +20,6 @@ const { DNSRecord } = ChromeUtils.import(
 const { DNS_RECORD_TYPES } = ChromeUtils.import(
   "resource://gre/modules/DNSTypes.jsm"
 );
->>>>>>> upstream-releases
 
 const DNS_RESOURCE_RECORD_DEFAULT_TTL = 120; // 120 seconds
 
@@ -52,13 +27,7 @@ class DNSResourceRecord extends DNSRecord {
   constructor(properties = {}) {
     super(properties);
 
-<<<<<<< HEAD
-    this.ttl  = properties.ttl || DNS_RESOURCE_RECORD_DEFAULT_TTL;
-||||||| merged common ancestors
-    this.ttl  = properties.ttl  || DNS_RESOURCE_RECORD_DEFAULT_TTL;
-=======
     this.ttl = properties.ttl || DNS_RESOURCE_RECORD_DEFAULT_TTL;
->>>>>>> upstream-releases
     this.data = properties.data || {};
   }
 
@@ -175,19 +144,9 @@ function _parseTXT(recordData, packetData) {
 
   let label = reader.getLabel(packetData);
   if (label.length > 0) {
-<<<<<<< HEAD
-    let parts = label.split(".");
-    parts.forEach((part) => {
-      let [name] = part.split("=", 1);
-||||||| merged common ancestors
-    let parts = label.split('.');
-    parts.forEach((part) => {
-      let [name] = part.split('=', 1);
-=======
     let parts = label.split(".");
     parts.forEach(part => {
       let [name] = part.split("=", 1);
->>>>>>> upstream-releases
       let value = part.substr(name.length + 1);
       result[name] = value;
     });

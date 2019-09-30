@@ -7,31 +7,11 @@ const isMac = "nsILocalFileMac" in Ci;
 
 const searchPopup = document.getElementById("PopupSearchAutoComplete");
 
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_oneOffHeader.js
-const oneOffsContainer =
-  document.getAnonymousElementByAttribute(searchPopup, "anonid",
-                                          "search-one-off-buttons");
-const searchSettings = oneOffsContainer.querySelector(".search-setting-button");
-
-var header = oneOffsContainer.querySelector(".search-panel-one-offs-header");
-
-||||||| merged common ancestors
-const oneOffsContainer =
-  document.getAnonymousElementByAttribute(searchPopup, "anonid",
-                                          "search-one-off-buttons");
-const searchSettings =
-  document.getAnonymousElementByAttribute(oneOffsContainer, "anonid",
-                                          "search-settings");
-var header =
-  document.getAnonymousElementByAttribute(oneOffsContainer, "anonid",
-                                          "search-panel-one-offs-header");
-=======
 const oneOffsContainer = searchPopup.searchOneOffsContainer;
 const searchSettings = oneOffsContainer.querySelector(".search-setting-button");
 
 var header = oneOffsContainer.querySelector(".search-panel-one-offs-header");
 
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_oneOffHeader.js
 function getHeaderText() {
   let headerChild = header.selectedPanel;
   while (headerChild.hasChildNodes()) {
@@ -182,17 +162,9 @@ add_task(async function test_text() {
     EventUtils.synthesizeMouseAtCenter(searchbarEngine, {});
   });
 
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_oneOffHeader.js
-  let url = Services.search.defaultEngine
-                           .getSubmission(searchbar.textbox.value).uri.spec;
-||||||| merged common ancestors
-  let url = Services.search.currentEngine
-                           .getSubmission(searchbar.textbox.value).uri.spec;
-=======
   let url = (await Services.search.getDefault()).getSubmission(
     searchbar.textbox.value
   ).uri.spec;
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_oneOffHeader.js
   await promiseTabLoadEvent(gBrowser.selectedTab, url);
 
   // Move the cursor out of the panel area to avoid messing with other tests.

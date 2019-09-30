@@ -161,22 +161,12 @@ function step4() {
       );
     });
   }
-<<<<<<< HEAD
-  /* eslint-enable no-shadow */
-  is(testPath + "bug343515_pg3.html", ctx.tab2Browser.currentURI.spec,
-     "Got expected tab 2 url in step 4");
-||||||| merged common ancestors
-
-  is(testPath + "bug343515_pg3.html", ctx.tab2Browser.currentURI.spec,
-     "Got expected tab 2 url in step 4");
-=======
   /* eslint-enable no-shadow */
   is(
     testPath + "bug343515_pg3.html",
     ctx.tab2Browser.currentURI.spec,
     "Got expected tab 2 url in step 4"
   );
->>>>>>> upstream-releases
 
   // Tab 0 should be inactive, Tab 1 should be active
   ok(!ctx.tab0Browser.docShellIsActive, "Tab 0 should be inactive");
@@ -247,24 +237,6 @@ function step6() {
       "Tab1 iframe 0 subiframe 0 should be active"
     );
     Assert.ok(isActive(content.frames[1]), "Tab1 iframe 1 should be active");
-<<<<<<< HEAD
-  }).then(() => {
-    ok(!ctx.tab2Browser.docShellIsActive, "Tab 2 should be inactive");
-    return ContentTask.spawn(ctx.tab2Browser, null, async function() {
-      for (var i = 0; i < content.frames.length; i++) {
-        let docShell = content.frames[i].docShell;
-        Assert.ok(!docShell.isActive, `Tab2 iframe ${i} should be inactive`);
-      }
-||||||| merged common ancestors
-  }).then(() => {
-    ok(!ctx.tab2Browser.docShellIsActive, "Tab 2 should be inactive");
-    return ContentTask.spawn(ctx.tab2Browser, null, async function() {
-      for (var i = 0; i < content.frames.length; i++) {
-        let docshell = content.frames[i].docShell;
-
-        Assert.ok(!docShell.isActive, `Tab2 iframe ${i} should be inactive`);
-      }
-=======
   })
     .then(() => {
       ok(!ctx.tab2Browser.docShellIsActive, "Tab 2 should be inactive");
@@ -279,50 +251,12 @@ function step6() {
       // Go forward on tab 2
       waitForPageshow(ctx.tab2Browser, step7);
       ctx.tab2Browser.goForward();
->>>>>>> upstream-releases
     });
 }
 
 function step7() {
   /* eslint-disable no-shadow */
   function checkBrowser(browser, tabNum, active) {
-<<<<<<< HEAD
-    return ContentTask.spawn(browser, { tabNum, active },
-                             async function({ tabNum, active }) {
-             function isActive(aWindow) {
-               var docshell = aWindow.docShell;
-               return docshell.isActive;
-             }
-
-             let activestr = active ? "active" : "inactive";
-             Assert.equal(isActive(content.frames[0]), active,
-                `Tab${tabNum} iframe 0 should be ${activestr}`);
-             Assert.equal(isActive(content.frames[0].frames[0]), active,
-                `Tab${tabNum} iframe 0 subiframe 0 should be ${activestr}`);
-             Assert.equal(isActive(content.frames[1]), active,
-                `Tab${tabNum} iframe 1 should be ${activestr}`);
-           });
-  }
-  /* eslint-enable no-shadow */
-||||||| merged common ancestors
-    return ContentTask.spawn(browser, { tabNum, active },
-                             async function({ tabNum, active }) {
-             function isActive(aWindow) {
-               var docshell = aWindow.docShell;
-               return docshell.isActive;
-             }
-
-             let activestr = active ? "active" : "inactive";
-             Assert.equal(isActive(content.frames[0]), active,
-                `Tab${tabNum} iframe 0 should be ${activestr}`);
-             Assert.equal(isActive(content.frames[0].frames[0]), active,
-                `Tab${tabNum} iframe 0 subiframe 0 should be ${activestr}`);
-             Assert.equal(isActive(content.frames[1]), active,
-                `Tab${tabNum} iframe 1 should be ${activestr}`);
-           });
-  }
-
-=======
     return ContentTask.spawn(browser, { tabNum, active }, async function({
       tabNum,
       active,
@@ -351,7 +285,6 @@ function step7() {
     });
   }
   /* eslint-enable no-shadow */
->>>>>>> upstream-releases
   // Check everything
   ok(!ctx.tab0Browser.docShellIsActive, "Tab 0 should be inactive");
   ok(ctx.tab1Browser.docShellIsActive, "Tab 1 should be active");
@@ -365,7 +298,6 @@ function step7() {
       allDone();
     });
 }
-
 
 function allDone() {
   // Close the tabs we made

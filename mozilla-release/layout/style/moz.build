@@ -112,13 +112,8 @@ EXPORTS.mozilla += [
     'StyleSheetInfo.h',
     'StyleSheetInlines.h',
     'URLExtraData.h',
-<<<<<<< HEAD
-    'UserAgentStyleSheetList.h',
-||||||| merged common ancestors
-=======
     'UserAgentStyleSheetID.h',
     'UserAgentStyleSheetList.h',
->>>>>>> upstream-releases
 ]
 
 EXPORTS.mozilla.dom += [
@@ -289,15 +284,8 @@ servo_props.inputs = [
 
 if CONFIG['COMPILE_ENVIRONMENT']:
     GENERATED_FILES += [
-<<<<<<< HEAD
-        'CompositorAnimatableProperties.h',
-        'nsComputedDOMStyleGenerated.cpp',
-||||||| merged common ancestors
-        'nsComputedDOMStyleGenerated.cpp',
-=======
         'CompositorAnimatableProperties.h',
         'nsComputedDOMStyleGenerated.inc',
->>>>>>> upstream-releases
         'nsCSSPropsGenerated.inc',
         'ServoStyleConsts.h',
     ]
@@ -307,17 +295,6 @@ if CONFIG['COMPILE_ENVIRONMENT']:
         '!ServoStyleConsts.h',
     ]
 
-<<<<<<< HEAD
-    compositor = GENERATED_FILES['CompositorAnimatableProperties.h']
-    compositor.script = 'GenerateCompositorAnimatableProperties.py:generate'
-    compositor.inputs = [
-        '!ServoCSSPropList.py',
-    ]
-
-    computed = GENERATED_FILES['nsComputedDOMStyleGenerated.cpp']
-||||||| merged common ancestors
-    computed = GENERATED_FILES['nsComputedDOMStyleGenerated.cpp']
-=======
     compositor = GENERATED_FILES['CompositorAnimatableProperties.h']
     compositor.script = 'GenerateCompositorAnimatableProperties.py:generate'
     compositor.inputs = [
@@ -325,7 +302,6 @@ if CONFIG['COMPILE_ENVIRONMENT']:
     ]
 
     computed = GENERATED_FILES['nsComputedDOMStyleGenerated.inc']
->>>>>>> upstream-releases
     computed.script = 'GenerateComputedDOMStyleGenerated.py:generate'
     computed.inputs = [
         '!ServoCSSPropList.py',

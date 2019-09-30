@@ -52,22 +52,10 @@ class LayerScope {
 };
 
 // Perform BeginFrame and EndFrame automatically
-<<<<<<< HEAD
-class LayerScopeAutoFrame {
- public:
-  explicit LayerScopeAutoFrame(int64_t aFrameStamp);
-  ~LayerScopeAutoFrame();
-||||||| merged common ancestors
-class LayerScopeAutoFrame {
-public:
-    explicit LayerScopeAutoFrame(int64_t aFrameStamp);
-    ~LayerScopeAutoFrame();
-=======
 class LayerScopeAutoFrame final {
  public:
   explicit LayerScopeAutoFrame(int64_t aFrameStamp);
   ~LayerScopeAutoFrame();
->>>>>>> upstream-releases
 
  private:
   static void BeginFrame(int64_t aFrameStamp);

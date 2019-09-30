@@ -55,13 +55,6 @@ xul|*.text-link:-moz-focusring {
   box-shadow: none;
 }
 
-<<<<<<< HEAD
-xul|menulist:-moz-focusring,
-||||||| merged common ancestors
-xul|button:-moz-focusring,
-xul|menulist:-moz-focusring,
-=======
->>>>>>> upstream-releases
 xul|checkbox:-moz-focusring > .checkbox-check,
 html|input[type="checkbox"]:-moz-focusring + html|label:before,
 xul|radio[focused="true"] > .radio-check,

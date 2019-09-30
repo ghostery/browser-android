@@ -23,11 +23,6 @@ const char* TrackTypeToStr(TrackInfo::TrackType aTrack) {
   }
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 bool TrackInfo::IsEqualTo(const TrackInfo& rhs) const {
   return (
       mId == rhs.mId && mKind == rhs.mKind && mLabel == rhs.mLabel &&
@@ -62,4 +57,3 @@ bool AudioInfo::operator==(const AudioInfo& rhs) const {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

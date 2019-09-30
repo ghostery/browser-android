@@ -2,19 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD
- // This file defines these globals on the window object.
- // Define them here so that ESLint can find them:
-/* globals MozElementMixin, MozXULElement, MozElements */
-||||||| merged common ancestors
- // This file defines these globals on the window object.
- // Define them here so that ESLint can find them:
-/* globals MozElementMixin, MozXULElement, MozBaseControl */
-=======
 // This file defines these globals on the window object.
 // Define them here so that ESLint can find them:
 /* globals MozXULElement, MozElements */
->>>>>>> upstream-releases
 
 "use strict";
 
@@ -44,59 +34,6 @@
   const instrumentedClasses = instrumentClasses ? new Set() : null;
   const instrumentedBaseClasses = instrumentClasses ? new WeakSet() : null;
 
-<<<<<<< HEAD
-// Handle customElements.js being loaded as a script in addition to the subscriptLoader
-// from MainProcessSingleton, to handle pages that can open both before and after
-// MainProcessSingleton starts. See Bug 1501845.
-if (window.MozXULElement) {
-  return;
-}
-
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-
-// The listener of DOMContentLoaded must be set on window, rather than
-// document, because the window can go away before the event is fired.
-// In that case, we don't want to initialize anything, otherwise we
-// may be leaking things because they will never be destroyed after.
-let gIsDOMContentLoaded = false;
-const gElementsPendingConnection = new Set();
-window.addEventListener("DOMContentLoaded", () => {
-  gIsDOMContentLoaded = true;
-  for (let element of gElementsPendingConnection) {
-    try {
-      if (element.isConnected) {
-        element.isRunningDelayedConnectedCallback = true;
-        element.connectedCallback();
-      }
-    } catch (ex) { console.error(ex); }
-    element.isRunningDelayedConnectedCallback = false;
-||||||| merged common ancestors
-// Handle customElements.js being loaded as a script in addition to the subscriptLoader
-// from MainProcessSingleton, to handle pages that can open both before and after
-// MainProcessSingleton starts. See Bug 1501845.
-if (window.MozXULElement) {
-  return;
-}
-
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-
-// The listener of DOMContentLoaded must be set on window, rather than
-// document, because the window can go away before the event is fired.
-// In that case, we don't want to initialize anything, otherwise we
-// may be leaking things because they will never be destroyed after.
-let gIsDOMContentLoaded = false;
-const gElementsPendingConnection = new Set();
-window.addEventListener("DOMContentLoaded", () => {
-  gIsDOMContentLoaded = true;
-  for (let element of gElementsPendingConnection) {
-    try {
-      if (element.isConnected) {
-        element.connectedCallback();
-      }
-    } catch (ex) { console.error(ex); }
-=======
   // If requested, wrap the normal customElements.define to give us a chance
   // to modify the class so we can instrument function calls in local development:
   if (instrumentClasses) {
@@ -112,7 +49,6 @@ window.addEventListener("DOMContentLoaded", () => {
       },
       { once: true, capture: true }
     );
->>>>>>> upstream-releases
   }
 
   MozElements.printInstrumentation = function(collapsed) {
@@ -169,83 +105,10 @@ window.addEventListener("DOMContentLoaded", () => {
       proto = Object.getPrototypeOf(proto);
     }
 
-<<<<<<< HEAD
-const MozElements = {};
-
-const MozElementMixin = Base => class MozElement extends Base {
-
-  /*
-   * Implements attribute inheritance by a child element. Uses XBL @inherit
-   * syntax of |to=from|.
-   *
-   * @param {element} child
-   *        A child element that inherits an attribute.
-   * @param {string} attr
-   *        An attribute to inherit. Optionally in the form of |to=from|, where
-   *        |to| is an attribute defined on custom element, whose value will be
-   *        inherited to |from| attribute, defined a child element. Note |from| may
-   *        take a special value of "text" to propogate attribute value as
-   *        a child's text.
-   */
-  inheritAttribute(child, attr) {
-    let attrName = attr;
-    let attrNewName = attr;
-    let split = attrName.split("=");
-    if (split.length == 2) {
-      attrName = split[1];
-      attrNewName = split[0];
-    }
-
-    if (attrNewName === "text") {
-      child.textContent =
-        this.hasAttribute(attrName) ? this.getAttribute(attrName) : "";
-    } else if (this.hasAttribute(attrName)) {
-      child.setAttribute(attrNewName, this.getAttribute(attrName));
-    } else {
-      child.removeAttribute(attrNewName);
-    }
-  }
-
-  /**
-   * Sometimes an element may not want to run connectedCallback logic during
-   * parse. This could be because we don't want to initialize the element before
-   * the element's contents have been fully parsed, or for performance reasons.
-   * If you'd like to opt-in to this, then add this to the beginning of your
-   * `connectedCallback` and `disconnectedCallback`:
-   *
-   *    if (this.delayConnectedCallback()) { return }
-   *
-   * And this at the beginning of your `attributeChangedCallback`
-   *
-   *    if (!this.isConnectedAndReady) { return; }
-   */
-  delayConnectedCallback() {
-    if (gIsDOMContentLoaded) {
-      return false;
-||||||| merged common ancestors
-const MozElementMixin = Base => class MozElement extends Base {
-  /**
-   * Sometimes an element may not want to run connectedCallback logic during
-   * parse. This could be because we don't want to initialize the element before
-   * the element's contents have been fully parsed, or for performance reasons.
-   * If you'd like to opt-in to this, then add this to the beginning of your
-   * `connectedCallback` and `disconnectedCallback`:
-   *
-   *    if (this.delayConnectedCallback()) { return }
-   *
-   * And this at the beginning of your `attributeChangedCallback`
-   *
-   *    if (!this.isConnectedAndReady) { return; }
-   */
-  delayConnectedCallback() {
-    if (gIsDOMContentLoaded) {
-      return false;
-=======
     if (inheritsFromBase) {
       for (let c of classesToInstrument.reverse()) {
         instrumentIndividualClass(c);
       }
->>>>>>> upstream-releases
     }
   }
 
@@ -748,21 +611,9 @@ const MozElementMixin = Base => class MozElement extends Base {
         }
       }
 
-<<<<<<< HEAD
-MozElements.BaseControl = class BaseControl extends MozXULElement {
-  get disabled() {
-    return this.getAttribute("disabled") == "true";
-  }
-||||||| merged common ancestors
-class MozBaseControl extends MozXULElement {
-  get disabled() {
-    return this.getAttribute("disabled") == "true";
-  }
-=======
       get tabIndex() {
         return parseInt(this.getAttribute("tabindex")) || 0;
       }
->>>>>>> upstream-releases
 
       set tabIndex(val) {
         if (val) {
@@ -780,69 +631,6 @@ class MozBaseControl extends MozXULElement {
   };
   MozElements.BaseControl = MozElements.BaseControlMixin(MozXULElement);
 
-<<<<<<< HEAD
-  set tabIndex(val) {
-    if (val) {
-      this.setAttribute("tabindex", val);
-    } else {
-      this.removeAttribute("tabindex");
-    }
-  }
-};
-
-MozXULElement.implementCustomInterface(MozElements.BaseControl,
-                                       [Ci.nsIDOMXULControlElement]);
-
-// Attach the base class to the window so other scripts can use it:
-window.MozElementMixin = MozElementMixin;
-window.MozXULElement = MozXULElement;
-window.MozElements = MozElements;
-
-// For now, don't load any elements in the extension dummy document.
-// We will want to load <browser> when that's migrated (bug 1441935).
-const isDummyDocument = document.documentURI == "chrome://extensions/content/dummy.xul";
-if (!isDummyDocument) {
-  for (let script of [
-    "chrome://global/content/elements/general.js",
-    "chrome://global/content/elements/notificationbox.js",
-    "chrome://global/content/elements/radio.js",
-    "chrome://global/content/elements/textbox.js",
-    "chrome://global/content/elements/tabbox.js",
-    "chrome://global/content/elements/tree.js",
-  ]) {
-    Services.scriptloader.loadSubScript(script, window);
-  }
-||||||| merged common ancestors
-  set tabIndex(val) {
-    if (val) {
-      this.setAttribute("tabindex", val);
-    } else {
-      this.removeAttribute("tabindex");
-    }
-  }
-}
-
-MozXULElement.implementCustomInterface(MozBaseControl, [Ci.nsIDOMXULControlElement]);
-
-// Attach the base class to the window so other scripts can use it:
-window.MozElementMixin = MozElementMixin;
-window.MozXULElement = MozXULElement;
-window.MozBaseControl = MozBaseControl;
-
-// For now, don't load any elements in the extension dummy document.
-// We will want to load <browser> when that's migrated (bug 1441935).
-const isDummyDocument = document.documentURI == "chrome://extensions/content/dummy.xul";
-if (!isDummyDocument) {
-  for (let script of [
-    "chrome://global/content/elements/general.js",
-    "chrome://global/content/elements/progressmeter.js",
-    "chrome://global/content/elements/radio.js",
-    "chrome://global/content/elements/textbox.js",
-    "chrome://global/content/elements/tabbox.js",
-  ]) {
-    Services.scriptloader.loadSubScript(script, window);
-  }
-=======
   const BaseTextMixin = Base =>
     class BaseText extends MozElements.BaseControlMixin(Base) {
       set label(val) {
@@ -853,7 +641,6 @@ if (!isDummyDocument) {
       get label() {
         return this.getAttribute("label");
       }
->>>>>>> upstream-releases
 
       set crop(val) {
         this.setAttribute("crop", val);

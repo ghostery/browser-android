@@ -9,17 +9,6 @@
  * ease of unit testing. Recycled here to help expose a shared_ptr interface to
  * objects which are really raw pointers.
  */
-<<<<<<< HEAD
-struct null_deleter {
-  void operator()(void const *) const {}
-||||||| merged common ancestors
-struct null_deleter
-{
-    void operator()(void const *) const
-    {
-    }
-=======
 struct null_deleter {
   void operator()(void const*) const {}
->>>>>>> upstream-releases
 };

@@ -209,29 +209,7 @@ void GPUProcessHost::KillHard(const char* aReason) {
   SetAlreadyDead();
 }
 
-<<<<<<< HEAD
 uint64_t GPUProcessHost::GetProcessToken() const { return mProcessToken; }
-
-static void DelayedDeleteSubprocess(GeckoChildProcessHost* aSubprocess) {
-  XRE_GetIOMessageLoop()->PostTask(
-      mozilla::MakeAndAddRef<DeleteTask<GeckoChildProcessHost>>(aSubprocess));
-}
-||||||| merged common ancestors
-uint64_t
-GPUProcessHost::GetProcessToken() const
-{
-  return mProcessToken;
-}
-
-static void
-DelayedDeleteSubprocess(GeckoChildProcessHost* aSubprocess)
-{
-  XRE_GetIOMessageLoop()->
-    PostTask(mozilla::MakeAndAddRef<DeleteTask<GeckoChildProcessHost>>(aSubprocess));
-}
-=======
-uint64_t GPUProcessHost::GetProcessToken() const { return mProcessToken; }
->>>>>>> upstream-releases
 
 void GPUProcessHost::KillProcess() { KillHard("DiagnosticKill"); }
 
@@ -243,16 +221,8 @@ void GPUProcessHost::DestroyProcess() {
     mTaskFactory.RevokeAll();
   }
 
-<<<<<<< HEAD
-  MessageLoop::current()->PostTask(NewRunnableFunction(
-      "DestroyProcessRunnable", DelayedDeleteSubprocess, this));
-||||||| merged common ancestors
-  MessageLoop::current()->
-    PostTask(NewRunnableFunction("DestroyProcessRunnable", DelayedDeleteSubprocess, this));
-=======
   MessageLoop::current()->PostTask(
       NS_NewRunnableFunction("DestroyProcessRunnable", [this] { Destroy(); }));
->>>>>>> upstream-releases
 }
 
 }  // namespace gfx

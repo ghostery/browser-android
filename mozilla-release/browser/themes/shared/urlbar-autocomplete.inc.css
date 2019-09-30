@@ -4,20 +4,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 %endif
 
-<<<<<<< HEAD
-%filter substitution
-%define urlbarViewPadding 5px
-%define urlbarViewIconMarginEnd .6em
-%define urlbarViewFaviconOffset (@urlbarViewPadding@ + 16px /* action icon width */ + @urlbarViewIconMarginEnd@)
-
-||||||| merged common ancestors
-=======
 %filter substitution
 %define urlbarViewPadding 4px
 %define urlbarViewIconMarginEnd 8px
 %define urlbarViewFaviconOffset (@urlbarViewPadding@ + 16px /* type icon width */ + @urlbarViewIconMarginEnd@)
 
->>>>>>> upstream-releases
 :root {
   --autocomplete-popup-background: var(--arrowpanel-background);
   --autocomplete-popup-color: var(--arrowpanel-color);
@@ -48,28 +39,14 @@
   box-sizing: border-box;
 }
 
-<<<<<<< HEAD
-.urlbarView-results {
-  padding: @urlbarViewPadding@;
-||||||| merged common ancestors
-.urlbarView-results {
-  padding: 5px;
-=======
 #urlbarView-results {
   box-sizing: border-box;
   padding: @urlbarViewPadding@;
->>>>>>> upstream-releases
   white-space: nowrap;
 }
 
 .urlbarView-row {
   border-radius: 2px;
-<<<<<<< HEAD
-  padding: 7px;
-  padding-inline-start: calc(var(--item-padding-start, calc(7px + @urlbarViewFaviconOffset@)) - @urlbarViewFaviconOffset@);
-  padding-inline-end: var(--item-padding-end, 7px);
-||||||| merged common ancestors
-=======
   fill: currentColor;
   fill-opacity: .6;
   padding-top: 6px;
@@ -81,7 +58,6 @@
 :root[uidensity=touch] .urlbarView-row {
   padding-top: 11px;
   padding-bottom: 11px;
->>>>>>> upstream-releases
 }
 
 .urlbarView-row-inner {
@@ -125,35 +101,19 @@
   -moz-context-properties: fill, fill-opacity;
 }
 
-<<<<<<< HEAD
-.urlbarView-row[type=bookmark] > .urlbarView-row-inner > .urlbarView-type-icon {
-  background-image: url(chrome://browser/skin/bookmark.svg);
-||||||| merged common ancestors
-.urlbarView-favicon {
-  border-radius: 8px;
-  background: currentcolor;
-  opacity: 0.6;
-=======
 @media (min-resolution: 2dppx) {
   .urlbarView-type-icon,
   .urlbarView-favicon {
     transform: translateY(-1.5px);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.urlbarView-row[type=switchtab] > .urlbarView-row-inner > .urlbarView-type-icon {
-||||||| merged common ancestors
-.urlbarView-row[action=switch-to-tab] > .urlbarView-row-inner > .urlbarView-action-icon {
-=======
 .urlbarView-row[type=bookmark] > .urlbarView-row-inner > .urlbarView-type-icon {
   background-image: url(chrome://browser/skin/bookmark.svg);
 }
 
 .urlbarView-row[type=remotetab] > .urlbarView-row-inner > .urlbarView-type-icon,
 #urlbar-results:not([actionoverride]) .urlbarView-row[type=switchtab] > .urlbarView-row-inner > .urlbarView-type-icon {
->>>>>>> upstream-releases
   background-image: url(chrome://browser/skin/tab.svg);
 }
 

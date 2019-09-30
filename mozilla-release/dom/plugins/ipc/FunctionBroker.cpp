@@ -9,22 +9,10 @@
 #include "PluginQuirks.h"
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include <commdlg.h>
-#include <schannel.h>
-#include <sddl.h>
-#endif  // defined(XP_WIN)
-||||||| merged common ancestors
-#include <commdlg.h>
-#include <schannel.h>
-#include <sddl.h>
-#endif // defined(XP_WIN)
-=======
 #  include <commdlg.h>
 #  include <schannel.h>
 #  include <sddl.h>
 #endif  // defined(XP_WIN)
->>>>>>> upstream-releases
 
 using namespace mozilla;
 using namespace mozilla::ipc;
@@ -244,17 +232,8 @@ typedef FileDlgFunctionBroker<ID_GetSaveFileNameW, decltype(GetSaveFileNameW)>
 
 // Remember files granted access in the chrome process
 static void GrantFileAccess(base::ProcessId aClientId, LPOPENFILENAME& aLpofn,
-<<<<<<< HEAD
-                            bool isSave) {
-#if defined(MOZ_SANDBOX)
-||||||| merged common ancestors
-                            bool isSave)
-{
-#if defined(MOZ_SANDBOX)
-=======
                             bool isSave) {
 #  if defined(MOZ_SANDBOX)
->>>>>>> upstream-releases
   if (aLpofn->Flags & OFN_ALLOWMULTISELECT) {
     // We only support multiselect with the OFN_EXPLORER flag.
     // This guarantees that ofn.lpstrFile follows the pattern below.
@@ -283,26 +262,6 @@ static void GrantFileAccess(base::ProcessId aClientId, LPOPENFILENAME& aLpofn,
         nextFile += nextFileStr.size() + 1;
       }
     }
-<<<<<<< HEAD
-  } else {
-    FunctionBrokerParent::GetSandboxPermissions()->GrantFileAccess(
-        aClientId, aLpofn->lpstrFile, isSave);
-  }
-#else
-  MOZ_ASSERT_UNREACHABLE(
-      "GetFileName IPC message is only available on "
-      "Windows builds with sandbox.");
-#endif
-||||||| merged common ancestors
-  }
-  else {
-    FunctionBrokerParent::GetSandboxPermissions()->GrantFileAccess(aClientId, aLpofn->lpstrFile, isSave);
-  }
-#else
-  MOZ_ASSERT_UNREACHABLE("GetFileName IPC message is only available on "
-                         "Windows builds with sandbox.");
-#endif
-=======
   } else {
     FunctionBrokerParent::GetSandboxPermissions()->GrantFileAccess(
         aClientId, aLpofn->lpstrFile, isSave);
@@ -312,7 +271,6 @@ static void GrantFileAccess(base::ProcessId aClientId, LPOPENFILENAME& aLpofn,
       "GetFileName IPC message is only available on "
       "Windows builds with sandbox.");
 #  endif
->>>>>>> upstream-releases
 }
 
 template <>

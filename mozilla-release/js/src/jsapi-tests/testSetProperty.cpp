@@ -7,52 +7,12 @@
 
 #include "jsapi-tests/tests.h"
 
-<<<<<<< HEAD
-BEGIN_TEST(testSetProperty_InheritedGlobalSetter) {
-  // This is a JSAPI test because jsapi-test globals do not have a resolve
-  // hook and therefore can use the property cache in some cases where the
-  // shell can't.
-  MOZ_RELEASE_ASSERT(!JS_GetClass(global)->getResolve());
-||||||| merged common ancestors
-BEGIN_TEST(testSetProperty_InheritedGlobalSetter)
-{
-    // This is a JSAPI test because jsapi-test globals do not have a resolve
-    // hook and therefore can use the property cache in some cases where the
-    // shell can't.
-    MOZ_RELEASE_ASSERT(!JS_GetClass(global)->getResolve());
-=======
 BEGIN_TEST(testSetProperty_InheritedGlobalSetter) {
   // This is a JSAPI test because jsapi-test globals can be set up to not have
   // a resolve hook and therefore can use the property cache in some cases
   // where the shell can't.
   MOZ_RELEASE_ASSERT(!JS_GetClass(global)->getResolve());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CHECK(JS_DefineProperty(cx, global, "HOTLOOP", 8, 0));
-  EXEC(
-      "var n = 0;\n"
-      "var global = this;\n"
-      "function f() { n++; }\n"
-      "Object.defineProperty(Object.prototype, 'x', {set: f});\n"
-      "for (var i = 0; i < HOTLOOP; i++)\n"
-      "    global.x = i;\n");
-  EXEC(
-      "if (n != HOTLOOP)\n"
-      "    throw 'FAIL';\n");
-  return true;
-||||||| merged common ancestors
-    CHECK(JS_DefineProperty(cx, global, "HOTLOOP", 8, 0));
-    EXEC("var n = 0;\n"
-         "var global = this;\n"
-         "function f() { n++; }\n"
-         "Object.defineProperty(Object.prototype, 'x', {set: f});\n"
-         "for (var i = 0; i < HOTLOOP; i++)\n"
-         "    global.x = i;\n");
-    EXEC("if (n != HOTLOOP)\n"
-         "    throw 'FAIL';\n");
-    return true;
-=======
   CHECK(JS::InitRealmStandardClasses(cx));
 
   CHECK(JS_DefineProperty(cx, global, "HOTLOOP", 8, 0));
@@ -87,6 +47,5 @@ const JSClass* getGlobalClass(void) override {
       JSCLASS_GLOBAL_FLAGS, &noResolveGlobalClassOps};
 
   return &noResolveGlobalClass;
->>>>>>> upstream-releases
 }
 END_TEST(testSetProperty_InheritedGlobalSetter)

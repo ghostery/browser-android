@@ -18,23 +18,11 @@ using mozilla::ipc::PrincipalInfoToPrincipal;
 ClientInfo::ClientInfo(const nsID& aId, ClientType aType,
                        const mozilla::ipc::PrincipalInfo& aPrincipalInfo,
                        const TimeStamp& aCreationTime)
-<<<<<<< HEAD
-    : mData(MakeUnique<IPCClientInfo>(aId, aType, aPrincipalInfo, aCreationTime,
-                                      EmptyCString(),
-                                      mozilla::dom::FrameType::None)) {}
-||||||| merged common ancestors
-  : mData(MakeUnique<IPCClientInfo>(aId, aType, aPrincipalInfo, aCreationTime,
-                                    EmptyCString(),
-                                    mozilla::dom::FrameType::None))
-{
-}
-=======
     : mData(MakeUnique<IPCClientInfo>(aId, aType, aPrincipalInfo, aCreationTime,
                                       EmptyCString(),
                                       mozilla::dom::FrameType::None,
                                       mozilla::Nothing(), mozilla::Nothing())) {
 }
->>>>>>> upstream-releases
 
 ClientInfo::ClientInfo(const IPCClientInfo& aData)
     : mData(MakeUnique<IPCClientInfo>(aData)) {}
@@ -111,13 +99,6 @@ nsCOMPtr<nsIPrincipal> ClientInfo::GetPrincipal() const {
   return ref;
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 const Maybe<mozilla::ipc::CSPInfo>& ClientInfo::GetCspInfo() const {
   return mData->cspInfo();
 }
@@ -137,4 +118,3 @@ void ClientInfo::SetPreloadCspInfo(
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

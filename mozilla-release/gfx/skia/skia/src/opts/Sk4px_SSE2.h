@@ -66,30 +66,9 @@ inline Sk4px Sk4px::Wide::div255() const {
 #endif
 
 inline Sk4px Sk4px::Load2Alphas(const SkAlpha a[2]) {
-<<<<<<< HEAD
     uint16_t alphas;
     memcpy(&alphas, a, 2);
     uint32_t alphas_and_two_zeros = alphas;   // Aa -> Aa00
-
-    return Load4Alphas((const SkAlpha*)&alphas_and_two_zeros);
-}
-
-inline Sk4px Sk4px::zeroColors() const {
-    return Sk16b(_mm_and_si128(_mm_set1_epi32(0xFF << SK_A32_SHIFT), this->fVec));
-}
-||||||| merged common ancestors
-    uint32_t as = *(const uint16_t*)a;   // Aa -> Aa00
-    return Load4Alphas((const SkAlpha*)&as);
-}
-
-inline Sk4px Sk4px::zeroColors() const {
-    return Sk16b(_mm_and_si128(_mm_set1_epi32(0xFF << SK_A32_SHIFT), this->fVec));
-}
-=======
-    uint16_t alphas;
-    memcpy(&alphas, a, 2);
-    uint32_t alphas_and_two_zeros = alphas;   // Aa -> Aa00
->>>>>>> upstream-releases
 
     return Load4Alphas((const SkAlpha*)&alphas_and_two_zeros);
 }

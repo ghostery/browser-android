@@ -59,43 +59,17 @@ class GenericNamedTimerCallbackBase : public nsITimerCallback, public nsINamed {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
- protected:
-  virtual ~GenericNamedTimerCallbackBase() {}
-||||||| merged common ancestors
-protected:
-  virtual ~GenericNamedTimerCallbackBase() {}
-=======
  protected:
   virtual ~GenericNamedTimerCallbackBase() = default;
->>>>>>> upstream-releases
 };
 
 // An nsITimerCallback implementation with nsINamed that can be used with any
 // function object that's callable with no arguments.
 template <typename Function>
-<<<<<<< HEAD
-class GenericNamedTimerCallback final : public GenericNamedTimerCallbackBase {
- public:
-  explicit GenericNamedTimerCallback(const Function& aFunction,
-                                     const char* aName)
-      : mFunction(aFunction), mName(aName) {}
-||||||| merged common ancestors
-class GenericNamedTimerCallback final : public GenericNamedTimerCallbackBase
-{
-public:
-  explicit GenericNamedTimerCallback(const Function& aFunction,
-                                     const char* aName)
-    : mFunction(aFunction)
-    , mName(aName)
-  {
-  }
-=======
 class GenericNamedTimerCallback final : public GenericNamedTimerCallbackBase {
  public:
   GenericNamedTimerCallback(const Function& aFunction, const char* aName)
       : mFunction(aFunction), mName(aName) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Notify(nsITimer*) override {
     mFunction();

@@ -6,7 +6,8 @@
 #include "nsThreadPool.h"
 #include "nsNetUtil.h"
 
-TEST(TestURIMutator, Mutator) {
+TEST(TestURIMutator, Mutator)
+{
   nsAutoCString out;
 
   // This test instantiates a new nsStandardURL::Mutator (via contractID)

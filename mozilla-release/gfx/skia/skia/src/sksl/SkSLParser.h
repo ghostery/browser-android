@@ -51,56 +51,6 @@ class SymbolTable;
  */
 class Parser {
 public:
-<<<<<<< HEAD
-    enum class LayoutToken {
-        LOCATION,
-        OFFSET,
-        BINDING,
-        INDEX,
-        SET,
-        BUILTIN,
-        INPUT_ATTACHMENT_INDEX,
-        ORIGIN_UPPER_LEFT,
-        OVERRIDE_COVERAGE,
-        BLEND_SUPPORT_ALL_EQUATIONS,
-        BLEND_SUPPORT_MULTIPLY,
-        BLEND_SUPPORT_SCREEN,
-        BLEND_SUPPORT_OVERLAY,
-        BLEND_SUPPORT_DARKEN,
-        BLEND_SUPPORT_LIGHTEN,
-        BLEND_SUPPORT_COLORDODGE,
-        BLEND_SUPPORT_COLORBURN,
-        BLEND_SUPPORT_HARDLIGHT,
-        BLEND_SUPPORT_SOFTLIGHT,
-        BLEND_SUPPORT_DIFFERENCE,
-        BLEND_SUPPORT_EXCLUSION,
-        BLEND_SUPPORT_HSL_HUE,
-        BLEND_SUPPORT_HSL_SATURATION,
-        BLEND_SUPPORT_HSL_COLOR,
-        BLEND_SUPPORT_HSL_LUMINOSITY,
-        PUSH_CONSTANT,
-        POINTS,
-        LINES,
-        LINE_STRIP,
-        LINES_ADJACENCY,
-        TRIANGLES,
-        TRIANGLE_STRIP,
-        TRIANGLES_ADJACENCY,
-        MAX_VERTICES,
-        INVOCATIONS,
-        WHEN,
-        KEY,
-        TRACKED,
-        CTYPE,
-        GRCOLOR4F,
-        SKPMCOLOR4F,
-        SKRECT,
-        SKIRECT,
-        SKPMCOLOR,
-    };
-
-||||||| merged common ancestors
-=======
     enum class LayoutToken {
         LOCATION,
         OFFSET,
@@ -147,7 +97,6 @@ public:
         SKPMCOLOR,
     };
 
->>>>>>> upstream-releases
     Parser(const char* text, size_t length, SymbolTable& types, ErrorReporter& errors);
 
     /**

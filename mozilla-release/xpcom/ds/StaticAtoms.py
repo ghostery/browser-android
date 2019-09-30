@@ -42,7 +42,6 @@ STATIC_ATOMS = [
     Atom("moztype", "_moz-type"),
     Atom("mozdirty", "_moz_dirty"),
     Atom("mozdisallowselectionprint", "mozdisallowselectionprint"),
-    Atom("mozpersist", "mozpersist"),
     Atom("mozdonotsend", "moz-do-not-send"),
     Atom("mozeditorbogusnode", "_moz_editor_bogus_node"),
     Atom("mozgeneratedcontentbefore", "_moz_generated_content_before"),
@@ -526,13 +525,7 @@ STATIC_ATOMS = [
     Atom("index", "index"),
     Atom("infinity", "infinity"),
     Atom("inherits", "inherits"),
-<<<<<<< HEAD
     Atom("inheritOverflow", "inherit-overflow"),
-    Atom("inheritScrollBehavior", "inherit-scroll-behavior"),
-||||||| merged common ancestors
-=======
-    Atom("inheritOverflow", "inherit-overflow"),
->>>>>>> upstream-releases
     Atom("inheritstyle", "inheritstyle"),
     Atom("initial_scale", "initial-scale"),
     Atom("input", "input"),
@@ -952,13 +945,8 @@ STATIC_ATOMS = [
     Atom("parameter", "parameter"),
     Atom("parent", "parent"),
     Atom("parentfocused", "parentfocused"),
-<<<<<<< HEAD
-    Atom("parsererror", "parsererror"),
-||||||| merged common ancestors
-=======
     Atom("parsererror", "parsererror"),
     Atom("part", "part"),
->>>>>>> upstream-releases
     Atom("password", "password"),
     Atom("pattern", "pattern"),
     Atom("patternSeparator", "pattern-separator"),
@@ -1234,14 +1222,7 @@ STATIC_ATOMS = [
     Atom("u", "u"),
     Atom("ul", "ul"),
     Atom("unparsedEntityUri", "unparsed-entity-uri"),
-<<<<<<< HEAD
     Atom("up", "up"),
-    Atom("upperAlpha", "upper-alpha"),
-||||||| merged common ancestors
-    Atom("upperAlpha", "upper-alpha"),
-=======
-    Atom("up", "up"),
->>>>>>> upstream-releases
     Atom("upperFirst", "upper-first"),
     Atom("use", "use"),
     Atom("useAttributeSets", "use-attribute-sets"),

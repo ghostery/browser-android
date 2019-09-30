@@ -11,12 +11,6 @@
 #include "SkConvertPixels.h"
 #include "SkDraw.h"
 #include "SkNx.h"
-<<<<<<< HEAD
-#include "SkPM4f.h"
-||||||| merged common ancestors
-#include "SkPM4fPriv.h"
-=======
->>>>>>> upstream-releases
 #include "SkRasterClip.h"
 #include "SkScan.h"
 #include "SkShaderBase.h"
@@ -82,16 +76,6 @@ public:
 
     bool isOpaque() const override { return fIsOpaque; }
 
-<<<<<<< HEAD
-    // For serialization.  This will never be called.
-    Factory getFactory() const override { SK_ABORT("not reached"); return nullptr; }
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-
-    // For serialization.  This will never be called.
-    Factory getFactory() const override { SK_ABORT("not reached"); return nullptr; }
-=======
->>>>>>> upstream-releases
 
 protected:
 #ifdef SK_ENABLE_LEGACY_SHADERCONTEXT
@@ -222,40 +206,6 @@ void SkDraw::drawVertices(SkVertices::VertexMode vmode, int vertexCount,
     constexpr size_t kDefVertexCount = 16;
     constexpr size_t kOuterSize = sizeof(SkTriColorShader) +
                                  sizeof(SkComposeShader) +
-<<<<<<< HEAD
-                                 (2 * sizeof(SkPoint) + sizeof(SkColor4f)) * kDefVertexCount;
-    SkSTArenaAlloc<kOuterSize> outerAlloc;
-
-    // deform vertices using the skeleton if it is passed in
-    if (bones && boneCount) {
-        // allocate space for the deformed vertices
-        SkPoint* deformed = outerAlloc.makeArray<SkPoint>(vertexCount);
-
-        // deform the vertices
-        if (boneIndices && boneWeights) {
-            for (int i = 0; i < vertexCount; i ++) {
-                const SkVertices::BoneIndices& indices = boneIndices[i];
-                const SkVertices::BoneWeights& weights = boneWeights[i];
-
-                // apply the world transform
-                SkPoint worldPoint = bones[0].mapPoint(vertices[i]);
-
-                // apply bone deformations
-                deformed[i] = SkPoint::Make(0.0f, 0.0f);
-                for (uint32_t j = 0; j < 4; j ++) {
-                    // get the attachment data
-                    uint32_t index = indices[j];
-                    float weight = weights[j];
-
-                    // skip the bone if there is no weight
-                    if (weight == 0.0f) {
-                        continue;
-                    }
-                    SkASSERT(index != 0);
-||||||| merged common ancestors
-                                 (sizeof(SkPoint) + sizeof(SkPM4f)) * defCount;
-    SkSTArenaAlloc<outerSize> outerAlloc;
-=======
                                  (2 * sizeof(SkPoint) + sizeof(SkColor4f)) * kDefVertexCount;
     SkSTArenaAlloc<kOuterSize> outerAlloc;
 
@@ -296,19 +246,6 @@ void SkDraw::drawVertices(SkVertices::VertexMode vmode, int vertexCount,
             worldTransform.setAffine(bones[0].values);
             worldTransform.mapPoints(deformed, vertices, vertexCount);
         }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-                    // deformed += M * v * w
-                    deformed[i] += bones[index].mapPoint(worldPoint) * weight;
-                }
-            }
-        } else {
-            // no bones, so only apply world transform
-            SkMatrix worldTransform = SkMatrix::I();
-            worldTransform.setAffine(bones[0].values);
-            worldTransform.mapPoints(deformed, vertices, vertexCount);
-        }
 
         // change the vertices to point to deformed
         vertices = deformed;
@@ -325,26 +262,6 @@ void SkDraw::drawVertices(SkVertices::VertexMode vmode, int vertexCount,
             return;
         }
     }
-||||||| merged common ancestors
-    SkPoint* devVerts = outerAlloc.makeArray<SkPoint>(count);
-    fMatrix->mapPoints(devVerts, vertices, count);
-=======
-        // change the vertices to point to deformed
-        vertices = deformed;
-    }
-
-    SkPoint* devVerts = outerAlloc.makeArray<SkPoint>(vertexCount);
-    fMatrix->mapPoints(devVerts, vertices, vertexCount);
-
-    {
-        SkRect bounds;
-        // this also sets bounds to empty if we see a non-finite value
-        bounds.set(devVerts, vertexCount);
-        if (bounds.isEmpty()) {
-            return;
-        }
-    }
->>>>>>> upstream-releases
 
     VertState       state(vertexCount, indices, indexCount);
     VertState::Proc vertProc = state.chooseProc(vmode);

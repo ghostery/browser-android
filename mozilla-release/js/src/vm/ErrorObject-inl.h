@@ -16,66 +16,21 @@ inline JSString* js::ErrorObject::fileName(JSContext* cx) const {
   return slot.isString() ? slot.toString() : cx->names().empty;
 }
 
-<<<<<<< HEAD
-inline uint32_t js::ErrorObject::lineNumber() const {
-  const HeapSlot& slot = getReservedSlotRef(LINENUMBER_SLOT);
-  return slot.isInt32() ? slot.toInt32() : 0;
-||||||| merged common ancestors
-inline uint32_t
-js::ErrorObject::lineNumber() const
-{
-    const HeapSlot& slot = getReservedSlotRef(LINENUMBER_SLOT);
-    return slot.isInt32() ? slot.toInt32() : 0;
-=======
 inline uint32_t js::ErrorObject::sourceId() const {
   const HeapSlot& slot = getReservedSlotRef(SOURCEID_SLOT);
   return slot.isInt32() ? slot.toInt32() : 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline uint32_t js::ErrorObject::columnNumber() const {
-  const HeapSlot& slot = getReservedSlotRef(COLUMNNUMBER_SLOT);
-  return slot.isInt32() ? slot.toInt32() : 0;
-||||||| merged common ancestors
-inline uint32_t
-js::ErrorObject::columnNumber() const
-{
-    const HeapSlot& slot = getReservedSlotRef(COLUMNNUMBER_SLOT);
-    return slot.isInt32() ? slot.toInt32() : 0;
-=======
 inline uint32_t js::ErrorObject::lineNumber() const {
   const HeapSlot& slot = getReservedSlotRef(LINENUMBER_SLOT);
   return slot.isInt32() ? slot.toInt32() : 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline JSObject* js::ErrorObject::stack() const {
-  return getReservedSlotRef(STACK_SLOT).toObjectOrNull();
-||||||| merged common ancestors
-inline JSObject*
-js::ErrorObject::stack() const
-{
-    return getReservedSlotRef(STACK_SLOT).toObjectOrNull();
-=======
 inline uint32_t js::ErrorObject::columnNumber() const {
   const HeapSlot& slot = getReservedSlotRef(COLUMNNUMBER_SLOT);
   return slot.isInt32() ? slot.toInt32() : 0;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline uint64_t js::ErrorObject::timeWarpTarget() const {
-  const HeapSlot& slot = getReservedSlotRef(TIME_WARP_SLOT);
-  return slot.isDouble() ? slot.toDouble() : 0;
-||||||| merged common ancestors
-inline uint64_t
-js::ErrorObject::timeWarpTarget() const
-{
-    const HeapSlot& slot = getReservedSlotRef(TIME_WARP_SLOT);
-    return slot.isDouble() ? slot.toDouble() : 0;
-=======
 inline JSObject* js::ErrorObject::stack() const {
   return getReservedSlotRef(STACK_SLOT).toObjectOrNull();
 }
@@ -83,7 +38,6 @@ inline JSObject* js::ErrorObject::stack() const {
 inline uint64_t js::ErrorObject::timeWarpTarget() const {
   const HeapSlot& slot = getReservedSlotRef(TIME_WARP_SLOT);
   return slot.isDouble() ? slot.toDouble() : 0;
->>>>>>> upstream-releases
 }
 
 #endif /* vm_ErrorObject_inl_h */

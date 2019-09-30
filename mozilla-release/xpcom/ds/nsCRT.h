@@ -13,36 +13,14 @@
 #include "nsCRTGlue.h"
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#define NS_LINEBREAK "\015\012"
-#define NS_LINEBREAK_LEN 2
-||||||| merged common ancestors
-#  define NS_LINEBREAK           "\015\012"
-#  define NS_LINEBREAK_LEN       2
-=======
 #  define NS_LINEBREAK "\015\012"
 #  define NS_LINEBREAK_LEN 2
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#ifdef XP_UNIX
-#define NS_LINEBREAK "\012"
-#define NS_LINEBREAK_LEN 1
-#endif /* XP_UNIX */
-#endif /* XP_WIN */
-||||||| merged common ancestors
-#  ifdef XP_UNIX
-#    define NS_LINEBREAK         "\012"
-#    define NS_LINEBREAK_LEN     1
-#  endif /* XP_UNIX */
-#endif /* XP_WIN */
-=======
 #  ifdef XP_UNIX
 #    define NS_LINEBREAK "\012"
 #    define NS_LINEBREAK_LEN 1
 #  endif /* XP_UNIX */
 #endif   /* XP_WIN */
->>>>>>> upstream-releases
 
 extern const char16_t kIsoLatin1ToUCS2[256];
 
@@ -111,27 +89,8 @@ class nsCRT {
   static bool IsUpper(char aChar) { return NS_IsUpper(aChar); }
   static bool IsLower(char aChar) { return NS_IsLower(aChar); }
 
-<<<<<<< HEAD
-  static bool IsAscii(char16_t aChar) { return NS_IsAscii(aChar); }
-  static bool IsAscii(const char16_t* aString) { return NS_IsAscii(aString); }
   static bool IsAsciiSpace(char16_t aChar) {
     return NS_IsAsciiWhitespace(aChar);
-  }
-  static bool IsAscii(const char* aString) { return NS_IsAscii(aString); }
-  static bool IsAscii(const char* aString, uint32_t aLength) {
-    return NS_IsAscii(aString, aLength);
-||||||| merged common ancestors
-  static bool IsAscii(char16_t aChar) { return NS_IsAscii(aChar); }
-  static bool IsAscii(const char16_t* aString) { return NS_IsAscii(aString); }
-  static bool IsAsciiSpace(char16_t aChar) { return NS_IsAsciiWhitespace(aChar); }
-  static bool IsAscii(const char* aString) { return NS_IsAscii(aString); }
-  static bool IsAscii(const char* aString, uint32_t aLength)
-  {
-    return NS_IsAscii(aString, aLength);
-=======
-  static bool IsAsciiSpace(char16_t aChar) {
-    return NS_IsAsciiWhitespace(aChar);
->>>>>>> upstream-releases
   }
 };
 
@@ -144,15 +103,8 @@ inline bool NS_IS_SPACE(char16_t aChar) {
 #if defined(XP_WIN)
 #  define NS_IS_ALPHA(VAL) (isascii((int)(VAL)) && isalpha((int)(VAL)))
 #else
-<<<<<<< HEAD
-#define NS_IS_ALPHA(VAL) \
-  ((((unsigned int)(VAL)) > 0x7f) ? (int)0 : isalpha((int)(VAL)))
-||||||| merged common ancestors
-#define NS_IS_ALPHA(VAL) ((((unsigned int) (VAL)) > 0x7f) ? (int) 0 : isalpha((int)(VAL)))
-=======
 #  define NS_IS_ALPHA(VAL) \
     ((((unsigned int)(VAL)) > 0x7f) ? (int)0 : isalpha((int)(VAL)))
->>>>>>> upstream-releases
 #endif
 
 #endif /* nsCRT_h___ */

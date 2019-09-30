@@ -6,41 +6,19 @@
 
 #include "ColumnSetWrapperFrame.h"
 
-<<<<<<< HEAD
-#include "nsContentUtils.h"
-#include "nsIFrame.h"
-#include "nsIFrameInlines.h"
-
-||||||| merged common ancestors
-=======
 #include "mozilla/ColumnUtils.h"
 #include "mozilla/PresShell.h"
 #include "nsContentUtils.h"
 #include "nsIFrame.h"
 #include "nsIFrameInlines.h"
 
->>>>>>> upstream-releases
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsBlockFrame* NS_NewColumnSetWrapperFrame(nsIPresShell* aPresShell,
-                                          ComputedStyle* aStyle,
-                                          nsFrameState aStateFlags) {
-  ColumnSetWrapperFrame* frame = new (aPresShell) ColumnSetWrapperFrame(aStyle);
-||||||| merged common ancestors
-nsBlockFrame*
-NS_NewColumnSetWrapperFrame(nsIPresShell* aPresShell,
-                            ComputedStyle* aStyle,
-                            nsFrameState aStateFlags)
-{
-  ColumnSetWrapperFrame* frame = new (aPresShell) ColumnSetWrapperFrame(aStyle);
-=======
 nsBlockFrame* NS_NewColumnSetWrapperFrame(PresShell* aPresShell,
                                           ComputedStyle* aStyle,
                                           nsFrameState aStateFlags) {
   ColumnSetWrapperFrame* frame = new (aPresShell)
       ColumnSetWrapperFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 
   // CSS Multi-column level 1 section 2: A multi-column container
   // establishes a new block formatting context, as per CSS 2.1 section
@@ -55,49 +33,6 @@ NS_QUERYFRAME_HEAD(ColumnSetWrapperFrame)
   NS_QUERYFRAME_ENTRY(ColumnSetWrapperFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsBlockFrame)
 
-<<<<<<< HEAD
-ColumnSetWrapperFrame::ColumnSetWrapperFrame(ComputedStyle* aStyle)
-    : nsBlockFrame(aStyle, kClassID) {}
-
-nsContainerFrame* ColumnSetWrapperFrame::GetContentInsertionFrame() {
-  nsIFrame* columnSet = PrincipalChildList().OnlyChild();
-  if (columnSet) {
-    // We have only one child, which means we don't have any column-span
-    // descendants. Thus we can safely return our only ColumnSet child's
-    // insertion frame as ours.
-    MOZ_ASSERT(columnSet->IsColumnSetFrame());
-    return columnSet->GetContentInsertionFrame();
-  }
-
-  // We have column-span descendants. Return ourselves as the insertion
-  // frame to let nsCSSFrameConstructor::WipeContainingBlock() figure out
-  // what to do.
-  return this;
-}
-
-void ColumnSetWrapperFrame::AppendDirectlyOwnedAnonBoxes(
-    nsTArray<OwnedAnonBox>& aResult) {
-  MOZ_ASSERT(!GetPrevContinuation(),
-             "Who set NS_FRAME_OWNS_ANON_BOXES on our continuations?");
-
-  // It's sufficient to append the first ColumnSet child, which is the first
-  // continuation of all the other ColumnSets.
-  //
-  // We don't need to append -moz-column-span-wrapper children because
-  // they're non-inheriting anon boxes, and they cannot have any directly
-  // owned anon boxes nor generate any native anonymous content themselves.
-  // Thus, no need to restyle them. AssertColumnSpanWrapperSubtreeIsSane()
-  // asserts all the conditions above which allow us to skip appending
-  // -moz-column-span-wrappers.
-  nsIFrame* columnSet = PrincipalChildList().FirstChild();
-  MOZ_ASSERT(columnSet && columnSet->IsColumnSetFrame(),
-             "The first child should always be ColumnSet!");
-  aResult.AppendElement(OwnedAnonBox(columnSet));
-||||||| merged common ancestors
-ColumnSetWrapperFrame::ColumnSetWrapperFrame(ComputedStyle* aStyle)
-  : nsBlockFrame(aStyle, kClassID)
-{
-=======
 ColumnSetWrapperFrame::ColumnSetWrapperFrame(ComputedStyle* aStyle,
                                              nsPresContext* aPresContext)
     : nsBlockFrame(aStyle, aPresContext, kClassID) {}
@@ -158,7 +93,6 @@ void ColumnSetWrapperFrame::AppendDirectlyOwnedAnonBoxes(
   MOZ_ASSERT(columnSet && columnSet->IsColumnSetFrame(),
              "The first child should always be ColumnSet!");
   aResult.AppendElement(OwnedAnonBox(columnSet));
->>>>>>> upstream-releases
 }
 
 #ifdef DEBUG_FRAME_DUMP
@@ -205,36 +139,6 @@ void ColumnSetWrapperFrame::RemoveFrame(ChildListID aListID,
   MOZ_ASSERT_UNREACHABLE("Unsupported operation!");
   nsBlockFrame::RemoveFrame(aListID, aOldFrame);
 }
-<<<<<<< HEAD
-
-#ifdef DEBUG
-
-/* static */ void ColumnSetWrapperFrame::AssertColumnSpanWrapperSubtreeIsSane(
-    const nsIFrame* aFrame) {
-  MOZ_ASSERT(aFrame->IsColumnSpan(), "aFrame is not column-span?");
-
-  if (!aFrame->Style()->IsAnonBox()) {
-    // aFrame is the primary frame of the element having "column-span: all".
-    // Traverse no further.
-    return;
-  }
-
-  MOZ_ASSERT(
-      aFrame->Style()->GetPseudo() == nsCSSAnonBoxes::columnSpanWrapper(),
-      "aFrame should be ::-moz-column-span-wrapper");
-
-  MOZ_ASSERT(!aFrame->HasAnyStateBits(NS_FRAME_OWNS_ANON_BOXES),
-             "::-moz-column-span-wrapper anonymous blocks cannot own "
-             "other types of anonymous blocks!");
-
-  for (const nsIFrame* child : aFrame->PrincipalChildList()) {
-    AssertColumnSpanWrapperSubtreeIsSane(child);
-  }
-}
-
-#endif
-||||||| merged common ancestors
-=======
 
 void ColumnSetWrapperFrame::MarkIntrinsicISizesDirty() {
   nsBlockFrame::MarkIntrinsicISizesDirty();
@@ -342,4 +246,3 @@ void ColumnSetWrapperFrame::AssertColumnSpanWrapperSubtreeIsSane(
 }
 
 #endif
->>>>>>> upstream-releases

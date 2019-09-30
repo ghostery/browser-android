@@ -170,26 +170,12 @@ _ContextualIdentityService.prototype = {
   },
 
   load() {
-<<<<<<< HEAD
-    return OS.File.read(this._path).then(bytes => {
-      // If synchronous loading happened in the meantime, exit now.
-      if (this._dataReady) {
-        return;
-      }
-||||||| merged common ancestors
-    OS.File.read(this._path).then(bytes => {
-      // If synchronous loading happened in the meantime, exit now.
-      if (this._dataReady) {
-        return;
-      }
-=======
     return OS.File.read(this._path).then(
       bytes => {
         // If synchronous loading happened in the meantime, exit now.
         if (this._dataReady) {
           return;
         }
->>>>>>> upstream-releases
 
         try {
           this.parseData(bytes);
@@ -556,16 +542,9 @@ _ContextualIdentityService.prototype = {
       if (!identity.public) {
         continue;
       }
-<<<<<<< HEAD
-      Services.clearData.deleteDataFromOriginAttributesPattern({ userContextId: identity.userContextId });
-||||||| merged common ancestors
-      Services.obs.notifyObservers(null, "clear-origin-attributes-data",
-                                   JSON.stringify({ userContextId: identity.userContextId }));
-=======
       Services.clearData.deleteDataFromOriginAttributesPattern({
         userContextId: identity.userContextId,
       });
->>>>>>> upstream-releases
     }
   },
 
@@ -638,16 +617,9 @@ _ContextualIdentityService.prototype = {
     }
 
     for (let userContextId of cookiesUserContextIds) {
-<<<<<<< HEAD
-      Services.clearData.deleteDataFromOriginAttributesPattern({ userContextId });
-||||||| merged common ancestors
-      Services.obs.notifyObservers(null, "clear-origin-attributes-data",
-                                   JSON.stringify({ userContextId }));
-=======
       Services.clearData.deleteDataFromOriginAttributesPattern({
         userContextId,
       });
->>>>>>> upstream-releases
     }
   },
 

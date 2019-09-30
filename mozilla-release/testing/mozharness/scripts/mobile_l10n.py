@@ -50,35 +50,6 @@ class MobileSingleLocale(LocalesMixin, TooltoolMixin, AutomationMixin,
          "type": "string",
          "help": "Override the tags set for all repos"
          }
-<<<<<<< HEAD
-    ], [
-        ['--scm-level'],
-        {"action": "store",
-         "type": "int",
-         "dest": "scm_level",
-         "default": 1,
-         "help": "This sets the SCM level for the branch being built."
-                 " See https://www.mozilla.org/en-US/about/"
-                 "governance/policies/commit/access-policy/"}
-||||||| merged common ancestors
-    ], [
-        ['--revision', ],
-        {"action": "store",
-         "dest": "revision",
-         "type": "string",
-         "help": "Override the gecko revision to use (otherwise use automation supplied"
-                 " value, or en-US revision) "}
-    ], [
-        ['--scm-level'],
-        {"action": "store",
-         "type": "int",
-         "dest": "scm_level",
-         "default": 1,
-         "help": "This sets the SCM level for the branch being built."
-                 " See https://www.mozilla.org/en-US/about/"
-                 "governance/policies/commit/access-policy/"}
-=======
->>>>>>> upstream-releases
     ]]
 
     def __init__(self, require_config_file=True):

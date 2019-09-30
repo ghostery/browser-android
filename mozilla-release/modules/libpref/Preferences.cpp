@@ -107,30 +107,6 @@ using ipc::FileDescriptor;
 
 #ifdef DEBUG
 
-<<<<<<< HEAD
-#define ENSURE_PARENT_PROCESS(func, pref)                                   \
-  do {                                                                      \
-    if (MOZ_UNLIKELY(!XRE_IsParentProcess())) {                             \
-      nsPrintfCString msg(                                                  \
-          "ENSURE_PARENT_PROCESS: called %s on %s in a non-parent process", \
-          func, pref);                                                      \
-      NS_ERROR(msg.get());                                                  \
-      return NS_ERROR_NOT_AVAILABLE;                                        \
-    }                                                                       \
-  } while (0)
-||||||| merged common ancestors
-#define ENSURE_PARENT_PROCESS(func, pref)                                      \
-  do {                                                                         \
-    if (MOZ_UNLIKELY(!XRE_IsParentProcess())) {                                \
-      nsPrintfCString msg(                                                     \
-        "ENSURE_PARENT_PROCESS: called %s on %s in a non-parent process",      \
-        func,                                                                  \
-        pref);                                                                 \
-      NS_ERROR(msg.get());                                                     \
-      return NS_ERROR_NOT_AVAILABLE;                                           \
-    }                                                                          \
-  } while (0)
-=======
 #  define ENSURE_PARENT_PROCESS(func, pref)                                   \
     do {                                                                      \
       if (MOZ_UNLIKELY(!XRE_IsParentProcess())) {                             \
@@ -141,26 +117,13 @@ using ipc::FileDescriptor;
         return NS_ERROR_NOT_AVAILABLE;                                        \
       }                                                                       \
     } while (0)
->>>>>>> upstream-releases
 
 #else  // DEBUG
 
-<<<<<<< HEAD
-#define ENSURE_PARENT_PROCESS(func, pref)     \
-  if (MOZ_UNLIKELY(!XRE_IsParentProcess())) { \
-    return NS_ERROR_NOT_AVAILABLE;            \
-  }
-||||||| merged common ancestors
-#define ENSURE_PARENT_PROCESS(func, pref)                                      \
-  if (MOZ_UNLIKELY(!XRE_IsParentProcess())) {                                  \
-    return NS_ERROR_NOT_AVAILABLE;                                             \
-  }
-=======
 #  define ENSURE_PARENT_PROCESS(func, pref)     \
     if (MOZ_UNLIKELY(!XRE_IsParentProcess())) { \
       return NS_ERROR_NOT_AVAILABLE;            \
     }
->>>>>>> upstream-releases
 
 #endif  // DEBUG
 
@@ -318,18 +281,8 @@ union PrefValue {
     }
   }
 
-<<<<<<< HEAD
-  static char* Deserialize(PrefType aType, char* aStr,
-                           dom::MaybePrefValue* aDomValue) {
-||||||| merged common ancestors
-  static char* Deserialize(PrefType aType,
-                           char* aStr,
-                           dom::MaybePrefValue* aDomValue)
-  {
-=======
   static char* Deserialize(PrefType aType, char* aStr,
                            Maybe<dom::PrefValue>* aDomValue) {
->>>>>>> upstream-releases
     char* p = aStr;
 
     switch (aType) {
@@ -478,34 +431,6 @@ class PrefWrapper;
 class Pref {
  public:
   explicit Pref(const char* aName)
-<<<<<<< HEAD
-      : mName(ArenaStrdup(aName, gPrefNameArena)),
-        mType(static_cast<uint32_t>(PrefType::None)),
-        mIsSticky(false),
-        mIsLocked(false),
-        mDefaultChanged(false),
-        mHasDefaultValue(false),
-        mHasUserValue(false),
-        mDefaultValue(),
-        mUserValue() {}
-
-  ~Pref() {
-||||||| merged common ancestors
-    : mName(ArenaStrdup(aName, gPrefNameArena))
-    , mType(static_cast<uint32_t>(PrefType::None))
-    , mIsSticky(false)
-    , mIsLocked(false)
-    , mDefaultChanged(false)
-    , mHasDefaultValue(false)
-    , mHasUserValue(false)
-    , mDefaultValue()
-    , mUserValue()
-  {
-  }
-
-  ~Pref()
-  {
-=======
       : mName(ArenaStrdup(aName, gPrefNameArena)),
         mType(static_cast<uint32_t>(PrefType::None)),
         mIsSticky(false),
@@ -518,7 +443,6 @@ class Pref {
         mUserValue() {}
 
   ~Pref() {
->>>>>>> upstream-releases
     // There's no need to free mName because it's allocated in memory owned by
     // gPrefNameArena.
 
@@ -557,19 +481,8 @@ class Pref {
   template <typename T>
   void AddToMap(SharedPrefMapBuilder& aMap) {
     aMap.Add(Name(),
-<<<<<<< HEAD
-             {HasDefaultValue(), HasUserValue(), IsSticky(), IsLocked(),
-              DefaultChanged()},
-||||||| merged common ancestors
-             { HasDefaultValue(),
-               HasUserValue(),
-               IsSticky(),
-               IsLocked(),
-               DefaultChanged() },
-=======
              {HasDefaultValue(), HasUserValue(), IsSticky(), IsLocked(),
               DefaultChanged(), IsSkippedByIteration()},
->>>>>>> upstream-releases
              HasDefaultValue() ? mDefaultValue.Get<T>() : T(),
              HasUserValue() ? mUserValue.Get<T>() : T());
   }
@@ -642,24 +555,10 @@ class Pref {
       aDomPref->userValue() = Nothing();
     }
 
-<<<<<<< HEAD
-    MOZ_ASSERT(aDomPref->defaultValue().type() ==
-                   dom::MaybePrefValue::Tnull_t ||
-               aDomPref->userValue().type() == dom::MaybePrefValue::Tnull_t ||
-               (aDomPref->defaultValue().get_PrefValue().type() ==
-                aDomPref->userValue().get_PrefValue().type()));
-||||||| merged common ancestors
-    MOZ_ASSERT(aDomPref->defaultValue().type() ==
-                 dom::MaybePrefValue::Tnull_t ||
-               aDomPref->userValue().type() == dom::MaybePrefValue::Tnull_t ||
-               (aDomPref->defaultValue().get_PrefValue().type() ==
-                aDomPref->userValue().get_PrefValue().type()));
-=======
     MOZ_ASSERT(aDomPref->defaultValue().isNothing() ||
                aDomPref->userValue().isNothing() ||
                (aDomPref->defaultValue().ref().type() ==
                 aDomPref->userValue().ref().type()));
->>>>>>> upstream-releases
   }
 
   void FromDomPref(const dom::Pref& aDomPref, bool* aValueChanged) {
@@ -990,17 +889,8 @@ class Pref {
   PrefValue mUserValue;
 };
 
-<<<<<<< HEAD
-struct PrefHasher {
-  using Key = mozilla::UniquePtr<Pref>;
-||||||| merged common ancestors
-struct PrefHasher
-{
-  using Key = mozilla::UniquePtr<Pref>;
-=======
 struct PrefHasher {
   using Key = UniquePtr<Pref>;
->>>>>>> upstream-releases
   using Lookup = const char*;
 
   static HashNumber hash(const Lookup& aLookup) { return HashString(aLookup); }
@@ -1032,25 +922,6 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
   bool IsTypeInt() const { return IsType(PrefType::Int); }
   bool IsTypeBool() const { return IsType(PrefType::Bool); }
 
-<<<<<<< HEAD
-#define FORWARD(retType, method)                                   \
-  retType method() const {                                         \
-    struct Matcher {                                               \
-      retType match(const Pref* aPref) { return aPref->method(); } \
-      retType match(SharedPref& aPref) { return aPref.method(); }  \
-    };                                                             \
-    return match(Matcher());                                       \
-||||||| merged common ancestors
-#define FORWARD(retType, method)                                               \
-  retType method() const                                                       \
-  {                                                                            \
-    struct Matcher                                                             \
-    {                                                                          \
-      retType match(const Pref* aPref) { return aPref->method(); }             \
-      retType match(SharedPref& aPref) { return aPref.method(); }              \
-    };                                                                         \
-    return match(Matcher());                                                   \
-=======
 #define FORWARD(retType, method)                                        \
   retType method() const {                                              \
     struct Matcher {                                                    \
@@ -1058,7 +929,6 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
       retType operator()(SharedPref& aPref) { return aPref.method(); }  \
     };                                                                  \
     return match(Matcher());                                            \
->>>>>>> upstream-releases
   }
 
   FORWARD(bool, DefaultChanged)
@@ -1071,29 +941,6 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
   FORWARD(PrefType, Type)
 #undef FORWARD
 
-<<<<<<< HEAD
-#define FORWARD(retType, method)                                        \
-  retType method(PrefValueKind aKind = PrefValueKind::User) const {     \
-    struct Matcher {                                                    \
-      PrefValueKind mKind;                                              \
-                                                                        \
-      retType match(const Pref* aPref) { return aPref->method(mKind); } \
-      retType match(SharedPref& aPref) { return aPref.method(mKind); }  \
-    };                                                                  \
-    return match(Matcher{aKind});                                       \
-||||||| merged common ancestors
-#define FORWARD(retType, method)                                               \
-  retType method(PrefValueKind aKind = PrefValueKind::User) const              \
-  {                                                                            \
-    struct Matcher                                                             \
-    {                                                                          \
-      PrefValueKind mKind;                                                     \
-                                                                               \
-      retType match(const Pref* aPref) { return aPref->method(mKind); }        \
-      retType match(SharedPref& aPref) { return aPref.method(mKind); }         \
-    };                                                                         \
-    return match(Matcher{ aKind });                                            \
-=======
 #define FORWARD(retType, method)                                             \
   retType method(PrefValueKind aKind = PrefValueKind::User) const {          \
     struct Matcher {                                                         \
@@ -1103,7 +950,6 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
       retType operator()(SharedPref& aPref) { return aPref.method(mKind); }  \
     };                                                                       \
     return match(Matcher{aKind});                                            \
->>>>>>> upstream-releases
   }
 
   FORWARD(bool, GetBoolValue)
@@ -1141,14 +987,7 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
     return PrefValueKind::User;
   }
 
-<<<<<<< HEAD
-  nsresult GetBoolValue(PrefValueKind aKind, bool* aResult) const {
-||||||| merged common ancestors
-  nsresult GetBoolValue(PrefValueKind aKind, bool* aResult) const
-  {
-=======
   nsresult GetValue(PrefValueKind aKind, bool* aResult) const {
->>>>>>> upstream-releases
     PrefValueKind kind;
     MOZ_TRY_VAR(kind, WantValueKind(PrefType::Bool, aKind));
 
@@ -1156,14 +995,7 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsresult GetIntValue(PrefValueKind aKind, int32_t* aResult) const {
-||||||| merged common ancestors
-  nsresult GetIntValue(PrefValueKind aKind, int32_t* aResult) const
-  {
-=======
   nsresult GetValue(PrefValueKind aKind, int32_t* aResult) const {
->>>>>>> upstream-releases
     PrefValueKind kind;
     MOZ_TRY_VAR(kind, WantValueKind(PrefType::Int, aKind));
 
@@ -1171,12 +1003,6 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsresult GetCStringValue(PrefValueKind aKind, nsACString& aResult) const {
-||||||| merged common ancestors
-  nsresult GetCStringValue(PrefValueKind aKind, nsACString& aResult) const
-  {
-=======
   nsresult GetValue(PrefValueKind aKind, uint32_t* aResult) const {
     return GetValue(aKind, reinterpret_cast<int32_t*>(aResult));
   }
@@ -1192,7 +1018,6 @@ class MOZ_STACK_CLASS PrefWrapper : public PrefWrapperBase {
   }
 
   nsresult GetValue(PrefValueKind aKind, nsACString& aResult) const {
->>>>>>> upstream-releases
     PrefValueKind kind;
     MOZ_TRY_VAR(kind, WantValueKind(PrefType::String, aKind));
 
@@ -1507,42 +1332,6 @@ class PrefsIter {
     }
   }
 
-<<<<<<< HEAD
- private:
-#define MATCH(type, ...)                                                \
-  do {                                                                  \
-    struct Matcher {                                                    \
-      PrefsIter& mIter;                                                 \
-      type match(HashElem& pos) {                                       \
-        HashElem& end MOZ_MAYBE_UNUSED = mIter.mEnd.as<HashElem>();     \
-        __VA_ARGS__;                                                    \
-      }                                                                 \
-      type match(SharedElem& pos) {                                     \
-        SharedElem& end MOZ_MAYBE_UNUSED = mIter.mEnd.as<SharedElem>(); \
-        __VA_ARGS__;                                                    \
-      }                                                                 \
-    };                                                                  \
-    return mPos.match(Matcher{*this});                                  \
-||||||| merged common ancestors
-private:
-#define MATCH(type, ...)                                                       \
-  do {                                                                         \
-    struct Matcher                                                             \
-    {                                                                          \
-      PrefsIter& mIter;                                                        \
-      type match(HashElem& pos)                                                \
-      {                                                                        \
-        HashElem& end MOZ_MAYBE_UNUSED = mIter.mEnd.as<HashElem>();            \
-        __VA_ARGS__;                                                           \
-      }                                                                        \
-      type match(SharedElem& pos)                                              \
-      {                                                                        \
-        SharedElem& end MOZ_MAYBE_UNUSED = mIter.mEnd.as<SharedElem>();        \
-        __VA_ARGS__;                                                           \
-      }                                                                        \
-    };                                                                         \
-    return mPos.match(Matcher{ *this });                                       \
-=======
  private:
 #define MATCH(type, ...)                                                \
   do {                                                                  \
@@ -1558,7 +1347,6 @@ private:
       }                                                                 \
     };                                                                  \
     return mPos.match(Matcher{*this});                                  \
->>>>>>> upstream-releases
   } while (0);
 
   bool Done() { MATCH(bool, return pos == end); }
@@ -1720,18 +1508,8 @@ static bool gContentProcessPrefsAreInited = false;
 
 #endif  // DEBUG
 
-<<<<<<< HEAD
-static Pref* pref_HashTableLookup(const char* aPrefName) {
-  MOZ_ASSERT(NS_IsMainThread() || mozilla::ServoStyleSet::IsInServoTraversal());
-||||||| merged common ancestors
-static Pref*
-pref_HashTableLookup(const char* aPrefName)
-{
-  MOZ_ASSERT(NS_IsMainThread() || mozilla::ServoStyleSet::IsInServoTraversal());
-=======
 static Pref* pref_HashTableLookup(const char* aPrefName) {
   MOZ_ASSERT(NS_IsMainThread() || ServoStyleSet::IsInServoTraversal());
->>>>>>> upstream-releases
 
   MOZ_ASSERT_IF(!XRE_IsParentProcess(), gContentProcessPrefsAreInited);
 
@@ -1750,16 +1528,6 @@ static Pref* pref_HashTableLookup(const char* aPrefName) {
 // to use without locking.
 static const PrefWrapper* gCallbackPref;
 
-<<<<<<< HEAD
-Maybe<PrefWrapper> pref_Lookup(const char* aPrefName,
-                               bool aIncludeTypeNone = false) {
-  Maybe<PrefWrapper> result;
-||||||| merged common ancestors
-Maybe<PrefWrapper>
-pref_Lookup(const char* aPrefName, bool aIncludeTypeNone = false)
-{
-  Maybe<PrefWrapper> result;
-=======
 Maybe<PrefWrapper> pref_SharedLookup(const char* aPrefName) {
   MOZ_DIAGNOSTIC_ASSERT(gSharedMap, "gSharedMap must be initialized");
   if (Maybe<SharedPrefMap::Pref> pref = gSharedMap->Get(aPrefName)) {
@@ -1767,7 +1535,6 @@ Maybe<PrefWrapper> pref_SharedLookup(const char* aPrefName) {
   }
   return Nothing();
 }
->>>>>>> upstream-releases
 
 Maybe<PrefWrapper> pref_Lookup(const char* aPrefName,
                                bool aIncludeTypeNone = false) {
@@ -2098,20 +1865,9 @@ class PrefCallback : public PLDHashEntryHdr {
 
   static const PrefCallback* KeyToPointer(PrefCallback* aKey) { return aKey; }
 
-<<<<<<< HEAD
-  static PLDHashNumber HashKey(const PrefCallback* aKey) {
-    uint32_t hash = mozilla::HashString(aKey->mDomain);
-    return mozilla::AddToHash(hash, aKey->mCanonical);
-||||||| merged common ancestors
-  static PLDHashNumber HashKey(const PrefCallback* aKey)
-  {
-    uint32_t hash = mozilla::HashString(aKey->mDomain);
-    return mozilla::AddToHash(hash, aKey->mCanonical);
-=======
   static PLDHashNumber HashKey(const PrefCallback* aKey) {
     uint32_t hash = HashString(aKey->mDomain);
     return AddToHash(hash, aKey->mCanonical);
->>>>>>> upstream-releases
   }
 
  public:
@@ -2249,32 +2005,11 @@ class nsPrefBranch final : public nsIPrefBranch,
 
  private:
   // Helper class for either returning a raw cstring or nsCString.
-<<<<<<< HEAD
-  typedef mozilla::Variant<const char*, const nsCString> PrefNameBase;
-  class PrefName : public PrefNameBase {
-   public:
-    explicit PrefName(const char* aName) : PrefNameBase(aName) {}
-    explicit PrefName(const nsCString& aName) : PrefNameBase(aName) {}
-||||||| merged common ancestors
-  typedef mozilla::Variant<const char*, const nsCString> PrefNameBase;
-  class PrefName : public PrefNameBase
-  {
-  public:
-    explicit PrefName(const char* aName)
-      : PrefNameBase(aName)
-    {
-    }
-    explicit PrefName(const nsCString& aName)
-      : PrefNameBase(aName)
-    {
-    }
-=======
   typedef Variant<const char*, const nsCString> PrefNameBase;
   class PrefName : public PrefNameBase {
    public:
     explicit PrefName(const char* aName) : PrefNameBase(aName) {}
     explicit PrefName(const nsCString& aName) : PrefNameBase(aName) {}
->>>>>>> upstream-releases
 
     // Use default move constructors, disallow copy constructors.
     PrefName(PrefName&& aOther) = default;
@@ -2282,20 +2017,9 @@ class nsPrefBranch final : public nsIPrefBranch,
     PrefName(const PrefName&) = delete;
     PrefName& operator=(const PrefName&) = delete;
 
-<<<<<<< HEAD
-    struct PtrMatcher {
-      static const char* match(const char* aVal) { return aVal; }
-      static const char* match(const nsCString& aVal) { return aVal.get(); }
-||||||| merged common ancestors
-    struct PtrMatcher
-    {
-      static const char* match(const char* aVal) { return aVal; }
-      static const char* match(const nsCString& aVal) { return aVal.get(); }
-=======
     struct PtrMatcher {
       const char* operator()(const char* aVal) { return aVal; }
       const char* operator()(const nsCString& aVal) { return aVal.get(); }
->>>>>>> upstream-releases
     };
 
     struct CStringMatcher {
@@ -2307,53 +2031,16 @@ class nsPrefBranch final : public nsIPrefBranch,
       void operator()(const nsCString& aVal) { mStr.Assign(aVal); }
     };
 
-<<<<<<< HEAD
-    struct LenMatcher {
-      static size_t match(const char* aVal) { return strlen(aVal); }
-      static size_t match(const nsCString& aVal) { return aVal.Length(); }
-||||||| merged common ancestors
-    struct LenMatcher
-    {
-      static size_t match(const char* aVal) { return strlen(aVal); }
-      static size_t match(const nsCString& aVal) { return aVal.Length(); }
-=======
     struct LenMatcher {
       size_t operator()(const char* aVal) { return strlen(aVal); }
       size_t operator()(const nsCString& aVal) { return aVal.Length(); }
->>>>>>> upstream-releases
     };
 
-<<<<<<< HEAD
-    const char* get() const {
-      static PtrMatcher m;
-      return match(m);
-    }
-||||||| merged common ancestors
-    const char* get() const
-    {
-      static PtrMatcher m;
-      return match(m);
-    }
-=======
     const char* get() const { return match(PtrMatcher{}); }
->>>>>>> upstream-releases
 
     void get(nsACString& aStr) const { match(CStringMatcher{aStr}); }
 
-<<<<<<< HEAD
-    size_t Length() const {
-      static LenMatcher m;
-      return match(m);
-    }
-||||||| merged common ancestors
-    size_t Length() const
-    {
-      static LenMatcher m;
-      return match(m);
-    }
-=======
     size_t Length() const { return match(LenMatcher{}); }
->>>>>>> upstream-releases
   };
 
   virtual ~nsPrefBranch();
@@ -2413,28 +2100,11 @@ class nsPrefLocalizedString final : public nsIPrefLocalizedString {
 //----------------------------------------------------------------------------
 
 nsPrefBranch::nsPrefBranch(const char* aPrefRoot, PrefValueKind aKind)
-<<<<<<< HEAD
-    : mPrefRoot(aPrefRoot),
-      mKind(aKind),
-      mFreeingObserverList(false),
-      mObservers() {
-  nsCOMPtr<nsIObserverService> observerService =
-      mozilla::services::GetObserverService();
-||||||| merged common ancestors
-  : mPrefRoot(aPrefRoot)
-  , mKind(aKind)
-  , mFreeingObserverList(false)
-  , mObservers()
-{
-  nsCOMPtr<nsIObserverService> observerService =
-    mozilla::services::GetObserverService();
-=======
     : mPrefRoot(aPrefRoot),
       mKind(aKind),
       mFreeingObserverList(false),
       mObservers() {
   nsCOMPtr<nsIObserverService> observerService = services::GetObserverService();
->>>>>>> upstream-releases
   if (observerService) {
     ++mRefCnt;  // must be > 0 when we call this, or we'll get deleted!
 
@@ -2444,30 +2114,7 @@ nsPrefBranch::nsPrefBranch(const char* aPrefRoot, PrefValueKind aKind)
   }
 }
 
-<<<<<<< HEAD
-nsPrefBranch::~nsPrefBranch() {
-  FreeObserverList();
-
-  nsCOMPtr<nsIObserverService> observerService =
-      mozilla::services::GetObserverService();
-  if (observerService) {
-    observerService->RemoveObserver(this, NS_XPCOM_SHUTDOWN_OBSERVER_ID);
-  }
-}
-||||||| merged common ancestors
-nsPrefBranch::~nsPrefBranch()
-{
-  FreeObserverList();
-
-  nsCOMPtr<nsIObserverService> observerService =
-    mozilla::services::GetObserverService();
-  if (observerService) {
-    observerService->RemoveObserver(this, NS_XPCOM_SHUTDOWN_OBSERVER_ID);
-  }
-}
-=======
 nsPrefBranch::~nsPrefBranch() { FreeObserverList(); }
->>>>>>> upstream-releases
 
 NS_IMPL_ISUPPORTS(nsPrefBranch, nsIPrefBranch, nsIObserver,
                   nsISupportsWeakReference)
@@ -2985,28 +2632,8 @@ nsPrefBranch::DeleteBranch(const char* aStartingAt) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsPrefBranch::GetChildList(const char* aStartingAt, uint32_t* aCount,
-                           char*** aChildArray) {
-  char** outArray;
-  int32_t numPrefs;
-  int32_t dwIndex;
-  AutoTArray<nsCString, 32> prefArray;
-
-||||||| merged common ancestors
-nsPrefBranch::GetChildList(const char* aStartingAt,
-                           uint32_t* aCount,
-                           char*** aChildArray)
-{
-  char** outArray;
-  int32_t numPrefs;
-  int32_t dwIndex;
-  AutoTArray<nsCString, 32> prefArray;
-
-=======
 nsPrefBranch::GetChildList(const char* aStartingAt,
                            nsTArray<nsCString>& aChildArray) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aStartingAt);
 
   MOZ_ASSERT(NS_IsMainThread());
@@ -3025,43 +2652,11 @@ nsPrefBranch::GetChildList(const char* aStartingAt,
 
   // Now that we've built up the list, run the callback on all the matching
   // elements.
-<<<<<<< HEAD
-  numPrefs = prefArray.Length();
-
-  if (numPrefs) {
-    outArray = (char**)moz_xmalloc(numPrefs * sizeof(char*));
-
-    for (dwIndex = 0; dwIndex < numPrefs; ++dwIndex) {
-      // we need to lop off mPrefRoot in case the user is planning to pass this
-      // back to us because if they do we are going to add mPrefRoot again.
-      const nsCString& element = prefArray[dwIndex];
-      outArray[dwIndex] =
-          (char*)moz_xmemdup(element.get() + mPrefRoot.Length(),
-                             element.Length() - mPrefRoot.Length() + 1);
-    }
-    *aChildArray = outArray;
-||||||| merged common ancestors
-  numPrefs = prefArray.Length();
-
-  if (numPrefs) {
-    outArray = (char**)moz_xmalloc(numPrefs * sizeof(char*));
-
-    for (dwIndex = 0; dwIndex < numPrefs; ++dwIndex) {
-      // we need to lop off mPrefRoot in case the user is planning to pass this
-      // back to us because if they do we are going to add mPrefRoot again.
-      const nsCString& element = prefArray[dwIndex];
-      outArray[dwIndex] =
-        (char*)moz_xmemdup(element.get() + mPrefRoot.Length(),
-                           element.Length() - mPrefRoot.Length() + 1);
-    }
-    *aChildArray = outArray;
-=======
   aChildArray.SetCapacity(prefArray.Length());
   for (auto& element : prefArray) {
     // we need to lop off mPrefRoot in case the user is planning to pass this
     // back to us because if they do we are going to add mPrefRoot again.
     aChildArray.AppendElement(Substring(element, mPrefRoot.Length()));
->>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -3159,17 +2754,8 @@ nsPrefBranch::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ void nsPrefBranch::NotifyObserver(const char* aNewPref,
-                                               void* aData) {
-||||||| merged common ancestors
-/* static */ void
-nsPrefBranch::NotifyObserver(const char* aNewPref, void* aData)
-{
-=======
 /* static */
 void nsPrefBranch::NotifyObserver(const char* aNewPref, void* aData) {
->>>>>>> upstream-releases
   PrefCallback* pCallback = (PrefCallback*)aData;
 
   nsCOMPtr<nsIObserver> observer = pCallback->GetObserver();
@@ -3242,13 +2828,7 @@ nsresult nsPrefBranch::GetDefaultFromPropertiesFile(const char* aPrefName,
   }
 
   nsCOMPtr<nsIStringBundleService> bundleService =
-<<<<<<< HEAD
-      mozilla::services::GetStringBundleService();
-||||||| merged common ancestors
-    mozilla::services::GetStringBundleService();
-=======
       services::GetStringBundleService();
->>>>>>> upstream-releases
   if (!bundleService) {
     return NS_ERROR_FAILURE;
   }
@@ -3356,22 +2936,10 @@ void Preferences::HandleDirty() {
       sPreferences->mSavePending = true;
       static const int PREF_DELAY_MS = 500;
       NS_DelayedDispatchToCurrentThread(
-<<<<<<< HEAD
-          mozilla::NewRunnableMethod("Preferences::SavePrefFileAsynchronous",
-                                     sPreferences.get(),
-                                     &Preferences::SavePrefFileAsynchronous),
-          PREF_DELAY_MS);
-||||||| merged common ancestors
-        mozilla::NewRunnableMethod("Preferences::SavePrefFileAsynchronous",
-                                   sPreferences.get(),
-                                   &Preferences::SavePrefFileAsynchronous),
-        PREF_DELAY_MS);
-=======
           NewRunnableMethod("Preferences::SavePrefFileAsynchronous",
                             sPreferences.get(),
                             &Preferences::SavePrefFileAsynchronous),
           PREF_DELAY_MS);
->>>>>>> upstream-releases
     }
   }
 }
@@ -3504,16 +3072,8 @@ class PWRunnable : public Runnable {
   NS_IMETHOD Run() override {
     // If we get a nullptr on the exchange, it means that somebody
     // else has already processed the request, and we can just return.
-<<<<<<< HEAD
-    mozilla::UniquePtr<PrefSaveData> prefs(
-        PreferencesWriter::sPendingWriteData.exchange(nullptr));
-||||||| merged common ancestors
-    mozilla::UniquePtr<PrefSaveData> prefs(
-      PreferencesWriter::sPendingWriteData.exchange(nullptr));
-=======
     UniquePtr<PrefSaveData> prefs(
         PreferencesWriter::sPendingWriteData.exchange(nullptr));
->>>>>>> upstream-releases
     nsresult rv = NS_OK;
     if (prefs) {
       rv = PreferencesWriter::Write(mFile, *prefs);
@@ -3540,14 +3100,6 @@ class PWRunnable : public Runnable {
   nsCOMPtr<nsIFile> mFile;
 };
 
-<<<<<<< HEAD
-struct CacheData {
-  void* mCacheLocation;
-||||||| merged common ancestors
-struct CacheData
-{
-  void* mCacheLocation;
-=======
 struct CacheData {
   CacheData(void* aCacheLocation, bool aValue)
       : mCacheLocation(aCacheLocation), mDefaultValueBool(aValue) {}
@@ -3564,7 +3116,6 @@ struct CacheData {
   void* const mCacheLocation;
 
  private:
->>>>>>> upstream-releases
   union {
     const bool mDefaultValueBool;
     const int32_t mDefaultValueInt;
@@ -3638,19 +3189,9 @@ static void AssertNotAlreadyCached(const char* aPrefType,
 
 // Although this is a member of Preferences, it measures sPreferences and
 // several other global structures.
-<<<<<<< HEAD
-/* static */ void Preferences::AddSizeOfIncludingThis(
-    MallocSizeOf aMallocSizeOf, PrefsSizes& aSizes) {
-||||||| merged common ancestors
-/* static */ void
-Preferences::AddSizeOfIncludingThis(MallocSizeOf aMallocSizeOf,
-                                    PrefsSizes& aSizes)
-{
-=======
 /* static */
 void Preferences::AddSizeOfIncludingThis(MallocSizeOf aMallocSizeOf,
                                          PrefsSizes& aSizes) {
->>>>>>> upstream-releases
   if (!sPreferences) {
     return;
   }
@@ -3863,25 +3404,11 @@ static Maybe<bool> TelemetryPrefValue() {
     return Nothing();
   }
 
-<<<<<<< HEAD
-  // Determine the correct default for toolkit.telemetry.enabled. If this
-  // build has MOZ_TELEMETRY_ON_BY_DEFAULT *or* we're on the beta channel,
-  // telemetry is on by default, otherwise not. This is necessary so that
-  // beta users who are testing final release builds don't flipflop defaults.
-#ifdef MOZ_TELEMETRY_ON_BY_DEFAULT
-||||||| merged common ancestors
-    // Determine the correct default for toolkit.telemetry.enabled. If this
-    // build has MOZ_TELEMETRY_ON_BY_DEFAULT *or* we're on the beta channel,
-    // telemetry is on by default, otherwise not. This is necessary so that
-    // beta users who are testing final release builds don't flipflop defaults.
-#ifdef MOZ_TELEMETRY_ON_BY_DEFAULT
-=======
   // Determine the correct default for toolkit.telemetry.enabled. If this
   // build has MOZ_TELEMETRY_ON_BY_DEFAULT *or* we're on the beta channel,
   // telemetry is on by default, otherwise not. This is necessary so that
   // beta users who are testing final release builds don't flipflop defaults.
 #  ifdef MOZ_TELEMETRY_ON_BY_DEFAULT
->>>>>>> upstream-releases
   return Some(true);
 #  else
   nsAutoCString channelPrefValue;
@@ -3891,16 +3418,8 @@ static Maybe<bool> TelemetryPrefValue() {
 #  endif
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::SetupTelemetryPref() {
-||||||| merged common ancestors
-/* static */ void
-Preferences::SetupTelemetryPref()
-{
-=======
 /* static */
 void Preferences::SetupTelemetryPref() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   Maybe<bool> telemetryPrefValue = TelemetryPrefValue();
@@ -3946,16 +3465,8 @@ static bool TelemetryPrefValue() {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::SetupTelemetryPref() {
-||||||| merged common ancestors
-/* static */ void
-Preferences::SetupTelemetryPref()
-{
-=======
 /* static */
 void Preferences::SetupTelemetryPref() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   Preferences::SetBool(kTelemetryPref, TelemetryPrefValue(),
@@ -3975,17 +3486,8 @@ static void CheckTelemetryPref() {
 
 #endif  // MOZ_WIDGET_ANDROID
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Preferences>
-Preferences::GetInstanceForService() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Preferences>
-Preferences::GetInstanceForService()
-{
-=======
 /* static */
 already_AddRefed<Preferences> Preferences::GetInstanceForService() {
->>>>>>> upstream-releases
   if (sPreferences) {
     return do_AddRef(sPreferences);
   }
@@ -4003,17 +3505,11 @@ already_AddRefed<Preferences> Preferences::GetInstanceForService() {
                                       : kHashTableInitialLengthContent);
 
   gTelemetryLoadData =
-<<<<<<< HEAD
-      new nsDataHashtable<nsCStringHashKey, TelemetryLoadData>();
-||||||| merged common ancestors
-    new nsDataHashtable<nsCStringHashKey, TelemetryLoadData>();
-=======
       new nsDataHashtable<nsCStringHashKey, TelemetryLoadData>();
 
 #ifdef DEBUG
   gOnceStaticPrefsAntiFootgun = new AntiFootgunMap();
 #endif
->>>>>>> upstream-releases
 
 #ifdef ACCESS_COUNTS
   MOZ_ASSERT(!gAccessCounts);
@@ -4056,13 +3552,7 @@ already_AddRefed<Preferences> Preferences::GetInstanceForService() {
     }
 
     nsCOMPtr<nsIObserverService> observerService =
-<<<<<<< HEAD
-        mozilla::services::GetObserverService();
-||||||| merged common ancestors
-      mozilla::services::GetObserverService();
-=======
         services::GetObserverService();
->>>>>>> upstream-releases
     if (!observerService) {
       sPreferences = nullptr;
       gCacheDataDesc = "GetObserverService() failed (1)";
@@ -4102,32 +3592,12 @@ already_AddRefed<Preferences> Preferences::GetInstanceForService() {
   return do_AddRef(sPreferences);
 }
 
-<<<<<<< HEAD
-/* static */ bool Preferences::IsServiceAvailable() { return !!sPreferences; }
-||||||| merged common ancestors
-/* static */ bool
-Preferences::IsServiceAvailable()
-{
-  return !!sPreferences;
-}
-=======
 /* static */
 bool Preferences::IsServiceAvailable() { return !!sPreferences; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ bool Preferences::InitStaticMembers() {
-  MOZ_ASSERT(NS_IsMainThread() || mozilla::ServoStyleSet::IsInServoTraversal());
-||||||| merged common ancestors
-/* static */ bool
-Preferences::InitStaticMembers()
-{
-  MOZ_ASSERT(NS_IsMainThread() || mozilla::ServoStyleSet::IsInServoTraversal());
-=======
 /* static */
 bool Preferences::InitStaticMembers() {
   MOZ_ASSERT(NS_IsMainThread() || ServoStyleSet::IsInServoTraversal());
->>>>>>> upstream-releases
 
   if (MOZ_LIKELY(sPreferences)) {
     return true;
@@ -4142,16 +3612,8 @@ bool Preferences::InitStaticMembers() {
   return sPreferences != nullptr;
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-Preferences::Shutdown()
-{
-=======
 /* static */
 void Preferences::Shutdown() {
->>>>>>> upstream-releases
   if (!sShutdown) {
     sShutdown = true;  // Don't create the singleton instance after here.
     sPreferences = nullptr;
@@ -4201,16 +3663,8 @@ Preferences::~Preferences() {
 NS_IMPL_ISUPPORTS(Preferences, nsIPrefService, nsIObserver, nsIPrefBranch,
                   nsISupportsWeakReference)
 
-<<<<<<< HEAD
-/* static */ void Preferences::SerializePreferences(nsCString& aStr) {
-||||||| merged common ancestors
-/* static */ void
-Preferences::SerializePreferences(nsCString& aStr)
-{
-=======
 /* static */
 void Preferences::SerializePreferences(nsCString& aStr) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(InitStaticMembers());
 
   aStr.Truncate();
@@ -4225,17 +3679,8 @@ void Preferences::SerializePreferences(nsCString& aStr) {
   aStr.Append('\0');
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::DeserializePreferences(char* aStr,
-                                                      size_t aPrefsLen) {
-||||||| merged common ancestors
-/* static */ void
-Preferences::DeserializePreferences(char* aStr, size_t aPrefsLen)
-{
-=======
 /* static */
 void Preferences::DeserializePreferences(char* aStr, size_t aPrefsLen) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!XRE_IsParentProcess());
 
   MOZ_ASSERT(!gChangedDomPrefs);
@@ -4258,13 +3703,6 @@ void Preferences::DeserializePreferences(char* aStr, size_t aPrefsLen) {
 #endif
 }
 
-<<<<<<< HEAD
-/* static */ FileDescriptor Preferences::EnsureSnapshot(size_t* aSize) {
-||||||| merged common ancestors
-/* static */ FileDescriptor
-Preferences::EnsureSnapshot(size_t* aSize)
-{
-=======
 // Forward declarations.
 namespace StaticPrefs {
 
@@ -4277,7 +3715,6 @@ static void RegisterOncePrefs(SharedPrefMapBuilder& aBuilder);
 
 /* static */
 FileDescriptor Preferences::EnsureSnapshot(size_t* aSize) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   if (!gSharedMap) {
@@ -4312,17 +3749,8 @@ FileDescriptor Preferences::EnsureSnapshot(size_t* aSize) {
   return gSharedMap->CloneFileDescriptor();
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::InitSnapshot(const FileDescriptor& aHandle,
-                                            size_t aSize) {
-||||||| merged common ancestors
-/* static */ void
-Preferences::InitSnapshot(const FileDescriptor& aHandle, size_t aSize)
-{
-=======
 /* static */
 void Preferences::InitSnapshot(const FileDescriptor& aHandle, size_t aSize) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!XRE_IsParentProcess());
   MOZ_ASSERT(!gSharedMap);
 
@@ -4331,16 +3759,8 @@ void Preferences::InitSnapshot(const FileDescriptor& aHandle, size_t aSize) {
   StaticPrefs::InitStaticPrefsFromShared();
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::InitializeUserPrefs() {
-||||||| merged common ancestors
-/* static */ void
-Preferences::InitializeUserPrefs()
-{
-=======
 /* static */
 void Preferences::InitializeUserPrefs() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   MOZ_ASSERT(!sPreferences->mCurrentFile, "Should only initialize prefs once");
 
@@ -4514,16 +3934,8 @@ Preferences::SavePrefFile(nsIFile* aFile) {
   return SavePrefFileInternal(aFile, SaveMethod::Asynchronous);
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::SetPreference(const dom::Pref& aDomPref) {
-||||||| merged common ancestors
-/* static */ void
-Preferences::SetPreference(const dom::Pref& aDomPref)
-{
-=======
 /* static */
 void Preferences::SetPreference(const dom::Pref& aDomPref) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!XRE_IsParentProcess());
   NS_ENSURE_TRUE(InitStaticMembers(), (void)0);
 
@@ -4577,16 +3989,8 @@ void Preferences::SetPreference(const dom::Pref& aDomPref) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ void Preferences::GetPreference(dom::Pref* aDomPref) {
-||||||| merged common ancestors
-/* static */ void
-Preferences::GetPreference(dom::Pref* aDomPref)
-{
-=======
 /* static */
 void Preferences::GetPreference(dom::Pref* aDomPref) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 
   Pref* pref = pref_HashTableLookup(aDomPref->name().get());
@@ -4668,20 +4072,8 @@ Preferences::GetDirty(bool* aRetVal) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult Preferences::NotifyServiceObservers(const char* aTopic) {
-  nsCOMPtr<nsIObserverService> observerService =
-      mozilla::services::GetObserverService();
-||||||| merged common ancestors
-nsresult
-Preferences::NotifyServiceObservers(const char* aTopic)
-{
-  nsCOMPtr<nsIObserverService> observerService =
-    mozilla::services::GetObserverService();
-=======
 nsresult Preferences::NotifyServiceObservers(const char* aTopic) {
   nsCOMPtr<nsIObserverService> observerService = services::GetObserverService();
->>>>>>> upstream-releases
   if (!observerService) {
     return NS_ERROR_FAILURE;
   }
@@ -4822,15 +4214,7 @@ nsresult Preferences::WritePrefFile(nsIFile* aFile, SaveMethod aSaveMethod) {
 
   if (AllowOffMainThreadSave()) {
     nsresult rv = NS_OK;
-<<<<<<< HEAD
-    mozilla::UniquePtr<PrefSaveData> prefs =
-        MakeUnique<PrefSaveData>(pref_savePrefs());
-||||||| merged common ancestors
-    mozilla::UniquePtr<PrefSaveData> prefs =
-      MakeUnique<PrefSaveData>(pref_savePrefs());
-=======
     UniquePtr<PrefSaveData> prefs = MakeUnique<PrefSaveData>(pref_savePrefs());
->>>>>>> upstream-releases
 
     // Put the newly constructed preference data into sPendingWriteData
     // for the next request to pick up
@@ -5051,26 +4435,6 @@ static nsresult pref_ReadDefaultPrefs(const RefPtr<nsZipArchive> jarReader,
 // These preference getter wrappers allow us to look up the value for static
 // preferences based on their native types, rather than manually mapping them to
 // the appropriate Preferences::Get* functions.
-<<<<<<< HEAD
-template <typename T>
-static T GetPref(const char* aName, T aDefaultValue);
-
-template <>
-bool MOZ_MAYBE_UNUSED GetPref<bool>(const char* aName, bool aDefaultValue) {
-  return Preferences::GetBool(aName, aDefaultValue);
-}
-||||||| merged common ancestors
-template<typename T>
-static T
-GetPref(const char* aName, T aDefaultValue);
-
-template<>
-bool MOZ_MAYBE_UNUSED
-GetPref<bool>(const char* aName, bool aDefaultValue)
-{
-  return Preferences::GetBool(aName, aDefaultValue);
-}
-=======
 // We define these methods in a struct which is made friend of Preferences in
 // order to access private members.
 struct PreferencesInternalMethods {
@@ -5084,22 +4448,7 @@ struct PreferencesInternalMethods {
     }
     return NS_ERROR_UNEXPECTED;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <>
-int32_t MOZ_MAYBE_UNUSED GetPref<int32_t>(const char* aName,
-                                          int32_t aDefaultValue) {
-  return Preferences::GetInt(aName, aDefaultValue);
-}
-||||||| merged common ancestors
-template<>
-int32_t MOZ_MAYBE_UNUSED
-GetPref<int32_t>(const char* aName, int32_t aDefaultValue)
-{
-  return Preferences::GetInt(aName, aDefaultValue);
-}
-=======
   template <typename T>
   static nsresult GetSharedPrefValue(const char* aName, T* aResult) {
     if (Maybe<PrefWrapper> pref = pref_SharedLookup(aName)) {
@@ -5107,22 +4456,7 @@ GetPref<int32_t>(const char* aName, int32_t aDefaultValue)
     }
     return NS_ERROR_UNEXPECTED;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <>
-uint32_t MOZ_MAYBE_UNUSED GetPref<uint32_t>(const char* aName,
-                                            uint32_t aDefaultValue) {
-  return Preferences::GetInt(aName, aDefaultValue);
-}
-||||||| merged common ancestors
-template<>
-uint32_t MOZ_MAYBE_UNUSED
-GetPref<uint32_t>(const char* aName, uint32_t aDefaultValue)
-{
-  return Preferences::GetInt(aName, aDefaultValue);
-}
-=======
   template <typename T>
   static T GetPref(const char* aPrefName, T aFallback,
                    PrefValueKind aKind = PrefValueKind::User) {
@@ -5130,21 +4464,7 @@ GetPref<uint32_t>(const char* aName, uint32_t aDefaultValue)
     GetPrefValue(aPrefName, &result, aKind);
     return result;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <>
-float MOZ_MAYBE_UNUSED GetPref<float>(const char* aName, float aDefaultValue) {
-  return Preferences::GetFloat(aName, aDefaultValue);
-}
-||||||| merged common ancestors
-template<>
-float MOZ_MAYBE_UNUSED
-GetPref<float>(const char* aName, float aDefaultValue)
-{
-  return Preferences::GetFloat(aName, aDefaultValue);
-}
-=======
   template <typename T>
   static void VarChanged(const char* aPref, void* aClosure) {
     CacheData* cache = static_cast<CacheData*>(aClosure);
@@ -5160,21 +4480,11 @@ GetPref<float>(const char* aName, float aDefaultValue)
                                          /* isPriority */ true);
   }
 };
->>>>>>> upstream-releases
 
 // Initialize default preference JavaScript buffers from appropriate TEXT
 // resources.
-<<<<<<< HEAD
-/* static */ Result<Ok, const char*> Preferences::InitInitialObjects(
-    bool aIsStartup) {
-||||||| merged common ancestors
-/* static */ Result<Ok, const char*>
-Preferences::InitInitialObjects(bool aIsStartup)
-{
-=======
 /* static */
 Result<Ok, const char*> Preferences::InitInitialObjects(bool aIsStartup) {
->>>>>>> upstream-releases
   // Initialize static prefs before prefs from data files so that the latter
   // will override the former.
   StaticPrefs::InitAll(aIsStartup);
@@ -5183,33 +4493,6 @@ Result<Ok, const char*> Preferences::InitInitialObjects(bool aIsStartup) {
     MOZ_DIAGNOSTIC_ASSERT(gSharedMap);
 
 #ifdef DEBUG
-<<<<<<< HEAD
-    // Check that all varcache preferences match their current values. This
-    // can currently fail if the default value of a static varcache preference
-    // is changed in a preference file or at runtime, rather than in
-    // StaticPrefList.h.
-
-#define PREF(name, cpp_type, value)
-#define VARCACHE_PREF(name, id, cpp_type, value)                               \
-  MOZ_ASSERT(GetPref<StripAtomic<cpp_type>>(name, value) == StaticPrefs::id(), \
-             "Incorrect cached value for " name);
-#include "mozilla/StaticPrefList.h"
-#undef PREF
-#undef VARCACHE_PREF
-||||||| merged common ancestors
-      // Check that all varcache preferences match their current values. This
-      // can currently fail if the default value of a static varcache preference
-      // is changed in a preference file or at runtime, rather than in
-      // StaticPrefList.h.
-
-#define PREF(name, cpp_type, value)
-#define VARCACHE_PREF(name, id, cpp_type, value)                               \
-  MOZ_ASSERT(GetPref<StripAtomic<cpp_type>>(name, value) == StaticPrefs::id(), \
-             "Incorrect cached value for " name);
-#include "mozilla/StaticPrefList.h"
-#undef PREF
-#undef VARCACHE_PREF
-=======
     // For a VarCache pref like this:
     //
     //   VARCACHE_PREF($POLICY, "my.pref", my_pref, int32_t, 99)
@@ -5238,7 +4521,6 @@ Result<Ok, const char*> Preferences::InitInitialObjects(bool aIsStartup) {
 #  include "mozilla/StaticPrefList.h"
 #  undef PREF
 #  undef VARCACHE_PREF
->>>>>>> upstream-releases
 #endif
 
     return Ok();
@@ -5279,15 +4561,7 @@ Result<Ok, const char*> Preferences::InitInitialObjects(bool aIsStartup) {
   const char* entryName;
   uint16_t entryNameLen;
 
-<<<<<<< HEAD
-  RefPtr<nsZipArchive> jarReader =
-      mozilla::Omnijar::GetReader(mozilla::Omnijar::GRE);
-||||||| merged common ancestors
-  RefPtr<nsZipArchive> jarReader =
-    mozilla::Omnijar::GetReader(mozilla::Omnijar::GRE);
-=======
   RefPtr<nsZipArchive> jarReader = Omnijar::GetReader(Omnijar::GRE);
->>>>>>> upstream-releases
   if (jarReader) {
 #ifdef MOZ_WIDGET_ANDROID
     // Try to load an architecture-specific greprefs.js first. This will be
@@ -5371,15 +4645,7 @@ Result<Ok, const char*> Preferences::InitInitialObjects(bool aIsStartup) {
 
   // Load jar:$app/omni.jar!/defaults/preferences/*.js
   // or jar:$gre/omni.jar!/defaults/preferences/*.js.
-<<<<<<< HEAD
-  RefPtr<nsZipArchive> appJarReader =
-      mozilla::Omnijar::GetReader(mozilla::Omnijar::APP);
-||||||| merged common ancestors
-  RefPtr<nsZipArchive> appJarReader =
-    mozilla::Omnijar::GetReader(mozilla::Omnijar::APP);
-=======
   RefPtr<nsZipArchive> appJarReader = Omnijar::GetReader(Omnijar::APP);
->>>>>>> upstream-releases
 
   // GetReader(Omnijar::APP) returns null when `$app == $gre`, in
   // which case we look for app-specific default preferences in $gre.
@@ -5438,15 +4704,7 @@ Result<Ok, const char*> Preferences::InitInitialObjects(bool aIsStartup) {
   NS_CreateServicesFromCategory(NS_PREFSERVICE_APPDEFAULTS_TOPIC_ID, nullptr,
                                 NS_PREFSERVICE_APPDEFAULTS_TOPIC_ID);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIObserverService> observerService =
-      mozilla::services::GetObserverService();
-||||||| merged common ancestors
-  nsCOMPtr<nsIObserverService> observerService =
-    mozilla::services::GetObserverService();
-=======
   nsCOMPtr<nsIObserverService> observerService = services::GetObserverService();
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, Err("GetObserverService() failed (2)"));
 
   observerService->NotifyObservers(nullptr, NS_PREFSERVICE_APPDEFAULTS_TOPIC_ID,
@@ -5455,98 +4713,37 @@ Result<Ok, const char*> Preferences::InitInitialObjects(bool aIsStartup) {
   return Ok();
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetBool(const char* aPrefName, bool* aResult,
-                                           PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetBool(const char* aPrefName, bool* aResult, PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::GetBool(const char* aPrefName, bool* aResult,
                               PrefValueKind aKind) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aResult);
   return PreferencesInternalMethods::GetPrefValue(aPrefName, aResult, aKind);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetInt(const char* aPrefName,
-                                          int32_t* aResult,
-                                          PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetInt(const char* aPrefName,
-                    int32_t* aResult,
-                    PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::GetInt(const char* aPrefName, int32_t* aResult,
                              PrefValueKind aKind) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aResult);
   return PreferencesInternalMethods::GetPrefValue(aPrefName, aResult, aKind);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetFloat(const char* aPrefName,
-                                            float* aResult,
-                                            PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetFloat(const char* aPrefName,
-                      float* aResult,
-                      PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::GetFloat(const char* aPrefName, float* aResult,
                                PrefValueKind aKind) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aResult);
   return PreferencesInternalMethods::GetPrefValue(aPrefName, aResult, aKind);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetCString(const char* aPrefName,
-                                              nsACString& aResult,
-                                              PrefValueKind aKind) {
-  NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
-
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetCString(const char* aPrefName,
-                        nsACString& aResult,
-                        PrefValueKind aKind)
-{
-  NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
-
-=======
 /* static */
 nsresult Preferences::GetCString(const char* aPrefName, nsACString& aResult,
                                  PrefValueKind aKind) {
->>>>>>> upstream-releases
   aResult.SetIsVoid(true);
   return PreferencesInternalMethods::GetPrefValue(aPrefName, aResult, aKind);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetString(const char* aPrefName,
-                                             nsAString& aResult,
-                                             PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetString(const char* aPrefName,
-                       nsAString& aResult,
-                       PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::GetString(const char* aPrefName, nsAString& aResult,
                                 PrefValueKind aKind) {
->>>>>>> upstream-releases
   nsAutoCString result;
   nsresult rv = Preferences::GetCString(aPrefName, result, aKind);
   if (NS_SUCCEEDED(rv)) {
@@ -5555,22 +4752,10 @@ nsresult Preferences::GetString(const char* aPrefName, nsAString& aResult,
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetLocalizedCString(const char* aPrefName,
-                                                       nsACString& aResult,
-                                                       PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetLocalizedCString(const char* aPrefName,
-                                 nsACString& aResult,
-                                 PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::GetLocalizedCString(const char* aPrefName,
                                           nsACString& aResult,
                                           PrefValueKind aKind) {
->>>>>>> upstream-releases
   nsAutoString result;
   nsresult rv = GetLocalizedString(aPrefName, result, aKind);
   if (NS_SUCCEEDED(rv)) {
@@ -5579,22 +4764,10 @@ nsresult Preferences::GetLocalizedCString(const char* aPrefName,
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetLocalizedString(const char* aPrefName,
-                                                      nsAString& aResult,
-                                                      PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetLocalizedString(const char* aPrefName,
-                                nsAString& aResult,
-                                PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::GetLocalizedString(const char* aPrefName,
                                          nsAString& aResult,
                                          PrefValueKind aKind) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
   nsCOMPtr<nsIPrefLocalizedString> prefLocalString;
   nsresult rv = GetRootBranch(aKind)->GetComplexValue(
@@ -5607,38 +4780,13 @@ nsresult Preferences::GetLocalizedString(const char* aPrefName,
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::GetComplex(const char* aPrefName,
-                                              const nsIID& aType,
-                                              void** aResult,
-                                              PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::GetComplex(const char* aPrefName,
-                        const nsIID& aType,
-                        void** aResult,
-                        PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::GetComplex(const char* aPrefName, const nsIID& aType,
                                  void** aResult, PrefValueKind aKind) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
   return GetRootBranch(aKind)->GetComplexValue(aPrefName, aType, aResult);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::SetCString(const char* aPrefName,
-                                              const nsACString& aValue,
-                                              PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::SetCString(const char* aPrefName,
-                        const nsACString& aValue,
-                        PrefValueKind aKind)
-{
-=======
 /* static */
 bool Preferences::GetBool(const char* aPrefName, bool aFallback,
                           PrefValueKind aKind) {
@@ -5667,7 +4815,6 @@ float Preferences::GetFloat(const char* aPrefName, float aFallback,
 nsresult Preferences::SetCString(const char* aPrefName,
                                  const nsACString& aValue,
                                  PrefValueKind aKind) {
->>>>>>> upstream-releases
   ENSURE_PARENT_PROCESS("SetCString", aPrefName);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
 
@@ -5686,18 +4833,9 @@ nsresult Preferences::SetCString(const char* aPrefName,
                       /* fromInit */ false);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::SetBool(const char* aPrefName, bool aValue,
-                                           PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::SetBool(const char* aPrefName, bool aValue, PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::SetBool(const char* aPrefName, bool aValue,
                               PrefValueKind aKind) {
->>>>>>> upstream-releases
   ENSURE_PARENT_PROCESS("SetBool", aPrefName);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
 
@@ -5709,18 +4847,9 @@ nsresult Preferences::SetBool(const char* aPrefName, bool aValue,
                       /* fromInit */ false);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::SetInt(const char* aPrefName, int32_t aValue,
-                                          PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::SetInt(const char* aPrefName, int32_t aValue, PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::SetInt(const char* aPrefName, int32_t aValue,
                              PrefValueKind aKind) {
->>>>>>> upstream-releases
   ENSURE_PARENT_PROCESS("SetInt", aPrefName);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
 
@@ -5732,37 +4861,15 @@ nsresult Preferences::SetInt(const char* aPrefName, int32_t aValue,
                       /* fromInit */ false);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::SetComplex(const char* aPrefName,
-                                              const nsIID& aType,
-                                              nsISupports* aValue,
-                                              PrefValueKind aKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::SetComplex(const char* aPrefName,
-                        const nsIID& aType,
-                        nsISupports* aValue,
-                        PrefValueKind aKind)
-{
-=======
 /* static */
 nsresult Preferences::SetComplex(const char* aPrefName, const nsIID& aType,
                                  nsISupports* aValue, PrefValueKind aKind) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
   return GetRootBranch(aKind)->SetComplexValue(aPrefName, aType, aValue);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::Lock(const char* aPrefName) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::Lock(const char* aPrefName)
-{
-=======
 /* static */
 nsresult Preferences::Lock(const char* aPrefName) {
->>>>>>> upstream-releases
   ENSURE_PARENT_PROCESS("Lock", aPrefName);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
 
@@ -5780,16 +4887,8 @@ nsresult Preferences::Lock(const char* aPrefName) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::Unlock(const char* aPrefName) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::Unlock(const char* aPrefName)
-{
-=======
 /* static */
 nsresult Preferences::Unlock(const char* aPrefName) {
->>>>>>> upstream-releases
   ENSURE_PARENT_PROCESS("Unlock", aPrefName);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
 
@@ -5807,32 +4906,16 @@ nsresult Preferences::Unlock(const char* aPrefName) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ bool Preferences::IsLocked(const char* aPrefName) {
-||||||| merged common ancestors
-/* static */ bool
-Preferences::IsLocked(const char* aPrefName)
-{
-=======
 /* static */
 bool Preferences::IsLocked(const char* aPrefName) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(InitStaticMembers(), false);
 
   Maybe<PrefWrapper> pref = pref_Lookup(aPrefName);
   return pref.isSome() && pref->IsLocked();
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::ClearUser(const char* aPrefName) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::ClearUser(const char* aPrefName)
-{
-=======
 /* static */
 nsresult Preferences::ClearUser(const char* aPrefName) {
->>>>>>> upstream-releases
   ENSURE_PARENT_PROCESS("ClearUser", aPrefName);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
 
@@ -5862,32 +4945,16 @@ nsresult Preferences::ClearUser(const char* aPrefName) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ bool Preferences::HasUserValue(const char* aPrefName) {
-||||||| merged common ancestors
-/* static */ bool
-Preferences::HasUserValue(const char* aPrefName)
-{
-=======
 /* static */
 bool Preferences::HasUserValue(const char* aPrefName) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(InitStaticMembers(), false);
 
   Maybe<PrefWrapper> pref = pref_Lookup(aPrefName);
   return pref.isSome() && pref->HasUserValue();
 }
 
-<<<<<<< HEAD
-/* static */ int32_t Preferences::GetType(const char* aPrefName) {
-||||||| merged common ancestors
-/* static */ int32_t
-Preferences::GetType(const char* aPrefName)
-{
-=======
 /* static */
 int32_t Preferences::GetType(const char* aPrefName) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(InitStaticMembers(), nsIPrefBranch::PREF_INVALID);
 
   if (!gHashTable) {
@@ -5914,52 +4981,25 @@ int32_t Preferences::GetType(const char* aPrefName) {
   }
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::AddStrongObserver(nsIObserver* aObserver,
-                                                     const nsACString& aPref) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::AddStrongObserver(nsIObserver* aObserver, const nsACString& aPref)
-{
-=======
 /* static */
 nsresult Preferences::AddStrongObserver(nsIObserver* aObserver,
                                         const nsACString& aPref) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aObserver);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
   return sPreferences->mRootBranch->AddObserver(aPref, aObserver, false);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::AddWeakObserver(nsIObserver* aObserver,
-                                                   const nsACString& aPref) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::AddWeakObserver(nsIObserver* aObserver, const nsACString& aPref)
-{
-=======
 /* static */
 nsresult Preferences::AddWeakObserver(nsIObserver* aObserver,
                                       const nsACString& aPref) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aObserver);
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
   return sPreferences->mRootBranch->AddObserver(aPref, aObserver, true);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::RemoveObserver(nsIObserver* aObserver,
-                                                  const nsACString& aPref) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::RemoveObserver(nsIObserver* aObserver, const nsACString& aPref)
-{
-=======
 /* static */
 nsresult Preferences::RemoveObserver(nsIObserver* aObserver,
                                      const nsACString& aPref) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aObserver);
   if (sShutdown) {
     MOZ_ASSERT(!sPreferences);
@@ -5978,18 +5018,9 @@ static void AssertNotMallocAllocated(T* aPtr) {
 #endif
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::AddStrongObservers(nsIObserver* aObserver,
-                                                      const char** aPrefs) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::AddStrongObservers(nsIObserver* aObserver, const char** aPrefs)
-{
-=======
 /* static */
 nsresult Preferences::AddStrongObservers(nsIObserver* aObserver,
                                          const char** aPrefs) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aObserver);
   for (uint32_t i = 0; aPrefs[i]; i++) {
     AssertNotMallocAllocated(aPrefs[i]);
@@ -6002,18 +5033,9 @@ nsresult Preferences::AddStrongObservers(nsIObserver* aObserver,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::AddWeakObservers(nsIObserver* aObserver,
-                                                    const char** aPrefs) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::AddWeakObservers(nsIObserver* aObserver, const char** aPrefs)
-{
-=======
 /* static */
 nsresult Preferences::AddWeakObservers(nsIObserver* aObserver,
                                        const char** aPrefs) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aObserver);
   for (uint32_t i = 0; aPrefs[i]; i++) {
     AssertNotMallocAllocated(aPrefs[i]);
@@ -6026,18 +5048,9 @@ nsresult Preferences::AddWeakObservers(nsIObserver* aObserver,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::RemoveObservers(nsIObserver* aObserver,
-                                                   const char** aPrefs) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::RemoveObservers(nsIObserver* aObserver, const char** aPrefs)
-{
-=======
 /* static */
 nsresult Preferences::RemoveObservers(nsIObserver* aObserver,
                                       const char** aPrefs) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aObserver);
   if (sShutdown) {
     MOZ_ASSERT(!sPreferences);
@@ -6052,28 +5065,12 @@ nsresult Preferences::RemoveObservers(nsIObserver* aObserver,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-template <typename T>
-/* static */ nsresult Preferences::RegisterCallbackImpl(
-    PrefChangedFunc aCallback, T& aPrefNode, void* aData, MatchKind aMatchKind,
-    bool aIsPriority) {
-||||||| merged common ancestors
-template<typename T>
-/* static */ nsresult
-Preferences::RegisterCallbackImpl(PrefChangedFunc aCallback,
-                                  T& aPrefNode,
-                                  void* aData,
-                                  MatchKind aMatchKind,
-                                  bool aIsPriority)
-{
-=======
 template <typename T>
 /* static */
 nsresult Preferences::RegisterCallbackImpl(PrefChangedFunc aCallback,
                                            T& aPrefNode, void* aData,
                                            MatchKind aMatchKind,
                                            bool aIsPriority) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aCallback);
 
   NS_ENSURE_TRUE(InitStaticMembers(), NS_ERROR_NOT_AVAILABLE);
@@ -6101,73 +5098,26 @@ nsresult Preferences::RegisterCallbackImpl(PrefChangedFunc aCallback,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::RegisterCallback(PrefChangedFunc aCallback,
-                                                    const nsACString& aPrefNode,
-                                                    void* aData,
-                                                    MatchKind aMatchKind,
-                                                    bool aIsPriority) {
-  return RegisterCallbackImpl(aCallback, aPrefNode, aData, aMatchKind,
-                              aIsPriority);
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::RegisterCallback(PrefChangedFunc aCallback,
-                              const nsACString& aPrefNode,
-                              void* aData,
-                              MatchKind aMatchKind,
-                              bool aIsPriority)
-{
-  return RegisterCallbackImpl(
-    aCallback, aPrefNode, aData, aMatchKind, aIsPriority);
-=======
 /* static */
 nsresult Preferences::RegisterCallback(PrefChangedFunc aCallback,
                                        const nsACString& aPrefNode, void* aData,
                                        MatchKind aMatchKind, bool aIsPriority) {
   return RegisterCallbackImpl(aCallback, aPrefNode, aData, aMatchKind,
                               aIsPriority);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::RegisterCallbacks(PrefChangedFunc aCallback,
-                                                     const char** aPrefs,
-                                                     void* aData,
-                                                     MatchKind aMatchKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::RegisterCallbacks(PrefChangedFunc aCallback,
-                               const char** aPrefs,
-                               void* aData,
-                               MatchKind aMatchKind)
-{
-=======
 /* static */
 nsresult Preferences::RegisterCallbacks(PrefChangedFunc aCallback,
                                         const char** aPrefs, void* aData,
                                         MatchKind aMatchKind) {
->>>>>>> upstream-releases
   return RegisterCallbackImpl(aCallback, aPrefs, aData, aMatchKind);
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::RegisterCallbackAndCall(
-    PrefChangedFunc aCallback, const nsACString& aPref, void* aClosure,
-    MatchKind aMatchKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::RegisterCallbackAndCall(PrefChangedFunc aCallback,
-                                     const nsACString& aPref,
-                                     void* aClosure,
-                                     MatchKind aMatchKind)
-{
-=======
 /* static */
 nsresult Preferences::RegisterCallbackAndCall(PrefChangedFunc aCallback,
                                               const nsACString& aPref,
                                               void* aClosure,
                                               MatchKind aMatchKind) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCallback);
   nsresult rv = RegisterCallback(aCallback, aPref, aClosure, aMatchKind);
   if (NS_SUCCEEDED(rv)) {
@@ -6176,21 +5126,10 @@ nsresult Preferences::RegisterCallbackAndCall(PrefChangedFunc aCallback,
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::RegisterCallbacksAndCall(
-    PrefChangedFunc aCallback, const char** aPrefs, void* aClosure) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::RegisterCallbacksAndCall(PrefChangedFunc aCallback,
-                                      const char** aPrefs,
-                                      void* aClosure)
-{
-=======
 /* static */
 nsresult Preferences::RegisterCallbacksAndCall(PrefChangedFunc aCallback,
                                                const char** aPrefs,
                                                void* aClosure) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCallback);
 
   nsresult rv =
@@ -6203,26 +5142,11 @@ nsresult Preferences::RegisterCallbacksAndCall(PrefChangedFunc aCallback,
   return rv;
 }
 
-<<<<<<< HEAD
-template <typename T>
-/* static */ nsresult Preferences::UnregisterCallbackImpl(
-    PrefChangedFunc aCallback, T& aPrefNode, void* aData,
-    MatchKind aMatchKind) {
-||||||| merged common ancestors
-template<typename T>
-/* static */ nsresult
-Preferences::UnregisterCallbackImpl(PrefChangedFunc aCallback,
-                                    T& aPrefNode,
-                                    void* aData,
-                                    MatchKind aMatchKind)
-{
-=======
 template <typename T>
 /* static */
 nsresult Preferences::UnregisterCallbackImpl(PrefChangedFunc aCallback,
                                              T& aPrefNode, void* aData,
                                              MatchKind aMatchKind) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCallback);
   if (sShutdown) {
     MOZ_ASSERT(!sPreferences);
@@ -6256,48 +5180,18 @@ nsresult Preferences::UnregisterCallbackImpl(PrefChangedFunc aCallback,
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::UnregisterCallback(
-    PrefChangedFunc aCallback, const nsACString& aPrefNode, void* aData,
-    MatchKind aMatchKind) {
-  return UnregisterCallbackImpl<const nsACString&>(aCallback, aPrefNode, aData,
-                                                   aMatchKind);
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::UnregisterCallback(PrefChangedFunc aCallback,
-                                const nsACString& aPrefNode,
-                                void* aData,
-                                MatchKind aMatchKind)
-{
-  return UnregisterCallbackImpl<const nsACString&>(
-    aCallback, aPrefNode, aData, aMatchKind);
-=======
 /* static */
 nsresult Preferences::UnregisterCallback(PrefChangedFunc aCallback,
                                          const nsACString& aPrefNode,
                                          void* aData, MatchKind aMatchKind) {
   return UnregisterCallbackImpl<const nsACString&>(aCallback, aPrefNode, aData,
                                                    aMatchKind);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::UnregisterCallbacks(
-    PrefChangedFunc aCallback, const char** aPrefs, void* aData,
-    MatchKind aMatchKind) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::UnregisterCallbacks(PrefChangedFunc aCallback,
-                                 const char** aPrefs,
-                                 void* aData,
-                                 MatchKind aMatchKind)
-{
-=======
 /* static */
 nsresult Preferences::UnregisterCallbacks(PrefChangedFunc aCallback,
                                           const char** aPrefs, void* aData,
                                           MatchKind aMatchKind) {
->>>>>>> upstream-releases
   return UnregisterCallbackImpl(aCallback, aPrefs, aData, aMatchKind);
 }
 
@@ -6308,140 +5202,26 @@ static void CacheDataAppendElement(CacheData* aData) {
   gCacheData->AppendElement(aData);
 }
 
-<<<<<<< HEAD
-static void BoolVarChanged(const char* aPref, void* aClosure) {
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<bool*>(cache->mCacheLocation) =
-      Preferences::GetBool(aPref, cache->mDefaultValueBool);
-}
-
-/* static */ nsresult Preferences::AddBoolVarCache(bool* aCache,
-                                                   const nsACString& aPref,
-                                                   bool aDefault,
-                                                   bool aSkipAssignment) {
-  AssertNotAlreadyCached("bool", aPref, aCache);
-||||||| merged common ancestors
-static void
-BoolVarChanged(const char* aPref, void* aClosure)
-{
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<bool*>(cache->mCacheLocation) =
-    Preferences::GetBool(aPref, cache->mDefaultValueBool);
-}
-
-/* static */ nsresult
-Preferences::AddBoolVarCache(bool* aCache,
-                             const nsACString& aPref,
-                             bool aDefault,
-                             bool aSkipAssignment)
-{
-  AssertNotAlreadyCached("bool", aPref, aCache);
-=======
 template <typename T>
 static nsresult AddVarCache(T* aCache, const nsACString& aPref,
                             StripAtomic<T> aDefault, bool aSkipAssignment) {
->>>>>>> upstream-releases
   if (!aSkipAssignment) {
     *aCache = PreferencesInternalMethods::GetPref(
         PromiseFlatCString(aPref).get(), aDefault);
   }
   CacheData* data = new CacheData(aCache, aDefault);
   CacheDataAppendElement(data);
-<<<<<<< HEAD
-  Preferences::RegisterCallback(BoolVarChanged, aPref, data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-||||||| merged common ancestors
-  Preferences::RegisterCallback(BoolVarChanged,
-                                aPref,
-                                data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-=======
   PreferencesInternalMethods::RegisterCallback<T>(data, aPref);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
-<<<<<<< HEAD
-template <MemoryOrdering Order>
-static void AtomicBoolVarChanged(const char* aPref, void* aClosure) {
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<Atomic<bool, Order>*>(cache->mCacheLocation) =
-      Preferences::GetBool(aPref, cache->mDefaultValueBool);
-}
-
-template <MemoryOrdering Order>
-/* static */ nsresult Preferences::AddAtomicBoolVarCache(
-    Atomic<bool, Order>* aCache, const nsACString& aPref, bool aDefault,
-    bool aSkipAssignment) {
-||||||| merged common ancestors
-template<MemoryOrdering Order>
-static void
-AtomicBoolVarChanged(const char* aPref, void* aClosure)
-{
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<Atomic<bool, Order>*>(cache->mCacheLocation) =
-    Preferences::GetBool(aPref, cache->mDefaultValueBool);
-}
-
-template<MemoryOrdering Order>
-/* static */ nsresult
-Preferences::AddAtomicBoolVarCache(Atomic<bool, Order>* aCache,
-                                   const nsACString& aPref,
-                                   bool aDefault,
-                                   bool aSkipAssignment)
-{
-=======
 /* static */
 nsresult Preferences::AddBoolVarCache(bool* aCache, const nsACString& aPref,
                                       bool aDefault, bool aSkipAssignment) {
->>>>>>> upstream-releases
   AssertNotAlreadyCached("bool", aPref, aCache);
-<<<<<<< HEAD
-  if (!aSkipAssignment) {
-    *aCache = GetBool(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueBool = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(AtomicBoolVarChanged<Order>, aPref, data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-||||||| merged common ancestors
-  if (!aSkipAssignment) {
-    *aCache = GetBool(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueBool = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(AtomicBoolVarChanged<Order>,
-                                aPref,
-                                data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-=======
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void IntVarChanged(const char* aPref, void* aClosure) {
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<int32_t*>(cache->mCacheLocation) =
-      Preferences::GetInt(aPref, cache->mDefaultValueInt);
-||||||| merged common ancestors
-static void
-IntVarChanged(const char* aPref, void* aClosure)
-{
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<int32_t*>(cache->mCacheLocation) =
-    Preferences::GetInt(aPref, cache->mDefaultValueInt);
-=======
 template <MemoryOrdering Order>
 /* static */
 nsresult Preferences::AddAtomicBoolVarCache(Atomic<bool, Order>* aCache,
@@ -6450,352 +5230,45 @@ nsresult Preferences::AddAtomicBoolVarCache(Atomic<bool, Order>* aCache,
                                             bool aSkipAssignment) {
   AssertNotAlreadyCached("bool", aPref, aCache);
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ nsresult Preferences::AddIntVarCache(int32_t* aCache,
-                                                  const nsACString& aPref,
-                                                  int32_t aDefault,
-                                                  bool aSkipAssignment) {
-||||||| merged common ancestors
-/* static */ nsresult
-Preferences::AddIntVarCache(int32_t* aCache,
-                            const nsACString& aPref,
-                            int32_t aDefault,
-                            bool aSkipAssignment)
-{
-=======
 /* static */
 nsresult Preferences::AddIntVarCache(int32_t* aCache, const nsACString& aPref,
                                      int32_t aDefault, bool aSkipAssignment) {
->>>>>>> upstream-releases
   AssertNotAlreadyCached("int", aPref, aCache);
-<<<<<<< HEAD
-  if (!aSkipAssignment) {
-    *aCache = GetInt(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueInt = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(IntVarChanged, aPref, data,
-                                Preferences::ExactMatch, /* isPriority */ true);
-  return NS_OK;
-||||||| merged common ancestors
-  if (!aSkipAssignment) {
-    *aCache = GetInt(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueInt = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(
-    IntVarChanged, aPref, data, Preferences::ExactMatch, /* isPriority */ true);
-  return NS_OK;
-=======
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <MemoryOrdering Order>
-static void AtomicIntVarChanged(const char* aPref, void* aClosure) {
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<Atomic<int32_t, Order>*>(cache->mCacheLocation) =
-      Preferences::GetInt(aPref, cache->mDefaultValueUint);
-}
-
-template <MemoryOrdering Order>
-/* static */ nsresult Preferences::AddAtomicIntVarCache(
-    Atomic<int32_t, Order>* aCache, const nsACString& aPref, int32_t aDefault,
-    bool aSkipAssignment) {
-||||||| merged common ancestors
-template<MemoryOrdering Order>
-static void
-AtomicIntVarChanged(const char* aPref, void* aClosure)
-{
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<Atomic<int32_t, Order>*>(cache->mCacheLocation) =
-    Preferences::GetInt(aPref, cache->mDefaultValueUint);
-}
-
-template<MemoryOrdering Order>
-/* static */ nsresult
-Preferences::AddAtomicIntVarCache(Atomic<int32_t, Order>* aCache,
-                                  const nsACString& aPref,
-                                  int32_t aDefault,
-                                  bool aSkipAssignment)
-{
-=======
 template <MemoryOrdering Order>
 /* static */
 nsresult Preferences::AddAtomicIntVarCache(Atomic<int32_t, Order>* aCache,
                                            const nsACString& aPref,
                                            int32_t aDefault,
                                            bool aSkipAssignment) {
->>>>>>> upstream-releases
   AssertNotAlreadyCached("int", aPref, aCache);
-<<<<<<< HEAD
-  if (!aSkipAssignment) {
-    *aCache = GetInt(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueUint = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(AtomicIntVarChanged<Order>, aPref, data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-||||||| merged common ancestors
-  if (!aSkipAssignment) {
-    *aCache = GetInt(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueUint = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(AtomicIntVarChanged<Order>,
-                                aPref,
-                                data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-=======
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void UintVarChanged(const char* aPref, void* aClosure) {
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<uint32_t*>(cache->mCacheLocation) =
-      Preferences::GetUint(aPref, cache->mDefaultValueUint);
-}
-
-/* static */ nsresult Preferences::AddUintVarCache(uint32_t* aCache,
-                                                   const nsACString& aPref,
-                                                   uint32_t aDefault,
-                                                   bool aSkipAssignment) {
-||||||| merged common ancestors
-static void
-UintVarChanged(const char* aPref, void* aClosure)
-{
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<uint32_t*>(cache->mCacheLocation) =
-    Preferences::GetUint(aPref, cache->mDefaultValueUint);
-}
-
-/* static */ nsresult
-Preferences::AddUintVarCache(uint32_t* aCache,
-                             const nsACString& aPref,
-                             uint32_t aDefault,
-                             bool aSkipAssignment)
-{
-=======
 /* static */
 nsresult Preferences::AddUintVarCache(uint32_t* aCache, const nsACString& aPref,
                                       uint32_t aDefault, bool aSkipAssignment) {
->>>>>>> upstream-releases
   AssertNotAlreadyCached("uint", aPref, aCache);
-<<<<<<< HEAD
-  if (!aSkipAssignment) {
-    *aCache = GetUint(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueUint = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(UintVarChanged, aPref, data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-||||||| merged common ancestors
-  if (!aSkipAssignment) {
-    *aCache = GetUint(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueUint = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(UintVarChanged,
-                                aPref,
-                                data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-=======
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-template <MemoryOrdering Order>
-static void AtomicUintVarChanged(const char* aPref, void* aClosure) {
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<Atomic<uint32_t, Order>*>(cache->mCacheLocation) =
-      Preferences::GetUint(aPref, cache->mDefaultValueUint);
-}
-
-template <MemoryOrdering Order>
-/* static */ nsresult Preferences::AddAtomicUintVarCache(
-    Atomic<uint32_t, Order>* aCache, const nsACString& aPref, uint32_t aDefault,
-    bool aSkipAssignment) {
-||||||| merged common ancestors
-template<MemoryOrdering Order>
-static void
-AtomicUintVarChanged(const char* aPref, void* aClosure)
-{
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<Atomic<uint32_t, Order>*>(cache->mCacheLocation) =
-    Preferences::GetUint(aPref, cache->mDefaultValueUint);
-}
-
-template<MemoryOrdering Order>
-/* static */ nsresult
-Preferences::AddAtomicUintVarCache(Atomic<uint32_t, Order>* aCache,
-                                   const nsACString& aPref,
-                                   uint32_t aDefault,
-                                   bool aSkipAssignment)
-{
-=======
 template <MemoryOrdering Order>
 /* static */
 nsresult Preferences::AddAtomicUintVarCache(Atomic<uint32_t, Order>* aCache,
                                             const nsACString& aPref,
                                             uint32_t aDefault,
                                             bool aSkipAssignment) {
->>>>>>> upstream-releases
   AssertNotAlreadyCached("uint", aPref, aCache);
-<<<<<<< HEAD
-  if (!aSkipAssignment) {
-    *aCache = GetUint(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueUint = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(AtomicUintVarChanged<Order>, aPref, data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-||||||| merged common ancestors
-  if (!aSkipAssignment) {
-    *aCache = GetUint(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueUint = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(AtomicUintVarChanged<Order>,
-                                aPref,
-                                data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-=======
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
->>>>>>> upstream-releases
 }
 
 // Since the definition of template functions is not in a header file, we
 // need to explicitly specify the instantiations that are required. Currently
 // limited orders are needed and therefore implemented.
-<<<<<<< HEAD
-template nsresult Preferences::AddAtomicBoolVarCache(Atomic<bool, Relaxed>*,
-                                                     const nsACString&, bool,
-                                                     bool);
-
-template nsresult Preferences::AddAtomicBoolVarCache(
-    Atomic<bool, ReleaseAcquire>*, const nsACString&, bool, bool);
-
-template nsresult Preferences::AddAtomicBoolVarCache(
-    Atomic<bool, SequentiallyConsistent>*, const nsACString&, bool, bool);
-
-template nsresult Preferences::AddAtomicIntVarCache(Atomic<int32_t, Relaxed>*,
-                                                    const nsACString&, int32_t,
-                                                    bool);
-
-template nsresult Preferences::AddAtomicUintVarCache(Atomic<uint32_t, Relaxed>*,
-                                                     const nsACString&,
-                                                     uint32_t, bool);
-
-template nsresult Preferences::AddAtomicUintVarCache(
-    Atomic<uint32_t, ReleaseAcquire>*, const nsACString&, uint32_t, bool);
-
-template nsresult Preferences::AddAtomicUintVarCache(
-    Atomic<uint32_t, SequentiallyConsistent>*, const nsACString&, uint32_t,
-    bool);
-
-static void FloatVarChanged(const char* aPref, void* aClosure) {
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<float*>(cache->mCacheLocation) =
-      Preferences::GetFloat(aPref, cache->mDefaultValueFloat);
-}
-
-/* static */ nsresult Preferences::AddFloatVarCache(float* aCache,
-                                                    const nsACString& aPref,
-                                                    float aDefault,
-                                                    bool aSkipAssignment) {
-||||||| merged common ancestors
-template nsresult
-Preferences::AddAtomicBoolVarCache(Atomic<bool, Relaxed>*,
-                                   const nsACString&,
-                                   bool,
-                                   bool);
-
-template nsresult
-Preferences::AddAtomicBoolVarCache(Atomic<bool, ReleaseAcquire>*,
-                                   const nsACString&,
-                                   bool,
-                                   bool);
-
-template nsresult
-Preferences::AddAtomicBoolVarCache(Atomic<bool, SequentiallyConsistent>*,
-                                   const nsACString&,
-                                   bool,
-                                   bool);
-
-template nsresult
-Preferences::AddAtomicIntVarCache(Atomic<int32_t, Relaxed>*,
-                                  const nsACString&,
-                                  int32_t,
-                                  bool);
-
-template nsresult
-Preferences::AddAtomicUintVarCache(Atomic<uint32_t, Relaxed>*,
-                                   const nsACString&,
-                                   uint32_t,
-                                   bool);
-
-template nsresult
-Preferences::AddAtomicUintVarCache(Atomic<uint32_t, ReleaseAcquire>*,
-                                   const nsACString&,
-                                   uint32_t,
-                                   bool);
-
-template nsresult
-Preferences::AddAtomicUintVarCache(Atomic<uint32_t, SequentiallyConsistent>*,
-                                   const nsACString&,
-                                   uint32_t,
-                                   bool);
-
-static void
-FloatVarChanged(const char* aPref, void* aClosure)
-{
-  CacheData* cache = static_cast<CacheData*>(aClosure);
-  *static_cast<float*>(cache->mCacheLocation) =
-    Preferences::GetFloat(aPref, cache->mDefaultValueFloat);
-}
-
-/* static */ nsresult
-Preferences::AddFloatVarCache(float* aCache,
-                              const nsACString& aPref,
-                              float aDefault,
-                              bool aSkipAssignment)
-{
-=======
 template nsresult Preferences::AddAtomicBoolVarCache(Atomic<bool, Relaxed>*,
                                                      const nsACString&, bool,
                                                      bool);
@@ -6824,70 +5297,10 @@ template nsresult Preferences::AddAtomicUintVarCache(
 /* static */
 nsresult Preferences::AddFloatVarCache(float* aCache, const nsACString& aPref,
                                        float aDefault, bool aSkipAssignment) {
->>>>>>> upstream-releases
   AssertNotAlreadyCached("float", aPref, aCache);
-<<<<<<< HEAD
-  if (!aSkipAssignment) {
-    *aCache = GetFloat(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueFloat = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(FloatVarChanged, aPref, data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-||||||| merged common ancestors
-  if (!aSkipAssignment) {
-    *aCache = GetFloat(PromiseFlatCString(aPref).get(), aDefault);
-  }
-  CacheData* data = new CacheData();
-  data->mCacheLocation = aCache;
-  data->mDefaultValueFloat = aDefault;
-  CacheDataAppendElement(data);
-  Preferences::RegisterCallback(FloatVarChanged,
-                                aPref,
-                                data,
-                                Preferences::ExactMatch,
-                                /* isPriority */ true);
-  return NS_OK;
-=======
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// For a VarCache pref like this:
-//
-//   VARCACHE_PREF("my.varcache", my_varcache, int32_t, 99)
-//
-// we generate a static variable definition:
-//
-//   int32_t StaticPrefs::sVarCache_my_varcache(99);
-//
-#define PREF(name, cpp_type, value)
-#define VARCACHE_PREF(name, id, cpp_type, value) \
-  cpp_type StaticPrefs::sVarCache_##id(value);
-#include "mozilla/StaticPrefList.h"
-#undef PREF
-#undef VARCACHE_PREF
-||||||| merged common ancestors
-// For a VarCache pref like this:
-//
-//   VARCACHE_PREF("my.varcache", my_varcache, int32_t, 99)
-//
-// we generate a static variable definition:
-//
-//   int32_t StaticPrefs::sVarCache_my_varcache(99);
-//
-#define PREF(name, cpp_type, value)
-#define VARCACHE_PREF(name, id, cpp_type, value)                               \
-  cpp_type StaticPrefs::sVarCache_##id(value);
-#include "mozilla/StaticPrefList.h"
-#undef PREF
-#undef VARCACHE_PREF
-=======
 /* static */
 nsresult Preferences::AddAtomicFloatVarCache(std::atomic<float>* aCache,
                                              const nsACString& aPref,
@@ -6896,7 +5309,6 @@ nsresult Preferences::AddAtomicFloatVarCache(std::atomic<float>* aCache,
   AssertNotAlreadyCached("float", aPref, aCache);
   return AddVarCache(aCache, aPref, aDefault, aSkipAssignment);
 }
->>>>>>> upstream-releases
 
 // The SetPref_*() functions below end in a `_<type>` suffix because they are
 // used by the PREF macro definition in InitAll() below.
@@ -6942,23 +5354,6 @@ MOZ_MAYBE_UNUSED static void SetPref_String(const char* aName,
                /* fromInit */ true);
 }
 
-<<<<<<< HEAD
-static void InitVarCachePref(const nsACString& aName, bool* aCache,
-                             bool aDefaultValue, bool aIsStartup,
-                             bool aSetValue) {
-  if (aSetValue) {
-    SetPref_bool(PromiseFlatCString(aName).get(), aDefaultValue);
-||||||| merged common ancestors
-static void
-InitVarCachePref(const nsACString& aName,
-                 bool* aCache,
-                 bool aDefaultValue,
-                 bool aIsStartup,
-                 bool aSetValue)
-{
-  if (aSetValue) {
-    SetPref_bool(PromiseFlatCString(aName).get(), aDefaultValue);
-=======
 static void SetPref(const char* aName, bool aDefaultValue) {
   SetPref_bool(aName, aDefaultValue);
 }
@@ -7003,7 +5398,6 @@ static void InitVarCachePref(StaticPrefs::UpdatePolicy aPolicy,
     if (MOZ_LIKELY(aPolicy == StaticPrefs::UpdatePolicy::Live)) {
       *aCache = aDefaultValue;
     }
->>>>>>> upstream-releases
   }
 
   if (MOZ_LIKELY(aPolicy == StaticPrefs::UpdatePolicy::Live) &&
@@ -7012,25 +5406,6 @@ static void InitVarCachePref(StaticPrefs::UpdatePolicy aPolicy,
   }
 }
 
-<<<<<<< HEAD
-template <MemoryOrdering Order>
-static void InitVarCachePref(const nsACString& aName,
-                             Atomic<bool, Order>* aCache, bool aDefaultValue,
-                             bool aIsStartup, bool aSetValue) {
-  if (aSetValue) {
-    SetPref_bool(PromiseFlatCString(aName).get(), aDefaultValue);
-||||||| merged common ancestors
-template<MemoryOrdering Order>
-static void
-InitVarCachePref(const nsACString& aName,
-                 Atomic<bool, Order>* aCache,
-                 bool aDefaultValue,
-                 bool aIsStartup,
-                 bool aSetValue)
-{
-  if (aSetValue) {
-    SetPref_bool(PromiseFlatCString(aName).get(), aDefaultValue);
-=======
 static Atomic<bool> sOncePrefRead(false);
 static StaticMutex sOncePrefMutex;
 
@@ -7040,7 +5415,6 @@ void MaybeInitOncePrefs() {
   if (MOZ_LIKELY(sOncePrefRead)) {
     // `Once` StaticPrefs have already been initialized to their default value.
     return;
->>>>>>> upstream-releases
   }
   StaticMutexAutoLock lock(sOncePrefMutex);
   if (NS_IsMainThread()) {
@@ -7055,166 +5429,6 @@ void MaybeInitOncePrefs() {
   sOncePrefRead = true;
 }
 
-<<<<<<< HEAD
-// XXX: this will eventually become used
-MOZ_MAYBE_UNUSED static void InitVarCachePref(const nsACString& aName,
-                                              int32_t* aCache,
-                                              int32_t aDefaultValue,
-                                              bool aIsStartup, bool aSetValue) {
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(), aDefaultValue);
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddIntVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-template <MemoryOrdering Order>
-static void InitVarCachePref(const nsACString& aName,
-                             Atomic<int32_t, Order>* aCache,
-                             int32_t aDefaultValue, bool aIsStartup,
-                             bool aSetValue) {
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(), aDefaultValue);
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddAtomicIntVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-static void InitVarCachePref(const nsACString& aName, uint32_t* aCache,
-                             uint32_t aDefaultValue, bool aIsStartup,
-                             bool aSetValue) {
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(),
-                    static_cast<int32_t>(aDefaultValue));
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddUintVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-template <MemoryOrdering Order>
-static void InitVarCachePref(const nsACString& aName,
-                             Atomic<uint32_t, Order>* aCache,
-                             uint32_t aDefaultValue, bool aIsStartup,
-                             bool aSetValue) {
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(),
-                    static_cast<int32_t>(aDefaultValue));
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddAtomicUintVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-static void InitVarCachePref(const nsACString& aName, float* aCache,
-                             float aDefaultValue, bool aIsStartup,
-                             bool aSetValue) {
-  if (aSetValue) {
-    SetPref_float(PromiseFlatCString(aName).get(), aDefaultValue);
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddFloatVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-/* static */ void StaticPrefs::InitAll(bool aIsStartup) {
-||||||| merged common ancestors
-// XXX: this will eventually become used
-MOZ_MAYBE_UNUSED static void
-InitVarCachePref(const nsACString& aName,
-                 int32_t* aCache,
-                 int32_t aDefaultValue,
-                 bool aIsStartup,
-                 bool aSetValue)
-{
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(), aDefaultValue);
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddIntVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-template<MemoryOrdering Order>
-static void
-InitVarCachePref(const nsACString& aName,
-                 Atomic<int32_t, Order>* aCache,
-                 int32_t aDefaultValue,
-                 bool aIsStartup,
-                 bool aSetValue)
-{
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(), aDefaultValue);
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddAtomicIntVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-static void
-InitVarCachePref(const nsACString& aName,
-                 uint32_t* aCache,
-                 uint32_t aDefaultValue,
-                 bool aIsStartup,
-                 bool aSetValue)
-{
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(),
-                    static_cast<int32_t>(aDefaultValue));
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddUintVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-template<MemoryOrdering Order>
-static void
-InitVarCachePref(const nsACString& aName,
-                 Atomic<uint32_t, Order>* aCache,
-                 uint32_t aDefaultValue,
-                 bool aIsStartup,
-                 bool aSetValue)
-{
-  if (aSetValue) {
-    SetPref_int32_t(PromiseFlatCString(aName).get(),
-                    static_cast<int32_t>(aDefaultValue));
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddAtomicUintVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-static void
-InitVarCachePref(const nsACString& aName,
-                 float* aCache,
-                 float aDefaultValue,
-                 bool aIsStartup,
-                 bool aSetValue)
-{
-  if (aSetValue) {
-    SetPref_float(PromiseFlatCString(aName).get(), aDefaultValue);
-  }
-  *aCache = aDefaultValue;
-  if (aIsStartup) {
-    Preferences::AddFloatVarCache(aCache, aName, aDefaultValue, true);
-  }
-}
-
-/* static */ void
-StaticPrefs::InitAll(bool aIsStartup)
-{
-=======
 // For a pref like this:
 //
 //   VARCACHE_PREF($POLICY, "my.pref", my_pref, int32_t, 99)
@@ -7233,7 +5447,6 @@ StaticPrefs::InitAll(bool aIsStartup)
 static void InitAll(bool aIsStartup) {
   bool isParent = XRE_IsParentProcess();
 
->>>>>>> upstream-releases
   // For prefs like these:
   //
   //   PREF("foo.bar.baz", bool, true)
@@ -7254,25 +5467,6 @@ static void InitAll(bool aIsStartup) {
   //
   // In content processes, we rely on the parent to send us the correct initial
   // values via shared memory, so we do not re-initialize them here.
-<<<<<<< HEAD
-  bool isParent = XRE_IsParentProcess();
-#define PREF(name, cpp_type, value) \
-  if (isParent) SetPref_##cpp_type(name, value);
-#define VARCACHE_PREF(name, id, cpp_type, value)                           \
-  InitVarCachePref(NS_LITERAL_CSTRING(name), &StaticPrefs::sVarCache_##id, \
-                   value, aIsStartup, isParent);
-||||||| merged common ancestors
-  bool isParent = XRE_IsParentProcess();
-#define PREF(name, cpp_type, value)                                            \
-  if (isParent)                                                                \
-    SetPref_##cpp_type(name, value);
-#define VARCACHE_PREF(name, id, cpp_type, value)                               \
-  InitVarCachePref(NS_LITERAL_CSTRING(name),                                   \
-                   &StaticPrefs::sVarCache_##id,                               \
-                   value,                                                      \
-                   aIsStartup,                                                 \
-                   isParent);
-=======
 #define PREF(name, cpp_type, value)  \
   if (isParent) {                    \
     SetPref_##cpp_type(name, value); \
@@ -7280,17 +5474,11 @@ static void InitAll(bool aIsStartup) {
 #define VARCACHE_PREF(policy, name, id, cpp_type, value)           \
   InitVarCachePref(UpdatePolicy::policy, NS_LITERAL_CSTRING(name), \
                    &sVarCache_##id, value, aIsStartup, isParent);
->>>>>>> upstream-releases
 #include "mozilla/StaticPrefList.h"
 #undef PREF
 #undef VARCACHE_PREF
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 static void InitOncePrefs() {
   // For a pref like this:
   //
@@ -7339,7 +5527,6 @@ static void InitOncePrefs() {
           name, StripAtomic<cpp_type>(value));              \
     }
 #endif
->>>>>>> upstream-releases
 
 #include "mozilla/StaticPrefList.h"
 #undef PREF
@@ -7379,22 +5566,6 @@ static MOZ_MAYBE_UNUSED void SaveOncePrefToSharedMap(
   SaveOncePrefToSharedMap(aBuilder, aName, int32_t(aValue));
 }
 
-<<<<<<< HEAD
-static mozilla::Module::CIDEntry kPrefCIDs[] = {
-    {&kPrefServiceCID, true, nullptr, PreferencesConstructor},
-    {&kPrefLocalizedStringCID, false, nullptr,
-     nsPrefLocalizedStringConstructor},
-    {nullptr}};
-||||||| merged common ancestors
-static mozilla::Module::CIDEntry kPrefCIDs[] = {
-  { &kPrefServiceCID, true, nullptr, PreferencesConstructor },
-  { &kPrefLocalizedStringCID,
-    false,
-    nullptr,
-    nsPrefLocalizedStringConstructor },
-  { nullptr }
-};
-=======
 static MOZ_MAYBE_UNUSED void SaveOncePrefToSharedMap(
     SharedPrefMapBuilder& aBuilder, const char* aName, float aValue) {
   auto oncePref = MakeUnique<Pref>(aName);
@@ -7412,44 +5583,7 @@ static MOZ_MAYBE_UNUSED void SaveOncePrefToSharedMap(
                                 /* isLocked */ true, &valueChanged));
   oncePref->AddToMap(aBuilder);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static mozilla::Module::ContractIDEntry kPrefContracts[] = {
-    {NS_PREFSERVICE_CONTRACTID, &kPrefServiceCID},
-    {NS_PREFLOCALIZEDSTRING_CONTRACTID, &kPrefLocalizedStringCID},
-    {nullptr}};
-
-static void UnloadPrefsModule() { Preferences::Shutdown(); }
-
-static const mozilla::Module kPrefModule = {mozilla::Module::kVersion,
-                                            kPrefCIDs,
-                                            kPrefContracts,
-                                            nullptr,
-                                            nullptr,
-                                            nullptr,
-                                            UnloadPrefsModule};
-||||||| merged common ancestors
-static mozilla::Module::ContractIDEntry kPrefContracts[] = {
-  { NS_PREFSERVICE_CONTRACTID, &kPrefServiceCID },
-  { NS_PREFLOCALIZEDSTRING_CONTRACTID, &kPrefLocalizedStringCID },
-  { nullptr }
-};
-
-static void
-UnloadPrefsModule()
-{
-  Preferences::Shutdown();
-}
-
-static const mozilla::Module kPrefModule = { mozilla::Module::kVersion,
-                                             kPrefCIDs,
-                                             kPrefContracts,
-                                             nullptr,
-                                             nullptr,
-                                             nullptr,
-                                             UnloadPrefsModule };
-=======
 #define ONCE_PREF_NAME(name) ("$$$" name "$$$")
 
 namespace StaticPrefs {
@@ -7557,6 +5691,5 @@ NS_IMPL_COMPONENT_FACTORY(nsPrefLocalizedString) {
 namespace mozilla {
 
 void UnloadPrefsModule() { Preferences::Shutdown(); }
->>>>>>> upstream-releases
 
 }  // namespace mozilla

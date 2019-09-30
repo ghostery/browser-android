@@ -40,44 +40,9 @@ class nsAuthSSPI final : public nsIAuthModule {
 
   typedef ::TimeStamp MS_TimeStamp;
 
-<<<<<<< HEAD
- private:
-  nsresult MakeSN(const char *principal, nsCString &result);
-||||||| merged common ancestors
-private:
-    nsresult MakeSN(const char *principal, nsCString &result);
-=======
  private:
   nsresult MakeSN(const char* principal, nsCString& result);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CredHandle mCred;
-  CtxtHandle mCtxt;
-  nsCString mServiceName;
-  uint32_t mServiceFlags;
-  uint32_t mMaxTokenLen;
-  pType mPackage;
-  nsString mDomain;
-  nsString mUsername;
-  nsString mPassword;
-  bool mIsFirst;
-  void *mCertDERData;
-  uint32_t mCertDERLength;
-||||||| merged common ancestors
-    CredHandle   mCred;
-    CtxtHandle   mCtxt;
-    nsCString    mServiceName;
-    uint32_t     mServiceFlags;
-    uint32_t     mMaxTokenLen;
-    pType        mPackage;
-    nsString     mDomain;
-    nsString     mUsername;
-    nsString     mPassword;
-    bool         mIsFirst;
-    void*        mCertDERData;
-    uint32_t     mCertDERLength;
-=======
   CredHandle mCred;
   CtxtHandle mCtxt;
   nsCString mServiceName;
@@ -90,7 +55,6 @@ private:
   bool mIsFirst;
   void* mCertDERData;
   uint32_t mCertDERLength;
->>>>>>> upstream-releases
 };
 
 #endif /* nsAuthSSPI_h__ */

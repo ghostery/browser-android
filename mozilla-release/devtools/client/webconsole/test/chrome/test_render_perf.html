@@ -182,7 +182,6 @@ window.onload = async function() {
   // From https://github.com/firefox-devtools/profiler/blob/b73eb73df04c7df51464fa50eeadef3dc7f5d4e2/docs/gecko-profile-format.md#L21
   const settings = {
     entries: 100000000,
-    duration: 20,
     interval: 1,
     features: ["js"],
     threads: ["GeckoMain"],
@@ -192,13 +191,6 @@ window.onload = async function() {
     settings.interval,
     settings.features,
     settings.threads,
-<<<<<<< HEAD
-    settings.threads.length,
-    settings.duration
-||||||| merged common ancestors
-    settings.threads.length
-=======
->>>>>>> upstream-releases
   );
   info("Profiler has started");
 

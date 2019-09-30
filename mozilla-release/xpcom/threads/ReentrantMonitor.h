@@ -10,16 +10,8 @@
 #include "prmon.h"
 
 #ifdef MOZILLA_INTERNAL_API
-<<<<<<< HEAD
-#include "GeckoProfiler.h"
-#endif  // MOZILLA_INTERNAL_API
-||||||| merged common ancestors
-#include "GeckoProfiler.h"
-#endif //MOZILLA_INTERNAL_API
-=======
 #  include "GeckoProfiler.h"
 #endif  // MOZILLA_INTERNAL_API
->>>>>>> upstream-releases
 
 #include "mozilla/BlockingResourceBase.h"
 
@@ -96,33 +88,13 @@ class ReentrantMonitor : BlockingResourceBase {
    * Wait
    * @see prmon.h
    **/
-<<<<<<< HEAD
-  nsresult Wait(PRIntervalTime aInterval = PR_INTERVAL_NO_TIMEOUT) {
-#ifdef MOZILLA_INTERNAL_API
-||||||| merged common ancestors
-  nsresult Wait(PRIntervalTime aInterval = PR_INTERVAL_NO_TIMEOUT)
-  {
-#ifdef MOZILLA_INTERNAL_API
-=======
   nsresult Wait(PRIntervalTime aInterval = PR_INTERVAL_NO_TIMEOUT) {
 #  ifdef MOZILLA_INTERNAL_API
->>>>>>> upstream-releases
     AUTO_PROFILER_THREAD_SLEEP;
-<<<<<<< HEAD
-#endif  // MOZILLA_INTERNAL_API
-    return PR_Wait(mReentrantMonitor, aInterval) == PR_SUCCESS
-               ? NS_OK
-               : NS_ERROR_FAILURE;
-||||||| merged common ancestors
-#endif //MOZILLA_INTERNAL_API
-    return PR_Wait(mReentrantMonitor, aInterval) == PR_SUCCESS ?
-      NS_OK : NS_ERROR_FAILURE;
-=======
 #  endif  // MOZILLA_INTERNAL_API
     return PR_Wait(mReentrantMonitor, aInterval) == PR_SUCCESS
                ? NS_OK
                : NS_ERROR_FAILURE;
->>>>>>> upstream-releases
   }
 
 #else  // ifndef DEBUG

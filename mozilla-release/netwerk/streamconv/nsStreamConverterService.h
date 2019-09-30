@@ -16,61 +16,6 @@
 class nsAtom;
 
 class nsStreamConverterService : public nsIStreamConverterService {
-<<<<<<< HEAD
- public:
-  /////////////////////////////////////////////////////
-  // nsISupports methods
-  NS_DECL_ISUPPORTS
-
-  /////////////////////////////////////////////////////
-  // nsIStreamConverterService methods
-  NS_DECL_NSISTREAMCONVERTERSERVICE
-
-  /////////////////////////////////////////////////////
-  // nsStreamConverterService methods
-  nsStreamConverterService() = default;
-
- private:
-  virtual ~nsStreamConverterService() = default;
-
-  // Responsible for finding a converter for the given MIME-type.
-  nsresult FindConverter(const char *aContractID,
-                         nsTArray<nsCString> **aEdgeList);
-  nsresult BuildGraph(void);
-  nsresult AddAdjacency(const char *aContractID);
-  nsresult ParseFromTo(const char *aContractID, nsCString &aFromRes,
-                       nsCString &aToRes);
-
-  // member variables
-  nsClassHashtable<nsCStringHashKey, nsTArray<RefPtr<nsAtom>>> mAdjacencyList;
-||||||| merged common ancestors
-public:
-    /////////////////////////////////////////////////////
-    // nsISupports methods
-    NS_DECL_ISUPPORTS
-
-
-    /////////////////////////////////////////////////////
-    // nsIStreamConverterService methods
-    NS_DECL_NSISTREAMCONVERTERSERVICE
-
-    /////////////////////////////////////////////////////
-    // nsStreamConverterService methods
-    nsStreamConverterService() = default;
-
-private:
-    virtual ~nsStreamConverterService() = default;
-
-    // Responsible for finding a converter for the given MIME-type.
-    nsresult FindConverter(const char *aContractID, nsTArray<nsCString> **aEdgeList);
-    nsresult BuildGraph(void);
-    nsresult AddAdjacency(const char *aContractID);
-    nsresult ParseFromTo(const char *aContractID, nsCString &aFromRes, nsCString &aToRes);
-
-    // member variables
-    nsClassHashtable<nsCStringHashKey, nsTArray<RefPtr<nsAtom>>>
-        mAdjacencyList;
-=======
  public:
   /////////////////////////////////////////////////////
   // nsISupports methods
@@ -97,7 +42,6 @@ private:
 
   // member variables
   nsClassHashtable<nsCStringHashKey, nsTArray<RefPtr<nsAtom>>> mAdjacencyList;
->>>>>>> upstream-releases
 };
 
 #endif  // __nsstreamconverterservice__h___

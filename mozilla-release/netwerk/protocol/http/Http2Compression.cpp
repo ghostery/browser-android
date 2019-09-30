@@ -32,29 +32,12 @@ class HpackStaticTableReporter final : public nsIMemoryReporter {
   HpackStaticTableReporter() = default;
 
   NS_IMETHOD
-<<<<<<< HEAD
-  CollectReports(nsIHandleReportCallback *aHandleReport, nsISupports *aData,
-                 bool aAnonymize) override {
-    MOZ_COLLECT_REPORT("explicit/network/hpack/static-table", KIND_HEAP,
-                       UNITS_BYTES,
-                       gStaticHeaders->SizeOfIncludingThis(MallocSizeOf),
-                       "Memory usage of HPACK static table.");
-||||||| merged common ancestors
-  CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
-                 bool aAnonymize) override
-  {
-    MOZ_COLLECT_REPORT(
-      "explicit/network/hpack/static-table", KIND_HEAP, UNITS_BYTES,
-      gStaticHeaders->SizeOfIncludingThis(MallocSizeOf),
-      "Memory usage of HPACK static table.");
-=======
   CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
                  bool aAnonymize) override {
     MOZ_COLLECT_REPORT("explicit/network/hpack/static-table", KIND_HEAP,
                        UNITS_BYTES,
                        gStaticHeaders->SizeOfIncludingThis(MallocSizeOf),
                        "Memory usage of HPACK static table.");
->>>>>>> upstream-releases
 
     return NS_OK;
   }
@@ -71,30 +54,12 @@ class HpackDynamicTableReporter final : public nsIMemoryReporter {
  public:
   NS_DECL_THREADSAFE_ISUPPORTS
 
-<<<<<<< HEAD
-  explicit HpackDynamicTableReporter(Http2BaseCompressor *aCompressor)
-      : mCompressor(aCompressor) {}
-||||||| merged common ancestors
-  explicit HpackDynamicTableReporter(Http2BaseCompressor* aCompressor)
-    : mCompressor(aCompressor)
-  {}
-=======
   explicit HpackDynamicTableReporter(Http2BaseCompressor* aCompressor)
       : mCompressor(aCompressor) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD
-<<<<<<< HEAD
-  CollectReports(nsIHandleReportCallback *aHandleReport, nsISupports *aData,
-                 bool aAnonymize) override {
-||||||| merged common ancestors
-  CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
-                 bool aAnonymize) override
-  {
-=======
   CollectReports(nsIHandleReportCallback* aHandleReport, nsISupports* aData,
                  bool aAnonymize) override {
->>>>>>> upstream-releases
     if (mCompressor) {
       MOZ_COLLECT_REPORT("explicit/network/hpack/dynamic-tables", KIND_HEAP,
                          UNITS_BYTES,
@@ -109,7 +74,7 @@ class HpackDynamicTableReporter final : public nsIMemoryReporter {
 
   ~HpackDynamicTableReporter() = default;
 
-  Http2BaseCompressor *mCompressor;
+  Http2BaseCompressor* mCompressor;
 
   friend class Http2BaseCompressor;
 };
@@ -126,30 +91,12 @@ void Http2CompressionCleanup() {
   gStaticReporter = nullptr;
 }
 
-<<<<<<< HEAD
-static void AddStaticElement(const nsCString &name, const nsCString &value) {
-  nvPair *pair = new nvPair(name, value);
-||||||| merged common ancestors
-static void
-AddStaticElement(const nsCString &name, const nsCString &value)
-{
-  nvPair *pair = new nvPair(name, value);
-=======
 static void AddStaticElement(const nsCString& name, const nsCString& value) {
   nvPair* pair = new nvPair(name, value);
->>>>>>> upstream-releases
   gStaticHeaders->Push(pair);
 }
 
-<<<<<<< HEAD
-static void AddStaticElement(const nsCString &name) {
-||||||| merged common ancestors
-static void
-AddStaticElement(const nsCString &name)
-{
-=======
 static void AddStaticElement(const nsCString& name) {
->>>>>>> upstream-releases
   AddStaticElement(name, EmptyCString());
 }
 
@@ -239,46 +186,18 @@ nvFIFO::nvFIFO() : mByteCount(0), mTable() { InitializeStaticHeaders(); }
 
 nvFIFO::~nvFIFO() { Clear(); }
 
-<<<<<<< HEAD
-void nvFIFO::AddElement(const nsCString &name, const nsCString &value) {
-  nvPair *pair = new nvPair(name, value);
-||||||| merged common ancestors
-void
-nvFIFO::AddElement(const nsCString &name, const nsCString &value)
-{
-  nvPair *pair = new nvPair(name, value);
-=======
 void nvFIFO::AddElement(const nsCString& name, const nsCString& value) {
   nvPair* pair = new nvPair(name, value);
->>>>>>> upstream-releases
   mByteCount += pair->Size();
   mTable.PushFront(pair);
 }
 
-<<<<<<< HEAD
-void nvFIFO::AddElement(const nsCString &name) {
-||||||| merged common ancestors
-void
-nvFIFO::AddElement(const nsCString &name)
-{
-=======
 void nvFIFO::AddElement(const nsCString& name) {
->>>>>>> upstream-releases
   AddElement(name, EmptyCString());
 }
 
-<<<<<<< HEAD
-void nvFIFO::RemoveElement() {
-  nvPair *pair = static_cast<nvPair *>(mTable.Pop());
-||||||| merged common ancestors
-void
-nvFIFO::RemoveElement()
-{
-  nvPair *pair = static_cast<nvPair *>(mTable.Pop());
-=======
 void nvFIFO::RemoveElement() {
   nvPair* pair = static_cast<nvPair*>(mTable.Pop());
->>>>>>> upstream-releases
   if (pair) {
     mByteCount -= pair->Size();
     delete pair;
@@ -297,25 +216,10 @@ size_t nvFIFO::StaticLength() const { return gStaticHeaders->GetSize(); }
 
 void nvFIFO::Clear() {
   mByteCount = 0;
-<<<<<<< HEAD
-  while (mTable.GetSize()) delete static_cast<nvPair *>(mTable.Pop());
-||||||| merged common ancestors
-  while (mTable.GetSize())
-    delete static_cast<nvPair *>(mTable.Pop());
-=======
   while (mTable.GetSize()) delete static_cast<nvPair*>(mTable.Pop());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const nvPair *nvFIFO::operator[](size_t index) const {
-||||||| merged common ancestors
-const nvPair *
-nvFIFO::operator[] (size_t index) const
-{
-=======
 const nvPair* nvFIFO::operator[](size_t index) const {
->>>>>>> upstream-releases
   // NWGH - ensure index > 0
   // NWGH - subtract 1 from index here
   if (index >= (mTable.GetSize() + gStaticHeaders->GetSize())) {
@@ -324,15 +228,8 @@ const nvPair* nvFIFO::operator[](size_t index) const {
     return nullptr;
   }
   if (index >= gStaticHeaders->GetSize()) {
-<<<<<<< HEAD
-    return static_cast<nvPair *>(
-        mTable.ObjectAt(index - gStaticHeaders->GetSize()));
-||||||| merged common ancestors
-    return static_cast<nvPair *>(mTable.ObjectAt(index - gStaticHeaders->GetSize()));
-=======
     return static_cast<nvPair*>(
         mTable.ObjectAt(index - gStaticHeaders->GetSize()));
->>>>>>> upstream-releases
   }
   return static_cast<nvPair*>(gStaticHeaders->ObjectAt(index));
 }
@@ -373,15 +270,7 @@ size_t Http2BaseCompressor::SizeOfExcludingThis(
   return size;
 }
 
-<<<<<<< HEAD
-void Http2BaseCompressor::MakeRoom(uint32_t amount, const char *direction) {
-||||||| merged common ancestors
-void
-Http2BaseCompressor::MakeRoom(uint32_t amount, const char *direction)
-{
-=======
 void Http2BaseCompressor::MakeRoom(uint32_t amount, const char* direction) {
->>>>>>> upstream-releases
   uint32_t countEvicted = 0;
   uint32_t bytesEvicted = 0;
 
@@ -417,15 +306,7 @@ void Http2BaseCompressor::MakeRoom(uint32_t amount, const char* direction) {
   }
 }
 
-<<<<<<< HEAD
-void Http2BaseCompressor::DumpState(const char *preamble) {
-||||||| merged common ancestors
-void
-Http2BaseCompressor::DumpState()
-{
-=======
 void Http2BaseCompressor::DumpState(const char* preamble) {
->>>>>>> upstream-releases
   if (!LOG_ENABLED()) {
     return;
   }
@@ -477,20 +358,6 @@ nsresult Http2BaseCompressor::SetInitialMaxBufferSize(uint32_t maxBufferSize) {
   return NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD
-void Http2BaseCompressor::SetDumpTables(bool dumpTables) {
-  mDumpTables = dumpTables;
-}
-
-nsresult Http2Decompressor::DecodeHeaderBlock(const uint8_t *data,
-                                              uint32_t datalen,
-                                              nsACString &output, bool isPush) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::DecodeHeaderBlock(const uint8_t *data, uint32_t datalen,
-                                     nsACString &output, bool isPush)
-{
-=======
 void Http2BaseCompressor::SetDumpTables(bool dumpTables) {
   mDumpTables = dumpTables;
 }
@@ -498,7 +365,6 @@ void Http2BaseCompressor::SetDumpTables(bool dumpTables) {
 nsresult Http2Decompressor::DecodeHeaderBlock(const uint8_t* data,
                                               uint32_t datalen,
                                               nsACString& output, bool isPush) {
->>>>>>> upstream-releases
   mSetInitialMaxBufferSizeAllowed = false;
   mOffset = 0;
   mData = data;
@@ -520,12 +386,7 @@ nsresult Http2Decompressor::DecodeHeaderBlock(const uint8_t* data,
   nsresult softfail_rv = NS_OK;
   while (NS_SUCCEEDED(rv) && (mOffset < mDataLen)) {
     bool modifiesTable = true;
-<<<<<<< HEAD
-    const char *preamble = "Decompressor state after ?";
-||||||| merged common ancestors
-=======
     const char* preamble = "Decompressor state after ?";
->>>>>>> upstream-releases
     if (mData[mOffset] & 0x80) {
       rv = DoIndexed();
       preamble = "Decompressor state after indexed";
@@ -575,15 +436,7 @@ nsresult Http2Decompressor::DecodeHeaderBlock(const uint8_t* data,
   return softfail_rv;
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::DecodeInteger(uint32_t prefixLen, uint32_t &accum) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::DecodeInteger(uint32_t prefixLen, uint32_t &accum)
-{
-=======
 nsresult Http2Decompressor::DecodeInteger(uint32_t prefixLen, uint32_t& accum) {
->>>>>>> upstream-releases
   accum = 0;
 
   if (prefixLen) {
@@ -638,18 +491,10 @@ nsresult Http2Decompressor::DecodeInteger(uint32_t prefixLen, uint32_t& accum) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static bool HasConnectionBasedAuth(const nsACString &headerValue) {
-||||||| merged common ancestors
-static bool
-HasConnectionBasedAuth(const nsACString& headerValue)
-{
-=======
 static bool HasConnectionBasedAuth(const nsACString& headerValue) {
->>>>>>> upstream-releases
   nsCCharSeparatedTokenizer t(headerValue, '\n');
   while (t.hasMoreTokens()) {
-    const nsDependentCSubstring &authMethod = t.nextToken();
+    const nsDependentCSubstring& authMethod = t.nextToken();
     if (authMethod.LowerCaseEqualsLiteral("ntlm")) {
       return true;
     }
@@ -661,20 +506,9 @@ static bool HasConnectionBasedAuth(const nsACString& headerValue) {
   return false;
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::OutputHeader(const nsACString &name,
-                                         const nsACString &value) {
-  // exclusions
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::OutputHeader(const nsACString &name, const nsACString &value)
-{
-    // exclusions
-=======
 nsresult Http2Decompressor::OutputHeader(const nsACString& name,
                                          const nsACString& value) {
   // exclusions
->>>>>>> upstream-releases
   if (!mIsPush &&
       (name.EqualsLiteral("connection") || name.EqualsLiteral("host") ||
        name.EqualsLiteral("keep-alive") ||
@@ -688,14 +522,7 @@ nsresult Http2Decompressor::OutputHeader(const nsACString& name,
   }
 
   // Look for upper case characters in the name.
-<<<<<<< HEAD
-  for (const char *cPtr = name.BeginReading(); cPtr && cPtr < name.EndReading();
-||||||| merged common ancestors
-  for (const char *cPtr = name.BeginReading();
-       cPtr && cPtr < name.EndReading();
-=======
   for (const char* cPtr = name.BeginReading(); cPtr && cPtr < name.EndReading();
->>>>>>> upstream-releases
        ++cPtr) {
     if (*cPtr <= 'Z' && *cPtr >= 'A') {
       nsCString toLog(name);
@@ -707,23 +534,10 @@ nsresult Http2Decompressor::OutputHeader(const nsACString& name,
 
   // Look for CR OR LF in value - could be smuggling Sec 10.3
   // can map to space safely
-<<<<<<< HEAD
-  for (const char *cPtr = value.BeginReading();
-       cPtr && cPtr < value.EndReading(); ++cPtr) {
-    if (*cPtr == '\r' || *cPtr == '\n') {
-      char *wPtr = const_cast<char *>(cPtr);
-||||||| merged common ancestors
-  for (const char *cPtr = value.BeginReading();
-       cPtr && cPtr < value.EndReading();
-       ++cPtr) {
-    if (*cPtr == '\r' || *cPtr== '\n') {
-      char *wPtr = const_cast<char *>(cPtr);
-=======
   for (const char* cPtr = value.BeginReading();
        cPtr && cPtr < value.EndReading(); ++cPtr) {
     if (*cPtr == '\r' || *cPtr == '\n') {
       char* wPtr = const_cast<char*>(cPtr);
->>>>>>> upstream-releases
       *wPtr = ' ';
     }
   }
@@ -747,14 +561,7 @@ nsresult Http2Decompressor::OutputHeader(const nsACString& name,
 
   // http/2 transport level headers shouldn't be gatewayed into http/1
   bool isColonHeader = false;
-<<<<<<< HEAD
-  for (const char *cPtr = name.BeginReading(); cPtr && cPtr < name.EndReading();
-||||||| merged common ancestors
-  for (const char *cPtr = name.BeginReading();
-       cPtr && cPtr < name.EndReading();
-=======
   for (const char* cPtr = name.BeginReading(); cPtr && cPtr < name.EndReading();
->>>>>>> upstream-releases
        ++cPtr) {
     if (*cPtr == ':') {
       isColonHeader = true;
@@ -818,15 +625,7 @@ nsresult Http2Decompressor::OutputHeader(uint32_t index) {
   return OutputHeader(mHeaderTable[index]->mName, mHeaderTable[index]->mValue);
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::CopyHeaderString(uint32_t index, nsACString &name) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::CopyHeaderString(uint32_t index, nsACString &name)
-{
-=======
 nsresult Http2Decompressor::CopyHeaderString(uint32_t index, nsACString& name) {
->>>>>>> upstream-releases
   // NWGH - make this < index
   // bounds check
   if (mHeaderTable.Length() <= index) {
@@ -838,17 +637,8 @@ nsresult Http2Decompressor::CopyHeaderString(uint32_t index, nsACString& name) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::CopyStringFromInput(uint32_t bytes,
-                                                nsACString &val) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::CopyStringFromInput(uint32_t bytes, nsACString &val)
-{
-=======
 nsresult Http2Decompressor::CopyStringFromInput(uint32_t bytes,
                                                 nsACString& val) {
->>>>>>> upstream-releases
   if (mOffset + bytes > mDataLen) {
     // This is session-fatal.
     return NS_ERROR_FAILURE;
@@ -859,18 +649,8 @@ nsresult Http2Decompressor::CopyStringFromInput(uint32_t bytes,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::DecodeFinalHuffmanCharacter(
-    const HuffmanIncomingTable *table, uint8_t &c, uint8_t &bitsLeft) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::DecodeFinalHuffmanCharacter(const HuffmanIncomingTable *table,
-                                               uint8_t &c, uint8_t &bitsLeft)
-{
-=======
 nsresult Http2Decompressor::DecodeFinalHuffmanCharacter(
     const HuffmanIncomingTable* table, uint8_t& c, uint8_t& bitsLeft) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mOffset <= mDataLen);
   if (mOffset > mDataLen) {
     NS_WARNING("DecodeFinalHuffmanCharacter would read beyond end of buffer");
@@ -910,17 +690,8 @@ nsresult Http2Decompressor::DecodeFinalHuffmanCharacter(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-uint8_t Http2Decompressor::ExtractByte(uint8_t bitsLeft,
-                                       uint32_t &bytesConsumed) {
-||||||| merged common ancestors
-uint8_t
-Http2Decompressor::ExtractByte(uint8_t bitsLeft, uint32_t &bytesConsumed)
-{
-=======
 uint8_t Http2Decompressor::ExtractByte(uint8_t bitsLeft,
                                        uint32_t& bytesConsumed) {
->>>>>>> upstream-releases
   MOZ_DIAGNOSTIC_ASSERT(mOffset < mDataLen);
   uint8_t rv;
 
@@ -943,21 +714,9 @@ uint8_t Http2Decompressor::ExtractByte(uint8_t bitsLeft,
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::DecodeHuffmanCharacter(
-    const HuffmanIncomingTable *table, uint8_t &c, uint32_t &bytesConsumed,
-    uint8_t &bitsLeft) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::DecodeHuffmanCharacter(const HuffmanIncomingTable *table,
-                                          uint8_t &c, uint32_t &bytesConsumed,
-                                          uint8_t &bitsLeft)
-{
-=======
 nsresult Http2Decompressor::DecodeHuffmanCharacter(
     const HuffmanIncomingTable* table, uint8_t& c, uint32_t& bytesConsumed,
     uint8_t& bitsLeft) {
->>>>>>> upstream-releases
   uint8_t idx = ExtractByte(bitsLeft, bytesConsumed);
 
   if (table->IndexHasANextTable(idx)) {
@@ -999,17 +758,8 @@ nsresult Http2Decompressor::DecodeHuffmanCharacter(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::CopyHuffmanStringFromInput(uint32_t bytes,
-                                                       nsACString &val) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::CopyHuffmanStringFromInput(uint32_t bytes, nsACString &val)
-{
-=======
 nsresult Http2Decompressor::CopyHuffmanStringFromInput(uint32_t bytes,
                                                        nsACString& val) {
->>>>>>> upstream-releases
   if (mOffset + bytes > mDataLen) {
     LOG(("CopyHuffmanStringFromInput not enough data"));
     return NS_ERROR_FAILURE;
@@ -1095,20 +845,9 @@ nsresult Http2Decompressor::DoIndexed() {
   return OutputHeader(index);
 }
 
-<<<<<<< HEAD
-nsresult Http2Decompressor::DoLiteralInternal(nsACString &name,
-                                              nsACString &value,
-                                              uint32_t namePrefixLen) {
-||||||| merged common ancestors
-nsresult
-Http2Decompressor::DoLiteralInternal(nsACString &name, nsACString &value,
-                                     uint32_t namePrefixLen)
-{
-=======
 nsresult Http2Decompressor::DoLiteralInternal(nsACString& name,
                                               nsACString& value,
                                               uint32_t namePrefixLen) {
->>>>>>> upstream-releases
   // guts of doliteralwithoutindex and doliteralwithincremental
   MOZ_ASSERT(((mData[mOffset] & 0xF0) == 0x00) ||  // withoutindex
              ((mData[mOffset] & 0xF0) == 0x10) ||  // neverindexed
@@ -1304,24 +1043,10 @@ nsresult Http2Decompressor::DoContextUpdate() {
 
 /////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-nsresult Http2Compressor::EncodeHeaderBlock(
-    const nsCString &nvInput, const nsACString &method, const nsACString &path,
-    const nsACString &host, const nsACString &scheme,
-    const nsACString &protocol, bool simpleConnectForm, nsACString &output) {
-||||||| merged common ancestors
-nsresult
-Http2Compressor::EncodeHeaderBlock(const nsCString &nvInput,
-                                   const nsACString &method, const nsACString &path,
-                                   const nsACString &host, const nsACString &scheme,
-                                   bool connectForm, nsACString &output)
-{
-=======
 nsresult Http2Compressor::EncodeHeaderBlock(
     const nsCString& nvInput, const nsACString& method, const nsACString& path,
     const nsACString& host, const nsACString& scheme,
     const nsACString& protocol, bool simpleConnectForm, nsACString& output) {
->>>>>>> upstream-releases
   mSetInitialMaxBufferSizeAllowed = false;
   mOutput = &output;
   output.Truncate();
@@ -1390,17 +1115,8 @@ nsresult Http2Compressor::EncodeHeaderBlock(
     // colon headers are for http/2 and this is http/1 input, so that
     // is probably a smuggling attack of some kind
     bool isColonHeader = false;
-<<<<<<< HEAD
-    for (const char *cPtr = name.BeginReading();
-         cPtr && cPtr < name.EndReading(); ++cPtr) {
-||||||| merged common ancestors
-    for (const char *cPtr = name.BeginReading();
-         cPtr && cPtr < name.EndReading();
-         ++cPtr) {
-=======
     for (const char* cPtr = name.BeginReading();
          cPtr && cPtr < name.EndReading(); ++cPtr) {
->>>>>>> upstream-releases
       if (*cPtr == ':') {
         isColonHeader = true;
         break;
@@ -1469,18 +1185,8 @@ nsresult Http2Compressor::EncodeHeaderBlock(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
-                               const class nvPair *pair, uint32_t index) {
-||||||| merged common ancestors
-void
-Http2Compressor::DoOutput(Http2Compressor::outputCode code,
-                          const class nvPair *pair, uint32_t index)
-{
-=======
 void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
                                const class nvPair* pair, uint32_t index) {
->>>>>>> upstream-releases
   // start Byte needs to be calculated from the offset after
   // the opcode has been written out in case the output stream
   // buffer gets resized/relocated
@@ -1488,41 +1194,6 @@ void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
   uint8_t* startByte;
 
   switch (code) {
-<<<<<<< HEAD
-    case kNeverIndexedLiteral:
-      LOG(
-          ("HTTP compressor %p neverindex literal with name reference %u %s "
-           "%s\n",
-           this, index, pair->mName.get(), pair->mValue.get()));
-
-      // In this case, the index will have already been adjusted to be 1-based
-      // instead of 0-based.
-      EncodeInteger(4, index);  // 0001 4 bit prefix
-      startByte =
-          reinterpret_cast<unsigned char *>(mOutput->BeginWriting()) + offset;
-      *startByte = (*startByte & 0x0f) | 0x10;
-
-      if (!index) {
-        HuffmanAppend(pair->mName);
-      }
-||||||| merged common ancestors
-  case kNeverIndexedLiteral:
-    LOG(("HTTP compressor %p neverindex literal with name reference %u %s %s\n",
-         this, index, pair->mName.get(), pair->mValue.get()));
-
-    // In this case, the index will have already been adjusted to be 1-based
-    // instead of 0-based.
-    EncodeInteger(4, index); // 0001 4 bit prefix
-    startByte = reinterpret_cast<unsigned char *>(mOutput->BeginWriting()) + offset;
-    *startByte = (*startByte & 0x0f) | 0x10;
-
-    if (!index) {
-      HuffmanAppend(pair->mName);
-    }
-
-    HuffmanAppend(pair->mValue);
-    break;
-=======
     case kNeverIndexedLiteral:
       LOG(
           ("HTTP compressor %p neverindex literal with name reference %u %s "
@@ -1539,7 +1210,6 @@ void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
       if (!index) {
         HuffmanAppend(pair->mName);
       }
->>>>>>> upstream-releases
 
       HuffmanAppend(pair->mValue);
       break;
@@ -1548,25 +1218,12 @@ void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
       LOG(("HTTP compressor %p noindex literal with name reference %u %s %s\n",
            this, index, pair->mName.get(), pair->mValue.get()));
 
-<<<<<<< HEAD
-      // In this case, the index will have already been adjusted to be 1-based
-      // instead of 0-based.
-      EncodeInteger(4, index);  // 0000 4 bit prefix
-      startByte =
-          reinterpret_cast<unsigned char *>(mOutput->BeginWriting()) + offset;
-      *startByte = *startByte & 0x0f;
-||||||| merged common ancestors
-    if (!index) {
-      HuffmanAppend(pair->mName);
-    }
-=======
       // In this case, the index will have already been adjusted to be 1-based
       // instead of 0-based.
       EncodeInteger(4, index);  // 0000 4 bit prefix
       startByte =
           reinterpret_cast<unsigned char*>(mOutput->BeginWriting()) + offset;
       *startByte = *startByte & 0x0f;
->>>>>>> upstream-releases
 
       if (!index) {
         HuffmanAppend(pair->mName);
@@ -1579,25 +1236,12 @@ void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
       LOG(("HTTP compressor %p literal with name reference %u %s %s\n", this,
            index, pair->mName.get(), pair->mValue.get()));
 
-<<<<<<< HEAD
-      // In this case, the index will have already been adjusted to be 1-based
-      // instead of 0-based.
-      EncodeInteger(6, index);  // 01 2 bit prefix
-      startByte =
-          reinterpret_cast<unsigned char *>(mOutput->BeginWriting()) + offset;
-      *startByte = (*startByte & 0x3f) | 0x40;
-||||||| merged common ancestors
-    if (!index) {
-      HuffmanAppend(pair->mName);
-    }
-=======
       // In this case, the index will have already been adjusted to be 1-based
       // instead of 0-based.
       EncodeInteger(6, index);  // 01 2 bit prefix
       startByte =
           reinterpret_cast<unsigned char*>(mOutput->BeginWriting()) + offset;
       *startByte = (*startByte & 0x3f) | 0x40;
->>>>>>> upstream-releases
 
       if (!index) {
         HuffmanAppend(pair->mName);
@@ -1606,20 +1250,6 @@ void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
       HuffmanAppend(pair->mValue);
       break;
 
-<<<<<<< HEAD
-    case kIndex:
-      LOG(("HTTP compressor %p index %u %s %s\n", this, index,
-           pair->mName.get(), pair->mValue.get()));
-      // NWGH - make this plain old index instead of index + 1
-      // In this case, we are passed the raw 0-based C index, and need to
-      // increment to make it 1-based and comply with the spec
-      EncodeInteger(7, index + 1);
-      startByte =
-          reinterpret_cast<unsigned char *>(mOutput->BeginWriting()) + offset;
-      *startByte = *startByte | 0x80;  // 1 1 bit prefix
-      break;
-||||||| merged common ancestors
-=======
     case kIndex:
       LOG(("HTTP compressor %p index %u %s %s\n", this, index,
            pair->mName.get(), pair->mValue.get()));
@@ -1631,7 +1261,6 @@ void Http2Compressor::DoOutput(Http2Compressor::outputCode code,
           reinterpret_cast<unsigned char*>(mOutput->BeginWriting()) + offset;
       *startByte = *startByte | 0x80;  // 1 1 bit prefix
       break;
->>>>>>> upstream-releases
   }
 }
 
@@ -1666,15 +1295,7 @@ void Http2Compressor::EncodeInteger(uint32_t prefixLen, uint32_t val) {
   } while (q);
 }
 
-<<<<<<< HEAD
-void Http2Compressor::HuffmanAppend(const nsCString &value) {
-||||||| merged common ancestors
-void
-Http2Compressor::HuffmanAppend(const nsCString &value)
-{
-=======
 void Http2Compressor::HuffmanAppend(const nsCString& value) {
->>>>>>> upstream-releases
   nsAutoCString buf;
   uint8_t bitsLeft = 8;
   uint32_t length = value.Length();
@@ -1698,14 +1319,7 @@ void Http2Compressor::HuffmanAppend(const nsCString& value) {
       }
       val &= ((1 << bitsLeft) - 1);
       offset = buf.Length() - 1;
-<<<<<<< HEAD
-      startByte =
-          reinterpret_cast<unsigned char *>(buf.BeginWriting()) + offset;
-||||||| merged common ancestors
-      startByte = reinterpret_cast<unsigned char *>(buf.BeginWriting()) + offset;
-=======
       startByte = reinterpret_cast<unsigned char*>(buf.BeginWriting()) + offset;
->>>>>>> upstream-releases
       *startByte = *startByte | static_cast<uint8_t>(val & 0xFF);
       if (huffLength >= bitsLeft) {
         huffLength -= bitsLeft;
@@ -1744,15 +1358,8 @@ void Http2Compressor::HuffmanAppend(const nsCString& value) {
   uint32_t bufLength = buf.Length();
   offset = mOutput->Length();
   EncodeInteger(7, bufLength);
-<<<<<<< HEAD
-  startByte =
-      reinterpret_cast<unsigned char *>(mOutput->BeginWriting()) + offset;
-||||||| merged common ancestors
-  startByte = reinterpret_cast<unsigned char *>(mOutput->BeginWriting()) + offset;
-=======
   startByte =
       reinterpret_cast<unsigned char*>(mOutput->BeginWriting()) + offset;
->>>>>>> upstream-releases
   *startByte = *startByte | 0x80;
 
   // Finally, we can add our REAL data!
@@ -1821,15 +1428,8 @@ void Http2Compressor::ProcessHeader(const nvPair inputPair, bool noLocalIndex,
 void Http2Compressor::EncodeTableSizeChange(uint32_t newMaxSize) {
   uint32_t offset = mOutput->Length();
   EncodeInteger(5, newMaxSize);
-<<<<<<< HEAD
-  uint8_t *startByte =
-      reinterpret_cast<uint8_t *>(mOutput->BeginWriting()) + offset;
-||||||| merged common ancestors
-  uint8_t *startByte = reinterpret_cast<uint8_t *>(mOutput->BeginWriting()) + offset;
-=======
   uint8_t* startByte =
       reinterpret_cast<uint8_t*>(mOutput->BeginWriting()) + offset;
->>>>>>> upstream-releases
   *startByte = *startByte | 0x20;
 }
 

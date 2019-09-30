@@ -1,27 +1,3 @@
-<<<<<<< HEAD
----
-root:
-  items:
-    -
-      bounds: [10, 10, 938, 200]
-      clip-rect: [10, 10, 938, 200]
-      type: clip
-      id: 2
-      complex:
-        -
-          rect: [10, 10, 938, 200]
-          radius: [97, 97]
-          "clip-mode": clip
-    -
-      bounds: [10, 10, 100, 200]
-      clip-and-scroll: 2
-      type: border
-      width: [300, 300, 300, 300]
-      border-type: normal
-      color: green
-      style: solid
-||||||| merged common ancestors
-=======
 ---
 root:
   items:
@@ -43,4 +19,3 @@ root:
       border-type: normal
       color: green
       style: solid
->>>>>>> upstream-releases

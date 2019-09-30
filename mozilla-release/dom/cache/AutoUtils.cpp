@@ -28,43 +28,16 @@ using mozilla::ipc::PBackgroundParent;
 
 namespace {
 
-<<<<<<< HEAD
 enum CleanupAction { Forget, Delete };
 
 void CleanupChild(CacheReadStream& aReadStream, CleanupAction aAction) {
-||||||| merged common ancestors
-enum CleanupAction
-{
-  Forget,
-  Delete
-};
-
-void
-CleanupChild(CacheReadStream& aReadStream, CleanupAction aAction)
-{
-=======
-enum CleanupAction { Forget, Delete };
-
-void CleanupChild(CacheReadStream& aReadStream, CleanupAction aAction) {
->>>>>>> upstream-releases
   // fds cleaned up by mStreamCleanupList
   // PChildToParentStream actors cleaned up by mStreamCleanupList
 }
 
-<<<<<<< HEAD
-void CleanupChild(CacheReadStreamOrVoid& aReadStreamOrVoid,
-                  CleanupAction aAction) {
-  if (aReadStreamOrVoid.type() == CacheReadStreamOrVoid::Tvoid_t) {
-||||||| merged common ancestors
-void
-CleanupChild(CacheReadStreamOrVoid& aReadStreamOrVoid, CleanupAction aAction)
-{
-  if (aReadStreamOrVoid.type() == CacheReadStreamOrVoid::Tvoid_t) {
-=======
 void CleanupChild(Maybe<CacheReadStream>& aMaybeReadStream,
                   CleanupAction aAction) {
   if (aMaybeReadStream.isNothing()) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -164,26 +137,11 @@ void AutoChildOpArgs::Add(InternalRequest* aRequest, BodyAction aBodyAction,
     }
     case CacheOpArgs::TCacheMatchAllArgs: {
       CacheMatchAllArgs& args = mOpArgs.get_CacheMatchAllArgs();
-<<<<<<< HEAD
-      MOZ_DIAGNOSTIC_ASSERT(args.requestOrVoid().type() ==
-                            CacheRequestOrVoid::Tvoid_t);
-      args.requestOrVoid() = CacheRequest();
-      mTypeUtils->ToCacheRequest(args.requestOrVoid().get_CacheRequest(),
-                                 aRequest, aBodyAction, aSchemeAction,
-                                 mStreamCleanupList, aRv);
-||||||| merged common ancestors
-      MOZ_DIAGNOSTIC_ASSERT(args.requestOrVoid().type() == CacheRequestOrVoid::Tvoid_t);
-      args.requestOrVoid() = CacheRequest();
-      mTypeUtils->ToCacheRequest(args.requestOrVoid().get_CacheRequest(),
-                                 aRequest, aBodyAction, aSchemeAction,
-                                 mStreamCleanupList, aRv);
-=======
       MOZ_DIAGNOSTIC_ASSERT(args.maybeRequest().isNothing());
       args.maybeRequest().emplace(CacheRequest());
       mTypeUtils->ToCacheRequest(args.maybeRequest().ref(), aRequest,
                                  aBodyAction, aSchemeAction, mStreamCleanupList,
                                  aRv);
->>>>>>> upstream-releases
       break;
     }
     case CacheOpArgs::TCacheDeleteArgs: {
@@ -194,26 +152,11 @@ void AutoChildOpArgs::Add(InternalRequest* aRequest, BodyAction aBodyAction,
     }
     case CacheOpArgs::TCacheKeysArgs: {
       CacheKeysArgs& args = mOpArgs.get_CacheKeysArgs();
-<<<<<<< HEAD
-      MOZ_DIAGNOSTIC_ASSERT(args.requestOrVoid().type() ==
-                            CacheRequestOrVoid::Tvoid_t);
-      args.requestOrVoid() = CacheRequest();
-      mTypeUtils->ToCacheRequest(args.requestOrVoid().get_CacheRequest(),
-                                 aRequest, aBodyAction, aSchemeAction,
-                                 mStreamCleanupList, aRv);
-||||||| merged common ancestors
-      MOZ_DIAGNOSTIC_ASSERT(args.requestOrVoid().type() == CacheRequestOrVoid::Tvoid_t);
-      args.requestOrVoid() = CacheRequest();
-      mTypeUtils->ToCacheRequest(args.requestOrVoid().get_CacheRequest(),
-                                  aRequest, aBodyAction, aSchemeAction,
-                                  mStreamCleanupList, aRv);
-=======
       MOZ_DIAGNOSTIC_ASSERT(args.maybeRequest().isNothing());
       args.maybeRequest().emplace(CacheRequest());
       mTypeUtils->ToCacheRequest(args.maybeRequest().ref(), aRequest,
                                  aBodyAction, aSchemeAction, mStreamCleanupList,
                                  aRv);
->>>>>>> upstream-releases
       break;
     }
     case CacheOpArgs::TStorageMatchArgs: {
@@ -452,17 +395,8 @@ void AutoParentOpResult::Add(const SavedResponse& aSavedResponse,
   switch (mOpResult.type()) {
     case CacheOpResult::TCacheMatchResult: {
       CacheMatchResult& result = mOpResult.get_CacheMatchResult();
-<<<<<<< HEAD
-      MOZ_DIAGNOSTIC_ASSERT(result.responseOrVoid().type() ==
-                            CacheResponseOrVoid::Tvoid_t);
-      result.responseOrVoid() = aSavedResponse.mValue;
-||||||| merged common ancestors
-      MOZ_DIAGNOSTIC_ASSERT(result.responseOrVoid().type() == CacheResponseOrVoid::Tvoid_t);
-      result.responseOrVoid() = aSavedResponse.mValue;
-=======
       MOZ_DIAGNOSTIC_ASSERT(result.maybeResponse().isNothing());
       result.maybeResponse().emplace(aSavedResponse.mValue);
->>>>>>> upstream-releases
       SerializeResponseBody(aSavedResponse, aStreamList,
                             &result.maybeResponse().ref());
       break;
@@ -482,17 +416,8 @@ void AutoParentOpResult::Add(const SavedResponse& aSavedResponse,
     }
     case CacheOpResult::TStorageMatchResult: {
       StorageMatchResult& result = mOpResult.get_StorageMatchResult();
-<<<<<<< HEAD
-      MOZ_DIAGNOSTIC_ASSERT(result.responseOrVoid().type() ==
-                            CacheResponseOrVoid::Tvoid_t);
-      result.responseOrVoid() = aSavedResponse.mValue;
-||||||| merged common ancestors
-      MOZ_DIAGNOSTIC_ASSERT(result.responseOrVoid().type() == CacheResponseOrVoid::Tvoid_t);
-      result.responseOrVoid() = aSavedResponse.mValue;
-=======
       MOZ_DIAGNOSTIC_ASSERT(result.maybeResponse().isNothing());
       result.maybeResponse().emplace(aSavedResponse.mValue);
->>>>>>> upstream-releases
       SerializeResponseBody(aSavedResponse, aStreamList,
                             &result.maybeResponse().ref());
       break;

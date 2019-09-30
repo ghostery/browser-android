@@ -17,24 +17,6 @@ namespace mozilla {
 namespace dom {
 
 //----------------------------------------------------------------------
-<<<<<<< HEAD
-// implementation:
-
-SVGRect::SVGRect(nsIContent* aParent, float x, float y, float w, float h)
-    : SVGIRect(), mParent(aParent), mX(x), mY(y), mWidth(w), mHeight(h) {}
-
-//----------------------------------------------------------------------
-||||||| merged common ancestors
-// implementation:
-
-SVGRect::SVGRect(nsIContent* aParent, float x, float y, float w, float h)
-  : SVGIRect(), mParent(aParent), mX(x), mY(y), mWidth(w), mHeight(h)
-{
-}
-
-//----------------------------------------------------------------------
-=======
->>>>>>> upstream-releases
 // nsISupports methods:
 
 NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(SVGRect, mParent)
@@ -47,13 +29,6 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(SVGRect)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 //----------------------------------------------------------------------
 // implementation:
 
@@ -80,7 +55,6 @@ float SVGRect::X() {
       return mRect.x;
   }
 }
->>>>>>> upstream-releases
 
 float SVGRect::Y() {
   switch (mType) {
@@ -106,21 +80,6 @@ float SVGRect::Width() {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<mozilla::dom::SVGRect> NS_NewSVGRect(nsIContent* aParent,
-                                                      float aX, float aY,
-                                                      float aWidth,
-                                                      float aHeight) {
-  RefPtr<mozilla::dom::SVGRect> rect =
-      new mozilla::dom::SVGRect(aParent, aX, aY, aWidth, aHeight);
-||||||| merged common ancestors
-already_AddRefed<mozilla::dom::SVGRect>
-NS_NewSVGRect(nsIContent* aParent, float aX, float aY, float aWidth,
-              float aHeight)
-{
-  RefPtr<mozilla::dom::SVGRect> rect =
-    new mozilla::dom::SVGRect(aParent, aX, aY, aWidth, aHeight);
-=======
 float SVGRect::Height() {
   switch (mType) {
     case AnimValue:
@@ -164,7 +123,6 @@ void SVGRect::SetY(float aY, ErrorResult& aRv) {
       mRect.y = aY;
   }
 }
->>>>>>> upstream-releases
 
 void SVGRect::SetWidth(float aWidth, ErrorResult& aRv) {
   switch (mType) {
@@ -182,17 +140,6 @@ void SVGRect::SetWidth(float aWidth, ErrorResult& aRv) {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<mozilla::dom::SVGRect> NS_NewSVGRect(nsIContent* aParent,
-                                                      const Rect& aRect) {
-  return NS_NewSVGRect(aParent, aRect.x, aRect.y, aRect.width, aRect.height);
-||||||| merged common ancestors
-already_AddRefed<mozilla::dom::SVGRect>
-NS_NewSVGRect(nsIContent* aParent, const Rect& aRect)
-{
-  return NS_NewSVGRect(aParent, aRect.x, aRect.y,
-                       aRect.width, aRect.height);
-=======
 void SVGRect::SetHeight(float aHeight, ErrorResult& aRv) {
   switch (mType) {
     case AnimValue:
@@ -207,13 +154,7 @@ void SVGRect::SetHeight(float aHeight, ErrorResult& aRv) {
     default:
       mRect.height = aHeight;
   }
->>>>>>> upstream-releases
 }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

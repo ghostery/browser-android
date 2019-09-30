@@ -63,28 +63,12 @@ public:
         kCW_Direction travel clockwise; the same added with kCCW_Direction
         travel counterclockwise.
     */
-<<<<<<< HEAD
-    enum Direction {
-        kCW_Direction,  //!< contour travels clockwise
-        kCCW_Direction, //!< contour travels counterclockwise
-||||||| merged common ancestors
-    enum Direction {
-        kCW_Direction,  //!< Contour travels in a clockwise direction
-        kCCW_Direction, //!< Contour travels in a counterclockwise direction
-=======
     enum Direction : int {
         kCW_Direction,  //!< contour travels clockwise
         kCCW_Direction, //!< contour travels counterclockwise
->>>>>>> upstream-releases
     };
 
-<<<<<<< HEAD
-    /** Constucts an empty SkPath. By default, SkPath has no verbs, no SkPoint, and no weights.
-||||||| merged common ancestors
-    /** By default, SkPath has no verbs, no SkPoint, and no weights.
-=======
     /** Constructs an empty SkPath. By default, SkPath has no verbs, no SkPoint, and no weights.
->>>>>>> upstream-releases
         SkPath::FillType is set to kWinding_FillType.
 
         @return  empty SkPath
@@ -567,11 +551,6 @@ public:
     */
     void shrinkToFit();
 
-    /** Shrinks SkPath verb array and SkPoint array storage to discard unused capacity.
-        May reduce the heap overhead for SkPath known to be fully constructed.
-    */
-    void shrinkToFit();
-
     /** Adds beginning of contour at SkPoint (x, y).
 
         @param x  x-axis value of contour start
@@ -606,18 +585,9 @@ public:
         lineTo() appends kMove_Verb to verb array and (0, 0) to SkPoint array, if needed.
         lineTo() then appends kLine_Verb to verb array and (x, y) to SkPoint array.
 
-<<<<<<< HEAD
-        @param x  end of added line in x
-        @param y  end of added line in y
-        @return   reference to SkPath
-||||||| merged common ancestors
-        @param x  end of added line in x
-        @param y  end of added line in y
-=======
         @param x  end of added line on x-axis
         @param y  end of added line on y-axis
         @return   reference to SkPath
->>>>>>> upstream-releases
     */
     SkPath& lineTo(SkScalar x, SkScalar y);
 
@@ -656,24 +626,11 @@ public:
         then appends kQuad_Verb to verb array; and (x1, y1), (x2, y2)
         to SkPoint array.
 
-<<<<<<< HEAD
-        @param x1  control SkPoint of quad in x
-        @param y1  control SkPoint of quad in y
-        @param x2  end SkPoint of quad in x
-        @param y2  end SkPoint of quad in y
-        @return    reference to SkPath
-||||||| merged common ancestors
-        @param x1  control SkPoint of quad in x
-        @param y1  control SkPoint of quad in y
-        @param x2  end SkPoint of quad in x
-        @param y2  end SkPoint of quad in y
-=======
         @param x1  control SkPoint of quad on x-axis
         @param y1  control SkPoint of quad on y-axis
         @param x2  end SkPoint of quad on x-axis
         @param y2  end SkPoint of quad on y-axis
         @return    reference to SkPath
->>>>>>> upstream-releases
     */
     SkPath& quadTo(SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2);
 
@@ -797,22 +754,6 @@ public:
         then appends kCubic_Verb to verb array; and (x1, y1), (x2, y2), (x3, y3)
         to SkPoint array.
 
-<<<<<<< HEAD
-        @param x1  first control SkPoint of cubic in x
-        @param y1  first control SkPoint of cubic in y
-        @param x2  second control SkPoint of cubic in x
-        @param y2  second control SkPoint of cubic in y
-        @param x3  end SkPoint of cubic in x
-        @param y3  end SkPoint of cubic in y
-        @return    reference to SkPath
-||||||| merged common ancestors
-        @param x1  first control SkPoint of cubic in x
-        @param y1  first control SkPoint of cubic in y
-        @param x2  second control SkPoint of cubic in x
-        @param y2  second control SkPoint of cubic in y
-        @param x3  end SkPoint of cubic in x
-        @param y3  end SkPoint of cubic in y
-=======
         @param x1  first control SkPoint of cubic on x-axis
         @param y1  first control SkPoint of cubic on y-axis
         @param x2  second control SkPoint of cubic on x-axis
@@ -820,7 +761,6 @@ public:
         @param x3  end SkPoint of cubic on x-axis
         @param y3  end SkPoint of cubic on y-axis
         @return    reference to SkPath
->>>>>>> upstream-releases
     */
     SkPath& cubicTo(SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2,
                     SkScalar x3, SkScalar y3);
@@ -854,22 +794,6 @@ public:
         Cubic end is last point plus vector (dx2, dy2).
         Function name stands for "relative cubic to".
 
-<<<<<<< HEAD
-        @param x1  offset from last point to first cubic control on x-axis
-        @param y1  offset from last point to first cubic control on y-axis
-        @param x2  offset from last point to second cubic control on x-axis
-        @param y2  offset from last point to second cubic control on y-axis
-        @param x3  offset from last point to cubic end on x-axis
-        @param y3  offset from last point to cubic end on y-axis
-        @return    reference to SkPath
-||||||| merged common ancestors
-        @param x1  offset from last point x to first cubic control x
-        @param y1  offset from last point x to first cubic control y
-        @param x2  offset from last point x to second cubic control x
-        @param y2  offset from last point x to second cubic control y
-        @param x3  offset from last point x to cubic end x
-        @param y3  offset from last point x to cubic end y
-=======
         @param dx1  offset from last point to first cubic control on x-axis
         @param dy1  offset from last point to first cubic control on y-axis
         @param dx2  offset from last point to second cubic control on x-axis
@@ -877,18 +801,9 @@ public:
         @param dx3  offset from last point to cubic end on x-axis
         @param dy3  offset from last point to cubic end on y-axis
         @return    reference to SkPath
->>>>>>> upstream-releases
     */
-<<<<<<< HEAD
-    SkPath& rCubicTo(SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2,
-                     SkScalar x3, SkScalar y3);
-||||||| merged common ancestors
-    void rCubicTo(SkScalar x1, SkScalar y1, SkScalar x2, SkScalar y2,
-                  SkScalar x3, SkScalar y3);
-=======
     SkPath& rCubicTo(SkScalar dx1, SkScalar dy1, SkScalar dx2, SkScalar dy2,
                      SkScalar dx3, SkScalar dy3);
->>>>>>> upstream-releases
 
     /** Appends arc to SkPath. Arc added is part of ellipse
         bounded by oval, from startAngle through sweepAngle. Both startAngle and
@@ -912,17 +827,6 @@ public:
         last SkPath point to (x1, y1), and tangent from (x1, y1) to (x2, y2). Arc
         is part of circle sized to radius, positioned so it touches both tangent lines.
 
-<<<<<<< HEAD
-        @param x1      x-axis value common to pair of tangents
-        @param y1      y-axis value common to pair of tangents
-        @param x2      x-axis value end of second tangent
-        @param y2      y-axis value end of second tangent
-||||||| merged common ancestors
-        @param x1      x common to pair of tangents
-        @param y1      y common to pair of tangents
-        @param x2      x end of second tangent
-        @param y2      y end of second tangent
-=======
         If last Path Point does not start Arc, arcTo appends connecting Line to Path.
         The length of Vector from (x1, y1) to (x2, y2) does not affect Arc.
 
@@ -936,7 +840,6 @@ public:
         @param y1      y-axis value common to pair of tangents
         @param x2      x-axis value end of second tangent
         @param y2      y-axis value end of second tangent
->>>>>>> upstream-releases
         @param radius  distance from arc to circle center
         @return        reference to SkPath
     */
@@ -1007,21 +910,10 @@ public:
         clockwise or counterclockwise,
         and smaller or larger.
 
-<<<<<<< HEAD
-        Arc sweep is always less than 360 degrees. arcTo() appends line to xy if either
-        radii are zero, or if last SkPath SkPoint equals (x, y). arcTo() scales radii r to fit
-        last SkPath SkPoint and xy if both are greater than zero but too small to describe
-        an arc.
-||||||| merged common ancestors
-        Arc sweep is always less than 360 degrees. arcTo() appends line to xy if either radii are zero,
-        or if last SkPath SkPoint equals (x, y). arcTo() scales radii r to fit last SkPath SkPoint and
-        xy if both are greater than zero but too small to describe an arc.
-=======
         Arc sweep is always less than 360 degrees. arcTo() appends line to xy if either
         radii are zero, or if last SkPath SkPoint equals (xy.fX, xy.fY). arcTo() scales radii r to
         fit last SkPath SkPoint and xy if both are greater than zero but too small to describe
         an arc.
->>>>>>> upstream-releases
 
         arcTo() appends up to four conic curves.
         arcTo() implements the functionality of SVG arc, although SVG sweep-flag value is
@@ -1328,26 +1220,8 @@ public:
         @param pts    array of line sharing end and start SkPoint
         @param count  length of SkPoint array
         @param close  true to add line connecting contour end and start
-<<<<<<< HEAD
-        @return       reference to SkPath
-||||||| merged common ancestors
-=======
         @return       reference to SkPath
     */
-    SkPath& addPoly(const SkPoint pts[], int count, bool close);
-
-    /** Adds contour created from list. Contour added starts at list[0], then adds a line
-        for every additional SkPoint in list. If close is true, appends kClose_Verb to SkPath,
-        connecting last and first SkPoint in list.
-
-        If list is empty, append kMove_Verb to path.
-
-        @param list   array of SkPoint
-        @param close  true to add line connecting contour end and start
-        @return       reference to SkPath
->>>>>>> upstream-releases
-    */
-<<<<<<< HEAD
     SkPath& addPoly(const SkPoint pts[], int count, bool close);
 
     /** Adds contour created from list. Contour added starts at list[0], then adds a line
@@ -1363,13 +1237,6 @@ public:
     SkPath& addPoly(const std::initializer_list<SkPoint>& list, bool close) {
         return this->addPoly(list.begin(), SkToInt(list.size()), close);
     }
-||||||| merged common ancestors
-    void addPoly(const SkPoint pts[], int count, bool close);
-=======
-    SkPath& addPoly(const std::initializer_list<SkPoint>& list, bool close) {
-        return this->addPoly(list.begin(), SkToInt(list.size()), close);
-    }
->>>>>>> upstream-releases
 
     /** \enum SkPath::AddPathMode
         AddPathMode chooses how addPath() appends. Adding one SkPath to another can extend
@@ -1812,22 +1679,6 @@ public:
     bool isValid() const { return this->isValidImpl() && fPathRef->isValid(); }
 
 private:
-<<<<<<< HEAD
-    sk_sp<SkPathRef>                                     fPathRef;
-    int                                                  fLastMoveToIndex;
-    mutable SkAtomic<Convexity, sk_memory_order_relaxed> fConvexity;       // SkPath::Convexity
-   mutable SkAtomic<uint8_t, sk_memory_order_relaxed> fFirstDirection; // SkPathPriv::FirstDirection
-    uint8_t                                              fFillType    : 2;
-    uint8_t                                              fIsVolatile  : 1;
-    uint8_t                                              fIsBadForDAA : 1;
-||||||| merged common ancestors
-    sk_sp<SkPathRef>                                     fPathRef;
-    int                                                  fLastMoveToIndex;
-    uint8_t                                              fFillType;
-    mutable SkAtomic<Convexity, sk_memory_order_relaxed> fConvexity;
-    mutable SkAtomic<uint8_t, sk_memory_order_relaxed>   fFirstDirection;// SkPathPriv::FirstDirection
-    SkBool8                                              fIsVolatile;
-=======
     sk_sp<SkPathRef>               fPathRef;
     int                            fLastMoveToIndex;
     mutable std::atomic<Convexity> fConvexity;
@@ -1835,7 +1686,6 @@ private:
     uint8_t                        fFillType    : 2;
     uint8_t                        fIsVolatile  : 1;
     uint8_t                        fIsBadForDAA : 1;
->>>>>>> upstream-releases
 
     /** Resets all fields other than fPathRef to their initial 'empty' values.
      *  Assumes the caller has already emptied fPathRef.

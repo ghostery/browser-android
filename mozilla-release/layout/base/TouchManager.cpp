@@ -20,45 +20,21 @@ namespace mozilla {
 nsDataHashtable<nsUint32HashKey, TouchManager::TouchInfo>*
     TouchManager::sCaptureTouchList;
 
-<<<<<<< HEAD
-/*static*/ void TouchManager::InitializeStatics() {
-||||||| merged common ancestors
-/*static*/ void
-TouchManager::InitializeStatics()
-{
-=======
 /*static*/
 void TouchManager::InitializeStatics() {
->>>>>>> upstream-releases
   NS_ASSERTION(!sCaptureTouchList, "InitializeStatics called multiple times!");
   sCaptureTouchList =
       new nsDataHashtable<nsUint32HashKey, TouchManager::TouchInfo>;
 }
 
-<<<<<<< HEAD
-/*static*/ void TouchManager::ReleaseStatics() {
-||||||| merged common ancestors
-/*static*/ void
-TouchManager::ReleaseStatics()
-{
-=======
 /*static*/
 void TouchManager::ReleaseStatics() {
->>>>>>> upstream-releases
   NS_ASSERTION(sCaptureTouchList, "ReleaseStatics called without Initialize!");
   delete sCaptureTouchList;
   sCaptureTouchList = nullptr;
 }
 
-<<<<<<< HEAD
-void TouchManager::Init(PresShell* aPresShell, nsIDocument* aDocument) {
-||||||| merged common ancestors
-void
-TouchManager::Init(PresShell* aPresShell, nsIDocument* aDocument)
-{
-=======
 void TouchManager::Init(PresShell* aPresShell, Document* aDocument) {
->>>>>>> upstream-releases
   mPresShell = aPresShell;
   mDocument = aDocument;
 }
@@ -77,19 +53,9 @@ static nsIContent* GetNonAnonymousAncestor(EventTarget* aTarget) {
   return content;
 }
 
-<<<<<<< HEAD
-/*static*/ void TouchManager::EvictTouchPoint(RefPtr<Touch>& aTouch,
-                                              nsIDocument* aLimitToDocument) {
-||||||| merged common ancestors
-/*static*/ void
-TouchManager::EvictTouchPoint(RefPtr<Touch>& aTouch,
-                              nsIDocument* aLimitToDocument)
-{
-=======
 /*static*/
 void TouchManager::EvictTouchPoint(RefPtr<Touch>& aTouch,
                                    Document* aLimitToDocument) {
->>>>>>> upstream-releases
   nsCOMPtr<nsINode> node(do_QueryInterface(aTouch->mOriginalTarget));
   if (node) {
     Document* doc = node->GetComposedDoc();
@@ -116,22 +82,9 @@ void TouchManager::EvictTouchPoint(RefPtr<Touch>& aTouch,
   }
 }
 
-<<<<<<< HEAD
-/*static*/ void TouchManager::AppendToTouchList(
-    WidgetTouchEvent::TouchArray* aTouchList) {
-  for (auto iter = sCaptureTouchList->Iter(); !iter.Done(); iter.Next()) {
-||||||| merged common ancestors
-/*static*/ void
-TouchManager::AppendToTouchList(WidgetTouchEvent::TouchArray* aTouchList)
-{
-  for (auto iter = sCaptureTouchList->Iter();
-       !iter.Done();
-       iter.Next()) {
-=======
 /*static*/
 void TouchManager::AppendToTouchList(WidgetTouchEvent::TouchArray* aTouchList) {
   for (auto iter = sCaptureTouchList->Iter(); !iter.Done(); iter.Next()) {
->>>>>>> upstream-releases
     RefPtr<Touch>& touch = iter.Data().mTouch;
     touch->mChanged = false;
     aTouchList->AppendElement(touch);
@@ -146,18 +99,9 @@ void TouchManager::EvictTouches() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ nsIFrame* TouchManager::SetupTarget(WidgetTouchEvent* aEvent,
-                                                 nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ nsIFrame*
-TouchManager::SetupTarget(WidgetTouchEvent* aEvent, nsIFrame* aFrame)
-{
-=======
 /* static */
 nsIFrame* TouchManager::SetupTarget(WidgetTouchEvent* aEvent,
                                     nsIFrame* aFrame) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aEvent);
 
   if (!aEvent || aEvent->mMessage != eTouchStart) {
@@ -208,18 +152,9 @@ nsIFrame* TouchManager::SetupTarget(WidgetTouchEvent* aEvent,
   return target;
 }
 
-<<<<<<< HEAD
-/* static */ nsIFrame* TouchManager::SuppressInvalidPointsAndGetTargetedFrame(
-    WidgetTouchEvent* aEvent) {
-||||||| merged common ancestors
-/* static */ nsIFrame*
-TouchManager::SuppressInvalidPointsAndGetTargetedFrame(WidgetTouchEvent* aEvent)
-{
-=======
 /* static */
 nsIFrame* TouchManager::SuppressInvalidPointsAndGetTargetedFrame(
     WidgetTouchEvent* aEvent) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aEvent);
 
   if (!aEvent || aEvent->mMessage != eTouchStart) {
@@ -284,19 +219,6 @@ nsIFrame* TouchManager::SuppressInvalidPointsAndGetTargetedFrame(
   return frame;
 }
 
-<<<<<<< HEAD
-bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
-                                  bool& aTouchIsNew, bool& aIsHandlingUserInput,
-                                  nsCOMPtr<nsIContent>& aCurrentEventContent) {
-||||||| merged common ancestors
-bool
-TouchManager::PreHandleEvent(WidgetEvent* aEvent,
-                             nsEventStatus* aStatus,
-                             bool& aTouchIsNew,
-                             bool& aIsHandlingUserInput,
-                             nsCOMPtr<nsIContent>& aCurrentEventContent)
-{
-=======
 bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
                                   bool& aTouchIsNew,
                                   nsCOMPtr<nsIContent>& aCurrentEventContent) {
@@ -304,7 +226,6 @@ bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
 
   // NOTE: If you need to handle new event messages here, you need to add new
   //       cases in PresShell::EventHandler::PrepareToDispatchEvent().
->>>>>>> upstream-releases
   switch (aEvent->mMessage) {
     case eTouchStart: {
       WidgetTouchEvent* touchEvent = aEvent->AsTouchEvent();
@@ -476,17 +397,8 @@ bool TouchManager::PreHandleEvent(WidgetEvent* aEvent, nsEventStatus* aStatus,
   return true;
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<nsIContent>
-TouchManager::GetAnyCapturedTouchTarget() {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<nsIContent>
-TouchManager::GetAnyCapturedTouchTarget()
-{
-=======
 /*static*/
 already_AddRefed<nsIContent> TouchManager::GetAnyCapturedTouchTarget() {
->>>>>>> upstream-releases
   nsCOMPtr<nsIContent> result = nullptr;
   if (sCaptureTouchList->Count() == 0) {
     return result.forget();
@@ -504,29 +416,13 @@ already_AddRefed<nsIContent> TouchManager::GetAnyCapturedTouchTarget() {
   return result.forget();
 }
 
-<<<<<<< HEAD
-/*static*/ bool TouchManager::HasCapturedTouch(int32_t aId) {
-||||||| merged common ancestors
-/*static*/ bool
-TouchManager::HasCapturedTouch(int32_t aId)
-{
-=======
 /*static*/
 bool TouchManager::HasCapturedTouch(int32_t aId) {
->>>>>>> upstream-releases
   return sCaptureTouchList->Contains(aId);
 }
 
-<<<<<<< HEAD
-/*static*/ already_AddRefed<Touch> TouchManager::GetCapturedTouch(int32_t aId) {
-||||||| merged common ancestors
-/*static*/ already_AddRefed<Touch>
-TouchManager::GetCapturedTouch(int32_t aId)
-{
-=======
 /*static*/
 already_AddRefed<Touch> TouchManager::GetCapturedTouch(int32_t aId) {
->>>>>>> upstream-releases
   RefPtr<Touch> touch;
   TouchInfo info;
   if (sCaptureTouchList->Get(aId, &info)) {
@@ -535,19 +431,9 @@ already_AddRefed<Touch> TouchManager::GetCapturedTouch(int32_t aId) {
   return touch.forget();
 }
 
-<<<<<<< HEAD
-/*static*/ bool TouchManager::ShouldConvertTouchToPointer(
-    const Touch* aTouch, const WidgetTouchEvent* aEvent) {
-||||||| merged common ancestors
-/*static*/ bool
-TouchManager::ShouldConvertTouchToPointer(const Touch* aTouch,
-                                          const WidgetTouchEvent* aEvent)
-{
-=======
 /*static*/
 bool TouchManager::ShouldConvertTouchToPointer(const Touch* aTouch,
                                                const WidgetTouchEvent* aEvent) {
->>>>>>> upstream-releases
   if (!aTouch || !aTouch->convertToPointer) {
     return false;
   }

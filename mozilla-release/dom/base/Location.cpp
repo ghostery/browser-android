@@ -104,16 +104,8 @@ already_AddRefed<nsDocShellLoadState> Location::CheckURL(
   // after the document was loaded.
 
   nsCOMPtr<nsPIDOMWindowInner> incumbent =
-<<<<<<< HEAD
-      do_QueryInterface(mozilla::dom::GetIncumbentGlobal());
-  nsCOMPtr<nsIDocument> doc = incumbent ? incumbent->GetDoc() : nullptr;
-||||||| merged common ancestors
-    do_QueryInterface(mozilla::dom::GetIncumbentGlobal());
-  nsCOMPtr<nsIDocument> doc = incumbent ? incumbent->GetDoc() : nullptr;
-=======
       do_QueryInterface(mozilla::dom::GetIncumbentGlobal());
   nsCOMPtr<Document> doc = incumbent ? incumbent->GetDoc() : nullptr;
->>>>>>> upstream-releases
 
   if (doc) {
     nsCOMPtr<nsIURI> docOriginalURI, docCurrentURI, principalURI;
@@ -155,37 +147,17 @@ already_AddRefed<nsDocShellLoadState> Location::CheckURL(
   }
 
   // Create load info
-<<<<<<< HEAD
-  RefPtr<nsDocShellLoadState> loadState = new nsDocShellLoadState();
-||||||| merged common ancestors
-  RefPtr<nsDocShellLoadInfo> loadInfo = new nsDocShellLoadInfo();
-=======
   RefPtr<nsDocShellLoadState> loadState = new nsDocShellLoadState(aURI);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  loadState->SetTriggeringPrincipal(triggeringPrincipal);
-||||||| merged common ancestors
-  loadInfo->SetTriggeringPrincipal(triggeringPrincipal);
-=======
   loadState->SetTriggeringPrincipal(triggeringPrincipal);
   if (doc) {
     loadState->SetCsp(doc->GetCsp());
   }
->>>>>>> upstream-releases
 
   if (sourceURI) {
-<<<<<<< HEAD
-    loadState->SetReferrer(sourceURI);
-    loadState->SetReferrerPolicy(referrerPolicy);
-||||||| merged common ancestors
-    loadInfo->SetReferrer(sourceURI);
-    loadInfo->SetReferrerPolicy(referrerPolicy);
-=======
     nsCOMPtr<nsIReferrerInfo> referrerInfo =
         new ReferrerInfo(sourceURI, referrerPolicy);
     loadState->SetReferrerInfo(referrerInfo);
->>>>>>> upstream-releases
   }
 
   return loadState.forget();
@@ -253,21 +225,10 @@ void Location::SetURI(nsIURI* aURI, nsIPrincipal& aSubjectPrincipal,
       loadState->SetSourceDocShell(sourceWindow->GetDocShell());
     }
 
-<<<<<<< HEAD
-    loadState->SetURI(aURI);
     loadState->SetLoadFlags(nsIWebNavigation::LOAD_FLAGS_NONE);
     loadState->SetFirstParty(true);
 
     nsresult rv = docShell->LoadURI(loadState);
-||||||| merged common ancestors
-    nsresult rv = docShell->LoadURI(aURI, loadInfo,
-                                    nsIWebNavigation::LOAD_FLAGS_NONE, true);
-=======
-    loadState->SetLoadFlags(nsIWebNavigation::LOAD_FLAGS_NONE);
-    loadState->SetFirstParty(true);
-
-    nsresult rv = docShell->LoadURI(loadState);
->>>>>>> upstream-releases
     if (NS_WARN_IF(NS_FAILED(rv))) {
       aRv.Throw(rv);
     }
@@ -849,18 +810,8 @@ void Location::Assign(const nsAString& aUrl, nsIPrincipal& aSubjectPrincipal,
   DoSetHref(aUrl, aSubjectPrincipal, false, aRv);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIURI> Location::GetSourceBaseURL() {
-  nsIDocument* doc = GetEntryDocument();
-||||||| merged common ancestors
-already_AddRefed<nsIURI>
-Location::GetSourceBaseURL()
-{
-  nsIDocument* doc = GetEntryDocument();
-=======
 already_AddRefed<nsIURI> Location::GetSourceBaseURL() {
   Document* doc = GetEntryDocument();
->>>>>>> upstream-releases
   // If there's no entry document, we either have no Script Entry Point or one
   // that isn't a DOM Window.  This doesn't generally happen with the DOM, but
   // can sometimes happen with extension code in certain IPC configurations.  If

@@ -364,19 +364,10 @@ PlacesTreeView.prototype = {
       rowsInserted++;
 
       // Recursively do containers.
-<<<<<<< HEAD
-      if (!this._flatList &&
-          curChild instanceof Ci.nsINavHistoryContainerResultNode) {
-||||||| merged common ancestors
-      if (!this._flatList &&
-          curChild instanceof Ci.nsINavHistoryContainerResultNode &&
-          !this._controller.hasCachedLivemarkInfo(curChild)) {
-=======
       if (
         !this._flatList &&
         curChild instanceof Ci.nsINavHistoryContainerResultNode
       ) {
->>>>>>> upstream-releases
         let uri = curChild.uri;
         let isopen = false;
 
@@ -969,25 +960,6 @@ PlacesTreeView.prototype = {
 
   nodeKeywordChanged(aNode, aNewKeyword) {},
 
-<<<<<<< HEAD
-  nodeAnnotationChanged() {},
-
-||||||| merged common ancestors
-  nodeAnnotationChanged: function PTV_nodeAnnotationChanged(aNode, aAnno) {
-    if (aAnno == PlacesUtils.LMANNO_FEEDURI) {
-      PlacesUtils.livemarks.getLivemark({ id: aNode.itemId })
-        .then(aLivemark => {
-          this._controller.cacheLivemarkInfo(aNode, aLivemark);
-          let properties = this._cellProperties.get(aNode);
-          this._cellProperties.set(aNode, properties += " livemark");
-          // The livemark attribute is set as a cell property on the title cell.
-          this._invalidateCellValue(aNode, this.COLUMN_TYPE_TITLE);
-        }, Cu.reportError);
-    }
-  },
-
-=======
->>>>>>> upstream-releases
   nodeDateAddedChanged: function PTV_nodeDateAddedChanged(aNode, aNewValue) {
     this._invalidateCellValue(aNode, this.COLUMN_TYPE_DATEADDED);
   },
@@ -1134,27 +1106,10 @@ PlacesTreeView.prototype = {
         // and didn't find a match, so we can open our item.
         if (!parent && !item.containerOpen) {
           item.containerOpen = true;
-<<<<<<< HEAD
-      }
-    }
-
-||||||| merged common ancestors
-      }
-    }
-
-    if (this._controller.hasCachedLivemarkInfo(aContainer)) {
-      let queryOptions = PlacesUtils.asQuery(this._result.root).queryOptions;
-      if (!queryOptions.excludeItems) {
-        this._populateLivemarkContainer(aContainer);
-      }
-    }
-
-=======
         }
       }
     }
 
->>>>>>> upstream-releases
     this._tree.endUpdateBatch();
 
     // Restore selection.
@@ -1343,27 +1298,7 @@ PlacesTreeView.prototype = {
             properties += " dayContainer";
           } else if (PlacesUtils.nodeIsHost(node)) {
             properties += " hostContainer";
-<<<<<<< HEAD
-||||||| merged common ancestors
-        } else if (nodeType == Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER ||
-                 nodeType == Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER_SHORTCUT) {
-          if (itemId != -1) {
-            if (this._controller.hasCachedLivemarkInfo(node)) {
-              properties += " livemark";
-            } else {
-              PlacesUtils.livemarks.getLivemark({ id: itemId })
-                .then(aLivemark => {
-                  this._controller.cacheLivemarkInfo(node, aLivemark);
-                  let livemarkProps = this._cellProperties.get(node);
-                  this._cellProperties.set(node, livemarkProps += " livemark");
-                  // The livemark attribute is set as a cell property on the title cell.
-                  this._invalidateCellValue(node, this.COLUMN_TYPE_TITLE);
-                }, () => undefined);
-            }
           }
-=======
-          }
->>>>>>> upstream-releases
         }
 
         if (itemId == -1) {
@@ -1436,20 +1371,8 @@ PlacesTreeView.prototype = {
   isContainerEmpty: function PTV_isContainerEmpty(aRow) {
     if (this._flatList) {
       return true;
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-    let node = this._rows[aRow];
-    if (this._controller.hasCachedLivemarkInfo(node)) {
-      let queryOptions = PlacesUtils.asQuery(this._result.root).queryOptions;
-      return queryOptions.excludeItems;
     }
 
-=======
-    }
-
->>>>>>> upstream-releases
     // All containers are listed in the rows array.
     return !this._rows[aRow].hasChildren;
   },
@@ -1532,16 +1455,7 @@ PlacesTreeView.prototype = {
         ) {
           // If we are within a sorted view, insert at the end.
           index = -1;
-<<<<<<< HEAD
-        } else if (queryOptions.excludeItems ||
-                 queryOptions.excludeQueries) {
-||||||| merged common ancestors
-        } else if (queryOptions.excludeItems ||
-                 queryOptions.excludeQueries ||
-                 queryOptions.excludeReadOnlyFolders) {
-=======
         } else if (queryOptions.excludeItems || queryOptions.excludeQueries) {
->>>>>>> upstream-releases
           // Some item may be invisible, insert near last selected one.
           // We don't replace index here to avoid requests to the db,
           // instead it will be calculated later by the controller.
@@ -1865,17 +1779,8 @@ PlacesTreeView.prototype = {
     }
     let itemGuid = node.bookmarkGuid;
 
-<<<<<<< HEAD
-    // Only bookmark-nodes are editable.
-    if (!itemGuid)
-||||||| merged common ancestors
-    // Only bookmark-nodes are editable.  Fortunately, this checks also takes
-    // care of livemark children.
-    if (itemGuid == "")
-=======
     // Only bookmark-nodes are editable.
     if (!itemGuid) {
->>>>>>> upstream-releases
       return false;
     }
 
@@ -1923,24 +1828,9 @@ PlacesTreeView.prototype = {
     }
   },
 
-<<<<<<< HEAD
-  selectionChanged() { },
-  cycleCell(aRow, aColumn) { },
-  performAction(aAction) { },
-  performActionOnRow(aAction, aRow) { },
-  performActionOnCell(aAction, aRow, aColumn) { },
-||||||| merged common ancestors
-  selectionChanged() { },
-  cycleCell(aRow, aColumn) { },
-  isSelectable(aRow, aColumn) { return false; },
-  performAction(aAction) { },
-  performActionOnRow(aAction, aRow) { },
-  performActionOnCell(aAction, aRow, aColumn) { },
-=======
   selectionChanged() {},
   cycleCell(aRow, aColumn) {},
   performAction(aAction) {},
   performActionOnRow(aAction, aRow) {},
   performActionOnCell(aAction, aRow, aColumn) {},
->>>>>>> upstream-releases
 };

@@ -3,17 +3,10 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const { AddonManager } = require("resource://gre/modules/AddonManager.jsm");
-const { adbProcess } = require("devtools/shared/adb/adb-process");
-||||||| merged common ancestors
-const { ADB } = require("devtools/shared/adb/adb");
-=======
 /* import-globals-from helper-adb.js */
 Services.scriptloader.loadSubScript(CHROME_URL_ROOT + "helper-adb.js", this);
 
 const { AddonManager } = require("resource://gre/modules/AddonManager.jsm");
->>>>>>> upstream-releases
 
 /**
  * Check that USB Devices scanning can be enabled and disabled from the connect page.
@@ -68,31 +61,11 @@ add_task(async function() {
     "Got the expected addon.installTelemetryInfo"
   );
 
-<<<<<<< HEAD
-  info("Check that the addon was installed with the proper source");
-  const adbExtensionId = Services.prefs.getCharPref("devtools.remote.adb.extensionID");
-  const addon = await AddonManager.getAddonByID(adbExtensionId);
-  Assert.deepEqual(addon.installTelemetryInfo, { source: "about:debugging" },
-    "Got the expected addon.installTelemetryInfo");
-
-  // Right now we are resuming as soon as "USB devices enabled" is displayed, but ADB
-||||||| merged common ancestors
-  // Right now we are resuming as soon as "USB devices enabled" is displayed, but ADB
-=======
   // Right now we are resuming as soon as "USB enabled" is displayed, but ADB
->>>>>>> upstream-releases
   // might still be starting up. If we move to uninstall directly, the ADB startup will
   // fail and we will have an unhandled promise rejection.
   // See Bug 1498469.
-<<<<<<< HEAD
-  info("Wait until ADB has started.");
-  await waitUntil(() => adbProcess.ready);
-||||||| merged common ancestors
-  info("Wait until ADB has started.");
-  await waitUntil(() => ADB.ready);
-=======
   await waitForAdbStart();
->>>>>>> upstream-releases
 
   info("Click on the toggle button");
   usbToggleButton.click();

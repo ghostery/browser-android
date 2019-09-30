@@ -31,17 +31,9 @@ this.EXPORTED_SYMBOLS = ["assert"];
 
 const isFennec = () => AppConstants.platform == "android";
 const isFirefox = () =>
-<<<<<<< HEAD
-    Services.appinfo.ID == "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
-const isThunderbird = () =>
-    Services.appinfo.ID == "{3550f703-e582-4d05-9a08-453d09bdfdc6}";
-||||||| merged common ancestors
-    Services.appinfo.ID == "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
-=======
   Services.appinfo.ID == "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 const isThunderbird = () =>
   Services.appinfo.ID == "{3550f703-e582-4d05-9a08-453d09bdfdc6}";
->>>>>>> upstream-releases
 
 /**
  * Shorthands for common assertions made in Marionette.
@@ -106,24 +98,6 @@ assert.firefox = function(msg = "") {
 };
 
 /**
-<<<<<<< HEAD
- * Asserts that the current browser is Firefox Desktop or Thunderbird.
- *
- * @param {string=} msg
- *     Custom error message.
- *
- * @throws {UnsupportedOperationError}
- *     If current browser is not Firefox or Thunderbird.
- */
-assert.desktop = function(msg = "") {
-  msg = msg || "Only supported in desktop applications";
-  assert.that(obj => isFirefox(obj) || isThunderbird(obj),
-      msg, UnsupportedOperationError)();
-};
-
-/**
-||||||| merged common ancestors
-=======
  * Asserts that the current browser is Firefox Desktop or Thunderbird.
  *
  * @param {string=} msg
@@ -142,7 +116,6 @@ assert.desktop = function(msg = "") {
 };
 
 /**
->>>>>>> upstream-releases
  * Asserts that the current browser is Fennec, or Firefox for Android.
  *
  * @param {string=} msg

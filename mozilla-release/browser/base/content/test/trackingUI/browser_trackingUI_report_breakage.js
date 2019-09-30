@@ -3,19 +3,6 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const TRACKING_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
-const BENIGN_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/benignPage.html";
-const COOKIE_PAGE = "http://not-tracking.example.com/browser/browser/base/content/test/trackingUI/cookiePage.html";
-
-||||||| merged common ancestors
-const TRACKING_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
-const BENIGN_PAGE = "http://tracking.example.org/browser/browser/base/content/test/trackingUI/benignPage.html";
-const COOKIE_PAGE = "http://not-tracking.example.com/browser/browser/base/content/test/trackingUI/cookiePage.html";
-
-const CB_PREF = "browser.contentblocking.enabled";
-const CB_UI_PREF = "browser.contentblocking.ui.enabled";
-=======
 const TRACKING_PAGE =
   "http://tracking.example.org/browser/browser/base/content/test/trackingUI/trackingPage.html";
 const BENIGN_PAGE =
@@ -25,7 +12,6 @@ const COOKIE_PAGE =
 
 const CM_PREF = "privacy.trackingprotection.cryptomining.enabled";
 const FP_PREF = "privacy.trackingprotection.fingerprinting.enabled";
->>>>>>> upstream-releases
 const TP_PREF = "privacy.trackingprotection.enabled";
 const CB_PREF = "network.cookie.cookieBehavior";
 
@@ -59,16 +45,6 @@ add_task(async function setup() {
     UrlClassifierTestUtils.cleanupTestTrackers();
   });
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-function openIdentityPopup() {
-  let mainView = document.getElementById("identity-popup-mainView");
-  let viewShown = BrowserTestUtils.waitForEvent(mainView, "ViewShown");
-  gIdentityHandler._identityBox.click();
-  return viewShown;
-}
-
-=======
   await SpecialPowers.pushPrefEnv({
     set: [
       [ContentBlocking.prefIntroCount, ContentBlocking.MAX_INTROS],
@@ -94,7 +70,6 @@ function openIdentityPopup() {
   });
 });
 
->>>>>>> upstream-releases
 add_task(async function testReportBreakageVisibility() {
   let scenarios = [
     {
@@ -300,120 +275,9 @@ async function testReportBreakage(url, tags) {
   let path =
     i.primaryScheme + "://" + i.primaryHost + ":" + i.primaryPort + "/";
 
-<<<<<<< HEAD
-  Services.prefs.setBoolPref(TP_PREF, true);
-||||||| merged common ancestors
-  Services.prefs.setBoolPref(TP_PREF, true);
-  Services.prefs.setBoolPref(CB_PREF, true);
-=======
->>>>>>> upstream-releases
   Services.prefs.setBoolPref(PREF_REPORT_BREAKAGE_ENABLED, true);
   Services.prefs.setStringPref(PREF_REPORT_BREAKAGE_URL, path);
 
-<<<<<<< HEAD
-  // Make sure that we correctly strip the query.
-  let url = TRACKING_PAGE + "?a=b&1=abc&unicode=🦊";
-  await BrowserTestUtils.withNewTab(url, async function() {
-    await openIdentityPopup();
-
-    let reportBreakageButton = document.getElementById("identity-popup-content-blocking-report-breakage");
-    ok(BrowserTestUtils.is_visible(reportBreakageButton), "report breakage button is visible");
-    let reportBreakageView = document.getElementById("identity-popup-breakageReportView");
-    let viewShown = BrowserTestUtils.waitForEvent(reportBreakageView, "ViewShown");
-    reportBreakageButton.click();
-    await viewShown;
-
-    let submitButton = document.getElementById("identity-popup-breakageReportView-submit");
-    let reportURL = document.getElementById("identity-popup-breakageReportView-collection-url").value;
-
-    is(reportURL, TRACKING_PAGE, "Shows the correct URL in the report UI.");
-
-    // Make sure that sending the report closes the identity popup.
-    let popuphidden = BrowserTestUtils.waitForEvent(gIdentityHandler._identityPopup, "popuphidden");
-
-    // Check that we're receiving a good report.
-    await new Promise(resolve => {
-      server.registerPathHandler("/", async (request, response) => {
-        is(request.method, "POST", "request was a post");
-
-        // Extract and "parse" the form data in the request body.
-        let body = CommonUtils.readBytesFromInputStream(request.bodyInputStream);
-        let boundary = request.getHeader("Content-Type").match(/boundary=-+([^-]*)/i)[1];
-        let regex = new RegExp("-+" + boundary + "-*\\s+");
-        let sections = body.split(regex);
-
-        let prefs = [
-          "privacy.trackingprotection.enabled",
-          "privacy.trackingprotection.pbmode.enabled",
-          "urlclassifier.trackingTable",
-          "network.http.referer.defaultPolicy",
-          "network.http.referer.defaultPolicy.pbmode",
-          "network.cookie.cookieBehavior",
-          "network.cookie.lifetimePolicy",
-          "privacy.restrict3rdpartystorage.expiration",
-        ];
-        let prefsBody = "";
-
-        for (let pref of prefs) {
-          prefsBody += `${pref}: ${Preferences.get(pref)}\r\n`;
-        }
-
-        Assert.deepEqual(sections, [
-||||||| merged common ancestors
-  // Make sure that we correctly strip the query.
-  let url = TRACKING_PAGE + "?a=b&1=abc&unicode=🦊";
-  await BrowserTestUtils.withNewTab(url, async function() {
-    await openIdentityPopup();
-
-    let reportBreakageButton = document.getElementById("identity-popup-content-blocking-report-breakage");
-    ok(BrowserTestUtils.is_visible(reportBreakageButton), "report breakage button is visible");
-    let reportBreakageView = document.getElementById("identity-popup-breakageReportView");
-    let viewShown = BrowserTestUtils.waitForEvent(reportBreakageView, "ViewShown");
-    reportBreakageButton.click();
-    await viewShown;
-
-    let submitButton = document.getElementById("identity-popup-breakageReportView-submit");
-    let reportURL = document.getElementById("identity-popup-breakageReportView-collection-url").textContent;
-
-    is(reportURL, TRACKING_PAGE, "Shows the correct URL in the report UI.");
-
-    // Make sure that sending the report closes the identity popup.
-    let popuphidden = BrowserTestUtils.waitForEvent(gIdentityHandler._identityPopup, "popuphidden");
-
-    // Check that we're receiving a good report.
-    await new Promise(resolve => {
-      server.registerPathHandler("/", async (request, response) => {
-        is(request.method, "POST", "request was a post");
-
-        // Extract and "parse" the form data in the request body.
-        let body = CommonUtils.readBytesFromInputStream(request.bodyInputStream);
-        let boundary = request.getHeader("Content-Type").match(/boundary=-+([^-]*)/i)[1];
-        let regex = new RegExp("-+" + boundary + "-*\\s+");
-        let sections = body.split(regex);
-
-        let prefs = [
-          "privacy.trackingprotection.enabled",
-          "privacy.trackingprotection.pbmode.enabled",
-          "browser.contentblocking.trackingprotection.control-center.ui.enabled",
-          "urlclassifier.trackingTable",
-          "network.http.referer.defaultPolicy",
-          "network.http.referer.defaultPolicy.pbmode",
-          "browser.contentblocking.rejecttrackers.control-center.ui.enabled",
-          "network.cookie.cookieBehavior",
-          "network.cookie.lifetimePolicy",
-          "privacy.restrict3rdpartystorage.expiration",
-          "browser.fastblock.enabled",
-          "browser.contentblocking.fastblock.control-center.ui.enabled",
-          "browser.fastblock.timeout",
-        ];
-        let prefsBody = "";
-
-        for (let pref of prefs) {
-          prefsBody += `${pref}: ${Preferences.get(pref)}\r\n`;
-        }
-
-        Assert.deepEqual(sections, [
-=======
   await openIdentityPopup();
 
   let comments = document.getElementById(
@@ -488,7 +352,6 @@ async function testReportBreakage(url, tags) {
       Assert.deepEqual(
         sections,
         [
->>>>>>> upstream-releases
           "",
           `Content-Disposition: form-data; name=\"title\"\r\n\r\n${
             Services.io.newURI(reportURL).host
@@ -519,28 +382,6 @@ async function testReportBreakage(url, tags) {
   // Stop the server.
   await new Promise(r => server.stop(r));
 
-<<<<<<< HEAD
-  Services.prefs.clearUserPref(TP_PREF);
-  Services.prefs.clearUserPref(PREF_REPORT_BREAKAGE_ENABLED);
-  Services.prefs.clearUserPref(PREF_REPORT_BREAKAGE_URL);
-});
-
-add_task(async function cleanup() {
-  // Clear prefs that are touched in this test again for sanity.
-  Services.prefs.clearUserPref(TP_PREF);
-||||||| merged common ancestors
-  Services.prefs.clearUserPref(CB_PREF);
-  Services.prefs.clearUserPref(TP_PREF);
-  Services.prefs.clearUserPref(PREF_REPORT_BREAKAGE_ENABLED);
-  Services.prefs.clearUserPref(PREF_REPORT_BREAKAGE_URL);
-});
-
-add_task(async function cleanup() {
-  // Clear prefs that are touched in this test again for sanity.
-  Services.prefs.clearUserPref(CB_PREF);
-  Services.prefs.clearUserPref(TP_PREF);
-=======
->>>>>>> upstream-releases
   Services.prefs.clearUserPref(PREF_REPORT_BREAKAGE_ENABLED);
   Services.prefs.clearUserPref(PREF_REPORT_BREAKAGE_URL);
 }

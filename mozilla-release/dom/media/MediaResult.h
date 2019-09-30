@@ -67,25 +67,11 @@ class MediaResult {
 };
 
 #ifdef _MSC_VER
-<<<<<<< HEAD
-#define RESULT_DETAIL(arg, ...) \
-  nsPrintfCString("%s: " arg, __FUNCSIG__, ##__VA_ARGS__)
-||||||| merged common ancestors
-#define RESULT_DETAIL(arg, ...) nsPrintfCString("%s: " arg, __FUNCSIG__, ##__VA_ARGS__)
-=======
 #  define RESULT_DETAIL(arg, ...) \
     nsPrintfCString("%s: " arg, __FUNCSIG__, ##__VA_ARGS__)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define RESULT_DETAIL(arg, ...) \
-  nsPrintfCString("%s: " arg, __PRETTY_FUNCTION__, ##__VA_ARGS__)
-||||||| merged common ancestors
-#define RESULT_DETAIL(arg, ...) nsPrintfCString("%s: " arg, __PRETTY_FUNCTION__, ##__VA_ARGS__)
-=======
 #  define RESULT_DETAIL(arg, ...) \
     nsPrintfCString("%s: " arg, __PRETTY_FUNCTION__, ##__VA_ARGS__)
->>>>>>> upstream-releases
 #endif
 
 }  // namespace mozilla

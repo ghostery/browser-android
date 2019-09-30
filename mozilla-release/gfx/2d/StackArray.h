@@ -9,17 +9,8 @@
  */
 
 template <class T, size_t size>
-<<<<<<< HEAD
-class StackArray {
- public:
-||||||| merged common ancestors
-class StackArray
-{
-public:
-=======
 class StackArray final {
  public:
->>>>>>> upstream-releases
   explicit StackArray(size_t count) {
     if (count > size) {
       mData = new T[count];

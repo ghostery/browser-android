@@ -15,41 +15,11 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-ProfileBuffer::ProfileBuffer(uint32_t aCapacity)
-    : mEntryIndexMask(0), mRangeStart(0), mRangeEnd(0), mCapacity(0) {
-  // Round aCapacity up to the nearest power of two, so that we can index
-  // mEntries with a simple mask and don't need to do a slow modulo operation.
-  const uint32_t UINT32_MAX_POWER_OF_TWO = 1 << 31;
-  MOZ_RELEASE_ASSERT(aCapacity <= UINT32_MAX_POWER_OF_TWO,
-                     "aCapacity is larger than what we support");
-  mCapacity = RoundUpPow2(aCapacity);
-  mEntryIndexMask = mCapacity - 1;
-  mEntries = MakeUnique<ProfileBufferEntry[]>(mCapacity);
-}
-||||||| merged common ancestors
-ProfileBuffer::ProfileBuffer(uint32_t aEntrySize)
-  : mEntryIndexMask(0)
-  , mRangeStart(0)
-  , mRangeEnd(0)
-  , mEntrySize(0)
-{
-  // Round aEntrySize up to the nearest power of two, so that we can index
-  // mEntries with a simple mask and don't need to do a slow modulo operation.
-  const uint32_t UINT32_MAX_POWER_OF_TWO = 1 << 31;
-  MOZ_RELEASE_ASSERT(aEntrySize <= UINT32_MAX_POWER_OF_TWO,
-                     "aEntrySize is larger than what we support");
-  mEntrySize = RoundUpPow2(aEntrySize);
-  mEntryIndexMask = mEntrySize - 1;
-  mEntries = MakeUnique<ProfileBufferEntry[]>(mEntrySize);
-}
-=======
 ProfileBuffer::ProfileBuffer(PowerOfTwo32 aCapacity)
     : mEntries(MakeUnique<ProfileBufferEntry[]>(aCapacity.Value())),
       mEntryIndexMask(aCapacity.Mask()),
       mRangeStart(0),
       mRangeEnd(0) {}
->>>>>>> upstream-releases
 
 ProfileBuffer::~ProfileBuffer() {
   while (mStoredMarkers.peek()) {
@@ -62,16 +32,8 @@ void ProfileBuffer::AddEntry(const ProfileBufferEntry& aEntry) {
   GetEntry(mRangeEnd++) = aEntry;
 
   // The distance between mRangeStart and mRangeEnd must never exceed
-<<<<<<< HEAD
-  // mCapacity, so advance mRangeStart if necessary.
-  if (mRangeEnd - mRangeStart > mCapacity) {
-||||||| merged common ancestors
-  // mEntrySize, so advance mRangeStart if necessary.
-  if (mRangeEnd - mRangeStart > mEntrySize) {
-=======
   // capacity, so advance mRangeStart if necessary.
   if (mRangeEnd - mRangeStart > mEntryIndexMask.MaskValue() + 1) {
->>>>>>> upstream-releases
     mRangeStart++;
   }
 }
@@ -87,24 +49,10 @@ void ProfileBuffer::AddStoredMarker(ProfilerMarker* aStoredMarker) {
   mStoredMarkers.insert(aStoredMarker);
 }
 
-<<<<<<< HEAD
-void ProfileBuffer::CollectCodeLocation(
-    const char* aLabel, const char* aStr, uint32_t aFrameFlags,
-    const Maybe<uint32_t>& aLineNumber, const Maybe<uint32_t>& aColumnNumber,
-    const Maybe<js::ProfilingStackFrame::Category>& aCategory) {
-||||||| merged common ancestors
-void
-ProfileBuffer::CollectCodeLocation(
-  const char* aLabel, const char* aStr,
-  const Maybe<uint32_t>& aLineNumber, const Maybe<uint32_t>& aColumnNumber,
-  const Maybe<js::ProfilingStackFrame::Category>& aCategory)
-{
-=======
 void ProfileBuffer::CollectCodeLocation(
     const char* aLabel, const char* aStr, uint32_t aFrameFlags,
     const Maybe<uint32_t>& aLineNumber, const Maybe<uint32_t>& aColumnNumber,
     const Maybe<JS::ProfilingCategoryPair>& aCategoryPair) {
->>>>>>> upstream-releases
   AddEntry(ProfileBufferEntry::Label(aLabel));
   AddEntry(ProfileBufferEntry::FrameFlags(uint64_t(aFrameFlags)));
 
@@ -231,14 +179,6 @@ void ProfileBufferCollector::CollectProfilingStackFrame(
     }
   }
 
-<<<<<<< HEAD
-  mBuf.CollectCodeLocation(label, dynamicString, aFrame.flags(), line, column,
-                           Some(aFrame.category()));
-||||||| merged common ancestors
-  mBuf.CollectCodeLocation(label, dynamicString, line, column,
-                           Some(aFrame.category()));
-=======
   mBuf.CollectCodeLocation(label, dynamicString, aFrame.flags(), line, column,
                            Some(aFrame.categoryPair()));
->>>>>>> upstream-releases
 }

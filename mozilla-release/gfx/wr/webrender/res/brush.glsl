@@ -117,17 +117,9 @@ void main(void) {
         vi,
         ph.specific_prim_address,
         ph.local_rect,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/brush.glsl
-        segment_rect,
-        ivec4(ph.user_data, segment_user_data),
-||||||| merged common ancestors
-        local_segment_rect,
-        ivec4(ph.user_data, segment_user_data),
-=======
         segment_rect,
         ph.user_data,
         segment_user_data,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/brush.glsl
         transform.m,
         pic_task,
         brush_flags,

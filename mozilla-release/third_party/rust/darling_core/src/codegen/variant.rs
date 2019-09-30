@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-use proc_macro2::TokenStream;
-use quote::{TokenStreamExt, ToTokens};
-||||||| merged common ancestors
-use quote::{Tokens, ToTokens};
-=======
 use std::borrow::Cow;
 
 use proc_macro2::TokenStream;
 use quote::{ToTokens, TokenStreamExt};
->>>>>>> upstream-releases
 use syn::Ident;
 
 use ast::Fields;
@@ -19,16 +12,8 @@ use usage::{self, IdentRefSet, IdentSet, UsesTypeParams};
 /// A variant of the enum which is deriving `FromMeta`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Variant<'a> {
-<<<<<<< HEAD
-    /// The name which will appear in code passed to the `FromMeta` input.
-    pub name_in_attr: String,
-||||||| merged common ancestors
-    /// The name which will appear in code passed to the `FromMetaItem` input.
-    pub name_in_attr: &'a str,
-=======
     /// The name which will appear in code passed to the `FromMeta` input.
     pub name_in_attr: Cow<'a, String>,
->>>>>>> upstream-releases
 
     /// The name of the variant which will be returned for a given `name_in_attr`.
     pub variant_ident: &'a Ident,
@@ -58,19 +43,6 @@ impl<'a> Variant<'a> {
     }
 }
 
-<<<<<<< HEAD
-impl<'a> UsesTypeParams for Variant<'a> {
-    fn uses_type_params<'b>(
-        &self,
-        options: &usage::Options,
-        type_set: &'b IdentSet,
-    ) -> IdentRefSet<'b> {
-        self.data.uses_type_params(options, type_set)
-    }
-}
-
-||||||| merged common ancestors
-=======
 impl<'a> UsesTypeParams for Variant<'a> {
     fn uses_type_params<'b>(
         &self,
@@ -84,7 +56,6 @@ impl<'a> UsesTypeParams for Variant<'a> {
 /// Code generator for an enum variant in a unit match position.
 /// This is placed in generated `from_string` calls for the parent enum.
 /// Value-carrying variants wrapped in this type will emit code to produce an "unsupported format" error.
->>>>>>> upstream-releases
 pub struct UnitMatchArm<'a>(&'a Variant<'a>);
 
 impl<'a> ToTokens for UnitMatchArm<'a> {
@@ -137,26 +108,11 @@ impl<'a> ToTokens for DataMatchArm<'a> {
             return;
         }
 
-<<<<<<< HEAD
-        let vdg = FieldsGen(&val.data);
-||||||| merged common ancestors
-
-        let vdg = FieldsGen(&val.data);
-=======
         let vdg = FieldsGen::new(&val.data, val.allow_unknown_fields);
->>>>>>> upstream-releases
 
         if val.data.is_struct() {
-<<<<<<< HEAD
-            let declare_errors = ErrorDeclaration::new();
-            let check_errors = ErrorCheck::with_location(&name_in_attr);
-||||||| merged common ancestors
-            let declare_errors = ErrorDeclaration::new();
-            let check_errors = ErrorCheck::with_location(name_in_attr);
-=======
             let declare_errors = ErrorDeclaration::default();
             let check_errors = ErrorCheck::with_location(&name_in_attr);
->>>>>>> upstream-releases
             let require_fields = vdg.require_fields();
             let decls = vdg.declarations();
             let core_loop = vdg.core_loop();

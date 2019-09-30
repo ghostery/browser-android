@@ -9,19 +9,11 @@
   display: none;
 }
 
-<<<<<<< HEAD
-#identity-popup {
-  --identity-popup-width: 33rem;
-}
-
-||||||| merged common ancestors
-=======
 #identity-popup,
 #protections-popup {
   --popup-width: 33rem;
 }
 
->>>>>>> upstream-releases
 /* This is used by screenshots tests to hide intermittently different
  * identity popup shadows (see bug 1425253). */
 #identity-popup.no-shadow {
@@ -83,13 +75,6 @@
 }
 
 #identity-popup-mainView {
-<<<<<<< HEAD
-  min-width: var(--identity-popup-width);
-  max-width: var(--identity-popup-width);
-||||||| merged common ancestors
-  min-width: 33em;
-  max-width: 33em;
-=======
   min-width: var(--popup-width);
   max-width: var(--popup-width);
 }
@@ -106,7 +91,6 @@
 
 #protections-popup[toast] #protections-popup-mainView-panel-header {
   min-height: 30px;
->>>>>>> upstream-releases
 }
 
 .identity-popup-section {
@@ -185,51 +169,24 @@
   display: none;
 }
 
-<<<<<<< HEAD
-#tracking-protection-preferences-button > .toolbarbutton-text {
-  display: inline;
-  padding-inline-end: 25px;
-  padding-inline-start: 0px;
-  color: var(--panel-disabled-color);
-}
-
-||||||| merged common ancestors
-=======
 #tracking-protection-preferences-button > .toolbarbutton-text {
   display: inline;
   padding-inline-end: 25px;
   padding-inline-start: 0px;
 }
 
->>>>>>> upstream-releases
 /* CONTENT */
 
-<<<<<<< HEAD
-.identity-popup-content-blocking-empty-label,
-#tracking-protection-preferences-button > .toolbarbutton-text,
-.identity-popup-footer,
-.tracking-protection-button,
-#identity-popup-trackersView-strict-info > label,
-.identity-popup-cookiesView-list-header,
-.identity-popup-content-blocking-list-item > label,
-||||||| merged common ancestors
-=======
 .identity-popup-content-blocking-empty-label,
 #tracking-protection-preferences-button > .toolbarbutton-text,
 .tracking-protection-button,
 #identity-popup-trackersView-strict-info > label,
 .identity-popup-cookiesView-list-header,
 .identity-popup-content-blocking-list-item > label,
->>>>>>> upstream-releases
 #identity-popup-mainView-panel-header > label,
-<<<<<<< HEAD
-#identity-popup-trackersView > .panel-header,
-||||||| merged common ancestors
-=======
 #protections-popup-mainView-panel-header > label,
 #protections-popup-mainView-panel-header > description,
 #identity-popup-trackersView > .panel-header,
->>>>>>> upstream-releases
 #identity-popup-securityView > .panel-header,
 #identity-popup-breakageReportView > .panel-header,
 #protections-popup-sendReportView > .panel-header,
@@ -282,11 +239,6 @@
   overflow-wrap: break-word;
   /* This is needed for the overflow-wrap to work correctly.
    * 33em is the panel width, panel-header has 1em padding on each side. */
-<<<<<<< HEAD
-  max-width: calc(var(--identity-popup-width) - 2em);
-||||||| merged common ancestors
-  max-width: calc(33rem - 2em);
-=======
   max-width: calc(var(--popup-width) - 2em);
 }
 
@@ -294,7 +246,6 @@
 #protections-popup-toast-panel-tp-on-desc,
 #protections-popup-toast-panel-tp-off-desc {
   max-width: calc(var(--popup-width) - 2em);
->>>>>>> upstream-releases
 }
 
 #identity-popup-permissions-content > description,
@@ -317,13 +268,7 @@
   /* This is needed for the overflow-wrap to work correctly.
    * 1em + 2em + 24px is .identity-popup-security-content padding
    * 33em is the panel width */
-<<<<<<< HEAD
-  max-width: calc(var(--identity-popup-width) - 3rem - 24px);
-||||||| merged common ancestors
-  max-width: calc(33rem - 3rem - 24px);
-=======
   max-width: calc(var(--popup-width) - 3rem - 24px);
->>>>>>> upstream-releases
 }
 
 .identity-popup-warning-gray {
@@ -412,39 +357,6 @@
   margin-top: 1em;
 }
 
-<<<<<<< HEAD
-.identity-popup-footer > button {
-  margin: 0;
-  border-top: 1px solid var(--panel-separator-color);
-  padding: 8px 20px;
-}
-
-||||||| merged common ancestors
-.identity-popup-footer {
-  background-color: var(--arrowpanel-dimmed);
-}
-
-.identity-popup-footer > button {
-  -moz-appearance: none;
-  margin: 0;
-  border: none;
-  border-top: 1px solid var(--panel-separator-color);
-  padding: 8px 20px;
-  color: inherit;
-  background-color: transparent;
-}
-
-.identity-popup-footer > button:hover,
-.identity-popup-footer > button:focus {
-  background-color: var(--arrowpanel-dimmed);
-}
-
-.identity-popup-footer > button:hover:active {
-  background-color: var(--arrowpanel-dimmed-further);
-}
-
-=======
->>>>>>> upstream-releases
 #identity-popup-content-verifier ~ description {
   margin-top: 1em;
   color: var(--panel-disabled-color);
@@ -474,30 +386,6 @@ description#identity-popup-content-verifier,
   flex: 1;
 }
 
-<<<<<<< HEAD
-#identity-popup-breakageReportView-heading,
-#identity-popup-breakageReportView-body {
-  padding: 16px;
-  font-size: 110%;
-||||||| merged common ancestors
-#identity-popup-breakageReportView-footer > button[default] {
-  color: white;
-  background-color: #0996f8;
-}
-
-#identity-popup-breakageReportView-footer > button[default]:hover {
-  background-color: #0675d3;
-}
-
-#identity-popup-breakageReportView-footer > button[default]:hover:active {
-  background-color: #0568ba;
-}
-
-#identity-popup-breakageReportView-heading,
-#identity-popup-breakageReportView-body {
-  padding: 16px;
-  font-size: 110%;
-=======
 #identity-popup-breakageReportView-heading,
 #identity-popup-breakageReportView-body,
 #protections-popup-sendReportView-heading,
@@ -519,24 +407,8 @@ description#identity-popup-content-verifier,
 #identity-popup-breakageReportView-collection-url,
 #protections-popup-sendReportView-collection-url {
   font: inherit;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-.identity-popup-breakageReportView-collection-section {
-  margin-bottom: 16px;
-||||||| merged common ancestors
-.identity-popup-breakageReportView-collection-label {
-  color: graytext;
-}
-
-#identity-popup-breakageReportView-collection-url {
-  word-wrap: break-word;
-}
-
-.identity-popup-breakageReportView-collection-section {
-  margin-bottom: 16px;
-=======
 #identity-popup-breakageReportView-collection-comments,
 #protections-popup-sendReportView-collection-comments {
   height: 120px;
@@ -551,7 +423,6 @@ description#identity-popup-content-verifier,
   -moz-appearance: none;
   margin: 0;
   padding-inline-start: 0;
->>>>>>> upstream-releases
 }
 
 .identity-popup-content-blocking-category:-moz-focusring,
@@ -573,55 +444,6 @@ description#identity-popup-content-verifier,
   float: right;
 }
 
-<<<<<<< HEAD
-.identity-popup-content-blocking-category {
-  /* Overwrite toolbarbutton styles */
-  -moz-appearance: none;
-  margin: 0;
-  padding-inline-start: 0;
-}
-
-.identity-popup-content-blocking-category:-moz-focusring,
-.identity-popup-content-blocking-category:hover {
-  border-radius: 2px;
-  background-color: var(--arrowpanel-dimmed);
-||||||| merged common ancestors
-/* We can currently show either the old tracking protection-only UI, which has "Tracking Protection"
- * as a label, or the new content blocking UI which has a different label and also a list of
- * categories of blockers. This rule hides elements depending on which UI we want to show */
-#identity-popup-content-blocking-content[contentBlockingUI] #tracking-protection-label,
-#identity-popup-content-blocking-content:not([contentBlockingUI]) #content-blocking-label,
-#identity-popup-content-blocking-content:not([contentBlockingUI]) > #identity-popup-content-blocking-category-list {
-  display: none;
-=======
-.identity-popup-content-blocking-category:-moz-locale-dir(rtl)::after {
-  transform: scaleX(1) translateY(1px);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-.identity-popup-content-blocking-category:hover:active {
-  background-color: var(--arrowpanel-dimmed-further);
-}
-||||||| merged common ancestors
-/* Disabled label */
-=======
-/* This subview could get filled with a lot of trackers, set a maximum size
- * and allow it to scroll vertically.*/
-#identity-popup-cookiesView,
-#identity-popup-trackersView {
-  max-height: 600px;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-.identity-popup-content-blocking-category::after {
-  content: url(chrome://browser/skin/back-12.svg);
-  -moz-context-properties: fill, fill-opacity;
-  transform: scaleX(-1) translateY(1px);
-  float: right;
-}
-
 .identity-popup-content-blocking-category:-moz-locale-dir(rtl)::after {
   transform: scaleX(1) translateY(1px);
 }
@@ -634,16 +456,6 @@ description#identity-popup-content-verifier,
 }
 
 #identity-popup-trackersView-list.empty {
-||||||| merged common ancestors
-#identity-popup-content-blocking-disabled-label {
-  padding: 2px 5px;
-  border-radius: 3px;
-  margin: 5px;
-  display: none;
-  color: #fff;
-=======
-#identity-popup-trackersView-list.empty {
->>>>>>> upstream-releases
   -moz-box-align: center;
   -moz-box-pack: center;
 }
@@ -677,19 +489,6 @@ description#identity-popup-content-verifier,
   overflow: auto;
 }
 
-<<<<<<< HEAD
-.identity-popup-content-blocking-list-item {
-  margin: 5px 0;
-  overflow: hidden;
-  -moz-box-align: center;
-}
-
-.identity-popup-content-blocking-list-item:not(.allowed) {
-  color: var(--panel-disabled-color);
-||||||| merged common ancestors
-#identity-popup-content-blocking-disabled-label > label {
-  margin: 0;
-=======
 .identity-popup-content-blocking-list-item {
   margin: 5px 0;
   overflow: hidden;
@@ -768,84 +567,12 @@ description#identity-popup-content-verifier,
   -moz-box-pack: center;
   padding: 5px 15px;
   border-radius: 3px;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-.identity-popup-content-blocking-list-host-label {
-  -moz-box-flex: 1;
-}
-
-.identity-popup-content-blocking-list-state-label {
-  -moz-box-flex: 1;
-  text-align: end;
-  margin-inline-start: 5px;
-  margin-inline-end: 2px;
-}
-
-.identity-popup-trackersView-icon,
-.identity-popup-cookiesView-icon {
-  margin-inline-end: 10px;
-  -moz-context-properties: fill, fill-opacity;
-}
-
-.identity-popup-trackersView-icon {
-  list-style-image: url(chrome://browser/skin/controlcenter/trackers-disabled.svg);
-}
-
-.identity-popup-trackersView-icon.allowed {
-  list-style-image: url(chrome://browser/skin/controlcenter/trackers.svg);
-}
-
-.identity-popup-cookiesView-icon {
-  list-style-image: url(chrome://browser/skin/controlcenter/3rdpartycookies-disabled.svg);
-}
-
-.identity-popup-cookiesView-icon.allowed {
-  list-style-image: url(chrome://browser/skin/controlcenter/3rdpartycookies.svg);
-}
-
-#identity-popup-trackersView-strict-info {
-  min-height: 40px;
-  /* Limit to full width - margin */
-  max-width: calc(var(--identity-popup-width) - 12px);
-  min-width: calc(var(--identity-popup-width) - 12px);
-  background-color: #45a1ff80;
-  margin: 6px;
-  text-align: center;
-  -moz-box-align: center;
-  -moz-box-pack: center;
-  padding: 5px 15px;
-  border-radius: 3px;
-  color: #002275;
 }
 
 #identity-popup-trackersView-strict-info > image {
   list-style-image: url(chrome://browser/skin/controlcenter/info.svg);
   -moz-context-properties: fill;
-||||||| merged common ancestors
-#identity-popup-content-blocking-disabled-label > image {
-  list-style-image: url(chrome://browser/skin/controlcenter/warning.svg);
-=======
-#identity-popup-trackersView-strict-info > image {
-  list-style-image: url(chrome://browser/skin/controlcenter/info.svg);
-  -moz-context-properties: fill;
->>>>>>> upstream-releases
   fill: currentColor;
-<<<<<<< HEAD
-  margin-inline-end: 10px;
-}
-
-#identity-popup-trackersView-strict-info > label {
-  overflow-wrap: break-word;
-  /* Limit to full width - container margin - container padding - icon width - icon margin */
-  max-width: calc(var(--identity-popup-width) - 12px - 20px - 16px - 10px);
-||||||| merged common ancestors
-  -moz-context-properties: fill, stroke;
-  margin-inline-end: 4px;
-  height: 13px;
-  width: 13px;
-=======
   margin-inline-end: 10px;
 }
 
@@ -853,7 +580,6 @@ description#identity-popup-content-verifier,
   overflow-wrap: break-word;
   /* Limit to full width - container margin - container padding - icon width - icon margin */
   max-width: calc(var(--popup-width) - 12px - 20px - 16px - 10px);
->>>>>>> upstream-releases
 }
 
 /* Content Blocking categories */
@@ -868,18 +594,6 @@ description#identity-popup-content-verifier,
   display: none;
 }
 
-<<<<<<< HEAD
-.tracking-protection-icon {
-  list-style-image: url(chrome://browser/skin/controlcenter/trackers.svg);
-}
-
-.thirdpartycookies-icon {
-  list-style-image: url(chrome://browser/skin/controlcenter/3rdpartycookies.svg);
-||||||| merged common ancestors
-#identity-popup-content-blocking-content[enabled][hasException] .identity-popup-content-blocking-category-state-label,
-.identity-popup-content-blocking-category:not(.blocked) .identity-popup-content-blocking-category-state-label {
-  display: none;
-=======
 .tracking-protection-icon {
   list-style-image: url(chrome://browser/skin/controlcenter/trackers.svg);
 }
@@ -890,19 +604,8 @@ description#identity-popup-content-verifier,
 
 .cryptominers-icon {
   list-style-image: url(chrome://browser/skin/controlcenter/cryptominers.svg);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* Content Blocking action button */
-
-.tracking-protection-button {
-  list-style-image: url(chrome://browser/skin/tracking-protection.svg);
-  -moz-appearance: none;
-  margin: 1em 0 0;
-||||||| merged common ancestors
-.identity-popup-content-blocking-category.blocked .identity-popup-content-blocking-category-add-blocking {
-=======
 .fingerprinters-icon {
   list-style-image: url(chrome://browser/skin/controlcenter/fingerprinters.svg);
 }
@@ -913,7 +616,6 @@ description#identity-popup-content-verifier,
   list-style-image: url(chrome://browser/skin/tracking-protection.svg);
   -moz-appearance: none;
   margin: 1em 0 0;
->>>>>>> upstream-releases
   display: none;
   height: 32px;
   background-color: var(--arrowpanel-dimmed);
@@ -970,21 +672,9 @@ description#identity-popup-content-verifier,
 
 /* Show the right action buttons depending on content state */
 /* Offer to temporarily add an exception in private mode. */
-<<<<<<< HEAD
-#main-window:not([privatebrowsingmode]) #identity-popup-content-blocking-content[blocking]:not([hasException]) > #tracking-action-unblock,
-||||||| merged common ancestors
-#main-window:not([privatebrowsingmode]) #identity-popup-content-blocking-content[active]:not([hasException]) > #tracking-action-unblock,
-=======
 :root:not([privatebrowsingmode]) #identity-popup-content-blocking-content[blocking]:not([hasException]) > #tracking-action-unblock,
->>>>>>> upstream-releases
 /* Offer to permanently add an exception in normal mode. */
-<<<<<<< HEAD
-#main-window[privatebrowsingmode] #identity-popup-content-blocking-content[blocking]:not([hasException]) > #tracking-action-unblock-private,
-||||||| merged common ancestors
-#main-window[privatebrowsingmode] #identity-popup-content-blocking-content[active]:not([hasException]) > #tracking-action-unblock-private,
-=======
 :root[privatebrowsingmode] #identity-popup-content-blocking-content[blocking]:not([hasException]) > #tracking-action-unblock-private,
->>>>>>> upstream-releases
 /* If there's an exception just offer to remove the exception again. */
 #identity-popup-content-blocking-content[hasException] > #tracking-action-block {
   display: -moz-box;
@@ -1080,10 +770,6 @@ description#identity-popup-content-verifier,
 .identity-popup-permission-state-label {
   margin-inline-end: 5px;
   text-align: end;
-}
-
-#identity-popup-content-blocking-content[hasException] .identity-popup-content-blocking-category-state-label {
-  visibility: hidden;
 }
 
 #identity-popup-content-blocking-content[hasException] .identity-popup-content-blocking-category-state-label {

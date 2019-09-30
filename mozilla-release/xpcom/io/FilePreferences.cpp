@@ -24,16 +24,9 @@ static StaticMutex sMutex;
 static bool sBlockUNCPaths = false;
 typedef nsTArray<nsString> WinPaths;
 
-<<<<<<< HEAD
-static WinPaths& PathWhitelist() {
-||||||| merged common ancestors
-static WinPaths& PathWhitelist()
-{
-=======
 static WinPaths& PathWhitelist() {
   sMutex.AssertCurrentThreadOwns();
 
->>>>>>> upstream-releases
   static WinPaths sPaths;
   return sPaths;
 }
@@ -50,15 +43,8 @@ static bool sBlacklistEmpty = false;
 typedef nsTArray<nsTString<char_path_t>> Paths;
 static StaticAutoPtr<Paths> sBlacklist;
 
-<<<<<<< HEAD
-static Paths& PathBlacklist() {
-||||||| merged common ancestors
-static Paths& PathBlacklist()
-{
-=======
 static Paths& PathBlacklist() {
   sMutex.AssertCurrentThreadOwns();
->>>>>>> upstream-releases
   if (!sBlacklist) {
     sBlacklist = new nsTArray<nsTString<char_path_t>>();
     ClearOnShutdown(&sBlacklist);
@@ -197,18 +183,9 @@ class TNormalizer : public TTokenizer<TChar> {
     }
 
     nsTDependentSubstring<TChar> name;
-<<<<<<< HEAD
-    if (base::ReadUntil(mSeparator, name, base::INCLUDE_LAST) &&
-        name.Length() == 1) {
-      // this means and empty name (a lone slash), which is illegal
-||||||| merged common ancestors
-    if (base::ReadUntil(mSeparator, name, base::INCLUDE_LAST) && name.Length() == 1) {
-      // this means and empty name (a lone slash), which is illegal
-=======
     if (base::ReadUntil(mSeparator, name, base::INCLUDE_LAST) &&
         name.Length() == 1) {
       // this means an empty name (a lone slash), which is illegal
->>>>>>> upstream-releases
       return false;
     }
     mStack.AppendElement(name);
@@ -331,15 +308,8 @@ bool IsAllowedPath(const nsTSubstring<char_path_t>& aFilePath) {
 
 void testing::SetBlockUNCPaths(bool aBlock) { sBlockUNCPaths = aBlock; }
 
-<<<<<<< HEAD
-void testing::AddDirectoryToWhitelist(nsAString const& aPath) {
-||||||| merged common ancestors
-void testing::AddDirectoryToWhitelist(nsAString const & aPath)
-{
-=======
 void testing::AddDirectoryToWhitelist(nsAString const& aPath) {
   StaticMutexAutoLock lock(sMutex);
->>>>>>> upstream-releases
   PathWhitelist().AppendElement(aPath);
 }
 

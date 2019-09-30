@@ -131,14 +131,7 @@ nsBaseDragService::GetNumDropItems(uint32_t* aNumItems) {
 // nullptr if the drag began outside of our application.
 //
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseDragService::GetSourceDocument(nsIDocument** aSourceDocument) {
-||||||| merged common ancestors
-nsBaseDragService::GetSourceDocument(nsIDocument** aSourceDocument)
-{
-=======
 nsBaseDragService::GetSourceDocument(Document** aSourceDocument) {
->>>>>>> upstream-releases
   *aSourceDocument = mSourceDocument.get();
   NS_IF_ADDREF(*aSourceDocument);
 
@@ -158,34 +151,14 @@ nsBaseDragService::GetSourceNode(nsINode** aSourceNode) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseDragService::GetTriggeringPrincipalURISpec(
-    nsACString& aPrincipalURISpec) {
-  aPrincipalURISpec = mTriggeringPrincipalURISpec;
-||||||| merged common ancestors
-nsBaseDragService::GetTriggeringPrincipalURISpec(nsACString& aPrincipalURISpec)
-{
-  aPrincipalURISpec = mTriggeringPrincipalURISpec;
-=======
 nsBaseDragService::GetTriggeringPrincipal(nsIPrincipal** aPrincipal) {
   NS_IF_ADDREF(*aPrincipal = mTriggeringPrincipal);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseDragService::SetTriggeringPrincipalURISpec(
-    const nsACString& aPrincipalURISpec) {
-  mTriggeringPrincipalURISpec = aPrincipalURISpec;
-||||||| merged common ancestors
-nsBaseDragService::SetTriggeringPrincipalURISpec(const nsACString& aPrincipalURISpec)
-{
-  mTriggeringPrincipalURISpec = aPrincipalURISpec;
-=======
 nsBaseDragService::SetTriggeringPrincipal(nsIPrincipal* aPrincipal) {
   mTriggeringPrincipal = aPrincipal;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -226,25 +199,10 @@ void nsBaseDragService::SetDataTransfer(DataTransfer* aDataTransfer) {
 
 //-------------------------------------------------------------------------
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseDragService::InvokeDragSession(
-    nsINode* aDOMNode, const nsACString& aPrincipalURISpec,
-    nsIArray* aTransferableArray, uint32_t aActionType,
-    nsContentPolicyType aContentPolicyType = nsIContentPolicy::TYPE_OTHER) {
-||||||| merged common ancestors
-nsBaseDragService::InvokeDragSession(nsINode *aDOMNode,
-                                     const nsACString& aPrincipalURISpec,
-                                     nsIArray* aTransferableArray,
-                                     uint32_t aActionType,
-                                     nsContentPolicyType aContentPolicyType =
-                                       nsIContentPolicy::TYPE_OTHER)
-{
-=======
 nsBaseDragService::InvokeDragSession(
     nsINode* aDOMNode, nsIPrincipal* aPrincipal, nsIArray* aTransferableArray,
     uint32_t aActionType,
     nsContentPolicyType aContentPolicyType = nsIContentPolicy::TYPE_OTHER) {
->>>>>>> upstream-releases
   AUTO_PROFILER_LABEL("nsBaseDragService::InvokeDragSession", OTHER);
 
   // If you're hitting this, a test is causing the browser to attempt to enter
@@ -304,28 +262,10 @@ nsBaseDragService::InvokeDragSession(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseDragService::InvokeDragSessionWithImage(
-    nsINode* aDOMNode, const nsACString& aPrincipalURISpec,
-    nsIArray* aTransferableArray, uint32_t aActionType, nsINode* aImage,
-    int32_t aImageX, int32_t aImageY, DragEvent* aDragEvent,
-    DataTransfer* aDataTransfer) {
-||||||| merged common ancestors
-nsBaseDragService::InvokeDragSessionWithImage(nsINode* aDOMNode,
-                                              const nsACString& aPrincipalURISpec,
-                                              nsIArray* aTransferableArray,
-                                              uint32_t aActionType,
-                                              nsINode* aImage,
-                                              int32_t aImageX, int32_t aImageY,
-                                              DragEvent* aDragEvent,
-                                              DataTransfer* aDataTransfer)
-{
-=======
 nsBaseDragService::InvokeDragSessionWithImage(
     nsINode* aDOMNode, nsIPrincipal* aPrincipal, nsIArray* aTransferableArray,
     uint32_t aActionType, nsINode* aImage, int32_t aImageX, int32_t aImageY,
     DragEvent* aDragEvent, DataTransfer* aDataTransfer) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(aDragEvent, NS_ERROR_NULL_POINTER);
   NS_ENSURE_TRUE(aDataTransfer, NS_ERROR_NULL_POINTER);
   NS_ENSURE_TRUE(mSuppressLevel == 0, NS_ERROR_FAILURE);
@@ -361,16 +301,6 @@ nsBaseDragService::InvokeDragSessionWithImage(
   }
 #endif
 
-<<<<<<< HEAD
-  nsresult rv =
-      InvokeDragSession(aDOMNode, aPrincipalURISpec, aTransferableArray,
-                        aActionType, nsIContentPolicy::TYPE_INTERNAL_IMAGE);
-||||||| merged common ancestors
-  nsresult rv = InvokeDragSession(aDOMNode, aPrincipalURISpec,
-                                  aTransferableArray,
-                                  aActionType,
-                                  nsIContentPolicy::TYPE_INTERNAL_IMAGE);
-=======
   nsresult rv =
       InvokeDragSession(aDOMNode, aPrincipal, aTransferableArray, aActionType,
                         nsIContentPolicy::TYPE_INTERNAL_IMAGE);
@@ -402,33 +332,17 @@ nsBaseDragService::InvokeDragSessionWithRemoteImage(
   nsresult rv =
       InvokeDragSession(aDOMNode, aPrincipal, aTransferableArray, aActionType,
                         nsIContentPolicy::TYPE_INTERNAL_IMAGE);
->>>>>>> upstream-releases
   mRegion = Nothing();
   return rv;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseDragService::InvokeDragSessionWithSelection(
-    Selection* aSelection, const nsACString& aPrincipalURISpec,
-    nsIArray* aTransferableArray, uint32_t aActionType, DragEvent* aDragEvent,
-    DataTransfer* aDataTransfer) {
-||||||| merged common ancestors
-nsBaseDragService::InvokeDragSessionWithSelection(Selection* aSelection,
-                                                  const nsACString& aPrincipalURISpec,
-                                                  nsIArray* aTransferableArray,
-                                                  uint32_t aActionType,
-                                                  DragEvent* aDragEvent,
-                                                  DataTransfer* aDataTransfer)
-{
-=======
 nsBaseDragService::InvokeDragSessionWithSelection(Selection* aSelection,
                                                   nsIPrincipal* aPrincipal,
                                                   nsIArray* aTransferableArray,
                                                   uint32_t aActionType,
                                                   DragEvent* aDragEvent,
                                                   DataTransfer* aDataTransfer) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(aSelection, NS_ERROR_NULL_POINTER);
   NS_ENSURE_TRUE(aDragEvent, NS_ERROR_NULL_POINTER);
   NS_ENSURE_TRUE(mSuppressLevel == 0, NS_ERROR_FAILURE);
@@ -451,18 +365,8 @@ nsBaseDragService::InvokeDragSessionWithSelection(Selection* aSelection,
   // endpoints of the selection
   nsCOMPtr<nsINode> node = aSelection->GetFocusNode();
 
-<<<<<<< HEAD
-  return InvokeDragSession(node, aPrincipalURISpec, aTransferableArray,
-                           aActionType, nsIContentPolicy::TYPE_OTHER);
-||||||| merged common ancestors
-  return InvokeDragSession(node, aPrincipalURISpec,
-                           aTransferableArray,
-                           aActionType,
-                           nsIContentPolicy::TYPE_OTHER);
-=======
   return InvokeDragSession(node, aPrincipal, aTransferableArray, aActionType,
                            nsIContentPolicy::TYPE_OTHER);
->>>>>>> upstream-releases
 }
 
 //-------------------------------------------------------------------------
@@ -648,15 +552,7 @@ nsBaseDragService::DragMoved(int32_t aX, int32_t aY) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static nsIPresShell* GetPresShellForContent(nsINode* aDOMNode) {
-||||||| merged common ancestors
-static nsIPresShell*
-GetPresShellForContent(nsINode* aDOMNode)
-{
-=======
 static PresShell* GetPresShellForContent(nsINode* aDOMNode) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIContent> content = do_QueryInterface(aDOMNode);
   if (!content) return nullptr;
 
@@ -687,17 +583,6 @@ nsresult nsBaseDragService::DrawDrag(nsINode* aDOMNode,
 
   // get the presshell for the node being dragged. If the drag image is not in
   // a document or has no frame, get the presshell from the source drag node
-<<<<<<< HEAD
-  nsIPresShell* presShell = GetPresShellForContent(dragNode);
-  if (!presShell && mImage) presShell = GetPresShellForContent(aDOMNode);
-  if (!presShell) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  nsIPresShell* presShell = GetPresShellForContent(dragNode);
-  if (!presShell && mImage)
-    presShell = GetPresShellForContent(aDOMNode);
-  if (!presShell)
-    return NS_ERROR_FAILURE;
-=======
   PresShell* presShell = GetPresShellForContent(dragNode);
   if (!presShell && mImage) {
     presShell = GetPresShellForContent(aDOMNode);
@@ -705,7 +590,6 @@ nsresult nsBaseDragService::DrawDrag(nsINode* aDOMNode,
   if (!presShell) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   *aPresContext = presShell->GetPresContext();
 
@@ -764,18 +648,9 @@ nsresult nsBaseDragService::DrawDrag(nsINode* aDOMNode,
   // draw the image for selections
   if (mSelection) {
     LayoutDeviceIntPoint pnt(aScreenDragRect->TopLeft());
-<<<<<<< HEAD
-    *aSurface = presShell->RenderSelection(
-        mSelection, pnt, aScreenDragRect,
-        mImage ? 0 : nsIPresShell::RENDER_AUTO_SCALE);
-||||||| merged common ancestors
-    *aSurface = presShell->RenderSelection(mSelection, pnt, aScreenDragRect,
-        mImage ? 0 : nsIPresShell::RENDER_AUTO_SCALE);
-=======
     *aSurface = presShell->RenderSelection(
         mSelection, pnt, aScreenDragRect,
         mImage ? RenderImageFlags::None : RenderImageFlags::AutoScale);
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -822,22 +697,11 @@ nsresult nsBaseDragService::DrawDrag(nsINode* aDOMNode,
         // check every childnode for being an img element
         // XXXbz why don't we need to check descendants recursively?
         for (uint32_t count = 0; count < length; ++count) {
-<<<<<<< HEAD
-          if (childList->Item(count)->NodeName().LowerCaseEqualsLiteral(
-                  "img")) {
-            // if the dragnode contains an image, set RENDER_IS_IMAGE flag
-            renderFlags = renderFlags | nsIPresShell::RENDER_IS_IMAGE;
-||||||| merged common ancestors
-          if (childList->Item(count)->NodeName().LowerCaseEqualsLiteral("img")) {
-            // if the dragnode contains an image, set RENDER_IS_IMAGE flag
-            renderFlags = renderFlags | nsIPresShell::RENDER_IS_IMAGE;
-=======
           if (childList->Item(count)->NodeName().LowerCaseEqualsLiteral(
                   "img")) {
             // if the dragnode contains an image, set RenderImageFlags::IsImage
             // flag
             renderFlags = renderFlags | RenderImageFlags::IsImage;
->>>>>>> upstream-releases
             break;
           }
         }

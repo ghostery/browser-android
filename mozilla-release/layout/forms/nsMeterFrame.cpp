@@ -26,35 +26,14 @@ using namespace mozilla;
 using mozilla::dom::Element;
 using mozilla::dom::HTMLMeterElement;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMeterFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsMeterFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMeterFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsMeterFrame(aStyle);
-=======
 nsIFrame* NS_NewMeterFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsMeterFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMeterFrame)
 
-<<<<<<< HEAD
-nsMeterFrame::nsMeterFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID), mBarDiv(nullptr) {}
-||||||| merged common ancestors
-nsMeterFrame::nsMeterFrame(ComputedStyle* aStyle)
-  : nsContainerFrame(aStyle, kClassID)
-  , mBarDiv(nullptr)
-{
-}
-=======
 nsMeterFrame::nsMeterFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
     : nsContainerFrame(aStyle, aPresContext, kClassID), mBarDiv(nullptr) {}
->>>>>>> upstream-releases
 
 nsMeterFrame::~nsMeterFrame() {}
 

@@ -60,18 +60,9 @@ void MouseEvent::InitMouseEvent(const nsAString& aType, bool aCanBubble,
     case eSimpleGestureEventClass: {
       WidgetMouseEventBase* mouseEventBase = mEvent->AsMouseEventBase();
       mouseEventBase->mRelatedTarget = aRelatedTarget;
-<<<<<<< HEAD
-      mouseEventBase->button = aButton;
-      mouseEventBase->InitBasicModifiers(aCtrlKey, aAltKey, aShiftKey,
-                                         aMetaKey);
-||||||| merged common ancestors
-      mouseEventBase->button = aButton;
-      mouseEventBase->InitBasicModifiers(aCtrlKey, aAltKey, aShiftKey, aMetaKey);
-=======
       mouseEventBase->mButton = aButton;
       mouseEventBase->InitBasicModifiers(aCtrlKey, aAltKey, aShiftKey,
                                          aMetaKey);
->>>>>>> upstream-releases
       mClientPoint.x = aClientX;
       mClientPoint.y = aClientY;
       mouseEventBase->mRefPoint.x = aScreenX;
@@ -251,13 +242,6 @@ int32_t MouseEvent::ScreenY(CallerType aCallerType) {
   return Event::GetScreenCoords(mPresContext, mEvent, mEvent->mRefPoint).y;
 }
 
-<<<<<<< HEAD
-int32_t MouseEvent::ClientX() {
-||||||| merged common ancestors
-int32_t
-MouseEvent::ClientX()
-{
-=======
 int32_t MouseEvent::PageX() const {
   if (mEvent->mFlags.mIsPositionless) {
     return 0;
@@ -287,7 +271,6 @@ int32_t MouseEvent::PageY() const {
 }
 
 int32_t MouseEvent::ClientX() {
->>>>>>> upstream-releases
   if (mEvent->mFlags.mIsPositionless) {
     return 0;
   }
@@ -333,46 +316,16 @@ bool MouseEvent::ShiftKey() { return mEvent->AsInputEvent()->IsShift(); }
 
 bool MouseEvent::MetaKey() { return mEvent->AsInputEvent()->IsMeta(); }
 
-<<<<<<< HEAD
-float MouseEvent::MozPressure() const {
-  return mEvent->AsMouseEventBase()->pressure;
-||||||| merged common ancestors
-float
-MouseEvent::MozPressure() const
-{
-  return mEvent->AsMouseEventBase()->pressure;
-=======
 float MouseEvent::MozPressure() const {
   return mEvent->AsMouseEventBase()->mPressure;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MouseEvent::HitCluster() const {
-  return mEvent->AsMouseEventBase()->hitCluster;
-||||||| merged common ancestors
-bool
-MouseEvent::HitCluster() const
-{
-  return mEvent->AsMouseEventBase()->hitCluster;
-=======
 bool MouseEvent::HitCluster() const {
   return mEvent->AsMouseEventBase()->mHitCluster;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-uint16_t MouseEvent::MozInputSource() const {
-  return mEvent->AsMouseEventBase()->inputSource;
-||||||| merged common ancestors
-uint16_t
-MouseEvent::MozInputSource() const
-{
-  return mEvent->AsMouseEventBase()->inputSource;
-=======
 uint16_t MouseEvent::MozInputSource() const {
   return mEvent->AsMouseEventBase()->mInputSource;
->>>>>>> upstream-releases
 }
 
 }  // namespace dom

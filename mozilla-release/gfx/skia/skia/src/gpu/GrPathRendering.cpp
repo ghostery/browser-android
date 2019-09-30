@@ -50,60 +50,18 @@ void GrPathRendering::stencilPath(const StencilPathArgs& args, const GrPath* pat
     this->onStencilPath(args, path);
 }
 
-<<<<<<< HEAD
-void GrPathRendering::drawPath(const GrPrimitiveProcessor& primProc,
-                               const GrPipeline& pipeline,
-                               const GrPipeline::FixedDynamicState& fixedDynamicState,
-||||||| merged common ancestors
-void GrPathRendering::drawPath(const GrPipeline& pipeline,
-                               const GrPrimitiveProcessor& primProc,
-=======
 void GrPathRendering::drawPath(GrRenderTarget* renderTarget, GrSurfaceOrigin origin,
                                const GrPrimitiveProcessor& primProc,
                                const GrPipeline& pipeline,
                                const GrPipeline::FixedDynamicState& fixedDynamicState,
->>>>>>> upstream-releases
                                // Cover pass settings in pipeline.
                                const GrStencilSettings& stencilPassSettings,
                                const GrPath* path) {
     fGpu->handleDirtyContext();
-<<<<<<< HEAD
-    if (GrXferBarrierType barrierType = pipeline.xferBarrierType(*fGpu->caps())) {
-        fGpu->xferBarrier(pipeline.renderTarget(), barrierType);
-    }
-    this->onDrawPath(primProc, pipeline, fixedDynamicState, stencilPassSettings, path);
-||||||| merged common ancestors
-    if (GrXferBarrierType barrierType = pipeline.xferBarrierType(*fGpu->caps())) {
-        fGpu->xferBarrier(pipeline.renderTarget(), barrierType);
-    }
-    this->onDrawPath(pipeline, primProc, stencilPassSettings, path);
-}
-
-void GrPathRendering::drawPaths(const GrPipeline& pipeline,
-                                const GrPrimitiveProcessor& primProc,
-                                // Cover pass settings in pipeline.
-                                const GrStencilSettings& stencilPassSettings,
-                                const GrPathRange* pathRange,
-                                const void* indices,
-                                PathIndexType indexType,
-                                const float transformValues[],
-                                PathTransformType transformType,
-                                int count) {
-    fGpu->handleDirtyContext();
-    if (GrXferBarrierType barrierType = pipeline.xferBarrierType(*fGpu->caps())) {
-        fGpu->xferBarrier(pipeline.renderTarget(), barrierType);
-    }
-#ifdef SK_DEBUG
-    pathRange->assertPathsLoaded(indices, indexType, count);
-#endif
-    this->onDrawPaths(pipeline, primProc, stencilPassSettings, pathRange, indices, indexType,
-                      transformValues, transformType, count);
-=======
     if (GrXferBarrierType barrierType = pipeline.xferBarrierType(renderTarget->asTexture(),
                                                                  *fGpu->caps())) {
         fGpu->xferBarrier(renderTarget, barrierType);
     }
     this->onDrawPath(renderTarget, origin, primProc, pipeline, fixedDynamicState,
                      stencilPassSettings, path);
->>>>>>> upstream-releases
 }

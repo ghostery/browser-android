@@ -111,15 +111,7 @@ class FakeMouseMonitor : public MouseCursorMonitor {
     hotspot_ = hotspot;
   }
 
-<<<<<<< HEAD
   void Init(Callback* callback, Mode mode) { callback_ = callback; }
-  void Stop() override {};
-||||||| merged common ancestors
-  void Start(Callback* callback, Mode mode) { callback_ = callback; }
-  void Stop() override {};
-=======
-  void Init(Callback* callback, Mode mode) { callback_ = callback; }
->>>>>>> upstream-releases
 
   void Capture() override {
     if (changed_) {

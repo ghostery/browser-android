@@ -17,20 +17,6 @@ const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
 
-<<<<<<< HEAD
-const {XPCOMUtils} = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", null);
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-=======
-XPCOMUtils.defineLazyModuleGetters(this, {
-  PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
-  SearchTelemetry: "resource:///modules/SearchTelemetry.jsm",
-  Services: "resource://gre/modules/Services.jsm",
-  setTimeout: "resource://gre/modules/Timer.jsm",
-});
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 XPCOMUtils.defineLazyModuleGetters(this, {
   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
   SearchTelemetry: "resource:///modules/SearchTelemetry.jsm",
@@ -38,21 +24,12 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   setTimeout: "resource://gre/modules/Timer.jsm",
 });
 
-// This pref is in seconds!
-XPCOMUtils.defineLazyPreferenceGetter(this,
-  "gRecentVisitedOriginsExpiry",
-  "browser.engagement.recent_visited_origins.expiry");
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "PrivateBrowsingUtils",
-                               "resource://gre/modules/PrivateBrowsingUtils.jsm");
-=======
 // This pref is in seconds!
 XPCOMUtils.defineLazyPreferenceGetter(
   this,
   "gRecentVisitedOriginsExpiry",
   "browser.engagement.recent_visited_origins.expiry"
 );
->>>>>>> upstream-releases
 
 // The upper bound for the count of the visited unique domain names.
 const MAX_UNIQUE_VISITED_DOMAINS = 100;
@@ -273,23 +250,12 @@ let URICountListener = {
     if (!this.isHttpURI(uri)) {
       return;
     }
-<<<<<<< HEAD
-
-    if (shouldRecordSearchCount(browser.getTabBrowser()) &&
-        !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
-      SearchTelemetry.updateTrackingStatus(browser, uriSpec);
-||||||| merged common ancestors
-    if (shouldRecordSearchCount(browser.getTabBrowser()) &&
-        !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
-      Services.search.recordSearchURLTelemetry(uriSpec);
-=======
 
     if (
       shouldRecordSearchCount(browser.getTabBrowser()) &&
       !(flags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)
     ) {
       SearchTelemetry.updateTrackingStatus(browser, uriSpec);
->>>>>>> upstream-releases
     }
 
     if (!shouldCountURI) {
@@ -314,22 +280,6 @@ let URICountListener = {
       return;
     }
 
-<<<<<<< HEAD
-    // We only want to count the unique domains up to MAX_UNIQUE_VISITED_DOMAINS.
-    if (this._domainSet.size < MAX_UNIQUE_VISITED_DOMAINS) {
-      this._domainSet.add(baseDomain);
-      Services.telemetry.scalarSet(UNIQUE_DOMAINS_COUNT_SCALAR_NAME, this._domainSet.size);
-    }
-
-    this._domain24hrSet.add(baseDomain);
-    if (gRecentVisitedOriginsExpiry) {
-      setTimeout(() => {
-        this._domain24hrSet.delete(baseDomain);
-      }, gRecentVisitedOriginsExpiry * 1000);
-    }
-||||||| merged common ancestors
-    Services.telemetry.scalarSet(UNIQUE_DOMAINS_COUNT_SCALAR_NAME, this._domainSet.size);
-=======
     // We only want to count the unique domains up to MAX_UNIQUE_VISITED_DOMAINS.
     if (this._domainSet.size < MAX_UNIQUE_VISITED_DOMAINS) {
       this._domainSet.add(baseDomain);
@@ -345,7 +295,6 @@ let URICountListener = {
         this._domain24hrSet.delete(baseDomain);
       }, gRecentVisitedOriginsExpiry * 1000);
     }
->>>>>>> upstream-releases
   },
 
   /**
@@ -355,28 +304,6 @@ let URICountListener = {
     this._domainSet.clear();
   },
 
-<<<<<<< HEAD
-  /**
-   * Returns the number of unique domains visited in this session during the
-   * last 24 hours.
-   */
-  get uniqueDomainsVisitedInPast24Hours() {
-    return this._domain24hrSet.size;
-  },
-
-  /**
-   * Resets the number of unique domains visited in this session.
-   */
-  resetUniqueDomainsVisitedInPast24Hours() {
-    this._domain24hrSet.clear();
-  },
-
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIWebProgressListener,
-                                          Ci.nsISupportsWeakReference]),
-||||||| merged common ancestors
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIWebProgressListener,
-                                          Ci.nsISupportsWeakReference]),
-=======
   /**
    * Returns the number of unique domains visited in this session during the
    * last 24 hours.
@@ -396,7 +323,6 @@ let URICountListener = {
     Ci.nsIWebProgressListener,
     Ci.nsISupportsWeakReference,
   ]),
->>>>>>> upstream-releases
 };
 
 let urlbarListener = {

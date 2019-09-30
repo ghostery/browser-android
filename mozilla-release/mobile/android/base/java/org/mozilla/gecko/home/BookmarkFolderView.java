@@ -9,11 +9,8 @@ import org.mozilla.gecko.GeckoProfile;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.db.BrowserDB;
-import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.util.UIAsyncTask;
-import org.mozilla.gecko.widget.themed.ThemedImageView;
-import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -62,13 +59,11 @@ public class BookmarkFolderView extends LinearLayout {
         FolderState(final int image) { this.image = image; }
     }
 
-    /* Cliqz Start */
-    private final ThemedTextView mTitle;
-    /* Cliqz End */
+    private final TextView mTitle;
     private final TextView mSubtitle;
 
-    private final ThemedImageView mIcon;
-    private final ThemedImageView mIndicator;
+    private final ImageView mIcon;
+    private final ImageView mIndicator;
 
     public BookmarkFolderView(Context context) {
         this(context, null);
@@ -79,12 +74,10 @@ public class BookmarkFolderView extends LinearLayout {
 
         LayoutInflater.from(context).inflate(R.layout.two_line_folder_row, this);
 
-        /* Cliqz Start */
-        mTitle = (ThemedTextView) findViewById(R.id.title);
-        /* Cliqz End */
+        mTitle = (TextView) findViewById(R.id.title);
         mSubtitle = (TextView) findViewById(R.id.subtitle);
-        mIcon =  (ThemedImageView) findViewById(R.id.icon);
-        mIndicator = (ThemedImageView) findViewById(R.id.indicator);
+        mIcon =  (ImageView) findViewById(R.id.icon);
+        mIndicator = (ImageView) findViewById(R.id.indicator);
     }
 
     public void update(String title, int folderID) {
@@ -95,18 +88,6 @@ public class BookmarkFolderView extends LinearLayout {
     private void setTitle(String title) {
         mTitle.setText(title);
     }
-
-    /* Cliqz Start */
-    public void updateTheme() {
-        setLightTheme(PreferenceManager.getInstance().isLightThemeEnabled());
-    }
-
-    public void setLightTheme(boolean isLightTheme) {
-        mTitle.setLightTheme(isLightTheme);
-        mIcon.setLightTheme(isLightTheme);
-        mIndicator.setLightTheme(isLightTheme);
-    }
-    /* Cliqz End */
 
     private static class ItemCountUpdateTask extends UIAsyncTask.WithoutParams<Integer> {
         private final WeakReference<TextView> mTextViewReference;

@@ -494,14 +494,6 @@ typedef enum {
 
     SEC_OID_TLS13_KEA_ANY = 356,
 
-<<<<<<< HEAD
-    SEC_OID_X509_ANY_EXT_KEY_USAGE = 357,
-    SEC_OID_EXT_KEY_USAGE_IPSEC_IKE = 358,
-    SEC_OID_IPSEC_IKE_END = 359,
-    SEC_OID_IPSEC_IKE_INTERMEDIATE = 360,
-
-||||||| merged common ancestors
-=======
     SEC_OID_X509_ANY_EXT_KEY_USAGE = 357,
     SEC_OID_EXT_KEY_USAGE_IPSEC_IKE = 358,
     SEC_OID_IPSEC_IKE_END = 359,
@@ -510,7 +502,6 @@ typedef enum {
     SEC_OID_EXT_KEY_USAGE_IPSEC_TUNNEL = 362,
     SEC_OID_EXT_KEY_USAGE_IPSEC_USER = 363,
 
->>>>>>> upstream-releases
     SEC_OID_TOTAL
 } SECOidTag;
 

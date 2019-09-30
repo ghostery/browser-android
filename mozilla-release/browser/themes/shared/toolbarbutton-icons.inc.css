@@ -480,18 +480,12 @@ toolbar[brighttext] {
   animation-timing-function: steps(48);
 }
 
-<<<<<<< HEAD
-#library-animatable-box[animate="bookmark"] > .toolbarbutton-animatable-image {
-||||||| merged common ancestors
-.toolbarbutton-animatable-box[animate="bookmark"] > .toolbarbutton-animatable-image {
-=======
 #library-animatable-box[animate][fade] > .toolbarbutton-animatable-image {
   animation-duration: 2s;
   animation-timing-function: ease-out;
 }
 
 #library-animatable-box[animate="bookmark"] > .toolbarbutton-animatable-image {
->>>>>>> upstream-releases
   background-image: url("chrome://browser/skin/library-bookmark-animation.svg");
   animation-name: library-bookmark-animation;
   -moz-context-properties: fill, fill-opacity, stroke;

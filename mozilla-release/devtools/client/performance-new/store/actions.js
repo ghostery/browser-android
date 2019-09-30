@@ -4,21 +4,6 @@
 "use strict";
 
 const selectors = require("devtools/client/performance-new/store/selectors");
-<<<<<<< HEAD
-const { recordingState: {
-  AVAILABLE_TO_RECORD,
-  REQUEST_TO_START_RECORDING,
-  REQUEST_TO_GET_PROFILE_AND_STOP_PROFILER,
-  REQUEST_TO_STOP_PROFILER,
-}, INFINITE_WINDOW_LENGTH } = require("devtools/client/performance-new/utils");
-||||||| merged common ancestors
-const { recordingState: {
-  AVAILABLE_TO_RECORD,
-  REQUEST_TO_START_RECORDING,
-  REQUEST_TO_GET_PROFILE_AND_STOP_PROFILER,
-  REQUEST_TO_STOP_PROFILER,
-}} = require("devtools/client/performance-new/utils");
-=======
 const {
   recordingState: {
     AVAILABLE_TO_RECORD,
@@ -31,7 +16,6 @@ const { OS } = require("resource://gre/modules/osfile.jsm");
 const {
   ProfilerGetSymbols,
 } = require("resource://gre/modules/ProfilerGetSymbols.jsm");
->>>>>>> upstream-releases
 
 /**
  * The recording state manages the current state of the recording panel.
@@ -101,15 +85,6 @@ exports.changeEntries = entries =>
   });
 
 /**
- * Updates the recording settings for the duration.
- * @param {number} duration in seconds
- */
-exports.changeDuration = duration => _dispatchAndUpdatePreferences({
-  type: "CHANGE_DURATION",
-  duration,
-});
-
-/**
  * Updates the recording settings for the features.
  * @param {object} features
  */
@@ -156,17 +131,6 @@ exports.startRecording = () => {
   return (dispatch, getState) => {
     const recordingSettings = selectors.getRecordingSettings(getState());
     const perfFront = selectors.getPerfFront(getState());
-    // We should pass 0 to startProfiler call if the window length should be infinite.
-    if (recordingSettings.duration === INFINITE_WINDOW_LENGTH) {
-      recordingSettings.duration = 0;
-    }
-    // Firefox 65 introduced a duration-based buffer with actorVersion 1.
-    // We should delete the duration parameter if the profiled Firefox is older than
-    // version 1. This cannot happen inside the devtools panel but it may happen
-    // when profiling an older Firefox with remote debugging. Fx65+
-    if (selectors.getActorVersion(getState()) < 1) {
-      delete recordingSettings.duration;
-    }
     perfFront.startProfiler(recordingSettings);
     dispatch(changeRecordingState(REQUEST_TO_START_RECORDING));
   };

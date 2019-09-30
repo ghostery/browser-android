@@ -27,10 +27,4 @@ typedef int64_t SMILTime;
 
 }  // namespace mozilla
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILTypes.h
-#endif  // NS_SMILTYPES_H_
-||||||| merged common ancestors
-#endif // NS_SMILTYPES_H_
-=======
 #endif  // mozilla_SMILTypes_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILTypes.h

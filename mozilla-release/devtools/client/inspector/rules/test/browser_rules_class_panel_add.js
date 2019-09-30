@@ -11,65 +11,6 @@
 // - {Boolean} expectNoMutation Set to true if we shouldn't wait for a DOM mutation
 // - {Array} expectedClasses The expected list of classes to be applied to the DOM and to
 //   be found in the class panel
-<<<<<<< HEAD
-const TEST_ARRAY = [{
-  textEntered: "",
-  expectNoMutation: true,
-  expectedClasses: [],
-}, {
-  textEntered: "class",
-  expectedClasses: ["class"],
-}, {
-  textEntered: "class",
-  expectNoMutation: true,
-  expectedClasses: ["class"],
-}, {
-  textEntered: "a a a a a a a a a a",
-  expectedClasses: ["class", "a"],
-}, {
-  textEntered: "class2 class3",
-  expectedClasses: ["class", "a", "class2", "class3"],
-}, {
-  textEntered: "                       ",
-  expectNoMutation: true,
-  expectedClasses: ["class", "a", "class2", "class3"],
-}, {
-  textEntered: "          class4",
-  expectedClasses: ["class", "a", "class2", "class3", "class4"],
-}, {
-  textEntered: "    \t      class5      \t \t\t             ",
-  expectedClasses: ["class", "a", "class2", "class3", "class4", "class5"],
-}];
-||||||| merged common ancestors
-const TEST_ARRAY = [{
-  textEntered: "",
-  expectNoMutation: true,
-  expectedClasses: []
-}, {
-  textEntered: "class",
-  expectedClasses: ["class"]
-}, {
-  textEntered: "class",
-  expectNoMutation: true,
-  expectedClasses: ["class"]
-}, {
-  textEntered: "a a a a a a a a a a",
-  expectedClasses: ["class", "a"]
-}, {
-  textEntered: "class2 class3",
-  expectedClasses: ["class", "a", "class2", "class3"]
-}, {
-  textEntered: "                       ",
-  expectNoMutation: true,
-  expectedClasses: ["class", "a", "class2", "class3"]
-}, {
-  textEntered: "          class4",
-  expectedClasses: ["class", "a", "class2", "class3", "class4"]
-}, {
-  textEntered: "    \t      class5      \t \t\t             ",
-  expectedClasses: ["class", "a", "class2", "class3", "class4", "class5"]
-}];
-=======
 const TEST_ARRAY = [
   {
     textEntered: "",
@@ -107,7 +48,6 @@ const TEST_ARRAY = [
     expectedClasses: ["class", "a", "class2", "class3", "class4", "class5"],
   },
 ];
->>>>>>> upstream-releases
 
 add_task(async function() {
   await addTab("data:text/html;charset=utf-8,");

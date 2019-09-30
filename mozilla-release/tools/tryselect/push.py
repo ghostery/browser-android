@@ -102,33 +102,6 @@ def push_to_try(method, msg, try_task_config=None,
     commit_message = ('%s%s\n\nPushed via `mach try %s`' %
                       (msg, closed_tree_string, method))
 
-<<<<<<< HEAD
-    if templates is not None:
-        templates.setdefault('env', {}).update({'TRY_SELECTOR': method})
-
-    if labels or labels == []:
-        try_task_config = {
-            'version': 1,
-            'tasks': sorted(labels),
-        }
-        if templates:
-            try_task_config['templates'] = templates
-        if push:
-            write_task_config_history(msg, try_task_config)
-
-||||||| merged common ancestors
-    if labels or labels == []:
-        try_task_config = {
-            'version': 1,
-            'tasks': sorted(labels),
-        }
-        if templates:
-            try_task_config['templates'] = templates
-        if push:
-            write_task_config_history(msg, try_task_config)
-
-=======
->>>>>>> upstream-releases
     config_path = None
     changed_files = []
     if try_task_config:

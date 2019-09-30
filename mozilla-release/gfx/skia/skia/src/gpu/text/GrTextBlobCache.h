@@ -8,13 +8,7 @@
 #ifndef GrTextBlobCache_DEFINED
 #define GrTextBlobCache_DEFINED
 
-<<<<<<< HEAD
-#include "GrTextContext.h"
-||||||| merged common ancestors
-#include "GrAtlasTextContext.h"
-=======
 #include "GrTextBlob.h"
->>>>>>> upstream-releases
 #include "SkMessageBus.h"
 #include "SkRefCnt.h"
 #include "SkTArray.h"
@@ -39,50 +33,13 @@ public:
     }
     ~GrTextBlobCache();
 
-<<<<<<< HEAD
-    // creates an uncached blob
-    sk_sp<GrTextBlob> makeBlob(int glyphCount, int runCount) {
-        return GrTextBlob::Make(glyphCount, runCount);
-||||||| merged common ancestors
-    // creates an uncached blob
-    sk_sp<GrAtlasTextBlob> makeBlob(int glyphCount, int runCount) {
-        return GrAtlasTextBlob::Make(fPool, glyphCount, runCount);
-=======
     sk_sp<GrTextBlob> makeBlob(const SkGlyphRunList& glyphRunList,
                                GrColor color,
                                GrStrikeCache* strikeCache) {
         return GrTextBlob::Make(
                 glyphRunList.totalGlyphCount(), glyphRunList.size(), color, strikeCache);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    sk_sp<GrTextBlob> makeBlob(const SkTextBlob* blob) {
-        int glyphCount = 0;
-        int runCount = 0;
-        BlobGlyphCount(&glyphCount, &runCount, blob);
-        return GrTextBlob::Make(glyphCount, runCount);
-    }
-
-    sk_sp<GrTextBlob> makeCachedBlob(const SkTextBlob* blob,
-                                          const GrTextBlob::Key& key,
-                                          const SkMaskFilterBase::BlurRec& blurRec,
-                                          const SkPaint& paint) {
-        sk_sp<GrTextBlob> cacheBlob(this->makeBlob(blob));
-||||||| merged common ancestors
-    sk_sp<GrAtlasTextBlob> makeBlob(const SkTextBlob* blob) {
-        int glyphCount = 0;
-        int runCount = 0;
-        BlobGlyphCount(&glyphCount, &runCount, blob);
-        return GrAtlasTextBlob::Make(fPool, glyphCount, runCount);
-    }
-
-    sk_sp<GrAtlasTextBlob> makeCachedBlob(const SkTextBlob* blob,
-                                          const GrAtlasTextBlob::Key& key,
-                                          const SkMaskFilterBase::BlurRec& blurRec,
-                                          const SkPaint& paint) {
-        sk_sp<GrAtlasTextBlob> cacheBlob(this->makeBlob(blob));
-=======
     sk_sp<GrTextBlob> makeCachedBlob(const SkGlyphRunList& glyphRunList,
                                      const GrTextBlob::Key& key,
                                      const SkMaskFilterBase::BlurRec& blurRec,
@@ -90,23 +47,6 @@ public:
                                      GrColor color,
                                      GrStrikeCache* strikeCache) {
         sk_sp<GrTextBlob> cacheBlob(makeBlob(glyphRunList, color, strikeCache));
->>>>>>> upstream-releases
-        cacheBlob->setupKey(key, blurRec, paint);
-        this->add(cacheBlob);
-        glyphRunList.temporaryShuntBlobNotifyAddedToCache(fUniqueID);
-        return cacheBlob;
-    }
-
-<<<<<<< HEAD
-    sk_sp<GrTextBlob> makeBlob(const SkGlyphRunList& glyphRunList) {
-        return GrTextBlob::Make(glyphRunList.totalGlyphCount(), glyphRunList.size());
-    }
-
-    sk_sp<GrTextBlob> makeCachedBlob(const SkGlyphRunList& glyphRunList,
-                                     const GrTextBlob::Key& key,
-                                     const SkMaskFilterBase::BlurRec& blurRec,
-                                     const SkPaint& paint) {
-        sk_sp<GrTextBlob> cacheBlob(makeBlob(glyphRunList));
         cacheBlob->setupKey(key, blurRec, paint);
         this->add(cacheBlob);
         glyphRunList.temporaryShuntBlobNotifyAddedToCache(fUniqueID);
@@ -114,11 +54,6 @@ public:
     }
 
     sk_sp<GrTextBlob> find(const GrTextBlob::Key& key) const {
-||||||| merged common ancestors
-    sk_sp<GrAtlasTextBlob> find(const GrAtlasTextBlob::Key& key) const {
-=======
-    sk_sp<GrTextBlob> find(const GrTextBlob::Key& key) const {
->>>>>>> upstream-releases
         const auto* idEntry = fBlobIDCache.find(key.fUniqueID);
         return idEntry ? idEntry->find(key) : nullptr;
     }
@@ -161,22 +96,11 @@ public:
     }
 
     struct PurgeBlobMessage {
-<<<<<<< HEAD
-        PurgeBlobMessage(uint32_t blobID, uint32_t contextUniqueID)
-                : fBlobID(blobID), fContextID(contextUniqueID) {}
-        bool shouldSend(uint32_t inboxID) const { return fContextID == inboxID; }
-
-        uint32_t fBlobID;
-        uint32_t fContextID;
-||||||| merged common ancestors
-        uint32_t fID;
-=======
         PurgeBlobMessage(uint32_t blobID, uint32_t contextUniqueID)
                 : fBlobID(blobID), fContextID(contextUniqueID) {}
 
         uint32_t fBlobID;
         uint32_t fContextID;
->>>>>>> upstream-releases
     };
 
     static void PostPurgeBlobMessage(uint32_t blobID, uint32_t cacheID);

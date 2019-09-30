@@ -82,30 +82,11 @@ class SharedMemoryBasic final : public SharedMemoryCommon<mach_port_t> {
 #endif
   }
 
-<<<<<<< HEAD
-  virtual SharedMemoryType Type() const override { return TYPE_BASIC; }
-||||||| merged common ancestors
-  virtual SharedMemoryType Type() const override
-  {
-    return TYPE_BASIC;
-  }
-
-  static Handle NULLHandle()
-  {
-    return Handle();
-  }
-=======
   virtual SharedMemoryType Type() const override { return TYPE_BASIC; }
 
   static Handle NULLHandle() { return Handle(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static Handle NULLHandle() { return Handle(); }
-||||||| merged common ancestors
-=======
   static void* FindFreeAddressSpace(size_t aSize);
->>>>>>> upstream-releases
 
   virtual bool IsHandleValid(const Handle& aHandle) const override;
 

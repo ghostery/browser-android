@@ -511,13 +511,7 @@ void Summariser::Rule(uintptr_t aAddress, int aNewReg, LExprHow how,
 
 #else
 
-<<<<<<< HEAD
-#error "Unsupported arch"
-||||||| merged common ancestors
-# error "Unsupported arch"
-=======
 #  error "Unsupported arch"
->>>>>>> upstream-releases
 #endif
 
   return;

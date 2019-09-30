@@ -25,16 +25,8 @@ struct SVGMark {
 
   float x, y, angle;
   Type type;
-<<<<<<< HEAD
-  nsSVGMark(float aX, float aY, float aAngle, Type aType)
-      : x(aX), y(aY), angle(aAngle), type(aType) {}
-||||||| merged common ancestors
-  nsSVGMark(float aX, float aY, float aAngle, Type aType) :
-    x(aX), y(aY), angle(aAngle), type(aType) {}
-=======
   SVGMark(float aX, float aY, float aAngle, Type aType)
       : x(aX), y(aY), angle(aAngle), type(aType) {}
->>>>>>> upstream-releases
 };
 
 namespace dom {
@@ -87,13 +79,7 @@ class SVGGeometryElement : public SVGGeometryElementBase {
   bool GeometryDependsOnCoordCtx();
 
   virtual bool IsMarkable();
-<<<<<<< HEAD
-  virtual void GetMarkPoints(nsTArray<nsSVGMark>* aMarks);
-||||||| merged common ancestors
-  virtual void GetMarkPoints(nsTArray<nsSVGMark> *aMarks);
-=======
   virtual void GetMarkPoints(nsTArray<SVGMark>* aMarks);
->>>>>>> upstream-releases
 
   /**
    * A method that can be faster than using a Moz2D Path and calling GetBounds/
@@ -236,16 +222,8 @@ class SVGGeometryElement : public SVGGeometryElementBase {
   already_AddRefed<nsISVGPoint> GetPointAtLength(float distance,
                                                  ErrorResult& rv);
 
-<<<<<<< HEAD
- protected:
-  // nsSVGElement method
-||||||| merged common ancestors
-protected:
-  // nsSVGElement method
-=======
  protected:
   // SVGElement method
->>>>>>> upstream-releases
   virtual NumberAttributesInfo GetNumberInfo() override;
 
   SVGAnimatedNumber mPathLength;

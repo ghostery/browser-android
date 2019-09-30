@@ -24,17 +24,8 @@ namespace mozilla {
 
 namespace dom {
 
-<<<<<<< HEAD
-static nsSVGAttrTearoffTable<nsSVGLength2, DOMSVGLength>
-    sBaseSVGLengthTearOffTable, sAnimSVGLengthTearOffTable;
-||||||| merged common ancestors
-static nsSVGAttrTearoffTable<nsSVGLength2, DOMSVGLength>
-  sBaseSVGLengthTearOffTable,
-  sAnimSVGLengthTearOffTable;
-=======
 static SVGAttrTearoffTable<SVGAnimatedLength, DOMSVGLength>
     sBaseSVGLengthTearOffTable, sAnimSVGLengthTearOffTable;
->>>>>>> upstream-releases
 
 // We could use NS_IMPL_CYCLE_COLLECTION(, except that in Unlink() we need to
 // clear our list's weak ref to us to be safe. (The other option would be to
@@ -64,13 +55,7 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(DOMSVGLength)
 
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(DOMSVGLength)
   NS_WRAPPERCACHE_INTERFACE_MAP_ENTRY
-<<<<<<< HEAD
-  NS_INTERFACE_MAP_ENTRY(mozilla::DOMSVGLength)  // pseudo-interface
-||||||| merged common ancestors
-  NS_INTERFACE_MAP_ENTRY(mozilla::DOMSVGLength) // pseudo-interface
-=======
   NS_INTERFACE_MAP_ENTRY(DOMSVGLength)  // pseudo-interface
->>>>>>> upstream-releases
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
@@ -124,29 +109,6 @@ DOMSVGLength::DOMSVGLength(DOMSVGLengthList* aList, uint8_t aAttrEnum,
 }
 
 DOMSVGLength::DOMSVGLength()
-<<<<<<< HEAD
-    : mList(nullptr),
-      mListIndex(0),
-      mAttrEnum(0),
-      mIsAnimValItem(false),
-      mUnit(SVGLength_Binding::SVG_LENGTHTYPE_NUMBER),
-      mValue(0.0f),
-      mVal(nullptr) {}
-
-DOMSVGLength::DOMSVGLength(nsSVGLength2* aVal, nsSVGElement* aSVGElement,
-||||||| merged common ancestors
-  : mList(nullptr)
-  , mListIndex(0)
-  , mAttrEnum(0)
-  , mIsAnimValItem(false)
-  , mUnit(SVGLength_Binding::SVG_LENGTHTYPE_NUMBER)
-  , mValue(0.0f)
-  , mVal(nullptr)
-{
-}
-
-DOMSVGLength::DOMSVGLength(nsSVGLength2* aVal, nsSVGElement* aSVGElement,
-=======
     : mList(nullptr),
       mListIndex(0),
       mAttrEnum(0),
@@ -156,7 +118,6 @@ DOMSVGLength::DOMSVGLength(nsSVGLength2* aVal, nsSVGElement* aSVGElement,
       mVal(nullptr) {}
 
 DOMSVGLength::DOMSVGLength(SVGAnimatedLength* aVal, SVGElement* aSVGElement,
->>>>>>> upstream-releases
                            bool aAnimVal)
     : mList(nullptr),
       mListIndex(0),
@@ -188,24 +149,11 @@ void DOMSVGLength::CleanupWeakRefs() {
 
 DOMSVGLength::~DOMSVGLength() { CleanupWeakRefs(); }
 
-<<<<<<< HEAD
-already_AddRefed<DOMSVGLength> DOMSVGLength::GetTearOff(
-    nsSVGLength2* aVal, nsSVGElement* aSVGElement, bool aAnimVal) {
-  auto& table =
-      aAnimVal ? sAnimSVGLengthTearOffTable : sBaseSVGLengthTearOffTable;
-||||||| merged common ancestors
-already_AddRefed<DOMSVGLength>
-DOMSVGLength::GetTearOff(nsSVGLength2* aVal, nsSVGElement* aSVGElement,
-                         bool aAnimVal)
-{
-  auto& table = aAnimVal ? sAnimSVGLengthTearOffTable : sBaseSVGLengthTearOffTable;
-=======
 already_AddRefed<DOMSVGLength> DOMSVGLength::GetTearOff(SVGAnimatedLength* aVal,
                                                         SVGElement* aSVGElement,
                                                         bool aAnimVal) {
   auto& table =
       aAnimVal ? sAnimSVGLengthTearOffTable : sBaseSVGLengthTearOffTable;
->>>>>>> upstream-releases
   RefPtr<DOMSVGLength> domLength = table.GetTearoff(aVal);
   if (!domLength) {
     domLength = new DOMSVGLength(aVal, aSVGElement, aAnimVal);
@@ -518,11 +466,5 @@ bool DOMSVGLength::IndexIsValid() {
 }
 #endif
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

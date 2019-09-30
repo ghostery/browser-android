@@ -17,15 +17,6 @@ add_task(async function() {
   await focusNode("#test-div", inspector);
 
   info("Verify attributes, only ID should be there for now");
-<<<<<<< HEAD
-  await assertAttributes("#test-div", {
-    id: "test-div",
-  }, testActor);
-||||||| merged common ancestors
-  await assertAttributes("#test-div", {
-    id: "test-div"
-  }, testActor);
-=======
   await assertAttributes(
     "#test-div",
     {
@@ -33,7 +24,6 @@ add_task(async function() {
     },
     testActor
   );
->>>>>>> upstream-releases
 
   info("Focus the ID attribute and change its content");
   const { editor } = await getContainerForSelector("#test-div", inspector);
@@ -47,19 +37,6 @@ add_task(async function() {
   await mutated;
 
   info("Verify attributes, should have ID, class and style");
-<<<<<<< HEAD
-  await assertAttributes("#test-div", {
-    id: "test-div",
-    class: "newclass",
-    style: "color:green",
-  }, testActor);
-||||||| merged common ancestors
-  await assertAttributes("#test-div", {
-    id: "test-div",
-    class: "newclass",
-    style: "color:green"
-  }, testActor);
-=======
   await assertAttributes(
     "#test-div",
     {
@@ -69,19 +46,9 @@ add_task(async function() {
     },
     testActor
   );
->>>>>>> upstream-releases
 
   info("Trying to undo the change");
   await undoChange(inspector);
-<<<<<<< HEAD
-  await assertAttributes("#test-div", {
-    id: "test-div",
-  }, testActor);
-||||||| merged common ancestors
-  await assertAttributes("#test-div", {
-    id: "test-div"
-  }, testActor);
-=======
   await assertAttributes(
     "#test-div",
     {
@@ -89,5 +56,4 @@ add_task(async function() {
     },
     testActor
   );
->>>>>>> upstream-releases
 });

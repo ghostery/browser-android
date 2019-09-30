@@ -91,15 +91,8 @@ class nsAPostRefreshObserver {
 };
 
 class nsRefreshDriver final : public mozilla::layers::TransactionIdAllocator,
-<<<<<<< HEAD
-                              public nsARefreshObserver {
-||||||| merged common ancestors
-                              public nsARefreshObserver
-{
-=======
                               public nsARefreshObserver {
   using Document = mozilla::dom::Document;
->>>>>>> upstream-releases
   using TransactionId = mozilla::layers::TransactionId;
   using VVPResizeEvent =
       mozilla::dom::VisualViewport::VisualViewportResizeEvent;
@@ -196,20 +189,6 @@ class nsRefreshDriver final : public mozilla::layers::TransactionIdAllocator,
   /**
    * Add / remove presshells which have pending resize event.
    */
-<<<<<<< HEAD
-  void AddResizeEventFlushObserver(nsIPresShell* aShell) {
-    MOZ_DIAGNOSTIC_ASSERT(!mResizeEventFlushObservers.Contains(aShell),
-                          "Double-adding resize event flush observer");
-    mResizeEventFlushObservers.AppendElement(aShell);
-    EnsureTimerStarted();
-||||||| merged common ancestors
-  void AddResizeEventFlushObserver(nsIPresShell* aShell)
-  {
-    MOZ_DIAGNOSTIC_ASSERT(!mResizeEventFlushObservers.Contains(aShell),
-                          "Double-adding resize event flush observer");
-    mResizeEventFlushObservers.AppendElement(aShell);
-    EnsureTimerStarted();
-=======
   void AddResizeEventFlushObserver(mozilla::PresShell* aPresShell,
                                    bool aDelayed = false) {
     MOZ_DIAGNOSTIC_ASSERT(
@@ -222,93 +201,38 @@ class nsRefreshDriver final : public mozilla::layers::TransactionIdAllocator,
       mResizeEventFlushObservers.AppendElement(aPresShell);
       EnsureTimerStarted();
     }
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  void RemoveResizeEventFlushObserver(nsIPresShell* aShell) {
-    mResizeEventFlushObservers.RemoveElement(aShell);
-||||||| merged common ancestors
-  void RemoveResizeEventFlushObserver(nsIPresShell* aShell)
-  {
-    mResizeEventFlushObservers.RemoveElement(aShell);
-=======
   void RemoveResizeEventFlushObserver(mozilla::PresShell* aPresShell) {
     mResizeEventFlushObservers.RemoveElement(aPresShell);
     mDelayedResizeEventFlushObservers.RemoveElement(aPresShell);
->>>>>>> upstream-releases
   }
 
   /**
    * Add / remove presshells that we should flush style and layout on
    */
-<<<<<<< HEAD
-  void AddStyleFlushObserver(nsIPresShell* aShell) {
-    MOZ_DIAGNOSTIC_ASSERT(!mStyleFlushObservers.Contains(aShell),
-||||||| merged common ancestors
-  void AddStyleFlushObserver(nsIPresShell* aShell)
-  {
-    MOZ_DIAGNOSTIC_ASSERT(!mStyleFlushObservers.Contains(aShell),
-=======
   void AddStyleFlushObserver(mozilla::PresShell* aPresShell) {
     MOZ_DIAGNOSTIC_ASSERT(!mStyleFlushObservers.Contains(aPresShell),
->>>>>>> upstream-releases
                           "Double-adding style flush observer");
     mStyleFlushObservers.AppendElement(aPresShell);
     EnsureTimerStarted();
   }
 
-<<<<<<< HEAD
-  void RemoveStyleFlushObserver(nsIPresShell* aShell) {
-    mStyleFlushObservers.RemoveElement(aShell);
-||||||| merged common ancestors
-  void RemoveStyleFlushObserver(nsIPresShell* aShell)
-  {
-    mStyleFlushObservers.RemoveElement(aShell);
-=======
   void RemoveStyleFlushObserver(mozilla::PresShell* aPresShell) {
     mStyleFlushObservers.RemoveElement(aPresShell);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  void AddLayoutFlushObserver(nsIPresShell* aShell) {
-    MOZ_DIAGNOSTIC_ASSERT(!IsLayoutFlushObserver(aShell),
-||||||| merged common ancestors
-  void AddLayoutFlushObserver(nsIPresShell* aShell)
-  {
-    MOZ_DIAGNOSTIC_ASSERT(!IsLayoutFlushObserver(aShell),
-=======
   void AddLayoutFlushObserver(mozilla::PresShell* aPresShell) {
     MOZ_DIAGNOSTIC_ASSERT(!IsLayoutFlushObserver(aPresShell),
->>>>>>> upstream-releases
                           "Double-adding layout flush observer");
     mLayoutFlushObservers.AppendElement(aPresShell);
     EnsureTimerStarted();
   }
-<<<<<<< HEAD
-  void RemoveLayoutFlushObserver(nsIPresShell* aShell) {
-    mLayoutFlushObservers.RemoveElement(aShell);
-||||||| merged common ancestors
-  void RemoveLayoutFlushObserver(nsIPresShell* aShell)
-  {
-    mLayoutFlushObservers.RemoveElement(aShell);
-=======
   void RemoveLayoutFlushObserver(mozilla::PresShell* aPresShell) {
     mLayoutFlushObservers.RemoveElement(aPresShell);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  bool IsLayoutFlushObserver(nsIPresShell* aShell) {
-    return mLayoutFlushObservers.Contains(aShell);
-||||||| merged common ancestors
-  bool IsLayoutFlushObserver(nsIPresShell* aShell)
-  {
-    return mLayoutFlushObservers.Contains(aShell);
-=======
   bool IsLayoutFlushObserver(mozilla::PresShell* aPresShell) {
     return mLayoutFlushObservers.Contains(aPresShell);
->>>>>>> upstream-releases
   }
 
   /**
@@ -458,13 +382,8 @@ class nsRefreshDriver final : public mozilla::layers::TransactionIdAllocator,
   void ClearPendingTransactions() override;
   void ResetInitialTransactionId(TransactionId aTransactionId) override;
   mozilla::TimeStamp GetTransactionStart() override;
-<<<<<<< HEAD
-  mozilla::VsyncId GetVsyncId() override;
-||||||| merged common ancestors
-=======
   mozilla::VsyncId GetVsyncId() override;
   mozilla::TimeStamp GetVsyncStart() override;
->>>>>>> upstream-releases
 
   bool IsWaitingForPaint(mozilla::TimeStamp aTime);
 
@@ -502,11 +421,6 @@ class nsRefreshDriver final : public mozilla::layers::TransactionIdAllocator,
 
   void NotifyDOMContentLoaded();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // Schedule a refresh so that any delayed events will run soon.
   void RunDelayedEventsSoon();
 
@@ -516,7 +430,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   typedef nsTObserverArray<nsARefreshObserver*> ObserverArray;
   typedef nsTArray<RefPtr<VVPResizeEvent>> VisualViewportResizeEventArray;
   typedef nsTArray<RefPtr<mozilla::Runnable>> ScrollEventArray;
@@ -535,14 +448,8 @@ private:
   MOZ_CAN_RUN_SCRIPT
   void RunFrameRequestCallbacks(mozilla::TimeStamp aNowTime);
   void UpdateIntersectionObservations();
-<<<<<<< HEAD
-  void Tick(mozilla::VsyncId aId, mozilla::TimeStamp aNowTime);
-||||||| merged common ancestors
-  void Tick(mozilla::TimeStamp aNowTime);
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY
   void Tick(mozilla::VsyncId aId, mozilla::TimeStamp aNowTime);
->>>>>>> upstream-releases
 
   enum EnsureTimerStartedFlags {
     eNone = 0,
@@ -635,13 +542,8 @@ private:
   uint64_t mWarningThreshold;
   mozilla::TimeStamp mMostRecentRefresh;
   mozilla::TimeStamp mTickStart;
-<<<<<<< HEAD
-  mozilla::VsyncId mTickVsyncId;
-||||||| merged common ancestors
-=======
   mozilla::VsyncId mTickVsyncId;
   mozilla::TimeStamp mTickVsyncTime;
->>>>>>> upstream-releases
   mozilla::TimeStamp mNextThrottledFrameRequestTick;
   mozilla::TimeStamp mNextRecomputeVisibilityTick;
   mozilla::TimeStamp mInitialTimerRunningLimit;

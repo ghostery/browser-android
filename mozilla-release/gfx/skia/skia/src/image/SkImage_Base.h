@@ -16,28 +16,15 @@
 #include "GrTextureProxy.h"
 #include "SkTDArray.h"
 
-<<<<<<< HEAD
-class GrTexture;
-||||||| merged common ancestors
-    class GrTexture;
-=======
 class GrRecordingContext;
 class GrTexture;
->>>>>>> upstream-releases
 #endif
 
 #include <new>
 
 class GrSamplerState;
-<<<<<<< HEAD
-class SkCachedData;
-struct SkYUVSizeInfo;
-||||||| merged common ancestors
-class SkImageCacherator;
-=======
 class SkCachedData;
 struct SkYUVASizeInfo;
->>>>>>> upstream-releases
 
 enum {
     kNeedNewImageUniqueID = 0
@@ -77,18 +64,9 @@ public:
                                                         uint32_t* uniqueID) const {
         return nullptr;
     }
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-    virtual GrBackendObject onGetTextureHandle(bool flushPendingGrContextIO,
-                                               GrSurfaceOrigin* origin) const {
-        return 0;
-    }
-=======
     virtual bool isYUVA() const { return false; }
     virtual bool asYUVATextureProxiesRef(sk_sp<GrTextureProxy>[4], SkYUVAIndex[4],
                                          SkYUVColorSpace*) const { return false; }
->>>>>>> upstream-releases
     virtual GrTexture* onGetTexture() const { return nullptr; }
 #endif
     virtual GrBackendTexture onGetBackendTexture(bool flushPendingGrContextIO,
@@ -100,44 +78,22 @@ public:
 
     virtual sk_sp<SkImage> onMakeSubset(GrRecordingContext*, const SkIRect&) const = 0;
 
-<<<<<<< HEAD
-    virtual sk_sp<SkCachedData> getPlanes(SkYUVSizeInfo*, SkYUVColorSpace*, const void* planes[3]);
-    virtual sk_sp<SkData> onRefEncoded() const { return nullptr; }
-||||||| merged common ancestors
-    virtual SkData* onRefEncoded() const { return nullptr; }
-=======
     virtual sk_sp<SkCachedData> getPlanes(SkYUVASizeInfo*, SkYUVAIndex[4],
                                           SkYUVColorSpace*, const void* planes[4]);
     virtual sk_sp<SkData> onRefEncoded() const { return nullptr; }
->>>>>>> upstream-releases
 
     virtual bool onAsLegacyBitmap(SkBitmap*) const;
 
     // True for picture-backed and codec-backed
     virtual bool onIsLazyGenerated() const { return false; }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    // True only for generators that operate directly on gpu (e.g. picture-generators)
-    virtual bool onCanLazyGenerateOnGPU() const { return false; }
-
-=======
     // True for images instantiated in GPU memory
     virtual bool onIsTextureBacked() const { return false; }
 
->>>>>>> upstream-releases
     // Call when this image is part of the key to a resourcecache entry. This allows the cache
     // to know automatically those entries can be purged when this SkImage deleted.
-<<<<<<< HEAD
-    void notifyAddedToRasterCache() const {
-        fAddedToRasterCache.store(true);
-||||||| merged common ancestors
-    void notifyAddedToCache() const {
-        fAddedToCache.store(true);
-=======
     virtual void notifyAddedToRasterCache() const {
         fAddedToRasterCache.store(true);
->>>>>>> upstream-releases
     }
 
     virtual bool onIsValid(GrContext*) const = 0;
@@ -145,15 +101,8 @@ public:
     virtual bool onPinAsTexture(GrContext*) const { return false; }
     virtual void onUnpinAsTexture(GrContext*) const {}
 
-<<<<<<< HEAD
-    virtual sk_sp<SkImage> onMakeColorSpace(sk_sp<SkColorSpace>) const = 0;
-||||||| merged common ancestors
-    virtual sk_sp<SkImage> onMakeColorSpace(sk_sp<SkColorSpace>, SkColorType,
-                                            SkTransferFunctionBehavior) const = 0;
-=======
     virtual sk_sp<SkImage> onMakeColorTypeAndColorSpace(GrRecordingContext*,
                                                         SkColorType, sk_sp<SkColorSpace>) const = 0;
->>>>>>> upstream-releases
 protected:
     SkImage_Base(int width, int height, uint32_t uniqueID);
 

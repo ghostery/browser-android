@@ -6,10 +6,6 @@
 //!
 //! [length]: https://drafts.csswg.org/css-values/#lengths
 
-<<<<<<< HEAD
-use super::{AllowQuirks, Number, Percentage, ToComputedValue};
-||||||| merged common ancestors
-=======
 use super::{AllowQuirks, Number, Percentage, ToComputedValue};
 use crate::font_metrics::{FontMetrics, FontMetricsOrientation};
 use crate::parser::{Parse, ParserContext};
@@ -24,17 +20,7 @@ use crate::values::specified::calc::CalcNode;
 use crate::values::specified::NonNegativeNumber;
 use crate::values::CSSFloat;
 use crate::Zero;
->>>>>>> upstream-releases
 use app_units::Au;
-use crate::font_metrics::FontMetricsQueryResult;
-use crate::parser::{Parse, ParserContext};
-use crate::values::computed::{self, CSSPixelLength, Context, ExtremumLength};
-use crate::values::generics::length::MaxLength as GenericMaxLength;
-use crate::values::generics::length::MozLength as GenericMozLength;
-use crate::values::generics::transform::IsZeroLength;
-use crate::values::generics::NonNegative;
-use crate::values::specified::calc::CalcNode;
-use crate::values::{Auto, CSSFloat, Either, IsAuto, Normal};
 use cssparser::{Parser, Token};
 use euclid::Size2D;
 use std::cmp;
@@ -44,12 +30,7 @@ use style_traits::{ParseError, SpecifiedValueInfo, StyleParseErrorKind};
 
 pub use super::image::{ColorStop, EndingShape as GradientEndingShape, Gradient};
 pub use super::image::{GradientKind, Image};
-<<<<<<< HEAD
-pub use crate::values::specified::calc::CalcLengthOrPercentage;
-||||||| merged common ancestors
-=======
 pub use crate::values::specified::calc::CalcLengthPercentage;
->>>>>>> upstream-releases
 
 /// Number of app units per pixel
 pub const AU_PER_PX: CSSFloat = 60.;
@@ -522,21 +503,6 @@ impl NoCalcLength {
 
 impl SpecifiedValueInfo for NoCalcLength {}
 
-<<<<<<< HEAD
-impl IsZeroLength for NoCalcLength {
-    #[inline]
-    fn is_zero_length(&self) -> bool {
-        match *self {
-            NoCalcLength::Absolute(v) => v.is_zero(),
-            NoCalcLength::FontRelative(v) => v.is_zero(),
-            NoCalcLength::ViewportPercentage(v) => v.is_zero(),
-            NoCalcLength::ServoCharacterWidth(v) => v.0 == 0,
-        }
-    }
-}
-
-||||||| merged common ancestors
-=======
 impl Zero for NoCalcLength {
     fn zero() -> Self {
         NoCalcLength::Absolute(AbsoluteLength::Px(0.))
@@ -552,7 +518,6 @@ impl Zero for NoCalcLength {
     }
 }
 
->>>>>>> upstream-releases
 /// An extension to `NoCalcLength` to parse `calc` expressions.
 /// This is commonly used for the `<length>` values.
 ///
@@ -894,43 +859,6 @@ impl LengthPercentage {
     ) -> Result<Self, ParseError<'i>> {
         Self::parse_internal(context, input, AllowedNumericType::All, allow_quirks)
     }
-<<<<<<< HEAD
-}
-
-impl IsZeroLength for LengthOrPercentage {
-    #[inline]
-    fn is_zero_length(&self) -> bool {
-        match *self {
-            LengthOrPercentage::Length(l) => l.is_zero_length(),
-            LengthOrPercentage::Percentage(p) => p.0 == 0.0,
-            LengthOrPercentage::Calc(_) => false,
-        }
-    }
-}
-
-/// Either a `<length>`, a `<percentage>`, or the `auto` keyword.
-#[allow(missing_docs)]
-#[derive(Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToCss)]
-pub enum LengthOrPercentageOrAuto {
-    Length(NoCalcLength),
-    Percentage(computed::Percentage),
-    Auto,
-    Calc(Box<CalcLengthOrPercentage>),
-}
-||||||| merged common ancestors
-}
-
-/// Either a `<length>`, a `<percentage>`, or the `auto` keyword.
-#[allow(missing_docs)]
-#[derive(Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToCss)]
-pub enum LengthOrPercentageOrAuto {
-    Length(NoCalcLength),
-    Percentage(computed::Percentage),
-    Auto,
-    Calc(Box<CalcLengthOrPercentage>),
-}
-=======
->>>>>>> upstream-releases
 
     /// Parse a non-negative length.
     ///
@@ -1002,35 +930,8 @@ impl LengthPercentageOrAuto {
 pub type NonNegativeLengthPercentageOrAuto =
     generics::LengthPercentageOrAuto<NonNegativeLengthPercentage>;
 
-<<<<<<< HEAD
-impl IsAuto for NonNegativeLengthOrPercentageOrAuto {
-    #[inline]
-    fn is_auto(&self) -> bool {
-        *self == Self::auto()
-    }
-}
-
-impl NonNegativeLengthOrPercentageOrAuto {
-    /// 0
-    #[inline]
-    pub fn zero() -> Self {
-        NonNegative(LengthOrPercentageOrAuto::zero())
-    }
-
-    /// 0%
-||||||| merged common ancestors
-impl NonNegativeLengthOrPercentageOrAuto {
-    /// 0
-    #[inline]
-    pub fn zero() -> Self {
-        NonNegative(LengthOrPercentageOrAuto::zero())
-    }
-
-    /// 0%
-=======
 impl NonNegativeLengthPercentageOrAuto {
     /// Returns a value representing `0%`.
->>>>>>> upstream-releases
     #[inline]
     pub fn zero_percent() -> Self {
         generics::LengthPercentageOrAuto::LengthPercentage(

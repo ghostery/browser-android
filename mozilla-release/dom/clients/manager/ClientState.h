@@ -49,14 +49,7 @@ class ClientWindowState final {
 
   bool Focused() const;
 
-<<<<<<< HEAD
-  nsContentUtils::StorageAccess GetStorageAccess() const;
-||||||| merged common ancestors
-  nsContentUtils::StorageAccess
-  GetStorageAccess() const;
-=======
   StorageAccess GetStorageAccess() const;
->>>>>>> upstream-releases
 
   const IPCClientWindowState& ToIPC() const;
 };
@@ -70,16 +63,8 @@ class ClientWindowState final {
 class ClientWorkerState final {
   UniquePtr<IPCClientWorkerState> mData;
 
-<<<<<<< HEAD
- public:
-  explicit ClientWorkerState(nsContentUtils::StorageAccess aStorageAccess);
-||||||| merged common ancestors
-public:
-  explicit ClientWorkerState(nsContentUtils::StorageAccess aStorageAccess);
-=======
  public:
   explicit ClientWorkerState(StorageAccess aStorageAccess);
->>>>>>> upstream-releases
 
   explicit ClientWorkerState(const IPCClientWorkerState& aData);
 
@@ -92,14 +77,7 @@ public:
 
   ~ClientWorkerState();
 
-<<<<<<< HEAD
-  nsContentUtils::StorageAccess GetStorageAccess() const;
-||||||| merged common ancestors
-  nsContentUtils::StorageAccess
-  GetStorageAccess() const;
-=======
   StorageAccess GetStorageAccess() const;
->>>>>>> upstream-releases
 
   const IPCClientWorkerState& ToIPC() const;
 };
@@ -137,14 +115,7 @@ class ClientState final {
 
   const ClientWorkerState& AsWorkerState() const;
 
-<<<<<<< HEAD
-  nsContentUtils::StorageAccess GetStorageAccess() const;
-||||||| merged common ancestors
-  nsContentUtils::StorageAccess
-  GetStorageAccess() const;
-=======
   StorageAccess GetStorageAccess() const;
->>>>>>> upstream-releases
 
   const IPCClientState ToIPC() const;
 };

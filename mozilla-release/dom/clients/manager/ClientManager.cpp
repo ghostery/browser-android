@@ -166,20 +166,9 @@ already_AddRefed<ClientHandle> ClientManager::CreateHandleInternal(
   return handle.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<ClientOpPromise> ClientManager::StartOp(
-    const ClientOpConstructorArgs& aArgs,
-    nsISerialEventTarget* aSerialEventTarget) {
-||||||| merged common ancestors
-already_AddRefed<ClientOpPromise>
-ClientManager::StartOp(const ClientOpConstructorArgs& aArgs,
-                       nsISerialEventTarget* aSerialEventTarget)
-{
-=======
 RefPtr<ClientOpPromise> ClientManager::StartOp(
     const ClientOpConstructorArgs& aArgs,
     nsISerialEventTarget* aSerialEventTarget) {
->>>>>>> upstream-releases
   RefPtr<ClientOpPromise::Private> promise =
       new ClientOpPromise::Private(__func__);
 
@@ -188,35 +177,6 @@ RefPtr<ClientOpPromise> ClientManager::StartOp(
   // get an answer.
   RefPtr<ClientManager> kungFuGrip = this;
 
-<<<<<<< HEAD
-  MaybeExecute(
-      [aArgs, promise, kungFuGrip](ClientManagerChild* aActor) {
-        ClientManagerOpChild* actor =
-            new ClientManagerOpChild(kungFuGrip, aArgs, promise);
-        if (!aActor->SendPClientManagerOpConstructor(actor, aArgs)) {
-          // Constructor failure will reject promise via ActorDestroy()
-          return;
-        }
-      },
-      [promise] { promise->Reject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__); });
-
-  RefPtr<ClientOpPromise> ref = promise.get();
-  return ref.forget();
-||||||| merged common ancestors
-  MaybeExecute([aArgs, promise, kungFuGrip] (ClientManagerChild* aActor) {
-    ClientManagerOpChild* actor =
-      new ClientManagerOpChild(kungFuGrip, aArgs, promise);
-    if (!aActor->SendPClientManagerOpConstructor(actor, aArgs)) {
-      // Constructor failure will reject promise via ActorDestroy()
-      return;
-    }
-  }, [promise] {
-    promise->Reject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__);
-  });
-
-  RefPtr<ClientOpPromise> ref = promise.get();
-  return ref.forget();
-=======
   MaybeExecute(
       [aArgs, promise, kungFuGrip](ClientManagerChild* aActor) {
         ClientManagerOpChild* actor =
@@ -229,7 +189,6 @@ RefPtr<ClientOpPromise> ClientManager::StartOp(
       [promise] { promise->Reject(NS_ERROR_DOM_INVALID_STATE_ERR, __func__); });
 
   return promise.forget();
->>>>>>> upstream-releases
 }
 
 // static

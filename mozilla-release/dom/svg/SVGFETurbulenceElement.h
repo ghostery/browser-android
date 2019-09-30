@@ -36,26 +36,6 @@ class SVGFETurbulenceElement : public SVGFETurbulenceElementBase {
  public:
   virtual bool SubregionIsUnionOfRegions() override { return false; }
 
-<<<<<<< HEAD
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
-                                         nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override {
-    return mStringAttributes[RESULT];
-  }
-||||||| merged common ancestors
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(
-          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
-=======
   virtual FilterPrimitiveDescription GetPrimitiveDescription(
       nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
       const nsTArray<bool>& aInputsAreTainted,
@@ -65,30 +45,10 @@ class SVGFETurbulenceElement : public SVGFETurbulenceElementBase {
   virtual SVGAnimatedString& GetResultImageName() override {
     return mStringAttributes[RESULT];
   }
->>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   // WebIDL
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedNumber> BaseFrequencyX();
-  already_AddRefed<SVGAnimatedNumber> BaseFrequencyY();
-  already_AddRefed<SVGAnimatedInteger> NumOctaves();
-  already_AddRefed<SVGAnimatedNumber> Seed();
-  already_AddRefed<SVGAnimatedEnumeration> StitchTiles();
-  already_AddRefed<SVGAnimatedEnumeration> Type();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedNumber> BaseFrequencyX();
-  already_AddRefed<SVGAnimatedNumber> BaseFrequencyY();
-  already_AddRefed<SVGAnimatedInteger> NumOctaves();
-  already_AddRefed<SVGAnimatedNumber> Seed();
-  already_AddRefed<SVGAnimatedEnumeration> StitchTiles();
-  already_AddRefed<SVGAnimatedEnumeration> Type();
-
-protected:
-=======
   already_AddRefed<DOMSVGAnimatedNumber> BaseFrequencyX();
   already_AddRefed<DOMSVGAnimatedNumber> BaseFrequencyY();
   already_AddRefed<DOMSVGAnimatedInteger> NumOctaves();
@@ -97,23 +57,14 @@ protected:
   already_AddRefed<DOMSVGAnimatedEnumeration> Type();
 
  protected:
->>>>>>> upstream-releases
   virtual NumberAttributesInfo GetNumberInfo() override;
   virtual NumberPairAttributesInfo GetNumberPairInfo() override;
   virtual IntegerAttributesInfo GetIntegerInfo() override;
   virtual EnumAttributesInfo GetEnumInfo() override;
   virtual StringAttributesInfo GetStringInfo() override;
 
-<<<<<<< HEAD
-  enum { SEED };  // floating point seed?!
-  nsSVGNumber2 mNumberAttributes[1];
-||||||| merged common ancestors
-  enum { SEED }; // floating point seed?!
-  nsSVGNumber2 mNumberAttributes[1];
-=======
   enum { SEED };  // floating point seed?!
   SVGAnimatedNumber mNumberAttributes[1];
->>>>>>> upstream-releases
   static NumberInfo sNumberInfo[1];
 
   enum { BASE_FREQ };

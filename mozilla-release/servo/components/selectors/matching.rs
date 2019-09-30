@@ -450,30 +450,6 @@ where
         },
         Combinator::Part => element.containing_shadow_host(),
         Combinator::SlotAssignment => {
-<<<<<<< HEAD
-            debug_assert!(
-                context.current_host.is_some(),
-                "Should not be trying to match slotted rules in a non-shadow-tree context"
-            );
-            debug_assert!(
-                element
-                    .assigned_slot()
-                    .map_or(true, |s| s.is_html_slot_element())
-            );
-            let scope = context.current_host?;
-            let mut current_slot = element.assigned_slot()?;
-            while current_slot.containing_shadow_host().unwrap().opaque() != scope {
-                current_slot = current_slot.assigned_slot()?;
-            }
-            Some(current_slot)
-||||||| merged common ancestors
-            debug_assert!(
-                element
-                    .assigned_slot()
-                    .map_or(true, |s| s.is_html_slot_element())
-            );
-            element.assigned_slot()
-=======
             debug_assert!(element
                 .assigned_slot()
                 .map_or(true, |s| s.is_html_slot_element()));
@@ -483,7 +459,6 @@ where
                 current_slot = current_slot.assigned_slot()?;
             }
             Some(current_slot)
->>>>>>> upstream-releases
         },
         Combinator::PseudoElement => element.pseudo_element_originating_element(),
     }
@@ -541,19 +516,8 @@ where
         Combinator::PseudoElement => SelectorMatchingResult::NotMatchedGlobally,
     };
 
-<<<<<<< HEAD
-    let mut next_element = next_element_for_combinator(
-        element,
-        combinator,
-        &selector_iter,
-        &context,
-    );
-||||||| merged common ancestors
-    let mut next_element = next_element_for_combinator(element, combinator, &selector_iter);
-=======
     let mut next_element =
         next_element_for_combinator(element, combinator, &selector_iter, &context);
->>>>>>> upstream-releases
 
     // Stop matching :visited as soon as we find a link, or a combinator for
     // something that isn't an ancestor.
@@ -617,18 +581,7 @@ where
             visited_handling = VisitedHandlingMode::AllLinksUnvisited;
         }
 
-<<<<<<< HEAD
-        next_element = next_element_for_combinator(
-            &element,
-            combinator,
-            &selector_iter,
-            &context,
-        );
-||||||| merged common ancestors
-        next_element = next_element_for_combinator(&element, combinator, &selector_iter);
-=======
         next_element = next_element_for_combinator(&element, combinator, &selector_iter, &context);
->>>>>>> upstream-releases
     }
 }
 
@@ -641,18 +594,9 @@ where
         element.is_html_element_in_html_document(),
         &local_name.name,
         &local_name.lower_name,
-<<<<<<< HEAD
-    )
-    .borrow();
-    element.local_name() == name
-||||||| merged common ancestors
-    ).borrow();
-    element.local_name() == name
-=======
     )
     .borrow();
     element.has_local_name(name)
->>>>>>> upstream-releases
 }
 
 /// Determines whether the given element matches the given compound selector.
@@ -740,16 +684,8 @@ where
             element.has_namespace(&url.borrow())
         },
         Component::ExplicitNoNamespace => {
-<<<<<<< HEAD
-            let ns = crate::parser::namespace_empty_string::<E::Impl>();
-            element.namespace() == ns.borrow()
-||||||| merged common ancestors
-            let ns = ::parser::namespace_empty_string::<E::Impl>();
-            element.namespace() == ns.borrow()
-=======
             let ns = crate::parser::namespace_empty_string::<E::Impl>();
             element.has_namespace(&ns.borrow())
->>>>>>> upstream-releases
         },
         Component::ID(ref id) => {
             element.has_id(id, context.shared.classes_and_ids_case_sensitivity())

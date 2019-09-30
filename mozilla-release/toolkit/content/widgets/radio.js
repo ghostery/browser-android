@@ -104,15 +104,6 @@
           return;
         }
 
-<<<<<<< HEAD
-class MozRadiogroup extends MozElements.BaseControl {
-  constructor() {
-    super();
-||||||| merged common ancestors
-class MozRadiogroup extends MozBaseControl {
-  constructor() {
-    super();
-=======
         var val = this.selectedItem;
         if (!val || val.disabled || val.hidden || val.collapsed) {
           var children = this._getRadioChildren();
@@ -129,7 +120,6 @@ class MozRadiogroup extends MozBaseControl {
         }
         this.focusedItem = val;
       });
->>>>>>> upstream-releases
 
       this.addEventListener("blur", event => {
         if (event.originalTarget != this) {

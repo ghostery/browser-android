@@ -181,13 +181,7 @@ TimeUnit MP3TrackDemuxer::FastSeek(const TimeUnit& aTime) {
              *Duration() != TimeUnit::Zero()) {
     // Use TOC for more precise seeking.
     const float durationFrac = static_cast<float>(aTime.ToMicroseconds()) /
-<<<<<<< HEAD
-                               Duration().ToMicroseconds();
-||||||| merged common ancestors
-                                                  Duration().ToMicroseconds();
-=======
                                Duration()->ToMicroseconds();
->>>>>>> upstream-releases
     mFrameIndex = FrameIndexFromOffset(vbr.Offset(durationFrac));
   } else if (AverageFrameLength() > 0) {
     mFrameIndex = FrameIndexFromTime(aTime);
@@ -342,15 +336,7 @@ TimeIntervals MP3TrackDemuxer::GetBuffered() {
 
 int64_t MP3TrackDemuxer::StreamLength() const { return mSource.GetLength(); }
 
-<<<<<<< HEAD
-TimeUnit MP3TrackDemuxer::Duration() const {
-||||||| merged common ancestors
-TimeUnit
-MP3TrackDemuxer::Duration() const
-{
-=======
 media::NullableTimeUnit MP3TrackDemuxer::Duration() const {
->>>>>>> upstream-releases
   if (!mNumParsedFrames) {
     return Nothing();
   }
@@ -378,15 +364,8 @@ media::NullableTimeUnit MP3TrackDemuxer::Duration() const {
   // If it's CBR, calculate the duration by bitrate.
   if (!mParser.VBRInfo().IsValid()) {
     const int32_t bitrate = mParser.CurrentFrame().Header().Bitrate();
-<<<<<<< HEAD
-    return media::TimeUnit::FromSeconds(static_cast<double>(size) * 8 /
-                                        bitrate);
-||||||| merged common ancestors
-    return media::TimeUnit::FromSeconds(static_cast<double>(size) * 8 / bitrate);
-=======
     return Some(
         media::TimeUnit::FromSeconds(static_cast<double>(size) * 8 / bitrate));
->>>>>>> upstream-releases
   }
 
   if (AverageFrameLength() > 0) {
@@ -758,11 +737,6 @@ double MP3TrackDemuxer::AverageFrameLength() const {
   return 0.0;
 }
 
-<<<<<<< HEAD
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace mozilla
-=======
 Maybe<uint32_t> MP3TrackDemuxer::ValidNumAudioFrames() const {
   return mParser.VBRInfo().IsValid() &&
                  mParser.VBRInfo().NumAudioFrames().valueOr(0) + 1 > 1
@@ -771,7 +745,6 @@ Maybe<uint32_t> MP3TrackDemuxer::ValidNumAudioFrames() const {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #undef MP3LOG
 #undef MP3LOGV

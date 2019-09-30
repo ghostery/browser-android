@@ -12,29 +12,9 @@ use crate::values::specified::length::LengthPercentage as SpecifiedLengthPercent
 use crate::values::{computed, CSSFloat};
 use crate::Zero;
 use app_units::Au;
-use crate::values::computed::length::Length as ComputedLength;
-use crate::values::computed::length::LengthOrPercentage as ComputedLengthOrPercentage;
-use crate::values::specified::angle::Angle as SpecifiedAngle;
-use crate::values::specified::length::Length as SpecifiedLength;
-use crate::values::specified::length::LengthOrPercentage as SpecifiedLengthOrPercentage;
-use crate::values::{computed, CSSFloat};
 use euclid::{self, Rect, Transform3D};
-<<<<<<< HEAD
-use num_traits::Zero;
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ToCss};
-||||||| merged common ancestors
-use num_traits::Zero;
-use values::{computed, CSSFloat};
-use values::computed::length::Length as ComputedLength;
-use values::computed::length::LengthOrPercentage as ComputedLengthOrPercentage;
-use values::specified::angle::Angle as SpecifiedAngle;
-use values::specified::length::Length as SpecifiedLength;
-use values::specified::length::LengthOrPercentage as SpecifiedLengthOrPercentage;
-=======
-use std::fmt::{self, Write};
-use style_traits::{CssWriter, ToCss};
->>>>>>> upstream-releases
 
 /// A generic 2D transformation matrix.
 #[allow(missing_docs)]
@@ -140,73 +120,8 @@ pub struct GenericTransformOrigin<H, V, Depth> {
     pub depth: Depth,
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-/// A generic timing function.
-///
-/// <https://drafts.csswg.org/css-timing-1/#single-timing-function-production>
-#[derive(Clone, Copy, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToCss)]
-#[value_info(ty = "TIMING_FUNCTION")]
-pub enum TimingFunction<Integer, Number> {
-    /// `linear | ease | ease-in | ease-out | ease-in-out`
-    Keyword(TimingKeyword),
-    /// `cubic-bezier(<number>, <number>, <number>, <number>)`
-    #[allow(missing_docs)]
-    #[css(comma, function)]
-    CubicBezier {
-        x1: Number,
-        y1: Number,
-        x2: Number,
-        y2: Number,
-    },
-    /// `step-start | step-end | steps(<integer>, [ start | end ]?)`
-    #[css(comma, function)]
-    #[value_info(other_values = "step-start,step-end")]
-    Steps(Integer, #[css(skip_if = "is_end")] StepPosition),
-    /// `frames(<integer>)`
-    #[css(comma, function)]
-    Frames(Integer),
-}
-
-#[allow(missing_docs)]
-#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
-#[derive(
-    Clone,
-    Copy,
-    Debug,
-    Eq,
-    MallocSizeOf,
-    Parse,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToComputedValue,
-    ToCss,
-)]
-pub enum TimingKeyword {
-    Linear,
-    Ease,
-    EaseIn,
-    EaseOut,
-    EaseInOut,
-}
-
-#[allow(missing_docs)]
-#[cfg_attr(feature = "servo", derive(Deserialize, Serialize))]
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, Parse, PartialEq, ToComputedValue, ToCss)]
-pub enum StepPosition {
-    Start,
-    End,
-}
-
-#[inline]
-fn is_end(position: &StepPosition) -> bool {
-    *position == StepPosition::End
-}
-
-=======
 pub use self::GenericTransformOrigin as TransformOrigin;
 
->>>>>>> upstream-releases
 impl<H, V, D> TransformOrigin<H, V, D> {
     /// Returns a new transform origin.
     pub fn new(horizontal: H, vertical: V, depth: D) -> Self {
@@ -218,34 +133,6 @@ impl<H, V, D> TransformOrigin<H, V, D> {
     }
 }
 
-<<<<<<< HEAD
-#[derive(Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToComputedValue, ToCss)]
-||||||| merged common ancestors
-impl<Integer, Number> TimingFunction<Integer, Number> {
-    /// `ease`
-    #[inline]
-    pub fn ease() -> Self {
-        TimingFunction::Keyword(TimingKeyword::Ease)
-    }
-}
-
-impl TimingKeyword {
-    /// Returns the keyword as a quadruplet of Bezier point coordinates
-    /// `(x1, y1, x2, y2)`.
-    #[inline]
-    pub fn to_bezier(self) -> (CSSFloat, CSSFloat, CSSFloat, CSSFloat) {
-        match self {
-            TimingKeyword::Linear => (0., 0., 1., 1.),
-            TimingKeyword::Ease => (0.25, 0.1, 0.25, 1.),
-            TimingKeyword::EaseIn => (0.42, 0., 1., 1.),
-            TimingKeyword::EaseOut => (0., 0., 0.58, 1.),
-            TimingKeyword::EaseInOut => (0.42, 0., 0.58, 1.),
-        }
-    }
-}
-
-#[derive(Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToComputedValue, ToCss)]
-=======
 fn is_same<N: PartialEq>(x: &N, y: &N) -> bool {
     x == y
 }
@@ -262,7 +149,6 @@ fn is_same<N: PartialEq>(x: &N, y: &N) -> bool {
     ToShmem,
 )]
 #[repr(C, u8)]
->>>>>>> upstream-releases
 /// A single operation in the list of a `transform` value
 /// cbindgen:derive-tagged-enum-copy-constructor=true
 pub enum GenericTransformOperation<Angle, Number, Length, Integer, LengthPercentage>
@@ -713,20 +599,6 @@ pub fn get_normalized_vector_and_angle<T: Zero>(
 }
 
 #[derive(
-<<<<<<< HEAD
-    Clone, Copy, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToAnimatedZero, ToComputedValue,
-||||||| merged common ancestors
-    Clone,
-    ComputeSquaredDistance,
-    Copy,
-    Debug,
-    MallocSizeOf,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToAnimatedZero,
-    ToComputedValue,
-    ToCss,
-=======
     Clone,
     Copy,
     Debug,
@@ -737,7 +609,6 @@ pub fn get_normalized_vector_and_angle<T: Zero>(
     ToComputedValue,
     ToResolvedValue,
     ToShmem,
->>>>>>> upstream-releases
 )]
 #[repr(C, u8)]
 /// A value of the `Rotate` property
@@ -752,56 +623,6 @@ pub enum GenericRotate<Number, Angle> {
     Rotate3D(Number, Number, Number, Angle),
 }
 
-<<<<<<< HEAD
-/// A trait to check if the current 3D vector is parallel to the DirectionVector.
-/// This is especially for serialization on Rotate.
-pub trait IsParallelTo {
-    /// Returns true if this is parallel to the vector.
-    fn is_parallel_to(&self, vector: &computed::transform::DirectionVector) -> bool;
-}
-
-impl<Number, Angle> ToCss for Rotate<Number, Angle>
-where
-    Number: Copy + ToCss,
-    Angle: ToCss,
-    (Number, Number, Number): IsParallelTo,
-{
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: fmt::Write,
-    {
-        use crate::values::computed::transform::DirectionVector;
-        match *self {
-            Rotate::None => dest.write_str("none"),
-            Rotate::Rotate(ref angle) => angle.to_css(dest),
-            Rotate::Rotate3D(x, y, z, ref angle) => {
-                // If a 3d rotation is specified, the property must serialize with an axis
-                // specified. If the axis is parallel with the x, y, or z axises, it must
-                // serialize as the appropriate keyword.
-                // https://drafts.csswg.org/css-transforms-2/#individual-transform-serialization
-                let v = (x, y, z);
-                if v.is_parallel_to(&DirectionVector::new(1., 0., 0.)) {
-                    dest.write_char('x')?;
-                } else if v.is_parallel_to(&DirectionVector::new(0., 1., 0.)) {
-                    dest.write_char('y')?;
-                } else if v.is_parallel_to(&DirectionVector::new(0., 0., 1.)) {
-                    dest.write_char('z')?;
-                } else {
-                    x.to_css(dest)?;
-                    dest.write_char(' ')?;
-                    y.to_css(dest)?;
-                    dest.write_char(' ')?;
-                    z.to_css(dest)?;
-                }
-                dest.write_char(' ')?;
-                angle.to_css(dest)
-            },
-        }
-    }
-}
-
-||||||| merged common ancestors
-=======
 pub use self::GenericRotate as Rotate;
 
 /// A trait to check if the current 3D vector is parallel to the DirectionVector.
@@ -851,22 +672,7 @@ where
     }
 }
 
->>>>>>> upstream-releases
 #[derive(
-<<<<<<< HEAD
-    Clone, Copy, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToAnimatedZero, ToComputedValue,
-||||||| merged common ancestors
-    Clone,
-    ComputeSquaredDistance,
-    Copy,
-    Debug,
-    MallocSizeOf,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToAnimatedZero,
-    ToComputedValue,
-    ToCss,
-=======
     Clone,
     Copy,
     Debug,
@@ -877,7 +683,6 @@ where
     ToComputedValue,
     ToResolvedValue,
     ToShmem,
->>>>>>> upstream-releases
 )]
 #[repr(C, u8)]
 /// A value of the `Scale` property
@@ -892,35 +697,6 @@ pub enum GenericScale<Number> {
     Scale3D(Number, Number, Number),
 }
 
-<<<<<<< HEAD
-impl<Number: ToCss + PartialEq> ToCss for Scale<Number> {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: fmt::Write,
-    {
-        match *self {
-            Scale::None => dest.write_str("none"),
-            Scale::Scale(ref x, ref y) => {
-                x.to_css(dest)?;
-                if x != y {
-                    dest.write_char(' ')?;
-                    y.to_css(dest)?;
-                }
-                Ok(())
-            },
-            Scale::Scale3D(ref x, ref y, ref z) => {
-                x.to_css(dest)?;
-                dest.write_char(' ')?;
-                y.to_css(dest)?;
-                dest.write_char(' ')?;
-                z.to_css(dest)
-            },
-        }
-    }
-}
-
-||||||| merged common ancestors
-=======
 pub use self::GenericScale as Scale;
 
 impl<Number: ToCss + PartialEq> ToCss for Scale<Number> {
@@ -949,21 +725,7 @@ impl<Number: ToCss + PartialEq> ToCss for Scale<Number> {
     }
 }
 
->>>>>>> upstream-releases
 #[derive(
-<<<<<<< HEAD
-    Clone, Debug, MallocSizeOf, PartialEq, SpecifiedValueInfo, ToAnimatedZero, ToComputedValue,
-||||||| merged common ancestors
-    Clone,
-    ComputeSquaredDistance,
-    Debug,
-    MallocSizeOf,
-    PartialEq,
-    SpecifiedValueInfo,
-    ToAnimatedZero,
-    ToComputedValue,
-    ToCss,
-=======
     Clone,
     Debug,
     MallocSizeOf,
@@ -974,7 +736,6 @@ impl<Number: ToCss + PartialEq> ToCss for Scale<Number> {
     ToCss,
     ToResolvedValue,
     ToShmem,
->>>>>>> upstream-releases
 )]
 #[repr(C, u8)]
 /// A value of the `translate` property
@@ -997,75 +758,17 @@ where
 {
     /// 'none'
     None,
-<<<<<<< HEAD
-    /// '<length-percentage>' or '<length-percentage> <length-percentage>'
-    Translate(LengthOrPercentage, LengthOrPercentage),
-||||||| merged common ancestors
-    /// '<length-percentage>'
-    TranslateX(LengthOrPercentage),
-    /// '<length-percentage> <length-percentage>'
-    Translate(LengthOrPercentage, LengthOrPercentage),
-=======
     /// '<length-percentage>' or '<length-percentage> <length-percentage>'
     Translate(
         LengthPercentage,
         #[css(skip_if = "Zero::is_zero")] LengthPercentage,
     ),
->>>>>>> upstream-releases
     /// '<length-percentage> <length-percentage> <length>'
     Translate3D(LengthPercentage, LengthPercentage, Length),
 }
 
-<<<<<<< HEAD
-/// A trait to check if this is a zero length.
-/// An alternative way is use num_traits::Zero. However, in order to implement num_traits::Zero,
-/// we also have to implement Add, which may be complicated for LengthOrPercentage::Calc.
-/// We could do this if other types also need it. If so, we could drop this trait.
-pub trait IsZeroLength {
-    /// Returns true if this is a zero length.
-    fn is_zero_length(&self) -> bool;
-}
-
-impl<LoP: ToCss + IsZeroLength, L: ToCss> ToCss for Translate<LoP, L> {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: fmt::Write,
-    {
-        // The spec says:
-        // 1. If a 2d translation is specified, the property must serialize with only one or two
-        //    values (per usual, if the second value is 0px, the default, it must be omitted when
-        //    serializing).
-        // 2. If a 3d translation is specified, all three values must be serialized.
-        // https://drafts.csswg.org/css-transforms-2/#individual-transform-serialization
-        //
-        // We don't omit the 3rd component even if it is 0px for now, and the related
-        // spec issue is https://github.com/w3c/csswg-drafts/issues/3305
-        match *self {
-            Translate::None => dest.write_str("none"),
-            Translate::Translate(ref x, ref y) => {
-                x.to_css(dest)?;
-                if !y.is_zero_length() {
-                    dest.write_char(' ')?;
-                    y.to_css(dest)?;
-                }
-                Ok(())
-            },
-            Translate::Translate3D(ref x, ref y, ref z) => {
-                x.to_css(dest)?;
-                dest.write_char(' ')?;
-                y.to_css(dest)?;
-                dest.write_char(' ')?;
-                z.to_css(dest)
-            },
-        }
-    }
-}
-
-||||||| merged common ancestors
-=======
 pub use self::GenericTranslate as Translate;
 
->>>>>>> upstream-releases
 #[allow(missing_docs)]
 #[derive(
     Clone,

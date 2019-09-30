@@ -176,20 +176,6 @@ static void ValidatePinningPreloadList() {
 // Returns via one of the output parameters the most relevant pinning
 // information that is valid for the given host at the given time.
 // Dynamic pins are prioritized over static pins.
-<<<<<<< HEAD
-static nsresult FindPinningInformation(
-    const char* hostname, mozilla::pkix::Time time,
-    const OriginAttributes& originAttributes,
-    /*out*/ nsTArray<nsCString>& dynamicFingerprints,
-    /*out*/ const TransportSecurityPreload*& staticFingerprints) {
-||||||| merged common ancestors
-static nsresult
-FindPinningInformation(const char* hostname, mozilla::pkix::Time time,
-                       const OriginAttributes& originAttributes,
-               /*out*/ nsTArray<nsCString>& dynamicFingerprints,
-               /*out*/ const TransportSecurityPreload*& staticFingerprints)
-{
-=======
 static nsresult FindPinningInformation(
     const char* hostname, mozilla::pkix::Time time,
     const OriginAttributes& originAttributes,
@@ -198,7 +184,6 @@ static nsresult FindPinningInformation(
 #ifdef DEBUG
   ValidatePinningPreloadList();
 #endif
->>>>>>> upstream-releases
   if (!hostname || hostname[0] == 0) {
     return NS_ERROR_INVALID_ARG;
   }
@@ -307,44 +292,11 @@ static nsresult CheckPinsForHostname(
       return rv;
     }
     chainHasValidPins = enforceTestModeResult;
-<<<<<<< HEAD
-    Telemetry::HistogramID histogram = staticFingerprints->mIsMoz
-                                           ? Telemetry::CERT_PINNING_MOZ_RESULTS
-                                           : Telemetry::CERT_PINNING_RESULTS;
-    if (staticFingerprints->mTestMode) {
-      histogram = staticFingerprints->mIsMoz
-                      ? Telemetry::CERT_PINNING_MOZ_TEST_RESULTS
-                      : Telemetry::CERT_PINNING_TEST_RESULTS;
-      if (!enforceTestMode) {
-        chainHasValidPins = true;
-      }
-||||||| merged common ancestors
-    Telemetry::HistogramID histogram = staticFingerprints->mIsMoz
-      ? Telemetry::CERT_PINNING_MOZ_RESULTS
-      : Telemetry::CERT_PINNING_RESULTS;
-    if (staticFingerprints->mTestMode) {
-      histogram = staticFingerprints->mIsMoz
-        ? Telemetry::CERT_PINNING_MOZ_TEST_RESULTS
-        : Telemetry::CERT_PINNING_TEST_RESULTS;
-      if (!enforceTestMode) {
-        chainHasValidPins = true;
-      }
-=======
     if (staticFingerprints->mTestMode && !enforceTestMode) {
       chainHasValidPins = true;
->>>>>>> upstream-releases
     }
 
     if (pinningTelemetryInfo) {
-<<<<<<< HEAD
-      if (staticFingerprints->mId != kUnknownId) {
-        int32_t bucket =
-            staticFingerprints->mId * 2 + (enforceTestModeResult ? 1 : 0);
-||||||| merged common ancestors
-      if (staticFingerprints->mId != kUnknownId) {
-        int32_t bucket = staticFingerprints->mId * 2
-                         + (enforceTestModeResult ? 1 : 0);
-=======
       // If and only if a static entry is a Mozilla entry, it has a telemetry
       // ID.
       if ((staticFingerprints->mIsMoz &&
@@ -359,21 +311,10 @@ static nsresult CheckPinsForHostname(
       // We can collect per-host pinning violations for this host because it is
       // operationally critical to Firefox.
       if (staticFingerprints->mIsMoz) {
->>>>>>> upstream-releases
         histogram = staticFingerprints->mTestMode
-<<<<<<< HEAD
-                        ? Telemetry::CERT_PINNING_MOZ_TEST_RESULTS_BY_HOST
-                        : Telemetry::CERT_PINNING_MOZ_RESULTS_BY_HOST;
-        pinningTelemetryInfo->certPinningResultBucket = bucket;
-||||||| merged common ancestors
-          ? Telemetry::CERT_PINNING_MOZ_TEST_RESULTS_BY_HOST
-          : Telemetry::CERT_PINNING_MOZ_RESULTS_BY_HOST;
-        pinningTelemetryInfo->certPinningResultBucket = bucket;
-=======
                         ? Telemetry::CERT_PINNING_MOZ_TEST_RESULTS_BY_HOST
                         : Telemetry::CERT_PINNING_MOZ_RESULTS_BY_HOST;
         bucket = staticFingerprints->mId * 2 + (enforceTestModeResult ? 1 : 0);
->>>>>>> upstream-releases
       } else {
         histogram = staticFingerprints->mTestMode
                         ? Telemetry::CERT_PINNING_TEST_RESULTS
@@ -384,27 +325,6 @@ static nsresult CheckPinsForHostname(
       pinningTelemetryInfo->certPinningResultHistogram = Some(histogram);
       pinningTelemetryInfo->certPinningResultBucket = bucket;
 
-<<<<<<< HEAD
-    // Only log telemetry if the certificate list is non-empty.
-    if (rootCert && !enforceTestModeResult && pinningTelemetryInfo) {
-      UniqueCERTCertificate rootCertObj =
-          UniqueCERTCertificate(rootCert.get()->GetCert());
-      if (rootCertObj) {
-        int32_t binNumber = RootCABinNumber(&rootCertObj->derCert);
-        if (binNumber != ROOT_CERTIFICATE_UNKNOWN) {
-          pinningTelemetryInfo->accumulateForRoot = true;
-          pinningTelemetryInfo->rootBucket = binNumber;
-||||||| merged common ancestors
-    // Only log telemetry if the certificate list is non-empty.
-    if (rootCert && !enforceTestModeResult && pinningTelemetryInfo) {
-      UniqueCERTCertificate rootCertObj =
-        UniqueCERTCertificate(rootCert.get()->GetCert());
-      if (rootCertObj) {
-        int32_t binNumber = RootCABinNumber(&rootCertObj->derCert);
-        if (binNumber != ROOT_CERTIFICATE_UNKNOWN ) {
-          pinningTelemetryInfo->accumulateForRoot = true;
-          pinningTelemetryInfo->rootBucket = binNumber;
-=======
       // We only collect per-CA pinning statistics upon failures.
       if (!enforceTestModeResult) {
         nsCOMPtr<nsIX509Cert> rootCert;
@@ -422,7 +342,6 @@ static nsresult CheckPinsForHostname(
             pinningTelemetryInfo->accumulateForRoot = true;
             pinningTelemetryInfo->rootBucket = binNumber;
           }
->>>>>>> upstream-releases
         }
       }
     }

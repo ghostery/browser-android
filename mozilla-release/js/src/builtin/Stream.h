@@ -96,90 +96,6 @@ class ReadableStream : public NativeObject {
   }
   void clearReader() { setFixedSlot(Slot_Reader, JS::UndefinedValue()); }
 
-<<<<<<< HEAD
-  Value storedError() const { return getFixedSlot(Slot_StoredError); }
-  void setStoredError(HandleValue value) {
-    setFixedSlot(Slot_StoredError, value);
-  }
-
-  JS::ReadableStreamMode mode() const;
-
-  bool locked() const;
-
-  static MOZ_MUST_USE ReadableStream* create(JSContext* cx,
-                                             HandleObject proto = nullptr);
-  static ReadableStream* createExternalSourceStream(
-      JSContext* cx, JS::ReadableStreamUnderlyingSource* source,
-      HandleObject proto = nullptr);
-
-  static bool constructor(JSContext* cx, unsigned argc, Value* vp);
-  static const ClassSpec classSpec_;
-  static const Class class_;
-  static const ClassSpec protoClassSpec_;
-  static const Class protoClass_;
-||||||| merged common ancestors
-class ReadableStream : public NativeObject
-{
-  public:
-    static ReadableStream* createDefaultStream(JSContext* cx, HandleValue underlyingSource,
-                                               HandleValue size, HandleValue highWaterMark,
-                                               HandleObject proto = nullptr);
-    static ReadableStream* createExternalSourceStream(JSContext* cx, void* underlyingSource,
-                                                      uint8_t flags, HandleObject proto = nullptr);
-
-    bool readable() const;
-    bool closed() const;
-    bool errored() const;
-    bool disturbed() const;
-
-    bool locked() const;
-
-    void desiredSize(bool* hasSize, double* size) const;
-
-    JS::ReadableStreamMode mode() const;
-
-    static MOZ_MUST_USE bool close(JSContext* cx, Handle<ReadableStream*> stream);
-    static MOZ_MUST_USE JSObject* cancel(JSContext* cx, Handle<ReadableStream*> stream,
-                                         HandleValue reason);
-    static MOZ_MUST_USE bool error(JSContext* cx, Handle<ReadableStream*> stream,
-                                   HandleValue error);
-
-    static MOZ_MUST_USE ReadableStreamReader* getReader(JSContext* cx,
-                                                        Handle<ReadableStream*> stream,
-                                                        JS::ReadableStreamReaderMode mode);
-
-    static MOZ_MUST_USE bool tee(JSContext* cx,
-                                 Handle<ReadableStream*> stream, bool cloneForBranch2,
-                                 MutableHandle<ReadableStream*> branch1Stream,
-                                 MutableHandle<ReadableStream*> branch2Stream);
-
-    static MOZ_MUST_USE bool enqueue(JSContext* cx, Handle<ReadableStream*> stream,
-                                     HandleValue chunk);
-    static MOZ_MUST_USE bool getExternalSource(JSContext* cx, Handle<ReadableStream*> stream,
-                                               void** source);
-    void releaseExternalSource();
-    uint8_t embeddingFlags() const;
-    static MOZ_MUST_USE bool updateDataAvailableFromSource(JSContext* cx,
-                                                           Handle<ReadableStream*> stream,
-                                                           uint32_t availableData);
-
-    enum State {
-         Readable  = 1 << 0,
-         Closed    = 1 << 1,
-         Errored   = 1 << 2,
-         Disturbed = 1 << 3
-    };
-
-  private:
-    static MOZ_MUST_USE ReadableStream* createStream(JSContext* cx, HandleObject proto = nullptr);
-
-  public:
-    static bool constructor(JSContext* cx, unsigned argc, Value* vp);
-    static const ClassSpec classSpec_;
-    static const Class class_;
-    static const ClassSpec protoClassSpec_;
-    static const Class protoClass_;
-=======
   Value storedError() const { return getFixedSlot(Slot_StoredError); }
   void setStoredError(HandleValue value) {
     setFixedSlot(Slot_StoredError, value);
@@ -202,7 +118,6 @@ class ReadableStream : public NativeObject
   static const Class class_;
   static const ClassSpec protoClassSpec_;
   static const Class protoClass_;
->>>>>>> upstream-releases
 };
 
 /**
@@ -373,77 +288,6 @@ class ReadableStreamController : public StreamController {
     Flag_SourceLocked = 1 << 7,
   };
 
-<<<<<<< HEAD
-  ReadableStream* stream() const {
-    return &getFixedSlot(Slot_Stream).toObject().as<ReadableStream>();
-  }
-  void setStream(ReadableStream* stream) {
-    setFixedSlot(Slot_Stream, ObjectValue(*stream));
-  }
-  Value underlyingSource() const { return getFixedSlot(Slot_UnderlyingSource); }
-  void setUnderlyingSource(const Value& underlyingSource) {
-    setFixedSlot(Slot_UnderlyingSource, underlyingSource);
-  }
-  Value pullMethod() const { return getFixedSlot(Slot_PullMethod); }
-  void setPullMethod(const Value& pullMethod) {
-    setFixedSlot(Slot_PullMethod, pullMethod);
-  }
-  Value cancelMethod() const { return getFixedSlot(Slot_CancelMethod); }
-  void setCancelMethod(const Value& cancelMethod) {
-    setFixedSlot(Slot_CancelMethod, cancelMethod);
-  }
-  JS::ReadableStreamUnderlyingSource* externalSource() const {
-    static_assert(alignof(JS::ReadableStreamUnderlyingSource) >= 2,
-                  "External underling sources are stored as PrivateValues, "
-                  "so they must have even addresses");
-    MOZ_ASSERT(hasExternalSource());
-    return static_cast<JS::ReadableStreamUnderlyingSource*>(
-        underlyingSource().toPrivate());
-  }
-  void setExternalSource(JS::ReadableStreamUnderlyingSource* underlyingSource) {
-    MOZ_ASSERT(getFixedSlot(Slot_Flags).isUndefined());
-    setUnderlyingSource(JS::PrivateValue(underlyingSource));
-    setFlags(Flag_ExternalSource);
-  }
-  double strategyHWM() const {
-    return getFixedSlot(Slot_StrategyHWM).toNumber();
-  }
-  void setStrategyHWM(double highWaterMark) {
-    setFixedSlot(Slot_StrategyHWM, NumberValue(highWaterMark));
-  }
-  uint32_t flags() const { return getFixedSlot(Slot_Flags).toInt32(); }
-  void setFlags(uint32_t flags) { setFixedSlot(Slot_Flags, Int32Value(flags)); }
-  void addFlags(uint32_t flags) { setFlags(this->flags() | flags); }
-  void removeFlags(uint32_t flags) { setFlags(this->flags() & ~flags); }
-  bool started() const { return flags() & Flag_Started; }
-  void setStarted() { addFlags(Flag_Started); }
-  bool pulling() const { return flags() & Flag_Pulling; }
-  void setPulling() { addFlags(Flag_Pulling); }
-  void clearPullFlags() { removeFlags(Flag_Pulling | Flag_PullAgain); }
-  bool pullAgain() const { return flags() & Flag_PullAgain; }
-  void setPullAgain() { addFlags(Flag_PullAgain); }
-  bool closeRequested() const { return flags() & Flag_CloseRequested; }
-  void setCloseRequested() { addFlags(Flag_CloseRequested); }
-  bool isTeeBranch1() const { return flags() & Flag_TeeBranch1; }
-  void setTeeBranch1() {
-    MOZ_ASSERT(!isTeeBranch2());
-    addFlags(Flag_TeeBranch1);
-  }
-  bool isTeeBranch2() const { return flags() & Flag_TeeBranch2; }
-  void setTeeBranch2() {
-    MOZ_ASSERT(!isTeeBranch1());
-    addFlags(Flag_TeeBranch2);
-  }
-  bool hasExternalSource() const { return flags() & Flag_ExternalSource; }
-  bool sourceLocked() const { return flags() & Flag_SourceLocked; }
-  void setSourceLocked() { addFlags(Flag_SourceLocked); }
-  void clearSourceLocked() { removeFlags(Flag_SourceLocked); }
-||||||| merged common ancestors
-class ReadableStreamController : public NativeObject
-{
-  public:
-    static const Class class_;
-=======
   ReadableStream* stream() const {
     return &getFixedSlot(Slot_Stream).toObject().as<ReadableStream>();
   }
@@ -518,7 +362,6 @@ class ReadableStreamController : public NativeObject
   bool sourceLocked() const { return flags() & Flag_SourceLocked; }
   void setSourceLocked() { addFlags(Flag_SourceLocked); }
   void clearSourceLocked() { removeFlags(Flag_SourceLocked); }
->>>>>>> upstream-releases
 };
 
 class ReadableStreamDefaultController : public ReadableStreamController {

@@ -15,19 +15,9 @@
 
 using namespace mozilla;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewXULLabelFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  nsXULLabelFrame* it = new (aPresShell) nsXULLabelFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewXULLabelFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  nsXULLabelFrame* it = new (aPresShell) nsXULLabelFrame(aStyle);
-=======
 nsIFrame* NS_NewXULLabelFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   nsXULLabelFrame* it =
       new (aPresShell) nsXULLabelFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
   it->AddStateBits(NS_BLOCK_FORMATTING_CONTEXT_STATE_BITS);
   return it;
 }

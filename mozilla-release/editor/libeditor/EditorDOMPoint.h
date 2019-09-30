@@ -111,29 +111,12 @@ class EditorDOMPointBase final {
 
   EditorDOMPointBase(nsINode* aContainer, nsIContent* aPointedNode,
                      int32_t aOffset)
-<<<<<<< HEAD
-      : mParent(aContainer),
-        mChild(aPointedNode),
-        mOffset(mozilla::Some(aOffset)),
-        mIsChildInitialized(true) {
-    MOZ_RELEASE_ASSERT(
-        aContainer, "This constructor shouldn't be used when pointing nowhere");
-||||||| merged common ancestors
-    : mParent(aContainer)
-    , mChild(aPointedNode)
-    , mOffset(mozilla::Some(aOffset))
-    , mIsChildInitialized(true)
-  {
-    MOZ_RELEASE_ASSERT(aContainer,
-      "This constructor shouldn't be used when pointing nowhere");
-=======
       : mParent(aContainer),
         mChild(aPointedNode),
         mOffset(mozilla::Some(aOffset)),
         mIsChildInitialized(true) {
     MOZ_DIAGNOSTIC_ASSERT(
         aContainer, "This constructor shouldn't be used when pointing nowhere");
->>>>>>> upstream-releases
     MOZ_ASSERT(mOffset.value() <= mParent->Length());
     MOZ_ASSERT(mChild || mParent->Length() == mOffset.value() ||
                !mParent->IsContainerNode());
@@ -518,19 +501,11 @@ class EditorDOMPointBase final {
     return true;
   }
 
-<<<<<<< HEAD
-  bool IsStartOfContainer() const {
-||||||| merged common ancestors
-  bool
-  IsStartOfContainer() const
-  {
-=======
   bool HasChildMovedFromContainer() const {
     return mChild && mChild->GetParentNode() != mParent;
   }
 
   bool IsStartOfContainer() const {
->>>>>>> upstream-releases
     // If we're referring the first point in the container:
     //   If mParent is not a container like a text node, mOffset is 0.
     //   If mChild is initialized and it's first child of mParent.
@@ -685,19 +660,9 @@ class EditorDOMPointBase final {
    * This operator should be used if API of other modules take RawRangeBoundary,
    * e.g., methods of Selection and nsRange.
    */
-<<<<<<< HEAD
-  operator const RawRangeBoundary() const {
-    if (!IsSet() || NS_WARN_IF(!mIsChildInitialized && !mOffset.isSome())) {
-||||||| merged common ancestors
-  operator const RawRangeBoundary() const
-  {
-    if (!IsSet() ||
-        NS_WARN_IF(!mIsChildInitialized && !mOffset.isSome())) {
-=======
   operator const RawRangeBoundary() const { return ToRawRangeBoundary(); }
   const RawRangeBoundary ToRawRangeBoundary() const {
     if (!IsSet() || NS_WARN_IF(!mIsChildInitialized && !mOffset.isSome())) {
->>>>>>> upstream-releases
       return RawRangeBoundary();
     }
     if (!mParent->IsContainerNode()) {

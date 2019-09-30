@@ -9,19 +9,9 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* virtual */ JSObject* BindingStyleRule::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-BindingStyleRule::WrapObject(JSContext* aCx,
-			     JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* BindingStyleRule::WrapObject(JSContext* aCx,
                                        JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return dom::CSSStyleRule_Binding::Wrap(aCx, this, aGivenProto);
 }
 

@@ -39,30 +39,10 @@ NS_INTERFACE_MAP_END_INHERITING(nsGenericHTMLElement)
 
 NS_IMPL_ELEMENT_CLONE(HTMLSlotElement)
 
-<<<<<<< HEAD
-nsresult HTMLSlotElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-||||||| merged common ancestors
-nsresult
-HTMLSlotElement::BindToTree(nsIDocument* aDocument,
-                            nsIContent* aParent,
-                            nsIContent* aBindingParent)
-{
-=======
 nsresult HTMLSlotElement::BindToTree(BindContext& aContext, nsINode& aParent) {
->>>>>>> upstream-releases
   RefPtr<ShadowRoot> oldContainingShadow = GetContainingShadow();
 
-<<<<<<< HEAD
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   ShadowRoot* containingShadow = GetContainingShadow();
@@ -73,15 +53,7 @@ nsresult HTMLSlotElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void HTMLSlotElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-HTMLSlotElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void HTMLSlotElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   RefPtr<ShadowRoot> oldContainingShadow = GetContainingShadow();
 
   nsGenericHTMLElement::UnbindFromTree(aNullParent);
@@ -167,13 +139,6 @@ void HTMLSlotElement::AssignedNodes(const AssignedNodesOptions& aOptions,
   aNodes = mAssignedNodes;
 }
 
-<<<<<<< HEAD
-const nsTArray<RefPtr<nsINode>>& HTMLSlotElement::AssignedNodes() const {
-||||||| merged common ancestors
-const nsTArray<RefPtr<nsINode>>&
-HTMLSlotElement::AssignedNodes() const
-{
-=======
 void HTMLSlotElement::AssignedElements(const AssignedNodesOptions& aOptions,
                                        nsTArray<RefPtr<Element>>& aElements) {
   AutoTArray<RefPtr<nsINode>, 128> assignedNodes;
@@ -186,7 +151,6 @@ void HTMLSlotElement::AssignedElements(const AssignedNodesOptions& aOptions,
 }
 
 const nsTArray<RefPtr<nsINode>>& HTMLSlotElement::AssignedNodes() const {
->>>>>>> upstream-releases
   return mAssignedNodes;
 }
 

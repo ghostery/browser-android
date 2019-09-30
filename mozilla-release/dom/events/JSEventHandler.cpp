@@ -154,16 +154,8 @@ nsresult JSEventHandler::HandleEvent(Event* aEvent) {
         mTypedHandler.OnErrorEventHandler();
     ErrorResult rv;
     JS::Rooted<JS::Value> retval(RootingCx());
-<<<<<<< HEAD
-    handler->Call(mTarget, msgOrEvent, fileName, lineNumber, columnNumber,
-                  error, &retval, rv);
-||||||| merged common ancestors
-    handler->Call(mTarget, msgOrEvent, fileName, lineNumber,
-                  columnNumber, error, &retval, rv);
-=======
     handler->Call(target, msgOrEvent, fileName, lineNumber, columnNumber, error,
                   &retval, rv);
->>>>>>> upstream-releases
     if (rv.Failed()) {
       return rv.StealNSResult();
     }

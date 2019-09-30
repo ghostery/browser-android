@@ -280,14 +280,7 @@ class FixedSizeSmallShmemSectionAllocator final : public ShmemSectionAllocator {
 
   ~FixedSizeSmallShmemSectionAllocator();
 
-<<<<<<< HEAD
-  virtual bool AllocShmemSection(uint32_t aSize,
-                                 ShmemSection* aShmemSection) override;
-||||||| merged common ancestors
-  virtual bool AllocShmemSection(uint32_t aSize, ShmemSection* aShmemSection) override;
-=======
   bool AllocShmemSection(uint32_t aSize, ShmemSection* aShmemSection) override;
->>>>>>> upstream-releases
 
   void DeallocShmemSection(ShmemSection& aShmemSection) override;
 

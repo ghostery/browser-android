@@ -24,18 +24,8 @@ sw{
                 range{"{0}–{1}"}
             }
             patterns{
-<<<<<<< HEAD
                 accountingFormat{"¤ #,##0.00"}
                 currencyFormat{"¤ #,##0.00"}
-                decimalFormat{"#,##0.###"}
-||||||| merged common ancestors
-                accountingFormat{"¤#,##0.00;(¤#,##0.00)"}
-                currencyFormat{"¤#,##0.00"}
-                decimalFormat{"#,##0.###"}
-=======
-                accountingFormat{"¤ #,##0.00"}
-                currencyFormat{"¤ #,##0.00"}
->>>>>>> upstream-releases
                 percentFormat{"#,##0%"}
                 scientificFormat{"#E0"}
             }
@@ -213,13 +203,7 @@ sw{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

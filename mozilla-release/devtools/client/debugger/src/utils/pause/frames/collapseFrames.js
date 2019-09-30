@@ -6,17 +6,9 @@
 
 import { get, findIndex } from "lodash";
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/frames/collapseFrames.js
-// eslint-disable-next-line max-len
-import type { LocalFrame } from "../../../components/SecondaryPanes/Frames/types";
-import { getFrameUrl } from "./getFrameUrl";
-||||||| merged common ancestors
-var _getFrameUrl = require("./getFrameUrl");
-=======
 // eslint-disable-next-line max-len
 import type { Frame } from "../../../types";
 import { getFrameUrl } from "./getFrameUrl";
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/frames/collapseFrames.js
 
 function collapseLastFrames(frames) {
   const index = findIndex(frames, frame =>
@@ -32,19 +24,10 @@ function collapseLastFrames(frames) {
   return { newFrames, lastGroup };
 }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/frames/collapseFrames.js
-type FrameGroup = LocalFrame[];
-type GroupedFrames = Array<FrameGroup | LocalFrame>;
-
-export function collapseFrames(frames: LocalFrame[]): GroupedFrames {
-||||||| merged common ancestors
-function collapseFrames(frames) {
-=======
 type FrameGroup = Frame[];
 type GroupedFrames = Array<FrameGroup | Frame>;
 
 export function collapseFrames(frames: Frame[]): GroupedFrames {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/frames/collapseFrames.js
   // We collapse groups of one so that user frames
   // are not in a group of one
   function addGroupToList(group, list) {

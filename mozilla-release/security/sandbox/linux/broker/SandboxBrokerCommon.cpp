@@ -24,57 +24,19 @@
 // because this is running in a multithreaded process that can fork.
 // In the future, if the broker becomes a dedicated executable, this
 // can change.
-<<<<<<< HEAD
-#error "No MSG_CMSG_CLOEXEC?"
-#endif  // XP_LINUX
-#endif  // MSG_CMSG_CLOEXEC
-||||||| merged common ancestors
-#error "No MSG_CMSG_CLOEXEC?"
-#endif // XP_LINUX
-#endif // MSG_CMSG_CLOEXEC
-=======
 #    error "No MSG_CMSG_CLOEXEC?"
 #  endif  // XP_LINUX
 #endif    // MSG_CMSG_CLOEXEC
->>>>>>> upstream-releases
 
 namespace mozilla {
 
 const char* SandboxBrokerCommon::OperationDescription[] = {
-<<<<<<< HEAD
-    "open",  "access", "stat",  "chmod",  "link",     "symlink",
-    "mkdir", "rename", "rmdir", "unlink", "readlink", "connect"};
-
-/* static */ ssize_t SandboxBrokerCommon::RecvWithFd(int aFd, const iovec* aIO,
-                                                     size_t aNumIO,
-                                                     int* aPassedFdPtr) {
-||||||| merged common ancestors
-  "open",
-  "access",
-  "stat",
-  "chmod",
-  "link",
-  "symlink",
-  "mkdir",
-  "rename",
-  "rmdir",
-  "unlink",
-  "readlink",
-  "connect"
-};
-
-/* static */ ssize_t
-SandboxBrokerCommon::RecvWithFd(int aFd, const iovec* aIO, size_t aNumIO,
-                                    int* aPassedFdPtr)
-{
-=======
     "open",  "access", "stat",  "chmod",  "link",     "symlink",
     "mkdir", "rename", "rmdir", "unlink", "readlink", "connect"};
 
 /* static */
 ssize_t SandboxBrokerCommon::RecvWithFd(int aFd, const iovec* aIO,
                                         size_t aNumIO, int* aPassedFdPtr) {
->>>>>>> upstream-releases
   struct msghdr msg = {};
   msg.msg_iov = const_cast<iovec*>(aIO);
   msg.msg_iovlen = aNumIO;
@@ -131,20 +93,9 @@ ssize_t SandboxBrokerCommon::RecvWithFd(int aFd, const iovec* aIO,
   return rv;
 }
 
-<<<<<<< HEAD
-/* static */ ssize_t SandboxBrokerCommon::SendWithFd(int aFd, const iovec* aIO,
-                                                     size_t aNumIO,
-                                                     int aPassedFd) {
-||||||| merged common ancestors
-/* static */ ssize_t
-SandboxBrokerCommon::SendWithFd(int aFd, const iovec* aIO, size_t aNumIO,
-                                    int aPassedFd)
-{
-=======
 /* static */
 ssize_t SandboxBrokerCommon::SendWithFd(int aFd, const iovec* aIO,
                                         size_t aNumIO, int aPassedFd) {
->>>>>>> upstream-releases
   struct msghdr msg = {};
   msg.msg_iov = const_cast<iovec*>(aIO);
   msg.msg_iovlen = aNumIO;

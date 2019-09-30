@@ -54,13 +54,5 @@ module.exports = {
       type: EXTENSION_SIDEBAR_REMOVE,
       sidebarId,
     };
-<<<<<<< HEAD
   },
-
-||||||| merged common ancestors
-  }
-
-=======
-  },
->>>>>>> upstream-releases
 };

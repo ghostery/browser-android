@@ -74,19 +74,6 @@ add_task(async function() {
 
   function moveMouseOver(selector) {
     info("Waiting for element " + selector + " to be highlighted");
-<<<<<<< HEAD
-    testActor.synthesizeMouse({
-      selector: selector,
-      options: {type: "mousemove"},
-      center: true,
-    }).then(() => inspector.toolbox.once("picker-node-hovered"));
-||||||| merged common ancestors
-    testActor.synthesizeMouse({
-      selector: selector,
-      options: {type: "mousemove"},
-      center: true
-    }).then(() => inspector.toolbox.once("picker-node-hovered"));
-=======
     testActor
       .synthesizeMouse({
         selector: selector,
@@ -94,6 +81,5 @@ add_task(async function() {
         center: true,
       })
       .then(() => inspector.inspector.nodePicker.once("picker-node-hovered"));
->>>>>>> upstream-releases
   }
 });

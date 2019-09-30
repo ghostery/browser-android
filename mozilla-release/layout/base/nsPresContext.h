@@ -86,28 +86,8 @@ class LayerManager;
 namespace dom {
 class Document;
 class Element;
-<<<<<<< HEAD
 }  // namespace dom
 }  // namespace mozilla
-
-// supported values for cached bool types
-enum nsPresContext_CachedBoolPrefType {
-  kPresContext_UseDocumentFonts = 1,
-  kPresContext_UnderlineLinks
-};
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-
-// supported values for cached bool types
-enum nsPresContext_CachedBoolPrefType {
-  kPresContext_UseDocumentFonts = 1,
-  kPresContext_UnderlineLinks
-};
-=======
-}  // namespace dom
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 // supported values for cached integer pref types
 enum nsPresContext_CachedIntPrefType {
@@ -150,17 +130,8 @@ class nsPresContext : public nsISupports,
                       public mozilla::SupportsWeakPtr<nsPresContext> {
  public:
   using Encoding = mozilla::Encoding;
-<<<<<<< HEAD
   template <typename T>
   using NotNull = mozilla::NotNull<T>;
-  typedef mozilla::LangGroupFontPrefs LangGroupFontPrefs;
-||||||| merged common ancestors
-  template <typename T> using NotNull = mozilla::NotNull<T>;
-  typedef mozilla::LangGroupFontPrefs LangGroupFontPrefs;
-=======
-  template <typename T>
-  using NotNull = mozilla::NotNull<T>;
->>>>>>> upstream-releases
   typedef mozilla::ScrollStyles ScrollStyles;
   typedef mozilla::StaticPresData StaticPresData;
   using TransactionId = mozilla::layers::TransactionId;
@@ -187,39 +158,17 @@ class nsPresContext : public nsISupports,
    * Set and detach presentation shell that this context is bound to.
    * A presentation context may only be bound to a single shell.
    */
-<<<<<<< HEAD
-  void AttachShell(nsIPresShell* aShell);
-  void DetachShell();
-
-||||||| merged common ancestors
-  void AttachShell(nsIPresShell* aShell);
-  void DetachShell();
-
-
-=======
   void AttachPresShell(mozilla::PresShell* aPresShell);
   void DetachPresShell();
 
->>>>>>> upstream-releases
   nsPresContextType Type() const { return mType; }
 
   /**
    * Get the PresentationShell that this context is bound to.
    */
-<<<<<<< HEAD
-  nsIPresShell* PresShell() const {
-    NS_ASSERTION(mShell, "Null pres shell");
-    return mShell;
-||||||| merged common ancestors
-  nsIPresShell* PresShell() const
-  {
-    NS_ASSERTION(mShell, "Null pres shell");
-    return mShell;
-=======
   mozilla::PresShell* PresShell() const {
     NS_ASSERTION(mPresShell, "Null pres shell");
     return mPresShell;
->>>>>>> upstream-releases
   }
 
   mozilla::PresShell* GetPresShell() const { return mPresShell; }
@@ -263,53 +212,20 @@ class nsPresContext : public nsISupports,
 
   virtual bool IsRoot() { return false; }
 
-<<<<<<< HEAD
-  nsIDocument* Document() const {
-    NS_ASSERTION(
-        !mShell || !mShell->GetDocument() || mShell->GetDocument() == mDocument,
-        "nsPresContext doesn't have the same document as nsPresShell!");
-    return mDocument;
-||||||| merged common ancestors
-  nsIDocument* Document() const
-  {
-      NS_ASSERTION(!mShell || !mShell->GetDocument() ||
-                   mShell->GetDocument() == mDocument,
-                   "nsPresContext doesn't have the same document as nsPresShell!");
-      return mDocument;
-=======
   mozilla::dom::Document* Document() const {
 #ifdef DEBUG
     ValidatePresShellAndDocumentReleation();
 #endif  // #ifdef DEBUG
     return mDocument;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  mozilla::ServoStyleSet* StyleSet() const {
-    return GetPresShell()->StyleSet();
-  }
-||||||| merged common ancestors
-  mozilla::ServoStyleSet* StyleSet() const
-    { return GetPresShell()->StyleSet(); }
-=======
   inline mozilla::ServoStyleSet* StyleSet() const;
->>>>>>> upstream-releases
 
   bool HasPendingMediaQueryUpdates() const {
     return !!mPendingMediaFeatureValuesChange;
   }
 
-<<<<<<< HEAD
-  nsCSSFrameConstructor* FrameConstructor() {
-    return PresShell()->FrameConstructor();
-  }
-||||||| merged common ancestors
-  nsCSSFrameConstructor* FrameConstructor()
-    { return PresShell()->FrameConstructor(); }
-=======
   inline nsCSSFrameConstructor* FrameConstructor();
->>>>>>> upstream-releases
 
   mozilla::AnimationEventDispatcher* AnimationEventDispatcher() {
     return mAnimationEventDispatcher;
@@ -351,76 +267,9 @@ class nsPresContext : public nsISupports,
   void ContentLanguageChanged();
 
   /**
-<<<<<<< HEAD
-   * Handle changes in the values of media features (used in media
-   * queries).
-   *
-   * There are three sensible values to use for aRestyleHint:
-   *  * nsRestyleHint(0) to rebuild style data, with rerunning of
-   *    selector matching, only if media features have changed
-   *  * eRestyle_ForceDescendants to force rebuilding of style data (but
-   *    still only rerun selector matching if media query results have
-   *    changed).  (RebuildAllStyleData always adds
-   *    eRestyle_ForceDescendants internally, so here we're only using
-   *    it to distinguish from nsRestyleHint(0) whether we need to call
-   *    RebuildAllStyleData at all.)
-   *  * eRestyle_Subtree to force rebuilding of style data with
-   *    rerunning of selector matching
-   *
-   * For aChangeHint, see RestyleManager::RebuildAllStyleData.  (Passing
-   * a nonzero aChangeHint forces rebuilding style data even if
-   * nsRestyleHint(0) is passed.)
-   */
-  void MediaFeatureValuesChanged(const mozilla::MediaFeatureChange& aChange) {
-    if (mShell) {
-      mShell->EnsureStyleFlush();
-    }
-
-    if (!mPendingMediaFeatureValuesChange) {
-      mPendingMediaFeatureValuesChange.emplace(aChange);
-      return;
-    }
-
-    *mPendingMediaFeatureValuesChange |= aChange;
-  }
-||||||| merged common ancestors
-   * Handle changes in the values of media features (used in media
-   * queries).
-   *
-   * There are three sensible values to use for aRestyleHint:
-   *  * nsRestyleHint(0) to rebuild style data, with rerunning of
-   *    selector matching, only if media features have changed
-   *  * eRestyle_ForceDescendants to force rebuilding of style data (but
-   *    still only rerun selector matching if media query results have
-   *    changed).  (RebuildAllStyleData always adds
-   *    eRestyle_ForceDescendants internally, so here we're only using
-   *    it to distinguish from nsRestyleHint(0) whether we need to call
-   *    RebuildAllStyleData at all.)
-   *  * eRestyle_Subtree to force rebuilding of style data with
-   *    rerunning of selector matching
-   *
-   * For aChangeHint, see RestyleManager::RebuildAllStyleData.  (Passing
-   * a nonzero aChangeHint forces rebuilding style data even if
-   * nsRestyleHint(0) is passed.)
-   */
-  void MediaFeatureValuesChanged(const mozilla::MediaFeatureChange& aChange)
-  {
-    if (mShell) {
-      mShell->EnsureStyleFlush();
-    }
-
-    if (!mPendingMediaFeatureValuesChange) {
-      mPendingMediaFeatureValuesChange.emplace(aChange);
-      return;
-    }
-
-    *mPendingMediaFeatureValuesChange |= aChange;
-  }
-=======
    * Handle changes in the values of media features (used in media queries).
    */
   void MediaFeatureValuesChanged(const mozilla::MediaFeatureChange& aChange);
->>>>>>> upstream-releases
 
   void FlushPendingMediaFeatureValuesChanged();
 
@@ -470,84 +319,6 @@ class nsPresContext : public nsISupports,
    */
   void StopEmulatingMedium();
 
-<<<<<<< HEAD
-  /**
-   * Get the default font for the given language and generic font ID.
-   * If aLanguage is nullptr, the document's language is used.
-   *
-   * See the comment in StaticPresData::GetDefaultFont.
-   */
-  const nsFont* GetDefaultFont(uint8_t aFontID, nsAtom* aLanguage,
-                               bool* aNeedsToCache = nullptr) const {
-    nsAtom* lang = aLanguage ? aLanguage : mLanguage.get();
-    const LangGroupFontPrefs* prefs = GetFontPrefsForLang(lang, aNeedsToCache);
-    if (aNeedsToCache && *aNeedsToCache) {
-      return nullptr;
-    }
-    return StaticPresData::Get()->GetDefaultFontHelper(aFontID, lang, prefs);
-  }
-
-  void ForceCacheLang(nsAtom* aLanguage);
-  void CacheAllLangs();
-
-  /** Get a cached boolean pref, by its type */
-  // *  - initially created for bugs 31816, 20760, 22963
-  bool GetCachedBoolPref(nsPresContext_CachedBoolPrefType aPrefType) const {
-    // If called with a constant parameter, the compiler should optimize
-    // this switch statement away.
-    switch (aPrefType) {
-      case kPresContext_UseDocumentFonts:
-        return mUseDocumentFonts;
-      case kPresContext_UnderlineLinks:
-        return mUnderlineLinks;
-      default:
-        NS_ERROR("Invalid arg passed to GetCachedBoolPref");
-    }
-
-    return false;
-  }
-
-||||||| merged common ancestors
-  /**
-   * Get the default font for the given language and generic font ID.
-   * If aLanguage is nullptr, the document's language is used.
-   *
-   * See the comment in StaticPresData::GetDefaultFont.
-   */
-  const nsFont* GetDefaultFont(uint8_t aFontID,
-                               nsAtom *aLanguage, bool* aNeedsToCache = nullptr) const
-  {
-    nsAtom* lang = aLanguage ? aLanguage : mLanguage.get();
-    const LangGroupFontPrefs* prefs = GetFontPrefsForLang(lang, aNeedsToCache);
-    if (aNeedsToCache && *aNeedsToCache) {
-      return nullptr;
-    }
-    return StaticPresData::Get()->GetDefaultFontHelper(aFontID, lang, prefs);
-  }
-
-  void ForceCacheLang(nsAtom *aLanguage);
-  void CacheAllLangs();
-
-  /** Get a cached boolean pref, by its type */
-  // *  - initially created for bugs 31816, 20760, 22963
-  bool GetCachedBoolPref(nsPresContext_CachedBoolPrefType aPrefType) const
-  {
-    // If called with a constant parameter, the compiler should optimize
-    // this switch statement away.
-    switch (aPrefType) {
-    case kPresContext_UseDocumentFonts:
-      return mUseDocumentFonts;
-    case kPresContext_UnderlineLinks:
-      return mUnderlineLinks;
-    default:
-      NS_ERROR("Invalid arg passed to GetCachedBoolPref");
-    }
-
-    return false;
-  }
-
-=======
->>>>>>> upstream-releases
   /** Get a cached integer pref, by its type */
   // *  - initially created for bugs 30910, 61883, 74186, 84398
   int32_t GetCachedIntPref(nsPresContext_CachedIntPrefType aPrefType) const {
@@ -703,17 +474,11 @@ class nsPresContext : public nsISupports,
  protected:
   void UpdateEffectiveTextZoom();
 
-<<<<<<< HEAD
- public:
-||||||| merged common ancestors
-public:
-=======
 #ifdef DEBUG
   void ValidatePresShellAndDocumentReleation() const;
 #endif  // #ifdef DEBUG
 
  public:
->>>>>>> upstream-releases
   /**
    * Corresponds to the product of text zoom and system font scale, limited
    * by zoom.maxPercent and minPercent.
@@ -724,91 +489,6 @@ public:
    */
   float EffectiveTextZoom() const { return mEffectiveTextZoom; }
 
-<<<<<<< HEAD
-  /**
-   * Get the minimum font size for the specified language. If aLanguage
-   * is nullptr, then the document's language is used.  This combines
-   * the language-specific global preference with the per-presentation
-   * base minimum font size.
-   */
-  int32_t MinFontSize(nsAtom* aLanguage, bool* aNeedsToCache = nullptr) const {
-    const LangGroupFontPrefs* prefs =
-        GetFontPrefsForLang(aLanguage, aNeedsToCache);
-    if (aNeedsToCache && *aNeedsToCache) {
-      return 0;
-    }
-    return std::max(mBaseMinFontSize, prefs->mMinimumFontSize);
-  }
-
-  /**
-   * Get the per-presentation base minimum font size.  This size is
-   * independent of the language-specific global preference.
-   */
-  int32_t BaseMinFontSize() const { return mBaseMinFontSize; }
-
-  /**
-   * Set the per-presentation base minimum font size.  This size is
-   * independent of the language-specific global preference.
-   */
-  void SetBaseMinFontSize(int32_t aMinFontSize) {
-    if (aMinFontSize == mBaseMinFontSize) {
-      return;
-    }
-
-    mBaseMinFontSize = aMinFontSize;
-
-    // Media queries could have changed, since we changed the meaning
-    // of 'em' units in them.
-    MediaFeatureValuesChanged(
-        {eRestyle_ForceDescendants, NS_STYLE_HINT_REFLOW,
-         mozilla::MediaFeatureChangeReason::MinFontSizeChange});
-  }
-
-||||||| merged common ancestors
-  /**
-   * Get the minimum font size for the specified language. If aLanguage
-   * is nullptr, then the document's language is used.  This combines
-   * the language-specific global preference with the per-presentation
-   * base minimum font size.
-   */
-  int32_t MinFontSize(nsAtom *aLanguage, bool* aNeedsToCache = nullptr) const {
-    const LangGroupFontPrefs *prefs = GetFontPrefsForLang(aLanguage, aNeedsToCache);
-    if (aNeedsToCache && *aNeedsToCache) {
-      return 0;
-    }
-    return std::max(mBaseMinFontSize, prefs->mMinimumFontSize);
-  }
-
-  /**
-   * Get the per-presentation base minimum font size.  This size is
-   * independent of the language-specific global preference.
-   */
-  int32_t BaseMinFontSize() const {
-    return mBaseMinFontSize;
-  }
-
-  /**
-   * Set the per-presentation base minimum font size.  This size is
-   * independent of the language-specific global preference.
-   */
-  void SetBaseMinFontSize(int32_t aMinFontSize) {
-    if (aMinFontSize == mBaseMinFontSize) {
-      return;
-    }
-
-    mBaseMinFontSize = aMinFontSize;
-
-    // Media queries could have changed, since we changed the meaning
-    // of 'em' units in them.
-    MediaFeatureValuesChanged({
-      eRestyle_ForceDescendants,
-      NS_STYLE_HINT_REFLOW,
-      mozilla::MediaFeatureChangeReason::MinFontSizeChange
-    });
-  }
-
-=======
->>>>>>> upstream-releases
   float GetFullZoom() { return mFullZoom; }
   /**
    * Device full zoom differs from full zoom because it gets the zoom from
@@ -1130,25 +810,6 @@ public:
   bool HasAuthorSpecifiedRules(const nsIFrame* aFrame,
                                uint32_t ruleTypeMask) const;
 
-<<<<<<< HEAD
-  // Is it OK to let the page specify colors and backgrounds?
-  bool UseDocumentColors() const {
-    MOZ_ASSERT(mUseDocumentColors || !(IsChrome() || IsChromeOriginImage()),
-               "We should never have a chrome doc or image that can't use its "
-               "colors.");
-    return mUseDocumentColors;
-  }
-
-||||||| merged common ancestors
-  // Is it OK to let the page specify colors and backgrounds?
-  bool UseDocumentColors() const {
-    MOZ_ASSERT(mUseDocumentColors || !(IsChrome() || IsChromeOriginImage()),
-               "We should never have a chrome doc or image that can't use its colors.");
-    return mUseDocumentColors;
-  }
-
-=======
->>>>>>> upstream-releases
   // Explicitly enable and disable paint flashing.
   void SetPaintFlashing(bool aPaintFlashing) {
     mPaintFlashing = aPaintFlashing;
@@ -1295,15 +956,6 @@ public:
    */
   bool IsRootContentDocument() const;
 
-<<<<<<< HEAD
-  bool HadNonBlankPaint() const { return mHadNonBlankPaint; }
-  bool HadContentfulPaint() const { return mHadContentfulPaint; }
-||||||| merged common ancestors
-  bool HadNonBlankPaint() const {
-    return mHadNonBlankPaint;
-  }
-
-=======
   /**
    * We are a root content document in process if: we are not a resource doc, we
    * are not chrome, and we either have no parent in the current process or our
@@ -1320,7 +972,6 @@ public:
 
   bool HadNonBlankPaint() const { return mHadNonBlankPaint; }
   bool HadContentfulPaint() const { return mHadContentfulPaint; }
->>>>>>> upstream-releases
   void NotifyNonBlankPaint();
   void NotifyContentfulPaint();
   void NotifyDOMContentFlushed();
@@ -1382,30 +1033,12 @@ public:
   // aData here is a pointer to a double that holds the CSS to device-pixel
   // scale factor from the parent, which will be applied to the subdocument's
   // device context instead of retrieving a scale from the widget.
-<<<<<<< HEAD
-  static bool UIResolutionChangedSubdocumentCallback(nsIDocument* aDocument,
-                                                     void* aData);
-||||||| merged common ancestors
-  static bool
-  UIResolutionChangedSubdocumentCallback(nsIDocument* aDocument, void* aData);
-=======
   static bool UIResolutionChangedSubdocumentCallback(
       mozilla::dom::Document* aDocument, void* aData);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetImgAnimations(nsIContent* aParent, uint16_t aMode);
-  void SetSMILAnimations(nsIDocument* aDoc, uint16_t aNewMode,
-                         uint16_t aOldMode);
-||||||| merged common ancestors
-  void SetImgAnimations(nsIContent *aParent, uint16_t aMode);
-  void SetSMILAnimations(nsIDocument *aDoc, uint16_t aNewMode,
-                                     uint16_t aOldMode);
-=======
   void SetImgAnimations(nsIContent* aParent, uint16_t aMode);
   void SetSMILAnimations(mozilla::dom::Document* aDoc, uint16_t aNewMode,
                          uint16_t aOldMode);
->>>>>>> upstream-releases
   void GetDocumentColorPreferences();
 
   void PreferenceChanged(const char* aPrefName);
@@ -1415,54 +1048,14 @@ public:
 
   void GetUserPreferences();
 
-<<<<<<< HEAD
-  /**
-   * Fetch the user's font preferences for the given aLanguage's
-   * langugage group.
-   */
-  const LangGroupFontPrefs* GetFontPrefsForLang(
-      nsAtom* aLanguage, bool* aNeedsToCache = nullptr) const {
-    nsAtom* lang = aLanguage ? aLanguage : mLanguage.get();
-    return StaticPresData::Get()->GetFontPrefsForLangHelper(
-        lang, &mLangGroupFontPrefs, aNeedsToCache);
-  }
-
-||||||| merged common ancestors
-  /**
-   * Fetch the user's font preferences for the given aLanguage's
-   * langugage group.
-   */
-  const LangGroupFontPrefs* GetFontPrefsForLang(nsAtom *aLanguage, bool* aNeedsToCache = nullptr) const
-  {
-    nsAtom* lang = aLanguage ? aLanguage : mLanguage.get();
-    return StaticPresData::Get()->GetFontPrefsForLangHelper(lang, &mLangGroupFontPrefs, aNeedsToCache);
-  }
-
-=======
->>>>>>> upstream-releases
   void UpdateCharSet(NotNull<const Encoding*> aCharSet);
 
-<<<<<<< HEAD
-  static bool NotifyDidPaintSubdocumentCallback(nsIDocument* aDocument,
-                                                void* aData);
-  static bool NotifyRevokingDidPaintSubdocumentCallback(nsIDocument* aDocument,
-                                                        void* aData);
-
- public:
-||||||| merged common ancestors
-  static bool NotifyDidPaintSubdocumentCallback(nsIDocument* aDocument, void* aData);
-  static bool NotifyRevokingDidPaintSubdocumentCallback(nsIDocument* aDocument, void* aData);
-
-
-public:
-=======
   static bool NotifyDidPaintSubdocumentCallback(
       mozilla::dom::Document* aDocument, void* aData);
   static bool NotifyRevokingDidPaintSubdocumentCallback(
       mozilla::dom::Document* aDocument, void* aData);
 
  public:
->>>>>>> upstream-releases
   // Used by the PresShell to force a reflow when some aspect of font info
   // has been updated, potentially affecting font selection and layout.
   void ForceReflowForFontInfoUpdate();
@@ -1483,11 +1076,6 @@ public:
 
   void InvalidatePaintedLayers();
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   uint32_t GetNextFrameRateMultiplier() const {
     return mNextFrameRateMultiplier;
   }
@@ -1501,7 +1089,6 @@ protected:
   }
 
  protected:
->>>>>>> upstream-releases
   // May be called multiple times (unlink, destructor)
   void Destroy();
 
@@ -1525,29 +1112,6 @@ protected:
   // has been explicitly checked.  If you add any members to this class,
   // please make the ownership explicit (pinkerton, scc).
 
-<<<<<<< HEAD
-  nsPresContextType mType;
-  // the nsPresShell owns a strong reference to the nsPresContext, and is
-  // responsible for nulling this pointer before it is destroyed
-  nsIPresShell* MOZ_NON_OWNING_REF mShell;  // [WEAK]
-  nsCOMPtr<nsIDocument> mDocument;
-  RefPtr<nsDeviceContext> mDeviceContext;  // [STRONG] could be weak, but
-                                           // better safe than sorry.
-                                           // Cannot reintroduce cycles
-                                           // since there is no dependency
-                                           // from gfx back to layout.
-||||||| merged common ancestors
-  nsPresContextType     mType;
-  // the nsPresShell owns a strong reference to the nsPresContext, and is responsible
-  // for nulling this pointer before it is destroyed
-  nsIPresShell* MOZ_NON_OWNING_REF mShell;         // [WEAK]
-  nsCOMPtr<nsIDocument> mDocument;
-  RefPtr<nsDeviceContext> mDeviceContext; // [STRONG] could be weak, but
-                                            // better safe than sorry.
-                                            // Cannot reintroduce cycles
-                                            // since there is no dependency
-                                            // from gfx back to layout.
-=======
   nsPresContextType mType;
   // the PresShell owns a strong reference to the nsPresContext, and is
   // responsible for nulling this pointer before it is destroyed
@@ -1558,7 +1122,6 @@ protected:
                                            // Cannot reintroduce cycles
                                            // since there is no dependency
                                            // from gfx back to layout.
->>>>>>> upstream-releases
   RefPtr<mozilla::EventStateManager> mEventManager;
   RefPtr<nsRefreshDriver> mRefreshDriver;
   RefPtr<mozilla::AnimationEventDispatcher> mAnimationEventDispatcher;
@@ -1576,73 +1139,14 @@ protected:
   // the classes which set it. (using SetLinkHandler() again).
   nsILinkHandler* MOZ_NON_OWNING_REF mLinkHandler;
 
-<<<<<<< HEAD
-  // Formerly mLangGroup; moving from charset-oriented langGroup to
-  // maintaining actual language settings everywhere (see bug 524107).
-  // This may in fact hold a langGroup such as x-western rather than
-  // a specific language, however (e.g, if it is inferred from the
-  // charset rather than explicitly specified as a lang attribute).
-  RefPtr<nsAtom> mLanguage;
-
  public:
-||||||| merged common ancestors
-  // Formerly mLangGroup; moving from charset-oriented langGroup to
-  // maintaining actual language settings everywhere (see bug 524107).
-  // This may in fact hold a langGroup such as x-western rather than
-  // a specific language, however (e.g, if it is inferred from the
-  // charset rather than explicitly specified as a lang attribute).
-  RefPtr<nsAtom>     mLanguage;
-
-public:
-=======
- public:
->>>>>>> upstream-releases
   // The following are public member variables so that we can use them
   // with mozilla::AutoToggle or mozilla::AutoRestore.
 
   // Should we disable font size inflation because we're inside of
   // shrink-wrapping calculations on an inflation container?
-<<<<<<< HEAD
   bool mInflationDisabledForShrinkWrap;
 
- protected:
-  mozilla::WeakPtr<nsDocShell> mContainer;
-
-  // Base minimum font size, independent of the language-specific global
-  // preference. Defaults to 0
-  int32_t mBaseMinFontSize;
-  float mSystemFontScale;    // Internal text zoom factor, defaults to 1.0
-  float mTextZoom;           // Text zoom, defaults to 1.0
-  float mEffectiveTextZoom;  // Text zoom * system font scale
-  float mFullZoom;           // Page zoom, defaults to 1.0
-  float mOverrideDPPX;       // DPPX overrided, defaults to 0.0
-  gfxSize mLastFontInflationScreenSize;
-||||||| merged common ancestors
-  bool                  mInflationDisabledForShrinkWrap;
-
-protected:
-
-  mozilla::WeakPtr<nsDocShell>             mContainer;
-=======
-  bool mInflationDisabledForShrinkWrap;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  int32_t mCurAppUnitsPerDevPixel;
-  int32_t mAutoQualityMinFontSizePixelsPref;
-||||||| merged common ancestors
-  // Base minimum font size, independent of the language-specific global preference. Defaults to 0
-  int32_t               mBaseMinFontSize;
-  float                 mSystemFontScale; // Internal text zoom factor, defaults to 1.0
-  float                 mTextZoom;      // Text zoom, defaults to 1.0
-  float                 mEffectiveTextZoom; // Text zoom * system font scale
-  float                 mFullZoom;      // Page zoom, defaults to 1.0
-  float                 mOverrideDPPX;   // DPPX overrided, defaults to 0.0
-  gfxSize               mLastFontInflationScreenSize;
-
-  int32_t               mCurAppUnitsPerDevPixel;
-  int32_t               mAutoQualityMinFontSizePixelsPref;
-=======
  protected:
   float mSystemFontScale;    // Internal text zoom factor, defaults to 1.0
   float mTextZoom;           // Text zoom, defaults to 1.0
@@ -1653,7 +1157,6 @@ protected:
 
   int32_t mCurAppUnitsPerDevPixel;
   int32_t mAutoQualityMinFontSizePixelsPref;
->>>>>>> upstream-releases
 
   nsCOMPtr<nsITheme> mTheme;
   nsCOMPtr<nsIPrintSettings> mPrintSettings;
@@ -1663,64 +1166,14 @@ protected:
   AutoTArray<TransactionInvalidations, 4> mTransactions;
 
   // text performance metrics
-<<<<<<< HEAD
   mozilla::UniquePtr<gfxTextPerfMetrics> mTextPerf;
 
   mozilla::UniquePtr<gfxMissingFontRecorder> mMissingFonts;
 
   nsRect mVisibleArea;
-  nsRect mLastResizeEventVisibleArea;
   nsSize mPageSize;
   float mPageScale;
   float mPPScale;
-||||||| merged common ancestors
-  nsAutoPtr<gfxTextPerfMetrics>   mTextPerf;
-
-  nsAutoPtr<gfxMissingFontRecorder> mMissingFonts;
-
-  nsRect                mVisibleArea;
-  nsRect                mLastResizeEventVisibleArea;
-  nsSize                mPageSize;
-  float                 mPageScale;
-  float                 mPPScale;
-=======
-  mozilla::UniquePtr<gfxTextPerfMetrics> mTextPerf;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nscolor mDefaultColor;
-  nscolor mBackgroundColor;
-||||||| merged common ancestors
-  nscolor               mDefaultColor;
-  nscolor               mBackgroundColor;
-=======
-  mozilla::UniquePtr<gfxMissingFontRecorder> mMissingFonts;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nscolor mLinkColor;
-  nscolor mActiveLinkColor;
-  nscolor mVisitedLinkColor;
-
-  nscolor mFocusBackgroundColor;
-  nscolor mFocusTextColor;
-
-  nscolor mBodyTextColor;
-||||||| merged common ancestors
-  nscolor               mLinkColor;
-  nscolor               mActiveLinkColor;
-  nscolor               mVisitedLinkColor;
-
-  nscolor               mFocusBackgroundColor;
-  nscolor               mFocusTextColor;
-
-  nscolor               mBodyTextColor;
-=======
-  nsRect mVisibleArea;
-  nsSize mPageSize;
-  float mPageScale;
-  float mPPScale;
->>>>>>> upstream-releases
 
   // This is a non-owning pointer. May be null. If non-null, it's guaranteed to
   // be pointing to an element that's still alive, because we'll reset it in
@@ -1730,102 +1183,30 @@ protected:
   // fullscreen elements, it happens in the fullscreen-specific cleanup invoked
   // by Element::UnbindFromTree().)
   mozilla::dom::Element* MOZ_NON_OWNING_REF mViewportScrollOverrideElement;
-<<<<<<< HEAD
   ScrollStyles mViewportScrollStyles;
-
-  uint8_t mFocusRingWidth;
-||||||| merged common ancestors
-  ScrollStyles          mViewportScrollStyles;
-
-  uint8_t               mFocusRingWidth;
-=======
-  ScrollStyles mViewportScrollStyles;
->>>>>>> upstream-releases
 
   bool mExistThrottledUpdates;
 
-<<<<<<< HEAD
   uint16_t mImageAnimationMode;
   uint16_t mImageAnimationModePref;
 
-  // Most documents will only use one (or very few) language groups. Rather
-  // than have the overhead of a hash lookup, we simply look along what will
-  // typically be a very short (usually of length 1) linked list. There are 31
-  // language groups, so in the worst case scenario we'll need to traverse 31
-  // link items.
-  LangGroupFontPrefs mLangGroupFontPrefs;
-||||||| merged common ancestors
-  uint16_t              mImageAnimationMode;
-  uint16_t              mImageAnimationModePref;
-
-  // Most documents will only use one (or very few) language groups. Rather
-  // than have the overhead of a hash lookup, we simply look along what will
-  // typically be a very short (usually of length 1) linked list. There are 31
-  // language groups, so in the worst case scenario we'll need to traverse 31
-  // link items.
-  LangGroupFontPrefs    mLangGroupFontPrefs;
-=======
-  uint16_t mImageAnimationMode;
-  uint16_t mImageAnimationModePref;
->>>>>>> upstream-releases
-
   uint32_t mInterruptChecksToSkip;
 
-<<<<<<< HEAD
-  uint32_t mInterruptChecksToSkip;
-||||||| merged common ancestors
-  nscoord               mBorderWidthTable[3];
-
-  uint32_t              mInterruptChecksToSkip;
-=======
   // During page load we use slower frame rate.
   uint32_t mNextFrameRateMultiplier;
->>>>>>> upstream-releases
 
   // Counters for tests and tools that want to detect frame construction
   // or reflow.
-<<<<<<< HEAD
-  uint64_t mElementsRestyled;
-  uint64_t mFramesConstructed;
-  uint64_t mFramesReflowed;
-||||||| merged common ancestors
-  uint64_t              mElementsRestyled;
-  uint64_t              mFramesConstructed;
-  uint64_t              mFramesReflowed;
-=======
   uint64_t mElementsRestyled;
   uint64_t mFramesConstructed;
   uint64_t mFramesReflowed;
 
   mozilla::TimeStamp mReflowStartTime;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::TimeStamp mReflowStartTime;
-||||||| merged common ancestors
-  mozilla::TimeStamp    mReflowStartTime;
-=======
   mozilla::Maybe<TransactionId> mFirstContentfulPaintTransactionId;
->>>>>>> upstream-releases
 
   // Time of various first interaction types, used to report time from
   // first paint of the top level content pres shell to first interaction.
-<<<<<<< HEAD
-  mozilla::TimeStamp mFirstNonBlankPaintTime;
-  mozilla::TimeStamp mFirstContentfulPaintTime;
-  mozilla::TimeStamp mFirstClickTime;
-  mozilla::TimeStamp mFirstKeyTime;
-  mozilla::TimeStamp mFirstMouseMoveTime;
-  mozilla::TimeStamp mFirstScrollTime;
-  bool mInteractionTimeEnabled;
-||||||| merged common ancestors
-  mozilla::TimeStamp    mFirstNonBlankPaintTime;
-  mozilla::TimeStamp    mFirstClickTime;
-  mozilla::TimeStamp    mFirstKeyTime;
-  mozilla::TimeStamp    mFirstMouseMoveTime;
-  mozilla::TimeStamp    mFirstScrollTime;
-  bool                  mInteractionTimeEnabled;
-=======
   mozilla::TimeStamp mFirstNonBlankPaintTime;
   mozilla::TimeStamp mFirstClickTime;
   mozilla::TimeStamp mFirstKeyTime;
@@ -1833,67 +1214,8 @@ protected:
   mozilla::TimeStamp mFirstScrollTime;
 
   bool mInteractionTimeEnabled;
->>>>>>> upstream-releases
 
   // last time we did a full style flush
-<<<<<<< HEAD
-  mozilla::TimeStamp mLastStyleUpdateForAllAnimations;
-
-  unsigned mHasPendingInterrupt : 1;
-  unsigned mPendingInterruptFromTest : 1;
-  unsigned mInterruptsEnabled : 1;
-  unsigned mUseDocumentFonts : 1;
-  unsigned mUseDocumentColors : 1;
-  unsigned mUnderlineLinks : 1;
-  unsigned mSendAfterPaintToContent : 1;
-  unsigned mUseFocusColors : 1;
-  unsigned mFocusRingOnAnything : 1;
-  unsigned mFocusRingStyle : 1;
-  unsigned mDrawImageBackground : 1;
-  unsigned mDrawColorBackground : 1;
-  unsigned mNeverAnimate : 1;
-  unsigned mPaginated : 1;
-  unsigned mCanPaginatedScroll : 1;
-  unsigned mDoScaledTwips : 1;
-  unsigned mIsRootPaginatedDocument : 1;
-  unsigned mPrefBidiDirection : 1;
-  unsigned mPrefScrollbarSide : 2;
-  unsigned mPendingSysColorChanged : 1;
-  unsigned mPendingThemeChanged : 1;
-  unsigned mPendingUIResolutionChanged : 1;
-  unsigned mPrefChangePendingNeedsReflow : 1;
-  unsigned mPostedPrefChangedRunnable : 1;
-  unsigned mIsEmulatingMedia : 1;
-||||||| merged common ancestors
-  mozilla::TimeStamp    mLastStyleUpdateForAllAnimations;
-
-  unsigned              mHasPendingInterrupt : 1;
-  unsigned              mPendingInterruptFromTest : 1;
-  unsigned              mInterruptsEnabled : 1;
-  unsigned              mUseDocumentFonts : 1;
-  unsigned              mUseDocumentColors : 1;
-  unsigned              mUnderlineLinks : 1;
-  unsigned              mSendAfterPaintToContent : 1;
-  unsigned              mUseFocusColors : 1;
-  unsigned              mFocusRingOnAnything : 1;
-  unsigned              mFocusRingStyle : 1;
-  unsigned              mDrawImageBackground : 1;
-  unsigned              mDrawColorBackground : 1;
-  unsigned              mNeverAnimate : 1;
-  unsigned              mIsRenderingOnlySelection : 1;
-  unsigned              mPaginated : 1;
-  unsigned              mCanPaginatedScroll : 1;
-  unsigned              mDoScaledTwips : 1;
-  unsigned              mIsRootPaginatedDocument : 1;
-  unsigned              mPrefBidiDirection : 1;
-  unsigned              mPrefScrollbarSide : 2;
-  unsigned              mPendingSysColorChanged : 1;
-  unsigned              mPendingThemeChanged : 1;
-  unsigned              mPendingUIResolutionChanged : 1;
-  unsigned              mPrefChangePendingNeedsReflow : 1;
-  unsigned              mPostedPrefChangedRunnable : 1;
-  unsigned              mIsEmulatingMedia : 1;
-=======
   mozilla::TimeStamp mLastStyleUpdateForAllAnimations;
 
   unsigned mHasPendingInterrupt : 1;
@@ -1915,7 +1237,6 @@ protected:
   unsigned mPrefChangePendingNeedsReflow : 1;
   unsigned mPostedPrefChangedRunnable : 1;
   unsigned mIsEmulatingMedia : 1;
->>>>>>> upstream-releases
 
   // Are we currently drawing an SVG glyph?
   unsigned mIsGlyph : 1;
@@ -1935,19 +1256,7 @@ protected:
   // the document rather than to change the document's dimensions
   unsigned mSuppressResizeReflow : 1;
 
-<<<<<<< HEAD
   unsigned mIsVisual : 1;
-
-  unsigned mIsChrome : 1;
-  unsigned mIsChromeOriginImage : 1;
-||||||| merged common ancestors
-  unsigned              mIsVisual : 1;
-
-  unsigned              mIsChrome : 1;
-  unsigned              mIsChromeOriginImage : 1;
-=======
-  unsigned mIsVisual : 1;
->>>>>>> upstream-releases
 
   // Should we paint flash in this context? Do not use this variable directly.
   // Use GetPaintFlashing() method instead.
@@ -1959,34 +1268,14 @@ protected:
   unsigned mHasWarnedAboutTooLargeDashedOrDottedRadius : 1;
 
   // Have we added quirk.css to the style set?
-<<<<<<< HEAD
   unsigned mQuirkSheetAdded : 1;
-
-  // Is there a pref update to process once we have a container?
-  unsigned mNeedsPrefUpdate : 1;
-||||||| merged common ancestors
-  unsigned              mQuirkSheetAdded : 1;
-
-  // Is there a pref update to process once we have a container?
-  unsigned              mNeedsPrefUpdate : 1;
-=======
-  unsigned mQuirkSheetAdded : 1;
->>>>>>> upstream-releases
 
   // Has NotifyNonBlankPaint been called on this PresContext?
-<<<<<<< HEAD
-  unsigned mHadNonBlankPaint : 1;
-  // Has NotifyContentfulPaint been called on this PresContext?
-  unsigned mHadContentfulPaint : 1;
-||||||| merged common ancestors
-  unsigned              mHadNonBlankPaint : 1;
-=======
   unsigned mHadNonBlankPaint : 1;
   // Has NotifyContentfulPaint been called on this PresContext?
   unsigned mHadContentfulPaint : 1;
   // Has NotifyDidPaintForSubtree been called for a contentful paint?
   unsigned mHadContentfulPaintComposite : 1;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   unsigned mInitialized : 1;
@@ -2012,16 +1301,8 @@ protected:
 };
 
 class nsRootPresContext final : public nsPresContext {
-<<<<<<< HEAD
- public:
-  nsRootPresContext(nsIDocument* aDocument, nsPresContextType aType);
-||||||| merged common ancestors
-public:
-  nsRootPresContext(nsIDocument* aDocument, nsPresContextType aType);
-=======
  public:
   nsRootPresContext(mozilla::dom::Document* aDocument, nsPresContextType aType);
->>>>>>> upstream-releases
   virtual ~nsRootPresContext();
   virtual void Detach() override;
 
@@ -2127,15 +1408,7 @@ public:
 #  define DO_GLOBAL_REFLOW_COUNT(_name) \
     aPresContext->CountReflows((_name), (nsIFrame*)this);
 #else
-<<<<<<< HEAD
-#define DO_GLOBAL_REFLOW_COUNT(_name)
-#endif  // MOZ_REFLOW_PERF
-||||||| merged common ancestors
-#define DO_GLOBAL_REFLOW_COUNT(_name)
-#endif // MOZ_REFLOW_PERF
-=======
 #  define DO_GLOBAL_REFLOW_COUNT(_name)
 #endif  // MOZ_REFLOW_PERF
->>>>>>> upstream-releases
 
 #endif /* nsPresContext_h___ */

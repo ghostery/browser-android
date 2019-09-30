@@ -128,23 +128,12 @@ NS_IMETHODIMP nsTextToSubURI::UnEscapeURIForUI(const nsACString& aCharset,
   MOZ_ASSERT(!mIDNBlocklist.IsEmpty());
   const nsPromiseFlatString& unescapedResult = PromiseFlatString(_retval);
   nsString reescapedSpec;
-<<<<<<< HEAD
-  _retval =
-      NS_EscapeURL(unescapedResult,
-                   [&](char16_t aChar) -> bool {
-                     return mozilla::net::CharInBlocklist(aChar, mIDNBlocklist);
-                   },
-                   reescapedSpec);
-||||||| merged common ancestors
-  _retval = NS_EscapeURL(unescapedResult, mUnsafeChars, reescapedSpec);
-=======
   _retval = NS_EscapeURL(
       unescapedResult,
       [&](char16_t aChar) -> bool {
         return mozilla::net::CharInBlocklist(aChar, mIDNBlocklist);
       },
       reescapedSpec);
->>>>>>> upstream-releases
 
   return NS_OK;
 }

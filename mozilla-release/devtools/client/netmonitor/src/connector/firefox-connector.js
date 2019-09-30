@@ -132,28 +132,6 @@ class FirefoxConnector {
     );
     this.webConsoleClient.on("documentEvent", this.onDocEvent);
 
-<<<<<<< HEAD
-    // The console actor supports listening to document events like
-    // DOMContentLoaded and load.
-    await this.webConsoleClient.startListeners(["DocumentEvents"]);
-||||||| merged common ancestors
-    // With FF60+ console actor supports listening to document events like
-    // DOMContentLoaded and load. We used to query Timeline actor, but it was too CPU
-    // intensive.
-    const { startedListeners } = await this.webConsoleClient.startListeners(
-      ["DocumentEvents"]);
-    // Allows to know if we are on FF60 and support these events.
-    const supportsDocEvents = startedListeners.includes("DocumentEvents");
-
-    // Don't start up waiting for timeline markers if the server isn't
-    // recent enough (<FF45) to emit the markers we're interested in.
-    if (!supportsDocEvents && !this.timelineFront &&
-        this.tabTarget.getTrait("documentLoadingMarkers")) {
-      this.timelineFront = new TimelineFront(this.tabTarget.client, this.tabTarget.form);
-      this.timelineFront.on("doc-loading", this.onDocLoadingMarker);
-      await this.timelineFront.start({ withDocLoadingEvents: true });
-    }
-=======
     // Support for WebSocket monitoring is currently hidden behind this pref.
     if (Services.prefs.getBoolPref("devtools.netmonitor.features.webSockets")) {
       try {
@@ -182,23 +160,10 @@ class FirefoxConnector {
     // The console actor supports listening to document events like
     // DOMContentLoaded and load.
     await this.webConsoleClient.startListeners(["DocumentEvents"]);
->>>>>>> upstream-releases
   }
 
   async removeListeners() {
     if (this.tabTarget) {
-<<<<<<< HEAD
-      this.tabTarget.off("close");
-    }
-||||||| merged common ancestors
-      this.tabTarget.off("close");
-    }
-    if (this.timelineFront) {
-      this.timelineFront.off("doc-loading", this.onDocLoadingMarker);
-      await this.timelineFront.destroy();
-      this.timelineFront = null;
-    }
-=======
       this.tabTarget.off("close", this.disconnect);
       if (this.webSocketFront) {
         this.webSocketFront.off(
@@ -217,7 +182,6 @@ class FirefoxConnector {
         this.webSocketFront.stopListening();
       }
     }
->>>>>>> upstream-releases
     if (this.webConsoleClient) {
       this.webConsoleClient.off(
         "networkEvent",

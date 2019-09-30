@@ -45,27 +45,12 @@ class DataTransfer;
 class Document;
 class Element;
 class Selection;
-<<<<<<< HEAD
-class TabParent;
-}  // namespace dom
-||||||| merged common ancestors
-class TabParent;
-} // namespace dom
-=======
 class BrowserParent;
 class RemoteDragStartData;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-class OverOutElementsWrapper final : public nsISupports {
-||||||| merged common ancestors
-class OverOutElementsWrapper final : public nsISupports
-{
-=======
 }  // namespace dom
 
 class OverOutElementsWrapper final : public nsISupports {
->>>>>>> upstream-releases
   ~OverOutElementsWrapper();
 
  public:
@@ -114,19 +99,9 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
    * used as the *up target when deciding whether to send click event.
    * This is used when releasing pointer capture. Otherwise null.
    */
-<<<<<<< HEAD
-  nsresult PreHandleEvent(nsPresContext* aPresContext, WidgetEvent* aEvent,
-                          nsIFrame* aTargetFrame, nsIContent* aTargetContent,
-||||||| merged common ancestors
-  nsresult PreHandleEvent(nsPresContext* aPresContext,
-                          WidgetEvent* aEvent,
-                          nsIFrame* aTargetFrame,
-                          nsIContent* aTargetContent,
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult PreHandleEvent(nsPresContext* aPresContext, WidgetEvent* aEvent,
                           nsIFrame* aTargetFrame, nsIContent* aTargetContent,
->>>>>>> upstream-releases
                           nsEventStatus* aStatus,
                           nsIContent* aOverrideClickTarget);
 
@@ -135,21 +110,9 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
    * also contain any centralized event processing which must occur after
    * DOM and frame processing.
    */
-<<<<<<< HEAD
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  nsresult PostHandleEvent(nsPresContext* aPresContext, WidgetEvent* aEvent,
-                           nsIFrame* aTargetFrame, nsEventStatus* aStatus,
-||||||| merged common ancestors
-  MOZ_CAN_RUN_SCRIPT_BOUNDARY
-  nsresult PostHandleEvent(nsPresContext* aPresContext,
-                           WidgetEvent* aEvent,
-                           nsIFrame* aTargetFrame,
-                           nsEventStatus* aStatus,
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult PostHandleEvent(nsPresContext* aPresContext, WidgetEvent* aEvent,
                            nsIFrame* aTargetFrame, nsEventStatus* aStatus,
->>>>>>> upstream-releases
                            nsIContent* aOverrideClickTarget);
 
   void PostHandleKeyboardEvent(WidgetKeyboardEvent* aKeyboardEvent,
@@ -314,27 +277,6 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
   static bool IsHandlingKeyboardInput();
 
   /**
-<<<<<<< HEAD
-   * Get the number of user inputs handled since process start. This
-   * includes anything that is initiated by user, with the exception
-   * of page load events or mouse over events.
-   */
-  static uint64_t UserInputCount() { return sUserInputCounter; }
-
-  /**
-||||||| merged common ancestors
-   * Get the number of user inputs handled since process start. This
-   * includes anything that is initiated by user, with the exception
-   * of page load events or mouse over events.
-   */
-  static uint64_t UserInputCount()
-  {
-    return sUserInputCounter;
-  }
-
-  /**
-=======
->>>>>>> upstream-releases
    * Get the timestamp at which the latest user input was handled.
    *
    * Guaranteed to be monotonic. Until the first user input, return
@@ -549,28 +491,11 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
    *                                aCurrentTarget are ignored.
    */
   MOZ_CAN_RUN_SCRIPT
-<<<<<<< HEAD
-  static nsresult InitAndDispatchClickEvent(
-      WidgetMouseEvent* aMouseUpEvent, nsEventStatus* aStatus,
-      EventMessage aMessage, nsIPresShell* aPresShell,
-      nsIContent* aMouseUpContent, AutoWeakFrame aCurrentTarget,
-      bool aNoContentDispatch, nsIContent* aOverrideClickTarget);
-||||||| merged common ancestors
-  static nsresult InitAndDispatchClickEvent(WidgetMouseEvent* aMouseUpEvent,
-                                            nsEventStatus* aStatus,
-                                            EventMessage aMessage,
-                                            nsIPresShell* aPresShell,
-                                            nsIContent* aMouseUpContent,
-                                            AutoWeakFrame aCurrentTarget,
-                                            bool aNoContentDispatch,
-                                            nsIContent* aOverrideClickTarget);
-=======
   static nsresult InitAndDispatchClickEvent(
       WidgetMouseEvent* aMouseUpEvent, nsEventStatus* aStatus,
       EventMessage aMessage, PresShell* aPresShell, nsIContent* aMouseUpContent,
       AutoWeakFrame aCurrentTarget, bool aNoContentDispatch,
       nsIContent* aOverrideClickTarget);
->>>>>>> upstream-releases
 
   nsresult SetClickCount(WidgetMouseEvent* aEvent, nsEventStatus* aStatus,
                          nsIContent* aOverrideClickTarget = nullptr);
@@ -688,15 +613,8 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
    *                    is true, a target is executed or focused.
    */
   bool LookForAccessKeyAndExecute(nsTArray<uint32_t>& aAccessCharCodes,
-<<<<<<< HEAD
-                                  bool aIsTrustedEvent, bool aExecute);
-||||||| merged common ancestors
-                                  bool aIsTrustedEvent,
-                                  bool aExecute);
-=======
                                   bool aIsTrustedEvent, bool aIsRepeat,
                                   bool aExecute);
->>>>>>> upstream-releases
 
   //---------------------------------------------
   // DocShell Focus Traversal Methods
@@ -1129,17 +1047,6 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
                                 WidgetMouseEvent* aDownEvent,
                                 nsIFrame* aDownFrame);
 
-<<<<<<< HEAD
-  void SetGestureDownPoint(WidgetGUIEvent* aEvent);
-
-  LayoutDeviceIntPoint GetEventRefPoint(WidgetEvent* aEvent) const;
-
-  friend class mozilla::dom::TabParent;
-  void BeginTrackingRemoteDragGesture(nsIContent* aContent);
-||||||| merged common ancestors
-  friend class mozilla::dom::TabParent;
-  void BeginTrackingRemoteDragGesture(nsIContent* aContent);
-=======
   void SetGestureDownPoint(WidgetGUIEvent* aEvent);
 
   LayoutDeviceIntPoint GetEventRefPoint(WidgetEvent* aEvent) const;
@@ -1147,7 +1054,6 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
   friend class mozilla::dom::BrowserParent;
   void BeginTrackingRemoteDragGesture(nsIContent* aContent,
                                       dom::RemoteDragStartData* aDragStartData);
->>>>>>> upstream-releases
   void StopTrackingDragGesture();
   MOZ_CAN_RUN_SCRIPT
   void GenerateDragGesture(nsPresContext* aPresContext,
@@ -1195,18 +1101,9 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
   bool DoDefaultDragStart(nsPresContext* aPresContext,
                           WidgetDragEvent* aDragEvent,
                           dom::DataTransfer* aDataTransfer,
-<<<<<<< HEAD
-                          nsIContent* aDragTarget, dom::Selection* aSelection,
-                          const nsACString& aPrincipalURISpec);
-||||||| merged common ancestors
-                          nsIContent* aDragTarget,
-                          dom::Selection* aSelection,
-                          const nsACString& aPrincipalURISpec);
-=======
                           nsIContent* aDragTarget, dom::Selection* aSelection,
                           dom::RemoteDragStartData* aDragStartData,
                           nsIPrincipal* aPrincipal);
->>>>>>> upstream-releases
 
   bool IsTrackingDragGesture() const { return mGestureDownContent != nullptr; }
   /**
@@ -1221,13 +1118,7 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
   nsresult DoContentCommandEvent(WidgetContentCommandEvent* aEvent);
   nsresult DoContentCommandScrollEvent(WidgetContentCommandEvent* aEvent);
 
-<<<<<<< HEAD
-  dom::TabParent* GetCrossProcessTarget();
-||||||| merged common ancestors
-  dom::TabParent *GetCrossProcessTarget();
-=======
   dom::BrowserParent* GetCrossProcessTarget();
->>>>>>> upstream-releases
   bool IsTargetCrossProcess(WidgetGUIEvent* aEvent);
 
   /**
@@ -1297,13 +1188,7 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
   already_AddRefed<EventStateManager> ESMFromContentOrThis(
       nsIContent* aContent);
 
-<<<<<<< HEAD
-  int32_t mLockCursor;
-||||||| merged common ancestors
-  int32_t     mLockCursor;
-=======
   StyleCursorKind mLockCursor;
->>>>>>> upstream-releases
   bool mLastFrameConsumedSetCursor;
 
   // Last mouse event mRefPoint (the offset from the widget's origin in
@@ -1350,13 +1235,7 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
   nsCOMPtr<nsIContent> mURLTargetContent;
 
   nsPresContext* mPresContext;      // Not refcnted
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> mDocument;  // Doesn't necessarily need to be owner
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument> mDocument;   // Doesn't necessarily need to be owner
-=======
   RefPtr<dom::Document> mDocument;  // Doesn't necessarily need to be owner
->>>>>>> upstream-releases
 
   RefPtr<IMEContentObserver> mIMEContentObserver;
 
@@ -1408,77 +1287,24 @@ class EventStateManager : public nsSupportsWeakReference, public nsIObserver {
   void KillClickHoldTimer();
   void FireContextClick();
 
-<<<<<<< HEAD
-  static void SetPointerLock(nsIWidget* aWidget, nsIContent* aElement);
-  static void sClickHoldCallback(nsITimer* aTimer, void* aESM);
-||||||| merged common ancestors
-  static void SetPointerLock(nsIWidget* aWidget, nsIContent* aElement) ;
-  static void sClickHoldCallback ( nsITimer* aTimer, void* aESM ) ;
-=======
   MOZ_CAN_RUN_SCRIPT static void SetPointerLock(nsIWidget* aWidget,
                                                 nsIContent* aElement);
   static void sClickHoldCallback(nsITimer* aTimer, void* aESM);
->>>>>>> upstream-releases
 };
 
 /**
  * This class is used while processing real user input. During this time, popups
  * are allowed. For mousedown events, mouse capturing is also permitted.
  */
-<<<<<<< HEAD
-class AutoHandlingUserInputStatePusher {
- public:
-  AutoHandlingUserInputStatePusher(bool aIsHandlingUserInput,
-                                   WidgetEvent* aEvent, nsIDocument* aDocument);
-||||||| merged common ancestors
-class AutoHandlingUserInputStatePusher
-{
-public:
-  AutoHandlingUserInputStatePusher(bool aIsHandlingUserInput,
-                                   WidgetEvent* aEvent,
-                                   nsIDocument* aDocument);
-=======
 class MOZ_RAII AutoHandlingUserInputStatePusher final {
  public:
   explicit AutoHandlingUserInputStatePusher(bool aIsHandlingUserInput,
                                             WidgetEvent* aEvent = nullptr);
->>>>>>> upstream-releases
   ~AutoHandlingUserInputStatePusher();
 
-<<<<<<< HEAD
  protected:
-  nsCOMPtr<nsIDocument> mMouseButtonEventHandlingDocument;
-||||||| merged common ancestors
-protected:
-  nsCOMPtr<nsIDocument> mMouseButtonEventHandlingDocument;
-=======
- protected:
->>>>>>> upstream-releases
   EventMessage mMessage;
   bool mIsHandlingUserInput;
-<<<<<<< HEAD
-
-  bool NeedsToResetFocusManagerMouseButtonHandlingState() const {
-    return mMessage == eMouseDown || mMessage == eMouseUp;
-  }
-
- private:
-  // Hide so that this class can only be stack-allocated
-  static void* operator new(size_t /*size*/) CPP_THROW_NEW { return nullptr; }
-  static void operator delete(void* /*memory*/) {}
-||||||| merged common ancestors
-
-  bool NeedsToResetFocusManagerMouseButtonHandlingState() const
-  {
-    return mMessage == eMouseDown || mMessage == eMouseUp;
-  }
-
-private:
-  // Hide so that this class can only be stack-allocated
-  static void* operator new(size_t /*size*/) CPP_THROW_NEW { return nullptr; }
-  static void operator delete(void* /*memory*/) {}
-=======
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

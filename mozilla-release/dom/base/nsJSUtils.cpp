@@ -69,26 +69,6 @@ uint64_t nsJSUtils::GetCurrentlyRunningCodeInnerWindowID(JSContext* aContext) {
   return win ? win->WindowID() : 0;
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::CompileFunction(AutoJSAPI& jsapi,
-                                    JS::AutoObjectVector& aScopeChain,
-                                    JS::CompileOptions& aOptions,
-                                    const nsACString& aName, uint32_t aArgCount,
-                                    const char** aArgArray,
-                                    const nsAString& aBody,
-                                    JSObject** aFunctionObject) {
-||||||| merged common ancestors
-nsresult
-nsJSUtils::CompileFunction(AutoJSAPI& jsapi,
-                           JS::AutoObjectVector& aScopeChain,
-                           JS::CompileOptions& aOptions,
-                           const nsACString& aName,
-                           uint32_t aArgCount,
-                           const char** aArgArray,
-                           const nsAString& aBody,
-                           JSObject** aFunctionObject)
-{
-=======
 nsresult nsJSUtils::CompileFunction(AutoJSAPI& jsapi,
                                     JS::HandleVector<JSObject*> aScopeChain,
                                     JS::CompileOptions& aOptions,
@@ -96,7 +76,6 @@ nsresult nsJSUtils::CompileFunction(AutoJSAPI& jsapi,
                                     const char** aArgArray,
                                     const nsAString& aBody,
                                     JSObject** aFunctionObject) {
->>>>>>> upstream-releases
   JSContext* cx = jsapi.cx();
   MOZ_ASSERT(js::GetContextRealm(cx));
   MOZ_ASSERT_IF(aScopeChain.length() != 0,
@@ -108,30 +87,6 @@ nsresult nsJSUtils::CompileFunction(AutoJSAPI& jsapi,
   }
 
   // Compile.
-<<<<<<< HEAD
-  const nsPromiseFlatString& flatBody = PromiseFlatString(aBody);
-
-  JS::SourceText<char16_t> source;
-  if (!source.init(cx, flatBody.get(), flatBody.Length(),
-                   JS::SourceOwnership::Borrowed)) {
-    return NS_ERROR_FAILURE;
-  }
-
-  JS::Rooted<JSFunction*> fun(cx);
-  if (!JS::CompileFunction(cx, aScopeChain, aOptions,
-                           PromiseFlatCString(aName).get(), aArgCount,
-                           aArgArray, source, &fun)) {
-||||||| merged common ancestors
-  JS::Rooted<JSFunction*> fun(cx);
-  const nsString& bodyString = PromiseFlatString(aBody);
-  JS::SourceBufferHolder source(bodyString.get(), aBody.Length(),
-                                JS::SourceBufferHolder::NoOwnership);
-  if (!JS::CompileFunction(cx, aScopeChain, aOptions,
-                           PromiseFlatCString(aName).get(),
-                           aArgCount, aArgArray,
-                           source, &fun))
-  {
-=======
   const nsPromiseFlatString& flatBody = PromiseFlatString(aBody);
 
   JS::SourceText<char16_t> source;
@@ -145,7 +100,6 @@ nsresult nsJSUtils::CompileFunction(AutoJSAPI& jsapi,
                               PromiseFlatCString(aName).get(), aArgCount,
                               aArgArray, source));
   if (!fun) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -164,38 +118,10 @@ nsJSUtils::ExecutionContext::ExecutionContext(JSContext* aCx,
                                               JS::Handle<JSObject*> aGlobal)
     :
 #ifdef MOZ_GECKO_PROFILER
-<<<<<<< HEAD
-      mAutoProfilerLabel("nsJSUtils::ExecutionContext",
-                         /* dynamicStr */ nullptr,
-                         js::ProfilingStackFrame::Category::JS),
-||||||| merged common ancestors
-    mAutoProfilerLabel("nsJSUtils::ExecutionContext", /* dynamicStr */ nullptr,
-                       __LINE__, js::ProfilingStackFrame::Category::JS),
-=======
       mAutoProfilerLabel("nsJSUtils::ExecutionContext",
                          /* dynamicStr */ nullptr,
                          JS::ProfilingCategoryPair::JS),
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-      mCx(aCx),
-      mRealm(aCx, aGlobal),
-      mRetValue(aCx),
-      mScopeChain(aCx),
-      mRv(NS_OK),
-      mSkip(false),
-      mCoerceToString(false),
-      mEncodeBytecode(false)
-||||||| merged common ancestors
-    mCx(aCx)
-  , mRealm(aCx, aGlobal)
-  , mRetValue(aCx)
-  , mScopeChain(aCx)
-  , mRv(NS_OK)
-  , mSkip(false)
-  , mCoerceToString(false)
-  , mEncodeBytecode(false)
-=======
       mCx(aCx),
       mRealm(aCx, aGlobal),
       mRetValue(aCx),
@@ -205,21 +131,11 @@ nsJSUtils::ExecutionContext::ExecutionContext(JSContext* aCx,
       mSkip(false),
       mCoerceToString(false),
       mEncodeBytecode(false)
->>>>>>> upstream-releases
 #ifdef DEBUG
-<<<<<<< HEAD
-      ,
-      mWantsReturnValue(false),
-      mExpectScopeChain(false)
-||||||| merged common ancestors
-  , mWantsReturnValue(false)
-  , mExpectScopeChain(false)
-=======
       ,
       mWantsReturnValue(false),
       mExpectScopeChain(false),
       mScriptUsed(false)
->>>>>>> upstream-releases
 #endif
 {
   MOZ_ASSERT(aCx == nsContentUtils::GetCurrentJSContext());
@@ -235,18 +151,8 @@ nsJSUtils::ExecutionContext::ExecutionContext(JSContext* aCx,
   }
 }
 
-<<<<<<< HEAD
-void nsJSUtils::ExecutionContext::SetScopeChain(
-    const JS::AutoObjectVector& aScopeChain) {
-||||||| merged common ancestors
-void
-nsJSUtils::ExecutionContext::SetScopeChain(
-  const JS::AutoObjectVector& aScopeChain)
-{
-=======
 void nsJSUtils::ExecutionContext::SetScopeChain(
     JS::HandleVector<JSObject*> aScopeChain) {
->>>>>>> upstream-releases
   if (mSkip) {
     return;
   }
@@ -272,51 +178,18 @@ void nsJSUtils::ExecutionContext::SetScopeChain(
   }
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::JoinAndExec(
-    JS::OffThreadToken** aOffThreadToken,
-    JS::MutableHandle<JSScript*> aScript) {
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::JoinAndExec(JS::OffThreadToken** aOffThreadToken,
-                                         JS::MutableHandle<JSScript*> aScript)
-{
-=======
 nsresult nsJSUtils::ExecutionContext::JoinCompile(
     JS::OffThreadToken** aOffThreadToken) {
->>>>>>> upstream-releases
   if (mSkip) {
     return mRv;
   }
 
   MOZ_ASSERT(!mWantsReturnValue);
   MOZ_ASSERT(!mExpectScopeChain);
-<<<<<<< HEAD
-  aScript.set(JS::FinishOffThreadScript(mCx, *aOffThreadToken));
-  *aOffThreadToken = nullptr;  // Mark the token as having been finished.
-  if (!aScript) {
-    mSkip = true;
-    mRv = EvaluationExceptionToNSResult(mCx);
-    return mRv;
-  }
-
-  if (mEncodeBytecode && !StartIncrementalEncoding(mCx, aScript)) {
-||||||| merged common ancestors
-  aScript.set(JS::FinishOffThreadScript(mCx, *aOffThreadToken));
-  *aOffThreadToken = nullptr; // Mark the token as having been finished.
-  if (!aScript) {
-    mSkip = true;
-    mRv = EvaluationExceptionToNSResult(mCx);
-    return mRv;
-  }
-
-  if (mEncodeBytecode && !StartIncrementalEncoding(mCx, aScript)) {
-=======
   MOZ_ASSERT(!mScript);
   mScript.set(JS::FinishOffThreadScript(mCx, *aOffThreadToken));
   *aOffThreadToken = nullptr;  // Mark the token as having been finished.
   if (!mScript) {
->>>>>>> upstream-releases
     mSkip = true;
     mRv = EvaluationExceptionToNSResult(mCx);
     return mRv;
@@ -331,17 +204,6 @@ nsresult nsJSUtils::ExecutionContext::JoinCompile(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::CompileAndExec(
-    JS::CompileOptions& aCompileOptions, JS::SourceText<char16_t>& aSrcBuf,
-    JS::MutableHandle<JSScript*> aScript) {
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::CompileAndExec(JS::CompileOptions& aCompileOptions,
-                                            JS::SourceBufferHolder& aSrcBuf,
-                                            JS::MutableHandle<JSScript*> aScript)
-{
-=======
 static JSScript* CompileScript(
     JSContext* aCx, JS::Handle<JS::StackGCVector<JSObject*>> aScopeChain,
     JS::CompileOptions& aCompileOptions, JS::SourceText<char16_t>& aSrcBuf) {
@@ -365,7 +227,6 @@ static JSScript* CompileScript(
 template <typename Unit>
 nsresult nsJSUtils::ExecutionContext::InternalCompile(
     JS::CompileOptions& aCompileOptions, JS::SourceText<Unit>& aSrcBuf) {
->>>>>>> upstream-releases
   if (mSkip) {
     return mRv;
   }
@@ -376,32 +237,9 @@ nsresult nsJSUtils::ExecutionContext::InternalCompile(
   mWantsReturnValue = !aCompileOptions.noScriptRval;
 #endif
 
-<<<<<<< HEAD
-  bool compiled = true;
-  if (mScopeChain.length() == 0) {
-    compiled = JS::Compile(mCx, aCompileOptions, aSrcBuf, aScript);
-  } else {
-    compiled =
-        JS::CompileForNonSyntacticScope(mCx, aCompileOptions, aSrcBuf, aScript);
-  }
-
-  MOZ_ASSERT_IF(compiled, aScript);
-  if (!compiled) {
-||||||| merged common ancestors
-  bool compiled = true;
-  if (mScopeChain.length() == 0) {
-    compiled = JS::Compile(mCx, aCompileOptions, aSrcBuf, aScript);
-  } else {
-    compiled = JS::CompileForNonSyntacticScope(mCx, aCompileOptions, aSrcBuf, aScript);
-  }
-
-  MOZ_ASSERT_IF(compiled, aScript);
-  if (!compiled) {
-=======
   MOZ_ASSERT(!mScript);
   mScript = CompileScript(mCx, mScopeChain, aCompileOptions, aSrcBuf);
   if (!mScript) {
->>>>>>> upstream-releases
     mSkip = true;
     mRv = EvaluationExceptionToNSResult(mCx);
     return mRv;
@@ -416,18 +254,6 @@ nsresult nsJSUtils::ExecutionContext::InternalCompile(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::CompileAndExec(
-    JS::CompileOptions& aCompileOptions, const nsAString& aScript) {
-  MOZ_ASSERT(!mEncodeBytecode,
-             "A JSScript is needed for calling FinishIncrementalEncoding");
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::CompileAndExec(JS::CompileOptions& aCompileOptions,
-                                            const nsAString& aScript)
-{
-  MOZ_ASSERT(!mEncodeBytecode, "A JSScript is needed for calling FinishIncrementalEncoding");
-=======
 nsresult nsJSUtils::ExecutionContext::Compile(
     JS::CompileOptions& aCompileOptions, JS::SourceText<char16_t>& aSrcBuf) {
   return InternalCompile(aCompileOptions, aSrcBuf);
@@ -440,29 +266,11 @@ nsresult nsJSUtils::ExecutionContext::Compile(
 
 nsresult nsJSUtils::ExecutionContext::Compile(
     JS::CompileOptions& aCompileOptions, const nsAString& aScript) {
->>>>>>> upstream-releases
   if (mSkip) {
     return mRv;
   }
 
   const nsPromiseFlatString& flatScript = PromiseFlatString(aScript);
-<<<<<<< HEAD
-  JS::SourceText<char16_t> srcBuf;
-  if (!srcBuf.init(mCx, flatScript.get(), flatScript.Length(),
-                   JS::SourceOwnership::Borrowed)) {
-    mSkip = true;
-    mRv = EvaluationExceptionToNSResult(mCx);
-    return mRv;
-  }
-
-  JS::Rooted<JSScript*> script(mCx);
-  return CompileAndExec(aCompileOptions, srcBuf, &script);
-||||||| merged common ancestors
-  JS::SourceBufferHolder srcBuf(flatScript.get(), aScript.Length(),
-                                JS::SourceBufferHolder::NoOwnership);
-  JS::Rooted<JSScript*> script(mCx);
-  return CompileAndExec(aCompileOptions, srcBuf, &script);
-=======
   JS::SourceText<char16_t> srcBuf;
   if (!srcBuf.init(mCx, flatScript.get(), flatScript.Length(),
                    JS::SourceOwnership::Borrowed)) {
@@ -472,43 +280,18 @@ nsresult nsJSUtils::ExecutionContext::Compile(
   }
 
   return Compile(aCompileOptions, srcBuf);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::DecodeAndExec(
-    JS::CompileOptions& aCompileOptions, mozilla::Vector<uint8_t>& aBytecodeBuf,
-    size_t aBytecodeIndex) {
-  MOZ_ASSERT(!mEncodeBytecode,
-             "A JSScript is needed for calling FinishIncrementalEncoding");
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::DecodeAndExec(JS::CompileOptions& aCompileOptions,
-                                           mozilla::Vector<uint8_t>& aBytecodeBuf,
-                                           size_t aBytecodeIndex)
-{
-  MOZ_ASSERT(!mEncodeBytecode, "A JSScript is needed for calling FinishIncrementalEncoding");
-=======
 nsresult nsJSUtils::ExecutionContext::Decode(
     JS::CompileOptions& aCompileOptions, mozilla::Vector<uint8_t>& aBytecodeBuf,
     size_t aBytecodeIndex) {
->>>>>>> upstream-releases
   if (mSkip) {
     return mRv;
   }
 
   MOZ_ASSERT(!mWantsReturnValue);
-<<<<<<< HEAD
-  JS::Rooted<JSScript*> script(mCx);
-  JS::TranscodeResult tr =
-      JS::DecodeScript(mCx, aBytecodeBuf, &script, aBytecodeIndex);
-||||||| merged common ancestors
-  JS::Rooted<JSScript*> script(mCx);
-  JS::TranscodeResult tr = JS::DecodeScript(mCx, aBytecodeBuf, &script, aBytecodeIndex);
-=======
   JS::TranscodeResult tr =
       JS::DecodeScript(mCx, aBytecodeBuf, &mScript, aBytecodeIndex);
->>>>>>> upstream-releases
   // These errors are external parameters which should be handled before the
   // decoding phase, and which are the only reasons why you might want to
   // fallback on decoding failures.
@@ -523,38 +306,17 @@ nsresult nsJSUtils::ExecutionContext::Decode(
   return mRv;
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::DecodeJoinAndExec(
-    JS::OffThreadToken** aOffThreadToken) {
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::DecodeJoinAndExec(JS::OffThreadToken** aOffThreadToken)
-{
-=======
 nsresult nsJSUtils::ExecutionContext::JoinDecode(
     JS::OffThreadToken** aOffThreadToken) {
->>>>>>> upstream-releases
   if (mSkip) {
     return mRv;
   }
 
   MOZ_ASSERT(!mWantsReturnValue);
   MOZ_ASSERT(!mExpectScopeChain);
-<<<<<<< HEAD
-  JS::Rooted<JSScript*> script(mCx);
-  script.set(JS::FinishOffThreadScriptDecoder(mCx, *aOffThreadToken));
-  *aOffThreadToken = nullptr;  // Mark the token as having been finished.
-  if (!script || !JS_ExecuteScript(mCx, mScopeChain, script)) {
-||||||| merged common ancestors
-  JS::Rooted<JSScript*> script(mCx);
-  script.set(JS::FinishOffThreadScriptDecoder(mCx, *aOffThreadToken));
-  *aOffThreadToken = nullptr; // Mark the token as having been finished.
-  if (!script || !JS_ExecuteScript(mCx, mScopeChain, script)) {
-=======
   mScript.set(JS::FinishOffThreadScriptDecoder(mCx, *aOffThreadToken));
   *aOffThreadToken = nullptr;  // Mark the token as having been finished.
   if (!mScript) {
->>>>>>> upstream-releases
     mSkip = true;
     mRv = EvaluationExceptionToNSResult(mCx);
     return mRv;
@@ -563,19 +325,8 @@ nsresult nsJSUtils::ExecutionContext::JoinDecode(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::DecodeBinASTJoinAndExec(
-    JS::OffThreadToken** aOffThreadToken,
-    JS::MutableHandle<JSScript*> aScript) {
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::DecodeBinASTJoinAndExec(JS::OffThreadToken** aOffThreadToken,
-                                                     JS::MutableHandle<JSScript*> aScript)
-{
-=======
 nsresult nsJSUtils::ExecutionContext::JoinDecodeBinAST(
     JS::OffThreadToken** aOffThreadToken) {
->>>>>>> upstream-releases
 #ifdef JS_BUILD_BINAST
   if (mSkip) {
     return mRv;
@@ -584,16 +335,8 @@ nsresult nsJSUtils::ExecutionContext::JoinDecodeBinAST(
   MOZ_ASSERT(!mWantsReturnValue);
   MOZ_ASSERT(!mExpectScopeChain);
 
-<<<<<<< HEAD
-  aScript.set(JS::FinishOffThreadBinASTDecode(mCx, *aOffThreadToken));
-  *aOffThreadToken = nullptr;  // Mark the token as having been finished.
-||||||| merged common ancestors
-  aScript.set(JS::FinishOffThreadBinASTDecode(mCx, *aOffThreadToken));
-  *aOffThreadToken = nullptr; // Mark the token as having been finished.
-=======
   mScript.set(JS::FinishOffThreadBinASTDecode(mCx, *aOffThreadToken));
   *aOffThreadToken = nullptr;  // Mark the token as having been finished.
->>>>>>> upstream-releases
 
   if (!mScript) {
     mSkip = true;
@@ -613,20 +356,8 @@ nsresult nsJSUtils::ExecutionContext::JoinDecodeBinAST(
 #endif
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::DecodeBinASTAndExec(
-    JS::CompileOptions& aCompileOptions, const uint8_t* aBuf, size_t aLength,
-    JS::MutableHandle<JSScript*> aScript) {
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::DecodeBinASTAndExec(JS::CompileOptions& aCompileOptions,
-                                                 const uint8_t* aBuf, size_t aLength,
-                                                 JS::MutableHandle<JSScript*> aScript)
-{
-=======
 nsresult nsJSUtils::ExecutionContext::DecodeBinAST(
     JS::CompileOptions& aCompileOptions, const uint8_t* aBuf, size_t aLength) {
->>>>>>> upstream-releases
 #ifdef JS_BUILD_BINAST
   MOZ_ASSERT(mScopeChain.length() == 0,
              "BinAST decoding is not supported in non-syntactic scopes");
@@ -703,19 +434,8 @@ static bool IsPromiseValue(JSContext* aCx, JS::Handle<JS::Value> aValue) {
   return JS::IsPromiseObject(obj);
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::ExecutionContext::ExtractReturnValue(
-    JS::MutableHandle<JS::Value> aRetValue) {
-  MOZ_ASSERT(aRetValue.isUndefined());
-||||||| merged common ancestors
-nsresult
-nsJSUtils::ExecutionContext::ExtractReturnValue(JS::MutableHandle<JS::Value> aRetValue)
-{
-  MOZ_ASSERT(aRetValue.isUndefined());
-=======
 nsresult nsJSUtils::ExecutionContext::ExecScript(
     JS::MutableHandle<JS::Value> aRetValue) {
->>>>>>> upstream-releases
   if (mSkip) {
     aRetValue.setUndefined();
     return mRv;
@@ -756,23 +476,6 @@ nsresult nsJSUtils::ExecutionContext::ExecScript(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::CompileModule(JSContext* aCx,
-                                  JS::SourceText<char16_t>& aSrcBuf,
-                                  JS::Handle<JSObject*> aEvaluationGlobal,
-                                  JS::CompileOptions& aCompileOptions,
-                                  JS::MutableHandle<JSObject*> aModule) {
-  AUTO_PROFILER_LABEL("nsJSUtils::CompileModule", JS);
-||||||| merged common ancestors
-nsresult
-nsJSUtils::CompileModule(JSContext* aCx,
-                       JS::SourceBufferHolder& aSrcBuf,
-                       JS::Handle<JSObject*> aEvaluationGlobal,
-                       JS::CompileOptions &aCompileOptions,
-                       JS::MutableHandle<JSObject*> aModule)
-{
-  AUTO_PROFILER_LABEL("nsJSUtils::CompileModule", JS);
-=======
 static JSObject* CompileModule(JSContext* aCx,
                                JS::CompileOptions& aCompileOptions,
                                JS::SourceText<char16_t>& aSrcBuf) {
@@ -787,7 +490,6 @@ static JSObject* CompileModule(JSContext* aCx,
   // |JS::CompileModule| can be used in the sole caller below.
   return JS::CompileModuleDontInflate(aCx, aCompileOptions, aSrcBuf);
 }
->>>>>>> upstream-releases
 
 template <typename Unit>
 static nsresult CompileJSModule(JSContext* aCx, JS::SourceText<Unit>& aSrcBuf,
@@ -814,17 +516,6 @@ static nsresult CompileJSModule(JSContext* aCx, JS::SourceText<Unit>& aSrcBuf,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsJSUtils::InitModuleSourceElement(JSContext* aCx,
-                                            JS::Handle<JSObject*> aModule,
-                                            nsIScriptElement* aElement) {
-||||||| merged common ancestors
-nsresult
-nsJSUtils::InitModuleSourceElement(JSContext* aCx,
-                                   JS::Handle<JSObject*> aModule,
-                                   nsIScriptElement* aElement)
-{
-=======
 nsresult nsJSUtils::CompileModule(JSContext* aCx,
                                   JS::SourceText<char16_t>& aSrcBuf,
                                   JS::Handle<JSObject*> aEvaluationGlobal,
@@ -846,7 +537,6 @@ nsresult nsJSUtils::CompileModule(JSContext* aCx,
 nsresult nsJSUtils::InitModuleSourceElement(JSContext* aCx,
                                             JS::Handle<JSObject*> aModule,
                                             nsIScriptElement* aElement) {
->>>>>>> upstream-releases
   JS::Rooted<JS::Value> value(aCx);
   nsresult rv = nsContentUtils::WrapNative(aCx, aElement, &value,
                                            /* aAllowWrapping = */ true);
@@ -901,19 +591,8 @@ nsresult nsJSUtils::ModuleEvaluate(JSContext* aCx,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static bool AddScopeChainItem(JSContext* aCx, nsINode* aNode,
-                              JS::AutoObjectVector& aScopeChain) {
-||||||| merged common ancestors
-static bool
-AddScopeChainItem(JSContext* aCx,
-                  nsINode* aNode,
-                  JS::AutoObjectVector& aScopeChain)
-{
-=======
 static bool AddScopeChainItem(JSContext* aCx, nsINode* aNode,
                               JS::MutableHandleVector<JSObject*> aScopeChain) {
->>>>>>> upstream-releases
   JS::RootedValue val(aCx);
   if (!GetOrCreateDOMReflector(aCx, aNode, &val)) {
     return false;
@@ -927,20 +606,9 @@ static bool AddScopeChainItem(JSContext* aCx, nsINode* aNode,
 }
 
 /* static */
-<<<<<<< HEAD
-bool nsJSUtils::GetScopeChainForElement(JSContext* aCx, Element* aElement,
-                                        JS::AutoObjectVector& aScopeChain) {
-||||||| merged common ancestors
-bool
-nsJSUtils::GetScopeChainForElement(JSContext* aCx,
-                                   Element* aElement,
-                                   JS::AutoObjectVector& aScopeChain)
-{
-=======
 bool nsJSUtils::GetScopeChainForElement(
     JSContext* aCx, Element* aElement,
     JS::MutableHandleVector<JSObject*> aScopeChain) {
->>>>>>> upstream-releases
   for (nsINode* cur = aElement; cur; cur = cur->GetScopeChainParent()) {
     if (!AddScopeChainItem(aCx, cur, aScopeChain)) {
       return false;
@@ -951,23 +619,10 @@ bool nsJSUtils::GetScopeChainForElement(
 }
 
 /* static */
-<<<<<<< HEAD
-bool nsJSUtils::GetScopeChainForXBL(JSContext* aCx, Element* aElement,
-                                    const nsXBLPrototypeBinding& aProtoBinding,
-                                    JS::AutoObjectVector& aScopeChain) {
-||||||| merged common ancestors
-bool
-nsJSUtils::GetScopeChainForXBL(JSContext* aCx,
-                               Element* aElement,
-                               const nsXBLPrototypeBinding& aProtoBinding,
-                               JS::AutoObjectVector& aScopeChain)
-{
-=======
 bool nsJSUtils::GetScopeChainForXBL(
     JSContext* aCx, Element* aElement,
     const nsXBLPrototypeBinding& aProtoBinding,
     JS::MutableHandleVector<JSObject*> aScopeChain) {
->>>>>>> upstream-releases
   if (!aElement) {
     return true;
   }
@@ -987,15 +642,6 @@ bool nsJSUtils::GetScopeChainForXBL(
 }
 
 /* static */
-<<<<<<< HEAD
-void nsJSUtils::ResetTimeZone() { JS::ResetTimeZone(); }
-||||||| merged common ancestors
-void
-nsJSUtils::ResetTimeZone()
-{
-  JS::ResetTimeZone();
-}
-=======
 void nsJSUtils::ResetTimeZone() { JS::ResetTimeZone(); }
 
 /* static */
@@ -1006,7 +652,6 @@ bool nsJSUtils::DumpEnabled() {
   return StaticPrefs::browser_dom_window_dump_enabled();
 #endif
 }
->>>>>>> upstream-releases
 
 //
 // nsDOMJSUtils.h

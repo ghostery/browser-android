@@ -91,68 +91,6 @@ static const nsAttrValue::EnumTable kFormAutocompleteTable[] = {
     {"off", NS_FORM_AUTOCOMPLETE_OFF},
     {nullptr, 0}};
 // Default autocomplete value is 'on'.
-<<<<<<< HEAD
-static const nsAttrValue::EnumTable* kFormDefaultAutocomplete =
-    &kFormAutocompleteTable[0];
-
-bool HTMLFormElement::gFirstFormSubmitted = false;
-bool HTMLFormElement::gPasswordManagerInitialized = false;
-
-HTMLFormElement::HTMLFormElement(
-    already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : nsGenericHTMLElement(std::move(aNodeInfo)),
-      mControls(new HTMLFormControlsCollection(this)),
-      mSelectedRadioButtons(2),
-      mRequiredRadioButtonCounts(2),
-      mValueMissingRadioGroups(2),
-      mPendingSubmission(nullptr),
-      mSubmittingRequest(nullptr),
-      mDefaultSubmitElement(nullptr),
-      mFirstSubmitInElements(nullptr),
-      mFirstSubmitNotInElements(nullptr),
-      mImageNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
-      mPastNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
-      mSubmitPopupState(openAbused),
-      mInvalidElementsCount(0),
-      mGeneratingSubmit(false),
-      mGeneratingReset(false),
-      mIsSubmitting(false),
-      mDeferSubmission(false),
-      mNotifiedObservers(false),
-      mNotifiedObserversResult(false),
-      mSubmitInitiatedFromUserInput(false),
-      mEverTriedInvalidSubmit(false) {
-||||||| merged common ancestors
-static const nsAttrValue::EnumTable* kFormDefaultAutocomplete = &kFormAutocompleteTable[0];
-
-bool HTMLFormElement::gFirstFormSubmitted = false;
-bool HTMLFormElement::gPasswordManagerInitialized = false;
-
-HTMLFormElement::HTMLFormElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-  : nsGenericHTMLElement(std::move(aNodeInfo)),
-    mControls(new HTMLFormControlsCollection(this)),
-    mSelectedRadioButtons(2),
-    mRequiredRadioButtonCounts(2),
-    mValueMissingRadioGroups(2),
-    mPendingSubmission(nullptr),
-    mSubmittingRequest(nullptr),
-    mDefaultSubmitElement(nullptr),
-    mFirstSubmitInElements(nullptr),
-    mFirstSubmitNotInElements(nullptr),
-    mImageNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
-    mPastNameLookupTable(FORM_CONTROL_LIST_HASHTABLE_LENGTH),
-    mSubmitPopupState(openAbused),
-    mInvalidElementsCount(0),
-    mGeneratingSubmit(false),
-    mGeneratingReset(false),
-    mIsSubmitting(false),
-    mDeferSubmission(false),
-    mNotifiedObservers(false),
-    mNotifiedObserversResult(false),
-    mSubmitInitiatedFromUserInput(false),
-    mEverTriedInvalidSubmit(false)
-{
-=======
 static const nsAttrValue::EnumTable* kFormDefaultAutocomplete =
     &kFormAutocompleteTable[0];
 
@@ -180,7 +118,6 @@ HTMLFormElement::HTMLFormElement(
       mNotifiedObservers(false),
       mNotifiedObserversResult(false),
       mEverTriedInvalidSubmit(false) {
->>>>>>> upstream-releases
   // We start out valid.
   AddStatesSilently(NS_EVENT_STATE_VALID);
 }
@@ -317,23 +254,8 @@ bool HTMLFormElement::ParseAttribute(int32_t aNamespaceID, nsAtom* aAttribute,
                                               aMaybeScriptedPrincipal, aResult);
 }
 
-<<<<<<< HEAD
-nsresult HTMLFormElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLFormElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                            nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLFormElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (IsInUncomposedDoc() && aContext.OwnerDoc().IsHTMLOrXHTML()) {
@@ -434,15 +356,7 @@ static void CollectOrphans(nsINode* aRemovalRoot,
   }
 }
 
-<<<<<<< HEAD
-void HTMLFormElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-HTMLFormElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void HTMLFormElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   // Note, this is explicitly using uncomposed doc, since we count
   // only forms in document.
   RefPtr<Document> oldDocument = GetUncomposedDoc();
@@ -648,32 +562,14 @@ nsresult HTMLFormElement::DoSubmit(WidgetEvent* aEvent) {
 
   // XXXbz if the script global is that for an sXBL/XBL2 doc, it won't
   // be a window...
-<<<<<<< HEAD
   nsPIDOMWindowOuter* window = OwnerDoc()->GetWindow();
-
-||||||| merged common ancestors
-  nsPIDOMWindowOuter *window = OwnerDoc()->GetWindow();
-
-=======
-  nsPIDOMWindowOuter* window = OwnerDoc()->GetWindow();
->>>>>>> upstream-releases
   if (window) {
     mSubmitPopupState = PopupBlocker::GetPopupControlState();
   } else {
     mSubmitPopupState = PopupBlocker::openAbused;
   }
 
-<<<<<<< HEAD
-  mSubmitInitiatedFromUserInput = EventStateManager::IsHandlingUserInput();
-
   if (mDeferSubmission) {
-||||||| merged common ancestors
-  mSubmitInitiatedFromUserInput = EventStateManager::IsHandlingUserInput();
-
-  if(mDeferSubmission) {
-=======
-  if (mDeferSubmission) {
->>>>>>> upstream-releases
     // we are in an event handler, JS submitted so we have to
     // defer this submission. let's remember it and return
     // without submitting
@@ -796,14 +692,7 @@ nsresult HTMLFormElement::SubmitSubmission(
     AutoPopupStatePusher popupStatePusher(mSubmitPopupState);
 
     AutoHandlingUserInputStatePusher userInpStatePusher(
-<<<<<<< HEAD
-        mSubmitInitiatedFromUserInput, nullptr, doc);
-||||||| merged common ancestors
-                                       mSubmitInitiatedFromUserInput,
-                                       nullptr, doc);
-=======
         aFormSubmission->IsInitiatedFromUserInput());
->>>>>>> upstream-releases
 
     nsCOMPtr<nsIInputStream> postDataStream;
     rv = aFormSubmission->GetEncodedSubmission(
@@ -812,26 +701,10 @@ nsresult HTMLFormElement::SubmitSubmission(
 
     nsAutoString target;
     aFormSubmission->GetTarget(target);
-<<<<<<< HEAD
-    rv = linkHandler->OnLinkClickSync(
-        this, actionURI, target, VoidString(), postDataStream, nullptr, false,
-        getter_AddRefs(docShell), getter_AddRefs(mSubmittingRequest),
-        EventStateManager::IsHandlingUserInput());
-||||||| merged common ancestors
-    rv = linkHandler->OnLinkClickSync(this, actionURI,
-                                      target.get(),
-                                      VoidString(),
-                                      postDataStream,
-                                      nullptr, false,
-                                      getter_AddRefs(docShell),
-                                      getter_AddRefs(mSubmittingRequest),
-                                      EventStateManager::IsHandlingUserInput());
-=======
     rv = linkHandler->OnLinkClickSync(
         this, actionURI, target, VoidString(), postDataStream, nullptr, false,
         getter_AddRefs(docShell), getter_AddRefs(mSubmittingRequest),
         aFormSubmission->IsInitiatedFromUserInput());
->>>>>>> upstream-releases
     NS_ENSURE_SUBMIT_SUCCESS(rv);
   }
 
@@ -965,38 +838,9 @@ nsresult HTMLFormElement::DoSecureToInsecureSubmitCheck(nsIURI* aActionURL,
   return NS_OK;
 }
 
-<<<<<<< HEAD
 nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
                                                 bool* aCancelSubmit,
                                                 bool aEarlyNotify) {
-  // If this is the first form, bring alive the first form submit
-  // category observers
-  if (!gFirstFormSubmitted) {
-    gFirstFormSubmitted = true;
-    NS_CreateServicesFromCategory(NS_FIRST_FORMSUBMIT_CATEGORY, nullptr,
-                                  NS_FIRST_FORMSUBMIT_CATEGORY);
-  }
-
-||||||| merged common ancestors
-nsresult
-HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
-                                       bool* aCancelSubmit,
-                                       bool    aEarlyNotify)
-{
-  // If this is the first form, bring alive the first form submit
-  // category observers
-  if (!gFirstFormSubmitted) {
-    gFirstFormSubmitted = true;
-    NS_CreateServicesFromCategory(NS_FIRST_FORMSUBMIT_CATEGORY,
-                                  nullptr,
-                                  NS_FIRST_FORMSUBMIT_CATEGORY);
-  }
-
-=======
-nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
-                                                bool* aCancelSubmit,
-                                                bool aEarlyNotify) {
->>>>>>> upstream-releases
   if (!aEarlyNotify) {
     nsresult rv = DoSecureToInsecureSubmitCheck(aActionURL, aCancelSubmit);
     if (NS_FAILED(rv)) {
@@ -1007,84 +851,6 @@ nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
     }
   }
 
-<<<<<<< HEAD
-  // Notify observers that the form is being submitted.
-  nsCOMPtr<nsIObserverService> service =
-      mozilla::services::GetObserverService();
-  if (!service) return NS_ERROR_FAILURE;
-
-  nsCOMPtr<nsISimpleEnumerator> theEnum;
-  nsresult rv = service->EnumerateObservers(
-      aEarlyNotify ? NS_EARLYFORMSUBMIT_SUBJECT : NS_FORMSUBMIT_SUBJECT,
-      getter_AddRefs(theEnum));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  if (theEnum) {
-    nsCOMPtr<nsISupports> inst;
-    *aCancelSubmit = false;
-
-    // XXXbz what do the submit observers actually want?  The window
-    // of the document this is shown in?  Or something else?
-    // sXBL/XBL2 issue
-    nsCOMPtr<nsPIDOMWindowOuter> window = OwnerDoc()->GetWindow();
-
-    bool loop = true;
-    while (NS_SUCCEEDED(theEnum->HasMoreElements(&loop)) && loop) {
-      theEnum->GetNext(getter_AddRefs(inst));
-
-      nsCOMPtr<nsIFormSubmitObserver> formSubmitObserver(
-          do_QueryInterface(inst));
-      if (formSubmitObserver) {
-        rv = formSubmitObserver->Notify(
-            this, window ? window->GetCurrentInnerWindow() : nullptr,
-            aActionURL, aCancelSubmit);
-        NS_ENSURE_SUCCESS(rv, rv);
-      }
-      if (*aCancelSubmit) {
-        return NS_OK;
-      }
-    }
-||||||| merged common ancestors
-  // Notify observers that the form is being submitted.
-  nsCOMPtr<nsIObserverService> service =
-    mozilla::services::GetObserverService();
-  if (!service)
-    return NS_ERROR_FAILURE;
-
-  nsCOMPtr<nsISimpleEnumerator> theEnum;
-  nsresult rv = service->EnumerateObservers(aEarlyNotify ?
-                                            NS_EARLYFORMSUBMIT_SUBJECT :
-                                            NS_FORMSUBMIT_SUBJECT,
-                                            getter_AddRefs(theEnum));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  if (theEnum) {
-    nsCOMPtr<nsISupports> inst;
-    *aCancelSubmit = false;
-
-    // XXXbz what do the submit observers actually want?  The window
-    // of the document this is shown in?  Or something else?
-    // sXBL/XBL2 issue
-    nsCOMPtr<nsPIDOMWindowOuter> window = OwnerDoc()->GetWindow();
-
-    bool loop = true;
-    while (NS_SUCCEEDED(theEnum->HasMoreElements(&loop)) && loop) {
-      theEnum->GetNext(getter_AddRefs(inst));
-
-      nsCOMPtr<nsIFormSubmitObserver> formSubmitObserver(
-                      do_QueryInterface(inst));
-      if (formSubmitObserver) {
-        rv = formSubmitObserver->Notify(this,
-                                        window ? window->GetCurrentInnerWindow() : nullptr,
-                                        aActionURL,
-                                        aCancelSubmit);
-        NS_ENSURE_SUCCESS(rv, rv);
-      }
-      if (*aCancelSubmit) {
-        return NS_OK;
-      }
-    }
-=======
   bool defaultAction = true;
   nsresult rv = nsContentUtils::DispatchEventOnlyToChrome(
       OwnerDoc(), static_cast<nsINode*>(this),
@@ -1094,7 +860,6 @@ nsresult HTMLFormElement::NotifySubmitObservers(nsIURI* aActionURL,
   *aCancelSubmit = !defaultAction;
   if (*aCancelSubmit) {
     return NS_OK;
->>>>>>> upstream-releases
   }
   return rv;
 }
@@ -1145,21 +910,10 @@ HTMLFormElement::GetElementAt(int32_t aIndex) const {
  *         > 0 if aControl1 is after aControl2,
  *         0 otherwise
  */
-<<<<<<< HEAD
-/* static */ int32_t HTMLFormElement::CompareFormControlPosition(
-    Element* aElement1, Element* aElement2, const nsIContent* aForm) {
-||||||| merged common ancestors
-/* static */ int32_t
-HTMLFormElement::CompareFormControlPosition(Element* aElement1,
-                                            Element* aElement2,
-                                            const nsIContent* aForm)
-{
-=======
 /* static */
 int32_t HTMLFormElement::CompareFormControlPosition(Element* aElement1,
                                                     Element* aElement2,
                                                     const nsIContent* aForm) {
->>>>>>> upstream-releases
   NS_ASSERTION(aElement1 != aElement2, "Comparing a form control to itself");
 
   // If an element has a @form, we can assume it *might* be able to not have
@@ -1194,19 +948,9 @@ int32_t HTMLFormElement::CompareFormControlPosition(Element* aElement1,
  * @param aControls List of form controls to check.
  * @param aForm Parent form of the controls.
  */
-<<<<<<< HEAD
-/* static */ void HTMLFormElement::AssertDocumentOrder(
-    const nsTArray<nsGenericHTMLFormElement*>& aControls, nsIContent* aForm) {
-||||||| merged common ancestors
-/* static */ void
-HTMLFormElement::AssertDocumentOrder(
-  const nsTArray<nsGenericHTMLFormElement*>& aControls, nsIContent* aForm)
-{
-=======
 /* static */
 void HTMLFormElement::AssertDocumentOrder(
     const nsTArray<nsGenericHTMLFormElement*>& aControls, nsIContent* aForm) {
->>>>>>> upstream-releases
   // TODO: remove the return statement with bug 598468.
   // This is done to prevent asserts in some edge cases.
   return;
@@ -1229,21 +973,10 @@ void HTMLFormElement::AssertDocumentOrder(
  * @param aControls List of form controls to check.
  * @param aForm Parent form of the controls.
  */
-<<<<<<< HEAD
-/* static */ void HTMLFormElement::AssertDocumentOrder(
-    const nsTArray<RefPtr<nsGenericHTMLFormElement>>& aControls,
-    nsIContent* aForm) {
-||||||| merged common ancestors
-/* static */ void
-HTMLFormElement::AssertDocumentOrder(
-  const nsTArray<RefPtr<nsGenericHTMLFormElement>>& aControls, nsIContent* aForm)
-{
-=======
 /* static */
 void HTMLFormElement::AssertDocumentOrder(
     const nsTArray<RefPtr<nsGenericHTMLFormElement>>& aControls,
     nsIContent* aForm) {
->>>>>>> upstream-releases
   // TODO: remove the return statement with bug 598468.
   // This is done to prevent asserts in some edge cases.
   return;
@@ -1349,21 +1082,6 @@ nsresult HTMLFormElement::AddElement(nsGenericHTMLFormElement* aChild,
 
   // If it is a password control, inform the password manager.
   if (type == NS_FORM_INPUT_PASSWORD) {
-<<<<<<< HEAD
-    if (!gPasswordManagerInitialized) {
-      gPasswordManagerInitialized = true;
-      NS_CreateServicesFromCategory(NS_PASSWORDMANAGER_CATEGORY, nullptr,
-                                    NS_PASSWORDMANAGER_CATEGORY);
-    }
-||||||| merged common ancestors
-    if (!gPasswordManagerInitialized) {
-      gPasswordManagerInitialized = true;
-      NS_CreateServicesFromCategory(NS_PASSWORDMANAGER_CATEGORY,
-                                    nullptr,
-                                    NS_PASSWORDMANAGER_CATEGORY);
-    }
-=======
->>>>>>> upstream-releases
     PostPasswordEvent();
   }
 
@@ -1747,16 +1465,8 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
   }
 
   // Get base URL
-<<<<<<< HEAD
-  nsIDocument* document = OwnerDoc();
-  nsIURI* docURI = document->GetDocumentURI();
-||||||| merged common ancestors
-  nsIDocument *document = OwnerDoc();
-  nsIURI *docURI = document->GetDocumentURI();
-=======
   Document* document = OwnerDoc();
   nsIURI* docURI = document->GetDocumentURI();
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(docURI, NS_ERROR_UNEXPECTED);
 
   // If an action is not specified and we are inside
@@ -1796,48 +1506,6 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
       NodePrincipal(), actionURL, nsIScriptSecurityManager::STANDARD);
   NS_ENSURE_SUCCESS(rv, rv);
 
-<<<<<<< HEAD
-  // Check if CSP allows this form-action
-  nsCOMPtr<nsIContentSecurityPolicy> csp;
-  rv = NodePrincipal()->GetCsp(getter_AddRefs(csp));
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (csp) {
-    bool permitsFormAction = true;
-
-    // form-action is only enforced if explicitly defined in the
-    // policy - do *not* consult default-src, see:
-    // http://www.w3.org/TR/CSP2/#directive-default-src
-    rv = csp->Permits(this, nullptr /* nsICSPEventListener */, actionURL,
-                      nsIContentSecurityPolicy::FORM_ACTION_DIRECTIVE, true,
-                      &permitsFormAction);
-    NS_ENSURE_SUCCESS(rv, rv);
-    if (!permitsFormAction) {
-      return NS_ERROR_CSP_FORM_ACTION_VIOLATION;
-    }
-  }
-
-||||||| merged common ancestors
-  // Check if CSP allows this form-action
-  nsCOMPtr<nsIContentSecurityPolicy> csp;
-  rv = NodePrincipal()->GetCsp(getter_AddRefs(csp));
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (csp) {
-    bool permitsFormAction = true;
-
-    // form-action is only enforced if explicitly defined in the
-    // policy - do *not* consult default-src, see:
-    // http://www.w3.org/TR/CSP2/#directive-default-src
-    rv = csp->Permits(this, nullptr /* nsICSPEventListener */, actionURL,
-                      nsIContentSecurityPolicy::FORM_ACTION_DIRECTIVE,
-                      true, &permitsFormAction);
-    NS_ENSURE_SUCCESS(rv, rv);
-    if (!permitsFormAction) {
-      return NS_ERROR_CSP_FORM_ACTION_VIOLATION;
-    }
-  }
-
-=======
->>>>>>> upstream-releases
   // Potentially the page uses the CSP directive 'upgrade-insecure-requests'. In
   // such a case we have to upgrade the action url from http:// to https://.
   // If the actionURL is not http, then there is nothing to do.
@@ -1864,30 +1532,6 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
     NS_ENSURE_SUCCESS(rv, rv);
     CopyUTF8toUTF16(scheme, *params.AppendElement());
 
-<<<<<<< HEAD
-    const char16_t* params[] = {reportSpec.get(), reportScheme.get()};
-    CSP_LogLocalizedStr(
-        "upgradeInsecureRequest", params, ArrayLength(params),
-        EmptyString(),  // aSourceFile
-        EmptyString(),  // aScriptSample
-        0,              // aLineNumber
-        0,              // aColumnNumber
-        nsIScriptError::warningFlag,
-        NS_LITERAL_CSTRING("upgradeInsecureRequest"), document->InnerWindowID(),
-        !!document->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId);
-||||||| merged common ancestors
-    const char16_t* params[] = { reportSpec.get(), reportScheme.get() };
-    CSP_LogLocalizedStr("upgradeInsecureRequest",
-                        params, ArrayLength(params),
-                        EmptyString(), // aSourceFile
-                        EmptyString(), // aScriptSample
-                        0, // aLineNumber
-                        0, // aColumnNumber
-                        nsIScriptError::warningFlag,
-                        NS_LITERAL_CSTRING("upgradeInsecureRequest"),
-                        document->InnerWindowID(),
-                        !!document->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId);
-=======
     CSP_LogLocalizedStr(
         "upgradeInsecureRequest", params,
         EmptyString(),  // aSourceFile
@@ -1897,7 +1541,6 @@ nsresult HTMLFormElement::GetActionURL(nsIURI** aActionURL,
         nsIScriptError::warningFlag,
         NS_LITERAL_CSTRING("upgradeInsecureRequest"), document->InnerWindowID(),
         !!document->NodePrincipal()->OriginAttributesRef().mPrivateBrowsingId);
->>>>>>> upstream-releases
   }
 
   //
@@ -2278,15 +1921,6 @@ HTMLFormElement::OnStatusChange(nsIWebProgress* aWebProgress,
 
 NS_IMETHODIMP
 HTMLFormElement::OnSecurityChange(nsIWebProgress* aWebProgress,
-<<<<<<< HEAD
-                                  nsIRequest* aRequest, uint32_t state) {
-||||||| merged common ancestors
-                                  nsIRequest* aRequest,
-                                  uint32_t aOldState,
-                                  uint32_t aState,
-                                  const nsAString& aContentBlockingLogJSON)
-{
-=======
                                   nsIRequest* aRequest, uint32_t aState) {
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
@@ -2295,7 +1929,6 @@ HTMLFormElement::OnSecurityChange(nsIWebProgress* aWebProgress,
 NS_IMETHODIMP
 HTMLFormElement::OnContentBlockingEvent(nsIWebProgress* aWebProgress,
                                         nsIRequest* aRequest, uint32_t aEvent) {
->>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE("notification excluded in AddProgressListener(...)");
   return NS_OK;
 }
@@ -2674,13 +2307,6 @@ JSObject* HTMLFormElement::WrapNode(JSContext* aCx,
   return HTMLFormElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 int32_t HTMLFormElement::GetFormNumberForStateKey() {
   if (mFormNumber == -1) {
     mFormNumber = OwnerDoc()->GetNextFormNumber();
@@ -2704,4 +2330,3 @@ void HTMLFormElement::NodeInfoChanged(Document* aOldDoc) {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

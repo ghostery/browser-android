@@ -8,8 +8,6 @@ use crate::str::{CssString, CssStringWriter};
 use crate::stylesheets::Origin;
 #[cfg(feature = "gecko")]
 use atomic_refcell::{AtomicRef, AtomicRefCell, AtomicRefMut};
-use crate::str::{CssString, CssStringWriter};
-use crate::stylesheets::Origin;
 #[cfg(feature = "servo")]
 use parking_lot::RwLock;
 use servo_arc::Arc;
@@ -20,13 +18,7 @@ use std::mem;
 use std::mem::ManuallyDrop;
 #[cfg(feature = "gecko")]
 use std::ptr;
-<<<<<<< HEAD
-||||||| merged common ancestors
-use str::{CssString, CssStringWriter};
-use stylesheets::Origin;
-=======
 use to_shmem::{SharedMemoryBuilder, ToShmem};
->>>>>>> upstream-releases
 
 /// A shared read/write lock that can protect multiple objects.
 ///

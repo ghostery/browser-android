@@ -1075,68 +1075,6 @@ add_task(async function test_environmentChange() {
   );
   now = fakeNow(futureDate(now, 10 * MILLISECONDS_PER_MINUTE));
 
-<<<<<<< HEAD
-  if (Services.prefs.getBoolPref("prio.enabled", false)) {
-    fakePrioEncode();
-
-    // Set histograms to expected state.
-    let prioMeasures = [
-      "BROWSER_IS_USER_DEFAULT",
-      "NEWTAB_PAGE_ENABLED",
-    ];
-
-    for (let measure of prioMeasures) {
-      const value = Telemetry.getHistogramById(measure);
-      value.clear();
-      value.add(1);
-    }
-
-    let expectedPrioResult = {
-      "booleans": [
-        true,
-        true,
-        false,
-      ],
-    };
-
-    Preferences.set(PREF_TEST, 3);
-    ping = await PingServer.promiseNextPing();
-    Assert.ok(!!ping);
-
-    Assert.deepEqual(ping.payload.prio, expectedPrioResult);
-  }
-
-||||||| merged common ancestors
-  if (Services.prefs.getBoolPref("prio.enabled", false)) {
-    fakePrioEncode();
-
-    // Set histograms to expected state.
-    let prioMeasures = [
-      "BROWSER_IS_USER_DEFAULT",
-      "NEWTAB_PAGE_ENABLED",
-    ];
-
-    for (let measure of prioMeasures) {
-      const value = Telemetry.getHistogramById(measure);
-      value.clear();
-      value.add(1);
-    }
-
-    let expectedPrioResult = {
-      "browserIsUserDefault": true,
-      "newTabPageEnabled": true,
-      "pdfViewerUsed": false,
-    };
-
-    Preferences.set(PREF_TEST, 3);
-    ping = await PingServer.promiseNextPing();
-    Assert.ok(!!ping);
-
-    Assert.deepEqual(ping.payload.prio, expectedPrioResult);
-  }
-
-=======
->>>>>>> upstream-releases
   await TelemetryController.testShutdown();
 });
 

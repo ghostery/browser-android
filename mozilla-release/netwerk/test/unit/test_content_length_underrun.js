@@ -5,16 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Test infrastructure
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://testing-common/httpd.js");
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://testing-common/httpd.js");
-ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
-=======
 const { HttpServer } = ChromeUtils.import("resource://testing-common/httpd.js");
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyGetter(this, "URL", function() {
   return "http://localhost:" + httpserver.identity.primaryPort;
@@ -30,25 +21,12 @@ var enforcePrefStrict;
 var enforcePrefSoft;
 var enforcePrefStrictChunked;
 
-<<<<<<< HEAD
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
-
-function run_test()
-{
-||||||| merged common ancestors
-function run_test()
-{
-=======
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
 
 function run_test() {
->>>>>>> upstream-releases
   prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
   enforcePrefStrict = prefs.getBoolPref("network.http.enforce-framing.http1");
   enforcePrefSoft = prefs.getBoolPref("network.http.enforce-framing.soft");

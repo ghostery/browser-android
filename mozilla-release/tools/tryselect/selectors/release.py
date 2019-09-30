@@ -37,18 +37,12 @@ class ReleaseParser(BaseTryParser):
          {'metavar': 'STR',
           'action': 'append',
           'dest': 'migrations',
-<<<<<<< HEAD
-          'choices': ['central-to-beta', 'beta-to-release', 'early-to-late-beta'],
-||||||| merged common ancestors
-          'choices': ['central-to-beta', 'beta-to-release'],
-=======
           'choices': [
               'central-to-beta',
               'beta-to-release',
               'early-to-late-beta',
               'release-to-esr',
           ],
->>>>>>> upstream-releases
           'help': "Migration to run for the release (can be specified multiple times).",
           }],
         [['--no-limit-locales'],
@@ -66,35 +60,16 @@ class ReleaseParser(BaseTryParser):
     common_groups = ['push']
     templates = ['disable-pgo']
 
-<<<<<<< HEAD
     def __init__(self, *args, **kwargs):
         super(ReleaseParser, self).__init__(*args, **kwargs)
         self.set_defaults(migrations=[])
-
-||||||| merged common ancestors
-=======
-    def __init__(self, *args, **kwargs):
-        super(ReleaseParser, self).__init__(*args, **kwargs)
-        self.set_defaults(migrations=[])
->>>>>>> upstream-releases
 
 
 def run(
     version, migrations, limit_locales, tasks,
     try_config=None, push=True, message='{msg}', closed_tree=False
 ):
-<<<<<<< HEAD
-
     app_version = attr.evolve(version, beta_number=None, is_esr=False)
-||||||| merged common ancestors
-
-    if version.is_beta:
-        app_version = attr.evolve(version, beta_number=None)
-    else:
-        app_version = version
-=======
-    app_version = attr.evolve(version, beta_number=None, is_esr=False)
->>>>>>> upstream-releases
 
     files_to_change = {
         'browser/config/version.txt': '{}\n'.format(app_version),

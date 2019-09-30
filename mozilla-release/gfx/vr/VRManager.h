@@ -41,58 +41,14 @@ class VRManager {
   void NotifyVsync(const TimeStamp& aVsyncTimestamp);
 
   void RefreshVRDisplays(bool aMustDispatch = false);
-<<<<<<< HEAD
-  void RefreshVRControllers();
-  void ScanForControllers();
-  void RemoveControllers();
-  template <class T>
-  void NotifyGamepadChange(uint32_t aIndex, const T& aInfo);
-  RefPtr<gfx::VRDisplayHost> GetDisplay(const uint32_t& aDisplayID);
-  void GetVRDisplayInfo(nsTArray<VRDisplayInfo>& aDisplayInfo);
-  RefPtr<gfx::VRControllerHost> GetController(const uint32_t& aControllerID);
-  void GetVRControllerInfo(nsTArray<VRControllerInfo>& aControllerInfo);
-  void CreateVRTestSystem();
-  VRSystemManagerPuppet* GetPuppetManager();
-  VRSystemManagerExternal* GetExternalManager();
-||||||| merged common ancestors
-  void RefreshVRControllers();
-  void ScanForControllers();
-  void RemoveControllers();
-  template<class T> void NotifyGamepadChange(uint32_t aIndex, const T& aInfo);
-  RefPtr<gfx::VRDisplayHost> GetDisplay(const uint32_t& aDisplayID);
-  void GetVRDisplayInfo(nsTArray<VRDisplayInfo>& aDisplayInfo);
-  RefPtr<gfx::VRControllerHost> GetController(const uint32_t& aControllerID);
-  void GetVRControllerInfo(nsTArray<VRControllerInfo>& aControllerInfo);
-  void CreateVRTestSystem();
-  VRSystemManagerPuppet* GetPuppetManager();
-  VRSystemManagerExternal* GetExternalManager();
-=======
   void StopAllHaptics();
->>>>>>> upstream-releases
 
   void VibrateHaptic(uint32_t aControllerIdx, uint32_t aHapticIndex,
                      double aIntensity, double aDuration,
                      const VRManagerPromise& aPromise);
   void StopVibrateHaptic(uint32_t aControllerIdx);
   void NotifyVibrateHapticCompleted(const VRManagerPromise& aPromise);
-<<<<<<< HEAD
-  void DispatchSubmitFrameResult(uint32_t aDisplayID,
-                                 const VRSubmitFrameResultInfo& aResult);
-||||||| merged common ancestors
-  void DispatchSubmitFrameResult(uint32_t aDisplayID, const VRSubmitFrameResultInfo& aResult);
-=======
->>>>>>> upstream-releases
   void StartVRNavigation(const uint32_t& aDisplayID);
-<<<<<<< HEAD
-  void StopVRNavigation(const uint32_t& aDisplayID,
-                        const TimeDuration& aTimeout);
-
- protected:
-||||||| merged common ancestors
-  void StopVRNavigation(const uint32_t& aDisplayID, const TimeDuration& aTimeout);
-
-protected:
-=======
   void StopVRNavigation(const uint32_t& aDisplayID,
                         const TimeDuration& aTimeout);
   void Shutdown();
@@ -111,20 +67,8 @@ protected:
   bool IsPresenting();
 
  private:
->>>>>>> upstream-releases
   VRManager();
   ~VRManager();
-<<<<<<< HEAD
-
- private:
-  void Init();
-||||||| merged common ancestors
-
-private:
-
-  void Init();
-=======
->>>>>>> upstream-releases
   void Destroy();
   void StartTasks();
   void StopTasks();
@@ -176,36 +120,6 @@ private:
   // VRLayerParent destructor
   nsTArray<VRLayerParent*> mLayers;
 
-<<<<<<< HEAD
-  typedef nsTArray<RefPtr<VRSystemManager>> VRSystemManagerArray;
-  VRSystemManagerArray mManagers;
-
-  typedef nsRefPtrHashtable<nsUint32HashKey, gfx::VRDisplayHost>
-      VRDisplayHostHashMap;
-  VRDisplayHostHashMap mVRDisplays;
-
-  typedef nsRefPtrHashtable<nsUint32HashKey, gfx::VRControllerHost>
-      VRControllerHostHashMap;
-  VRControllerHostHashMap mVRControllers;
-
-  Atomic<bool> mInitialized;
-
-  TimeStamp mLastControllerEnumerationTime;
-||||||| merged common ancestors
-  typedef nsTArray<RefPtr<VRSystemManager>> VRSystemManagerArray;
-  VRSystemManagerArray mManagers;
-
-  typedef nsRefPtrHashtable<nsUint32HashKey, gfx::VRDisplayHost> VRDisplayHostHashMap;
-  VRDisplayHostHashMap mVRDisplays;
-
-  typedef nsRefPtrHashtable<nsUint32HashKey, gfx::VRControllerHost> VRControllerHostHashMap;
-  VRControllerHostHashMap mVRControllers;
-
-  Atomic<bool> mInitialized;
-
-  TimeStamp mLastControllerEnumerationTime;
-=======
->>>>>>> upstream-releases
   TimeStamp mLastDisplayEnumerationTime;
   TimeStamp mLastActiveTime;
   TimeStamp mLastTickTime;

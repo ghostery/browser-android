@@ -44,20 +44,10 @@ const testData = [
   },
   {
     value: "blue",
-<<<<<<< HEAD
-    commitKey: "VK_TAB", modifiers: {shiftKey: true},
-    expected: "blue",
-  },
-||||||| merged common ancestors
-    commitKey: "VK_TAB", modifiers: {shiftKey: true},
-    expected: "blue"
-  }
-=======
     commitKey: "VK_TAB",
     modifiers: { shiftKey: true },
     expected: "blue",
   },
->>>>>>> upstream-releases
 ];
 
 add_task(async function() {

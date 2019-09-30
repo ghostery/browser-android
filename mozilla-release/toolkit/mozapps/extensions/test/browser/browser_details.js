@@ -65,174 +65,6 @@ async function test() {
 
   gProvider = new MockProvider();
 
-<<<<<<< HEAD
-  gProvider.createAddons([{
-    id: "addon1@tests.mozilla.org",
-    name: "Test add-on 1",
-    version: "2.1",
-    description: "Short description",
-    fullDescription: "Longer description",
-    type: "extension",
-    iconURL: "chrome://foo/skin/icon.png",
-    contributionURL: "http://foo.com",
-    contributionAmount: "$0.99",
-    sourceURI: Services.io.newURI("http://example.com/foo"),
-    averageRating: 4,
-    reviewCount: 5,
-    reviewURL: "http://example.com/reviews",
-    homepageURL: "http://example.com/addon1",
-    applyBackgroundUpdates: AddonManager.AUTOUPDATE_ENABLE,
-  }, {
-    id: "addon2@tests.mozilla.org",
-    name: "Test add-on 2",
-    version: "2.2",
-    description: "Short description",
-    creator: { name: "Mozilla", url: null },
-    type: "extension",
-    iconURL: "chrome://foo/skin/icon.png",
-    contributionURL: "http://foo.com",
-    contributionAmount: null,
-    updateDate: gDate,
-    permissions: 0,
-  }, {
-    id: "addon3@tests.mozilla.org",
-    name: "Test add-on 3",
-    description: "Short description",
-    creator: { name: "Mozilla", url: "http://www.mozilla.org" },
-    type: "extension",
-    sourceURI: Services.io.newURI("http://example.com/foo"),
-    updateDate: gDate,
-    reviewCount: 1,
-    reviewURL: "http://example.com/reviews",
-    applyBackgroundUpdates: AddonManager.AUTOUPDATE_DISABLE,
-    isActive: false,
-    isCompatible: false,
-    appDisabled: true,
-    permissions: AddonManager.PERM_CAN_ENABLE |
-                 AddonManager.PERM_CAN_DISABLE |
-                 AddonManager.PERM_CAN_UPGRADE,
-  }, {
-    id: "addon5@tests.mozilla.org",
-    blocklistURL: "http://example.com/addon5@tests.mozilla.org",
-    name: "Test add-on 5",
-    isActive: false,
-    blocklistState: Ci.nsIBlocklistService.STATE_BLOCKED,
-    appDisabled: true,
-  }, {
-    id: "addon8@tests.mozilla.org",
-    blocklistURL: "http://example.com/addon8@tests.mozilla.org",
-    name: "Test add-on 8",
-    blocklistState: Ci.nsIBlocklistService.STATE_OUTDATED,
-  }, {
-    id: "addon9@tests.mozilla.org",
-    name: "Test add-on 9",
-    signedState: AddonManager.SIGNEDSTATE_MISSING,
-  }, {
-    id: "addon10@tests.mozilla.org",
-    name: "Test add-on 10",
-    signedState: AddonManager.SIGNEDSTATE_MISSING,
-    isActive: false,
-    appDisabled: true,
-    isCompatible: false,
-  }, {
-    id: "addon11@tests.mozilla.org",
-    name: "Test add-on 11",
-    signedState: AddonManager.SIGNEDSTATE_PRELIMINARY,
-    foreignInstall: true,
-    isActive: false,
-    appDisabled: true,
-    isCompatible: false,
-  }, {
-    id: "addon12@tests.mozilla.org",
-    name: "Test add-on 12",
-    signedState: AddonManager.SIGNEDSTATE_SIGNED,
-    foreignInstall: true,
-  }]);
-||||||| merged common ancestors
-  gProvider.createAddons([{
-    id: "addon1@tests.mozilla.org",
-    name: "Test add-on 1",
-    version: "2.1",
-    description: "Short description",
-    fullDescription: "Longer description",
-    type: "extension",
-    iconURL: "chrome://foo/skin/icon.png",
-    icon64URL: "chrome://foo/skin/icon64.png",
-    contributionURL: "http://foo.com",
-    contributionAmount: "$0.99",
-    sourceURI: Services.io.newURI("http://example.com/foo"),
-    averageRating: 4,
-    reviewCount: 5,
-    reviewURL: "http://example.com/reviews",
-    homepageURL: "http://example.com/addon1",
-    applyBackgroundUpdates: AddonManager.AUTOUPDATE_ENABLE,
-  }, {
-    id: "addon2@tests.mozilla.org",
-    name: "Test add-on 2",
-    version: "2.2",
-    description: "Short description",
-    creator: { name: "Mozilla", url: null },
-    type: "extension",
-    iconURL: "chrome://foo/skin/icon.png",
-    contributionURL: "http://foo.com",
-    contributionAmount: null,
-    updateDate: gDate,
-    permissions: 0,
-  }, {
-    id: "addon3@tests.mozilla.org",
-    name: "Test add-on 3",
-    description: "Short description",
-    creator: { name: "Mozilla", url: "http://www.mozilla.org" },
-    type: "extension",
-    sourceURI: Services.io.newURI("http://example.com/foo"),
-    updateDate: gDate,
-    reviewCount: 1,
-    reviewURL: "http://example.com/reviews",
-    applyBackgroundUpdates: AddonManager.AUTOUPDATE_DISABLE,
-    isActive: false,
-    isCompatible: false,
-    appDisabled: true,
-    permissions: AddonManager.PERM_CAN_ENABLE |
-                 AddonManager.PERM_CAN_DISABLE |
-                 AddonManager.PERM_CAN_UPGRADE,
-  }, {
-    id: "addon5@tests.mozilla.org",
-    blocklistURL: "http://example.com/addon5@tests.mozilla.org",
-    name: "Test add-on 5",
-    isActive: false,
-    blocklistState: Ci.nsIBlocklistService.STATE_BLOCKED,
-    appDisabled: true,
-  }, {
-    id: "addon8@tests.mozilla.org",
-    blocklistURL: "http://example.com/addon8@tests.mozilla.org",
-    name: "Test add-on 8",
-    blocklistState: Ci.nsIBlocklistService.STATE_OUTDATED,
-  }, {
-    id: "addon9@tests.mozilla.org",
-    name: "Test add-on 9",
-    signedState: AddonManager.SIGNEDSTATE_MISSING,
-  }, {
-    id: "addon10@tests.mozilla.org",
-    name: "Test add-on 10",
-    signedState: AddonManager.SIGNEDSTATE_MISSING,
-    isActive: false,
-    appDisabled: true,
-    isCompatible: false,
-  }, {
-    id: "addon11@tests.mozilla.org",
-    name: "Test add-on 11",
-    signedState: AddonManager.SIGNEDSTATE_PRELIMINARY,
-    foreignInstall: true,
-    isActive: false,
-    appDisabled: true,
-    isCompatible: false,
-  }, {
-    id: "addon12@tests.mozilla.org",
-    name: "Test add-on 12",
-    signedState: AddonManager.SIGNEDSTATE_SIGNED,
-    foreignInstall: true,
-  }]);
-=======
   gProvider.createAddons([
     {
       id: "addon1@tests.mozilla.org",
@@ -346,7 +178,6 @@ async function test() {
           ~AddonManager.PERM_CAN_CHANGE_PRIVATEBROWSING_ACCESS),
     },
   ]);
->>>>>>> upstream-releases
 
   let aWindow = await open_manager(null);
   gManagerWindow = aWindow;
@@ -1265,42 +1096,6 @@ add_test(async function() {
 // Tests that upgrades with onExternalInstall apply immediately
 add_test(function() {
   open_details("addon1@tests.mozilla.org", "extension", function() {
-<<<<<<< HEAD
-    gProvider.createAddons([{
-      id: "addon1@tests.mozilla.org",
-      name: "Test add-on replacement",
-      version: "2.5",
-      description: "Short description replacement",
-      fullDescription: "Longer description replacement",
-      type: "extension",
-      iconURL: "chrome://foo/skin/icon.png",
-      sourceURI: Services.io.newURI("http://example.com/foo"),
-      averageRating: 2,
-      optionsURL: "chrome://foo/content/options.xul",
-      applyBackgroundUpdates: AddonManager.AUTOUPDATE_ENABLE,
-      operationsRequiringRestart: AddonManager.OP_NEEDS_RESTART_NONE,
-    }]);
-
-    is(get("detail-name").textContent, "Test add-on replacement", "Name should be correct");
-||||||| merged common ancestors
-    gProvider.createAddons([{
-      id: "addon1@tests.mozilla.org",
-      name: "Test add-on replacement",
-      version: "2.5",
-      description: "Short description replacement",
-      fullDescription: "Longer description replacement",
-      type: "extension",
-      iconURL: "chrome://foo/skin/icon.png",
-      icon64URL: "chrome://foo/skin/icon264.png",
-      sourceURI: Services.io.newURI("http://example.com/foo"),
-      averageRating: 2,
-      optionsURL: "chrome://foo/content/options.xul",
-      applyBackgroundUpdates: AddonManager.AUTOUPDATE_ENABLE,
-      operationsRequiringRestart: AddonManager.OP_NEEDS_RESTART_NONE,
-    }]);
-
-    is(get("detail-name").textContent, "Test add-on replacement", "Name should be correct");
-=======
     gProvider.createAddons([
       {
         id: "addon1@tests.mozilla.org",
@@ -1323,7 +1118,6 @@ add_test(function() {
       "Test add-on replacement",
       "Name should be correct"
     );
->>>>>>> upstream-releases
     is_element_visible(get("detail-version"), "Version should not be hidden");
     is(get("detail-version").value, "2.5", "Version should be correct");
     is(

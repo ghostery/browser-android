@@ -7,20 +7,6 @@
 //!
 //! [basic-shape]: https://drafts.csswg.org/css-shapes/#typedef-basic-shape
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::generics::basic_shape as generic;
-use crate::values::generics::basic_shape::{GeometryBox, Path, PolygonCoord};
-use crate::values::generics::basic_shape::{ShapeBox, ShapeSource};
-use crate::values::generics::rect::Rect;
-use crate::values::specified::border::BorderRadius;
-use crate::values::specified::image::Image;
-use crate::values::specified::position::{HorizontalPosition, Position, VerticalPosition};
-use crate::values::specified::url::SpecifiedUrl;
-use crate::values::specified::LengthOrPercentage;
-use crate::values::specified::SVGPathData;
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::generics::basic_shape as generic;
 use crate::values::generics::basic_shape::{GeometryBox, Path, PolygonCoord};
@@ -33,37 +19,11 @@ use crate::values::specified::url::SpecifiedUrl;
 use crate::values::specified::SVGPathData;
 use crate::values::specified::{LengthPercentage, NonNegativeLengthPercentage};
 use crate::Zero;
->>>>>>> upstream-releases
 use cssparser::Parser;
-<<<<<<< HEAD
-use std::fmt::{self, Write};
-use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
-
-/// A specified alias for FillRule.
-pub use crate::values::generics::basic_shape::FillRule;
-||||||| merged common ancestors
-use parser::{Parse, ParserContext};
-use std::borrow::Cow;
-use std::fmt::{self, Write};
-use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
-use values::computed::Percentage;
-use values::generics::basic_shape as generic;
-use values::generics::basic_shape::{FillRule, GeometryBox, Path, PolygonCoord};
-use values::generics::basic_shape::{ShapeBox, ShapeSource};
-use values::generics::rect::Rect;
-use values::specified::LengthOrPercentage;
-use values::specified::SVGPathData;
-use values::specified::border::BorderRadius;
-use values::specified::image::Image;
-use values::specified::position::{HorizontalPosition, Position, PositionComponent};
-use values::specified::position::{Side, VerticalPosition};
-use values::specified::url::SpecifiedUrl;
-=======
 use style_traits::{ParseError, StyleParseErrorKind};
 
 /// A specified alias for FillRule.
 pub use crate::values::generics::basic_shape::FillRule;
->>>>>>> upstream-releases
 
 /// A specified clipping shape.
 pub type ClippingShape = generic::ClippingShape<BasicShape, SpecifiedUrl>;
@@ -278,44 +238,6 @@ impl Circle {
     }
 }
 
-<<<<<<< HEAD
-impl ToCss for Circle {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: Write,
-    {
-        dest.write_str("circle(")?;
-        if generic::ShapeRadius::ClosestSide != self.radius {
-            self.radius.to_css(dest)?;
-            dest.write_str(" ")?;
-        }
-
-        dest.write_str("at ")?;
-        self.position.to_css(dest)?;
-        dest.write_str(")")
-    }
-}
-
-||||||| merged common ancestors
-impl ToCss for Circle {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: Write,
-    {
-        dest.write_str("circle(")?;
-        if generic::ShapeRadius::ClosestSide != self.radius {
-            self.radius.to_css(dest)?;
-            dest.write_str(" ")?;
-        }
-
-        dest.write_str("at ")?;
-        serialize_basicshape_position(&self.position, dest)?;
-        dest.write_str(")")
-    }
-}
-
-=======
->>>>>>> upstream-releases
 impl Parse for Ellipse {
     fn parse<'i, 't>(
         context: &ParserContext,
@@ -353,48 +275,6 @@ impl Ellipse {
     }
 }
 
-<<<<<<< HEAD
-impl ToCss for Ellipse {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: Write,
-    {
-        dest.write_str("ellipse(")?;
-        if self.semiaxis_x != ShapeRadius::default() || self.semiaxis_y != ShapeRadius::default() {
-            self.semiaxis_x.to_css(dest)?;
-            dest.write_str(" ")?;
-            self.semiaxis_y.to_css(dest)?;
-            dest.write_str(" ")?;
-        }
-
-        dest.write_str("at ")?;
-        self.position.to_css(dest)?;
-        dest.write_str(")")
-    }
-}
-
-||||||| merged common ancestors
-impl ToCss for Ellipse {
-    fn to_css<W>(&self, dest: &mut CssWriter<W>) -> fmt::Result
-    where
-        W: Write,
-    {
-        dest.write_str("ellipse(")?;
-        if self.semiaxis_x != ShapeRadius::default() || self.semiaxis_y != ShapeRadius::default() {
-            self.semiaxis_x.to_css(dest)?;
-            dest.write_str(" ")?;
-            self.semiaxis_y.to_css(dest)?;
-            dest.write_str(" ")?;
-        }
-
-        dest.write_str("at ")?;
-        serialize_basicshape_position(&self.position, dest)?;
-        dest.write_str(")")
-    }
-}
-
-=======
->>>>>>> upstream-releases
 impl Parse for ShapeRadius {
     fn parse<'i, 't>(
         context: &ParserContext,
@@ -432,36 +312,6 @@ impl Polygon {
                 let fill = FillRule::parse(i)?;
                 i.expect_comma()?; // only eat the comma if there is something before it
                 Ok(fill)
-<<<<<<< HEAD
-            })
-            .unwrap_or_default();
-
-        let buf = input.parse_comma_separated(|i| {
-            Ok(PolygonCoord(
-                LengthOrPercentage::parse(context, i)?,
-                LengthOrPercentage::parse(context, i)?,
-            ))
-        })?;
-
-        Ok(Polygon {
-            fill: fill,
-            coordinates: buf,
-        })
-||||||| merged common ancestors
-            }).unwrap_or_default();
-
-        let buf = input.parse_comma_separated(|i| {
-            Ok(PolygonCoord(
-                LengthOrPercentage::parse(context, i)?,
-                LengthOrPercentage::parse(context, i)?,
-            ))
-        })?;
-
-        Ok(Polygon {
-            fill: fill,
-            coordinates: buf,
-        })
-=======
             })
             .unwrap_or_default();
 
@@ -475,7 +325,6 @@ impl Polygon {
             .into();
 
         Ok(Polygon { fill, coordinates })
->>>>>>> upstream-releases
     }
 }
 

@@ -475,29 +475,6 @@ function getSnapshot(histogramId) {
 
 // Helper for setting an empty list of Environment preferences to watch.
 function setEmptyPrefWatchlist() {
-<<<<<<< HEAD
-  let TelemetryEnvironment =
-    ChromeUtils.import("resource://gre/modules/TelemetryEnvironment.jsm").TelemetryEnvironment;
-  return TelemetryEnvironment.onInitialized().then(() => {
-    TelemetryEnvironment.testWatchPreferences(new Map());
-
-  });
-}
-
-||||||| merged common ancestors
-  let TelemetryEnvironment =
-    ChromeUtils.import("resource://gre/modules/TelemetryEnvironment.jsm").TelemetryEnvironment;
-  return TelemetryEnvironment.onInitialized().then(() => {
-    TelemetryEnvironment.testWatchPreferences(new Map());
-
-  });
-}
-
-function histogramValueCount(histogramSnapshot) {
-  return histogramSnapshot.counts.reduce((a, b) => a + b);
-}
-
-=======
   const { TelemetryEnvironment } = ChromeUtils.import(
     "resource://gre/modules/TelemetryEnvironment.jsm"
   );
@@ -506,7 +483,6 @@ function histogramValueCount(histogramSnapshot) {
   );
 }
 
->>>>>>> upstream-releases
 if (runningInParent) {
   // Set logging preferences for all the tests.
   Services.prefs.setCharPref("toolkit.telemetry.log.level", "Trace");
@@ -540,9 +516,6 @@ if (runningInParent) {
     TelemetryUtils.Preferences.HealthPingEnabled,
     false
   );
-
-  // Speed up child process accumulations
-  Services.prefs.setIntPref(TelemetryUtils.Preferences.IPCBatchTimeout, 10);
 
   // Speed up child process accumulations
   Services.prefs.setIntPref(TelemetryUtils.Preferences.IPCBatchTimeout, 10);

@@ -107,23 +107,6 @@ async function runTests() {
   event = await focused;
   testStates(event.accessible, STATE_FOCUSED);
 
-<<<<<<< HEAD
-  if (AppConstants.platform == "macosx") {
-    info("Ensuring focus of another autocomplete item on ctrl-n");
-    focused = waitForEvent(EVENT_FOCUS, isEventForAutocompleteItem);
-    EventUtils.synthesizeKey("n", {ctrlKey: true});
-    event = await focused;
-    testStates(event.accessible, STATE_FOCUSED);
-
-    info("Ensuring focus of another autocomplete item on ctrl-p");
-    focused = waitForEvent(EVENT_FOCUS, isEventForAutocompleteItem);
-    EventUtils.synthesizeKey("p", {ctrlKey: true});
-    event = await focused;
-    testStates(event.accessible, STATE_FOCUSED);
-  }
-
-||||||| merged common ancestors
-=======
   if (AppConstants.platform == "macosx") {
     info("Ensuring focus of another autocomplete item on ctrl-n");
     focused = waitForEvent(EVENT_FOCUS, isEventForAutocompleteItem);
@@ -138,7 +121,6 @@ async function runTests() {
     testStates(event.accessible, STATE_FOCUSED);
   }
 
->>>>>>> upstream-releases
   info("Ensuring focus of another autocomplete item on up arrow");
   focused = waitForEvent(EVENT_FOCUS, isEventForAutocompleteItem);
   EventUtils.synthesizeKey("KEY_ArrowUp");
@@ -198,21 +180,6 @@ async function runTests() {
   EventUtils.synthesizeKey("KEY_ArrowLeft", { shiftKey: true });
   await focused;
   testStates(textBox, STATE_FOCUSED);
-<<<<<<< HEAD
-
-  if (AppConstants.platform == "macosx") {
-    // On Mac, ctrl-n after arrow left/right does not re-open the popup.
-    // Type some text so the next press of ctrl-n opens the popup.
-    EventUtils.sendString("ple");
-
-    info("Ensuring autocomplete focus on ctrl-n");
-    focused = waitForEvent(EVENT_FOCUS, isEventForAutocompleteItem);
-    EventUtils.synthesizeKey("n", {ctrlKey: true});
-    event = await focused;
-    testStates(event.accessible, STATE_FOCUSED);
-  }
-||||||| merged common ancestors
-=======
 
   if (AppConstants.platform == "macosx") {
     // On Mac, ctrl-n after arrow left/right does not re-open the popup.
@@ -225,7 +192,6 @@ async function runTests() {
     event = await focused;
     testStates(event.accessible, STATE_FOCUSED);
   }
->>>>>>> upstream-releases
 }
 
 addAccessibleTask(``, runTests);

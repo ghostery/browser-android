@@ -787,13 +787,7 @@ zh_Hant{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.44.91"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             DateTimePatterns{
@@ -4995,12 +4989,7 @@ zh_Hant{
                     "大正",
                     "昭和",
                     "平成",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "令和",
->>>>>>> upstream-releases
                 }
                 narrow{
                     "大化",
@@ -5239,12 +5228,7 @@ zh_Hant{
                     "大正",
                     "昭和",
                     "平成",
-<<<<<<< HEAD
-                    "Q",
-||||||| merged common ancestors
-=======
                     "令和",
->>>>>>> upstream-releases
                 }
                 wide{
                     "大化",
@@ -5483,12 +5467,7 @@ zh_Hant{
                     "大正",
                     "昭和",
                     "平成",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "令和",
->>>>>>> upstream-releases
                 }
             }
             intervalFormats{

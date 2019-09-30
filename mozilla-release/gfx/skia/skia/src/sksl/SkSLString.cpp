@@ -244,45 +244,6 @@ String to_string(uint64_t value) {
 }
 
 String to_string(double value) {
-<<<<<<< HEAD
-#ifdef SKSL_BUILD_FOR_WIN
-    #define SNPRINTF    _snprintf
-#else
-    #define SNPRINTF    snprintf
-#endif
-#define MAX_DOUBLE_CHARS 25
-    char buffer[MAX_DOUBLE_CHARS];
-    int len = SNPRINTF(buffer, sizeof(buffer), "%.17g", value);
-    SkASSERT(len < MAX_DOUBLE_CHARS);
-    bool needsDotZero = true;
-    for (int i = 0; i < len; ++i) {
-        char c = buffer[i];
-        if (c == ',') {
-            buffer[i] = '.';
-            needsDotZero = false;
-            break;
-        } else if (c == '.' || c == 'e') {
-            needsDotZero = false;
-            break;
-        }
-    }
-    String result(buffer);
-    if (needsDotZero) {
-        result += ".0";
-||||||| merged common ancestors
-#ifdef SKSL_BUILD_FOR_WIN
-    #define SNPRINTF    _snprintf
-#else
-    #define SNPRINTF    snprintf
-#endif
-#define MAX_DOUBLE_CHARS 25
-    char buffer[MAX_DOUBLE_CHARS];
-    SKSL_DEBUGCODE(int len = )SNPRINTF(buffer, sizeof(buffer), "%.17g", value);
-    ASSERT(len < MAX_DOUBLE_CHARS);
-    String result(buffer);
-    if (!strchr(buffer, '.') && !strchr(buffer, 'e')) {
-        result += ".0";
-=======
     std::stringstream buffer;
     buffer.imbue(std::locale::classic());
     buffer.precision(17);
@@ -295,7 +256,6 @@ String to_string(double value) {
             needsDotZero = false;
             break;
         }
->>>>>>> upstream-releases
     }
     if (needsDotZero) {
         buffer << ".0";

@@ -40,13 +40,6 @@ public:
         kRemovePictureImageFilterLocalSpace = 59,
         kRemoveHeaderFlags_Version         = 60,
         kTwoColorDrawShadow_Version        = 61,
-<<<<<<< HEAD
-        kDontNegateImageSize_Version       = 62,
-        kStoreImageBounds_Version          = 63,
-        kRemoveOccluderFromBlurMaskFilter  = 64,
-        kFloat4PaintColor_Version          = 65,
-||||||| merged common ancestors
-=======
         kDontNegateImageSize_Version       = 62,
         kStoreImageBounds_Version          = 63,
         kRemoveOccluderFromBlurMaskFilter  = 64,
@@ -54,7 +47,6 @@ public:
         kSaveBehind_Version                = 66,
         kSerializeFonts_Version            = 67,
         kPaintDoesntSerializeFonts_Version = 68,
->>>>>>> upstream-releases
     };
 
     /**
@@ -121,16 +113,10 @@ public:
     void readRegion(SkRegion* region);
 
     void readPath(SkPath* path);
-<<<<<<< HEAD
-    virtual bool readPaint(SkPaint* paint) { return SkPaintPriv::Unflatten(paint, *this); }
-||||||| merged common ancestors
-    virtual bool readPaint(SkPaint* paint) { return paint->unflatten(*this); }
-=======
 
     SkReadPaintResult readPaint(SkPaint* paint, SkFont* font) {
         return SkPaintPriv::Unflatten(paint, *this, font);
     }
->>>>>>> upstream-releases
 
     SkFlattenable* readFlattenable(SkFlattenable::Type);
     template <typename T> sk_sp<T> readFlattenable() {
@@ -240,28 +226,6 @@ private:
     int                     fFactoryCount;
 
     SkDeserialProcs fProcs;
-<<<<<<< HEAD
-    friend class SkPicturePriv;
-
-#ifdef DEBUG_NON_DETERMINISTIC_ASSERT
-    // Debugging counter to keep track of how many bitmaps we
-    // have decoded.
-    int fDecodedBitmapIndex;
-#endif // DEBUG_NON_DETERMINISTIC_ASSERT
-
-    SkInflator* fInflator = nullptr;
-||||||| merged common ancestors
-    friend class SkPicture;
-
-#ifdef DEBUG_NON_DETERMINISTIC_ASSERT
-    // Debugging counter to keep track of how many bitmaps we
-    // have decoded.
-    int fDecodedBitmapIndex;
-#endif // DEBUG_NON_DETERMINISTIC_ASSERT
-
-    SkInflator* fInflator = nullptr;
-=======
->>>>>>> upstream-releases
 
     static bool IsPtrAlign4(const void* ptr) {
         return SkIsAlign4((uintptr_t)ptr);

@@ -3,29 +3,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-#ifndef nsIDocument_h___
-#define nsIDocument_h___
-
-#include "mozilla/FlushType.h"  // for enum
-#include "mozilla/Pair.h"       // for Pair
-#include "nsAutoPtr.h"          // for member
-#include "nsCOMArray.h"         // for member
-#include "nsCompatibility.h"    // for member
-#include "nsCOMPtr.h"           // for member
-#include "nsGkAtoms.h"          // for static class members
-||||||| merged common ancestors
-#ifndef nsIDocument_h___
-#define nsIDocument_h___
-
-#include "mozilla/FlushType.h"           // for enum
-#include "mozilla/Pair.h"                // for Pair
-#include "nsAutoPtr.h"                   // for member
-#include "nsCOMArray.h"                  // for member
-#include "nsCompatibility.h"             // for member
-#include "nsCOMPtr.h"                    // for member
-#include "nsGkAtoms.h"                   // for static class members
-=======
 #ifndef mozilla_dom_Document_h___
 #define mozilla_dom_Document_h___
 
@@ -39,7 +16,6 @@
 #include "nsCOMPtr.h"             // for member
 #include "nsICookieSettings.h"
 #include "nsGkAtoms.h"  // for static class members
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 #include "nsIApplicationCache.h"
 #include "nsIApplicationCacheContainer.h"
 #include "nsIContentViewer.h"
@@ -51,17 +27,9 @@
 #include "nsIParser.h"
 #include "nsIChannelEventSink.h"
 #include "nsIProgressEventSink.h"
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-#include "nsISecurityEventSink.h"
-#include "nsIScriptGlobalObject.h"  // for member (in nsCOMPtr)
-||||||| merged common ancestors
-#include "nsISecurityEventSink.h"
-#include "nsIScriptGlobalObject.h"       // for member (in nsCOMPtr)
-=======
 #include "nsIRadioGroupContainer.h"
 #include "nsIScriptObjectPrincipal.h"
 #include "nsIScriptGlobalObject.h"  // for member (in nsCOMPtr)
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 #include "nsIServiceManager.h"
 #include "nsIURI.h"  // for use in inline functions
 #include "nsIUUIDGenerator.h"
@@ -70,14 +38,8 @@
 #include "nsPIDOMWindow.h"           // for use in inline functions
 #include "nsPropertyTable.h"         // for member
 #include "nsStringFwd.h"
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-#include "nsTHashtable.h"  // for member
-||||||| merged common ancestors
-#include "nsTHashtable.h"                // for member
-=======
 #include "nsStubMutationObserver.h"
 #include "nsTHashtable.h"  // for member
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 #include "nsURIHashKey.h"
 #include "mozilla/net/ReferrerPolicy.h"  // for member
 #include "mozilla/UseCounter.h"
@@ -94,12 +56,7 @@
 #include "mozilla/dom/ContentBlockingLog.h"
 #include "mozilla/dom/DispatcherTrait.h"
 #include "mozilla/dom/DocumentOrShadowRoot.h"
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-||||||| merged common ancestors
-#include "mozilla/EnumSet.h"
-=======
 #include "mozilla/HashTable.h"
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 #include "mozilla/LinkedList.h"
 #include "mozilla/NotNull.h"
 #include "mozilla/SegmentedVector.h"
@@ -107,14 +64,8 @@
 #include "mozilla/StyleSheet.h"
 #include "mozilla/TimeStamp.h"
 #include "mozilla/UniquePtr.h"
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-#include <bitset>  // for member
-||||||| merged common ancestors
-#include <bitset>                        // for member
-=======
 #include "mozilla/dom/FailedCertSecurityInfoBinding.h"
 #include <bitset>  // for member
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
 // windows.h #defines CreateEvent
 #ifdef CreateEvent
@@ -195,17 +146,10 @@ class FullscreenRequest;
 class PendingAnimationTracker;
 class PresShell;
 class ServoStyleSet;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-template <typename>
-class OwningNonNull;
-||||||| merged common ancestors
-template<typename> class OwningNonNull;
-=======
 class SMILAnimationController;
 enum class StyleCursorKind : uint8_t;
 template <typename>
 class OwningNonNull;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 struct URLExtraData;
 
 namespace css {
@@ -270,31 +214,17 @@ class XPathExpression;
 class XPathNSResolver;
 class XPathResult;
 class XULDocument;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-template <typename>
-class Sequence;
-||||||| merged common ancestors
-template<typename> class Sequence;
-=======
 template <typename>
 class Sequence;
 
 class nsDocumentOnStack;
 class nsUnblockOnloadEvent;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
 template <typename, typename>
 class CallbackObjectHolder;
 
 enum class CallerType : uint32_t;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 enum BFCacheStatus {
   NOT_ALLOWED = 1 << 0,                  // Status 0
   EVENT_HANDLING_SUPPRESSED = 1 << 1,    // Status 1
@@ -317,7 +247,6 @@ namespace net {
 class ChannelEventQueue;
 }  // namespace net
 }  // namespace mozilla
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
 // Must be kept in sync with xpcom/rust/xpcom/src/interfaces/nonidl.rs
 #define NS_IDOCUMENT_IID                             \
@@ -327,23 +256,6 @@ class ChannelEventQueue;
     }                                                \
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-// Enum for requesting a particular type of document when creating a doc
-enum DocumentFlavor {
-  DocumentFlavorLegacyGuess,  // compat with old code until made HTML5-compliant
-  DocumentFlavorHTML,         // HTMLDocument with HTMLness bit set to true
-  DocumentFlavorSVG,          // SVGDocument
-  DocumentFlavorPlain,        // Just a Document
-};
-||||||| merged common ancestors
-// Enum for requesting a particular type of document when creating a doc
-enum DocumentFlavor {
-  DocumentFlavorLegacyGuess, // compat with old code until made HTML5-compliant
-  DocumentFlavorHTML, // HTMLDocument with HTMLness bit set to true
-  DocumentFlavorSVG, // SVGDocument
-  DocumentFlavorPlain, // Just a Document
-};
-=======
 namespace mozilla {
 namespace dom {
 
@@ -352,7 +264,6 @@ class DOMStyleSheetSetList;
 class ResizeObserver;
 class ResizeObserverController;
 class PostMessageEvent;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
 // Document states
 
@@ -361,61 +272,20 @@ class PostMessageEvent;
 // Window activation status
 #define NS_DOCUMENT_STATE_WINDOW_INACTIVE NS_DEFINE_EVENT_STATE_MACRO(1)
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-// Some function forward-declarations
-class nsContentList;
-class nsDocumentOnStack;
-
-class nsDocHeaderData {
- public:
-  nsDocHeaderData(nsAtom* aField, const nsAString& aData)
-      : mField(aField), mData(aData), mNext(nullptr) {}
-||||||| merged common ancestors
-// Some function forward-declarations
-class nsContentList;
-class nsDocumentOnStack;
-
-class nsDocHeaderData
-{
-public:
-  nsDocHeaderData(nsAtom* aField, const nsAString& aData)
-    : mField(aField), mData(aData), mNext(nullptr)
-  {
-  }
-=======
 class DocHeaderData {
  public:
   DocHeaderData(nsAtom* aField, const nsAString& aData)
       : mField(aField), mData(aData), mNext(nullptr) {}
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  ~nsDocHeaderData(void) { delete mNext; }
-||||||| merged common ancestors
-  ~nsDocHeaderData(void)
-  {
-    delete mNext;
-  }
-=======
   ~DocHeaderData(void) { delete mNext; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   RefPtr<nsAtom> mField;
   nsString mData;
   DocHeaderData* mNext;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-class nsExternalResourceMap {
-  typedef bool (*nsSubDocEnumFunc)(nsIDocument* aDocument, void* aData);
-||||||| merged common ancestors
-class nsExternalResourceMap
-{
-  typedef bool (*nsSubDocEnumFunc)(nsIDocument *aDocument, void *aData);
-=======
 class ExternalResourceMap {
   typedef bool (*SubDocEnumFunc)(Document* aDocument, void* aData);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
  public:
   /**
@@ -428,20 +298,9 @@ class ExternalResourceMap {
    * If document creation fails for some reason, observers will still be
    * notified, with a null document pointer.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  class ExternalResourceLoad : public nsISupports {
-   public:
-    virtual ~ExternalResourceLoad() {}
-||||||| merged common ancestors
-  class ExternalResourceLoad : public nsISupports
-  {
-  public:
-    virtual ~ExternalResourceLoad() {}
-=======
   class ExternalResourceLoad : public nsISupports {
    public:
     virtual ~ExternalResourceLoad() = default;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
     void AddObserver(nsIObserver* aObserver) {
       MOZ_ASSERT(aObserver, "Must have observer");
@@ -460,25 +319,10 @@ class ExternalResourceMap {
    * Request an external resource document.  This does exactly what
    * Document::RequestExternalResource is documented to do.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIDocument* RequestResource(nsIURI* aURI, nsIURI* aReferrer,
-                               uint32_t aReferrerPolicy,
-                               nsINode* aRequestingNode,
-                               nsIDocument* aDisplayDocument,
-                               ExternalResourceLoad** aPendingLoad);
-||||||| merged common ancestors
-  nsIDocument* RequestResource(nsIURI* aURI,
-                               nsIURI* aReferrer,
-                               uint32_t aReferrerPolicy,
-                               nsINode* aRequestingNode,
-                               nsIDocument* aDisplayDocument,
-                               ExternalResourceLoad** aPendingLoad);
-=======
   Document* RequestResource(nsIURI* aURI, nsIURI* aReferrer,
                             uint32_t aReferrerPolicy, nsINode* aRequestingNode,
                             Document* aDisplayDocument,
                             ExternalResourceLoad** aPendingLoad);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Enumerate the resource documents.  See
@@ -521,20 +365,9 @@ class ExternalResourceMap {
   class PendingLoad : public ExternalResourceLoad, public nsIStreamListener {
     ~PendingLoad() {}
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-   public:
-    explicit PendingLoad(nsIDocument* aDisplayDocument)
-        : mDisplayDocument(aDisplayDocument) {}
-||||||| merged common ancestors
-  public:
-    explicit PendingLoad(nsIDocument* aDisplayDocument) :
-      mDisplayDocument(aDisplayDocument)
-    {}
-=======
    public:
     explicit PendingLoad(Document* aDisplayDocument)
         : mDisplayDocument(aDisplayDocument) {}
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
     NS_DECL_ISUPPORTS
     NS_DECL_NSISTREAMLISTENER
@@ -553,16 +386,8 @@ class ExternalResourceMap {
     nsresult SetupViewer(nsIRequest* aRequest, nsIContentViewer** aViewer,
                          nsILoadGroup** aLoadGroup);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-   private:
-    nsCOMPtr<nsIDocument> mDisplayDocument;
-||||||| merged common ancestors
-  private:
-    nsCOMPtr<nsIDocument> mDisplayDocument;
-=======
    private:
     RefPtr<Document> mDisplayDocument;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     nsCOMPtr<nsIStreamListener> mTargetListener;
     nsCOMPtr<nsIURI> mURI;
   };
@@ -631,39 +456,6 @@ class ExternalResourceMap {
 
 // Document interface.  This is implemented by all document objects in
 // Gecko.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-class nsIDocument : public nsINode,
-                    public mozilla::dom::DocumentOrShadowRoot,
-                    public mozilla::dom::DispatcherTrait {
-  typedef mozilla::dom::GlobalObject GlobalObject;
-
- protected:
-  using Encoding = mozilla::Encoding;
-  template <typename T>
-  using NotNull = mozilla::NotNull<T>;
-
- public:
-  typedef nsExternalResourceMap::ExternalResourceLoad ExternalResourceLoad;
-  typedef mozilla::FullscreenRequest FullscreenRequest;
-  typedef mozilla::net::ReferrerPolicy ReferrerPolicyEnum;
-  typedef mozilla::dom::Element Element;
-||||||| merged common ancestors
-class nsIDocument : public nsINode,
-                    public mozilla::dom::DocumentOrShadowRoot,
-                    public mozilla::dom::DispatcherTrait
-{
-  typedef mozilla::dom::GlobalObject GlobalObject;
-
-protected:
-  using Encoding = mozilla::Encoding;
-  template <typename T> using NotNull = mozilla::NotNull<T>;
-
-public:
-  typedef nsExternalResourceMap::ExternalResourceLoad ExternalResourceLoad;
-  typedef mozilla::FullscreenRequest FullscreenRequest;
-  typedef mozilla::net::ReferrerPolicy ReferrerPolicyEnum;
-  typedef mozilla::dom::Element Element;
-=======
 class Document : public nsINode,
                  public DocumentOrShadowRoot,
                  public nsSupportsWeakReference,
@@ -690,7 +482,6 @@ class Document : public nsINode,
   static void Shutdown();
 
   MOZ_DECLARE_WEAKREFERENCE_TYPENAME(Document)
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IDOCUMENT_IID)
 
@@ -774,34 +565,13 @@ class Document : public nsINode,
 
   // This helper class must be set when we dispatch beforeunload and unload
   // events in order to avoid unterminate sync XHRs.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  class MOZ_RAII PageUnloadingEventTimeStamp {
-    nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-  class MOZ_RAII PageUnloadingEventTimeStamp
-  {
-    nsCOMPtr<nsIDocument> mDocument;
-=======
   class MOZ_RAII PageUnloadingEventTimeStamp {
     RefPtr<Document> mDocument;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     bool mSet;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-   public:
-    explicit PageUnloadingEventTimeStamp(nsIDocument* aDocument)
-        : mDocument(aDocument), mSet(false) {
-||||||| merged common ancestors
-  public:
-    explicit PageUnloadingEventTimeStamp(nsIDocument* aDocument)
-      : mDocument(aDocument)
-      , mSet(false)
-    {
-=======
    public:
     explicit PageUnloadingEventTimeStamp(Document* aDocument)
         : mDocument(aDocument), mSet(false) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
       MOZ_ASSERT(aDocument);
       if (mDocument->mPageUnloadingEventTimeStamp.IsNull()) {
         mDocument->SetPageUnloadingEventTimeStamp();
@@ -871,16 +641,7 @@ class Document : public nsINode,
   nsresult InsertChildBefore(nsIContent* aKid, nsIContent* aBeforeThis,
                              bool aNotify) override;
   void RemoveChildNode(nsIContent* aKid, bool aNotify) final;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsresult Clone(mozilla::dom::NodeInfo* aNodeInfo,
-                 nsINode** aResult) const override {
-||||||| merged common ancestors
-  nsresult Clone(mozilla::dom::NodeInfo* aNodeInfo,
-                 nsINode **aResult) const override
-  {
-=======
   nsresult Clone(dom::NodeInfo* aNodeInfo, nsINode** aResult) const override {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return NS_ERROR_NOT_IMPLEMENTED;
   }
   nsresult CloneDocHelper(Document* clone) const;
@@ -918,14 +679,6 @@ class Document : public nsINode,
    *
    * https://html.spec.whatwg.org/multipage/webappapis.html#creation-url
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIURI* GetOriginalURI() const { return mOriginalURI; }
-||||||| merged common ancestors
-  nsIURI* GetOriginalURI() const
-  {
-    return mOriginalURI;
-  }
-=======
   nsIURI* GetOriginalURI() const { return mOriginalURI; }
 
   /**
@@ -934,7 +687,6 @@ class Document : public nsINode,
    * checks.  When the URI of the document changes, this value is recomputed.
    */
   nsCString GetBaseDomain() const { return mBaseDomain; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Set the URI for the document.  This also sets the document's original URI,
@@ -952,14 +704,6 @@ class Document : public nsINode,
    * Set the base URI for the document loaded via XHR, when accessed from
    * chrome privileged script.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetChromeXHRDocBaseURI(nsIURI* aURI) { mChromeXHRDocBaseURI = aURI; }
-||||||| merged common ancestors
-  void SetChromeXHRDocBaseURI(nsIURI* aURI)
-  {
-    mChromeXHRDocBaseURI = aURI;
-  }
-=======
   void SetChromeXHRDocBaseURI(nsIURI* aURI) { mChromeXHRDocBaseURI = aURI; }
 
   /**
@@ -979,7 +723,6 @@ class Document : public nsINode,
   void SetPreloadCsp(nsIContentSecurityPolicy* aPreloadCSP);
 
   void GetCspJSON(nsString& aJSON);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Set referrer policy and upgrade-insecure-requests flags
@@ -1006,16 +749,7 @@ class Document : public nsINode,
    * valid meta referrer tag found in the document.
    * Referrer policy should be inherited from parent if the iframe is srcdoc
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  ReferrerPolicyEnum GetReferrerPolicy() const { return mReferrerPolicy; }
-||||||| merged common ancestors
-  ReferrerPolicyEnum GetReferrerPolicy() const
-  {
-    return mReferrerPolicy;
-  }
-=======
   ReferrerPolicyEnum GetReferrerPolicy() const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * GetReferrerPolicy() for Document.webidl.
@@ -1048,13 +782,6 @@ class Document : public nsINode,
     return mUpgradeInsecureRequests;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetReferrer(const nsACString& aReferrer) { mReferrer = aReferrer; }
-||||||| merged common ancestors
-  void SetReferrer(const nsACString& aReferrer) {
-    mReferrer = aReferrer;
-  }
-=======
   void SetReferrerInfo(nsIReferrerInfo* aReferrerInfo) {
     mReferrerInfo = aReferrerInfo;
   }
@@ -1087,7 +814,6 @@ class Document : public nsINode,
               ->CloneWithNewPolicy(policy);
     }
   }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Set the principals responsible for this document.  Chances are, you do not
@@ -1254,20 +980,11 @@ class Document : public nsINode,
    * Tell this document that it's the initial document in its window.  See
    * comments on mIsInitialDocumentInWindow for when this should be called.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetIsInitialDocument(bool aIsInitialDocument) {
-    mIsInitialDocumentInWindow = aIsInitialDocument;
-||||||| merged common ancestors
-  void SetIsInitialDocument(bool aIsInitialDocument)
-  {
-    mIsInitialDocumentInWindow = aIsInitialDocument;
-=======
   void SetIsInitialDocument(bool aIsInitialDocument);
 
   void SetLoadedAsData(bool aLoadedAsData) { mLoadedAsData = aLoadedAsData; }
   void SetLoadedAsInteractiveData(bool aLoadedAsInteractiveData) {
     mLoadedAsInteractiveData = aLoadedAsInteractiveData;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   /**
@@ -1375,18 +1092,7 @@ class Document : public nsINode,
   /**
    * Get the content blocking log.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::dom::ContentBlockingLog* GetContentBlockingLog() {
-    return &mContentBlockingLog;
-  }
-||||||| merged common ancestors
-  mozilla::dom::ContentBlockingLog* GetContentBlockingLog()
-  {
-    return &mContentBlockingLog;
-  }
-=======
   ContentBlockingLog* GetContentBlockingLog() { return &mContentBlockingLog; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Get tracking content blocked flag for this document.
@@ -1397,18 +1103,6 @@ class Document : public nsINode,
   }
 
   /**
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-||||||| merged common ancestors
-   * Get slow tracking content blocked flag for this document.
-   */
-  bool GetHasSlowTrackingContentBlocked()
-  {
-    return mContentBlockingLog.HasBlockedAnyOfType(
-        nsIWebProgressListener::STATE_BLOCKED_SLOW_TRACKING_CONTENT);
-  }
-
-  /**
-=======
    * Get fingerprinting content blocked flag for this document.
    */
   bool GetHasFingerprintingContentBlocked() {
@@ -1433,7 +1127,6 @@ class Document : public nsINode,
   }
 
   /**
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
    * Get all cookies blocked flag for this document.
    */
   bool GetHasAllCookiesBlocked() {
@@ -1469,29 +1162,6 @@ class Document : public nsINode,
    * Set the tracking content blocked flag for this document.
    */
   void SetHasTrackingContentBlocked(bool aHasTrackingContentBlocked,
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-                                    const nsAString& aOriginBlocked) {
-    RecordContentBlockingLog(
-        aOriginBlocked, nsIWebProgressListener::STATE_BLOCKED_TRACKING_CONTENT,
-        aHasTrackingContentBlocked);
-||||||| merged common ancestors
-                                    const nsAString& aOriginBlocked)
-  {
-    RecordContentBlockingLog(aOriginBlocked,
-                             nsIWebProgressListener::STATE_BLOCKED_TRACKING_CONTENT,
-                             aHasTrackingContentBlocked);
-  }
-
-  /**
-   * Set the slow tracking content blocked flag for this document.
-   */
-  void SetHasSlowTrackingContentBlocked(bool aHasSlowTrackingContentBlocked,
-                                        const nsAString& aOriginBlocked)
-  {
-    RecordContentBlockingLog(aOriginBlocked,
-                             nsIWebProgressListener::STATE_BLOCKED_SLOW_TRACKING_CONTENT,
-                             aHasSlowTrackingContentBlocked);
-=======
                                     const nsACString& aOriginBlocked) {
     RecordContentBlockingLog(
         aOriginBlocked, nsIWebProgressListener::STATE_BLOCKED_TRACKING_CONTENT,
@@ -1529,21 +1199,13 @@ class Document : public nsINode,
         aOriginBlocked,
         nsIWebProgressListener::STATE_BLOCKED_SOCIALTRACKING_CONTENT,
         aHasSocialTrackingContentBlocked);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   /**
    * Set the all cookies blocked flag for this document.
    */
   void SetHasAllCookiesBlocked(bool aHasAllCookiesBlocked,
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-                               const nsAString& aOriginBlocked) {
-||||||| merged common ancestors
-                               const nsAString& aOriginBlocked)
-  {
-=======
                                const nsACString& aOriginBlocked) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     RecordContentBlockingLog(aOriginBlocked,
                              nsIWebProgressListener::STATE_COOKIES_BLOCKED_ALL,
                              aHasAllCookiesBlocked);
@@ -1552,20 +1214,6 @@ class Document : public nsINode,
   /**
    * Set the tracking cookies blocked flag for this document.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetHasTrackingCookiesBlocked(bool aHasTrackingCookiesBlocked,
-                                    const nsAString& aOriginBlocked) {
-    RecordContentBlockingLog(
-        aOriginBlocked, nsIWebProgressListener::STATE_COOKIES_BLOCKED_TRACKER,
-        aHasTrackingCookiesBlocked);
-||||||| merged common ancestors
-  void SetHasTrackingCookiesBlocked(bool aHasTrackingCookiesBlocked,
-                                    const nsAString& aOriginBlocked)
-  {
-    RecordContentBlockingLog(aOriginBlocked,
-                             nsIWebProgressListener::STATE_COOKIES_BLOCKED_TRACKER,
-                             aHasTrackingCookiesBlocked);
-=======
   void SetHasTrackingCookiesBlocked(
       bool aHasTrackingCookiesBlocked, const nsACString& aOriginBlocked,
       const Maybe<AntiTrackingCommon::StorageAccessGrantedReason>& aReason,
@@ -1573,67 +1221,22 @@ class Document : public nsINode,
     RecordContentBlockingLog(
         aOriginBlocked, nsIWebProgressListener::STATE_COOKIES_BLOCKED_TRACKER,
         aHasTrackingCookiesBlocked, aReason, aTrackingFullHashes);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   /**
    * Set the third-party cookies blocked flag for this document.
    */
   void SetHasForeignCookiesBlocked(bool aHasForeignCookiesBlocked,
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-                                   const nsAString& aOriginBlocked) {
-    RecordContentBlockingLog(
-        aOriginBlocked, nsIWebProgressListener::STATE_COOKIES_BLOCKED_FOREIGN,
-        aHasForeignCookiesBlocked);
-||||||| merged common ancestors
-                                   const nsAString& aOriginBlocked)
-  {
-    RecordContentBlockingLog(aOriginBlocked,
-                             nsIWebProgressListener::STATE_COOKIES_BLOCKED_FOREIGN,
-                             aHasForeignCookiesBlocked);
-=======
                                    const nsACString& aOriginBlocked) {
     RecordContentBlockingLog(
         aOriginBlocked, nsIWebProgressListener::STATE_COOKIES_BLOCKED_FOREIGN,
         aHasForeignCookiesBlocked);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   /**
    * Set the cookies blocked by site permission flag for this document.
    */
   void SetHasCookiesBlockedByPermission(bool aHasCookiesBlockedByPermission,
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-                                        const nsAString& aOriginBlocked) {
-    RecordContentBlockingLog(
-        aOriginBlocked,
-        nsIWebProgressListener::STATE_COOKIES_BLOCKED_BY_PERMISSION,
-        aHasCookiesBlockedByPermission);
-  }
-
-  /**
-   * Set the cookies loaded flag for this document.
-   */
-  void SetHasCookiesLoaded(bool aHasCookiesLoaded,
-                           const nsAString& aOriginLoaded) {
-    RecordContentBlockingLog(aOriginLoaded,
-                             nsIWebProgressListener::STATE_COOKIES_LOADED,
-                             aHasCookiesLoaded);
-  }
-
-  /**
-   * Get cookies loaded flag for this document.
-   */
-  bool GetHasCookiesLoaded() {
-    return mContentBlockingLog.HasBlockedAnyOfType(
-        nsIWebProgressListener::STATE_COOKIES_LOADED);
-||||||| merged common ancestors
-                                        const nsAString& aOriginBlocked)
-  {
-    RecordContentBlockingLog(aOriginBlocked,
-                             nsIWebProgressListener::STATE_COOKIES_BLOCKED_BY_PERMISSION,
-                             aHasCookiesBlockedByPermission);
-=======
                                         const nsACString& aOriginBlocked) {
     RecordContentBlockingLog(
         aOriginBlocked,
@@ -1657,7 +1260,6 @@ class Document : public nsINode,
   bool GetHasCookiesLoaded() {
     return mContentBlockingLog.HasBlockedAnyOfType(
         nsIWebProgressListener::STATE_COOKIES_LOADED);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   /**
@@ -1671,17 +1273,6 @@ class Document : public nsINode,
   /**
    * Set the tracking content loaded flag for this document.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetHasTrackingContentLoaded(bool aHasTrackingContentLoaded,
-                                   const nsAString& aOriginBlocked) {
-    RecordContentBlockingLog(
-        aOriginBlocked, nsIWebProgressListener::STATE_LOADED_TRACKING_CONTENT,
-        aHasTrackingContentLoaded);
-||||||| merged common ancestors
-  void SetHasTrackingContentLoaded(bool aHasTrackingContentLoaded)
-  {
-    mHasTrackingContentLoaded = aHasTrackingContentLoaded;
-=======
   void SetHasTrackingContentLoaded(bool aHasTrackingContentLoaded,
                                    const nsACString& aOriginBlocked) {
     RecordContentBlockingLog(
@@ -1744,7 +1335,6 @@ class Document : public nsINode,
         aOriginBlocked,
         nsIWebProgressListener::STATE_LOADED_SOCIALTRACKING_CONTENT,
         aHasSocialTrackingContentLoaded);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   /**
@@ -1768,14 +1358,6 @@ class Document : public nsINode,
    * Called when the document was decoded as UTF-8 and decoder encountered no
    * errors.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void EnableEncodingMenu() { mEncodingMenuDisabled = false; }
-||||||| merged common ancestors
-  void EnableEncodingMenu()
-  {
-    mEncodingMenuDisabled = false;
-  }
-=======
   void EnableEncodingMenu() { mEncodingMenuDisabled = false; }
 
   /**
@@ -1799,7 +1381,6 @@ class Document : public nsINode,
    * Whether a document.write() call is in progress.
    */
   bool IsWriting() const { return mWriteLevel != uint32_t(0); }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Access HTTP header data (this may also get set from other
@@ -1815,66 +1396,20 @@ class Document : public nsINode,
    * method is responsible for calling BeginObservingDocument() on the
    * presshell if the presshell should observe document mutations.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<nsIPresShell> CreateShell(
-      nsPresContext* aContext, nsViewManager* aViewManager,
-      mozilla::UniquePtr<mozilla::ServoStyleSet> aStyleSet);
-  void DeleteShell();
-||||||| merged common ancestors
-  already_AddRefed<nsIPresShell> CreateShell(
-    nsPresContext* aContext,
-    nsViewManager* aViewManager,
-    mozilla::UniquePtr<mozilla::ServoStyleSet> aStyleSet);
-  void DeleteShell();
-=======
   already_AddRefed<PresShell> CreatePresShell(nsPresContext* aContext,
                                               nsViewManager* aViewManager);
   void DeletePresShell();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIPresShell* GetShell() const {
-||||||| merged common ancestors
-  nsIPresShell* GetShell() const
-  {
-=======
   PresShell* GetPresShell() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return GetBFCacheEntry() ? nullptr : mPresShell;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIPresShell* GetObservingShell() const {
-    return mPresShell && mPresShell->IsObservingDocument() ? mPresShell
-                                                           : nullptr;
-  }
-||||||| merged common ancestors
-  nsIPresShell* GetObservingShell() const
-  {
-    return mPresShell && mPresShell->IsObservingDocument()
-      ? mPresShell : nullptr;
-  }
-=======
   inline PresShell* GetObservingPresShell() const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Return whether the presshell for this document is safe to flush.
   bool IsSafeToFlush() const;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsPresContext* GetPresContext() const {
-    nsIPresShell* shell = GetShell();
-    return shell ? shell->GetPresContext() : nullptr;
-  }
-||||||| merged common ancestors
-  nsPresContext* GetPresContext() const
-  {
-    nsIPresShell* shell = GetShell();
-    return shell ? shell->GetPresContext() : nullptr;
-  }
-=======
   inline nsPresContext* GetPresContext() const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   bool HasShellOrBFCacheEntry() const { return mPresShell || mBFCacheEntry; }
 
@@ -1897,28 +1432,12 @@ class Document : public nsINode,
    * unless this document is within a compound document and has a
    * parent. Note that this parent chain may cross chrome boundaries.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIDocument* GetParentDocument() const { return mParentDocument; }
-||||||| merged common ancestors
-  nsIDocument *GetParentDocument() const
-  {
-    return mParentDocument;
-  }
-=======
   Document* GetParentDocument() const { return mParentDocument; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Set the parent document of this document.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetParentDocument(nsIDocument* aParent) {
-||||||| merged common ancestors
-  void SetParentDocument(nsIDocument* aParent)
-  {
-=======
   void SetParentDocument(Document* aParent) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mParentDocument = aParent;
     if (aParent) {
       mIgnoreDocGroupMismatches = aParent->mIgnoreDocGroupMismatches;
@@ -1957,20 +1476,8 @@ class Document : public nsINode,
 
   Selection* GetSelection(ErrorResult& aRv);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<mozilla::dom::Promise> HasStorageAccess(
-      mozilla::ErrorResult& aRv);
-  already_AddRefed<mozilla::dom::Promise> RequestStorageAccess(
-      mozilla::ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::Promise>
-    HasStorageAccess(mozilla::ErrorResult& aRv);
-  already_AddRefed<mozilla::dom::Promise>
-    RequestStorageAccess(mozilla::ErrorResult& aRv);
-=======
   already_AddRefed<Promise> HasStorageAccess(ErrorResult& aRv);
   already_AddRefed<Promise> RequestStorageAccess(ErrorResult& aRv);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Gets the event target to dispatch key events to if there is no focused
@@ -2019,28 +1526,9 @@ class Document : public nsINode,
    */
   nsresult GetSrcdocData(nsAString& aSrcdocData);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool DidDocumentOpen() { return mDidDocumentOpen; }
-
-  already_AddRefed<mozilla::dom::AnonymousContent> InsertAnonymousContent(
-      mozilla::dom::Element& aElement, mozilla::ErrorResult& aError);
-  void RemoveAnonymousContent(mozilla::dom::AnonymousContent& aContent,
-                              mozilla::ErrorResult& aError);
-||||||| merged common ancestors
-  bool DidDocumentOpen() {
-    return mDidDocumentOpen;
-  }
-
-  already_AddRefed<mozilla::dom::AnonymousContent>
-  InsertAnonymousContent(mozilla::dom::Element& aElement,
-                         mozilla::ErrorResult& aError);
-  void RemoveAnonymousContent(mozilla::dom::AnonymousContent& aContent,
-                              mozilla::ErrorResult& aError);
-=======
   already_AddRefed<AnonymousContent> InsertAnonymousContent(
       Element& aElement, ErrorResult& aError);
   void RemoveAnonymousContent(AnonymousContent& aContent, ErrorResult& aError);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   /**
    * If aNode is a descendant of anonymous content inserted by
    * InsertAnonymousContent, this method returns the root element of the
@@ -2052,27 +1540,13 @@ class Document : public nsINode,
     return mAnonymousContents;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::TimeStamp GetPageUnloadingEventTimeStamp() const {
-||||||| merged common ancestors
-  mozilla::TimeStamp GetPageUnloadingEventTimeStamp() const
-  {
-=======
   TimeStamp GetPageUnloadingEventTimeStamp() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     if (!mParentDocument) {
       return mPageUnloadingEventTimeStamp;
     }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-    mozilla::TimeStamp parentTimeStamp(
-        mParentDocument->GetPageUnloadingEventTimeStamp());
-||||||| merged common ancestors
-    mozilla::TimeStamp parentTimeStamp(mParentDocument->GetPageUnloadingEventTimeStamp());
-=======
     TimeStamp parentTimeStamp(
         mParentDocument->GetPageUnloadingEventTimeStamp());
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     if (parentTimeStamp.IsNull()) {
       return mPageUnloadingEventTimeStamp;
     }
@@ -2094,27 +1568,13 @@ class Document : public nsINode,
    * These are weak pointers, please manually unschedule them when an element
    * is removed.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void ScheduleSVGForPresAttrEvaluation(nsSVGElement* aSVG) {
-||||||| merged common ancestors
-  void ScheduleSVGForPresAttrEvaluation(nsSVGElement* aSVG)
-  {
-=======
   void ScheduleSVGForPresAttrEvaluation(SVGElement* aSVG) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mLazySVGPresElements.PutEntry(aSVG);
   }
 
   // Unschedule an element scheduled by ScheduleFrameRequestCallback (e.g. for
   // when it is destroyed)
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void UnscheduleSVGForPresAttrEvaluation(nsSVGElement* aSVG) {
-||||||| merged common ancestors
-  void UnscheduleSVGForPresAttrEvaluation(nsSVGElement* aSVG)
-  {
-=======
   void UnscheduleSVGForPresAttrEvaluation(SVGElement* aSVG) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mLazySVGPresElements.RemoveEntry(aSVG);
   }
 
@@ -2135,24 +1595,6 @@ class Document : public nsINode,
   // to get a list of references to these nodes.
   //
   // Note:
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  // This expresses how many tracking nodes have been blocked for this
-  // document since its beginning, not how many of them are still around
-  // in the DOM tree. Weak references to blocked nodes are added in the
-  // mBlockedTrackingNodesArray but they are not removed when those nodes
-  // are removed from the tree or even garbage collected.
-  long BlockedTrackingNodeCount() const {
-    return mBlockedTrackingNodes.Length();
-||||||| merged common ancestors
-  // This expresses how many tracking nodes have been blocked for this
-  // document since its beginning, not how many of them are still around
-  // in the DOM tree. Weak references to blocked nodes are added in the
-  // mBlockedTrackingNodesArray but they are not removed when those nodes
-  // are removed from the tree or even garbage collected.
-  long BlockedTrackingNodeCount() const
-  {
-    return mBlockedTrackingNodes.Length();
-=======
   // This expresses how many tracking nodes have been blocked for this document
   // since its beginning, not how many of them are still around in the DOM tree.
   // Weak references to blocked nodes are added in the mBlockedNodesByClassifier
@@ -2160,7 +1602,6 @@ class Document : public nsINode,
   // or even garbage collected.
   long BlockedNodeByClassifierCount() const {
     return mBlockedNodesByClassifier.Length();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   //
@@ -2194,15 +1635,6 @@ class Document : public nsINode,
   // Sets the cache sizes for the current generation.
   void SetCachedSizes(nsTabSizes* aSizes);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  // Helper method that returns true if the document has storage-access sandbox
-  // flag.
-  bool StorageAccessSandboxed() const;
-
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * Should be called when an element's editable changes as a result of
    * changing its contentEditable attribute/property.
@@ -2278,7 +1710,6 @@ protected:
   int32_t GetNextControlNumber() { return mNextControlNumber++; }
 
  protected:
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   friend class nsUnblockOnloadEvent;
 
   nsresult InitCSP(nsIChannel* aChannel);
@@ -2301,17 +1732,8 @@ protected:
 
   void DispatchContentLoadedEvents();
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void DispatchPageTransition(mozilla::dom::EventTarget* aDispatchTarget,
-                              const nsAString& aType, bool aPersisted,
-||||||| merged common ancestors
-  void DispatchPageTransition(mozilla::dom::EventTarget* aDispatchTarget,
-                              const nsAString& aType,
-                              bool aPersisted,
-=======
   void DispatchPageTransition(EventTarget* aDispatchTarget,
                               const nsAString& aType, bool aPersisted,
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
                               bool aOnlySystemGroup = false);
 
   // Call this before the document does something that will unbind all content.
@@ -2341,23 +1763,6 @@ protected:
    */
   already_AddRefed<nsPIWindowRoot> GetWindowRoot();
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- private:
-  class SelectorCacheKey {
-   public:
-    explicit SelectorCacheKey(const nsAString& aString) : mKey(aString) {
-      MOZ_COUNT_CTOR(SelectorCacheKey);
-    }
-||||||| merged common ancestors
-private:
-  class SelectorCacheKey
-  {
-    public:
-      explicit SelectorCacheKey(const nsAString& aString) : mKey(aString)
-      {
-        MOZ_COUNT_CTOR(SelectorCacheKey);
-      }
-=======
   /**
    * Do the tree-disconnection that ResetToURI and document.open need to do.
    */
@@ -2367,15 +1772,7 @@ private:
    * Like IsEditingOn(), but will flush as needed first.
    */
   bool IsEditingOnAfterFlush();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-    nsString mKey;
-    nsExpirationState mState;
-||||||| merged common ancestors
-      nsString mKey;
-      nsExpirationState mState;
-=======
   /**
    * MaybeDispatchCheckKeyPressEventModelEvent() dispatches
    * "CheckKeyPressEventModel" event to check whether we should dispatch
@@ -2384,25 +1781,10 @@ private:
    * eConentEditable at first time.
    */
   void MaybeDispatchCheckKeyPressEventModelEvent();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-    nsExpirationState* GetExpirationState() { return &mState; }
-||||||| merged common ancestors
-      nsExpirationState* GetExpirationState() { return &mState; }
-=======
   /* Midas implementation */
   nsCommandManager* GetMidasCommandManager();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-    ~SelectorCacheKey() { MOZ_COUNT_DTOR(SelectorCacheKey); }
-||||||| merged common ancestors
-      ~SelectorCacheKey()
-      {
-        MOZ_COUNT_DTOR(SelectorCacheKey);
-      }
-=======
   nsresult TurnEditingOff();
 
   // MOZ_CAN_RUN_SCRIPT_BOUNDARY because this is called from all sorts
@@ -2425,29 +1807,14 @@ private:
     nsExpirationState* GetExpirationState() { return &mState; }
 
     ~SelectorCacheKey() { MOZ_COUNT_DTOR(SelectorCacheKey); }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   };
 
   class SelectorCacheKeyDeleter;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- public:
-  class SelectorCache final : public nsExpirationTracker<SelectorCacheKey, 4> {
-   public:
-    using SelectorList = mozilla::UniquePtr<RawServoSelectorList>;
-||||||| merged common ancestors
-public:
-  class SelectorCache final
-    : public nsExpirationTracker<SelectorCacheKey, 4>
-  {
-  public:
-    using SelectorList = mozilla::UniquePtr<RawServoSelectorList>;
-=======
  public:
   class SelectorCache final : public nsExpirationTracker<SelectorCacheKey, 4> {
    public:
     using SelectorList = UniquePtr<RawServoSelectorList>;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
     explicit SelectorCache(nsIEventTarget* aEventTarget);
 
@@ -2479,17 +1846,8 @@ public:
 
   SelectorCache& GetSelectorCache() {
     if (!mSelectorCache) {
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-      mSelectorCache = mozilla::MakeUnique<SelectorCache>(
-          EventTargetFor(mozilla::TaskCategory::Other));
-||||||| merged common ancestors
-      mSelectorCache =
-        mozilla::MakeUnique<SelectorCache>(
-          EventTargetFor(mozilla::TaskCategory::Other));
-=======
       mSelectorCache =
           MakeUnique<SelectorCache>(EventTargetFor(TaskCategory::Other));
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     }
     return *mSelectorCache;
   }
@@ -2534,47 +1892,11 @@ public:
    * Style sheets are ordered, most significant last.
    */
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::dom::StyleSheetList* StyleSheets() {
-||||||| merged common ancestors
-  mozilla::dom::StyleSheetList* StyleSheets()
-  {
-=======
   StyleSheetList* StyleSheets() {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return &DocumentOrShadowRoot::EnsureDOMStyleSheets();
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void InsertSheetAt(size_t aIndex, mozilla::StyleSheet&);
-
-  /**
-   * Replace the stylesheets in aOldSheets with the stylesheets in
-   * aNewSheets. The two lists must have equal length, and the sheet
-   * at positon J in the first list will be replaced by the sheet at
-   * position J in the second list.  Some sheets in the second list
-   * may be null; if so the corresponding sheets in the first list
-   * will simply be removed.
-   */
-  void UpdateStyleSheets(nsTArray<RefPtr<mozilla::StyleSheet>>& aOldSheets,
-                         nsTArray<RefPtr<mozilla::StyleSheet>>& aNewSheets);
-||||||| merged common ancestors
-  void InsertSheetAt(size_t aIndex, mozilla::StyleSheet&);
-
-  /**
-   * Replace the stylesheets in aOldSheets with the stylesheets in
-   * aNewSheets. The two lists must have equal length, and the sheet
-   * at positon J in the first list will be replaced by the sheet at
-   * position J in the second list.  Some sheets in the second list
-   * may be null; if so the corresponding sheets in the first list
-   * will simply be removed.
-   */
-  void UpdateStyleSheets(
-      nsTArray<RefPtr<mozilla::StyleSheet>>& aOldSheets,
-      nsTArray<RefPtr<mozilla::StyleSheet>>& aNewSheets);
-=======
   void InsertSheetAt(size_t aIndex, StyleSheet&);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Add a stylesheet to the document
@@ -2582,14 +1904,7 @@ public:
    * TODO(emilio): This is only used by parts of editor that are no longer in
    * use by m-c or c-c, so remove.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void AddStyleSheet(mozilla::StyleSheet* aSheet) {
-||||||| merged common ancestors
-  void AddStyleSheet(mozilla::StyleSheet* aSheet)
-  {
-=======
   void AddStyleSheet(StyleSheet* aSheet) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     MOZ_ASSERT(aSheet);
     InsertSheetAt(SheetCount(), *aSheet);
   }
@@ -2618,14 +1933,7 @@ public:
                                    StyleSheet* aSheet);
   void RemoveAdditionalStyleSheet(additionalSheetType aType, nsIURI* sheetURI);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::StyleSheet* GetFirstAdditionalAuthorSheet() {
-||||||| merged common ancestors
-  mozilla::StyleSheet* GetFirstAdditionalAuthorSheet()
-  {
-=======
   StyleSheet* GetFirstAdditionalAuthorSheet() {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mAdditionalSheets[eAuthorSheet].SafeElementAt(0);
   }
 
@@ -2633,30 +1941,12 @@ public:
    * Returns the index that aSheet should be inserted at to maintain document
    * ordering.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  template <typename T>
-  size_t FindDocStyleSheetInsertionPoint(const nsTArray<T>& aDocSheets,
-                                         const mozilla::StyleSheet& aSheet);
-||||||| merged common ancestors
-  template<typename T>
-  size_t FindDocStyleSheetInsertionPoint(const nsTArray<T>& aDocSheets,
-                                         const mozilla::StyleSheet& aSheet);
-=======
   size_t FindDocStyleSheetInsertionPoint(const StyleSheet& aSheet);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Get this document's CSSLoader.  This is guaranteed to not return null.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::css::Loader* CSSLoader() const { return mCSSLoader; }
-||||||| merged common ancestors
-  mozilla::css::Loader* CSSLoader() const {
-    return mCSSLoader;
-  }
-=======
   css::Loader* CSSLoader() const { return mCSSLoader; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Get this document's StyleImageLoader.  This is guaranteed to not return
@@ -2756,16 +2046,7 @@ public:
   /**
    * Get the script loader for this document
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::dom::ScriptLoader* ScriptLoader() { return mScriptLoader; }
-||||||| merged common ancestors
-  mozilla::dom::ScriptLoader* ScriptLoader()
-  {
-    return mScriptLoader;
-  }
-=======
   dom::ScriptLoader* ScriptLoader() { return mScriptLoader; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Add/Remove an element to the document's id and name hashes
@@ -2840,15 +2121,7 @@ public:
    * is no former fullscreen element, this exits fullscreen, moving the
    * top-level browser window out of fullscreen mode.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void RestorePreviousFullscreenState(
-      mozilla::UniquePtr<mozilla::FullscreenExit>);
-||||||| merged common ancestors
-  void RestorePreviousFullscreenState(
-    mozilla::UniquePtr<mozilla::FullscreenExit>);
-=======
   void RestorePreviousFullscreenState(UniquePtr<FullscreenExit>);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Returns true if this document is a fullscreen leaf document, i.e. it
@@ -2909,47 +2182,17 @@ public:
 
   // ScreenOrientation related APIs
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetCurrentOrientation(mozilla::dom::OrientationType aType,
-                             uint16_t aAngle) {
-||||||| merged common ancestors
-  void SetCurrentOrientation(mozilla::dom::OrientationType aType,
-                             uint16_t aAngle)
-  {
-=======
   void SetCurrentOrientation(OrientationType aType, uint16_t aAngle) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mCurrentOrientationType = aType;
     mCurrentOrientationAngle = aAngle;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  uint16_t CurrentOrientationAngle() const { return mCurrentOrientationAngle; }
-  mozilla::dom::OrientationType CurrentOrientationType() const {
-||||||| merged common ancestors
-  uint16_t CurrentOrientationAngle() const
-  {
-    return mCurrentOrientationAngle;
-  }
-  mozilla::dom::OrientationType CurrentOrientationType() const
-  {
-=======
   uint16_t CurrentOrientationAngle() const { return mCurrentOrientationAngle; }
   OrientationType CurrentOrientationType() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mCurrentOrientationType;
   }
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetOrientationPendingPromise(mozilla::dom::Promise* aPromise);
-  mozilla::dom::Promise* GetOrientationPendingPromise() const {
-||||||| merged common ancestors
-  void SetOrientationPendingPromise(mozilla::dom::Promise* aPromise);
-  mozilla::dom::Promise* GetOrientationPendingPromise() const
-  {
-=======
   void SetOrientationPendingPromise(Promise* aPromise);
   Promise* GetOrientationPendingPromise() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mOrientationPendingPromise;
   }
 
@@ -2988,23 +2231,6 @@ public:
   void BeginLoad();
   virtual void EndLoad();
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  enum ReadyState {
-    READYSTATE_UNINITIALIZED = 0,
-    READYSTATE_LOADING = 1,
-    READYSTATE_INTERACTIVE = 3,
-    READYSTATE_COMPLETE = 4
-  };
-  void SetReadyStateInternal(ReadyState rs);
-  ReadyState GetReadyStateEnum() { return mReadyState; }
-||||||| merged common ancestors
-  enum ReadyState { READYSTATE_UNINITIALIZED = 0, READYSTATE_LOADING = 1, READYSTATE_INTERACTIVE = 3, READYSTATE_COMPLETE = 4};
-  void SetReadyStateInternal(ReadyState rs);
-  ReadyState GetReadyStateEnum()
-  {
-    return mReadyState;
-  }
-=======
   enum ReadyState {
     READYSTATE_UNINITIALIZED = 0,
     READYSTATE_LOADING = 1,
@@ -3023,19 +2249,10 @@ public:
   void NotifyLoading(const bool& aCurrentParentIsLoading,
                      bool aNewParentIsLoading, const ReadyState& aCurrentState,
                      ReadyState aNewState);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // notify that a content node changed state.  This must happen under
   // a scriptblocker but NOT within a begin/end update.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void ContentStateChanged(nsIContent* aContent,
-                           mozilla::EventStates aStateMask);
-||||||| merged common ancestors
-  void ContentStateChanged(
-      nsIContent* aContent, mozilla::EventStates aStateMask);
-=======
   void ContentStateChanged(nsIContent* aContent, EventStates aStateMask);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Update a set of document states that may have changed.
   // This should only be called by callers whose state is also reflected in the
@@ -3105,18 +2322,9 @@ public:
    * aURI must not be null.  If aPrincipal is null, a codebase principal based
    * on aURI will be used.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  virtual void ResetToURI(nsIURI* aURI, nsILoadGroup* aLoadGroup,
-                          nsIPrincipal* aPrincipal);
-||||||| merged common ancestors
-  virtual void ResetToURI(nsIURI* aURI,
-                          nsILoadGroup* aLoadGroup,
-                          nsIPrincipal* aPrincipal);
-=======
   virtual void ResetToURI(nsIURI* aURI, nsILoadGroup* aLoadGroup,
                           nsIPrincipal* aPrincipal,
                           nsIPrincipal* aStoragePrincipal);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Set the container (docshell) for this document. Virtual so that
@@ -3218,14 +2426,6 @@ public:
    * Get the channel that failed to load and resulted in an error page, if it
    * exists. This is only relevant to error pages.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIChannel* GetFailedChannel() const { return mFailedChannel; }
-||||||| merged common ancestors
-  nsIChannel* GetFailedChannel() const
-  {
-    return mFailedChannel;
-  }
-=======
   nsIChannel* GetFailedChannel() const { return mFailedChannel; }
 
   /**
@@ -3241,7 +2441,6 @@ public:
    */
   void GetFailedCertSecurityInfo(mozilla::dom::FailedCertSecurityInfo& aInfo,
                                  ErrorResult& aRv);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Set the channel that failed to load and resulted in an error page.
@@ -3281,35 +2480,16 @@ public:
    * The enumerator callback should return true to continue enumerating, or
    * false to stop.  This will never get passed a null aDocument.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  typedef bool (*nsSubDocEnumFunc)(nsIDocument* aDocument, void* aData);
-  void EnumerateSubDocuments(nsSubDocEnumFunc aCallback, void* aData);
-||||||| merged common ancestors
-  typedef bool (*nsSubDocEnumFunc)(nsIDocument *aDocument, void *aData);
-  void EnumerateSubDocuments(nsSubDocEnumFunc aCallback, void *aData);
-=======
   typedef bool (*SubDocEnumFunc)(Document* aDocument, void* aData);
   void EnumerateSubDocuments(SubDocEnumFunc aCallback, void* aData);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Collect all the descendant documents for which |aCalback| returns true.
    * The callback function must not mutate any state for the given document.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  typedef bool (*nsDocTestFunc)(const nsIDocument* aDocument);
-  void CollectDescendantDocuments(nsTArray<nsCOMPtr<nsIDocument>>& aDescendants,
-                                  nsDocTestFunc aCallback) const;
-||||||| merged common ancestors
-  typedef bool (*nsDocTestFunc)(const nsIDocument* aDocument);
-  void CollectDescendantDocuments(
-    nsTArray<nsCOMPtr<nsIDocument>>& aDescendants,
-    nsDocTestFunc aCallback) const;
-=======
   typedef bool (*nsDocTestFunc)(const Document* aDocument);
   void CollectDescendantDocuments(nsTArray<RefPtr<Document>>& aDescendants,
                                   nsDocTestFunc aCallback) const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Check whether it is safe to cache the presentation of this document
@@ -3374,19 +2554,10 @@ public:
    */
   void UnblockOnload(bool aFireSync);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void BlockDOMContentLoaded() { ++mBlockDOMContentLoaded; }
-||||||| merged common ancestors
-  void BlockDOMContentLoaded()
-  {
-    ++mBlockDOMContentLoaded;
-  }
-=======
   // Only BlockOnload should call this!
   void AsyncBlockOnload();
 
   void BlockDOMContentLoaded() { ++mBlockDOMContentLoaded; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   void UnblockDOMContentLoaded();
 
@@ -3429,14 +2600,7 @@ public:
   /**
    * Notification that an element is a link that is relevant to style.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void AddStyleRelevantLink(mozilla::dom::Link* aLink) {
-||||||| merged common ancestors
-  void AddStyleRelevantLink(mozilla::dom::Link* aLink)
-  {
-=======
   void AddStyleRelevantLink(Link* aLink) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     NS_ASSERTION(aLink, "Passing in a null link.  Expect crashes RSN!");
 #ifdef DEBUG
     nsPtrHashKey<Link>* entry = mStyledLinks.GetEntry(aLink);
@@ -3452,14 +2616,7 @@ public:
    * to style, then someone must ensure that AddStyleRelevantLink is
    * (eventually) called on it again.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void ForgetLink(mozilla::dom::Link* aLink) {
-||||||| merged common ancestors
-  void ForgetLink(mozilla::dom::Link* aLink)
-  {
-=======
   void ForgetLink(Link* aLink) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     NS_ASSERTION(aLink, "Passing in a null link.  Expect crashes RSN!");
 #ifdef DEBUG
     nsPtrHashKey<Link>* entry = mStyledLinks.GetEntry(aLink);
@@ -3469,60 +2626,15 @@ public:
     mStyledLinks.RemoveEntry(aLink);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
   // Refreshes the hrefs of all the links in the document.
   void RefreshLinkHrefs();
-
-  /**
-   * Resets and removes a box object from the document's box object cache
-   *
-   * @param aElement canonical nsIContent pointer of the box object's element
-   */
-  void ClearBoxObjectFor(nsIContent* aContent);
-
-  /**
-   * Get the box object for an element. This is not exposed through a
-   * scriptable interface except for XUL documents.
-   */
-  already_AddRefed<mozilla::dom::BoxObject> GetBoxObjectFor(
-      mozilla::dom::Element* aElement, mozilla::ErrorResult& aRv);
-||||||| merged common ancestors
-  // Refreshes the hrefs of all the links in the document.
-  void RefreshLinkHrefs();
-
-  /**
-   * Resets and removes a box object from the document's box object cache
-   *
-   * @param aElement canonical nsIContent pointer of the box object's element
-   */
-  void ClearBoxObjectFor(nsIContent* aContent);
-
-  /**
-   * Get the box object for an element. This is not exposed through a
-   * scriptable interface except for XUL documents.
-   */
-  already_AddRefed<mozilla::dom::BoxObject>
-    GetBoxObjectFor(mozilla::dom::Element* aElement, mozilla::ErrorResult& aRv);
-=======
-  // Refreshes the hrefs of all the links in the document.
-  void RefreshLinkHrefs();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Support for window.matchMedia()
    */
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<mozilla::dom::MediaQueryList> MatchMedia(
-      const nsAString& aMediaQueryList, mozilla::dom::CallerType aCallerType);
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::MediaQueryList>
-    MatchMedia(const nsAString& aMediaQueryList,
-               mozilla::dom::CallerType aCallerType);
-=======
   already_AddRefed<MediaQueryList> MatchMedia(const nsAString& aMediaQueryList,
                                               CallerType aCallerType);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   LinkedList<MediaQueryList>& MediaQueryLists() { return mDOMMediaQueryLists; }
 
@@ -3541,32 +2653,6 @@ public:
                                           nsAtom* aAttrName,
                                           const nsAString& aAttrValue) const;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsresult NodesFromRectHelper(float aX, float aY, float aTopSize,
-                               float aRightSize, float aBottomSize,
-                               float aLeftSize, bool aIgnoreRootScrollFrame,
-                               bool aFlushLayout, nsINodeList** aReturn);
-
-  /**
-   * See FlushSkinBindings on nsBindingManager
-   */
-  void FlushSkinBindings();
-
-||||||| merged common ancestors
-  nsresult NodesFromRectHelper(float aX, float aY,
-                               float aTopSize, float aRightSize,
-                               float aBottomSize, float aLeftSize,
-                               bool aIgnoreRootScrollFrame,
-                               bool aFlushLayout,
-                               nsINodeList** aReturn);
-
-  /**
-   * See FlushSkinBindings on nsBindingManager
-   */
-  void FlushSkinBindings();
-
-=======
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   /**
    * To batch DOMSubtreeModified, document needs to be informed when
    * a mutation event might be dispatched, even if the event isn't actually
@@ -3646,23 +2732,8 @@ public:
     return !mParentDocument && !mDisplayDocument;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool IsBeingUsedAsImage() const { return mIsBeingUsedAsImage; }
-||||||| merged common ancestors
-  bool IsBeingUsedAsImage() const {
-    return mIsBeingUsedAsImage;
-  }
-=======
   bool IsDocumentURISchemeChrome() const { return mDocURISchemeIsChrome; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetIsBeingUsedAsImage() { mIsBeingUsedAsImage = true; }
-||||||| merged common ancestors
-  void SetIsBeingUsedAsImage() {
-    mIsBeingUsedAsImage = true;
-  }
-=======
   bool IsInChromeDocShell() const {
     const Document* root = this;
     while (const Document* displayDoc = root->GetDisplayDocument()) {
@@ -3670,33 +2741,14 @@ public:
     }
     return root->mInChromeDocShell;
   }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool IsSVGGlyphsDocument() const { return mIsSVGGlyphsDocument; }
-||||||| merged common ancestors
-  bool IsSVGGlyphsDocument() const
-  {
-    return mIsSVGGlyphsDocument;
-  }
-=======
   bool IsBeingUsedAsImage() const { return mIsBeingUsedAsImage; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetIsSVGGlyphsDocument() { mIsSVGGlyphsDocument = true; }
-||||||| merged common ancestors
-  void SetIsSVGGlyphsDocument()
-  {
-    mIsSVGGlyphsDocument = true;
-  }
-=======
   void SetIsBeingUsedAsImage() { mIsBeingUsedAsImage = true; }
 
   bool IsSVGGlyphsDocument() const { return mIsSVGGlyphsDocument; }
 
   void SetIsSVGGlyphsDocument() { mIsSVGGlyphsDocument = true; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   bool IsResourceDoc() const {
     return IsBeingUsedAsImage() ||  // Are we a helper-doc for an SVG image?
@@ -3709,34 +2761,14 @@ public:
    * GetDisplayDocument() will return a non-null document, and
    * GetDisplayDocument()->GetDisplayDocument() is guaranteed to be null.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIDocument* GetDisplayDocument() const { return mDisplayDocument; }
-||||||| merged common ancestors
-  nsIDocument* GetDisplayDocument() const
-  {
-    return mDisplayDocument;
-  }
-=======
   Document* GetDisplayDocument() const { return mDisplayDocument; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Set the display document for this document.  aDisplayDocument must not be
    * null.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetDisplayDocument(nsIDocument* aDisplayDocument) {
-    MOZ_ASSERT(!GetShell() && !GetContainer() && !GetWindow(),
-||||||| merged common ancestors
-  void SetDisplayDocument(nsIDocument* aDisplayDocument)
-  {
-    MOZ_ASSERT(!GetShell() &&
-               !GetContainer() &&
-               !GetWindow(),
-=======
   void SetDisplayDocument(Document* aDisplayDocument) {
     MOZ_ASSERT(!GetPresShell() && !GetContainer() && !GetWindow(),
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
                "Shouldn't set mDisplayDocument on documents that already "
                "have a presentation or a docshell or a window");
     MOZ_ASSERT(aDisplayDocument, "Must not be null");
@@ -3762,23 +2794,10 @@ public:
    * @param aRequestingNode the node making the request
    * @param aPendingLoad the pending load for this request, if any
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIDocument* RequestExternalResource(nsIURI* aURI, nsIURI* aReferrer,
-                                       uint32_t aReferrerPolicy,
-                                       nsINode* aRequestingNode,
-                                       ExternalResourceLoad** aPendingLoad);
-||||||| merged common ancestors
-  nsIDocument* RequestExternalResource(nsIURI* aURI,
-                                       nsIURI* aReferrer,
-                                       uint32_t aReferrerPolicy,
-                                       nsINode* aRequestingNode,
-                                       ExternalResourceLoad** aPendingLoad);
-=======
   Document* RequestExternalResource(nsIURI* aURI, nsIURI* aReferrer,
                                     uint32_t aReferrerPolicy,
                                     nsINode* aRequestingNode,
                                     ExternalResourceLoad** aPendingLoad);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Enumerate the external resource documents associated with this document.
@@ -3787,18 +2806,9 @@ public:
    */
   void EnumerateExternalResources(SubDocEnumFunc aCallback, void* aData);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsExternalResourceMap& ExternalResourceMap() { return mExternalResourceMap; }
-||||||| merged common ancestors
-  nsExternalResourceMap& ExternalResourceMap()
-  {
-    return mExternalResourceMap;
-  }
-=======
   dom::ExternalResourceMap& ExternalResourceMap() {
     return mExternalResourceMap;
   }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Return whether the document is currently showing (in the sense of
@@ -3882,14 +2892,7 @@ public:
   // Returns nullptr if there is no pending animation tracker for this document
   // which will be the case if there have never been any CSS animations or
   // transitions on elements in the document.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::PendingAnimationTracker* GetPendingAnimationTracker() {
-||||||| merged common ancestors
-  mozilla::PendingAnimationTracker* GetPendingAnimationTracker()
-  {
-=======
   PendingAnimationTracker* GetPendingAnimationTracker() {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mPendingAnimationTracker;
   }
 
@@ -4024,29 +3027,14 @@ public:
    *
    * @param aCloneContainer The container for the clone document.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  virtual already_AddRefed<nsIDocument> CreateStaticClone(
-      nsIDocShell* aCloneContainer);
-||||||| merged common ancestors
-  virtual already_AddRefed<nsIDocument>
-  CreateStaticClone(nsIDocShell* aCloneContainer);
-=======
   virtual already_AddRefed<Document> CreateStaticClone(
       nsIDocShell* aCloneContainer);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * If this document is a static clone, this returns the original
    * document.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIDocument* GetOriginalDocument() {
-||||||| merged common ancestors
-  nsIDocument* GetOriginalDocument()
-  {
-=======
   Document* GetOriginalDocument() {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     MOZ_ASSERT(!mOriginalDocument || !mOriginalDocument->GetOriginalDocument());
     return mOriginalDocument;
   }
@@ -4113,14 +3101,7 @@ public:
    * Called by nsParser to preload style sheets.  aCrossOriginAttr should be a
    * void string if the attr is not present.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void PreloadStyle(nsIURI* aURI, const mozilla::Encoding* aEncoding,
-||||||| merged common ancestors
-  void PreloadStyle(nsIURI* aURI,
-                    const mozilla::Encoding* aEncoding,
-=======
   void PreloadStyle(nsIURI* aURI, const Encoding* aEncoding,
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
                     const nsAString& aCrossOriginAttr,
                     ReferrerPolicyEnum aReferrerPolicy,
                     const nsAString& aIntegrity);
@@ -4158,11 +3139,6 @@ public:
    * Set the document's pending state object (as serialized using structured
    * clone).
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetStateObject(nsIStructuredCloneContainer* scContainer);
-||||||| merged common ancestors
-  void SetStateObject(nsIStructuredCloneContainer *scContainer);
-=======
   void SetStateObject(nsIStructuredCloneContainer* scContainer);
 
   /**
@@ -4172,7 +3148,6 @@ public:
   void SetStateObjectFrom(Document* aDocument) {
     SetStateObject(aDocument->mStateObjectContainer);
   }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * Returns Doc_Theme_None if there is no lightweight theme specified,
@@ -4201,16 +3176,7 @@ public:
    * Document state bits have the form NS_DOCUMENT_STATE_* and are declared in
    * Document.h.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::EventStates GetDocumentState() const { return mDocumentState; }
-||||||| merged common ancestors
-  mozilla::EventStates GetDocumentState() const
-  {
-    return mDocumentState;
-  }
-=======
   EventStates GetDocumentState() const { return mDocumentState; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   nsISupports* GetCurrentContentSink();
 
@@ -4218,56 +3184,20 @@ public:
   void TriggerAutoFocus();
 
   void SetScrollToRef(nsIURI* aDocumentURI);
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void ScrollToRef();
-  void ResetScrolledToRefAlready() { mScrolledToRefAlready = false; }
-||||||| merged common ancestors
-  void ScrollToRef();
-  void ResetScrolledToRefAlready()
-  {
-    mScrolledToRefAlready = false;
-  }
-=======
   MOZ_CAN_RUN_SCRIPT void ScrollToRef();
   void ResetScrolledToRefAlready() { mScrolledToRefAlready = false; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   void SetChangeScrollPosWhenScrollingToRef(bool aValue) {
     mChangeScrollPosWhenScrollingToRef = aValue;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  using mozilla::dom::DocumentOrShadowRoot::GetElementById;
-  using mozilla::dom::DocumentOrShadowRoot::GetElementsByClassName;
-  using mozilla::dom::DocumentOrShadowRoot::GetElementsByTagName;
-  using mozilla::dom::DocumentOrShadowRoot::GetElementsByTagNameNS;
-||||||| merged common ancestors
-  using mozilla::dom::DocumentOrShadowRoot::GetElementById;
-  using mozilla::dom::DocumentOrShadowRoot::GetElementsByTagName;
-  using mozilla::dom::DocumentOrShadowRoot::GetElementsByTagNameNS;
-  using mozilla::dom::DocumentOrShadowRoot::GetElementsByClassName;
-=======
   using DocumentOrShadowRoot::GetElementById;
   using DocumentOrShadowRoot::GetElementsByClassName;
   using DocumentOrShadowRoot::GetElementsByTagName;
   using DocumentOrShadowRoot::GetElementsByTagNameNS;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::dom::DocumentTimeline* Timeline();
-  mozilla::LinkedList<mozilla::dom::DocumentTimeline>& Timelines() {
-    return mTimelines;
-  }
-||||||| merged common ancestors
-  mozilla::dom::DocumentTimeline* Timeline();
-  mozilla::LinkedList<mozilla::dom::DocumentTimeline>& Timelines()
-  {
-    return mTimelines;
-  }
-=======
   DocumentTimeline* Timeline();
   LinkedList<DocumentTimeline>& Timelines() { return mTimelines; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   void GetAnimations(nsTArray<RefPtr<Animation>>& aAnimations);
 
@@ -4285,24 +3215,10 @@ public:
     int32_t mHandle;
   };
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsresult ScheduleFrameRequestCallback(
-      mozilla::dom::FrameRequestCallback& aCallback, int32_t* aHandle);
-||||||| merged common ancestors
-  nsresult ScheduleFrameRequestCallback(mozilla::dom::FrameRequestCallback& aCallback,
-                                        int32_t *aHandle);
-=======
   nsresult ScheduleFrameRequestCallback(FrameRequestCallback& aCallback,
                                         int32_t* aHandle);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   void CancelFrameRequestCallback(int32_t aHandle);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  typedef nsTArray<RefPtr<mozilla::dom::FrameRequestCallback>>
-      FrameRequestCallbackList;
-||||||| merged common ancestors
-  typedef nsTArray<RefPtr<mozilla::dom::FrameRequestCallback>> FrameRequestCallbackList;
-=======
   /**
    * Returns true if the handle refers to a callback that was canceled that
    * we did not find in our list of callbacks (e.g. because it is one of those
@@ -4310,7 +3226,6 @@ public:
    */
   bool IsCanceledFrameRequestCallback(int32_t aHandle) const;
 
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   /**
    * Put this document's frame request callbacks into the provided
    * list, and forget about them.
@@ -4349,94 +3264,41 @@ public:
 
   // Adds an element to mResponsiveContent when the element is
   // added to the tree.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void AddResponsiveContent(mozilla::dom::HTMLImageElement* aContent) {
-||||||| merged common ancestors
-  void AddResponsiveContent(mozilla::dom::HTMLImageElement* aContent)
-  {
-=======
   void AddResponsiveContent(HTMLImageElement* aContent) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     MOZ_ASSERT(aContent);
     mResponsiveContent.PutEntry(aContent);
   }
 
   // Removes an element from mResponsiveContent when the element is
   // removed from the tree.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void RemoveResponsiveContent(mozilla::dom::HTMLImageElement* aContent) {
-||||||| merged common ancestors
-  void RemoveResponsiveContent(mozilla::dom::HTMLImageElement* aContent)
-  {
-=======
   void RemoveResponsiveContent(HTMLImageElement* aContent) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     MOZ_ASSERT(aContent);
     mResponsiveContent.RemoveEntry(aContent);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void ScheduleSVGUseElementShadowTreeUpdate(mozilla::dom::SVGUseElement&);
-  void UnscheduleSVGUseElementShadowTreeUpdate(
-      mozilla::dom::SVGUseElement& aElement) {
-||||||| merged common ancestors
-  void ScheduleSVGUseElementShadowTreeUpdate(mozilla::dom::SVGUseElement&);
-  void UnscheduleSVGUseElementShadowTreeUpdate(mozilla::dom::SVGUseElement& aElement)
-  {
-=======
   void ScheduleSVGUseElementShadowTreeUpdate(SVGUseElement&);
   void UnscheduleSVGUseElementShadowTreeUpdate(SVGUseElement& aElement) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mSVGUseElementsNeedingShadowTreeUpdate.RemoveEntry(&aElement);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool SVGUseElementNeedsShadowTreeUpdate(
-      mozilla::dom::SVGUseElement& aElement) const {
-||||||| merged common ancestors
-  bool SVGUseElementNeedsShadowTreeUpdate(mozilla::dom::SVGUseElement& aElement) const
-  {
-=======
   bool SVGUseElementNeedsShadowTreeUpdate(SVGUseElement& aElement) const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mSVGUseElementsNeedingShadowTreeUpdate.GetEntry(&aElement);
   }
 
   using ShadowRootSet = nsTHashtable<nsPtrHashKey<ShadowRoot>>;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void AddComposedDocShadowRoot(mozilla::dom::ShadowRoot& aShadowRoot) {
-||||||| merged common ancestors
-  void AddComposedDocShadowRoot(mozilla::dom::ShadowRoot& aShadowRoot)
-  {
-=======
   void AddComposedDocShadowRoot(ShadowRoot& aShadowRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mComposedShadowRoots.PutEntry(&aShadowRoot);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void RemoveComposedDocShadowRoot(mozilla::dom::ShadowRoot& aShadowRoot) {
-||||||| merged common ancestors
-  void RemoveComposedDocShadowRoot(mozilla::dom::ShadowRoot& aShadowRoot)
-  {
-=======
   void RemoveComposedDocShadowRoot(ShadowRoot& aShadowRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mComposedShadowRoots.RemoveEntry(&aShadowRoot);
   }
 
   // If you're considering using this, you probably want to use
   // ShadowRoot::IsComposedDocParticipant instead. This is just for
   // sanity-checking.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool IsComposedDocShadowRoot(mozilla::dom::ShadowRoot& aShadowRoot) {
-||||||| merged common ancestors
-  bool IsComposedDocShadowRoot(mozilla::dom::ShadowRoot& aShadowRoot)
-  {
-=======
   bool IsComposedDocShadowRoot(ShadowRoot& aShadowRoot) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mComposedShadowRoots.Contains(&aShadowRoot);
   }
 
@@ -4494,20 +3356,9 @@ public:
   };
 #undef DOCUMENT_WARNING
   bool HasWarnedAbout(DocumentWarnings aWarning) const;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void WarnOnceAbout(DocumentWarnings aWarning, bool asError = false,
-                     const char16_t** aParams = nullptr,
-                     uint32_t aParamsLength = 0) const;
-||||||| merged common ancestors
-  void WarnOnceAbout(DocumentWarnings aWarning,
-                     bool asError = false,
-                     const char16_t **aParams = nullptr,
-                     uint32_t aParamsLength = 0) const;
-=======
   void WarnOnceAbout(
       DocumentWarnings aWarning, bool asError = false,
       const nsTArray<nsString>& aParams = nsTArray<nsString>()) const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Posts an event to call UpdateVisibilityState
   void PostVisibilityUpdateEvent();
@@ -4557,26 +3408,10 @@ public:
   already_AddRefed<Element> CreateHTMLElement(nsAtom* aTag);
 
   // WebIDL API
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsIGlobalObject* GetParentObject() const { return GetScopeObject(); }
-  static already_AddRefed<nsIDocument> Constructor(const GlobalObject& aGlobal,
-                                                   mozilla::ErrorResult& rv);
-  mozilla::dom::DOMImplementation* GetImplementation(mozilla::ErrorResult& rv);
-||||||| merged common ancestors
-  nsIGlobalObject* GetParentObject() const
-  {
-    return GetScopeObject();
-  }
-  static already_AddRefed<nsIDocument>
-    Constructor(const GlobalObject& aGlobal,
-                mozilla::ErrorResult& rv);
-  mozilla::dom::DOMImplementation* GetImplementation(mozilla::ErrorResult& rv);
-=======
   nsIGlobalObject* GetParentObject() const { return GetScopeObject(); }
   static already_AddRefed<Document> Constructor(const GlobalObject& aGlobal,
                                                 ErrorResult& rv);
   DOMImplementation* GetImplementation(ErrorResult& rv);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   MOZ_MUST_USE nsresult GetURL(nsString& retval) const;
   MOZ_MUST_USE nsresult GetDocumentURI(nsString& retval) const;
   // Return the URI for the document.
@@ -4606,38 +3441,6 @@ public:
   // null otherwise.
   already_AddRefed<nsIXULWindow> GetXULWindowIfToplevelChrome() const;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<Element> CreateElement(
-      const nsAString& aTagName,
-      const mozilla::dom::ElementCreationOptionsOrString& aOptions,
-      mozilla::ErrorResult& rv);
-  already_AddRefed<Element> CreateElementNS(
-      const nsAString& aNamespaceURI, const nsAString& aQualifiedName,
-      const mozilla::dom::ElementCreationOptionsOrString& aOptions,
-      mozilla::ErrorResult& rv);
-  already_AddRefed<Element> CreateXULElement(
-      const nsAString& aTagName,
-      const mozilla::dom::ElementCreationOptionsOrString& aOptions,
-      mozilla::ErrorResult& aRv);
-  already_AddRefed<mozilla::dom::DocumentFragment> CreateDocumentFragment()
-      const;
-||||||| merged common ancestors
-  already_AddRefed<Element>
-  CreateElement(const nsAString& aTagName,
-                const mozilla::dom::ElementCreationOptionsOrString& aOptions,
-                mozilla::ErrorResult& rv);
-  already_AddRefed<Element>
-  CreateElementNS(const nsAString& aNamespaceURI,
-                  const nsAString& aQualifiedName,
-                  const mozilla::dom::ElementCreationOptionsOrString& aOptions,
-                  mozilla::ErrorResult& rv);
-  already_AddRefed<Element>
-  CreateXULElement(const nsAString& aTagName,
-                   const mozilla::dom::ElementCreationOptionsOrString& aOptions,
-                   mozilla::ErrorResult& aRv);
-  already_AddRefed<mozilla::dom::DocumentFragment>
-    CreateDocumentFragment() const;
-=======
   already_AddRefed<Element> CreateElement(
       const nsAString& aTagName, const ElementCreationOptionsOrString& aOptions,
       ErrorResult& rv);
@@ -4648,50 +3451,8 @@ public:
       const nsAString& aTagName, const ElementCreationOptionsOrString& aOptions,
       ErrorResult& aRv);
   already_AddRefed<DocumentFragment> CreateDocumentFragment() const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   already_AddRefed<nsTextNode> CreateTextNode(const nsAString& aData) const;
   already_AddRefed<nsTextNode> CreateEmptyTextNode() const;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<mozilla::dom::Comment> CreateComment(
-      const nsAString& aData) const;
-  already_AddRefed<mozilla::dom::ProcessingInstruction>
-  CreateProcessingInstruction(const nsAString& target, const nsAString& data,
-                              mozilla::ErrorResult& rv) const;
-  already_AddRefed<nsINode> ImportNode(nsINode& aNode, bool aDeep,
-                                       mozilla::ErrorResult& rv) const;
-  nsINode* AdoptNode(nsINode& aNode, mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::Event> CreateEvent(
-      const nsAString& aEventType, mozilla::dom::CallerType aCallerType,
-      mozilla::ErrorResult& rv) const;
-  already_AddRefed<nsRange> CreateRange(mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::NodeIterator> CreateNodeIterator(
-      nsINode& aRoot, uint32_t aWhatToShow, mozilla::dom::NodeFilter* aFilter,
-      mozilla::ErrorResult& rv) const;
-  already_AddRefed<mozilla::dom::TreeWalker> CreateTreeWalker(
-      nsINode& aRoot, uint32_t aWhatToShow, mozilla::dom::NodeFilter* aFilter,
-      mozilla::ErrorResult& rv) const;
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::Comment>
-    CreateComment(const nsAString& aData) const;
-  already_AddRefed<mozilla::dom::ProcessingInstruction>
-    CreateProcessingInstruction(const nsAString& target, const nsAString& data,
-                                mozilla::ErrorResult& rv) const;
-  already_AddRefed<nsINode>
-    ImportNode(nsINode& aNode, bool aDeep, mozilla::ErrorResult& rv) const;
-  nsINode* AdoptNode(nsINode& aNode, mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::Event>
-    CreateEvent(const nsAString& aEventType,
-                mozilla::dom::CallerType aCallerType,
-                mozilla::ErrorResult& rv) const;
-  already_AddRefed<nsRange> CreateRange(mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::NodeIterator>
-    CreateNodeIterator(nsINode& aRoot, uint32_t aWhatToShow,
-                       mozilla::dom::NodeFilter* aFilter,
-                       mozilla::ErrorResult& rv) const;
-  already_AddRefed<mozilla::dom::TreeWalker>
-    CreateTreeWalker(nsINode& aRoot, uint32_t aWhatToShow,
-                     mozilla::dom::NodeFilter* aFilter, mozilla::ErrorResult& rv) const;
-=======
   already_AddRefed<Comment> CreateComment(const nsAString& aData) const;
   already_AddRefed<ProcessingInstruction> CreateProcessingInstruction(
       const nsAString& target, const nsAString& data, ErrorResult& rv) const;
@@ -4710,26 +3471,7 @@ public:
                                                 uint32_t aWhatToShow,
                                                 NodeFilter* aFilter,
                                                 ErrorResult& rv) const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   // Deprecated WebIDL bits
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<mozilla::dom::CDATASection> CreateCDATASection(
-      const nsAString& aData, mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::Attr> CreateAttribute(
-      const nsAString& aName, mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::Attr> CreateAttributeNS(
-      const nsAString& aNamespaceURI, const nsAString& aQualifiedName,
-      mozilla::ErrorResult& rv);
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::CDATASection>
-    CreateCDATASection(const nsAString& aData, mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::Attr>
-    CreateAttribute(const nsAString& aName, mozilla::ErrorResult& rv);
-  already_AddRefed<mozilla::dom::Attr>
-    CreateAttributeNS(const nsAString& aNamespaceURI,
-                      const nsAString& aQualifiedName,
-                      mozilla::ErrorResult& rv);
-=======
   already_AddRefed<CDATASection> CreateCDATASection(const nsAString& aData,
                                                     ErrorResult& rv);
   already_AddRefed<Attr> CreateAttribute(const nsAString& aName,
@@ -4737,7 +3479,6 @@ public:
   already_AddRefed<Attr> CreateAttributeNS(const nsAString& aNamespaceURI,
                                            const nsAString& aQualifiedName,
                                            ErrorResult& rv);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   void GetInputEncoding(nsAString& aInputEncoding) const;
   already_AddRefed<Location> GetLocation() const;
   void GetDomain(nsAString& aDomain);
@@ -4758,26 +3499,6 @@ public:
   nsIHTMLCollection* Links();
   nsIHTMLCollection* Forms();
   nsIHTMLCollection* Scripts();
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<nsContentList> GetElementsByName(const nsAString& aName) {
-    return GetFuncStringContentList<nsCachableElementsByNameNodeList>(
-        this, MatchNameAttribute, nullptr, UseExistingNameString, aName);
-  }
-  nsPIDOMWindowOuter* GetDefaultView() const { return GetWindow(); }
-||||||| merged common ancestors
-  already_AddRefed<nsContentList> GetElementsByName(const nsAString& aName)
-  {
-    return GetFuncStringContentList<nsCachableElementsByNameNodeList>(this,
-                                                                      MatchNameAttribute,
-                                                                      nullptr,
-                                                                      UseExistingNameString,
-                                                                      aName);
-  }
-  nsPIDOMWindowOuter* GetDefaultView() const
-  {
-    return GetWindow();
-  }
-=======
   already_AddRefed<nsContentList> GetElementsByName(const nsAString& aName) {
     return GetFuncStringContentList<nsCachableElementsByNameNodeList>(
         this, MatchNameAttribute, nullptr, UseExistingNameString, aName);
@@ -4793,7 +3514,6 @@ public:
   void Writeln(const mozilla::dom::Sequence<nsString>& aText,
                mozilla::ErrorResult& rv);
   Nullable<WindowProxyHolder> GetDefaultView() const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   Element* GetActiveElement();
   bool HasFocus(ErrorResult& rv) const;
   void GetDesignMode(nsAString& aDesignMode);
@@ -4832,21 +3552,6 @@ public:
   // Not const because all the fullscreen goop is not const
   bool FullscreenEnabled(CallerType aCallerType);
   Element* FullscreenStackTop();
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool Fullscreen() { return !!GetFullscreenElement(); }
-  already_AddRefed<mozilla::dom::Promise> ExitFullscreen(ErrorResult&);
-  void ExitPointerLock() { UnlockPointer(this); }
-||||||| merged common ancestors
-  bool Fullscreen()
-  {
-    return !!GetFullscreenElement();
-  }
-  already_AddRefed<mozilla::dom::Promise> ExitFullscreen(ErrorResult&);
-  void ExitPointerLock()
-  {
-    UnlockPointer(this);
-  }
-=======
   bool Fullscreen() { return !!GetFullscreenElement(); }
   already_AddRefed<Promise> ExitFullscreen(ErrorResult&);
   void ExitPointerLock() { UnlockPointer(this); }
@@ -4860,7 +3565,6 @@ public:
   void SetAlinkColor(const nsAString& aAlinkColor);
   void GetBgColor(nsAString& aBgColor);
   void SetBgColor(const nsAString& aBgColor);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   static bool IsUnprefixedFullscreenEnabled(JSContext* aCx, JSObject* aObject);
   static bool DocumentSupportsL10n(JSContext* aCx, JSObject* aObject);
@@ -4876,26 +3580,8 @@ public:
   static bool IsCallerChromeOrAddon(JSContext* aCx, JSObject* aObject);
 
 #ifdef MOZILLA_INTERNAL_API
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool Hidden() const {
-    return mVisibilityState != mozilla::dom::VisibilityState::Visible;
-  }
-  mozilla::dom::VisibilityState VisibilityState() const {
-    return mVisibilityState;
-  }
-||||||| merged common ancestors
-  bool Hidden() const
-  {
-    return mVisibilityState != mozilla::dom::VisibilityState::Visible;
-  }
-  mozilla::dom::VisibilityState VisibilityState() const
-  {
-    return mVisibilityState;
-  }
-=======
   bool Hidden() const { return mVisibilityState != VisibilityState::Visible; }
   dom::VisibilityState VisibilityState() const { return mVisibilityState; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 #endif
   void GetSelectedStyleSheetSet(nsAString& aSheetSet);
   void SetSelectedStyleSheetSet(const nsAString& aSheetSet);
@@ -4939,76 +3625,16 @@ public:
                                           const nsAString& aAttrValue);
   Element* GetBindingParent(nsINode& aNode);
   void LoadBindingDocument(const nsAString& aURI,
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-                           nsIPrincipal& aSubjectPrincipal,
-                           mozilla::ErrorResult& rv);
-  mozilla::dom::XPathExpression* CreateExpression(
-      const nsAString& aExpression, mozilla::dom::XPathNSResolver* aResolver,
-      mozilla::ErrorResult& rv);
-||||||| merged common ancestors
-                           nsIPrincipal& aSubjectPrincipal,
-                           mozilla::ErrorResult& rv);
-  mozilla::dom::XPathExpression*
-    CreateExpression(const nsAString& aExpression,
-                     mozilla::dom::XPathNSResolver* aResolver,
-                     mozilla::ErrorResult& rv);
-=======
                            nsIPrincipal& aSubjectPrincipal, ErrorResult& rv);
   XPathExpression* CreateExpression(const nsAString& aExpression,
                                     XPathNSResolver* aResolver,
                                     ErrorResult& rv);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   nsINode* CreateNSResolver(nsINode& aNodeResolver);
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<mozilla::dom::XPathResult> Evaluate(
-      JSContext* aCx, const nsAString& aExpression, nsINode& aContextNode,
-      mozilla::dom::XPathNSResolver* aResolver, uint16_t aType,
-      JS::Handle<JSObject*> aResult, mozilla::ErrorResult& rv);
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::XPathResult>
-    Evaluate(JSContext* aCx, const nsAString& aExpression, nsINode& aContextNode,
-             mozilla::dom::XPathNSResolver* aResolver, uint16_t aType,
-             JS::Handle<JSObject*> aResult, mozilla::ErrorResult& rv);
-=======
   already_AddRefed<XPathResult> Evaluate(
       JSContext* aCx, const nsAString& aExpression, nsINode& aContextNode,
       XPathNSResolver* aResolver, uint16_t aType, JS::Handle<JSObject*> aResult,
       ErrorResult& rv);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   // Touch event handlers already on nsINode
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<mozilla::dom::Touch> CreateTouch(
-      nsGlobalWindowInner* aView, mozilla::dom::EventTarget* aTarget,
-      int32_t aIdentifier, int32_t aPageX, int32_t aPageY, int32_t aScreenX,
-      int32_t aScreenY, int32_t aClientX, int32_t aClientY, int32_t aRadiusX,
-      int32_t aRadiusY, float aRotationAngle, float aForce);
-  already_AddRefed<mozilla::dom::TouchList> CreateTouchList();
-  already_AddRefed<mozilla::dom::TouchList> CreateTouchList(
-      mozilla::dom::Touch& aTouch,
-      const mozilla::dom::Sequence<mozilla::OwningNonNull<mozilla::dom::Touch>>&
-          aTouches);
-  already_AddRefed<mozilla::dom::TouchList> CreateTouchList(
-      const mozilla::dom::Sequence<mozilla::OwningNonNull<mozilla::dom::Touch>>&
-          aTouches);
-
-  void SetStyleSheetChangeEventsEnabled(bool aValue) {
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::Touch>
-    CreateTouch(nsGlobalWindowInner* aView, mozilla::dom::EventTarget* aTarget,
-                int32_t aIdentifier, int32_t aPageX, int32_t aPageY,
-                int32_t aScreenX, int32_t aScreenY, int32_t aClientX,
-                int32_t aClientY, int32_t aRadiusX, int32_t aRadiusY,
-                float aRotationAngle, float aForce);
-  already_AddRefed<mozilla::dom::TouchList> CreateTouchList();
-  already_AddRefed<mozilla::dom::TouchList>
-    CreateTouchList(mozilla::dom::Touch& aTouch,
-                    const mozilla::dom::Sequence<mozilla::OwningNonNull<mozilla::dom::Touch> >& aTouches);
-  already_AddRefed<mozilla::dom::TouchList>
-    CreateTouchList(const mozilla::dom::Sequence<mozilla::OwningNonNull<mozilla::dom::Touch> >& aTouches);
-
-  void SetStyleSheetChangeEventsEnabled(bool aValue)
-  {
-=======
   already_AddRefed<Touch> CreateTouch(nsGlobalWindowInner* aView,
                                       EventTarget* aTarget, int32_t aIdentifier,
                                       int32_t aPageX, int32_t aPageY,
@@ -5023,7 +3649,6 @@ public:
       const Sequence<OwningNonNull<Touch>>& aTouches);
 
   void SetStyleSheetChangeEventsEnabled(bool aValue) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mStyleSheetChangeEventsEnabled = aValue;
   }
 
@@ -5031,20 +3656,9 @@ public:
     return mStyleSheetChangeEventsEnabled;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  already_AddRefed<mozilla::dom::Promise> BlockParsing(
-      mozilla::dom::Promise& aPromise,
-      const mozilla::dom::BlockParsingOptions& aOptions,
-      mozilla::ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<mozilla::dom::Promise> BlockParsing(mozilla::dom::Promise& aPromise,
-                                                       const mozilla::dom::BlockParsingOptions& aOptions,
-                                                       mozilla::ErrorResult& aRv);
-=======
   already_AddRefed<Promise> BlockParsing(Promise& aPromise,
                                          const BlockParsingOptions& aOptions,
                                          ErrorResult& aRv);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   already_AddRefed<nsIURI> GetMozDocumentURIIfNotForErrorPages();
 
@@ -5053,14 +3667,7 @@ public:
   nsIDOMXULCommandDispatcher* GetCommandDispatcher();
   bool HasXULBroadcastManager() const { return mXULBroadcastManager; };
   void InitializeXULBroadcastManager();
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::dom::XULBroadcastManager* GetXULBroadcastManager() const {
-||||||| merged common ancestors
-  mozilla::dom::XULBroadcastManager* GetXULBroadcastManager() const
-  {
-=======
   XULBroadcastManager* GetXULBroadcastManager() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mXULBroadcastManager;
   }
   already_AddRefed<nsINode> GetPopupNode();
@@ -5098,14 +3705,7 @@ public:
    * mBlockedNodesByClassifier. Can be used later on to look up a node in it.
    * (e.g., by the UI)
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void AddBlockedTrackingNode(nsINode* node) {
-||||||| merged common ancestors
-  void AddBlockedTrackingNode(nsINode *node)
-  {
-=======
   void AddBlockedNodeByClassifier(nsINode* node) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     if (!node) {
       return;
     }
@@ -5144,14 +3744,7 @@ public:
   void ReportUseCounters(
       UseCounterReportKind aKind = UseCounterReportKind::eDefault);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetDocumentUseCounter(mozilla::UseCounter aUseCounter) {
-||||||| merged common ancestors
-  void SetDocumentUseCounter(mozilla::UseCounter aUseCounter)
-  {
-=======
   void SetDocumentUseCounter(UseCounter aUseCounter) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     if (!mUseCounters[aUseCounter]) {
       mUseCounters[aUseCounter] = true;
     }
@@ -5163,14 +3756,7 @@ public:
 
   void SetPageUseCounter(UseCounter aUseCounter);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetDocumentAndPageUseCounter(mozilla::UseCounter aUseCounter) {
-||||||| merged common ancestors
-  void SetDocumentAndPageUseCounter(mozilla::UseCounter aUseCounter)
-  {
-=======
   void SetDocumentAndPageUseCounter(UseCounter aUseCounter) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     SetDocumentUseCounter(aUseCounter);
     SetPageUseCounter(aUseCounter);
   }
@@ -5221,14 +3807,6 @@ public:
   bool InlineScriptAllowedByCSP();
 
   void ReportHasScrollLinkedEffect();
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool HasScrollLinkedEffect() const { return mHasScrollLinkedEffect; }
-||||||| merged common ancestors
-  bool HasScrollLinkedEffect() const
-  {
-    return mHasScrollLinkedEffect;
-  }
-=======
   bool HasScrollLinkedEffect() const { return mHasScrollLinkedEffect; }
 
 #ifdef DEBUG
@@ -5241,7 +3819,6 @@ public:
 #endif
     return mDocGroup;
   }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   /**
    * If we're a sub-document, the parent document's layout can affect our style
@@ -5257,29 +3834,13 @@ public:
            GetDocGroup() == GetParentDocument()->GetDocGroup();
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void AddIntersectionObserver(
-      mozilla::dom::DOMIntersectionObserver* aObserver) {
-||||||| merged common ancestors
-  void AddIntersectionObserver(mozilla::dom::DOMIntersectionObserver* aObserver)
-  {
-=======
   void AddIntersectionObserver(DOMIntersectionObserver* aObserver) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     MOZ_ASSERT(!mIntersectionObservers.Contains(aObserver),
                "Intersection observer already in the list");
     mIntersectionObservers.PutEntry(aObserver);
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void RemoveIntersectionObserver(
-      mozilla::dom::DOMIntersectionObserver* aObserver) {
-||||||| merged common ancestors
-  void RemoveIntersectionObserver(mozilla::dom::DOMIntersectionObserver* aObserver)
-  {
-=======
   void RemoveIntersectionObserver(DOMIntersectionObserver* aObserver) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mIntersectionObservers.RemoveEntry(aObserver);
   }
 
@@ -5295,27 +3856,11 @@ public:
   nsresult Dispatch(TaskCategory aCategory,
                     already_AddRefed<nsIRunnable>&& aRunnable) final;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  virtual nsISerialEventTarget* EventTargetFor(
-      mozilla::TaskCategory aCategory) const override;
-||||||| merged common ancestors
-  virtual nsISerialEventTarget*
-  EventTargetFor(mozilla::TaskCategory aCategory) const override;
-=======
   virtual nsISerialEventTarget* EventTargetFor(
       TaskCategory aCategory) const override;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  virtual mozilla::AbstractThread* AbstractMainThreadFor(
-      mozilla::TaskCategory aCategory) override;
-||||||| merged common ancestors
-  virtual mozilla::AbstractThread*
-  AbstractMainThreadFor(mozilla::TaskCategory aCategory) override;
-=======
   virtual AbstractThread* AbstractMainThreadFor(
       TaskCategory aCategory) override;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // The URLs passed to these functions should match what
   // JS::DescribeScriptedCaller() returns, since these APIs are used to
@@ -5370,12 +3915,6 @@ public:
    */
   void LocalizationLinkRemoved(Element* aLinkElement);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- protected:
-||||||| merged common ancestors
-protected:
-=======
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   /**
    * This method should be called as soon as the
    * parsing of the document is completed.
@@ -5429,29 +3968,13 @@ protected:
 
   nsTArray<nsString> mL10nResources;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- public:
-  bool IsThirdParty();
-||||||| merged common ancestors
-public:
-  bool IsThirdParty();
-=======
   // The application cache that this document is associated with, if
   // any.  This can change during the lifetime of the document.
   nsCOMPtr<nsIApplicationCache> mApplicationCache;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
  public:
   bool IsThirdPartyForFlashClassifier();
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsINode* GetServoRestyleRoot() const { return mServoRestyleRoot; }
-||||||| merged common ancestors
-  nsINode* GetServoRestyleRoot() const
-  {
-    return mServoRestyleRoot;
-  }
-=======
  private:
   void DoCacheAllKnownLangPrefs();
   void RecomputeLanguageFromCharset();
@@ -5484,18 +4007,10 @@ public:
     }
     DoCacheAllKnownLangPrefs();
   }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  uint32_t GetServoRestyleRootDirtyBits() const {
-||||||| merged common ancestors
-  uint32_t GetServoRestyleRootDirtyBits() const
-  {
-=======
   nsINode* GetServoRestyleRoot() const { return mServoRestyleRoot; }
 
   uint32_t GetServoRestyleRootDirtyBits() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     MOZ_ASSERT(mServoRestyleRoot);
     MOZ_ASSERT(mServoRestyleRootDirtyBits);
     return mServoRestyleRootDirtyBits;
@@ -5539,19 +4054,7 @@ public:
     mAllowPaymentRequest = aAllowPaymentRequest;
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozilla::dom::FeaturePolicy* Policy() const;
-||||||| merged common ancestors
-  mozilla::dom::FeaturePolicy*
-  Policy() const;
-
-  bool IsShadowDOMEnabled() const
-  {
-    return mIsShadowDOMEnabled;
-  }
-=======
   FeaturePolicy* Policy() const;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   bool ModuleScriptsEnabled();
 
@@ -5575,11 +4078,6 @@ public:
   void SetDocTreeHadAudibleMedia();
   void SetDocTreeHadPlayRevoked();
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- protected:
-||||||| merged common ancestors
-protected:
-=======
   dom::XPathEvaluator* XPathEvaluator();
 
   void MaybeInitializeFinalizeFrameLoaders();
@@ -5594,7 +4092,6 @@ protected:
   void SetInRDMPane(bool aInRDMPane) { mInRDMPane = aInRDMPane; }
 
  protected:
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   void DoUpdateSVGUseElementShadowTrees();
 
   already_AddRefed<nsIPrincipal> MaybeDowngradePrincipal(
@@ -5637,38 +4134,17 @@ protected:
   // fails and nothing gets changed.
   bool ApplyFullscreen(UniquePtr<FullscreenRequest>);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool GetUseCounter(mozilla::UseCounter aUseCounter) {
-||||||| merged common ancestors
-  bool GetUseCounter(mozilla::UseCounter aUseCounter)
-  {
-=======
   bool GetUseCounter(UseCounter aUseCounter) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mUseCounters[aUseCounter];
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void SetChildDocumentUseCounter(mozilla::UseCounter aUseCounter) {
-||||||| merged common ancestors
-  void SetChildDocumentUseCounter(mozilla::UseCounter aUseCounter)
-  {
-=======
   void SetChildDocumentUseCounter(UseCounter aUseCounter) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     if (!mChildDocumentUseCounters[aUseCounter]) {
       mChildDocumentUseCounters[aUseCounter] = true;
     }
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool GetChildDocumentUseCounter(mozilla::UseCounter aUseCounter) {
-||||||| merged common ancestors
-  bool GetChildDocumentUseCounter(mozilla::UseCounter aUseCounter)
-  {
-=======
   bool GetChildDocumentUseCounter(UseCounter aUseCounter) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     return mChildDocumentUseCounters[aUseCounter];
   }
 
@@ -5676,20 +4152,6 @@ protected:
   void RemoveStyleSheetsFromStyleSets(
       const nsTArray<RefPtr<StyleSheet>>& aSheets, StyleOrigin);
   void ResetStylesheetsToURI(nsIURI* aURI);
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void FillStyleSet(mozilla::ServoStyleSet* aStyleSet);
-  void AddStyleSheetToStyleSets(mozilla::StyleSheet* aSheet);
-  void RemoveStyleSheetFromStyleSets(mozilla::StyleSheet* aSheet);
-  void NotifyStyleSheetAdded(mozilla::StyleSheet* aSheet, bool aDocumentSheet);
-  void NotifyStyleSheetRemoved(mozilla::StyleSheet* aSheet,
-                               bool aDocumentSheet);
-||||||| merged common ancestors
-  void FillStyleSet(mozilla::ServoStyleSet* aStyleSet);
-  void AddStyleSheetToStyleSets(mozilla::StyleSheet* aSheet);
-  void RemoveStyleSheetFromStyleSets(mozilla::StyleSheet* aSheet);
-  void NotifyStyleSheetAdded(mozilla::StyleSheet* aSheet, bool aDocumentSheet);
-  void NotifyStyleSheetRemoved(mozilla::StyleSheet* aSheet, bool aDocumentSheet);
-=======
   void FillStyleSet();
   void FillStyleSetUserAndUASheets();
   void FillStyleSetDocumentSheets();
@@ -5705,7 +4167,6 @@ protected:
   void RemoveStyleSheetFromStyleSets(StyleSheet* aSheet);
   void NotifyStyleSheetAdded(StyleSheet* aSheet, bool aDocumentSheet);
   void NotifyStyleSheetRemoved(StyleSheet* aSheet, bool aDocumentSheet);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   void NotifyStyleSheetApplicableStateChanged();
   // Just like EnableStyleSheetsForSet, but doesn't check whether
   // aSheetSet is null and allows the caller to control whether to set
@@ -5713,18 +4174,6 @@ protected:
   void EnableStyleSheetsForSetInternal(const nsAString& aSheetSet,
                                        bool aUpdateCSSLoader);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- private:
-  void RecordContentBlockingLog(const nsAString& aOrigin, uint32_t aType,
-                                bool aBlocked) {
-    mContentBlockingLog.RecordLog(aOrigin, aType, aBlocked);
-||||||| merged common ancestors
-private:
-  void RecordContentBlockingLog(const nsAString& aOrigin,
-                                uint32_t aType, bool aBlocked)
-  {
-    mContentBlockingLog.RecordLog(aOrigin, aType, aBlocked);
-=======
   already_AddRefed<nsIURI> GetDomainURI();
   already_AddRefed<nsIURI> CreateInheritingURIForHost(
       const nsACString& aHostString);
@@ -5838,7 +4287,6 @@ private:
       const nsTArray<nsCString>& aTrackingFullHashes = nsTArray<nsCString>()) {
     mContentBlockingLog.RecordLog(aOrigin, aType, aBlocked, aReason,
                                   aTrackingFullHashes);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   }
 
   mutable std::bitset<eDeprecatedOperationCount> mDeprecationWarnedAbout;
@@ -5884,35 +4332,15 @@ private:
 
   void SetContentTypeInternal(const nsACString& aType);
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
   nsCString GetContentTypeInternal() const { return mContentType; }
-
-  mozilla::dom::XPathEvaluator* XPathEvaluator();
-||||||| merged common ancestors
-  nsCString GetContentTypeInternal() const
-  {
-    return mContentType;
-  }
-
-  mozilla::dom::XPathEvaluator* XPathEvaluator();
-=======
-  nsCString GetContentTypeInternal() const { return mContentType; }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Update our frame request callback scheduling state, if needed.  This will
   // schedule or unschedule them, if necessary, and update
   // mFrameRequestCallbacksScheduled.  aOldShell should only be passed when
   // mPresShell is becoming null; in that case it will be used to get hold of
   // the relevant refresh driver.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void UpdateFrameRequestCallbackSchedulingState(
-      nsIPresShell* aOldShell = nullptr);
-||||||| merged common ancestors
-  void UpdateFrameRequestCallbackSchedulingState(nsIPresShell* aOldShell = nullptr);
-=======
   void UpdateFrameRequestCallbackSchedulingState(
       PresShell* aOldPresShell = nullptr);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Helper for GetScrollingElement/IsScrollingElement.
   bool IsPotentiallyScrollable(HTMLBodyElement* aBody);
@@ -5925,18 +4353,8 @@ private:
   void MaybeStoreUserInteractionAsPermission();
 
   // Helpers for GetElementsByName.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  static bool MatchNameAttribute(mozilla::dom::Element* aElement,
-                                 int32_t aNamespaceID, nsAtom* aAtom,
-                                 void* aData);
-||||||| merged common ancestors
-  static bool MatchNameAttribute(mozilla::dom::Element* aElement,
-                                 int32_t aNamespaceID,
-                                 nsAtom* aAtom, void* aData);
-=======
   static bool MatchNameAttribute(Element* aElement, int32_t aNamespaceID,
                                  nsAtom* aAtom, void* aData);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   static void* UseExistingNameString(nsINode* aRootNode, const nsString* aName);
 
   void MaybeResolveReadyForIdle();
@@ -5996,15 +4414,7 @@ private:
   // See ShadowRoot::Bind and ShadowRoot::Unbind.
   ShadowRootSet mComposedShadowRoots;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  using SVGUseElementSet =
-      nsTHashtable<nsPtrHashKey<mozilla::dom::SVGUseElement>>;
-||||||| merged common ancestors
-  using SVGUseElementSet =
-    nsTHashtable<nsPtrHashKey<mozilla::dom::SVGUseElement>>;
-=======
   using SVGUseElementSet = nsTHashtable<nsPtrHashKey<SVGUseElement>>;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // The set of <svg:use> elements that need a shadow tree reclone because the
   // tree they map to has changed.
@@ -6032,19 +4442,8 @@ private:
   // document.
   static const size_t kSegmentSize = 128;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  typedef mozilla::SegmentedVector<nsCOMPtr<mozilla::dom::Link>, kSegmentSize,
-                                   InfallibleAllocPolicy>
-      LinksToUpdateList;
-||||||| merged common ancestors
-  typedef mozilla::SegmentedVector<nsCOMPtr<mozilla::dom::Link>,
-                                   kSegmentSize,
-                                   InfallibleAllocPolicy>
-    LinksToUpdateList;
-=======
   typedef SegmentedVector<nsCOMPtr<Link>, kSegmentSize, InfallibleAllocPolicy>
       LinksToUpdateList;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   LinksToUpdateList mLinksToUpdate;
 
@@ -6253,42 +4652,15 @@ private:
   bool mInDestructor : 1;
 
   // True if the document has been detached from its content viewer.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool mIsGoingAway : 1;
-||||||| merged common ancestors
-  bool mIsGoingAway: 1;
-=======
   bool mIsGoingAway : 1;
 
   bool mInXBLUpdate : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool mInXBLUpdate : 1;
-||||||| merged common ancestors
-  bool mInXBLUpdate: 1;
-=======
   bool mNeedsReleaseAfterStackRefCntRelease : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool mNeedsReleaseAfterStackRefCntRelease : 1;
-||||||| merged common ancestors
-  bool mNeedsReleaseAfterStackRefCntRelease: 1;
-=======
   // Whether we have filled our style set with all the stylesheets.
   bool mStyleSetFilled : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  // Whether we have filled our pres shell's style set with the document's
-  // additional sheets and sheets from the nsStyleSheetService.
-  bool mStyleSetFilled : 1;
-||||||| merged common ancestors
-  // Whether we have filled our pres shell's style set with the document's
-  // additional sheets and sheets from the nsStyleSheetService.
-  bool mStyleSetFilled: 1;
-=======
   // Whether we have a quirks mode stylesheet in the style set.
   bool mQuirkSheetAdded : 1;
 
@@ -6297,7 +4669,6 @@ private:
 
   // Whether we have a designmode.css stylesheet in the style set.
   bool mDesignModeSheetAdded : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Keeps track of whether we have a pending
   // 'style-sheet-applicable-state-changed' notification.
@@ -6315,25 +4686,9 @@ private:
   bool mScrolledToRefAlready : 1;
   bool mChangeScrollPosWhenScrollingToRef : 1;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool mHasWarnedAboutBoxObjects : 1;
-||||||| merged common ancestors
-  bool mHasWarnedAboutBoxObjects: 1;
-=======
-  bool mDelayFrameLoaderInitialization : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
-
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
   bool mDelayFrameLoaderInitialization : 1;
 
   bool mSynchronousDOMContentLoaded : 1;
-||||||| merged common ancestors
-  bool mDelayFrameLoaderInitialization: 1;
-
-  bool mSynchronousDOMContentLoaded: 1;
-=======
-  bool mSynchronousDOMContentLoaded : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Set to true when the document is possibly controlled by the ServiceWorker.
   // Used to prevent multiple requests to ServiceWorkerManager.
@@ -6341,28 +4696,11 @@ private:
 
   // These member variables cache information about the viewport so we don't
   // have to recalculate it each time.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  bool mAllowZoom : 1;
-  bool mValidScaleFloat : 1;
-  bool mValidMaxScale : 1;
-  bool mScaleStrEmpty : 1;
-  bool mWidthStrEmpty : 1;
-||||||| merged common ancestors
-  bool mValidWidth: 1;
-  bool mValidHeight: 1;
-  bool mAutoSize: 1;
-  bool mAllowZoom: 1;
-  bool mValidScaleFloat: 1;
-  bool mValidMaxScale: 1;
-  bool mScaleStrEmpty: 1;
-  bool mWidthStrEmpty: 1;
-=======
   bool mAllowZoom : 1;
   bool mValidScaleFloat : 1;
   bool mValidMinScale : 1;
   bool mValidMaxScale : 1;
   bool mWidthStrEmpty : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Parser aborted. True if the parser of this document was forcibly
   // terminated instead of letting it finish at its own pace.
@@ -6388,20 +4726,6 @@ private:
   // This should only be set on top level content documents.
   bool mDocTreeHadPlayRevoked : 1;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-#ifdef DEBUG
- public:
-  bool mWillReparent : 1;
-
- protected:
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-public:
-  bool mWillReparent: 1;
-protected:
-#endif
-=======
   // Whether an event triggered by the refresh driver was delayed because this
   // document has suppressed events.
   bool mHasDelayedRefreshEvent : 1;
@@ -6440,7 +4764,6 @@ protected:
   // mHasBeenEditable is set to true when mEditingState is firstly set to
   // eDesignMode or eContentEditable.
   bool mHasBeenEditable : 1;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   uint8_t mPendingFullscreenRequests;
 
@@ -6513,12 +4836,6 @@ protected:
 
   // The channel that got passed to Document::StartDocumentLoad(), if any.
   nsCOMPtr<nsIChannel> mChannel;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-
- private:
-||||||| merged common ancestors
-private:
-=======
 
   // The CSP for every load lives in the Client within the LoadInfo. For all
   // document-initiated subresource loads we can use that cached version of the
@@ -6527,20 +4844,7 @@ private:
   nsCOMPtr<nsIContentSecurityPolicy> mPreloadCSP;
 
  private:
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   nsCString mContentType;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-
- protected:
-  // For document.write() we may need a different content type than
-  // mContentType.
-  nsCString mContentTypeForWriteCalls;
-||||||| merged common ancestors
-protected:
-  // For document.write() we may need a different content type than mContentType.
-  nsCString mContentTypeForWriteCalls;
-=======
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
  protected:
   // The document's security info
@@ -6698,22 +5002,10 @@ protected:
   // existing in the set means the corresponding script isn't a tracking script.
   nsTHashtable<nsCStringHashKey> mTrackingScripts;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  // The log of all content blocking actions taken on this document.  This is
-  // only stored on top-level documents and includes the activity log for all of
-  // the nested subdocuments as well.
-  mozilla::dom::ContentBlockingLog mContentBlockingLog;
-||||||| merged common ancestors
-  // The log of all content blocking actions taken on this document.  This is only
-  // stored on top-level documents and includes the activity log for all of the
-  // nested subdocuments as well.
-  mozilla::dom::ContentBlockingLog mContentBlockingLog;
-=======
   // The log of all content blocking actions taken on this document.  This is
   // only stored on top-level documents and includes the activity log for all of
   // the nested subdocuments as well.
   ContentBlockingLog mContentBlockingLog;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // List of ancestor principals.  This is set at the point a document
   // is connected to a docshell and not mutated thereafter.
@@ -6739,22 +5031,12 @@ protected:
   // Our update nesting level
   uint32_t mUpdateNestLevel;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  enum ViewportType : uint8_t { DisplayWidthHeight, Specified, Unknown };
-||||||| merged common ancestors
-  enum ViewportType : uint8_t {
-    DisplayWidthHeight,
-    Specified,
-    Unknown
-  };
-=======
   enum ViewportType : uint8_t {
     DisplayWidthHeight,
     Specified,
     Unknown,
     NoValidContent,
   };
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   ViewportType mViewportType;
 
@@ -6770,16 +5052,8 @@ protected:
   // method, which caches its result here.
   Maybe<bool> mIsThirdPartyForFlashClassifier;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsRevocableEventPtr<nsRunnableMethod<nsIDocument, void, false>>
-      mPendingTitleChangeEvent;
-||||||| merged common ancestors
-  nsRevocableEventPtr<nsRunnableMethod<nsIDocument, void, false>>
-    mPendingTitleChangeEvent;
-=======
   nsRevocableEventPtr<nsRunnableMethod<Document, void, false>>
       mPendingTitleChangeEvent;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   RefPtr<nsDOMNavigationTiming> mTiming;
 
@@ -6799,15 +5073,7 @@ protected:
   nsWeakPtr mScopeObject;
 
   // Array of intersection observers
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsTHashtable<nsPtrHashKey<mozilla::dom::DOMIntersectionObserver>>
-      mIntersectionObservers;
-||||||| merged common ancestors
-  nsTHashtable<nsPtrHashKey<mozilla::dom::DOMIntersectionObserver>>
-    mIntersectionObservers;
-=======
   nsTHashtable<nsPtrHashKey<DOMIntersectionObserver>> mIntersectionObservers;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Stack of fullscreen elements. When we request fullscreen we push the
   // fullscreen element onto this stack, and when we cancel fullscreen we
@@ -6831,15 +5097,7 @@ protected:
   RefPtr<DocumentTimeline> mDocumentTimeline;
   LinkedList<DocumentTimeline> mTimelines;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsRefPtrHashtable<nsPtrHashKey<nsIContent>, mozilla::dom::BoxObject>*
-      mBoxObjectTable;
-||||||| merged common ancestors
-  nsRefPtrHashtable<nsPtrHashKey<nsIContent>, mozilla::dom::BoxObject>*
-    mBoxObjectTable;
-=======
   RefPtr<dom::ScriptLoader> mScriptLoader;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Tracker for animations that are waiting to start.
   // nullptr until GetOrCreatePendingAnimationTracker is called.
@@ -6885,14 +5143,7 @@ protected:
   nsCOMPtr<nsIRunnable> mMaybeEndOutermostXBLUpdateRunner;
   nsCOMPtr<nsIRequest> mOnloadBlocker;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  nsTArray<RefPtr<mozilla::StyleSheet>>
-      mAdditionalSheets[AdditionalSheetTypeCount];
-||||||| merged common ancestors
-  nsTArray<RefPtr<mozilla::StyleSheet>> mAdditionalSheets[AdditionalSheetTypeCount];
-=======
   nsTArray<RefPtr<StyleSheet>> mAdditionalSheets[AdditionalSheetTypeCount];
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Member to store out last-selected stylesheet set.
   nsString mLastStyleSheetSet;
@@ -6936,46 +5187,15 @@ protected:
   // Count of unload/beforeunload/pagehide operations in progress.
   uint32_t mIgnoreOpensDuringUnloadCounter;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
   nsCOMPtr<nsIDOMXULCommandDispatcher>
       mCommandDispatcher;  // [OWNER] of the focus tracker
 
-  RefPtr<mozilla::dom::XULBroadcastManager> mXULBroadcastManager;
-  RefPtr<mozilla::dom::XULPersist> mXULPersist;
-||||||| merged common ancestors
-  nsCOMPtr<nsIDOMXULCommandDispatcher> mCommandDispatcher; // [OWNER] of the focus tracker
-
-  RefPtr<mozilla::dom::XULBroadcastManager> mXULBroadcastManager;
-=======
-  nsCOMPtr<nsIDOMXULCommandDispatcher>
-      mCommandDispatcher;  // [OWNER] of the focus tracker
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
-
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  // document lightweight theme for use with :-moz-lwtheme,
-  // :-moz-lwtheme-brighttext and :-moz-lwtheme-darktext
-  DocumentTheme mDocLWTheme;
-||||||| merged common ancestors
-  // At the moment, trackers might be blocked by Tracking Protection or FastBlock.
-  // In order to know the numbers of trackers detected and blocked, we add
-  // these two values here and those are shared by TP and FB.
-  uint32_t mNumTrackersFound;
-  uint32_t mNumTrackersBlocked;
-
-  mozilla::EnumSet<mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED>
-    mTrackerBlockedReasons;
-
-  // document lightweight theme for use with :-moz-lwtheme, :-moz-lwtheme-brighttext
-  // and :-moz-lwtheme-darktext
-  DocumentTheme                         mDocLWTheme;
-=======
   RefPtr<XULBroadcastManager> mXULBroadcastManager;
   RefPtr<XULPersist> mXULPersist;
 
   // document lightweight theme for use with :-moz-lwtheme,
   // :-moz-lwtheme-brighttext and :-moz-lwtheme-darktext
   DocumentTheme mDocLWTheme;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   // Pres shell resolution saved before entering fullscreen mode.
   float mSavedResolution;
@@ -7024,27 +5244,13 @@ class MOZ_STACK_CLASS mozAutoSubtreeModified {
    *                      Can be nullptr, in which case mozAutoSubtreeModified
    *                      is just used to batch DOM mutations.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  mozAutoSubtreeModified(nsIDocument* aSubtreeOwner, nsINode* aTarget) {
-||||||| merged common ancestors
-  mozAutoSubtreeModified(nsIDocument* aSubtreeOwner, nsINode* aTarget)
-  {
-=======
   mozAutoSubtreeModified(Document* aSubtreeOwner, nsINode* aTarget) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     UpdateTarget(aSubtreeOwner, aTarget);
   }
 
   ~mozAutoSubtreeModified() { UpdateTarget(nullptr, nullptr); }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  void UpdateTarget(nsIDocument* aSubtreeOwner, nsINode* aTarget) {
-||||||| merged common ancestors
-  void UpdateTarget(nsIDocument* aSubtreeOwner, nsINode* aTarget)
-  {
-=======
   void UpdateTarget(Document* aSubtreeOwner, nsINode* aTarget) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     if (mSubtreeOwner) {
       mSubtreeOwner->MutationEventDispatched(mTarget);
     }
@@ -7056,183 +5262,67 @@ class MOZ_STACK_CLASS mozAutoSubtreeModified {
     }
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- private:
-  nsCOMPtr<nsINode> mTarget;
-  nsCOMPtr<nsIDocument> mSubtreeOwner;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsINode>     mTarget;
-  nsCOMPtr<nsIDocument> mSubtreeOwner;
-=======
  private:
   nsCOMPtr<nsINode> mTarget;
   RefPtr<Document> mSubtreeOwner;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 };
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-class MOZ_STACK_CLASS nsAutoSyncOperation {
- public:
-  explicit nsAutoSyncOperation(nsIDocument* aDocument);
-||||||| merged common ancestors
-class MOZ_STACK_CLASS nsAutoSyncOperation
-{
-public:
-  explicit nsAutoSyncOperation(nsIDocument* aDocument);
-=======
 class MOZ_STACK_CLASS nsAutoSyncOperation {
  public:
   explicit nsAutoSyncOperation(Document* aDocument);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   ~nsAutoSyncOperation();
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-
- private:
-  nsCOMArray<nsIDocument> mDocuments;
-  uint32_t mMicroTaskLevel;
-||||||| merged common ancestors
-private:
-  nsCOMArray<nsIDocument> mDocuments;
-  uint32_t                mMicroTaskLevel;
-=======
 
  private:
   nsTArray<RefPtr<Document>> mDocuments;
   uint32_t mMicroTaskLevel;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 };
 
 class MOZ_RAII AutoSetThrowOnDynamicMarkupInsertionCounter final {
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- public:
-  explicit AutoSetThrowOnDynamicMarkupInsertionCounter(nsIDocument* aDocument)
-      : mDocument(aDocument) {
-    mDocument->IncrementThrowOnDynamicMarkupInsertionCounter();
-  }
-||||||| merged common ancestors
-  public:
-    explicit AutoSetThrowOnDynamicMarkupInsertionCounter(
-      nsIDocument* aDocument)
-      : mDocument(aDocument)
-    {
-      mDocument->IncrementThrowOnDynamicMarkupInsertionCounter();
-    }
-=======
  public:
   explicit AutoSetThrowOnDynamicMarkupInsertionCounter(Document* aDocument)
       : mDocument(aDocument) {
     mDocument->IncrementThrowOnDynamicMarkupInsertionCounter();
   }
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   ~AutoSetThrowOnDynamicMarkupInsertionCounter() {
     mDocument->DecrementThrowOnDynamicMarkupInsertionCounter();
   }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
- private:
-  nsIDocument* mDocument;
-||||||| merged common ancestors
-  private:
-    nsIDocument* mDocument;
-=======
  private:
   Document* mDocument;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 };
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-class MOZ_RAII IgnoreOpensDuringUnload final {
- public:
-  explicit IgnoreOpensDuringUnload(nsIDocument* aDoc) : mDoc(aDoc) {
-||||||| merged common ancestors
-class MOZ_RAII IgnoreOpensDuringUnload final
-{
-public:
-  explicit IgnoreOpensDuringUnload(nsIDocument* aDoc)
-    : mDoc(aDoc)
-  {
-=======
 class MOZ_RAII IgnoreOpensDuringUnload final {
  public:
   explicit IgnoreOpensDuringUnload(Document* aDoc) : mDoc(aDoc) {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
     mDoc->IncrementIgnoreOpensDuringUnloadCounter();
   }
 
   ~IgnoreOpensDuringUnload() {
     mDoc->DecrementIgnoreOpensDuringUnloadCounter();
   }
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-
- private:
-  nsIDocument* mDoc;
-||||||| merged common ancestors
-private:
-  nsIDocument* mDoc;
-=======
 
  private:
   Document* mDoc;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 };
 
 }  // namespace dom
 }  // namespace mozilla
 
 // XXX These belong somewhere else
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-nsresult NS_NewHTMLDocument(nsIDocument** aInstancePtrResult,
-                            bool aLoadedAsData = false);
-||||||| merged common ancestors
-nsresult
-NS_NewHTMLDocument(nsIDocument** aInstancePtrResult, bool aLoadedAsData = false);
-=======
 nsresult NS_NewHTMLDocument(mozilla::dom::Document** aInstancePtrResult,
                             bool aLoadedAsData = false);
 
 nsresult NS_NewXMLDocument(mozilla::dom::Document** aInstancePtrResult,
                            bool aLoadedAsData = false,
                            bool aIsPlainDocument = false);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-nsresult NS_NewXMLDocument(nsIDocument** aInstancePtrResult,
-                           bool aLoadedAsData = false,
-                           bool aIsPlainDocument = false);
-||||||| merged common ancestors
-nsresult
-NS_NewXMLDocument(nsIDocument** aInstancePtrResult, bool aLoadedAsData = false,
-                  bool aIsPlainDocument = false);
-=======
 nsresult NS_NewSVGDocument(mozilla::dom::Document** aInstancePtrResult);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-nsresult NS_NewSVGDocument(nsIDocument** aInstancePtrResult);
-||||||| merged common ancestors
-nsresult
-NS_NewSVGDocument(nsIDocument** aInstancePtrResult);
-=======
 nsresult NS_NewImageDocument(mozilla::dom::Document** aInstancePtrResult);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-nsresult NS_NewImageDocument(nsIDocument** aInstancePtrResult);
-||||||| merged common ancestors
-nsresult
-NS_NewImageDocument(nsIDocument** aInstancePtrResult);
-=======
 nsresult NS_NewVideoDocument(mozilla::dom::Document** aInstancePtrResult);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-nsresult NS_NewVideoDocument(nsIDocument** aInstancePtrResult);
-||||||| merged common ancestors
-nsresult
-NS_NewVideoDocument(nsIDocument** aInstancePtrResult);
-=======
 // Enum for requesting a particular type of document when creating a doc
 enum DocumentFlavor {
   DocumentFlavorLegacyGuess,  // compat with old code until made HTML5-compliant
@@ -7240,63 +5330,18 @@ enum DocumentFlavor {
   DocumentFlavorSVG,          // SVGDocument
   DocumentFlavorPlain,        // Just a Document
 };
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
 // Note: it's the caller's responsibility to create or get aPrincipal as needed
 // -- this method will not attempt to get a principal based on aDocumentURI.
 // Also, both aDocumentURI and aBaseURI must not be null.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-nsresult NS_NewDOMDocument(
-    nsIDocument** aInstancePtrResult, const nsAString& aNamespaceURI,
-    const nsAString& aQualifiedName, mozilla::dom::DocumentType* aDoctype,
-    nsIURI* aDocumentURI, nsIURI* aBaseURI, nsIPrincipal* aPrincipal,
-    bool aLoadedAsData, nsIGlobalObject* aEventObject, DocumentFlavor aFlavor);
-||||||| merged common ancestors
-nsresult
-NS_NewDOMDocument(nsIDocument** aInstancePtrResult,
-                  const nsAString& aNamespaceURI,
-                  const nsAString& aQualifiedName,
-                  mozilla::dom::DocumentType* aDoctype,
-                  nsIURI* aDocumentURI,
-                  nsIURI* aBaseURI,
-                  nsIPrincipal* aPrincipal,
-                  bool aLoadedAsData,
-                  nsIGlobalObject* aEventObject,
-                  DocumentFlavor aFlavor);
-=======
 nsresult NS_NewDOMDocument(
     mozilla::dom::Document** aInstancePtrResult, const nsAString& aNamespaceURI,
     const nsAString& aQualifiedName, mozilla::dom::DocumentType* aDoctype,
     nsIURI* aDocumentURI, nsIURI* aBaseURI, nsIPrincipal* aPrincipal,
     bool aLoadedAsData, nsIGlobalObject* aEventObject, DocumentFlavor aFlavor);
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
 // This is used only for xbl documents created from the startup cache.
 // Non-cached documents are created in the same manner as xml documents.
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-nsresult NS_NewXBLDocument(nsIDocument** aInstancePtrResult,
-                           nsIURI* aDocumentURI, nsIURI* aBaseURI,
-                           nsIPrincipal* aPrincipal);
-
-nsresult NS_NewPluginDocument(nsIDocument** aInstancePtrResult);
-
-inline nsIDocument* nsINode::GetOwnerDocument() const {
-  nsIDocument* ownerDoc = OwnerDoc();
-||||||| merged common ancestors
-nsresult
-NS_NewXBLDocument(nsIDocument** aInstancePtrResult,
-                  nsIURI* aDocumentURI,
-                  nsIURI* aBaseURI,
-                  nsIPrincipal* aPrincipal);
-
-nsresult
-NS_NewPluginDocument(nsIDocument** aInstancePtrResult);
-
-inline nsIDocument*
-nsINode::GetOwnerDocument() const
-{
-  nsIDocument* ownerDoc = OwnerDoc();
-=======
 nsresult NS_NewXBLDocument(mozilla::dom::Document** aInstancePtrResult,
                            nsIURI* aDocumentURI, nsIURI* aBaseURI,
                            nsIPrincipal* aPrincipal);
@@ -7305,107 +5350,38 @@ nsresult NS_NewPluginDocument(mozilla::dom::Document** aInstancePtrResult);
 
 inline mozilla::dom::Document* nsINode::GetOwnerDocument() const {
   mozilla::dom::Document* ownerDoc = OwnerDoc();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 
   return ownerDoc != this ? ownerDoc : nullptr;
 }
 
 inline nsINode* nsINode::OwnerDocAsNode() const { return OwnerDoc(); }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-// ShouldUseXBLScope is defined here as a template so that we can get the faster
-// version of IsInAnonymousSubtree if we're statically known to be an
-// nsIContent.  we could try defining ShouldUseXBLScope separately on nsINode
-// and nsIContent, but then we couldn't put its nsINode implementation here
-// (because this header does not include nsIContent) and we can't put it in
-// nsIContent.h, because the definition of nsIContent::IsInAnonymousSubtree is
-// in nsIContentInlines.h.  And then we get include hell from people trying to
-// call nsINode::GetParentObject but not including nsIContentInlines.h and with
-// no really good way to include it.
-template <typename T>
-inline bool ShouldUseXBLScope(const T* aNode) {
-  return aNode->IsInAnonymousSubtree();
-||||||| merged common ancestors
-// ShouldUseXBLScope is defined here as a template so that we can get the faster
-// version of IsInAnonymousSubtree if we're statically known to be an
-// nsIContent.  we could try defining ShouldUseXBLScope separately on nsINode
-// and nsIContent, but then we couldn't put its nsINode implementation here
-// (because this header does not include nsIContent) and we can't put it in
-// nsIContent.h, because the definition of nsIContent::IsInAnonymousSubtree is
-// in nsIContentInlines.h.  And then we get include hell from people trying to
-// call nsINode::GetParentObject but not including nsIContentInlines.h and with
-// no really good way to include it.
-template<typename T>
-inline bool ShouldUseXBLScope(const T* aNode)
-{
-  return aNode->IsInAnonymousSubtree();
-=======
 inline bool ShouldUseNACScope(const nsINode* aNode) {
   return aNode->IsInNativeAnonymousSubtree();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-template <typename T>
-inline bool ShouldUseUAWidgetScope(const T* aNode) {
-  return aNode->IsInUAWidget();
-||||||| merged common ancestors
-template<typename T>
-inline bool ShouldUseUAWidgetScope(const T* aNode)
-{
-  return aNode->IsInUAWidget();
-=======
 inline bool ShouldUseUAWidgetScope(const nsINode* aNode) {
   return aNode->HasBeenInUAWidget();
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
 }
 
 inline mozilla::dom::ParentObject nsINode::GetParentObject() const {
   mozilla::dom::ParentObject p(OwnerDoc());
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-  // Note that mReflectionScope is a no-op for chrome, and other places
-  // where we don't check this value.
-  if (ShouldUseXBLScope(this)) {
-    p.mReflectionScope = mozilla::dom::ReflectionScope::XBL;
-||||||| merged common ancestors
-    // Note that mReflectionScope is a no-op for chrome, and other places
-    // where we don't check this value.
-  if (ShouldUseXBLScope(this)) {
-    p.mReflectionScope = mozilla::dom::ReflectionScope::XBL;
-=======
   // Note that mReflectionScope is a no-op for chrome, and other places
   // where we don't check this value.
   if (ShouldUseNACScope(this)) {
     p.mReflectionScope = mozilla::dom::ReflectionScope::NAC;
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   } else if (ShouldUseUAWidgetScope(this)) {
     p.mReflectionScope = mozilla::dom::ReflectionScope::UAWidget;
   }
   return p;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-inline nsIDocument* nsINode::AsDocument() {
-||||||| merged common ancestors
-inline nsIDocument*
-nsINode::AsDocument()
-{
-=======
 inline mozilla::dom::Document* nsINode::AsDocument() {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   MOZ_ASSERT(IsDocument());
   return static_cast<mozilla::dom::Document*>(this);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIDocument.h
-inline const nsIDocument* nsINode::AsDocument() const {
-||||||| merged common ancestors
-inline const nsIDocument*
-nsINode::AsDocument() const
-{
-=======
 inline const mozilla::dom::Document* nsINode::AsDocument() const {
->>>>>>> upstream-releases:mozilla-release/dom/base/Document.h
   MOZ_ASSERT(IsDocument());
   return static_cast<const mozilla::dom::Document*>(this);
 }

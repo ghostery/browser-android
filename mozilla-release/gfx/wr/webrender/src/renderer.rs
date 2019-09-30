@@ -21,15 +21,6 @@
 //! directly with the `RenderBackend`. Aside from a few high-level operations
 //! like 'render now', most of interesting commands from the consumer go over
 //! that channel and operate on the `RenderBackend`.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-
-use api::{BlobImageHandler, ColorF, DeviceIntPoint, DeviceIntRect, DeviceIntSize};
-use api::{DocumentId, Epoch, ExternalImageId};
-||||||| merged common ancestors
-
-use api::{BlobImageHandler, ColorF, DeviceIntPoint, DeviceIntRect, DeviceIntSize};
-use api::{DeviceUintPoint, DeviceUintRect, DeviceUintSize, DocumentId, Epoch, ExternalImageId};
-=======
 //!
 //! ## Space conversion guidelines
 //! At this stage, we shuld be operating with `DevicePixel` and `FramebufferPixel` only.
@@ -45,25 +36,8 @@ use api::{DeviceUintPoint, DeviceUintRect, DeviceUintSize, DocumentId, Epoch, Ex
 
 use api::{ApiMsg, BlobImageHandler, ColorF, ColorU, MixBlendMode};
 use api::{DocumentId, Epoch, ExternalImageId};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 use api::{ExternalImageType, FontRenderMode, FrameMsg, ImageFormat, PipelineId};
 use api::{ImageRendering, Checkpoint, NotificationRequest};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-use api::{MemoryReport, VoidPtrToSizeFn};
-use api::{RenderApiSender, RenderNotifier, TexelRect, TextureTarget};
-use api::{channel};
-use api::DebugCommand;
-pub use api::DebugFlags;
-use api::channel::PayloadReceiverHelperMethods;
-use batch::{BatchKind, BatchTextures, BrushBatchKind};
-||||||| merged common ancestors
-use api::{MemoryReport, VoidPtrToSizeFn};
-use api::{RenderApiSender, RenderNotifier, TexelRect, TextureTarget};
-use api::{channel};
-use api::DebugCommand;
-use api::channel::PayloadReceiverHelperMethods;
-use batch::{BatchKind, BatchTextures, BrushBatchKind};
-=======
 use api::{DebugCommand, MemoryReport, VoidPtrToSizeFn};
 use api::{RenderApiSender, RenderNotifier, TextureTarget};
 use api::channel;
@@ -71,28 +45,13 @@ use api::units::*;
 pub use api::DebugFlags;
 use api::channel::{MsgSender, PayloadReceiverHelperMethods};
 use crate::batch::{AlphaBatchContainer, BatchKind, BatchFeatures, BatchTextures, BrushBatchKind, ClipBatchList};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 #[cfg(any(feature = "capture", feature = "replay"))]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-use capture::{CaptureConfig, ExternalCaptureImage, PlainExternalImage};
-use debug_colors;
-use device::{DepthFunction, Device, GpuFrameId, Program, UploadMethod, Texture, PBO};
-use device::{DrawTarget, ExternalTexture, FBOId, ReadTarget, TextureSlot};
-use device::{ShaderError, TextureFilter, TextureFlags,
-||||||| merged common ancestors
-use capture::{CaptureConfig, ExternalCaptureImage, PlainExternalImage};
-use debug_colors;
-use device::{DepthFunction, Device, FrameId, Program, UploadMethod, Texture, PBO};
-use device::{ExternalTexture, FBOId, TextureDrawTarget, TextureReadTarget, TextureSlot};
-use device::{ShaderError, TextureFilter,
-=======
 use crate::capture::{CaptureConfig, ExternalCaptureImage, PlainExternalImage};
 use crate::debug_colors;
 use crate::debug_render::{DebugItem, DebugRenderer};
 use crate::device::{DepthFunction, Device, GpuFrameId, Program, UploadMethod, Texture, PBO};
 use crate::device::{DrawTarget, ExternalTexture, FBOId, ReadTarget, TextureSlot};
 use crate::device::{ShaderError, TextureFilter, TextureFlags,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
              VertexUsageHint, VAO, VBO, CustomVAO};
 use crate::device::{ProgramCache};
 use crate::device::query::GpuTimer;
@@ -104,25 +63,6 @@ use crate::glyph_rasterizer::{GlyphFormat, GlyphRasterizer};
 use crate::gpu_cache::{GpuBlockData, GpuCacheUpdate, GpuCacheUpdateList};
 use crate::gpu_cache::{GpuCacheDebugChunk, GpuCacheDebugCmd};
 #[cfg(feature = "pathfinder")]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-use gpu_glyph_renderer::GpuGlyphRenderer;
-use gpu_types::ScalingInstance;
-use internal_types::{TextureSource, ORTHO_FAR_PLANE, ORTHO_NEAR_PLANE, ResourceCacheError};
-use internal_types::{CacheTextureId, DebugOutput, FastHashMap, LayerIndex, RenderedDocument, ResultMsg};
-use internal_types::{TextureCacheAllocationKind, TextureCacheUpdate, TextureUpdateList, TextureUpdateSource};
-use internal_types::{RenderTargetInfo, SavedTargetIndex};
-use prim_store::DeferredResolve;
-use profiler::{BackendProfileCounters, FrameProfileCounters, TimeProfileCounter,
-||||||| merged common ancestors
-use gpu_glyph_renderer::GpuGlyphRenderer;
-use gpu_types::ScalingInstance;
-use internal_types::{TextureSource, ORTHO_FAR_PLANE, ORTHO_NEAR_PLANE, ResourceCacheError};
-use internal_types::{CacheTextureId, DebugOutput, FastHashMap, RenderedDocument, ResultMsg};
-use internal_types::{LayerIndex, TextureUpdateList, TextureUpdateOp, TextureUpdateSource};
-use internal_types::{RenderTargetInfo, SavedTargetIndex};
-use prim_store::DeferredResolve;
-use profiler::{BackendProfileCounters, FrameProfileCounters,
-=======
 use crate::gpu_glyph_renderer::GpuGlyphRenderer;
 use crate::gpu_types::{PrimitiveHeaderI, PrimitiveHeaderF, ScalingInstance, TransformData, ResolveInstanceData};
 use crate::internal_types::{TextureSource, ORTHO_FAR_PLANE, ORTHO_NEAR_PLANE, ResourceCacheError};
@@ -133,29 +73,15 @@ use malloc_size_of::MallocSizeOfOps;
 use crate::picture::{RecordedDirtyRegion, TILE_SIZE_WIDTH, TILE_SIZE_HEIGHT};
 use crate::prim_store::DeferredResolve;
 use crate::profiler::{BackendProfileCounters, FrameProfileCounters, TimeProfileCounter,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                GpuProfileTag, RendererProfileCounters, RendererProfileTimers};
 use crate::profiler::{Profiler, ChangeIndicator};
 use crate::device::query::{GpuProfiler, GpuDebugMethod};
 use rayon::{ThreadPool, ThreadPoolBuilder};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-use record::ApiRecordingReceiver;
-use render_backend::{FrameId, RenderBackend};
-use render_task::ClearMode;
-use scene_builder::{SceneBuilder, LowPrioritySceneBuilder};
-use shade::{Shaders, WrShaders};
-||||||| merged common ancestors
-use record::ApiRecordingReceiver;
-use render_backend::RenderBackend;
-use scene_builder::{SceneBuilder, LowPrioritySceneBuilder};
-use shade::{Shaders, WrShaders};
-=======
 use crate::record::ApiRecordingReceiver;
 use crate::render_backend::{FrameId, RenderBackend};
 use crate::scene_builder::{SceneBuilder, LowPrioritySceneBuilder};
 use crate::screen_capture::AsyncScreenshotGrabber;
 use crate::shade::{Shaders, WrShaders};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 use smallvec::SmallVec;
 use crate::render_task::{RenderTask, RenderTaskData, RenderTaskKind, RenderTaskGraph};
 use crate::resource_cache::ResourceCache;
@@ -701,16 +627,6 @@ pub(crate) mod desc {
                 count: 1,
                 kind: VertexAttributeKind::F32,
             },
-            VertexAttribute {
-                name: "aClipLocalPos",
-                count: 2,
-                kind: VertexAttributeKind::F32,
-            },
-            VertexAttribute {
-                name: "aClipTileRect",
-                count: 4,
-                kind: VertexAttributeKind::F32,
-            }
         ],
     };
 
@@ -893,15 +809,7 @@ pub struct GpuProfile {
 }
 
 impl GpuProfile {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    #[cfg(feature = "debug_renderer")]
     fn new<T>(frame_id: GpuFrameId, timers: &[GpuTimer<T>]) -> GpuProfile {
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-    fn new<T>(frame_id: FrameId, timers: &[GpuTimer<T>]) -> GpuProfile {
-=======
-    fn new<T>(frame_id: GpuFrameId, timers: &[GpuTimer<T>]) -> GpuProfile {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         let mut paint_time_ns = 0;
         for timer in timers {
             paint_time_ns += timer.time_ns;
@@ -1266,13 +1174,7 @@ impl GpuCacheTexture {
 
     /// Ensures that we have an appropriately-sized texture. Returns true if a
     /// new texture was created.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    fn ensure_texture(&mut self, device: &mut Device, height: i32) -> bool {
-||||||| merged common ancestors
-    fn ensure_texture(&mut self, device: &mut Device, height: u32) -> bool {
-=======
     fn ensure_texture(&mut self, device: &mut Device, height: i32) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         // If we already have a texture that works, we're done.
         if self.texture.as_ref().map_or(false, |t| t.get_dimensions().height >= height) {
             if GPU_CACHE_RESIZE_TEST {
@@ -1282,52 +1184,8 @@ impl GpuCacheTexture {
             }
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        // Compute a few parameters for the new texture. We round the height up to
-        // a multiple of 256 to avoid many small resizes.
-        let new_height = (height + 255) & !255;
-        let new_size = DeviceIntSize::new(MAX_VERTEX_TEXTURE_WIDTH as _, new_height);
-        let rt_info = if self.bus.uses_render_target() {
-            Some(RenderTargetInfo { has_depth: false })
-        } else {
-            None
-        };
-
-        // Take the old texture, if any, and deinitialize it unless we're going
-        // to blit it's contents to the new one.
-        let mut blit_source = None;
-        if let Some(t) = self.texture.take() {
-            if rt_info.is_some() {
-                blit_source = Some(t);
-            } else {
-                device.delete_texture(t);
-            }
-        }
-||||||| merged common ancestors
-        // Compute a few parameters for the new texture. We round the height up to
-        // a multiple of 256 to avoid many small resizes.
-        let new_height = (height + 255) & !255;
-        let new_size = DeviceUintSize::new(MAX_VERTEX_TEXTURE_WIDTH as _, new_height);
-        let rt_info = if self.bus.uses_render_target() {
-            Some(RenderTargetInfo { has_depth: false })
-        } else {
-            None
-        };
-
-        // Take the old texture, if any, and deinitialize it unless we're going
-        // to blit it's contents to the new one.
-        let mut blit_source = None;
-        if let Some(t) = self.texture.take() {
-            if rt_info.is_some() {
-                blit_source = Some(t);
-            } else {
-                device.delete_texture(t);
-            }
-        }
-=======
         // Take the old texture, if any.
         let blit_source = self.texture.take();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
         // Create the new texture.
         assert!(height >= 2, "Height is too small for ANGLE");
@@ -1536,25 +1394,9 @@ impl GpuCacheTexture {
                         continue;
                     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                    let block_index = row_index * MAX_VERTEX_TEXTURE_WIDTH;
-                    let cpu_blocks =
-                        &cpu_blocks[block_index .. (block_index + MAX_VERTEX_TEXTURE_WIDTH)];
                     let rect = DeviceIntRect::new(
                         DeviceIntPoint::new(0, row_index as i32),
                         DeviceIntSize::new(MAX_VERTEX_TEXTURE_WIDTH as i32, 1),
-||||||| merged common ancestors
-                    let block_index = row_index * MAX_VERTEX_TEXTURE_WIDTH;
-                    let cpu_blocks =
-                        &cpu_blocks[block_index .. (block_index + MAX_VERTEX_TEXTURE_WIDTH)];
-                    let rect = DeviceUintRect::new(
-                        DeviceUintPoint::new(0, row_index as u32),
-                        DeviceUintSize::new(MAX_VERTEX_TEXTURE_WIDTH as u32, 1),
-=======
-                    let rect = DeviceIntRect::new(
-                        DeviceIntPoint::new(0, row_index as i32),
-                        DeviceIntSize::new(MAX_VERTEX_TEXTURE_WIDTH as i32, 1),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                     );
 
                     uploader.upload(rect, 0, None, &*row.cpu_blocks);
@@ -1570,28 +1412,11 @@ impl GpuCacheTexture {
                 device.bind_program(program);
                 device.bind_custom_vao(vao);
                 device.bind_draw_target(
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                    DrawTarget::Texture {
-||||||| merged common ancestors
-                    Some(TextureDrawTarget {
-=======
                     DrawTarget::from_texture(
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                         texture,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                        layer: 0,
-                        with_depth: false,
-                    },
-||||||| merged common ancestors
-                        layer: 0,
-                        with_depth: false,
-                    }),
-                    Some(texture.get_dimensions()),
-=======
                         0,
                         false,
                     ),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 );
                 device.draw_nonindexed_points(0, count as _);
                 0
@@ -1800,26 +1625,12 @@ pub struct Renderer {
     debug_flags: DebugFlags,
     backend_profile_counters: BackendProfileCounters,
     profile_counters: RendererProfileCounters,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
     resource_upload_time: u64,
     gpu_cache_upload_time: u64,
-    #[cfg(feature = "debug_renderer")]
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-=======
-    resource_upload_time: u64,
-    gpu_cache_upload_time: u64,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
     profiler: Profiler,
     new_frame_indicator: ChangeIndicator,
     new_scene_indicator: ChangeIndicator,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    #[cfg(feature = "debug_renderer")]
     slow_frame_indicator: ChangeIndicator,
-||||||| merged common ancestors
-=======
-    slow_frame_indicator: ChangeIndicator,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
     last_time: u64,
 
@@ -2158,10 +1969,6 @@ impl Renderer {
             dual_source_blending_is_enabled: true,
             dual_source_blending_is_supported: use_dual_source_blending,
             chase_primitive: options.chase_primitive,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            enable_picture_caching: options.enable_picture_caching,
-||||||| merged common ancestors
-=======
             enable_picture_caching: options.enable_picture_caching,
             testing: options.testing,
             gpu_supports_fast_clears: options.gpu_supports_fast_clears,
@@ -2169,7 +1976,6 @@ impl Renderer {
             advanced_blend_is_coherent: ext_blend_equation_advanced_coherent,
             batch_lookback_count: options.batch_lookback_count,
             background_color: options.clear_color,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         };
         info!("WR {:?}", config);
 
@@ -2271,15 +2077,6 @@ impl Renderer {
                 thread_listener.thread_started(&rb_thread_name);
             }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            let texture_cache = TextureCache::new(
-                max_texture_size,
-                max_texture_layers,
-            );
-
-||||||| merged common ancestors
-            let texture_cache = TextureCache::new(max_device_size);
-=======
             let picture_tile_sizes = &[
                 DeviceIntSize::new(TILE_SIZE_WIDTH, TILE_SIZE_HEIGHT),
             ];
@@ -2297,7 +2094,6 @@ impl Renderer {
 
             let glyph_cache = GlyphCache::new(max_glyph_cache_size);
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             let resource_cache = ResourceCache::new(
                 texture_cache,
                 glyph_rasterizer,
@@ -2356,27 +2152,12 @@ impl Renderer {
             debug_flags: DebugFlags::empty(),
             backend_profile_counters: BackendProfileCounters::new(),
             profile_counters: RendererProfileCounters::new(),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
             resource_upload_time: 0,
             gpu_cache_upload_time: 0,
-            #[cfg(feature = "debug_renderer")]
-||||||| merged common ancestors
-            #[cfg(feature = "debug_renderer")]
-=======
-            resource_upload_time: 0,
-            gpu_cache_upload_time: 0,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             profiler: Profiler::new(),
             new_frame_indicator: ChangeIndicator::new(),
             new_scene_indicator: ChangeIndicator::new(),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            #[cfg(feature = "debug_renderer")]
             slow_frame_indicator: ChangeIndicator::new(),
-||||||| merged common ancestors
-            max_texture_size: max_device_size,
-=======
-            slow_frame_indicator: ChangeIndicator::new(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             max_recorded_profiles: options.max_recorded_profiles,
             clear_color: options.clear_color,
             enable_clear_scissor: options.enable_clear_scissor,
@@ -2435,13 +2216,6 @@ impl Renderer {
         Ok((renderer, sender))
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    pub fn get_max_texture_size(&self) -> i32 {
-        self.device.max_texture_size()
-||||||| merged common ancestors
-    pub fn get_max_texture_size(&self) -> u32 {
-        self.max_texture_size
-=======
     pub fn device_size(&self) -> Option<DeviceIntSize> {
         self.device_size
     }
@@ -2456,7 +2230,6 @@ impl Renderer {
 
     pub fn get_max_texture_size(&self) -> i32 {
         self.device.max_texture_size()
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
     }
 
     pub fn get_graphics_api_info(&self) -> GraphicsApiInfo {
@@ -2894,31 +2667,16 @@ impl Renderer {
         self.slow_frame_indicator.changed();
     }
 
-    pub fn notify_slow_frame(&mut self) {
-        #[cfg(feature = "debug_renderer")]
-        self.slow_frame_indicator.changed();
-    }
-
     /// Renders the current frame.
     ///
     /// A Frame is supplied by calling [`generate_frame()`][webrender_api::Transaction::generate_frame].
     pub fn render(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        framebuffer_size: DeviceIntSize,
-    ) -> Result<RendererStats, Vec<RendererError>> {
-        let result = self.render_impl(Some(framebuffer_size));
-||||||| merged common ancestors
-        framebuffer_size: DeviceUintSize,
-    ) -> Result<RendererStats, Vec<RendererError>> {
-        let result = self.render_impl(Some(framebuffer_size));
-=======
         device_size: DeviceIntSize,
     ) -> Result<RenderResults, Vec<RendererError>> {
         self.device_size = Some(device_size);
 
         let result = self.render_impl(Some(device_size));
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
         drain_filter(
             &mut self.notifications,
@@ -2940,16 +2698,8 @@ impl Renderer {
     // avoid doing a full frame render.
     fn render_impl(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        framebuffer_size: Option<DeviceIntSize>,
-    ) -> Result<RendererStats, Vec<RendererError>> {
-||||||| merged common ancestors
-        framebuffer_size: Option<DeviceUintSize>
-    ) -> Result<RendererStats, Vec<RendererError>> {
-=======
         device_size: Option<DeviceIntSize>,
     ) -> Result<RenderResults, Vec<RendererError>> {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         profile_scope!("render");
         let mut results = RenderResults::default();
         if self.active_documents.is_empty() {
@@ -3007,56 +2757,6 @@ impl Renderer {
             // sort by the document layer id
             active_documents.sort_by_key(|&(_, ref render_doc)| render_doc.frame.layer);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            // don't clear the framebuffer if one of the rendered documents will overwrite it
-            if let Some(framebuffer_size) = framebuffer_size {
-                let needs_color_clear = !active_documents
-                    .iter()
-                    .any(|&(_, RenderedDocument { ref frame, .. })| {
-                        frame.background_color.is_some() &&
-                        frame.inner_rect.origin == DeviceIntPoint::zero() &&
-                        frame.inner_rect.size == framebuffer_size
-                    });
-
-                if needs_color_clear || clear_depth_value.is_some() {
-                    let clear_color = if needs_color_clear {
-                        self.clear_color.map(|color| color.to_array())
-                    } else {
-                        None
-                    };
-                    self.device.reset_draw_target();
-                    self.device.enable_depth_write();
-                    self.device.clear_target(clear_color, clear_depth_value, None);
-                    self.device.disable_depth_write();
-                }
-            }
-
-||||||| merged common ancestors
-            // don't clear the framebuffer if one of the rendered documents will overwrite it
-            if let Some(framebuffer_size) = framebuffer_size {
-                let needs_color_clear = !active_documents
-                    .iter()
-                    .any(|&(_, RenderedDocument { ref frame, .. })| {
-                        frame.background_color.is_some() &&
-                        frame.inner_rect.origin == DeviceUintPoint::zero() &&
-                        frame.inner_rect.size == framebuffer_size
-                    });
-
-                if needs_color_clear || clear_depth_value.is_some() {
-                    let clear_color = if needs_color_clear {
-                        self.clear_color.map(|color| color.to_array())
-                    } else {
-                        None
-                    };
-                    self.device.bind_draw_target(None, None);
-                    self.device.enable_depth_write();
-                    self.device.clear_target(clear_color, clear_depth_value, None);
-                    self.device.disable_depth_write();
-                }
-            }
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             #[cfg(feature = "replay")]
             self.texture_resolver.external_images.extend(
                 self.owned_external_images.iter().map(|(key, value)| (*key, value.clone()))
@@ -3134,70 +2834,10 @@ impl Renderer {
             self.cpu_profiles.push_back(cpu_profile);
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        #[cfg(feature = "debug_renderer")]
-        {
-            if self.debug_flags.contains(DebugFlags::PROFILER_DBG) {
-                if let Some(framebuffer_size) = framebuffer_size {
-                    //TODO: take device/pixel ratio into equation?
-                    if let Some(debug_renderer) = self.debug.get_mut(&mut self.device) {
-                        let screen_fraction = 1.0 / framebuffer_size.to_f32().area();
-                        self.profiler.draw_profile(
-                            &frame_profiles,
-                            &self.backend_profile_counters,
-                            &self.profile_counters,
-                            &mut profile_timers,
-                            &profile_samplers,
-                            screen_fraction,
-                            debug_renderer,
-                            self.debug_flags.contains(DebugFlags::COMPACT_PROFILER),
-                        );
-                    }
-                }
-            }
-
-            let mut x = 0.0;
-            if self.debug_flags.contains(DebugFlags::NEW_FRAME_INDICATOR) {
-||||||| merged common ancestors
-        #[cfg(feature = "debug_renderer")]
-        {
-            if self.debug_flags.contains(DebugFlags::PROFILER_DBG) {
-                if let Some(framebuffer_size) = framebuffer_size {
-                    //TODO: take device/pixel ratio into equation?
-                    if let Some(debug_renderer) = self.debug.get_mut(&mut self.device) {
-                        let screen_fraction = 1.0 / framebuffer_size.to_f32().area();
-                        self.profiler.draw_profile(
-                            &frame_profiles,
-                            &self.backend_profile_counters,
-                            &self.profile_counters,
-                            &mut profile_timers,
-                            &profile_samplers,
-                            screen_fraction,
-                            debug_renderer,
-                            self.debug_flags.contains(DebugFlags::COMPACT_PROFILER),
-                        );
-                    }
-                }
-            }
-
-            if self.debug_flags.contains(DebugFlags::NEW_FRAME_INDICATOR) {
-=======
         if self.debug_flags.contains(DebugFlags::PROFILER_DBG) {
             if let Some(device_size) = device_size {
                 //TODO: take device/pixel ratio into equation?
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 if let Some(debug_renderer) = self.debug.get_mut(&mut self.device) {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                    self.new_frame_indicator.changed();
-                    self.new_frame_indicator.draw(
-                        x, 0.0,
-                        ColorU::new(0, 110, 220, 255),
-||||||| merged common ancestors
-                    self.new_frame_indicator.changed();
-                    self.new_frame_indicator.draw(
-                        0.0, 0.0,
-                        ColorU::new(0, 110, 220, 255),
-=======
                     let screen_fraction = 1.0 / device_size.to_f32().area();
                     self.profiler.draw_profile(
                         &frame_profiles,
@@ -3206,45 +2846,13 @@ impl Renderer {
                         &mut profile_timers,
                         &profile_samplers,
                         screen_fraction,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                         debug_renderer,
                         self.debug_flags.contains(DebugFlags::COMPACT_PROFILER),
                     );
-                    x += ChangeIndicator::width();
                 }
             }
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            if self.debug_flags.contains(DebugFlags::NEW_SCENE_INDICATOR) {
-                if let Some(debug_renderer) = self.debug.get_mut(&mut self.device) {
-                    self.new_scene_indicator.draw(
-                        x, 0.0,
-                        ColorU::new(0, 220, 110, 255),
-                        debug_renderer,
-                    );
-                    x += ChangeIndicator::width();
-                }
-            }
-
-            if self.debug_flags.contains(DebugFlags::SLOW_FRAME_INDICATOR) {
-                if let Some(debug_renderer) = self.debug.get_mut(&mut self.device) {
-                    self.slow_frame_indicator.draw(
-                        x, 0.0,
-                        ColorU::new(220, 30, 10, 255),
-                        debug_renderer,
-                    );
-                }
-||||||| merged common ancestors
-            if self.debug_flags.contains(DebugFlags::NEW_SCENE_INDICATOR) {
-                if let Some(debug_renderer) = self.debug.get_mut(&mut self.device) {
-                    self.new_scene_indicator.draw(
-                        160.0, 0.0,
-                        ColorU::new(220, 30, 10, 255),
-                        debug_renderer,
-                    );
-                }
-=======
         let mut x = 0.0;
         if self.debug_flags.contains(DebugFlags::NEW_FRAME_INDICATOR) {
             if let Some(debug_renderer) = self.debug.get_mut(&mut self.device) {
@@ -3276,7 +2884,6 @@ impl Renderer {
                     ColorU::new(220, 30, 10, 255),
                     debug_renderer,
                 );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             }
         }
 
@@ -3288,18 +2895,10 @@ impl Renderer {
         self.backend_profile_counters.reset();
         self.profile_counters.reset();
         self.profile_counters.frame_counter.inc();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        stats.resource_upload_time = self.resource_upload_time;
-        self.resource_upload_time = 0;
-        stats.gpu_cache_upload_time = self.gpu_cache_upload_time;
-        self.gpu_cache_upload_time = 0;
-||||||| merged common ancestors
-=======
         results.stats.resource_upload_time = self.resource_upload_time;
         self.resource_upload_time = 0;
         results.stats.gpu_cache_upload_time = self.gpu_cache_upload_time;
         self.gpu_cache_upload_time = 0;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
         profile_timers.cpu_time.profile(|| {
             let _gm = self.gpu_profile.start_marker("end frame");
@@ -3340,14 +2939,8 @@ impl Renderer {
         let gpu_cache_height = self.gpu_cache_texture.get_height();
         if gpu_cache_height != 0 && GPU_CACHE_RESIZE_TEST {
             self.pending_gpu_cache_updates.push(GpuCacheUpdateList {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                frame_id: FrameId::INVALID,
-||||||| merged common ancestors
-                frame_id: FrameId::new(0),
-=======
                 frame_id: FrameId::INVALID,
                 clear: false,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 height: gpu_cache_height,
                 blocks: vec![[1f32; 4].into()],
                 updates: Vec::new(),
@@ -3423,82 +3016,6 @@ impl Renderer {
         let _gm = self.gpu_profile.start_marker("texture cache update");
         let mut pending_texture_updates = mem::replace(&mut self.pending_texture_updates, vec![]);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        let mut upload_time = TimeProfileCounter::new("Resource upload time", false);
-        upload_time.profile(|| {
-            for update_list in pending_texture_updates.drain(..) {
-                for allocation in update_list.allocations {
-                    let is_realloc = matches!(allocation.kind, TextureCacheAllocationKind::Realloc(..));
-                    match allocation.kind {
-                        TextureCacheAllocationKind::Alloc(info) |
-                        TextureCacheAllocationKind::Realloc(info) => {
-                            // Create a new native texture, as requested by the texture cache.
-                            //
-                            // Ensure no PBO is bound when creating the texture storage,
-                            // or GL will attempt to read data from there.
-                            let mut texture = self.device.create_texture(
-                                TextureTarget::Array,
-                                info.format,
-                                info.width,
-                                info.height,
-                                info.filter,
-                                // This needs to be a render target because some render
-                                // tasks get rendered into the texture cache.
-                                Some(RenderTargetInfo { has_depth: false }),
-                                info.layer_count,
-                            );
-
-                            if info.is_shared_cache {
-                                texture.flags_mut()
-                                    .insert(TextureFlags::IS_SHARED_TEXTURE_CACHE);
-
-                                // Textures in the cache generally don't need to be cleared,
-                                // but we do so if the debug display is active to make it
-                                // easier to identify unallocated regions.
-                                if self.debug_flags.contains(DebugFlags::TEXTURE_CACHE_DBG) {
-                                    self.clear_texture(&texture, TEXTURE_CACHE_DBG_CLEAR_COLOR);
-                                }
-||||||| merged common ancestors
-        for update_list in pending_texture_updates.drain(..) {
-            for update in update_list.updates {
-                match update.op {
-                    TextureUpdateOp::Create {
-                        width,
-                        height,
-                        layer_count,
-                        format,
-                        filter,
-                        render_target,
-                    } => {
-                        // Create a new native texture, as requested by the texture cache.
-                        //
-                        // Ensure no PBO is bound when creating the texture storage,
-                        // or GL will attempt to read data from there.
-                        let texture = self.device.create_texture(
-                            TextureTarget::Array,
-                            format,
-                            width,
-                            height,
-                            filter,
-                            render_target,
-                            layer_count,
-                        );
-                        self.texture_resolver.texture_cache_map.insert(update.id, texture);
-                    }
-                    TextureUpdateOp::Update {
-                        rect,
-                        source,
-                        stride,
-                        layer_index,
-                        offset,
-                    } => {
-                        let texture = &self.texture_resolver.texture_cache_map[&update.id];
-                        let mut uploader = self.device.upload_texture(
-                            texture,
-                            &self.texture_cache_upload_pbo,
-                            0,
-                        );
-=======
         let mut upload_time = TimeProfileCounter::new("Resource upload time", false);
         upload_time.profile(|| {
             for update_list in pending_texture_updates.drain(..) {
@@ -3522,46 +3039,7 @@ impl Renderer {
                                 Some(RenderTargetInfo { has_depth: info.has_depth }),
                                 info.layer_count,
                             );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-||||||| merged common ancestors
-                        let bytes_uploaded = match source {
-                            TextureUpdateSource::Bytes { data } => {
-                                uploader.upload(
-                                    rect, layer_index, stride,
-                                    &data[offset as usize ..],
-                                )
-                            }
-                            TextureUpdateSource::External { id, channel_index } => {
-                                let handler = self.external_image_handler
-                                    .as_mut()
-                                    .expect("Found external image, but no handler set!");
-                                // The filter is only relevant for NativeTexture external images.
-                                let size = match handler.lock(id, channel_index, ImageRendering::Auto).source {
-                                    ExternalImageSource::RawData(data) => {
-                                        uploader.upload(
-                                            rect, layer_index, stride,
-                                            &data[offset as usize ..],
-                                        )
-                                    }
-                                    ExternalImageSource::Invalid => {
-                                        // Create a local buffer to fill the pbo.
-                                        let bpp = texture.get_format().bytes_per_pixel();
-                                        let width = stride.unwrap_or(rect.size.width * bpp);
-                                        let total_size = width * rect.size.height;
-                                        // WR haven't support RGBAF32 format in texture_cache, so
-                                        // we use u8 type here.
-                                        let dummy_data: Vec<u8> = vec![255; total_size as usize];
-                                        uploader.upload(rect, layer_index, stride, &dummy_data)
-                                    }
-                                    ExternalImageSource::NativeTexture(eid) => {
-                                        panic!("Unexpected external texture {:?} for the texture cache update of {:?}", eid, id);
-                                    }
-                                };
-                                handler.unlock(id, channel_index);
-                                size
-=======
                             if info.is_shared_cache {
                                 texture.flags_mut()
                                     .insert(TextureFlags::IS_SHARED_TEXTURE_CACHE);
@@ -3572,31 +3050,8 @@ impl Renderer {
                                 if self.debug_flags.contains(DebugFlags::TEXTURE_CACHE_DBG) {
                                     self.clear_texture(&texture, TEXTURE_CACHE_DBG_CLEAR_COLOR);
                                 }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                             }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                            let old = self.texture_resolver.texture_cache_map.insert(allocation.id, texture);
-                            assert_eq!(old.is_some(), is_realloc, "Renderer and RenderBackend disagree");
-                            if let Some(old) = old {
-                                self.device.blit_renderable_texture(
-                                    self.texture_resolver.texture_cache_map.get_mut(&allocation.id).unwrap(),
-                                    &old
-                                );
-                                self.device.delete_texture(old);
-                            }
-                        },
-                        TextureCacheAllocationKind::Free => {
-                            let texture = self.texture_resolver.texture_cache_map.remove(&allocation.id).unwrap();
-                            self.device.delete_texture(texture);
-                        },
-||||||| merged common ancestors
-                        self.profile_counters.texture_data_uploaded.add(bytes_uploaded >> 10);
-                    }
-                    TextureUpdateOp::Free => {
-                        let texture = self.texture_resolver.texture_cache_map.remove(&update.id).unwrap();
-                        self.device.delete_texture(texture);
-=======
                             self.texture_resolver.texture_cache_map.insert(allocation.id, texture)
                         }
                         TextureCacheAllocationKind::Free => {
@@ -3622,79 +3077,8 @@ impl Renderer {
 
                     if let Some(old) = old {
                         self.device.delete_texture(old);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                     }
                 }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-
-                for update in update_list.updates {
-                    let TextureCacheUpdate { id, rect, stride, offset, layer_index, source } = update;
-                    let texture = &self.texture_resolver.texture_cache_map[&id];
-
-                    let bytes_uploaded = match source {
-                        TextureUpdateSource::Bytes { data } => {
-                            let mut uploader = self.device.upload_texture(
-                                texture,
-                                &self.texture_cache_upload_pbo,
-                                0,
-                            );
-                            uploader.upload(
-                                rect, layer_index, stride,
-                                &data[offset as usize ..],
-                            )
-                        }
-                        TextureUpdateSource::External { id, channel_index } => {
-                            let mut uploader = self.device.upload_texture(
-                                texture,
-                                &self.texture_cache_upload_pbo,
-                                0,
-                            );
-                            let handler = self.external_image_handler
-                                .as_mut()
-                                .expect("Found external image, but no handler set!");
-                            // The filter is only relevant for NativeTexture external images.
-                            let size = match handler.lock(id, channel_index, ImageRendering::Auto).source {
-                                ExternalImageSource::RawData(data) => {
-                                    uploader.upload(
-                                        rect, layer_index, stride,
-                                        &data[offset as usize ..],
-                                    )
-                                }
-                                ExternalImageSource::Invalid => {
-                                    // Create a local buffer to fill the pbo.
-                                    let bpp = texture.get_format().bytes_per_pixel();
-                                    let width = stride.unwrap_or(rect.size.width * bpp);
-                                    let total_size = width * rect.size.height;
-                                    // WR haven't support RGBAF32 format in texture_cache, so
-                                    // we use u8 type here.
-                                    let dummy_data: Vec<u8> = vec![255; total_size as usize];
-                                    uploader.upload(rect, layer_index, stride, &dummy_data)
-                                }
-                                ExternalImageSource::NativeTexture(eid) => {
-                                    panic!("Unexpected external texture {:?} for the texture cache update of {:?}", eid, id);
-                                }
-                            };
-                            handler.unlock(id, channel_index);
-                            size
-                        }
-                        TextureUpdateSource::DebugClear => {
-                            self.device.bind_draw_target(DrawTarget::Texture {
-                                texture,
-                                layer: layer_index as usize,
-                                with_depth: false,
-                            });
-                            self.device.clear_target(
-                                Some(TEXTURE_CACHE_DBG_CLEAR_COLOR),
-                                None,
-                                Some(rect.to_i32())
-                            );
-                            0
-                        }
-                    };
-                    self.profile_counters.texture_data_uploaded.add(bytes_uploaded >> 10);
-                }
-||||||| merged common ancestors
-=======
 
                 for update in update_list.updates {
                     let TextureCacheUpdate { id, rect, stride, offset, layer_index, source } = update;
@@ -3767,7 +3151,6 @@ impl Renderer {
                 if update_list.clears_shared_cache {
                     self.shared_texture_cache_cleared = true;
                 }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             }
 
             drain_filter(
@@ -3842,17 +3225,8 @@ impl Renderer {
 
     fn handle_readback_composite(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        draw_target: DrawTarget,
-        scissor_rect: Option<DeviceIntRect>,
-||||||| merged common ancestors
-        render_target: Option<TextureDrawTarget>,
-        framebuffer_size: DeviceUintSize,
-        scissor_rect: Option<DeviceIntRect>,
-=======
         draw_target: DrawTarget,
         uses_scissor: bool,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         source: &RenderTask,
         backdrop: &RenderTask,
         readback: &RenderTask,
@@ -3883,27 +3257,11 @@ impl Renderer {
         // Called per-instance in case the layer (and therefore FBO)
         // changes. The device will skip the GL call if the requested
         // target is already bound.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        let cache_draw_target = DrawTarget::Texture {
-            texture: cache_texture,
-            layer: readback_layer.0 as usize,
-            with_depth: false,
-        };
-        self.device.bind_draw_target(cache_draw_target);
-||||||| merged common ancestors
-        let cache_draw_target = TextureDrawTarget {
-            texture: cache_texture,
-            layer: readback_layer.0 as usize,
-            with_depth: false,
-        };
-        self.device.bind_draw_target(Some(cache_draw_target), None);
-=======
         let cache_draw_target = DrawTarget::from_texture(
             cache_texture,
             readback_layer.0 as usize,
             false,
         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
         let mut src = DeviceIntRect::new(
             source_screen_origin + (backdrop_rect.origin - backdrop_screen_origin),
@@ -3920,13 +3278,6 @@ impl Renderer {
             dest.size.height = -dest.size.height;
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        self.device.bind_read_target(draw_target.into());
-        self.device.blit_render_target(src, dest);
-||||||| merged common ancestors
-        self.device.bind_read_target(render_target.map(|r| r.into()));
-        self.device.blit_render_target(src, dest);
-=======
         self.device.blit_render_target(
             draw_target.into(),
             src * device_to_framebuffer,
@@ -3934,7 +3285,6 @@ impl Renderer {
             dest * device_to_framebuffer,
             TextureFilter::Linear,
         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
         // Restore draw target to current pass render target + layer, and reset
         // the read target.
@@ -3969,21 +3319,7 @@ impl Renderer {
             let (source, layer, source_rect) = match blit.source {
                 BlitJobSource::Texture(texture_id, layer, source_rect) => {
                     // A blit from a texture into this target.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                    let texture = self.texture_resolver
-                        .resolve(&texture_id)
-                        .expect("BUG: invalid source texture");
-                    self.device.bind_read_target(ReadTarget::Texture { texture, layer: layer as usize });
-                    source_rect
-||||||| merged common ancestors
-                    let texture = self.texture_resolver
-                        .resolve(&texture_id)
-                        .expect("BUG: invalid source texture");
-                    self.device.bind_read_target(Some(TextureReadTarget { texture, layer: layer as usize }));
-                    source_rect
-=======
                     (texture_id, layer as usize, source_rect)
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 }
                 BlitJobSource::RenderTask(task_id) => {
                     // A blit from the child render task into this target.
@@ -3991,15 +3327,7 @@ impl Renderer {
                     //           creating mips for alpha masks.
                     let source = &render_tasks[task_id];
                     let (source_rect, layer) = source.get_target_rect();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                    self.device.bind_read_target(ReadTarget::Texture { texture, layer: layer.0 });
-                    source_rect
-||||||| merged common ancestors
-                    self.device.bind_read_target(Some(TextureReadTarget { texture, layer: layer.0 }));
-                    source_rect
-=======
                     (TextureSource::PrevPassColor, layer.0, source_rect)
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 }
             };
             debug_assert_eq!(source_rect.size, blit.target_rect.size);
@@ -4054,67 +3382,16 @@ impl Renderer {
 
     fn draw_picture_cache_target(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        draw_target: DrawTarget,
-        target: &ColorRenderTarget,
-        framebuffer_target_rect: DeviceIntRect,
-        depth_is_ready: bool,
-        clear_color: Option<[f32; 4]>,
-        render_tasks: &RenderTaskTree,
-||||||| merged common ancestors
-        render_target: Option<TextureDrawTarget>,
-        target: &ColorRenderTarget,
-        framebuffer_target_rect: DeviceUintRect,
-        target_size: DeviceUintSize,
-        depth_is_ready: bool,
-        clear_color: Option<[f32; 4]>,
-        render_tasks: &RenderTaskTree,
-=======
         target: &PictureCacheTarget,
         draw_target: DrawTarget,
         content_origin: DeviceIntPoint,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         projection: &Transform3D<f32>,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        frame_id: GpuFrameId,
-||||||| merged common ancestors
-        frame_id: FrameId,
-=======
         render_tasks: &RenderTaskGraph,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         stats: &mut RendererStats,
     ) {
         self.profile_counters.color_targets.inc();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        let _gm = self.gpu_profile.start_marker("color target");
-
-        // sanity check for the depth buffer
-        if let DrawTarget::Texture { texture, .. } = draw_target {
-            assert!(texture.supports_depth() >= target.needs_depth());
-        }
-
-        let framebuffer_kind = if draw_target.is_default() {
-            FramebufferKind::Main
-        } else {
-            FramebufferKind::Other
-        };
-||||||| merged common ancestors
-        let _gm = self.gpu_profile.start_marker("color target");
-
-        // sanity check for the depth buffer
-        if let Some(t) = render_target {
-            assert!(t.texture.supports_depth() >= target.needs_depth());
-        }
-
-        let framebuffer_kind = if render_target.is_none() {
-            FramebufferKind::Main
-        } else {
-            FramebufferKind::Other
-        };
-=======
         let _gm = self.gpu_profile.start_marker("picture cache target");
         let framebuffer_kind = FramebufferKind::Other;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
         {
             let _timer = self.gpu_profile.start_timer(GPU_TAG_SETUP_TARGET);
@@ -4123,110 +3400,13 @@ impl Renderer {
             self.device.enable_depth_write();
             self.set_blend(false, framebuffer_kind);
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            let depth_clear = if !depth_is_ready && target.needs_depth() {
-                self.device.enable_depth_write();
-                Some(1.0)
-            } else {
-                None
-            };
-
-            let clear_rect = if !draw_target.is_default() {
-                if self.enable_clear_scissor {
-                    // TODO(gw): Applying a scissor rect and minimal clear here
-                    // is a very large performance win on the Intel and nVidia
-                    // GPUs that I have tested with. It's possible it may be a
-                    // performance penalty on other GPU types - we should test this
-                    // and consider different code paths.
-                    //
-                    // Note: The above measurements were taken when render
-                    // target slices were minimum 2048x2048. Now that we size
-                    // them adaptively, this may be less of a win (except perhaps
-                    // on a mostly-unused last slice of a large texture array).
-                    Some(target.used_rect())
-                } else {
-                    None
-                }
-            } else if framebuffer_target_rect == DeviceIntRect::new(DeviceIntPoint::zero(), draw_target.dimensions()) {
-                // whole screen is covered, no need for scissor
-                None
-            } else {
-                let mut rect = framebuffer_target_rect.to_i32();
-                // Note: `framebuffer_target_rect` needs a Y-flip before going to GL
-                // Note: at this point, the target rectangle is not guaranteed to be within the main framebuffer bounds
-                // but `clear_target_rect` is totally fine with negative origin, as long as width & height are positive
-                rect.origin.y = draw_target.dimensions().height as i32 - rect.origin.y - rect.size.height;
-                Some(rect)
-            };
-
-            self.device.clear_target(clear_color, depth_clear, clear_rect);
-||||||| merged common ancestors
-            let depth_clear = if !depth_is_ready && target.needs_depth() {
-                self.device.enable_depth_write();
-                Some(1.0)
-            } else {
-                None
-            };
-
-            let clear_rect = if render_target.is_some() {
-                if self.enable_clear_scissor {
-                    // TODO(gw): Applying a scissor rect and minimal clear here
-                    // is a very large performance win on the Intel and nVidia
-                    // GPUs that I have tested with. It's possible it may be a
-                    // performance penalty on other GPU types - we should test this
-                    // and consider different code paths.
-                    Some(target.used_rect())
-                } else {
-                    None
-                }
-            } else if framebuffer_target_rect == DeviceUintRect::new(DeviceUintPoint::zero(), target_size) {
-                // whole screen is covered, no need for scissor
-                None
-            } else {
-                let mut rect = framebuffer_target_rect.to_i32();
-                // Note: `framebuffer_target_rect` needs a Y-flip before going to GL
-                // Note: at this point, the target rectangle is not guaranteed to be within the main framebuffer bounds
-                // but `clear_target_rect` is totally fine with negative origin, as long as width & height are positive
-                rect.origin.y = target_size.height as i32 - rect.origin.y - rect.size.height;
-                Some(rect)
-            };
-
-            self.device.clear_target(clear_color, depth_clear, clear_rect);
-=======
             self.device.clear_target(
                 target.clear_color.map(|c| c.to_array()),
                 Some(1.0),
                 None,
             );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            // If this color target requires any tasks to be pre-cleared,
-            // go through and do that now.
-            for &task_id in &target.color_clears {
-                let task = &render_tasks[task_id];
-                let (rect, _) = task.get_target_rect();
-                let color = match task.clear_mode {
-                    ClearMode::Color(color) => color.to_array(),
-                    _ => unreachable!(),
-                };
-                self.device.clear_target(
-                    Some(color),
-                    None,
-                    Some(rect),
-                );
-            }
-
-            if depth_clear.is_some() {
-                self.device.disable_depth_write();
-            }
-||||||| merged common ancestors
-            if depth_clear.is_some() {
-                self.device.disable_depth_write();
-            }
-=======
             self.device.disable_depth_write();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         }
 
         self.draw_alpha_batch_container(
@@ -4273,60 +3453,12 @@ impl Renderer {
             self.device.enable_depth();
             self.device.enable_depth_write();
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            for alpha_batch_container in &target.alpha_batch_containers {
-                if let Some(target_rect) = alpha_batch_container.target_rect {
-                    // Note: `framebuffer_target_rect` needs a Y-flip before going to GL
-                    let rect = if draw_target.is_default() {
-                        let mut rect = target_rect
-                            .intersection(&framebuffer_target_rect.to_i32())
-                            .unwrap_or(DeviceIntRect::zero());
-                        rect.origin.y = draw_target.dimensions().height as i32 - rect.origin.y - rect.size.height;
-                        rect
-                    } else {
-                        target_rect
-                    };
-                    self.device.enable_scissor();
-                    self.device.set_scissor_rect(rect);
-                }
-
-                // Draw opaque batches front-to-back for maximum
-                // z-buffer efficiency!
-                for batch in alpha_batch_container
-                    .opaque_batches
-                    .iter()
-                    .rev()
-||||||| merged common ancestors
-            for alpha_batch_container in &target.alpha_batch_containers {
-                if let Some(target_rect) = alpha_batch_container.target_rect {
-                    // Note: `framebuffer_target_rect` needs a Y-flip before going to GL
-                    let rect = if render_target.is_none() {
-                        let mut rect = target_rect
-                            .intersection(&framebuffer_target_rect.to_i32())
-                            .unwrap_or(DeviceIntRect::zero());
-                        rect.origin.y = target_size.height as i32 - rect.origin.y - rect.size.height;
-                        rect
-                    } else {
-                        target_rect
-                    };
-                    self.device.enable_scissor();
-                    self.device.set_scissor_rect(rect);
-                }
-
-                // Draw opaque batches front-to-back for maximum
-                // z-buffer efficiency!
-                for batch in alpha_batch_container
-                    .opaque_batches
-                    .iter()
-                    .rev()
-=======
             // Draw opaque batches front-to-back for maximum
             // z-buffer efficiency!
             for batch in alpha_batch_container
                 .opaque_batches
                 .iter()
                 .rev()
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 {
                     if should_skip_batch(&batch.key.kind, &self.debug_flags) {
                         continue;
@@ -4352,47 +3484,6 @@ impl Renderer {
             self.gpu_profile.finish_sampler(opaque_sampler);
         }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        let _gl = self.gpu_profile.start_marker("alpha batches");
-        let transparent_sampler = self.gpu_profile.start_sampler(GPU_SAMPLER_TAG_TRANSPARENT);
-        self.set_blend(true, framebuffer_kind);
-        let mut prev_blend_mode = BlendMode::None;
-
-        for alpha_batch_container in &target.alpha_batch_containers {
-            if let Some(target_rect) = alpha_batch_container.target_rect {
-                // Note: `framebuffer_target_rect` needs a Y-flip before going to GL
-                let rect = if draw_target.is_default() {
-                    let mut rect = target_rect
-                        .intersection(&framebuffer_target_rect.to_i32())
-                        .unwrap_or(DeviceIntRect::zero());
-                    rect.origin.y = draw_target.dimensions().height as i32 - rect.origin.y - rect.size.height;
-                    rect
-                } else {
-                    target_rect
-                };
-                self.device.enable_scissor();
-                self.device.set_scissor_rect(rect);
-||||||| merged common ancestors
-        let _gl = self.gpu_profile.start_marker("alpha batches");
-        let transparent_sampler = self.gpu_profile.start_sampler(GPU_SAMPLER_TAG_TRANSPARENT);
-        self.set_blend(true, framebuffer_kind);
-        let mut prev_blend_mode = BlendMode::None;
-
-        for alpha_batch_container in &target.alpha_batch_containers {
-            if let Some(target_rect) = alpha_batch_container.target_rect {
-                // Note: `framebuffer_target_rect` needs a Y-flip before going to GL
-                let rect = if render_target.is_none() {
-                    let mut rect = target_rect
-                        .intersection(&framebuffer_target_rect.to_i32())
-                        .unwrap_or(DeviceIntRect::zero());
-                    rect.origin.y = target_size.height as i32 - rect.origin.y - rect.size.height;
-                    rect
-                } else {
-                    target_rect
-                };
-                self.device.enable_scissor();
-                self.device.set_scissor_rect(rect);
-=======
         if !alpha_batch_container.alpha_batches.is_empty()
             && !self.debug_flags.contains(DebugFlags::DISABLE_ALPHA_PASS) {
             let _gl = self.gpu_profile.start_marker("alpha batches");
@@ -4415,7 +3506,6 @@ impl Renderer {
                     projection,
                     stats,
                 );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             }
 
             for batch in &alpha_batch_container.alpha_batches {
@@ -4479,17 +3569,8 @@ impl Renderer {
                     // they may overlap and affect each other.
                     debug_assert_eq!(batch.instances.len(), 1);
                     self.handle_readback_composite(
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                        draw_target,
-                        alpha_batch_container.target_rect,
-||||||| merged common ancestors
-                        render_target,
-                        target_size,
-                        alpha_batch_container.target_rect,
-=======
                         draw_target,
                         uses_scissor,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                         &render_tasks[source_id],
                         &render_tasks[task_id],
                         &render_tasks[backdrop_id],
@@ -4702,67 +3783,13 @@ impl Renderer {
                     }
                 };
                 let (src_rect, _) = render_tasks[output.task_id].get_target_rect();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                let mut dest_rect = DeviceIntRect::new(DeviceIntPoint::zero(), output_size);
-
-                // Invert Y coordinates, to correctly convert between coordinate systems.
-                dest_rect.origin.y += dest_rect.size.height;
-                dest_rect.size.height *= -1;
-
-                self.device.bind_read_target(draw_target.into());
-                self.device.bind_external_draw_target(fbo_id);
-                self.device.blit_render_target(src_rect, dest_rect);
-||||||| merged common ancestors
-                let mut dest_rect = DeviceIntRect::new(DeviceIntPoint::zero(), output_size);
-
-                // Invert Y coordinates, to correctly convert between coordinate systems.
-                dest_rect.origin.y += dest_rect.size.height;
-                dest_rect.size.height *= -1;
-
-                self.device.bind_read_target(render_target.map(|r| r.into()));
-                self.device.bind_external_draw_target(fbo_id);
-                self.device.blit_render_target(src_rect, dest_rect);
-=======
                 self.device.blit_render_target_invert_y(
                     draw_target.into(),
                     draw_target.to_framebuffer_rect(src_rect.translate(&-content_origin.to_vector())),
                     DrawTarget::External { fbo: fbo_id, size: output_size },
                     output_size.into(),
                 );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 handler.unlock(output.pipeline_id);
-            }
-        }
-
-        // At the end of rendering a target, blit across any cache tiles
-        // to the texture cache for use on subsequent frames.
-        if !target.tile_blits.is_empty() {
-            let _timer = self.gpu_profile.start_timer(GPU_TAG_BLIT);
-
-            self.device.bind_read_target(draw_target.into());
-
-            for blit in &target.tile_blits {
-                let texture = self.texture_resolver
-                    .resolve(&blit.target.texture_id)
-                    .expect("BUG: invalid target texture");
-
-                self.device.bind_draw_target(DrawTarget::Texture {
-                    texture,
-                    layer: blit.target.texture_layer as usize,
-                    with_depth: false,
-                });
-
-                let src_rect = DeviceIntRect::new(
-                    blit.offset,
-                    blit.target.uv_rect.size.to_i32(),
-                );
-
-                let dest_rect = blit.target.uv_rect.to_i32();
-
-                self.device.blit_render_target(
-                    src_rect,
-                    dest_rect,
-                );
             }
         }
     }
@@ -5000,24 +4027,9 @@ impl Renderer {
             let texture = self.texture_resolver
                 .resolve(&texture_source)
                 .expect("BUG: invalid target texture");
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            self.device.bind_draw_target(DrawTarget::Texture {
-||||||| merged common ancestors
-            self.device.bind_draw_target(Some(TextureDrawTarget {
-=======
             let draw_target = DrawTarget::from_texture(
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 texture,
                 layer,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                with_depth: false,
-            });
-        }
-||||||| merged common ancestors
-                with_depth: false,
-            }), Some(target_size));
-        }
-=======
                 false,
             );
             self.device.bind_draw_target(draw_target);
@@ -5025,7 +4037,6 @@ impl Renderer {
             self.device.disable_depth();
             self.device.disable_depth_write();
             self.set_blend(false, FramebufferKind::Other);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
             for rect in &target.clears {
                 self.device.clear_target(
@@ -5183,14 +4194,8 @@ impl Renderer {
             .expect("Found external image, but no handler set!");
 
         let mut list = GpuCacheUpdateList {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            frame_id: FrameId::INVALID,
-||||||| merged common ancestors
-            frame_id: FrameId::new(0),
-=======
             frame_id: FrameId::INVALID,
             clear: false,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             height: self.gpu_cache_texture.get_height(),
             blocks: Vec::new(),
             updates: Vec::new(),
@@ -5387,18 +4392,8 @@ impl Renderer {
     fn draw_tile_frame(
         &mut self,
         frame: &mut Frame,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        framebuffer_size: Option<DeviceIntSize>,
-        framebuffer_depth_is_ready: bool,
-        frame_id: GpuFrameId,
-||||||| merged common ancestors
-        framebuffer_size: Option<DeviceUintSize>,
-        framebuffer_depth_is_ready: bool,
-        frame_id: FrameId,
-=======
         device_size: Option<DeviceIntSize>,
         frame_id: GpuFrameId,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         stats: &mut RendererStats,
         clear_framebuffer: bool,
     ) {
@@ -5465,26 +4460,11 @@ impl Renderer {
                         }
 
                         self.draw_color_target(
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                            DrawTarget::Default(framebuffer_size),
-                            target,
-                            frame.inner_rect,
-                            framebuffer_depth_is_ready,
-                            clear_color,
-||||||| merged common ancestors
-                            None,
-                            target,
-                            frame.inner_rect,
-                            framebuffer_size,
-                            framebuffer_depth_is_ready,
-                            clear_color,
-=======
                             draw_target,
                             main_target,
                             frame.content_origin,
                             None,
                             None,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                             &frame.render_tasks,
                             &projection,
                             frame_id,
@@ -5550,20 +4530,11 @@ impl Renderer {
 
                     for (target_index, target) in alpha.targets.iter().enumerate() {
                         stats.alpha_target_count += 1;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                        let draw_target = DrawTarget::Texture {
-                            texture: &alpha_tex.as_ref().unwrap().texture,
-                            layer: target_index,
-                            with_depth: false,
-                        };
-||||||| merged common ancestors
-=======
                         let draw_target = DrawTarget::from_texture(
                             &alpha_tex.as_ref().unwrap().texture,
                             target_index,
                             false,
                         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
                         let projection = Transform3D::ortho(
                             0.0,
@@ -5585,20 +4556,11 @@ impl Renderer {
 
                     for (target_index, target) in color.targets.iter().enumerate() {
                         stats.color_target_count += 1;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                        let draw_target = DrawTarget::Texture {
-                            texture: &color_tex.as_ref().unwrap().texture,
-                            layer: target_index,
-                            with_depth: target.needs_depth(),
-                        };
-||||||| merged common ancestors
-=======
                         let draw_target = DrawTarget::from_texture(
                             &color_tex.as_ref().unwrap().texture,
                             target_index,
                             target.needs_depth(),
                         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
                         let projection = Transform3D::ortho(
                             0.0,
@@ -5618,16 +4580,7 @@ impl Renderer {
                         self.draw_color_target(
                             draw_target,
                             target,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                            frame.inner_rect,
-                            false,
-||||||| merged common ancestors
-                            frame.inner_rect,
-                            color.max_size,
-                            false,
-=======
                             frame.content_origin,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                             Some([0.0, 0.0, 0.0, 0.0]),
                             clear_depth,
                             &frame.render_tasks,
@@ -5807,15 +4760,7 @@ impl Renderer {
         }
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    #[cfg(feature = "debug_renderer")]
-    fn draw_render_target_debug(&mut self, framebuffer_size: DeviceIntSize) {
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-    fn draw_render_target_debug(&mut self, framebuffer_size: DeviceUintSize) {
-=======
     fn draw_render_target_debug(&mut self, device_size: DeviceIntSize) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         if !self.debug_flags.contains(DebugFlags::RENDER_TARGET_DBG) {
             return;
         }
@@ -5825,30 +4770,6 @@ impl Renderer {
             None => return,
         };
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        let textures =
-            self.texture_resolver.render_target_pool.iter().collect::<Vec<&Texture>>();
-
-        Self::do_debug_blit(
-            &mut self.device,
-            debug_renderer,
-            textures,
-            framebuffer_size,
-            0,
-            &|_| [0.0, 1.0, 0.0, 1.0], // Use green for all RTs.
-        );
-    }
-
-    #[cfg(feature = "debug_renderer")]
-    fn draw_texture_cache_debug(&mut self, framebuffer_size: DeviceIntSize) {
-        if !self.debug_flags.contains(DebugFlags::TEXTURE_CACHE_DBG) {
-            return;
-||||||| merged common ancestors
-        if num_layers * (size + spacing) > fb_width {
-            let factor = fb_width as f32 / (num_layers * (size + spacing)) as f32;
-            size = (size as f32 * factor) as i32;
-            spacing = (spacing as f32 * factor) as i32;
-=======
         let textures =
             self.texture_resolver.render_target_pool.iter().collect::<Vec<&Texture>>();
 
@@ -5868,7 +4789,6 @@ impl Renderer {
     ) {
         if !self.debug_flags.contains(DebugFlags::ZOOM_DBG) {
             return;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         }
 
         let debug_renderer = match self.debug.get_mut(&mut self.device) {
@@ -5876,33 +4796,9 @@ impl Renderer {
             None => return,
         };
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        let textures =
-            self.texture_resolver.texture_cache_map.values().collect::<Vec<&Texture>>();
-||||||| merged common ancestors
-            let layer_count = texture.get_layer_count() as usize;
-            for layer in 0 .. layer_count {
-                self.device.bind_read_target(Some(TextureReadTarget { texture, layer }));
-                let x = fb_width - (spacing + size) * (target_index + 1);
-                let y = spacing;
-=======
         let source_size = DeviceIntSize::new(64, 64);
         let target_size = DeviceIntSize::new(1024, 1024);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        fn select_color(texture: &Texture) -> [f32; 4] {
-            if texture.flags().contains(TextureFlags::IS_SHARED_TEXTURE_CACHE) {
-                [1.0, 0.5, 0.0, 1.0] // Orange for shared.
-            } else {
-                [1.0, 0.0, 1.0, 1.0] // Fuchsia for standalone.
-            }
-||||||| merged common ancestors
-                let dest_rect = rect(x, y, size, size);
-                self.device.blit_render_target(src_rect, dest_rect);
-                target_index += 1;
-            }
-=======
         let source_origin = DeviceIntPoint::new(
             (self.cursor_position.x - source_size.width / 2)
                 .min(device_size.width - source_size.width)
@@ -5947,20 +4843,7 @@ impl Renderer {
             );
 
             self.zoom_debug_texture = Some(texture);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-
-        Self::do_debug_blit(
-            &mut self.device,
-            debug_renderer,
-            textures,
-            framebuffer_size,
-            if self.debug_flags.contains(DebugFlags::RENDER_TARGET_DBG) { 544 } else { 0 },
-            &select_color,
-        );
-||||||| merged common ancestors
-=======
 
         // Copy frame buffer into the zoom texture
         let read_target = DrawTarget::new_default(device_size);
@@ -5987,27 +4870,8 @@ impl Renderer {
             read_target.to_framebuffer_rect(target_rect),
             TextureFilter::Nearest,
         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    #[cfg(feature = "debug_renderer")]
-    fn do_debug_blit(
-        device: &mut Device,
-        debug_renderer: &mut DebugRenderer,
-        mut textures: Vec<&Texture>,
-        framebuffer_size: DeviceIntSize,
-        bottom: i32,
-        select_color: &Fn(&Texture) -> [f32; 4],
-    ) {
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-    fn draw_texture_cache_debug(&mut self, framebuffer_size: DeviceUintSize) {
-        if !self.debug_flags.contains(DebugFlags::TEXTURE_CACHE_DBG) {
-            return;
-        }
-
-=======
     fn draw_texture_cache_debug(&mut self, device_size: DeviceIntSize) {
         if !self.debug_flags.contains(DebugFlags::TEXTURE_CACHE_DBG) {
             return;
@@ -6047,25 +4911,12 @@ impl Renderer {
         bottom: i32,
         select_color: &dyn Fn(&Texture) -> [f32; 4],
     ) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         let mut spacing = 16;
         let mut size = 512;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-
-        let fb_width = framebuffer_size.width as i32;
-        let fb_height = framebuffer_size.height as i32;
-        let num_layers: i32 = textures.iter()
-||||||| merged common ancestors
-        let fb_width = framebuffer_size.width as i32;
-        let num_layers: i32 = self.texture_resolver
-            .texture_cache_map
-            .values()
-=======
 
         let fb_width = device_size.width;
         let fb_height = device_size.height;
         let num_layers: i32 = textures.iter()
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             .map(|texture| texture.get_layer_count())
             .sum();
 
@@ -6093,14 +4944,6 @@ impl Renderer {
 
             let layer_count = texture.get_layer_count() as usize;
             for layer in 0 .. layer_count {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                device.bind_read_target(ReadTarget::Texture { texture, layer});
-
-||||||| merged common ancestors
-                self.device.bind_read_target(Some(TextureReadTarget { texture, layer}));
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 let x = fb_width - (spacing + size) * (i as i32 + 1);
 
                 // If we have more targets than fit on one row in screen, just early exit.
@@ -6108,37 +4951,6 @@ impl Renderer {
                     return;
                 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                // Draw the info tag.
-                let text_margin = 1;
-                let text_height = 14; // Visually aproximated.
-                let tag_height = text_height + text_margin * 2;
-                let tag_rect = rect(x, y, size, tag_height);
-                let tag_color = select_color(texture);
-                device.clear_target(Some(tag_color), None, Some(tag_rect));
-
-                // Draw the dimensions onto the tag.
-                let dim = texture.get_dimensions();
-                let mut text_rect = tag_rect;
-                text_rect.origin.y =
-                    fb_height - text_rect.origin.y - text_rect.size.height; // Top-relative.
-                debug_renderer.add_text(
-                    (x + text_margin) as f32,
-                    (fb_height - y - text_margin) as f32, // Top-relative.
-                    &format!("{}x{}", dim.width, dim.height),
-                    ColorU::new(0, 0, 0, 255),
-                    Some(text_rect.to_f32())
-                );
-
-                // Blit the contents of the layer. We need to invert Y because
-                // we're blitting from a texture to the main framebuffer, which
-                // use different conventions.
-                let dest_rect = rect(x, y + tag_height, size, size);
-                device.blit_render_target_invert_y(src_rect, dest_rect);
-||||||| merged common ancestors
-                let dest_rect = rect(x, y, size, size);
-                self.device.blit_render_target(src_rect, dest_rect);
-=======
                 //TODO: properly use FramebufferPixel coordinates
 
                 // Draw the info tag.
@@ -6176,7 +4988,6 @@ impl Renderer {
                     DrawTarget::new_default(device_size),
                     FramebufferIntRect::from_untyped(&dest_rect),
                 );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                 i += 1;
             }
         }
@@ -6219,15 +5030,7 @@ impl Renderer {
         );
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    #[cfg(feature = "debug_renderer")]
-    fn draw_gpu_cache_debug(&mut self, framebuffer_size: DeviceIntSize) {
-||||||| merged common ancestors
-    #[cfg(feature = "debug_renderer")]
-    fn draw_gpu_cache_debug(&mut self, framebuffer_size: DeviceUintSize) {
-=======
     fn draw_gpu_cache_debug(&mut self, device_size: DeviceIntSize) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         if !self.debug_flags.contains(DebugFlags::GPU_CACHE_DBG) {
             return;
         }
@@ -6265,23 +5068,11 @@ impl Renderer {
     }
 
     /// Pass-through to `Device::read_pixels_into`, used by Gecko's WR bindings.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    pub fn read_pixels_into(&mut self, rect: DeviceIntRect, format: ReadPixelsFormat, output: &mut [u8]) {
-||||||| merged common ancestors
-    pub fn read_pixels_into(&mut self, rect: DeviceUintRect, format: ReadPixelsFormat, output: &mut [u8]) {
-=======
     pub fn read_pixels_into(&mut self, rect: FramebufferIntRect, format: ImageFormat, output: &mut [u8]) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         self.device.read_pixels_into(rect, format, output);
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    pub fn read_pixels_rgba8(&mut self, rect: DeviceIntRect) -> Vec<u8> {
-||||||| merged common ancestors
-    pub fn read_pixels_rgba8(&mut self, rect: DeviceUintRect) -> Vec<u8> {
-=======
     pub fn read_pixels_rgba8(&mut self, rect: FramebufferIntRect) -> Vec<u8> {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         let mut pixels = vec![0; (rect.size.width * rect.size.height * 4) as usize];
         self.device.read_pixels_into(rect, ImageFormat::RGBA8, &mut pixels);
         pixels
@@ -6292,24 +5083,10 @@ impl Renderer {
         let size = FramebufferIntSize::from_untyped(&texture.get_dimensions().to_untyped());
         let mut texels = vec![0; (size.width * size.height * 16) as usize];
         self.device.begin_frame();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        self.device.bind_read_target(ReadTarget::Texture { texture, layer: 0 });
-||||||| merged common ancestors
-        self.device.bind_read_target(Some(TextureReadTarget { texture, layer: 0 }));
-=======
         self.device.bind_read_target(ReadTarget::from_texture(texture, 0));
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         self.device.read_pixels_into(
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            DeviceIntRect::new(DeviceIntPoint::zero(), size),
-            ReadPixelsFormat::Standard(ImageFormat::RGBAF32),
-||||||| merged common ancestors
-            DeviceUintRect::new(DeviceUintPoint::zero(), size),
-            ReadPixelsFormat::Standard(ImageFormat::RGBAF32),
-=======
             size.into(),
             ImageFormat::RGBAF32,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             &mut texels,
         );
         self.device.reset_read_target();
@@ -6451,21 +5228,6 @@ impl Renderer {
             self.device.set_blend_mode_subpixel_with_bg_color_pass2();
         }
     }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-
-    /// Clears all the layers of a texture with a given color.
-    fn clear_texture(&mut self, texture: &Texture, color: [f32; 4]) {
-        for i in 0..texture.get_layer_count() {
-            self.device.bind_draw_target(DrawTarget::Texture {
-                texture: &texture,
-                layer: i as usize,
-                with_depth: false,
-            });
-            self.device.clear_target(Some(color), None, None);
-        }
-    }
-||||||| merged common ancestors
-=======
 
     /// Clears all the layers of a texture with a given color.
     fn clear_texture(&mut self, texture: &Texture, color: [f32; 4]) {
@@ -6478,7 +5240,6 @@ impl Renderer {
             self.device.clear_target(Some(color), None, None);
         }
     }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 }
 
 pub enum ExternalImageSource<'a> {
@@ -6549,23 +5310,12 @@ pub trait SceneBuilderHooks {
     /// This is called after a resource update operation on the scene builder
     /// thread, in the case where resource updates were applied without a scene
     /// build.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    fn post_resource_update(&self);
-    /// This is called after a scene build completes without any changes being
-    /// made. We guarantee that each pre_scene_build call will be matched with
-    /// exactly one of post_scene_swap, post_resource_update or
-    /// post_empty_scene_build.
-    fn post_empty_scene_build(&self);
-||||||| merged common ancestors
-    fn post_resource_update(&self);
-=======
     fn post_resource_update(&self, document_ids: &Vec<DocumentId>);
     /// This is called after a scene build completes without any changes being
     /// made. We guarantee that each pre_scene_build call will be matched with
     /// exactly one of post_scene_swap, post_resource_update or
     /// post_empty_scene_build.
     fn post_empty_scene_build(&self);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
     /// This is a generic callback which provides an opportunity to run code
     /// on the scene builder thread. This is called as part of the main message
     /// loop of the scene builder thread, but outside of any specific message
@@ -6618,14 +5368,8 @@ pub struct RendererOptions {
     pub enable_subpixel_aa: bool,
     pub clear_color: Option<ColorF>,
     pub enable_clear_scissor: bool,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    pub max_texture_size: Option<i32>,
-||||||| merged common ancestors
-    pub max_texture_size: Option<u32>,
-=======
     pub max_texture_size: Option<i32>,
     pub max_glyph_cache_size: Option<usize>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
     pub scatter_gpu_cache_updates: bool,
     pub upload_method: UploadMethod,
     pub workers: Option<Arc<ThreadPool>>,
@@ -6642,10 +5386,6 @@ pub struct RendererOptions {
     pub chase_primitive: ChasePrimitive,
     pub support_low_priority_transactions: bool,
     pub namespace_alloc_by_client: bool,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-    pub enable_picture_caching: bool,
-||||||| merged common ancestors
-=======
     pub enable_picture_caching: bool,
     pub testing: bool,
     /// Set to true if this GPU supports hardware fast clears as a performance
@@ -6667,7 +5407,6 @@ pub struct RendererOptions {
     pub start_debug_server: bool,
     /// Output the source of the shader with the given name.
     pub dump_shader_source: Option<String>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 }
 
 impl Default for RendererOptions {
@@ -6704,10 +5443,6 @@ impl Default for RendererOptions {
             chase_primitive: ChasePrimitive::Nothing,
             support_low_priority_transactions: false,
             namespace_alloc_by_client: false,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            enable_picture_caching: false,
-||||||| merged common ancestors
-=======
             enable_picture_caching: false,
             testing: false,
             gpu_supports_fast_clears: false,
@@ -6721,7 +5456,6 @@ impl Default for RendererOptions {
             // needed.
             start_debug_server: true,
             dump_shader_source: None,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
         }
     }
 }
@@ -6770,36 +5504,12 @@ pub struct RendererStats {
     pub gpu_cache_upload_time: u64,
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-impl RendererStats {
-    pub fn empty() -> Self {
-        RendererStats {
-            total_draw_calls: 0,
-            alpha_target_count: 0,
-            color_target_count: 0,
-            texture_upload_kb: 0,
-            resource_upload_time: 0,
-            gpu_cache_upload_time: 0,
-        }
-    }
-||||||| merged common ancestors
-impl RendererStats {
-    pub fn empty() -> Self {
-        RendererStats {
-            total_draw_calls: 0,
-            alpha_target_count: 0,
-            color_target_count: 0,
-            texture_upload_kb: 0,
-        }
-    }
-=======
 /// Return type from render(), which contains some repr(C) statistics as well as
 /// some non-repr(C) data.
 #[derive(Debug, Default)]
 pub struct RenderResults {
     pub stats: RendererStats,
     pub recorded_dirty_regions: Vec<RecordedDirtyRegion>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 }
 
 #[cfg(any(feature = "capture", feature = "replay"))]
@@ -6878,22 +5588,8 @@ impl Renderer {
         let short_path = format!("textures/{}.raw", name);
 
         let bytes_per_pixel = texture.get_format().bytes_per_pixel();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-        let read_format = ReadPixelsFormat::Standard(texture.get_format());
-        let rect = DeviceIntRect::new(
-            DeviceIntPoint::zero(),
-            texture.get_dimensions(),
-        );
-||||||| merged common ancestors
-        let read_format = ReadPixelsFormat::Standard(texture.get_format());
-        let rect = DeviceUintRect::new(
-            DeviceUintPoint::zero(),
-            texture.get_dimensions(),
-        );
-=======
         let read_format = texture.get_format();
         let rect_size = texture.get_dimensions();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
 
         let mut file = fs::File::create(root.join(&short_path))
             .expect(&format!("Unable to create {}", short_path));
@@ -6920,13 +5616,7 @@ impl Renderer {
                 };
                 CaptureConfig::save_png(
                     root.join(format!("textures/{}-{}.png", name, layer_id)),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-                    rect.size, format,
-||||||| merged common ancestors
-                    (rect.size.width, rect.size.height), format,
-=======
                     rect_size, format,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
                     data_ref,
                 );
             }
@@ -6937,13 +5627,7 @@ impl Renderer {
 
         PlainTexture {
             data: short_path,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/renderer.rs
-            size: (rect.size, texture.get_layer_count()),
-||||||| merged common ancestors
-            size: (rect.size.width, rect.size.height, texture.get_layer_count()),
-=======
             size: (rect_size, texture.get_layer_count()),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/renderer.rs
             format: texture.get_format(),
             filter: texture.get_filter(),
             has_depth: texture.supports_depth(),

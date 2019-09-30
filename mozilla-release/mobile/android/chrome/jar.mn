@@ -48,15 +48,6 @@ chrome.jar:
   content/aboutLogins.js               (content/aboutLogins.js)
   content/ExtensionPermissions.js      (content/ExtensionPermissions.js)
 
-<<<<<<< HEAD
-% content branding %content/branding/
-
-||||||| merged common ancestors
-% content branding %content/branding/
-
-% override chrome://global/content/config.xul chrome://browser/content/config.xhtml
-=======
->>>>>>> upstream-releases
 % override chrome://global/content/netError.xhtml chrome://browser/content/netError.xhtml
 % override chrome://mozapps/content/extensions/extensions.xul chrome://browser/content/aboutAddons.xhtml
 

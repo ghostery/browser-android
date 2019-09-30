@@ -5,18 +5,10 @@
 
 #include "TextServicesDocument.h"
 
-<<<<<<< HEAD
-#include "mozilla/Assertions.h"   // for MOZ_ASSERT, etc
-#include "mozilla/EditorUtils.h"  // for AutoTransactionBatchExternal
-||||||| merged common ancestors
-#include "mozilla/Assertions.h"         // for MOZ_ASSERT, etc
-#include "mozilla/EditorUtils.h"        // for AutoTransactionBatch
-=======
 #include "FilteredContentIterator.h"  // for FilteredContentIterator
 #include "mozilla/Assertions.h"       // for MOZ_ASSERT, etc
 #include "mozilla/EditorUtils.h"      // for AutoTransactionBatchExternal
 #include "mozilla/dom/AbstractRange.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/Element.h"
 #include "mozilla/dom/Selection.h"
 #include "mozilla/mozalloc.h"    // for operator new, etc
@@ -93,30 +85,10 @@ NS_INTERFACE_MAP_BEGIN(TextServicesDocument)
   NS_INTERFACE_MAP_ENTRIES_CYCLE_COLLECTION(TextServicesDocument)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION(TextServicesDocument, mDocument, mSelCon, mTextEditor,
-                         mIterator, mPrevTextBlock, mNextTextBlock, mExtent)
-
-nsresult TextServicesDocument::InitWithEditor(nsIEditor* aEditor) {
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION(TextServicesDocument,
-                         mDocument,
-                         mSelCon,
-                         mTextEditor,
-                         mIterator,
-                         mPrevTextBlock,
-                         mNextTextBlock,
-                         mExtent)
-
-nsresult
-TextServicesDocument::InitWithEditor(nsIEditor* aEditor)
-{
-=======
 NS_IMPL_CYCLE_COLLECTION(TextServicesDocument, mDocument, mSelCon, mTextEditor,
                          mFilteredIter, mPrevTextBlock, mNextTextBlock, mExtent)
 
 nsresult TextServicesDocument::InitWithEditor(nsIEditor* aEditor) {
->>>>>>> upstream-releases
   nsCOMPtr<nsISelectionController> selCon;
 
   NS_ENSURE_TRUE(aEditor, NS_ERROR_NULL_POINTER);
@@ -171,20 +143,8 @@ nsresult TextServicesDocument::InitWithEditor(nsIEditor* aEditor) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::SetExtent(nsRange* aRange) {
-  NS_ENSURE_ARG_POINTER(aRange);
-  NS_ENSURE_TRUE(mDocument, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::SetExtent(nsRange* aRange)
-{
-  NS_ENSURE_ARG_POINTER(aRange);
-  NS_ENSURE_TRUE(mDocument, NS_ERROR_FAILURE);
-=======
 nsresult TextServicesDocument::SetExtent(const AbstractRange* aAbstractRange) {
   MOZ_ASSERT(aAbstractRange);
->>>>>>> upstream-releases
 
   if (NS_WARN_IF(!mDocument)) {
     return NS_ERROR_FAILURE;
@@ -213,46 +173,21 @@ nsresult TextServicesDocument::SetExtent(const AbstractRange* aAbstractRange) {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::ExpandRangeToWordBoundaries(nsRange* aRange) {
-  NS_ENSURE_ARG_POINTER(aRange);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::ExpandRangeToWordBoundaries(nsRange* aRange)
-{
-  NS_ENSURE_ARG_POINTER(aRange);
-=======
 nsresult TextServicesDocument::ExpandRangeToWordBoundaries(
     StaticRange* aStaticRange) {
   MOZ_ASSERT(aStaticRange);
->>>>>>> upstream-releases
 
   // Get the end points of the range.
 
   nsCOMPtr<nsINode> rngStartNode, rngEndNode;
   int32_t rngStartOffset, rngEndOffset;
 
-<<<<<<< HEAD
-  nsresult rv =
-      GetRangeEndPoints(aRange, getter_AddRefs(rngStartNode), &rngStartOffset,
-                        getter_AddRefs(rngEndNode), &rngEndOffset);
-
-  NS_ENSURE_SUCCESS(rv, rv);
-||||||| merged common ancestors
-  nsresult rv = GetRangeEndPoints(aRange, getter_AddRefs(rngStartNode),
-                                  &rngStartOffset,
-                                  getter_AddRefs(rngEndNode),
-                                  &rngEndOffset);
-
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
   nsresult rv = GetRangeEndPoints(aStaticRange, getter_AddRefs(rngStartNode),
                                   &rngStartOffset, getter_AddRefs(rngEndNode),
                                   &rngEndOffset);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
->>>>>>> upstream-releases
 
   // Create a content iterator based on the range.
   RefPtr<FilteredContentIterator> filteredIter;
@@ -274,18 +209,10 @@ nsresult TextServicesDocument::ExpandRangeToWordBoundaries(
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsINode* firstText = iter->GetCurrentNode();
-  NS_ENSURE_TRUE(firstText, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-  nsINode *firstText = iter->GetCurrentNode();
-  NS_ENSURE_TRUE(firstText, NS_ERROR_FAILURE);
-=======
   nsINode* firstText = filteredIter->GetCurrentNode();
   if (NS_WARN_IF(!firstText)) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   // Find the last text node in the range.
 
@@ -301,18 +228,10 @@ nsresult TextServicesDocument::ExpandRangeToWordBoundaries(
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  nsINode* lastText = iter->GetCurrentNode();
-  NS_ENSURE_TRUE(lastText, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-  nsINode *lastText = iter->GetCurrentNode();
-  NS_ENSURE_TRUE(lastText, NS_ERROR_FAILURE);
-=======
   nsINode* lastText = filteredIter->GetCurrentNode();
   if (NS_WARN_IF(!lastText)) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   // Now make sure our end points are in terms of text nodes in the range!
 
@@ -349,16 +268,8 @@ nsresult TextServicesDocument::ExpandRangeToWordBoundaries(
   nsTArray<OffsetEntry*> offsetTable;
   nsAutoString blockStr;
 
-<<<<<<< HEAD
-  rv =
-      CreateOffsetTable(&offsetTable, docIter, &iterStatus, nullptr, &blockStr);
-||||||| merged common ancestors
-  rv = CreateOffsetTable(&offsetTable, docIter, &iterStatus,
-                         nullptr, &blockStr);
-=======
   rv = CreateOffsetTable(&offsetTable, docFilteredIter, &iterStatus, nullptr,
                          &blockStr);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     ClearOffsetTable(&offsetTable);
     return rv;
@@ -390,16 +301,8 @@ nsresult TextServicesDocument::ExpandRangeToWordBoundaries(
 
   iterStatus = IteratorStatus::eValid;
 
-<<<<<<< HEAD
-  rv =
-      CreateOffsetTable(&offsetTable, docIter, &iterStatus, nullptr, &blockStr);
-||||||| merged common ancestors
-  rv = CreateOffsetTable(&offsetTable, docIter, &iterStatus,
-                         nullptr, &blockStr);
-=======
   rv = CreateOffsetTable(&offsetTable, docFilteredIter, &iterStatus, nullptr,
                          &blockStr);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     ClearOffsetTable(&offsetTable);
     return rv;
@@ -425,31 +328,11 @@ nsresult TextServicesDocument::ExpandRangeToWordBoundaries(
     rngEndOffset = wordEndOffset;
   }
 
-<<<<<<< HEAD
-  // Now adjust the range so that it uses our new
-  // end points.
-  rv = aRange->SetStartAndEnd(rngStartNode, rngStartOffset, rngEndNode,
-                              rngEndOffset);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-  // Now adjust the range so that it uses our new
-  // end points.
-  rv = aRange->SetStartAndEnd(rngStartNode, rngStartOffset,
-                              rngEndNode, rngEndOffset);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-=======
   // Now adjust the range so that it uses our new end points.
   rv = aStaticRange->SetStartAndEnd(rngStartNode, rngStartOffset, rngEndNode,
                                     rngEndOffset);
   NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to update the given range");
   return rv;
->>>>>>> upstream-releases
 }
 
 nsresult TextServicesDocument::SetFilterType(uint32_t aFilterType) {
@@ -458,18 +341,8 @@ nsresult TextServicesDocument::SetFilterType(uint32_t aFilterType) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::GetCurrentTextBlock(nsString* aStr) {
-  NS_ENSURE_TRUE(aStr, NS_ERROR_NULL_POINTER);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::GetCurrentTextBlock(nsString *aStr)
-{
-  NS_ENSURE_TRUE(aStr, NS_ERROR_NULL_POINTER);
-=======
 nsresult TextServicesDocument::GetCurrentTextBlock(nsAString& aStr) {
   aStr.Truncate();
->>>>>>> upstream-releases
 
   NS_ENSURE_TRUE(mFilteredIter, NS_ERROR_FAILURE);
 
@@ -481,18 +354,8 @@ nsresult TextServicesDocument::GetCurrentTextBlock(nsAString& aStr) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::FirstBlock() {
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::FirstBlock()
-{
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-=======
 nsresult TextServicesDocument::FirstBlock() {
   NS_ENSURE_TRUE(mFilteredIter, NS_ERROR_FAILURE);
->>>>>>> upstream-releases
 
   nsresult rv = FirstTextNode(mFilteredIter, &mIteratorStatus);
 
@@ -816,18 +679,8 @@ nsresult TextServicesDocument::LastSelectedBlock(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::PrevBlock() {
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::PrevBlock()
-{
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-=======
 nsresult TextServicesDocument::PrevBlock() {
   NS_ENSURE_TRUE(mFilteredIter, NS_ERROR_FAILURE);
->>>>>>> upstream-releases
 
   if (mIteratorStatus == IteratorStatus::eDone) {
     return NS_OK;
@@ -836,14 +689,7 @@ nsresult TextServicesDocument::PrevBlock() {
   switch (mIteratorStatus) {
     case IteratorStatus::eValid:
     case IteratorStatus::eNext: {
-<<<<<<< HEAD
-      nsresult rv = FirstTextNodeInPrevBlock(mIterator);
-||||||| merged common ancestors
-
-      nsresult rv = FirstTextNodeInPrevBlock(mIterator);
-=======
       nsresult rv = FirstTextNodeInPrevBlock(mFilteredIter);
->>>>>>> upstream-releases
 
       if (NS_FAILED(rv)) {
         mIteratorStatus = IteratorStatus::eDone;
@@ -888,18 +734,8 @@ nsresult TextServicesDocument::PrevBlock() {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::NextBlock() {
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::NextBlock()
-{
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-=======
 nsresult TextServicesDocument::NextBlock() {
   NS_ENSURE_TRUE(mFilteredIter, NS_ERROR_FAILURE);
->>>>>>> upstream-releases
 
   if (mIteratorStatus == IteratorStatus::eDone) {
     return NS_OK;
@@ -1161,19 +997,9 @@ nsresult TextServicesDocument::DeleteSelection() {
         // so get its current node so we can restore it after we
         // create the new iterator!
 
-<<<<<<< HEAD
-        curContent = mIterator->GetCurrentNode()
-                         ? mIterator->GetCurrentNode()->AsContent()
-                         : nullptr;
-||||||| merged common ancestors
-        curContent = mIterator->GetCurrentNode()
-                     ? mIterator->GetCurrentNode()->AsContent()
-                     : nullptr;
-=======
         curContent = mFilteredIter->GetCurrentNode()
                          ? mFilteredIter->GetCurrentNode()->AsContent()
                          : nullptr;
->>>>>>> upstream-releases
       }
 
       // Create the new iterator.
@@ -1254,23 +1080,7 @@ nsresult TextServicesDocument::DeleteSelection() {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::InsertText(const nsString* aText) {
-  if (NS_WARN_IF(!aText)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::InsertText(const nsString* aText)
-{
-  if (NS_WARN_IF(!aText)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-=======
 nsresult TextServicesDocument::InsertText(const nsAString& aText) {
->>>>>>> upstream-releases
   if (NS_WARN_IF(!mTextEditor) || NS_WARN_IF(!SelectionIsValid())) {
     return NS_ERROR_FAILURE;
   }
@@ -1295,23 +1105,10 @@ nsresult TextServicesDocument::InsertText(const nsAString& aText) {
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
-<<<<<<< HEAD
-  // AutoTransactionBatchExternal grabs mTextEditor, so, we don't need to grab
-  // the instance with local variable here.
-  AutoTransactionBatchExternal treatAsOneTransaction(*mTextEditor);
-||||||| merged common ancestors
-  // AutoTransactionBatch grabs mTextEditor, so, we don't need to grab the
-  // instance with local variable here.
-  // XXX Well, do we really need to create AutoTransactionBatch here?
-  //     Looks like that after InsertTextAsAction(), this does nothing
-  //     from a point of view of editor.
-  AutoTransactionBatch bundleAllTransactions(*mTextEditor);
-=======
   // AutoTransactionBatchExternal grabs mTextEditor, so, we don't need to grab
   // the instance with local variable here.
   RefPtr<TextEditor> textEditor = mTextEditor;
   AutoTransactionBatchExternal treatAsOneTransaction(*textEditor);
->>>>>>> upstream-releases
 
   nsresult rv = textEditor->InsertTextAsAction(aText);
   if (NS_FAILED(rv)) {
@@ -1456,18 +1253,8 @@ nsresult TextServicesDocument::InsertText(const nsAString& aText) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void TextServicesDocument::DidDeleteNode(nsINode* aChild) {
-  if (NS_WARN_IF(!mIterator)) {
-||||||| merged common ancestors
-void
-TextServicesDocument::DidDeleteNode(nsINode* aChild)
-{
-  if (NS_WARN_IF(!mIterator)) {
-=======
 void TextServicesDocument::DidDeleteNode(nsINode* aChild) {
   if (NS_WARN_IF(!mFilteredIter)) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -1487,17 +1274,8 @@ void TextServicesDocument::DidDeleteNode(nsINode* aChild) {
     return;
   }
 
-<<<<<<< HEAD
-  nsINode* node = mIterator->GetCurrentNode();
-  if (node && node == aChild && mIteratorStatus != IteratorStatus::eDone) {
-||||||| merged common ancestors
-  nsINode* node = mIterator->GetCurrentNode();
-  if (node && node == aChild &&
-      mIteratorStatus != IteratorStatus::eDone) {
-=======
   nsINode* node = mFilteredIter->GetCurrentNode();
   if (node && node == aChild && mIteratorStatus != IteratorStatus::eDone) {
->>>>>>> upstream-releases
     // XXX: This should never really happen because
     // AdjustContentIterator() should have been called prior
     // to the delete to try and position the iterator on the
@@ -1606,24 +1384,12 @@ void TextServicesDocument::DidJoinNodes(nsINode& aLeftNode,
   }
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::CreateContentIterator(
-    nsRange* aRange, nsIContentIterator** aIterator) {
-  NS_ENSURE_TRUE(aRange && aIterator, NS_ERROR_NULL_POINTER);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::CreateContentIterator(nsRange* aRange,
-                                            nsIContentIterator** aIterator)
-{
-  NS_ENSURE_TRUE(aRange && aIterator, NS_ERROR_NULL_POINTER);
-=======
 nsresult TextServicesDocument::CreateFilteredContentIterator(
     const AbstractRange* aAbstractRange,
     FilteredContentIterator** aFilteredIter) {
   if (NS_WARN_IF(!aAbstractRange) || NS_WARN_IF(!aFilteredIter)) {
     return NS_ERROR_INVALID_ARG;
   }
->>>>>>> upstream-releases
 
   *aFilteredIter = nullptr;
 
@@ -1640,16 +1406,8 @@ nsresult TextServicesDocument::CreateFilteredContentIterator(
   // Create a FilteredContentIterator
   // This class wraps the ContentIterator in order to give itself a chance
   // to filter out certain content nodes
-<<<<<<< HEAD
-  RefPtr<nsFilteredContentIterator> filter =
-      new nsFilteredContentIterator(std::move(composeFilter));
-||||||| merged common ancestors
-  RefPtr<nsFilteredContentIterator> filter =
-    new nsFilteredContentIterator(std::move(composeFilter));
-=======
   RefPtr<FilteredContentIterator> filter =
       new FilteredContentIterator(std::move(composeFilter));
->>>>>>> upstream-releases
 
   nsresult rv = filter->Init(aAbstractRange);
   if (NS_FAILED(rv)) {
@@ -1739,21 +1497,9 @@ TextServicesDocument::CreateDocumentContentRootToNodeOffsetRange(
   return range.forget();
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::CreateDocumentContentIterator(
-    nsIContentIterator** aIterator) {
-  NS_ENSURE_TRUE(aIterator, NS_ERROR_NULL_POINTER);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::CreateDocumentContentIterator(
-                        nsIContentIterator** aIterator)
-{
-  NS_ENSURE_TRUE(aIterator, NS_ERROR_NULL_POINTER);
-=======
 nsresult TextServicesDocument::CreateDocumentContentIterator(
     FilteredContentIterator** aFilteredIter) {
   NS_ENSURE_TRUE(aFilteredIter, NS_ERROR_NULL_POINTER);
->>>>>>> upstream-releases
 
   RefPtr<nsRange> range = CreateDocumentContentRange();
   if (NS_WARN_IF(!range)) {
@@ -1764,18 +1510,8 @@ nsresult TextServicesDocument::CreateDocumentContentIterator(
   return CreateFilteredContentIterator(range, aFilteredIter);
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::AdjustContentIterator() {
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::AdjustContentIterator()
-{
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-=======
 nsresult TextServicesDocument::AdjustContentIterator() {
   NS_ENSURE_TRUE(mFilteredIter, NS_ERROR_FAILURE);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsINode> node = mFilteredIter->GetCurrentNode();
   NS_ENSURE_TRUE(node, NS_ERROR_FAILURE);
@@ -1866,66 +1602,16 @@ nsresult TextServicesDocument::AdjustContentIterator() {
 }
 
 // static
-<<<<<<< HEAD
-bool TextServicesDocument::DidSkip(nsIContentIterator* aFilteredIter) {
-  // We can assume here that the Iterator is a nsFilteredContentIterator because
-  // all the iterator are created in CreateContentIterator which create a
-  // nsFilteredContentIterator
-  // So if the iterator bailed on one of the "filtered" content nodes then we
-  // consider that to be a block and bail with true
-  if (aFilteredIter) {
-    nsFilteredContentIterator* filter =
-        static_cast<nsFilteredContentIterator*>(aFilteredIter);
-    if (filter && filter->DidSkip()) {
-      return true;
-    }
-  }
-  return false;
-||||||| merged common ancestors
-bool
-TextServicesDocument::DidSkip(nsIContentIterator* aFilteredIter)
-{
-  // We can assume here that the Iterator is a nsFilteredContentIterator because
-  // all the iterator are created in CreateContentIterator which create a
-  // nsFilteredContentIterator
-  // So if the iterator bailed on one of the "filtered" content nodes then we
-  // consider that to be a block and bail with true
-  if (aFilteredIter) {
-    nsFilteredContentIterator* filter = static_cast<nsFilteredContentIterator *>(aFilteredIter);
-    if (filter && filter->DidSkip()) {
-      return true;
-    }
-  }
-  return false;
-=======
 bool TextServicesDocument::DidSkip(FilteredContentIterator* aFilteredIter) {
   return aFilteredIter && aFilteredIter->DidSkip();
->>>>>>> upstream-releases
 }
 
 // static
-<<<<<<< HEAD
-void TextServicesDocument::ClearDidSkip(nsIContentIterator* aFilteredIter) {
-||||||| merged common ancestors
-void
-TextServicesDocument::ClearDidSkip(nsIContentIterator* aFilteredIter)
-{
-=======
 void TextServicesDocument::ClearDidSkip(
     FilteredContentIterator* aFilteredIter) {
->>>>>>> upstream-releases
   // Clear filter's skip flag
   if (aFilteredIter) {
-<<<<<<< HEAD
-    nsFilteredContentIterator* filter =
-        static_cast<nsFilteredContentIterator*>(aFilteredIter);
-    filter->ClearDidSkip();
-||||||| merged common ancestors
-    nsFilteredContentIterator* filter = static_cast<nsFilteredContentIterator *>(aFilteredIter);
-    filter->ClearDidSkip();
-=======
     aFilteredIter->ClearDidSkip();
->>>>>>> upstream-releases
   }
 }
 
@@ -1998,19 +1684,6 @@ bool TextServicesDocument::IsTextNode(nsIContent* aContent) {
   return nsINode::TEXT_NODE == aContent->NodeType();
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::SetSelectionInternal(int32_t aOffset,
-                                                    int32_t aLength,
-                                                    bool aDoUpdate) {
-  NS_ENSURE_TRUE(mSelCon && aOffset >= 0 && aLength >= 0, NS_ERROR_FAILURE);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::SetSelectionInternal(int32_t aOffset,
-                                           int32_t aLength,
-                                           bool aDoUpdate)
-{
-  NS_ENSURE_TRUE(mSelCon && aOffset >= 0 && aLength >= 0, NS_ERROR_FAILURE);
-=======
 nsresult TextServicesDocument::SetSelectionInternal(int32_t aOffset,
                                                     int32_t aLength,
                                                     bool aDoUpdate) {
@@ -2018,7 +1691,6 @@ nsresult TextServicesDocument::SetSelectionInternal(int32_t aOffset,
       NS_WARN_IF(aLength < 0)) {
     return NS_ERROR_INVALID_ARG;
   }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsINode> startNode;
   int32_t startNodeOffset = 0;
@@ -2082,36 +1754,11 @@ nsresult TextServicesDocument::SetSelectionInternal(int32_t aOffset,
   RefPtr<Selection> selection;
   if (aDoUpdate) {
     selection = mSelCon->GetSelection(nsISelectionController::SELECTION_NORMAL);
-<<<<<<< HEAD
-    NS_ENSURE_STATE(selection);
-
-    nsresult rv = selection->Collapse(startNode, startNodeOffset);
-    NS_ENSURE_SUCCESS(rv, rv);
-  }
-
-  if (aLength <= 0) {
-    // We have a collapsed selection. (Caret)
-||||||| merged common ancestors
-    NS_ENSURE_STATE(selection);
-
-    nsresult rv = selection->Collapse(startNode, startNodeOffset);
-    NS_ENSURE_SUCCESS(rv, rv);
-   }
-
-  if (aLength <= 0) {
-    // We have a collapsed selection. (Caret)
-=======
     if (NS_WARN_IF(!selection)) {
       return NS_ERROR_FAILURE;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    mSelEndIndex = mSelStartIndex;
-||||||| merged common ancestors
-    mSelEndIndex  = mSelStartIndex;
-=======
   if (!aLength) {
     if (aDoUpdate) {
       nsresult rv = selection->Collapse(startNode, startNodeOffset);
@@ -2120,23 +1767,7 @@ nsresult TextServicesDocument::SetSelectionInternal(int32_t aOffset,
       }
     }
     mSelEndIndex = mSelStartIndex;
->>>>>>> upstream-releases
     mSelEndOffset = mSelStartOffset;
-<<<<<<< HEAD
-
-    //**** KDEBUG ****
-    // printf("\n* Sel: (%2d, %4d) (%2d, %4d)\n", mSelStartIndex,
-    //        mSelStartOffset, mSelEndIndex, mSelEndOffset);
-    //**** KDEBUG ****
-
-||||||| merged common ancestors
-
-   //**** KDEBUG ****
-   // printf("\n* Sel: (%2d, %4d) (%2d, %4d)\n", mSelStartIndex, mSelStartOffset, mSelEndIndex, mSelEndOffset);
-   //**** KDEBUG ****
-
-=======
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -2173,22 +1804,11 @@ nsresult TextServicesDocument::SetSelectionInternal(int32_t aOffset,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  //**** KDEBUG ****
-  // printf("\n * Sel: (%2d, %4d) (%2d, %4d)\n", mSelStartIndex,
-  //        mSelStartOffset, mSelEndIndex, mSelEndOffset);
-  //**** KDEBUG ****
-||||||| merged common ancestors
-  //**** KDEBUG ****
-  // printf("\n * Sel: (%2d, %4d) (%2d, %4d)\n", mSelStartIndex, mSelStartOffset, mSelEndIndex, mSelEndOffset);
-  //**** KDEBUG ****
-=======
   if (!endNode) {
     nsresult rv = selection->Collapse(startNode, startNodeOffset);
     NS_WARNING_ASSERTION(NS_SUCCEEDED(rv), "Failed to collapse selection");
     return rv;
   }
->>>>>>> upstream-releases
 
   ErrorResult error;
   selection->SetStartAndEndInLimiter(
@@ -2651,36 +2271,6 @@ bool TextServicesDocument::SelectionIsCollapsed() {
 bool TextServicesDocument::SelectionIsValid() { return mSelStartIndex >= 0; }
 
 // static
-<<<<<<< HEAD
-nsresult TextServicesDocument::GetRangeEndPoints(nsRange* aRange,
-                                                 nsINode** aStartContainer,
-                                                 int32_t* aStartOffset,
-                                                 nsINode** aEndContainer,
-                                                 int32_t* aEndOffset) {
-  NS_ENSURE_TRUE(
-      aRange && aStartContainer && aStartOffset && aEndContainer && aEndOffset,
-      NS_ERROR_NULL_POINTER);
-
-  NS_IF_ADDREF(*aStartContainer = aRange->GetStartContainer());
-  NS_ENSURE_TRUE(aStartContainer, NS_ERROR_FAILURE);
-
-  *aStartOffset = static_cast<int32_t>(aRange->StartOffset());
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::GetRangeEndPoints(nsRange* aRange,
-                                        nsINode** aStartContainer,
-                                        int32_t* aStartOffset,
-                                        nsINode** aEndContainer,
-                                        int32_t* aEndOffset)
-{
-  NS_ENSURE_TRUE(aRange && aStartContainer && aStartOffset &&
-                 aEndContainer && aEndOffset, NS_ERROR_NULL_POINTER);
-
-  NS_IF_ADDREF(*aStartContainer = aRange->GetStartContainer());
-  NS_ENSURE_TRUE(aStartContainer, NS_ERROR_FAILURE);
-
-  *aStartOffset = static_cast<int32_t>(aRange->StartOffset());
-=======
 nsresult TextServicesDocument::GetRangeEndPoints(
     const AbstractRange* aAbstractRange, nsINode** aStartContainer,
     int32_t* aStartOffset, nsINode** aEndContainer, int32_t* aEndOffset) {
@@ -2688,7 +2278,6 @@ nsresult TextServicesDocument::GetRangeEndPoints(
       NS_WARN_IF(!aEndContainer) || NS_WARN_IF(!aEndOffset)) {
     return NS_ERROR_INVALID_ARG;
   }
->>>>>>> upstream-releases
 
   nsCOMPtr<nsINode> startContainer = aAbstractRange->GetStartContainer();
   if (NS_WARN_IF(!startContainer)) {
@@ -2707,18 +2296,8 @@ nsresult TextServicesDocument::GetRangeEndPoints(
 }
 
 // static
-<<<<<<< HEAD
-nsresult TextServicesDocument::FirstTextNode(nsIContentIterator* aIterator,
-                                             IteratorStatus* aIteratorStatus) {
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::FirstTextNode(nsIContentIterator* aIterator,
-                                    IteratorStatus* aIteratorStatus)
-{
-=======
 nsresult TextServicesDocument::FirstTextNode(
     FilteredContentIterator* aFilteredIter, IteratorStatus* aIteratorStatus) {
->>>>>>> upstream-releases
   if (aIteratorStatus) {
     *aIteratorStatus = IteratorStatus::eDone;
   }
@@ -2737,18 +2316,8 @@ nsresult TextServicesDocument::FirstTextNode(
 }
 
 // static
-<<<<<<< HEAD
-nsresult TextServicesDocument::LastTextNode(nsIContentIterator* aIterator,
-                                            IteratorStatus* aIteratorStatus) {
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::LastTextNode(nsIContentIterator* aIterator,
-                                   IteratorStatus* aIteratorStatus)
-{
-=======
 nsresult TextServicesDocument::LastTextNode(
     FilteredContentIterator* aFilteredIter, IteratorStatus* aIteratorStatus) {
->>>>>>> upstream-releases
   if (aIteratorStatus) {
     *aIteratorStatus = IteratorStatus::eDone;
   }
@@ -2766,20 +2335,9 @@ nsresult TextServicesDocument::LastTextNode(
 }
 
 // static
-<<<<<<< HEAD
-nsresult TextServicesDocument::FirstTextNodeInCurrentBlock(
-    nsIContentIterator* aIter) {
-  NS_ENSURE_TRUE(aIter, NS_ERROR_NULL_POINTER);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::FirstTextNodeInCurrentBlock(nsIContentIterator* aIter)
-{
-  NS_ENSURE_TRUE(aIter, NS_ERROR_NULL_POINTER);
-=======
 nsresult TextServicesDocument::FirstTextNodeInCurrentBlock(
     FilteredContentIterator* aFilteredIter) {
   NS_ENSURE_TRUE(aFilteredIter, NS_ERROR_NULL_POINTER);
->>>>>>> upstream-releases
 
   ClearDidSkip(aFilteredIter);
 
@@ -2788,23 +2346,11 @@ nsresult TextServicesDocument::FirstTextNodeInCurrentBlock(
   // Walk backwards over adjacent text nodes until
   // we hit a block boundary:
 
-<<<<<<< HEAD
-  while (!aIter->IsDone()) {
-    nsCOMPtr<nsIContent> content = aIter->GetCurrentNode()->IsContent()
-                                       ? aIter->GetCurrentNode()->AsContent()
-                                       : nullptr;
-||||||| merged common ancestors
-  while (!aIter->IsDone()) {
-    nsCOMPtr<nsIContent> content =
-      aIter->GetCurrentNode()->IsContent() ?
-        aIter->GetCurrentNode()->AsContent() : nullptr;
-=======
   while (!aFilteredIter->IsDone()) {
     nsCOMPtr<nsIContent> content =
         aFilteredIter->GetCurrentNode()->IsContent()
             ? aFilteredIter->GetCurrentNode()->AsContent()
             : nullptr;
->>>>>>> upstream-releases
     if (last && IsBlockNode(content)) {
       break;
     }
@@ -2834,20 +2380,9 @@ nsresult TextServicesDocument::FirstTextNodeInCurrentBlock(
 }
 
 // static
-<<<<<<< HEAD
-nsresult TextServicesDocument::FirstTextNodeInPrevBlock(
-    nsIContentIterator* aIterator) {
-  NS_ENSURE_TRUE(aIterator, NS_ERROR_NULL_POINTER);
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::FirstTextNodeInPrevBlock(nsIContentIterator* aIterator)
-{
-  NS_ENSURE_TRUE(aIterator, NS_ERROR_NULL_POINTER);
-=======
 nsresult TextServicesDocument::FirstTextNodeInPrevBlock(
     FilteredContentIterator* aFilteredIter) {
   NS_ENSURE_TRUE(aFilteredIter, NS_ERROR_NULL_POINTER);
->>>>>>> upstream-releases
 
   // XXX: What if mFilteredIter is not currently on a text node?
 
@@ -2872,17 +2407,8 @@ nsresult TextServicesDocument::FirstTextNodeInPrevBlock(
 }
 
 // static
-<<<<<<< HEAD
-nsresult TextServicesDocument::FirstTextNodeInNextBlock(
-    nsIContentIterator* aIterator) {
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::FirstTextNodeInNextBlock(nsIContentIterator* aIterator)
-{
-=======
 nsresult TextServicesDocument::FirstTextNodeInNextBlock(
     FilteredContentIterator* aFilteredIter) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIContent> prev;
   bool crossedBlockBoundary = false;
 
@@ -2890,24 +2416,11 @@ nsresult TextServicesDocument::FirstTextNodeInNextBlock(
 
   ClearDidSkip(aFilteredIter);
 
-<<<<<<< HEAD
-  while (!aIterator->IsDone()) {
-    nsCOMPtr<nsIContent> content =
-        aIterator->GetCurrentNode()->IsContent()
-            ? aIterator->GetCurrentNode()->AsContent()
-            : nullptr;
-||||||| merged common ancestors
-  while (!aIterator->IsDone()) {
-    nsCOMPtr<nsIContent> content = aIterator->GetCurrentNode()->IsContent()
-                                   ? aIterator->GetCurrentNode()->AsContent()
-                                   : nullptr;
-=======
   while (!aFilteredIter->IsDone()) {
     nsCOMPtr<nsIContent> content =
         aFilteredIter->GetCurrentNode()->IsContent()
             ? aFilteredIter->GetCurrentNode()->AsContent()
             : nullptr;
->>>>>>> upstream-releases
 
     if (IsTextNode(content)) {
       if (crossedBlockBoundary ||
@@ -2948,24 +2461,11 @@ nsresult TextServicesDocument::GetFirstTextNodeInPrevBlock(
     return rv;
   }
 
-<<<<<<< HEAD
-  if (!mIterator->IsDone()) {
-    nsCOMPtr<nsIContent> current =
-        mIterator->GetCurrentNode()->IsContent()
-            ? mIterator->GetCurrentNode()->AsContent()
-            : nullptr;
-||||||| merged common ancestors
-  if (!mIterator->IsDone()) {
-    nsCOMPtr<nsIContent> current = mIterator->GetCurrentNode()->IsContent()
-                                   ? mIterator->GetCurrentNode()->AsContent()
-                                   : nullptr;
-=======
   if (!mFilteredIter->IsDone()) {
     nsCOMPtr<nsIContent> current =
         mFilteredIter->GetCurrentNode()->IsContent()
             ? mFilteredIter->GetCurrentNode()->AsContent()
             : nullptr;
->>>>>>> upstream-releases
     current.forget(aContent);
   }
 
@@ -2993,24 +2493,11 @@ nsresult TextServicesDocument::GetFirstTextNodeInNextBlock(
     return rv;
   }
 
-<<<<<<< HEAD
-  if (!mIterator->IsDone()) {
-    nsCOMPtr<nsIContent> current =
-        mIterator->GetCurrentNode()->IsContent()
-            ? mIterator->GetCurrentNode()->AsContent()
-            : nullptr;
-||||||| merged common ancestors
-  if (!mIterator->IsDone()) {
-    nsCOMPtr<nsIContent> current = mIterator->GetCurrentNode()->IsContent()
-                                   ? mIterator->GetCurrentNode()->AsContent()
-                                   : nullptr;
-=======
   if (!mFilteredIter->IsDone()) {
     nsCOMPtr<nsIContent> current =
         mFilteredIter->GetCurrentNode()->IsContent()
             ? mFilteredIter->GetCurrentNode()->AsContent()
             : nullptr;
->>>>>>> upstream-releases
     current.forget(aContent);
   }
 
@@ -3018,24 +2505,10 @@ nsresult TextServicesDocument::GetFirstTextNodeInNextBlock(
   return mFilteredIter->PositionAt(node);
 }
 
-<<<<<<< HEAD
-nsresult TextServicesDocument::CreateOffsetTable(
-    nsTArray<OffsetEntry*>* aOffsetTable, nsIContentIterator* aIterator,
-    IteratorStatus* aIteratorStatus, nsRange* aIterRange, nsString* aStr) {
-||||||| merged common ancestors
-nsresult
-TextServicesDocument::CreateOffsetTable(nsTArray<OffsetEntry*>* aOffsetTable,
-                                        nsIContentIterator* aIterator,
-                                        IteratorStatus* aIteratorStatus,
-                                        nsRange* aIterRange,
-                                        nsString* aStr)
-{
-=======
 nsresult TextServicesDocument::CreateOffsetTable(
     nsTArray<OffsetEntry*>* aOffsetTable,
     FilteredContentIterator* aFilteredIter, IteratorStatus* aIteratorStatus,
     nsRange* aIterRange, nsAString* aStr) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIContent> first;
   nsCOMPtr<nsIContent> prev;
 
@@ -3078,24 +2551,11 @@ nsresult TextServicesDocument::CreateOffsetTable(
 
   ClearDidSkip(aFilteredIter);
 
-<<<<<<< HEAD
-  while (!aIterator->IsDone()) {
-    nsCOMPtr<nsIContent> content =
-        aIterator->GetCurrentNode()->IsContent()
-            ? aIterator->GetCurrentNode()->AsContent()
-            : nullptr;
-||||||| merged common ancestors
-  while (!aIterator->IsDone()) {
-    nsCOMPtr<nsIContent> content = aIterator->GetCurrentNode()->IsContent()
-                                   ? aIterator->GetCurrentNode()->AsContent()
-                                   : nullptr;
-=======
   while (!aFilteredIter->IsDone()) {
     nsCOMPtr<nsIContent> content =
         aFilteredIter->GetCurrentNode()->IsContent()
             ? aFilteredIter->GetCurrentNode()->AsContent()
             : nullptr;
->>>>>>> upstream-releases
     if (IsTextNode(content)) {
       if (prev && !HasSameBlockNodeParent(prev, content)) {
         break;

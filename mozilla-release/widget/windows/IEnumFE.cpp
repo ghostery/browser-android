@@ -10,18 +10,8 @@
 CEnumFormatEtc::CEnumFormatEtc() : mRefCnt(0), mCurrentIdx(0) {}
 
 // Constructor used by Clone()
-<<<<<<< HEAD
-CEnumFormatEtc::CEnumFormatEtc(nsTArray<FormatEtc> &aArray)
-    : mRefCnt(0), mCurrentIdx(0) {
-||||||| merged common ancestors
-CEnumFormatEtc::CEnumFormatEtc(nsTArray<FormatEtc>& aArray) :
-  mRefCnt(0),
-  mCurrentIdx(0)
-{
-=======
 CEnumFormatEtc::CEnumFormatEtc(nsTArray<FormatEtc>& aArray)
     : mRefCnt(0), mCurrentIdx(0) {
->>>>>>> upstream-releases
   // a deep copy, calls FormatEtc's copy constructor on each
   mFormatList.AppendElements(aArray);
 }
@@ -31,14 +21,7 @@ CEnumFormatEtc::~CEnumFormatEtc() {}
 /* IUnknown impl. */
 
 STDMETHODIMP
-<<<<<<< HEAD
-CEnumFormatEtc::QueryInterface(REFIID riid, LPVOID *ppv) {
-||||||| merged common ancestors
-CEnumFormatEtc::QueryInterface(REFIID riid, LPVOID *ppv)
-{
-=======
 CEnumFormatEtc::QueryInterface(REFIID riid, LPVOID* ppv) {
->>>>>>> upstream-releases
   *ppv = nullptr;
 
   if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_IEnumFORMATETC))
@@ -73,16 +56,8 @@ CEnumFormatEtc::Release() {
 /* IEnumFORMATETC impl. */
 
 STDMETHODIMP
-<<<<<<< HEAD
-CEnumFormatEtc::Next(ULONG aMaxToFetch, FORMATETC *aResult,
-                     ULONG *aNumFetched) {
-||||||| merged common ancestors
-CEnumFormatEtc::Next(ULONG aMaxToFetch, FORMATETC *aResult, ULONG *aNumFetched)
-{
-=======
 CEnumFormatEtc::Next(ULONG aMaxToFetch, FORMATETC* aResult,
                      ULONG* aNumFetched) {
->>>>>>> upstream-releases
   // If the method retrieves the number of items requested, the return
   // value is S_OK. Otherwise, it is S_FALSE.
 
@@ -133,25 +108,12 @@ CEnumFormatEtc::Reset(void) {
 }
 
 STDMETHODIMP
-<<<<<<< HEAD
-CEnumFormatEtc::Clone(LPENUMFORMATETC *aResult) {
-||||||| merged common ancestors
-CEnumFormatEtc::Clone(LPENUMFORMATETC *aResult)
-{
-=======
 CEnumFormatEtc::Clone(LPENUMFORMATETC* aResult) {
->>>>>>> upstream-releases
   // Must return a new IEnumFORMATETC interface with the same iterative state.
 
   if (!aResult) return E_INVALIDARG;
 
-<<<<<<< HEAD
-  CEnumFormatEtc *pEnumObj = new CEnumFormatEtc(mFormatList);
-||||||| merged common ancestors
-  CEnumFormatEtc * pEnumObj = new CEnumFormatEtc(mFormatList);
-=======
   CEnumFormatEtc* pEnumObj = new CEnumFormatEtc(mFormatList);
->>>>>>> upstream-releases
 
   if (!pEnumObj) return E_OUTOFMEMORY;
 
@@ -165,22 +127,9 @@ CEnumFormatEtc::Clone(LPENUMFORMATETC* aResult) {
 
 /* utils */
 
-<<<<<<< HEAD
-void CEnumFormatEtc::AddFormatEtc(LPFORMATETC aFormat) {
-  if (!aFormat) return;
-  FormatEtc *etc = mFormatList.AppendElement();
-||||||| merged common ancestors
-void
-CEnumFormatEtc::AddFormatEtc(LPFORMATETC aFormat)
-{
-  if (!aFormat)
-      return;
-  FormatEtc * etc = mFormatList.AppendElement();
-=======
 void CEnumFormatEtc::AddFormatEtc(LPFORMATETC aFormat) {
   if (!aFormat) return;
   FormatEtc* etc = mFormatList.AppendElement();
->>>>>>> upstream-releases
   // Make a copy of aFormat
   if (etc) etc->CopyIn(aFormat);
 }

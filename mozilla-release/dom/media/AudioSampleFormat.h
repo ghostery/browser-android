@@ -100,20 +100,9 @@ template <>
 inline float UInt8bitToAudioSample<float>(uint8_t aValue) {
   return aValue * (static_cast<float>(2) / UINT8_MAX) - static_cast<float>(1);
 }
-<<<<<<< HEAD
-template <>
-inline int16_t UInt8bitToAudioSample<int16_t>(uint8_t aValue) {
-  return (int16_t(aValue) << 8) + aValue + INT16_MIN;
-||||||| merged common ancestors
-template <> inline int16_t
-UInt8bitToAudioSample<int16_t>(uint8_t aValue)
-{
-  return (int16_t(aValue) << 8) + aValue + INT16_MIN;
-=======
 template <>
 inline int16_t UInt8bitToAudioSample<int16_t>(uint8_t aValue) {
   return static_cast<int16_t>((aValue << 8) + aValue + INT16_MIN);
->>>>>>> upstream-releases
 }
 
 template <typename T>
@@ -135,20 +124,9 @@ template <>
 inline float Int24bitToAudioSample<float>(int32_t aValue) {
   return aValue / static_cast<float>(1 << 23);
 }
-<<<<<<< HEAD
-template <>
-inline int16_t Int24bitToAudioSample<int16_t>(int32_t aValue) {
-  return aValue / 256;
-||||||| merged common ancestors
-template <> inline int16_t
-Int24bitToAudioSample<int16_t>(int32_t aValue)
-{
-  return aValue / 256;
-=======
 template <>
 inline int16_t Int24bitToAudioSample<int16_t>(int32_t aValue) {
   return static_cast<int16_t>(aValue / 256);
->>>>>>> upstream-releases
 }
 
 template <typename SrcT, typename DstT>

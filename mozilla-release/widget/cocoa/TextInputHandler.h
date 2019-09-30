@@ -612,71 +612,6 @@ class TextInputHandlerBase : public TextEventDispatcherListener {
       Modifiers modifiers = nsCocoaUtils::ModifiersForEvent(mKeyEvent) &
                             (MODIFIER_SHIFT | MODIFIER_CONTROL | MODIFIER_ALT | MODIFIER_META);
       switch (aCommand) {
-<<<<<<< HEAD
-        case CommandInsertLineBreak:
-          return keyNameIndex == KEY_NAME_INDEX_Enter && modifiers == MODIFIER_CONTROL;
-        case CommandInsertParagraph:
-          return keyNameIndex == KEY_NAME_INDEX_Enter && modifiers == MODIFIER_NONE;
-        case CommandDeleteCharBackward:
-          return keyNameIndex == KEY_NAME_INDEX_Backspace && modifiers == MODIFIER_NONE;
-        case CommandDeleteToBeginningOfLine:
-          return keyNameIndex == KEY_NAME_INDEX_Backspace && modifiers == MODIFIER_META;
-        case CommandDeleteWordBackward:
-          return keyNameIndex == KEY_NAME_INDEX_Backspace && modifiers == MODIFIER_ALT;
-        case CommandDeleteCharForward:
-          return keyNameIndex == KEY_NAME_INDEX_Delete && modifiers == MODIFIER_NONE;
-        case CommandDeleteWordForward:
-          return keyNameIndex == KEY_NAME_INDEX_Delete && modifiers == MODIFIER_ALT;
-        case CommandInsertTab:
-          return keyNameIndex == KEY_NAME_INDEX_Tab && modifiers == MODIFIER_NONE;
-        case CommandInsertBacktab:
-          return keyNameIndex == KEY_NAME_INDEX_Tab && modifiers == MODIFIER_SHIFT;
-        case CommandCharNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight && modifiers == MODIFIER_NONE;
-        case CommandSelectCharNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight && modifiers == MODIFIER_SHIFT;
-        case CommandWordNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight && modifiers == MODIFIER_ALT;
-        case CommandSelectWordNext:
-||||||| merged common ancestors
-        case CommandInsertLineBreak:
-          return keyNameIndex == KEY_NAME_INDEX_Enter &&
-                 modifiers == MODIFIER_CONTROL;
-        case CommandInsertParagraph:
-          return keyNameIndex == KEY_NAME_INDEX_Enter &&
-                 modifiers == MODIFIER_NONE;
-        case CommandDeleteCharBackward:
-          return keyNameIndex == KEY_NAME_INDEX_Backspace &&
-                 modifiers == MODIFIER_NONE;
-        case CommandDeleteToBeginningOfLine:
-          return keyNameIndex == KEY_NAME_INDEX_Backspace &&
-                 modifiers == MODIFIER_META;
-        case CommandDeleteWordBackward:
-          return keyNameIndex == KEY_NAME_INDEX_Backspace &&
-                 modifiers == MODIFIER_ALT;
-        case CommandDeleteCharForward:
-          return keyNameIndex == KEY_NAME_INDEX_Delete &&
-                 modifiers == MODIFIER_NONE;
-        case CommandDeleteWordForward:
-          return keyNameIndex == KEY_NAME_INDEX_Delete &&
-                 modifiers == MODIFIER_ALT;
-        case CommandInsertTab:
-          return keyNameIndex == KEY_NAME_INDEX_Tab &&
-                 modifiers == MODIFIER_NONE;
-        case CommandInsertBacktab:
-          return keyNameIndex == KEY_NAME_INDEX_Tab &&
-                 modifiers == MODIFIER_SHIFT;
-        case CommandCharNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight &&
-                 modifiers == MODIFIER_NONE;
-        case CommandSelectCharNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight &&
-                 modifiers == MODIFIER_SHIFT;
-        case CommandWordNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight &&
-                 modifiers == MODIFIER_ALT;
-        case CommandSelectWordNext:
-=======
         case Command::InsertLineBreak:
           return keyNameIndex == KEY_NAME_INDEX_Enter && modifiers == MODIFIER_CONTROL;
         case Command::InsertParagraph:
@@ -702,45 +637,13 @@ class TextInputHandlerBase : public TextEventDispatcherListener {
         case Command::WordNext:
           return keyNameIndex == KEY_NAME_INDEX_ArrowRight && modifiers == MODIFIER_ALT;
         case Command::SelectWordNext:
->>>>>>> upstream-releases
           return keyNameIndex == KEY_NAME_INDEX_ArrowRight &&
                  modifiers == (MODIFIER_ALT | MODIFIER_SHIFT);
-<<<<<<< HEAD
-        case CommandEndLine:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight && modifiers == MODIFIER_META;
-        case CommandSelectEndLine:
-||||||| merged common ancestors
-        case CommandEndLine:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowRight &&
-                 modifiers == MODIFIER_META;
-        case CommandSelectEndLine:
-=======
         case Command::EndLine:
           return keyNameIndex == KEY_NAME_INDEX_ArrowRight && modifiers == MODIFIER_META;
         case Command::SelectEndLine:
->>>>>>> upstream-releases
           return keyNameIndex == KEY_NAME_INDEX_ArrowRight &&
                  modifiers == (MODIFIER_META | MODIFIER_SHIFT);
-<<<<<<< HEAD
-        case CommandCharPrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft && modifiers == MODIFIER_NONE;
-        case CommandSelectCharPrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft && modifiers == MODIFIER_SHIFT;
-        case CommandWordPrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft && modifiers == MODIFIER_ALT;
-        case CommandSelectWordPrevious:
-||||||| merged common ancestors
-        case CommandCharPrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft &&
-                 modifiers == MODIFIER_NONE;
-        case CommandSelectCharPrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft &&
-                 modifiers == MODIFIER_SHIFT;
-        case CommandWordPrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft &&
-                 modifiers == MODIFIER_ALT;
-        case CommandSelectWordPrevious:
-=======
         case Command::CharPrevious:
           return keyNameIndex == KEY_NAME_INDEX_ArrowLeft && modifiers == MODIFIER_NONE;
         case Command::SelectCharPrevious:
@@ -748,45 +651,13 @@ class TextInputHandlerBase : public TextEventDispatcherListener {
         case Command::WordPrevious:
           return keyNameIndex == KEY_NAME_INDEX_ArrowLeft && modifiers == MODIFIER_ALT;
         case Command::SelectWordPrevious:
->>>>>>> upstream-releases
           return keyNameIndex == KEY_NAME_INDEX_ArrowLeft &&
                  modifiers == (MODIFIER_ALT | MODIFIER_SHIFT);
-<<<<<<< HEAD
-        case CommandBeginLine:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft && modifiers == MODIFIER_META;
-        case CommandSelectBeginLine:
-||||||| merged common ancestors
-        case CommandBeginLine:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowLeft &&
-                 modifiers == MODIFIER_META;
-        case CommandSelectBeginLine:
-=======
         case Command::BeginLine:
           return keyNameIndex == KEY_NAME_INDEX_ArrowLeft && modifiers == MODIFIER_META;
         case Command::SelectBeginLine:
->>>>>>> upstream-releases
           return keyNameIndex == KEY_NAME_INDEX_ArrowLeft &&
                  modifiers == (MODIFIER_META | MODIFIER_SHIFT);
-<<<<<<< HEAD
-        case CommandLinePrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowUp && modifiers == MODIFIER_NONE;
-        case CommandSelectLinePrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowUp && modifiers == MODIFIER_SHIFT;
-        case CommandMoveTop:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowUp && modifiers == MODIFIER_META;
-        case CommandSelectTop:
-||||||| merged common ancestors
-        case CommandLinePrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowUp &&
-                 modifiers == MODIFIER_NONE;
-        case CommandSelectLinePrevious:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowUp &&
-                 modifiers == MODIFIER_SHIFT;
-        case CommandMoveTop:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowUp &&
-                 modifiers == MODIFIER_META;
-        case CommandSelectTop:
-=======
         case Command::LinePrevious:
           return keyNameIndex == KEY_NAME_INDEX_ArrowUp && modifiers == MODIFIER_NONE;
         case Command::SelectLinePrevious:
@@ -794,32 +665,8 @@ class TextInputHandlerBase : public TextEventDispatcherListener {
         case Command::MoveTop:
           return keyNameIndex == KEY_NAME_INDEX_ArrowUp && modifiers == MODIFIER_META;
         case Command::SelectTop:
->>>>>>> upstream-releases
           return (keyNameIndex == KEY_NAME_INDEX_ArrowUp &&
                   modifiers == (MODIFIER_META | MODIFIER_SHIFT)) ||
-<<<<<<< HEAD
-                 (keyNameIndex == KEY_NAME_INDEX_Home && modifiers == MODIFIER_SHIFT);
-        case CommandLineNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowDown && modifiers == MODIFIER_NONE;
-        case CommandSelectLineNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowDown && modifiers == MODIFIER_SHIFT;
-        case CommandMoveBottom:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowDown && modifiers == MODIFIER_META;
-        case CommandSelectBottom:
-||||||| merged common ancestors
-                 (keyNameIndex == KEY_NAME_INDEX_Home &&
-                  modifiers == MODIFIER_SHIFT);
-        case CommandLineNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowDown &&
-                 modifiers == MODIFIER_NONE;
-        case CommandSelectLineNext:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowDown &&
-                 modifiers == MODIFIER_SHIFT;
-        case CommandMoveBottom:
-          return keyNameIndex == KEY_NAME_INDEX_ArrowDown &&
-                 modifiers == MODIFIER_META;
-        case CommandSelectBottom:
-=======
                  (keyNameIndex == KEY_NAME_INDEX_Home && modifiers == MODIFIER_SHIFT);
         case Command::LineNext:
           return keyNameIndex == KEY_NAME_INDEX_ArrowDown && modifiers == MODIFIER_NONE;
@@ -828,47 +675,8 @@ class TextInputHandlerBase : public TextEventDispatcherListener {
         case Command::MoveBottom:
           return keyNameIndex == KEY_NAME_INDEX_ArrowDown && modifiers == MODIFIER_META;
         case Command::SelectBottom:
->>>>>>> upstream-releases
           return (keyNameIndex == KEY_NAME_INDEX_ArrowDown &&
                   modifiers == (MODIFIER_META | MODIFIER_SHIFT)) ||
-<<<<<<< HEAD
-                 (keyNameIndex == KEY_NAME_INDEX_End && modifiers == MODIFIER_SHIFT);
-        case CommandScrollPageUp:
-          return keyNameIndex == KEY_NAME_INDEX_PageUp && modifiers == MODIFIER_NONE;
-        case CommandSelectPageUp:
-          return keyNameIndex == KEY_NAME_INDEX_PageUp && modifiers == MODIFIER_SHIFT;
-        case CommandScrollPageDown:
-          return keyNameIndex == KEY_NAME_INDEX_PageDown && modifiers == MODIFIER_NONE;
-        case CommandSelectPageDown:
-          return keyNameIndex == KEY_NAME_INDEX_PageDown && modifiers == MODIFIER_SHIFT;
-        case CommandScrollBottom:
-          return keyNameIndex == KEY_NAME_INDEX_End && modifiers == MODIFIER_NONE;
-        case CommandScrollTop:
-          return keyNameIndex == KEY_NAME_INDEX_Home && modifiers == MODIFIER_NONE;
-        case CommandCancelOperation:
-||||||| merged common ancestors
-                 (keyNameIndex == KEY_NAME_INDEX_End &&
-                  modifiers == MODIFIER_SHIFT);
-        case CommandScrollPageUp:
-          return keyNameIndex == KEY_NAME_INDEX_PageUp &&
-                 modifiers == MODIFIER_NONE;
-        case CommandSelectPageUp:
-          return keyNameIndex == KEY_NAME_INDEX_PageUp &&
-                 modifiers == MODIFIER_SHIFT;
-        case CommandScrollPageDown:
-          return keyNameIndex == KEY_NAME_INDEX_PageDown &&
-                 modifiers == MODIFIER_NONE;
-        case CommandSelectPageDown:
-          return keyNameIndex == KEY_NAME_INDEX_PageDown &&
-                 modifiers == MODIFIER_SHIFT;
-        case CommandScrollBottom:
-          return keyNameIndex == KEY_NAME_INDEX_End &&
-                 modifiers == MODIFIER_NONE;
-        case CommandScrollTop:
-          return keyNameIndex == KEY_NAME_INDEX_Home &&
-                 modifiers == MODIFIER_NONE;
-        case CommandCancelOperation:
-=======
                  (keyNameIndex == KEY_NAME_INDEX_End && modifiers == MODIFIER_SHIFT);
         case Command::ScrollPageUp:
           return keyNameIndex == KEY_NAME_INDEX_PageUp && modifiers == MODIFIER_NONE;
@@ -883,23 +691,10 @@ class TextInputHandlerBase : public TextEventDispatcherListener {
         case Command::ScrollTop:
           return keyNameIndex == KEY_NAME_INDEX_Home && modifiers == MODIFIER_NONE;
         case Command::CancelOperation:
->>>>>>> upstream-releases
           return (keyNameIndex == KEY_NAME_INDEX_Escape &&
-<<<<<<< HEAD
-                  (modifiers == MODIFIER_NONE || modifiers == MODIFIER_SHIFT)) ||
-                 ([mKeyEvent keyCode] == kVK_ANSI_Period && modifiers == MODIFIER_META);
-        case CommandComplete:
-||||||| merged common ancestors
-                  (modifiers == MODIFIER_NONE ||
-                   modifiers == MODIFIER_SHIFT)) ||
-                 ([mKeyEvent keyCode] == kVK_ANSI_Period &&
-                  modifiers == MODIFIER_META);
-        case CommandComplete:
-=======
                   (modifiers == MODIFIER_NONE || modifiers == MODIFIER_SHIFT)) ||
                  ([mKeyEvent keyCode] == kVK_ANSI_Period && modifiers == MODIFIER_META);
         case Command::Complete:
->>>>>>> upstream-releases
           return keyNameIndex == KEY_NAME_INDEX_Escape &&
                  (modifiers == MODIFIER_ALT || modifiers == (MODIFIER_ALT | MODIFIER_SHIFT));
         default:

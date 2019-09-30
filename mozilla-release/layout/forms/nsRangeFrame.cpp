@@ -41,32 +41,12 @@ using namespace mozilla::image;
 
 NS_IMPL_ISUPPORTS(nsRangeFrame::DummyTouchListener, nsIDOMEventListener)
 
-<<<<<<< HEAD
-nsIFrame* NS_NewRangeFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsRangeFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewRangeFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsRangeFrame(aStyle);
-=======
 nsIFrame* NS_NewRangeFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsRangeFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsRangeFrame::nsRangeFrame(ComputedStyle* aStyle)
-    : nsContainerFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-nsRangeFrame::nsRangeFrame(ComputedStyle* aStyle)
-  : nsContainerFrame(aStyle, kClassID)
-{
-}
-=======
 nsRangeFrame::nsRangeFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
     : nsContainerFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
 nsRangeFrame::~nsRangeFrame() {}
 
@@ -94,18 +74,8 @@ void nsRangeFrame::Init(nsIContent* aContent, nsContainerFrame* aParent,
 
   ServoStyleSet* styleSet = PresContext()->StyleSet();
 
-<<<<<<< HEAD
-  mOuterFocusStyle = styleSet->ProbePseudoElementStyle(
-      *aContent->AsElement(), CSSPseudoElementType::mozFocusOuter, Style());
-||||||| merged common ancestors
-  mOuterFocusStyle =
-    styleSet->ProbePseudoElementStyle(*aContent->AsElement(),
-                                      CSSPseudoElementType::mozFocusOuter,
-                                      Style());
-=======
   mOuterFocusStyle = styleSet->ProbePseudoElementStyle(
       *aContent->AsElement(), PseudoStyleType::mozFocusOuter, Style());
->>>>>>> upstream-releases
 
   return nsContainerFrame::Init(aContent, aParent, aPrevInFlow);
 }
@@ -126,24 +96,10 @@ void nsRangeFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsContainerFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
-<<<<<<< HEAD
-nsresult nsRangeFrame::MakeAnonymousDiv(Element** aResult,
-                                        CSSPseudoElementType aPseudoType,
-                                        nsTArray<ContentInfo>& aElements) {
-  nsCOMPtr<nsIDocument> doc = mContent->GetComposedDoc();
-||||||| merged common ancestors
-nsresult
-nsRangeFrame::MakeAnonymousDiv(Element** aResult,
-                               CSSPseudoElementType aPseudoType,
-                               nsTArray<ContentInfo>& aElements)
-{
-  nsCOMPtr<nsIDocument> doc = mContent->GetComposedDoc();
-=======
 nsresult nsRangeFrame::MakeAnonymousDiv(Element** aResult,
                                         PseudoStyleType aPseudoType,
                                         nsTArray<ContentInfo>& aElements) {
   nsCOMPtr<Document> doc = mContent->GetComposedDoc();
->>>>>>> upstream-releases
   RefPtr<Element> resultElement = doc->CreateHTMLElement(nsGkAtoms::div);
 
   // Associate the pseudo-element with the anonymous child.
@@ -163,38 +119,17 @@ nsresult nsRangeFrame::CreateAnonymousContent(
 
   // Create the ::-moz-range-track pseudo-element (a div):
   rv = MakeAnonymousDiv(getter_AddRefs(mTrackDiv),
-<<<<<<< HEAD
-                        CSSPseudoElementType::mozRangeTrack, aElements);
-||||||| merged common ancestors
-                        CSSPseudoElementType::mozRangeTrack,
-                        aElements);
-=======
                         PseudoStyleType::mozRangeTrack, aElements);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Create the ::-moz-range-progress pseudo-element (a div):
   rv = MakeAnonymousDiv(getter_AddRefs(mProgressDiv),
-<<<<<<< HEAD
-                        CSSPseudoElementType::mozRangeProgress, aElements);
-||||||| merged common ancestors
-                        CSSPseudoElementType::mozRangeProgress,
-                        aElements);
-=======
                         PseudoStyleType::mozRangeProgress, aElements);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Create the ::-moz-range-thumb pseudo-element (a div):
   rv = MakeAnonymousDiv(getter_AddRefs(mThumbDiv),
-<<<<<<< HEAD
-                        CSSPseudoElementType::mozRangeThumb, aElements);
-||||||| merged common ancestors
-                        CSSPseudoElementType::mozRangeThumb,
-                        aElements);
-=======
                         PseudoStyleType::mozRangeThumb, aElements);
->>>>>>> upstream-releases
   return rv;
 }
 
@@ -213,25 +148,10 @@ void nsRangeFrame::AppendAnonymousContentTo(nsTArray<nsIContent*>& aElements,
   }
 }
 
-<<<<<<< HEAD
-class nsDisplayRangeFocusRing final : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayRangeFocusRing final : public nsDisplayItem
-{
-public:
-=======
 class nsDisplayRangeFocusRing final : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayRangeFocusRing(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame)
-<<<<<<< HEAD
-      : nsDisplayItem(aBuilder, aFrame) {
-||||||| merged common ancestors
-    : nsDisplayItem(aBuilder, aFrame) {
-=======
       : nsPaintedDisplayItem(aBuilder, aFrame) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayRangeFocusRing);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -294,16 +214,8 @@ void nsDisplayRangeFocusRing::Paint(nsDisplayListBuilder* aBuilder,
   MOZ_ASSERT(computedStyle, "We only exist if mOuterFocusStyle is non-null");
 
   PaintBorderFlags flags = aBuilder->ShouldSyncDecodeImages()
-<<<<<<< HEAD
-                               ? PaintBorderFlags::SYNC_DECODE_IMAGES
-                               : PaintBorderFlags();
-||||||| merged common ancestors
-                         ? PaintBorderFlags::SYNC_DECODE_IMAGES
-                         : PaintBorderFlags();
-=======
                                ? PaintBorderFlags::SyncDecodeImages
                                : PaintBorderFlags();
->>>>>>> upstream-releases
 
   ImgDrawResult result = nsCSSRendering::PaintBorder(
       mFrame->PresContext(), *aCtx, mFrame, GetPaintRect(),
@@ -358,15 +270,7 @@ void nsRangeFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
     return;  // the native theme displays its own visual indication of focus
   }
 
-<<<<<<< HEAD
-  aLists.Content()->AppendToTop(
-      MakeDisplayItem<nsDisplayRangeFocusRing>(aBuilder, this));
-||||||| merged common ancestors
-  aLists.Content()->AppendToTop(
-    MakeDisplayItem<nsDisplayRangeFocusRing>(aBuilder, this));
-=======
   aLists.Content()->AppendNewToTop<nsDisplayRangeFocusRing>(aBuilder, this);
->>>>>>> upstream-releases
 }
 
 void nsRangeFrame::Reflow(nsPresContext* aPresContext,
@@ -815,27 +719,6 @@ nsresult nsRangeFrame::AttributeChanged(int32_t aNameSpaceID,
   return nsContainerFrame::AttributeChanged(aNameSpaceID, aAttribute, aModType);
 }
 
-<<<<<<< HEAD
-LogicalSize nsRangeFrame::ComputeAutoSize(
-    gfxContext* aRenderingContext, WritingMode aWM, const LogicalSize& aCBSize,
-    nscoord aAvailableISize, const LogicalSize& aMargin,
-    const LogicalSize& aBorder, const LogicalSize& aPadding,
-    ComputeSizeFlags aFlags) {
-||||||| merged common ancestors
-LogicalSize
-nsRangeFrame::ComputeAutoSize(gfxContext*         aRenderingContext,
-                              WritingMode         aWM,
-                              const LogicalSize&  aCBSize,
-                              nscoord             aAvailableISize,
-                              const LogicalSize&  aMargin,
-                              const LogicalSize&  aBorder,
-                              const LogicalSize&  aPadding,
-                              ComputeSizeFlags    aFlags)
-{
-  nscoord oneEm = NSToCoordRound(StyleFont()->mFont.size *
-                                 nsLayoutUtils::FontSizeInflationFor(this)); // 1em
-
-=======
 nscoord nsRangeFrame::AutoCrossSize(nscoord aEm) {
   nscoord minCrossSize(0);
   if (IsThemed()) {
@@ -855,58 +738,22 @@ LogicalSize nsRangeFrame::ComputeAutoSize(
     nscoord aAvailableISize, const LogicalSize& aMargin,
     const LogicalSize& aBorder, const LogicalSize& aPadding,
     ComputeSizeFlags aFlags) {
->>>>>>> upstream-releases
   bool isInlineOriented = IsInlineOriented();
   auto em = StyleFont()->mFont.size * nsLayoutUtils::FontSizeInflationFor(this);
 
   const WritingMode wm = GetWritingMode();
   LogicalSize autoSize(wm);
   if (isInlineOriented) {
-<<<<<<< HEAD
-    autoSize.ISize(wm) = NSToCoordRound(MAIN_AXIS_EM_SIZE * em);
-    autoSize.BSize(wm) = NSToCoordRound(CROSS_AXIS_EM_SIZE * em);
-||||||| merged common ancestors
-    autoSize.ISize(wm) = LONG_SIDE_TO_SHORT_SIDE_RATIO * oneEm;
-    autoSize.BSize(wm) = IsThemed() ? 0 : oneEm;
-=======
     autoSize.ISize(wm) = NSToCoordRound(MAIN_AXIS_EM_SIZE * em);
     autoSize.BSize(wm) = AutoCrossSize(em);
->>>>>>> upstream-releases
   } else {
-<<<<<<< HEAD
-    autoSize.ISize(wm) = NSToCoordRound(CROSS_AXIS_EM_SIZE * em);
-    autoSize.BSize(wm) = NSToCoordRound(MAIN_AXIS_EM_SIZE * em);
-||||||| merged common ancestors
-    autoSize.ISize(wm) = IsThemed() ? 0 : oneEm;
-    autoSize.BSize(wm) = LONG_SIDE_TO_SHORT_SIDE_RATIO * oneEm;
-=======
     autoSize.ISize(wm) = AutoCrossSize(em);
     autoSize.BSize(wm) = NSToCoordRound(MAIN_AXIS_EM_SIZE * em);
->>>>>>> upstream-releases
   }
 
   return autoSize.ConvertTo(aWM, wm);
 }
 
-<<<<<<< HEAD
-nscoord nsRangeFrame::GetMinISize(gfxContext* aRenderingContext) {
-  auto pos = StylePosition();
-  auto wm = GetWritingMode();
-  if (pos->ISize(wm).HasPercent()) {
-    // https://drafts.csswg.org/css-sizing-3/#percentage-sizing
-    // https://drafts.csswg.org/css-sizing-3/#min-content-zero
-    return nsLayoutUtils::ResolveToLength<true>(pos->ISize(wm), nscoord(0));
-  }
-  return GetPrefISize(aRenderingContext);
-||||||| merged common ancestors
-nscoord
-nsRangeFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-  // nsFrame::ComputeSize calls GetMinimumWidgetSize to prevent us from being
-  // given too small a size when we're natively themed. If we aren't native
-  // themed, we don't mind how small we're sized.
-  return nscoord(0);
-=======
 nscoord nsRangeFrame::GetMinISize(gfxContext* aRenderingContext) {
   auto pos = StylePosition();
   auto wm = GetWritingMode();
@@ -917,37 +764,12 @@ nscoord nsRangeFrame::GetMinISize(gfxContext* aRenderingContext) {
         pos->ISize(wm).AsLengthPercentage(), nscoord(0));
   }
   return GetPrefISize(aRenderingContext);
->>>>>>> upstream-releases
 }
 
 nscoord nsRangeFrame::GetPrefISize(gfxContext* aRenderingContext) {
   bool isInline = IsInlineOriented();
-<<<<<<< HEAD
-  auto em = StyleFont()->mFont.size * nsLayoutUtils::FontSizeInflationFor(this);
-  return NSToCoordRound(em *
-                        (isInline ? MAIN_AXIS_EM_SIZE : CROSS_AXIS_EM_SIZE));
-||||||| merged common ancestors
-
-  if (!isInline && IsThemed()) {
-    // nsFrame::ComputeSize calls GetMinimumWidgetSize to prevent us from being
-    // given too small a size when we're natively themed. We return zero and
-    // depend on that correction to get our "natural" width when we're a
-    // vertical slider.
-    return 0;
-  }
-
-  nscoord prefISize = NSToCoordRound(StyleFont()->mFont.size *
-                                     nsLayoutUtils::FontSizeInflationFor(this)); // 1em
-
-  if (isInline) {
-    prefISize *= LONG_SIDE_TO_SHORT_SIDE_RATIO;
-  }
-
-  return prefISize;
-=======
   auto em = StyleFont()->mFont.size * nsLayoutUtils::FontSizeInflationFor(this);
   return isInline ? NSToCoordRound(em * MAIN_AXIS_EM_SIZE) : AutoCrossSize(em);
->>>>>>> upstream-releases
 }
 
 bool nsRangeFrame::IsHorizontal() const {

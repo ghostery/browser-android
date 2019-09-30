@@ -1,11 +1,6 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
 ha{
-<<<<<<< HEAD
-    Version{"2.1.43.2"}
-||||||| merged common ancestors
-    Version{"2.1.39.11"}
-=======
     Version{"2.1.48.45"}
     zoneStrings{
         "America:Adak"{
@@ -434,5 +429,4 @@ ha{
         regionFormatDaylight{"{0} Lokaci rana"}
         regionFormatStandard{"{0} Daidai ta ce lokaci"}
     }
->>>>>>> upstream-releases
 }

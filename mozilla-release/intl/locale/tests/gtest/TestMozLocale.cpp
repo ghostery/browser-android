@@ -8,15 +8,8 @@
 
 using namespace mozilla::intl;
 
-<<<<<<< HEAD
-TEST(Intl_Locale_Locale, Locale) {
-||||||| merged common ancestors
-
-TEST(Intl_Locale_Locale, Locale) {
-=======
 TEST(Intl_Locale_Locale, Locale)
 {
->>>>>>> upstream-releases
   Locale loc = Locale("en-US");
 
   ASSERT_TRUE(loc.GetLanguage().Equals("en"));

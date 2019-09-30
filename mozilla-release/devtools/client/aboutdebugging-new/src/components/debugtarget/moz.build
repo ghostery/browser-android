@@ -10,13 +10,8 @@ DevToolsModules(
     'DebugTargetPane.css',
     'DebugTargetPane.js',
     'ExtensionDetail.js',
-<<<<<<< HEAD
-    'FieldPair.js',
-||||||| merged common ancestors
-=======
     'FieldPair.css',
     'FieldPair.js',
->>>>>>> upstream-releases
     'InspectAction.js',
     'ProcessDetail.js',
     'ServiceWorkerAction.css',

@@ -83,18 +83,6 @@
   }
 
 // {2451BAED-8DC3-46D9-9E30-96E1BAA03666}
-<<<<<<< HEAD
-#define NS_MACDOCKSUPPORT_CID                        \
-  {                                                  \
-    0x2451BAED, 0x8DC3, 0x46D9, {                    \
-      0x9E, 0x30, 0x96, 0xE1, 0xBA, 0xA0, 0x36, 0x66 \
-    }                                                \
-  }
-||||||| merged common ancestors
-#define NS_MACDOCKSUPPORT_CID \
-{ 0x2451BAED, 0x8DC3, 0x46D9, \
-  { 0x9E, 0x30, 0x96, 0xE1, 0xBA, 0xA0, 0x36, 0x66 } }
-=======
 #define NS_MACDOCKSUPPORT_CID                        \
   {                                                  \
     0x2451BAED, 0x8DC3, 0x46D9, {                    \
@@ -109,7 +97,6 @@
       0x99, 0x84, 0x66, 0xDA, 0x8B, 0x22, 0x5A, 0x37 \
     }                                                \
   }
->>>>>>> upstream-releases
 
 // {de59fe1a-46c8-490f-b04d-34545acb06c9}
 #define NS_MACSHARINGSERVICE_CID                     \
@@ -120,18 +107,6 @@
   }
 
 // {b6e1a890-b2b8-4883-a65f-9476f6185313}
-<<<<<<< HEAD
-#define NS_MACSYSTEMSTATUSBAR_CID                    \
-  {                                                  \
-    0xb6e1a890, 0xb2b8, 0x4883, {                    \
-      0xa6, 0x5f, 0x94, 0x76, 0xf6, 0x18, 0x53, 0x13 \
-    }                                                \
-  }
-||||||| merged common ancestors
-#define NS_MACSYSTEMSTATUSBAR_CID \
-{ 0xb6e1a890, 0xb2b8, 0x4883, \
-  { 0xa6, 0x5f, 0x94, 0x76, 0xf6, 0x18, 0x53, 0x13 } }
-=======
 #define NS_MACSYSTEMSTATUSBAR_CID                    \
   {                                                  \
     0xb6e1a890, 0xb2b8, 0x4883, {                    \
@@ -162,7 +137,6 @@
       0x98, 0x2f, 0xf2, 0x0a, 0x5a, 0xb5, 0xa9, 0x00 \
     }                                                \
   }
->>>>>>> upstream-releases
 
 //-----------------------------------------------------------
 // Drag & Drop & Clipboard

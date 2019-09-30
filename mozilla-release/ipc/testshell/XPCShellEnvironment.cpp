@@ -17,17 +17,9 @@
 
 #include "jsapi.h"
 #include "js/CharacterEncoding.h"
-<<<<<<< HEAD
-#include "js/CompilationAndEvaluation.h"
-#include "js/SourceText.h"
-||||||| merged common ancestors
-#include "js/CompilationAndEvaluation.h"
-#include "js/SourceBufferHolder.h"
-=======
 #include "js/CompilationAndEvaluation.h"  // JS::Compile{,Utf8File}
 #include "js/PropertySpec.h"
 #include "js/SourceText.h"  // JS::Source{Ownership,Text}
->>>>>>> upstream-releases
 
 #include "xpcpublic.h"
 
@@ -282,103 +274,6 @@ void XPCShellEnvironment::ProcessFile(JSContext* cx, const char* filename,
      */
     startline = lineno;
     do {
-<<<<<<< HEAD
-        bufp = buffer;
-        *bufp = '\0';
-
-        /*
-         * Accumulate lines until we get a 'compilable unit' - one that either
-         * generates an error (before running out of source) or that compiles
-         * cleanly.  This should be whenever we get a complete statement that
-         * coincides with the end of a line.
-         */
-        startline = lineno;
-        do {
-            if (!GetLine(bufp, file, startline == lineno ? "js> " : "")) {
-                hitEOF = true;
-                break;
-            }
-            bufp += strlen(bufp);
-            lineno++;
-        } while (!JS_Utf8BufferIsCompilableUnit(cx, global, buffer, strlen(buffer)));
-
-        /* Clear any pending exception from previous failed compiles.  */
-        JS_ClearPendingException(cx);
-
-        JS::CompileOptions options(cx);
-        options.setFileAndLine("typein", startline);
-
-        JS::Rooted<JSScript*> script(cx);
-        if (JS::CompileUtf8(cx, options, buffer, strlen(buffer), &script)) {
-
-            ok = JS_ExecuteScript(cx, script, &result);
-            if (ok && !result.isUndefined()) {
-                /* Suppress warnings from JS::ToString(). */
-                JS::AutoSuppressWarningReporter suppressWarnings(cx);
-                str = JS::ToString(cx, result);
-                JS::UniqueChars bytes;
-                if (str)
-                    bytes = JS_EncodeStringToLatin1(cx, str);
-
-                if (!!bytes)
-                    fprintf(stdout, "%s\n", bytes.get());
-                else
-                    ok = false;
-            }
-        }
-    } while (!hitEOF && !env->IsQuitting());
-
-    fprintf(stdout, "\n");
-||||||| merged common ancestors
-        bufp = buffer;
-        *bufp = '\0';
-
-        /*
-         * Accumulate lines until we get a 'compilable unit' - one that either
-         * generates an error (before running out of source) or that compiles
-         * cleanly.  This should be whenever we get a complete statement that
-         * coincides with the end of a line.
-         */
-        startline = lineno;
-        do {
-            if (!GetLine(bufp, file, startline == lineno ? "js> " : "")) {
-                hitEOF = true;
-                break;
-            }
-            bufp += strlen(bufp);
-            lineno++;
-        } while (!JS_Utf8BufferIsCompilableUnit(cx, global, buffer, strlen(buffer)));
-
-        /* Clear any pending exception from previous failed compiles.  */
-        JS_ClearPendingException(cx);
-
-        JS::CompileOptions options(cx);
-        options.setFileAndLine("typein", startline);
-
-        JS::Rooted<JSScript*> script(cx);
-        if (JS::CompileUtf8(cx, options, buffer, strlen(buffer), &script)) {
-            JS::WarningReporter older;
-
-            ok = JS_ExecuteScript(cx, script, &result);
-            if (ok && !result.isUndefined()) {
-                /* Suppress warnings from JS::ToString(). */
-                older = JS::SetWarningReporter(cx, nullptr);
-                str = JS::ToString(cx, result);
-                JS::UniqueChars bytes;
-                if (str)
-                    bytes = JS_EncodeStringToLatin1(cx, str);
-                JS::SetWarningReporter(cx, older);
-
-                if (!!bytes)
-                    fprintf(stdout, "%s\n", bytes.get());
-                else
-                    ok = false;
-            }
-        }
-    } while (!hitEOF && !env->IsQuitting());
-
-    fprintf(stdout, "\n");
-=======
       if (!GetLine(bufp, file, startline == lineno ? "js> " : "")) {
         hitEOF = true;
         break;
@@ -417,7 +312,6 @@ void XPCShellEnvironment::ProcessFile(JSContext* cx, const char* filename,
   } while (!hitEOF && !env->IsQuitting());
 
   fprintf(stdout, "\n");
->>>>>>> upstream-releases
 }
 
 // static
@@ -529,26 +423,6 @@ bool XPCShellEnvironment::EvaluateString(const nsString& aString,
   JS::CompileOptions options(cx);
   options.setFileAndLine("typein", 0);
 
-<<<<<<< HEAD
-  JS::SourceText<char16_t> srcBuf;
-  if (!srcBuf.init(cx, aString.get(), aString.Length(),
-                   JS::SourceOwnership::Borrowed))
-  {
-    return false;
-  }
-
-  JS::Rooted<JSScript*> script(cx);
-  if (!JS::Compile(cx, options, srcBuf, &script))
-  {
-     return false;
-||||||| merged common ancestors
-  JS::Rooted<JSScript*> script(cx);
-  JS::SourceBufferHolder srcBuf(aString.get(), aString.Length(),
-                                JS::SourceBufferHolder::NoOwnership);
-  if (!JS::Compile(cx, options, srcBuf, &script))
-  {
-     return false;
-=======
   JS::SourceText<char16_t> srcBuf;
   if (!srcBuf.init(cx, aString.get(), aString.Length(),
                    JS::SourceOwnership::Borrowed)) {
@@ -558,7 +432,6 @@ bool XPCShellEnvironment::EvaluateString(const nsString& aString,
   JS::Rooted<JSScript*> script(cx, JS::Compile(cx, options, srcBuf));
   if (!script) {
     return false;
->>>>>>> upstream-releases
   }
 
   if (aResult) {
@@ -568,29 +441,6 @@ bool XPCShellEnvironment::EvaluateString(const nsString& aString,
   JS::Rooted<JS::Value> result(cx);
   bool ok = JS_ExecuteScript(cx, script, &result);
   if (ok && !result.isUndefined()) {
-<<<<<<< HEAD
-      /* Suppress warnings from JS::ToString(). */
-      JS::AutoSuppressWarningReporter suppressWarnings(cx);
-      JSString* str = JS::ToString(cx, result);
-      nsAutoJSString autoStr;
-      if (str)
-          autoStr.init(cx, str);
-
-      if (!autoStr.IsEmpty() && aResult) {
-          aResult->Assign(autoStr);
-      }
-||||||| merged common ancestors
-      JS::WarningReporter old = JS::SetWarningReporter(cx, nullptr);
-      JSString* str = JS::ToString(cx, result);
-      nsAutoJSString autoStr;
-      if (str)
-          autoStr.init(cx, str);
-      JS::SetWarningReporter(cx, old);
-
-      if (!autoStr.IsEmpty() && aResult) {
-          aResult->Assign(autoStr);
-      }
-=======
     /* Suppress warnings from JS::ToString(). */
     JS::AutoSuppressWarningReporter suppressWarnings(cx);
     JSString* str = JS::ToString(cx, result);
@@ -600,7 +450,6 @@ bool XPCShellEnvironment::EvaluateString(const nsString& aString,
     if (!autoStr.IsEmpty() && aResult) {
       aResult->Assign(autoStr);
     }
->>>>>>> upstream-releases
   }
 
   return true;

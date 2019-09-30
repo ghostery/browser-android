@@ -60,23 +60,6 @@ add_task(function setup() {
   controller.addQueryListener(generalListener);
 });
 
-<<<<<<< HEAD
-add_task(function test_constructor_throws() {
-  Assert.throws(() => new UrlbarController(),
-    /Missing options: browserWindow/,
-    "Should throw if the browserWindow was not supplied");
-  Assert.throws(() => new UrlbarController({browserWindow: {}}),
-    /browserWindow should be an actual browser window/,
-    "Should throw if the browserWindow is not a window");
-  Assert.throws(() => new UrlbarController({browserWindow: {
-    location: "about:fake",
-  }}),
-    /browserWindow should be an actual browser window/,
-    "Should throw if the browserWindow does not have the correct location");
-});
-
-||||||| merged common ancestors
-=======
 add_task(function test_constructor_throws() {
   Assert.throws(
     () => new UrlbarController(),
@@ -100,7 +83,6 @@ add_task(function test_constructor_throws() {
   );
 });
 
->>>>>>> upstream-releases
 add_task(function test_add_and_remove_listeners() {
   Assert.throws(
     () => controller.addQueryListener(null),
@@ -298,22 +280,6 @@ add_task(function test_receiveResults() {
 
   sandbox.resetHistory();
 });
-<<<<<<< HEAD
-
-add_task(function test_autocomplete_enabled() {
-  const context = createContext();
-  controller.receiveResults(context);
-
-  Assert.equal(generalListener.onQueryResults.callCount, 1,
-    "Should have called onQueryResults for the listener");
-  Assert.deepEqual(generalListener.onQueryResults.args[0], [context],
-    "Should have called onQueryResults with the context");
-
-  sandbox.resetHistory();
-});
-
-||||||| merged common ancestors
-=======
 
 add_task(async function test_notifications_order() {
   // Clear any pending notifications.
@@ -379,4 +345,3 @@ add_task(async function test_notifications_order() {
     "Check order of notifications"
   );
 });
->>>>>>> upstream-releases

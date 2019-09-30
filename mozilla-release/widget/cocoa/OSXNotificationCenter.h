@@ -48,16 +48,8 @@ class OSXNotificationCenter : public nsIAlertsService,
  protected:
   virtual ~OSXNotificationCenter();
 
-<<<<<<< HEAD
- private:
-  mozNotificationCenterDelegate *mDelegate;
-||||||| merged common ancestors
-private:
-  mozNotificationCenterDelegate *mDelegate;
-=======
  private:
   mozNotificationCenterDelegate* mDelegate;
->>>>>>> upstream-releases
   nsTArray<RefPtr<OSXNotificationInfo> > mActiveAlerts;
   nsTArray<RefPtr<OSXNotificationInfo> > mPendingAlerts;
 };

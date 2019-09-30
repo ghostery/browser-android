@@ -98,16 +98,10 @@ class OSPreferences : public mozIOSPreferences {
   nsTArray<nsCString> mSystemLocales;
   nsTArray<nsCString> mRegionalPrefsLocales;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   const size_t kMaxCachedPatterns = 15;
   nsDataHashtable<nsCStringHashKey, nsString> mPatternCache;
 
  private:
->>>>>>> upstream-releases
   virtual ~OSPreferences();
 
   static StaticRefPtr<OSPreferences> sInstance;

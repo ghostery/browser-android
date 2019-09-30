@@ -10,21 +10,12 @@
 #include "nsIDOMEventListener.h"
 #include "nsBoxFrame.h"
 
-<<<<<<< HEAD
-class nsButtonBoxFrame : public nsBoxFrame {
- public:
-||||||| merged common ancestors
-class nsButtonBoxFrame : public nsBoxFrame
-{
-public:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 class nsButtonBoxFrame : public nsBoxFrame {
  public:
->>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsButtonBoxFrame)
 
   friend nsIFrame* NS_NewButtonBoxFrame(mozilla::PresShell* aPresShell);

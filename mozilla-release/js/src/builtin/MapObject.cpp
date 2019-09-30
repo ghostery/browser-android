@@ -29,58 +29,6 @@ using namespace js;
 using mozilla::IsNaN;
 using mozilla::NumberEqualsInt32;
 
-<<<<<<< HEAD
-using JS::DoubleNaNValue;
-
-/*** HashableValue **********************************************************/
-
-bool HashableValue::setValue(JSContext* cx, HandleValue v) {
-  if (v.isString()) {
-    // Atomize so that hash() and operator==() are fast and infallible.
-    JSString* str = AtomizeString(cx, v.toString(), DoNotPinAtom);
-    if (!str) {
-      return false;
-    }
-    value = StringValue(str);
-  } else if (v.isDouble()) {
-    double d = v.toDouble();
-    int32_t i;
-    if (NumberEqualsInt32(d, &i)) {
-      // Normalize int32_t-valued doubles to int32_t for faster hashing and
-      // testing.
-      value = Int32Value(i);
-    } else if (IsNaN(d)) {
-      // NaNs with different bits must hash and test identically.
-      value = DoubleNaNValue();
-||||||| merged common ancestors
-using JS::DoubleNaNValue;
-
-
-/*** HashableValue *******************************************************************************/
-
-bool
-HashableValue::setValue(JSContext* cx, HandleValue v)
-{
-    if (v.isString()) {
-        // Atomize so that hash() and operator==() are fast and infallible.
-        JSString* str = AtomizeString(cx, v.toString(), DoNotPinAtom);
-        if (!str) {
-            return false;
-        }
-        value = StringValue(str);
-    } else if (v.isDouble()) {
-        double d = v.toDouble();
-        int32_t i;
-        if (NumberEqualsInt32(d, &i)) {
-            // Normalize int32_t-valued doubles to int32_t for faster hashing and testing.
-            value = Int32Value(i);
-        } else if (IsNaN(d)) {
-            // NaNs with different bits must hash and test identically.
-            value = DoubleNaNValue();
-        } else {
-            value = v;
-        }
-=======
 /*** HashableValue **********************************************************/
 
 bool HashableValue::setValue(JSContext* cx, HandleValue v) {
@@ -99,142 +47,7 @@ bool HashableValue::setValue(JSContext* cx, HandleValue v) {
       // testing. Note: we use NumberEqualsInt32 here instead of NumberIsInt32
       // because we want -0 and 0 to be normalized to the same thing.
       value = Int32Value(i);
->>>>>>> upstream-releases
     } else {
-<<<<<<< HEAD
-      value = v;
-    }
-  } else {
-    value = v;
-  }
-
-  MOZ_ASSERT(value.isUndefined() || value.isNull() || value.isBoolean() ||
-             value.isNumber() || value.isString() || value.isSymbol() ||
-             value.isObject() || IF_BIGINT(value.isBigInt(), false));
-  return true;
-}
-
-static HashNumber HashValue(const Value& v,
-                            const mozilla::HashCodeScrambler& hcs) {
-  // HashableValue::setValue normalizes values so that the SameValue relation
-  // on HashableValues is the same as the == relationship on
-  // value.asRawBits(). So why not just return that? Security.
-  //
-  // To avoid revealing GC of atoms, string-based hash codes are computed
-  // from the string contents rather than any pointer; to avoid revealing
-  // addresses, pointer-based hash codes are computed using the
-  // HashCodeScrambler.
-
-  if (v.isString()) {
-    return v.toString()->asAtom().hash();
-  }
-  if (v.isSymbol()) {
-    return v.toSymbol()->hash();
-  }
-#ifdef ENABLE_BIGINT
-  if (v.isBigInt()) {
-    return v.toBigInt()->hash();
-  }
-#endif
-  if (v.isObject()) {
-    return hcs.scramble(v.asRawBits());
-  }
-
-  MOZ_ASSERT(!v.isGCThing(), "do not reveal pointers via hash codes");
-  return mozilla::HashGeneric(v.asRawBits());
-}
-
-HashNumber HashableValue::hash(const mozilla::HashCodeScrambler& hcs) const {
-  return HashValue(value, hcs);
-}
-
-bool HashableValue::operator==(const HashableValue& other) const {
-  // Two HashableValues are equal if they have equal bits.
-  bool b = (value.asRawBits() == other.value.asRawBits());
-
-#ifdef ENABLE_BIGINT
-  // BigInt values are considered equal if they represent the same
-  // integer. This test should use a comparison function that doesn't
-  // require a JSContext once one is defined in the BigInt class.
-  if (!b && (value.isBigInt() && other.value.isBigInt())) {
-    JSContext* cx = TlsContext.get();
-    RootedValue valueRoot(cx, value);
-    RootedValue otherRoot(cx, other.value);
-    SameValue(cx, valueRoot, otherRoot, &b);
-  }
-||||||| merged common ancestors
-        value = v;
-    }
-
-    MOZ_ASSERT(value.isUndefined() || value.isNull() || value.isBoolean() || value.isNumber() ||
-               value.isString() || value.isSymbol() || value.isObject() ||
-               IF_BIGINT(value.isBigInt(), false));
-    return true;
-}
-
-static HashNumber
-HashValue(const Value& v, const mozilla::HashCodeScrambler& hcs)
-{
-    // HashableValue::setValue normalizes values so that the SameValue relation
-    // on HashableValues is the same as the == relationship on
-    // value.asRawBits(). So why not just return that? Security.
-    //
-    // To avoid revealing GC of atoms, string-based hash codes are computed
-    // from the string contents rather than any pointer; to avoid revealing
-    // addresses, pointer-based hash codes are computed using the
-    // HashCodeScrambler.
-
-    if (v.isString()) {
-        return v.toString()->asAtom().hash();
-    }
-    if (v.isSymbol()) {
-        return v.toSymbol()->hash();
-    }
-#ifdef ENABLE_BIGINT
-    if (v.isBigInt()) {
-        return v.toBigInt()->hash();
-    }
-#endif
-    if (v.isObject()) {
-        return hcs.scramble(v.asRawBits());
-    }
-
-    MOZ_ASSERT(!v.isGCThing(), "do not reveal pointers via hash codes");
-    return mozilla::HashGeneric(v.asRawBits());
-}
-
-HashNumber
-HashableValue::hash(const mozilla::HashCodeScrambler& hcs) const
-{
-    return HashValue(value, hcs);
-}
-
-bool
-HashableValue::operator==(const HashableValue& other) const
-{
-    // Two HashableValues are equal if they have equal bits.
-    bool b = (value.asRawBits() == other.value.asRawBits());
-
-#ifdef ENABLE_BIGINT
-    // BigInt values are considered equal if they represent the same
-    // integer. This test should use a comparison function that doesn't
-    // require a JSContext once one is defined in the BigInt class.
-    if (!b && (value.isBigInt() && other.value.isBigInt())) {
-        JSContext* cx = TlsContext.get();
-        RootedValue valueRoot(cx, value);
-        RootedValue otherRoot(cx, other.value);
-        SameValue(cx, valueRoot, otherRoot, &b);
-    }
-#endif
-
-#ifdef DEBUG
-    bool same;
-    JSContext* cx = TlsContext.get();
-    RootedValue valueRoot(cx, value);
-    RootedValue otherRoot(cx, other.value);
-    MOZ_ASSERT(SameValue(cx, valueRoot, otherRoot, &same));
-    MOZ_ASSERT(same == b);
-=======
       // Normalize the sign bit of a NaN.
       value = JS::CanonicalizedDoubleValue(d);
     }
@@ -297,64 +110,18 @@ bool HashableValue::operator==(const HashableValue& other) const {
   RootedValue otherRoot(cx, other.value);
   MOZ_ASSERT(SameValue(cx, valueRoot, otherRoot, &same));
   MOZ_ASSERT(same == b);
->>>>>>> upstream-releases
-#endif
-<<<<<<< HEAD
-||||||| merged common ancestors
-    return b;
-}
-=======
-  return b;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-#ifdef DEBUG
-  bool same;
-  JSContext* cx = TlsContext.get();
-  RootedValue valueRoot(cx, value);
-  RootedValue otherRoot(cx, other.value);
-  MOZ_ASSERT(SameValue(cx, valueRoot, otherRoot, &same));
-  MOZ_ASSERT(same == b);
 #endif
   return b;
-||||||| merged common ancestors
-HashableValue
-HashableValue::trace(JSTracer* trc) const
-{
-    HashableValue hv(*this);
-    TraceEdge(trc, &hv.value, "key");
-    return hv;
-=======
-HashableValue HashableValue::trace(JSTracer* trc) const {
-  HashableValue hv(*this);
-  TraceEdge(trc, &hv.value, "key");
-  return hv;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 HashableValue HashableValue::trace(JSTracer* trc) const {
   HashableValue hv(*this);
   TraceEdge(trc, &hv.value, "key");
   return hv;
 }
-||||||| merged common ancestors
-
-/*** MapIterator *********************************************************************************/
-=======
-/*** MapIterator ************************************************************/
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 /*** MapIterator ************************************************************/
-||||||| merged common ancestors
-namespace {
-=======
-namespace {} /* anonymous namespace */
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 namespace {} /* anonymous namespace */
 
 static const ClassOps MapIteratorObjectClassOps = {nullptr, /* addProperty */
@@ -364,39 +131,9 @@ static const ClassOps MapIteratorObjectClassOps = {nullptr, /* addProperty */
                                                    nullptr, /* resolve */
                                                    nullptr, /* mayResolve */
                                                    MapIteratorObject::finalize};
-||||||| merged common ancestors
-} /* anonymous namespace */
-
-static const ClassOps MapIteratorObjectClassOps = {
-    nullptr, /* addProperty */
-    nullptr, /* delProperty */
-    nullptr, /* enumerate */
-    nullptr, /* newEnumerate */
-    nullptr, /* resolve */
-    nullptr, /* mayResolve */
-    MapIteratorObject::finalize
-};
-=======
-static const ClassOps MapIteratorObjectClassOps = {nullptr, /* addProperty */
-                                                   nullptr, /* delProperty */
-                                                   nullptr, /* enumerate */
-                                                   nullptr, /* newEnumerate */
-                                                   nullptr, /* resolve */
-                                                   nullptr, /* mayResolve */
-                                                   MapIteratorObject::finalize};
->>>>>>> upstream-releases
 
 static const ClassExtension MapIteratorObjectClassExtension = {
-<<<<<<< HEAD
-    nullptr, /* weakmapKeyDelegateOp */
     MapIteratorObject::objectMoved};
-||||||| merged common ancestors
-    nullptr, /* weakmapKeyDelegateOp */
-    MapIteratorObject::objectMoved
-};
-=======
-    MapIteratorObject::objectMoved};
->>>>>>> upstream-releases
 
 const Class MapIteratorObject::class_ = {
     "Map Iterator",
@@ -425,44 +162,6 @@ inline MapObject::IteratorKind MapIteratorObject::kind() const {
   return MapObject::IteratorKind(i);
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::initMapIteratorProto(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  Rooted<JSObject*> base(
-      cx, GlobalObject::getOrCreateIteratorPrototype(cx, global));
-  if (!base) {
-    return false;
-  }
-  RootedPlainObject proto(cx, NewObjectWithGivenProto<PlainObject>(cx, base));
-  if (!proto) {
-    return false;
-  }
-  if (!JS_DefineFunctions(cx, proto, MapIteratorObject::methods) ||
-      !DefineToStringTag(cx, proto, cx->names().MapIterator)) {
-    return false;
-  }
-  global->setReservedSlot(MAP_ITERATOR_PROTO, ObjectValue(*proto));
-  return true;
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::initMapIteratorProto(JSContext* cx, Handle<GlobalObject*> global)
-{
-    Rooted<JSObject*> base(cx, GlobalObject::getOrCreateIteratorPrototype(cx, global));
-    if (!base) {
-        return false;
-    }
-    RootedPlainObject proto(cx, NewObjectWithGivenProto<PlainObject>(cx, base));
-    if (!proto) {
-        return false;
-    }
-    if (!JS_DefineFunctions(cx, proto, MapIteratorObject::methods) ||
-        !DefineToStringTag(cx, proto, cx->names().MapIterator))
-    {
-        return false;
-    }
-    global->setReservedSlot(MAP_ITERATOR_PROTO, ObjectValue(*proto));
-    return true;
-=======
 /* static */
 bool GlobalObject::initMapIteratorProto(JSContext* cx,
                                         Handle<GlobalObject*> global) {
@@ -481,7 +180,6 @@ bool GlobalObject::initMapIteratorProto(JSContext* cx,
   }
   global->setReservedSlot(MAP_ITERATOR_PROTO, ObjectValue(*proto));
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename TableObject>
@@ -516,7 +214,6 @@ MapIteratorObject* MapIteratorObject::create(JSContext* cx, HandleObject obj,
       return nullptr;
     }
 
-<<<<<<< HEAD
     iterobj->setSlot(TargetSlot, ObjectValue(*mapobj));
     iterobj->setSlot(RangeSlot, PrivateValue(nullptr));
     iterobj->setSlot(KindSlot, Int32Value(int32_t(kind)));
@@ -526,43 +223,6 @@ MapIteratorObject* MapIteratorObject::create(JSContext* cx, HandleObject obj,
     if (buffer) {
       break;
     }
-||||||| merged common ancestors
-    Nursery& nursery = cx->nursery();
-
-    MapIteratorObject* iterobj;
-    void *buffer;
-    NewObjectKind objectKind = GenericObject;
-    while (true) {
-        iterobj = NewObjectWithGivenProto<MapIteratorObject>(cx, proto, objectKind);
-        if (!iterobj) {
-            return nullptr;
-        }
-
-        iterobj->setSlot(TargetSlot, ObjectValue(*mapobj));
-        iterobj->setSlot(RangeSlot, PrivateValue(nullptr));
-        iterobj->setSlot(KindSlot, Int32Value(int32_t(kind)));
-
-        const size_t size = JS_ROUNDUP(sizeof(ValueMap::Range), gc::CellAlignBytes);
-        buffer = nursery.allocateBufferSameLocation(iterobj, size);
-        if (buffer) {
-            break;
-        }
-
-        if (!IsInsideNursery(iterobj)) {
-            ReportOutOfMemory(cx);
-            return nullptr;
-        }
-=======
-    iterobj->setSlot(TargetSlot, ObjectValue(*mapobj));
-    iterobj->setSlot(RangeSlot, PrivateValue(nullptr));
-    iterobj->setSlot(KindSlot, Int32Value(int32_t(kind)));
-
-    const size_t size = JS_ROUNDUP(sizeof(ValueMap::Range), gc::CellAlignBytes);
-    buffer = nursery.allocateBufferSameLocation(iterobj, size);
-    if (buffer) {
-      break;
-    }
->>>>>>> upstream-releases
 
     if (!IsInsideNursery(iterobj)) {
       ReportOutOfMemory(cx);
@@ -638,53 +298,13 @@ static void DestroyRange(JSObject* iterator, Range* range) {
   }
 }
 
-<<<<<<< HEAD
-bool MapIteratorObject::next(Handle<MapIteratorObject*> mapIterator,
-                             HandleArrayObject resultPairObj, JSContext* cx) {
-  // Check invariants for inlined _GetNextMapEntryForIterator.
-||||||| merged common ancestors
-/* static */ JSObject*
-MapIteratorObject::createResultPair(JSContext* cx)
-{
-    RootedArrayObject resultPairObj(cx, NewDenseFullyAllocatedArray(cx, 2, nullptr, TenuredObject));
-    if (!resultPairObj) {
-        return nullptr;
-    }
-
-    Rooted<TaggedProto> proto(cx, resultPairObj->taggedProto());
-    ObjectGroup* group = ObjectGroupRealm::makeGroup(cx, resultPairObj->realm(),
-                                                     resultPairObj->getClass(), proto);
-    if (!group) {
-        return nullptr;
-    }
-    resultPairObj->setGroup(group);
-
-    resultPairObj->setDenseInitializedLength(2);
-    resultPairObj->initDenseElement(0, NullValue());
-    resultPairObj->initDenseElement(1, NullValue());
-=======
 bool MapIteratorObject::next(Handle<MapIteratorObject*> mapIterator,
                              HandleArrayObject resultPairObj, JSContext* cx) {
   // Check invariants for inlined _GetNextMapEntryForIterator.
 
   // The array should be tenured, so that post-barrier can be done simply.
   MOZ_ASSERT(resultPairObj->isTenured());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The array should be tenured, so that post-barrier can be done simply.
-  MOZ_ASSERT(resultPairObj->isTenured());
-||||||| merged common ancestors
-    // See comments in MapIteratorObject::next.
-    AddTypePropertyId(cx, resultPairObj, JSID_VOID, TypeSet::UnknownType());
-=======
-  // The array elements should be fixed.
-  MOZ_ASSERT(resultPairObj->hasFixedElements());
-  MOZ_ASSERT(resultPairObj->getDenseInitializedLength() == 2);
-  MOZ_ASSERT(resultPairObj->getDenseCapacity() >= 2);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // The array elements should be fixed.
   MOZ_ASSERT(resultPairObj->hasFixedElements());
   MOZ_ASSERT(resultPairObj->getDenseInitializedLength() == 2);
@@ -694,98 +314,7 @@ bool MapIteratorObject::next(Handle<MapIteratorObject*> mapIterator,
   if (!range) {
     return true;
   }
-||||||| merged common ancestors
-    return resultPairObj;
-}
 
-
-/*** Map *****************************************************************************************/
-=======
-  ValueMap::Range* range = MapIteratorObjectRange(mapIterator);
-  if (!range) {
-    return true;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (range->empty()) {
-    DestroyRange<ValueMap::Range>(mapIterator, range);
-    mapIterator->setReservedSlot(RangeSlot, PrivateValue(nullptr));
-    return true;
-  }
-
-  switch (mapIterator->kind()) {
-    case MapObject::Keys:
-      resultPairObj->setDenseElementWithType(cx, 0, range->front().key.get());
-      break;
-
-    case MapObject::Values:
-      resultPairObj->setDenseElementWithType(cx, 1, range->front().value);
-      break;
-
-    case MapObject::Entries: {
-      resultPairObj->setDenseElementWithType(cx, 0, range->front().key.get());
-      resultPairObj->setDenseElementWithType(cx, 1, range->front().value);
-      break;
-    }
-  }
-  range->popFront();
-  return false;
-}
-
-/* static */ JSObject* MapIteratorObject::createResultPair(JSContext* cx) {
-  RootedArrayObject resultPairObj(
-      cx, NewDenseFullyAllocatedArray(cx, 2, nullptr, TenuredObject));
-  if (!resultPairObj) {
-    return nullptr;
-  }
-
-  Rooted<TaggedProto> proto(cx, resultPairObj->taggedProto());
-  ObjectGroup* group = ObjectGroupRealm::makeGroup(
-      cx, resultPairObj->realm(), resultPairObj->getClass(), proto);
-  if (!group) {
-    return nullptr;
-  }
-  resultPairObj->setGroup(group);
-
-  resultPairObj->setDenseInitializedLength(2);
-  resultPairObj->initDenseElement(0, NullValue());
-  resultPairObj->initDenseElement(1, NullValue());
-
-  // See comments in MapIteratorObject::next.
-  AddTypePropertyId(cx, resultPairObj, JSID_VOID, TypeSet::UnknownType());
-
-  return resultPairObj;
-}
-
-/*** Map ********************************************************************/
-
-const ClassOps MapObject::classOps_ = {nullptr,  // addProperty
-                                       nullptr,  // delProperty
-                                       nullptr,  // enumerate
-                                       nullptr,  // newEnumerate
-                                       nullptr,  // resolve
-                                       nullptr,  // mayResolve
-                                       finalize,
-                                       nullptr,  // call
-                                       nullptr,  // hasInstance
-                                       nullptr,  // construct
-                                       trace};
-||||||| merged common ancestors
-const ClassOps MapObject::classOps_ = {
-    nullptr, // addProperty
-    nullptr, // delProperty
-    nullptr, // enumerate
-    nullptr, // newEnumerate
-    nullptr, // resolve
-    nullptr, // mayResolve
-    finalize,
-    nullptr, // call
-    nullptr, // hasInstance
-    nullptr, // construct
-    trace
-};
-=======
   if (range->empty()) {
     DestroyRange<ValueMap::Range>(mapIterator, range);
     mapIterator->setReservedSlot(RangeSlot, PrivateValue(nullptr));
@@ -850,7 +379,6 @@ const ClassOps MapObject::classOps_ = {nullptr,  // addProperty
                                        nullptr,  // hasInstance
                                        nullptr,  // construct
                                        trace};
->>>>>>> upstream-releases
 
 const ClassSpec MapObject::classSpec_ = {
     GenericCreateConstructor<MapObject::construct, 0, gc::AllocKind::FUNCTION>,
@@ -883,53 +411,13 @@ const JSFunctionSpec MapObject::methods[] = {
     JS_SELF_HOSTED_FN("forEach", "MapForEach", 2, 0),
     // MapEntries only exists to preseve the equal identity of
     // entries and @@iterator.
-<<<<<<< HEAD
-    JS_SELF_HOSTED_FN("entries", "MapEntries", 0, 0),
-    JS_SELF_HOSTED_SYM_FN(iterator, "MapEntries", 0, 0), JS_FS_END};
-||||||| merged common ancestors
-    JS_SELF_HOSTED_FN("entries", "MapEntries", 0, 0),
-    JS_SELF_HOSTED_SYM_FN(iterator, "MapEntries", 0, 0),
-    JS_FS_END
-    // clang-format on
-};
-=======
     JS_SELF_HOSTED_FN("entries", "$MapEntries", 0, 0),
     JS_SELF_HOSTED_SYM_FN(iterator, "$MapEntries", 0, 0), JS_FS_END};
->>>>>>> upstream-releases
 
 const JSPropertySpec MapObject::staticProperties[] = {
-<<<<<<< HEAD
-    JS_SELF_HOSTED_SYM_GET(species, "MapSpecies", 0), JS_PS_END};
-||||||| merged common ancestors
-    JS_SELF_HOSTED_SYM_GET(species, "MapSpecies", 0),
-    JS_PS_END
-};
-=======
     JS_SELF_HOSTED_SYM_GET(species, "$MapSpecies", 0), JS_PS_END};
->>>>>>> upstream-releases
 
 template <class Range>
-<<<<<<< HEAD
-static void TraceKey(Range& r, const HashableValue& key, JSTracer* trc) {
-  HashableValue newKey = key.trace(trc);
-
-  if (newKey.get() != key.get()) {
-    // The hash function only uses the bits of the Value, so it is safe to
-    // rekey even when the object or string has been modified by the GC.
-    r.rekeyFront(newKey);
-  }
-||||||| merged common ancestors
-static void
-TraceKey(Range& r, const HashableValue& key, JSTracer* trc)
-{
-    HashableValue newKey = key.trace(trc);
-
-    if (newKey.get() != key.get()) {
-        // The hash function only uses the bits of the Value, so it is safe to
-        // rekey even when the object or string has been modified by the GC.
-        r.rekeyFront(newKey);
-    }
-=======
 static void TraceKey(Range& r, const HashableValue& key, JSTracer* trc) {
   HashableValue newKey = key.trace(trc);
 
@@ -939,7 +427,6 @@ static void TraceKey(Range& r, const HashableValue& key, JSTracer* trc) {
     // other types the hash function only uses the bits of the Value.
     r.rekeyFront(newKey);
   }
->>>>>>> upstream-releases
 }
 
 void MapObject::trace(JSTracer* trc, JSObject* obj) {
@@ -1124,64 +611,20 @@ MapObject* MapObject::create(JSContext* cx,
     return nullptr;
   }
 
-<<<<<<< HEAD
-  mapObj->initPrivate(map.release());
-  mapObj->initReservedSlot(NurseryKeysSlot, PrivateValue(nullptr));
-  mapObj->initReservedSlot(HasNurseryMemorySlot,
-                           JS::BooleanValue(insideNursery));
-  return mapObj;
-||||||| merged common ancestors
-    mapObj->initPrivate(map.release());
-    mapObj->initReservedSlot(NurseryKeysSlot, PrivateValue(nullptr));
-    mapObj->initReservedSlot(HasNurseryMemorySlot, JS::BooleanValue(insideNursery));
-    return mapObj;
-=======
   InitObjectPrivate(mapObj, map.release(), MemoryUse::MapObjectTable);
   mapObj->initReservedSlot(NurseryKeysSlot, PrivateValue(nullptr));
   mapObj->initReservedSlot(HasNurseryMemorySlot,
                            JS::BooleanValue(insideNursery));
   return mapObj;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MapObject::finalize(FreeOp* fop, JSObject* obj) {
-  MOZ_ASSERT(fop->onMainThread());
-  if (ValueMap* map = obj->as<MapObject>().getData()) {
-    fop->delete_(map);
-  }
-||||||| merged common ancestors
-void
-MapObject::finalize(FreeOp* fop, JSObject* obj)
-{
-    MOZ_ASSERT(fop->onMainThread());
-    if (ValueMap* map = obj->as<MapObject>().getData()) {
-        fop->delete_(map);
-    }
-=======
 void MapObject::finalize(FreeOp* fop, JSObject* obj) {
   MOZ_ASSERT(fop->onMainThread());
   if (ValueMap* map = obj->as<MapObject>().getData()) {
     fop->delete_(obj, map, MemoryUse::MapObjectTable);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void MapObject::sweepAfterMinorGC(FreeOp* fop, MapObject* mapobj) {
-  if (IsInsideNursery(mapobj) && !IsForwarded(mapobj)) {
-    finalize(fop, mapobj);
-    return;
-  }
-||||||| merged common ancestors
-/* static */ void
-MapObject::sweepAfterMinorGC(FreeOp* fop, MapObject* mapobj)
-{
-    if (IsInsideNursery(mapobj) && !IsForwarded(mapobj)) {
-        finalize(fop, mapobj);
-        return;
-    }
-=======
 /* static */
 void MapObject::sweepAfterMinorGC(FreeOp* fop, MapObject* mapobj) {
   bool wasInsideNursery = IsInsideNursery(mapobj);
@@ -1193,21 +636,10 @@ void MapObject::sweepAfterMinorGC(FreeOp* fop, MapObject* mapobj) {
   mapobj = MaybeForwarded(mapobj);
   mapobj->getData()->destroyNurseryRanges();
   SetHasNurseryMemory(mapobj, false);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mapobj = MaybeForwarded(mapobj);
-  mapobj->getData()->destroyNurseryRanges();
-  SetHasNurseryMemory(mapobj, false);
-||||||| merged common ancestors
-    mapobj = MaybeForwarded(mapobj);
-    mapobj->getData()->destroyNurseryRanges();
-    SetHasNurseryMemory(mapobj, false);
-=======
   if (wasInsideNursery) {
     AddCellMemory(mapobj, sizeof(ValueMap), MemoryUse::MapObjectTable);
   }
->>>>>>> upstream-releases
 }
 
 bool MapObject::construct(JSContext* cx, unsigned argc, Value* vp) {
@@ -1217,22 +649,10 @@ bool MapObject::construct(JSContext* cx, unsigned argc, Value* vp) {
     return false;
   }
 
-<<<<<<< HEAD
-  RootedObject proto(cx);
-  if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-    return false;
-  }
-||||||| merged common ancestors
-    RootedObject proto(cx);
-    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-        return false;
-    }
-=======
   RootedObject proto(cx);
   if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_Map, &proto)) {
     return false;
   }
->>>>>>> upstream-releases
 
   Rooted<MapObject*> obj(cx, MapObject::create(cx, proto));
   if (!obj) {
@@ -1373,7 +793,6 @@ bool MapObject::set(JSContext* cx, unsigned argc, Value* vp) {
   return CallNonGenericMethod<MapObject::is, MapObject::set_impl>(cx, args);
 }
 
-<<<<<<< HEAD
 bool MapObject::delete_(JSContext* cx, HandleObject obj, HandleValue key,
                         bool* rval) {
   ValueMap& map = extract(obj);
@@ -1382,33 +801,6 @@ bool MapObject::delete_(JSContext* cx, HandleObject obj, HandleValue key,
   if (!k.setValue(cx, key)) {
     return false;
   }
-||||||| merged common ancestors
-bool
-MapObject::delete_(JSContext *cx, HandleObject obj, HandleValue key, bool *rval)
-{
-    ValueMap &map = extract(obj);
-    Rooted<HashableValue> k(cx);
-
-    if (!k.setValue(cx, key)) {
-        return false;
-    }
-
-    if (!map.remove(k, rval)) {
-        ReportOutOfMemory(cx);
-        return false;
-    }
-    return true;
-}
-=======
-bool MapObject::delete_(JSContext* cx, HandleObject obj, HandleValue key,
-                        bool* rval) {
-  ValueMap& map = extract(obj);
-  Rooted<HashableValue> k(cx);
-
-  if (!k.setValue(cx, key)) {
-    return false;
-  }
->>>>>>> upstream-releases
 
   if (!map.remove(k, rval)) {
     ReportOutOfMemory(cx);
@@ -1520,16 +912,7 @@ static const ClassOps SetIteratorObjectClassOps = {nullptr, /* addProperty */
                                                    SetIteratorObject::finalize};
 
 static const ClassExtension SetIteratorObjectClassExtension = {
-<<<<<<< HEAD
-    nullptr, /* weakmapKeyDelegateOp */
     SetIteratorObject::objectMoved};
-||||||| merged common ancestors
-    nullptr, /* weakmapKeyDelegateOp */
-    SetIteratorObject::objectMoved
-};
-=======
-    SetIteratorObject::objectMoved};
->>>>>>> upstream-releases
 
 const Class SetIteratorObject::class_ = {
     "Set Iterator",
@@ -1557,65 +940,6 @@ inline SetObject::IteratorKind SetIteratorObject::kind() const {
   return SetObject::IteratorKind(i);
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::initSetIteratorProto(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  Rooted<JSObject*> base(
-      cx, GlobalObject::getOrCreateIteratorPrototype(cx, global));
-  if (!base) {
-    return false;
-  }
-  RootedPlainObject proto(cx, NewObjectWithGivenProto<PlainObject>(cx, base));
-  if (!proto) {
-    return false;
-  }
-  if (!JS_DefineFunctions(cx, proto, SetIteratorObject::methods) ||
-      !DefineToStringTag(cx, proto, cx->names().SetIterator)) {
-    return false;
-  }
-  global->setReservedSlot(SET_ITERATOR_PROTO, ObjectValue(*proto));
-  return true;
-}
-
-SetIteratorObject* SetIteratorObject::create(JSContext* cx, HandleObject obj,
-                                             ValueSet* data,
-                                             SetObject::IteratorKind kind) {
-  MOZ_ASSERT(kind != SetObject::Keys);
-
-  Handle<SetObject*> setobj(obj.as<SetObject>());
-  Rooted<GlobalObject*> global(cx, &setobj->global());
-  Rooted<JSObject*> proto(
-      cx, GlobalObject::getOrCreateSetIteratorPrototype(cx, global));
-  if (!proto) {
-    return nullptr;
-  }
-
-  Nursery& nursery = cx->nursery();
-
-  SetIteratorObject* iterobj;
-  void* buffer;
-  NewObjectKind objectKind = GenericObject;
-  while (true) {
-    iterobj = NewObjectWithGivenProto<SetIteratorObject>(cx, proto, objectKind);
-    if (!iterobj) {
-      return nullptr;
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::initSetIteratorProto(JSContext* cx, Handle<GlobalObject*> global)
-{
-    Rooted<JSObject*> base(cx, GlobalObject::getOrCreateIteratorPrototype(cx, global));
-    if (!base) {
-        return false;
-    }
-    RootedPlainObject proto(cx, NewObjectWithGivenProto<PlainObject>(cx, base));
-    if (!proto) {
-        return false;
-    }
-    if (!JS_DefineFunctions(cx, proto, SetIteratorObject::methods) ||
-        !DefineToStringTag(cx, proto, cx->names().SetIterator))
-    {
-        return false;
-=======
 /* static */
 bool GlobalObject::initSetIteratorProto(JSContext* cx,
                                         Handle<GlobalObject*> global) {
@@ -1658,7 +982,6 @@ SetIteratorObject* SetIteratorObject::create(JSContext* cx, HandleObject obj,
     iterobj = NewObjectWithGivenProto<SetIteratorObject>(cx, proto, objectKind);
     if (!iterobj) {
       return nullptr;
->>>>>>> upstream-releases
     }
 
     iterobj->setSlot(TargetSlot, ObjectValue(*setobj));
@@ -1765,22 +1088,6 @@ bool SetIteratorObject::next(Handle<SetIteratorObject*> setIterator,
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ JSObject* SetIteratorObject::createResult(JSContext* cx) {
-  RootedArrayObject resultObj(
-      cx, NewDenseFullyAllocatedArray(cx, 1, nullptr, TenuredObject));
-  if (!resultObj) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-/* static */ JSObject*
-SetIteratorObject::createResult(JSContext* cx)
-{
-    RootedArrayObject resultObj(cx, NewDenseFullyAllocatedArray(cx, 1, nullptr, TenuredObject));
-    if (!resultObj) {
-        return nullptr;
-    }
-=======
 /* static */
 JSObject* SetIteratorObject::createResult(JSContext* cx) {
   RootedArrayObject resultObj(
@@ -1788,7 +1095,6 @@ JSObject* SetIteratorObject::createResult(JSContext* cx) {
   if (!resultObj) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   Rooted<TaggedProto> proto(cx, resultObj->taggedProto());
   ObjectGroup* group = ObjectGroupRealm::makeGroup(
@@ -1854,63 +1160,11 @@ const JSFunctionSpec SetObject::methods[] = {
     JS_SELF_HOSTED_FN("forEach", "SetForEach", 2, 0),
     // SetValues only exists to preseve the equal identity of
     // values, keys and @@iterator.
-<<<<<<< HEAD
-    JS_SELF_HOSTED_FN("values", "SetValues", 0, 0),
-    JS_SELF_HOSTED_FN("keys", "SetValues", 0, 0),
-    JS_SELF_HOSTED_SYM_FN(iterator, "SetValues", 0, 0), JS_FS_END};
-||||||| merged common ancestors
-    JS_SELF_HOSTED_FN("values", "SetValues", 0, 0),
-    JS_SELF_HOSTED_FN("keys", "SetValues", 0, 0),
-    JS_SELF_HOSTED_SYM_FN(iterator, "SetValues", 0, 0),
-    JS_FS_END
-    // clang-format on
-};
-=======
     JS_SELF_HOSTED_FN("values", "$SetValues", 0, 0),
     JS_SELF_HOSTED_FN("keys", "$SetValues", 0, 0),
     JS_SELF_HOSTED_SYM_FN(iterator, "$SetValues", 0, 0), JS_FS_END};
->>>>>>> upstream-releases
 
 const JSPropertySpec SetObject::staticProperties[] = {
-<<<<<<< HEAD
-    JS_SELF_HOSTED_SYM_GET(species, "SetSpecies", 0), JS_PS_END};
-
-bool SetObject::keys(JSContext* cx, HandleObject obj,
-                     JS::MutableHandle<GCVector<JS::Value>> keys) {
-  ValueSet* set = obj->as<SetObject>().getData();
-  if (!set) {
-    return false;
-  }
-||||||| merged common ancestors
-    JS_SELF_HOSTED_SYM_GET(species, "SetSpecies", 0),
-    JS_PS_END
-};
-
-bool
-SetObject::keys(JSContext* cx, HandleObject obj, JS::MutableHandle<GCVector<JS::Value>> keys)
-{
-    ValueSet* set = obj->as<SetObject>().getData();
-    if (!set) {
-        return false;
-    }
-
-    for (ValueSet::Range r = set->all(); !r.empty(); r.popFront()) {
-        if (!keys.append(r.front().get())) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool
-SetObject::add(JSContext* cx, HandleObject obj, HandleValue k)
-{
-    ValueSet* set = obj->as<SetObject>().getData();
-    if (!set) {
-        return false;
-    }
-=======
     JS_SELF_HOSTED_SYM_GET(species, "$SetSpecies", 0), JS_PS_END};
 
 bool SetObject::keys(JSContext* cx, HandleObject obj,
@@ -1919,7 +1173,6 @@ bool SetObject::keys(JSContext* cx, HandleObject obj,
   if (!set) {
     return false;
   }
->>>>>>> upstream-releases
 
   for (ValueSet::Range r = set->all(); !r.empty(); r.popFront()) {
     if (!keys.append(r.front().get())) {
@@ -1930,49 +1183,6 @@ bool SetObject::keys(JSContext* cx, HandleObject obj,
   return true;
 }
 
-<<<<<<< HEAD
-bool SetObject::add(JSContext* cx, HandleObject obj, HandleValue k) {
-  ValueSet* set = obj->as<SetObject>().getData();
-  if (!set) {
-    return false;
-  }
-
-  Rooted<HashableValue> key(cx);
-  if (!key.setValue(cx, k)) {
-    return false;
-  }
-||||||| merged common ancestors
-SetObject*
-SetObject::create(JSContext* cx, HandleObject proto /* = nullptr */)
-{
-    auto set = cx->make_unique<ValueSet>(cx->zone(),
-                                         cx->realm()->randomHashCodeScrambler());
-    if (!set) {
-        return nullptr;
-    }
-
-    if (!set->init()) {
-        ReportOutOfMemory(cx);
-        return nullptr;
-    }
-
-    SetObject* obj = NewObjectWithClassProto<SetObject>(cx, proto);
-    if (!obj) {
-        return nullptr;
-    }
-
-    bool insideNursery = IsInsideNursery(obj);
-    if (insideNursery && !cx->nursery().addSetWithNurseryMemory(obj)) {
-        ReportOutOfMemory(cx);
-        return nullptr;
-    }
-
-    obj->initPrivate(set.release());
-    obj->initReservedSlot(NurseryKeysSlot, PrivateValue(nullptr));
-    obj->initReservedSlot(HasNurseryMemorySlot, JS::BooleanValue(insideNursery));
-    return obj;
-}
-=======
 bool SetObject::add(JSContext* cx, HandleObject obj, HandleValue k) {
   ValueSet* set = obj->as<SetObject>().getData();
   if (!set) {
@@ -2029,92 +1239,15 @@ void SetObject::trace(JSTracer* trc, JSObject* obj) {
     }
   }
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!WriteBarrierPost(&obj->as<SetObject>(), key.value()) || !set->put(key)) {
-    ReportOutOfMemory(cx);
-    return false;
-  }
-  return true;
-}
-
-SetObject* SetObject::create(JSContext* cx,
-                             HandleObject proto /* = nullptr */) {
-  auto set = cx->make_unique<ValueSet>(cx->zone(),
-                                       cx->realm()->randomHashCodeScrambler());
-  if (!set) {
-    return nullptr;
-  }
-
-  if (!set->init()) {
-    ReportOutOfMemory(cx);
-    return nullptr;
-  }
-
-  SetObject* obj = NewObjectWithClassProto<SetObject>(cx, proto);
-  if (!obj) {
-    return nullptr;
-  }
-
-  bool insideNursery = IsInsideNursery(obj);
-  if (insideNursery && !cx->nursery().addSetWithNurseryMemory(obj)) {
-    ReportOutOfMemory(cx);
-    return nullptr;
-  }
-
-  obj->initPrivate(set.release());
-  obj->initReservedSlot(NurseryKeysSlot, PrivateValue(nullptr));
-  obj->initReservedSlot(HasNurseryMemorySlot, JS::BooleanValue(insideNursery));
-  return obj;
-}
-
-void SetObject::trace(JSTracer* trc, JSObject* obj) {
-  SetObject* setobj = static_cast<SetObject*>(obj);
-  if (ValueSet* set = setobj->getData()) {
-    for (ValueSet::Range r = set->all(); !r.empty(); r.popFront()) {
-      TraceKey(r, r.front(), trc);
-    }
-  }
-||||||| merged common ancestors
-void
-SetObject::trace(JSTracer* trc, JSObject* obj)
-{
-    SetObject* setobj = static_cast<SetObject*>(obj);
-    if (ValueSet* set = setobj->getData()) {
-        for (ValueSet::Range r = set->all(); !r.empty(); r.popFront()) {
-            TraceKey(r, r.front(), trc);
-        }
-    }
-=======
 void SetObject::finalize(FreeOp* fop, JSObject* obj) {
   MOZ_ASSERT(fop->onMainThread());
   SetObject* setobj = static_cast<SetObject*>(obj);
   if (ValueSet* set = setobj->getData()) {
     fop->delete_(obj, set, MemoryUse::MapObjectTable);
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void SetObject::finalize(FreeOp* fop, JSObject* obj) {
-  MOZ_ASSERT(fop->onMainThread());
-  SetObject* setobj = static_cast<SetObject*>(obj);
-  if (ValueSet* set = setobj->getData()) {
-    fop->delete_(set);
-  }
-}
-||||||| merged common ancestors
-void
-SetObject::finalize(FreeOp* fop, JSObject* obj)
-{
-    MOZ_ASSERT(fop->onMainThread());
-    SetObject* setobj = static_cast<SetObject*>(obj);
-    if (ValueSet* set = setobj->getData()) {
-        fop->delete_(set);
-    }
-}
-=======
 /* static */
 void SetObject::sweepAfterMinorGC(FreeOp* fop, SetObject* setobj) {
   bool wasInsideNursery = IsInsideNursery(setobj);
@@ -2122,41 +1255,14 @@ void SetObject::sweepAfterMinorGC(FreeOp* fop, SetObject* setobj) {
     finalize(fop, setobj);
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void SetObject::sweepAfterMinorGC(FreeOp* fop, SetObject* setobj) {
-  if (IsInsideNursery(setobj) && !IsForwarded(setobj)) {
-    finalize(fop, setobj);
-    return;
-  }
-||||||| merged common ancestors
-/* static */ void
-SetObject::sweepAfterMinorGC(FreeOp* fop, SetObject* setobj)
-{
-    if (IsInsideNursery(setobj) && !IsForwarded(setobj)) {
-        finalize(fop, setobj);
-        return;
-    }
-=======
   setobj = MaybeForwarded(setobj);
   setobj->getData()->destroyNurseryRanges();
   SetHasNurseryMemory(setobj, false);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  setobj = MaybeForwarded(setobj);
-  setobj->getData()->destroyNurseryRanges();
-  SetHasNurseryMemory(setobj, false);
-||||||| merged common ancestors
-    setobj = MaybeForwarded(setobj);
-    setobj->getData()->destroyNurseryRanges();
-    SetHasNurseryMemory(setobj, false);
-=======
   if (wasInsideNursery) {
     AddCellMemory(setobj, sizeof(ValueSet), MemoryUse::MapObjectTable);
   }
->>>>>>> upstream-releases
 }
 
 bool SetObject::isBuiltinAdd(HandleValue add) {
@@ -2170,22 +1276,10 @@ bool SetObject::construct(JSContext* cx, unsigned argc, Value* vp) {
     return false;
   }
 
-<<<<<<< HEAD
-  RootedObject proto(cx);
-  if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-    return false;
-  }
-||||||| merged common ancestors
-    Rooted<SetObject*> obj(cx, SetObject::create(cx, proto));
-    if (!obj) {
-        return false;
-    }
-=======
   RootedObject proto(cx);
   if (!GetPrototypeFromBuiltinConstructor(cx, args, JSProto_Set, &proto)) {
     return false;
   }
->>>>>>> upstream-releases
 
   Rooted<SetObject*> obj(cx, SetObject::create(cx, proto));
   if (!obj) {
@@ -2344,7 +1438,6 @@ bool SetObject::delete_(JSContext* cx, HandleObject obj, HandleValue key,
   return true;
 }
 
-<<<<<<< HEAD
 bool SetObject::delete_impl(JSContext* cx, const CallArgs& args) {
   MOZ_ASSERT(is(args.thisv()));
 
@@ -2357,42 +1450,6 @@ bool SetObject::delete_impl(JSContext* cx, const CallArgs& args) {
   }
   args.rval().setBoolean(found);
   return true;
-||||||| merged common ancestors
-bool
-SetObject::delete_impl(JSContext *cx, const CallArgs& args)
-{
-    MOZ_ASSERT(is(args.thisv()));
-
-    ValueSet& set = extract(args);
-    ARG0_KEY(cx, args, key);
-    bool found;
-    if (!set.remove(key, &found)) {
-        ReportOutOfMemory(cx);
-        return false;
-    }
-    args.rval().setBoolean(found);
-    return true;
-}
-
-bool
-SetObject::delete_(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    return CallNonGenericMethod<SetObject::is, SetObject::delete_impl>(cx, args);
-=======
-bool SetObject::delete_impl(JSContext* cx, const CallArgs& args) {
-  MOZ_ASSERT(is(args.thisv()));
-
-  ValueSet& set = extract(args);
-  ARG0_KEY(cx, args, key);
-  bool found;
-  if (!set.remove(key, &found)) {
-    ReportOutOfMemory(cx);
-    return false;
-  }
-  args.rval().setBoolean(found);
-  return true;
->>>>>>> upstream-releases
 }
 
 bool SetObject::delete_(JSContext* cx, unsigned argc, Value* vp) {
@@ -2579,23 +1636,6 @@ JS_PUBLIC_API bool JS::MapGet(JSContext* cx, HandleObject obj, HandleValue key,
     JSAutoRealm ar(cx, unwrappedObj);
     RootedValue wrappedKey(cx, key);
 
-<<<<<<< HEAD
-    // If we passed in a wrapper, wrap our key into its compartment now.
-    if (obj != unwrappedObj) {
-      if (!JS_WrapValue(cx, &wrappedKey)) {
-        return false;
-      }
-||||||| merged common ancestors
-        // If we passed in a wrapper, wrap our key into its compartment now.
-        if (obj != unwrappedObj) {
-            if (!JS_WrapValue(cx, &wrappedKey)) {
-                return false;
-            }
-        }
-        if (!MapObject::get(cx, unwrappedObj, wrappedKey, rval)) {
-            return false;
-        }
-=======
     // If we passed in a wrapper, wrap our key into its compartment now.
     if (obj != unwrappedObj) {
       if (!JS_WrapValue(cx, &wrappedKey)) {
@@ -2604,17 +1644,8 @@ JS_PUBLIC_API bool JS::MapGet(JSContext* cx, HandleObject obj, HandleValue key,
     }
     if (!MapObject::get(cx, unwrappedObj, wrappedKey, rval)) {
       return false;
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-    if (!MapObject::get(cx, unwrappedObj, wrappedKey, rval)) {
-      return false;
     }
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 
   // If we passed in a wrapper, wrap our return value on the way out.
   if (obj != unwrappedObj) {

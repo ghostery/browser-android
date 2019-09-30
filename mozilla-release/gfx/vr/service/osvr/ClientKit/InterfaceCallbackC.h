@@ -45,22 +45,10 @@
 
 OSVR_EXTERN_C_BEGIN
 
-<<<<<<< HEAD
-#define OSVR_INTERFACE_CALLBACK_METHOD(TYPE)                          \
-  /** @brief Register a callback for TYPE reports on an interface */  \
-  OSVR_CLIENTKIT_EXPORT OSVR_ReturnCode osvrRegister##TYPE##Callback( \
-      OSVR_ClientInterface iface, OSVR_##TYPE##Callback cb, void *userdata);
-||||||| merged common ancestors
-#define OSVR_INTERFACE_CALLBACK_METHOD(TYPE)                                   \
-    /** @brief Register a callback for TYPE reports on an interface */         \
-    OSVR_CLIENTKIT_EXPORT OSVR_ReturnCode osvrRegister##TYPE##Callback(        \
-        OSVR_ClientInterface iface, OSVR_##TYPE##Callback cb, void *userdata);
-=======
 #define OSVR_INTERFACE_CALLBACK_METHOD(TYPE)                          \
   /** @brief Register a callback for TYPE reports on an interface */  \
   OSVR_CLIENTKIT_EXPORT OSVR_ReturnCode osvrRegister##TYPE##Callback( \
       OSVR_ClientInterface iface, OSVR_##TYPE##Callback cb, void* userdata);
->>>>>>> upstream-releases
 
 OSVR_INTERFACE_CALLBACK_METHOD(Pose)
 OSVR_INTERFACE_CALLBACK_METHOD(Position)

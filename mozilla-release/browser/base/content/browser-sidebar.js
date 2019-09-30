@@ -168,20 +168,10 @@ var SidebarUI = {
     );
 
     // Combine start/end position with ltr/rtl to set the label in the popup appropriately.
-<<<<<<< HEAD
-    let label = this._positionStart == RTL_UI ?
-                  gNavigatorBundle.getString("sidebar.moveToLeft") :
-                  gNavigatorBundle.getString("sidebar.moveToRight");
-||||||| merged common ancestors
-    let label = this._positionStart == this.isRTL ?
-                  gNavigatorBundle.getString("sidebar.moveToLeft") :
-                  gNavigatorBundle.getString("sidebar.moveToRight");
-=======
     let label =
       this._positionStart == RTL_UI
         ? gNavigatorBundle.getString("sidebar.moveToLeft")
         : gNavigatorBundle.getString("sidebar.moveToRight");
->>>>>>> upstream-releases
     this._reversePositionButton.setAttribute("label", label);
 
     this._switcherPanel.hidden = false;
@@ -614,16 +604,6 @@ var SidebarUI = {
 
 // Add getters related to the position here, since we will want them
 // available for both startDelayedLoad and init.
-<<<<<<< HEAD
-XPCOMUtils.defineLazyPreferenceGetter(SidebarUI, "_positionStart",
-  SidebarUI.POSITION_START_PREF, true, SidebarUI.setPosition.bind(SidebarUI));
-||||||| merged common ancestors
-XPCOMUtils.defineLazyPreferenceGetter(SidebarUI, "_positionStart",
-  SidebarUI.POSITION_START_PREF, true, SidebarUI.setPosition.bind(SidebarUI));
-XPCOMUtils.defineLazyGetter(SidebarUI, "isRTL", () => {
-  return getComputedStyle(document.documentElement).direction == "rtl";
-});
-=======
 XPCOMUtils.defineLazyPreferenceGetter(
   SidebarUI,
   "_positionStart",
@@ -631,4 +611,3 @@ XPCOMUtils.defineLazyPreferenceGetter(
   true,
   SidebarUI.setPosition.bind(SidebarUI)
 );
->>>>>>> upstream-releases

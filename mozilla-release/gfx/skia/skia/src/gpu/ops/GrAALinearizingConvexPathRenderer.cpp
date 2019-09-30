@@ -105,24 +105,11 @@ static sk_sp<GrGeometryProcessor> create_lines_only_gp(const GrShaderCaps* shade
     Coverage::Type coverageType =
         tweakAlphaForCoverage ? Coverage::kAttributeTweakAlpha_Type : Coverage::kAttribute_Type;
     LocalCoords::Type localCoordsType =
-<<<<<<< HEAD
-            usesLocalCoords ? LocalCoords::kUsePosition_Type : LocalCoords::kUnused_Type;
-    return MakeForDeviceSpace(shaderCaps,
-                              Color::kPremulGrColorAttribute_Type,
-                              coverageType,
-                              localCoordsType,
-                              viewMatrix);
-||||||| merged common ancestors
-            usesLocalCoords ? LocalCoords::kUsePosition_Type : LocalCoords::kUnused_Type;
-    return MakeForDeviceSpace(Color::kPremulGrColorAttribute_Type, coverageType, localCoordsType,
-                              viewMatrix);
-=======
         usesLocalCoords ? LocalCoords::kUsePosition_Type : LocalCoords::kUnused_Type;
     Color::Type colorType =
         wideColor ? Color::kPremulWideColorAttribute_Type : Color::kPremulGrColorAttribute_Type;
 
     return MakeForDeviceSpace(shaderCaps, colorType, coverageType, localCoordsType, viewMatrix);
->>>>>>> upstream-releases
 }
 
 namespace {
@@ -133,15 +120,8 @@ private:
 
 public:
     DEFINE_OP_CLASS_ID
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                                          GrPaint&& paint,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(GrPaint&& paint,
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                           GrPaint&& paint,
->>>>>>> upstream-releases
                                           const SkMatrix& viewMatrix,
                                           const SkPath& path,
                                           SkScalar strokeWidth,
@@ -207,49 +187,20 @@ public:
 
     FixedFunctionFlags fixedFunctionFlags() const override { return fHelper.fixedFunctionFlags(); }
 
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, GrProcessorAnalysisCoverage::kSingleChannel,
-                                            &fPaths.back().fColor);
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-        return fHelper.xpRequiresDstTexture(caps, clip, dstIsClamped,
-                                            GrProcessorAnalysisCoverage::kSingleChannel,
-                                            &fPaths.back().fColor);
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
         return fHelper.finalizeProcessors(
                 caps, clip, fsaaType, GrProcessorAnalysisCoverage::kSingleChannel,
                 &fPaths.back().fColor);
->>>>>>> upstream-releases
     }
 
 private:
-<<<<<<< HEAD
-    void draw(Target* target, sk_sp<const GrGeometryProcessor> gp, const GrPipeline* pipeline,
-              const GrPipeline::FixedDynamicState* fixedDynamicState, int vertexCount,
-              size_t vertexStride, void* vertices, int indexCount, uint16_t* indices) const {
-||||||| merged common ancestors
-    void draw(GrMeshDrawOp::Target* target, const GrGeometryProcessor* gp,
-              const GrPipeline* pipeline, int vertexCount, size_t vertexStride, void* vertices,
-              int indexCount, uint16_t* indices) const {
-=======
     void recordDraw(Target* target, sk_sp<const GrGeometryProcessor> gp, int vertexCount,
                     size_t vertexStride, void* vertices, int indexCount, uint16_t* indices) const {
->>>>>>> upstream-releases
         if (vertexCount == 0 || indexCount == 0) {
             return;
         }
-<<<<<<< HEAD
-        const GrBuffer* vertexBuffer;
-||||||| merged common ancestors
-        const GrBuffer* vertexBuffer;
-        GrMesh mesh(GrPrimitiveType::kTriangles);
-=======
         sk_sp<const GrBuffer> vertexBuffer;
->>>>>>> upstream-releases
         int firstVertex;
         void* verts = target->makeVertexSpace(vertexStride, vertexCount, &vertexBuffer,
                                               &firstVertex);
@@ -267,33 +218,14 @@ private:
             return;
         }
         memcpy(idxs, indices, indexCount * sizeof(uint16_t));
-<<<<<<< HEAD
-        GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
-        mesh->setIndexed(indexBuffer, indexCount, firstIndex, 0, vertexCount - 1,
-                         GrPrimitiveRestart::kNo);
-        mesh->setVertexData(vertexBuffer, firstVertex);
-        target->draw(std::move(gp), pipeline, fixedDynamicState, mesh);
-||||||| merged common ancestors
-        mesh.setIndexed(indexBuffer, indexCount, firstIndex, 0, vertexCount - 1);
-        mesh.setVertexData(vertexBuffer, firstVertex);
-        target->draw(gp, pipeline, mesh);
-=======
         GrMesh* mesh = target->allocMesh(GrPrimitiveType::kTriangles);
         mesh->setIndexed(std::move(indexBuffer), indexCount, firstIndex, 0, vertexCount - 1,
                          GrPrimitiveRestart::kNo);
         mesh->setVertexData(std::move(vertexBuffer), firstVertex);
         target->recordDraw(std::move(gp), mesh);
->>>>>>> upstream-releases
     }
 
     void onPrepareDraws(Target* target) override {
-<<<<<<< HEAD
-        auto pipe = fHelper.makePipeline(target);
-||||||| merged common ancestors
-        const GrPipeline* pipeline = fHelper.makePipeline(target);
-
-=======
->>>>>>> upstream-releases
         // Setup GrGeometryProcessor
         sk_sp<GrGeometryProcessor> gp(create_lines_only_gp(target->caps().shaderCaps(),
                                                            fHelper.compatibleWithAlphaAsCoverage(),
@@ -305,23 +237,7 @@ private:
             return;
         }
 
-<<<<<<< HEAD
-        size_t vertexStride = fHelper.compatibleWithAlphaAsCoverage()
-                                      ? sizeof(GrDefaultGeoProcFactory::PositionColorAttr)
-                                      : sizeof(GrDefaultGeoProcFactory::PositionColorCoverageAttr);
-        SkASSERT(vertexStride == gp->debugOnly_vertexStride());
-
-||||||| merged common ancestors
-        size_t vertexStride = gp->getVertexStride();
-
-        SkASSERT(fHelper.compatibleWithAlphaAsCoverage()
-                         ? vertexStride == sizeof(GrDefaultGeoProcFactory::PositionColorAttr)
-                         : vertexStride ==
-                                   sizeof(GrDefaultGeoProcFactory::PositionColorCoverageAttr));
-
-=======
         size_t vertexStride = gp->vertexStride();
->>>>>>> upstream-releases
         int instanceCount = fPaths.count();
 
         int64_t vertexCount = 0;
@@ -343,16 +259,8 @@ private:
             if (vertexCount + currentVertices > static_cast<int>(UINT16_MAX)) {
                 // if we added the current instance, we would overflow the indices we can store in a
                 // uint16_t. Draw what we've got so far and reset.
-<<<<<<< HEAD
-                this->draw(target, gp, pipe.fPipeline, pipe.fFixedDynamicState, vertexCount,
-                           vertexStride, vertices, indexCount, indices);
-||||||| merged common ancestors
-                this->draw(target, gp.get(), pipeline, vertexCount, vertexStride, vertices,
-                           indexCount, indices);
-=======
                 this->recordDraw(
                         target, gp, vertexCount, vertexStride, vertices, indexCount, indices);
->>>>>>> upstream-releases
                 vertexCount = 0;
                 indexCount = 0;
             }
@@ -383,48 +291,26 @@ private:
             indexCount += currentIndices;
         }
         if (vertexCount <= SK_MaxS32 && indexCount <= SK_MaxS32) {
-<<<<<<< HEAD
-            this->draw(target, std::move(gp), pipe.fPipeline, pipe.fFixedDynamicState, vertexCount,
-                       vertexStride, vertices, indexCount, indices);
-||||||| merged common ancestors
-            this->draw(target, gp.get(), pipeline, vertexCount, vertexStride, vertices, indexCount,
-                       indices);
-=======
             this->recordDraw(target, std::move(gp), vertexCount, vertexStride, vertices, indexCount,
                              indices);
->>>>>>> upstream-releases
         }
         sk_free(vertices);
         sk_free(indices);
     }
 
-<<<<<<< HEAD
-    CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
-||||||| merged common ancestors
-    bool onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
-=======
     void onExecute(GrOpFlushState* flushState, const SkRect& chainBounds) override {
         fHelper.executeDrawsAndUploads(this, flushState, chainBounds);
     }
 
     CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
->>>>>>> upstream-releases
         AAFlatteningConvexPathOp* that = t->cast<AAFlatteningConvexPathOp>();
         if (!fHelper.isCompatible(that->fHelper, caps, this->bounds(), that->bounds())) {
             return CombineResult::kCannotCombine;
         }
 
         fPaths.push_back_n(that->fPaths.count(), that->fPaths.begin());
-<<<<<<< HEAD
-        this->joinBounds(*that);
-        return CombineResult::kMerged;
-||||||| merged common ancestors
-        this->joinBounds(*that);
-        return true;
-=======
         fWideColor |= that->fWideColor;
         return CombineResult::kMerged;
->>>>>>> upstream-releases
     }
 
     const SkMatrix& viewMatrix() const { return fPaths[0].fViewMatrix; }

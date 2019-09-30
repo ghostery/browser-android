@@ -20,51 +20,16 @@
         buttons="accept,cancel"
         persist="lastSelected screenX screenY"
         role="dialog"
-<<<<<<< HEAD
-        data-l10n-id="dialog-title"
-        data-l10n-attrs="style"
-        onload="gSanitizePromptDialog.init();"
-        ondialogaccept="return gSanitizePromptDialog.sanitize();">
-||||||| merged common ancestors
-        title="&sanitizeDialog2.title;"
-        noneverythingtitle="&sanitizeDialog2.title;"
-        style="width: &sanitizeDialog2.width;;"
-        onload="gSanitizePromptDialog.init();"
-        ondialogaccept="return gSanitizePromptDialog.sanitize();">
-=======
         data-l10n-id="dialog-title"
         data-l10n-attrs="style"
         onload="gSanitizePromptDialog.init();">
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  <linkset>
-    <link rel="localization" href="browser/sanitize.ftl"/>
-  </linkset>
-||||||| merged common ancestors
-  <vbox id="SanitizeDialogPane" class="prefpane">
-    <stringbundle id="bundleBrowser"
-                  src="chrome://browser/locale/browser.properties"/>
-=======
   <linkset>
     <html:link rel="localization" href="browser/sanitize.ftl"/>
   </linkset>
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  <script type="application/javascript"
-          src="chrome://global/content/preferencesBindings.js"/>
-  <script type="application/javascript"
-          src="chrome://browser/content/sanitizeDialog.js"/>
-||||||| merged common ancestors
-    <script type="application/javascript"
-            src="chrome://global/content/preferencesBindings.js"/>
-    <script type="application/javascript"
-            src="chrome://browser/content/sanitizeDialog.js"/>
-=======
   <script src="chrome://global/content/preferencesBindings.js"/>
   <script src="chrome://browser/content/sanitizeDialog.js"/>
->>>>>>> upstream-releases
 
   <hbox id="SanitizeDurationBox" align="center">
     <label data-l10n-id="clear-time-duration-prefix"
@@ -103,121 +68,6 @@
 
   <separator class="thin"/>
 
-<<<<<<< HEAD
-  <groupbox>
-    <label><html:h2 data-l10n-id="history-section-label"/></label>
-    <grid flex="1">
-      <columns>
-        <column data-l10n-id="sanitize-prefs-style" data-l10n-attrs="style"/>
-        <column flex="1"/>
-      </columns>
-      <rows>
-        <row>
-          <checkbox data-l10n-id="item-history-and-downloads"
-                    preference="privacy.cpd.history"
-                    onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-          <checkbox data-l10n-id="item-cookies"
-                    preference="privacy.cpd.cookies"
-                    onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-        </row>
-        <row>
-          <checkbox data-l10n-id="item-active-logins"
-                    preference="privacy.cpd.sessions"
-                    onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-          <checkbox data-l10n-id="item-cache"
-                    preference="privacy.cpd.cache"
-                    onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-        </row>
-        <row>
-          <checkbox data-l10n-id="item-form-search-history"
-                    preference="privacy.cpd.formdata"
-                    onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-        </row>
-      </rows>
-    </grid>
-  </groupbox>
-  <groupbox>
-    <label><html:h2 data-l10n-id="data-section-label"/></label>
-    <grid flex="1">
-      <columns>
-        <column data-l10n-id="sanitize-prefs-style" data-l10n-attrs="style"/>
-        <column flex="1"/>
-      </columns>
-      <rows>
-        <row>
-          <checkbox data-l10n-id="item-site-preferences"
-                    preference="privacy.cpd.siteSettings"
-                    onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-          <checkbox data-l10n-id="item-offline-apps"
-                    preference="privacy.cpd.offlineApps"
-                    onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-        </row>
-      </rows>
-    </grid>
-  </groupbox>
-||||||| merged common ancestors
-    <separator class="thin"/>
-
-    <groupbox orient="horizontal">
-      <caption><label>&historySection.label;</label></caption>
-      <grid flex="1">
-        <columns>
-          <column style="width: &sanitizePrefs2.column.width;"/>
-          <column flex="1"/>
-        </columns>
-        <rows>
-          <row>
-            <checkbox label="&itemHistoryAndDownloads.label;"
-                      accesskey="&itemHistoryAndDownloads.accesskey;"
-                      preference="privacy.cpd.history"
-                      onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-            <checkbox label="&itemCookies.label;"
-                      accesskey="&itemCookies.accesskey;"
-                      preference="privacy.cpd.cookies"
-                      onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-          </row>
-          <row>
-            <checkbox label="&itemActiveLogins.label;"
-                      accesskey="&itemActiveLogins.accesskey;"
-                      preference="privacy.cpd.sessions"
-                      onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-            <checkbox label="&itemCache.label;"
-                      accesskey="&itemCache.accesskey;"
-                      preference="privacy.cpd.cache"
-                      onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-          </row>
-          <row>
-            <checkbox label="&itemFormSearchHistory.label;"
-                      accesskey="&itemFormSearchHistory.accesskey;"
-                      preference="privacy.cpd.formdata"
-                      onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-          </row>
-        </rows>
-      </grid>
-    </groupbox>
-    <groupbox orient="horizontal">
-      <caption><label>&dataSection.label;</label></caption>
-      <grid flex="1">
-        <columns>
-          <column style="width: &sanitizePrefs2.column.width;"/>
-          <column flex="1"/>
-        </columns>
-        <rows>
-          <row>
-            <checkbox label="&itemSitePreferences.label;"
-                      accesskey="&itemSitePreferences.accesskey;"
-                      preference="privacy.cpd.siteSettings"
-                      onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-            <checkbox label="&itemOfflineApps.label;"
-                      accesskey="&itemOfflineApps.accesskey;"
-                      preference="privacy.cpd.offlineApps"
-                      onsyncfrompreference="return gSanitizePromptDialog.onReadGeneric();"/>
-          </row>
-        </rows>
-      </grid>
-    </groupbox>
-  </vbox>
-=======
   <groupbox>
     <label><html:h2 data-l10n-id="history-section-label"/></label>
     <hbox>
@@ -257,5 +107,4 @@
       </vbox>
     </hbox>
   </groupbox>
->>>>>>> upstream-releases
 </dialog>

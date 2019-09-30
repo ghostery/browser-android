@@ -9,26 +9,14 @@ de{
                 "&OE<<ö<<<Ö"
                 "&UE<<ü<<<Ü"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         search{
             Sequence{
                 "[import und-u-co-search]"
                 "[import de-u-co-phonebk]"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

@@ -37,16 +37,10 @@
   --highlighter-font-size: 11px;
   --highlighter-infobar-color: hsl(210, 30%, 85%);
   --highlighter-marker-color: #000;
-<<<<<<< HEAD
-
-  --grey-40: #b1b1b3;
-||||||| merged common ancestors
-=======
 
   --grey-40: #b1b1b3;
   --red-40: #ff3b6b;
   --yellow-60: #d7b600;
->>>>>>> upstream-releases
 }
 
 /**
@@ -732,31 +726,9 @@
 }
 
 :-moz-native-anonymous .accessible-infobar-audit .accessible-contrast-ratio:not(:empty).AAA:after {
-<<<<<<< HEAD
   content: "AAA\2713";
 }
 
-:-moz-native-anonymous .accessible-infobar-audit .accessible-contrast-ratio-label,
-:-moz-native-anonymous .accessible-infobar-audit .accessible-contrast-ratio-separator:before {
-  margin-inline-end: 3px;
-}
-
-:-moz-native-anonymous .accessible-infobar-audit .accessible-contrast-ratio-separator:before {
-  content: "-";
-  margin-inline-start: 3px;
-||||||| merged common ancestors
-  content: " AAA\2713";
-=======
-  content: "AAA\2713";
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-:-moz-native-anonymous .accessible-infobar-name:not(:empty) {
-||||||| merged common ancestors
-:-moz-native-anonymous .accessible-infobar-name:not(:empty),
-:-moz-native-anonymous .accessible-infobar-audit:not(:empty) {
-=======
 :-moz-native-anonymous .accessible-infobar-audit .accessible-contrast-ratio-label,
 :-moz-native-anonymous .accessible-infobar-audit .accessible-contrast-ratio-separator:before {
   margin-inline-end: 3px;
@@ -796,7 +768,6 @@
 }
 
 :-moz-native-anonymous .accessible-infobar-name:not(:empty) {
->>>>>>> upstream-releases
   border-inline-start: 1px solid #5a6169;
   margin-inline-start: 6px;
   padding-inline-start: 6px;

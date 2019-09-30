@@ -29,44 +29,6 @@ static bool IsValidHost(const nsACString& host) {
     return false;
   }
 
-<<<<<<< HEAD
-  // This is ugly, but Preferences.h doesn't have support
-  // for default prefs or locked prefs
-  nsCOMPtr<nsIPrefService> prefService(
-      do_GetService(NS_PREFSERVICE_CONTRACTID));
-  nsCOMPtr<nsIPrefBranch> prefs;
-  if (prefService) {
-    prefService->GetDefaultBranch(nullptr, getter_AddRefs(prefs));
-    bool isEnabled;
-    if (NS_SUCCEEDED(prefs->GetBoolPref("xpinstall.enabled", &isEnabled)) &&
-        !isEnabled) {
-      bool isLocked;
-      prefs->PrefIsLocked("xpinstall.enabled", &isLocked);
-      if (isLocked) {
-        return false;
-      }
-    }
-  }
-
-||||||| merged common ancestors
-  // This is ugly, but Preferences.h doesn't have support
-  // for default prefs or locked prefs
-  nsCOMPtr<nsIPrefService> prefService (do_GetService(NS_PREFSERVICE_CONTRACTID));
-  nsCOMPtr<nsIPrefBranch> prefs;
-  if (prefService) {
-    prefService->GetDefaultBranch(nullptr, getter_AddRefs(prefs));
-    bool isEnabled;
-    if (NS_SUCCEEDED(prefs->GetBoolPref("xpinstall.enabled", &isEnabled)) && !isEnabled) {
-      bool isLocked;
-      prefs->PrefIsLocked("xpinstall.enabled", &isLocked);
-      if (isLocked) {
-        return false;
-      }
-    }
-  }
-
-=======
->>>>>>> upstream-releases
   if (host.EqualsLiteral("addons.mozilla.org") ||
       host.EqualsLiteral("discovery.addons.mozilla.org")) {
     return true;

@@ -38,27 +38,10 @@ inline bool probes::EnterScript(JSContext* cx, JSScript* script,
   }
 #endif
 
-<<<<<<< HEAD
-  JSRuntime* rt = cx->runtime();
-  if (rt->geckoProfiler().enabled()) {
-    if (!cx->geckoProfiler().enter(cx, script, maybeFun)) {
-      return false;
-||||||| merged common ancestors
-    JSRuntime* rt = cx->runtime();
-    if (rt->geckoProfiler().enabled()) {
-        if (!cx->geckoProfiler().enter(cx, script, maybeFun)) {
-            return false;
-        }
-        MOZ_ASSERT_IF(!fp->script()->isGenerator() &&
-                      !fp->script()->isAsync(),
-                      !fp->hasPushedGeckoProfilerFrame());
-        fp->setPushedGeckoProfilerFrame();
-=======
   JSRuntime* rt = cx->runtime();
   if (rt->geckoProfiler().enabled()) {
     if (!cx->geckoProfiler().enter(cx, script)) {
       return false;
->>>>>>> upstream-releases
     }
     MOZ_ASSERT_IF(!fp->script()->isGenerator() && !fp->script()->isAsync(),
                   !fp->hasPushedGeckoProfilerFrame());
@@ -80,19 +63,9 @@ inline void probes::ExitScript(JSContext* cx, JSScript* script,
   }
 #endif
 
-<<<<<<< HEAD
-  if (popProfilerFrame) {
-    cx->geckoProfiler().exit(script, maybeFun);
-  }
-||||||| merged common ancestors
-    if (popProfilerFrame) {
-        cx->geckoProfiler().exit(script, maybeFun);
-    }
-=======
   if (popProfilerFrame) {
     cx->geckoProfiler().exit(cx, script);
   }
->>>>>>> upstream-releases
 }
 
 inline bool probes::StartExecution(JSScript* script) {

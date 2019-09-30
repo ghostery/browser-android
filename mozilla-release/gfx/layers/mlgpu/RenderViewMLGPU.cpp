@@ -63,35 +63,6 @@ RenderViewMLGPU::RenderViewMLGPU(FrameBuilder* aBuilder,
   mContainer->SetRenderView(this);
 }
 
-<<<<<<< HEAD
-RenderViewMLGPU::RenderViewMLGPU(FrameBuilder* aBuilder,
-                                 RenderViewMLGPU* aParent)
-    : mBuilder(aBuilder),
-      mDevice(aBuilder->GetDevice()),
-      mParent(aParent),
-      mContainer(nullptr),
-      mFinishedBuilding(false),
-      mCurrentLayerBufferIndex(kInvalidResourceIndex),
-      mCurrentMaskRectBufferIndex(kInvalidResourceIndex),
-      mCurrentDepthMode(MLGDepthTestMode::Disabled),
-      mNextSortIndex(1),
-      mUseDepthBuffer(gfxPrefs::AdvancedLayersEnableDepthBuffer()),
-      mDepthBufferNeedsClear(false) {
-||||||| merged common ancestors
-RenderViewMLGPU::RenderViewMLGPU(FrameBuilder* aBuilder, RenderViewMLGPU* aParent)
- : mBuilder(aBuilder),
-   mDevice(aBuilder->GetDevice()),
-   mParent(aParent),
-   mContainer(nullptr),
-   mFinishedBuilding(false),
-   mCurrentLayerBufferIndex(kInvalidResourceIndex),
-   mCurrentMaskRectBufferIndex(kInvalidResourceIndex),
-   mCurrentDepthMode(MLGDepthTestMode::Disabled),
-   mNextSortIndex(1),
-   mUseDepthBuffer(gfxPrefs::AdvancedLayersEnableDepthBuffer()),
-   mDepthBufferNeedsClear(false)
-{
-=======
 RenderViewMLGPU::RenderViewMLGPU(FrameBuilder* aBuilder,
                                  RenderViewMLGPU* aParent)
     : mBuilder(aBuilder),
@@ -105,7 +76,6 @@ RenderViewMLGPU::RenderViewMLGPU(FrameBuilder* aBuilder,
       mNextSortIndex(1),
       mUseDepthBuffer(StaticPrefs::layers_mlgpu_enable_depth_buffer()),
       mDepthBufferNeedsClear(false) {
->>>>>>> upstream-releases
   if (aParent) {
     aParent->AddChild(this);
   }
@@ -217,18 +187,8 @@ bool RenderViewMLGPU::UpdateVisibleRegion(ItemInfo& aItem) {
   // simple occlusion test and move on. We using a depth buffer we skip
   // CPU-based occlusion culling as well, since the GPU will do most of our
   // culling work for us.
-<<<<<<< HEAD
-  if (mUseDepthBuffer || !aItem.translation ||
-      !gfxPrefs::AdvancedLayersEnableCPUOcclusion()) {
-||||||| merged common ancestors
-  if (mUseDepthBuffer ||
-      !aItem.translation ||
-      !gfxPrefs::AdvancedLayersEnableCPUOcclusion())
-  {
-=======
   if (mUseDepthBuffer || !aItem.translation ||
       !StaticPrefs::layers_mlgpu_enable_cpu_occlusion()) {
->>>>>>> upstream-releases
     // Update the render region even if we won't compute visibility, since some
     // layer types (like Canvas and Image) need to have the visible region
     // clamped.

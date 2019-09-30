@@ -17,18 +17,9 @@ using base::ProcessHandle;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ CrossProcessSemaphore* CrossProcessSemaphore::Create(
-    const char*, uint32_t aInitialValue) {
-||||||| merged common ancestors
-/* static */ CrossProcessSemaphore*
-CrossProcessSemaphore::Create(const char*, uint32_t aInitialValue)
-{
-=======
 /* static */
 CrossProcessSemaphore* CrossProcessSemaphore::Create(const char*,
                                                      uint32_t aInitialValue) {
->>>>>>> upstream-releases
   // We explicitly share this using DuplicateHandle, we do -not- want this to
   // be inherited by child processes by default! So no security attributes are
   // given.
@@ -40,18 +31,9 @@ CrossProcessSemaphore* CrossProcessSemaphore::Create(const char*,
   return new CrossProcessSemaphore(semaphore);
 }
 
-<<<<<<< HEAD
-/* static */ CrossProcessSemaphore* CrossProcessSemaphore::Create(
-    CrossProcessSemaphoreHandle aHandle) {
-||||||| merged common ancestors
-/* static */ CrossProcessSemaphore*
-CrossProcessSemaphore::Create(CrossProcessSemaphoreHandle aHandle)
-{
-=======
 /* static */
 CrossProcessSemaphore* CrossProcessSemaphore::Create(
     CrossProcessSemaphoreHandle aHandle) {
->>>>>>> upstream-releases
   DWORD flags;
   if (!::GetHandleInformation(aHandle, &flags)) {
     return nullptr;

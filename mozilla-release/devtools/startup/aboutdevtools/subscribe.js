@@ -9,58 +9,6 @@
  * It is largely inspired from https://mozilla.github.io/basket-example/
  */
 
-<<<<<<< HEAD
-window.addEventListener("load", function() {
-  // Timeout for the subscribe XHR.
-  const REQUEST_TIMEOUT = 5000;
-
-  const emailInput = document.getElementById("email");
-  const newsletterErrors = document.getElementById("newsletter-errors");
-  const newsletterForm = document.getElementById("newsletter-form");
-  const newsletterPrivacySection = document.getElementById("newsletter-privacy");
-  const newsletterThanks = document.getElementById("newsletter-thanks");
-
-  /**
-   * Update the error panel to display the provided errors. If the argument is null or
-   * empty, a default error message will be displayed.
-   *
-   * @param {Array} errors
-   *        Array of strings, each item being an error message to display.
-   */
-  async function updateErrorPanel(errors) {
-    clearErrorPanel();
-
-    if (!errors || errors.length == 0) {
-      errors = [await document.l10n.formatValues([{id: "newsletter-error-unknown"}])];
-||||||| merged common ancestors
-window.addEventListener("load", function() {
-  const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm", {});
-
-  // Timeout for the subscribe XHR.
-  const REQUEST_TIMEOUT = 5000;
-
-  const ABOUTDEVTOOLS_STRINGS = "chrome://devtools-startup/locale/aboutdevtools.properties";
-  const aboutDevtoolsBundle = Services.strings.createBundle(ABOUTDEVTOOLS_STRINGS);
-
-  const emailInput = document.getElementById("email");
-  const newsletterErrors = document.getElementById("newsletter-errors");
-  const newsletterForm = document.getElementById("newsletter-form");
-  const newsletterPrivacySection = document.getElementById("newsletter-privacy");
-  const newsletterThanks = document.getElementById("newsletter-thanks");
-
-  /**
-   * Update the error panel to display the provided errors. If the argument is null or
-   * empty, a default error message will be displayed.
-   *
-   * @param {Array} errors
-   *        Array of strings, each item being an error message to display.
-   */
-  function updateErrorPanel(errors) {
-    clearErrorPanel();
-
-    if (!errors || errors.length == 0) {
-      errors = [aboutDevtoolsBundle.GetStringFromName("newsletter.error.unknown")];
-=======
 window.addEventListener(
   "load",
   function() {
@@ -104,7 +52,6 @@ window.addEventListener(
 
       newsletterErrors.appendChild(fragment);
       newsletterErrors.classList.add("show");
->>>>>>> upstream-releases
     }
 
     /**
@@ -139,115 +86,6 @@ window.addEventListener(
       newsletterPrivacySection.style.cssText = `height: ${height}px; margin-bottom: 0;`;
     }
 
-<<<<<<< HEAD
-    newsletterErrors.appendChild(fragment);
-    newsletterErrors.classList.add("show");
-  }
-
-  /**
-   * Hide the error panel and remove all errors.
-   */
-  function clearErrorPanel() {
-    newsletterErrors.classList.remove("show");
-    newsletterErrors.innerHTML = "";
-  }
-
-  // Show the additional form fields on focus of the email input.
-  function onEmailInputFocus() {
-    // Create a hidden measuring container, append it to the parent of the privacy section
-    const container = document.createElement("div");
-    container.style.cssText = "visibility: hidden; overflow: hidden; position: absolute";
-    newsletterPrivacySection.parentNode.appendChild(container);
-
-    // Clone the privacy section, append the clone to the measuring container.
-    const clone = newsletterPrivacySection.cloneNode(true);
-    container.appendChild(clone);
-
-    // Measure the target height of the privacy section.
-    clone.style.height = "auto";
-    const height = clone.offsetHeight;
-
-    // Cleanup the measuring container.
-    container.remove();
-
-    // Set the animate class and set the height to the measured height.
-    newsletterPrivacySection.classList.add("animate");
-    newsletterPrivacySection.style.cssText = `height: ${height}px; margin-bottom: 0;`;
-  }
-
-  // XHR subscribe; handle errors; display thanks message on success.
-  function onFormSubmit(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-
-    // New submission, clear old errors
-    clearErrorPanel();
-
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = async function(r) {
-      if (r.target.status >= 200 && r.target.status < 300) {
-        const {response} = r.target;
-
-        if (response.success === true) {
-          // Hide form and show success message.
-          newsletterForm.style.display = "none";
-          newsletterThanks.classList.add("show");
-||||||| merged common ancestors
-    newsletterErrors.appendChild(fragment);
-    newsletterErrors.classList.add("show");
-  }
-
-  /**
-   * Hide the error panel and remove all errors.
-   */
-  function clearErrorPanel() {
-    newsletterErrors.classList.remove("show");
-    newsletterErrors.innerHTML = "";
-  }
-
-  // Show the additional form fields on focus of the email input.
-  function onEmailInputFocus() {
-    // Create a hidden measuring container, append it to the parent of the privacy section
-    const container = document.createElement("div");
-    container.style.cssText = "visibility: hidden; overflow: hidden; position: absolute";
-    newsletterPrivacySection.parentNode.appendChild(container);
-
-    // Clone the privacy section, append the clone to the measuring container.
-    const clone = newsletterPrivacySection.cloneNode(true);
-    container.appendChild(clone);
-
-    // Measure the target height of the privacy section.
-    clone.style.height = "auto";
-    const height = clone.offsetHeight;
-
-    // Cleanup the measuring container.
-    container.remove();
-
-    // Set the animate class and set the height to the measured height.
-    newsletterPrivacySection.classList.add("animate");
-    newsletterPrivacySection.style.cssText = `height: ${height}px; margin-bottom: 0;`;
-  }
-
-  // XHR subscribe; handle errors; display thanks message on success.
-  function onFormSubmit(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-
-    // New submission, clear old errors
-    clearErrorPanel();
-
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = function(r) {
-      if (r.target.status >= 200 && r.target.status < 300) {
-        const {response} = r.target;
-
-        if (response.success === true) {
-          // Hide form and show success message.
-          newsletterForm.style.display = "none";
-          newsletterThanks.classList.add("show");
-=======
     // XHR subscribe; handle errors; display thanks message on success.
     function onFormSubmit(evt) {
       evt.preventDefault();
@@ -270,7 +108,6 @@ window.addEventListener(
             // We trust the error messages from the service to be meaningful for the user.
             updateErrorPanel(response.errors);
           }
->>>>>>> upstream-releases
         } else {
           const { status, statusText } = r.target;
           const statusInfo = `${status} - ${statusText}`;
@@ -282,53 +119,18 @@ window.addEventListener(
           ]);
           updateErrorPanel([error]);
         }
-<<<<<<< HEAD
-      } else {
-        const {status, statusText} = r.target;
-        const statusInfo = `${status} - ${statusText}`;
-        const error = await document.l10n.formatValues([
-          { id: "newsletter-error-common", args: { errorDescription: statusInfo } },
-        ]);
-        updateErrorPanel([error]);
-      }
-    };
-||||||| merged common ancestors
-      } else {
-        const {status, statusText} = r.target;
-        const statusInfo = `${status} - ${statusText}`;
-        const error = aboutDevtoolsBundle
-          .formatStringFromName("newsletter.error.common", [statusInfo], 1);
-        updateErrorPanel([error]);
-      }
-    };
-=======
       };
->>>>>>> upstream-releases
 
       xhr.onerror = () => {
         updateErrorPanel();
       };
 
-<<<<<<< HEAD
-    xhr.ontimeout = async () => {
-      const error = await document.l10n.formatValues([
-        { id: "newsletter-error-timeout" },
-      ]);
-      updateErrorPanel([error]);
-    };
-||||||| merged common ancestors
-    xhr.ontimeout = () => {
-      const error = aboutDevtoolsBundle.GetStringFromName("newsletter.error.timeout");
-      updateErrorPanel([error]);
-    };
-=======
       xhr.ontimeout = async () => {
         const error = await document.l10n.formatValues([
           { id: "newsletter-error-timeout" },
         ]);
         updateErrorPanel([error]);
       };
->>>>>>> upstream-releases
 
       const url = newsletterForm.getAttribute("action");
 

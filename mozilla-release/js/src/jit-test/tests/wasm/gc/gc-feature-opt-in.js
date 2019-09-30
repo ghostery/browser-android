@@ -8,12 +8,6 @@ let CURRENT_VERSION = 3;
 let SOME_OLDER_INCOMPATIBLE_VERSION = CURRENT_VERSION - 1;  // v1 incompatible with v2, v2 with v3
 let SOME_FUTURE_VERSION = CURRENT_VERSION + 1;              // ok for now
 
-// Version numbers
-
-let CURRENT_VERSION = 2;
-let OLDER_INCOMPATIBLE_VERSION = 1; // v1 incompatible with v2
-let FUTURE_VERSION = 3;
-
 // Encoding.  If the section is present it must be first.
 
 var bad_order =
@@ -38,51 +32,13 @@ new WebAssembly.Module(wasmTextToBinary(
 
 new WebAssembly.Module(wasmTextToBinary(
     `(module
-<<<<<<< HEAD
       (gc_feature_opt_in ${CURRENT_VERSION}))`));
 
 assertErrorMessage(() => new WebAssembly.Module(wasmTextToBinary(
     `(module
-      (gc_feature_opt_in ${OLDER_INCOMPATIBLE_VERSION}))`)),
-                   WebAssembly.CompileError,
-                   /GC feature version \d+ is no longer supported by this engine/);
-||||||| merged common ancestors
-      (gc_feature_opt_in 1))`));
-=======
-      (gc_feature_opt_in ${CURRENT_VERSION}))`));
->>>>>>> upstream-releases
-
-assertErrorMessage(() => new WebAssembly.Module(wasmTextToBinary(
-    `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in ${FUTURE_VERSION}))`)),
-||||||| merged common ancestors
-      (gc_feature_opt_in 2))`)),
-=======
       (gc_feature_opt_in ${SOME_OLDER_INCOMPATIBLE_VERSION}))`)),
->>>>>>> upstream-releases
                    WebAssembly.CompileError,
-<<<<<<< HEAD
-                   /GC feature version is unknown/);
-
-// Struct types are only available if we opt in.
-
-new WebAssembly.Module(wasmTextToBinary(
-    `(module
-      (gc_feature_opt_in ${CURRENT_VERSION})
-      (type (struct (field i32))))`));
-||||||| merged common ancestors
-                   /unsupported version of the gc feature/);
-
-// Struct types are only available if we opt in.
-
-new WebAssembly.Module(wasmTextToBinary(
-    `(module
-      (gc_feature_opt_in 1)
-      (type (struct (field i32))))`));
-=======
                    /GC feature version.*no longer supported by this engine/);
->>>>>>> upstream-releases
 
 assertErrorMessage(() => new WebAssembly.Module(wasmTextToBinary(
     `(module
@@ -136,17 +92,7 @@ new WebAssembly.Module(wasmTextToBinary(
 
 new WebAssembly.Module(wasmTextToBinary(
     `(module
-<<<<<<< HEAD
-      (global (mut anyref) (ref.null)))`)),
-                   WebAssembly.CompileError,
-                   /reference types not enabled/);
-||||||| merged common ancestors
-      (global (mut anyref) (ref.null anyref)))`)),
-                   WebAssembly.CompileError,
-                   /reference types not enabled/);
-=======
       (global (mut anyref) (ref.null)))`));
->>>>>>> upstream-releases
 
 // ref.null and ref.is_null are available whetehr we opt in or not, but ref.eq
 // only if we opt in
@@ -157,17 +103,7 @@ new WebAssembly.Module(wasmTextToBinary(
 
 new WebAssembly.Module(wasmTextToBinary(
     `(module
-<<<<<<< HEAD
-      (func ref.null))`)),
-                   WebAssembly.CompileError,
-                   /unrecognized opcode/);
-||||||| merged common ancestors
-      (func (ref.null anyref)))`)),
-                   WebAssembly.CompileError,
-                   /unrecognized opcode/);
-=======
       (func (result anyref) ref.null))`));
->>>>>>> upstream-releases
 
 new WebAssembly.Module(wasmTextToBinary(
     `(module

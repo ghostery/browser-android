@@ -221,44 +221,6 @@ function run_test() {
   );
 
   debugDump("checking the first update patch properties");
-<<<<<<< HEAD
-  patch = update.selectedPatch;
-  Assert.equal(patch.type, "complete",
-               "the update patch type attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(patch.URL, "http://complete/",
-               "the update patch URL attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(patch.size, "75",
-               "the update patch size attribute" + MSG_SHOULD_EQUAL);
-  Assert.ok(!!patch.selected,
-            "the update patch selected attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(patch.state, STATE_FAILED,
-               "the update patch state attribute" + MSG_SHOULD_EQUAL);
-
-||||||| merged common ancestors
-  patch = update.selectedPatch;
-  Assert.equal(patch.type, "complete",
-               "the update patch type attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(patch.URL, "http://complete/",
-               "the update patch URL attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(patch.size, "75",
-               "the update patch size attribute" + MSG_SHOULD_EQUAL);
-  Assert.ok(!!patch.selected,
-            "the update patch selected attribute" + MSG_SHOULD_EQUAL);
-  Assert.equal(patch.state, STATE_FAILED,
-               "the update patch state attribute" + MSG_SHOULD_EQUAL);
-
-  // Cleaning up the active update along with reloading the update manager
-  // in doTestFinish will prevent writing the update xml files during
-  // shutdown.
-  gUpdateManager.cleanupActiveUpdate();
-  executeSoon(waitForUpdateXMLFiles);
-}
-
-/**
- * Called after the call to waitForUpdateXMLFiles finishes.
- */
-function waitForUpdateXMLFilesFinished() {
-=======
   let patch = update.selectedPatch.QueryInterface(Ci.nsIWritablePropertyBag);
   Assert.equal(
     patch.type,
@@ -573,7 +535,6 @@ function waitForUpdateXMLFilesFinished() {
   ];
   checkIllegalProperties(patch, attrNames);
 
->>>>>>> upstream-releases
   executeSoon(doTestFinish);
 }
 

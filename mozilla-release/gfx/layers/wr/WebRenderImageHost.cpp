@@ -29,31 +29,9 @@ namespace layers {
 class ISurfaceAllocator;
 
 WebRenderImageHost::WebRenderImageHost(const TextureInfo& aTextureInfo)
-<<<<<<< HEAD
-    : CompositableHost(aTextureInfo),
-      ImageComposite(),
-      mWrBridge(nullptr),
-      mWrBridgeBindings(0),
-      mUseAsyncImagePipeline(false) {}
-
-WebRenderImageHost::~WebRenderImageHost() { MOZ_ASSERT(!mWrBridge); }
-||||||| merged common ancestors
-  : CompositableHost(aTextureInfo)
-  , ImageComposite()
-  , mWrBridge(nullptr)
-  , mWrBridgeBindings(0)
-  , mUseAsyncImagePipeline(false)
-{}
-
-WebRenderImageHost::~WebRenderImageHost()
-{
-  MOZ_ASSERT(!mWrBridge);
-}
-=======
     : CompositableHost(aTextureInfo), ImageComposite(), mWrBridgeBindings(0) {}
 
 WebRenderImageHost::~WebRenderImageHost() { MOZ_ASSERT(!mWrBridge); }
->>>>>>> upstream-releases
 
 void WebRenderImageHost::UseTextureHost(
     const nsTArray<TimedTexture>& aTextures) {
@@ -269,16 +247,8 @@ void WebRenderImageHost::SetWrBridge(WebRenderBridgeParent* aWrBridge) {
   ++mWrBridgeBindings;
 }
 
-<<<<<<< HEAD
-void WebRenderImageHost::ClearWrBridge() {
-||||||| merged common ancestors
-void
-WebRenderImageHost::ClearWrBridge()
-{
-=======
 void WebRenderImageHost::ClearWrBridge(WebRenderBridgeParent* aWrBridge) {
   MOZ_ASSERT(aWrBridge);
->>>>>>> upstream-releases
   MOZ_ASSERT(mWrBridgeBindings > 0);
   --mWrBridgeBindings;
   if (mWrBridgeBindings == 0) {

@@ -29,7 +29,6 @@ using namespace mozilla::tasktracer;
 
 NS_IMPL_ISUPPORTS(TimerThread, nsIRunnable, nsIObserver)
 
-<<<<<<< HEAD
 TimerThread::TimerThread()
     : mInitialized(false),
       mMonitor("TimerThread.mMonitor"),
@@ -40,32 +39,6 @@ TimerThread::TimerThread()
       mAllowedEarlyFiringMicroseconds(0) {}
 
 TimerThread::~TimerThread() {
-||||||| merged common ancestors
-TimerThread::TimerThread() :
-  mInitialized(false),
-  mMonitor("TimerThread.mMonitor"),
-  mShutdown(false),
-  mWaiting(false),
-  mNotified(false),
-  mSleeping(false),
-  mAllowedEarlyFiringMicroseconds(0)
-{
-}
-
-TimerThread::~TimerThread()
-{
-=======
-TimerThread::TimerThread()
-    : mInitialized(false),
-      mMonitor("TimerThread.mMonitor"),
-      mShutdown(false),
-      mWaiting(false),
-      mNotified(false),
-      mSleeping(false),
-      mAllowedEarlyFiringMicroseconds(0) {}
-
-TimerThread::~TimerThread() {
->>>>>>> upstream-releases
   mThread = nullptr;
 
   NS_ASSERTION(mTimers.IsEmpty(), "Timers remain in TimerThread::~TimerThread");
@@ -161,21 +134,10 @@ class nsTimerEvent final : public CancelableRunnable {
   NS_IMETHOD GetName(nsACString& aName) override;
 #endif
 
-<<<<<<< HEAD
-  nsTimerEvent()
-      : mozilla::CancelableRunnable("nsTimerEvent"), mTimer(), mGeneration(0) {
-||||||| merged common ancestors
-  nsTimerEvent()
-    : mozilla::CancelableRunnable("nsTimerEvent")
-    , mTimer()
-    , mGeneration(0)
-  {
-=======
   explicit nsTimerEvent(already_AddRefed<nsTimerImpl> aTimer)
       : mozilla::CancelableRunnable("nsTimerEvent"),
         mTimer(aTimer),
         mGeneration(mTimer->GetGeneration()) {
->>>>>>> upstream-releases
     // Note: We override operator new for this class, and the override is
     // fallible!
     sAllocatorUsers++;
@@ -199,24 +161,7 @@ class nsTimerEvent final : public CancelableRunnable {
 
   already_AddRefed<nsTimerImpl> ForgetTimer() { return mTimer.forget(); }
 
-<<<<<<< HEAD
-  void SetTimer(already_AddRefed<nsTimerImpl> aTimer) {
-    mTimer = aTimer;
-    mGeneration = mTimer->GetGeneration();
-  }
-
  private:
-||||||| merged common ancestors
-  void SetTimer(already_AddRefed<nsTimerImpl> aTimer)
-  {
-    mTimer = aTimer;
-    mGeneration = mTimer->GetGeneration();
-  }
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   nsTimerEvent(const nsTimerEvent&) = delete;
   nsTimerEvent& operator=(const nsTimerEvent&) = delete;
   nsTimerEvent& operator=(const nsTimerEvent&&) = delete;
@@ -230,13 +175,7 @@ private:
 
   TimeStamp mInitTime;
   RefPtr<nsTimerImpl> mTimer;
-<<<<<<< HEAD
-  int32_t mGeneration;
-||||||| merged common ancestors
-  int32_t      mGeneration;
-=======
   const int32_t mGeneration;
->>>>>>> upstream-releases
 
   static TimerEventAllocator* sAllocator;
 

@@ -32,17 +32,8 @@ static double ComputeDeceleration(float aDPI) {
 const float kDecelerationRate = 2.3582018f;
 
 // Default friction constant in android.view.ViewConfiguration.
-<<<<<<< HEAD
-static float GetFlingFriction() {
-  return gfxPrefs::APZChromeFlingPhysicsFriction();
-||||||| merged common ancestors
-static float GetFlingFriction()
-{
-  return gfxPrefs::APZChromeFlingPhysicsFriction();
-=======
 static float GetFlingFriction() {
   return StaticPrefs::apz_android_chrome_fling_physics_friction();
->>>>>>> upstream-releases
 }
 
 // Tension lines cross at (GetInflexion(), 1).
@@ -63,17 +54,8 @@ static float GetInflexion() {
 
 // Fling scroll is stopped when the scroll position is |kThresholdForFlingEnd|
 // pixels or closer from the end.
-<<<<<<< HEAD
-static float GetThresholdForFlingEnd() {
-  return gfxPrefs::APZChromeFlingPhysicsStopThreshold();
-||||||| merged common ancestors
-static float GetThresholdForFlingEnd()
-{
-  return gfxPrefs::APZChromeFlingPhysicsStopThreshold();
-=======
 static float GetThresholdForFlingEnd() {
   return StaticPrefs::apz_android_chrome_fling_physics_stop_threshold();
->>>>>>> upstream-releases
 }
 
 static double ComputeSplineDeceleration(ParentLayerCoord aVelocity,
@@ -157,15 +139,8 @@ struct SplineConstants {
 
 StaticAutoPtr<SplineConstants> gSplineConstants;
 
-<<<<<<< HEAD
-/* static */ void AndroidFlingPhysics::InitializeGlobalState() {
-||||||| merged common ancestors
-/* static */ void AndroidFlingPhysics::InitializeGlobalState()
-{
-=======
 /* static */
 void AndroidFlingPhysics::InitializeGlobalState() {
->>>>>>> upstream-releases
   gSplineConstants = new SplineConstants();
   ClearOnShutdown(&gSplineConstants);
 }

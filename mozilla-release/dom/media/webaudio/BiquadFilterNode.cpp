@@ -139,21 +139,10 @@ class BiquadFilterNodeEngine final : public AudioNodeEngine {
           aStream->ScheduleCheckForInactive();
 
           RefPtr<PlayingRefChangeHandler> refchanged =
-<<<<<<< HEAD
-              new PlayingRefChangeHandler(aStream,
-                                          PlayingRefChangeHandler::RELEASE);
-          aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-              refchanged.forget());
-||||||| merged common ancestors
-            new PlayingRefChangeHandler(aStream, PlayingRefChangeHandler::RELEASE);
-          aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-=======
               new PlayingRefChangeHandler(aStream,
                                           PlayingRefChangeHandler::RELEASE);
           aStream->Graph()->DispatchToMainThreadStableState(
               refchanged.forget());
->>>>>>> upstream-releases
         }
 
         aOutput->SetNull(WEBAUDIO_BLOCK_SIZE);
@@ -165,29 +154,12 @@ class BiquadFilterNodeEngine final : public AudioNodeEngine {
     } else if (mBiquads.Length() != aInput.ChannelCount()) {
       if (mBiquads.IsEmpty()) {
         RefPtr<PlayingRefChangeHandler> refchanged =
-<<<<<<< HEAD
-            new PlayingRefChangeHandler(aStream,
-                                        PlayingRefChangeHandler::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-            refchanged.forget());
-      } else {  // Help people diagnose bug 924718
-        WebAudioUtils::LogToDeveloperConsole(
-            mWindowID, "BiquadFilterChannelCountChangeWarning");
-||||||| merged common ancestors
-          new PlayingRefChangeHandler(aStream, PlayingRefChangeHandler::ADDREF);
-        aStream->Graph()->DispatchToMainThreadAfterStreamStateUpdate(
-          refchanged.forget());
-      } else { // Help people diagnose bug 924718
-        WebAudioUtils::LogToDeveloperConsole(mWindowID,
-                                             "BiquadFilterChannelCountChangeWarning");
-=======
             new PlayingRefChangeHandler(aStream,
                                         PlayingRefChangeHandler::ADDREF);
         aStream->Graph()->DispatchToMainThreadStableState(refchanged.forget());
       } else {  // Help people diagnose bug 924718
         WebAudioUtils::LogToDeveloperConsole(
             mWindowID, "BiquadFilterChannelCountChangeWarning");
->>>>>>> upstream-releases
       }
 
       // Adjust the number of biquads based on the number of channels
@@ -251,58 +223,6 @@ class BiquadFilterNodeEngine final : public AudioNodeEngine {
 };
 
 BiquadFilterNode::BiquadFilterNode(AudioContext* aContext)
-<<<<<<< HEAD
-    : AudioNode(aContext, 2, ChannelCountMode::Max,
-                ChannelInterpretation::Speakers),
-      mType(BiquadFilterType::Lowpass),
-      mFrequency(new AudioParam(
-          this, BiquadFilterNodeEngine::FREQUENCY, "frequency", 350.f,
-          -(aContext->SampleRate() / 2), aContext->SampleRate() / 2)),
-      mDetune(
-          new AudioParam(this, BiquadFilterNodeEngine::DETUNE, "detune", 0.f)),
-      mQ(new AudioParam(this, BiquadFilterNodeEngine::Q, "Q", 1.f)),
-      mGain(new AudioParam(this, BiquadFilterNodeEngine::GAIN, "gain", 0.f)) {
-  uint64_t windowID = aContext->GetParentObject()->WindowID();
-  BiquadFilterNodeEngine* engine =
-      new BiquadFilterNodeEngine(this, aContext->Destination(), windowID);
-  mStream = AudioNodeStream::Create(
-      aContext, engine, AudioNodeStream::NO_STREAM_FLAGS, aContext->Graph());
-}
-
-/* static */ already_AddRefed<BiquadFilterNode> BiquadFilterNode::Create(
-    AudioContext& aAudioContext, const BiquadFilterOptions& aOptions,
-    ErrorResult& aRv) {
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-||||||| merged common ancestors
-  : AudioNode(aContext,
-              2,
-              ChannelCountMode::Max,
-              ChannelInterpretation::Speakers)
-  , mType(BiquadFilterType::Lowpass)
-  , mFrequency(new AudioParam(this, BiquadFilterNodeEngine::FREQUENCY,
-                              "frequency", 350.f,
-                              -(aContext->SampleRate() / 2),
-                              aContext->SampleRate() / 2))
-  , mDetune(new AudioParam(this, BiquadFilterNodeEngine::DETUNE, "detune", 0.f))
-  , mQ(new AudioParam(this, BiquadFilterNodeEngine::Q, "Q", 1.f))
-  , mGain(new AudioParam(this, BiquadFilterNodeEngine::GAIN, "gain", 0.f))
-{
-  uint64_t windowID = aContext->GetParentObject()->WindowID();
-  BiquadFilterNodeEngine* engine = new BiquadFilterNodeEngine(this, aContext->Destination(), windowID);
-  mStream = AudioNodeStream::Create(aContext, engine,
-                                    AudioNodeStream::NO_STREAM_FLAGS,
-                                    aContext->Graph());
-}
-
-/* static */ already_AddRefed<BiquadFilterNode>
-BiquadFilterNode::Create(AudioContext& aAudioContext,
-                         const BiquadFilterOptions& aOptions,
-                         ErrorResult& aRv)
-{
-  if (aAudioContext.CheckClosed(aRv)) {
-    return nullptr;
-=======
     : AudioNode(aContext, 2, ChannelCountMode::Max,
                 ChannelInterpretation::Speakers),
       mType(BiquadFilterType::Lowpass) {
@@ -316,7 +236,6 @@ BiquadFilterNode::Create(AudioContext& aAudioContext,
   uint64_t windowID = 0;
   if (aContext->GetParentObject()) {
     windowID = aContext->GetParentObject()->WindowID();
->>>>>>> upstream-releases
   }
   BiquadFilterNodeEngine* engine =
       new BiquadFilterNodeEngine(this, aContext->Destination(), windowID);
@@ -381,34 +300,14 @@ void BiquadFilterNode::SetType(BiquadFilterType aType) {
                              static_cast<int32_t>(aType));
 }
 
-<<<<<<< HEAD
-void BiquadFilterNode::GetFrequencyResponse(
-    const Float32Array& aFrequencyHz, const Float32Array& aMagResponse,
-    const Float32Array& aPhaseResponse) {
-||||||| merged common ancestors
-void
-BiquadFilterNode::GetFrequencyResponse(const Float32Array& aFrequencyHz,
-                                       const Float32Array& aMagResponse,
-                                       const Float32Array& aPhaseResponse)
-{
-=======
 void BiquadFilterNode::GetFrequencyResponse(const Float32Array& aFrequencyHz,
                                             const Float32Array& aMagResponse,
                                             const Float32Array& aPhaseResponse,
                                             ErrorResult& aRv) {
->>>>>>> upstream-releases
   aFrequencyHz.ComputeLengthAndData();
   aMagResponse.ComputeLengthAndData();
   aPhaseResponse.ComputeLengthAndData();
 
-<<<<<<< HEAD
-  uint32_t length =
-      std::min(std::min(aFrequencyHz.Length(), aMagResponse.Length()),
-               aPhaseResponse.Length());
-||||||| merged common ancestors
-  uint32_t length = std::min(std::min(aFrequencyHz.Length(), aMagResponse.Length()),
-                             aPhaseResponse.Length());
-=======
   if (!(aFrequencyHz.Length() == aMagResponse.Length() &&
         aMagResponse.Length() == aPhaseResponse.Length())) {
     aRv.Throw(NS_ERROR_DOM_INVALID_ACCESS_ERR);
@@ -416,7 +315,6 @@ void BiquadFilterNode::GetFrequencyResponse(const Float32Array& aFrequencyHz,
   }
 
   uint32_t length = aFrequencyHz.Length();
->>>>>>> upstream-releases
   if (!length) {
     return;
   }

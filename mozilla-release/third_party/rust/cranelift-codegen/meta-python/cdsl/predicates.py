@@ -244,14 +244,8 @@ class FieldPredicate(object):
         """
         # Prepend `field` to the predicate function arguments.
         args = (self.field.rust_name(),) + tuple(map(str, self.args))
-<<<<<<< HEAD
-        return '::predicates::{}({})'.format(self.function, ', '.join(args))
-||||||| merged common ancestors
-        return 'predicates::{}({})'.format(self.function, ', '.join(args))
-=======
         return 'crate::predicates::{}({})'\
             .format(self.function, ', '.join(args))
->>>>>>> upstream-releases
 
 
 class IsEqual(FieldPredicate):

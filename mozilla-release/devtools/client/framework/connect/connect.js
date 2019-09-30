@@ -120,25 +120,9 @@ var onConnectionReady = async function([aType, aTraits]) {
     const a = document.createElement("a");
     a.onclick = function() {
       if (gClient.mainRoot.traits.allowChromeProcess) {
-<<<<<<< HEAD
-        gClient.mainRoot.getMainProcess()
-               .then(front => {
-                 openToolbox(null, true, null, front);
-               });
-      } else if (globals.consoleActor) {
-        openToolbox(globals, true, "webconsole", false);
-||||||| merged common ancestors
-        gClient.mainRoot.getProcess(0)
-               .then(aResponse => {
-                 openToolbox(aResponse.form, true);
-               });
-      } else if (globals.consoleActor) {
-        openToolbox(globals, true, "webconsole", false);
-=======
         gClient.mainRoot
           .getMainProcess()
           .then(front => openToolbox(front, true));
->>>>>>> upstream-releases
       }
     };
     a.title = a.textContent = L10N.getStr("mainProcess");
@@ -168,13 +152,7 @@ var onConnectionReady = async function([aType, aTraits]) {
 function buildAddonLink(addon, parent) {
   const a = document.createElement("a");
   a.onclick = async function() {
-<<<<<<< HEAD
-    openToolbox(null, true, "webconsole", addon);
-||||||| merged common ancestors
-    openToolbox(addon, true, "webconsole");
-=======
     openToolbox(addon, true);
->>>>>>> upstream-releases
   };
 
   a.textContent = addon.name;
@@ -233,40 +211,6 @@ function handleConnectionTimeout() {
  * The user clicked on one of the buttons.
  * Opens the toolbox.
  */
-<<<<<<< HEAD
-function openToolbox(form, chrome = false, tool = "webconsole", activeTab = null) {
-  const options = {
-    form,
-    activeTab,
-    client: gClient,
-    chrome,
-  };
-  TargetFactory.forRemoteTab(options).then((target) => {
-    const hostType = Toolbox.HostType.WINDOW;
-    gDevTools.showToolbox(target, tool, hostType).then((toolbox) => {
-      toolbox.once("destroyed", function() {
-        gClient.close();
-      });
-    }, console.error);
-    window.close();
-  }, console.error);
-||||||| merged common ancestors
-function openToolbox(form, chrome = false, tool = "webconsole") {
-  const options = {
-    form: form,
-    client: gClient,
-    chrome: chrome,
-  };
-  TargetFactory.forRemoteTab(options).then((target) => {
-    const hostType = Toolbox.HostType.WINDOW;
-    gDevTools.showToolbox(target, tool, hostType).then((toolbox) => {
-      toolbox.once("destroyed", function() {
-        gClient.close();
-      });
-    }, console.error);
-    window.close();
-  }, console.error);
-=======
 async function openToolbox(target, chrome = false) {
   const hostType = Toolbox.HostType.WINDOW;
   const toolbox = await gDevTools.showToolbox(target, "webconsole", hostType);
@@ -274,5 +218,4 @@ async function openToolbox(target, chrome = false) {
     gClient.close();
   });
   window.close();
->>>>>>> upstream-releases
 }

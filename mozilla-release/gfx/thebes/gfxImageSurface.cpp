@@ -151,42 +151,6 @@ gfxImageSurface::~gfxImageSurface() {
   if (mOwnsData) free(mData);
 }
 
-<<<<<<< HEAD
-/*static*/ long gfxImageSurface::ComputeStride(const IntSize& aSize,
-                                               gfxImageFormat aFormat) {
-  long stride;
-
-  if (aFormat == SurfaceFormat::A8R8G8B8_UINT32)
-    stride = aSize.width * 4;
-  else if (aFormat == SurfaceFormat::X8R8G8B8_UINT32)
-    stride = aSize.width * 4;
-  else if (aFormat == SurfaceFormat::R5G6B5_UINT16)
-    stride = aSize.width * 2;
-  else if (aFormat == SurfaceFormat::A8)
-    stride = aSize.width;
-  else {
-    NS_WARNING("Unknown format specified to gfxImageSurface!");
-    stride = aSize.width * 4;
-  }
-||||||| merged common ancestors
-/*static*/ long
-gfxImageSurface::ComputeStride(const IntSize& aSize, gfxImageFormat aFormat)
-{
-    long stride;
-
-    if (aFormat == SurfaceFormat::A8R8G8B8_UINT32)
-        stride = aSize.width * 4;
-    else if (aFormat == SurfaceFormat::X8R8G8B8_UINT32)
-        stride = aSize.width * 4;
-    else if (aFormat == SurfaceFormat::R5G6B5_UINT16)
-        stride = aSize.width * 2;
-    else if (aFormat == SurfaceFormat::A8)
-        stride = aSize.width;
-    else {
-        NS_WARNING("Unknown format specified to gfxImageSurface!");
-        stride = aSize.width * 4;
-    }
-=======
 /*static*/
 long gfxImageSurface::ComputeStride(const IntSize& aSize,
                                     gfxImageFormat aFormat) {
@@ -204,7 +168,6 @@ long gfxImageSurface::ComputeStride(const IntSize& aSize,
     NS_WARNING("Unknown format specified to gfxImageSurface!");
     stride = aSize.width * 4;
   }
->>>>>>> upstream-releases
 
   stride = ((stride + 3) / 4) * 4;
 

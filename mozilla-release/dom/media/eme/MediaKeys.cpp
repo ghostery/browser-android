@@ -35,18 +35,6 @@ namespace mozilla {
 
 namespace dom {
 
-<<<<<<< HEAD
-NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(MediaKeys, mElement, mParent,
-                                      mKeySessions, mPromises,
-                                      mPendingSessions);
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(MediaKeys,
-                                      mElement,
-                                      mParent,
-                                      mKeySessions,
-                                      mPromises,
-                                      mPendingSessions);
-=======
 // We don't use NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE because we need to
 // unregister our MediaKeys from mDocument's activity listeners. If we don't do
 // this then cycle collection can null mDocument before our dtor runs and the
@@ -73,7 +61,6 @@ NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(MediaKeys)
   NS_IMPL_CYCLE_COLLECTION_UNLINK_PRESERVED_WRAPPER
 NS_IMPL_CYCLE_COLLECTION_UNLINK_END
 
->>>>>>> upstream-releases
 NS_IMPL_CYCLE_COLLECTING_ADDREF(MediaKeys)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(MediaKeys)
 NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(MediaKeys)
@@ -92,27 +79,13 @@ MediaKeys::MediaKeys(nsPIDOMWindowInner* aParent, const nsAString& aKeySystem,
           NS_ConvertUTF16toUTF8(mKeySystem).get());
 }
 
-<<<<<<< HEAD
-MediaKeys::~MediaKeys() {
-||||||| merged common ancestors
-MediaKeys::~MediaKeys()
-{
-=======
 MediaKeys::~MediaKeys() {
   UnregisterActivityObserver();
   mDocument = nullptr;
->>>>>>> upstream-releases
   Shutdown();
   EME_LOG("MediaKeys[%p] destroyed", this);
 }
 
-<<<<<<< HEAD
-void MediaKeys::Terminated() {
-||||||| merged common ancestors
-void
-MediaKeys::Terminated()
-{
-=======
 void MediaKeys::RegisterActivityObserver() {
   MOZ_ASSERT(mDocument);
   if (mDocument) {
@@ -140,7 +113,6 @@ void MediaKeys::NotifyOwnerDocumentActivityChanged() {
 }
 
 void MediaKeys::Terminated() {
->>>>>>> upstream-releases
   EME_LOG("MediaKeys[%p] CDM crashed unexpectedly", this);
 
   KeySessionHashMap keySessions;
@@ -164,16 +136,8 @@ void MediaKeys::Terminated() {
   Shutdown();
 }
 
-<<<<<<< HEAD
-void MediaKeys::Shutdown() {
-||||||| merged common ancestors
-void
-MediaKeys::Shutdown()
-{
-=======
 void MediaKeys::Shutdown() {
   EME_LOG("MediaKeys[%p]::Shutdown()", this);
->>>>>>> upstream-releases
   if (mProxy) {
     mProxy->Shutdown();
     mProxy = nullptr;
@@ -275,31 +239,15 @@ void MediaKeys::ConnectPendingPromiseIdWithToken(PromiseId aId,
       this, aId, aToken);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DetailedPromise> MediaKeys::RetrievePromise(PromiseId aId) {
-||||||| merged common ancestors
-already_AddRefed<DetailedPromise>
-MediaKeys::RetrievePromise(PromiseId aId)
-{
-=======
 already_AddRefed<DetailedPromise> MediaKeys::RetrievePromise(PromiseId aId) {
   EME_LOG("MediaKeys[%p]::RetrievePromise(aId=%" PRIu32 ")", this, aId);
->>>>>>> upstream-releases
   if (!mPromises.Contains(aId)) {
-<<<<<<< HEAD
-    NS_WARNING(
-        nsPrintfCString("Tried to retrieve a non-existent promise id=%d", aId)
-            .get());
-||||||| merged common ancestors
-    NS_WARNING(nsPrintfCString("Tried to retrieve a non-existent promise id=%d", aId).get());
-=======
     EME_LOG("MediaKeys[%p]::RetrievePromise(aId=%" PRIu32
             ") tried to retrieve non-existent promise!",
             this, aId);
     NS_WARNING(nsPrintfCString(
                    "Tried to retrieve a non-existent promise id=%" PRIu32, aId)
                    .get());
->>>>>>> upstream-releases
     return nullptr;
   }
   RefPtr<DetailedPromise> promise;
@@ -310,24 +258,10 @@ already_AddRefed<DetailedPromise> MediaKeys::RetrievePromise(PromiseId aId) {
   return promise.forget();
 }
 
-<<<<<<< HEAD
-void MediaKeys::RejectPromise(PromiseId aId, nsresult aExceptionCode,
-                              const nsCString& aReason) {
-  EME_LOG("MediaKeys[%p]::RejectPromise(%d, 0x%" PRIx32 ")", this, aId,
-          static_cast<uint32_t>(aExceptionCode));
-||||||| merged common ancestors
-void
-MediaKeys::RejectPromise(PromiseId aId, nsresult aExceptionCode,
-                         const nsCString& aReason)
-{
-  EME_LOG("MediaKeys[%p]::RejectPromise(%d, 0x%" PRIx32 ")",
-          this, aId, static_cast<uint32_t>(aExceptionCode));
-=======
 void MediaKeys::RejectPromise(PromiseId aId, nsresult aExceptionCode,
                               const nsCString& aReason) {
   EME_LOG("MediaKeys[%p]::RejectPromise(%" PRIu32 ", 0x%" PRIx32 ")", this, aId,
           static_cast<uint32_t>(aExceptionCode));
->>>>>>> upstream-releases
 
   RefPtr<DetailedPromise> promise(RetrievePromise(aId));
   if (!promise) {
@@ -382,18 +316,8 @@ void MediaKeys::OnSessionIdReady(MediaKeySession* aSession) {
   mKeySessions.Put(aSession->GetSessionId(), aSession);
 }
 
-<<<<<<< HEAD
-void MediaKeys::ResolvePromise(PromiseId aId) {
-  EME_LOG("MediaKeys[%p]::ResolvePromise(%d)", this, aId);
-||||||| merged common ancestors
-void
-MediaKeys::ResolvePromise(PromiseId aId)
-{
-  EME_LOG("MediaKeys[%p]::ResolvePromise(%d)", this, aId);
-=======
 void MediaKeys::ResolvePromise(PromiseId aId) {
   EME_LOG("MediaKeys[%p]::ResolvePromise(%" PRIu32 ")", this, aId);
->>>>>>> upstream-releases
 
   RefPtr<DetailedPromise> promise(RetrievePromise(aId));
   MOZ_ASSERT(!mPromises.Contains(aId));
@@ -448,18 +372,9 @@ class MediaKeysGMPCrashHelper : public GMPCrashHelper {
   WeakPtr<MediaKeys> mMediaKeys;
 };
 
-<<<<<<< HEAD
-already_AddRefed<CDMProxy> MediaKeys::CreateCDMProxy(
-    nsIEventTarget* aMainThread) {
-||||||| merged common ancestors
-already_AddRefed<CDMProxy>
-MediaKeys::CreateCDMProxy(nsIEventTarget* aMainThread)
-{
-=======
 already_AddRefed<CDMProxy> MediaKeys::CreateCDMProxy(
     nsISerialEventTarget* aMainThread) {
   EME_LOG("MediaKeys[%p]::CreateCDMProxy()", this);
->>>>>>> upstream-releases
   RefPtr<CDMProxy> proxy;
 #ifdef MOZ_WIDGET_ANDROID
   if (IsWidevineKeySystem(mKeySystem)) {
@@ -480,22 +395,10 @@ already_AddRefed<CDMProxy> MediaKeys::CreateCDMProxy(
   return proxy.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<DetailedPromise> MediaKeys::Init(ErrorResult& aRv) {
-  RefPtr<DetailedPromise> promise(
-      MakePromise(aRv, NS_LITERAL_CSTRING("MediaKeys::Init()")));
-||||||| merged common ancestors
-already_AddRefed<DetailedPromise>
-MediaKeys::Init(ErrorResult& aRv)
-{
-  RefPtr<DetailedPromise> promise(MakePromise(aRv,
-    NS_LITERAL_CSTRING("MediaKeys::Init()")));
-=======
 already_AddRefed<DetailedPromise> MediaKeys::Init(ErrorResult& aRv) {
   EME_LOG("MediaKeys[%p]::Init()", this);
   RefPtr<DetailedPromise> promise(
       MakePromise(aRv, NS_LITERAL_CSTRING("MediaKeys::Init()")));
->>>>>>> upstream-releases
   if (aRv.Failed()) {
     return nullptr;
   }
@@ -585,17 +488,9 @@ already_AddRefed<DetailedPromise> MediaKeys::Init(ErrorResult& aRv) {
   return promise.forget();
 }
 
-<<<<<<< HEAD
-void MediaKeys::OnCDMCreated(PromiseId aId, const uint32_t aPluginId) {
-||||||| merged common ancestors
-void
-MediaKeys::OnCDMCreated(PromiseId aId, const uint32_t aPluginId)
-{
-=======
 void MediaKeys::OnCDMCreated(PromiseId aId, const uint32_t aPluginId) {
   EME_LOG("MediaKeys[%p]::OnCDMCreated(aId=%" PRIu32 ", aPluginId=%" PRIu32 ")",
           this, aId, aPluginId);
->>>>>>> upstream-releases
   RefPtr<DetailedPromise> promise(RetrievePromise(aId));
   if (!promise) {
     return;
@@ -627,31 +522,13 @@ static bool IsSessionTypeSupported(const MediaKeySessionType aSessionType,
   return aConfig.mSessionTypes.Value().Contains(ToString(aSessionType));
 }
 
-<<<<<<< HEAD
-already_AddRefed<MediaKeySession> MediaKeys::CreateSession(
-    JSContext* aCx, MediaKeySessionType aSessionType, ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<MediaKeySession>
-MediaKeys::CreateSession(JSContext* aCx,
-                         MediaKeySessionType aSessionType,
-                         ErrorResult& aRv)
-{
-=======
 already_AddRefed<MediaKeySession> MediaKeys::CreateSession(
     JSContext* aCx, MediaKeySessionType aSessionType, ErrorResult& aRv) {
   EME_LOG("MediaKeys[%p]::CreateSession(aCx=%p, aSessionType=%" PRIu8 ")", this,
           aCx, static_cast<uint8_t>(aSessionType));
->>>>>>> upstream-releases
   if (!IsSessionTypeSupported(aSessionType, mConfig)) {
-<<<<<<< HEAD
-    EME_LOG("MediaKeys[%p] CreateSession() failed, unsupported session type",
-            this);
-||||||| merged common ancestors
-    EME_LOG("MediaKeys[%p] CreateSession() failed, unsupported session type", this);
-=======
     EME_LOG("MediaKeys[%p]::CreateSession() failed, unsupported session type",
             this);
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;
   }
@@ -681,20 +558,6 @@ already_AddRefed<MediaKeySession> MediaKeys::CreateSession(
   return session.forget();
 }
 
-<<<<<<< HEAD
-void MediaKeys::OnSessionLoaded(PromiseId aId, bool aSuccess) {
-  EME_LOG("MediaKeys[%p]::OnSessionLoaded() resolve promise id=%d", this, aId);
-
-  ResolvePromiseWithResult(aId, aSuccess);
-}
-
-template <typename T>
-void MediaKeys::ResolvePromiseWithResult(PromiseId aId, const T& aResult) {
-||||||| merged common ancestors
-void
-MediaKeys::OnSessionLoaded(PromiseId aId, bool aSuccess)
-{
-=======
 void MediaKeys::OnSessionLoaded(PromiseId aId, bool aSuccess) {
   EME_LOG("MediaKeys[%p]::OnSessionLoaded() resolve promise id=%" PRIu32, this,
           aId);
@@ -704,7 +567,6 @@ void MediaKeys::OnSessionLoaded(PromiseId aId, bool aSuccess) {
 
 template <typename T>
 void MediaKeys::ResolvePromiseWithResult(PromiseId aId, const T& aResult) {
->>>>>>> upstream-releases
   RefPtr<DetailedPromise> promise(RetrievePromise(aId));
   if (!promise) {
     return;
@@ -726,18 +588,9 @@ already_AddRefed<MediaKeySession> MediaKeys::GetSession(
   return session.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<MediaKeySession> MediaKeys::GetPendingSession(
-    uint32_t aToken) {
-||||||| merged common ancestors
-already_AddRefed<MediaKeySession>
-MediaKeys::GetPendingSession(uint32_t aToken)
-{
-=======
 already_AddRefed<MediaKeySession> MediaKeys::GetPendingSession(
     uint32_t aToken) {
   EME_LOG("MediaKeys[%p]::GetPendingSession(aToken=%" PRIu32 ")", this, aToken);
->>>>>>> upstream-releases
   RefPtr<MediaKeySession> session;
   mPendingSessions.Get(aToken, getter_AddRefs(session));
   mPendingSessions.Remove(aToken);
@@ -832,22 +685,10 @@ void MediaKeys::ResolvePromiseWithKeyStatus(PromiseId aId,
     return;
   }
   RefPtr<MediaKeys> keys(this);
-<<<<<<< HEAD
-  EME_LOG(
-      "MediaKeys[%p]::ResolvePromiseWithKeyStatus() resolve promise id=%d, "
-      "keystatus=%" PRIu8,
-      this, aId, static_cast<uint8_t>(aMediaKeyStatus));
-||||||| merged common ancestors
-  EME_LOG("MediaKeys[%p]::ResolvePromiseWithKeyStatus() resolve promise id=%d, keystatus=%" PRIu8,
-          this,
-          aId,
-          static_cast<uint8_t>(aMediaKeyStatus));
-=======
   EME_LOG(
       "MediaKeys[%p]::ResolvePromiseWithKeyStatus() resolve promise id=%" PRIu32
       ", keystatus=%" PRIu8,
       this, aId, static_cast<uint8_t>(aMediaKeyStatus));
->>>>>>> upstream-releases
   promise->MaybeResolve(aMediaKeyStatus);
 }
 

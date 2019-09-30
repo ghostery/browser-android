@@ -61,16 +61,8 @@ static void SetupSurface(gfxImageSurface* surface) {
 }
 
 // return true if two surfaces contain the same data
-<<<<<<< HEAD
-void AssertSurfacesEqual(gfxImageSurface* surface1, gfxImageSurface* surface2) {
-||||||| merged common ancestors
-void AssertSurfacesEqual(gfxImageSurface* surface1,
-                         gfxImageSurface* surface2)
-{
-=======
 static void AssertSurfacesEqual(gfxImageSurface* surface1,
                                 gfxImageSurface* surface2) {
->>>>>>> upstream-releases
   ASSERT_EQ(surface1->GetSize(), surface2->GetSize());
   ASSERT_EQ(surface1->Format(), surface2->Format());
 
@@ -90,16 +82,8 @@ static void AssertSurfacesEqual(gfxImageSurface* surface1,
   }
 }
 
-<<<<<<< HEAD
-void AssertSurfacesEqual(SourceSurface* surface1, SourceSurface* surface2) {
-||||||| merged common ancestors
-void AssertSurfacesEqual(SourceSurface* surface1,
-                         SourceSurface* surface2)
-{
-=======
 static void AssertSurfacesEqual(SourceSurface* surface1,
                                 SourceSurface* surface2) {
->>>>>>> upstream-releases
   ASSERT_EQ(surface1->GetSize(), surface2->GetSize());
   ASSERT_EQ(surface1->GetFormat(), surface2->GetFormat());
 
@@ -259,20 +243,6 @@ TEST(Layers, TextureSerialization)
   }
 }
 
-<<<<<<< HEAD
-TEST(Layers, TextureYCbCrSerialization) {
-  RefPtr<gfxImageSurface> ySurface =
-      new gfxImageSurface(IntSize(400, 300), SurfaceFormat::A8);
-  RefPtr<gfxImageSurface> cbSurface =
-      new gfxImageSurface(IntSize(200, 150), SurfaceFormat::A8);
-  RefPtr<gfxImageSurface> crSurface =
-      new gfxImageSurface(IntSize(200, 150), SurfaceFormat::A8);
-||||||| merged common ancestors
-TEST(Layers, TextureYCbCrSerialization) {
-  RefPtr<gfxImageSurface> ySurface = new gfxImageSurface(IntSize(400,300), SurfaceFormat::A8);
-  RefPtr<gfxImageSurface> cbSurface = new gfxImageSurface(IntSize(200,150), SurfaceFormat::A8);
-  RefPtr<gfxImageSurface> crSurface = new gfxImageSurface(IntSize(200,150), SurfaceFormat::A8);
-=======
 TEST(Layers, TextureYCbCrSerialization)
 {
   RefPtr<gfxImageSurface> ySurface =
@@ -281,7 +251,6 @@ TEST(Layers, TextureYCbCrSerialization)
       new gfxImageSurface(IntSize(200, 150), SurfaceFormat::A8);
   RefPtr<gfxImageSurface> crSurface =
       new gfxImageSurface(IntSize(200, 150), SurfaceFormat::A8);
->>>>>>> upstream-releases
   SetupSurface(ySurface.get());
   SetupSurface(cbSurface.get());
   SetupSurface(crSurface.get());

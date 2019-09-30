@@ -8,18 +8,8 @@
 "use strict";
 
 add_task(async function() {
-<<<<<<< HEAD
-  const target  = await addTabTarget(MAIN_DOMAIN + "doc_allocations.html");
-  const front = await target.getFront("performance");
-  await front.connect();
-||||||| merged common ancestors
-  const target  = await addTabTarget(MAIN_DOMAIN + "doc_allocations.html");
-  const front = target.getFront("performance");
-  await front.connect();
-=======
   const target = await addTabTarget(MAIN_DOMAIN + "doc_allocations.html");
   const front = await target.getFront("performance");
->>>>>>> upstream-releases
 
   const rec = await front.startRecording({
     withMarkers: true,

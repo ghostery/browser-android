@@ -128,17 +128,8 @@ nsUUIDGenerator::GenerateUUIDInPlace(nsID* aId) {
     const size_t mRBytes = 4;
 #    else
     long rval = random();
-<<<<<<< HEAD
-#endif
-
-||||||| merged common ancestors
-#endif
-
-
-=======
 #    endif
 
->>>>>>> upstream-releases
     uint8_t* src = (uint8_t*)&rval;
     // We want to grab the mRBytes least significant bytes of rval, since
     // mRBytes less than sizeof(rval) means the high bytes are 0.

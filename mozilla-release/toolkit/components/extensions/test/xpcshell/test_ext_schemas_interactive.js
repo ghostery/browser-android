@@ -1,20 +1,10 @@
 "use strict";
 
-<<<<<<< HEAD
-const {ExtensionManager} = ChromeUtils.import("resource://gre/modules/ExtensionChild.jsm", {});
-
-||||||| merged common ancestors
-const {ExtensionManager} = ChromeUtils.import("resource://gre/modules/ExtensionChild.jsm", {});
-
-Cu.importGlobalProperties(["Blob", "URL"]);
-
-=======
 const { ExtensionManager } = ChromeUtils.import(
   "resource://gre/modules/ExtensionChild.jsm",
   null
 );
 
->>>>>>> upstream-releases
 let experimentAPIs = {
   userinputtest: {
     schema: "schema.json",

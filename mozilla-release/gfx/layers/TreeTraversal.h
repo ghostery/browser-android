@@ -183,20 +183,10 @@ auto ForEachNodePostOrder(Node aRoot, const PostAction& aPostAction) ->
  */
 template <typename Iterator, typename Node, typename PostAction>
 auto ForEachNodePostOrder(Node aRoot, const PostAction& aPostAction) ->
-<<<<<<< HEAD
-    typename EnableIf<IsSame<decltype(aPostAction(aRoot)), void>::value,
-                      void>::Type {
-  ForEachNode<Iterator>(aRoot, [](Node aNode) {}, aPostAction);
-||||||| merged common ancestors
-typename EnableIf<IsSame<decltype(aPostAction(aRoot)), void>::value, void>::Type
-{
-  ForEachNode<Iterator>(aRoot, [](Node aNode){}, aPostAction);
-=======
     typename EnableIf<IsSame<decltype(aPostAction(aRoot)), void>::value,
                       void>::Type {
   ForEachNode<Iterator>(
       aRoot, [](Node aNode) {}, aPostAction);
->>>>>>> upstream-releases
 }
 
 /*

@@ -73,21 +73,10 @@ static void gio_set_metadata_done(GObject* source_obj, GAsyncResult* res,
   GError* err = nullptr;
   g_file_set_attributes_finish(G_FILE(source_obj), res, nullptr, &err);
   if (err) {
-<<<<<<< HEAD
-#ifdef DEBUG
-    NS_DebugBreak(NS_DEBUG_WARNING, "Set file metadata failed: ", err->message,
-                  __FILE__, __LINE__);
-#endif
-||||||| merged common ancestors
-#ifdef DEBUG
-    NS_DebugBreak(NS_DEBUG_WARNING, "Set file metadata failed: ", err->message, __FILE__, __LINE__);
-#endif
-=======
 #  ifdef DEBUG
     NS_DebugBreak(NS_DEBUG_WARNING, "Set file metadata failed: ", err->message,
                   __FILE__, __LINE__);
 #  endif
->>>>>>> upstream-releases
     g_error_free(err);
   }
 }

@@ -55,19 +55,8 @@ class WebSocket final : public DOMEventTargetHelper {
   virtual void DisconnectFromOwner() override;
 
   // nsWrapperCache
-<<<<<<< HEAD
-  nsPIDOMWindowInner* GetParentObject() { return GetOwner(); }
-
   virtual JSObject* WrapObject(JSContext* cx,
                                JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  nsPIDOMWindowInner* GetParentObject() { return GetOwner(); }
-
-  virtual JSObject* WrapObject(JSContext* cx, JS::Handle<JSObject*> aGivenProto) override;
-=======
-  virtual JSObject* WrapObject(JSContext* cx,
-                               JS::Handle<JSObject*> aGivenProto) override;
->>>>>>> upstream-releases
 
   // DOMEventTargetHelper
   void BindToOwner(nsIGlobalObject* aNew) override;
@@ -141,27 +130,6 @@ class WebSocket final : public DOMEventTargetHelper {
   void SetBinaryType(dom::BinaryType aData);
 
   // webIDL: void send(DOMString|Blob|ArrayBufferView data);
-<<<<<<< HEAD
-  void Send(const nsAString& aData, ErrorResult& aRv);
-  void Send(Blob& aData, ErrorResult& aRv);
-  void Send(const ArrayBuffer& aData, ErrorResult& aRv);
-  void Send(const ArrayBufferView& aData, ErrorResult& aRv);
-
- private:  // constructor && destructor
-  explicit WebSocket(nsPIDOMWindowInner* aOwnerWindow);
-||||||| merged common ancestors
-  void Send(const nsAString& aData,
-            ErrorResult& aRv);
-  void Send(Blob& aData,
-            ErrorResult& aRv);
-  void Send(const ArrayBuffer& aData,
-            ErrorResult& aRv);
-  void Send(const ArrayBufferView& aData,
-            ErrorResult& aRv);
-
-private: // constructor && destructor
-  explicit WebSocket(nsPIDOMWindowInner* aOwnerWindow);
-=======
   void Send(const nsAString& aData, ErrorResult& aRv);
   void Send(Blob& aData, ErrorResult& aRv);
   void Send(const ArrayBuffer& aData, ErrorResult& aRv);
@@ -169,7 +137,6 @@ private: // constructor && destructor
 
  private:  // constructor && destructor
   explicit WebSocket(nsIGlobalObject* aGlobal);
->>>>>>> upstream-releases
   virtual ~WebSocket();
 
   void SetReadyState(uint16_t aReadyState);

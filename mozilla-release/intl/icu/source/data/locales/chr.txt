@@ -215,13 +215,7 @@ chr{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.2"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{
@@ -1766,11 +1760,6 @@ chr{
         }
         standard{
             2{"{0} ᎠᎴ {1}"}
-<<<<<<< HEAD
-            end{"{0}, ᎠᎴ {1}"}
-||||||| merged common ancestors
-            end{"{0} ᎠᎴ {1}"}
-=======
             end{"{0}, ᎠᎴ {1}"}
             middle{"{0}, {1}"}
             start{"{0}, {1}"}
@@ -1778,21 +1767,12 @@ chr{
         standard-narrow{
             2{"{0}, {1}"}
             end{"{0}, & {1}"}
->>>>>>> upstream-releases
             middle{"{0}, {1}"}
             start{"{0}, {1}"}
         }
         standard-short{
-<<<<<<< HEAD
-            2{"{0} ᎠᎴ {1}"}
-            end{"{0}, ᎠᎴ {1}"}
-||||||| merged common ancestors
-            2{"{0} ᎠᎴ {1}"}
-            end{"{0} ᎠᎴ {1}"}
-=======
             2{"{0} & {1}"}
             end{"{0}, & {1}"}
->>>>>>> upstream-releases
             middle{"{0}, {1}"}
             start{"{0}, {1}"}
         }
@@ -1820,41 +1800,6 @@ chr{
         US{"US"}
         metric{"ᎠᏂᎩᎸᏥ ᏂᏓᏳᏓᎴᏅᎯ ᏗᏎᏍᏗ"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -1883,5 +1828,4 @@ chr{
             }
         }
     }
->>>>>>> upstream-releases
 }

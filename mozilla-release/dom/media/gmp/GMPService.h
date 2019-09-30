@@ -17,14 +17,7 @@
 #include "nsCOMPtr.h"
 #include "nsIThread.h"
 #include "nsThreadUtils.h"
-<<<<<<< HEAD
-#include "nsIDocument.h"
-||||||| merged common ancestors
-#include "nsIDocument.h"
-#include "nsIWeakReference.h"
-=======
 #include "mozilla/dom/Document.h"
->>>>>>> upstream-releases
 #include "mozilla/AbstractThread.h"
 #include "nsClassHashtable.h"
 #include "nsISupportsImpl.h"

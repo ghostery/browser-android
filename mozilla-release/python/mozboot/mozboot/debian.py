@@ -5,11 +5,6 @@
 from __future__ import absolute_import, print_function
 
 from mozboot.base import BaseBootstrapper
-<<<<<<< HEAD
-from mozboot.linux_common import NodeInstall, StyloInstall, ClangStaticAnalysisInstall
-||||||| merged common ancestors
-from mozboot.linux_common import NodeInstall, StyloInstall
-=======
 from mozboot.linux_common import (
     ClangStaticAnalysisInstall,
     NasmInstall,
@@ -17,7 +12,6 @@ from mozboot.linux_common import (
     SccacheInstall,
     StyloInstall,
 )
->>>>>>> upstream-releases
 
 
 MERCURIAL_INSTALL_PROMPT = '''
@@ -37,23 +31,8 @@ How would you like to continue?
 Your choice: '''
 
 
-<<<<<<< HEAD
-Choice:
-'''.strip()
-
-
-class DebianBootstrapper(NodeInstall, StyloInstall, ClangStaticAnalysisInstall,
-                         BaseBootstrapper):
-||||||| merged common ancestors
-Choice:
-'''.strip()
-
-
-class DebianBootstrapper(NodeInstall, StyloInstall, BaseBootstrapper):
-=======
 class DebianBootstrapper(NasmInstall, NodeInstall, StyloInstall, ClangStaticAnalysisInstall,
                          SccacheInstall, BaseBootstrapper):
->>>>>>> upstream-releases
     # These are common packages for all Debian-derived distros (such as
     # Ubuntu).
     COMMON_PACKAGES = [
@@ -89,7 +68,6 @@ class DebianBootstrapper(NasmInstall, NodeInstall, StyloInstall, ClangStaticAnal
         'libpulse-dev',
         'libx11-xcb-dev',
         'libxt-dev',
-        'nasm',
         'python-dbus',
         'xvfb',
         'yasm',

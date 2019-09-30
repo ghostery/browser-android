@@ -10,19 +10,6 @@
 
 //! A drop-in replacement for string_cache, but backed by Gecko `nsAtom`s.
 
-<<<<<<< HEAD
-use crate::gecko_bindings::bindings::Gecko_AddRefAtom;
-use crate::gecko_bindings::bindings::Gecko_Atomize;
-use crate::gecko_bindings::bindings::Gecko_Atomize16;
-use crate::gecko_bindings::bindings::Gecko_ReleaseAtom;
-use crate::gecko_bindings::structs::{nsAtom, nsDynamicAtom, nsStaticAtom};
-||||||| merged common ancestors
-use gecko_bindings::bindings::Gecko_AddRefAtom;
-use gecko_bindings::bindings::Gecko_Atomize;
-use gecko_bindings::bindings::Gecko_Atomize16;
-use gecko_bindings::bindings::Gecko_ReleaseAtom;
-use gecko_bindings::structs::{nsAtom, nsAtom_AtomKind, nsDynamicAtom, nsStaticAtom};
-=======
 use crate::gecko_bindings::bindings::Gecko_AddRefAtom;
 use crate::gecko_bindings::bindings::Gecko_Atomize;
 use crate::gecko_bindings::bindings::Gecko_Atomize16;
@@ -31,7 +18,6 @@ use crate::gecko_bindings::structs::root::mozilla::detail::gGkAtoms;
 use crate::gecko_bindings::structs::root::mozilla::detail::kGkAtomsArrayOffset;
 use crate::gecko_bindings::structs::root::mozilla::detail::GkAtoms_Atoms_AtomsCount;
 use crate::gecko_bindings::structs::{nsAtom, nsDynamicAtom, nsStaticAtom};
->>>>>>> upstream-releases
 use nsstring::{nsAString, nsStr};
 use precomputed_hash::PrecomputedHash;
 use std::borrow::{Borrow, Cow};
@@ -41,12 +27,7 @@ use std::hash::{Hash, Hasher};
 use std::iter::Cloned;
 use std::mem::{self, ManuallyDrop};
 use std::ops::Deref;
-<<<<<<< HEAD
-use std::{mem, slice, str};
-||||||| merged common ancestors
-=======
 use std::{slice, str};
->>>>>>> upstream-releases
 use style_traits::SpecifiedValueInfo;
 use to_shmem::{SharedMemoryBuilder, ToShmem};
 

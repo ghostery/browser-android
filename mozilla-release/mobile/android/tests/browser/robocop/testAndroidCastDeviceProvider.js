@@ -8,20 +8,9 @@
 
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-||||||| merged common ancestors
-/* eslint-disable mozilla/use-chromeutils-import */
-
-Cu.import("resource://gre/modules/Messaging.jsm");
-Cu.import("resource://gre/modules/XPCOMUtils.jsm");
-
-const {ChromeUtils} = Cu.getGlobalForObject(XPCOMUtils);
-=======
 const { EventDispatcher } = ChromeUtils.import(
   "resource://gre/modules/Messaging.jsm"
 );
->>>>>>> upstream-releases
 
 // event name
 const TOPIC_ANDROID_CAST_DEVICE_ADDED = "AndroidCastDevice:Added";

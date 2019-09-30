@@ -254,16 +254,7 @@ RasterImage::GetIntrinsicSize(nsSize* aSize) {
 }
 
 //******************************************************************************
-<<<<<<< HEAD
-NS_IMETHODIMP
-RasterImage::GetIntrinsicRatio(nsSize* aRatio) {
-||||||| merged common ancestors
-NS_IMETHODIMP
-RasterImage::GetIntrinsicRatio(nsSize* aRatio)
-{
-=======
 Maybe<AspectRatio> RasterImage::GetIntrinsicRatio() {
->>>>>>> upstream-releases
   if (mError) {
     return Nothing();
   }
@@ -283,19 +274,6 @@ RasterImage::GetType(uint16_t* aType) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-LookupResult RasterImage::LookupFrameInternal(const IntSize& aSize,
-                                              uint32_t aFlags,
-                                              PlaybackType aPlaybackType,
-                                              bool aMarkUsed) {
-||||||| merged common ancestors
-LookupResult
-RasterImage::LookupFrameInternal(const IntSize& aSize,
-                                 uint32_t aFlags,
-                                 PlaybackType aPlaybackType,
-                                 bool aMarkUsed)
-{
-=======
 NS_IMETHODIMP
 RasterImage::GetProducerId(uint32_t* aId) {
   NS_ENSURE_ARG_POINTER(aId);
@@ -308,7 +286,6 @@ LookupResult RasterImage::LookupFrameInternal(const IntSize& aSize,
                                               uint32_t aFlags,
                                               PlaybackType aPlaybackType,
                                               bool aMarkUsed) {
->>>>>>> upstream-releases
   if (mAnimationState && aPlaybackType == PlaybackType::eAnimated) {
     MOZ_ASSERT(mFrameAnimator);
     MOZ_ASSERT(ToSurfaceFlags(aFlags) == DefaultSurfaceFlags(),
@@ -370,48 +347,23 @@ LookupResult RasterImage::LookupFrame(const IntSize& aSize, uint32_t aFlags,
     // one. (Or we're sync decoding and the existing decoder hasn't even started
     // yet.) Trigger decoding so it'll be available next time.
     MOZ_ASSERT(aPlaybackType != PlaybackType::eAnimated ||
-<<<<<<< HEAD
-                   gfxPrefs::ImageMemAnimatedDiscardable() ||
-                   !mAnimationState || mAnimationState->KnownFrameCount() < 1,
-||||||| merged common ancestors
-               gfxPrefs::ImageMemAnimatedDiscardable() ||
-               !mAnimationState || mAnimationState->KnownFrameCount() < 1,
-=======
                    StaticPrefs::image_mem_animated_discardable() ||
                    !mAnimationState || mAnimationState->KnownFrameCount() < 1,
->>>>>>> upstream-releases
                "Animated frames should be locked");
 
     // The surface cache may suggest the preferred size we are supposed to
     // decode at. This should only happen if we accept substitutions.
     if (!result.SuggestedSize().IsEmpty()) {
-<<<<<<< HEAD
-      MOZ_ASSERT(!(aFlags & FLAG_SYNC_DECODE) &&
-                 (aFlags & FLAG_HIGH_QUALITY_SCALING));
-||||||| merged common ancestors
-      MOZ_ASSERT(!(aFlags & FLAG_SYNC_DECODE) &&
-                  (aFlags & FLAG_HIGH_QUALITY_SCALING));
-=======
       MOZ_ASSERT(!syncDecode && (aFlags & FLAG_HIGH_QUALITY_SCALING));
->>>>>>> upstream-releases
       requestedSize = result.SuggestedSize();
     }
 
     bool ranSync = Decode(requestedSize, aFlags, aPlaybackType);
 
     // If we can or did sync decode, we should already have the frame.
-<<<<<<< HEAD
-    if (ranSync || (aFlags & FLAG_SYNC_DECODE)) {
-      result =
-          LookupFrameInternal(requestedSize, aFlags, aPlaybackType, aMarkUsed);
-||||||| merged common ancestors
-    if (ranSync || (aFlags & FLAG_SYNC_DECODE)) {
-      result = LookupFrameInternal(requestedSize, aFlags, aPlaybackType, aMarkUsed);
-=======
     if (ranSync || syncDecode) {
       result =
           LookupFrameInternal(requestedSize, aFlags, aPlaybackType, aMarkUsed);
->>>>>>> upstream-releases
     }
   }
 
@@ -1057,14 +1009,7 @@ RasterImage::Undefine(const char* prop) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-RasterImage::GetKeys(uint32_t* count, char*** keys) {
-||||||| merged common ancestors
-RasterImage::GetKeys(uint32_t* count, char*** keys)
-{
-=======
 RasterImage::GetKeys(nsTArray<nsCString>& keys) {
->>>>>>> upstream-releases
   if (!mProperties) {
     keys.Clear();
     return NS_OK;
@@ -1075,16 +1020,8 @@ RasterImage::GetKeys(nsTArray<nsCString>& keys) {
 void RasterImage::Discard() {
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(CanDiscard(), "Asked to discard but can't");
-<<<<<<< HEAD
-  MOZ_ASSERT(!mAnimationState || gfxPrefs::ImageMemAnimatedDiscardable(),
-             "Asked to discard for animated image");
-||||||| merged common ancestors
-  MOZ_ASSERT(!mAnimationState || gfxPrefs::ImageMemAnimatedDiscardable(),
-    "Asked to discard for animated image");
-=======
   MOZ_ASSERT(!mAnimationState || StaticPrefs::image_mem_animated_discardable(),
              "Asked to discard for animated image");
->>>>>>> upstream-releases
 
   // Delete all the decoded frames.
   SurfaceCache::RemoveImage(ImageKey(this));
@@ -1109,14 +1046,7 @@ bool RasterImage::CanDiscard() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-RasterImage::StartDecoding(uint32_t aFlags) {
-||||||| merged common ancestors
-RasterImage::StartDecoding(uint32_t aFlags)
-{
-=======
 RasterImage::StartDecoding(uint32_t aFlags, uint32_t aWhichFrame) {
->>>>>>> upstream-releases
   if (mError) {
     return NS_ERROR_FAILURE;
   }
@@ -1126,31 +1056,13 @@ RasterImage::StartDecoding(uint32_t aFlags, uint32_t aWhichFrame) {
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  uint32_t flags = (aFlags & FLAG_ASYNC_NOTIFY) | FLAG_SYNC_DECODE_IF_FAST |
-                   FLAG_HIGH_QUALITY_SCALING;
-  return RequestDecodeForSize(mSize, flags);
-||||||| merged common ancestors
-  uint32_t flags =
-    (aFlags & FLAG_ASYNC_NOTIFY) | FLAG_SYNC_DECODE_IF_FAST | FLAG_HIGH_QUALITY_SCALING;
-  return RequestDecodeForSize(mSize, flags);
-=======
   uint32_t flags = (aFlags & FLAG_ASYNC_NOTIFY) | FLAG_SYNC_DECODE_IF_FAST |
                    FLAG_HIGH_QUALITY_SCALING;
   return RequestDecodeForSize(mSize, flags, aWhichFrame);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool RasterImage::StartDecodingWithResult(uint32_t aFlags) {
-||||||| merged common ancestors
-bool
-RasterImage::StartDecodingWithResult(uint32_t aFlags)
-{
-=======
 bool RasterImage::StartDecodingWithResult(uint32_t aFlags,
                                           uint32_t aWhichFrame) {
->>>>>>> upstream-releases
   if (mError) {
     return false;
   }
@@ -1160,15 +1072,6 @@ bool RasterImage::StartDecodingWithResult(uint32_t aFlags,
     return false;
   }
 
-<<<<<<< HEAD
-  uint32_t flags = (aFlags & FLAG_ASYNC_NOTIFY) | FLAG_SYNC_DECODE_IF_FAST |
-                   FLAG_HIGH_QUALITY_SCALING;
-  DrawableSurface surface = RequestDecodeForSizeInternal(mSize, flags);
-||||||| merged common ancestors
-  uint32_t flags =
-    (aFlags & FLAG_ASYNC_NOTIFY) | FLAG_SYNC_DECODE_IF_FAST | FLAG_HIGH_QUALITY_SCALING;
-  DrawableSurface surface = RequestDecodeForSizeInternal(mSize, flags);
-=======
   uint32_t flags = (aFlags & FLAG_ASYNC_NOTIFY) | FLAG_SYNC_DECODE_IF_FAST |
                    FLAG_HIGH_QUALITY_SCALING;
   DrawableSurface surface =
@@ -1187,20 +1090,12 @@ bool RasterImage::RequestDecodeWithResult(uint32_t aFlags,
   uint32_t flags = aFlags | FLAG_ASYNC_NOTIFY;
   DrawableSurface surface =
       RequestDecodeForSizeInternal(mSize, flags, aWhichFrame);
->>>>>>> upstream-releases
   return surface && surface->IsFinished();
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-RasterImage::RequestDecodeForSize(const IntSize& aSize, uint32_t aFlags) {
-||||||| merged common ancestors
-RasterImage::RequestDecodeForSize(const IntSize& aSize, uint32_t aFlags)
-{
-=======
 RasterImage::RequestDecodeForSize(const IntSize& aSize, uint32_t aFlags,
                                   uint32_t aWhichFrame) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (mError) {
@@ -1212,17 +1107,8 @@ RasterImage::RequestDecodeForSize(const IntSize& aSize, uint32_t aFlags,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-DrawableSurface RasterImage::RequestDecodeForSizeInternal(const IntSize& aSize,
-                                                          uint32_t aFlags) {
-||||||| merged common ancestors
-DrawableSurface
-RasterImage::RequestDecodeForSizeInternal(const IntSize& aSize, uint32_t aFlags)
-{
-=======
 DrawableSurface RasterImage::RequestDecodeForSizeInternal(
     const IntSize& aSize, uint32_t aFlags, uint32_t aWhichFrame) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (aWhichFrame > FRAME_MAX_VALUE) {
@@ -1248,19 +1134,8 @@ DrawableSurface RasterImage::RequestDecodeForSizeInternal(
       shouldSyncDecodeIfFast ? aFlags : aFlags & ~FLAG_SYNC_DECODE_IF_FAST;
 
   // Perform a frame lookup, which will implicitly start decoding if needed.
-<<<<<<< HEAD
-  PlaybackType playbackType =
-      mAnimationState ? PlaybackType::eAnimated : PlaybackType::eStatic;
-  LookupResult result =
-      LookupFrame(aSize, flags, playbackType, /* aMarkUsed = */ false);
-||||||| merged common ancestors
-  PlaybackType playbackType = mAnimationState ? PlaybackType::eAnimated
-                                              : PlaybackType::eStatic;
-  LookupResult result = LookupFrame(aSize, flags, playbackType, /* aMarkUsed = */ false);
-=======
   LookupResult result = LookupFrame(aSize, flags, ToPlaybackType(aWhichFrame),
                                     /* aMarkUsed = */ false);
->>>>>>> upstream-releases
   return std::move(result.Surface());
 }
 
@@ -1674,17 +1549,8 @@ void RasterImage::DoError() {
           ("RasterImage: [this=%p] Error detected for image\n", this));
 }
 
-<<<<<<< HEAD
-/* static */ void RasterImage::HandleErrorWorker::DispatchIfNeeded(
-    RasterImage* aImage) {
-||||||| merged common ancestors
-/* static */ void
-RasterImage::HandleErrorWorker::DispatchIfNeeded(RasterImage* aImage)
-{
-=======
 /* static */
 void RasterImage::HandleErrorWorker::DispatchIfNeeded(RasterImage* aImage) {
->>>>>>> upstream-releases
   RefPtr<HandleErrorWorker> worker = new HandleErrorWorker(aImage);
   NS_DispatchToMainThread(worker);
 }
@@ -1837,16 +1703,9 @@ void RasterImage::NotifyDecodeComplete(
     // If we were a metadata decode and a full decode was requested, do it.
     if (mWantFullDecode) {
       mWantFullDecode = false;
-<<<<<<< HEAD
-      RequestDecodeForSize(mSize,
-                           DECODE_FLAGS_DEFAULT | FLAG_HIGH_QUALITY_SCALING);
-||||||| merged common ancestors
-      RequestDecodeForSize(mSize, DECODE_FLAGS_DEFAULT | FLAG_HIGH_QUALITY_SCALING);
-=======
       RequestDecodeForSize(mSize,
                            DECODE_FLAGS_DEFAULT | FLAG_HIGH_QUALITY_SCALING,
                            FRAME_CURRENT);
->>>>>>> upstream-releases
     }
   }
 }
@@ -1880,15 +1739,7 @@ already_AddRefed<imgIContainer> RasterImage::Unwrap() {
   return self.forget();
 }
 
-<<<<<<< HEAD
-void RasterImage::PropagateUseCounters(nsIDocument*) {
-||||||| merged common ancestors
-void
-RasterImage::PropagateUseCounters(nsIDocument*)
-{
-=======
 void RasterImage::PropagateUseCounters(dom::Document*) {
->>>>>>> upstream-releases
   // No use counters.
 }
 

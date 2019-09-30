@@ -96,13 +96,7 @@ add_task(async function() {
     "Toolbar shouldn't be known to customize mode."
   );
 
-<<<<<<< HEAD
-  CustomizableUI.registerArea(TOOLBARID, {defaultPlacements: []});
-||||||| merged common ancestors
-  CustomizableUI.registerArea(TOOLBARID, {legacy: true, defaultPlacements: []});
-=======
   CustomizableUI.registerArea(TOOLBARID, { defaultPlacements: [] });
->>>>>>> upstream-releases
   CustomizableUI.registerToolbarNode(toolbar, []);
   ok(
     !CustomizableUI.inDefaultState,
@@ -143,18 +137,11 @@ add_task(async function() {
   };
   CustomizableUI.addListener(listener);
   otherWin.gNavToolbox.appendChild(otherTB);
-<<<<<<< HEAD
-  CustomizableUI.registerToolbarNode(otherTB);
-  ok(wasInformedCorrectlyOfAreaAppearing, "Should have been told area was registered.");
-||||||| merged common ancestors
-  ok(wasInformedCorrectlyOfAreaAppearing, "Should have been told area was registered.");
-=======
   CustomizableUI.registerToolbarNode(otherTB);
   ok(
     wasInformedCorrectlyOfAreaAppearing,
     "Should have been told area was registered."
   );
->>>>>>> upstream-releases
   CustomizableUI.removeListener(listener);
 
   ok(

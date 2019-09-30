@@ -5,13 +5,6 @@
  * found in the LICENSE file.
  */
 
-<<<<<<< HEAD
-#include "SkFont.h"
-
-#include "SkTo.h"
-||||||| merged common ancestors
-#include "SkFont.h"
-=======
 #include "SkDraw.h"
 #include "SkFontPriv.h"
 #include "SkPaint.h"
@@ -22,16 +15,9 @@
 #include "SkStrikeCache.h"
 #include "SkTo.h"
 #include "SkTLazy.h"
->>>>>>> upstream-releases
 #include "SkTypeface.h"
-<<<<<<< HEAD
-#include "SkUTF.h"
-||||||| merged common ancestors
-#include "SkUtils.h"
-=======
 #include "SkUTF.h"
 #include "SkUtils.h"
->>>>>>> upstream-releases
 
 #define kDefault_Size       SkPaintDefaults_TextSize
 #define kDefault_Flags      0
@@ -192,46 +178,8 @@ int SkFont::textToGlyphs(const void* text, size_t byteLength, SkTextEncoding enc
 
     SkASSERT(text);
 
-<<<<<<< HEAD
-    int count = 0;  // fix uninitialized warning (even though the switch is complete!)
-
-    switch (encoding) {
-        case kUTF8_SkTextEncoding:
-            count = SkUTF::CountUTF8((const char*)text, byteLength);
-            break;
-        case kUTF16_SkTextEncoding:
-            count = SkUTF::CountUTF16((const uint16_t*)text, byteLength);
-            break;
-        case kUTF32_SkTextEncoding:
-            count = SkToInt(byteLength >> 2);
-            break;
-        case kGlyphID_SkTextEncoding:
-            count = SkToInt(byteLength >> 1);
-            break;
-    }
-    if (!glyphs) {
-||||||| merged common ancestors
-    int count = 0;  // fix uninitialized warning (even though the switch is complete!)
-
-    switch (encoding) {
-        case kUTF8_SkTextEncoding:
-            count = SkUTF8_CountUnichars((const char*)text, byteLength);
-            break;
-        case kUTF16_SkTextEncoding:
-            count = SkUTF16_CountUnichars((const uint16_t*)text, byteLength);
-            break;
-        case kUTF32_SkTextEncoding:
-            count = SkToInt(byteLength >> 2);
-            break;
-        case kGlyphID_SkTextEncoding:
-            count = SkToInt(byteLength >> 1);
-            break;
-    }
-    if (!glyphs) {
-=======
     int count = SkFontPriv::CountTextElements(text, byteLength, encoding);
     if (!glyphs || count > maxGlyphCount) {
->>>>>>> upstream-releases
         return count;
     }
 
@@ -564,22 +512,11 @@ void SkFontPriv::Flatten(const SkFont& font, SkWriteBuffer& buffer) {
     if (font.fScaleX != 1) {
         packed |= kHas_ScaleX_Bit;
     }
-<<<<<<< HEAD
-    if (paint.isFakeBoldText()) {
-        flags |= kEmbolden_Flag;
-||||||| merged common ancestors
-    if (paint.getFlags() & SkPaint::kGenA8FromLCD_Flag) {
-        flags |= kGenA8FromLCD_Flag;
-    }
-    if (paint.isFakeBoldText()) {
-        flags |= kEmbolden_Flag;
-=======
     if (font.fSkewX != 0) {
         packed |= kHas_SkewX_Bit;
     }
     if (font.fTypeface) {
         packed |= kHas_Typeface_Bit;
->>>>>>> upstream-releases
     }
 
     buffer.write32(packed);

@@ -627,18 +627,8 @@ toolbarbutton[constrain-size="true"][cui-areatype="menu-panel"] > .toolbarbutton
   -moz-box-flex: 1;
 }
 
-<<<<<<< HEAD
-#appMenu-tp-category {
-  color: var(--panel-disabled-color);
-  margin-inline-end: 0;
-||||||| merged common ancestors
-#appMenu-tp-toggle[enabled=true]:hover,
-#appMenu-tp-toggle[enabled=true]:-moz-focusring {
-  background-color: #45a1ff;
-=======
 #appMenu-tp-category {
   margin-inline-end: 0;
->>>>>>> upstream-releases
 }
 
 .addon-banner-item > .toolbarbutton-text,
@@ -970,13 +960,7 @@ panelmultiview[mainViewId="PanelUI-fxa"] #PanelUI-remotetabs-syncnow {
 
 :root[lwt-popup-brighttext] .panel-banner-item:not([disabled]) {
   background-color: rgba(48,230,11,.1);
-<<<<<<< HEAD
-  color: #F9F9FA !important;
-||||||| merged common ancestors
-  color: #F9F9FA;
-=======
   color: @appmenuWarningColorBrightText@ !important;
->>>>>>> upstream-releases
 }
 
 :root[lwt-popup-brighttext] .panel-banner-item:not([disabled]):focus,

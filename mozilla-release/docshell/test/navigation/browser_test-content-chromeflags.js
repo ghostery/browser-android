@@ -10,45 +10,14 @@ add_task(async function() {
   // Make sure that the window.open call will open a new
   // window instead of a new tab.
   await new Promise(resolve => {
-<<<<<<< HEAD
-    SpecialPowers.pushPrefEnv({
-      "set": [
-        ["browser.link.open_newwindow", 2],
-      ],
-    }, resolve);
-||||||| merged common ancestors
-    SpecialPowers.pushPrefEnv({
-      "set": [
-        ["browser.link.open_newwindow", 2],
-      ]
-    }, resolve);
-=======
     SpecialPowers.pushPrefEnv(
       {
         set: [["browser.link.open_newwindow", 2]],
       },
       resolve
     );
->>>>>>> upstream-releases
   });
 
-<<<<<<< HEAD
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: TEST_PAGE,
-  }, async function(browser) {
-    let openedPromise = BrowserTestUtils.waitForNewWindow();
-    BrowserTestUtils.synthesizeMouse("a", 0, 0, {}, browser);
-    let win = await openedPromise;
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: TEST_PAGE
-  }, async function(browser) {
-    let openedPromise = BrowserTestUtils.waitForNewWindow();
-    BrowserTestUtils.synthesizeMouse("a", 0, 0, {}, browser);
-    let win = await openedPromise;
-=======
   await BrowserTestUtils.withNewTab(
     {
       gBrowser,
@@ -58,7 +27,6 @@ add_task(async function() {
       let openedPromise = BrowserTestUtils.waitForNewWindow();
       BrowserTestUtils.synthesizeMouse("a", 0, 0, {}, browser);
       let win = await openedPromise;
->>>>>>> upstream-releases
 
       let chromeFlags = win.docShell.treeOwner
         .QueryInterface(Ci.nsIInterfaceRequestor)

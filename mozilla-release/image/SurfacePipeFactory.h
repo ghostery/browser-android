@@ -59,18 +59,6 @@ enum class SurfacePipeFlags {
                                  // result in a better user experience for
                                  // progressive display but which may be more
                                  // computationally expensive.
-<<<<<<< HEAD
-
-  BLEND_ANIMATION = 1 << 4  // If set, produce the next full frame of an
-                            // animation instead of a partial frame to be
-                            // blended later.
-||||||| merged common ancestors
-
-  BLEND_ANIMATION     = 1 << 4   // If set, produce the next full frame of an
-                                 // animation instead of a partial frame to be
-                                 // blended later.
-=======
->>>>>>> upstream-releases
 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(SurfacePipeFlags)
 
@@ -97,50 +85,21 @@ class SurfacePipeFactory {
    *         successfully, or Nothing() if the SurfacePipe could not be
    *         initialized.
    */
-<<<<<<< HEAD
-  static Maybe<SurfacePipe> CreateSurfacePipe(
-      Decoder* aDecoder, const nsIntSize& aInputSize,
-      const nsIntSize& aOutputSize, const nsIntRect& aFrameRect,
-      gfx::SurfaceFormat aFormat, const Maybe<AnimationParams>& aAnimParams,
-      SurfacePipeFlags aFlags) {
-||||||| merged common ancestors
-  static Maybe<SurfacePipe>
-  CreateSurfacePipe(Decoder* aDecoder,
-                    const nsIntSize& aInputSize,
-                    const nsIntSize& aOutputSize,
-                    const nsIntRect& aFrameRect,
-                    gfx::SurfaceFormat aFormat,
-                    const Maybe<AnimationParams>& aAnimParams,
-                    SurfacePipeFlags aFlags)
-  {
-=======
   static Maybe<SurfacePipe> CreateSurfacePipe(
       Decoder* aDecoder, const nsIntSize& aInputSize,
       const nsIntSize& aOutputSize, const nsIntRect& aFrameRect,
       gfx::SurfaceFormat aFormat, const Maybe<AnimationParams>& aAnimParams,
       qcms_transform* aTransform, SurfacePipeFlags aFlags) {
->>>>>>> upstream-releases
     const bool deinterlace = bool(aFlags & SurfacePipeFlags::DEINTERLACE);
     const bool flipVertically =
         bool(aFlags & SurfacePipeFlags::FLIP_VERTICALLY);
     const bool progressiveDisplay =
         bool(aFlags & SurfacePipeFlags::PROGRESSIVE_DISPLAY);
     const bool downscale = aInputSize != aOutputSize;
-<<<<<<< HEAD
-    const bool removeFrameRect = !aFrameRect.IsEqualEdges(
-        nsIntRect(0, 0, aInputSize.width, aInputSize.height));
-    const bool blendAnimation =
-        bool(aFlags & SurfacePipeFlags::BLEND_ANIMATION);
-||||||| merged common ancestors
-    const bool removeFrameRect =
-      !aFrameRect.IsEqualEdges(nsIntRect(0, 0, aInputSize.width, aInputSize.height));
-    const bool blendAnimation = bool(aFlags & SurfacePipeFlags::BLEND_ANIMATION);
-=======
     const bool removeFrameRect = !aFrameRect.IsEqualEdges(
         nsIntRect(0, 0, aInputSize.width, aInputSize.height));
     const bool blendAnimation = aAnimParams.isSome();
     const bool colorManagement = aTransform != nullptr;
->>>>>>> upstream-releases
 
     // Don't interpolate if we're sure we won't show this surface to the user
     // until it's completely decoded. The final pass of an ADAM7 image doesn't
@@ -163,55 +122,15 @@ class SurfacePipeFactory {
     // account.
     DeinterlacingConfig<uint32_t> deinterlacingConfig{progressiveDisplay};
     ADAM7InterpolatingConfig interpolatingConfig;
-<<<<<<< HEAD
-    RemoveFrameRectConfig removeFrameRectConfig{aFrameRect};
-    BlendAnimationConfig blendAnimationConfig{aDecoder};
-    DownscalingConfig downscalingConfig{aInputSize, aFormat};
-    SurfaceConfig surfaceConfig{aDecoder, aOutputSize, aFormat, flipVertically,
-                                aAnimParams};
-||||||| merged common ancestors
-    RemoveFrameRectConfig removeFrameRectConfig { aFrameRect };
-    BlendAnimationConfig blendAnimationConfig { aDecoder };
-    DownscalingConfig downscalingConfig { aInputSize, aFormat };
-    SurfaceConfig surfaceConfig { aDecoder, aOutputSize, aFormat,
-                                  flipVertically, aAnimParams };
-=======
     RemoveFrameRectConfig removeFrameRectConfig{aFrameRect};
     BlendAnimationConfig blendAnimationConfig{aDecoder};
     DownscalingConfig downscalingConfig{aInputSize, aFormat};
     ColorManagementConfig colorManagementConfig{aTransform};
     SurfaceConfig surfaceConfig{aDecoder, aOutputSize, aFormat, flipVertically,
                                 aAnimParams};
->>>>>>> upstream-releases
 
     Maybe<SurfacePipe> pipe;
 
-<<<<<<< HEAD
-    if (downscale) {
-      MOZ_ASSERT(!blendAnimation);
-      if (removeFrameRect) {
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, removeFrameRectConfig,
-                          downscalingConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, removeFrameRectConfig,
-                          downscalingConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe =
-              MakePipe(removeFrameRectConfig, downscalingConfig, surfaceConfig);
-||||||| merged common ancestors
-    if (downscale) {
-      MOZ_ASSERT(!blendAnimation);
-      if (removeFrameRect) {
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, removeFrameRectConfig,
-                          downscalingConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, removeFrameRectConfig,
-                          downscalingConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(removeFrameRectConfig, downscalingConfig, surfaceConfig);
-=======
     if (colorManagement) {
       if (downscale) {
         MOZ_ASSERT(!blendAnimation);
@@ -239,27 +158,7 @@ class SurfacePipeFactory {
             pipe = MakePipe(downscalingConfig, colorManagementConfig,
                             surfaceConfig);
           }
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      } else {  // (removeFrameRect is false)
-        if (deinterlace) {
-          pipe =
-              MakePipe(deinterlacingConfig, downscalingConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe =
-              MakePipe(interpolatingConfig, downscalingConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(downscalingConfig, surfaceConfig);
-||||||| merged common ancestors
-      } else {  // (removeFrameRect is false)
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, downscalingConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, downscalingConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(downscalingConfig, surfaceConfig);
-=======
       } else {  // (downscale is false)
         if (blendAnimation) {
           if (deinterlace) {
@@ -293,30 +192,8 @@ class SurfacePipeFactory {
           } else {  // (deinterlace and adam7Interpolate are false)
             pipe = MakePipe(colorManagementConfig, surfaceConfig);
           }
->>>>>>> upstream-releases
         }
       }
-<<<<<<< HEAD
-    } else {  // (downscale is false)
-      if (blendAnimation) {
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, blendAnimationConfig,
-                          surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, blendAnimationConfig,
-                          surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(blendAnimationConfig, surfaceConfig);
-||||||| merged common ancestors
-    } else {  // (downscale is false)
-      if (blendAnimation) {
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, blendAnimationConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, blendAnimationConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(blendAnimationConfig, surfaceConfig);
-=======
     } else {  // (colorManagement is false)
       if (downscale) {
         MOZ_ASSERT(!blendAnimation);
@@ -341,43 +218,7 @@ class SurfacePipeFactory {
           } else {  // (deinterlace and adam7Interpolate are false)
             pipe = MakePipe(downscalingConfig, surfaceConfig);
           }
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      } else if (removeFrameRect) {
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, removeFrameRectConfig,
-                          surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, removeFrameRectConfig,
-                          surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(removeFrameRectConfig, surfaceConfig);
-        }
-      } else {  // (blendAnimation and removeFrameRect is false)
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(surfaceConfig);
-||||||| merged common ancestors
-      } else if (removeFrameRect) {
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, removeFrameRectConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, removeFrameRectConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(removeFrameRectConfig, surfaceConfig);
-        }
-      } else {  // (blendAnimation and removeFrameRect is false)
-        if (deinterlace) {
-          pipe = MakePipe(deinterlacingConfig, surfaceConfig);
-        } else if (adam7Interpolate) {
-          pipe = MakePipe(interpolatingConfig, surfaceConfig);
-        } else {  // (deinterlace and adam7Interpolate are false)
-          pipe = MakePipe(surfaceConfig);
-=======
       } else {  // (downscale is false)
         if (blendAnimation) {
           if (deinterlace) {
@@ -407,7 +248,6 @@ class SurfacePipeFactory {
           } else {  // (deinterlace and adam7Interpolate are false)
             pipe = MakePipe(surfaceConfig);
           }
->>>>>>> upstream-releases
         }
       }
     }
@@ -415,115 +255,7 @@ class SurfacePipeFactory {
     return pipe;
   }
 
-<<<<<<< HEAD
-  /**
-   * Creates and initializes a paletted SurfacePipe.
-   *
-   * XXX(seth): We'll remove all support for paletted surfaces in bug 1247520,
-   * which means we can remove CreatePalettedSurfacePipe() entirely.
-   *
-   * @param aDecoder The decoder whose current frame the SurfacePipe will write
-   *                 to.
-   * @param aInputSize The original size of the image.
-   * @param aFrameRect The portion of the image that actually contains data.
-   * @param aFormat The surface format of the image; generally B8G8R8A8 or
-   *                B8G8R8X8.
-   * @param aPaletteDepth The palette depth of the image.
-   * @param aAnimParams Extra parameters used by animated images.
-   * @param aFlags Flags enabling or disabling various functionality for the
-   *               SurfacePipe; see the SurfacePipeFlags documentation for more
-   *               information.
-   *
-   * @return A SurfacePipe if the parameters allowed one to be created
-   *         successfully, or Nothing() if the SurfacePipe could not be
-   *         initialized.
-   */
-  static Maybe<SurfacePipe> CreatePalettedSurfacePipe(
-      Decoder* aDecoder, const nsIntSize& aInputSize,
-      const nsIntRect& aFrameRect, gfx::SurfaceFormat aFormat,
-      uint8_t aPaletteDepth, const Maybe<AnimationParams>& aAnimParams,
-      SurfacePipeFlags aFlags) {
-    const bool deinterlace = bool(aFlags & SurfacePipeFlags::DEINTERLACE);
-    const bool flipVertically =
-        bool(aFlags & SurfacePipeFlags::FLIP_VERTICALLY);
-    const bool progressiveDisplay =
-        bool(aFlags & SurfacePipeFlags::PROGRESSIVE_DISPLAY);
-
-    // Construct configurations for the SurfaceFilters.
-    DeinterlacingConfig<uint8_t> deinterlacingConfig{progressiveDisplay};
-    PalettedSurfaceConfig palettedSurfaceConfig{
-        aDecoder,      aInputSize,     aFrameRect, aFormat,
-        aPaletteDepth, flipVertically, aAnimParams};
-
-    Maybe<SurfacePipe> pipe;
-
-    if (deinterlace) {
-      pipe = MakePipe(deinterlacingConfig, palettedSurfaceConfig);
-    } else {
-      pipe = MakePipe(palettedSurfaceConfig);
-    }
-
-    return pipe;
-  }
-
  private:
-||||||| merged common ancestors
-  /**
-   * Creates and initializes a paletted SurfacePipe.
-   *
-   * XXX(seth): We'll remove all support for paletted surfaces in bug 1247520,
-   * which means we can remove CreatePalettedSurfacePipe() entirely.
-   *
-   * @param aDecoder The decoder whose current frame the SurfacePipe will write
-   *                 to.
-   * @param aInputSize The original size of the image.
-   * @param aFrameRect The portion of the image that actually contains data.
-   * @param aFormat The surface format of the image; generally B8G8R8A8 or
-   *                B8G8R8X8.
-   * @param aPaletteDepth The palette depth of the image.
-   * @param aAnimParams Extra parameters used by animated images.
-   * @param aFlags Flags enabling or disabling various functionality for the
-   *               SurfacePipe; see the SurfacePipeFlags documentation for more
-   *               information.
-   *
-   * @return A SurfacePipe if the parameters allowed one to be created
-   *         successfully, or Nothing() if the SurfacePipe could not be
-   *         initialized.
-   */
-  static Maybe<SurfacePipe>
-  CreatePalettedSurfacePipe(Decoder* aDecoder,
-                            const nsIntSize& aInputSize,
-                            const nsIntRect& aFrameRect,
-                            gfx::SurfaceFormat aFormat,
-                            uint8_t aPaletteDepth,
-                            const Maybe<AnimationParams>& aAnimParams,
-                            SurfacePipeFlags aFlags)
-  {
-    const bool deinterlace = bool(aFlags & SurfacePipeFlags::DEINTERLACE);
-    const bool flipVertically = bool(aFlags & SurfacePipeFlags::FLIP_VERTICALLY);
-    const bool progressiveDisplay = bool(aFlags & SurfacePipeFlags::PROGRESSIVE_DISPLAY);
-
-    // Construct configurations for the SurfaceFilters.
-    DeinterlacingConfig<uint8_t> deinterlacingConfig { progressiveDisplay };
-    PalettedSurfaceConfig palettedSurfaceConfig { aDecoder, aInputSize, aFrameRect,
-                                                  aFormat, aPaletteDepth,
-                                                  flipVertically, aAnimParams };
-
-    Maybe<SurfacePipe> pipe;
-
-    if (deinterlace) {
-      pipe = MakePipe(deinterlacingConfig, palettedSurfaceConfig);
-    } else {
-      pipe = MakePipe(palettedSurfaceConfig);
-    }
-
-    return pipe;
-  }
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   template <typename... Configs>
   static Maybe<SurfacePipe> MakePipe(const Configs&... aConfigs) {
     auto pipe = MakeUnique<typename detail::FilterPipeline<Configs...>::Type>();

@@ -6,13 +6,8 @@
 #ifndef GFX_VR_PROCESS_MANAGER_H
 #define GFX_VR_PROCESS_MANAGER_H
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 #include "VRProcessParent.h"
 
->>>>>>> upstream-releases
 namespace mozilla {
 class MemoryReportingProcess;
 namespace gfx {
@@ -23,17 +18,8 @@ class VRChild;
 
 // The VRProcessManager is a singleton responsible for creating VR-bound
 // objects that may live in another process.
-<<<<<<< HEAD
-class VRProcessManager final {
- public:
-||||||| merged common ancestors
-class VRProcessManager final
-{
-public:
-=======
 class VRProcessManager final : public VRProcessParent::Listener {
  public:
->>>>>>> upstream-releases
   static VRProcessManager* Get();
   static void Initialize();
   static void Shutdown();
@@ -56,16 +42,10 @@ class VRProcessManager final : public VRProcessParent::Listener {
   // Otherwise, return null.
   RefPtr<MemoryReportingProcess> GetProcessMemoryReporter();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   virtual void OnProcessLaunchComplete(VRProcessParent* aParent) override;
   virtual void OnProcessUnexpectedShutdown(VRProcessParent* aParent) override;
 
  private:
->>>>>>> upstream-releases
   VRProcessManager();
 
   DISALLOW_COPY_AND_ASSIGN(VRProcessManager);

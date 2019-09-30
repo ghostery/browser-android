@@ -166,14 +166,6 @@ class LogModule {
 class LazyLogModule final {
  public:
   explicit constexpr LazyLogModule(const char* aLogName)
-<<<<<<< HEAD
-      : mLogName(aLogName), mLog(nullptr) {}
-||||||| merged common ancestors
-    : mLogName(aLogName)
-    , mLog(nullptr)
-  {
-  }
-=======
       : mLogName(aLogName), mLog(nullptr) {}
 
   MOZ_NEVER_INLINE_DEBUG operator LogModule*() {
@@ -189,19 +181,8 @@ class LazyLogModule final {
 
     return tmp;
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  operator LogModule*();
 
  private:
-||||||| merged common ancestors
-  operator LogModule*();
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   const char* const mLogName;
 
   // As for LogModule::mLevel, don't preserve behavior for this atomic when
@@ -228,14 +209,8 @@ void log_print(const LogModule* aModule, LogLevel aLevel, const char* aFmt, ...)
 #define MOZ_LOG_EXPAND_ARGS(...) __VA_ARGS__
 
 #if MOZ_LOGGING_ENABLED
-<<<<<<< HEAD
-#define MOZ_LOG_TEST(_module, _level) mozilla::detail::log_test(_module, _level)
-||||||| merged common ancestors
-#define MOZ_LOG_TEST(_module,_level) mozilla::detail::log_test(_module, _level)
-=======
 #  define MOZ_LOG_TEST(_module, _level) \
     MOZ_UNLIKELY(mozilla::detail::log_test(_module, _level))
->>>>>>> upstream-releases
 #else
 // Define away MOZ_LOG_TEST here so the compiler will fold away entire
 // logging blocks via dead code elimination, e.g.:
@@ -243,13 +218,7 @@ void log_print(const LogModule* aModule, LogLevel aLevel, const char* aFmt, ...)
 //   if (MOZ_LOG_TEST(...)) {
 //     ...compute things to log and log them...
 //   }
-<<<<<<< HEAD
-#define MOZ_LOG_TEST(_module, _level) false
-||||||| merged common ancestors
-#define MOZ_LOG_TEST(_module,_level) false
-=======
 #  define MOZ_LOG_TEST(_module, _level) false
->>>>>>> upstream-releases
 #endif
 
 // The natural definition of the MOZ_LOG macro would expand to:
@@ -290,24 +259,6 @@ void log_print(const LogModule* aModule, LogLevel aLevel, const char* aFmt, ...)
 // variables only used during logging code are actually used, even if the
 // code will never be executed.)  Hence, the following code.
 #if MOZ_LOGGING_ENABLED
-<<<<<<< HEAD
-#define MOZ_LOG(_module, _level, _args)                      \
-  do {                                                       \
-    const ::mozilla::LogModule* moz_real_module = _module;   \
-    if (MOZ_LOG_TEST(moz_real_module, _level)) {             \
-      mozilla::detail::log_print(moz_real_module, _level,    \
-                                 MOZ_LOG_EXPAND_ARGS _args); \
-    }                                                        \
-  } while (0)
-||||||| merged common ancestors
-#define MOZ_LOG(_module,_level,_args)                                         \
-  do {                                                                        \
-    const ::mozilla::LogModule* moz_real_module = _module;                    \
-    if (MOZ_LOG_TEST(moz_real_module,_level)) {                               \
-      mozilla::detail::log_print(moz_real_module, _level, MOZ_LOG_EXPAND_ARGS _args); \
-    }                                                                         \
-  } while (0)
-=======
 #  define MOZ_LOG(_module, _level, _args)                      \
     do {                                                       \
       const ::mozilla::LogModule* moz_real_module = _module;   \
@@ -316,23 +267,7 @@ void log_print(const LogModule* aModule, LogLevel aLevel, const char* aFmt, ...)
                                    MOZ_LOG_EXPAND_ARGS _args); \
       }                                                        \
     } while (0)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define MOZ_LOG(_module, _level, _args)                                       \
-  do {                                                                        \
-    if (MOZ_LOG_TEST(_module, _level)) {                                      \
-      mozilla::detail::log_print(_module, _level, MOZ_LOG_EXPAND_ARGS _args); \
-    }                                                                         \
-  } while (0)
-||||||| merged common ancestors
-#define MOZ_LOG(_module,_level,_args)                                         \
-  do {                                                                        \
-    if (MOZ_LOG_TEST(_module,_level)) {                        \
-      mozilla::detail::log_print(_module, _level, MOZ_LOG_EXPAND_ARGS _args); \
-    }                                                                         \
-  } while (0)
-=======
 #  define MOZ_LOG(_module, _level, _args)                      \
     do {                                                       \
       if (MOZ_LOG_TEST(_module, _level)) {                     \
@@ -340,7 +275,6 @@ void log_print(const LogModule* aModule, LogLevel aLevel, const char* aFmt, ...)
                                    MOZ_LOG_EXPAND_ARGS _args); \
       }                                                        \
     } while (0)
->>>>>>> upstream-releases
 #endif
 
 // This #define is a Logging.h-only knob!  Don't encourage people to get fancy

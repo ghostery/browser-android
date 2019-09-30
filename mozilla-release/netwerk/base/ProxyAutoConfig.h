@@ -31,29 +31,6 @@ class ProxyAutoConfig {
   ProxyAutoConfig();
   ~ProxyAutoConfig();
 
-<<<<<<< HEAD
-  nsresult Init(const nsCString &aPACURI, const nsCString &aPACScript,
-                bool aIncludePath, uint32_t aExtraHeapSize,
-                nsIEventTarget *aEventTarget);
-  void SetThreadLocalIndex(uint32_t index);
-  void Shutdown();
-  void GC();
-  bool MyIPAddress(const JS::CallArgs &aArgs);
-  bool ResolveAddress(const nsCString &aHostName, NetAddr *aNetAddr,
-                      unsigned int aTimeout);
-||||||| merged common ancestors
-  nsresult Init(const nsCString &aPACURI,
-                const nsCString &aPACScript,
-                bool aIncludePath,
-                uint32_t aExtraHeapSize,
-                nsIEventTarget *aEventTarget);
-  void     SetThreadLocalIndex(uint32_t index);
-  void     Shutdown();
-  void     GC();
-  bool     MyIPAddress(const JS::CallArgs &aArgs);
-  bool     ResolveAddress(const nsCString &aHostName,
-                          NetAddr *aNetAddr, unsigned int aTimeout);
-=======
   nsresult Init(const nsCString& aPACURI, const nsCString& aPACScriptData,
                 bool aIncludePath, uint32_t aExtraHeapSize,
                 nsIEventTarget* aEventTarget);
@@ -63,7 +40,6 @@ class ProxyAutoConfig {
   bool MyIPAddress(const JS::CallArgs& aArgs);
   bool ResolveAddress(const nsCString& aHostName, NetAddr* aNetAddr,
                       unsigned int aTimeout);
->>>>>>> upstream-releases
 
   /**
    * Get the proxy string for the specified URI.  The proxy string is
@@ -99,17 +75,8 @@ class ProxyAutoConfig {
    * @param result
    *        result string as defined above.
    */
-<<<<<<< HEAD
-  nsresult GetProxyForURI(const nsCString &aTestURI, const nsCString &aTestHost,
-                          nsACString &result);
-||||||| merged common ancestors
-  nsresult GetProxyForURI(const nsCString &aTestURI,
-                          const nsCString &aTestHost,
-                          nsACString &result);
-=======
   nsresult GetProxyForURI(const nsCString& aTestURI, const nsCString& aTestHost,
                           nsACString& result);
->>>>>>> upstream-releases
 
  private:
   // allow 665ms for myipaddress dns queries. That's 95th percentile.
@@ -118,39 +85,10 @@ class ProxyAutoConfig {
   // used to compile the PAC file and setup the execution context
   nsresult SetupJS();
 
-<<<<<<< HEAD
-  bool SrcAddress(const NetAddr *remoteAddress, nsCString &localAddress);
-  bool MyIPAddressTryHost(const nsCString &hostName, unsigned int timeout,
-                          const JS::CallArgs &aArgs, bool *aResult);
-||||||| merged common ancestors
-  bool SrcAddress(const NetAddr *remoteAddress, nsCString &localAddress);
-  bool MyIPAddressTryHost(const nsCString &hostName, unsigned int timeout,
-                          const JS::CallArgs &aArgs, bool* aResult);
-=======
   bool SrcAddress(const NetAddr* remoteAddress, nsCString& localAddress);
   bool MyIPAddressTryHost(const nsCString& hostName, unsigned int timeout,
                           const JS::CallArgs& aArgs, bool* aResult);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  JSContextWrapper *mJSContext;
-  bool mJSNeedsSetup;
-  bool mShutdown;
-  nsCString mPACScript;
-  nsCString mPACURI;
-  bool mIncludePath;
-  uint32_t mExtraHeapSize;
-  nsCString mRunningHost;
-||||||| merged common ancestors
-  JSContextWrapper *mJSContext;
-  bool              mJSNeedsSetup;
-  bool              mShutdown;
-  nsCString         mPACScript;
-  nsCString         mPACURI;
-  bool              mIncludePath;
-  uint32_t          mExtraHeapSize;
-  nsCString         mRunningHost;
-=======
   JSContextWrapper* mJSContext;
   bool mJSNeedsSetup;
   bool mShutdown;
@@ -159,7 +97,6 @@ class ProxyAutoConfig {
   bool mIncludePath;
   uint32_t mExtraHeapSize;
   nsCString mRunningHost;
->>>>>>> upstream-releases
   nsCOMPtr<nsITimer> mTimer;
   nsCOMPtr<nsIEventTarget> mMainThreadEventTarget;
 };

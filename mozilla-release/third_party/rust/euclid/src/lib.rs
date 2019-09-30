@@ -60,16 +60,10 @@
 #[macro_use]
 extern crate serde;
 
-<<<<<<< HEAD
-#[cfg(feature = "mint")]
-pub extern crate mint;
-||||||| merged common ancestors
-=======
 #[cfg(feature = "mint")]
 pub extern crate mint;
 #[macro_use]
 extern crate euclid_macros;
->>>>>>> upstream-releases
 extern crate num_traits;
 #[cfg(test)]
 extern crate rand;

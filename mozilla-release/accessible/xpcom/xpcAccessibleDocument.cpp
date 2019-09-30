@@ -76,14 +76,7 @@ xpcAccessibleDocument::GetDocType(nsAString& aType) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-xpcAccessibleDocument::GetDOMDocument(nsIDocument** aDOMDocument) {
-||||||| merged common ancestors
-xpcAccessibleDocument::GetDOMDocument(nsIDocument** aDOMDocument)
-{
-=======
 xpcAccessibleDocument::GetDOMDocument(dom::Document** aDOMDocument) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aDOMDocument);
   *aDOMDocument = nullptr;
 

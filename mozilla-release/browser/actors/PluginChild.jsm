@@ -153,17 +153,6 @@ class PluginChild extends ActorChild {
   }
 
   getPluginUI(plugin, anonid) {
-<<<<<<< HEAD
-    if (plugin.openOrClosedShadowRoot &&
-        plugin.openOrClosedShadowRoot.isUAWidget()) {
-      return plugin.openOrClosedShadowRoot.getElementById(anonid);
-    }
-    return plugin.ownerDocument.
-      getAnonymousElementByAttribute(plugin, "anonid", anonid);
-||||||| merged common ancestors
-    return plugin.ownerDocument.
-           getAnonymousElementByAttribute(plugin, "anonid", anonid);
-=======
     if (
       plugin.openOrClosedShadowRoot &&
       plugin.openOrClosedShadowRoot.isUAWidget()
@@ -171,7 +160,6 @@ class PluginChild extends ActorChild {
       return plugin.openOrClosedShadowRoot.getElementById(anonid);
     }
     return null;
->>>>>>> upstream-releases
   }
 
   _getPluginInfo(pluginElement) {
@@ -821,20 +809,6 @@ class PluginChild extends ActorChild {
     let plugin = document.getBindingParent(event.target);
     let overlay = this.getPluginUI(plugin, "main");
     // Have to check that the target is not the link to update the plugin
-<<<<<<< HEAD
-    if (!(ChromeUtils.getClassName(event.originalTarget) === "HTMLAnchorElement") &&
-        event.originalTarget.getAttribute("anonid") != "closeIcon" &&
-        event.originalTarget.id != "closeIcon" &&
-        !overlay.hasAttribute("dismissed") &&
-        event.button == 0 &&
-        event.isTrusted) {
-||||||| merged common ancestors
-    if (!(ChromeUtils.getClassName(event.originalTarget) === "HTMLAnchorElement") &&
-        (event.originalTarget.getAttribute("anonid") != "closeIcon") &&
-        !overlay.hasAttribute("dismissed") &&
-        event.button == 0 &&
-        event.isTrusted) {
-=======
     if (
       !(
         ChromeUtils.getClassName(event.originalTarget) === "HTMLAnchorElement"
@@ -845,7 +819,6 @@ class PluginChild extends ActorChild {
       event.button == 0 &&
       event.isTrusted
     ) {
->>>>>>> upstream-releases
       this._showClickToPlayNotification(plugin, true);
       event.stopPropagation();
       event.preventDefault();

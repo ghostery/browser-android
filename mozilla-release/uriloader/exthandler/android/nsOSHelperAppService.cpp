@@ -7,13 +7,6 @@
 #include "nsMIMEInfoAndroid.h"
 #include "AndroidBridge.h"
 
-<<<<<<< HEAD
-nsOSHelperAppService::nsOSHelperAppService() : nsExternalHelperAppService() {}
-||||||| merged common ancestors
-nsOSHelperAppService::nsOSHelperAppService() : nsExternalHelperAppService()
-{
-}
-=======
 nsOSHelperAppService::nsOSHelperAppService() : nsExternalHelperAppService() {}
 
 nsOSHelperAppService::~nsOSHelperAppService() {}
@@ -38,41 +31,6 @@ nsresult nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aMIMEType,
   mimeInfo.forget(aMIMEInfo);
   return NS_OK;
 }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-nsOSHelperAppService::~nsOSHelperAppService() {}
-||||||| merged common ancestors
-nsOSHelperAppService::~nsOSHelperAppService()
-{
-}
-=======
-nsresult nsOSHelperAppService::OSProtocolHandlerExists(const char* aScheme,
-                                                       bool* aExists) {
-  *aExists = mozilla::AndroidBridge::Bridge()->GetHandlersForURL(
-      NS_ConvertUTF8toUTF16(aScheme));
-  return NS_OK;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-already_AddRefed<nsIMIMEInfo> nsOSHelperAppService::GetMIMEInfoFromOS(
-    const nsACString& aMIMEType, const nsACString& aFileExt, bool* aFound) {
-  RefPtr<nsMIMEInfoAndroid> mimeInfo;
-  *aFound = false;
-  if (!aMIMEType.IsEmpty())
-    *aFound = nsMIMEInfoAndroid::GetMimeInfoForMimeType(
-        aMIMEType, getter_AddRefs(mimeInfo));
-  if (!*aFound)
-    *aFound = nsMIMEInfoAndroid::GetMimeInfoForFileExt(
-        aFileExt, getter_AddRefs(mimeInfo));
-
-  // Code that calls this requires an object regardless if the OS has
-  // something for us, so we return the empty object.
-  if (!*aFound) mimeInfo = new nsMIMEInfoAndroid(aMIMEType);
-
-  return mimeInfo.forget();
-}
 
 nsresult nsOSHelperAppService::OSProtocolHandlerExists(const char* aScheme,
                                                        bool* aExists) {
@@ -84,49 +42,6 @@ nsresult nsOSHelperAppService::OSProtocolHandlerExists(const char* aScheme,
 nsresult nsOSHelperAppService::GetProtocolHandlerInfoFromOS(
     const nsACString& aScheme, bool* found, nsIHandlerInfo** info) {
   return nsMIMEInfoAndroid::GetMimeInfoForURL(aScheme, found, info);
-||||||| merged common ancestors
-already_AddRefed<nsIMIMEInfo>
-nsOSHelperAppService::GetMIMEInfoFromOS(const nsACString& aMIMEType,
-                                        const nsACString& aFileExt,
-                                        bool* aFound)
-{
-    RefPtr<nsMIMEInfoAndroid> mimeInfo;
-    *aFound = false;
-    if (!aMIMEType.IsEmpty())
-        *aFound = 
-            nsMIMEInfoAndroid::GetMimeInfoForMimeType(aMIMEType, 
-                                                      getter_AddRefs(mimeInfo));
-    if (!*aFound)
-        *aFound =
-            nsMIMEInfoAndroid::GetMimeInfoForFileExt(aFileExt, 
-                                                     getter_AddRefs(mimeInfo));
-
-    // Code that calls this requires an object regardless if the OS has
-    // something for us, so we return the empty object.
-    if (!*aFound)
-        mimeInfo = new nsMIMEInfoAndroid(aMIMEType);
-
-    return mimeInfo.forget();
-}
-
-nsresult
-nsOSHelperAppService::OSProtocolHandlerExists(const char* aScheme,
-                                              bool* aExists)
-{
-    *aExists = mozilla::AndroidBridge::Bridge()->GetHandlersForURL(NS_ConvertUTF8toUTF16(aScheme));    
-    return NS_OK;
-}
-
-nsresult nsOSHelperAppService::GetProtocolHandlerInfoFromOS(const nsACString &aScheme,
-                                      bool *found,
-                                      nsIHandlerInfo **info)
-{
-    return nsMIMEInfoAndroid::GetMimeInfoForURL(aScheme, found, info);
-=======
-nsresult nsOSHelperAppService::GetProtocolHandlerInfoFromOS(
-    const nsACString& aScheme, bool* found, nsIHandlerInfo** info) {
-  return nsMIMEInfoAndroid::GetMimeInfoForURL(aScheme, found, info);
->>>>>>> upstream-releases
 }
 
 nsIHandlerApp* nsOSHelperAppService::CreateAndroidHandlerApp(

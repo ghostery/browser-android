@@ -40,22 +40,11 @@ namespace net {
 
 namespace {
 
-<<<<<<< HEAD
-void AppendMemoryStorageID(nsAutoCString& key) {
-  key.Append('/');
-  key.Append('M');
-||||||| merged common ancestors
-void AppendMemoryStorageID(nsAutoCString &key)
-{
-  key.Append('/');
-  key.Append('M');
-=======
 void AppendMemoryStorageTag(nsAutoCString& key) {
   // Using DEL as the very last ascii-7 character we can use in the list of
   // attributes
   key.Append('\x7f');
   key.Append(',');
->>>>>>> upstream-releases
 }
 
 }  // namespace
@@ -67,18 +56,9 @@ typedef nsClassHashtable<nsCStringHashKey, CacheEntryTable> GlobalEntryTables;
 
 /**
  * Keeps tables of entries.  There is one entries table for each distinct load
-<<<<<<< HEAD
- * context type.  The distinction is based on following load context info
- * states: <isPrivate|isAnon|appId|inIsolatedMozBrowser> which builds a mapping
- * key.
-||||||| merged common ancestors
- * context type.  The distinction is based on following load context info states:
- * <isPrivate|isAnon|appId|inIsolatedMozBrowser> which builds a mapping key.
-=======
  * context type.  The distinction is based on following load context info
  * states: <isPrivate|isAnon|inIsolatedMozBrowser> which builds a mapping
  * key.
->>>>>>> upstream-releases
  *
  * Thread-safe to access, protected by the service mutex.
  */
@@ -104,29 +84,10 @@ CacheStorageService::MemoryPool::~MemoryPool() {
   }
 }
 
-<<<<<<< HEAD
-uint32_t CacheStorageService::MemoryPool::Limit() const {
-||||||| merged common ancestors
-uint32_t
-CacheStorageService::MemoryPool::Limit() const
-{
-=======
 uint32_t CacheStorageService::MemoryPool::Limit() const {
   uint32_t limit = 0;
 
->>>>>>> upstream-releases
   switch (mType) {
-<<<<<<< HEAD
-    case DISK:
-      return CacheObserver::MetadataMemoryLimit();
-    case MEMORY:
-      return CacheObserver::MemoryCacheCapacity();
-||||||| merged common ancestors
-  case DISK:
-    return CacheObserver::MetadataMemoryLimit();
-  case MEMORY:
-    return CacheObserver::MemoryCacheCapacity();
-=======
     case DISK:
       limit = CacheObserver::MetadataMemoryLimit();
       break;
@@ -135,7 +96,6 @@ uint32_t CacheStorageService::MemoryPool::Limit() const {
       break;
     default:
       MOZ_CRASH("Bad pool type");
->>>>>>> upstream-releases
   }
 
   static const uint32_t kMaxLimit = 0x3FFFFF;
@@ -316,21 +276,9 @@ class WalkMemoryCacheRunnable : public WalkCacheRunnable {
         capacity <<= 10;  // kilobytes to bytes
 
         // Second, notify overall storage info
-<<<<<<< HEAD
-        mCallback->OnCacheStorageInfo(mEntryArray.Length(), mSize,
-                                      CacheObserver::MemoryCacheCapacity(),
-                                      nullptr);
-        if (!mVisitEntries) return NS_OK;  // done
-||||||| merged common ancestors
-        mCallback->OnCacheStorageInfo(mEntryArray.Length(), mSize,
-                                      CacheObserver::MemoryCacheCapacity(), nullptr);
-        if (!mVisitEntries)
-          return NS_OK; // done
-=======
         mCallback->OnCacheStorageInfo(mEntryArray.Length(), mSize, capacity,
                                       nullptr);
         if (!mVisitEntries) return NS_OK;  // done
->>>>>>> upstream-releases
 
         mNotifyStorage = false;
 
@@ -526,16 +474,9 @@ class WalkDiskCacheRunnable : public WalkCacheRunnable {
       if (mNotifyStorage) {
         nsCOMPtr<nsIFile> dir;
         CacheFileIOManager::GetCacheDirectory(getter_AddRefs(dir));
-<<<<<<< HEAD
-        mCallback->OnCacheStorageInfo(mCount, mSize,
-                                      CacheObserver::DiskCacheCapacity(), dir);
-||||||| merged common ancestors
-        mCallback->OnCacheStorageInfo(mCount, mSize, CacheObserver::DiskCacheCapacity(), dir);
-=======
         uint64_t capacity = CacheObserver::DiskCacheCapacity();
         capacity <<= 10;  // kilobytes to bytes
         mCallback->OnCacheStorageInfo(mCount, mSize, capacity, dir);
->>>>>>> upstream-releases
         mNotifyStorage = false;
       } else {
         mCallback->OnCacheEntryVisitCompleted();

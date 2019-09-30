@@ -9,17 +9,7 @@
 #include "nsIParserUtils.h"
 #include "mozilla/Attributes.h"
 
-<<<<<<< HEAD
-class nsParserUtils final : public nsIScriptableUnescapeHTML,
-                            public nsIParserUtils {
-||||||| merged common ancestors
-class nsParserUtils final
-  : public nsIScriptableUnescapeHTML
-  , public nsIParserUtils
-{
-=======
 class nsParserUtils final : public nsIParserUtils {
->>>>>>> upstream-releases
   ~nsParserUtils() {}
 
  public:

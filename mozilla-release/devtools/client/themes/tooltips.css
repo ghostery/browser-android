@@ -528,16 +528,6 @@ strong {
 
 .event-tooltip-debugger-icon {
   -moz-context-properties: stroke;
-<<<<<<< HEAD
-  stroke: currentColor;
-  background: url(resource://devtools/client/shared/components/reps/images/jump-definition.svg);
-}
-
-.theme-dark .event-tooltip-debugger-icon {
-  filter: invert(70%);
-||||||| merged common ancestors
-   stroke: currentColor;
-=======
   stroke: var(--theme-icon-color);
   background-image: url("resource://devtools/client/shared/components/reps/images/jump-definition.svg");
   background-repeat: no-repeat;
@@ -548,7 +538,6 @@ strong {
   margin-inline-end: 4px;
   flex-shrink: 0;
   cursor: pointer;
->>>>>>> upstream-releases
 }
 
 .event-tooltip-debugger-icon:hover {

@@ -27,17 +27,8 @@ class RtpSourceObserver : public webrtc::RtpPacketObserver {
 
   virtual ~RtpSourceObserver(){};
 
-<<<<<<< HEAD
-  void OnRtpPacket(const webrtc::WebRtcRTPHeader* aRtpHeader,
-                   const int64_t aTimestamp, const uint32_t aJitter) override;
-||||||| merged common ancestors
-  void OnRtpPacket(const webrtc::WebRtcRTPHeader* aRtpHeader,
-                   const int64_t aTimestamp,
-                   const uint32_t aJitter) override;
-=======
   void OnRtpPacket(const webrtc::RTPHeader& aRtpHeader,
                    const int64_t aTimestamp, const uint32_t aJitter) override;
->>>>>>> upstream-releases
 
   /* Get the local time in MS from the same clock source that is used
    * to generate the capture timestamps. Use for computing the age of

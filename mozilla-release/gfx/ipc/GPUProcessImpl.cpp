@@ -63,13 +63,6 @@ bool GPUProcessImpl::Init(int aArgc, char* aArgv[]) {
     }
   }
 
-<<<<<<< HEAD
-  return mGPU.Init(ParentPid(), parentBuildID, IOThreadChild::message_loop(),
-||||||| merged common ancestors
-  return mGPU.Init(ParentPid(),
-                   parentBuildID,
-                   IOThreadChild::message_loop(),
-=======
   SharedPreferenceDeserializer deserializer;
   if (!deserializer.DeserializeFromSharedMemory(prefsHandle, prefMapHandle,
                                                 prefsLen, prefMapSize)) {
@@ -77,7 +70,6 @@ bool GPUProcessImpl::Init(int aArgc, char* aArgv[]) {
   }
 
   return mGPU.Init(ParentPid(), parentBuildID, IOThreadChild::message_loop(),
->>>>>>> upstream-releases
                    IOThreadChild::channel());
 }
 

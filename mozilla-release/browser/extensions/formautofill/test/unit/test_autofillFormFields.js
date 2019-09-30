@@ -5,32 +5,19 @@
 
 "use strict";
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-let MasterPassword;
-=======
 const { setTimeout, clearTimeout } = ChromeUtils.import(
   "resource://gre/modules/Timer.jsm",
   {}
 );
 
 var FormAutofillHandler, OSKeyStore;
->>>>>>> upstream-releases
 add_task(async function setup() {
-<<<<<<< HEAD
-  ChromeUtils.import("resource://formautofill/FormAutofillHandler.jsm");
-  ChromeUtils.import("resource://formautofill/OSKeyStore.jsm");
-||||||| merged common ancestors
-  ChromeUtils.import("resource://formautofill/FormAutofillHandler.jsm");
-  ({MasterPassword} = ChromeUtils.import("resource://formautofill/MasterPassword.jsm", {}));
-=======
   ({ FormAutofillHandler } = ChromeUtils.import(
     "resource://formautofill/FormAutofillHandler.jsm"
   ));
   ({ OSKeyStore } = ChromeUtils.import(
     "resource://formautofill/OSKeyStore.jsm"
   ));
->>>>>>> upstream-releases
 });
 
 const TESTCASES = [
@@ -505,15 +492,9 @@ function do_test(testcases, testFn) {
         info("Starting testcase: " + testcase.description);
         let ccNumber = testcase.profileData["cc-number"];
         if (ccNumber) {
-<<<<<<< HEAD
-          testcase.profileData["cc-number-encrypted"] = await OSKeyStore.encrypt(ccNumber);
-||||||| merged common ancestors
-          testcase.profileData["cc-number-encrypted"] = await MasterPassword.encrypt(ccNumber);
-=======
           testcase.profileData[
             "cc-number-encrypted"
           ] = await OSKeyStore.encrypt(ccNumber);
->>>>>>> upstream-releases
           delete testcase.profileData["cc-number"];
         }
 

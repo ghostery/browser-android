@@ -4,16 +4,8 @@
 
 //! Computed types for CSS borders.
 
-<<<<<<< HEAD
-use crate::values::computed::length::LengthOrNumber;
-use crate::values::generics::rect::Rect;
-||||||| merged common ancestors
-use values::computed::length::LengthOrNumber;
-use values::generics::rect::Rect;
-=======
 use crate::values::computed::length::NonNegativeLengthOrNumber;
 use crate::values::generics::rect::Rect;
->>>>>>> upstream-releases
 
 /// A specified rectangle made of four `<length-or-number>` values.
 pub type NonNegativeLengthOrNumberRect = Rect<NonNegativeLengthOrNumber>;

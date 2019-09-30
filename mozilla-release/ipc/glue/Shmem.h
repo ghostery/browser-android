@@ -216,18 +216,9 @@ template <>
 struct IPDLParamTraits<Shmem> {
   typedef Shmem paramType;
 
-<<<<<<< HEAD
-  static void Write(IPC::Message* aMsg, IProtocol* aActor, paramType& aParam);
-  static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,
-                   IProtocol* aActor, paramType* aResult);
-||||||| merged common ancestors
-  static void Write(IPC::Message* aMsg, IProtocol* aActor, paramType& aParam);
-  static bool Read(const IPC::Message* aMsg, PickleIterator* aIter, IProtocol* aActor, paramType* aResult);
-=======
   static void Write(IPC::Message* aMsg, IProtocol* aActor, paramType&& aParam);
   static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,
                    IProtocol* aActor, paramType* aResult);
->>>>>>> upstream-releases
 
   static void Log(const paramType& aParam, std::wstring* aLog) {
     aLog->append(L"(shmem segment)");

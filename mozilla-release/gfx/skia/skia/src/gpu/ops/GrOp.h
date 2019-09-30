@@ -30,21 +30,6 @@ class GrRenderTargetOpList;
  * subclasses complete freedom to decide how/when to combine in order to produce fewer draw calls
  * and minimize state changes.
  *
-<<<<<<< HEAD
- * Ops of the same subclass may be merged or chained using combineIfPossible. When two ops merge,
- * one takes on the union of the data and the other is left empty. The merged op becomes responsible
- * for drawing the data from both the original ops. When ops are chained each op maintains its own
- * data but they are linked in a list and the head op becomes responsible for executing the work for
- * the chain.
-||||||| merged common ancestors
- * Ops of the same subclass may be merged using combineIfPossible. When two ops merge, one
- * takes on the union of the data and the other is left empty. The merged op becomes responsible
- * for drawing the data from both the original ops.
- *
- * If there are any possible optimizations which might require knowing more about the full state of
- * the draw, e.g. whether or not the GrOp is allowed to tweak alpha for coverage, then this
- * information will be communicated to the GrOp prior to geometry generation.
-=======
  * Ops of the same subclass may be merged or chained using combineIfPossible. When two ops merge,
  * one takes on the union of the data and the other is left empty. The merged op becomes responsible
  * for drawing the data from both the original ops. When ops are chained each op maintains its own
@@ -54,7 +39,6 @@ class GrRenderTargetOpList;
  * It is required that chainability is transitive. Moreover, if op A is able to merge with B then
  * it must be the case that any op that can chain with A will either merge or chain with any op
  * that can chain to B.
->>>>>>> upstream-releases
  *
  * The bounds of the op must contain all the vertices in device space *irrespective* of the clip.
  * The bounds are used in determining which clip elements must be applied and thus the bounds cannot
@@ -81,14 +65,7 @@ class GrRenderTargetOpList;
 
 class GrOp : private SkNoncopyable {
 public:
-<<<<<<< HEAD
-    virtual ~GrOp();
-||||||| merged common ancestors
-    GrOp(uint32_t classID);
-    virtual ~GrOp();
-=======
     virtual ~GrOp() = default;
->>>>>>> upstream-releases
 
     virtual const char* name() const = 0;
 
@@ -199,19 +176,10 @@ public:
     void prepare(GrOpFlushState* state) { this->onPrepare(state); }
 
     /** Issues the op's commands to GrGpu. */
-<<<<<<< HEAD
-    void execute(GrOpFlushState* state) {
-        TRACE_EVENT0("skia", name());
-        this->onExecute(state);
-    }
-||||||| merged common ancestors
-    void execute(GrOpFlushState* state) { this->onExecute(state); }
-=======
     void execute(GrOpFlushState* state, const SkRect& chainBounds) {
         TRACE_EVENT0("skia", name());
         this->onExecute(state, chainBounds);
     }
->>>>>>> upstream-releases
 
     /** Used for spewing information about ops when debugging. */
 #ifdef SK_DEBUG
@@ -278,45 +246,6 @@ public:
     virtual void validate() const {}
 #endif
 
-    /**
-     * A helper for iterating over an op chain in a range for loop that also downcasts to a GrOp
-     * subclass. E.g.:
-     *     for (MyOpSubClass& op : ChainRange<MyOpSubClass>(this)) {
-     *         // ...
-     *     }
-     */
-    template <typename OpSubclass> class ChainRange {
-    private:
-        class Iter {
-        public:
-            explicit Iter(const GrOp* head) : fCurr(head) {}
-            inline Iter& operator++() { return *this = Iter(fCurr->nextInChain()); }
-            const OpSubclass& operator*() const { return fCurr->cast<OpSubclass>(); }
-            bool operator!=(const Iter& that) const { return fCurr != that.fCurr; }
-
-        private:
-            const GrOp* fCurr;
-        };
-        const GrOp* fHead;
-
-    public:
-        explicit ChainRange(const GrOp* head) : fHead(head) {}
-        Iter begin() { return Iter(fHead); }
-        Iter end() { return Iter(nullptr); }
-    };
-
-    void setNextInChain(GrOp*);
-    /** Returns true if this is the head of a chain (including a length 1 chain). */
-    bool isChainHead() const { return !fChainHead || (fChainHead == this); }
-    /** Gets the head op of the chain. */
-    const GrOp* chainHead() const { return fChainHead ? fChainHead : this; }
-    /** Returns true if this is the tail of a chain (including a length 1 chain). */
-    bool isChainTail() const { return !fNextInChain; }
-    /** Returns true if this is part of chain with length > 1. */
-    bool isChained() const { return SkToBool(fChainHead); }
-    /** The next op in the chain. */
-    const GrOp* nextInChain() const { return fNextInChain; }
-
 protected:
     GrOp(uint32_t classID);
 
@@ -369,22 +298,6 @@ private:
         return CombineResult::kCannotCombine;
     }
 
-<<<<<<< HEAD
-    static uint32_t GenOpClassID() { return GenID(&gCurrOpClassID); }
-
-private:
-    virtual CombineResult onCombineIfPossible(GrOp*, const GrCaps&) {
-        return CombineResult::kCannotCombine;
-    }
-
-||||||| merged common ancestors
-    static uint32_t GenOpClassID() { return GenID(&gCurrOpClassID); }
-
-private:
-    virtual bool onCombineIfPossible(GrOp*, const GrCaps& caps) = 0;
-
-=======
->>>>>>> upstream-releases
     virtual void onPrepare(GrOpFlushState*) = 0;
     // If this op is chained then chainBounds is the union of the bounds of all ops in the chain.
     // Otherwise, this op's bounds.
@@ -415,14 +328,8 @@ private:
         SkDEBUGCODE(kUninitialized_BoundsFlag   = 0x4)
     };
 
-<<<<<<< HEAD
-    GrOp*                               fNextInChain = nullptr;
-    GrOp*                               fChainHead = nullptr;    // null if this is not in a chain.
-||||||| merged common ancestors
-=======
     std::unique_ptr<GrOp>               fNextInChain;
     GrOp*                               fPrevInChain = nullptr;
->>>>>>> upstream-releases
     const uint16_t                      fClassID;
     uint16_t                            fBoundsFlags;
 

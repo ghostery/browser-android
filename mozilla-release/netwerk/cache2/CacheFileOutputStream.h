@@ -26,19 +26,9 @@ class CacheFileOutputStream : public nsIAsyncOutputStream,
   NS_DECL_NSISEEKABLESTREAM
   NS_DECL_NSITELLABLESTREAM
 
-<<<<<<< HEAD
- public:
-  CacheFileOutputStream(CacheFile *aFile,
-                        CacheOutputCloseListener *aCloseListener,
-||||||| merged common ancestors
-public:
-  CacheFileOutputStream(CacheFile *aFile,
-                        CacheOutputCloseListener *aCloseListener,
-=======
  public:
   CacheFileOutputStream(CacheFile* aFile,
                         CacheOutputCloseListener* aCloseListener,
->>>>>>> upstream-releases
                         bool aAlternativeData);
 
   NS_IMETHOD OnChunkRead(nsresult aResult, CacheFileChunk* aChunk) override;

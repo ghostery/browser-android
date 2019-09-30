@@ -52,20 +52,8 @@ class TextTrackCueList final : public nsISupports, public nsWrapperCache {
 
   void SetCuesInactive();
 
-<<<<<<< HEAD
-  already_AddRefed<TextTrackCueList> GetCueListByTimeInterval(
-      media::Interval<double>& aInterval);
   void NotifyCueUpdated(TextTrackCue* aCue);
   bool IsCueExist(TextTrackCue* aCue);
-||||||| merged common ancestors
-  already_AddRefed<TextTrackCueList>
-  GetCueListByTimeInterval(media::Interval<double>& aInterval);
-  void NotifyCueUpdated(TextTrackCue *aCue);
-  bool IsCueExist(TextTrackCue *aCue);
-=======
-  void NotifyCueUpdated(TextTrackCue* aCue);
-  bool IsCueExist(TextTrackCue* aCue);
->>>>>>> upstream-releases
   nsTArray<RefPtr<TextTrackCue>>& GetCuesArray();
 
  private:

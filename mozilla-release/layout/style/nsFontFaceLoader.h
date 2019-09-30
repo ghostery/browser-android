@@ -23,21 +23,10 @@
 
 class nsIPrincipal;
 
-<<<<<<< HEAD
-class nsFontFaceLoader final : public nsIStreamLoaderObserver,
-                               public nsIRequestObserver {
- public:
-||||||| merged common ancestors
-class nsFontFaceLoader final : public nsIStreamLoaderObserver
-                             , public nsIRequestObserver
-{
-public:
-=======
 class nsFontFaceLoader final : public nsIStreamLoaderObserver,
                                public nsIRequestObserver,
                                public nsIFontLoadCompleteCallback {
  public:
->>>>>>> upstream-releases
   nsFontFaceLoader(gfxUserFontEntry* aFontToLoad, nsIURI* aFontURI,
                    mozilla::dom::FontFaceSet* aFontFaceSet,
                    nsIChannel* aChannel);
@@ -59,41 +48,16 @@ class nsFontFaceLoader final : public nsIStreamLoaderObserver,
 
   gfxUserFontEntry* GetUserFontEntry() const { return mUserFontEntry; }
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   // Called by the gfxUserFontEntry once it has finished the platform font
   // loading.
   NS_IMETHODIMP FontLoadComplete() final;
 
  protected:
->>>>>>> upstream-releases
   virtual ~nsFontFaceLoader();
 
   // helper method for determining the font-display value
   mozilla::StyleFontDisplay GetFontDisplay();
 
-<<<<<<< HEAD
- private:
-  RefPtr<gfxUserFontEntry> mUserFontEntry;
-  nsCOMPtr<nsIURI> mFontURI;
-  RefPtr<mozilla::dom::FontFaceSet> mFontFaceSet;
-  nsCOMPtr<nsIChannel> mChannel;
-  nsCOMPtr<nsITimer> mLoadTimer;
-  mozilla::TimeStamp mStartTime;
-  nsIStreamLoader* mStreamLoader;
-||||||| merged common ancestors
-private:
-  RefPtr<gfxUserFontEntry>  mUserFontEntry;
-  nsCOMPtr<nsIURI>        mFontURI;
-  RefPtr<mozilla::dom::FontFaceSet> mFontFaceSet;
-  nsCOMPtr<nsIChannel>    mChannel;
-  nsCOMPtr<nsITimer>      mLoadTimer;
-  mozilla::TimeStamp      mStartTime;
-  nsIStreamLoader*        mStreamLoader;
-=======
  private:
   RefPtr<gfxUserFontEntry> mUserFontEntry;
   nsCOMPtr<nsIURI> mFontURI;
@@ -105,7 +69,6 @@ private:
   nsIStreamLoader* mStreamLoader;
   bool mInStreamComplete = false;
   bool mInLoadTimerCallback = false;
->>>>>>> upstream-releases
 };
 
 #endif /* !defined(nsFontFaceLoader_h_) */

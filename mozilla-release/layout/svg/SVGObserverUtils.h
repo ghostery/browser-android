@@ -51,23 +51,10 @@ class URLAndReferrerInfo {
     MOZ_ASSERT(aURI);
   }
 
-<<<<<<< HEAD
-  URLAndReferrerInfo(nsIURI* aURI, URLExtraData* aExtraData)
-      : mURI(aURI),
-        mReferrer(aExtraData->GetReferrer()),
-        mReferrerPolicy(aExtraData->GetReferrerPolicy()) {
-||||||| merged common ancestors
-  URLAndReferrerInfo(nsIURI* aURI, URLExtraData* aExtraData)
-    : mURI(aURI)
-    , mReferrer(aExtraData->GetReferrer())
-    , mReferrerPolicy(aExtraData->GetReferrerPolicy())
-  {
-=======
   URLAndReferrerInfo(nsIURI* aURI, const URLExtraData& aExtraData)
       : mURI(aURI),
         mReferrer(aExtraData.GetReferrer()),
         mReferrerPolicy(aExtraData.GetReferrerPolicy()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(aURI);
   }
 
@@ -116,15 +103,7 @@ class SVGRenderingObserver : public nsStubMutationObserver {
  public:
   typedef mozilla::dom::Element Element;
 
-<<<<<<< HEAD
-  SVGRenderingObserver() : mInObserverList(false) {}
-||||||| merged common ancestors
-  SVGRenderingObserver()
-    : mInObserverList(false)
-  {}
-=======
   SVGRenderingObserver() : mInObserverSet(false) {}
->>>>>>> upstream-releases
 
   // nsIMutationObserver
   NS_DECL_NSIMUTATIONOBSERVER_ATTRIBUTECHANGED
@@ -271,17 +250,8 @@ class SVGObserverUtils {
   /**
    * Get the paint server for aPaintedFrame.
    */
-<<<<<<< HEAD
-  static nsSVGPaintServerFrame* GetAndObservePaintServer(
-      nsIFrame* aPaintedFrame, nsStyleSVGPaint nsStyleSVG::*aPaint);
-||||||| merged common ancestors
-  static nsSVGPaintServerFrame*
-  GetAndObservePaintServer(nsIFrame* aPaintedFrame,
-                           nsStyleSVGPaint nsStyleSVG::* aPaint);
-=======
   static nsSVGPaintServerFrame* GetAndObservePaintServer(
       nsIFrame* aPaintedFrame, mozilla::StyleSVGPaint nsStyleSVG::*aPaint);
->>>>>>> upstream-releases
 
   /**
    * Get the start/mid/end-markers for the given frame, and add the frame as
@@ -330,20 +300,9 @@ class SVGObserverUtils {
    * objects separately.  It would be better to refactor things so that we only
    * do that work once.
    */
-<<<<<<< HEAD
-  static already_AddRefed<nsISupports> ObserveFiltersForCanvasContext(
-      CanvasRenderingContext2D* aContext, Element* aCanvasElement,
-      nsTArray<nsStyleFilter>& aFilters);
-||||||| merged common ancestors
-  static already_AddRefed<nsISupports>
-  ObserveFiltersForCanvasContext(CanvasRenderingContext2D* aContext,
-                                 Element* aCanvasElement,
-                                 nsTArray<nsStyleFilter>& aFilters);
-=======
   static already_AddRefed<nsISupports> ObserveFiltersForCanvasContext(
       CanvasRenderingContext2D* aContext, Element* aCanvasElement,
       Span<const StyleFilter> aFilters);
->>>>>>> upstream-releases
 
   /**
    * Called when cycle collecting CanvasRenderingContext2D, and requires the
@@ -424,21 +383,6 @@ class SVGObserverUtils {
 
   static void RemoveTemplateObserver(nsIFrame* aFrame);
 
-<<<<<<< HEAD
-  /**
-   * Gets an arbitrary element and starts observing it.  Used to implement
-   * '-moz-element'.
-   *
-   * Note that bug 1496065 has been filed to remove support for referencing
-   * arbitrary elements using '-moz-element'.
-   */
-  static Element* GetAndObserveBackgroundImage(nsIFrame* aFrame,
-                                               const nsAtom* aHref);
-||||||| merged common ancestors
-  static Element*
-  GetAndObserveBackgroundImage(nsIFrame* aFrame,
-                               const nsAtom* aHref);
-=======
   /**
    * Gets an arbitrary element and starts observing it.  Used to implement
    * '-moz-element'.
@@ -454,21 +398,12 @@ class SVGObserverUtils {
    * invalidation changes for background-clip:text.
    */
   static Element* GetAndObserveBackgroundClip(nsIFrame* aFrame);
->>>>>>> upstream-releases
 
   /**
    * A helper function to resolve filter URL.
    */
-<<<<<<< HEAD
-  static already_AddRefed<URLAndReferrerInfo> GetFilterURI(
-      nsIFrame* aFrame, const nsStyleFilter& aFilter);
-||||||| merged common ancestors
-  static already_AddRefed<URLAndReferrerInfo>
-  GetFilterURI(nsIFrame* aFrame, const nsStyleFilter& aFilter);
-=======
   static already_AddRefed<URLAndReferrerInfo> GetFilterURI(
       nsIFrame* aFrame, const StyleFilter& aFilter);
->>>>>>> upstream-releases
 
   /**
    * Return a baseURL for resolving a local-ref URL.

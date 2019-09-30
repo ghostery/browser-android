@@ -443,27 +443,6 @@ static void inline MOZ_FORMAT_PRINTF(1, 2) DDLOGPRCheck(const char*, ...) {}
 // Log a printf'd string to DDLogger and/or MOZ_LOG, with an EXplicit `this`.
 // Don't even call MOZ_LOG on Android non-release/beta; See Logging.h.
 #if !defined(ANDROID) || !defined(RELEASE_OR_BETA)
-<<<<<<< HEAD
-#define DDMOZ_LOGEX(_this, _logModule, _logLevel, _format, ...)                \
-  do {                                                                         \
-    if (DecoderDoctorLogger::IsDDLoggingEnabled() ||                           \
-        MOZ_LOG_TEST(_logModule, _logLevel)) {                                 \
-      DDLOGPR_CHECK(_format, ##__VA_ARGS__);                                   \
-      DecoderDoctorLogger::MozLogPrintf(_this, _logModule, _logLevel, _format, \
-                                        ##__VA_ARGS__);                        \
-    }                                                                          \
-  } while (0)
-||||||| merged common ancestors
-#define DDMOZ_LOGEX(_this, _logModule, _logLevel, _format, ...)                \
-  do {                                                                         \
-    if (DecoderDoctorLogger::IsDDLoggingEnabled() ||                           \
-        MOZ_LOG_TEST(_logModule, _logLevel)) {                                 \
-      DDLOGPR_CHECK(_format, ##__VA_ARGS__);                                   \
-      DecoderDoctorLogger::MozLogPrintf(                                       \
-        _this, _logModule, _logLevel, _format, ##__VA_ARGS__);                 \
-    }                                                                          \
-  } while (0)
-=======
 #  define DDMOZ_LOGEX(_this, _logModule, _logLevel, _format, ...)       \
     do {                                                                \
       if (DecoderDoctorLogger::IsDDLoggingEnabled() ||                  \
@@ -473,27 +452,7 @@ static void inline MOZ_FORMAT_PRINTF(1, 2) DDLOGPRCheck(const char*, ...) {}
                                           _format, ##__VA_ARGS__);      \
       }                                                                 \
     } while (0)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define DDMOZ_LOGEX(_this, _logModule, _logLevel, _format, ...)                \
-  do {                                                                         \
-    if (DecoderDoctorLogger::IsDDLoggingEnabled()) {                           \
-      DDLOGPR_CHECK(_format, ##__VA_ARGS__);                                   \
-      DecoderDoctorLogger::MozLogPrintf(_this, _logModule, _logLevel, _format, \
-                                        ##__VA_ARGS__);                        \
-    }                                                                          \
-  } while (0)
-||||||| merged common ancestors
-#define DDMOZ_LOGEX(_this, _logModule, _logLevel, _format, ...)                \
-  do {                                                                         \
-    if (DecoderDoctorLogger::IsDDLoggingEnabled()) {                           \
-      DDLOGPR_CHECK(_format, ##__VA_ARGS__);                                   \
-      DecoderDoctorLogger::MozLogPrintf(                                       \
-        _this, _logModule, _logLevel, _format, ##__VA_ARGS__);                 \
-    }                                                                          \
-  } while (0)
-=======
 #  define DDMOZ_LOGEX(_this, _logModule, _logLevel, _format, ...)       \
     do {                                                                \
       if (DecoderDoctorLogger::IsDDLoggingEnabled()) {                  \
@@ -502,7 +461,6 @@ static void inline MOZ_FORMAT_PRINTF(1, 2) DDLOGPRCheck(const char*, ...) {}
                                           _format, ##__VA_ARGS__);      \
       }                                                                 \
     } while (0)
->>>>>>> upstream-releases
 #endif
 
 // Log a printf'd string to DDLogger and/or MOZ_LOG.

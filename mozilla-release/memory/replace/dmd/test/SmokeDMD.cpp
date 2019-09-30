@@ -315,13 +315,7 @@ void TestScan(int aSeven) {
 
   ResetEverything("--mode=scan");
 
-<<<<<<< HEAD
-  uintptr_t* p = (uintptr_t*)malloc(6 * sizeof(uintptr_t*));
-||||||| merged common ancestors
-  uintptr_t* p = (uintptr_t*) malloc(6 * sizeof(uintptr_t*));
-=======
   uintptr_t* p = (uintptr_t*)malloc(6 * sizeof(uintptr_t));
->>>>>>> upstream-releases
   UseItOrLoseIt(p, aSeven);
 
   // Hard-coded values checked by scan-test.py

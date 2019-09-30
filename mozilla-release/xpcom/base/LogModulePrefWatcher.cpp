@@ -34,31 +34,12 @@ NS_IMPL_ISUPPORTS(LogModulePrefWatcher, nsIObserver)
  * If logging after restart is desired, set the logging.config.clear_on_startup
  * pref to false, or use the MOZ_LOG_FILE and MOZ_LOG_MODULES env vars.
  */
-<<<<<<< HEAD
-void ResetExistingPrefs() {
-  uint32_t count;
-  char** names;
-  nsresult rv = Preferences::GetRootBranch()->GetChildList(kLoggingPrefPrefix,
-                                                           &count, &names);
-  if (NS_SUCCEEDED(rv) && count) {
-    for (size_t i = 0; i < count; i++) {
-||||||| merged common ancestors
-void ResetExistingPrefs()
-{
-  uint32_t count;
-  char** names;
-  nsresult rv = Preferences::GetRootBranch()->
-      GetChildList(kLoggingPrefPrefix, &count, &names);
-  if (NS_SUCCEEDED(rv) && count) {
-    for (size_t i = 0; i < count; i++) {
-=======
 static void ResetExistingPrefs() {
   nsTArray<nsCString> names;
   nsresult rv =
       Preferences::GetRootBranch()->GetChildList(kLoggingPrefPrefix, names);
   if (NS_SUCCEEDED(rv)) {
     for (auto& name : names) {
->>>>>>> upstream-releases
       // Clearing the pref will cause it to reload, thus resetting the log level
       Preferences::ClearUser(name.get());
     }
@@ -123,15 +104,7 @@ static void LoadPrefValue(const char* aName) {
   LogModule::Get(moduleName)->SetLevel(logLevel);
 }
 
-<<<<<<< HEAD
-void LoadExistingPrefs() {
-||||||| merged common ancestors
-void
-LoadExistingPrefs()
-{
-=======
 static void LoadExistingPrefs() {
->>>>>>> upstream-releases
   nsIPrefBranch* root = Preferences::GetRootBranch();
   if (!root) {
     return;

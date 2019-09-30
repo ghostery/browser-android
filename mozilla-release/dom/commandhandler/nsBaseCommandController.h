@@ -15,23 +15,6 @@
 
 // The base editor controller is used for both text widgets, and all other text
 // and html editing
-<<<<<<< HEAD
-class nsBaseCommandController : public nsIController,
-                                public nsIControllerContext,
-                                public nsIInterfaceRequestor,
-                                public nsICommandController {
- public:
-  nsBaseCommandController();
-||||||| merged common ancestors
-class nsBaseCommandController
-  : public nsIController
-  , public nsIControllerContext
-  , public nsIInterfaceRequestor
-  , public nsICommandController
-{
-public:
-  nsBaseCommandController();
-=======
 class nsBaseCommandController final : public nsIController,
                                       public nsIControllerContext,
                                       public nsIInterfaceRequestor,
@@ -45,7 +28,6 @@ class nsBaseCommandController final : public nsIController,
   explicit nsBaseCommandController(
       nsControllerCommandTable* aControllerCommandTable =
           new nsControllerCommandTable());
->>>>>>> upstream-releases
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSICONTROLLER

@@ -34,29 +34,12 @@ void txXPathTreeWalker::moveToRoot() {
     return;
   }
 
-<<<<<<< HEAD
-  nsIDocument* root = mPosition.mNode->GetUncomposedDoc();
-  if (root) {
-    mPosition.mIndex = txXPathNode::eDocument;
-    mPosition.mNode = root;
-  } else {
-    nsINode* rootNode = mPosition.Root();
-||||||| merged common ancestors
-    nsIDocument* root = mPosition.mNode->GetUncomposedDoc();
-    if (root) {
-        mPosition.mIndex = txXPathNode::eDocument;
-        mPosition.mNode = root;
-    }
-    else {
-        nsINode *rootNode = mPosition.Root();
-=======
   Document* root = mPosition.mNode->GetUncomposedDoc();
   if (root) {
     mPosition.mIndex = txXPathNode::eDocument;
     mPosition.mNode = root;
   } else {
     nsINode* rootNode = mPosition.Root();
->>>>>>> upstream-releases
 
     NS_ASSERTION(rootNode->IsContent(), "root of subtree wasn't an nsIContent");
 
@@ -70,13 +53,7 @@ bool txXPathTreeWalker::moveToElementById(const nsAString& aID) {
     return false;
   }
 
-<<<<<<< HEAD
-  nsIDocument* doc = mPosition.mNode->GetUncomposedDoc();
-||||||| merged common ancestors
-    nsIDocument* doc = mPosition.mNode->GetUncomposedDoc();
-=======
   Document* doc = mPosition.mNode->GetUncomposedDoc();
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIContent> content;
   if (doc) {
@@ -493,214 +470,6 @@ nsresult txXPathNodeUtils::getBaseURI(const txXPathNode& aNode,
 }
 
 /* static */
-<<<<<<< HEAD
-int txXPathNodeUtils::comparePosition(const txXPathNode& aNode,
-                                      const txXPathNode& aOtherNode) {
-  // First check for equal nodes or attribute-nodes on the same element.
-  if (aNode.mNode == aOtherNode.mNode) {
-    if (aNode.mIndex == aOtherNode.mIndex) {
-      return 0;
-    }
-
-    NS_ASSERTION(!aNode.isDocument() && !aOtherNode.isDocument(),
-                 "documents should always have a set index");
-
-    if (aNode.isContent() ||
-        (!aOtherNode.isContent() && aNode.mIndex < aOtherNode.mIndex)) {
-      return -1;
-    }
-
-    return 1;
-  }
-
-  // Get document for both nodes.
-  nsIDocument* document = aNode.mNode->GetUncomposedDoc();
-  nsIDocument* otherDocument = aOtherNode.mNode->GetUncomposedDoc();
-
-  // If the nodes have different current documents, compare the document
-  // pointers.
-  if (document != otherDocument) {
-    return document < otherDocument ? -1 : 1;
-  }
-
-  // Now either both nodes are in orphan trees, or they are both in the
-  // same tree.
-
-  // Get parents up the tree.
-  AutoTArray<nsINode*, 8> parents, otherParents;
-  nsINode* node = aNode.mNode;
-  nsINode* otherNode = aOtherNode.mNode;
-  nsINode* parent;
-  nsINode* otherParent;
-  while (node && otherNode) {
-    parent = node->GetParentNode();
-    otherParent = otherNode->GetParentNode();
-
-    // Hopefully this is a common case.
-    if (parent == otherParent) {
-      if (!parent) {
-        // Both node and otherNode are root nodes in respective orphan
-        // tree.
-        return node < otherNode ? -1 : 1;
-      }
-
-      return parent->ComputeIndexOf(node) < parent->ComputeIndexOf(otherNode)
-                 ? -1
-                 : 1;
-    }
-
-    parents.AppendElement(node);
-    otherParents.AppendElement(otherNode);
-    node = parent;
-    otherNode = otherParent;
-  }
-
-  while (node) {
-    parents.AppendElement(node);
-    node = node->GetParentNode();
-  }
-  while (otherNode) {
-    otherParents.AppendElement(otherNode);
-    otherNode = otherNode->GetParentNode();
-  }
-
-  // Walk back down along the parent-chains until we find where they split.
-  int32_t total = parents.Length() - 1;
-  int32_t otherTotal = otherParents.Length() - 1;
-  NS_ASSERTION(total != otherTotal, "Can't have same number of parents");
-
-  int32_t lastIndex = std::min(total, otherTotal);
-  int32_t i;
-  parent = nullptr;
-  for (i = 0; i <= lastIndex; ++i) {
-    node = parents.ElementAt(total - i);
-    otherNode = otherParents.ElementAt(otherTotal - i);
-    if (node != otherNode) {
-      if (!parent) {
-        // The two nodes are in different orphan subtrees.
-        NS_ASSERTION(i == 0, "this shouldn't happen");
-        return node < otherNode ? -1 : 1;
-      }
-
-      int32_t index = parent->ComputeIndexOf(node);
-      int32_t otherIndex = parent->ComputeIndexOf(otherNode);
-      NS_ASSERTION(index != otherIndex && index >= 0 && otherIndex >= 0,
-                   "invalid index in compareTreePosition");
-
-      return index < otherIndex ? -1 : 1;
-    }
-
-    parent = node;
-  }
-
-  // One node is a descendant of the other. The one with the shortest
-  // parent-chain is first in the document.
-  return total < otherTotal ? -1 : 1;
-||||||| merged common ancestors
-int
-txXPathNodeUtils::comparePosition(const txXPathNode& aNode,
-                                  const txXPathNode& aOtherNode)
-{
-    // First check for equal nodes or attribute-nodes on the same element.
-    if (aNode.mNode == aOtherNode.mNode) {
-        if (aNode.mIndex == aOtherNode.mIndex) {
-            return 0;
-        }
-
-        NS_ASSERTION(!aNode.isDocument() && !aOtherNode.isDocument(),
-                     "documents should always have a set index");
-
-        if (aNode.isContent() || (!aOtherNode.isContent() &&
-                                  aNode.mIndex < aOtherNode.mIndex)) {
-            return -1;
-        }
-
-        return 1;
-    }
-
-    // Get document for both nodes.
-    nsIDocument* document = aNode.mNode->GetUncomposedDoc();
-    nsIDocument* otherDocument = aOtherNode.mNode->GetUncomposedDoc();
-
-    // If the nodes have different current documents, compare the document
-    // pointers.
-    if (document != otherDocument) {
-        return document < otherDocument ? -1 : 1;
-    }
-
-    // Now either both nodes are in orphan trees, or they are both in the
-    // same tree.
-
-    // Get parents up the tree.
-    AutoTArray<nsINode*, 8> parents, otherParents;
-    nsINode* node = aNode.mNode;
-    nsINode* otherNode = aOtherNode.mNode;
-    nsINode* parent;
-    nsINode* otherParent;
-    while (node && otherNode) {
-        parent = node->GetParentNode();
-        otherParent = otherNode->GetParentNode();
-
-        // Hopefully this is a common case.
-        if (parent == otherParent) {
-            if (!parent) {
-                // Both node and otherNode are root nodes in respective orphan
-                // tree.
-                return node < otherNode ? -1 : 1;
-            }
-
-            return parent->ComputeIndexOf(node) < parent->ComputeIndexOf(otherNode) ?
-                   -1 : 1;
-        }
-
-        parents.AppendElement(node);
-        otherParents.AppendElement(otherNode);
-        node = parent;
-        otherNode = otherParent;
-    }
-
-    while (node) {
-        parents.AppendElement(node);
-        node = node->GetParentNode();
-    }
-    while (otherNode) {
-        otherParents.AppendElement(otherNode);
-        otherNode = otherNode->GetParentNode();
-    }
-
-    // Walk back down along the parent-chains until we find where they split.
-    int32_t total = parents.Length() - 1;
-    int32_t otherTotal = otherParents.Length() - 1;
-    NS_ASSERTION(total != otherTotal, "Can't have same number of parents");
-
-    int32_t lastIndex = std::min(total, otherTotal);
-    int32_t i;
-    parent = nullptr;
-    for (i = 0; i <= lastIndex; ++i) {
-        node = parents.ElementAt(total - i);
-        otherNode = otherParents.ElementAt(otherTotal - i);
-        if (node != otherNode) {
-            if (!parent) {
-                // The two nodes are in different orphan subtrees.
-                NS_ASSERTION(i == 0, "this shouldn't happen");
-                return node < otherNode ? -1 : 1;
-            }
-
-            int32_t index = parent->ComputeIndexOf(node);
-            int32_t otherIndex = parent->ComputeIndexOf(otherNode);
-            NS_ASSERTION(index != otherIndex && index >= 0 && otherIndex >= 0,
-                         "invalid index in compareTreePosition");
-
-            return index < otherIndex ? -1 : 1;
-        }
-
-        parent = node;
-    }
-
-    // One node is a descendant of the other. The one with the shortest
-    // parent-chain is first in the document.
-    return total < otherTotal ? -1 : 1;
-=======
 int txXPathNodeUtils::comparePosition(const txXPathNode& aNode,
                                       const txXPathNode& aOtherNode) {
   // First check for equal nodes or attribute-nodes on the same element.
@@ -803,7 +572,6 @@ int txXPathNodeUtils::comparePosition(const txXPathNode& aNode,
   // One node is a descendant of the other. The one with the shortest
   // parent-chain is first in the document.
   return total < otherTotal ? -1 : 1;
->>>>>>> upstream-releases
 }
 
 /* static */
@@ -858,18 +626,8 @@ txXPathNode* txXPathNativeNode::createXPathNode(nsINode* aNode,
 }
 
 /* static */
-<<<<<<< HEAD
-txXPathNode* txXPathNativeNode::createXPathNode(nsIDocument* aDocument) {
-  return new txXPathNode(aDocument);
-||||||| merged common ancestors
-txXPathNode*
-txXPathNativeNode::createXPathNode(nsIDocument* aDocument)
-{
-    return new txXPathNode(aDocument);
-=======
 txXPathNode* txXPathNativeNode::createXPathNode(Document* aDocument) {
   return new txXPathNode(aDocument);
->>>>>>> upstream-releases
 }
 
 /* static */
@@ -899,22 +657,8 @@ nsIContent* txXPathNativeNode::getContent(const txXPathNode& aNode) {
 }
 
 /* static */
-<<<<<<< HEAD
-nsIDocument* txXPathNativeNode::getDocument(const txXPathNode& aNode) {
-  NS_ASSERTION(aNode.isDocument(),
-               "Only call getDocument on nsIDocument wrappers!");
-  return aNode.Document();
-||||||| merged common ancestors
-nsIDocument*
-txXPathNativeNode::getDocument(const txXPathNode& aNode)
-{
-    NS_ASSERTION(aNode.isDocument(),
-                 "Only call getDocument on nsIDocument wrappers!");
-    return aNode.Document();
-=======
 Document* txXPathNativeNode::getDocument(const txXPathNode& aNode) {
   NS_ASSERTION(aNode.isDocument(),
                "Only call getDocument on Document wrappers!");
   return aNode.Document();
->>>>>>> upstream-releases
 }

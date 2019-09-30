@@ -12,49 +12,20 @@
 #include "mozilla/layers/Compositor.h"  // for Compositor
 // clang-format off
 //#include "mozilla/layers/CompositorBridgeParent.h"  // for CompositorBridgeParent
-<<<<<<< HEAD
-// clang-format on
-#include "mozilla/layers/Effects.h"  // for TexturedEffect, Effect, etc
-#include "mozilla/layers/LayerMetricsWrapper.h"  // for LayerMetricsWrapper
-#include "mozilla/layers/TextureHostOGL.h"       // for TextureHostOGL
-||||||| merged common ancestors
-#include "mozilla/layers/Effects.h"     // for TexturedEffect, Effect, etc
-#include "mozilla/layers/LayerMetricsWrapper.h" // for LayerMetricsWrapper
-#include "mozilla/layers/TextureHostOGL.h"  // for TextureHostOGL
-=======
 // clang-format on
 #include "mozilla/layers/Effects.h"  // for TexturedEffect, Effect, etc
 #include "mozilla/layers/LayerMetricsWrapper.h"  // for LayerMetricsWrapper
 #include "mozilla/layers/PTextureParent.h"
 #include "mozilla/layers/TextureHostOGL.h"  // for TextureHostOGL
->>>>>>> upstream-releases
 #ifdef XP_DARWIN
-<<<<<<< HEAD
-#include "mozilla/layers/TextureSync.h"  // for TextureSync
-||||||| merged common ancestors
-#include "mozilla/layers/TextureSync.h" // for TextureSync
-=======
 #  include "mozilla/layers/TextureSync.h"  // for TextureSync
->>>>>>> upstream-releases
 #endif
 #include "nsAString.h"
-<<<<<<< HEAD
-#include "nsDebug.h"          // for NS_WARNING
-#include "nsPoint.h"          // for IntPoint
-#include "nsPrintfCString.h"  // for nsPrintfCString
-#include "nsRect.h"           // for IntRect
-||||||| merged common ancestors
-#include "nsDebug.h"                    // for NS_WARNING
-#include "nsPoint.h"                    // for IntPoint
-#include "nsPrintfCString.h"            // for nsPrintfCString
-#include "nsRect.h"                     // for IntRect
-=======
 #include "nsDebug.h"          // for NS_WARNING
 #include "nsPoint.h"          // for IntPoint
 #include "nsPrintfCString.h"  // for nsPrintfCString
 #include "nsRect.h"           // for IntRect
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 #include "mozilla/layers/TextureClient.h"
 
 namespace mozilla {
@@ -65,18 +36,8 @@ class Layer;
 
 float TileHost::GetFadeInOpacity(float aOpacity) {
   TimeStamp now = TimeStamp::Now();
-<<<<<<< HEAD
-  if (!gfxPrefs::LayerTileFadeInEnabled() || mFadeStart.IsNull() ||
-      now < mFadeStart) {
-||||||| merged common ancestors
-  if (!gfxPrefs::LayerTileFadeInEnabled() ||
-      mFadeStart.IsNull() ||
-      now < mFadeStart)
-  {
-=======
   if (!StaticPrefs::layers_tiles_fade_in_enabled() || mFadeStart.IsNull() ||
       now < mFadeStart) {
->>>>>>> upstream-releases
     return aOpacity;
   }
 
@@ -193,24 +154,10 @@ bool TiledContentHost::UseTiledLayerBuffer(
   return true;
 }
 
-<<<<<<< HEAD
-void UseTileTexture(CompositableTextureHostRef& aTexture,
-                    CompositableTextureSourceRef& aTextureSource,
-                    const IntRect& aUpdateRect,
-                    TextureSourceProvider* aProvider) {
-||||||| merged common ancestors
-void
-UseTileTexture(CompositableTextureHostRef& aTexture,
-               CompositableTextureSourceRef& aTextureSource,
-               const IntRect& aUpdateRect,
-               TextureSourceProvider* aProvider)
-{
-=======
 static void UseTileTexture(CompositableTextureHostRef& aTexture,
                            CompositableTextureSourceRef& aTextureSource,
                            const IntRect& aUpdateRect,
                            TextureSourceProvider* aProvider) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aTexture);
   if (!aTexture) {
     return;
@@ -363,20 +310,9 @@ bool TiledLayerBufferComposite::UseTiles(const SurfaceDescriptorTiles& aTiles,
       }
     }
 
-<<<<<<< HEAD
-    if (texturedDesc.textureOnWhite().type() == MaybeTexture::TPTextureParent) {
-      tile.mTextureHostOnWhite = TextureHost::AsTextureHost(
-          texturedDesc.textureOnWhite().get_PTextureParent());
-||||||| merged common ancestors
-    if (texturedDesc.textureOnWhite().type() == MaybeTexture::TPTextureParent) {
-      tile.mTextureHostOnWhite = TextureHost::AsTextureHost(
-        texturedDesc.textureOnWhite().get_PTextureParent()
-      );
-=======
     if (texturedDesc.textureOnWhiteParent().isSome()) {
       tile.mTextureHostOnWhite =
           TextureHost::AsTextureHost(texturedDesc.textureOnWhiteParent().ref());
->>>>>>> upstream-releases
       if (texturedDesc.readLockedOnWhite()) {
         tile.mTextureHostOnWhite->SetReadLocked();
         auto actor = tile.mTextureHostOnWhite->GetIPDLActor();
@@ -403,16 +339,9 @@ bool TiledLayerBufferComposite::UseTiles(const SurfaceDescriptorTiles& aTiles,
       tile.mFadeStart = TimeStamp::Now();
 
       aLayerManager->CompositeUntil(
-<<<<<<< HEAD
-          tile.mFadeStart +
-          TimeDuration::FromMilliseconds(gfxPrefs::LayerTileFadeInDuration()));
-||||||| merged common ancestors
-        tile.mFadeStart + TimeDuration::FromMilliseconds(gfxPrefs::LayerTileFadeInDuration()));
-=======
           tile.mFadeStart +
           TimeDuration::FromMilliseconds(
               StaticPrefs::layers_tiles_fade_in_duration_ms()));
->>>>>>> upstream-releases
     }
   }
 
@@ -508,18 +437,9 @@ void TiledContentHost::Composite(
     }
   }
   float lowPrecisionOpacityReduction =
-<<<<<<< HEAD
-      (aOpacity == 1.0f && backgroundColor.a == 1.0f)
-          ? gfxPrefs::LowPrecisionOpacity()
-          : 1.0f;
-||||||| merged common ancestors
-        (aOpacity == 1.0f && backgroundColor.a == 1.0f)
-        ? gfxPrefs::LowPrecisionOpacity() : 1.0f;
-=======
       (aOpacity == 1.0f && backgroundColor.a == 1.0f)
           ? StaticPrefs::layers_low_precision_opacity()
           : 1.0f;
->>>>>>> upstream-releases
 
   nsIntRegion tmpRegion;
   const nsIntRegion* renderRegion = aVisibleRegion;

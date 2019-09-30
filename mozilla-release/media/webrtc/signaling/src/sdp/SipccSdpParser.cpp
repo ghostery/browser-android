@@ -16,36 +16,16 @@ namespace mozilla {
 
 extern "C" {
 
-<<<<<<< HEAD
-void sipcc_sdp_parser_error_handler(void *context, uint32_t line,
-                                    const char *message) {
-  SdpErrorHolder *errorHolder = static_cast<SdpErrorHolder *>(context);
-||||||| merged common ancestors
-void
-sipcc_sdp_parser_error_handler(void *context, uint32_t line,
-                               const char *message)
-{
-  SdpErrorHolder *errorHolder = static_cast<SdpErrorHolder *>(context);
-=======
 void sipcc_sdp_parser_error_handler(void* context, uint32_t line,
                                     const char* message) {
   SdpErrorHolder* errorHolder = static_cast<SdpErrorHolder*>(context);
->>>>>>> upstream-releases
   std::string err(message);
   errorHolder->AddParseError(line, err);
 }
 
 }  // extern "C"
 
-<<<<<<< HEAD
-UniquePtr<Sdp> SipccSdpParser::Parse(const std::string &sdpText) {
-||||||| merged common ancestors
-UniquePtr<Sdp>
-SipccSdpParser::Parse(const std::string &sdpText)
-{
-=======
 UniquePtr<Sdp> SipccSdpParser::Parse(const std::string& sdpText) {
->>>>>>> upstream-releases
   ClearParseErrors();
 
   sdp_conf_options_t* sipcc_config = sdp_init_config();

@@ -57,13 +57,7 @@ add_task(async function() {
     return promise.all([
       inspector.selection.once("new-node-front"),
       inspector.once("inspector-updated"),
-<<<<<<< HEAD
-      inspector.toolbox.once("picker-stopped"),
-||||||| merged common ancestors
-      inspector.toolbox.once("picker-stopped")
-=======
       inspector.inspector.nodePicker.once("picker-stopped"),
->>>>>>> upstream-releases
     ]);
   }
 

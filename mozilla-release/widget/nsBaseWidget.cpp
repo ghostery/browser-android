@@ -83,15 +83,9 @@
 #include "mozilla/layers/CompositorSession.h"
 #include "VRManagerChild.h"
 #include "gfxConfig.h"
-<<<<<<< HEAD
-#include "nsView.h"
-#include "nsViewManager.h"
-||||||| merged common ancestors
-=======
 #include "nsView.h"
 #include "nsViewManager.h"
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 
 #ifdef DEBUG
 #  include "nsIObserver.h"
@@ -131,19 +125,10 @@ bool gDisableNativeTheme = false;
 int32_t nsIWidget::sPointerIdCounter = 0;
 
 // Some statics from nsIWidget.h
-<<<<<<< HEAD
-/*static*/ uint64_t AutoObserverNotifier::sObserverId = 0;
-/*static*/ nsDataHashtable<nsUint64HashKey, nsCOMPtr<nsIObserver>>
-    AutoObserverNotifier::sSavedObservers;
-||||||| merged common ancestors
-/*static*/ uint64_t AutoObserverNotifier::sObserverId = 0;
-/*static*/ nsDataHashtable<nsUint64HashKey, nsCOMPtr<nsIObserver>> AutoObserverNotifier::sSavedObservers;
-=======
 /*static*/
 uint64_t AutoObserverNotifier::sObserverId = 0;
 /*static*/ nsDataHashtable<nsUint64HashKey, nsCOMPtr<nsIObserver>>
     AutoObserverNotifier::sSavedObservers;
->>>>>>> upstream-releases
 
 // The maximum amount of time to let the EnableDragDrop runnable wait in the
 // idle queue before timing out and moving it to the regular queue. Value is in
@@ -174,46 +159,6 @@ NS_IMPL_ISUPPORTS(nsBaseWidget, nsIWidget, nsISupportsWeakReference)
 //-------------------------------------------------------------------------
 
 nsBaseWidget::nsBaseWidget()
-<<<<<<< HEAD
-    : mWidgetListener(nullptr),
-      mAttachedWidgetListener(nullptr),
-      mPreviouslyAttachedWidgetListener(nullptr),
-      mLayerManager(nullptr),
-      mCompositorVsyncDispatcher(nullptr),
-      mCursor(eCursor_standard),
-      mBorderStyle(eBorderStyle_none),
-      mBounds(0, 0, 0, 0),
-      mOriginalBounds(nullptr),
-      mClipRectCount(0),
-      mSizeMode(nsSizeMode_Normal),
-      mPopupLevel(ePopupLevelTop),
-      mPopupType(ePopupTypeAny),
-      mHasRemoteContent(false),
-      mUpdateCursor(true),
-      mUseAttachedEvents(false),
-      mIMEHasFocus(false),
-      mIsFullyOccluded(false) {
-||||||| merged common ancestors
-: mWidgetListener(nullptr)
-, mAttachedWidgetListener(nullptr)
-, mPreviouslyAttachedWidgetListener(nullptr)
-, mLayerManager(nullptr)
-, mCompositorVsyncDispatcher(nullptr)
-, mCursor(eCursor_standard)
-, mBorderStyle(eBorderStyle_none)
-, mBounds(0,0,0,0)
-, mOriginalBounds(nullptr)
-, mClipRectCount(0)
-, mSizeMode(nsSizeMode_Normal)
-, mPopupLevel(ePopupLevelTop)
-, mPopupType(ePopupTypeAny)
-, mHasRemoteContent(false)
-, mUpdateCursor(true)
-, mUseAttachedEvents(false)
-, mIMEHasFocus(false)
-, mIsFullyOccluded(false)
-{
-=======
     : mWidgetListener(nullptr),
       mAttachedWidgetListener(nullptr),
       mPreviouslyAttachedWidgetListener(nullptr),
@@ -233,7 +178,6 @@ nsBaseWidget::nsBaseWidget()
       mIMEHasFocus(false),
       mIMEHasQuit(false),
       mIsFullyOccluded(false) {
->>>>>>> upstream-releases
 #ifdef NOISY_WIDGET_LEAKS
   gNumWidgets++;
   printf("WIDGETS+ = %d\n", gNumWidgets);
@@ -265,24 +209,12 @@ WidgetShutdownObserver::~WidgetShutdownObserver() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-WidgetShutdownObserver::Observe(nsISupports* aSubject, const char* aTopic,
-                                const char16_t* aData) {
-  if (mWidget && !strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
-||||||| merged common ancestors
-WidgetShutdownObserver::Observe(nsISupports *aSubject,
-                                const char *aTopic,
-                                const char16_t *aData)
-{
-  if (mWidget && !strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
-=======
 WidgetShutdownObserver::Observe(nsISupports* aSubject, const char* aTopic,
                                 const char16_t* aData) {
   if (!mWidget) {
     return NS_OK;
   }
   if (!strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID)) {
->>>>>>> upstream-releases
     RefPtr<nsBaseWidget> widget(mWidget);
     widget->Shutdown();
   } else if (!strcmp(aTopic, "quit-application")) {
@@ -343,19 +275,12 @@ void nsBaseWidget::Shutdown() {
 #endif
 }
 
-<<<<<<< HEAD
-void nsBaseWidget::DestroyCompositor() {
-||||||| merged common ancestors
-void nsBaseWidget::DestroyCompositor()
-{
-=======
 void nsBaseWidget::QuitIME() {
   IMEStateManager::WidgetOnQuit(this);
   this->mIMEHasQuit = true;
 }
 
 void nsBaseWidget::DestroyCompositor() {
->>>>>>> upstream-releases
   // We release this before releasing the compositor, since it may hold the
   // last reference to our ClientLayerManager. ClientLayerManager's dtor can
   // trigger a paint, creating a new compositor, and we don't want to re-use
@@ -752,38 +677,12 @@ void nsBaseWidget::SetSizeMode(nsSizeMode aMode) {
 //
 //-------------------------------------------------------------------------
 
-<<<<<<< HEAD
-void nsBaseWidget::SetCursor(nsCursor aCursor) { mCursor = aCursor; }
-||||||| merged common ancestors
-void
-nsBaseWidget::SetCursor(nsCursor aCursor)
-{
-  mCursor = aCursor;
-}
-=======
 void nsBaseWidget::SetCursor(nsCursor aCursor, imgIContainer*, uint32_t,
                              uint32_t) {
   // We don't support the cursor image.
   mCursor = aCursor;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult nsBaseWidget::SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
-                                 uint32_t aHotspotY) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-||||||| merged common ancestors
-nsresult
-nsBaseWidget::SetCursor(imgIContainer* aCursor,
-                        uint32_t aHotspotX, uint32_t aHotspotY)
-{
-  return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-=======
->>>>>>> upstream-releases
 //-------------------------------------------------------------------------
 //
 // Window transparency methods
@@ -862,24 +761,11 @@ nsresult nsBaseWidget::SetWindowClipRegion(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsBaseWidget::PerformFullscreenTransition(
-    FullscreenTransitionStage aStage, uint16_t aDuration, nsISupports* aData,
-    nsIRunnable* aCallback) {
-||||||| merged common ancestors
-/* virtual */ void
-nsBaseWidget::PerformFullscreenTransition(FullscreenTransitionStage aStage,
-                                          uint16_t aDuration,
-                                          nsISupports* aData,
-                                          nsIRunnable* aCallback)
-{
-=======
 /* virtual */
 void nsBaseWidget::PerformFullscreenTransition(FullscreenTransitionStage aStage,
                                                uint16_t aDuration,
                                                nsISupports* aData,
                                                nsIRunnable* aCallback) {
->>>>>>> upstream-releases
   MOZ_ASSERT_UNREACHABLE(
       "Should never call PerformFullscreenTransition on nsBaseWidget");
 }
@@ -1018,17 +904,7 @@ void nsBaseWidget::ConfigureAPZCTreeManager() {
   RefPtr<IAPZCTreeManager> treeManager = mAPZC;  // for capture by the lambdas
 
   ContentReceivedInputBlockCallback callback(
-<<<<<<< HEAD
-      [treeManager](const ScrollableLayerGuid& aGuid, uint64_t aInputBlockId,
-                    bool aPreventDefault) {
-||||||| merged common ancestors
-      [treeManager](const ScrollableLayerGuid& aGuid,
-                    uint64_t aInputBlockId,
-                    bool aPreventDefault)
-      {
-=======
       [treeManager](uint64_t aInputBlockId, bool aPreventDefault) {
->>>>>>> upstream-releases
         MOZ_ASSERT(NS_IsMainThread());
         APZThreadUtils::RunOnControllerThread(NewRunnableMethod<uint64_t, bool>(
             "layers::IAPZCTreeManager::ContentReceivedInputBlock", treeManager,
@@ -1068,47 +944,10 @@ void nsBaseWidget::ConfigureAPZControllerThread() {
   APZThreadUtils::SetControllerThread(MessageLoop::current());
 }
 
-<<<<<<< HEAD
-void nsBaseWidget::SetConfirmedTargetAPZC(
-    uint64_t aInputBlockId,
-    const nsTArray<ScrollableLayerGuid>& aTargets) const {
-||||||| merged common ancestors
-void
-nsBaseWidget::SetConfirmedTargetAPZC(uint64_t aInputBlockId,
-                                     const nsTArray<ScrollableLayerGuid>& aTargets) const
-{
-=======
 void nsBaseWidget::SetConfirmedTargetAPZC(
     uint64_t aInputBlockId,
     const nsTArray<SLGuidAndRenderRoot>& aTargets) const {
->>>>>>> upstream-releases
   APZThreadUtils::RunOnControllerThread(
-<<<<<<< HEAD
-      NewRunnableMethod<uint64_t,
-                        StoreCopyPassByRRef<nsTArray<ScrollableLayerGuid>>>(
-          "layers::IAPZCTreeManager::SetTargetAPZC", mAPZC,
-          &IAPZCTreeManager::SetTargetAPZC, aInputBlockId, aTargets));
-}
-
-void nsBaseWidget::UpdateZoomConstraints(
-    const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
-    const Maybe<ZoomConstraints>& aConstraints) {
-||||||| merged common ancestors
-    NewRunnableMethod<uint64_t,
-                      StoreCopyPassByRRef<nsTArray<ScrollableLayerGuid>>>(
-      "layers::IAPZCTreeManager::SetTargetAPZC",
-      mAPZC,
-      &IAPZCTreeManager::SetTargetAPZC,
-      aInputBlockId,
-      aTargets));
-}
-
-void
-nsBaseWidget::UpdateZoomConstraints(const uint32_t& aPresShellId,
-                                    const FrameMetrics::ViewID& aViewId,
-                                    const Maybe<ZoomConstraints>& aConstraints)
-{
-=======
       NewRunnableMethod<uint64_t,
                         StoreCopyPassByRRef<nsTArray<SLGuidAndRenderRoot>>>(
           "layers::IAPZCTreeManager::SetTargetAPZC", mAPZC,
@@ -1118,7 +957,6 @@ nsBaseWidget::UpdateZoomConstraints(const uint32_t& aPresShellId,
 void nsBaseWidget::UpdateZoomConstraints(
     const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
     const Maybe<ZoomConstraints>& aConstraints) {
->>>>>>> upstream-releases
   if (!mCompositorSession || !mAPZC) {
     if (mInitialZoomConstraints) {
       MOZ_ASSERT(mInitialZoomConstraints->mPresShellID == aPresShellId);
@@ -1137,18 +975,10 @@ void nsBaseWidget::UpdateZoomConstraints(
     return;
   }
   LayersId layersId = mCompositorSession->RootLayerTreeId();
-<<<<<<< HEAD
-  mAPZC->UpdateZoomConstraints(
-      ScrollableLayerGuid(layersId, aPresShellId, aViewId), aConstraints);
-||||||| merged common ancestors
-  mAPZC->UpdateZoomConstraints(ScrollableLayerGuid(layersId, aPresShellId, aViewId),
-                               aConstraints);
-=======
   mAPZC->UpdateZoomConstraints(
       SLGuidAndRenderRoot(layersId, aPresShellId, aViewId,
                           wr::RenderRoot::Default),
       aConstraints);
->>>>>>> upstream-releases
 }
 
 bool nsBaseWidget::AsyncPanZoomEnabled() const { return !!mAPZC; }
@@ -1182,71 +1012,32 @@ nsEventStatus nsBaseWidget::ProcessUntransformedAPZEvent(
     UniquePtr<DisplayportSetListener> postLayerization;
     if (WidgetTouchEvent* touchEvent = aEvent->AsTouchEvent()) {
       if (touchEvent->mMessage == eTouchStart) {
-<<<<<<< HEAD
-        if (gfxPrefs::TouchActionEnabled()) {
-          APZCCallbackHelper::SendSetAllowedTouchBehaviorNotification(
-              this, GetDocument(), *(original->AsTouchEvent()), aInputBlockId,
-||||||| merged common ancestors
-        if (gfxPrefs::TouchActionEnabled()) {
-          APZCCallbackHelper::SendSetAllowedTouchBehaviorNotification(this,
-              GetDocument(), *(original->AsTouchEvent()), aInputBlockId,
-=======
         if (StaticPrefs::layout_css_touch_action_enabled()) {
           APZCCallbackHelper::SendSetAllowedTouchBehaviorNotification(
               this, GetDocument(), *(original->AsTouchEvent()), aInputBlockId,
->>>>>>> upstream-releases
               mSetAllowedTouchBehaviorCallback);
         }
-<<<<<<< HEAD
-        postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(
-            this, GetDocument(), *(original->AsTouchEvent()), aGuid,
-            aInputBlockId);
-||||||| merged common ancestors
-        postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
-            *(original->AsTouchEvent()), aGuid, aInputBlockId);
-=======
         postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(
             this, GetDocument(), *(original->AsTouchEvent()), aGuid.mLayersId,
             aInputBlockId);
->>>>>>> upstream-releases
       }
       mAPZEventState->ProcessTouchEvent(*touchEvent, aGuid, aInputBlockId,
                                         aApzResponse, status);
     } else if (WidgetWheelEvent* wheelEvent = aEvent->AsWheelEvent()) {
       MOZ_ASSERT(wheelEvent->mFlags.mHandledByAPZ);
-<<<<<<< HEAD
-      postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(
-          this, GetDocument(), *(original->AsWheelEvent()), aGuid,
-          aInputBlockId);
-||||||| merged common ancestors
-      postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
-          *(original->AsWheelEvent()), aGuid, aInputBlockId);
-=======
       postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(
           this, GetDocument(), *(original->AsWheelEvent()), aGuid.mLayersId,
           aInputBlockId);
->>>>>>> upstream-releases
       if (wheelEvent->mCanTriggerSwipe) {
         ReportSwipeStarted(aInputBlockId, wheelEvent->TriggersSwipe());
       }
       mAPZEventState->ProcessWheelEvent(*wheelEvent, aInputBlockId);
     } else if (WidgetMouseEvent* mouseEvent = aEvent->AsMouseEvent()) {
       MOZ_ASSERT(mouseEvent->mFlags.mHandledByAPZ);
-<<<<<<< HEAD
-      postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(
-          this, GetDocument(), *(original->AsMouseEvent()), aGuid,
-          aInputBlockId);
-      mAPZEventState->ProcessMouseEvent(*mouseEvent, aGuid, aInputBlockId);
-||||||| merged common ancestors
-      postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(this, GetDocument(),
-          *(original->AsMouseEvent()), aGuid, aInputBlockId);
-      mAPZEventState->ProcessMouseEvent(*mouseEvent, aGuid, aInputBlockId);
-=======
       postLayerization = APZCCallbackHelper::SendSetTargetAPZCNotification(
           this, GetDocument(), *(original->AsMouseEvent()), aGuid.mLayersId,
           aInputBlockId);
       mAPZEventState->ProcessMouseEvent(*mouseEvent, aInputBlockId);
->>>>>>> upstream-releases
     }
     if (postLayerization && postLayerization->Register()) {
       Unused << postLayerization.release();
@@ -1341,13 +1132,6 @@ void nsBaseWidget::DispatchTouchInput(MultiTouchInput& aInput) {
   }
 }
 
-<<<<<<< HEAD
-nsEventStatus nsBaseWidget::DispatchInputEvent(WidgetInputEvent* aEvent) {
-||||||| merged common ancestors
-nsEventStatus
-nsBaseWidget::DispatchInputEvent(WidgetInputEvent* aEvent)
-{
-=======
 void nsBaseWidget::DispatchPanGestureInput(PanGestureInput& aInput) {
   MOZ_ASSERT(NS_IsMainThread());
   if (mAPZC) {
@@ -1372,7 +1156,6 @@ void nsBaseWidget::DispatchPanGestureInput(PanGestureInput& aInput) {
 }
 
 nsEventStatus nsBaseWidget::DispatchInputEvent(WidgetInputEvent* aEvent) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (mAPZC) {
     if (APZThreadUtils::IsControllerThread()) {
@@ -1425,15 +1208,7 @@ bool nsBaseWidget::ShowContextMenuAfterMouseUp() {
   return gContextMenuAfterMouseUp;
 }
 
-<<<<<<< HEAD
-nsIDocument* nsBaseWidget::GetDocument() const {
-||||||| merged common ancestors
-nsIDocument*
-nsBaseWidget::GetDocument() const
-{
-=======
 Document* nsBaseWidget::GetDocument() const {
->>>>>>> upstream-releases
   if (mWidgetListener) {
     if (PresShell* presShell = mWidgetListener->GetPresShell()) {
       return presShell->GetDocument();
@@ -1666,22 +1441,11 @@ LayerManager* nsBaseWidget::GetLayerManager(
     }
     // Try to use an async compositor first, if possible
     if (ShouldUseOffMainThreadCompositing()) {
-<<<<<<< HEAD
-      // e10s uses the parameter to pass in the shadow manager from the TabChild
-      // so we don't expect to see it there since this doesn't support e10s.
-      NS_ASSERTION(aShadowManager == nullptr,
-                   "Async Compositor not supported with e10s");
-||||||| merged common ancestors
-      // e10s uses the parameter to pass in the shadow manager from the TabChild
-      // so we don't expect to see it there since this doesn't support e10s.
-      NS_ASSERTION(aShadowManager == nullptr, "Async Compositor not supported with e10s");
-=======
       // e10s uses the parameter to pass in the shadow manager from the
       // BrowserChild so we don't expect to see it there since this doesn't
       // support e10s.
       NS_ASSERTION(aShadowManager == nullptr,
                    "Async Compositor not supported with e10s");
->>>>>>> upstream-releases
       CreateCompositor();
     }
 
@@ -1961,15 +1725,7 @@ void nsBaseWidget::NotifyWindowMoved(int32_t aX, int32_t aY) {
   }
 }
 
-<<<<<<< HEAD
-void nsBaseWidget::NotifyPresShell(NotificationFunc aNotificationFunc) {
-||||||| merged common ancestors
-void
-nsBaseWidget::NotifyPresShell(NotificationFunc aNotificationFunc)
-{
-=======
 void nsBaseWidget::NotifySizeMoveDone() {
->>>>>>> upstream-releases
   if (!mWidgetListener) {
     return;
   }
@@ -1978,25 +1734,6 @@ void nsBaseWidget::NotifySizeMoveDone() {
   }
 }
 
-<<<<<<< HEAD
-void nsBaseWidget::NotifySizeMoveDone() {
-  NotifyPresShell(&nsIPresShell::WindowSizeMoveDone);
-}
-
-void nsBaseWidget::NotifySysColorChanged() {
-  NotifyPresShell(&nsIPresShell::SysColorChanged);
-||||||| merged common ancestors
-void
-nsBaseWidget::NotifySizeMoveDone()
-{
-  NotifyPresShell(&nsIPresShell::WindowSizeMoveDone);
-}
-
-void
-nsBaseWidget::NotifySysColorChanged()
-{
-  NotifyPresShell(&nsIPresShell::SysColorChanged);
-=======
 void nsBaseWidget::NotifySysColorChanged() {
   if (!mWidgetListener) {
     return;
@@ -2004,18 +1741,8 @@ void nsBaseWidget::NotifySysColorChanged() {
   if (PresShell* presShell = mWidgetListener->GetPresShell()) {
     presShell->SysColorChanged();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsBaseWidget::NotifyThemeChanged() {
-  NotifyPresShell(&nsIPresShell::ThemeChanged);
-||||||| merged common ancestors
-void
-nsBaseWidget::NotifyThemeChanged()
-{
-  NotifyPresShell(&nsIPresShell::ThemeChanged);
-=======
 void nsBaseWidget::NotifyThemeChanged() {
   if (!mWidgetListener) {
     return;
@@ -2023,47 +1750,20 @@ void nsBaseWidget::NotifyThemeChanged() {
   if (PresShell* presShell = mWidgetListener->GetPresShell()) {
     presShell->ThemeChanged();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsBaseWidget::NotifyUIStateChanged(UIStateChangeType aShowAccelerators,
-                                        UIStateChangeType aShowFocusRings) {
-  if (nsIDocument* doc = GetDocument()) {
-    nsPIDOMWindowOuter* win = doc->GetWindow();
-    if (win) {
-      win->SetKeyboardIndicators(aShowAccelerators, aShowFocusRings);
-||||||| merged common ancestors
-void
-nsBaseWidget::NotifyUIStateChanged(UIStateChangeType aShowAccelerators,
-                                   UIStateChangeType aShowFocusRings)
-{
-  if (nsIDocument* doc = GetDocument()) {
-    nsPIDOMWindowOuter* win = doc->GetWindow();
-    if (win) {
-      win->SetKeyboardIndicators(aShowAccelerators, aShowFocusRings);
-=======
 void nsBaseWidget::NotifyUIStateChanged(UIStateChangeType aShowFocusRings) {
   if (Document* doc = GetDocument()) {
     if (nsPIDOMWindowOuter* win = doc->GetWindow()) {
       win->SetKeyboardIndicators(aShowFocusRings);
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
-nsresult nsBaseWidget::NotifyIME(const IMENotification& aIMENotification) {
-||||||| merged common ancestors
-nsresult
-nsBaseWidget::NotifyIME(const IMENotification& aIMENotification)
-{
-=======
 nsresult nsBaseWidget::NotifyIME(const IMENotification& aIMENotification) {
   if (mIMEHasQuit) {
     return NS_OK;
   }
->>>>>>> upstream-releases
   switch (aIMENotification.mMessage) {
     case REQUEST_TO_COMMIT_COMPOSITION:
     case REQUEST_TO_CANCEL_COMPOSITION:
@@ -2146,27 +1846,12 @@ void nsBaseWidget::ZoomToRect(const uint32_t& aPresShellId,
   }
   LayersId layerId = mCompositorSession->RootLayerTreeId();
   APZThreadUtils::RunOnControllerThread(
-<<<<<<< HEAD
-      NewRunnableMethod<ScrollableLayerGuid, CSSRect, uint32_t>(
-          "layers::IAPZCTreeManager::ZoomToRect", mAPZC,
-          &IAPZCTreeManager::ZoomToRect,
-          ScrollableLayerGuid(layerId, aPresShellId, aViewId), aRect, aFlags));
-||||||| merged common ancestors
-    NewRunnableMethod<ScrollableLayerGuid, CSSRect, uint32_t>(
-      "layers::IAPZCTreeManager::ZoomToRect",
-      mAPZC,
-      &IAPZCTreeManager::ZoomToRect,
-      ScrollableLayerGuid(layerId, aPresShellId, aViewId),
-      aRect,
-      aFlags));
-=======
       NewRunnableMethod<SLGuidAndRenderRoot, CSSRect, uint32_t>(
           "layers::IAPZCTreeManager::ZoomToRect", mAPZC,
           &IAPZCTreeManager::ZoomToRect,
           SLGuidAndRenderRoot(layerId, aPresShellId, aViewId,
                               wr::RenderRoot::Default),
           aRect, aFlags));
->>>>>>> upstream-releases
 }
 
 #ifdef ACCESSIBILITY
@@ -2204,39 +1889,10 @@ void nsBaseWidget::StartAsyncScrollbarDrag(
   MOZ_ASSERT(XRE_IsParentProcess() && mCompositorSession);
 
   LayersId layersId = mCompositorSession->RootLayerTreeId();
-<<<<<<< HEAD
-  ScrollableLayerGuid guid(layersId, aDragMetrics.mPresShellId,
-                           aDragMetrics.mViewId);
-||||||| merged common ancestors
-  ScrollableLayerGuid guid(layersId, aDragMetrics.mPresShellId, aDragMetrics.mViewId);
-=======
   SLGuidAndRenderRoot guid(layersId, aDragMetrics.mPresShellId,
                            aDragMetrics.mViewId, wr::RenderRoot::Default);
->>>>>>> upstream-releases
 
   APZThreadUtils::RunOnControllerThread(
-<<<<<<< HEAD
-      NewRunnableMethod<ScrollableLayerGuid, AsyncDragMetrics>(
-          "layers::IAPZCTreeManager::StartScrollbarDrag", mAPZC,
-          &IAPZCTreeManager::StartScrollbarDrag, guid, aDragMetrics));
-}
-
-bool nsBaseWidget::StartAsyncAutoscroll(const ScreenPoint& aAnchorLocation,
-                                        const ScrollableLayerGuid& aGuid) {
-||||||| merged common ancestors
-    NewRunnableMethod<ScrollableLayerGuid, AsyncDragMetrics>(
-      "layers::IAPZCTreeManager::StartScrollbarDrag",
-      mAPZC,
-      &IAPZCTreeManager::StartScrollbarDrag,
-      guid,
-      aDragMetrics));
-}
-
-bool
-nsBaseWidget::StartAsyncAutoscroll(const ScreenPoint& aAnchorLocation,
-                                   const ScrollableLayerGuid& aGuid)
-{
-=======
       NewRunnableMethod<SLGuidAndRenderRoot, AsyncDragMetrics>(
           "layers::IAPZCTreeManager::StartScrollbarDrag", mAPZC,
           &IAPZCTreeManager::StartScrollbarDrag, guid, aDragMetrics));
@@ -2244,21 +1900,12 @@ nsBaseWidget::StartAsyncAutoscroll(const ScreenPoint& aAnchorLocation,
 
 bool nsBaseWidget::StartAsyncAutoscroll(const ScreenPoint& aAnchorLocation,
                                         const SLGuidAndRenderRoot& aGuid) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess() && AsyncPanZoomEnabled());
 
   return mAPZC->StartAutoscroll(aGuid, aAnchorLocation);
 }
 
-<<<<<<< HEAD
-void nsBaseWidget::StopAsyncAutoscroll(const ScrollableLayerGuid& aGuid) {
-||||||| merged common ancestors
-void
-nsBaseWidget::StopAsyncAutoscroll(const ScrollableLayerGuid& aGuid)
-{
-=======
 void nsBaseWidget::StopAsyncAutoscroll(const SLGuidAndRenderRoot& aGuid) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess() && AsyncPanZoomEnabled());
 
   mAPZC->StopAutoscroll(aGuid);
@@ -2504,26 +2151,11 @@ void nsBaseWidget::UnregisterPluginWindowForRemoteUpdates() {
 
 nsresult nsBaseWidget::AsyncEnableDragDrop(bool aEnable) {
   RefPtr<nsBaseWidget> kungFuDeathGrip = this;
-<<<<<<< HEAD
-  return NS_IdleDispatchToCurrentThread(
-      NS_NewRunnableFunction(
-          "AsyncEnableDragDropFn",
-          [this, aEnable, kungFuDeathGrip]() { EnableDragDrop(aEnable); }),
-      kAsyncDragDropTimeout);
-||||||| merged common ancestors
-  return NS_IdleDispatchToCurrentThread(
-    NS_NewRunnableFunction("AsyncEnableDragDropFn",
-                           [this, aEnable, kungFuDeathGrip]() {
-                             EnableDragDrop(aEnable);
-                           }),
-    kAsyncDragDropTimeout);
-=======
   return NS_DispatchToCurrentThreadQueue(
       NS_NewRunnableFunction(
           "AsyncEnableDragDropFn",
           [this, aEnable, kungFuDeathGrip]() { EnableDragDrop(aEnable); }),
       kAsyncDragDropTimeout, EventQueuePriority::Idle);
->>>>>>> upstream-releases
 }
 
 // static
@@ -3481,103 +3113,12 @@ void IMENotification::TextChangeDataBase::Test() {
 // this.
 //
 //////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-/* static */ nsAutoString nsBaseWidget::debug_GuiEventToString(
-    WidgetGUIEvent* aGuiEvent) {
-  NS_ASSERTION(nullptr != aGuiEvent, "cmon, null gui event.");
-||||||| merged common ancestors
-/* static */ nsAutoString
-nsBaseWidget::debug_GuiEventToString(WidgetGUIEvent* aGuiEvent)
-{
-  NS_ASSERTION(nullptr != aGuiEvent,"cmon, null gui event.");
-=======
 /* static */
 nsAutoString nsBaseWidget::debug_GuiEventToString(WidgetGUIEvent* aGuiEvent) {
   NS_ASSERTION(nullptr != aGuiEvent, "cmon, null gui event.");
->>>>>>> upstream-releases
 
   nsAutoString eventName(NS_LITERAL_STRING("UNKNOWN"));
 
-<<<<<<< HEAD
-#define _ASSIGN_eventName(_value, _name) \
-  case _value:                           \
-    eventName.AssignLiteral(_name);      \
-    break
-
-  switch (aGuiEvent->mMessage) {
-    _ASSIGN_eventName(eBlur, "eBlur");
-    _ASSIGN_eventName(eDrop, "eDrop");
-    _ASSIGN_eventName(eDragEnter, "eDragEnter");
-    _ASSIGN_eventName(eDragExit, "eDragExit");
-    _ASSIGN_eventName(eDragOver, "eDragOver");
-    _ASSIGN_eventName(eEditorInput, "eEditorInput");
-    _ASSIGN_eventName(eFocus, "eFocus");
-    _ASSIGN_eventName(eFocusIn, "eFocusIn");
-    _ASSIGN_eventName(eFocusOut, "eFocusOut");
-    _ASSIGN_eventName(eFormSelect, "eFormSelect");
-    _ASSIGN_eventName(eFormChange, "eFormChange");
-    _ASSIGN_eventName(eFormReset, "eFormReset");
-    _ASSIGN_eventName(eFormSubmit, "eFormSubmit");
-    _ASSIGN_eventName(eImageAbort, "eImageAbort");
-    _ASSIGN_eventName(eLoadError, "eLoadError");
-    _ASSIGN_eventName(eKeyDown, "eKeyDown");
-    _ASSIGN_eventName(eKeyPress, "eKeyPress");
-    _ASSIGN_eventName(eKeyUp, "eKeyUp");
-    _ASSIGN_eventName(eMouseEnterIntoWidget, "eMouseEnterIntoWidget");
-    _ASSIGN_eventName(eMouseExitFromWidget, "eMouseExitFromWidget");
-    _ASSIGN_eventName(eMouseDown, "eMouseDown");
-    _ASSIGN_eventName(eMouseUp, "eMouseUp");
-    _ASSIGN_eventName(eMouseClick, "eMouseClick");
-    _ASSIGN_eventName(eMouseAuxClick, "eMouseAuxClick");
-    _ASSIGN_eventName(eMouseDoubleClick, "eMouseDoubleClick");
-    _ASSIGN_eventName(eMouseMove, "eMouseMove");
-    _ASSIGN_eventName(eLoad, "eLoad");
-    _ASSIGN_eventName(ePopState, "ePopState");
-    _ASSIGN_eventName(eBeforeScriptExecute, "eBeforeScriptExecute");
-    _ASSIGN_eventName(eAfterScriptExecute, "eAfterScriptExecute");
-    _ASSIGN_eventName(eUnload, "eUnload");
-    _ASSIGN_eventName(eHashChange, "eHashChange");
-    _ASSIGN_eventName(eReadyStateChange, "eReadyStateChange");
-||||||| merged common ancestors
-#define _ASSIGN_eventName(_value,_name)\
-case _value: eventName.AssignLiteral(_name) ; break
-
-  switch(aGuiEvent->mMessage)
-  {
-    _ASSIGN_eventName(eBlur,"eBlur");
-    _ASSIGN_eventName(eDrop,"eDrop");
-    _ASSIGN_eventName(eDragEnter,"eDragEnter");
-    _ASSIGN_eventName(eDragExit,"eDragExit");
-    _ASSIGN_eventName(eDragOver,"eDragOver");
-    _ASSIGN_eventName(eEditorInput,"eEditorInput");
-    _ASSIGN_eventName(eFocus,"eFocus");
-    _ASSIGN_eventName(eFocusIn,"eFocusIn");
-    _ASSIGN_eventName(eFocusOut,"eFocusOut");
-    _ASSIGN_eventName(eFormSelect,"eFormSelect");
-    _ASSIGN_eventName(eFormChange,"eFormChange");
-    _ASSIGN_eventName(eFormReset,"eFormReset");
-    _ASSIGN_eventName(eFormSubmit,"eFormSubmit");
-    _ASSIGN_eventName(eImageAbort,"eImageAbort");
-    _ASSIGN_eventName(eLoadError,"eLoadError");
-    _ASSIGN_eventName(eKeyDown,"eKeyDown");
-    _ASSIGN_eventName(eKeyPress,"eKeyPress");
-    _ASSIGN_eventName(eKeyUp,"eKeyUp");
-    _ASSIGN_eventName(eMouseEnterIntoWidget,"eMouseEnterIntoWidget");
-    _ASSIGN_eventName(eMouseExitFromWidget,"eMouseExitFromWidget");
-    _ASSIGN_eventName(eMouseDown,"eMouseDown");
-    _ASSIGN_eventName(eMouseUp,"eMouseUp");
-    _ASSIGN_eventName(eMouseClick,"eMouseClick");
-    _ASSIGN_eventName(eMouseAuxClick,"eMouseAuxClick");
-    _ASSIGN_eventName(eMouseDoubleClick,"eMouseDoubleClick");
-    _ASSIGN_eventName(eMouseMove,"eMouseMove");
-    _ASSIGN_eventName(eLoad,"eLoad");
-    _ASSIGN_eventName(ePopState,"ePopState");
-    _ASSIGN_eventName(eBeforeScriptExecute,"eBeforeScriptExecute");
-    _ASSIGN_eventName(eAfterScriptExecute,"eAfterScriptExecute");
-    _ASSIGN_eventName(eUnload,"eUnload");
-    _ASSIGN_eventName(eHashChange,"eHashChange");
-    _ASSIGN_eventName(eReadyStateChange,"eReadyStateChange");
-=======
 #  define _ASSIGN_eventName(_value, _name) \
     case _value:                           \
       eventName.AssignLiteral(_name);      \
@@ -3617,7 +3158,6 @@ case _value: eventName.AssignLiteral(_name) ; break
     _ASSIGN_eventName(eUnload, "eUnload");
     _ASSIGN_eventName(eHashChange, "eHashChange");
     _ASSIGN_eventName(eReadyStateChange, "eReadyStateChange");
->>>>>>> upstream-releases
     _ASSIGN_eventName(eXULBroadcast, "eXULBroadcast");
     _ASSIGN_eventName(eXULCommandUpdate, "eXULCommandUpdate");
 
@@ -3730,39 +3270,15 @@ static int32_t _GetPrintCount() {
   return ++sCount;
 }
 //////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-/* static */ bool nsBaseWidget::debug_WantPaintFlashing() {
-||||||| merged common ancestors
-/* static */ bool
-nsBaseWidget::debug_WantPaintFlashing()
-{
-=======
 /* static */
 bool nsBaseWidget::debug_WantPaintFlashing() {
->>>>>>> upstream-releases
   return debug_GetCachedBoolPref("nglayout.debug.paint_flashing");
 }
 //////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-/* static */ void nsBaseWidget::debug_DumpEvent(FILE* aFileOut,
-                                                nsIWidget* aWidget,
-                                                WidgetGUIEvent* aGuiEvent,
-                                                const char* aWidgetName,
-                                                int32_t aWindowID) {
-||||||| merged common ancestors
-/* static */ void
-nsBaseWidget::debug_DumpEvent(FILE *                aFileOut,
-                              nsIWidget *           aWidget,
-                              WidgetGUIEvent*       aGuiEvent,
-                              const char*           aWidgetName,
-                              int32_t               aWindowID)
-{
-=======
 /* static */
 void nsBaseWidget::debug_DumpEvent(FILE* aFileOut, nsIWidget* aWidget,
                                    WidgetGUIEvent* aGuiEvent,
                                    const char* aWidgetName, int32_t aWindowID) {
->>>>>>> upstream-releases
   if (aGuiEvent->mMessage == eMouseMove) {
     if (!debug_GetCachedBoolPref("nglayout.debug.motion_event_dumping")) return;
   }
@@ -3783,30 +3299,6 @@ void nsBaseWidget::debug_DumpEvent(FILE* aFileOut, nsIWidget* aWidget,
           aWindowID, aGuiEvent->mRefPoint.x, aGuiEvent->mRefPoint.y);
 }
 //////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-/* static */ void nsBaseWidget::debug_DumpPaintEvent(FILE* aFileOut,
-                                                     nsIWidget* aWidget,
-                                                     const nsIntRegion& aRegion,
-                                                     const char* aWidgetName,
-                                                     int32_t aWindowID) {
-  NS_ASSERTION(nullptr != aFileOut, "cmon, null output FILE");
-  NS_ASSERTION(nullptr != aWidget, "cmon, the widget is null");
-
-  if (!debug_GetCachedBoolPref("nglayout.debug.paint_dumping")) return;
-||||||| merged common ancestors
-/* static */ void
-nsBaseWidget::debug_DumpPaintEvent(FILE *                aFileOut,
-                                   nsIWidget *           aWidget,
-                                   const nsIntRegion &   aRegion,
-                                   const char *          aWidgetName,
-                                   int32_t               aWindowID)
-{
-  NS_ASSERTION(nullptr != aFileOut,"cmon, null output FILE");
-  NS_ASSERTION(nullptr != aWidget,"cmon, the widget is null");
-
-  if (!debug_GetCachedBoolPref("nglayout.debug.paint_dumping"))
-    return;
-=======
 /* static */
 void nsBaseWidget::debug_DumpPaintEvent(FILE* aFileOut, nsIWidget* aWidget,
                                         const nsIntRegion& aRegion,
@@ -3816,7 +3308,6 @@ void nsBaseWidget::debug_DumpPaintEvent(FILE* aFileOut, nsIWidget* aWidget,
   NS_ASSERTION(nullptr != aWidget, "cmon, the widget is null");
 
   if (!debug_GetCachedBoolPref("nglayout.debug.paint_dumping")) return;
->>>>>>> upstream-releases
 
   nsIntRect rect = aRegion.GetBounds();
   fprintf(aFileOut,
@@ -3828,29 +3319,12 @@ void nsBaseWidget::debug_DumpPaintEvent(FILE* aFileOut, nsIWidget* aWidget,
   fprintf(aFileOut, "\n");
 }
 //////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-/* static */ void nsBaseWidget::debug_DumpInvalidate(
-    FILE* aFileOut, nsIWidget* aWidget, const LayoutDeviceIntRect* aRect,
-    const char* aWidgetName, int32_t aWindowID) {
-  if (!debug_GetCachedBoolPref("nglayout.debug.invalidate_dumping")) return;
-||||||| merged common ancestors
-/* static */ void
-nsBaseWidget::debug_DumpInvalidate(FILE* aFileOut,
-                                   nsIWidget* aWidget,
-                                   const LayoutDeviceIntRect* aRect,
-                                   const char* aWidgetName,
-                                   int32_t aWindowID)
-{
-  if (!debug_GetCachedBoolPref("nglayout.debug.invalidate_dumping"))
-    return;
-=======
 /* static */
 void nsBaseWidget::debug_DumpInvalidate(FILE* aFileOut, nsIWidget* aWidget,
                                         const LayoutDeviceIntRect* aRect,
                                         const char* aWidgetName,
                                         int32_t aWindowID) {
   if (!debug_GetCachedBoolPref("nglayout.debug.invalidate_dumping")) return;
->>>>>>> upstream-releases
 
   NS_ASSERTION(nullptr != aFileOut, "cmon, null output FILE");
   NS_ASSERTION(nullptr != aWidget, "cmon, the widget is null");

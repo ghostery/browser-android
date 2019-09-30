@@ -83,71 +83,10 @@ nsresult ExtractByteStreamFromBody(const fetch::BodyInit& aBodyInit,
  * Non-owning version. This method should go away when BodyInit will contain
  * ReadableStream.
  */
-<<<<<<< HEAD
 nsresult ExtractByteStreamFromBody(const fetch::ResponseBodyInit& aBodyInit,
                                    nsIInputStream** aStream,
                                    nsCString& aContentType,
                                    uint64_t& aContentLength);
-
-template <class Derived>
-class FetchBodyConsumer;
-
-enum FetchConsumeType {
-  CONSUME_ARRAYBUFFER,
-  CONSUME_BLOB,
-  CONSUME_FORMDATA,
-  CONSUME_JSON,
-  CONSUME_TEXT,
-};
-
-class FetchStreamHolder {
- public:
-  NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
-
-  virtual void NullifyStream() = 0;
-
-  virtual void MarkAsRead() = 0;
-
-  virtual JSObject* ReadableStreamBody() = 0;
-};
-||||||| merged common ancestors
-nsresult
-ExtractByteStreamFromBody(const fetch::ResponseBodyInit& aBodyInit,
-                          nsIInputStream** aStream,
-                          nsCString& aContentType,
-                          uint64_t& aContentLength);
-
-template <class Derived> class FetchBodyConsumer;
-
-enum FetchConsumeType
-{
-  CONSUME_ARRAYBUFFER,
-  CONSUME_BLOB,
-  CONSUME_FORMDATA,
-  CONSUME_JSON,
-  CONSUME_TEXT,
-};
-
-class FetchStreamHolder
-{
-public:
-  NS_INLINE_DECL_PURE_VIRTUAL_REFCOUNTING
-
-  virtual void
-  NullifyStream() = 0;
-
-  virtual void
-  MarkAsRead() = 0;
-
-  virtual JSObject*
-  ReadableStreamBody() = 0;
-};
-=======
-nsresult ExtractByteStreamFromBody(const fetch::ResponseBodyInit& aBodyInit,
-                                   nsIInputStream** aStream,
-                                   nsCString& aContentType,
-                                   uint64_t& aContentLength);
->>>>>>> upstream-releases
 
 /*
  * FetchBody's body consumption uses nsIInputStreamPump to read from the
@@ -184,99 +123,32 @@ nsresult ExtractByteStreamFromBody(const fetch::ResponseBodyInit& aBodyInit,
  * The pump is always released on the main thread.
  */
 template <class Derived>
-<<<<<<< HEAD
-class FetchBody : public FetchStreamHolder, public AbortFollower {
- public:
-  friend class FetchBodyConsumer<Derived>;
-
-  bool GetBodyUsed(ErrorResult& aRv) const;
-||||||| merged common ancestors
-class FetchBody : public FetchStreamHolder
-                , public AbortFollower
-{
-public:
-  friend class FetchBodyConsumer<Derived>;
-
-  bool
-  GetBodyUsed(ErrorResult& aRv) const;
-=======
 class FetchBody : public BodyStreamHolder, public AbortFollower {
  public:
   bool GetBodyUsed(ErrorResult& aRv) const;
->>>>>>> upstream-releases
 
   // For use in assertions. On success, returns true if the body is used, false
   // if not. On error, this sweeps the error under the rug and returns true.
   bool CheckBodyUsed() const;
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> ArrayBuffer(JSContext* aCx, ErrorResult& aRv) {
-    return ConsumeBody(aCx, CONSUME_ARRAYBUFFER, aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise>
-  ArrayBuffer(JSContext* aCx, ErrorResult& aRv)
-  {
-    return ConsumeBody(aCx, CONSUME_ARRAYBUFFER, aRv);
-=======
   already_AddRefed<Promise> ArrayBuffer(JSContext* aCx, ErrorResult& aRv) {
     return ConsumeBody(aCx, BodyConsumer::CONSUME_ARRAYBUFFER, aRv);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> Blob(JSContext* aCx, ErrorResult& aRv) {
-    return ConsumeBody(aCx, CONSUME_BLOB, aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise>
-  Blob(JSContext* aCx, ErrorResult& aRv)
-  {
-    return ConsumeBody(aCx, CONSUME_BLOB, aRv);
-=======
   already_AddRefed<Promise> Blob(JSContext* aCx, ErrorResult& aRv) {
     return ConsumeBody(aCx, BodyConsumer::CONSUME_BLOB, aRv);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> FormData(JSContext* aCx, ErrorResult& aRv) {
-    return ConsumeBody(aCx, CONSUME_FORMDATA, aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise>
-  FormData(JSContext* aCx, ErrorResult& aRv)
-  {
-    return ConsumeBody(aCx, CONSUME_FORMDATA, aRv);
-=======
   already_AddRefed<Promise> FormData(JSContext* aCx, ErrorResult& aRv) {
     return ConsumeBody(aCx, BodyConsumer::CONSUME_FORMDATA, aRv);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> Json(JSContext* aCx, ErrorResult& aRv) {
-    return ConsumeBody(aCx, CONSUME_JSON, aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise>
-  Json(JSContext* aCx, ErrorResult& aRv)
-  {
-    return ConsumeBody(aCx, CONSUME_JSON, aRv);
-=======
   already_AddRefed<Promise> Json(JSContext* aCx, ErrorResult& aRv) {
     return ConsumeBody(aCx, BodyConsumer::CONSUME_JSON, aRv);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> Text(JSContext* aCx, ErrorResult& aRv) {
-    return ConsumeBody(aCx, CONSUME_TEXT, aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise>
-  Text(JSContext* aCx, ErrorResult& aRv)
-  {
-    return ConsumeBody(aCx, CONSUME_TEXT, aRv);
-=======
   already_AddRefed<Promise> Text(JSContext* aCx, ErrorResult& aRv) {
     return ConsumeBody(aCx, BodyConsumer::CONSUME_TEXT, aRv);
->>>>>>> upstream-releases
   }
 
   void GetBody(JSContext* aCx, JS::MutableHandle<JSObject*> aBodyOut,
@@ -320,78 +192,29 @@ class FetchBody : public BodyStreamHolder, public AbortFollower {
 
   const nsCString& MimeType() const { return mMimeType; }
 
-<<<<<<< HEAD
-  // FetchStreamHolder
-  void NullifyStream() override {
-||||||| merged common ancestors
-  // FetchStreamHolder
-  void
-  NullifyStream() override
-  {
-=======
   // BodyStreamHolder
   void NullifyStream() override {
->>>>>>> upstream-releases
     mReadableStreamBody = nullptr;
     mReadableStreamReader = nullptr;
     mFetchStreamReader = nullptr;
   }
 
-<<<<<<< HEAD
-  JSObject* ReadableStreamBody() override {
-    MOZ_ASSERT(mReadableStreamBody);
-    return mReadableStreamBody;
-||||||| merged common ancestors
-  JSObject*
-  ReadableStreamBody() override
-  {
-    MOZ_ASSERT(mReadableStreamBody);
-    return mReadableStreamBody;
-=======
   void SetReadableStreamBody(JSObject* aBody) override {
     mReadableStreamBody = aBody;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  void MarkAsRead() override { mBodyUsed = true; }
-||||||| merged common ancestors
-  void
-  MarkAsRead() override
-  {
-    mBodyUsed = true;
-  }
-=======
   JSObject* GetReadableStreamBody() override { return mReadableStreamBody; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual AbortSignalImpl* GetSignalImpl() const = 0;
-||||||| merged common ancestors
-  virtual AbortSignalImpl*
-  GetSignalImpl() const = 0;
-=======
   void MarkAsRead() override { mBodyUsed = true; }
 
   virtual AbortSignalImpl* GetSignalImpl() const = 0;
->>>>>>> upstream-releases
 
   // AbortFollower
-<<<<<<< HEAD
-  void Abort() override;
-
-  already_AddRefed<Promise> ConsumeBody(JSContext* aCx, FetchConsumeType aType,
-                                        ErrorResult& aRv);
-||||||| merged common ancestors
-  void
-  Abort() override;
-=======
   void Abort() override;
 
   already_AddRefed<Promise> ConsumeBody(JSContext* aCx,
                                         BodyConsumer::ConsumeType aType,
                                         ErrorResult& aRv);
->>>>>>> upstream-releases
 
  protected:
   nsCOMPtr<nsIGlobalObject> mOwner;

@@ -24,18 +24,9 @@
 #include "vm/Monitor.h"
 
 // Some platform hooks must be implemented for single-step profiling.
-<<<<<<< HEAD
-#if defined(JS_SIMULATOR_ARM) || defined(JS_SIMULATOR_MIPS64) || \
-    defined(JS_SIMULATOR_MIPS32)
-#define SINGLESTEP_PROFILING
-||||||| merged common ancestors
-#if defined(JS_SIMULATOR_ARM) || defined(JS_SIMULATOR_MIPS64) || defined(JS_SIMULATOR_MIPS32)
-# define SINGLESTEP_PROFILING
-=======
 #if defined(JS_SIMULATOR_ARM) || defined(JS_SIMULATOR_MIPS64) || \
     defined(JS_SIMULATOR_MIPS32)
 #  define SINGLESTEP_PROFILING
->>>>>>> upstream-releases
 #endif
 
 namespace js {
@@ -136,36 +127,6 @@ using StackChars = Vector<char16_t, 0, SystemAllocPolicy>;
 class OffThreadJob;
 
 // Per-context shell state.
-<<<<<<< HEAD
-struct ShellContext {
-  explicit ShellContext(JSContext* cx);
-  ~ShellContext();
-
-  bool isWorker;
-  double timeoutInterval;
-  double startTime;
-  mozilla::Atomic<bool> serviceInterrupt;
-  mozilla::Atomic<bool> haveInterruptFunc;
-  JS::PersistentRootedValue interruptFunc;
-  bool lastWarningEnabled;
-  JS::PersistentRootedValue lastWarning;
-  JS::PersistentRootedValue promiseRejectionTrackerCallback;
-||||||| merged common ancestors
-struct ShellContext
-{
-    explicit ShellContext(JSContext* cx);
-    ~ShellContext();
-
-    bool isWorker;
-    double timeoutInterval;
-    double startTime;
-    mozilla::Atomic<bool> serviceInterrupt;
-    mozilla::Atomic<bool> haveInterruptFunc;
-    JS::PersistentRootedValue interruptFunc;
-    bool lastWarningEnabled;
-    JS::PersistentRootedValue lastWarning;
-    JS::PersistentRootedValue promiseRejectionTrackerCallback;
-=======
 struct ShellContext {
   explicit ShellContext(JSContext* cx);
   ~ShellContext();
@@ -189,7 +150,6 @@ struct ShellContext {
   // report unhandled rejections in the rejected order.
   JS::PersistentRooted<SetObject*> unhandledRejectedPromises;
 
->>>>>>> upstream-releases
 #ifdef SINGLESTEP_PROFILING
   Vector<StackChars, 0, SystemAllocPolicy> stacks;
 #endif

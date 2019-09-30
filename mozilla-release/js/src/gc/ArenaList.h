@@ -292,19 +292,9 @@ class ArenaLists {
   ZoneData<Arena*> gcScriptArenasToUpdate;
   ZoneData<Arena*> gcObjectGroupArenasToUpdate;
 
-<<<<<<< HEAD
-  // The list of empty arenas which are collected during sweep phase and
-  // released at the end of sweeping every sweep group.
-  ZoneData<Arena*> savedEmptyArenas;
-||||||| merged common ancestors
-    // The list of empty arenas which are collected during sweep phase and released at the end of
-    // sweeping every sweep group.
-    ZoneData<Arena*> savedEmptyArenas;
-=======
   // The list of empty arenas which are collected during the sweep phase and
   // released at the end of sweeping every sweep group.
   ZoneData<Arena*> savedEmptyArenas;
->>>>>>> upstream-releases
 
  public:
   explicit ArenaLists(JS::Zone* zone);
@@ -345,16 +335,8 @@ class ArenaLists {
 
   bool checkEmptyArenaList(AllocKind kind);
 
-<<<<<<< HEAD
-  bool relocateArenas(Arena*& relocatedListOut, JS::gcreason::Reason reason,
-                      js::SliceBudget& sliceBudget, gcstats::Statistics& stats);
-||||||| merged common ancestors
-    bool relocateArenas(Arena*& relocatedListOut, JS::gcreason::Reason reason,
-                        js::SliceBudget& sliceBudget, gcstats::Statistics& stats);
-=======
   bool relocateArenas(Arena*& relocatedListOut, JS::GCReason reason,
                       js::SliceBudget& sliceBudget, gcstats::Statistics& stats);
->>>>>>> upstream-releases
 
   void queueForegroundObjectsForSweep(FreeOp* fop);
   void queueForegroundThingsForSweep();
@@ -368,55 +350,15 @@ class ArenaLists {
 
   void setParallelAllocEnabled(bool enabled);
 
-<<<<<<< HEAD
-  // When finalizing arenas, whether to keep empty arenas on the list or
-  // release them immediately.
-  enum KeepArenasEnum { RELEASE_ARENAS, KEEP_ARENAS };
-||||||| merged common ancestors
-    // When finalizing arenas, whether to keep empty arenas on the list or
-    // release them immediately.
-    enum KeepArenasEnum {
-        RELEASE_ARENAS,
-        KEEP_ARENAS
-    };
-=======
  private:
   inline JSRuntime* runtime();
   inline JSRuntime* runtimeFromAnyThread();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  inline JSRuntime* runtime();
-  inline JSRuntime* runtimeFromAnyThread();
-||||||| merged common ancestors
-  private:
-    inline JSRuntime* runtime();
-    inline JSRuntime* runtimeFromAnyThread();
-=======
   inline void queueForForegroundSweep(FreeOp* fop, const FinalizePhase& phase);
   inline void queueForBackgroundSweep(FreeOp* fop, const FinalizePhase& phase);
   inline void queueForForegroundSweep(AllocKind thingKind);
   inline void queueForBackgroundSweep(AllocKind thingKind);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  inline void queueForForegroundSweep(FreeOp* fop, const FinalizePhase& phase);
-  inline void queueForBackgroundSweep(FreeOp* fop, const FinalizePhase& phase);
-  inline void queueForForegroundSweep(AllocKind thingKind);
-  inline void queueForBackgroundSweep(AllocKind thingKind);
-||||||| merged common ancestors
-    inline void queueForForegroundSweep(FreeOp* fop, const FinalizePhase& phase);
-    inline void queueForBackgroundSweep(FreeOp* fop, const FinalizePhase& phase);
-    inline void queueForForegroundSweep(AllocKind thingKind);
-    inline void queueForBackgroundSweep(AllocKind thingKind);
-=======
-  TenuredCell* refillFreeListAndAllocate(FreeLists& freeLists,
-                                         AllocKind thingKind,
-                                         ShouldCheckThresholds checkThresholds);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   TenuredCell* refillFreeListAndAllocate(FreeLists& freeLists,
                                          AllocKind thingKind,
                                          ShouldCheckThresholds checkThresholds);
@@ -424,18 +366,6 @@ class ArenaLists {
   friend class GCRuntime;
   friend class js::Nursery;
   friend class js::TenuringTracer;
-||||||| merged common ancestors
-    TenuredCell* refillFreeListAndAllocate(FreeLists& freeLists, AllocKind thingKind,
-                                           ShouldCheckThresholds checkThresholds);
-
-    friend class GCRuntime;
-    friend class js::Nursery;
-    friend class js::TenuringTracer;
-=======
-  friend class GCRuntime;
-  friend class js::Nursery;
-  friend class js::TenuringTracer;
->>>>>>> upstream-releases
 };
 
 } /* namespace gc */

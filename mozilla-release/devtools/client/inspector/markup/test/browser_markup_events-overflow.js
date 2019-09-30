@@ -34,16 +34,9 @@ add_task(async function() {
   const { inspector } = await openInspectorForURL(TEST_URL);
 
   const markupContainer = await getContainerForSelector("#events", inspector);
-<<<<<<< HEAD
-  const evHolder = markupContainer.elt.querySelector(
-    ".inspector-badge.interactive[data-event]");
-||||||| merged common ancestors
-  const evHolder = markupContainer.elt.querySelector(".markup-badge[data-event]");
-=======
   const evHolder = markupContainer.elt.querySelector(
     ".inspector-badge.interactive[data-event]"
   );
->>>>>>> upstream-releases
   const tooltip = inspector.markup.eventDetailsTooltip;
 
   info("Clicking to open event tooltip.");

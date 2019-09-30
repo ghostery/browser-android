@@ -20,15 +20,8 @@
 #include "mozilla/UniquePtr.h"
 #include "mozilla/webrender/WebRenderTypes.h"
 #include "mozilla/layers/SynchronousTask.h"
-<<<<<<< HEAD
-#include "GLContext.h"
-#include "mozilla/VsyncDispatcher.h"
-||||||| merged common ancestors
-#include "GLContext.h"
-=======
 #include "mozilla/layers/WebRenderCompositionRecorder.h"
 #include "mozilla/VsyncDispatcher.h"
->>>>>>> upstream-releases
 
 #include <list>
 #include <queue>
@@ -60,16 +53,8 @@ class WebRenderThreadPool {
   wr::WrThreadPool* mThreadPool;
 };
 
-<<<<<<< HEAD
-class WebRenderProgramCache {
- public:
-||||||| merged common ancestors
-class WebRenderProgramCache {
-public:
-=======
 class WebRenderProgramCache final {
  public:
->>>>>>> upstream-releases
   explicit WebRenderProgramCache(wr::WrThreadPool* aThreadPool);
 
   ~WebRenderProgramCache();
@@ -80,16 +65,8 @@ class WebRenderProgramCache final {
   wr::WrProgramCache* mProgramCache;
 };
 
-<<<<<<< HEAD
-class WebRenderShaders {
- public:
-||||||| merged common ancestors
-class WebRenderShaders {
-public:
-=======
 class WebRenderShaders final {
  public:
->>>>>>> upstream-releases
   WebRenderShaders(gl::GLContext* gl, WebRenderProgramCache* programCache);
   ~WebRenderShaders();
 
@@ -100,23 +77,6 @@ class WebRenderShaders final {
   wr::WrShaders* mShaders;
 };
 
-<<<<<<< HEAD
-class WebRenderPipelineInfo {
-  NS_INLINE_DECL_THREADSAFE_REFCOUNTING(WebRenderPipelineInfo);
-
- public:
-  explicit WebRenderPipelineInfo(wr::WrPipelineInfo aPipelineInfo);
-
-  const wr::WrPipelineInfo& Raw() { return mPipelineInfo; }
-
- protected:
-  ~WebRenderPipelineInfo();
-
-  const wr::WrPipelineInfo mPipelineInfo;
-};
-
-||||||| merged common ancestors
-=======
 class WebRenderPipelineInfo final {
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(WebRenderPipelineInfo);
 
@@ -131,29 +91,13 @@ class WebRenderPipelineInfo final {
   const wr::WrPipelineInfo mPipelineInfo;
 };
 
->>>>>>> upstream-releases
 /// Base class for an event that can be scheduled to run on the render thread.
 ///
-<<<<<<< HEAD
-/// The event can be passed through the same channels as regular WebRender
-/// messages to preserve ordering.
-class RendererEvent {
- public:
-  virtual ~RendererEvent() {}
-||||||| merged common ancestors
-/// The event can be passed through the same channels as regular WebRender messages
-/// to preserve ordering.
-class RendererEvent
-{
-public:
-  virtual ~RendererEvent() {}
-=======
 /// The event can be passed through the same channels as regular WebRender
 /// messages to preserve ordering.
 class RendererEvent {
  public:
   virtual ~RendererEvent() = default;
->>>>>>> upstream-releases
   virtual void Run(RenderThread& aRenderThread, wr::WindowId aWindow) = 0;
 };
 
@@ -228,22 +172,12 @@ class RenderThread final {
   void RunEvent(wr::WindowId aWindowId, UniquePtr<RendererEvent> aCallBack);
 
   /// Can only be called from the render thread.
-<<<<<<< HEAD
-  void UpdateAndRender(wr::WindowId aWindowId, const VsyncId& aStartId,
-                       const TimeStamp& aStartTime, bool aRender,
-                       const Maybe<gfx::IntSize>& aReadbackSize,
-                       const Maybe<Range<uint8_t>>& aReadbackBuffer,
-                       bool aHadSlowFrame);
-||||||| merged common ancestors
-  void UpdateAndRender(wr::WindowId aWindowId, const TimeStamp& aStartTime, bool aRender, const Maybe<gfx::IntSize>& aReadbackSize, const Maybe<Range<uint8_t>>& aReadbackBuffer);
-=======
   void UpdateAndRender(wr::WindowId aWindowId, const VsyncId& aStartId,
                        const TimeStamp& aStartTime, bool aRender,
                        const Maybe<gfx::IntSize>& aReadbackSize,
                        const Maybe<wr::ImageFormat>& aReadbackFormat,
                        const Maybe<Range<uint8_t>>& aReadbackBuffer,
                        bool aHadSlowFrame);
->>>>>>> upstream-releases
 
   void Pause(wr::WindowId aWindowId);
   bool Resume(wr::WindowId aWindowId);
@@ -256,12 +190,6 @@ class RenderThread final {
   void UnregisterExternalImage(uint64_t aExternalImageId);
 
   /// Can be called from any thread.
-<<<<<<< HEAD
-  void UpdateRenderTextureHost(uint64_t aSrcExternalImageId,
-                               uint64_t aWrappedExternalImageId);
-||||||| merged common ancestors
-  void UpdateRenderTextureHost(uint64_t aSrcExternalImageId, uint64_t aWrappedExternalImageId);
-=======
   void PrepareForUse(uint64_t aExternalImageId);
 
   /// Can be called from any thread.
@@ -273,7 +201,6 @@ class RenderThread final {
 
   /// Can only be called from the render thread.
   void NofityForUse(uint64_t aExternalImageId);
->>>>>>> upstream-releases
 
   /// Can only be called from the render thread.
   void UnregisterExternalImageDuringShutdown(uint64_t aExternalImageId);
@@ -288,16 +215,9 @@ class RenderThread final {
   /// Can be called from any thread.
   bool TooManyPendingFrames(wr::WindowId aWindowId);
   /// Can be called from any thread.
-<<<<<<< HEAD
-  void IncPendingFrameCount(wr::WindowId aWindowId, const VsyncId& aStartId,
-                            const TimeStamp& aStartTime);
-||||||| merged common ancestors
-  void IncPendingFrameCount(wr::WindowId aWindowId, const TimeStamp& aStartTime);
-=======
   void IncPendingFrameCount(wr::WindowId aWindowId, const VsyncId& aStartId,
                             const TimeStamp& aStartTime,
                             uint8_t aDocFrameCount);
->>>>>>> upstream-releases
   /// Can be called from any thread.
   mozilla::Pair<bool, bool> IncRenderingFrameCount(wr::WindowId aWindowId,
                                                    bool aRender);
@@ -342,17 +262,11 @@ class RenderThread final {
 
   size_t RendererCount();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   void SetCompositionRecorderForWindow(
       wr::WindowId aWindowId,
       RefPtr<layers::WebRenderCompositionRecorder>&& aCompositionRecorder);
 
  private:
->>>>>>> upstream-releases
   explicit RenderThread(base::Thread* aThread);
 
   void DeferredRenderTextureHostDestroy();
@@ -388,15 +302,9 @@ private:
     // One entry in this queue for each pending frame, so the length
     // should always equal mPendingCount
     std::queue<TimeStamp> mStartTimes;
-<<<<<<< HEAD
-    std::queue<VsyncId> mStartIds;
-    bool mHadSlowFrame = false;
-||||||| merged common ancestors
-=======
     std::queue<VsyncId> mStartIds;
     std::queue<uint8_t> mDocFrameCounts;
     bool mHadSlowFrame = false;
->>>>>>> upstream-releases
   };
 
   DataMutex<std::unordered_map<uint64_t, WindowInfo*>> mWindowInfos;

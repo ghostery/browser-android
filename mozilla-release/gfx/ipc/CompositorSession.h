@@ -11,16 +11,8 @@
 #include "mozilla/layers/CompositorTypes.h"
 #include "nsISupportsImpl.h"
 #if defined(MOZ_WIDGET_ANDROID)
-<<<<<<< HEAD
-#include "mozilla/layers/UiCompositorControllerChild.h"
-#endif  // defined(MOZ_WIDGET_ANDROID)
-||||||| merged common ancestors
-#include "mozilla/layers/UiCompositorControllerChild.h"
-#endif // defined(MOZ_WIDGET_ANDROID)
-=======
 #  include "mozilla/layers/UiCompositorControllerChild.h"
 #endif  // defined(MOZ_WIDGET_ANDROID)
->>>>>>> upstream-releases
 
 class nsBaseWidget;
 
@@ -88,33 +80,17 @@ class CompositorSession {
   RefPtr<UiCompositorControllerChild> GetUiCompositorControllerChild() {
     return mUiCompositorControllerChild;
   }
-<<<<<<< HEAD
-#endif  // defined(MOZ_WIDGET_ANDROID)
- protected:
-  CompositorSession(CompositorWidgetDelegate* aDelegate,
-||||||| merged common ancestors
-#endif // defined(MOZ_WIDGET_ANDROID)
-protected:
-  CompositorSession(CompositorWidgetDelegate* aDelegate,
-=======
 
   void NotifyDisablingWebRender();
 #endif  // defined(MOZ_WIDGET_ANDROID)
  protected:
   CompositorSession(nsBaseWidget* aWidget, CompositorWidgetDelegate* aDelegate,
->>>>>>> upstream-releases
                     CompositorBridgeChild* aChild,
                     const LayersId& aRootLayerTreeId);
   virtual ~CompositorSession();
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
  protected:
   nsBaseWidget* mWidget;
->>>>>>> upstream-releases
   CompositorWidgetDelegate* mCompositorWidgetDelegate;
   RefPtr<CompositorBridgeChild> mCompositorBridgeChild;
   LayersId mRootLayerTreeId;

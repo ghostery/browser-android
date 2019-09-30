@@ -273,16 +273,8 @@ FormAutofillParent.prototype = {
         break;
       }
       case "FormAutofill:SaveCreditCard": {
-<<<<<<< HEAD
-        if (!await OSKeyStore.ensureLoggedIn()) {
-          log.warn("User canceled encryption login");
-||||||| merged common ancestors
-        if (!await MasterPassword.ensureLoggedIn()) {
-          log.warn("User canceled master password entry");
-=======
         if (!(await OSKeyStore.ensureLoggedIn())) {
           log.warn("User canceled encryption login");
->>>>>>> upstream-releases
           return;
         }
         await this.formAutofillStorage.creditCards.add(data.creditcard);
@@ -384,24 +376,12 @@ FormAutofillParent.prototype = {
       return;
     }
 
-<<<<<<< HEAD
-    let isCC = collectionName == CREDITCARDS_COLLECTION_NAME;
-    // We don't filter "cc-number"
-    if (isCC && info.fieldName == "cc-number") {
-      recordsInCollection = recordsInCollection.filter(record => !!record["cc-number"]);
-||||||| merged common ancestors
-    let isCCAndMPEnabled = collectionName == CREDITCARDS_COLLECTION_NAME && MasterPassword.isEnabled;
-    // We don't filter "cc-number" when MasterPassword is set.
-    if (isCCAndMPEnabled && info.fieldName == "cc-number") {
-      recordsInCollection = recordsInCollection.filter(record => !!record["cc-number"]);
-=======
     let isCC = collectionName == CREDITCARDS_COLLECTION_NAME;
     // We don't filter "cc-number"
     if (isCC && info.fieldName == "cc-number") {
       recordsInCollection = recordsInCollection.filter(
         record => !!record["cc-number"]
       );
->>>>>>> upstream-releases
       target.sendAsyncMessage("FormAutofill:Records", recordsInCollection);
       return;
     }
@@ -415,30 +395,11 @@ FormAutofillParent.prototype = {
         continue;
       }
 
-<<<<<<< HEAD
-      if (collectionName == ADDRESSES_COLLECTION_NAME && record.country
-          && !FormAutofill.supportedCountries.includes(record.country)) {
-||||||| merged common ancestors
-      // Cache the decrypted "cc-number" in each record for content to preview
-      // when MasterPassword isn't set.
-      if (!isCCAndMPEnabled && record["cc-number-encrypted"]) {
-        record["cc-number-decrypted"] = await MasterPassword.decrypt(record["cc-number-encrypted"]);
-      }
-
-      // Filter "cc-number" based on the decrypted one.
-      if (info.fieldName == "cc-number") {
-        fieldValue = record["cc-number-decrypted"];
-      }
-
-      if (collectionName == ADDRESSES_COLLECTION_NAME && record.country
-          && !FormAutofill.supportedCountries.includes(record.country)) {
-=======
       if (
         collectionName == ADDRESSES_COLLECTION_NAME &&
         record.country &&
         !FormAutofill.supportedCountries.includes(record.country)
       ) {
->>>>>>> upstream-releases
         // Address autofill isn't supported for the record's country so we don't
         // want to attempt to potentially incorrectly fill the address fields.
         continue;
@@ -461,21 +422,6 @@ FormAutofillParent.prototype = {
   _updateSavedFieldNames() {
     log.debug("_updateSavedFieldNames");
 
-<<<<<<< HEAD
-    // Don't access the credit cards store unless it is enabled.
-    if (FormAutofill.isAutofillCreditCardsAvailable) {
-      Services.ppmm.initialProcessData.autofillSavedFieldNames =
-        new Set([...this.formAutofillStorage.addresses.getSavedFieldNames(),
-          ...this.formAutofillStorage.creditCards.getSavedFieldNames()]);
-    } else {
-      Services.ppmm.initialProcessData.autofillSavedFieldNames =
-        this.formAutofillStorage.addresses.getSavedFieldNames();
-    }
-||||||| merged common ancestors
-    Services.ppmm.initialProcessData.autofillSavedFieldNames =
-      new Set([...this.formAutofillStorage.addresses.getSavedFieldNames(),
-        ...this.formAutofillStorage.creditCards.getSavedFieldNames()]);
-=======
     let savedFieldNames;
     // Don't access the credit cards store unless it is enabled.
     if (FormAutofill.isAutofillCreditCardsAvailable) {
@@ -492,7 +438,6 @@ FormAutofillParent.prototype = {
       savedFieldNames
     );
     Services.ppmm.sharedData.flush();
->>>>>>> upstream-releases
 
     this._updateStatus();
   },
@@ -722,25 +667,6 @@ FormAutofillParent.prototype = {
         return;
       }
 
-<<<<<<< HEAD
-      let number = creditCard.record["cc-number"] || creditCard.record["cc-number-decrypted"];
-      let name = creditCard.record["cc-name"];
-      const description = await CreditCard.getLabel({name, number});
-      const state = await FormAutofillDoorhanger.show(target,
-                                                      creditCard.guid ? "updateCreditCard" : "addCreditCard",
-                                                      description);
-||||||| merged common ancestors
-      const card = new CreditCard({
-        number: creditCard.record["cc-number"] || creditCard.record["cc-number-decrypted"],
-        encryptedNumber: creditCard.record["cc-number-encrypted"],
-        name: creditCard.record["cc-name"],
-        network: creditCard.record["cc-type"],
-      });
-      const description = await card.getLabel();
-      const state = await FormAutofillDoorhanger.show(target,
-                                                      creditCard.guid ? "updateCreditCard" : "addCreditCard",
-                                                      description);
-=======
       let number =
         creditCard.record["cc-number"] ||
         creditCard.record["cc-number-decrypted"];
@@ -751,7 +677,6 @@ FormAutofillParent.prototype = {
         creditCard.guid ? "updateCreditCard" : "addCreditCard",
         description
       );
->>>>>>> upstream-releases
       if (state == "cancel") {
         return;
       }
@@ -764,16 +689,8 @@ FormAutofillParent.prototype = {
         return;
       }
 
-<<<<<<< HEAD
-      if (!await OSKeyStore.ensureLoggedIn()) {
-        log.warn("User canceled encryption login");
-||||||| merged common ancestors
-      if (!await MasterPassword.ensureLoggedIn()) {
-        log.warn("User canceled master password entry");
-=======
       if (!(await OSKeyStore.ensureLoggedIn())) {
         log.warn("User canceled encryption login");
->>>>>>> upstream-releases
         return;
       }
 

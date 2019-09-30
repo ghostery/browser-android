@@ -275,12 +275,6 @@ SkCodec::Result SkBmpRLECodec::onPrepareToDecode(const SkImageInfo& dstInfo,
  */
 int SkBmpRLECodec::decodeRows(const SkImageInfo& info, void* dst, size_t dstRowBytes,
         const Options& opts) {
-<<<<<<< HEAD
-    const int width = this->dimensions().width();
-||||||| merged common ancestors
-    const int width = this->getInfo().width();
-=======
->>>>>>> upstream-releases
     int height = info.height();
 
     // Account for sampling.
@@ -566,15 +560,9 @@ SkSampler* SkBmpRLECodec::getSampler(bool createIfNecessary) {
 
 int SkBmpRLECodec::setSampleX(int sampleX) {
     fSampleX = sampleX;
-<<<<<<< HEAD
-    return get_scaled_dimension(this->dimensions().width(), sampleX);
-||||||| merged common ancestors
-    return get_scaled_dimension(this->getInfo().width(), sampleX);
-=======
     return this->fillWidth();
 }
 
 int SkBmpRLECodec::fillWidth() const {
     return get_scaled_dimension(this->dimensions().width(), fSampleX);
->>>>>>> upstream-releases
 }

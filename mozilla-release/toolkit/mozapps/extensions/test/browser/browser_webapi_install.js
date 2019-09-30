@@ -1,26 +1,11 @@
 const TESTPAGE = `${SECURE_TESTROOT}webapi_checkavailable.html`;
-<<<<<<< HEAD
-const XPI_URL = `${SECURE_TESTROOT}../xpinstall/amosigned.xpi`;
-||||||| merged common ancestors
-const XPI_URL = `${SECURE_TESTROOT}addons/browser_webapi_install.xpi`;
-const XPI_SHA = "sha256:d4bab17ff9ba5f635e97c84021f4c527c502250d62ab7f6e6c9e8ee28822f772";
-=======
 const XPI_URL = `${SECURE_TESTROOT}../xpinstall/amosigned.xpi`;
 const XPI_ADDON_ID = "amosigned-xpi@tests.mozilla.org";
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const XPI_SHA = "sha256:91121ed2c27f670f2307b9aebdd30979f147318c7fb9111c254c14ddbb84e4b0";
-
-const ID = "amosigned-xpi@tests.mozilla.org";
-||||||| merged common ancestors
-const ID = "webapi_install@tests.mozilla.org";
-=======
 const XPI_SHA =
   "sha256:91121ed2c27f670f2307b9aebdd30979f147318c7fb9111c254c14ddbb84e4b0";
 
 const ID = "amosigned-xpi@tests.mozilla.org";
->>>>>>> upstream-releases
 // eh, would be good to just stat the real file instead of this...
 const XPI_LEN = 4287;
 
@@ -59,25 +44,6 @@ add_task(async function setup() {
 // with properties that the AddonInstall object is expected to have when
 // that event is triggered.
 async function testInstall(browser, args, steps, description) {
-<<<<<<< HEAD
-  promisePopupNotificationShown("addon-webext-permissions").then(panel => {
-    panel.button.click();
-  });
-
-  let success = await ContentTask.spawn(browser, {args, steps}, async function(opts) {
-    let { args, steps } = opts;
-    let install = await content.navigator.mozAddonManager.createInstall(args);
-    if (!install) {
-      await Promise.reject("createInstall() did not return an install object");
-    }
-||||||| merged common ancestors
-  let success = await ContentTask.spawn(browser, {args, steps}, async function(opts) {
-    let { args, steps } = opts;
-    let install = await content.navigator.mozAddonManager.createInstall(args);
-    if (!install) {
-      await Promise.reject("createInstall() did not return an install object");
-    }
-=======
   let success = await ContentTask.spawn(
     browser,
     { args, steps },
@@ -89,7 +55,6 @@ async function testInstall(browser, args, steps, description) {
           "createInstall() did not return an install object"
         );
       }
->>>>>>> upstream-releases
 
       // Check that the initial state of the AddonInstall is sane.
       if (install.state != "STATE_AVAILABLE") {
@@ -267,15 +232,8 @@ function makeRegularTest(options, what) {
 
     await installPromptPromise;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    let version = Services.prefs.getIntPref("webapitest.active_version");
-    is(version, 1, "the install really did work");
-
-=======
     await promptPromise;
 
->>>>>>> upstream-releases
     // Sanity check to ensure that the test in makeInstallTest() that
     // installs.size == 0 means we actually did clean up.
     ok(
@@ -287,19 +245,11 @@ function makeRegularTest(options, what) {
     isnot(addon, null, "Found the addon");
 
     // Check that the expected installTelemetryInfo has been stored in the addon details.
-<<<<<<< HEAD
-    Assert.deepEqual(addon.installTelemetryInfo, {source: "test-host", method: "amWebAPI"},
-                     "Got the expected addon.installTelemetryInfo");
-||||||| merged common ancestors
-    Assert.deepEqual(addons[0].installTelemetryInfo, {source: "test-host", method: "amWebAPI"},
-                     "Got the expected addon.installTelemetryInfo");
-=======
     Assert.deepEqual(
       addon.installTelemetryInfo,
       { source: "test-host", method: "amWebAPI" },
       "Got the expected addon.installTelemetryInfo"
     );
->>>>>>> upstream-releases
 
     await addon.uninstall();
 

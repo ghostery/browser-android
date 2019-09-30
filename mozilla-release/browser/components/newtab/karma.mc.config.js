@@ -49,16 +49,8 @@ module.exports = function(config) {
       reports: ["html", "text-summary"],
       dir: PATHS.coverageReportingPath,
       // This will make karma fail if coverage reporting is less than the minimums here
-<<<<<<< HEAD
-      thresholds: !isTDD && {
-        global: {
-||||||| merged common ancestors
-      check: !isTDD && {
-        global: {
-=======
       thresholds: !isTDD && {
         each: {
->>>>>>> upstream-releases
           statements: 100,
           lines: 100,
           functions: 100,

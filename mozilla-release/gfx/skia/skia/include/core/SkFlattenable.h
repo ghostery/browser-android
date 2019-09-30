@@ -53,21 +53,7 @@ public:
     /**
      *  Returns the name of the object's class.
      */
-<<<<<<< HEAD
-    virtual const char* getTypeName() const {
-    #ifdef SK_DISABLE_READBUFFER
-        // Should not be reachable by PathKit WebAssembly Code.
-        SkASSERT(false);
-        return nullptr;
-    #else
-        return FactoryToName(getFactory());
-    #endif
-    }
-||||||| merged common ancestors
-    virtual const char* getTypeName() const { return FactoryToName(getFactory()); }
-=======
     virtual const char* getTypeName() const = 0;
->>>>>>> upstream-releases
 
     static Factory NameToFactory(const char name[]);
     static const char* FactoryToName(Factory);

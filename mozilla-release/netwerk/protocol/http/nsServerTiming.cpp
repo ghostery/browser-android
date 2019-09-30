@@ -9,40 +9,19 @@
 NS_IMPL_ISUPPORTS(nsServerTiming, nsIServerTiming)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsServerTiming::GetName(nsACString &aName) {
-||||||| merged common ancestors
-nsServerTiming::GetName(nsACString &aName)
-{
-=======
 nsServerTiming::GetName(nsACString& aName) {
->>>>>>> upstream-releases
   aName.Assign(mName);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsServerTiming::GetDuration(double *aDuration) {
-||||||| merged common ancestors
-nsServerTiming::GetDuration(double *aDuration)
-{
-=======
 nsServerTiming::GetDuration(double* aDuration) {
->>>>>>> upstream-releases
   *aDuration = mDuration;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsServerTiming::GetDescription(nsACString &aDescription) {
-||||||| merged common ancestors
-nsServerTiming::GetDescription(nsACString &aDescription)
-{
-=======
 nsServerTiming::GetDescription(nsACString& aDescription) {
->>>>>>> upstream-releases
   aDescription.Assign(mDescription);
   return NS_OK;
 }
@@ -50,15 +29,7 @@ nsServerTiming::GetDescription(nsACString& aDescription) {
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-static double ParseDouble(const nsACString &aString) {
-||||||| merged common ancestors
-static double
-ParseDouble(const nsACString& aString)
-{
-=======
 static double ParseDouble(const nsACString& aString) {
->>>>>>> upstream-releases
   nsresult rv;
   double val = PromiseFlatCString(aString).ToDouble(&rv);
   return NS_FAILED(rv) ? 0.0f : val;
@@ -95,22 +66,10 @@ void ServerTimingParser::Parse() {
     for (uint32_t pairIndex = 1;
          pairIndex < parsedHeader.mValues[index].mValues.Length();
          ++pairIndex) {
-<<<<<<< HEAD
-      nsDependentCSubstring &currentName =
-          parsedHeader.mValues[index].mValues[pairIndex].mName;
-      nsDependentCSubstring &currentValue =
-          parsedHeader.mValues[index].mValues[pairIndex].mValue;
-||||||| merged common ancestors
-      nsDependentCSubstring &currentName =
-        parsedHeader.mValues[index].mValues[pairIndex].mName;
-      nsDependentCSubstring &currentValue =
-        parsedHeader.mValues[index].mValues[pairIndex].mValue;
-=======
       nsDependentCSubstring& currentName =
           parsedHeader.mValues[index].mValues[pairIndex].mName;
       nsDependentCSubstring& currentValue =
           parsedHeader.mValues[index].mValues[pairIndex].mValue;
->>>>>>> upstream-releases
 
       // We should only take the value from the first
       // occurrence of server-timing-param-name ("dur" and "desc").
@@ -140,17 +99,8 @@ void ServerTimingParser::Parse() {
   }
 }
 
-<<<<<<< HEAD
-nsTArray<nsCOMPtr<nsIServerTiming>>
-    &&ServerTimingParser::TakeServerTimingHeaders() {
-||||||| merged common ancestors
-nsTArray<nsCOMPtr<nsIServerTiming>>&&
-ServerTimingParser::TakeServerTimingHeaders()
-{
-=======
 nsTArray<nsCOMPtr<nsIServerTiming>>&&
 ServerTimingParser::TakeServerTimingHeaders() {
->>>>>>> upstream-releases
   return std::move(mServerTimingHeaders);
 }
 

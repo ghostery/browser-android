@@ -20,12 +20,6 @@ static void TestSuffix(const OriginAttributes& attrs) {
   EXPECT_EQ(attrs, attrsFromSuffix);
 }
 
-<<<<<<< HEAD
-TEST(OriginAttributes, Suffix_default) {
-||||||| merged common ancestors
-TEST(OriginAttributes, Suffix_default)
-{
-=======
 static void TestFPD(const nsAString& spec, const nsAString& fpd) {
   OriginAttributes attrs;
   nsCOMPtr<nsIURI> url;
@@ -36,36 +30,16 @@ static void TestFPD(const nsAString& spec, const nsAString& fpd) {
 
 TEST(OriginAttributes, Suffix_default)
 {
->>>>>>> upstream-releases
   OriginAttributes attrs;
   TestSuffix(attrs);
 }
 
-<<<<<<< HEAD
-TEST(OriginAttributes, Suffix_appId_inIsolatedMozBrowser) {
-  OriginAttributes attrs(1, true);
-||||||| merged common ancestors
-TEST(OriginAttributes, Suffix_appId_inIsolatedMozBrowser)
-{
-  OriginAttributes attrs(1, true);
-=======
 TEST(OriginAttributes, Suffix_inIsolatedMozBrowser)
 {
   OriginAttributes attrs(true);
->>>>>>> upstream-releases
   TestSuffix(attrs);
 }
 
-<<<<<<< HEAD
-TEST(OriginAttributes, Suffix_maxAppId_inIsolatedMozBrowser) {
-  OriginAttributes attrs(4294967295, true);
-  TestSuffix(attrs);
-||||||| merged common ancestors
-TEST(OriginAttributes, Suffix_maxAppId_inIsolatedMozBrowser)
-{
-  OriginAttributes attrs(4294967295, true);
-  TestSuffix(attrs);
-=======
 TEST(OriginAttributes, FirstPartyDomain_default)
 {
   static const char prefKey[] = "privacy.firstparty.isolate";
@@ -82,5 +56,4 @@ TEST(OriginAttributes, FirstPartyDomain_default)
           NS_LITERAL_STRING("127.0.0.1"));
   TestFPD(NS_LITERAL_STRING("http://[::1]"), NS_LITERAL_STRING("[::1]"));
   Preferences::SetBool(prefKey, oldPref);
->>>>>>> upstream-releases
 }

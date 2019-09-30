@@ -38,22 +38,9 @@ JSObject* DataTransferItemList::WrapObject(JSContext* aCx,
   return DataTransferItemList_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-already_AddRefed<DataTransferItemList> DataTransferItemList::Clone(
-    DataTransfer* aDataTransfer) const {
-  RefPtr<DataTransferItemList> list =
-      new DataTransferItemList(aDataTransfer, mIsExternal);
-||||||| merged common ancestors
-already_AddRefed<DataTransferItemList>
-DataTransferItemList::Clone(DataTransfer* aDataTransfer) const
-{
-  RefPtr<DataTransferItemList> list =
-    new DataTransferItemList(aDataTransfer, mIsExternal);
-=======
 already_AddRefed<DataTransferItemList> DataTransferItemList::Clone(
     DataTransfer* aDataTransfer) const {
   RefPtr<DataTransferItemList> list = new DataTransferItemList(aDataTransfer);
->>>>>>> upstream-releases
 
   // We need to clone the mItems and mIndexedItems lists while keeping the same
   // correspondences between the mIndexedItems and mItems lists (namely, if an

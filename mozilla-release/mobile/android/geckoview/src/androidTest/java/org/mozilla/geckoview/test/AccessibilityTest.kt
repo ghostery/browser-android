@@ -199,13 +199,8 @@ class AccessibilityTest : BaseSessionTest() {
                 assertThat("Label accessibility focused", node.className.toString(),
                         equalTo("android.view.View"))
                 assertThat("Text node should not be focusable", node.isFocusable, equalTo(false))
-<<<<<<< HEAD
-                assertThat("Text node should not be clickable", node.isClickable, equalTo(false))
-||||||| merged common ancestors
-=======
                 assertThat("Text node should be a11y focused", node.isAccessibilityFocused, equalTo(true))
                 assertThat("Text node should not be clickable", node.isClickable, equalTo(false))
->>>>>>> upstream-releases
             }
         })
 
@@ -220,10 +215,6 @@ class AccessibilityTest : BaseSessionTest() {
                 assertThat("Editbox accessibility focused", node.className.toString(),
                         equalTo("android.widget.EditText"))
                 assertThat("Entry node should be focusable", node.isFocusable, equalTo(true))
-<<<<<<< HEAD
-                assertThat("Entry node should be clickable", node.isClickable, equalTo(true))
-||||||| merged common ancestors
-=======
                 assertThat("Entry node should be a11y focused", node.isAccessibilityFocused, equalTo(true))
                 assertThat("Entry node should be clickable", node.isClickable, equalTo(true))
             }
@@ -238,7 +229,6 @@ class AccessibilityTest : BaseSessionTest() {
                 assertThat("Accessibility focused node is now cleared", getSourceId(event), equalTo(nodeId))
                 val node = createNodeInfo(nodeId)
                 assertThat("Entry node should node be a11y focused", node.isAccessibilityFocused, equalTo(false))
->>>>>>> upstream-releases
             }
         })
     }

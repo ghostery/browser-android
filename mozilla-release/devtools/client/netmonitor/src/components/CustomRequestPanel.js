@@ -20,42 +20,17 @@ const {
   writeHeaderText,
 } = require("../utils/request-utils");
 
-<<<<<<< HEAD
-const {
-  button,
-  div,
-  input,
-  label,
-  textarea,
-} = dom;
-||||||| merged common ancestors
-const {
-  button,
-  div,
-  input,
-  textarea,
-} = dom;
-=======
 const { button, div, input, label, textarea } = dom;
->>>>>>> upstream-releases
 
 const CUSTOM_CANCEL = L10N.getStr("netmonitor.custom.cancel");
 const CUSTOM_HEADERS = L10N.getStr("netmonitor.custom.headers");
 const CUSTOM_NEW_REQUEST = L10N.getStr("netmonitor.custom.newRequest");
-<<<<<<< HEAD
-const CUSTOM_NEW_REQUEST_METHOD_LABEL =
-    L10N.getStr("netmonitor.custom.newRequestMethodLabel");
-const CUSTOM_NEW_REQUEST_URL_LABEL =
-    L10N.getStr("netmonitor.custom.newRequestUrlLabel");
-||||||| merged common ancestors
-=======
 const CUSTOM_NEW_REQUEST_METHOD_LABEL = L10N.getStr(
   "netmonitor.custom.newRequestMethodLabel"
 );
 const CUSTOM_NEW_REQUEST_URL_LABEL = L10N.getStr(
   "netmonitor.custom.newRequestUrlLabel"
 );
->>>>>>> upstream-releases
 const CUSTOM_POSTDATA = L10N.getStr("netmonitor.custom.postData");
 const CUSTOM_QUERY = L10N.getStr("netmonitor.custom.query");
 const CUSTOM_SEND = L10N.getStr("netmonitor.custom.send");
@@ -258,101 +233,13 @@ class CustomRequestPanel extends Component {
           className: "tabpanel-summary-container custom-method-and-url",
           id: "custom-method-and-url",
         },
-<<<<<<< HEAD
-          label({
-            className: "custom-method-value-label custom-request-label",
-            htmlFor: "custom-method-value",
-          },
-            CUSTOM_NEW_REQUEST_METHOD_LABEL,
-          ),
-          input({
-            className: "custom-method-value",
-            id: "custom-method-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            onBlur: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            value: method,
-          }),
-          label({
-            className: "custom-url-value-label custom-request-label",
-            htmlFor: "custom-url-value",
-          },
-            CUSTOM_NEW_REQUEST_URL_LABEL,
-          ),
-          input({
-            className: "custom-url-value",
-            id: "custom-url-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            value: url || "http://",
-          }),
-||||||| merged common ancestors
-          input({
-            className: "custom-method-value",
-            id: "custom-method-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            onBlur: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            value: method,
-          }),
-          input({
-            className: "custom-url-value",
-            id: "custom-url-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            value: url || "http://",
-          }),
-=======
         label(
           {
             className: "custom-method-value-label custom-request-label",
             htmlFor: "custom-method-value",
           },
           CUSTOM_NEW_REQUEST_METHOD_LABEL
->>>>>>> upstream-releases
         ),
-<<<<<<< HEAD
-        // Hide query field when there is no params
-        params ? div({
-          className: "tabpanel-summary-container custom-section",
-          id: "custom-query",
-        },
-          label({
-            className: "custom-request-label",
-            htmlFor: "custom-query-value",
-          }, CUSTOM_QUERY),
-          textarea({
-            className: "tabpanel-summary-input",
-            id: "custom-query-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            rows: 4,
-            value: params,
-            wrap: "off",
-          }),
-        ) : null,
-        div({
-||||||| merged common ancestors
-        // Hide query field when there is no params
-        params ? div({
-          className: "tabpanel-summary-container custom-section",
-          id: "custom-query",
-        },
-          div({ className: "custom-request-label" }, CUSTOM_QUERY),
-          textarea({
-            className: "tabpanel-summary-input",
-            id: "custom-query-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            rows: 4,
-            value: params,
-            wrap: "off",
-          }),
-        ) : null,
-        div({
-=======
         input({
           className: "custom-method-value",
           id: "custom-method-value",
@@ -404,43 +291,15 @@ class CustomRequestPanel extends Component {
         : null,
       div(
         {
->>>>>>> upstream-releases
           id: "custom-headers",
           className: "tabpanel-summary-container custom-section",
         },
-<<<<<<< HEAD
-          label({
-            className: "custom-request-label",
-            htmlFor: "custom-headers-value",
-          }, CUSTOM_HEADERS),
-          textarea({
-            className: "tabpanel-summary-input",
-            id: "custom-headers-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            rows: 8,
-            value: headers,
-            wrap: "off",
-          }),
-||||||| merged common ancestors
-          div({ className: "custom-request-label" }, CUSTOM_HEADERS),
-          textarea({
-            className: "tabpanel-summary-input",
-            id: "custom-headers-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            rows: 8,
-            value: headers,
-            wrap: "off",
-          }),
-=======
         label(
           {
             className: "custom-request-label",
             htmlFor: "custom-headers-value",
           },
           CUSTOM_HEADERS
->>>>>>> upstream-releases
         ),
         textarea({
           className: "tabpanel-summary-input",
@@ -457,39 +316,12 @@ class CustomRequestPanel extends Component {
           id: "custom-postdata",
           className: "tabpanel-summary-container custom-section",
         },
-<<<<<<< HEAD
-          label({
-            className: "custom-request-label",
-            htmlFor: "custom-postdata-value",
-          }, CUSTOM_POSTDATA),
-          textarea({
-            className: "tabpanel-summary-input",
-            id: "custom-postdata-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            rows: 6,
-            value: postData,
-            wrap: "off",
-          }),
-||||||| merged common ancestors
-          div({ className: "custom-request-label" }, CUSTOM_POSTDATA),
-          textarea({
-            className: "tabpanel-summary-input",
-            id: "custom-postdata-value",
-            onChange: (evt) =>
-              this.updateCustomRequestFields(evt, request, updateRequest),
-            rows: 6,
-            value: postData,
-            wrap: "off",
-          }),
-=======
         label(
           {
             className: "custom-request-label",
             htmlFor: "custom-postdata-value",
           },
           CUSTOM_POSTDATA
->>>>>>> upstream-releases
         ),
         textarea({
           className: "tabpanel-summary-input",

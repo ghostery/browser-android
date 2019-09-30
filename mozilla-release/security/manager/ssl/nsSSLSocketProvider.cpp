@@ -18,38 +18,6 @@ nsSSLSocketProvider::~nsSSLSocketProvider() {}
 NS_IMPL_ISUPPORTS(nsSSLSocketProvider, nsISocketProvider)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsSSLSocketProvider::NewSocket(int32_t family, const char *host, int32_t port,
-                               nsIProxyInfo *proxy,
-                               const OriginAttributes &originAttributes,
-                               uint32_t flags, uint32_t tlsFlags,
-                               PRFileDesc **_result,
-                               nsISupports **securityInfo) {
-  nsresult rv =
-      nsSSLIOLayerNewSocket(family, host, port, proxy, originAttributes,
-                            _result, securityInfo, false, flags, tlsFlags);
-||||||| merged common ancestors
-nsSSLSocketProvider::NewSocket(int32_t family,
-                               const char *host,
-                               int32_t port,
-                               nsIProxyInfo *proxy,
-                               const OriginAttributes &originAttributes,
-                               uint32_t flags,
-                               uint32_t tlsFlags,
-                               PRFileDesc **_result,
-                               nsISupports **securityInfo)
-{
-  nsresult rv = nsSSLIOLayerNewSocket(family,
-                                      host,
-                                      port,
-                                      proxy,
-                                      originAttributes,
-                                      _result,
-                                      securityInfo,
-                                      false,
-                                      flags,
-                                      tlsFlags);
-=======
 nsSSLSocketProvider::NewSocket(int32_t family, const char* host, int32_t port,
                                nsIProxyInfo* proxy,
                                const OriginAttributes& originAttributes,
@@ -59,44 +27,11 @@ nsSSLSocketProvider::NewSocket(int32_t family, const char* host, int32_t port,
   nsresult rv =
       nsSSLIOLayerNewSocket(family, host, port, proxy, originAttributes,
                             _result, securityInfo, false, flags, tlsFlags);
->>>>>>> upstream-releases
   return (NS_FAILED(rv)) ? NS_ERROR_SOCKET_CREATE_FAILED : NS_OK;
 }
 
 // Add the SSL IO layer to an existing socket
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsSSLSocketProvider::AddToSocket(int32_t family, const char *host, int32_t port,
-                                 nsIProxyInfo *proxy,
-                                 const OriginAttributes &originAttributes,
-                                 uint32_t flags, uint32_t tlsFlags,
-                                 PRFileDesc *aSocket,
-                                 nsISupports **securityInfo) {
-  nsresult rv =
-      nsSSLIOLayerAddToSocket(family, host, port, proxy, originAttributes,
-                              aSocket, securityInfo, false, flags, tlsFlags);
-||||||| merged common ancestors
-nsSSLSocketProvider::AddToSocket(int32_t family,
-                                 const char *host,
-                                 int32_t port,
-                                 nsIProxyInfo *proxy,
-                                 const OriginAttributes &originAttributes,
-                                 uint32_t flags,
-                                 uint32_t tlsFlags,
-                                 PRFileDesc *aSocket,
-                                 nsISupports **securityInfo)
-{
-  nsresult rv = nsSSLIOLayerAddToSocket(family,
-                                        host,
-                                        port,
-                                        proxy,
-                                        originAttributes,
-                                        aSocket,
-                                        securityInfo,
-                                        false,
-                                        flags,
-                                        tlsFlags);
-=======
 nsSSLSocketProvider::AddToSocket(int32_t family, const char* host, int32_t port,
                                  nsIProxyInfo* proxy,
                                  const OriginAttributes& originAttributes,
@@ -106,7 +41,6 @@ nsSSLSocketProvider::AddToSocket(int32_t family, const char* host, int32_t port,
   nsresult rv =
       nsSSLIOLayerAddToSocket(family, host, port, proxy, originAttributes,
                               aSocket, securityInfo, false, flags, tlsFlags);
->>>>>>> upstream-releases
 
   return (NS_FAILED(rv)) ? NS_ERROR_SOCKET_CREATE_FAILED : NS_OK;
 }

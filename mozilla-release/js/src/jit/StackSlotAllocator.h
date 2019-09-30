@@ -86,27 +86,11 @@ class StackSlotAllocator {
       case LDefinition::TYPE:
       case LDefinition::PAYLOAD:
 #endif
-<<<<<<< HEAD
-      case LDefinition::DOUBLE:
-        return 8;
-      case LDefinition::SINCOS:
-      case LDefinition::SIMD128INT:
-      case LDefinition::SIMD128FLOAT:
-        return 16;
-||||||| merged common ancestors
-          case LDefinition::DOUBLE:       return 8;
-          case LDefinition::SINCOS:
-          case LDefinition::SIMD128INT:
-          case LDefinition::SIMD128FLOAT: return 16;
-        }
-        MOZ_CRASH("Unknown slot type");
-=======
       case LDefinition::DOUBLE:
         return 8;
       case LDefinition::SIMD128INT:
       case LDefinition::SIMD128FLOAT:
         return 16;
->>>>>>> upstream-releases
     }
     MOZ_CRASH("Unknown slot type");
   }

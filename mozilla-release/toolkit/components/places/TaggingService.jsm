@@ -505,19 +505,10 @@ TagAutoCompleteSearch.prototype = {
 
     // Create a new result to add eventual matches.  Note we need a result
     // regardless having matches.
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/nsTaggingService.js
-    let result = Cc["@mozilla.org/autocomplete/simple-result;1"]
-                   .createInstance(Ci.nsIAutoCompleteSimpleResult);
-    result.setDefaultIndex(0);
-||||||| merged common ancestors
-    let result = Cc["@mozilla.org/autocomplete/simple-result;1"]
-                   .createInstance(Ci.nsIAutoCompleteSimpleResult);
-=======
     let result = Cc["@mozilla.org/autocomplete/simple-result;1"].createInstance(
       Ci.nsIAutoCompleteSimpleResult
     );
     result.setDefaultIndex(0);
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/TaggingService.jsm
     result.setSearchString(searchString);
 
     let count = 0;

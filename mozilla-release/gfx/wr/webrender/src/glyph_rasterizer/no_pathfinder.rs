@@ -5,44 +5,12 @@
 //! Module only available when pathfinder is deactivated when webrender is
 //! compiled regularly (i.e. any configuration without feature = "pathfinder")
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
-use api::{ImageDescriptor, ImageFormat, DirtyRect};
-use device::TextureFilter;
-||||||| merged common ancestors
-use api::{ImageData, ImageDescriptor, ImageFormat};
-use device::TextureFilter;
-=======
 use api::{ImageDescriptor, ImageFormat, DirtyRect};
 use crate::device::TextureFilter;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
 use euclid::size2;
 use crate::gpu_types::UvRectKind;
 use rayon::prelude::*;
 use std::sync::{Arc, MutexGuard};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
-use platform::font::FontContext;
-use glyph_rasterizer::{FontInstance, FontContexts, GlyphKey};
-use glyph_rasterizer::{GlyphRasterizer, GlyphRasterJob, GlyphRasterJobs, GlyphRasterResult};
-use glyph_cache::{GlyphCache, CachedGlyphInfo, GlyphCacheEntry};
-use resource_cache::CachedImageData;
-use texture_cache::{TextureCache, TextureCacheHandle, Eviction};
-use gpu_cache::GpuCache;
-use render_task::{RenderTaskTree, RenderTaskCache};
-use tiling::SpecialRenderPasses;
-use profiler::TextureCacheProfileCounters;
-use std::collections::hash_map::Entry;
-||||||| merged common ancestors
-use platform::font::FontContext;
-use glyph_rasterizer::{FontInstance, FontContexts, GlyphKey};
-use glyph_rasterizer::{GlyphRasterizer, GlyphRasterJob, GlyphRasterJobs, GlyphRasterResult};
-use glyph_cache::{GlyphCache, CachedGlyphInfo, GlyphCacheEntry};
-use texture_cache::{TextureCache, TextureCacheHandle, Eviction};
-use gpu_cache::GpuCache;
-use render_task::{RenderTaskTree, RenderTaskCache};
-use tiling::SpecialRenderPasses;
-use profiler::TextureCacheProfileCounters;
-use std::collections::hash_map::Entry;
-=======
 use crate::platform::font::FontContext;
 use crate::glyph_rasterizer::{FontInstance, FontContexts, GlyphKey};
 use crate::glyph_rasterizer::{GlyphRasterizer, GlyphRasterJob, GlyphRasterJobs};
@@ -52,7 +20,6 @@ use crate::texture_cache::{TextureCache, TextureCacheHandle, Eviction};
 use crate::gpu_cache::GpuCache;
 use crate::render_task::{RenderTaskGraph, RenderTaskCache};
 use crate::profiler::TextureCacheProfileCounters;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
 
 impl FontContexts {
     /// Get access to the font context associated to the current thread.
@@ -192,18 +159,8 @@ impl GlyphRasterizer {
                     Ok(ref glyph) if glyph.width == 0 || glyph.height == 0 => {
                         GlyphCacheEntry::Blank
                     }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
-                    GlyphRasterResult::Bitmap(glyph) => {
-                        assert_eq!((glyph.left.fract(), glyph.top.fract()), (0.0, 0.0));
-                        let mut texture_cache_handle = TextureCacheHandle::invalid();
-||||||| merged common ancestors
-                    GlyphRasterResult::Bitmap(glyph) => {
-                        assert_eq!((glyph.left.fract(), glyph.top.fract()), (0.0, 0.0));
-                        let mut texture_cache_handle = TextureCacheHandle::new();
-=======
                     Ok(glyph) => {
                         let mut texture_cache_handle = TextureCacheHandle::invalid();
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/glyph_rasterizer/no_pathfinder.rs
                         texture_cache.request(&texture_cache_handle, gpu_cache);
                         texture_cache.update(
                             &mut texture_cache_handle,

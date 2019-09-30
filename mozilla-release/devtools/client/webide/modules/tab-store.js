@@ -59,33 +59,17 @@ TabStore.prototype = {
   _onStatusChanged: function() {
     if (this._connection.status == Connection.Status.CONNECTED) {
       // Watch for changes to remote browser tabs
-<<<<<<< HEAD
-      this._connection.client.mainRoot.on("tabListChanged",
-                                          this._onTabListChanged);
-||||||| merged common ancestors
-      this._connection.client.addListener("tabListChanged",
-                                          this._onTabListChanged);
-=======
       this._connection.client.mainRoot.on(
         "tabListChanged",
         this._onTabListChanged
       );
->>>>>>> upstream-releases
       this.listTabs();
     } else {
       if (this._connection.client) {
-<<<<<<< HEAD
-        this._connection.client.mainRoot.off("tabListChanged",
-                                             this._onTabListChanged);
-||||||| merged common ancestors
-        this._connection.client.removeListener("tabListChanged",
-                                               this._onTabListChanged);
-=======
         this._connection.client.mainRoot.off(
           "tabListChanged",
           this._onTabListChanged
         );
->>>>>>> upstream-releases
       }
       this._resetStore();
     }

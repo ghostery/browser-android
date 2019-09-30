@@ -20,14 +20,7 @@ EXPORTS.mozilla += [
 ]
 
 LOCAL_INCLUDES += [
-<<<<<<< HEAD
-    '/dom/base',
-    '/dom/media',
-||||||| merged common ancestors
-    '/dom/base',
-=======
     '/dom/base'
->>>>>>> upstream-releases
 ]
 
 FINAL_LIBRARY = 'xul'

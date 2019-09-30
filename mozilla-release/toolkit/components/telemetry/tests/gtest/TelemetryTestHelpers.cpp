@@ -22,36 +22,16 @@ void CheckUintScalar(const char* aName, JSContext* aCx,
   // Validate the value of the test scalar.
   JS::RootedValue value(aCx);
   JS::RootedObject scalarObj(aCx, &aSnapshot.toObject());
-<<<<<<< HEAD
-  ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value))
-      << "The test scalar must be reported.";
-||||||| merged common ancestors
-  ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value)) << "The test scalar must be reported.";
-=======
   ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value))
   << "The test scalar must be reported.";
->>>>>>> upstream-releases
   JS_GetProperty(aCx, scalarObj, aName, &value);
 
-<<<<<<< HEAD
-  ASSERT_TRUE(value.isInt32())
-      << "The scalar value must be of the correct type.";
-  ASSERT_TRUE(value.toInt32() >= 0)
-      << "The uint scalar type must contain a value >= 0.";
-  ASSERT_EQ(static_cast<uint32_t>(value.toInt32()), expectedValue)
-      << "The scalar value must match the expected value.";
-||||||| merged common ancestors
-  ASSERT_TRUE(value.isInt32()) << "The scalar value must be of the correct type.";
-  ASSERT_TRUE(value.toInt32() >= 0) << "The uint scalar type must contain a value >= 0.";
-  ASSERT_EQ(static_cast<uint32_t>(value.toInt32()), expectedValue) << "The scalar value must match the expected value.";
-=======
   ASSERT_TRUE(value.isInt32())
   << "The scalar value must be of the correct type.";
   ASSERT_TRUE(value.toInt32() >= 0)
   << "The uint scalar type must contain a value >= 0.";
   ASSERT_EQ(static_cast<uint32_t>(value.toInt32()), expectedValue)
       << "The scalar value must match the expected value.";
->>>>>>> upstream-releases
 }
 
 void CheckBoolScalar(const char* aName, JSContext* aCx,
@@ -59,25 +39,12 @@ void CheckBoolScalar(const char* aName, JSContext* aCx,
   // Validate the value of the test scalar.
   JS::RootedValue value(aCx);
   JS::RootedObject scalarObj(aCx, &aSnapshot.toObject());
-<<<<<<< HEAD
-  ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value))
-      << "The test scalar must be reported.";
-  ASSERT_TRUE(value.isBoolean())
-      << "The scalar value must be of the correct type.";
-  ASSERT_EQ(static_cast<bool>(value.toBoolean()), expectedValue)
-      << "The scalar value must match the expected value.";
-||||||| merged common ancestors
-  ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value)) << "The test scalar must be reported.";
-  ASSERT_TRUE(value.isBoolean()) << "The scalar value must be of the correct type.";
-  ASSERT_EQ(static_cast<bool>(value.toBoolean()), expectedValue) << "The scalar value must match the expected value.";
-=======
   ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value))
   << "The test scalar must be reported.";
   ASSERT_TRUE(value.isBoolean())
   << "The scalar value must be of the correct type.";
   ASSERT_EQ(static_cast<bool>(value.toBoolean()), expectedValue)
       << "The scalar value must match the expected value.";
->>>>>>> upstream-releases
 }
 
 void CheckStringScalar(const char* aName, JSContext* aCx,
@@ -85,37 +52,17 @@ void CheckStringScalar(const char* aName, JSContext* aCx,
   // Validate the value of the test scalar.
   JS::RootedValue value(aCx);
   JS::RootedObject scalarObj(aCx, &aSnapshot.toObject());
-<<<<<<< HEAD
-  ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value))
-      << "The test scalar must be reported.";
-  ASSERT_TRUE(value.isString())
-      << "The scalar value must be of the correct type.";
-||||||| merged common ancestors
-  ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value)) << "The test scalar must be reported.";
-  ASSERT_TRUE(value.isString()) << "The scalar value must be of the correct type.";
-=======
   ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &value))
   << "The test scalar must be reported.";
   ASSERT_TRUE(value.isString())
   << "The scalar value must be of the correct type.";
->>>>>>> upstream-releases
 
   bool sameString;
-<<<<<<< HEAD
-  ASSERT_TRUE(
-      JS_StringEqualsAscii(aCx, value.toString(), expectedValue, &sameString))
-      << "JS String comparison failed";
-  ASSERT_TRUE(sameString) << "The scalar value must match the expected string";
-||||||| merged common ancestors
-  ASSERT_TRUE(JS_StringEqualsAscii(aCx, value.toString(), expectedValue, &sameString)) << "JS String comparison failed";
-  ASSERT_TRUE(sameString) << "The scalar value must match the expected string";
-=======
   ASSERT_TRUE(
       JS_StringEqualsAscii(aCx, value.toString(), expectedValue, &sameString))
   << "JS String comparison failed";
   ASSERT_TRUE(sameString)
   << "The scalar value must match the expected string";
->>>>>>> upstream-releases
 }
 
 void CheckKeyedUintScalar(const char* aName, const char* aKey, JSContext* aCx,
@@ -124,13 +71,7 @@ void CheckKeyedUintScalar(const char* aName, const char* aKey, JSContext* aCx,
   JS::RootedObject scalarObj(aCx, &aSnapshot.toObject());
   // Get the aName keyed scalar object from the scalars snapshot.
   ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &keyedScalar))
-<<<<<<< HEAD
-      << "The keyed scalar must be reported.";
-||||||| merged common ancestors
-    << "The keyed scalar must be reported.";
-=======
   << "The keyed scalar must be reported.";
->>>>>>> upstream-releases
 
   CheckUintScalar(aKey, aCx, keyedScalar, expectedValue);
 }
@@ -141,13 +82,7 @@ void CheckKeyedBoolScalar(const char* aName, const char* aKey, JSContext* aCx,
   JS::RootedObject scalarObj(aCx, &aSnapshot.toObject());
   // Get the aName keyed scalar object from the scalars snapshot.
   ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &keyedScalar))
-<<<<<<< HEAD
-      << "The keyed scalar must be reported.";
-||||||| merged common ancestors
-    << "The keyed scalar must be reported.";
-=======
   << "The keyed scalar must be reported.";
->>>>>>> upstream-releases
 
   CheckBoolScalar(aKey, aCx, keyedScalar, expectedValue);
 }
@@ -159,42 +94,17 @@ void CheckNumberOfProperties(const char* aName, JSContext* aCx,
   JS::RootedObject scalarObj(aCx, &aSnapshot.toObject());
   // Get the aName keyed scalar object from the scalars snapshot.
   ASSERT_TRUE(JS_GetProperty(aCx, scalarObj, aName, &keyedScalar))
-<<<<<<< HEAD
-      << "The keyed scalar must be reported.";
-||||||| merged common ancestors
-    << "The keyed scalar must be reported.";
-=======
   << "The keyed scalar must be reported.";
->>>>>>> upstream-releases
 
   JS::RootedObject keyedScalarObj(aCx, &keyedScalar.toObject());
   JS::Rooted<JS::IdVector> ids(aCx, JS::IdVector(aCx));
   ASSERT_TRUE(JS_Enumerate(aCx, keyedScalarObj, &ids))
-<<<<<<< HEAD
-      << "We must be able to get keyed scalar members.";
-||||||| merged common ancestors
-    << "We must be able to get keyed scalar members.";
-=======
   << "We must be able to get keyed scalar members.";
->>>>>>> upstream-releases
 
   ASSERT_EQ(expectedNumProperties, ids.length())
       << "The scalar must report the expected number of properties.";
 }
 
-<<<<<<< HEAD
-void GetScalarsSnapshot(bool aKeyed, JSContext* aCx,
-                        JS::MutableHandle<JS::Value> aResult,
-                        ProcessID aProcessType) {
-  nsCOMPtr<nsITelemetry> telemetry =
-      do_GetService("@mozilla.org/base/telemetry;1");
-||||||| merged common ancestors
-void
-GetScalarsSnapshot(bool aKeyed, JSContext* aCx, JS::MutableHandle<JS::Value> aResult,
-                   ProcessID aProcessType)
-{
-  nsCOMPtr<nsITelemetry> telemetry = do_GetService("@mozilla.org/base/telemetry;1");
-=======
 bool EventPresent(JSContext* aCx, const JS::RootedValue& aSnapshot,
                   const nsACString& aCategory, const nsACString& aMethod,
                   const nsACString& aObject) {
@@ -381,7 +291,6 @@ void GetScalarsSnapshot(bool aKeyed, JSContext* aCx,
                         ProcessID aProcessType) {
   nsCOMPtr<nsITelemetry> telemetry =
       do_GetService("@mozilla.org/base/telemetry;1");
->>>>>>> upstream-releases
 
   // Get a snapshot of the scalars.
   JS::RootedValue scalarsSnapshot(aCx);
@@ -426,15 +335,8 @@ void GetAndClearHistogram(JSContext* cx, nsCOMPtr<nsITelemetry> mTelemetry,
   JS::RootedObject testHistogramObj(cx, &testHistogram.toObject());
   JS::RootedValue rval(cx);
   ASSERT_TRUE(JS_CallFunctionName(cx, testHistogramObj, "clear",
-<<<<<<< HEAD
-                                  JS::HandleValueArray::empty(), &rval))
-      << "Cannot clear histogram";
-||||||| merged common ancestors
-                  JS::HandleValueArray::empty(), &rval)) << "Cannot clear histogram";
-=======
                                   JS::HandleValueArray::empty(), &rval))
   << "Cannot clear histogram";
->>>>>>> upstream-releases
 }
 
 void GetProperty(JSContext* cx, const char* name, JS::HandleValue valueIn,
@@ -442,13 +344,7 @@ void GetProperty(JSContext* cx, const char* name, JS::HandleValue valueIn,
   JS::RootedValue property(cx);
   JS::RootedObject valueInObj(cx, &valueIn.toObject());
   ASSERT_TRUE(JS_GetProperty(cx, valueInObj, name, &property))
-<<<<<<< HEAD
-      << "Cannot get property '" << name << "'";
-||||||| merged common ancestors
-    << "Cannot get property '" << name << "'";
-=======
   << "Cannot get property '" << name << "'";
->>>>>>> upstream-releases
   valueOut.set(property);
 }
 
@@ -457,13 +353,7 @@ void GetElement(JSContext* cx, uint32_t index, JS::HandleValue valueIn,
   JS::RootedValue element(cx);
   JS::RootedObject valueInObj(cx, &valueIn.toObject());
   ASSERT_TRUE(JS_GetElement(cx, valueInObj, index, &element))
-<<<<<<< HEAD
-      << "Cannot get element at index '" << index << "'";
-||||||| merged common ancestors
-    << "Cannot get element at index '" << index << "'";
-=======
   << "Cannot get element at index '" << index << "'";
->>>>>>> upstream-releases
   valueOut.set(element);
 }
 

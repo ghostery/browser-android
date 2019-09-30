@@ -67,13 +67,7 @@ class nsXMLContentSerializer : public nsIContentSerializer {
 
   NS_IMETHOD Flush(nsAString& aStr) override { return NS_OK; }
 
-<<<<<<< HEAD
-  NS_IMETHOD AppendDocumentStart(nsIDocument* aDocument,
-||||||| merged common ancestors
-  NS_IMETHOD AppendDocumentStart(nsIDocument *aDocument,
-=======
   NS_IMETHOD AppendDocumentStart(mozilla::dom::Document* aDocument,
->>>>>>> upstream-releases
                                  nsAString& aStr) override;
 
   NS_IMETHOD ScanElementForPreformat(mozilla::dom::Element* aElement) override {

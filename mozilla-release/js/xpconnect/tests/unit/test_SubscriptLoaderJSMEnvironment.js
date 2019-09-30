@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-||||||| merged common ancestors
-=======
 const {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
->>>>>>> upstream-releases
 let tgt_load = {};
 let tgt_check = {};
 

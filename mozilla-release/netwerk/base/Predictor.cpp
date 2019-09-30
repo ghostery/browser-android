@@ -108,17 +108,8 @@ static bool sEsniEnabled = false;
 
 // Get the full origin (scheme, host, port) out of a URI (maybe should be part
 // of nsIURI instead?)
-<<<<<<< HEAD
-static nsresult ExtractOrigin(nsIURI *uri, nsIURI **originUri,
-                              nsIIOService *ioService) {
-||||||| merged common ancestors
-static nsresult
-ExtractOrigin(nsIURI *uri, nsIURI **originUri, nsIIOService *ioService)
-{
-=======
 static nsresult ExtractOrigin(nsIURI* uri, nsIURI** originUri,
                               nsIIOService* ioService) {
->>>>>>> upstream-releases
   nsAutoCString s;
   s.Truncate();
   nsresult rv = nsContentUtils::GetASCIIOrigin(uri, s);
@@ -129,15 +120,7 @@ static nsresult ExtractOrigin(nsIURI* uri, nsIURI** originUri,
 
 // All URIs we get passed *must* be http or https if they're not null. This
 // helps ensure that.
-<<<<<<< HEAD
-static bool IsNullOrHttp(nsIURI *uri) {
-||||||| merged common ancestors
-static bool
-IsNullOrHttp(nsIURI *uri)
-{
-=======
 static bool IsNullOrHttp(nsIURI* uri) {
->>>>>>> upstream-releases
   if (!uri) {
     return true;
   }
@@ -159,36 +142,15 @@ static bool IsNullOrHttp(nsIURI* uri) {
 NS_IMPL_ISUPPORTS(Predictor::DNSListener, nsIDNSListener);
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::DNSListener::OnLookupComplete(nsICancelable *request,
-                                         nsIDNSRecord *rec, nsresult status) {
-||||||| merged common ancestors
-Predictor::DNSListener::OnLookupComplete(nsICancelable *request,
-                                         nsIDNSRecord *rec,
-                                         nsresult status)
-{
-=======
 Predictor::DNSListener::OnLookupComplete(nsICancelable* request,
                                          nsIDNSRecord* rec, nsresult status) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::DNSListener::OnLookupByTypeComplete(nsICancelable *request,
-                                               nsIDNSByTypeRecord *res,
-                                               nsresult status) {
-||||||| merged common ancestors
-Predictor::DNSListener::OnLookupByTypeComplete(nsICancelable *request,
-                                               nsIDNSByTypeRecord *res,
-                                               nsresult status)
-{
-=======
 Predictor::DNSListener::OnLookupByTypeComplete(nsICancelable* request,
                                                nsIDNSByTypeRecord* res,
                                                nsresult status) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -198,33 +160,6 @@ Predictor::DNSListener::OnLookupByTypeComplete(nsICancelable* request,
 // has different parameters.
 NS_IMPL_ISUPPORTS(Predictor::Action, nsICacheEntryOpenCallback);
 
-<<<<<<< HEAD
-Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
-                          nsIURI *targetURI, nsIURI *sourceURI,
-                          nsINetworkPredictorVerifier *verifier,
-                          Predictor *predictor)
-    : mFullUri(fullUri),
-      mPredict(predict),
-      mTargetURI(targetURI),
-      mSourceURI(sourceURI),
-      mVerifier(verifier),
-      mStackCount(0),
-      mPredictor(predictor) {
-||||||| merged common ancestors
-Predictor::Action::Action(bool fullUri, bool predict,
-                          Predictor::Reason reason,
-                          nsIURI *targetURI, nsIURI *sourceURI,
-                          nsINetworkPredictorVerifier *verifier,
-                          Predictor *predictor)
-  :mFullUri(fullUri)
-  ,mPredict(predict)
-  ,mTargetURI(targetURI)
-  ,mSourceURI(sourceURI)
-  ,mVerifier(verifier)
-  ,mStackCount(0)
-  ,mPredictor(predictor)
-{
-=======
 Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
                           nsIURI* targetURI, nsIURI* sourceURI,
                           nsINetworkPredictorVerifier* verifier,
@@ -236,7 +171,6 @@ Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
       mVerifier(verifier),
       mStackCount(0),
       mPredictor(predictor) {
->>>>>>> upstream-releases
   mStartTime = TimeStamp::Now();
   if (mPredict) {
     mPredictReason = reason.mPredict;
@@ -245,33 +179,6 @@ Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
   }
 }
 
-<<<<<<< HEAD
-Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
-                          nsIURI *targetURI, nsIURI *sourceURI,
-                          nsINetworkPredictorVerifier *verifier,
-                          Predictor *predictor, uint8_t stackCount)
-    : mFullUri(fullUri),
-      mPredict(predict),
-      mTargetURI(targetURI),
-      mSourceURI(sourceURI),
-      mVerifier(verifier),
-      mStackCount(stackCount),
-      mPredictor(predictor) {
-||||||| merged common ancestors
-Predictor::Action::Action(bool fullUri, bool predict,
-                          Predictor::Reason reason,
-                          nsIURI *targetURI, nsIURI *sourceURI,
-                          nsINetworkPredictorVerifier *verifier,
-                          Predictor *predictor, uint8_t stackCount)
-  :mFullUri(fullUri)
-  ,mPredict(predict)
-  ,mTargetURI(targetURI)
-  ,mSourceURI(sourceURI)
-  ,mVerifier(verifier)
-  ,mStackCount(stackCount)
-  ,mPredictor(predictor)
-{
-=======
 Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
                           nsIURI* targetURI, nsIURI* sourceURI,
                           nsINetworkPredictorVerifier* verifier,
@@ -283,7 +190,6 @@ Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
       mVerifier(verifier),
       mStackCount(stackCount),
       mPredictor(predictor) {
->>>>>>> upstream-releases
   mStartTime = TimeStamp::Now();
   if (mPredict) {
     mPredictReason = reason.mPredict;
@@ -293,39 +199,17 @@ Predictor::Action::Action(bool fullUri, bool predict, Predictor::Reason reason,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Action::OnCacheEntryCheck(nsICacheEntry *entry,
-                                     nsIApplicationCache *appCache,
-                                     uint32_t *result) {
-||||||| merged common ancestors
-Predictor::Action::OnCacheEntryCheck(nsICacheEntry *entry,
-                                     nsIApplicationCache *appCache,
-                                     uint32_t *result)
-{
-=======
 Predictor::Action::OnCacheEntryCheck(nsICacheEntry* entry,
                                      nsIApplicationCache* appCache,
                                      uint32_t* result) {
->>>>>>> upstream-releases
   *result = nsICacheEntryOpenCallback::ENTRY_WANTED;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Action::OnCacheEntryAvailable(nsICacheEntry *entry, bool isNew,
-                                         nsIApplicationCache *appCache,
-                                         nsresult result) {
-||||||| merged common ancestors
-Predictor::Action::OnCacheEntryAvailable(nsICacheEntry *entry, bool isNew,
-                                         nsIApplicationCache *appCache,
-                                         nsresult result)
-{
-=======
 Predictor::Action::OnCacheEntryAvailable(nsICacheEntry* entry, bool isNew,
                                          nsIApplicationCache* appCache,
                                          nsresult result) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Got cache entry off main thread!");
 
   nsAutoCString targetURI, sourceURI;
@@ -430,17 +314,8 @@ void Predictor::RemoveObserver() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Observe(nsISupports *subject, const char *topic,
-                   const char16_t *data_unicode) {
-||||||| merged common ancestors
-Predictor::Observe(nsISupports *subject, const char *topic,
-                   const char16_t *data_unicode)
-{
-=======
 Predictor::Observe(nsISupports* subject, const char* topic,
                    const char16_t* data_unicode) {
->>>>>>> upstream-releases
   nsresult rv = NS_OK;
   MOZ_ASSERT(NS_IsMainThread(),
              "Predictor observing something off main thread!");
@@ -458,54 +333,26 @@ Predictor::Observe(nsISupports* subject, const char* topic,
 // Predictor::nsISpeculativeConnectionOverrider
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::GetIgnoreIdle(bool *ignoreIdle) {
-||||||| merged common ancestors
-Predictor::GetIgnoreIdle(bool *ignoreIdle)
-{
-=======
 Predictor::GetIgnoreIdle(bool* ignoreIdle) {
->>>>>>> upstream-releases
   *ignoreIdle = true;
   return NS_OK;
 }
 
 NS_IMETHODIMP
 Predictor::GetParallelSpeculativeConnectLimit(
-<<<<<<< HEAD
-    uint32_t *parallelSpeculativeConnectLimit) {
-||||||| merged common ancestors
-    uint32_t *parallelSpeculativeConnectLimit)
-{
-=======
     uint32_t* parallelSpeculativeConnectLimit) {
->>>>>>> upstream-releases
   *parallelSpeculativeConnectLimit = 6;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::GetIsFromPredictor(bool *isFromPredictor) {
-||||||| merged common ancestors
-Predictor::GetIsFromPredictor(bool *isFromPredictor)
-{
-=======
 Predictor::GetIsFromPredictor(bool* isFromPredictor) {
->>>>>>> upstream-releases
   *isFromPredictor = true;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::GetAllow1918(bool *allow1918) {
-||||||| merged common ancestors
-Predictor::GetAllow1918(bool *allow1918)
-{
-=======
 Predictor::GetAllow1918(bool* allow1918) {
->>>>>>> upstream-releases
   *allow1918 = false;
   return NS_OK;
 }
@@ -513,14 +360,7 @@ Predictor::GetAllow1918(bool* allow1918) {
 // Predictor::nsIInterfaceRequestor
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::GetInterface(const nsIID &iid, void **result) {
-||||||| merged common ancestors
-Predictor::GetInterface(const nsIID &iid, void **result)
-{
-=======
 Predictor::GetInterface(const nsIID& iid, void** result) {
->>>>>>> upstream-releases
   return QueryInterface(iid, result);
 }
 
@@ -530,32 +370,15 @@ Predictor::GetInterface(const nsIID& iid, void** result) {
 #define RESOURCE_META_DATA "predictor::resource-count"
 #define META_DATA_PREFIX "predictor::"
 
-<<<<<<< HEAD
-static bool IsURIMetadataElement(const char *key) {
-||||||| merged common ancestors
-static bool
-IsURIMetadataElement(const char *key)
-{
-=======
 static bool IsURIMetadataElement(const char* key) {
->>>>>>> upstream-releases
   return StringBeginsWith(nsDependentCString(key),
                           NS_LITERAL_CSTRING(META_DATA_PREFIX)) &&
          !NS_LITERAL_CSTRING(SEEN_META_DATA).Equals(key) &&
          !NS_LITERAL_CSTRING(RESOURCE_META_DATA).Equals(key);
 }
 
-<<<<<<< HEAD
-nsresult Predictor::OnMetaDataElement(const char *asciiKey,
-                                      const char *asciiValue) {
-||||||| merged common ancestors
-nsresult
-Predictor::OnMetaDataElement(const char *asciiKey, const char *asciiValue)
-{
-=======
 nsresult Predictor::OnMetaDataElement(const char* asciiKey,
                                       const char* asciiValue) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!IsURIMetadataElement(asciiKey)) {
@@ -618,30 +441,12 @@ nsresult Predictor::Init() {
 }
 
 namespace {
-<<<<<<< HEAD
-class PredictorThreadShutdownRunner : public Runnable {
- public:
-  PredictorThreadShutdownRunner(nsIThread *ioThread, bool success)
-      : Runnable("net::PredictorThreadShutdownRunner"),
-        mIOThread(ioThread),
-        mSuccess(success) {}
-||||||| merged common ancestors
-class PredictorThreadShutdownRunner : public Runnable
-{
-public:
-  PredictorThreadShutdownRunner(nsIThread* ioThread, bool success)
-    : Runnable("net::PredictorThreadShutdownRunner")
-    , mIOThread(ioThread)
-    , mSuccess(success)
-  { }
-=======
 class PredictorThreadShutdownRunner : public Runnable {
  public:
   PredictorThreadShutdownRunner(nsIThread* ioThread, bool success)
       : Runnable("net::PredictorThreadShutdownRunner"),
         mIOThread(ioThread),
         mSuccess(success) {}
->>>>>>> upstream-releases
   ~PredictorThreadShutdownRunner() = default;
 
   NS_IMETHOD Run() override {
@@ -659,30 +464,12 @@ class PredictorThreadShutdownRunner : public Runnable {
   bool mSuccess;
 };
 
-<<<<<<< HEAD
-class PredictorOldCleanupRunner : public Runnable {
- public:
-  PredictorOldCleanupRunner(nsIThread *ioThread, nsIFile *dbFile)
-      : Runnable("net::PredictorOldCleanupRunner"),
-        mIOThread(ioThread),
-        mDBFile(dbFile) {}
-||||||| merged common ancestors
-class PredictorOldCleanupRunner : public Runnable
-{
-public:
-  PredictorOldCleanupRunner(nsIThread* ioThread, nsIFile* dbFile)
-    : Runnable("net::PredictorOldCleanupRunner")
-    , mIOThread(ioThread)
-    , mDBFile(dbFile)
-  { }
-=======
 class PredictorOldCleanupRunner : public Runnable {
  public:
   PredictorOldCleanupRunner(nsIThread* ioThread, nsIFile* dbFile)
       : Runnable("net::PredictorOldCleanupRunner"),
         mIOThread(ioThread),
         mDBFile(dbFile) {}
->>>>>>> upstream-releases
 
   ~PredictorOldCleanupRunner() = default;
 
@@ -729,27 +516,6 @@ class PredictorOldCleanupRunner : public Runnable {
 };
 
 class PredictorLearnRunnable final : public Runnable {
-<<<<<<< HEAD
- public:
-  PredictorLearnRunnable(nsIURI *targetURI, nsIURI *sourceURI,
-                         PredictorLearnReason reason,
-                         const OriginAttributes &oa)
-      : Runnable("PredictorLearnRunnable"),
-        mTargetURI(targetURI),
-        mSourceURI(sourceURI),
-        mReason(reason),
-        mOA(oa) {}
-||||||| merged common ancestors
-public:
-  PredictorLearnRunnable(nsIURI *targetURI, nsIURI *sourceURI,
-                         PredictorLearnReason reason, const OriginAttributes &oa)
-    : Runnable("PredictorLearnRunnable")
-    , mTargetURI(targetURI)
-    , mSourceURI(sourceURI)
-    , mReason(reason)
-    , mOA(oa)
-  { }
-=======
  public:
   PredictorLearnRunnable(nsIURI* targetURI, nsIURI* sourceURI,
                          PredictorLearnReason reason,
@@ -759,7 +525,6 @@ public:
         mSourceURI(sourceURI),
         mReason(reason),
         mOA(oa) {}
->>>>>>> upstream-releases
 
   ~PredictorLearnRunnable() = default;
 
@@ -831,18 +596,8 @@ void Predictor::Shutdown() {
   mInitialized = false;
 }
 
-<<<<<<< HEAD
-nsresult Predictor::Create(nsISupports *aOuter, const nsIID &aIID,
-                           void **aResult) {
-||||||| merged common ancestors
-nsresult
-Predictor::Create(nsISupports *aOuter, const nsIID& aIID,
-                  void **aResult)
-{
-=======
 nsresult Predictor::Create(nsISupports* aOuter, const nsIID& aIID,
                            void** aResult) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsresult rv;
@@ -877,15 +632,7 @@ NS_IMETHODIMP
 Predictor::Predict(nsIURI* targetURI, nsIURI* sourceURI,
                    PredictorPredictReason reason,
                    JS::HandleValue originAttributes,
-<<<<<<< HEAD
-                   nsINetworkPredictorVerifier *verifier, JSContext *aCx) {
-||||||| merged common ancestors
-                   nsINetworkPredictorVerifier *verifier,
-                   JSContext* aCx)
-{
-=======
                    nsINetworkPredictorVerifier* verifier, JSContext* aCx) {
->>>>>>> upstream-releases
   OriginAttributes attrs;
 
   if (!originAttributes.isObject() || !attrs.Init(aCx, originAttributes)) {
@@ -899,17 +646,8 @@ Predictor::Predict(nsIURI* targetURI, nsIURI* sourceURI,
 NS_IMETHODIMP
 Predictor::PredictNative(nsIURI* targetURI, nsIURI* sourceURI,
                          PredictorPredictReason reason,
-<<<<<<< HEAD
-                         const OriginAttributes &originAttributes,
-                         nsINetworkPredictorVerifier *verifier) {
-||||||| merged common ancestors
-                         const OriginAttributes& originAttributes,
-                         nsINetworkPredictorVerifier *verifier)
-{
-=======
                          const OriginAttributes& originAttributes,
                          nsINetworkPredictorVerifier* verifier) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(),
              "Predictor interface methods must be called on the main thread");
 
@@ -1047,26 +785,11 @@ Predictor::PredictNative(nsIURI* targetURI, nsIURI* sourceURI,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool Predictor::PredictInternal(PredictorPredictReason reason,
-                                nsICacheEntry *entry, bool isNew, bool fullUri,
-                                nsIURI *targetURI,
-                                nsINetworkPredictorVerifier *verifier,
-                                uint8_t stackCount) {
-||||||| merged common ancestors
-bool
-Predictor::PredictInternal(PredictorPredictReason reason, nsICacheEntry *entry,
-                           bool isNew, bool fullUri, nsIURI *targetURI,
-                           nsINetworkPredictorVerifier *verifier,
-                           uint8_t stackCount)
-{
-=======
 bool Predictor::PredictInternal(PredictorPredictReason reason,
                                 nsICacheEntry* entry, bool isNew, bool fullUri,
                                 nsIURI* targetURI,
                                 nsINetworkPredictorVerifier* verifier,
                                 uint8_t stackCount) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   PREDICTOR_LOG(("Predictor::PredictInternal"));
@@ -1104,21 +827,9 @@ bool Predictor::PredictInternal(PredictorPredictReason reason,
   return rv;
 }
 
-<<<<<<< HEAD
-void Predictor::PredictForLink(nsIURI *targetURI, nsIURI *sourceURI,
-                               const OriginAttributes &originAttributes,
-                               nsINetworkPredictorVerifier *verifier) {
-||||||| merged common ancestors
-void
-Predictor::PredictForLink(nsIURI *targetURI, nsIURI *sourceURI,
-                          const OriginAttributes& originAttributes,
-                          nsINetworkPredictorVerifier *verifier)
-{
-=======
 void Predictor::PredictForLink(nsIURI* targetURI, nsIURI* sourceURI,
                                const OriginAttributes& originAttributes,
                                nsINetworkPredictorVerifier* verifier) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   PREDICTOR_LOG(("Predictor::PredictForLink"));
@@ -1149,21 +860,9 @@ void Predictor::PredictForLink(nsIURI* targetURI, nsIURI* sourceURI,
 
 // This is the driver for prediction based on a new pageload.
 static const uint8_t MAX_PAGELOAD_DEPTH = 10;
-<<<<<<< HEAD
-bool Predictor::PredictForPageload(nsICacheEntry *entry, nsIURI *targetURI,
-                                   uint8_t stackCount, bool fullUri,
-                                   nsINetworkPredictorVerifier *verifier) {
-||||||| merged common ancestors
-bool
-Predictor::PredictForPageload(nsICacheEntry *entry, nsIURI *targetURI,
-                              uint8_t stackCount, bool fullUri,
-                              nsINetworkPredictorVerifier *verifier)
-{
-=======
 bool Predictor::PredictForPageload(nsICacheEntry* entry, nsIURI* targetURI,
                                    uint8_t stackCount, bool fullUri,
                                    nsINetworkPredictorVerifier* verifier) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   PREDICTOR_LOG(("Predictor::PredictForPageload"));
@@ -1225,18 +924,8 @@ bool Predictor::PredictForPageload(nsICacheEntry* entry, nsIURI* targetURI,
 
 // This is the driver for predicting at browser startup time based on pages that
 // have previously been loaded close to startup.
-<<<<<<< HEAD
-bool Predictor::PredictForStartup(nsICacheEntry *entry, bool fullUri,
-                                  nsINetworkPredictorVerifier *verifier) {
-||||||| merged common ancestors
-bool
-Predictor::PredictForStartup(nsICacheEntry *entry, bool fullUri,
-                             nsINetworkPredictorVerifier *verifier)
-{
-=======
 bool Predictor::PredictForStartup(nsICacheEntry* entry, bool fullUri,
                                   nsINetworkPredictorVerifier* verifier) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   PREDICTOR_LOG(("Predictor::PredictForStartup"));
@@ -1353,18 +1042,8 @@ int32_t Predictor::CalculateConfidence(uint32_t hitCount, uint32_t hitsPossible,
   return confidence;
 }
 
-<<<<<<< HEAD
-static void MakeMetadataEntry(const uint32_t hitCount, const uint32_t lastHit,
-                              const uint32_t flags, nsCString &newValue) {
-||||||| merged common ancestors
-static void
-MakeMetadataEntry(const uint32_t hitCount, const uint32_t lastHit,
-                  const uint32_t flags, nsCString &newValue)
-{
-=======
 static void MakeMetadataEntry(const uint32_t hitCount, const uint32_t lastHit,
                               const uint32_t flags, nsCString& newValue) {
->>>>>>> upstream-releases
   newValue.Truncate();
   newValue.AppendInt(METADATA_VERSION);
   newValue.Append(',');
@@ -1377,30 +1056,6 @@ static void MakeMetadataEntry(const uint32_t hitCount, const uint32_t lastHit,
 
 // On every page load, the rolling window gets shifted by one bit, leaving the
 // lowest bit at 0, to indicate that the subresource in question has not been
-<<<<<<< HEAD
-// seen on the most recent page load. If, at some point later during the page
-// load, the subresource is seen again, we will then set the lowest bit to 1.
-// This is how we keep track of how many of the last n pageloads (for n <= 20) a
-// particular subresource has been seen. The rolling window is kept in the upper
-// 20 bits of the flags element of the metadata. This saves 12 bits for regular
-// old flags.
-void Predictor::UpdateRollingLoadCount(nsICacheEntry *entry,
-                                       const uint32_t flags, const char *key,
-                                       const uint32_t hitCount,
-                                       const uint32_t lastHit) {
-||||||| merged common ancestors
-// seen on the most recent page load. If, at some point later during the page load,
-// the subresource is seen again, we will then set the lowest bit to 1. This is
-// how we keep track of how many of the last n pageloads (for n <= 20) a particular
-// subresource has been seen.
-// The rolling window is kept in the upper 20 bits of the flags element of the
-// metadata. This saves 12 bits for regular old flags.
-void
-Predictor::UpdateRollingLoadCount(nsICacheEntry *entry, const uint32_t flags,
-                                  const char *key, const uint32_t hitCount,
-                                  const uint32_t lastHit)
-{
-=======
 // seen on the most recent page load. If, at some point later during the page
 // load, the subresource is seen again, we will then set the lowest bit to 1.
 // This is how we keep track of how many of the last n pageloads (for n <= 20) a
@@ -1411,7 +1066,6 @@ void Predictor::UpdateRollingLoadCount(nsICacheEntry* entry,
                                        const uint32_t flags, const char* key,
                                        const uint32_t hitCount,
                                        const uint32_t lastHit) {
->>>>>>> upstream-releases
   // Extract just the rolling load count from the flags, shift it to clear the
   // lowest bit, and put the new value with the existing flags.
   uint32_t rollingLoadCount = flags & ~kFlagsMask;
@@ -1435,21 +1089,9 @@ uint32_t Predictor::ClampedPrefetchRollingLoadCount() {
   return n;
 }
 
-<<<<<<< HEAD
-void Predictor::CalculatePredictions(nsICacheEntry *entry, nsIURI *referrer,
-                                     uint32_t lastLoad, uint32_t loadCount,
-                                     int32_t globalDegradation, bool fullUri) {
-||||||| merged common ancestors
-void
-Predictor::CalculatePredictions(nsICacheEntry *entry, nsIURI *referrer,
-                                uint32_t lastLoad, uint32_t loadCount,
-                                int32_t globalDegradation, bool fullUri)
-{
-=======
 void Predictor::CalculatePredictions(nsICacheEntry* entry, nsIURI* referrer,
                                      uint32_t lastLoad, uint32_t loadCount,
                                      int32_t globalDegradation, bool fullUri) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // Since the visitor gets called under a cache lock, all we do there is get
@@ -1521,21 +1163,9 @@ void Predictor::CalculatePredictions(nsICacheEntry* entry, nsIURI* referrer,
 
 // (Maybe) adds a predictive action to the prediction runner, based on our
 // calculated confidence for the subresource in question.
-<<<<<<< HEAD
-void Predictor::SetupPrediction(int32_t confidence, uint32_t flags,
-                                const nsCString &uri,
-                                PrefetchIgnoreReason earlyReason) {
-||||||| merged common ancestors
-void
-Predictor::SetupPrediction(int32_t confidence, uint32_t flags,
-                           const nsCString &uri,
-                           PrefetchIgnoreReason earlyReason)
-{
-=======
 void Predictor::SetupPrediction(int32_t confidence, uint32_t flags,
                                 const nsCString& uri,
                                 PrefetchIgnoreReason earlyReason) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsresult rv = NS_OK;
@@ -1605,45 +1235,15 @@ void Predictor::SetupPrediction(int32_t confidence, uint32_t flags,
   }
 }
 
-<<<<<<< HEAD
-nsresult Predictor::Prefetch(nsIURI *uri, nsIURI *referrer,
-                             const OriginAttributes &originAttributes,
-                             nsINetworkPredictorVerifier *verifier) {
-||||||| merged common ancestors
-nsresult
-Predictor::Prefetch(nsIURI *uri, nsIURI *referrer,
-                    const OriginAttributes& originAttributes,
-                    nsINetworkPredictorVerifier *verifier)
-{
-=======
 nsresult Predictor::Prefetch(nsIURI* uri, nsIURI* referrer,
                              const OriginAttributes& originAttributes,
                              nsINetworkPredictorVerifier* verifier) {
->>>>>>> upstream-releases
   nsAutoCString strUri, strReferrer;
   uri->GetAsciiSpec(strUri);
   referrer->GetAsciiSpec(strReferrer);
   PREDICTOR_LOG(("Predictor::Prefetch uri=%s referrer=%s verifier=%p",
                  strUri.get(), strReferrer.get(), verifier));
   nsCOMPtr<nsIChannel> channel;
-<<<<<<< HEAD
-  nsresult rv = NS_NewChannel(
-      getter_AddRefs(channel), uri, nsContentUtils::GetSystemPrincipal(),
-      nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-      nsIContentPolicy::TYPE_OTHER, nullptr, /* aPerformanceStorage */
-      nullptr,                               /* aLoadGroup */
-      nullptr,                               /* aCallbacks */
-      nsIRequest::LOAD_BACKGROUND);
-||||||| merged common ancestors
-  nsresult rv = NS_NewChannel(getter_AddRefs(channel), uri,
-                              nsContentUtils::GetSystemPrincipal(),
-                              nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
-                              nsIContentPolicy::TYPE_OTHER,
-                              nullptr, /* aPerformanceStorage */
-                              nullptr, /* aLoadGroup */
-                              nullptr, /* aCallbacks */
-                              nsIRequest::LOAD_BACKGROUND);
-=======
   nsresult rv = NS_NewChannel(
       getter_AddRefs(channel), uri, nsContentUtils::GetSystemPrincipal(),
       nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_DATA_IS_NULL,
@@ -1652,7 +1252,6 @@ nsresult Predictor::Prefetch(nsIURI* uri, nsIURI* referrer,
       nullptr,                               /* aLoadGroup */
       nullptr,                               /* aCallbacks */
       nsIRequest::LOAD_BACKGROUND);
->>>>>>> upstream-releases
 
   if (NS_FAILED(rv)) {
     PREDICTOR_LOG(
@@ -1682,56 +1281,23 @@ nsresult Predictor::Prefetch(nsIURI* uri, nsIURI* referrer,
   NS_ENSURE_SUCCESS(rv, rv);
   // XXX - set a header here to indicate this is a prefetch?
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIStreamListener> listener =
-      new PrefetchListener(verifier, uri, this);
-  PREDICTOR_LOG(("    calling AsyncOpen2 listener=%p channel=%p",
-                 listener.get(), channel.get()));
-  rv = channel->AsyncOpen2(listener);
-||||||| merged common ancestors
-  nsCOMPtr<nsIStreamListener> listener = new PrefetchListener(verifier, uri,
-                                                              this);
-  PREDICTOR_LOG(("    calling AsyncOpen2 listener=%p channel=%p", listener.get(),
-                 channel.get()));
-  rv = channel->AsyncOpen2(listener);
-=======
   nsCOMPtr<nsIStreamListener> listener =
       new PrefetchListener(verifier, uri, this);
   PREDICTOR_LOG(("    calling AsyncOpen listener=%p channel=%p", listener.get(),
                  channel.get()));
   rv = channel->AsyncOpen(listener);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
-<<<<<<< HEAD
-    PREDICTOR_LOG(
-        ("    AsyncOpen2 failed rv=0x%" PRIX32, static_cast<uint32_t>(rv)));
-||||||| merged common ancestors
-    PREDICTOR_LOG(("    AsyncOpen2 failed rv=0x%" PRIX32, static_cast<uint32_t>(rv)));
-=======
     PREDICTOR_LOG(
         ("    AsyncOpen failed rv=0x%" PRIX32, static_cast<uint32_t>(rv)));
->>>>>>> upstream-releases
   }
 
   return rv;
 }
 
 // Runs predictions that have been set up.
-<<<<<<< HEAD
-bool Predictor::RunPredictions(nsIURI *referrer,
-                               const OriginAttributes &originAttributes,
-                               nsINetworkPredictorVerifier *verifier) {
-||||||| merged common ancestors
-bool
-Predictor::RunPredictions(nsIURI *referrer,
-                          const OriginAttributes& originAttributes,
-                          nsINetworkPredictorVerifier *verifier)
-{
-=======
 bool Predictor::RunPredictions(nsIURI* referrer,
                                const OriginAttributes& originAttributes,
                                nsINetworkPredictorVerifier* verifier) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(), "Running prediction off main thread");
 
   PREDICTOR_LOG(("Predictor::RunPredictions"));
@@ -1770,16 +1336,8 @@ bool Predictor::RunPredictions(nsIURI* referrer,
     ++totalPredictions;
     ++totalPreconnects;
     nsCOMPtr<nsIPrincipal> principal =
-<<<<<<< HEAD
-        BasePrincipal::CreateCodebasePrincipal(uri, originAttributes);
-    mSpeculativeService->SpeculativeConnect2(uri, principal, this);
-||||||| merged common ancestors
-      BasePrincipal::CreateCodebasePrincipal(uri, originAttributes);
-    mSpeculativeService->SpeculativeConnect2(uri, principal, this);
-=======
         BasePrincipal::CreateCodebasePrincipal(uri, originAttributes);
     mSpeculativeService->SpeculativeConnect(uri, principal, this);
->>>>>>> upstream-releases
     predicted = true;
     if (verifier) {
       PREDICTOR_LOG(("    sending preconnect verification"));
@@ -1828,21 +1386,9 @@ bool Predictor::RunPredictions(nsIURI* referrer,
 }
 
 // Find out if a top-level page is likely to redirect.
-<<<<<<< HEAD
-bool Predictor::WouldRedirect(nsICacheEntry *entry, uint32_t loadCount,
-                              uint32_t lastLoad, int32_t globalDegradation,
-                              nsIURI **redirectURI) {
-||||||| merged common ancestors
-bool
-Predictor::WouldRedirect(nsICacheEntry *entry, uint32_t loadCount,
-                         uint32_t lastLoad, int32_t globalDegradation,
-                         nsIURI **redirectURI)
-{
-=======
 bool Predictor::WouldRedirect(nsICacheEntry* entry, uint32_t loadCount,
                               uint32_t lastLoad, int32_t globalDegradation,
                               nsIURI** redirectURI) {
->>>>>>> upstream-releases
   // TODO - not doing redirects for first go around
   MOZ_ASSERT(NS_IsMainThread());
 
@@ -1850,21 +1396,9 @@ bool Predictor::WouldRedirect(nsICacheEntry* entry, uint32_t loadCount,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Learn(nsIURI *targetURI, nsIURI *sourceURI,
-                 PredictorLearnReason reason, JS::HandleValue originAttributes,
-                 JSContext *aCx) {
-||||||| merged common ancestors
-Predictor::Learn(nsIURI *targetURI, nsIURI *sourceURI,
-                 PredictorLearnReason reason,
-                 JS::HandleValue originAttributes,
-                 JSContext* aCx)
-{
-=======
 Predictor::Learn(nsIURI* targetURI, nsIURI* sourceURI,
                  PredictorLearnReason reason, JS::HandleValue originAttributes,
                  JSContext* aCx) {
->>>>>>> upstream-releases
   OriginAttributes attrs;
 
   if (!originAttributes.isObject() || !attrs.Init(aCx, originAttributes)) {
@@ -1878,14 +1412,7 @@ Predictor::Learn(nsIURI* targetURI, nsIURI* sourceURI,
 NS_IMETHODIMP
 Predictor::LearnNative(nsIURI* targetURI, nsIURI* sourceURI,
                        PredictorLearnReason reason,
-<<<<<<< HEAD
-                       const OriginAttributes &originAttributes) {
-||||||| merged common ancestors
-                       const OriginAttributes& originAttributes)
-{
-=======
                        const OriginAttributes& originAttributes) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread(),
              "Predictor interface methods must be called on the main thread");
 
@@ -2051,21 +1578,9 @@ Predictor::LearnNative(nsIURI* targetURI, nsIURI* sourceURI,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void Predictor::LearnInternal(PredictorLearnReason reason, nsICacheEntry *entry,
-                              bool isNew, bool fullUri, nsIURI *targetURI,
-                              nsIURI *sourceURI) {
-||||||| merged common ancestors
-void
-Predictor::LearnInternal(PredictorLearnReason reason, nsICacheEntry *entry,
-                         bool isNew, bool fullUri, nsIURI *targetURI,
-                         nsIURI *sourceURI)
-{
-=======
 void Predictor::LearnInternal(PredictorLearnReason reason, nsICacheEntry* entry,
                               bool isNew, bool fullUri, nsIURI* targetURI,
                               nsIURI* sourceURI) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   PREDICTOR_LOG(("Predictor::LearnInternal"));
@@ -2147,14 +1662,7 @@ void Predictor::LearnInternal(PredictorLearnReason reason, nsICacheEntry* entry,
 NS_IMPL_ISUPPORTS(Predictor::SpaceCleaner, nsICacheEntryMetaDataVisitor)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::SpaceCleaner::OnMetaDataElement(const char *key, const char *value) {
-||||||| merged common ancestors
-Predictor::SpaceCleaner::OnMetaDataElement(const char *key, const char *value)
-{
-=======
 Predictor::SpaceCleaner::OnMetaDataElement(const char* key, const char* value) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!IsURIMetadataElement(key)) {
@@ -2193,15 +1701,7 @@ Predictor::SpaceCleaner::OnMetaDataElement(const char* key, const char* value) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void Predictor::SpaceCleaner::Finalize(nsICacheEntry *entry) {
-||||||| merged common ancestors
-void
-Predictor::SpaceCleaner::Finalize(nsICacheEntry *entry)
-{
-=======
 void Predictor::SpaceCleaner::Finalize(nsICacheEntry* entry) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (mLRUKeyToDelete) {
@@ -2215,15 +1715,7 @@ void Predictor::SpaceCleaner::Finalize(nsICacheEntry* entry) {
 
 // Called when a subresource has been hit from a top-level load. Uses the two
 // helper functions above to update the database appropriately.
-<<<<<<< HEAD
-void Predictor::LearnForSubresource(nsICacheEntry *entry, nsIURI *targetURI) {
-||||||| merged common ancestors
-void
-Predictor::LearnForSubresource(nsICacheEntry *entry, nsIURI *targetURI)
-{
-=======
 void Predictor::LearnForSubresource(nsICacheEntry* entry, nsIURI* targetURI) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   PREDICTOR_LOG(("Predictor::LearnForSubresource"));
@@ -2315,15 +1807,7 @@ void Predictor::LearnForSubresource(nsICacheEntry* entry, nsIURI* targetURI) {
 
 // This is called when a top-level loaded ended up redirecting to a different
 // URI so we can keep track of that fact.
-<<<<<<< HEAD
-void Predictor::LearnForRedirect(nsICacheEntry *entry, nsIURI *targetURI) {
-||||||| merged common ancestors
-void
-Predictor::LearnForRedirect(nsICacheEntry *entry, nsIURI *targetURI)
-{
-=======
 void Predictor::LearnForRedirect(nsICacheEntry* entry, nsIURI* targetURI) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // TODO - not doing redirects for first go around
@@ -2332,18 +1816,8 @@ void Predictor::LearnForRedirect(nsICacheEntry* entry, nsIURI* targetURI) {
 
 // This will add a page to our list of startup pages if it's being loaded
 // before our startup window has expired.
-<<<<<<< HEAD
-void Predictor::MaybeLearnForStartup(nsIURI *uri, bool fullUri,
-                                     const OriginAttributes &originAttributes) {
-||||||| merged common ancestors
-void
-Predictor::MaybeLearnForStartup(nsIURI *uri, bool fullUri,
-                                const OriginAttributes& originAttributes)
-{
-=======
 void Predictor::MaybeLearnForStartup(nsIURI* uri, bool fullUri,
                                      const OriginAttributes& originAttributes) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // TODO - not doing startup for first go around
@@ -2351,15 +1825,7 @@ void Predictor::MaybeLearnForStartup(nsIURI* uri, bool fullUri,
 }
 
 // Add information about a top-level load to our list of startup pages
-<<<<<<< HEAD
-void Predictor::LearnForStartup(nsICacheEntry *entry, nsIURI *targetURI) {
-||||||| merged common ancestors
-void
-Predictor::LearnForStartup(nsICacheEntry *entry, nsIURI *targetURI)
-{
-=======
 void Predictor::LearnForStartup(nsICacheEntry* entry, nsIURI* targetURI) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   // These actually do the same set of work, just on different entries, so we
@@ -2368,21 +1834,9 @@ void Predictor::LearnForStartup(nsICacheEntry* entry, nsIURI* targetURI) {
   LearnForSubresource(entry, targetURI);
 }
 
-<<<<<<< HEAD
-bool Predictor::ParseMetaDataEntry(const char *key, const char *value,
-                                   nsCString &uri, uint32_t &hitCount,
-                                   uint32_t &lastHit, uint32_t &flags) {
-||||||| merged common ancestors
-bool
-Predictor::ParseMetaDataEntry(const char *key, const char *value, nsCString &uri,
-                              uint32_t &hitCount, uint32_t &lastHit,
-                              uint32_t &flags)
-{
-=======
 bool Predictor::ParseMetaDataEntry(const char* key, const char* value,
                                    nsCString& uri, uint32_t& hitCount,
                                    uint32_t& lastHit, uint32_t& flags) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   PREDICTOR_LOG(
@@ -2476,53 +1930,21 @@ Predictor::Reset() {
 NS_IMPL_ISUPPORTS(Predictor::Resetter, nsICacheEntryOpenCallback,
                   nsICacheEntryMetaDataVisitor, nsICacheStorageVisitor);
 
-<<<<<<< HEAD
-Predictor::Resetter::Resetter(Predictor *predictor)
-    : mEntriesToVisit(0), mPredictor(predictor) {}
-||||||| merged common ancestors
-Predictor::Resetter::Resetter(Predictor *predictor)
-  :mEntriesToVisit(0)
-  ,mPredictor(predictor)
-{ }
-=======
 Predictor::Resetter::Resetter(Predictor* predictor)
     : mEntriesToVisit(0), mPredictor(predictor) {}
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Resetter::OnCacheEntryCheck(nsICacheEntry *entry,
-                                       nsIApplicationCache *appCache,
-                                       uint32_t *result) {
-||||||| merged common ancestors
-Predictor::Resetter::OnCacheEntryCheck(nsICacheEntry *entry,
-                                       nsIApplicationCache *appCache,
-                                       uint32_t *result)
-{
-=======
 Predictor::Resetter::OnCacheEntryCheck(nsICacheEntry* entry,
                                        nsIApplicationCache* appCache,
                                        uint32_t* result) {
->>>>>>> upstream-releases
   *result = nsICacheEntryOpenCallback::ENTRY_WANTED;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Resetter::OnCacheEntryAvailable(nsICacheEntry *entry, bool isNew,
-                                           nsIApplicationCache *appCache,
-                                           nsresult result) {
-||||||| merged common ancestors
-Predictor::Resetter::OnCacheEntryAvailable(nsICacheEntry *entry, bool isNew,
-                                           nsIApplicationCache *appCache,
-                                           nsresult result)
-{
-=======
 Predictor::Resetter::OnCacheEntryAvailable(nsICacheEntry* entry, bool isNew,
                                            nsIApplicationCache* appCache,
                                            nsresult result) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (NS_FAILED(result)) {
@@ -2554,17 +1976,8 @@ Predictor::Resetter::OnCacheEntryAvailable(nsICacheEntry* entry, bool isNew,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Resetter::OnMetaDataElement(const char *asciiKey,
-                                       const char *asciiValue) {
-||||||| merged common ancestors
-Predictor::Resetter::OnMetaDataElement(const char *asciiKey,
-                                       const char *asciiValue)
-{
-=======
 Predictor::Resetter::OnMetaDataElement(const char* asciiKey,
                                        const char* asciiValue) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!StringBeginsWith(nsDependentCString(asciiKey),
@@ -2581,19 +1994,9 @@ Predictor::Resetter::OnMetaDataElement(const char* asciiKey,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::Resetter::OnCacheStorageInfo(uint32_t entryCount,
-                                        uint64_t consumption, uint64_t capacity,
-                                        nsIFile *diskDirectory) {
-||||||| merged common ancestors
-Predictor::Resetter::OnCacheStorageInfo(uint32_t entryCount, uint64_t consumption,
-                                        uint64_t capacity, nsIFile *diskDirectory)
-{
-=======
 Predictor::Resetter::OnCacheStorageInfo(uint32_t entryCount,
                                         uint64_t consumption, uint64_t capacity,
                                         nsIFile* diskDirectory) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   return NS_OK;
@@ -2602,19 +2005,9 @@ Predictor::Resetter::OnCacheStorageInfo(uint32_t entryCount,
 NS_IMETHODIMP
 Predictor::Resetter::OnCacheEntryInfo(nsIURI* uri, const nsACString& idEnhance,
                                       int64_t dataSize, int32_t fetchCount,
-<<<<<<< HEAD
-                                      uint32_t lastModifiedTime,
-                                      uint32_t expirationTime, bool aPinned,
-                                      nsILoadContextInfo *aInfo) {
-||||||| merged common ancestors
-                                      uint32_t lastModifiedTime, uint32_t expirationTime,
-                                      bool aPinned, nsILoadContextInfo* aInfo)
-{
-=======
                                       uint32_t lastModifiedTime,
                                       uint32_t expirationTime, bool aPinned,
                                       nsILoadContextInfo* aInfo) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsresult rv;
@@ -2701,15 +2094,7 @@ void Predictor::Resetter::Complete() {
 
 static StaticRefPtr<nsINetworkPredictor> sPredictor;
 
-<<<<<<< HEAD
-static nsresult EnsureGlobalPredictor(nsINetworkPredictor **aPredictor) {
-||||||| merged common ancestors
-static nsresult
-EnsureGlobalPredictor(nsINetworkPredictor **aPredictor)
-{
-=======
 static nsresult EnsureGlobalPredictor(nsINetworkPredictor** aPredictor) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!sPredictor) {
@@ -2726,24 +2111,10 @@ static nsresult EnsureGlobalPredictor(nsINetworkPredictor** aPredictor) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PredictorPredict(nsIURI *targetURI, nsIURI *sourceURI,
-                          PredictorPredictReason reason,
-                          const OriginAttributes &originAttributes,
-                          nsINetworkPredictorVerifier *verifier) {
-||||||| merged common ancestors
-nsresult
-PredictorPredict(nsIURI *targetURI, nsIURI *sourceURI,
-                 PredictorPredictReason reason,
-                 const OriginAttributes& originAttributes,
-                 nsINetworkPredictorVerifier *verifier)
-{
-=======
 nsresult PredictorPredict(nsIURI* targetURI, nsIURI* sourceURI,
                           PredictorPredictReason reason,
                           const OriginAttributes& originAttributes,
                           nsINetworkPredictorVerifier* verifier) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!IsNullOrHttp(targetURI) || !IsNullOrHttp(sourceURI)) {
@@ -2758,21 +2129,9 @@ nsresult PredictorPredict(nsIURI* targetURI, nsIURI* sourceURI,
                                   originAttributes, verifier);
 }
 
-<<<<<<< HEAD
-nsresult PredictorLearn(nsIURI *targetURI, nsIURI *sourceURI,
-                        PredictorLearnReason reason,
-                        const OriginAttributes &originAttributes) {
-||||||| merged common ancestors
-nsresult
-PredictorLearn(nsIURI *targetURI, nsIURI *sourceURI,
-               PredictorLearnReason reason,
-               const OriginAttributes& originAttributes)
-{
-=======
 nsresult PredictorLearn(nsIURI* targetURI, nsIURI* sourceURI,
                         PredictorLearnReason reason,
                         const OriginAttributes& originAttributes) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!IsNullOrHttp(targetURI) || !IsNullOrHttp(sourceURI)) {
@@ -2786,19 +2145,8 @@ nsresult PredictorLearn(nsIURI* targetURI, nsIURI* sourceURI,
   return predictor->LearnNative(targetURI, sourceURI, reason, originAttributes);
 }
 
-<<<<<<< HEAD
-nsresult PredictorLearn(nsIURI *targetURI, nsIURI *sourceURI,
-                        PredictorLearnReason reason, nsILoadGroup *loadGroup) {
-||||||| merged common ancestors
-nsresult
-PredictorLearn(nsIURI *targetURI, nsIURI *sourceURI,
-               PredictorLearnReason reason,
-               nsILoadGroup *loadGroup)
-{
-=======
 nsresult PredictorLearn(nsIURI* targetURI, nsIURI* sourceURI,
                         PredictorLearnReason reason, nsILoadGroup* loadGroup) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!IsNullOrHttp(targetURI) || !IsNullOrHttp(sourceURI)) {
@@ -2827,19 +2175,8 @@ nsresult PredictorLearn(nsIURI* targetURI, nsIURI* sourceURI,
   return predictor->LearnNative(targetURI, sourceURI, reason, originAttributes);
 }
 
-<<<<<<< HEAD
-nsresult PredictorLearn(nsIURI *targetURI, nsIURI *sourceURI,
-                        PredictorLearnReason reason, nsIDocument *document) {
-||||||| merged common ancestors
-nsresult
-PredictorLearn(nsIURI *targetURI, nsIURI *sourceURI,
-               PredictorLearnReason reason,
-               nsIDocument *document)
-{
-=======
 nsresult PredictorLearn(nsIURI* targetURI, nsIURI* sourceURI,
                         PredictorLearnReason reason, dom::Document* document) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!IsNullOrHttp(targetURI) || !IsNullOrHttp(sourceURI)) {
@@ -2863,18 +2200,8 @@ nsresult PredictorLearn(nsIURI* targetURI, nsIURI* sourceURI,
   return predictor->LearnNative(targetURI, sourceURI, reason, originAttributes);
 }
 
-<<<<<<< HEAD
-nsresult PredictorLearnRedirect(nsIURI *targetURI, nsIChannel *channel,
-                                const OriginAttributes &originAttributes) {
-||||||| merged common ancestors
-nsresult
-PredictorLearnRedirect(nsIURI *targetURI, nsIChannel *channel,
-                       const OriginAttributes& originAttributes)
-{
-=======
 nsresult PredictorLearnRedirect(nsIURI* targetURI, nsIChannel* channel,
                                 const OriginAttributes& originAttributes) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIURI> sourceURI;
@@ -2908,14 +2235,7 @@ nsresult PredictorLearnRedirect(nsIURI* targetURI, nsIChannel* channel,
  * Call through to the child's verifier (only during tests)
  */
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::OnPredictPrefetch(nsIURI *aURI, uint32_t httpStatus) {
-||||||| merged common ancestors
-Predictor::OnPredictPrefetch(nsIURI *aURI, uint32_t httpStatus)
-{
-=======
 Predictor::OnPredictPrefetch(nsIURI* aURI, uint32_t httpStatus) {
->>>>>>> upstream-releases
   if (IsNeckoChild()) {
     if (mChildVerifier) {
       // Ideally, we'd assert here. But since we're slowly moving towards a
@@ -2929,8 +2249,8 @@ Predictor::OnPredictPrefetch(nsIURI* aURI, uint32_t httpStatus) {
   ipc::URIParams serURI;
   SerializeURI(aURI, serURI);
 
-  for (auto *cp : ContentParent::AllProcesses(ContentParent::eLive)) {
-    PNeckoParent *neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
+  for (auto* cp : ContentParent::AllProcesses(ContentParent::eLive)) {
+    PNeckoParent* neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
     if (!neckoParent) {
       continue;
     }
@@ -2957,8 +2277,8 @@ Predictor::OnPredictPreconnect(nsIURI* aURI) {
   ipc::URIParams serURI;
   SerializeURI(aURI, serURI);
 
-  for (auto *cp : ContentParent::AllProcesses(ContentParent::eLive)) {
-    PNeckoParent *neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
+  for (auto* cp : ContentParent::AllProcesses(ContentParent::eLive)) {
+    PNeckoParent* neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
     if (!neckoParent) {
       continue;
     }
@@ -2985,8 +2305,8 @@ Predictor::OnPredictDNS(nsIURI* aURI) {
   ipc::URIParams serURI;
   SerializeURI(aURI, serURI);
 
-  for (auto *cp : ContentParent::AllProcesses(ContentParent::eLive)) {
-    PNeckoParent *neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
+  for (auto* cp : ContentParent::AllProcesses(ContentParent::eLive)) {
+    PNeckoParent* neckoParent = SingleManagedOrNull(cp->ManagedPNeckoParent());
     if (!neckoParent) {
       continue;
     }
@@ -3005,40 +2325,16 @@ NS_IMPL_ISUPPORTS(Predictor::PrefetchListener, nsIStreamListener,
 
 // nsIRequestObserver
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::PrefetchListener::OnStartRequest(nsIRequest *aRequest,
-                                            nsISupports *aContext) {
-||||||| merged common ancestors
-Predictor::PrefetchListener::OnStartRequest(nsIRequest *aRequest,
-                                            nsISupports *aContext)
-{
-=======
 Predictor::PrefetchListener::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   mStartTime = TimeStamp::Now();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::PrefetchListener::OnStopRequest(nsIRequest *aRequest,
-                                           nsISupports *aContext,
-                                           nsresult aStatusCode) {
-  PREDICTOR_LOG(("OnStopRequest this=%p aStatusCode=0x%" PRIX32, this,
-                 static_cast<uint32_t>(aStatusCode)));
-||||||| merged common ancestors
-Predictor::PrefetchListener::OnStopRequest(nsIRequest *aRequest,
-                                           nsISupports *aContext,
-                                           nsresult aStatusCode)
-{
-  PREDICTOR_LOG(("OnStopRequest this=%p aStatusCode=0x%" PRIX32,
-                 this, static_cast<uint32_t>(aStatusCode)));
-=======
 Predictor::PrefetchListener::OnStopRequest(nsIRequest* aRequest,
                                            nsresult aStatusCode) {
   PREDICTOR_LOG(("OnStopRequest this=%p aStatusCode=0x%" PRIX32, this,
                  static_cast<uint32_t>(aStatusCode)));
->>>>>>> upstream-releases
   NS_ENSURE_ARG(aRequest);
   if (NS_FAILED(aStatusCode)) {
     return aStatusCode;
@@ -3100,27 +2396,11 @@ Predictor::PrefetchListener::OnDataAvailable(nsIRequest* aRequest,
 
 // Miscellaneous Predictor
 
-<<<<<<< HEAD
-void Predictor::UpdateCacheability(nsIURI *sourceURI, nsIURI *targetURI,
-                                   uint32_t httpStatus,
-                                   nsHttpRequestHead &requestHead,
-                                   nsHttpResponseHead *responseHead,
-                                   nsILoadContextInfo *lci, bool isTracking) {
-||||||| merged common ancestors
-void
-Predictor::UpdateCacheability(nsIURI *sourceURI, nsIURI *targetURI,
-                              uint32_t httpStatus,
-                              nsHttpRequestHead &requestHead,
-                              nsHttpResponseHead *responseHead,
-                              nsILoadContextInfo *lci, bool isTracking)
-{
-=======
 void Predictor::UpdateCacheability(nsIURI* sourceURI, nsIURI* targetURI,
                                    uint32_t httpStatus,
                                    nsHttpRequestHead& requestHead,
                                    nsHttpResponseHead* responseHead,
                                    nsILoadContextInfo* lci, bool isTracking) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (lci && lci->IsPrivate()) {
@@ -3158,26 +2438,10 @@ void Predictor::UpdateCacheability(nsIURI* sourceURI, nsIURI* targetURI,
   }
 }
 
-<<<<<<< HEAD
-void Predictor::UpdateCacheabilityInternal(
-    nsIURI *sourceURI, nsIURI *targetURI, uint32_t httpStatus,
-    const nsCString &method, const OriginAttributes &originAttributes,
-    bool isTracking, bool couldVary, bool isNoStore) {
-||||||| merged common ancestors
-void
-Predictor::UpdateCacheabilityInternal(nsIURI *sourceURI, nsIURI *targetURI,
-                                      uint32_t httpStatus,
-                                      const nsCString &method,
-                                      const OriginAttributes& originAttributes,
-                                      bool isTracking, bool couldVary,
-                                      bool isNoStore)
-{
-=======
 void Predictor::UpdateCacheabilityInternal(
     nsIURI* sourceURI, nsIURI* targetURI, uint32_t httpStatus,
     const nsCString& method, const OriginAttributes& originAttributes,
     bool isTracking, bool couldVary, bool isNoStore) {
->>>>>>> upstream-releases
   PREDICTOR_LOG(("Predictor::UpdateCacheability httpStatus=%u", httpStatus));
 
   nsresult rv;
@@ -3219,20 +2483,9 @@ NS_IMPL_ISUPPORTS(Predictor::CacheabilityAction, nsICacheEntryOpenCallback,
                   nsICacheEntryMetaDataVisitor);
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::CacheabilityAction::OnCacheEntryCheck(nsICacheEntry *entry,
-                                                 nsIApplicationCache *appCache,
-                                                 uint32_t *result) {
-||||||| merged common ancestors
-Predictor::CacheabilityAction::OnCacheEntryCheck(nsICacheEntry *entry,
-                                                 nsIApplicationCache *appCache,
-                                                 uint32_t *result)
-{
-=======
 Predictor::CacheabilityAction::OnCacheEntryCheck(nsICacheEntry* entry,
                                                  nsIApplicationCache* appCache,
                                                  uint32_t* result) {
->>>>>>> upstream-releases
   *result = nsICacheEntryOpenCallback::ENTRY_WANTED;
   return NS_OK;
 }
@@ -3250,21 +2503,9 @@ enum PrefetchDecisionReason {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::CacheabilityAction::OnCacheEntryAvailable(
-    nsICacheEntry *entry, bool isNew, nsIApplicationCache *appCache,
-    nsresult result) {
-||||||| merged common ancestors
-Predictor::CacheabilityAction::OnCacheEntryAvailable(nsICacheEntry *entry,
-                                                     bool isNew,
-                                                     nsIApplicationCache *appCache,
-                                                     nsresult result)
-{
-=======
 Predictor::CacheabilityAction::OnCacheEntryAvailable(
     nsICacheEntry* entry, bool isNew, nsIApplicationCache* appCache,
     nsresult result) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   // This is being opened read-only, so isNew should always be false
   MOZ_ASSERT(!isNew);
@@ -3361,17 +2602,8 @@ Predictor::CacheabilityAction::OnCacheEntryAvailable(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-Predictor::CacheabilityAction::OnMetaDataElement(const char *asciiKey,
-                                                 const char *asciiValue) {
-||||||| merged common ancestors
-Predictor::CacheabilityAction::OnMetaDataElement(const char *asciiKey,
-                                                 const char *asciiValue)
-{
-=======
 Predictor::CacheabilityAction::OnMetaDataElement(const char* asciiKey,
                                                  const char* asciiValue) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!IsURIMetadataElement(asciiKey)) {

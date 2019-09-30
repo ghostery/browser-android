@@ -13,43 +13,17 @@
 #undef gdk_drag_context_list_targets
 #undef gdk_drag_context_get_dest_window
 
-<<<<<<< HEAD
-static inline GdkDragAction gdk_drag_context_get_actions(
-    GdkDragContext *context) {
-||||||| merged common ancestors
-static inline GdkDragAction
-gdk_drag_context_get_actions(GdkDragContext *context)
-{
-=======
 static inline GdkDragAction gdk_drag_context_get_actions(
     GdkDragContext* context) {
->>>>>>> upstream-releases
   return context->actions;
 }
 
-<<<<<<< HEAD
-static inline GList *gdk_drag_context_list_targets(GdkDragContext *context) {
-||||||| merged common ancestors
-static inline GList *
-gdk_drag_context_list_targets(GdkDragContext *context)
-{
-=======
 static inline GList* gdk_drag_context_list_targets(GdkDragContext* context) {
->>>>>>> upstream-releases
   return context->targets;
 }
 
-<<<<<<< HEAD
-static inline GdkWindow *gdk_drag_context_get_dest_window(
-    GdkDragContext *context) {
-||||||| merged common ancestors
-static inline GdkWindow *
-gdk_drag_context_get_dest_window(GdkDragContext *context)
-{
-=======
 static inline GdkWindow* gdk_drag_context_get_dest_window(
     GdkDragContext* context) {
->>>>>>> upstream-releases
   return context->dest_window;
 }
 #endif /* GDKDND_WRAPPER_H */

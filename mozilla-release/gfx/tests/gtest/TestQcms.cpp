@@ -15,104 +15,14 @@
 #include "qcmsint.h"
 #include "transform_util.h"
 
-<<<<<<< HEAD
-const size_t allGBSize = 1 * 256 * 256 * 4;
-static unsigned char* createAllGB() {
-  unsigned char* buff = (unsigned char*)malloc(allGBSize);
-  int pos = 0;
-  for (int r = 0; r < 1; r++) {  // Skip all R values for speed
-    for (int g = 0; g < 256; g++) {
-      for (int b = 0; b < 256; b++) {
-        buff[pos * 4 + 0] = r;
-        buff[pos * 4 + 1] = g;
-        buff[pos * 4 + 2] = b;
-        buff[pos * 4 + 3] = 0x80;
-        pos++;
-      }
-    }
-  }
-
-  return buff;
-}
-
-TEST(GfxQcms, Identity) {
-  // XXX: This means that we can't have qcms v2 unit test
-  //      without changing the qcms API.
-  qcms_enable_iccv4();
-
-  qcms_profile* input_profile = qcms_profile_sRGB();
-  qcms_profile* output_profile = qcms_profile_sRGB();
-
-  EXPECT_FALSE(qcms_profile_is_bogus(input_profile));
-  EXPECT_FALSE(qcms_profile_is_bogus(output_profile));
-
-  const qcms_intent intent = QCMS_INTENT_DEFAULT;
-  qcms_data_type input_type = QCMS_DATA_RGBA_8;
-  qcms_data_type output_type = QCMS_DATA_RGBA_8;
-||||||| merged common ancestors
-const size_t allGBSize = 1 * 256 * 256 * 4;
-static unsigned char* createAllGB() {
-  unsigned char* buff = (unsigned char*)malloc(allGBSize);
-  int pos = 0;
-  for (int r = 0; r < 1; r++) { // Skip all R values for speed
-    for (int g = 0; g < 256; g++) {
-      for (int b = 0; b < 256; b++) {
-        buff[pos * 4 + 0] = r;
-        buff[pos * 4 + 1] = g;
-        buff[pos * 4 + 2] = b;
-        buff[pos * 4 + 3] = 0x80;
-        pos++;
-      }
-    }
-  }
-
-  return buff;
-}
-
-TEST(GfxQcms, Identity) {
-  // XXX: This means that we can't have qcms v2 unit test
-  //      without changing the qcms API.
-  qcms_enable_iccv4();
-
-  qcms_profile* input_profile = qcms_profile_sRGB();
-  qcms_profile* output_profile = qcms_profile_sRGB();
-
-  EXPECT_FALSE(qcms_profile_is_bogus(input_profile));
-  EXPECT_FALSE(qcms_profile_is_bogus(output_profile));
-
-  const qcms_intent intent = QCMS_INTENT_DEFAULT;
-  qcms_data_type input_type = QCMS_DATA_RGBA_8;
-  qcms_data_type output_type = QCMS_DATA_RGBA_8;
-=======
 #include <cmath>
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  qcms_transform* transform = qcms_transform_create(
-      input_profile, input_type, output_profile, output_type, intent);
-||||||| merged common ancestors
-  qcms_transform* transform = qcms_transform_create(input_profile, input_type,
-                                                    output_profile, output_type,
-                                                    intent);
-=======
 /* SSEv1 is only included in non-Windows or non-x86-64-bit builds. */
 #if defined(MOZILLA_MAY_SUPPORT_SSE) && (!(defined(_MSC_VER) && defined(_M_AMD64)))
 #define QCMS_MAY_SUPPORT_SSE
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  unsigned char* data_in = createAllGB();
-  ;
-  unsigned char* data_out = (unsigned char*)malloc(allGBSize);
-  qcms_transform_data(transform, data_in, data_out, allGBSize / 4);
-||||||| merged common ancestors
-  unsigned char *data_in = createAllGB();;
-  unsigned char *data_out = (unsigned char*)malloc(allGBSize);
-  qcms_transform_data(transform, data_in, data_out, allGBSize / 4);
-=======
 using namespace mozilla;
->>>>>>> upstream-releases
 
 TEST(GfxQcms, LutInverseCrash)
 {

@@ -17,7 +17,6 @@
 #include "mozilla/layers/APZUpdater.h"
 
 class APZCBasicTester : public APZCTesterBase {
-<<<<<<< HEAD
  public:
   explicit APZCBasicTester(
       AsyncPanZoomController::GestureBehavior aGestureBehavior =
@@ -26,43 +25,14 @@ class APZCBasicTester : public APZCTesterBase {
 
  protected:
   virtual void SetUp() {
-    gfxPrefs::GetSingleton();
-||||||| merged common ancestors
-public:
-  explicit APZCBasicTester(AsyncPanZoomController::GestureBehavior aGestureBehavior = AsyncPanZoomController::DEFAULT_GESTURES)
-    : mGestureBehavior(aGestureBehavior)
-  {
-  }
-
-protected:
-  virtual void SetUp()
-  {
-    gfxPrefs::GetSingleton();
-=======
- public:
-  explicit APZCBasicTester(
-      AsyncPanZoomController::GestureBehavior aGestureBehavior =
-          AsyncPanZoomController::DEFAULT_GESTURES)
-      : mGestureBehavior(aGestureBehavior) {}
-
- protected:
-  virtual void SetUp() {
->>>>>>> upstream-releases
     APZThreadUtils::SetThreadAssertionsEnabled(false);
     APZThreadUtils::SetControllerThread(MessageLoop::current());
 
     tm = new TestAPZCTreeManager(mcc);
     updater = new APZUpdater(tm, false);
     sampler = new APZSampler(tm, false);
-<<<<<<< HEAD
-    apzc =
-        new TestAsyncPanZoomController(LayersId{0}, mcc, tm, mGestureBehavior);
-||||||| merged common ancestors
-    apzc = new TestAsyncPanZoomController(LayersId{0}, mcc, tm, mGestureBehavior);
-=======
     apzc = new TestAsyncPanZoomController(
         LayersId{0}, mcc, tm, wr::RenderRoot::Default, mGestureBehavior);
->>>>>>> upstream-releases
     apzc->SetFrameMetrics(TestFrameMetrics());
     apzc->GetScrollMetadata().SetIsLayersIdRoot(true);
   }

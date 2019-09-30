@@ -24,11 +24,6 @@ class ByteStream : public DecoderDoctorLifeLogger<ByteStream> {
 
   virtual void DiscardBefore(int64_t offset) {}
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   // If this ByteStream's underlying storage of media is in-memory, this
   // function returns a pointer to the in-memory storage of data at offset.
   // Note that even if a ByteStream stores data in memory, it may not be
@@ -38,7 +33,6 @@ protected:
   }
 
  protected:
->>>>>>> upstream-releases
   virtual ~ByteStream() {}
 };
 

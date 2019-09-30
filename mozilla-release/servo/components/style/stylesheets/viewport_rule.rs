@@ -23,24 +23,6 @@ use crate::values::generics::NonNegative;
 use crate::values::specified::{self, NoCalcLength};
 use crate::values::specified::{NonNegativeLengthPercentageOrAuto, ViewportPercentageLength};
 use app_units::Au;
-<<<<<<< HEAD
-use crate::context::QuirksMode;
-use crate::error_reporting::ContextualParseError;
-use crate::font_metrics::get_metrics_provider_for_product;
-use crate::media_queries::Device;
-use crate::parser::ParserContext;
-use crate::properties::StyleBuilder;
-use crate::rule_cache::RuleCacheConditions;
-use crate::shared_lock::{SharedRwLockReadGuard, StylesheetGuards, ToCssWithGuard};
-use crate::str::CssStringWriter;
-use crate::stylesheets::{Origin, StylesheetInDocument};
-use crate::values::computed::{Context, ToComputedValue};
-use crate::values::specified::{LengthOrPercentageOrAuto, NoCalcLength, ViewportPercentageLength};
-||||||| merged common ancestors
-use context::QuirksMode;
-use cssparser::{parse_important, AtRuleParser, DeclarationListParser, DeclarationParser, Parser};
-=======
->>>>>>> upstream-releases
 use cssparser::CowRcStr;
 use cssparser::{parse_important, AtRuleParser, DeclarationListParser, DeclarationParser, Parser};
 use euclid::TypedSize2D;

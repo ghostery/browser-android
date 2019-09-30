@@ -35,36 +35,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-<<<<<<< HEAD
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
 beetmover_description_schema = schema.extend({
-||||||| merged common ancestors
-# Voluptuous uses marker objects as dictionary *keys*, but they are not
-# comparable, so we cast all of the keys back to regular strings
-task_description_schema = {str(k): v for k, v in task_description_schema.schema.iteritems()}
-
-transforms = TransformSequence()
-
-# shortcut for a string where task references are allowed
-taskref_or_string = Any(
-    basestring,
-    {Required('task-reference'): basestring})
-
-beetmover_description_schema = Schema({
-    # the dependent task (object) for this beetmover job, used to inform beetmover.
-    Required('dependent-task'): object,
-
-=======
-beetmover_description_schema = schema.extend({
->>>>>>> upstream-releases
     # depname is used in taskref's to identify the taskID of the unsigned things
     Required('depname', default='build'): basestring,
 

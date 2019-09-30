@@ -17,16 +17,8 @@ using struct mozilla::layers::TextureInfo from "mozilla/layers/CompositorTypes.h
 using struct mozilla::void_t from "ipc/IPCMessageUtils.h";
 using struct mozilla::null_t from "ipc/IPCMessageUtils.h";
 using class mozilla::layers::APZTestData from "mozilla/layers/APZTestData.h";
-<<<<<<< HEAD
-using mozilla::layers::ScrollableLayerGuid::ViewID from "mozilla/layers/ScrollableLayerGuid.h";
-using struct mozilla::layers::ScrollableLayerGuid from "mozilla/layers/ScrollableLayerGuid.h";
-||||||| merged common ancestors
-using mozilla::layers::FrameMetrics::ViewID from "FrameMetrics.h";
-using struct mozilla::layers::ScrollableLayerGuid from "FrameMetrics.h";
-=======
 using mozilla::layers::ScrollableLayerGuid::ViewID from "mozilla/layers/ScrollableLayerGuid.h";
 using struct mozilla::layers::SLGuidAndRenderRoot from "mozilla/layers/APZTypes.h";
->>>>>>> upstream-releases
 using struct mozilla::layers::TextureFactoryIdentifier from "mozilla/layers/CompositorTypes.h";
 using mozilla::layers::LayersBackend from "mozilla/layers/LayersTypes.h";
 using mozilla::layers::LayerHandle from "mozilla/layers/LayersTypes.h";

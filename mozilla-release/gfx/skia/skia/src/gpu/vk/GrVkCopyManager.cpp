@@ -160,24 +160,6 @@ bool GrVkCopyManager::copySurfaceAsDraw(GrVkGpu* gpu,
         return false;
     }
 
-<<<<<<< HEAD
-    if (gpu->vkCaps().newCBOnPipelineChange()) {
-        // We bind a new pipeline here for the copy so we must start a new command buffer.
-        gpu->finishFlush(0, nullptr);
-    }
-
-||||||| merged common ancestors
-    if (!gpu->vkCaps().supportsCopiesAsDraws()) {
-        return false;
-    }
-
-    if (gpu->vkCaps().newCBOnPipelineChange()) {
-        // We bind a new pipeline here for the copy so we must start a new command buffer.
-        gpu->finishFlush(0, nullptr);
-    }
-
-=======
->>>>>>> upstream-releases
     GrVkRenderTarget* rt = static_cast<GrVkRenderTarget*>(dst->asRenderTarget());
     if (!rt) {
         return false;

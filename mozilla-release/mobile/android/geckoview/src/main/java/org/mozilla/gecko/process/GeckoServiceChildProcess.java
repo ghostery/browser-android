@@ -7,16 +7,7 @@ package org.mozilla.gecko.process;
 
 import org.mozilla.gecko.annotation.WrapForJNI;
 import org.mozilla.gecko.GeckoAppShell;
-<<<<<<< HEAD
 import org.mozilla.gecko.IGeckoEditableChild;
-import org.mozilla.gecko.IGeckoEditableParent;
-import org.mozilla.gecko.mozglue.GeckoLoader;
-||||||| merged common ancestors
-import org.mozilla.gecko.IGeckoEditableParent;
-import org.mozilla.gecko.mozglue.GeckoLoader;
-=======
-import org.mozilla.gecko.IGeckoEditableChild;
->>>>>>> upstream-releases
 import org.mozilla.gecko.GeckoThread;
 import org.mozilla.gecko.util.ThreadUtils;
 

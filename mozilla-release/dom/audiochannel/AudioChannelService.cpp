@@ -203,16 +203,8 @@ const char* AudibleChangedReasonToStr(
 
 StaticRefPtr<AudioChannelService> gAudioChannelService;
 
-<<<<<<< HEAD
-/* static */ void AudioChannelService::CreateServiceIfNeeded() {
-||||||| merged common ancestors
-/* static */ void
-AudioChannelService::CreateServiceIfNeeded()
-{
-=======
 /* static */
 void AudioChannelService::CreateServiceIfNeeded() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!gAudioChannelService) {
@@ -220,17 +212,8 @@ void AudioChannelService::CreateServiceIfNeeded() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioChannelService>
-AudioChannelService::GetOrCreate() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioChannelService>
-AudioChannelService::GetOrCreate()
-{
-=======
 /* static */
 already_AddRefed<AudioChannelService> AudioChannelService::GetOrCreate() {
->>>>>>> upstream-releases
   if (sXPCOMShuttingDown) {
     return nullptr;
   }
@@ -240,16 +223,8 @@ already_AddRefed<AudioChannelService> AudioChannelService::GetOrCreate() {
   return service.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioChannelService> AudioChannelService::Get() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioChannelService>
-AudioChannelService::Get()
-{
-=======
 /* static */
 already_AddRefed<AudioChannelService> AudioChannelService::Get() {
->>>>>>> upstream-releases
   if (sXPCOMShuttingDown) {
     return nullptr;
   }
@@ -258,29 +233,13 @@ already_AddRefed<AudioChannelService> AudioChannelService::Get() {
   return service.forget();
 }
 
-<<<<<<< HEAD
-/* static */ LogModule* AudioChannelService::GetAudioChannelLog() {
-||||||| merged common ancestors
-/* static */ LogModule*
-AudioChannelService::GetAudioChannelLog()
-{
-=======
 /* static */
 LogModule* AudioChannelService::GetAudioChannelLog() {
->>>>>>> upstream-releases
   return gAudioChannelLog;
 }
 
-<<<<<<< HEAD
-/* static */ void AudioChannelService::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-AudioChannelService::Shutdown()
-{
-=======
 /* static */
 void AudioChannelService::Shutdown() {
->>>>>>> upstream-releases
   if (gAudioChannelService) {
     nsCOMPtr<nsIObserverService> obs = mozilla::services::GetObserverService();
     if (obs) {
@@ -294,16 +253,8 @@ void AudioChannelService::Shutdown() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool AudioChannelService::IsEnableAudioCompeting() {
-||||||| merged common ancestors
-/* static */ bool
-AudioChannelService::IsEnableAudioCompeting()
-{
-=======
 /* static */
 bool AudioChannelService::IsEnableAudioCompeting() {
->>>>>>> upstream-releases
   CreateServiceIfNeeded();
   return sAudioChannelCompeting;
 }

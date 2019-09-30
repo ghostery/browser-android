@@ -24,31 +24,12 @@ class Headers;
 class InternalHeaders;
 class RequestOrUSVString;
 
-<<<<<<< HEAD
-class Request final : public nsISupports,
-                      public FetchBody<Request>,
-                      public nsWrapperCache {
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Request)
-
- public:
-||||||| merged common ancestors
-class Request final : public nsISupports
-                    , public FetchBody<Request>
-                    , public nsWrapperCache
-{
-  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
-  NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(Request)
-
-public:
-=======
 class Request final : public FetchBody<Request>, public nsWrapperCache {
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS_INHERITED(Request,
                                                          FetchBody<Request>)
 
  public:
->>>>>>> upstream-releases
   Request(nsIGlobalObject* aOwner, InternalRequest* aRequest,
           AbortSignal* aSignal);
 

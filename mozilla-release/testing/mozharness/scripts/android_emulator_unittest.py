@@ -26,17 +26,10 @@ from mozharness.mozilla.testing.codecoverage import (
     code_coverage_config_options
 )
 
-<<<<<<< HEAD
-SUITE_DEFAULT_E10S = ['geckoview-junit', 'mochitest', 'reftest']
-SUITE_NO_E10S = ['cppunittest', 'geckoview-junit', 'xpcshell']
-
-||||||| merged common ancestors
-=======
 SUITE_DEFAULT_E10S = ['geckoview-junit', 'mochitest', 'reftest', 'robocop']
 SUITE_NO_E10S = ['cppunittest', 'geckoview-junit', 'xpcshell']
 SUITE_REPEATABLE = ['mochitest', 'reftest']
 
->>>>>>> upstream-releases
 
 class AndroidEmulatorTest(TestingMixin, BaseScript, MozbaseMixin, CodeCoverageMixin,
                           AndroidMixin):
@@ -87,16 +80,6 @@ class AndroidEmulatorTest(TestingMixin, BaseScript, MozbaseMixin, CodeCoverageMi
          "default": "info",
          "help": "Set log level (debug|info|warning|error|critical|fatal)",
          }
-<<<<<<< HEAD
-    ], [
-        ['--e10s', ],
-        {"action": "store_true",
-         "dest": "e10s",
-         "default": False,
-         "help": "Run tests with multiple processes.",
-         }
-||||||| merged common ancestors
-=======
     ], [
         ['--disable-e10s', ],
         {"action": "store_false",
@@ -120,7 +103,6 @@ class AndroidEmulatorTest(TestingMixin, BaseScript, MozbaseMixin, CodeCoverageMi
          "help": "Repeat the tests the given number of times. Supported "
                  "by mochitest, reftest, crashtest, ignored otherwise."
          }
->>>>>>> upstream-releases
     ]] + copy.deepcopy(testing_config_options) + \
         copy.deepcopy(code_coverage_config_options)
 
@@ -163,17 +145,12 @@ class AndroidEmulatorTest(TestingMixin, BaseScript, MozbaseMixin, CodeCoverageMi
         self.device_serial = 'emulator-5554'
         self.log_raw_level = c.get('log_raw_level')
         self.log_tbpl_level = c.get('log_tbpl_level')
-<<<<<<< HEAD
-        self.e10s = c.get('e10s')
-||||||| merged common ancestors
-=======
         self.e10s = c.get('e10s')
         self.enable_webrender = c.get('enable_webrender')
         if self.enable_webrender:
             # AndroidMixin uses this when launching the emulator. We only want
             # GLES3 if we're running WebRender
             self.use_gles3 = True
->>>>>>> upstream-releases
 
     def query_abs_dirs(self):
         if self.abs_dirs:
@@ -275,15 +252,8 @@ class AndroidEmulatorTest(TestingMixin, BaseScript, MozbaseMixin, CodeCoverageMi
             'gtest_dir': os.path.join(dirs['abs_test_install_dir'], 'gtest'),
         }
 
-<<<<<<< HEAD
-        user_paths = json.loads(os.environ.get('MOZHARNESS_TEST_PATHS', '""'))
-
-||||||| merged common ancestors
-        user_paths = os.environ.get('MOZHARNESS_TEST_PATHS')
-=======
         user_paths = self._get_mozharness_test_paths(self.test_suite)
 
->>>>>>> upstream-releases
         for option in self.config["suite_definitions"][self.test_suite]["options"]:
             opt = option.split('=')[0]
             # override configured chunk options with script args, if specified
@@ -299,21 +269,6 @@ class AndroidEmulatorTest(TestingMixin, BaseScript, MozbaseMixin, CodeCoverageMi
                 if option:
                     cmd.extend([option])
 
-<<<<<<< HEAD
-        if 'mochitest' in self.test_suite:
-            category = 'mochitest'
-        elif 'reftest' in self.test_suite or 'crashtest' in self.test_suite:
-            category = 'reftest'
-        else:
-            category = self.test_suite
-        if category not in SUITE_NO_E10S:
-            if category in SUITE_DEFAULT_E10S and not self.e10s:
-                cmd.extend(['--disable-e10s'])
-            elif category not in SUITE_DEFAULT_E10S and self.e10s:
-                cmd.extend(['--e10s'])
-
-||||||| merged common ancestors
-=======
         if 'mochitest' in self.test_suite:
             category = 'mochitest'
         elif 'reftest' in self.test_suite or 'crashtest' in self.test_suite:
@@ -331,17 +286,9 @@ class AndroidEmulatorTest(TestingMixin, BaseScript, MozbaseMixin, CodeCoverageMi
             else:
                 self.log("--repeat not supported in {}".format(category), level=WARNING)
 
->>>>>>> upstream-releases
         if not (self.verify_enabled or self.per_test_coverage):
             if user_paths:
-<<<<<<< HEAD
-                if self.test_suite in user_paths:
-                    cmd.extend(user_paths[self.test_suite])
-||||||| merged common ancestors
-                cmd.extend(user_paths.split(':'))
-=======
                 cmd.extend(user_paths)
->>>>>>> upstream-releases
             elif not (self.verify_enabled or self.per_test_coverage):
                 if self.this_chunk is not None:
                     cmd.extend(['--this-chunk', self.this_chunk])

@@ -240,15 +240,6 @@ const BackgroundPageThumbs = {
         this._processCaptureQueue();
       }
     };
-<<<<<<< HEAD
-    webProgress.addProgressListener(this._listener, Ci.nsIWebProgress.NOTIFY_STATE_ALL);
-    let triggeringPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-    wlBrowser.loadURI("chrome://global/content/backgroundPageThumbs.xhtml",
-                      0, null, null, null, triggeringPrincipal);
-||||||| merged common ancestors
-    webProgress.addProgressListener(this._listener, Ci.nsIWebProgress.NOTIFY_STATE_ALL);
-    wlBrowser.loadURI("chrome://global/content/backgroundPageThumbs.xhtml", 0, null, null, null);
-=======
     webProgress.addProgressListener(
       this._listener,
       Ci.nsIWebProgress.NOTIFY_STATE_ALL
@@ -260,7 +251,6 @@ const BackgroundPageThumbs = {
       "chrome://global/content/backgroundPageThumbs.xhtml",
       loadURIOptions
     );
->>>>>>> upstream-releases
     this._windowlessContainer = wlBrowser;
 
     return false;
@@ -588,18 +578,6 @@ Capture.prototype = {
 
       if (Services.prefs.getBoolPref(ABOUT_NEWTAB_SEGREGATION_PREF)) {
         // Clear the data in the private container for thumbnails.
-<<<<<<< HEAD
-        let privateIdentity =
-          ContextualIdentityService.getPrivateIdentity("userContextIdInternal.thumbnail");
-        if (privateIdentity) {
-          Services.clearData.deleteDataFromOriginAttributesPattern({ userContextId: privateIdentity.userContextId });
-        }
-||||||| merged common ancestors
-        let privateIdentity =
-          ContextualIdentityService.getPrivateIdentity("userContextIdInternal.thumbnail");
-        Services.obs.notifyObservers(null, "clear-origin-attributes-data",
-          JSON.stringify({ userContextId: privateIdentity.userContextId }));
-=======
         let privateIdentity = ContextualIdentityService.getPrivateIdentity(
           "userContextIdInternal.thumbnail"
         );
@@ -608,7 +586,6 @@ Capture.prototype = {
             userContextId: privateIdentity.userContextId,
           });
         }
->>>>>>> upstream-releases
       }
     };
 

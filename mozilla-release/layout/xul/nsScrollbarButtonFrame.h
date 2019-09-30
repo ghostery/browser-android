@@ -19,49 +19,25 @@
 #include "nsITimer.h"
 #include "nsRepeatService.h"
 
-<<<<<<< HEAD
-class nsScrollbarButtonFrame final : public nsButtonBoxFrame {
- public:
-||||||| merged common ancestors
-class nsScrollbarButtonFrame final : public nsButtonBoxFrame
-{
-public:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 class nsScrollbarButtonFrame final : public nsButtonBoxFrame {
  public:
->>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsScrollbarButtonFrame)
 
-<<<<<<< HEAD
-  explicit nsScrollbarButtonFrame(ComputedStyle* aStyle)
-      : nsButtonBoxFrame(aStyle, kClassID), mCursorOnThis(false) {}
-||||||| merged common ancestors
-  explicit nsScrollbarButtonFrame(ComputedStyle* aStyle):
-    nsButtonBoxFrame(aStyle, kClassID), mCursorOnThis(false) {}
-=======
   explicit nsScrollbarButtonFrame(ComputedStyle* aStyle,
                                   nsPresContext* aPresContext)
       : nsButtonBoxFrame(aStyle, aPresContext, kClassID),
         mCursorOnThis(false) {}
->>>>>>> upstream-releases
 
   // Overrides
   virtual void DestroyFrom(nsIFrame* aDestructRoot,
                            PostDestroyData& aPostDestroyData) override;
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewScrollbarButtonFrame(nsIPresShell* aPresShell,
-                                              ComputedStyle* aStyle);
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewScrollbarButtonFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
   friend nsIFrame* NS_NewScrollbarButtonFrame(mozilla::PresShell* aPresShell,
                                               ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   virtual nsresult HandleEvent(nsPresContext* aPresContext,
                                mozilla::WidgetGUIEvent* aEvent,

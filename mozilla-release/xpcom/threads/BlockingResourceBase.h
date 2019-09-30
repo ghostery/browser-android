@@ -97,16 +97,8 @@ class BlockingResourceBase {
   // ``DDT'' = ``Deadlock Detector Type''
   typedef DeadlockDetector<BlockingResourceBase> DDT;
 
-<<<<<<< HEAD
- protected:
-#ifdef MOZ_CALLSTACK_DISABLED
-||||||| merged common ancestors
-protected:
-#ifdef MOZ_CALLSTACK_DISABLED
-=======
  protected:
 #  ifdef MOZ_CALLSTACK_DISABLED
->>>>>>> upstream-releases
   typedef bool AcquisitionState;
 #  else
   // Using maybe to use emplacement as the acquisition state flag; we may not
@@ -165,19 +157,8 @@ protected:
    * @return the front of the resource acquisition chain, i.e., the last
    *         resource acquired.
    */
-<<<<<<< HEAD
-  static BlockingResourceBase* ResourceChainFront() {
-    return (BlockingResourceBase*)PR_GetThreadPrivate(
-        sResourceAcqnChainFrontTPI);
-||||||| merged common ancestors
-  static BlockingResourceBase* ResourceChainFront()
-  {
-    return
-      (BlockingResourceBase*)PR_GetThreadPrivate(sResourceAcqnChainFrontTPI);
-=======
   static BlockingResourceBase* ResourceChainFront() {
     return sResourceAcqnChainFront.get();
->>>>>>> upstream-releases
   }
 
   /**
@@ -199,16 +180,8 @@ protected:
    */
   void ResourceChainAppend(BlockingResourceBase* aPrev) {
     mChainPrev = aPrev;
-<<<<<<< HEAD
-    PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, this);
-  }  // NS_NEEDS_RESOURCE(this)
-||||||| merged common ancestors
-    PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, this);
-  } //NS_NEEDS_RESOURCE(this)
-=======
     sResourceAcqnChainFront.set(this);
   }  // NS_NEEDS_RESOURCE(this)
->>>>>>> upstream-releases
 
   /**
    * ResourceChainRemove
@@ -218,16 +191,8 @@ protected:
    */
   void ResourceChainRemove() {
     NS_ASSERTION(this == ResourceChainFront(), "not at chain front");
-<<<<<<< HEAD
-    PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, mChainPrev);
-  }  // NS_NEEDS_RESOURCE(this)
-||||||| merged common ancestors
-    PR_SetThreadPrivate(sResourceAcqnChainFrontTPI, mChainPrev);
-  } //NS_NEEDS_RESOURCE(this)
-=======
     sResourceAcqnChainFront.set(mChainPrev);
   }  // NS_NEEDS_RESOURCE(this)
->>>>>>> upstream-releases
 
   /**
    * GetAcquisitionState
@@ -253,17 +218,8 @@ protected:
    *
    * *NOT* thread safe.  Requires ownership of underlying resource.
    */
-<<<<<<< HEAD
-  void ClearAcquisitionState() {
-#ifdef MOZ_CALLSTACK_DISABLED
-||||||| merged common ancestors
-  void ClearAcquisitionState()
-  {
-#ifdef MOZ_CALLSTACK_DISABLED
-=======
   void ClearAcquisitionState() {
 #  ifdef MOZ_CALLSTACK_DISABLED
->>>>>>> upstream-releases
     mAcquired = false;
 #  else
     mAcquired.reset();
@@ -276,26 +232,7 @@ protected:
    *
    * *NOT* thread safe.  Requires ownership of underlying resource.
    */
-<<<<<<< HEAD
-  bool IsAcquired() const {
-#ifdef MOZ_CALLSTACK_DISABLED
-    return mAcquired;
-#else
-    return !mAcquired.IsEmpty();
-#endif
-  }
-||||||| merged common ancestors
-  bool IsAcquired() const
-  {
-#ifdef MOZ_CALLSTACK_DISABLED
-    return mAcquired;
-#else
-    return !mAcquired.IsEmpty();
-#endif
-  }
-=======
   bool IsAcquired() const { return (bool)mAcquired; }
->>>>>>> upstream-releases
 
   /**
    * mChainPrev
@@ -374,10 +311,10 @@ protected:
                                 void* aClosure);
   static void GetStackTrace(AcquisitionState& aState);
 
-#ifdef MOZILLA_INTERNAL_API
+#  ifdef MOZILLA_INTERNAL_API
   // so it can call BlockingResourceBase::Shutdown()
   friend void LogTerm();
-#endif  // ifdef MOZILLA_INTERNAL_API
+#  endif  // ifdef MOZILLA_INTERNAL_API
 
 #else  // non-DEBUG implementation
 

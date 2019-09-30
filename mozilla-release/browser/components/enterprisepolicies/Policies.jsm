@@ -191,45 +191,6 @@ var Policies = {
               Services.dirsvc.get("XRESysNativeManifests", Ci.nsIFile),
             ];
           }
-<<<<<<< HEAD
-          dirs.unshift(Services.dirsvc.get("XREAppDist", Ci.nsIFile));
-          for (let certfilename of param.Install) {
-            let certfile;
-            try {
-              certfile = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsIFile);
-              certfile.initWithPath(certfilename);
-            } catch (e) {
-              for (let dir of dirs) {
-                certfile = dir.clone();
-                certfile.append(platform == "linux" ? "certificates" : "Certificates");
-                certfile.append(certfilename);
-                if (certfile.exists()) {
-                  break;
-                }
-              }
-            }
-            let file;
-            try {
-              file = await File.createFromNsIFile(certfile);
-            } catch (e) {
-              log.error(`Unable to find certificate - ${certfilename}`);
-              continue;
-            }
-            let reader = new FileReader();
-            reader.onloadend = function() {
-              if (reader.readyState != reader.DONE) {
-                log.error(`Unable to read certificate - ${certfile.path}`);
-                return;
-              }
-              let cert = reader.result;
-||||||| merged common ancestors
-          for (let dir of dirs) {
-            dir.append(platform == "linux" ? "certificates" : "Certificates");
-            for (let certfilename of param.Install) {
-              let certfile = dir.clone();
-              certfile.append(certfilename);
-              let file;
-=======
           dirs.unshift(Services.dirsvc.get("XREAppDist", Ci.nsIFile));
           for (let certfilename of param.Install) {
             let certfile;
@@ -265,49 +226,9 @@ var Policies = {
               }
               let certFile = reader.result;
               let cert;
->>>>>>> upstream-releases
               try {
-<<<<<<< HEAD
-                if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
-                  gCertDB.addCertFromBase64(pemToBase64(cert), "CTu,CTu,");
-                } else {
-                  gCertDB.addCert(cert, "CTu,CTu,");
-                }
-||||||| merged common ancestors
-                file = await File.createFromNsIFile(certfile);
-=======
                 cert = gCertDB.constructX509(certFile);
->>>>>>> upstream-releases
               } catch (e) {
-<<<<<<< HEAD
-                log.error(`Unable to add certificate - ${certfile.path}`);
-              }
-            };
-            reader.readAsBinaryString(file);
-||||||| merged common ancestors
-                log.info(`Unable to open certificate - ${certfile.path}`);
-                continue;
-              }
-              let reader = new FileReader();
-              reader.onloadend = function() {
-                if (reader.readyState != reader.DONE) {
-                  log.error(`Unable to read certificate - ${certfile.path}`);
-                  return;
-                }
-                let cert = reader.result;
-                try {
-                  if (/-----BEGIN CERTIFICATE-----/.test(cert)) {
-                    gCertDB.addCertFromBase64(pemToBase64(cert), "CTu,CTu,");
-                  } else {
-                    gCertDB.addCert(cert, "CTu,CTu,");
-                  }
-                } catch (e) {
-                  log.error(`Unable to add certificate - ${certfile.path}`);
-                }
-              };
-              reader.readAsBinaryString(file);
-            }
-=======
                 try {
                   // It might be PEM instead of DER.
                   cert = gCertDB.constructX509FromBase64(pemToBase64(certFile));
@@ -342,7 +263,6 @@ var Policies = {
               }
             };
             reader.readAsBinaryString(file);
->>>>>>> upstream-releases
           }
         })();
       }
@@ -1300,16 +1220,10 @@ var Policies = {
             async () => {
               let defaultEngine;
               try {
-<<<<<<< HEAD
-                Services.search.defaultEngine = defaultEngine;
-||||||| merged common ancestors
-                Services.search.currentEngine = defaultEngine;
-=======
                 defaultEngine = Services.search.getEngineByName(param.Default);
                 if (!defaultEngine) {
                   throw new Error("No engine by that name could be found");
                 }
->>>>>>> upstream-releases
               } catch (ex) {
                 log.error(
                   `Search engine lookup failed when attempting to set ` +

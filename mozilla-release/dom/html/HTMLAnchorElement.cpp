@@ -94,30 +94,11 @@ bool HTMLAnchorElement::HasDeferredDNSPrefetchRequest() {
   return HasFlag(HTML_ANCHOR_DNS_PREFETCH_DEFERRED);
 }
 
-<<<<<<< HEAD
-nsresult HTMLAnchorElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-||||||| merged common ancestors
-nsresult
-HTMLAnchorElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-=======
 nsresult HTMLAnchorElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
->>>>>>> upstream-releases
   Link::ResetLinkState(false, Link::ElementHasHref());
 
-<<<<<<< HEAD
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Prefetch links
@@ -129,15 +110,7 @@ nsresult HTMLAnchorElement::BindToTree(BindContext& aContext,
   return rv;
 }
 
-<<<<<<< HEAD
-void HTMLAnchorElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-||||||| merged common ancestors
-void
-HTMLAnchorElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-=======
 void HTMLAnchorElement::UnbindFromTree(bool aNullParent) {
->>>>>>> upstream-releases
   // Cancel any DNS prefetches
   // Note: Must come before ResetLinkState.  If called after, it will recreate
   // mCachedURI based on data that is invalid - due to a call to GetHostname.

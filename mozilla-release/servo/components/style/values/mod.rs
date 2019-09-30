@@ -17,12 +17,7 @@ use selectors::parser::SelectorParseErrorKind;
 use std::fmt::{self, Debug, Write};
 use std::hash;
 use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use values::distance::{ComputeSquaredDistance, SquaredDistance};
-=======
 use to_shmem::impl_trivial_to_shmem;
->>>>>>> upstream-releases
 
 #[cfg(feature = "gecko")]
 pub use crate::gecko::url::CssUrl;

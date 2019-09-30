@@ -108,29 +108,6 @@ inline AsyncTransformMatrix CompleteAsyncTransform(
 
 struct TargetConfirmationFlags final {
   explicit TargetConfirmationFlags(bool aTargetConfirmed)
-<<<<<<< HEAD
-      : mTargetConfirmed(aTargetConfirmed),
-        mRequiresTargetConfirmation(false) {}
-
-  explicit TargetConfirmationFlags(
-      const gfx::CompositorHitTestInfo& aHitTestInfo)
-      : mTargetConfirmed(
-            (aHitTestInfo != gfx::CompositorHitTestInvisibleToHit) &&
-            !aHitTestInfo.contains(
-                gfx::CompositorHitTestFlags::eDispatchToContent)),
-        mRequiresTargetConfirmation(aHitTestInfo.contains(
-            gfx::CompositorHitTestFlags::eRequiresTargetConfirmation)) {}
-||||||| merged common ancestors
-    : mTargetConfirmed(aTargetConfirmed)
-    , mRequiresTargetConfirmation(false)
-  {}
-
-  explicit TargetConfirmationFlags(const gfx::CompositorHitTestInfo& aHitTestInfo)
-    : mTargetConfirmed((aHitTestInfo != gfx::CompositorHitTestInvisibleToHit) &&
-                       !aHitTestInfo.contains(gfx::CompositorHitTestFlags::eDispatchToContent))
-    , mRequiresTargetConfirmation(aHitTestInfo.contains(gfx::CompositorHitTestFlags::eRequiresTargetConfirmation))
-  {}
-=======
       : mTargetConfirmed(aTargetConfirmed),
         mRequiresTargetConfirmation(false) {}
 
@@ -141,47 +118,17 @@ struct TargetConfirmationFlags final {
             (aHitTestInfo & gfx::CompositorHitTestDispatchToContent).isEmpty()),
         mRequiresTargetConfirmation(aHitTestInfo.contains(
             gfx::CompositorHitTestFlags::eRequiresTargetConfirmation)) {}
->>>>>>> upstream-releases
 
   bool mTargetConfirmed : 1;
   bool mRequiresTargetConfirmation : 1;
 };
 
-<<<<<<< HEAD
-/**
- * An RAII class to temporarily apply async test attributes to the provided
- * AsyncPanZoomController.
- */
-class MOZ_RAII AutoApplyAsyncTestAttributes {
- public:
-  explicit AutoApplyAsyncTestAttributes(AsyncPanZoomController*);
-  ~AutoApplyAsyncTestAttributes();
-
- private:
-  AsyncPanZoomController* mApzc;
-  FrameMetrics mPrevFrameMetrics;
-};
-||||||| merged common ancestors
-/**
- * An RAII class to temporarily apply async test attributes to the provided
- * AsyncPanZoomController.
- */
-class MOZ_RAII AutoApplyAsyncTestAttributes {
-public:
-  explicit AutoApplyAsyncTestAttributes(AsyncPanZoomController*);
-  ~AutoApplyAsyncTestAttributes();
-private:
-  AsyncPanZoomController* mApzc;
-  FrameMetrics mPrevFrameMetrics;
-};
-=======
 enum class AsyncTransformComponent { eLayout, eVisual };
 
 using AsyncTransformComponents = EnumSet<AsyncTransformComponent>;
 
 constexpr AsyncTransformComponents LayoutAndVisual(
     AsyncTransformComponent::eLayout, AsyncTransformComponent::eVisual);
->>>>>>> upstream-releases
 
 namespace apz {
 

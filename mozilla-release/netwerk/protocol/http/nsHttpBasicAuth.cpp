@@ -41,29 +41,6 @@ NS_IMPL_ISUPPORTS(nsHttpBasicAuth, nsIHttpAuthenticator)
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpBasicAuth::ChallengeReceived(nsIHttpAuthenticableChannel *authChannel,
-                                   const char *challenge, bool isProxyAuth,
-                                   nsISupports **sessionState,
-                                   nsISupports **continuationState,
-                                   bool *identityInvalid) {
-  // if challenged, then the username:password that was sent must
-  // have been wrong.
-  *identityInvalid = true;
-  return NS_OK;
-||||||| merged common ancestors
-nsHttpBasicAuth::ChallengeReceived(nsIHttpAuthenticableChannel *authChannel,
-                                   const char *challenge,
-                                   bool isProxyAuth,
-                                   nsISupports **sessionState,
-                                   nsISupports **continuationState,
-                                   bool *identityInvalid)
-{
-    // if challenged, then the username:password that was sent must
-    // have been wrong.
-    *identityInvalid = true;
-    return NS_OK;
-=======
 nsHttpBasicAuth::ChallengeReceived(nsIHttpAuthenticableChannel* authChannel,
                                    const char* challenge, bool isProxyAuth,
                                    nsISupports** sessionState,
@@ -73,64 +50,23 @@ nsHttpBasicAuth::ChallengeReceived(nsIHttpAuthenticableChannel* authChannel,
   // have been wrong.
   *identityInvalid = true;
   return NS_OK;
->>>>>>> upstream-releases
 }
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpBasicAuth::GenerateCredentialsAsync(
-    nsIHttpAuthenticableChannel *authChannel,
-    nsIHttpAuthenticatorCallback *aCallback, const char *challenge,
-    bool isProxyAuth, const char16_t *domain, const char16_t *username,
-    const char16_t *password, nsISupports *sessionState,
-    nsISupports *continuationState, nsICancelable **aCancellable) {
-||||||| merged common ancestors
-nsHttpBasicAuth::GenerateCredentialsAsync(nsIHttpAuthenticableChannel *authChannel,
-                                          nsIHttpAuthenticatorCallback* aCallback,
-                                          const char *challenge,
-                                          bool isProxyAuth,
-                                          const char16_t *domain,
-                                          const char16_t *username,
-                                          const char16_t *password,
-                                          nsISupports *sessionState,
-                                          nsISupports *continuationState,
-                                          nsICancelable **aCancellable)
-{
-=======
 nsHttpBasicAuth::GenerateCredentialsAsync(
     nsIHttpAuthenticableChannel* authChannel,
     nsIHttpAuthenticatorCallback* aCallback, const char* challenge,
     bool isProxyAuth, const char16_t* domain, const char16_t* username,
     const char16_t* password, nsISupports* sessionState,
     nsISupports* continuationState, nsICancelable** aCancellable) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpBasicAuth::GenerateCredentials(
-    nsIHttpAuthenticableChannel *authChannel, const char *challenge,
-    bool isProxyAuth, const char16_t *domain, const char16_t *user,
-    const char16_t *password, nsISupports **sessionState,
-    nsISupports **continuationState, uint32_t *aFlags, char **creds)
-||||||| merged common ancestors
-nsHttpBasicAuth::GenerateCredentials(nsIHttpAuthenticableChannel *authChannel,
-                                     const char *challenge,
-                                     bool isProxyAuth,
-                                     const char16_t *domain,
-                                     const char16_t *user,
-                                     const char16_t *password,
-                                     nsISupports **sessionState,
-                                     nsISupports **continuationState,
-                                     uint32_t *aFlags,
-                                     char **creds)
-=======
 nsHttpBasicAuth::GenerateCredentials(
     nsIHttpAuthenticableChannel* authChannel, const char* challenge,
     bool isProxyAuth, const char16_t* domain, const char16_t* user,
     const char16_t* password, nsISupports** sessionState,
     nsISupports** continuationState, uint32_t* aFlags, char** creds)
->>>>>>> upstream-releases
 
 {
   LOG(("nsHttpBasicAuth::GenerateCredentials [challenge=%s]\n", challenge));
@@ -160,20 +96,9 @@ nsHttpBasicAuth::GenerateCredentials(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHttpBasicAuth::GetAuthFlags(uint32_t *flags) {
-  *flags = REQUEST_BASED | REUSABLE_CREDENTIALS | REUSABLE_CHALLENGE;
-  return NS_OK;
-||||||| merged common ancestors
-nsHttpBasicAuth::GetAuthFlags(uint32_t *flags)
-{
-    *flags = REQUEST_BASED | REUSABLE_CREDENTIALS | REUSABLE_CHALLENGE;
-    return NS_OK;
-=======
 nsHttpBasicAuth::GetAuthFlags(uint32_t* flags) {
   *flags = REQUEST_BASED | REUSABLE_CREDENTIALS | REUSABLE_CHALLENGE;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 }  // namespace net

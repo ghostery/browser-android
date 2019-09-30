@@ -165,18 +165,7 @@ var whitelist = [
     platforms: ["linux", "macosx"],
   },
   // Bug 1356031 (only used by devtools)
-<<<<<<< HEAD
-  {file: "chrome://global/skin/icons/error-16.png"},
-||||||| merged common ancestors
-  {file: "chrome://global/skin/icons/error-16.png"},
-  // Bug 1348526
-  {file: "chrome://global/skin/tree/sort-asc-classic.png", platforms: ["linux"]},
-  {file: "chrome://global/skin/tree/sort-asc.png", platforms: ["linux"]},
-  {file: "chrome://global/skin/tree/sort-dsc-classic.png", platforms: ["linux"]},
-  {file: "chrome://global/skin/tree/sort-dsc.png", platforms: ["linux"]},
-=======
   { file: "chrome://global/skin/icons/error-16.png" },
->>>>>>> upstream-releases
   // Bug 1344267
   { file: "chrome://marionette/content/test_anonymous_content.xul" },
   { file: "chrome://marionette/content/test_dialog.properties" },
@@ -201,24 +190,7 @@ var whitelist = [
   // Bug 1378173 (warning: still used by devtools)
   { file: "resource://gre/modules/Promise.jsm" },
   // Still used by WebIDE, which is going away but not entirely gone.
-<<<<<<< HEAD
-  {file: "resource://gre/modules/ZipUtils.jsm"},
-  // Bug 1463225 (on Mac and Windows this is only used by a test)
-  {file: "chrome://global/content/bindings/toolbar.xml",
-   platforms: ["macosx", "win"]},
-  // Bug 1483277 (temporarily unreferenced)
-  {file: AppConstants.BROWSER_CHROME_URL == "chrome://browser/content/browser.xul" ?
-    "chrome://browser/content/browser.xhtml" : "chrome://browser/content/browser.xul" },
-||||||| merged common ancestors
-  {file: "resource://gre/modules/ZipUtils.jsm"},
-  // Bug 1463225 (on Mac and Windows this is only used by a test)
-  {file: "chrome://global/content/bindings/toolbar.xml",
-   platforms: ["macosx", "win"]},
-  // Bug 1483277 (temporarily unreferenced)
-  {file: "chrome://browser/content/browser.xhtml"},
-=======
   { file: "resource://gre/modules/ZipUtils.jsm" },
->>>>>>> upstream-releases
   // Bug 1494170
   // (The references to these files are dynamically generated, so the test can't
   // find the references)

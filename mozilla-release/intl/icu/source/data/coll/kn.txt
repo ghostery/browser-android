@@ -9,13 +9,7 @@ kn{
                 "[reorder Knda Deva Beng Guru Gujr Orya Taml Telu Mlym Sinh]"
                 "&ಔ<ಂ<ಃ<ೱ<ೲ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
         traditional{
             Sequence{
@@ -657,13 +651,7 @@ kn{
                 "&ಫೋ<<<ಫ಼ೋ"
                 "&ಫೌ<<<ಫ಼ೌ"
             }
-<<<<<<< HEAD
-            Version{"34"}
-||||||| merged common ancestors
-            Version{"33.1"}
-=======
             Version{"35.1"}
->>>>>>> upstream-releases
         }
     }
 }

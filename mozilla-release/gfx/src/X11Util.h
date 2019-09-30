@@ -10,11 +10,11 @@
 // Utilities common to all X clients, regardless of UI toolkit.
 
 #if defined(MOZ_WIDGET_GTK)
-#include <gdk/gdk.h>
-#include <gdk/gdkx.h>
-#include "X11UndefineNone.h"
+#  include <gdk/gdk.h>
+#  include <gdk/gdkx.h>
+#  include "X11UndefineNone.h"
 #else
-#error Unknown toolkit
+#  error Unknown toolkit
 #endif
 
 #include <string.h>          // for memset
@@ -25,15 +25,7 @@ namespace mozilla {
 /**
  * Return the default X Display created and used by the UI toolkit.
  */
-<<<<<<< HEAD
-inline Display *DefaultXDisplay() {
-||||||| merged common ancestors
-inline Display*
-DefaultXDisplay()
-{
-=======
 inline Display* DefaultXDisplay() {
->>>>>>> upstream-releases
 #if defined(MOZ_WIDGET_GTK)
   return GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
 #endif
@@ -45,18 +37,8 @@ inline Display* DefaultXDisplay() {
  * to nullptr and 0 respectively.  Both out-parameter pointers are assumed
  * non-nullptr.
  */
-<<<<<<< HEAD
-void FindVisualAndDepth(Display *aDisplay, VisualID aVisualID, Visual **aVisual,
-                        int *aDepth);
-||||||| merged common ancestors
-void
-FindVisualAndDepth(Display* aDisplay, VisualID aVisualID,
-                   Visual** aVisual, int* aDepth);
-
-=======
 void FindVisualAndDepth(Display* aDisplay, VisualID aVisualID, Visual** aVisual,
                         int* aDepth);
->>>>>>> upstream-releases
 
 /**
  * Ensure that all X requests have been processed.
@@ -67,41 +49,19 @@ void FindVisualAndDepth(Display* aDisplay, VisualID aVisualID, Visual** aVisual,
  * intermediate requests.
  */
 
-<<<<<<< HEAD
-void FinishX(Display *aDisplay);
-||||||| merged common ancestors
-void
-FinishX(Display* aDisplay);
-=======
 void FinishX(Display* aDisplay);
->>>>>>> upstream-releases
 
 /**
  * Invoke XFree() on a pointer to memory allocated by Xlib (if the
  * pointer is nonnull) when this class goes out of scope.
  */
 template <typename T>
-<<<<<<< HEAD
-struct ScopedXFreePtrTraits {
-  typedef T *type;
-  static T *empty() { return nullptr; }
-  static void release(T *ptr) {
-    if (ptr != nullptr) XFree(ptr);
-  }
-||||||| merged common ancestors
-struct ScopedXFreePtrTraits
-{
-  typedef T *type;
-  static T *empty() { return nullptr; }
-  static void release(T *ptr) { if (ptr != nullptr) XFree(ptr); }
-=======
 struct ScopedXFreePtrTraits {
   typedef T* type;
   static T* empty() { return nullptr; }
   static void release(T* ptr) {
     if (ptr != nullptr) XFree(ptr);
   }
->>>>>>> upstream-releases
 };
 SCOPED_TEMPLATE(ScopedXFree, ScopedXFreePtrTraits)
 
@@ -126,97 +86,6 @@ SCOPED_TEMPLATE(ScopedXFree, ScopedXFreePtrTraits)
  * using any ScopedXErrorHandler's. Given that it's not used on Mac, it should
  * be easy to make it thread-safe by using thread-local storage with __thread.
  */
-<<<<<<< HEAD
-class ScopedXErrorHandler {
- public:
-  // trivial wrapper around XErrorEvent, just adding ctor initializing by zero.
-  struct ErrorEvent {
-    XErrorEvent mError;
-
-    ErrorEvent() { memset(this, 0, sizeof(ErrorEvent)); }
-  };
-
- private:
-  // this ScopedXErrorHandler's ErrorEvent object
-  ErrorEvent mXError;
-
-  // static pointer for use by the error handler
-  static ErrorEvent *sXErrorPtr;
-
-  // what to restore sXErrorPtr to on destruction
-  ErrorEvent *mOldXErrorPtr;
-
-  // what to restore the error handler to on destruction
-  int (*mOldErrorHandler)(Display *, XErrorEvent *);
-
- public:
-  static int ErrorHandler(Display *, XErrorEvent *ev);
-
-  /**
-   * @param aAllowOffMainThread whether to warn if used off main thread
-   */
-  explicit ScopedXErrorHandler(bool aAllowOffMainThread = false);
-
-  ~ScopedXErrorHandler();
-
-  /** \returns true if a X error occurred since the last time this method was
-   * called on this ScopedXErrorHandler object, or since the creation of this
-   * ScopedXErrorHandler object if this method was never called on it.
-   *
-   * \param ev this optional parameter, if set, will be filled with the
-   * XErrorEvent object. If multiple errors occurred, the first one will be
-   * returned.
-   */
-  bool SyncAndGetError(Display *dpy, XErrorEvent *ev = nullptr);
-||||||| merged common ancestors
-class ScopedXErrorHandler
-{
-public:
-    // trivial wrapper around XErrorEvent, just adding ctor initializing by zero.
-    struct ErrorEvent
-    {
-        XErrorEvent mError;
-
-        ErrorEvent()
-        {
-            memset(this, 0, sizeof(ErrorEvent));
-        }
-    };
-
-private:
-
-    // this ScopedXErrorHandler's ErrorEvent object
-    ErrorEvent mXError;
-
-    // static pointer for use by the error handler
-    static ErrorEvent* sXErrorPtr;
-
-    // what to restore sXErrorPtr to on destruction
-    ErrorEvent* mOldXErrorPtr;
-
-    // what to restore the error handler to on destruction
-    int (*mOldErrorHandler)(Display *, XErrorEvent *);
-
-public:
-
-    static int
-    ErrorHandler(Display *, XErrorEvent *ev);
-
-    /**
-     * @param aAllowOffMainThread whether to warn if used off main thread
-     */
-    explicit ScopedXErrorHandler(bool aAllowOffMainThread = false);
-
-    ~ScopedXErrorHandler();
-
-    /** \returns true if a X error occurred since the last time this method was called on this ScopedXErrorHandler object,
-     *           or since the creation of this ScopedXErrorHandler object if this method was never called on it.
-     *
-     * \param ev this optional parameter, if set, will be filled with the XErrorEvent object. If multiple errors occurred,
-     *           the first one will be returned.
-     */
-    bool SyncAndGetError(Display *dpy, XErrorEvent *ev = nullptr);
-=======
 class ScopedXErrorHandler {
  public:
   // trivial wrapper around XErrorEvent, just adding ctor initializing by zero.
@@ -258,7 +127,6 @@ class ScopedXErrorHandler {
    * returned.
    */
   bool SyncAndGetError(Display* dpy, XErrorEvent* ev = nullptr);
->>>>>>> upstream-releases
 };
 
 class OffMainThreadScopedXErrorHandler : public ScopedXErrorHandler {

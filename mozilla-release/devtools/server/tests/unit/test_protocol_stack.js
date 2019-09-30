@@ -70,29 +70,6 @@ function run_test() {
   let rootFront;
 
   client.connect().then(function onConnect() {
-<<<<<<< HEAD
-    rootFront = RootFront(client);
-
-    rootFront.simpleReturn().then(() => {
-      let stack = Components.stack;
-      while (stack) {
-        info(stack.name);
-        if (stack.name.includes("run_test/onConnect")) {
-          // Reached back to outer function before request
-          ok(true, "Complete stack");
-          return;
-||||||| merged common ancestors
-    rootClient = RootFront(client);
-
-    rootClient.simpleReturn().then(() => {
-      let stack = Components.stack;
-      while (stack) {
-        info(stack.name);
-        if (stack.name.includes("run_test/onConnect")) {
-          // Reached back to outer function before request
-          ok(true, "Complete stack");
-          return;
-=======
     rootFront = new RootFront(client);
 
     rootFront
@@ -113,7 +90,6 @@ function run_test() {
         },
         () => {
           ok(false, "Request failed unexpectedly");
->>>>>>> upstream-releases
         }
       )
       .then(() => {

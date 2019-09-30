@@ -391,18 +391,9 @@ class CommonBackend(BuildBackend):
             if poison_windows_h:
                 includeTemplate += (
                     '\n'
-<<<<<<< HEAD
-                    '#if defined(_WINDOWS_) && !defined(MOZ_WRAPPED_WINDOWS_H)\n'
-                    '#pragma message("wrapper failure reason: " MOZ_WINDOWS_WRAPPER_DISABLED_REASON)\n'
-                    '#error "%(cppfile)s included unwrapped windows.h"\n'
-||||||| merged common ancestors
-                    '#ifdef _WINDOWS_\n'
-                    '#error "%(cppfile)s included windows.h"\n'
-=======
                     '#if defined(_WINDOWS_) && !defined(MOZ_WRAPPED_WINDOWS_H)\n'
                     '#pragma message("wrapper failure reason: " MOZ_WINDOWS_WRAPPER_DISABLED_REASON)\n'  # noqa
                     '#error "%(cppfile)s included unwrapped windows.h"\n'
->>>>>>> upstream-releases
                     "#endif")
             includeTemplate += (
                 '\n'

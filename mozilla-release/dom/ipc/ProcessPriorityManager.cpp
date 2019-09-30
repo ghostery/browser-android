@@ -56,29 +56,6 @@ using namespace mozilla::hal;
 // #define ENABLE_LOGGING 1
 
 #if defined(ANDROID) && defined(ENABLE_LOGGING)
-<<<<<<< HEAD
-#include <android/log.h>
-#define LOG(fmt, ...)                                                        \
-  __android_log_print(ANDROID_LOG_INFO, "Gecko:ProcessPriorityManager", fmt, \
-                      ##__VA_ARGS__)
-#define LOGP(fmt, ...)                                                         \
-  __android_log_print(ANDROID_LOG_INFO, "Gecko:ProcessPriorityManager",        \
-                      "[%schild-id=%" PRIu64 ", pid=%d] " fmt,                 \
-                      NameWithComma().get(), static_cast<uint64_t>(ChildID()), \
-                      Pid(), ##__VA_ARGS__)
-||||||| merged common ancestors
-#  include <android/log.h>
-#  define LOG(fmt, ...) \
-     __android_log_print(ANDROID_LOG_INFO, \
-       "Gecko:ProcessPriorityManager", \
-       fmt, ## __VA_ARGS__)
-#  define LOGP(fmt, ...) \
-    __android_log_print(ANDROID_LOG_INFO, \
-      "Gecko:ProcessPriorityManager", \
-      "[%schild-id=%" PRIu64 ", pid=%d] " fmt, \
-      NameWithComma().get(), \
-      static_cast<uint64_t>(ChildID()), Pid(), ## __VA_ARGS__)
-=======
 #  include <android/log.h>
 #  define LOG(fmt, ...)                                                        \
     __android_log_print(ANDROID_LOG_INFO, "Gecko:ProcessPriorityManager", fmt, \
@@ -88,25 +65,8 @@ using namespace mozilla::hal;
         ANDROID_LOG_INFO, "Gecko:ProcessPriorityManager",               \
         "[%schild-id=%" PRIu64 ", pid=%d] " fmt, NameWithComma().get(), \
         static_cast<uint64_t>(ChildID()), Pid(), ##__VA_ARGS__)
->>>>>>> upstream-releases
 
 #elif defined(ENABLE_LOGGING)
-<<<<<<< HEAD
-#define LOG(fmt, ...) \
-  printf("ProcessPriorityManager - " fmt "\n", ##__VA_ARGS__)
-#define LOGP(fmt, ...)                                                         \
-  printf("ProcessPriorityManager[%schild-id=%" PRIu64 ", pid=%d] - " fmt "\n", \
-         NameWithComma().get(), static_cast<uint64_t>(ChildID()), Pid(),       \
-         ##__VA_ARGS__)
-||||||| merged common ancestors
-#  define LOG(fmt, ...) \
-     printf("ProcessPriorityManager - " fmt "\n", ##__VA_ARGS__)
-#  define LOGP(fmt, ...) \
-     printf("ProcessPriorityManager[%schild-id=%" PRIu64 ", pid=%d] - " \
-       fmt "\n", \
-       NameWithComma().get(), \
-       static_cast<uint64_t>(ChildID()), Pid(), ##__VA_ARGS__)
-=======
 #  define LOG(fmt, ...) \
     printf("ProcessPriorityManager - " fmt "\n", ##__VA_ARGS__)
 #  define LOGP(fmt, ...)                                                   \
@@ -114,37 +74,7 @@ using namespace mozilla::hal;
            "\n",                                                           \
            NameWithComma().get(), static_cast<uint64_t>(ChildID()), Pid(), \
            ##__VA_ARGS__)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-static LogModule* GetPPMLog() {
-  static LazyLogModule sLog("ProcessPriorityManager");
-  return sLog;
-}
-#define LOG(fmt, ...)                   \
-  MOZ_LOG(GetPPMLog(), LogLevel::Debug, \
-          ("ProcessPriorityManager - " fmt, ##__VA_ARGS__))
-#define LOGP(fmt, ...)                                                      \
-  MOZ_LOG(GetPPMLog(), LogLevel::Debug,                                     \
-          ("ProcessPriorityManager[%schild-id=%" PRIu64 ", pid=%d] - " fmt, \
-           NameWithComma().get(), static_cast<uint64_t>(ChildID()), Pid(),  \
-           ##__VA_ARGS__))
-||||||| merged common ancestors
-  static LogModule*
-  GetPPMLog()
-  {
-    static LazyLogModule sLog("ProcessPriorityManager");
-    return sLog;
-  }
-#  define LOG(fmt, ...) \
-     MOZ_LOG(GetPPMLog(), LogLevel::Debug, \
-            ("ProcessPriorityManager - " fmt, ##__VA_ARGS__))
-#  define LOGP(fmt, ...) \
-     MOZ_LOG(GetPPMLog(), LogLevel::Debug, \
-            ("ProcessPriorityManager[%schild-id=%" PRIu64 ", pid=%d] - " fmt, \
-            NameWithComma().get(), \
-            static_cast<uint64_t>(ChildID()), Pid(), ##__VA_ARGS__))
-=======
 static LogModule* GetPPMLog() {
   static LazyLogModule sLog("ProcessPriorityManager");
   return sLog;
@@ -157,7 +87,6 @@ static LogModule* GetPPMLog() {
             ("ProcessPriorityManager[%schild-id=%" PRIu64 ", pid=%d] - " fmt, \
              NameWithComma().get(), static_cast<uint64_t>(ChildID()), Pid(),  \
              ##__VA_ARGS__))
->>>>>>> upstream-releases
 #endif
 
 namespace {
@@ -175,23 +104,9 @@ class ParticularProcessPriorityManager;
  * any process, are handled separately, by the ProcessPriorityManagerChild
  * class.
  */
-<<<<<<< HEAD
-class ProcessPriorityManagerImpl final : public nsIObserver,
-                                         public WakeLockObserver,
-                                         public nsSupportsWeakReference {
- public:
-||||||| merged common ancestors
-class ProcessPriorityManagerImpl final
-  : public nsIObserver
-  , public WakeLockObserver
-  , public nsSupportsWeakReference
-{
-public:
-=======
 class ProcessPriorityManagerImpl final : public nsIObserver,
                                          public nsSupportsWeakReference {
  public:
->>>>>>> upstream-releases
   /**
    * If we're in the main process, get the ProcessPriorityManagerImpl
    * singleton.  If we're in a child process, return null.
@@ -223,50 +138,12 @@ class ProcessPriorityManagerImpl final : public nsIObserver,
    * its priority.
    */
   void NotifyProcessPriorityChanged(
-<<<<<<< HEAD
       ParticularProcessPriorityManager* aParticularManager,
       hal::ProcessPriority aOldPriority);
-
-  /**
-   * Implements WakeLockObserver, used to monitor wake lock changes in the
-   * main process.
-   */
-  virtual void Notify(const WakeLockInformation& aInfo) override;
-||||||| merged common ancestors
-    ParticularProcessPriorityManager* aParticularManager,
-    hal::ProcessPriority aOldPriority);
-
-  /**
-   * Implements WakeLockObserver, used to monitor wake lock changes in the
-   * main process.
-   */
-  virtual void Notify(const WakeLockInformation& aInfo) override;
-=======
-      ParticularProcessPriorityManager* aParticularManager,
-      hal::ProcessPriority aOldPriority);
->>>>>>> upstream-releases
 
   void TabActivityChanged(BrowserParent* aBrowserParent, bool aIsActive);
 
-<<<<<<< HEAD
-  /**
-   * Call ShutDown before destroying the ProcessPriorityManager because
-   * WakeLockObserver hols a strong reference to it.
-   */
-  void ShutDown();
-
  private:
-||||||| merged common ancestors
-  /**
-   * Call ShutDown before destroying the ProcessPriorityManager because
-   * WakeLockObserver hols a strong reference to it.
-   */
-  void ShutDown();
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   static bool sPrefsEnabled;
   static bool sRemoteTabsDisabled;
   static bool sTestMode;
@@ -289,19 +166,7 @@ private:
   void ObserveContentParentDestroyed(nsISupports* aSubject);
 
   nsDataHashtable<nsUint64HashKey, RefPtr<ParticularProcessPriorityManager> >
-<<<<<<< HEAD
       mParticularManagers;
-
-  /** True if the main process is holding a high-priority wakelock */
-  bool mHighPriority;
-||||||| merged common ancestors
-    mParticularManagers;
-
-  /** True if the main process is holding a high-priority wakelock */
-  bool mHighPriority;
-=======
-      mParticularManagers;
->>>>>>> upstream-releases
 
   /** Contains the PIDs of child processes holding high-priority wakelocks */
   nsTHashtable<nsUint64HashKey> mHighPriorityChildIDs;
@@ -401,19 +266,10 @@ class ParticularProcessPriorityManager final : public WakeLockObserver,
   void FireTestOnlyObserverNotification(
       const char* aTopic, const nsACString& aData = EmptyCString());
 
-<<<<<<< HEAD
-  void FireTestOnlyObserverNotification(const char* aTopic,
-                                        const char* aData = nullptr);
-||||||| merged common ancestors
-  void FireTestOnlyObserverNotification(
-    const char* aTopic,
-    const char* aData = nullptr);
-=======
   void FireTestOnlyObserverNotification(const char* aTopic,
                                         const char* aData = nullptr);
 
   bool IsHoldingWakeLock(const nsAString& aTopic);
->>>>>>> upstream-releases
 
   ContentParent* mContentParent;
   uint64_t mChildID;
@@ -434,34 +290,6 @@ class ParticularProcessPriorityManager final : public WakeLockObserver,
   nsTHashtable<nsUint64HashKey> mActiveBrowserParents;
 };
 
-<<<<<<< HEAD
-/* static */ bool ProcessPriorityManagerImpl::sInitialized = false;
-/* static */ bool ProcessPriorityManagerImpl::sPrefsEnabled = false;
-/* static */ bool ProcessPriorityManagerImpl::sRemoteTabsDisabled = true;
-/* static */ bool ProcessPriorityManagerImpl::sTestMode = false;
-/* static */ bool ProcessPriorityManagerImpl::sPrefListenersRegistered = false;
-/* static */ StaticRefPtr<ProcessPriorityManagerImpl>
-    ProcessPriorityManagerImpl::sSingleton;
-/* static */ uint32_t
-    ParticularProcessPriorityManager::sBackgroundPerceivableGracePeriodMS = 0;
-/* static */ uint32_t
-    ParticularProcessPriorityManager::sBackgroundGracePeriodMS = 0;
-
-NS_IMPL_ISUPPORTS(ProcessPriorityManagerImpl, nsIObserver,
-||||||| merged common ancestors
-/* static */ bool ProcessPriorityManagerImpl::sInitialized = false;
-/* static */ bool ProcessPriorityManagerImpl::sPrefsEnabled = false;
-/* static */ bool ProcessPriorityManagerImpl::sRemoteTabsDisabled = true;
-/* static */ bool ProcessPriorityManagerImpl::sTestMode = false;
-/* static */ bool ProcessPriorityManagerImpl::sPrefListenersRegistered = false;
-/* static */ StaticRefPtr<ProcessPriorityManagerImpl>
-  ProcessPriorityManagerImpl::sSingleton;
-/* static */ uint32_t ParticularProcessPriorityManager::sBackgroundPerceivableGracePeriodMS = 0;
-/* static */ uint32_t ParticularProcessPriorityManager::sBackgroundGracePeriodMS = 0;
-
-NS_IMPL_ISUPPORTS(ProcessPriorityManagerImpl,
-                  nsIObserver,
-=======
 /* static */
 bool ProcessPriorityManagerImpl::sInitialized = false;
 /* static */
@@ -481,22 +309,11 @@ uint32_t ParticularProcessPriorityManager::sBackgroundPerceivableGracePeriodMS =
 uint32_t ParticularProcessPriorityManager::sBackgroundGracePeriodMS = 0;
 
 NS_IMPL_ISUPPORTS(ProcessPriorityManagerImpl, nsIObserver,
->>>>>>> upstream-releases
                   nsISupportsWeakReference);
 
-<<<<<<< HEAD
-/* static */ void ProcessPriorityManagerImpl::PrefChangedCallback(
-    const char* aPref, void* aClosure) {
-||||||| merged common ancestors
-/* static */ void
-ProcessPriorityManagerImpl::PrefChangedCallback(const char* aPref,
-                                                void* aClosure)
-{
-=======
 /* static */
 void ProcessPriorityManagerImpl::PrefChangedCallback(const char* aPref,
                                                      void* aClosure) {
->>>>>>> upstream-releases
   StaticInit();
   if (!PrefsEnabled() && sSingleton) {
     sSingleton = nullptr;
@@ -504,46 +321,17 @@ void ProcessPriorityManagerImpl::PrefChangedCallback(const char* aPref,
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool ProcessPriorityManagerImpl::PrefsEnabled() {
-  return sPrefsEnabled && hal::SetProcessPrioritySupported() &&
-         !sRemoteTabsDisabled;
-||||||| merged common ancestors
-/* static */ bool
-ProcessPriorityManagerImpl::PrefsEnabled()
-{
-  return sPrefsEnabled && hal::SetProcessPrioritySupported() && !sRemoteTabsDisabled;
-=======
 /* static */
 bool ProcessPriorityManagerImpl::PrefsEnabled() {
   return sPrefsEnabled && hal::SetProcessPrioritySupported() &&
          !sRemoteTabsDisabled;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool ProcessPriorityManagerImpl::TestMode() { return sTestMode; }
-||||||| merged common ancestors
-/* static */ bool
-ProcessPriorityManagerImpl::TestMode()
-{
-  return sTestMode;
-}
-=======
 /* static */
 bool ProcessPriorityManagerImpl::TestMode() { return sTestMode; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void ProcessPriorityManagerImpl::StaticInit() {
-||||||| merged common ancestors
-/* static */ void
-ProcessPriorityManagerImpl::StaticInit()
-{
-=======
 /* static */
 void ProcessPriorityManagerImpl::StaticInit() {
->>>>>>> upstream-releases
   if (sInitialized) {
     return;
   }
@@ -585,17 +373,8 @@ void ProcessPriorityManagerImpl::StaticInit() {
   ClearOnShutdown(&sSingleton);
 }
 
-<<<<<<< HEAD
-/* static */ ProcessPriorityManagerImpl*
-ProcessPriorityManagerImpl::GetSingleton() {
-||||||| merged common ancestors
-/* static */ ProcessPriorityManagerImpl*
-ProcessPriorityManagerImpl::GetSingleton()
-{
-=======
 /* static */
 ProcessPriorityManagerImpl* ProcessPriorityManagerImpl::GetSingleton() {
->>>>>>> upstream-releases
   if (!sSingleton) {
     StaticInit();
   }
@@ -603,39 +382,11 @@ ProcessPriorityManagerImpl* ProcessPriorityManagerImpl::GetSingleton() {
   return sSingleton;
 }
 
-<<<<<<< HEAD
-ProcessPriorityManagerImpl::ProcessPriorityManagerImpl()
-    : mHighPriority(false) {
-||||||| merged common ancestors
-ProcessPriorityManagerImpl::ProcessPriorityManagerImpl()
-  : mHighPriority(false)
-{
-=======
 ProcessPriorityManagerImpl::ProcessPriorityManagerImpl() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
 }
 
-<<<<<<< HEAD
-ProcessPriorityManagerImpl::~ProcessPriorityManagerImpl() { ShutDown(); }
-
-void ProcessPriorityManagerImpl::ShutDown() {
-  UnregisterWakeLockObserver(this);
-}
-||||||| merged common ancestors
-ProcessPriorityManagerImpl::~ProcessPriorityManagerImpl()
-{
-  ShutDown();
-}
-
-void
-ProcessPriorityManagerImpl::ShutDown()
-{
-  UnregisterWakeLockObserver(this);
-}
-=======
 ProcessPriorityManagerImpl::~ProcessPriorityManagerImpl() = default;
->>>>>>> upstream-releases
 
 void ProcessPriorityManagerImpl::Init() {
   LOG("Starting up.  This is the master process.");
@@ -703,13 +454,7 @@ void ProcessPriorityManagerImpl::ObserveContentParentCreated(
   // don't leak the already_AddRefed object.
   RefPtr<ContentParent> cp = do_QueryObject(aContentParent);
   RefPtr<ParticularProcessPriorityManager> pppm =
-<<<<<<< HEAD
-      GetParticularProcessPriorityManager(cp->AsContentParent());
-||||||| merged common ancestors
-    GetParticularProcessPriorityManager(cp->AsContentParent());
-=======
       GetParticularProcessPriorityManager(cp);
->>>>>>> upstream-releases
 }
 
 void ProcessPriorityManagerImpl::ObserveContentParentDestroyed(
@@ -742,64 +487,10 @@ void ProcessPriorityManagerImpl::NotifyProcessPriorityChanged(
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void ProcessPriorityManagerImpl::Notify(
-    const WakeLockInformation& aInfo) {
-  /* The main process always has an ID of 0, if it is present in the wake-lock
-   * information then we explicitly requested a high-priority wake-lock for the
-   * main process. */
-  if (aInfo.topic().EqualsLiteral("high-priority")) {
-    if (aInfo.lockingProcesses().Contains((uint64_t)0)) {
-      mHighPriority = true;
-    } else {
-      mHighPriority = false;
-    }
-
-    LOG("Got wake lock changed event. "
-        "Now mHighPriorityParent = %d\n",
-        mHighPriority);
-  }
-}
-
-void ProcessPriorityManagerImpl::TabActivityChanged(TabParent* aTabParent,
-                                                    bool aIsActive) {
-  ContentParent* cp = aTabParent->Manager()->AsContentParent();
-||||||| merged common ancestors
-/* virtual */ void
-ProcessPriorityManagerImpl::Notify(const WakeLockInformation& aInfo)
-{
-  /* The main process always has an ID of 0, if it is present in the wake-lock
-   * information then we explicitly requested a high-priority wake-lock for the
-   * main process. */
-  if (aInfo.topic().EqualsLiteral("high-priority")) {
-    if (aInfo.lockingProcesses().Contains((uint64_t)0)) {
-      mHighPriority = true;
-    } else {
-      mHighPriority = false;
-    }
-
-    LOG("Got wake lock changed event. "
-        "Now mHighPriorityParent = %d\n", mHighPriority);
-  }
-}
-
-void
-ProcessPriorityManagerImpl::TabActivityChanged(TabParent* aTabParent,
-                                               bool aIsActive)
-{
-  ContentParent* cp = aTabParent->Manager()->AsContentParent();
-=======
 void ProcessPriorityManagerImpl::TabActivityChanged(
     BrowserParent* aBrowserParent, bool aIsActive) {
->>>>>>> upstream-releases
   RefPtr<ParticularProcessPriorityManager> pppm =
-<<<<<<< HEAD
-      GetParticularProcessPriorityManager(cp);
-||||||| merged common ancestors
-    GetParticularProcessPriorityManager(cp);
-=======
       GetParticularProcessPriorityManager(aBrowserParent->Manager());
->>>>>>> upstream-releases
   if (!pppm) {
     return;
   }
@@ -814,22 +505,6 @@ NS_IMPL_ISUPPORTS(ParticularProcessPriorityManager, nsIObserver,
                   nsITimerCallback, nsISupportsWeakReference, nsINamed);
 
 ParticularProcessPriorityManager::ParticularProcessPriorityManager(
-<<<<<<< HEAD
-    ContentParent* aContentParent)
-    : mContentParent(aContentParent),
-      mChildID(aContentParent->ChildID()),
-      mPriority(PROCESS_PRIORITY_UNKNOWN),
-      mHoldsCPUWakeLock(false),
-      mHoldsHighPriorityWakeLock(false) {
-||||||| merged common ancestors
-  ContentParent* aContentParent)
-  : mContentParent(aContentParent)
-  , mChildID(aContentParent->ChildID())
-  , mPriority(PROCESS_PRIORITY_UNKNOWN)
-  , mHoldsCPUWakeLock(false)
-  , mHoldsHighPriorityWakeLock(false)
-{
-=======
     ContentParent* aContentParent)
     : mContentParent(aContentParent),
       mChildID(aContentParent->ChildID()),
@@ -838,7 +513,6 @@ ParticularProcessPriorityManager::ParticularProcessPriorityManager(
       mHoldsHighPriorityWakeLock(false),
       mHoldsPlayingAudioWakeLock(false),
       mHoldsPlayingVideoWakeLock(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   LOGP("Creating ParticularProcessPriorityManager.");
 }
@@ -863,32 +537,6 @@ void ParticularProcessPriorityManager::Init() {
 
   // This process may already hold the CPU lock; for example, our parent may
   // have acquired it on our behalf.
-<<<<<<< HEAD
-  WakeLockInformation info1, info2;
-  GetWakeLockInfo(NS_LITERAL_STRING("cpu"), &info1);
-  mHoldsCPUWakeLock = info1.lockingProcesses().Contains(ChildID());
-
-  GetWakeLockInfo(NS_LITERAL_STRING("high-priority"), &info2);
-  mHoldsHighPriorityWakeLock = info2.lockingProcesses().Contains(ChildID());
-  LOGP("Done starting up.  mHoldsCPUWakeLock=%d, mHoldsHighPriorityWakeLock=%d",
-       mHoldsCPUWakeLock, mHoldsHighPriorityWakeLock);
-}
-
-ParticularProcessPriorityManager::~ParticularProcessPriorityManager() {
-||||||| merged common ancestors
-  WakeLockInformation info1, info2;
-  GetWakeLockInfo(NS_LITERAL_STRING("cpu"), &info1);
-  mHoldsCPUWakeLock = info1.lockingProcesses().Contains(ChildID());
-
-  GetWakeLockInfo(NS_LITERAL_STRING("high-priority"), &info2);
-  mHoldsHighPriorityWakeLock = info2.lockingProcesses().Contains(ChildID());
-  LOGP("Done starting up.  mHoldsCPUWakeLock=%d, mHoldsHighPriorityWakeLock=%d",
-       mHoldsCPUWakeLock, mHoldsHighPriorityWakeLock);
-}
-
-ParticularProcessPriorityManager::~ParticularProcessPriorityManager()
-{
-=======
   mHoldsCPUWakeLock = IsHoldingWakeLock(NS_LITERAL_STRING("cpu"));
   mHoldsHighPriorityWakeLock =
       IsHoldingWakeLock(NS_LITERAL_STRING("high-priority"));
@@ -913,7 +561,6 @@ bool ParticularProcessPriorityManager::IsHoldingWakeLock(
 }
 
 ParticularProcessPriorityManager::~ParticularProcessPriorityManager() {
->>>>>>> upstream-releases
   LOGP("Destroying ParticularProcessPriorityManager.");
 
   // Unregister our wake lock observer if ShutDown hasn't been called.  (The
@@ -926,18 +573,9 @@ ParticularProcessPriorityManager::~ParticularProcessPriorityManager() {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void ParticularProcessPriorityManager::Notify(
-    const WakeLockInformation& aInfo) {
-||||||| merged common ancestors
-/* virtual */ void
-ParticularProcessPriorityManager::Notify(const WakeLockInformation& aInfo)
-{
-=======
 /* virtual */
 void ParticularProcessPriorityManager::Notify(
     const WakeLockInformation& aInfo) {
->>>>>>> upstream-releases
   if (!mContentParent) {
     // We've been shut down.
     return;
@@ -958,23 +596,12 @@ void ParticularProcessPriorityManager::Notify(
     bool thisProcessLocks = aInfo.lockingProcesses().Contains(ChildID());
     if (thisProcessLocks != *dest) {
       *dest = thisProcessLocks;
-<<<<<<< HEAD
-      LOGP(
-          "Got wake lock changed event. "
-          "Now mHoldsCPUWakeLock=%d, mHoldsHighPriorityWakeLock=%d",
-          mHoldsCPUWakeLock, mHoldsHighPriorityWakeLock);
-||||||| merged common ancestors
-      LOGP("Got wake lock changed event. "
-           "Now mHoldsCPUWakeLock=%d, mHoldsHighPriorityWakeLock=%d",
-           mHoldsCPUWakeLock, mHoldsHighPriorityWakeLock);
-=======
       LOGP(
           "Got wake lock changed event. "
           "Now mHoldsCPUWakeLock=%d, mHoldsHighPriorityWakeLock=%d, "
           "mHoldsPlayingAudioWakeLock=%d, mHoldsPlayingVideoWakeLock=%d",
           mHoldsCPUWakeLock, mHoldsHighPriorityWakeLock,
           mHoldsPlayingAudioWakeLock, mHoldsPlayingVideoWakeLock);
->>>>>>> upstream-releases
       ResetPriority();
     }
   }
@@ -1055,24 +682,11 @@ void ParticularProcessPriorityManager::OnRemoteBrowserFrameShown(
   }
 }
 
-<<<<<<< HEAD
-void ParticularProcessPriorityManager::OnTabParentDestroyed(
-    nsISupports* aSubject) {
-  nsCOMPtr<nsITabParent> tp = do_QueryInterface(aSubject);
-  NS_ENSURE_TRUE_VOID(tp);
-||||||| merged common ancestors
-void
-ParticularProcessPriorityManager::OnTabParentDestroyed(nsISupports* aSubject)
-{
-  nsCOMPtr<nsITabParent> tp = do_QueryInterface(aSubject);
-  NS_ENSURE_TRUE_VOID(tp);
-=======
 void ParticularProcessPriorityManager::OnBrowserParentDestroyed(
     nsISupports* aSubject) {
   nsCOMPtr<nsIRemoteTab> remoteTab = do_QueryInterface(aSubject);
   NS_ENSURE_TRUE_VOID(remoteTab);
   BrowserHost* browserHost = BrowserHost::GetFrom(remoteTab.get());
->>>>>>> upstream-releases
 
   MOZ_ASSERT(XRE_IsParentProcess());
   if (browserHost->GetContentParent() &&
@@ -1145,22 +759,10 @@ ProcessPriority ParticularProcessPriorityManager::CurrentPriority() {
   return mPriority;
 }
 
-<<<<<<< HEAD
-ProcessPriority ParticularProcessPriorityManager::ComputePriority() {
-  if (!mActiveTabParents.IsEmpty() ||
-      mContentParent->GetRemoteType().EqualsLiteral(EXTENSION_REMOTE_TYPE)) {
-||||||| merged common ancestors
-ProcessPriority
-ParticularProcessPriorityManager::ComputePriority()
-{
-  if (!mActiveTabParents.IsEmpty() ||
-      mContentParent->GetRemoteType().EqualsLiteral(EXTENSION_REMOTE_TYPE)) {
-=======
 ProcessPriority ParticularProcessPriorityManager::ComputePriority() {
   if (!mActiveBrowserParents.IsEmpty() ||
       mContentParent->GetRemoteType().EqualsLiteral(EXTENSION_REMOTE_TYPE) ||
       mHoldsPlayingAudioWakeLock) {
->>>>>>> upstream-releases
     return PROCESS_PRIORITY_FOREGROUND;
   }
 
@@ -1220,21 +822,9 @@ void ParticularProcessPriorityManager::SetPriorityNow(
                                    ProcessPriorityToString(mPriority));
 }
 
-<<<<<<< HEAD
-void ParticularProcessPriorityManager::TabActivityChanged(TabParent* aTabParent,
-                                                          bool aIsActive) {
-  MOZ_ASSERT(aTabParent);
-||||||| merged common ancestors
-void
-ParticularProcessPriorityManager::TabActivityChanged(TabParent* aTabParent,
-                                                     bool aIsActive)
-{
-  MOZ_ASSERT(aTabParent);
-=======
 void ParticularProcessPriorityManager::TabActivityChanged(
     BrowserParent* aBrowserParent, bool aIsActive) {
   MOZ_ASSERT(aBrowserParent);
->>>>>>> upstream-releases
 
   if (!aIsActive) {
     mActiveBrowserParents.RemoveEntry(aBrowserParent->GetTabId());
@@ -1311,16 +901,8 @@ void ParticularProcessPriorityManager::FireTestOnlyObserverNotification(
 StaticRefPtr<ProcessPriorityManagerChild>
     ProcessPriorityManagerChild::sSingleton;
 
-<<<<<<< HEAD
-/* static */ void ProcessPriorityManagerChild::StaticInit() {
-||||||| merged common ancestors
-/* static */ void
-ProcessPriorityManagerChild::StaticInit()
-{
-=======
 /* static */
 void ProcessPriorityManagerChild::StaticInit() {
->>>>>>> upstream-releases
   if (!sSingleton) {
     sSingleton = new ProcessPriorityManagerChild();
     sSingleton->Init();
@@ -1328,17 +910,8 @@ void ProcessPriorityManagerChild::StaticInit() {
   }
 }
 
-<<<<<<< HEAD
-/* static */ ProcessPriorityManagerChild*
-ProcessPriorityManagerChild::Singleton() {
-||||||| merged common ancestors
-/* static */ ProcessPriorityManagerChild*
-ProcessPriorityManagerChild::Singleton()
-{
-=======
 /* static */
 ProcessPriorityManagerChild* ProcessPriorityManagerChild::Singleton() {
->>>>>>> upstream-releases
   StaticInit();
   return sSingleton;
 }
@@ -1389,34 +962,16 @@ bool ProcessPriorityManagerChild::CurrentProcessIsForeground() {
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ void ProcessPriorityManager::Init() {
-||||||| merged common ancestors
-/* static */ void
-ProcessPriorityManager::Init()
-{
-=======
 /* static */
 void ProcessPriorityManager::Init() {
->>>>>>> upstream-releases
   ProcessPriorityManagerImpl::StaticInit();
   ProcessPriorityManagerChild::StaticInit();
   ParticularProcessPriorityManager::StaticInit();
 }
 
-<<<<<<< HEAD
-/* static */ void ProcessPriorityManager::SetProcessPriority(
-    ContentParent* aContentParent, ProcessPriority aPriority) {
-||||||| merged common ancestors
-/* static */ void
-ProcessPriorityManager::SetProcessPriority(ContentParent* aContentParent,
-                                           ProcessPriority aPriority)
-{
-=======
 /* static */
 void ProcessPriorityManager::SetProcessPriority(ContentParent* aContentParent,
                                                 ProcessPriority aPriority) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aContentParent);
 
   ProcessPriorityManagerImpl* singleton =
@@ -1426,38 +981,15 @@ void ProcessPriorityManager::SetProcessPriority(ContentParent* aContentParent,
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool ProcessPriorityManager::CurrentProcessIsForeground() {
-  return ProcessPriorityManagerChild::Singleton()->CurrentProcessIsForeground();
-||||||| merged common ancestors
-/* static */ bool
-ProcessPriorityManager::CurrentProcessIsForeground()
-{
-  return ProcessPriorityManagerChild::Singleton()->
-    CurrentProcessIsForeground();
-=======
 /* static */
 bool ProcessPriorityManager::CurrentProcessIsForeground() {
   return ProcessPriorityManagerChild::Singleton()->CurrentProcessIsForeground();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void ProcessPriorityManager::TabActivityChanged(
-    TabParent* aTabParent, bool aIsActive) {
-  MOZ_ASSERT(aTabParent);
-||||||| merged common ancestors
-/* static */ void
-ProcessPriorityManager::TabActivityChanged(TabParent* aTabParent,
-                                           bool aIsActive)
-{
-  MOZ_ASSERT(aTabParent);
-=======
 /* static */
 void ProcessPriorityManager::TabActivityChanged(BrowserParent* aBrowserParent,
                                                 bool aIsActive) {
   MOZ_ASSERT(aBrowserParent);
->>>>>>> upstream-releases
 
   ProcessPriorityManagerImpl* singleton =
       ProcessPriorityManagerImpl::GetSingleton();

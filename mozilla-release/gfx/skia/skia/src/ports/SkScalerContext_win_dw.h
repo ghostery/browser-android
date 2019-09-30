@@ -36,16 +36,8 @@ protected:
     bool generateAdvance(SkGlyph* glyph) override;
     void generateMetrics(SkGlyph* glyph) override;
     void generateImage(const SkGlyph& glyph) override;
-<<<<<<< HEAD
-    bool generatePath(SkGlyphID glyph, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-||||||| merged common ancestors
-    void generatePath(SkGlyphID glyph, SkPath* path) override;
-    void generateFontMetrics(SkPaint::FontMetrics*) override;
-=======
     bool generatePath(SkGlyphID glyph, SkPath* path) override;
     void generateFontMetrics(SkFontMetrics*) override;
->>>>>>> upstream-releases
 
 private:
     const void* drawDWMask(const SkGlyph& glyph,

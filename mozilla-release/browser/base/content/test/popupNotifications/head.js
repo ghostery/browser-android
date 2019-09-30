@@ -230,23 +230,6 @@ function checkPopup(popup, notifyObj) {
 
   is(notification.id, notifyObj.id + "-notification", "id matches");
   if (notifyObj.mainAction) {
-<<<<<<< HEAD
-    is(notification.getAttribute("buttonlabel"), notifyObj.mainAction.label,
-       "main action label matches");
-    is(notification.getAttribute("buttonaccesskey"),
-       notifyObj.mainAction.accessKey, "main action accesskey matches");
-    is(notification.hasAttribute("buttonhighlight"),
-       !notifyObj.mainAction.disableHighlight,
-       "main action highlight matches");
-||||||| merged common ancestors
-    is(notification.getAttribute("buttonlabel"), notifyObj.mainAction.label,
-       "main action label matches");
-    is(notification.getAttribute("buttonaccesskey"),
-       notifyObj.mainAction.accessKey, "main action accesskey matches");
-    is(notification.getAttribute("buttonhighlight"),
-       (!notifyObj.mainAction.disableHighlight).toString(),
-       "main action highlight matches");
-=======
     is(
       notification.getAttribute("buttonlabel"),
       notifyObj.mainAction.label,
@@ -262,7 +245,6 @@ function checkPopup(popup, notifyObj) {
       !notifyObj.mainAction.disableHighlight,
       "main action highlight matches"
     );
->>>>>>> upstream-releases
   }
   if (notifyObj.secondaryActions && notifyObj.secondaryActions.length > 0) {
     let secondaryAction = notifyObj.secondaryActions[0];

@@ -16,43 +16,6 @@
 NS_IMPL_CLASSINFO(nsPermission, nullptr, 0, {0})
 NS_IMPL_ISUPPORTS_CI(nsPermission, nsIPermission)
 
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermission.cpp
-nsPermission::nsPermission(nsIPrincipal* aPrincipal, const nsACString& aType,
-                           uint32_t aCapability, uint32_t aExpireType,
-                           int64_t aExpireTime)
-    : mPrincipal(aPrincipal),
-      mType(aType),
-      mCapability(aCapability),
-      mExpireType(aExpireType),
-      mExpireTime(aExpireTime) {}
-
-already_AddRefed<nsPermission> nsPermission::Create(nsIPrincipal* aPrincipal,
-                                                    const nsACString& aType,
-                                                    uint32_t aCapability,
-                                                    uint32_t aExpireType,
-                                                    int64_t aExpireTime) {
-||||||| merged common ancestors
-nsPermission::nsPermission(nsIPrincipal*    aPrincipal,
-                           const nsACString &aType,
-                           uint32_t         aCapability,
-                           uint32_t         aExpireType,
-                           int64_t          aExpireTime)
- : mPrincipal(aPrincipal)
- , mType(aType)
- , mCapability(aCapability)
- , mExpireType(aExpireType)
- , mExpireTime(aExpireTime)
-{
-}
-
-already_AddRefed<nsPermission>
-nsPermission::Create(nsIPrincipal* aPrincipal,
-                     const nsACString &aType,
-                     uint32_t aCapability,
-                     uint32_t aExpireType,
-                     int64_t aExpireTime)
-{
-=======
 nsPermission::nsPermission(nsIPrincipal* aPrincipal, const nsACString& aType,
                            uint32_t aCapability, uint32_t aExpireType,
                            int64_t aExpireTime, int64_t aModificationTime)
@@ -84,31 +47,15 @@ already_AddRefed<nsIPrincipal> nsPermission::ClonePrincipalForPermission(
 already_AddRefed<nsPermission> nsPermission::Create(
     nsIPrincipal* aPrincipal, const nsACString& aType, uint32_t aCapability,
     uint32_t aExpireType, int64_t aExpireTime, int64_t aModificationTime) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermission.cpp
   NS_ENSURE_TRUE(aPrincipal, nullptr);
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermission.cpp
-  nsCOMPtr<nsIPrincipal> principal =
-      mozilla::BasePrincipal::Cast(aPrincipal)
-          ->CloneStrippingUserContextIdAndFirstPartyDomain();
-||||||| merged common ancestors
-  nsCOMPtr<nsIPrincipal> principal =
-    mozilla::BasePrincipal::Cast(aPrincipal)->CloneStrippingUserContextIdAndFirstPartyDomain();
-=======
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermission.cpp
 
   nsCOMPtr<nsIPrincipal> principal =
       nsPermission::ClonePrincipalForPermission(aPrincipal);
   NS_ENSURE_TRUE(principal, nullptr);
 
   RefPtr<nsPermission> permission =
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermission.cpp
-      new nsPermission(principal, aType, aCapability, aExpireType, aExpireTime);
-||||||| merged common ancestors
-    new nsPermission(principal, aType, aCapability, aExpireType, aExpireTime);
-=======
       new nsPermission(principal, aType, aCapability, aExpireType, aExpireTime,
                        aModificationTime);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermission.cpp
   return permission.forget();
 }
 
@@ -144,13 +91,6 @@ nsPermission::GetExpireTime(int64_t* aExpireTime) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermission.cpp
-nsPermission::Matches(nsIPrincipal* aPrincipal, bool aExactHost,
-                      bool* aMatches) {
-||||||| merged common ancestors
-nsPermission::Matches(nsIPrincipal* aPrincipal, bool aExactHost, bool* aMatches)
-{
-=======
 nsPermission::GetModificationTime(int64_t* aModificationTime) {
   *aModificationTime = mModificationTime;
   return NS_OK;
@@ -159,23 +99,13 @@ nsPermission::GetModificationTime(int64_t* aModificationTime) {
 NS_IMETHODIMP
 nsPermission::Matches(nsIPrincipal* aPrincipal, bool aExactHost,
                       bool* aMatches) {
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermission.cpp
   NS_ENSURE_ARG_POINTER(aPrincipal);
   NS_ENSURE_ARG_POINTER(aMatches);
 
   *aMatches = false;
 
   nsCOMPtr<nsIPrincipal> principal =
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermission.cpp
-      mozilla::BasePrincipal::Cast(aPrincipal)
-          ->CloneStrippingUserContextIdAndFirstPartyDomain();
-
-||||||| merged common ancestors
-    mozilla::BasePrincipal::Cast(aPrincipal)->CloneStrippingUserContextIdAndFirstPartyDomain();
-
-=======
       nsPermission::ClonePrincipalForPermission(aPrincipal);
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermission.cpp
   if (!principal) {
     *aMatches = false;
     return NS_OK;
@@ -205,15 +135,8 @@ nsPermission::MatchesPrincipalForPermission(nsIPrincipal* aPrincipal,
   }
 
   // Compare their OriginAttributes
-<<<<<<< HEAD:mozilla-release/extensions/cookie/nsPermission.cpp
-  const mozilla::OriginAttributes& theirAttrs =
-      principal->OriginAttributesRef();
-||||||| merged common ancestors
-  const mozilla::OriginAttributes& theirAttrs = principal->OriginAttributesRef();
-=======
   const mozilla::OriginAttributes& theirAttrs =
       aPrincipal->OriginAttributesRef();
->>>>>>> upstream-releases:mozilla-release/extensions/permissions/nsPermission.cpp
   const mozilla::OriginAttributes& ourAttrs = mPrincipal->OriginAttributesRef();
 
   if (theirAttrs != ourAttrs) {

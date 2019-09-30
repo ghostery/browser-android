@@ -63,46 +63,8 @@ JSObject* BigIntObject::create(JSContext* cx, HandleBigInt bigInt) {
   return &bn;
 }
 
-<<<<<<< HEAD
 BigInt* BigIntObject::unbox() const {
   return getFixedSlot(PRIMITIVE_VALUE_SLOT).toBigInt();
-}
-
-bool js::intrinsic_ToBigInt(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  MOZ_ASSERT(args.length() == 1);
-
-  BigInt* result = ToBigInt(cx, args[0]);
-  if (!result) {
-    return false;
-  }
-
-  args.rval().setBigInt(result);
-  return true;
-||||||| merged common ancestors
-BigInt*
-BigIntObject::unbox() const
-{
-    return getFixedSlot(PRIMITIVE_VALUE_SLOT).toBigInt();
-}
-
-bool
-js::intrinsic_ToBigInt(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    MOZ_ASSERT(args.length() == 1);
-
-    BigInt* result = ToBigInt(cx, args[0]);
-    if (!result) {
-        return false;
-    }
-
-    args.rval().setBigInt(result);
-    return true;
-=======
-BigInt* BigIntObject::unbox() const {
-  return getFixedSlot(PRIMITIVE_VALUE_SLOT).toBigInt();
->>>>>>> upstream-releases
 }
 
 // BigInt proposal section 5.3.4
@@ -145,21 +107,6 @@ bool BigIntObject::toString_impl(JSContext* cx, const CallArgs& args) {
       JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr, JSMSG_BAD_RADIX);
       return false;
     }
-<<<<<<< HEAD
-    radix = d;
-  }
-
-  // Steps 6-7.
-  JSLinearString* str = BigInt::toString(cx, bi, radix);
-  if (!str) {
-    return false;
-  }
-  args.rval().setString(str);
-  return true;
-||||||| merged common ancestors
-    args.rval().setString(str);
-    return true;
-=======
     radix = d;
   }
 
@@ -170,7 +117,6 @@ bool BigIntObject::toString_impl(JSContext* cx, const CallArgs& args) {
   }
   args.rval().setString(str);
   return true;
->>>>>>> upstream-releases
 }
 
 bool BigIntObject::toString(JSContext* cx, unsigned argc, Value* vp) {
@@ -181,42 +127,6 @@ bool BigIntObject::toString(JSContext* cx, unsigned argc, Value* vp) {
 // BigInt proposal section 5.3.2. "This function is
 // implementation-dependent, and it is permissible, but not encouraged,
 // for it to return the same thing as toString."
-<<<<<<< HEAD
-bool BigIntObject::toLocaleString_impl(JSContext* cx, const CallArgs& args) {
-  HandleValue thisv = args.thisv();
-  MOZ_ASSERT(IsBigInt(thisv));
-  RootedBigInt bi(cx, thisv.isBigInt()
-                          ? thisv.toBigInt()
-                          : thisv.toObject().as<BigIntObject>().unbox());
-
-  RootedString str(cx, BigInt::toString(cx, bi, 10));
-  if (!str) {
-    return false;
-  }
-  args.rval().setString(str);
-  return true;
-}
-
-bool BigIntObject::toLocaleString(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-  return CallNonGenericMethod<IsBigInt, toLocaleString_impl>(cx, args);
-||||||| merged common ancestors
-bool
-BigIntObject::toLocaleString_impl(JSContext* cx, const CallArgs& args)
-{
-    HandleValue thisv = args.thisv();
-    MOZ_ASSERT(IsBigInt(thisv));
-    RootedBigInt bi(cx, thisv.isBigInt()
-                        ? thisv.toBigInt()
-                        : thisv.toObject().as<BigIntObject>().unbox());
-
-    RootedString str(cx, BigInt::toString(cx, bi, 10));
-    if (!str) {
-        return false;
-    }
-    args.rval().setString(str);
-    return true;
-=======
 bool BigIntObject::toLocaleString_impl(JSContext* cx, const CallArgs& args) {
   HandleValue thisv = args.thisv();
   MOZ_ASSERT(IsBigInt(thisv));
@@ -261,67 +171,8 @@ bool BigIntObject::asUintN(JSContext* cx, unsigned argc, Value* vp) {
 
   args.rval().setBigInt(res);
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// BigInt proposal section 5.2.1. BigInt.asUintN ( bits, bigint )
-bool BigIntObject::asUintN(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-
-  // Step 1.
-  uint64_t bits;
-  if (!ToIndex(cx, args[0], &bits)) {
-    return false;
-  }
-
-  // Step 2.
-  RootedBigInt bi(cx, ToBigInt(cx, args[1]));
-  if (!bi) {
-    return false;
-  }
-
-  // Step 3.
-  BigInt* res = BigInt::asUintN(cx, bi, bits);
-  if (!res) {
-    return false;
-  }
-
-  args.rval().setBigInt(res);
-  return true;
-}
-
-// BigInt proposal section 5.2.2. BigInt.asIntN ( bits, bigint )
-bool BigIntObject::asIntN(JSContext* cx, unsigned argc, Value* vp) {
-  CallArgs args = CallArgsFromVp(argc, vp);
-
-  // Step 1.
-  uint64_t bits;
-  if (!ToIndex(cx, args[0], &bits)) {
-    return false;
-  }
-
-  // Step 2.
-  RootedBigInt bi(cx, ToBigInt(cx, args[1]));
-  if (!bi) {
-    return false;
-  }
-
-  // Step 3.
-  BigInt* res = BigInt::asIntN(cx, bi, bits);
-  if (!res) {
-    return false;
-  }
-
-  args.rval().setBigInt(res);
-  return true;
-||||||| merged common ancestors
-bool
-BigIntObject::toLocaleString(JSContext* cx, unsigned argc, Value* vp)
-{
-    CallArgs args = CallArgsFromVp(argc, vp);
-    return CallNonGenericMethod<IsBigInt, toLocaleString_impl>(cx, args);
-=======
 // BigInt proposal section 5.2.2. BigInt.asIntN ( bits, bigint )
 bool BigIntObject::asIntN(JSContext* cx, unsigned argc, Value* vp) {
   CallArgs args = CallArgsFromVp(argc, vp);
@@ -346,7 +197,6 @@ bool BigIntObject::asIntN(JSContext* cx, unsigned argc, Value* vp) {
 
   args.rval().setBigInt(res);
   return true;
->>>>>>> upstream-releases
 }
 
 const ClassSpec BigIntObject::classSpec_ = {

@@ -36,21 +36,11 @@ add_task(async function() {
     let frame = content.document.getElementById("frame");
     let doc = frame.contentDocument;
     let plugin = doc.getElementById("test");
-<<<<<<< HEAD
-    let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
-    Assert.ok(plugin && overlay.classList.contains("visible"),
-      "Test 1, Plugin overlay should exist, not be hidden");
-||||||| merged common ancestors
-    let overlay = doc.getAnonymousElementByAttribute(plugin, "anonid", "main");
-    Assert.ok(plugin && overlay.classList.contains("visible"),
-      "Test 1, Plugin overlay should exist, not be hidden");
-=======
     let overlay = plugin.openOrClosedShadowRoot.getElementById("main");
     Assert.ok(
       plugin && overlay.classList.contains("visible"),
       "Test 1, Plugin overlay should exist, not be hidden"
     );
->>>>>>> upstream-releases
 
     let closeIcon = plugin.openOrClosedShadowRoot.getElementById("closeIcon");
     let bounds = closeIcon.getBoundingClientRect();

@@ -24,81 +24,23 @@ class nsColumnSetFrame final : public nsContainerFrame {
 
   explicit nsColumnSetFrame(ComputedStyle* aStyle, nsPresContext* aPresContext);
 
-<<<<<<< HEAD
-  virtual void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
-                      const ReflowInput& aReflowInput,
-                      nsReflowStatus& aStatus) override;
-||||||| merged common ancestors
-  virtual void Reflow(nsPresContext* aPresContext,
-                      ReflowOutput& aDesiredSize,
-                      const ReflowInput& aReflowInput,
-                      nsReflowStatus& aStatus) override;
-=======
   void Reflow(nsPresContext* aPresContext, ReflowOutput& aDesiredSize,
               const ReflowInput& aReflowInput,
               nsReflowStatus& aStatus) override;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  virtual void SetInitialChildList(ChildListID aListID,
-                                   nsFrameList& aChildList) override;
-  virtual void AppendFrames(ChildListID aListID,
-                            nsFrameList& aFrameList) override;
-  virtual void InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
-                            nsFrameList& aFrameList) override;
-  virtual void RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) override;
-||||||| merged common ancestors
-  virtual void SetInitialChildList(ChildListID     aListID,
-                                   nsFrameList&    aChildList) override;
-  virtual void AppendFrames(ChildListID     aListID,
-                            nsFrameList&    aFrameList) override;
-  virtual void InsertFrames(ChildListID     aListID,
-                            nsIFrame*       aPrevFrame,
-                            nsFrameList&    aFrameList) override;
-  virtual void RemoveFrame(ChildListID     aListID,
-                           nsIFrame*       aOldFrame) override;
-=======
   void SetInitialChildList(ChildListID aListID,
                            nsFrameList& aChildList) override;
   void AppendFrames(ChildListID aListID, nsFrameList& aFrameList) override;
   void InsertFrames(ChildListID aListID, nsIFrame* aPrevFrame,
                     nsFrameList& aFrameList) override;
   void RemoveFrame(ChildListID aListID, nsIFrame* aOldFrame) override;
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-  virtual nscoord GetMinISize(gfxContext* aRenderingContext) override;
-  virtual nscoord GetPrefISize(gfxContext* aRenderingContext) override;
-||||||| merged common ancestors
-  virtual nscoord GetMinISize(gfxContext *aRenderingContext) override;
-  virtual nscoord GetPrefISize(gfxContext *aRenderingContext) override;
-=======
   nscoord GetMinISize(gfxContext* aRenderingContext) override;
   nscoord GetPrefISize(gfxContext* aRenderingContext) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  /**
-   * Retrieve the available height for content of this frame. The available
-   * content height is the available height for the frame, minus borders and
-   * padding.
-   */
-  virtual nscoord GetAvailableContentBSize(const ReflowInput& aReflowInput);
-
-  virtual nsContainerFrame* GetContentInsertionFrame() override {
-||||||| merged common ancestors
-  /**
-   * Retrieve the available height for content of this frame. The available content
-   * height is the available height for the frame, minus borders and padding.
-   */
-  virtual nscoord GetAvailableContentBSize(const ReflowInput& aReflowInput);
-
-  virtual nsContainerFrame* GetContentInsertionFrame() override {
-=======
   nsContainerFrame* GetContentInsertionFrame() override {
->>>>>>> upstream-releases
     nsIFrame* frame = PrincipalChildList().FirstChild();
 
     // if no children return nullptr
@@ -107,34 +49,13 @@ class nsColumnSetFrame final : public nsContainerFrame {
     return frame->GetContentInsertionFrame();
   }
 
-<<<<<<< HEAD
-  virtual bool IsFrameOfType(uint32_t aFlags) const override {
-    return nsContainerFrame::IsFrameOfType(
-        aFlags & ~(nsIFrame::eCanContainOverflowContainers));
-  }
-||||||| merged common ancestors
-  virtual bool IsFrameOfType(uint32_t aFlags) const override
-   {
-     return nsContainerFrame::IsFrameOfType(aFlags &
-              ~(nsIFrame::eCanContainOverflowContainers));
-   }
-=======
   bool IsFrameOfType(uint32_t aFlags) const override {
     return nsContainerFrame::IsFrameOfType(
         aFlags & ~(nsIFrame::eCanContainOverflowContainers));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void BuildDisplayList(nsDisplayListBuilder* aBuilder,
-                                const nsDisplayListSet& aLists) override;
-||||||| merged common ancestors
-  virtual void BuildDisplayList(nsDisplayListBuilder*   aBuilder,
-                                const nsDisplayListSet& aLists) override;
-=======
   void BuildDisplayList(nsDisplayListBuilder* aBuilder,
                         const nsDisplayListSet& aLists) override;
->>>>>>> upstream-releases
 
   /**
    * Similar to nsBlockFrame::DrainOverflowLines. Locate any columns not
@@ -170,37 +91,19 @@ class nsColumnSetFrame final : public nsContainerFrame {
     int32_t mBalanceColCount = INT32_MAX;
 
     // The inline-size of each individual column.
-<<<<<<< HEAD
-    nscoord mColISize = NS_INTRINSICSIZE;
-||||||| merged common ancestors
-    nscoord mColISize;
-=======
     nscoord mColISize = NS_UNCONSTRAINEDSIZE;
->>>>>>> upstream-releases
 
     // The amount of inline-size that is expected to be left over after all the
     // columns and column gaps are laid out.
     nscoord mExpectedISizeLeftOver = 0;
 
     // The width (inline-size) of each column gap.
-<<<<<<< HEAD
-    nscoord mColGap = NS_INTRINSICSIZE;
-||||||| merged common ancestors
-    nscoord mColGap;
-=======
     nscoord mColGap = NS_UNCONSTRAINEDSIZE;
->>>>>>> upstream-releases
 
     // The maximum bSize of any individual column during a reflow iteration.
     // This parameter is set during each iteration of the binary search for
     // the best column block-size.
-<<<<<<< HEAD
-    nscoord mColMaxBSize = NS_INTRINSICSIZE;
-||||||| merged common ancestors
-    nscoord mColMaxBSize;
-=======
     nscoord mColMaxBSize = NS_UNCONSTRAINEDSIZE;
->>>>>>> upstream-releases
 
     // A boolean controlling whether or not we are balancing. This should be
     // equivalent to mBalanceColCount != INT32_MAX.
@@ -208,26 +111,14 @@ class nsColumnSetFrame final : public nsContainerFrame {
 
     // The last known column block-size that was 'feasible'. A column bSize is
     // feasible if all child content fits within the specified bSize.
-<<<<<<< HEAD
-    nscoord mKnownFeasibleBSize = NS_INTRINSICSIZE;
-||||||| merged common ancestors
-    nscoord mKnownFeasibleBSize;
-=======
     nscoord mKnownFeasibleBSize = NS_UNCONSTRAINEDSIZE;
->>>>>>> upstream-releases
 
     // The last known block-size that was 'infeasible'. A column bSize is
     // infeasible if not all child content fits within the specified bSize.
     nscoord mKnownInfeasibleBSize = 0;
 
     // block-size of the column set frame
-<<<<<<< HEAD
-    nscoord mComputedBSize = NS_INTRINSICSIZE;
-||||||| merged common ancestors
-    nscoord mComputedBSize;
-=======
     nscoord mComputedBSize = NS_UNCONSTRAINEDSIZE;
->>>>>>> upstream-releases
 
     // The block-size "consumed" by previous-in-flows.
     // The computed block-size should be equal to the block-size of the element
@@ -262,20 +153,6 @@ class nsColumnSetFrame final : public nsContainerFrame {
     bool mFeasible = false;
   };
 
-<<<<<<< HEAD
-  bool ReflowColumns(ReflowOutput& aDesiredSize,
-                     const ReflowInput& aReflowInput,
-                     nsReflowStatus& aReflowStatus, ReflowConfig& aConfig,
-                     bool aLastColumnUnbounded, ColumnBalanceData& aColData);
-||||||| merged common ancestors
-  bool ReflowColumns(ReflowOutput& aDesiredSize,
-                     const ReflowInput& aReflowInput,
-                     nsReflowStatus& aReflowStatus,
-                     ReflowConfig& aConfig,
-                     bool aLastColumnUnbounded,
-                     nsCollapsingMargin* aCarriedOutBEndMargin,
-                     ColumnBalanceData& aColData);
-=======
   ColumnBalanceData ReflowColumns(ReflowOutput& aDesiredSize,
                                   const ReflowInput& aReflowInput,
                                   nsReflowStatus& aReflowStatus,
@@ -287,7 +164,6 @@ class nsColumnSetFrame final : public nsContainerFrame {
                                    nsReflowStatus& aStatus,
                                    const ReflowConfig& aConfig,
                                    bool aUnboundedLastColumn);
->>>>>>> upstream-releases
 
   /**
    * The basic reflow strategy is to call this function repeatedly to
@@ -297,14 +173,7 @@ class nsColumnSetFrame final : public nsContainerFrame {
    * the state machine that controls column balancing.
    */
   ReflowConfig ChooseColumnStrategy(const ReflowInput& aReflowInput,
-<<<<<<< HEAD
-                                    bool aForceAuto);
-||||||| merged common ancestors
-                                    bool aForceAuto, nscoord aFeasibleBSize,
-                                    nscoord aInfeasibleBSize);
-=======
                                     bool aForceAuto) const;
->>>>>>> upstream-releases
 
   /**
    * Perform the binary search for the best balance block-size for this column
@@ -327,66 +196,21 @@ class nsColumnSetFrame final : public nsContainerFrame {
    *        an output parameter.
    */
   void FindBestBalanceBSize(const ReflowInput& aReflowInput,
-<<<<<<< HEAD
-                            nsPresContext* aPresContext, ReflowConfig& aConfig,
-                            ColumnBalanceData& aColData,
-||||||| merged common ancestors
-                            nsPresContext* aPresContext,
-                            ReflowConfig& aConfig,
-                            ColumnBalanceData& aColData,
-=======
                             nsPresContext* aPresContext, ReflowConfig& aConfig,
                             ColumnBalanceData aColData,
->>>>>>> upstream-releases
                             ReflowOutput& aDesiredSize,
-<<<<<<< HEAD
-                            bool& aUnboundedLastColumn, bool& aRunWasFeasible,
-                            nsReflowStatus& aStatus);
-||||||| merged common ancestors
-                            nsCollapsingMargin& aOutMargin,
-                            bool& aUnboundedLastColumn,
-                            bool& aRunWasFeasible,
-                            nsReflowStatus& aStatus);
-=======
                             bool aUnboundedLastColumn, nsReflowStatus& aStatus);
 
->>>>>>> upstream-releases
   /**
    * Retrieve the available block-size for content of this frame. The available
    * content block-size is the available block-size for the frame, minus borders
    * and padding.
    */
-<<<<<<< HEAD
-  bool ReflowChildren(ReflowOutput& aDesiredSize,
-                      const ReflowInput& aReflowInput, nsReflowStatus& aStatus,
-                      const ReflowConfig& aConfig, bool aLastColumnUnbounded,
-                      ColumnBalanceData& aColData);
-
-  void ForEachColumnRule(
-      const std::function<void(const nsRect& lineRect)>& aSetLineRect,
-      const nsPoint& aPt);
-
-  static nscoord ClampUsedColumnWidth(const nsStyleCoord& aColumnWidth);
-||||||| merged common ancestors
-  bool ReflowChildren(ReflowOutput& aDesiredSize,
-                        const ReflowInput& aReflowInput,
-                        nsReflowStatus& aStatus,
-                        const ReflowConfig& aConfig,
-                        bool aLastColumnUnbounded,
-                        nsCollapsingMargin* aCarriedOutBEndMargin,
-                        ColumnBalanceData& aColData);
-
-  void ForEachColumnRule(const std::function<void(const nsRect& lineRect)>& aSetLineRect,
-                         const nsPoint& aPt);
-
-  static nscoord ClampUsedColumnWidth(const nsStyleCoord& aColumnWidth);
-=======
   nscoord GetAvailableContentBSize(const ReflowInput& aReflowInput) const;
 
   void ForEachColumnRule(
       const std::function<void(const nsRect& lineRect)>& aSetLineRect,
       const nsPoint& aPt) const;
->>>>>>> upstream-releases
 };
 
 #endif  // nsColumnSetFrame_h___

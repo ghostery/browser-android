@@ -315,31 +315,15 @@ bool DecodePoolImpl::CreateThread() {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ void DecodePool::Initialize() {
-||||||| merged common ancestors
-/* static */ void
-DecodePool::Initialize()
-{
-=======
 /* static */
 void DecodePool::Initialize() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   sNumCores = max<int32_t>(PR_GetNumberOfProcessors(), 1);
   DecodePool::Singleton();
 }
 
-<<<<<<< HEAD
-/* static */ DecodePool* DecodePool::Singleton() {
-||||||| merged common ancestors
-/* static */ DecodePool*
-DecodePool::Singleton()
-{
-=======
 /* static */
 DecodePool* DecodePool::Singleton() {
->>>>>>> upstream-releases
   if (!sSingleton) {
     MOZ_ASSERT(NS_IsMainThread());
     sSingleton = new DecodePool();
@@ -349,15 +333,6 @@ DecodePool* DecodePool::Singleton() {
   return sSingleton;
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t DecodePool::NumberOfCores() { return sNumCores; }
-||||||| merged common ancestors
-/* static */ uint32_t
-DecodePool::NumberOfCores()
-{
-  return sNumCores;
-}
-=======
 /* static */
 uint32_t DecodePool::NumberOfCores() { return sNumCores; }
 
@@ -368,15 +343,7 @@ class IOThreadIniter final : public Runnable {
 
   NS_IMETHOD Run() override {
     MOZ_ASSERT(!NS_IsMainThread());
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-DecodePool::DecodePool() : mMutex("image::DecodePool") {
-||||||| merged common ancestors
-DecodePool::DecodePool()
-  : mMutex("image::DecodePool")
-{
-=======
     CoInitialize(nullptr);
 
     return NS_OK;
@@ -385,7 +352,6 @@ DecodePool::DecodePool()
 #endif
 
 DecodePool::DecodePool() : mMutex("image::IOThread") {
->>>>>>> upstream-releases
   // Determine the number of threads we want.
   int32_t prefLimit = StaticPrefs::image_multithreaded_decoding_limit();
   uint32_t limit;

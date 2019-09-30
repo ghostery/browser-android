@@ -60,24 +60,12 @@ run_task_schema = Schema({
 })
 
 
-<<<<<<< HEAD
-def common_setup(config, job, taskdesc, command, geckodir):
-||||||| merged common ancestors
-def common_setup(config, job, taskdesc, command, checkoutdir):
-=======
 def common_setup(config, job, taskdesc, command):
->>>>>>> upstream-releases
     run = job['run']
     if run['checkout']:
         support_vcs_checkout(config, job, taskdesc,
                              sparse=bool(run['sparse-profile']))
-<<<<<<< HEAD
-        command.append('--vcs-checkout={}'.format(geckodir))
-||||||| merged common ancestors
-        command.append('--vcs-checkout={}/gecko'.format(checkoutdir))
-=======
         command.append('--gecko-checkout={}'.format(taskdesc['worker']['env']['GECKO_PATH']))
->>>>>>> upstream-releases
 
     if run['sparse-profile']:
         command.append('--gecko-sparse-profile=build/sparse-profiles/%s' %
@@ -108,18 +96,11 @@ def docker_worker_run_task(config, job, taskdesc):
     run = job['run']
     worker = taskdesc['worker'] = job['worker']
     command = ['/builds/worker/bin/run-task']
-<<<<<<< HEAD
-    common_setup(config, job, taskdesc, command,
-                 geckodir='{workdir}/checkouts/gecko'.format(**run))
-||||||| merged common ancestors
-    common_setup(config, job, taskdesc, command, checkoutdir='{workdir}/checkouts'.format(**run))
-=======
     common_setup(config, job, taskdesc, command)
 
     if run['tooltool-downloads']:
         internal = run['tooltool-downloads'] == 'internal'
         docker_worker_add_tooltool(config, job, taskdesc, internal=internal)
->>>>>>> upstream-releases
 
     if run.get('cache-dotcache'):
         worker['caches'].append({
@@ -137,53 +118,8 @@ def docker_worker_run_task(config, job, taskdesc):
         command.append('--comm-checkout={}/comm'.format(
             taskdesc['worker']['env']['GECKO_PATH']))
     command.append('--fetch-hgfingerprint')
-<<<<<<< HEAD
-    command.append('--')
-    command.extend(run_command)
-    worker['command'] = command
-
-
-@run_job_using("native-engine", "run-task", schema=run_task_schema, defaults=worker_defaults)
-def native_engine_run_task(config, job, taskdesc):
-    run = job['run']
-    worker = taskdesc['worker'] = job['worker']
-    command = ['./run-task']
-    common_setup(config, job, taskdesc, command,
-                 geckodir='{workdir}/checkouts/gecko'.format(**run))
-
-    worker['context'] = run_task_url(config)
-
-    if run.get('cache-dotcache'):
-        raise Exception("No cache support on native-worker; can't use cache-dotcache")
-
-    run_command = run['command']
-    if isinstance(run_command, basestring):
-        run_command = ['bash', '-cx', run_command]
-||||||| merged common ancestors
-    command.append('--')
-    command.extend(run_command)
-    worker['command'] = command
-
-
-@run_job_using("native-engine", "run-task", schema=run_task_schema, defaults=worker_defaults)
-def native_engine_run_task(config, job, taskdesc):
-    run = job['run']
-    worker = taskdesc['worker'] = job['worker']
-    command = ['./run-task']
-    common_setup(config, job, taskdesc, command, checkoutdir='{workdir}/checkouts'.format(**run))
-
-    worker['context'] = run_task_url(config)
-
-    if run.get('cache-dotcache'):
-        raise Exception("No cache support on native-worker; can't use cache-dotcache")
-
-    run_command = run['command']
-    if isinstance(run_command, basestring):
-        run_command = ['bash', '-cx', run_command]
-=======
     if run['run-as-root']:
         command.extend(('--user', 'root', '--group', 'root'))
->>>>>>> upstream-releases
     command.append('--')
     command.extend(run_command)
     worker['command'] = command
@@ -193,21 +129,6 @@ def native_engine_run_task(config, job, taskdesc):
 def generic_worker_run_task(config, job, taskdesc):
     run = job['run']
     worker = taskdesc['worker'] = job['worker']
-<<<<<<< HEAD
-    is_win = worker['os'] == 'windows'
-
-    if is_win:
-        command = ['C:/mozilla-build/python3/python3.exe', 'run-task']
-        geckodir = './build/src'
-    else:
-        command = ['./run-task']
-        geckodir = '{workdir}/checkouts/gecko'.format(**run)
-
-    common_setup(config, job, taskdesc, command, geckodir=geckodir)
-||||||| merged common ancestors
-    command = ['./run-task']
-    common_setup(config, job, taskdesc, command, checkoutdir='{workdir}/checkouts'.format(**run))
-=======
     is_win = worker['os'] == 'windows'
     is_mac = worker['os'] == 'macosx'
     is_bitbar = worker['os'] == 'linux-bitbar'
@@ -222,7 +143,6 @@ def generic_worker_run_task(config, job, taskdesc):
         command = ['./run-task']
 
     common_setup(config, job, taskdesc, command)
->>>>>>> upstream-releases
 
     worker.setdefault('mounts', [])
     if run.get('cache-dotcache'):
@@ -249,14 +169,9 @@ def generic_worker_run_task(config, job, taskdesc):
         if is_win:
             run_command = '"{}"'.format(run_command)
         run_command = ['bash', '-cx', run_command]
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-=======
 
     if run['run-as-root']:
         command.extend(('--user', 'root', '--group', 'root'))
->>>>>>> upstream-releases
     command.append('--')
     if is_bitbar:
         # Use the bitbar wrapper script which sets up the device and adb

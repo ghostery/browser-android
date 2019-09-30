@@ -119,25 +119,11 @@ typedef char* NPMIMEType;
 /*                       Structures and definitions                     */
 /*----------------------------------------------------------------------*/
 
-<<<<<<< HEAD
-#if !defined(__LP64__)
-#if defined(XP_MACOSX)
-#pragma options align = mac68k
-#endif
-#endif /* __LP64__ */
-||||||| merged common ancestors
-#if !defined(__LP64__)
-#if defined(XP_MACOSX)
-#pragma options align=mac68k
-#endif
-#endif /* __LP64__ */
-=======
 #  if !defined(__LP64__)
 #    if defined(XP_MACOSX)
 #      pragma options align = mac68k
 #    endif
 #  endif /* __LP64__ */
->>>>>>> upstream-releases
 
 /*
  *  NPP is a plug-in's opaque instance handle
@@ -241,29 +227,12 @@ typedef struct {
   int32_t type;
 } NPAnyCallbackStruct;
 
-<<<<<<< HEAD
-typedef struct {
-  int32_t type;
-#if defined(MOZ_X11)
-  Display* display;
-  Visual* visual;
-  Colormap colormap;
-||||||| merged common ancestors
-typedef struct
-{
-  int32_t      type;
-#if defined(MOZ_X11)
-  Display*     display;
-  Visual*      visual;
-  Colormap     colormap;
-=======
 typedef struct {
   int32_t type;
 #    if defined(MOZ_X11)
   Display* display;
   Visual* visual;
   Colormap colormap;
->>>>>>> upstream-releases
   unsigned int depth;
 #    endif
 } NPSetWindowCallbackStruct;
@@ -307,53 +276,6 @@ typedef struct _NPAudioDeviceStateChanged {
 
 typedef enum {
   NPDrawingModelDUMMY
-<<<<<<< HEAD
-#if defined(XP_MACOSX)
-#ifndef NP_NO_QUICKDRAW
-  ,
-  NPDrawingModelQuickDraw = 0
-#endif
-  ,
-  NPDrawingModelCoreGraphics = 1,
-  NPDrawingModelOpenGL = 2,
-  NPDrawingModelCoreAnimation = 3,
-  NPDrawingModelInvalidatingCoreAnimation = 4
-#endif
-#if defined(XP_WIN)
-  ,
-  NPDrawingModelSyncWin = 5
-#endif
-#if defined(MOZ_X11)
-  ,
-  NPDrawingModelSyncX = 6
-#endif
-  ,
-  NPDrawingModelAsyncBitmapSurface = 7
-#if defined(XP_WIN)
-  ,
-  NPDrawingModelAsyncWindowsDXGISurface = 8
-#endif
-||||||| merged common ancestors
-#if defined(XP_MACOSX)
-#ifndef NP_NO_QUICKDRAW
-  , NPDrawingModelQuickDraw = 0
-#endif
-  , NPDrawingModelCoreGraphics = 1
-  , NPDrawingModelOpenGL = 2
-  , NPDrawingModelCoreAnimation = 3
-  , NPDrawingModelInvalidatingCoreAnimation = 4
-#endif
-#if defined(XP_WIN)
-  , NPDrawingModelSyncWin = 5
-#endif
-#if defined(MOZ_X11)
-  , NPDrawingModelSyncX = 6
-#endif
-  , NPDrawingModelAsyncBitmapSurface = 7
-#if defined(XP_WIN)
-  , NPDrawingModelAsyncWindowsDXGISurface = 8
-#endif
-=======
 #  if defined(XP_MACOSX)
 #    ifndef NP_NO_QUICKDRAW
   ,
@@ -379,7 +301,6 @@ typedef enum {
   ,
   NPDrawingModelAsyncWindowsDXGISurface = 8
 #  endif
->>>>>>> upstream-releases
 } NPDrawingModel;
 
 #  ifdef XP_MACOSX
@@ -404,13 +325,7 @@ typedef enum {
  *   as Microsoft's COM ABI will likely not change.
  */
 
-<<<<<<< HEAD
-#define NP_ABI_GCC3_MASK 0x10000000
-||||||| merged common ancestors
-#define NP_ABI_GCC3_MASK  0x10000000
-=======
 #  define NP_ABI_GCC3_MASK 0x10000000
->>>>>>> upstream-releases
 /*
  *   gcc 3.x generated vtables on UNIX and OSX are incompatible with
  *   previous compilers.
@@ -482,20 +397,6 @@ typedef enum {
   NPPVpluginDrawingModel = 1000
 #  if defined(XP_MACOSX)
   /* Used for negotiating event models */
-<<<<<<< HEAD
-  ,
-  NPPVpluginEventModel = 1001
-  /* In the NPDrawingModelCoreAnimation drawing model, the browser asks the
-     plug-in for a Core Animation layer. */
-  ,
-  NPPVpluginCoreAnimationLayer = 1003
-#endif
-||||||| merged common ancestors
-  , NPPVpluginEventModel = 1001
-  /* In the NPDrawingModelCoreAnimation drawing model, the browser asks the plug-in for a Core Animation layer. */
-  , NPPVpluginCoreAnimationLayer = 1003
-#endif
-=======
   ,
   NPPVpluginEventModel = 1001
   /* In the NPDrawingModelCoreAnimation drawing model, the browser asks the
@@ -503,24 +404,7 @@ typedef enum {
   ,
   NPPVpluginCoreAnimationLayer = 1003
 #  endif
->>>>>>> upstream-releases
   /* Notification that the plugin just started or stopped playing audio */
-<<<<<<< HEAD
-  ,
-  NPPVpluginIsPlayingAudio = 4000
-#if defined(XP_WIN)
-  /* Notification that the plugin requests notification when the default audio
-     device has changed */
-  ,
-  NPPVpluginRequiresAudioDeviceChanges = 4001
-#endif
-||||||| merged common ancestors
-  , NPPVpluginIsPlayingAudio = 4000
-#if defined(XP_WIN)
-  /* Notification that the plugin requests notification when the default audio device has changed */
-  , NPPVpluginRequiresAudioDeviceChanges = 4001
-#endif
-=======
   ,
   NPPVpluginIsPlayingAudio = 4000
 #  if defined(XP_WIN)
@@ -529,7 +413,6 @@ typedef enum {
   ,
   NPPVpluginRequiresAudioDeviceChanges = 4001
 #  endif
->>>>>>> upstream-releases
 
 } NPPVariable;
 
@@ -566,102 +449,6 @@ typedef enum {
 
   NPNVCSSZoomFactor = 23,
 
-<<<<<<< HEAD
-  NPNVpluginDrawingModel =
-      1000 /* Get the current drawing model (NPDrawingModel) */
-#if defined(XP_MACOSX) || defined(XP_WIN)
-  ,
-  NPNVcontentsScaleFactor = 1001
-#endif
-#if defined(XP_MACOSX)
-#ifndef NP_NO_QUICKDRAW
-  ,
-  NPNVsupportsQuickDrawBool = 2000
-#endif
-  ,
-  NPNVsupportsCoreGraphicsBool = 2001,
-  NPNVsupportsOpenGLBool = 2002,
-  NPNVsupportsCoreAnimationBool = 2003,
-  NPNVsupportsInvalidatingCoreAnimationBool = 2004
-#endif
-  ,
-  NPNVsupportsAsyncBitmapSurfaceBool = 2007
-#if defined(XP_WIN)
-  ,
-  NPNVsupportsAsyncWindowsDXGISurfaceBool = 2008,
-  NPNVpreferredDXGIAdapter = 2009
-#endif
-#if defined(XP_MACOSX)
-#ifndef NP_NO_CARBON
-  ,
-  NPNVsupportsCarbonBool =
-      3000 /* TRUE if the browser supports the Carbon event model */
-#endif
-  ,
-  NPNVsupportsCocoaBool =
-      3001 /* TRUE if the browser supports the Cocoa event model */
-  ,
-  NPNVsupportsUpdatedCocoaTextInputBool =
-      3002 /* TRUE if the browser supports the updated
-              Cocoa text input specification. */
-#endif
-  ,
-  NPNVmuteAudioBool =
-      4000 /* Request that the browser wants to mute or unmute the plugin */
-#if defined(XP_WIN)
-  ,
-  NPNVaudioDeviceChangeDetails =
-      4001 /* Provides information about the new default audio device */
-  ,
-  NPNVaudioDeviceStateChanged =
-      4002 /* Provides information if any audio device changes state */
-#endif
-#if defined(XP_MACOSX)
-  ,
-  NPNVsupportsCompositingCoreAnimationPluginsBool =
-      74656 /* TRUE if the browser supports
-               CA model compositing */
-#endif
-  ,
-  NPNVLast
-||||||| merged common ancestors
-  NPNVpluginDrawingModel = 1000 /* Get the current drawing model (NPDrawingModel) */
-#if defined(XP_MACOSX) || defined(XP_WIN)
-  , NPNVcontentsScaleFactor = 1001
-#endif
-#if defined(XP_MACOSX)
-#ifndef NP_NO_QUICKDRAW
-  , NPNVsupportsQuickDrawBool = 2000
-#endif
-  , NPNVsupportsCoreGraphicsBool = 2001
-  , NPNVsupportsOpenGLBool = 2002
-  , NPNVsupportsCoreAnimationBool = 2003
-  , NPNVsupportsInvalidatingCoreAnimationBool = 2004
-#endif
-  , NPNVsupportsAsyncBitmapSurfaceBool = 2007
-#if defined(XP_WIN)
-  , NPNVsupportsAsyncWindowsDXGISurfaceBool = 2008
-  , NPNVpreferredDXGIAdapter = 2009
-#endif
-#if defined(XP_MACOSX)
-#ifndef NP_NO_CARBON
-  , NPNVsupportsCarbonBool = 3000 /* TRUE if the browser supports the Carbon event model */
-#endif
-  , NPNVsupportsCocoaBool = 3001 /* TRUE if the browser supports the Cocoa event model */
-  , NPNVsupportsUpdatedCocoaTextInputBool = 3002 /* TRUE if the browser supports the updated
-                                                    Cocoa text input specification. */
-#endif
-  , NPNVmuteAudioBool = 4000 /* Request that the browser wants to mute or unmute the plugin */
-#if defined(XP_WIN)
-  , NPNVaudioDeviceChangeDetails = 4001 /* Provides information about the new default audio device */
-  , NPNVaudioDeviceStateChanged = 4002 /* Provides information if any audio device changes state */
-#endif
-#if defined(XP_MACOSX)
-  , NPNVsupportsCompositingCoreAnimationPluginsBool = 74656 /* TRUE if the browser supports
-                                                               CA model compositing */
-#endif
-  , NPNVLast
-=======
   NPNVpluginDrawingModel =
       1000 /* Get the current drawing model (NPDrawingModel) */
 #  if defined(XP_MACOSX) || defined(XP_WIN)
@@ -719,7 +506,6 @@ typedef enum {
 #  endif
   ,
   NPNVLast
->>>>>>> upstream-releases
 } NPNVariable;
 
 typedef enum { NPNURLVCookie = 501, NPNURLVProxy } NPNURLVariable;
@@ -743,22 +529,10 @@ typedef struct _NPWindow {
   int32_t y;      /* to a netscape page. */
   uint32_t width; /* Maximum window size */
   uint32_t height;
-<<<<<<< HEAD
-  NPRect clipRect; /* Clipping rectangle in port coordinates */
-#if (defined(XP_UNIX) || defined(XP_SYMBIAN)) && !defined(XP_MACOSX)
-  void* ws_info;     /* Platform-dependent additional data */
-#endif               /* XP_UNIX */
-||||||| merged common ancestors
-  NPRect   clipRect; /* Clipping rectangle in port coordinates */
-#if (defined(XP_UNIX) || defined(XP_SYMBIAN)) && !defined(XP_MACOSX)
-  void * ws_info; /* Platform-dependent additional data */
-#endif /* XP_UNIX */
-=======
   NPRect clipRect; /* Clipping rectangle in port coordinates */
 #  if (defined(XP_UNIX) || defined(XP_SYMBIAN)) && !defined(XP_MACOSX)
   void* ws_info;     /* Platform-dependent additional data */
 #  endif             /* XP_UNIX */
->>>>>>> upstream-releases
   NPWindowType type; /* Is this a window or a drawable? */
 } NPWindow;
 
@@ -803,36 +577,17 @@ typedef EventRecord NPEvent;
 #    endif
 #  elif defined(XP_SYMBIAN)
 typedef QEvent NPEvent;
-<<<<<<< HEAD
-#elif defined(XP_WIN)
-typedef struct _NPEvent {
-||||||| merged common ancestors
-#elif defined(XP_WIN)
-typedef struct _NPEvent
-{
-=======
 #  elif defined(XP_WIN)
 typedef struct _NPEvent {
->>>>>>> upstream-releases
   uint16_t event;
   uintptr_t wParam;
   intptr_t lParam;
 } NPEvent;
 #  elif defined(XP_UNIX) && defined(MOZ_X11)
 typedef XEvent NPEvent;
-<<<<<<< HEAD
-#else
-typedef void* NPEvent;
-#endif
-||||||| merged common ancestors
-#else
-typedef void*  NPEvent;
-#endif
-=======
 #  else
 typedef void* NPEvent;
 #  endif
->>>>>>> upstream-releases
 
 #  if defined(XP_MACOSX)
 typedef void* NPRegion;
@@ -846,19 +601,9 @@ typedef HRGN NPRegion;
 typedef Region NPRegion;
 #  elif defined(XP_SYMBIAN)
 typedef QRegion* NPRegion;
-<<<<<<< HEAD
-#else
-typedef void* NPRegion;
-#endif
-||||||| merged common ancestors
-#else
-typedef void *NPRegion;
-#endif
-=======
 #  else
 typedef void* NPRegion;
 #  endif
->>>>>>> upstream-releases
 
 typedef struct _NPNSString NPNSString;
 typedef struct _NPNSWindow NPNSWindow;
@@ -866,19 +611,9 @@ typedef struct _NPNSMenu NPNSMenu;
 
 #  if defined(XP_MACOSX)
 typedef NPNSMenu NPMenu;
-<<<<<<< HEAD
-#else
-typedef void* NPMenu;
-#endif
-||||||| merged common ancestors
-#else
-typedef void *NPMenu;
-#endif
-=======
 #  else
 typedef void* NPMenu;
 #  endif
->>>>>>> upstream-releases
 
 typedef enum {
   NPCoordinateSpacePlugin = 1,
@@ -890,17 +625,8 @@ typedef enum {
 
 #  if defined(XP_MACOSX)
 
-<<<<<<< HEAD
-#ifndef NP_NO_QUICKDRAW
-typedef struct NP_Port {
-||||||| merged common ancestors
-#ifndef NP_NO_QUICKDRAW
-typedef struct NP_Port
-{
-=======
 #    ifndef NP_NO_QUICKDRAW
 typedef struct NP_Port {
->>>>>>> upstream-releases
   CGrafPtr port;
   int32_t portx; /* position inside the topmost window */
   int32_t porty;
@@ -924,27 +650,12 @@ typedef struct NP_CGContext {
 
 typedef struct NP_GLContext {
   CGLContextObj context;
-<<<<<<< HEAD
-#ifdef NP_NO_CARBON
-  NPNSWindow* window;
-#else
-  void* window; /* Can be either an NSWindow or a WindowRef depending on the
-                   event model */
-#endif
-||||||| merged common ancestors
-#ifdef NP_NO_CARBON
-  NPNSWindow *window;
-#else
-  void *window; /* Can be either an NSWindow or a WindowRef depending on the event model */
-#endif
-=======
 #    ifdef NP_NO_CARBON
   NPNSWindow* window;
 #    else
   void* window; /* Can be either an NSWindow or a WindowRef depending on the
                    event model */
 #    endif
->>>>>>> upstream-releases
 } NP_GLContext;
 
 typedef enum {
@@ -1019,78 +730,30 @@ enum NPEventType {
 /*
  * Values for mode passed to NPP_New:
  */
-<<<<<<< HEAD
-#define NP_EMBED 1
-#define NP_FULL 2
-||||||| merged common ancestors
-#define NP_EMBED 1
-#define NP_FULL  2
-=======
 #  define NP_EMBED 1
 #  define NP_FULL 2
->>>>>>> upstream-releases
 
 /*
  * Values for stream type passed to NPP_NewStream:
  */
-<<<<<<< HEAD
-#define NP_NORMAL 1
-#define NP_SEEK 2
-#define NP_ASFILE 3
-#define NP_ASFILEONLY 4
-||||||| merged common ancestors
-#define NP_NORMAL     1
-#define NP_SEEK       2
-#define NP_ASFILE     3
-#define NP_ASFILEONLY 4
-=======
 #  define NP_NORMAL 1
 #  define NP_SEEK 2
 #  define NP_ASFILE 3
 #  define NP_ASFILEONLY 4
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define NP_MAXREADY (((unsigned)(~0) << 1) >> 1)
-||||||| merged common ancestors
-#define NP_MAXREADY (((unsigned)(~0)<<1)>>1)
-=======
 #  define NP_MAXREADY (((unsigned)(~0) << 1) >> 1)
->>>>>>> upstream-releases
 
 /*
  * Flags for NPP_ClearSiteData.
  */
-<<<<<<< HEAD
-#define NP_CLEAR_ALL 0
-#define NP_CLEAR_CACHE (1 << 0)
-||||||| merged common ancestors
-#define NP_CLEAR_ALL   0
-#define NP_CLEAR_CACHE (1 << 0)
-=======
 #  define NP_CLEAR_ALL 0
 #  define NP_CLEAR_CACHE (1 << 0)
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if !defined(__LP64__)
-#if defined(XP_MACOSX)
-#pragma options align = reset
-#endif
-#endif /* __LP64__ */
-||||||| merged common ancestors
-#if !defined(__LP64__)
-#if defined(XP_MACOSX)
-#pragma options align=reset
-#endif
-#endif /* __LP64__ */
-=======
 #  if !defined(__LP64__)
 #    if defined(XP_MACOSX)
 #      pragma options align = reset
 #    endif
 #  endif /* __LP64__ */
->>>>>>> upstream-releases
 
 /*----------------------------------------------------------------------*/
 /*       Error and Reason Code definitions                              */
@@ -1099,43 +762,6 @@ enum NPEventType {
 /*
  * Values of type NPError:
  */
-<<<<<<< HEAD
-#define NPERR_BASE 0
-#define NPERR_NO_ERROR (NPERR_BASE + 0)
-#define NPERR_GENERIC_ERROR (NPERR_BASE + 1)
-#define NPERR_INVALID_INSTANCE_ERROR (NPERR_BASE + 2)
-#define NPERR_INVALID_FUNCTABLE_ERROR (NPERR_BASE + 3)
-#define NPERR_MODULE_LOAD_FAILED_ERROR (NPERR_BASE + 4)
-#define NPERR_OUT_OF_MEMORY_ERROR (NPERR_BASE + 5)
-#define NPERR_INVALID_PLUGIN_ERROR (NPERR_BASE + 6)
-#define NPERR_INVALID_PLUGIN_DIR_ERROR (NPERR_BASE + 7)
-#define NPERR_INCOMPATIBLE_VERSION_ERROR (NPERR_BASE + 8)
-#define NPERR_INVALID_PARAM (NPERR_BASE + 9)
-#define NPERR_INVALID_URL (NPERR_BASE + 10)
-#define NPERR_FILE_NOT_FOUND (NPERR_BASE + 11)
-#define NPERR_NO_DATA (NPERR_BASE + 12)
-#define NPERR_STREAM_NOT_SEEKABLE (NPERR_BASE + 13)
-#define NPERR_TIME_RANGE_NOT_SUPPORTED (NPERR_BASE + 14)
-#define NPERR_MALFORMED_SITE (NPERR_BASE + 15)
-||||||| merged common ancestors
-#define NPERR_BASE                         0
-#define NPERR_NO_ERROR                    (NPERR_BASE + 0)
-#define NPERR_GENERIC_ERROR               (NPERR_BASE + 1)
-#define NPERR_INVALID_INSTANCE_ERROR      (NPERR_BASE + 2)
-#define NPERR_INVALID_FUNCTABLE_ERROR     (NPERR_BASE + 3)
-#define NPERR_MODULE_LOAD_FAILED_ERROR    (NPERR_BASE + 4)
-#define NPERR_OUT_OF_MEMORY_ERROR         (NPERR_BASE + 5)
-#define NPERR_INVALID_PLUGIN_ERROR        (NPERR_BASE + 6)
-#define NPERR_INVALID_PLUGIN_DIR_ERROR    (NPERR_BASE + 7)
-#define NPERR_INCOMPATIBLE_VERSION_ERROR  (NPERR_BASE + 8)
-#define NPERR_INVALID_PARAM               (NPERR_BASE + 9)
-#define NPERR_INVALID_URL                 (NPERR_BASE + 10)
-#define NPERR_FILE_NOT_FOUND              (NPERR_BASE + 11)
-#define NPERR_NO_DATA                     (NPERR_BASE + 12)
-#define NPERR_STREAM_NOT_SEEKABLE         (NPERR_BASE + 13)
-#define NPERR_TIME_RANGE_NOT_SUPPORTED    (NPERR_BASE + 14)
-#define NPERR_MALFORMED_SITE              (NPERR_BASE + 15)
-=======
 #  define NPERR_BASE 0
 #  define NPERR_NO_ERROR (NPERR_BASE + 0)
 #  define NPERR_GENERIC_ERROR (NPERR_BASE + 1)
@@ -1153,89 +779,25 @@ enum NPEventType {
 #  define NPERR_STREAM_NOT_SEEKABLE (NPERR_BASE + 13)
 #  define NPERR_TIME_RANGE_NOT_SUPPORTED (NPERR_BASE + 14)
 #  define NPERR_MALFORMED_SITE (NPERR_BASE + 15)
->>>>>>> upstream-releases
 
 /*
  * Values of type NPReason:
  */
-<<<<<<< HEAD
-#define NPRES_BASE 0
-#define NPRES_DONE (NPRES_BASE + 0)
-#define NPRES_NETWORK_ERR (NPRES_BASE + 1)
-#define NPRES_USER_BREAK (NPRES_BASE + 2)
-||||||| merged common ancestors
-#define NPRES_BASE          0
-#define NPRES_DONE         (NPRES_BASE + 0)
-#define NPRES_NETWORK_ERR  (NPRES_BASE + 1)
-#define NPRES_USER_BREAK   (NPRES_BASE + 2)
-=======
 #  define NPRES_BASE 0
 #  define NPRES_DONE (NPRES_BASE + 0)
 #  define NPRES_NETWORK_ERR (NPRES_BASE + 1)
 #  define NPRES_USER_BREAK (NPRES_BASE + 2)
->>>>>>> upstream-releases
 
 /*
  * Don't use these obsolete error codes any more.
  */
-<<<<<<< HEAD
-#define NP_NOERR NP_NOERR_is_obsolete_use_NPERR_NO_ERROR
-#define NP_EINVAL NP_EINVAL_is_obsolete_use_NPERR_GENERIC_ERROR
-#define NP_EABORT NP_EABORT_is_obsolete_use_NPRES_USER_BREAK
-||||||| merged common ancestors
-#define NP_NOERR  NP_NOERR_is_obsolete_use_NPERR_NO_ERROR
-#define NP_EINVAL NP_EINVAL_is_obsolete_use_NPERR_GENERIC_ERROR
-#define NP_EABORT NP_EABORT_is_obsolete_use_NPRES_USER_BREAK
-=======
 #  define NP_NOERR NP_NOERR_is_obsolete_use_NPERR_NO_ERROR
 #  define NP_EINVAL NP_EINVAL_is_obsolete_use_NPERR_GENERIC_ERROR
 #  define NP_EABORT NP_EABORT_is_obsolete_use_NPRES_USER_BREAK
->>>>>>> upstream-releases
 
 /*
  * Version feature information
  */
-<<<<<<< HEAD
-#define NPVERS_HAS_STREAMOUTPUT 8
-#define NPVERS_HAS_NOTIFICATION 9
-#define NPVERS_HAS_LIVECONNECT 9
-#define NPVERS_68K_HAS_LIVECONNECT 11
-#define NPVERS_HAS_WINDOWLESS 11
-#define NPVERS_HAS_XPCONNECT_SCRIPTING 13
-#define NPVERS_HAS_NPRUNTIME_SCRIPTING 14
-#define NPVERS_HAS_FORM_VALUES 15
-#define NPVERS_HAS_POPUPS_ENABLED_STATE 16
-#define NPVERS_HAS_RESPONSE_HEADERS 17
-#define NPVERS_HAS_NPOBJECT_ENUM 18
-#define NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL 19
-#define NPVERS_HAS_ALL_NETWORK_STREAMS 20
-#define NPVERS_HAS_URL_AND_AUTH_INFO 21
-#define NPVERS_HAS_PRIVATE_MODE 22
-#define NPVERS_MACOSX_HAS_COCOA_EVENTS 23
-#define NPVERS_HAS_ADVANCED_KEY_HANDLING 25
-#define NPVERS_HAS_URL_REDIRECT_HANDLING 26
-#define NPVERS_HAS_CLEAR_SITE_DATA 27
-||||||| merged common ancestors
-#define NPVERS_HAS_STREAMOUTPUT             8
-#define NPVERS_HAS_NOTIFICATION             9
-#define NPVERS_HAS_LIVECONNECT              9
-#define NPVERS_68K_HAS_LIVECONNECT          11
-#define NPVERS_HAS_WINDOWLESS               11
-#define NPVERS_HAS_XPCONNECT_SCRIPTING      13
-#define NPVERS_HAS_NPRUNTIME_SCRIPTING      14
-#define NPVERS_HAS_FORM_VALUES              15
-#define NPVERS_HAS_POPUPS_ENABLED_STATE     16
-#define NPVERS_HAS_RESPONSE_HEADERS         17
-#define NPVERS_HAS_NPOBJECT_ENUM            18
-#define NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL 19
-#define NPVERS_HAS_ALL_NETWORK_STREAMS      20
-#define NPVERS_HAS_URL_AND_AUTH_INFO        21
-#define NPVERS_HAS_PRIVATE_MODE             22
-#define NPVERS_MACOSX_HAS_COCOA_EVENTS      23
-#define NPVERS_HAS_ADVANCED_KEY_HANDLING    25
-#define NPVERS_HAS_URL_REDIRECT_HANDLING    26
-#define NPVERS_HAS_CLEAR_SITE_DATA          27
-=======
 #  define NPVERS_HAS_STREAMOUTPUT 8
 #  define NPVERS_HAS_NOTIFICATION 9
 #  define NPVERS_HAS_LIVECONNECT 9
@@ -1255,7 +817,6 @@ enum NPEventType {
 #  define NPVERS_HAS_ADVANCED_KEY_HANDLING 25
 #  define NPVERS_HAS_URL_REDIRECT_HANDLING 26
 #  define NPVERS_HAS_CLEAR_SITE_DATA 27
->>>>>>> upstream-releases
 
 /*----------------------------------------------------------------------*/
 /*                        Function Prototypes                           */
@@ -1314,97 +875,6 @@ int32_t NPN_Write(NPP instance, NPStream* stream, int32_t len, void* buffer);
 NPError NPN_DestroyStream(NPP instance, NPStream* stream, NPReason reason);
 void NPN_Status(NPP instance, const char* message);
 const char* NPN_UserAgent(NPP instance);
-<<<<<<< HEAD
-void* NPN_MemAlloc(uint32_t size);
-void NPN_MemFree(void* ptr);
-uint32_t NPN_MemFlush(uint32_t size);
-void NPN_ReloadPlugins(NPBool reloadPages);
-NPError NPN_GetValue(NPP instance, NPNVariable variable, void* value);
-NPError NPN_SetValue(NPP instance, NPPVariable variable, void* value);
-void NPN_InvalidateRect(NPP instance, NPRect* invalidRect);
-void NPN_InvalidateRegion(NPP instance, NPRegion invalidRegion);
-void NPN_ForceRedraw(NPP instance);
-void NPN_PushPopupsEnabledState(NPP instance, NPBool enabled);
-void NPN_PopPopupsEnabledState(NPP instance);
-void NPN_PluginThreadAsyncCall(NPP instance, void (*func)(void*),
-                               void* userData);
-NPError NPN_GetValueForURL(NPP instance, NPNURLVariable variable,
-                           const char* url, char** value, uint32_t* len);
-NPError NPN_SetValueForURL(NPP instance, NPNURLVariable variable,
-                           const char* url, const char* value, uint32_t len);
-NPError NPN_GetAuthenticationInfo(NPP instance, const char* protocol,
-                                  const char* host, int32_t port,
-                                  const char* scheme, const char* realm,
-                                  char** username, uint32_t* ulen,
-                                  char** password, uint32_t* plen);
-uint32_t NPN_ScheduleTimer(NPP instance, uint32_t interval, NPBool repeat,
-                           void (*timerFunc)(NPP npp, uint32_t timerID));
-void NPN_UnscheduleTimer(NPP instance, uint32_t timerID);
-NPError NPN_PopUpContextMenu(NPP instance, NPMenu* menu);
-NPBool NPN_ConvertPoint(NPP instance, double sourceX, double sourceY,
-                        NPCoordinateSpace sourceSpace, double* destX,
-                        double* destY, NPCoordinateSpace destSpace);
-NPBool NPN_HandleEvent(NPP instance, void* event, NPBool handled);
-NPBool NPN_UnfocusInstance(NPP instance, NPFocusDirection direction);
-void NPN_URLRedirectResponse(NPP instance, void* notifyData, NPBool allow);
-NPError NPN_InitAsyncSurface(NPP instance, NPSize* size, NPImageFormat format,
-                             void* initData, NPAsyncSurface* surface);
-NPError NPN_FinalizeAsyncSurface(NPP instance, NPAsyncSurface* surface);
-void NPN_SetCurrentAsyncSurface(NPP instance, NPAsyncSurface* surface,
-                                NPRect* changed);
-
-#ifdef __cplusplus
-} /* end extern "C" */
-#endif
-||||||| merged common ancestors
-void*       NPN_MemAlloc(uint32_t size);
-void        NPN_MemFree(void* ptr);
-uint32_t    NPN_MemFlush(uint32_t size);
-void        NPN_ReloadPlugins(NPBool reloadPages);
-NPError     NPN_GetValue(NPP instance, NPNVariable variable,
-                         void *value);
-NPError     NPN_SetValue(NPP instance, NPPVariable variable,
-                         void *value);
-void        NPN_InvalidateRect(NPP instance, NPRect *invalidRect);
-void        NPN_InvalidateRegion(NPP instance,
-                                 NPRegion invalidRegion);
-void        NPN_ForceRedraw(NPP instance);
-void        NPN_PushPopupsEnabledState(NPP instance, NPBool enabled);
-void        NPN_PopPopupsEnabledState(NPP instance);
-void        NPN_PluginThreadAsyncCall(NPP instance,
-                                      void (*func) (void *),
-                                      void *userData);
-NPError     NPN_GetValueForURL(NPP instance, NPNURLVariable variable,
-                               const char *url, char **value,
-                               uint32_t *len);
-NPError     NPN_SetValueForURL(NPP instance, NPNURLVariable variable,
-                               const char *url, const char *value,
-                               uint32_t len);
-NPError     NPN_GetAuthenticationInfo(NPP instance,
-                                      const char *protocol,
-                                      const char *host, int32_t port,
-                                      const char *scheme,
-                                      const char *realm,
-                                      char **username, uint32_t *ulen,
-                                      char **password,
-                                      uint32_t *plen);
-uint32_t    NPN_ScheduleTimer(NPP instance, uint32_t interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32_t timerID));
-void        NPN_UnscheduleTimer(NPP instance, uint32_t timerID);
-NPError     NPN_PopUpContextMenu(NPP instance, NPMenu* menu);
-NPBool      NPN_ConvertPoint(NPP instance, double sourceX, double sourceY, NPCoordinateSpace sourceSpace, double *destX, double *destY, NPCoordinateSpace destSpace);
-NPBool      NPN_HandleEvent(NPP instance, void *event, NPBool handled);
-NPBool      NPN_UnfocusInstance(NPP instance, NPFocusDirection direction);
-void        NPN_URLRedirectResponse(NPP instance, void* notifyData, NPBool allow);
-NPError     NPN_InitAsyncSurface(NPP instance, NPSize *size,
-                                 NPImageFormat format, void *initData,
-                                 NPAsyncSurface *surface);
-NPError     NPN_FinalizeAsyncSurface(NPP instance, NPAsyncSurface *surface);
-void        NPN_SetCurrentAsyncSurface(NPP instance, NPAsyncSurface *surface, NPRect *changed);
-
-#ifdef __cplusplus
-}  /* end extern "C" */
-#endif
-=======
 void* NPN_MemAlloc(uint32_t size);
 void NPN_MemFree(void* ptr);
 uint32_t NPN_MemFlush(uint32_t size);
@@ -1446,7 +916,6 @@ void NPN_SetCurrentAsyncSurface(NPP instance, NPAsyncSurface* surface,
 #  ifdef __cplusplus
 } /* end extern "C" */
 #  endif
->>>>>>> upstream-releases
 
 #endif /* RC_INVOKED */
 

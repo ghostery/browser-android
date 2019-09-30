@@ -11,21 +11,6 @@
   setTestPluginEnabledState(SpecialPowers.Ci.nsIPluginTag.STATE_ENABLED);
 
   function runTests() {
-<<<<<<< HEAD
-    ok(
-      document.getElementById('plugin1').pluginFoundElement,
-      "plugin1.pluginFoundElement (NPNVPluginElementNPObject) - " +
-      document.getElementById('plugin1').pluginFoundElement
-    );
-    ok(
-      window.pluginFoundWindow,
-      "window.pluginFoundWindow (NPNVWindowNPObject) - " +
-      window.pluginFoundWindow
-    );
-||||||| merged common ancestors
-    ok(document.getElementById('plugin1').pluginFoundElement, "plugin1.pluginFoundElement (NPNVPluginElementNPObject)", document.getElementById('plugin1').pluginFoundElement);
-    ok(window.pluginFoundWindow, "window.pluginFoundWindow (NPNVWindowNPObject)", window.pluginFoundWindow);
-=======
     ok(
       document.getElementById("plugin1").pluginFoundElement,
       "plugin1.pluginFoundElement (NPNVPluginElementNPObject) - " +
@@ -36,7 +21,6 @@
       "window.pluginFoundWindow (NPNVWindowNPObject) - " +
       window.pluginFoundWindow
     );
->>>>>>> upstream-releases
 
     SimpleTest.finish();
   }

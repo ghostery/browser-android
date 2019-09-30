@@ -10,14 +10,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 from taskgraph.loader.single_dep import schema
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.attributes import copy_attributes_from_dependent_job
-<<<<<<< HEAD
-from taskgraph.util.partners import check_if_partners_enabled
-||||||| merged common ancestors
-from taskgraph.util.partners import check_if_partners_enabled
-from taskgraph.util.schema import validate_schema, Schema
-=======
 from taskgraph.util.partners import check_if_partners_enabled, get_partner_config_by_kind
->>>>>>> upstream-releases
 from taskgraph.util.scriptworker import (
     get_signing_cert_scope_per_platform,
     get_worker_type_for_scope,

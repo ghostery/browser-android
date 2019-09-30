@@ -24,18 +24,9 @@ static int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
       do_CreateInstance(NS_CSPCONTEXT_CONTRACTID, &ret);
   if (ret != NS_OK) return 0;
 
-<<<<<<< HEAD
-  ret = csp->SetRequestContext(nullptr, selfURIPrincipal);
-  if (ret != NS_OK) return 0;
-||||||| merged common ancestors
-  ret = csp->SetRequestContext(nullptr, selfURIPrincipal);
-  if (ret != NS_OK)
-    return 0;
-=======
   ret = csp->SetRequestContextWithPrincipal(selfURIPrincipal, selfURI,
                                             EmptyString(), 0);
   if (ret != NS_OK) return 0;
->>>>>>> upstream-releases
 
   NS_ConvertASCIItoUTF16 policy(reinterpret_cast<const char*>(data), size);
   if (!policy.get()) return 0;

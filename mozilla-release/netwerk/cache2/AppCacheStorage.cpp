@@ -22,50 +22,20 @@
 namespace mozilla {
 namespace net {
 
-<<<<<<< HEAD
-AppCacheStorage::AppCacheStorage(nsILoadContextInfo *aInfo,
-                                 nsIApplicationCache *aAppCache)
-    : CacheStorage(aInfo, true /* disk */, false /* lookup app cache */,
-                   false /* skip size check */, false /* pin */),
-      mAppCache(aAppCache) {}
-||||||| merged common ancestors
-AppCacheStorage::AppCacheStorage(nsILoadContextInfo* aInfo,
-                                 nsIApplicationCache* aAppCache)
-: CacheStorage(aInfo, true /* disk */, false /* lookup app cache */, false /* skip size check */, false /* pin */)
-, mAppCache(aAppCache)
-{
-}
-=======
 AppCacheStorage::AppCacheStorage(nsILoadContextInfo* aInfo,
                                  nsIApplicationCache* aAppCache)
     : CacheStorage(aInfo, true /* disk */, false /* lookup app cache */,
                    false /* skip size check */, false /* pin */),
       mAppCache(aAppCache) {}
->>>>>>> upstream-releases
 
 AppCacheStorage::~AppCacheStorage() {
   ProxyReleaseMainThread("AppCacheStorage::mAppCache", mAppCache);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP AppCacheStorage::AsyncOpenURI(
-    nsIURI *aURI, const nsACString &aIdExtension, uint32_t aFlags,
-    nsICacheEntryOpenCallback *aCallback) {
-  if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-NS_IMETHODIMP AppCacheStorage::AsyncOpenURI(nsIURI *aURI,
-                                            const nsACString & aIdExtension,
-                                            uint32_t aFlags,
-                                            nsICacheEntryOpenCallback *aCallback)
-{
-  if (!CacheStorageService::Self())
-    return NS_ERROR_NOT_INITIALIZED;
-=======
 NS_IMETHODIMP AppCacheStorage::AsyncOpenURI(
     nsIURI* aURI, const nsACString& aIdExtension, uint32_t aFlags,
     nsICacheEntryOpenCallback* aCallback) {
   if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
 
   NS_ENSURE_ARG(aURI);
   NS_ENSURE_ARG(aCallback);
@@ -116,56 +86,23 @@ NS_IMETHODIMP AppCacheStorage::AsyncOpenURI(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP AppCacheStorage::OpenTruncate(nsIURI *aURI,
-                                            const nsACString &aIdExtension,
-                                            nsICacheEntry **aCacheEntry) {
-||||||| merged common ancestors
-NS_IMETHODIMP AppCacheStorage::OpenTruncate(nsIURI *aURI, const nsACString & aIdExtension,
-                                            nsICacheEntry **aCacheEntry)
-{
-=======
 NS_IMETHODIMP AppCacheStorage::OpenTruncate(nsIURI* aURI,
                                             const nsACString& aIdExtension,
                                             nsICacheEntry** aCacheEntry) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP AppCacheStorage::Exists(nsIURI *aURI,
-                                      const nsACString &aIdExtension,
-                                      bool *aResult) {
-||||||| merged common ancestors
-NS_IMETHODIMP AppCacheStorage::Exists(nsIURI *aURI, const nsACString & aIdExtension,
-                                      bool *aResult)
-{
-=======
 NS_IMETHODIMP AppCacheStorage::Exists(nsIURI* aURI,
                                       const nsACString& aIdExtension,
                                       bool* aResult) {
->>>>>>> upstream-releases
   *aResult = false;
   return NS_ERROR_NOT_AVAILABLE;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP AppCacheStorage::AsyncDoomURI(
-    nsIURI *aURI, const nsACString &aIdExtension,
-    nsICacheEntryDoomCallback *aCallback) {
-  if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-NS_IMETHODIMP AppCacheStorage::AsyncDoomURI(nsIURI *aURI, const nsACString & aIdExtension,
-                                            nsICacheEntryDoomCallback* aCallback)
-{
-  if (!CacheStorageService::Self())
-    return NS_ERROR_NOT_INITIALIZED;
-=======
 NS_IMETHODIMP AppCacheStorage::AsyncDoomURI(
     nsIURI* aURI, const nsACString& aIdExtension,
     nsICacheEntryDoomCallback* aCallback) {
   if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
 
   if (!mAppCache) {
     return NS_ERROR_NOT_AVAILABLE;
@@ -176,20 +113,9 @@ NS_IMETHODIMP AppCacheStorage::AsyncDoomURI(
   return old->AsyncDoomURI(aURI, aIdExtension, aCallback);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP AppCacheStorage::AsyncEvictStorage(
-    nsICacheEntryDoomCallback *aCallback) {
-  if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-NS_IMETHODIMP AppCacheStorage::AsyncEvictStorage(nsICacheEntryDoomCallback* aCallback)
-{
-  if (!CacheStorageService::Self())
-    return NS_ERROR_NOT_INITIALIZED;
-=======
 NS_IMETHODIMP AppCacheStorage::AsyncEvictStorage(
     nsICacheEntryDoomCallback* aCallback) {
   if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
 
   nsresult rv;
 
@@ -216,21 +142,9 @@ NS_IMETHODIMP AppCacheStorage::AsyncEvictStorage(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP AppCacheStorage::AsyncVisitStorage(
-    nsICacheStorageVisitor *aVisitor, bool aVisitEntries) {
-  if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
-||||||| merged common ancestors
-NS_IMETHODIMP AppCacheStorage::AsyncVisitStorage(nsICacheStorageVisitor* aVisitor,
-                                                 bool aVisitEntries)
-{
-  if (!CacheStorageService::Self())
-    return NS_ERROR_NOT_INITIALIZED;
-=======
 NS_IMETHODIMP AppCacheStorage::AsyncVisitStorage(
     nsICacheStorageVisitor* aVisitor, bool aVisitEntries) {
   if (!CacheStorageService::Self()) return NS_ERROR_NOT_INITIALIZED;
->>>>>>> upstream-releases
 
   LOG(("AppCacheStorage::AsyncVisitStorage [this=%p, cb=%p]", this, aVisitor));
 
@@ -248,21 +162,9 @@ NS_IMETHODIMP AppCacheStorage::AsyncVisitStorage(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP AppCacheStorage::GetCacheIndexEntryAttrs(
-    nsIURI *aURI, const nsACString &aIdExtension, bool *aHasAltData,
-    uint32_t *aSizeInKB) {
-||||||| merged common ancestors
-NS_IMETHODIMP AppCacheStorage::GetCacheIndexEntryAttrs(nsIURI *aURI,
-                                                       const nsACString &aIdExtension,
-                                                       bool *aHasAltData,
-                                                       uint32_t *aSizeInKB)
-{
-=======
 NS_IMETHODIMP AppCacheStorage::GetCacheIndexEntryAttrs(
     nsIURI* aURI, const nsACString& aIdExtension, bool* aHasAltData,
     uint32_t* aSizeInKB) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 

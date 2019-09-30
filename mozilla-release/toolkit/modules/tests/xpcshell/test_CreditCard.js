@@ -179,48 +179,14 @@ add_task(function test_longMaskedNumber() {
   testMask("5415425865751454", "************1454");
   testMask("344060747836806", "***********6806");
   testMask("6799990100000000019", "***************0019");
-<<<<<<< HEAD
-  Assert.throws(() => (new CreditCard({number: "1234"})).longMaskedNumber,
-||||||| merged common ancestors
-
-  Assert.throws(() => (new CreditCard({number: "1234"})).longMaskedNumber,
-=======
   Assert.throws(
     () => new CreditCard({ number: "1234" }).longMaskedNumber,
->>>>>>> upstream-releases
     /Invalid credit card number/,
-<<<<<<< HEAD
-    "Four or less numbers should throw when retrieving the longMaskedNumber");
-||||||| merged common ancestors
-    "Four or less numbers should throw when retrieving the maskedNumber");
-=======
     "Four or less numbers should throw when retrieving the longMaskedNumber"
   );
->>>>>>> upstream-releases
 });
 
 add_task(function test_isValid() {
-<<<<<<< HEAD
-  function testValid(number, expirationMonth, expirationYear, shouldPass, message) {
-    let isValid = false;
-    try {
-      let card = new CreditCard({
-        number,
-        expirationMonth,
-        expirationYear,
-      });
-      isValid = card.isValid();
-    } catch (ex) {
-      isValid = false;
-    }
-||||||| merged common ancestors
-  function testValid(number, expirationMonth, expirationYear, shouldPass, message) {
-    let card = new CreditCard({
-      number,
-      expirationMonth,
-      expirationYear,
-    });
-=======
   function testValid(
     number,
     expirationMonth,
@@ -239,7 +205,6 @@ add_task(function test_isValid() {
     } catch (ex) {
       isValid = false;
     }
->>>>>>> upstream-releases
     if (shouldPass) {
       ok(isValid, message);
     } else {
@@ -294,31 +259,6 @@ add_task(function test_isValid() {
 });
 
 add_task(function test_normalize() {
-<<<<<<< HEAD
-  Assert.equal((new CreditCard({number: "0000 0000 0000 0000"})).number, "0000000000000000",
-    "Spaces should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000   0000\t 0000\t0000"})).number, "0000000000000000",
-    "Spaces should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000-0000-0000-0000"})).number, "0000000000000000",
-    "Hyphens should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000-0000 0000-0000"})).number, "0000000000000000",
-    "Spaces and hyphens should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000000000000000"})).number, "0000000000000000",
-    "Normalized numbers should not get changed");
-||||||| merged common ancestors
-  Assert.equal((new CreditCard({number: "0000 0000 0000 0000"})).number, "0000000000000000",
-    "Spaces should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000   0000\t 0000\t0000"})).number, "0000000000000000",
-    "Spaces should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000-0000-0000-0000"})).number, "0000000000000000",
-    "Hyphens should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000-0000 0000-0000"})).number, "0000000000000000",
-    "Spaces and hyphens should be removed from card number after it is normalized");
-  Assert.equal((new CreditCard({number: "0000000000000000"})).number, "0000000000000000",
-    "Normalized numbers should not get changed");
-  Assert.equal((new CreditCard({number: "0000"})).number, null,
-    "Card numbers that are too short get set to null");
-=======
   Assert.equal(
     new CreditCard({ number: "0000 0000 0000 0000" }).number,
     "0000000000000000",
@@ -344,7 +284,6 @@ add_task(function test_normalize() {
     "0000000000000000",
     "Normalized numbers should not get changed"
   );
->>>>>>> upstream-releases
 
   let card = new CreditCard({ number: "0000000000000000" });
   card.expirationYear = "22";
@@ -449,40 +388,16 @@ add_task(async function test_label() {
       number: "3589993783099582",
       name: "Jimmy Babimmy",
       expectedMaskedLabel: "**** 9582, Jimmy Babimmy",
-<<<<<<< HEAD
-    }];
-||||||| merged common ancestors
-    }, {
-      name: "Ricky Bobby",
-      expectedLabel: "Ricky Bobby",
-      expectedMaskedLabel: "Ricky Bobby",
-  }];
-=======
     },
   ];
->>>>>>> upstream-releases
 
   for (let testCase of testCases) {
-<<<<<<< HEAD
-    let {number, name} = testCase;
-    Assert.equal(await CreditCard.getLabel({number, name}), testCase.expectedMaskedLabel,
-       "The expectedMaskedLabel should be shown when showNumbers is false");
-||||||| merged common ancestors
-    let {number, name} = testCase;
-    let card = new CreditCard({number, name});
-
-    Assert.equal(await card.getLabel({showNumbers: true}), testCase.expectedLabel,
-       "The expectedLabel should be shown when showNumbers is true");
-    Assert.equal(await card.getLabel({showNumbers: false}), testCase.expectedMaskedLabel,
-       "The expectedMaskedLabel should be shown when showNumbers is false");
-=======
     let { number, name } = testCase;
     Assert.equal(
       await CreditCard.getLabel({ number, name }),
       testCase.expectedMaskedLabel,
       "The expectedMaskedLabel should be shown when showNumbers is false"
     );
->>>>>>> upstream-releases
   }
 });
 

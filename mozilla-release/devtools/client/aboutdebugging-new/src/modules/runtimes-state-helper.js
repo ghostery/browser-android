@@ -16,37 +16,13 @@ function getCurrentClient(runtimesState) {
 }
 exports.getCurrentClient = getCurrentClient;
 
-<<<<<<< HEAD
-function getCurrentRuntimeInfo(runtimesState) {
-  const runtimeDetails = getCurrentRuntimeDetails(runtimesState);
-  return runtimeDetails ? runtimeDetails.info : null;
-||||||| merged common ancestors
-function getCurrentRuntimeInfo(runtimesState) {
-  const connection = getCurrentConnection(runtimesState);
-  return connection ? connection.info : null;
-=======
 function findRuntimeById(id, runtimesState) {
   return getAllRuntimes(runtimesState).find(r => r.id === id);
->>>>>>> upstream-releases
 }
 exports.findRuntimeById = findRuntimeById;
 
-<<<<<<< HEAD
-function getCurrentConnectionPromptSetting(runtimesState) {
-  const runtimeDetails = getCurrentRuntimeDetails(runtimesState);
-  return runtimeDetails ? runtimeDetails.connectionPromptEnabled : false;
-}
-exports.getCurrentConnectionPromptSetting = getCurrentConnectionPromptSetting;
-
-function findRuntimeById(id, runtimesState) {
-  const allRuntimes = [
-||||||| merged common ancestors
-function findRuntimeById(id, runtimesState) {
-  const allRuntimes = [
-=======
 function getAllRuntimes(runtimesState) {
   return [
->>>>>>> upstream-releases
     ...runtimesState.networkRuntimes,
     ...runtimesState.thisFirefoxRuntimes,
     ...runtimesState.usbRuntimes,

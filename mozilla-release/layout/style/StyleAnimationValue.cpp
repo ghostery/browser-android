@@ -10,13 +10,8 @@
 
 #include "mozilla/ArrayUtils.h"
 #include "mozilla/MathAlgorithms.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "mozilla/ServoBindings.h"
-=======
 #include "mozilla/PresShell.h"
 #include "mozilla/PresShellInlines.h"
->>>>>>> upstream-releases
 #include "mozilla/ServoStyleSet.h"
 #include "mozilla/Tuple.h"
 #include "mozilla/UniquePtr.h"
@@ -47,59 +42,6 @@ using nsStyleTransformMatrix::Decompose2DMatrix;
 using nsStyleTransformMatrix::Decompose3DMatrix;
 using nsStyleTransformMatrix::ShearType;
 
-<<<<<<< HEAD
-static already_AddRefed<nsCSSValue::Array> AppendFunction(
-    nsCSSKeyword aTransformFunction) {
-  uint32_t nargs;
-  switch (aTransformFunction) {
-    case eCSSKeyword_matrix3d:
-      nargs = 16;
-      break;
-    case eCSSKeyword_matrix:
-      nargs = 6;
-      break;
-    case eCSSKeyword_rotate3d:
-      nargs = 4;
-      break;
-    case eCSSKeyword_interpolatematrix:
-    case eCSSKeyword_accumulatematrix:
-    case eCSSKeyword_translate3d:
-    case eCSSKeyword_scale3d:
-      nargs = 3;
-      break;
-    case eCSSKeyword_translate:
-    case eCSSKeyword_skew:
-    case eCSSKeyword_scale:
-      nargs = 2;
-      break;
-||||||| merged common ancestors
-
-static already_AddRefed<nsCSSValue::Array>
-AppendFunction(nsCSSKeyword aTransformFunction)
-{
-  uint32_t nargs;
-  switch (aTransformFunction) {
-    case eCSSKeyword_matrix3d:
-      nargs = 16;
-      break;
-    case eCSSKeyword_matrix:
-      nargs = 6;
-      break;
-    case eCSSKeyword_rotate3d:
-      nargs = 4;
-      break;
-    case eCSSKeyword_interpolatematrix:
-    case eCSSKeyword_accumulatematrix:
-    case eCSSKeyword_translate3d:
-    case eCSSKeyword_scale3d:
-      nargs = 3;
-      break;
-    case eCSSKeyword_translate:
-    case eCSSKeyword_skew:
-    case eCSSKeyword_scale:
-      nargs = 2;
-      break;
-=======
 // TODO(emilio): Remove angle unit in a followup, should always be degrees.
 static inline StyleAngle GetCSSAngle(const layers::CSSAngle& aAngle) {
   if (aAngle.unit() != eCSSUnit_Degree) {
@@ -187,18 +129,12 @@ static StyleTransformOperation OperationFromLayers(
       float perspective = aFunction.get_Perspective().value();
       return StyleTransformOperation::Perspective(Length{perspective});
     }
->>>>>>> upstream-releases
     default:
       MOZ_ASSERT_UNREACHABLE("All functions should be implemented?");
       return StyleTransformOperation::TranslateX(LengthPercentage::Zero());
   }
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-
-=======
 static nsTArray<StyleTransformOperation> CreateTransformList(
     const nsTArray<layers::TransformFunction>& aFunctions) {
   nsTArray<StyleTransformOperation> result;
@@ -209,7 +145,6 @@ static nsTArray<StyleTransformOperation> CreateTransformList(
   return result;
 }
 
->>>>>>> upstream-releases
 // AnimationValue Implementation
 
 bool AnimationValue::operator==(const AnimationValue& aOther) const {
@@ -231,26 +166,12 @@ float AnimationValue::GetOpacity() const {
   return Servo_AnimationValue_GetOpacity(mServo);
 }
 
-<<<<<<< HEAD
-nscolor AnimationValue::GetColor(nscolor aForegroundColor) const {
-  MOZ_ASSERT(mServo);
-  return Servo_AnimationValue_GetColor(mServo, aForegroundColor);
-}
-
-already_AddRefed<const nsCSSValueSharedList> AnimationValue::GetTransformList()
-    const {
-||||||| merged common ancestors
-already_AddRefed<const nsCSSValueSharedList>
-AnimationValue::GetTransformList() const
-{
-=======
 nscolor AnimationValue::GetColor(nscolor aForegroundColor) const {
   MOZ_ASSERT(mServo);
   return Servo_AnimationValue_GetColor(mServo, aForegroundColor);
 }
 
 const StyleTranslate& AnimationValue::GetTranslateProperty() const {
->>>>>>> upstream-releases
   MOZ_ASSERT(mServo);
   return *Servo_AnimationValue_GetTranslate(mServo);
 }
@@ -260,28 +181,11 @@ const StyleRotate& AnimationValue::GetRotateProperty() const {
   return *Servo_AnimationValue_GetRotate(mServo);
 }
 
-<<<<<<< HEAD
-Size AnimationValue::GetScaleValue(const nsIFrame* aFrame) const {
-||||||| merged common ancestors
-Size
-AnimationValue::GetScaleValue(const nsIFrame* aFrame) const
-{
-=======
 const StyleScale& AnimationValue::GetScaleProperty() const {
->>>>>>> upstream-releases
   MOZ_ASSERT(mServo);
   return *Servo_AnimationValue_GetScale(mServo);
 }
 
-<<<<<<< HEAD
-void AnimationValue::SerializeSpecifiedValue(nsCSSPropertyID aProperty,
-                                             nsAString& aString) const {
-||||||| merged common ancestors
-void
-AnimationValue::SerializeSpecifiedValue(nsCSSPropertyID aProperty,
-                                        nsAString& aString) const
-{
-=======
 const StyleTransform& AnimationValue::GetTransformProperty() const {
   MOZ_ASSERT(mServo);
   return *Servo_AnimationValue_GetTransform(mServo);
@@ -331,7 +235,6 @@ Size AnimationValue::GetScaleValue(const nsIFrame* aFrame) const {
 
 void AnimationValue::SerializeSpecifiedValue(nsCSSPropertyID aProperty,
                                              nsAString& aString) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(mServo);
   Servo_AnimationValue_Serialize(mServo, aProperty, &aString);
 }
@@ -362,21 +265,10 @@ double AnimationValue::ComputeDistance(nsCSSPropertyID aProperty,
   return distance < 0.0 ? 0.0 : distance;
 }
 
-<<<<<<< HEAD
-/* static */ AnimationValue AnimationValue::FromString(
-    nsCSSPropertyID aProperty, const nsAString& aValue, Element* aElement) {
-||||||| merged common ancestors
-/* static */ AnimationValue
-AnimationValue::FromString(nsCSSPropertyID aProperty,
-                           const nsAString& aValue,
-                           Element* aElement)
-{
-=======
 /* static */
 AnimationValue AnimationValue::FromString(nsCSSPropertyID aProperty,
                                           const nsAString& aValue,
                                           Element* aElement) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aElement);
 
   AnimationValue result;
@@ -404,47 +296,11 @@ AnimationValue AnimationValue::FromString(nsCSSPropertyID aProperty,
     return result;
   }
 
-<<<<<<< HEAD
-  result.mServo = shell->StyleSet()->ComputeAnimationValue(
-      aElement, declarations, computedStyle);
-||||||| merged common ancestors
-  result.mServo = shell->StyleSet()->
-    ComputeAnimationValue(aElement, declarations, computedStyle);
-=======
   result.mServo = presShell->StyleSet()->ComputeAnimationValue(
       aElement, declarations, computedStyle);
->>>>>>> upstream-releases
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ AnimationValue AnimationValue::Opacity(float aOpacity) {
-  AnimationValue result;
-  result.mServo = Servo_AnimationValue_Opacity(aOpacity).Consume();
-  return result;
-}
-
-/* static */ AnimationValue AnimationValue::Transform(
-    nsCSSValueSharedList& aList) {
-  AnimationValue result;
-  result.mServo = Servo_AnimationValue_Transform(aList).Consume();
-  return result;
-||||||| merged common ancestors
-/* static */ AnimationValue
-AnimationValue::Opacity(float aOpacity)
-{
-  AnimationValue result;
-  result.mServo = Servo_AnimationValue_Opacity(aOpacity).Consume();
-  return result;
-}
-
-/* static */ AnimationValue
-AnimationValue::Transform(nsCSSValueSharedList& aList)
-{
-  AnimationValue result;
-  result.mServo = Servo_AnimationValue_Transform(aList).Consume();
-  return result;
-=======
 StyleRotate RotateFromLayers(const layers::Rotate& aRotate) {
   switch (aRotate.type()) {
     case layers::Rotate::Tnull_t:
@@ -464,35 +320,8 @@ StyleRotate RotateFromLayers(const layers::Rotate& aRotate) {
       MOZ_ASSERT_UNREACHABLE("Unknown rotate value?");
       return StyleRotate::None();
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsCSSValue::Array>
-AnimationValue::AppendTransformFunction(nsCSSKeyword aTransformFunction,
-                                        nsCSSValueList**& aListTail) {
-  RefPtr<nsCSSValue::Array> arr = AppendFunction(aTransformFunction);
-  nsCSSValueList* item = new nsCSSValueList;
-  item->mValue.SetArrayValue(arr, eCSSUnit_Function);
-
-  *aListTail = item;
-  aListTail = &item->mNext;
-
-  return arr.forget();
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsCSSValue::Array>
-AnimationValue::AppendTransformFunction(nsCSSKeyword aTransformFunction,
-                                        nsCSSValueList**& aListTail)
-{
-  RefPtr<nsCSSValue::Array> arr = AppendFunction(aTransformFunction);
-  nsCSSValueList *item = new nsCSSValueList;
-  item->mValue.SetArrayValue(arr, eCSSUnit_Function);
-
-  *aListTail = item;
-  aListTail = &item->mNext;
-
-  return arr.forget();
-=======
 /* static */
 already_AddRefed<RawServoAnimationValue> AnimationValue::FromAnimatable(
     nsCSSPropertyID aProperty, const layers::Animatable& aAnimatable) {
@@ -531,5 +360,4 @@ already_AddRefed<RawServoAnimationValue> AnimationValue::FromAnimatable(
       MOZ_ASSERT_UNREACHABLE("Unsupported type");
   }
   return nullptr;
->>>>>>> upstream-releases
 }

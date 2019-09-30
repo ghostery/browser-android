@@ -20,22 +20,8 @@
  */
 #define NS_UNCONSTRAINEDSIZE NS_MAXSIZE
 
-<<<<<<< HEAD
-// NOTE: There are assumptions all over that these have the same value,
-//       namely NS_UNCONSTRAINEDSIZE.
-#define NS_INTRINSICSIZE NS_UNCONSTRAINEDSIZE
-#define NS_AUTOHEIGHT NS_UNCONSTRAINEDSIZE
-#define NS_AUTOOFFSET NS_UNCONSTRAINEDSIZE
-||||||| merged common ancestors
-// NOTE: There are assumptions all over that these have the same value,
-//       namely NS_UNCONSTRAINEDSIZE.
-#define NS_INTRINSICSIZE    NS_UNCONSTRAINEDSIZE
-#define NS_AUTOHEIGHT       NS_UNCONSTRAINEDSIZE
-#define NS_AUTOOFFSET       NS_UNCONSTRAINEDSIZE
-=======
 // NS_AUTOOFFSET is assumed to have the same value as NS_UNCONSTRAINEDSIZE.
 #define NS_AUTOOFFSET NS_UNCONSTRAINEDSIZE
->>>>>>> upstream-releases
 
 // +1 is to avoid clamped huge margin values being processed as auto margins
 #define NS_AUTOMARGIN (NS_UNCONSTRAINEDSIZE + 1)

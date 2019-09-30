@@ -34,35 +34,14 @@ mozilla::ipc::IPCResult WebSocketEventListenerChild::RecvWebSocketCreated(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-mozilla::ipc::IPCResult WebSocketEventListenerChild::RecvWebSocketOpened(
-    const uint32_t& aWebSocketSerialID, const nsString& aEffectiveURI,
-    const nsCString& aProtocols, const nsCString& aExtensions) {
-||||||| merged common ancestors
-mozilla::ipc::IPCResult
-WebSocketEventListenerChild::RecvWebSocketOpened(const uint32_t& aWebSocketSerialID,
-                                                 const nsString& aEffectiveURI,
-                                                 const nsCString& aProtocols,
-                                                 const nsCString& aExtensions)
-{
-=======
 mozilla::ipc::IPCResult WebSocketEventListenerChild::RecvWebSocketOpened(
     const uint32_t& aWebSocketSerialID, const nsString& aEffectiveURI,
     const nsCString& aProtocols, const nsCString& aExtensions,
     const uint64_t& aHttpChannelId) {
->>>>>>> upstream-releases
   if (mService) {
     nsCOMPtr<nsIEventTarget> target = GetNeckoTarget();
-<<<<<<< HEAD
-    mService->WebSocketOpened(aWebSocketSerialID, mInnerWindowID, aEffectiveURI,
-                              aProtocols, aExtensions, target);
-||||||| merged common ancestors
-    mService->WebSocketOpened(aWebSocketSerialID, mInnerWindowID,
-                              aEffectiveURI, aProtocols, aExtensions, target);
-=======
     mService->WebSocketOpened(aWebSocketSerialID, mInnerWindowID, aEffectiveURI,
                               aProtocols, aExtensions, aHttpChannelId, target);
->>>>>>> upstream-releases
   }
 
   return IPC_OK();

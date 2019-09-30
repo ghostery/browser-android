@@ -184,13 +184,6 @@ void EventTarget::DispatchEvent(Event& aEvent, ErrorResult& aRv) {
   Unused << DispatchEvent(aEvent, CallerType::NonSystem, IgnoreErrors());
 }
 
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 Nullable<WindowProxyHolder> EventTarget::GetOwnerGlobalForBindings() {
   nsPIDOMWindowOuter* win = GetOwnerGlobalForBindingsInternal();
   if (!win) {
@@ -202,4 +195,3 @@ Nullable<WindowProxyHolder> EventTarget::GetOwnerGlobalForBindings() {
 
 }  // namespace dom
 }  // namespace mozilla
->>>>>>> upstream-releases

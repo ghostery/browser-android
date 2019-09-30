@@ -17,60 +17,6 @@ const ABOUT_NEWTAB = "about:newtab";
 const ABOUT_WELCOME = "about:welcome";
 const TEST_HTTP = "http://example.org/";
 
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privileged_process_pref.js
-/**
- * Takes a xul:browser and makes sure that the remoteTypes for the browser in
- * both the parent and the child processes are the same.
- *
- * @param {xul:browser} browser
- *        A xul:browser.
- * @param {string} expectedRemoteType
- *        The expected remoteType value for the browser in both the parent
- *        and child processes.
- * @param {optional string} message
- *        If provided, shows this string as the message when remoteType values
- *        do not match. If not present, it uses the default message defined
- *        in the function parameters.
- */
-function checkBrowserRemoteType(
-  browser,
-  expectedRemoteType,
-  message = `Ensures that tab runs in the ${expectedRemoteType} content process.`
-) {
-  // Check both parent and child to ensure that they have the correct remoteType.
-  is(browser.remoteType, expectedRemoteType, message);
-  is(browser.messageManager.remoteType, expectedRemoteType,
-    "Parent and child process should agree on the remote type.");
-}
-
-||||||| merged common ancestors
-/**
- * Takes a xul:browser and makes sure that the remoteTypes for the browser in
- * both the parent and the child processes are the same.
- *
- * @param {xul:browser} browser
- *        A xul:browser.
- * @param {string} expectedRemoteType
- *        The expected remoteType value for the browser in both the parent
- *        and child processes.
- * @param {optional string} message
- *        If provided, shows this string as the message when remoteType values
- *        do not match. If not present, it uses the default message defined
- *        in the function parameters.
- */
-async function checkBrowserRemoteType(
-  browser,
-  expectedRemoteType,
-  message = `Ensures that tab runs in the ${expectedRemoteType} content process.`
-) {
-  // Check both parent and child to ensure that they have the correct remoteType.
-  is(browser.remoteType, expectedRemoteType, message);
-  is(browser.messageManager.remoteType, expectedRemoteType,
-    "Parent and child process should agree on the remote type.");
-}
-
-=======
->>>>>>> upstream-releases:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privilegedabout_process_pref.js
 add_task(async function setup() {
   await SpecialPowers.pushPrefEnv({
     set: [
@@ -93,13 +39,7 @@ add_task(async function activity_stream_in_privileged_content_process() {
   Services.ppmm.releaseCachedProcesses();
 
   await BrowserTestUtils.withNewTab(ABOUT_NEWTAB, async function(browser1) {
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privileged_process_pref.js
-    checkBrowserRemoteType(browser1, E10SUtils.PRIVILEGED_REMOTE_TYPE);
-||||||| merged common ancestors
-    await checkBrowserRemoteType(browser1, E10SUtils.PRIVILEGED_REMOTE_TYPE);
-=======
     checkBrowserRemoteType(browser1, E10SUtils.PRIVILEGEDABOUT_REMOTE_TYPE);
->>>>>>> upstream-releases:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privilegedabout_process_pref.js
 
     // Note the processID for about:newtab for comparison later.
     let privilegedPid = browser1.frameLoader.remoteTab.osPid;
@@ -178,13 +118,7 @@ add_task(async function process_switching_through_navigation_features() {
   Services.ppmm.releaseCachedProcesses();
 
   await BrowserTestUtils.withNewTab(ABOUT_NEWTAB, async function(browser) {
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privileged_process_pref.js
-    checkBrowserRemoteType(browser, E10SUtils.PRIVILEGED_REMOTE_TYPE);
-||||||| merged common ancestors
-    await checkBrowserRemoteType(browser, E10SUtils.PRIVILEGED_REMOTE_TYPE);
-=======
     checkBrowserRemoteType(browser, E10SUtils.PRIVILEGEDABOUT_REMOTE_TYPE);
->>>>>>> upstream-releases:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privilegedabout_process_pref.js
 
     // Note the processID for about:newtab for comparison later.
     let privilegedPid = browser.frameLoader.remoteTab.osPid;
@@ -249,19 +183,11 @@ add_task(async function process_switching_through_navigation_features() {
     // We will need to ensure that the process flip has fully completed so that
     // the navigation history data will be available when we do browser.gotoIndex(0);
     await BrowserTestUtils.waitForEvent(newTab, "SSTabRestored");
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privileged_process_pref.js
-    checkBrowserRemoteType(browser, E10SUtils.WEB_REMOTE_TYPE,
-      "Check that tab runs in the web content process after using history goForward.");
-||||||| merged common ancestors
-    await checkBrowserRemoteType(browser, E10SUtils.WEB_REMOTE_TYPE,
-      "Check that tab runs in the web content process after using history goForward.");
-=======
     checkBrowserRemoteType(
       browser,
       E10SUtils.WEB_REMOTE_TYPE,
       "Check that tab runs in the web content process after using history goForward."
     );
->>>>>>> upstream-releases:mozilla-release/browser/base/content/test/tabs/browser_new_tab_in_privilegedabout_process_pref.js
 
     // Check that goto history index does not break the affinity.
     promiseLocation = BrowserTestUtils.waitForLocationChange(

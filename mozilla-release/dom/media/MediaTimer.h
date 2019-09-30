@@ -21,24 +21,11 @@ namespace mozilla {
 
 extern LazyLogModule gMediaTimerLog;
 
-<<<<<<< HEAD
-#define TIMER_LOG(x, ...)                                    \
-  MOZ_ASSERT(gMediaTimerLog);                                \
-  MOZ_LOG(gMediaTimerLog, LogLevel::Debug,                   \
-          ("[MediaTimer=%p relative_t=%" PRId64 "]" x, this, \
-           RelativeMicroseconds(TimeStamp::Now()), ##__VA_ARGS__))
-||||||| merged common ancestors
-#define TIMER_LOG(x, ...) \
-  MOZ_ASSERT(gMediaTimerLog); \
-  MOZ_LOG(gMediaTimerLog, LogLevel::Debug, ("[MediaTimer=%p relative_t=%" PRId64 "]" x, this, \
-                                        RelativeMicroseconds(TimeStamp::Now()), ##__VA_ARGS__))
-=======
 #  define TIMER_LOG(x, ...)                                    \
     MOZ_ASSERT(gMediaTimerLog);                                \
     MOZ_LOG(gMediaTimerLog, LogLevel::Debug,                   \
             ("[MediaTimer=%p relative_t=%" PRId64 "]" x, this, \
              RelativeMicroseconds(TimeStamp::Now()), ##__VA_ARGS__))
->>>>>>> upstream-releases
 
 // This promise type is only exclusive because so far there isn't a reason for
 // it not to be. Feel free to change that.

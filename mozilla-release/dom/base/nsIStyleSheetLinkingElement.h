@@ -23,61 +23,24 @@ class nsIURI;
   }
 
 class nsIStyleSheetLinkingElement : public nsISupports {
-<<<<<<< HEAD
- public:
-  enum class ForceUpdate {
-    Yes,
-||||||| merged common ancestors
-public:
-  enum class ForceUpdate
-  {
-    Yes,
-=======
  public:
   enum class ForceUpdate : uint8_t {
->>>>>>> upstream-releases
     No,
     Yes,
   };
 
-<<<<<<< HEAD
-  enum class Completed {
-    Yes,
-||||||| merged common ancestors
-  enum class Completed
-  {
-    Yes,
-=======
   enum class Completed : uint8_t {
->>>>>>> upstream-releases
     No,
     Yes,
   };
 
-<<<<<<< HEAD
-  enum class HasAlternateRel { Yes, No };
-||||||| merged common ancestors
-  enum class HasAlternateRel
-  {
-    Yes,
-    No
-  };
-=======
   enum class HasAlternateRel : uint8_t {
     No,
     Yes,
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  enum class IsAlternate {
-||||||| merged common ancestors
-  enum class IsAlternate
-  {
-=======
   enum class IsAlternate : uint8_t {
     No,
->>>>>>> upstream-releases
     Yes,
   };
 
@@ -86,29 +49,12 @@ public:
     Yes,
   };
 
-<<<<<<< HEAD
-  enum class IsInline { Yes, No };
-||||||| merged common ancestors
-  enum class IsInline
-  {
-    Yes,
-    No
-  };
-=======
   enum class IsExplicitlyEnabled : uint8_t {
     No,
     Yes,
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  enum class MediaMatched {
-||||||| merged common ancestors
-  enum class MediaMatched
-  {
-=======
   enum class MediaMatched : uint8_t {
->>>>>>> upstream-releases
     Yes,
     No,
   };
@@ -119,46 +65,9 @@ public:
     bool mIsAlternate;
     bool mMediaMatched;
 
-<<<<<<< HEAD
    public:
     Update() : mWillNotify(false), mIsAlternate(false), mMediaMatched(false) {}
 
-    Update(Completed aCompleted, IsAlternate aIsAlternate,
-           MediaMatched aMediaMatched)
-        : mWillNotify(aCompleted == Completed::No),
-          mIsAlternate(aIsAlternate == IsAlternate::Yes),
-          mMediaMatched(aMediaMatched == MediaMatched::Yes) {}
-||||||| merged common ancestors
-  public:
-    Update()
-      : mWillNotify(false)
-      , mIsAlternate(false)
-      , mMediaMatched(false)
-    { }
-
-    Update(Completed aCompleted, IsAlternate aIsAlternate, MediaMatched aMediaMatched)
-      : mWillNotify(aCompleted == Completed::No)
-      , mIsAlternate(aIsAlternate == IsAlternate::Yes)
-      , mMediaMatched(aMediaMatched == MediaMatched::Yes)
-    { }
-
-    bool WillNotify() const
-    {
-      return mWillNotify;
-    }
-=======
-   public:
-    Update() : mWillNotify(false), mIsAlternate(false), mMediaMatched(false) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    bool WillNotify() const { return mWillNotify; }
-
-    bool ShouldBlock() const {
-||||||| merged common ancestors
-    bool ShouldBlock() const
-    {
-=======
     Update(Completed aCompleted, IsAlternate aIsAlternate,
            MediaMatched aMediaMatched)
         : mWillNotify(aCompleted == Completed::No),
@@ -168,7 +77,6 @@ public:
     bool WillNotify() const { return mWillNotify; }
 
     bool ShouldBlock() const {
->>>>>>> upstream-releases
       if (!mWillNotify) {
         return false;
       }
@@ -195,34 +103,12 @@ public:
     bool mIsInline;
     IsExplicitlyEnabled mIsExplicitlyEnabled;
 
-<<<<<<< HEAD
-    SheetInfo(const nsIDocument&, nsIContent*, already_AddRefed<nsIURI> aURI,
-||||||| merged common ancestors
-    SheetInfo(const nsIDocument&,
-              nsIContent*,
-              already_AddRefed<nsIURI> aURI,
-=======
     SheetInfo(const mozilla::dom::Document&, nsIContent*,
               already_AddRefed<nsIURI> aURI,
->>>>>>> upstream-releases
               already_AddRefed<nsIPrincipal> aTriggeringPrincipal,
-<<<<<<< HEAD
-              mozilla::net::ReferrerPolicy aReferrerPolicy,
-              mozilla::CORSMode aCORSMode, const nsAString& aTitle,
-              const nsAString& aMedia, HasAlternateRel aHasAlternateRel,
-              IsInline aIsInline);
-||||||| merged common ancestors
-              mozilla::net::ReferrerPolicy aReferrerPolicy,
-              mozilla::CORSMode aCORSMode,
-              const nsAString& aTitle,
-              const nsAString& aMedia,
-              HasAlternateRel aHasAlternateRel,
-              IsInline aIsInline);
-=======
               mozilla::net::ReferrerPolicy aReferrerPolicy, mozilla::CORSMode,
               const nsAString& aTitle, const nsAString& aMedia, HasAlternateRel,
               IsInline, IsExplicitlyEnabled);
->>>>>>> upstream-releases
 
     ~SheetInfo();
   };

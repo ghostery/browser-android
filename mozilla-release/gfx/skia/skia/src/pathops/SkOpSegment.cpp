@@ -933,16 +933,8 @@ bool SkOpSegment::markAndChaseWinding(SkOpSpanBase* start, SkOpSpanBase* end,
                     return true;  // ... but let it succeed anyway
                 }
             } else {
-<<<<<<< HEAD
-                FAIL_IF(spanStart->windSum() != oppWinding);
-                SkASSERT(spanStart->oppSum() == winding);
-||||||| merged common ancestors
-                SkASSERT(spanStart->windSum() == oppWinding);
-                SkASSERT(spanStart->oppSum() == winding);
-=======
                 FAIL_IF(spanStart->windSum() != oppWinding);
                 FAIL_IF(spanStart->oppSum() != winding);
->>>>>>> upstream-releases
             }
             SkASSERT(!last);
             break;
@@ -997,22 +989,6 @@ bool SkOpSegment::markAngle(int maxWinding, int sumWinding, int oppMaxWinding,
         return false;
     }
 #if DEBUG_WINDING
-<<<<<<< HEAD
-    SkOpSpanBase* last = *result;
-    if (last) {
-        SkDebugf("%s last segment=%d span=%d", __FUNCTION__,
-                last->segment()->debugID(), last->debugID());
-        if (!last->final()) {
-            SkDebugf(" windSum=");
-            SkPathOpsDebug::WindingPrintf(last->upCast()->windSum());
-||||||| merged common ancestors
-    if (last) {
-        SkDebugf("%s last segment=%d span=%d", __FUNCTION__,
-                last->segment()->debugID(), last->debugID());
-        if (!last->final()) {
-            SkDebugf(" windSum=");
-            SkPathOpsDebug::WindingPrintf(last->upCast()->windSum());
-=======
     if (result) {
         SkOpSpanBase* last = *result;
         if (last) {
@@ -1023,7 +999,6 @@ bool SkOpSegment::markAngle(int maxWinding, int sumWinding, int oppMaxWinding,
                 SkPathOpsDebug::WindingPrintf(last->upCast()->windSum());
             }
             SkDebugf(" \n");
->>>>>>> upstream-releases
         }
     }
 #endif

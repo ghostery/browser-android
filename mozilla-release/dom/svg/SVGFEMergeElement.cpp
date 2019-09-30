@@ -20,18 +20,8 @@ JSObject* SVGFEMergeElement::WrapNode(JSContext* aCx,
   return SVGFEMergeElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGElement::StringInfo SVGFEMergeElement::sStringInfo[1] = {
-    {nsGkAtoms::result, kNameSpaceID_None, true}};
-||||||| merged common ancestors
-nsSVGElement::StringInfo SVGFEMergeElement::sStringInfo[1] =
-{
-  { nsGkAtoms::result, kNameSpaceID_None, true }
-};
-=======
 SVGElement::StringInfo SVGFEMergeElement::sStringInfo[1] = {
     {nsGkAtoms::result, kNameSpaceID_None, true}};
->>>>>>> upstream-releases
 
 NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGFEMergeElement)
 
@@ -42,20 +32,8 @@ FilterPrimitiveDescription SVGFEMergeElement::GetPrimitiveDescription(
   return FilterPrimitiveDescription(AsVariant(MergeAttributes()));
 }
 
-<<<<<<< HEAD
-void SVGFEMergeElement::GetSourceImageNames(
-    nsTArray<nsSVGStringInfo>& aSources) {
-  for (nsIContent* child = nsINode::GetFirstChild(); child;
-||||||| merged common ancestors
-void
-SVGFEMergeElement::GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources)
-{
-  for (nsIContent* child = nsINode::GetFirstChild();
-       child;
-=======
 void SVGFEMergeElement::GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) {
   for (nsIContent* child = nsINode::GetFirstChild(); child;
->>>>>>> upstream-releases
        child = child->GetNextSibling()) {
     if (child->IsSVGElement(nsGkAtoms::feMergeNode)) {
       SVGFEMergeNodeElement* node = static_cast<SVGFEMergeNodeElement*>(child);
@@ -67,15 +45,7 @@ void SVGFEMergeElement::GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) {
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-nsSVGElement::StringAttributesInfo SVGFEMergeElement::GetStringInfo() {
-||||||| merged common ancestors
-nsSVGElement::StringAttributesInfo
-SVGFEMergeElement::GetStringInfo()
-{
-=======
 SVGElement::StringAttributesInfo SVGFEMergeElement::GetStringInfo() {
->>>>>>> upstream-releases
   return StringAttributesInfo(mStringAttributes, sStringInfo,
                               ArrayLength(sStringInfo));
 }

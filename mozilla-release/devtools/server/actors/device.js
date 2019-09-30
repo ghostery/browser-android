@@ -4,26 +4,9 @@
 
 "use strict";
 
-<<<<<<< HEAD
-const {Ci, Cc} = require("chrome");
-||||||| merged common ancestors
-=======
 const { Ci, Cc } = require("chrome");
->>>>>>> upstream-releases
 const Services = require("Services");
 const protocol = require("devtools/shared/protocol");
-<<<<<<< HEAD
-const {LongStringActor} = require("devtools/server/actors/string");
-const {DebuggerServer} = require("devtools/server/main");
-const {getSystemInfo} = require("devtools/shared/system");
-const {deviceSpec} = require("devtools/shared/specs/device");
-const {AppConstants} = require("resource://gre/modules/AppConstants.jsm");
-||||||| merged common ancestors
-const {LongStringActor} = require("devtools/server/actors/string");
-const {DebuggerServer} = require("devtools/server/main");
-const {getSystemInfo} = require("devtools/shared/system");
-const {deviceSpec} = require("devtools/shared/specs/device");
-=======
 const { LongStringActor } = require("devtools/server/actors/string");
 const {
   addMultiE10sListener,
@@ -35,31 +18,8 @@ const { DebuggerServer } = require("devtools/server/main");
 const { getSystemInfo } = require("devtools/shared/system");
 const { deviceSpec } = require("devtools/shared/specs/device");
 const { AppConstants } = require("resource://gre/modules/AppConstants.jsm");
->>>>>>> upstream-releases
 
 exports.DeviceActor = protocol.ActorClassWithSpec(deviceSpec, {
-<<<<<<< HEAD
-  initialize: function(conn) {
-    protocol.Actor.prototype.initialize.call(this, conn);
-    // pageshow and pagehide event release wake lock, so we have to acquire
-    // wake lock again by pageshow event
-    this._onPageShow = this._onPageShow.bind(this);
-    if (this._window) {
-      this._window.addEventListener("pageshow", this._onPageShow, true);
-    }
-    this._acquireWakeLock();
-  },
-
-  destroy: function() {
-    protocol.Actor.prototype.destroy.call(this);
-    this._releaseWakeLock();
-    if (this._window) {
-      this._window.removeEventListener("pageshow", this._onPageShow, true);
-    }
-  },
-||||||| merged common ancestors
-  _desc: null,
-=======
   initialize: function(conn) {
     protocol.Actor.prototype.initialize.call(this, conn);
     // pageshow and pagehide event release wake lock, so we have to acquire
@@ -86,7 +46,6 @@ exports.DeviceActor = protocol.ActorClassWithSpec(deviceSpec, {
   _onMultiE10sUpdated: function() {
     this.emit("multi-e10s-updated", isMultiE10s());
   },
->>>>>>> upstream-releases
 
   getDescription: function() {
     return Object.assign({}, getSystemInfo(), { isMultiE10s: isMultiE10s() });
@@ -113,39 +72,6 @@ exports.DeviceActor = protocol.ActorClassWithSpec(deviceSpec, {
     const dataURL = canvas.toDataURL("image/png");
     return new LongStringActor(this.conn, dataURL);
   },
-<<<<<<< HEAD
-
-  _acquireWakeLock: function() {
-    if (AppConstants.platform !== "android") {
-      return;
-    }
-
-    const pm = Cc["@mozilla.org/power/powermanagerservice;1"]
-               .getService(Ci.nsIPowerManagerService);
-    this._wakelock = pm.newWakeLock("screen", this._window);
-  },
-
-  _releaseWakeLock: function() {
-    if (this._wakelock) {
-      try {
-        this._wakelock.unlock();
-      } catch (e) {
-        // Ignore error since wake lock is already unlocked
-      }
-      this._wakelock = null;
-    }
-  },
-
-  _onPageShow: function() {
-    this._releaseWakeLock();
-    this._acquireWakeLock();
-  },
-
-  get _window() {
-    return Services.wm.getMostRecentWindow(DebuggerServer.chromeWindowType);
-  },
-||||||| merged common ancestors
-=======
 
   _acquireWakeLock: function() {
     if (AppConstants.platform !== "android") {
@@ -177,5 +103,4 @@ exports.DeviceActor = protocol.ActorClassWithSpec(deviceSpec, {
   get _window() {
     return Services.wm.getMostRecentWindow(DebuggerServer.chromeWindowType);
   },
->>>>>>> upstream-releases
 });

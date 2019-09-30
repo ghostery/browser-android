@@ -54,25 +54,11 @@
 #include "mozilla/Sprintf.h"
 
 #ifdef XP_WIN
-<<<<<<< HEAD
-// We need to undef the MS macro for nsIDocument::CreateEvent
-#ifdef CreateEvent
-#undef CreateEvent
-#endif
-#endif  // XP_WIN
-||||||| merged common ancestors
-// We need to undef the MS macro for nsIDocument::CreateEvent
-#ifdef CreateEvent
-#undef CreateEvent
-#endif
-#endif // XP_WIN
-=======
 // We need to undef the MS macro for Document::CreateEvent
 #  ifdef CreateEvent
 #    undef CreateEvent
 #  endif
 #endif  // XP_WIN
->>>>>>> upstream-releases
 
 #include "mozilla/dom/Document.h"
 #include "nsGlobalWindow.h"
@@ -122,25 +108,11 @@
 
 #ifdef XP_WIN
 // We need to undef the MS macro again in case the windows include file
-<<<<<<< HEAD
-// got imported after we included nsIDocument.h
-#ifdef CreateEvent
-#undef CreateEvent
-#endif
-#endif  // XP_WIN
-||||||| merged common ancestors
-// got imported after we included nsIDocument.h
-#ifdef CreateEvent
-#undef CreateEvent
-#endif
-#endif // XP_WIN
-=======
 // got imported after we included mozilla/dom/Document.h
 #  ifdef CreateEvent
 #    undef CreateEvent
 #  endif
 #endif  // XP_WIN
->>>>>>> upstream-releases
 
 #include "MediaSegment.h"
 
@@ -245,49 +217,13 @@ namespace mozilla {
 class DataChannel;
 }
 
-<<<<<<< HEAD
-// XXX Workaround for bug 998092 to maintain the existing broken semantics
-template <>
-struct nsISupportsWeakReference::COMTypeInfo<nsSupportsWeakReference, void> {
-  static const nsIID kIID;
-};
-const nsIID
-    nsISupportsWeakReference::COMTypeInfo<nsSupportsWeakReference, void>::kIID =
-        NS_ISUPPORTSWEAKREFERENCE_IID;
-
-||||||| merged common ancestors
-// XXX Workaround for bug 998092 to maintain the existing broken semantics
-template<>
-struct nsISupportsWeakReference::COMTypeInfo<nsSupportsWeakReference, void> {
-  static const nsIID kIID;
-};
-const nsIID nsISupportsWeakReference::COMTypeInfo<nsSupportsWeakReference, void>::kIID = NS_ISUPPORTSWEAKREFERENCE_IID;
-
-=======
->>>>>>> upstream-releases
 namespace mozilla {
 
-<<<<<<< HEAD
-RTCStatsQuery::RTCStatsQuery(bool internal)
-    : internalStats(internal), grabAllLevels(false), now(0.0) {}
-||||||| merged common ancestors
-RTCStatsQuery::RTCStatsQuery(bool internal) :
-  failed(false),
-  internalStats(internal),
-  grabAllLevels(false),
-  now(0.0) {
-}
-
-RTCStatsQuery::~RTCStatsQuery() {
-  MOZ_ASSERT(NS_IsMainThread());
-}
-=======
 RTCStatsQuery::RTCStatsQuery(bool aInternal, bool aRecordTelemetry)
     : internalStats(aInternal),
       recordTelemetry(aRecordTelemetry),
       grabAllLevels(false),
       now(0.0) {}
->>>>>>> upstream-releases
 
 RTCStatsQuery::~RTCStatsQuery() {}
 
@@ -346,13 +282,7 @@ bool IsPrivateBrowsing(nsPIDOMWindowInner* aWindow) {
     return false;
   }
 
-<<<<<<< HEAD
-  nsIDocument* doc = aWindow->GetExtantDoc();
-||||||| merged common ancestors
-  nsIDocument *doc = aWindow->GetExtantDoc();
-=======
   Document* doc = aWindow->GetExtantDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return false;
   }
@@ -362,62 +292,6 @@ bool IsPrivateBrowsing(nsPIDOMWindowInner* aWindow) {
 }
 
 PeerConnectionImpl::PeerConnectionImpl(const GlobalObject* aGlobal)
-<<<<<<< HEAD
-    : mTimeCard(MOZ_LOG_TEST(logModuleInfo, LogLevel::Error) ? create_timecard()
-                                                             : nullptr),
-      mSignalingState(PCImplSignalingState::SignalingStable),
-      mIceConnectionState(PCImplIceConnectionState::New),
-      mIceGatheringState(PCImplIceGatheringState::New),
-      mWindow(nullptr),
-      mCertificate(nullptr),
-      mSTSThread(nullptr),
-      mForceIceTcp(false),
-      mMedia(nullptr),
-      mUuidGen(MakeUnique<PCUuidGenerator>()),
-      mIceRestartCount(0),
-      mIceRollbackCount(0),
-      mHaveConfiguredCodecs(false),
-      mAddCandidateErrorCount(0),
-      mTrickle(true)  // TODO(ekr@rtfm.com): Use pref
-      ,
-      mPrivateWindow(false),
-      mActiveOnWindow(false),
-      mPacketDumpEnabled(false),
-      mPacketDumpFlagsMutex("Packet dump flags mutex"),
-      listenPort(0),
-      connectPort(0),
-      connectStr(nullptr) {
-||||||| merged common ancestors
-: mTimeCard(MOZ_LOG_TEST(logModuleInfo,LogLevel::Error) ?
-            create_timecard() : nullptr)
-  , mSignalingState(PCImplSignalingState::SignalingStable)
-  , mIceConnectionState(PCImplIceConnectionState::New)
-  , mIceGatheringState(PCImplIceGatheringState::New)
-  , mDtlsConnected(false)
-  , mWindow(nullptr)
-  , mCertificate(nullptr)
-  , mPrivacyRequested(false)
-  , mSTSThread(nullptr)
-  , mAllowIceLoopback(false)
-  , mAllowIceLinkLocal(false)
-  , mForceIceTcp(false)
-  , mMedia(nullptr)
-  , mUuidGen(MakeUnique<PCUuidGenerator>())
-  , mIceRestartCount(0)
-  , mIceRollbackCount(0)
-  , mHaveConfiguredCodecs(false)
-  , mHaveDataStream(false)
-  , mAddCandidateErrorCount(0)
-  , mTrickle(true) // TODO(ekr@rtfm.com): Use pref
-  , mPrivateWindow(false)
-  , mActiveOnWindow(false)
-  , mPacketDumpEnabled(false)
-  , mPacketDumpFlagsMutex("Packet dump flags mutex")
-  , listenPort(0)
-  , connectPort(0)
-  , connectStr(nullptr)
-{
-=======
     : mTimeCard(MOZ_LOG_TEST(logModuleInfo, LogLevel::Error) ? create_timecard()
                                                              : nullptr),
       mSignalingState(RTCSignalingState::Stable),
@@ -443,18 +317,11 @@ PeerConnectionImpl::PeerConnectionImpl(const GlobalObject* aGlobal)
       listenPort(0),
       connectPort(0),
       connectStr(nullptr) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   if (aGlobal) {
     mWindow = do_QueryInterface(aGlobal->GetAsSupports());
     if (IsPrivateBrowsing(mWindow)) {
       mPrivateWindow = true;
-<<<<<<< HEAD
-      MediaTransportHandler::EnterPrivateMode();
-||||||| merged common ancestors
-      log->EnterPrivateMode();
-=======
->>>>>>> upstream-releases
     }
     mWindow->AddPeerConnection();
     mActiveOnWindow = true;
@@ -485,20 +352,8 @@ PeerConnectionImpl::~PeerConnectionImpl() {
     mActiveOnWindow = false;
   }
 
-<<<<<<< HEAD
-  if (mPrivateWindow) {
-    MediaTransportHandler::ExitPrivateMode();
-||||||| merged common ancestors
-  if (mPrivateWindow) {
-    auto * log = RLogConnector::GetInstance();
-    if (log) {
-      log->ExitPrivateMode();
-    }
-    mPrivateWindow = false;
-=======
   if (mPrivateWindow && mTransportHandler) {
     mTransportHandler->ExitPrivateMode();
->>>>>>> upstream-releases
   }
   if (PeerConnectionCtx::isActive()) {
     PeerConnectionCtx::GetInstance()->mPeerConnections.erase(mHandle);
@@ -540,13 +395,6 @@ nsresult PeerConnectionImpl::Initialize(PeerConnectionObserver& aObserver,
   mSTSThread = do_GetService(NS_SOCKETTRANSPORTSERVICE_CONTRACTID, &res);
   MOZ_ASSERT(mSTSThread);
 
-<<<<<<< HEAD
-  // Initialize NSS if we are in content process. For chrome process, NSS should
-  // already been initialized.
-||||||| merged common ancestors
-  // Initialize NSS if we are in content process. For chrome process, NSS should already
-  // been initialized.
-=======
   // We do callback handling on STS instead of main to avoid media jank.
   // Someday, we may have a dedicated thread for this.
   mTransportHandler = MediaTransportHandler::Create(mSTSThread);
@@ -556,7 +404,6 @@ nsresult PeerConnectionImpl::Initialize(PeerConnectionObserver& aObserver,
 
   // Initialize NSS if we are in content process. For chrome process, NSS should
   // already been initialized.
->>>>>>> upstream-releases
   if (XRE_IsParentProcess()) {
     // This code interferes with the C++ unit test startup code.
     nsCOMPtr<nsISupports> nssDummy = do_GetService("@mozilla.org/psm;1", &res);
@@ -611,42 +458,10 @@ nsresult PeerConnectionImpl::Initialize(PeerConnectionObserver& aObserver,
   res = PeerConnectionCtx::InitializeGlobal(mThread, mSTSThread);
   NS_ENSURE_SUCCESS(res, res);
 
-<<<<<<< HEAD
-  mMedia = new PeerConnectionMedia(this);
-
-  // Connect ICE slots.
-  mMedia->SignalIceGatheringStateChange.connect(
-      this, &PeerConnectionImpl::IceGatheringStateChange);
-  mMedia->SignalUpdateDefaultCandidate.connect(
-      this, &PeerConnectionImpl::UpdateDefaultCandidate);
-  mMedia->SignalIceConnectionStateChange.connect(
-      this, &PeerConnectionImpl::IceConnectionStateChange);
-
-  mMedia->SignalCandidate.connect(this, &PeerConnectionImpl::CandidateReady);
-||||||| merged common ancestors
-  mMedia = new PeerConnectionMedia(this);
-
-  // Connect ICE slots.
-  mMedia->SignalIceGatheringStateChange.connect(
-      this,
-      &PeerConnectionImpl::IceGatheringStateChange);
-  mMedia->SignalUpdateDefaultCandidate.connect(
-      this,
-      &PeerConnectionImpl::UpdateDefaultCandidate);
-  mMedia->SignalEndOfLocalCandidates.connect(
-      this,
-      &PeerConnectionImpl::EndOfLocalCandidates);
-  mMedia->SignalIceConnectionStateChange.connect(
-      this,
-      &PeerConnectionImpl::IceConnectionStateChange);
-
-  mMedia->SignalCandidate.connect(this, &PeerConnectionImpl::CandidateReady);
-=======
   nsTArray<dom::RTCIceServer> iceServers;
   if (aConfiguration.mIceServers.WasPassed()) {
     iceServers = aConfiguration.mIceServers.Value();
   }
->>>>>>> upstream-releases
 
   res = mTransportHandler->CreateIceCtx("PC:" + GetName(), iceServers,
                                         aConfiguration.mIceTransportPolicy);
@@ -655,20 +470,8 @@ nsresult PeerConnectionImpl::Initialize(PeerConnectionObserver& aObserver,
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  PeerConnectionCtx::GetInstance()->mPeerConnections[mHandle] = this;
-
   mJsepSession =
       MakeUnique<JsepSessionImpl>(mName, MakeUnique<PCUuidGenerator>());
-||||||| merged common ancestors
-  PeerConnectionCtx::GetInstance()->mPeerConnections[mHandle] = this;
-
-  mJsepSession = MakeUnique<JsepSessionImpl>(mName,
-                                             MakeUnique<PCUuidGenerator>());
-=======
-  mJsepSession =
-      MakeUnique<JsepSessionImpl>(mName, MakeUnique<PCUuidGenerator>());
->>>>>>> upstream-releases
 
   res = mJsepSession->Init();
   if (NS_FAILED(res)) {
@@ -1025,18 +828,8 @@ nsresult PeerConnectionImpl::ConfigureJsepSessionCodecs() {
 // tests to work (it doesn't have a window available) we ifdef the following
 // two implementations.
 //
-<<<<<<< HEAD
-// Note: 'media.peerconnection.sctp.force_ppid_fragmentation' and
-//       'media.peerconnection.sctp.force_maximum_message_size' change behaviour
-//       triggered by these parameters.
-||||||| merged common ancestors
-// Note: 'media.peerconnection.sctp.force_ppid_fragmentation' and
-//       'media.peerconnection.sctp.force_maximum_message_size' change behaviour triggered by
-//       these parameters.
-=======
 // Note: 'media.peerconnection.sctp.force_maximum_message_size' changes
 // behaviour triggered by these parameters.
->>>>>>> upstream-releases
 NS_IMETHODIMP
 PeerConnectionImpl::EnsureDataConnection(uint16_t aLocalPort,
                                          uint16_t aNumstreams,
@@ -1050,24 +843,6 @@ PeerConnectionImpl::EnsureDataConnection(uint16_t aLocalPort,
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIEventTarget> target =
-      mWindow ? mWindow->EventTargetFor(TaskCategory::Other) : nullptr;
-  mDataConnection =
-      new DataChannelConnection(this, target, mMedia->mTransportHandler);
-  if (!mDataConnection->Init(aLocalPort, aNumstreams, aMMSSet,
-                             aMaxMessageSize)) {
-    CSFLogError(LOGTAG, "%s DataConnection Init Failed", __FUNCTION__);
-    return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  nsCOMPtr<nsIEventTarget> target = mWindow
-      ? mWindow->EventTargetFor(TaskCategory::Other)
-      : nullptr;
-  mDataConnection = new DataChannelConnection(this, target);
-  if (!mDataConnection->Init(aLocalPort, aNumstreams, aMMSSet, aMaxMessageSize)) {
-    CSFLogError(LOGTAG,"%s DataConnection Init Failed",__FUNCTION__);
-    return NS_ERROR_FAILURE;
-=======
   nsCOMPtr<nsIEventTarget> target =
       mWindow ? mWindow->EventTargetFor(TaskCategory::Other) : nullptr;
   Maybe<uint64_t> mms = aMMSSet ? Some(aMaxMessageSize) : Nothing();
@@ -1077,20 +852,9 @@ PeerConnectionImpl::EnsureDataConnection(uint16_t aLocalPort,
     CSFLogDebug(LOGTAG, "%s DataChannelConnection %p attached to %s",
                 __FUNCTION__, (void*)mDataConnection.get(), mHandle.c_str());
     return NS_OK;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  CSFLogDebug(LOGTAG, "%s DataChannelConnection %p attached to %s",
-              __FUNCTION__, (void*)mDataConnection.get(), mHandle.c_str());
-  return NS_OK;
-||||||| merged common ancestors
-  CSFLogDebug(LOGTAG,"%s DataChannelConnection %p attached to %s",
-              __FUNCTION__, (void*) mDataConnection.get(), mHandle.c_str());
-  return NS_OK;
-=======
   CSFLogError(LOGTAG, "%s DataConnection Create Failed", __FUNCTION__);
   return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 }
 
 nsresult PeerConnectionImpl::GetDatachannelParameters(
@@ -1241,18 +1005,8 @@ already_AddRefed<TransceiverImpl> PeerConnectionImpl::CreateTransceiverImpl(
   return transceiverImpl.forget();
 }
 
-<<<<<<< HEAD
-bool PeerConnectionImpl::CheckNegotiationNeeded(ErrorResult& rv) {
-  MOZ_ASSERT(mSignalingState == PCImplSignalingState::SignalingStable);
-||||||| merged common ancestors
-bool
-PeerConnectionImpl::CheckNegotiationNeeded(ErrorResult &rv)
-{
-  MOZ_ASSERT(mSignalingState == PCImplSignalingState::SignalingStable);
-=======
 bool PeerConnectionImpl::CheckNegotiationNeeded(ErrorResult& rv) {
   MOZ_ASSERT(mSignalingState == RTCSignalingState::Stable);
->>>>>>> upstream-releases
   return mJsepSession->CheckNegotiationNeeded();
 }
 
@@ -1338,19 +1092,6 @@ PeerConnectionImpl::CreateDataChannel(
 
   CSFLogDebug(LOGTAG, "%s: making DOMDataChannel", __FUNCTION__);
 
-<<<<<<< HEAD
-  RefPtr<JsepTransceiver> dcTransceiver;
-  for (auto& transceiver : mJsepSession->GetTransceivers()) {
-    if (transceiver->GetMediaType() == SdpMediaSection::kApplication) {
-      dcTransceiver = transceiver;
-      break;
-    }
-||||||| merged common ancestors
-  if (!mHaveDataStream) {
-    mJsepSession->AddTransceiver(
-        new JsepTransceiver(SdpMediaSection::MediaType::kApplication));
-    mHaveDataStream = true;
-=======
   RefPtr<JsepTransceiver> dcTransceiver;
   for (auto& transceiver : mJsepSession->GetTransceivers()) {
     if (transceiver->GetMediaType() == SdpMediaSection::kApplication) {
@@ -1363,24 +1104,10 @@ PeerConnectionImpl::CreateDataChannel(
     dcTransceiver =
         new JsepTransceiver(SdpMediaSection::MediaType::kApplication);
     mJsepSession->AddTransceiver(dcTransceiver);
->>>>>>> upstream-releases
-  }
-<<<<<<< HEAD
-
-  if (!dcTransceiver) {
-    dcTransceiver =
-        new JsepTransceiver(SdpMediaSection::MediaType::kApplication);
-    mJsepSession->AddTransceiver(dcTransceiver);
   }
 
   dcTransceiver->RestartDatachannelTransceiver();
 
-||||||| merged common ancestors
-=======
-
-  dcTransceiver->RestartDatachannelTransceiver();
-
->>>>>>> upstream-releases
   RefPtr<nsDOMDataChannel> retval;
   rv = NS_NewDOMDataChannel(dataChannel.forget(), mWindow,
                             getter_AddRefs(retval));
@@ -1391,90 +1118,8 @@ PeerConnectionImpl::CreateDataChannel(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// do_QueryObjectReferent() - Helps get PeerConnectionObserver from nsWeakPtr.
-//
-// nsWeakPtr deals in XPCOM interfaces, while webidl bindings are concrete objs.
-// TODO: Turn this into a central (template) function somewhere (Bug 939178)
-//
-// Without it, each weak-ref call in this file would look like this:
-//
-//  nsCOMPtr<nsISupportsWeakReference> tmp = do_QueryReferent(mPCObserver);
-//  if (!tmp) {
-//    return;
-//  }
-//  RefPtr<nsSupportsWeakReference> tmp2 = do_QueryObject(tmp);
-//  RefPtr<PeerConnectionObserver> pco =
-//    static_cast<PeerConnectionObserver*>(&*tmp2);
-
-static already_AddRefed<PeerConnectionObserver> do_QueryObjectReferent(
-    nsIWeakReference* aRawPtr) {
-  nsCOMPtr<nsISupportsWeakReference> tmp = do_QueryReferent(aRawPtr);
-  if (!tmp) {
-    return nullptr;
-  }
-  RefPtr<nsSupportsWeakReference> tmp2 = do_QueryObject(tmp);
-  RefPtr<PeerConnectionObserver> tmp3 =
-      static_cast<PeerConnectionObserver*>(&*tmp2);
-  return tmp3.forget();
-}
-
-// Not a member function so that we don't need to keep the PC live.
-static void NotifyDataChannel_m(
-    const RefPtr<nsDOMDataChannel>& aChannel,
-    const RefPtr<PeerConnectionObserver>& aObserver) {
-  MOZ_ASSERT(NS_IsMainThread());
-  JSErrorResult rv;
-  aObserver->NotifyDataChannel(*aChannel, rv);
-  aChannel->AppReady();
-}
-
 void PeerConnectionImpl::NotifyDataChannel(
     already_AddRefed<DataChannel> aChannel) {
-||||||| merged common ancestors
-// do_QueryObjectReferent() - Helps get PeerConnectionObserver from nsWeakPtr.
-//
-// nsWeakPtr deals in XPCOM interfaces, while webidl bindings are concrete objs.
-// TODO: Turn this into a central (template) function somewhere (Bug 939178)
-//
-// Without it, each weak-ref call in this file would look like this:
-//
-//  nsCOMPtr<nsISupportsWeakReference> tmp = do_QueryReferent(mPCObserver);
-//  if (!tmp) {
-//    return;
-//  }
-//  RefPtr<nsSupportsWeakReference> tmp2 = do_QueryObject(tmp);
-//  RefPtr<PeerConnectionObserver> pco = static_cast<PeerConnectionObserver*>(&*tmp2);
-
-static already_AddRefed<PeerConnectionObserver>
-do_QueryObjectReferent(nsIWeakReference* aRawPtr) {
-  nsCOMPtr<nsISupportsWeakReference> tmp = do_QueryReferent(aRawPtr);
-  if (!tmp) {
-    return nullptr;
-  }
-  RefPtr<nsSupportsWeakReference> tmp2 = do_QueryObject(tmp);
-  RefPtr<PeerConnectionObserver> tmp3 = static_cast<PeerConnectionObserver*>(&*tmp2);
-  return tmp3.forget();
-}
-
-
-// Not a member function so that we don't need to keep the PC live.
-static void NotifyDataChannel_m(const RefPtr<nsDOMDataChannel>& aChannel,
-                                const RefPtr<PeerConnectionObserver>& aObserver)
-{
-  MOZ_ASSERT(NS_IsMainThread());
-  JSErrorResult rv;
-  aObserver->NotifyDataChannel(*aChannel, rv);
-  aChannel->AppReady();
-}
-
-void
-PeerConnectionImpl::NotifyDataChannel(already_AddRefed<DataChannel> aChannel)
-{
-=======
-void PeerConnectionImpl::NotifyDataChannel(
-    already_AddRefed<DataChannel> aChannel) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
 
   RefPtr<DataChannel> channel(aChannel);
@@ -1486,32 +1131,8 @@ void PeerConnectionImpl::NotifyDataChannel(
                                      getter_AddRefs(domchannel));
   NS_ENSURE_SUCCESS_VOID(rv);
 
-<<<<<<< HEAD
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(mPCObserver);
-  if (!pco) {
-    return;
-  }
-
-  RUN_ON_THREAD(mThread,
-                WrapRunnableNM(NotifyDataChannel_m, domchannel.forget(), pco),
-                NS_DISPATCH_NORMAL);
-||||||| merged common ancestors
-  mHaveDataStream = true;
-
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(mPCObserver);
-  if (!pco) {
-    return;
-  }
-
-  RUN_ON_THREAD(mThread,
-                WrapRunnableNM(NotifyDataChannel_m,
-                               domchannel.forget(),
-                               pco),
-                NS_DISPATCH_NORMAL);
-=======
   JSErrorResult jrv;
   mPCObserver->NotifyDataChannel(*domchannel, jrv);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
@@ -1666,57 +1287,14 @@ PeerConnectionImpl::SetLocalDescription(int32_t aAction, const char* aSDP) {
       MOZ_ASSERT(false);
       return NS_ERROR_FAILURE;
   }
-<<<<<<< HEAD
-  nsresult nrv = mJsepSession->SetLocalDescription(sdpType, mLocalRequestedSDP);
-  if (NS_FAILED(nrv)) {
-    Error error;
-    switch (nrv) {
-      case NS_ERROR_INVALID_ARG:
-        error = kInvalidSessionDescription;
-        break;
-      case NS_ERROR_UNEXPECTED:
-        error = kInvalidState;
-        break;
-      default:
-        error = kInternalError;
-    }
-
-||||||| merged common ancestors
-  nsresult nrv = mJsepSession->SetLocalDescription(sdpType,
-                                                   mLocalRequestedSDP);
-  if (NS_FAILED(nrv)) {
-    Error error;
-    switch (nrv) {
-      case NS_ERROR_INVALID_ARG:
-        error = kInvalidSessionDescription;
-        break;
-      case NS_ERROR_UNEXPECTED:
-        error = kInvalidState;
-        break;
-      default:
-        error = kInternalError;
-    }
-
-=======
   JsepSession::Result result =
       mJsepSession->SetLocalDescription(sdpType, mLocalRequestedSDP);
   if (result.mError.isSome()) {
->>>>>>> upstream-releases
     std::string errorString = mJsepSession->GetLastError();
-<<<<<<< HEAD
-    CSFLogError(LOGTAG, "%s: pc = %s, error = %s", __FUNCTION__,
-                mHandle.c_str(), errorString.c_str());
-    pco->OnSetLocalDescriptionError(error, ObString(errorString.c_str()), rv);
-||||||| merged common ancestors
-    CSFLogError(LOGTAG, "%s: pc = %s, error = %s",
-                __FUNCTION__, mHandle.c_str(), errorString.c_str());
-    pco->OnSetLocalDescriptionError(error, ObString(errorString.c_str()), rv);
-=======
     CSFLogError(LOGTAG, "%s: pc = %s, error = %s", __FUNCTION__,
                 mHandle.c_str(), errorString.c_str());
     mPCObserver->OnSetLocalDescriptionError(
         *buildJSErrorData(result, errorString), rv);
->>>>>>> upstream-releases
   } else {
     if (wasRestartingIce) {
       RecordIceRestartStatistics(sdpType);
@@ -1794,58 +1372,14 @@ PeerConnectionImpl::SetRemoteDescription(int32_t action, const char* aSDP) {
   }
 
   size_t originalTransceiverCount = mJsepSession->GetTransceivers().size();
-<<<<<<< HEAD
-  nsresult nrv =
-      mJsepSession->SetRemoteDescription(sdpType, mRemoteRequestedSDP);
-  if (NS_FAILED(nrv)) {
-    Error error;
-    switch (nrv) {
-      case NS_ERROR_INVALID_ARG:
-        error = kInvalidSessionDescription;
-        break;
-      case NS_ERROR_UNEXPECTED:
-        error = kInvalidState;
-        break;
-      default:
-        error = kInternalError;
-    }
-
-||||||| merged common ancestors
-  nsresult nrv = mJsepSession->SetRemoteDescription(sdpType,
-                                                    mRemoteRequestedSDP);
-  if (NS_FAILED(nrv)) {
-    Error error;
-    switch (nrv) {
-      case NS_ERROR_INVALID_ARG:
-        error = kInvalidSessionDescription;
-        break;
-      case NS_ERROR_UNEXPECTED:
-        error = kInvalidState;
-        break;
-      default:
-        error = kInternalError;
-    }
-
-=======
   JsepSession::Result result =
       mJsepSession->SetRemoteDescription(sdpType, mRemoteRequestedSDP);
   if (result.mError.isSome()) {
->>>>>>> upstream-releases
     std::string errorString = mJsepSession->GetLastError();
-<<<<<<< HEAD
-    CSFLogError(LOGTAG, "%s: pc = %s, error = %s", __FUNCTION__,
-                mHandle.c_str(), errorString.c_str());
-    pco->OnSetRemoteDescriptionError(error, ObString(errorString.c_str()), jrv);
-||||||| merged common ancestors
-    CSFLogError(LOGTAG, "%s: pc = %s, error = %s",
-                __FUNCTION__, mHandle.c_str(), errorString.c_str());
-    pco->OnSetRemoteDescriptionError(error, ObString(errorString.c_str()), jrv);
-=======
     CSFLogError(LOGTAG, "%s: pc = %s, error = %s", __FUNCTION__,
                 mHandle.c_str(), errorString.c_str());
     mPCObserver->OnSetRemoteDescriptionError(
         *buildJSErrorData(result, errorString), jrv);
->>>>>>> upstream-releases
   } else {
     // Iterate over the JSEP transceivers that were just created
     for (size_t i = originalTransceiverCount;
@@ -1866,40 +1400,16 @@ PeerConnectionImpl::SetRemoteDescription(int32_t action, const char* aSDP) {
       }
 
       const JsepTrack& receiving(jsepTransceiver->mRecvTrack);
-<<<<<<< HEAD
-      CSFLogInfo(LOGTAG, "%s: pc = %s, asking JS to create transceiver for %s",
-                 __FUNCTION__, mHandle.c_str(), receiving.GetTrackId().c_str());
-||||||| merged common ancestors
-      CSFLogInfo(LOGTAG, "%s: pc = %s, asking JS to create transceiver for %s",
-                  __FUNCTION__, mHandle.c_str(), receiving.GetTrackId().c_str());
-=======
       CSFLogInfo(LOGTAG, "%s: pc = %s, asking JS to create transceiver",
                  __FUNCTION__, mHandle.c_str());
->>>>>>> upstream-releases
       switch (receiving.GetMediaType()) {
         case SdpMediaSection::MediaType::kAudio:
-<<<<<<< HEAD
-          pco->OnTransceiverNeeded(NS_ConvertASCIItoUTF16("audio"),
-                                   *transceiverImpl, jrv);
-||||||| merged common ancestors
-          pco->OnTransceiverNeeded(
-              NS_ConvertASCIItoUTF16("audio"), *transceiverImpl, jrv);
-=======
           mPCObserver->OnTransceiverNeeded(NS_ConvertASCIItoUTF16("audio"),
                                            *transceiverImpl, jrv);
->>>>>>> upstream-releases
           break;
         case SdpMediaSection::MediaType::kVideo:
-<<<<<<< HEAD
-          pco->OnTransceiverNeeded(NS_ConvertASCIItoUTF16("video"),
-                                   *transceiverImpl, jrv);
-||||||| merged common ancestors
-          pco->OnTransceiverNeeded(
-              NS_ConvertASCIItoUTF16("video"), *transceiverImpl, jrv);
-=======
           mPCObserver->OnTransceiverNeeded(NS_ConvertASCIItoUTF16("video"),
                                            *transceiverImpl, jrv);
->>>>>>> upstream-releases
           break;
         default:
           MOZ_RELEASE_ASSERT(false);
@@ -1965,29 +1475,6 @@ NS_IMETHODIMP
 PeerConnectionImpl::GetStats(MediaStreamTrack* aSelector) {
   PC_AUTO_ENTER_API_CALL(true);
 
-<<<<<<< HEAD
-  GetStats(aSelector, false)
-      ->Then(GetMainThreadSerialEventTarget(), __func__,
-             [handle = mHandle](UniquePtr<RTCStatsQuery>&& aQuery) {
-               DeliverStatsReportToPCObserver_m(
-                   handle, NS_OK, nsAutoPtr<RTCStatsQuery>(aQuery.release()));
-             },
-             [handle = mHandle](nsresult aError) {
-               DeliverStatsReportToPCObserver_m(handle, aError,
-                                                nsAutoPtr<RTCStatsQuery>());
-             });
-||||||| merged common ancestors
-  if (!mMedia) {
-    // Since we zero this out before the d'tor, we should check.
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  nsAutoPtr<RTCStatsQuery> query(new RTCStatsQuery(false));
-
-  nsresult rv = BuildStatsQuery_m(aSelector, query.get());
-
-  NS_ENSURE_SUCCESS(rv, rv);
-=======
   GetStats(aSelector, false, false)
       ->Then(
           GetMainThreadSerialEventTarget(), __func__,
@@ -1999,23 +1486,14 @@ PeerConnectionImpl::GetStats(MediaStreamTrack* aSelector) {
             DeliverStatsReportToPCObserver_m(handle, aError,
                                              nsAutoPtr<RTCStatsQuery>());
           });
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PeerConnectionImpl::AddIceCandidate(
-    const char* aCandidate, const char* aMid,
-    const dom::Nullable<unsigned short>& aLevel) {
-||||||| merged common ancestors
-PeerConnectionImpl::AddIceCandidate(const char* aCandidate, const char* aMid, unsigned short aLevel) {
-=======
 PeerConnectionImpl::AddIceCandidate(
     const char* aCandidate, const char* aMid, const char* aUfrag,
     const dom::Nullable<unsigned short>& aLevel) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL(true);
 
   if (mForceIceTcp &&
@@ -2044,24 +1522,12 @@ PeerConnectionImpl::AddIceCandidate(
   }
 
   std::string transportId;
-<<<<<<< HEAD
-  Maybe<unsigned short> level;
-  if (!aLevel.IsNull()) {
-    level = Some(aLevel.Value());
-  }
-  nsresult res = mJsepSession->AddRemoteIceCandidate(aCandidate, aMid, level,
-                                                     &transportId);
-||||||| merged common ancestors
-  nsresult res =
-    mJsepSession->AddRemoteIceCandidate(aCandidate, aMid, aLevel, &transportId);
-=======
   Maybe<unsigned short> level;
   if (!aLevel.IsNull()) {
     level = Some(aLevel.Value());
   }
   JsepSession::Result result = mJsepSession->AddRemoteIceCandidate(
       aCandidate, aMid, level, aUfrag, &transportId);
->>>>>>> upstream-releases
 
   if (!result.mError.isSome()) {
     // We do not bother PCMedia about this before offer/answer concludes.
@@ -2074,59 +1540,13 @@ PeerConnectionImpl::AddIceCandidate(
     mPCObserver->OnAddIceCandidateSuccess(rv);
   } else {
     ++mAddCandidateErrorCount;
-<<<<<<< HEAD
-    Error error;
-    switch (res) {
-      case NS_ERROR_UNEXPECTED:
-        error = kInvalidState;
-        break;
-      case NS_ERROR_INVALID_ARG:
-        error = kOperationError;
-        break;
-      case NS_ERROR_TYPE_ERR:
-        error = kTypeError;
-        break;
-      default:
-        error = kInternalError;
-    }
-
-||||||| merged common ancestors
-    Error error;
-    switch (res) {
-      case NS_ERROR_UNEXPECTED:
-        error = kInvalidState;
-        break;
-      case NS_ERROR_INVALID_ARG:
-        error = kInvalidCandidate;
-        break;
-      default:
-        error = kInternalError;
-    }
-
-=======
->>>>>>> upstream-releases
     std::string errorString = mJsepSession->GetLastError();
 
-<<<<<<< HEAD
-    CSFLogError(LOGTAG,
-                "Failed to incorporate remote candidate into SDP:"
-                " res = %u, candidate = %s, level = %i, error = %s",
-                static_cast<unsigned>(res), aCandidate, level.valueOr(-1),
-                errorString.c_str());
-||||||| merged common ancestors
-    CSFLogError(LOGTAG, "Failed to incorporate remote candidate into SDP:"
-                        " res = %u, candidate = %s, level = %u, error = %s",
-                        static_cast<unsigned>(res),
-                        aCandidate,
-                        static_cast<unsigned>(aLevel),
-                        errorString.c_str());
-=======
     CSFLogError(LOGTAG,
                 "Failed to incorporate remote candidate into SDP:"
                 " res = %u, candidate = %s, level = %i, error = %s",
                 static_cast<unsigned>(*result.mError), aCandidate,
                 level.valueOr(-1), errorString.c_str());
->>>>>>> upstream-releases
 
     mPCObserver->OnAddIceCandidateError(*buildJSErrorData(result, errorString),
                                         rv);
@@ -2185,19 +1605,9 @@ nsresult PeerConnectionImpl::OnAlpnNegotiated(const std::string& aAlpn) {
   // fixate on that peer.  Dealing with multiple peers or connections is more
   // than this run-down wreck of an object can handle.
   // Besides, this is only used to say if we have been connected ever.
-<<<<<<< HEAD
-  if (!*mPrivacyRequested) {
-    // Neither side wants privacy
-    nsIDocument* doc = GetWindow()->GetExtantDoc();
-||||||| merged common ancestors
-  if (!mPrivacyRequested && !aPrivacyRequested && !mDtlsConnected) {
-    // now we know that privacy isn't needed for sure
-    nsIDocument* doc = GetWindow()->GetExtantDoc();
-=======
   if (!*mPrivacyRequested) {
     // Neither side wants privacy
     Document* doc = GetWindow()->GetExtantDoc();
->>>>>>> upstream-releases
     if (!doc) {
       CSFLogInfo(LOGTAG, "Can't update principal on streams; document gone");
       return NS_ERROR_FAILURE;
@@ -2208,17 +1618,8 @@ nsresult PeerConnectionImpl::OnAlpnNegotiated(const std::string& aAlpn) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void PeerConnectionImpl::PrincipalChanged(MediaStreamTrack* aTrack) {
-  nsIDocument* doc = GetWindow()->GetExtantDoc();
-||||||| merged common ancestors
-void
-PeerConnectionImpl::PrincipalChanged(MediaStreamTrack* aTrack) {
-  nsIDocument* doc = GetWindow()->GetExtantDoc();
-=======
 void PeerConnectionImpl::PrincipalChanged(MediaStreamTrack* aTrack) {
   Document* doc = GetWindow()->GetExtantDoc();
->>>>>>> upstream-releases
   if (doc) {
     mMedia->UpdateSinkIdentity_m(aTrack, doc->NodePrincipal(), mPeerIdentity);
   } else {
@@ -2275,18 +1676,9 @@ void PeerConnectionImpl::DumpPacket_m(size_t level, dom::mozPacketDumpType type,
     return;
   }
 
-<<<<<<< HEAD
-  JS::Rooted<JSObject*> jsobj(
-      jsapi.cx(),
-      JS_NewArrayBufferWithContents(jsapi.cx(), size, packet.release()));
-||||||| merged common ancestors
-  JS::Rooted<JSObject*> jsobj(jsapi.cx(),
-    JS_NewArrayBufferWithContents(jsapi.cx(), size, packet.release()));
-=======
   JS::Rooted<JSObject*> jsobj(
       jsapi.cx(),
       JS::NewArrayBufferWithContents(jsapi.cx(), size, packet.release()));
->>>>>>> upstream-releases
 
   RootedSpiderMonkeyInterface<ArrayBuffer> arrayBuffer(jsapi.cx());
   if (!arrayBuffer.Init(jsobj)) {
@@ -2565,36 +1957,13 @@ PeerConnectionImpl::ReplaceTrackNoRenegotiation(TransceiverImpl& aTransceiver,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult PeerConnectionImpl::CalculateFingerprint(
-    const std::string& algorithm, std::vector<uint8_t>* fingerprint) const {
-  uint8_t buf[DtlsIdentity::HASH_ALGORITHM_MAX_LENGTH];
-  size_t len = 0;
-||||||| merged common ancestors
-nsresult
-PeerConnectionImpl::CalculateFingerprint(
-    const std::string& algorithm,
-    std::vector<uint8_t>* fingerprint) const {
-  uint8_t buf[DtlsIdentity::HASH_ALGORITHM_MAX_LENGTH];
-  size_t len = 0;
-=======
 nsresult PeerConnectionImpl::CalculateFingerprint(
     const std::string& algorithm, std::vector<uint8_t>* fingerprint) const {
   DtlsDigest digest(algorithm);
->>>>>>> upstream-releases
 
   MOZ_ASSERT(fingerprint);
   const UniqueCERTCertificate& cert = mCertificate->Certificate();
-<<<<<<< HEAD
-  nsresult rv = DtlsIdentity::ComputeFingerprint(cert, algorithm, &buf[0],
-                                                 sizeof(buf), &len);
-||||||| merged common ancestors
-  nsresult rv = DtlsIdentity::ComputeFingerprint(cert, algorithm,
-                                                 &buf[0], sizeof(buf),
-                                                 &len);
-=======
   nsresult rv = DtlsIdentity::ComputeFingerprint(cert, &digest);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     CSFLogError(LOGTAG, "Unable to calculate certificate fingerprint, rv=%u",
                 static_cast<unsigned>(rv));
@@ -2624,106 +1993,25 @@ PeerConnectionImpl::GetFingerprint(char** fingerprint) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void PeerConnectionImpl::GetLocalDescription(nsAString& aSDP) {
-||||||| merged common ancestors
-void
-PeerConnectionImpl::GetLocalDescription(nsAString& aSDP)
-{
-=======
 void PeerConnectionImpl::GetCurrentLocalDescription(nsAString& aSDP) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
 
-<<<<<<< HEAD
-  std::string localSdp =
-      mJsepSession->GetLocalDescription(kJsepDescriptionPendingOrCurrent);
-||||||| merged common ancestors
-  std::string localSdp = mJsepSession->GetLocalDescription(
-      kJsepDescriptionPendingOrCurrent);
-=======
   std::string localSdp =
       mJsepSession->GetLocalDescription(kJsepDescriptionCurrent);
->>>>>>> upstream-releases
   aSDP = NS_ConvertASCIItoUTF16(localSdp.c_str());
 }
 
-<<<<<<< HEAD
-void PeerConnectionImpl::GetCurrentLocalDescription(nsAString& aSDP) {
-||||||| merged common ancestors
-void
-PeerConnectionImpl::GetCurrentLocalDescription(nsAString& aSDP)
-{
-=======
 void PeerConnectionImpl::GetPendingLocalDescription(nsAString& aSDP) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
 
-<<<<<<< HEAD
-  std::string localSdp =
-      mJsepSession->GetLocalDescription(kJsepDescriptionCurrent);
-||||||| merged common ancestors
-  std::string localSdp = mJsepSession->GetLocalDescription(kJsepDescriptionCurrent);
-=======
-  std::string localSdp =
-      mJsepSession->GetLocalDescription(kJsepDescriptionPending);
->>>>>>> upstream-releases
-  aSDP = NS_ConvertASCIItoUTF16(localSdp.c_str());
-}
-
-<<<<<<< HEAD
-void PeerConnectionImpl::GetPendingLocalDescription(nsAString& aSDP) {
-||||||| merged common ancestors
-void
-PeerConnectionImpl::GetPendingLocalDescription(nsAString& aSDP)
-{
-=======
-void PeerConnectionImpl::GetCurrentRemoteDescription(nsAString& aSDP) {
->>>>>>> upstream-releases
-  PC_AUTO_ENTER_API_CALL_NO_CHECK();
-
-<<<<<<< HEAD
   std::string localSdp =
       mJsepSession->GetLocalDescription(kJsepDescriptionPending);
   aSDP = NS_ConvertASCIItoUTF16(localSdp.c_str());
 }
 
-void PeerConnectionImpl::GetRemoteDescription(nsAString& aSDP) {
-  PC_AUTO_ENTER_API_CALL_NO_CHECK();
-
-  std::string remoteSdp =
-      mJsepSession->GetRemoteDescription(kJsepDescriptionPendingOrCurrent);
-||||||| merged common ancestors
-  std::string localSdp = mJsepSession->GetLocalDescription(kJsepDescriptionPending);
-  aSDP = NS_ConvertASCIItoUTF16(localSdp.c_str());
-}
-
-void
-PeerConnectionImpl::GetRemoteDescription(nsAString& aSDP)
-{
-  PC_AUTO_ENTER_API_CALL_NO_CHECK();
-
-  std::string remoteSdp = mJsepSession->GetRemoteDescription(
-      kJsepDescriptionPendingOrCurrent);
-=======
-  std::string remoteSdp =
-      mJsepSession->GetRemoteDescription(kJsepDescriptionCurrent);
->>>>>>> upstream-releases
-  aSDP = NS_ConvertASCIItoUTF16(remoteSdp.c_str());
-}
-
-<<<<<<< HEAD
 void PeerConnectionImpl::GetCurrentRemoteDescription(nsAString& aSDP) {
-||||||| merged common ancestors
-void
-PeerConnectionImpl::GetCurrentRemoteDescription(nsAString& aSDP)
-{
-=======
-void PeerConnectionImpl::GetPendingRemoteDescription(nsAString& aSDP) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
 
-<<<<<<< HEAD
   std::string remoteSdp =
       mJsepSession->GetRemoteDescription(kJsepDescriptionCurrent);
   aSDP = NS_ConvertASCIItoUTF16(remoteSdp.c_str());
@@ -2734,33 +2022,11 @@ void PeerConnectionImpl::GetPendingRemoteDescription(nsAString& aSDP) {
 
   std::string remoteSdp =
       mJsepSession->GetRemoteDescription(kJsepDescriptionPending);
-||||||| merged common ancestors
-  std::string remoteSdp = mJsepSession->GetRemoteDescription(kJsepDescriptionCurrent);
-  aSDP = NS_ConvertASCIItoUTF16(remoteSdp.c_str());
-}
-
-void
-PeerConnectionImpl::GetPendingRemoteDescription(nsAString& aSDP)
-{
-  PC_AUTO_ENTER_API_CALL_NO_CHECK();
-
-  std::string remoteSdp = mJsepSession->GetRemoteDescription(kJsepDescriptionPending);
-=======
-  std::string remoteSdp =
-      mJsepSession->GetRemoteDescription(kJsepDescriptionPending);
->>>>>>> upstream-releases
   aSDP = NS_ConvertASCIItoUTF16(remoteSdp.c_str());
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PeerConnectionImpl::SignalingState(PCImplSignalingState* aState) {
-||||||| merged common ancestors
-PeerConnectionImpl::SignalingState(PCImplSignalingState* aState)
-{
-=======
 PeerConnectionImpl::SignalingState(RTCSignalingState* aState) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
   MOZ_ASSERT(aState);
 
@@ -2769,14 +2035,7 @@ PeerConnectionImpl::SignalingState(RTCSignalingState* aState) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PeerConnectionImpl::IceConnectionState(PCImplIceConnectionState* aState) {
-||||||| merged common ancestors
-PeerConnectionImpl::IceConnectionState(PCImplIceConnectionState* aState)
-{
-=======
 PeerConnectionImpl::IceConnectionState(RTCIceConnectionState* aState) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
   MOZ_ASSERT(aState);
 
@@ -2785,14 +2044,7 @@ PeerConnectionImpl::IceConnectionState(RTCIceConnectionState* aState) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-PeerConnectionImpl::IceGatheringState(PCImplIceGatheringState* aState) {
-||||||| merged common ancestors
-PeerConnectionImpl::IceGatheringState(PCImplIceGatheringState* aState)
-{
-=======
 PeerConnectionImpl::IceGatheringState(RTCIceGatheringState* aState) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
   MOZ_ASSERT(aState);
 
@@ -2973,18 +2225,8 @@ void PeerConnectionImpl::ShutdownMedia() {
   mMedia.forget().take()->SelfDestruct();
 }
 
-<<<<<<< HEAD
-void PeerConnectionImpl::SetSignalingState_m(
-    PCImplSignalingState aSignalingState, bool rollback) {
-||||||| merged common ancestors
-void
-PeerConnectionImpl::SetSignalingState_m(PCImplSignalingState aSignalingState,
-                                        bool rollback)
-{
-=======
 void PeerConnectionImpl::SetSignalingState_m(RTCSignalingState aSignalingState,
                                              bool rollback) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
   if (mSignalingState == RTCSignalingState::Closed) {
     return;
@@ -3081,35 +2323,17 @@ void PeerConnectionImpl::UpdateSignalingState(bool rollback) {
   SetSignalingState_m(newState, rollback);
 }
 
-<<<<<<< HEAD
-bool PeerConnectionImpl::IsClosed() const {
-  return mSignalingState == PCImplSignalingState::SignalingClosed;
-||||||| merged common ancestors
-bool
-PeerConnectionImpl::IsClosed() const
-{
-  return mSignalingState == PCImplSignalingState::SignalingClosed;
-=======
 bool PeerConnectionImpl::IsClosed() const {
   return mSignalingState == RTCSignalingState::Closed;
->>>>>>> upstream-releases
 }
 
 bool PeerConnectionImpl::HasMedia() const { return mMedia; }
 
 PeerConnectionWrapper::PeerConnectionWrapper(const std::string& handle)
     : impl_(nullptr) {
-<<<<<<< HEAD
-  if (PeerConnectionCtx::GetInstance()->mPeerConnections.find(handle) ==
-      PeerConnectionCtx::GetInstance()->mPeerConnections.end()) {
-||||||| merged common ancestors
-  if (PeerConnectionCtx::GetInstance()->mPeerConnections.find(handle) ==
-    PeerConnectionCtx::GetInstance()->mPeerConnections.end()) {
-=======
   if (!PeerConnectionCtx::isActive() ||
       (PeerConnectionCtx::GetInstance()->mPeerConnections.find(handle) ==
        PeerConnectionCtx::GetInstance()->mPeerConnections.end())) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -3121,20 +2345,12 @@ PeerConnectionWrapper::PeerConnectionWrapper(const std::string& handle)
   impl_ = impl;
 }
 
-<<<<<<< HEAD
-const std::string& PeerConnectionImpl::GetHandle() {
-||||||| merged common ancestors
-const std::string&
-PeerConnectionImpl::GetHandle()
-{
-=======
 const RefPtr<MediaTransportHandler> PeerConnectionImpl::GetTransportHandler()
     const {
   return mTransportHandler;
 }
 
 const std::string& PeerConnectionImpl::GetHandle() {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_NO_CHECK();
   return mHandle;
 }
@@ -3144,24 +2360,10 @@ const std::string& PeerConnectionImpl::GetName() {
   return mName;
 }
 
-<<<<<<< HEAD
-void PeerConnectionImpl::CandidateReady(const std::string& candidate,
-                                        const std::string& transportId) {
-||||||| merged common ancestors
-void
-PeerConnectionImpl::CandidateReady(const std::string& candidate,
-                                   const std::string& transportId) {
-=======
 void PeerConnectionImpl::CandidateReady(const std::string& candidate,
                                         const std::string& transportId,
                                         const std::string& ufrag) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_VOID_RETURN(false);
-
-  if (candidate.empty()) {
-    mJsepSession->EndOfLocalCandidates(transportId);
-    return;
-  }
 
   if (mForceIceTcp && std::string::npos != candidate.find(" UDP ")) {
     CSFLogWarn(LOGTAG, "Blocking local UDP candidate: %s", candidate.c_str());
@@ -3172,19 +2374,8 @@ void PeerConnectionImpl::CandidateReady(const std::string& candidate,
   uint16_t level = 0;
   std::string mid;
   bool skipped = false;
-<<<<<<< HEAD
-  nsresult res = mJsepSession->AddLocalIceCandidate(candidate, transportId,
-                                                    &level, &mid, &skipped);
-||||||| merged common ancestors
-  nsresult res = mJsepSession->AddLocalIceCandidate(candidate,
-                                                    transportId,
-                                                    &level,
-                                                    &mid,
-                                                    &skipped);
-=======
   nsresult res = mJsepSession->AddLocalIceCandidate(
       candidate, transportId, ufrag, &level, &mid, &skipped);
->>>>>>> upstream-releases
 
   if (NS_FAILED(res)) {
     std::string errorString = mJsepSession->GetLastError();
@@ -3213,73 +2404,13 @@ void PeerConnectionImpl::CandidateReady(const std::string& candidate,
   SendLocalIceCandidateToContent(level, mid, candidate, ufrag);
 }
 
-<<<<<<< HEAD
-static void SendLocalIceCandidateToContentImpl(const nsWeakPtr& weakPCObserver,
-                                               uint16_t level,
-                                               const std::string& mid,
-                                               const std::string& candidate) {
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(weakPCObserver);
-  if (!pco) {
-    return;
-  }
-
-||||||| merged common ancestors
-static void
-SendLocalIceCandidateToContentImpl(const nsWeakPtr& weakPCObserver,
-                                   uint16_t level,
-                                   const std::string& mid,
-                                   const std::string& candidate) {
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(weakPCObserver);
-  if (!pco) {
-    return;
-  }
-
-=======
 void PeerConnectionImpl::SendLocalIceCandidateToContent(
     uint16_t level, const std::string& mid, const std::string& candidate,
     const std::string& ufrag) {
->>>>>>> upstream-releases
   JSErrorResult rv;
-<<<<<<< HEAD
-  pco->OnIceCandidate(level, ObString(mid.c_str()), ObString(candidate.c_str()),
-                      rv);
-}
-
-void PeerConnectionImpl::SendLocalIceCandidateToContent(
-    uint16_t level, const std::string& mid, const std::string& candidate) {
-  // We dispatch this because OnSetLocalDescriptionSuccess does a setTimeout(0)
-  // to unwind the stack, but the event handlers don't. We need to ensure that
-  // the candidates do not skip ahead of the callback.
-  NS_DispatchToMainThread(WrapRunnableNM(&SendLocalIceCandidateToContentImpl,
-                                         mPCObserver, level, mid, candidate),
-                          NS_DISPATCH_NORMAL);
-||||||| merged common ancestors
-  pco->OnIceCandidate(level,
-                      ObString(mid.c_str()),
-                      ObString(candidate.c_str()),
-                      rv);
-}
-
-void
-PeerConnectionImpl::SendLocalIceCandidateToContent(
-    uint16_t level,
-    const std::string& mid,
-    const std::string& candidate) {
-  // We dispatch this because OnSetLocalDescriptionSuccess does a setTimeout(0)
-  // to unwind the stack, but the event handlers don't. We need to ensure that
-  // the candidates do not skip ahead of the callback.
-  NS_DispatchToMainThread(
-      WrapRunnableNM(&SendLocalIceCandidateToContentImpl,
-                     mPCObserver,
-                     level,
-                     mid,
-                     candidate),
-      NS_DISPATCH_NORMAL);
-=======
   mPCObserver->OnIceCandidate(level, ObString(mid.c_str()),
                               ObString(candidate.c_str()),
                               ObString(ufrag.c_str()), rv);
->>>>>>> upstream-releases
 }
 
 static bool isDone(RTCIceConnectionState state) {
@@ -3323,15 +2454,8 @@ void PeerConnectionImpl::IceConnectionStateChange(
   mIceConnectionState = domState;
 
   // Uncount this connection as active on the inner window upon close.
-<<<<<<< HEAD
-  if (mWindow && mActiveOnWindow &&
-      mIceConnectionState == PCImplIceConnectionState::Closed) {
-||||||| merged common ancestors
-  if (mWindow && mActiveOnWindow && mIceConnectionState == PCImplIceConnectionState::Closed) {
-=======
   if (mWindow && mActiveOnWindow &&
       mIceConnectionState == RTCIceConnectionState::Closed) {
->>>>>>> upstream-releases
     mWindow->RemovePeerConnection();
     mActiveOnWindow = false;
   }
@@ -3382,17 +2506,8 @@ void PeerConnectionImpl::OnCandidateFound(const std::string& aTransportId,
                  aCandidateInfo.mUfrag);
 }
 
-<<<<<<< HEAD
-void PeerConnectionImpl::IceGatheringStateChange(
-    dom::PCImplIceGatheringState state) {
-||||||| merged common ancestors
-void
-PeerConnectionImpl::IceGatheringStateChange(dom::PCImplIceGatheringState state)
-{
-=======
 void PeerConnectionImpl::IceGatheringStateChange(
     dom::RTCIceGatheringState state) {
->>>>>>> upstream-releases
   PC_AUTO_ENTER_API_CALL_VOID_RETURN(false);
 
   CSFLogDebug(LOGTAG, "%s %d", __FUNCTION__, static_cast<int>(state));
@@ -3418,60 +2533,6 @@ void PeerConnectionImpl::IceGatheringStateChange(
       MOZ_ASSERT_UNREACHABLE("Unexpected mIceGatheringState!");
   }
 
-<<<<<<< HEAD
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(mPCObserver);
-  if (!pco) {
-    return;
-  }
-  WrappableJSErrorResult rv;
-  mThread->Dispatch(WrapRunnable(pco, &PeerConnectionObserver::OnStateChange,
-                                 PCObserverStateType::IceGatheringState, rv,
-                                 static_cast<JS::Realm*>(nullptr)),
-                    NS_DISPATCH_NORMAL);
-
-  if (mIceGatheringState == PCImplIceGatheringState::Complete) {
-    SendLocalIceCandidateToContent(0, "", "");
-  }
-}
-
-void PeerConnectionImpl::UpdateDefaultCandidate(
-    const std::string& defaultAddr, uint16_t defaultPort,
-    const std::string& defaultRtcpAddr, uint16_t defaultRtcpPort,
-    const std::string& transportId) {
-||||||| merged common ancestors
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(mPCObserver);
-  if (!pco) {
-    return;
-  }
-  WrappableJSErrorResult rv;
-  mThread->Dispatch(WrapRunnable(pco,
-                                 &PeerConnectionObserver::OnStateChange,
-                                 PCObserverStateType::IceGatheringState,
-                                 rv, static_cast<JS::Realm*>(nullptr)),
-                    NS_DISPATCH_NORMAL);
-
-  if (mIceGatheringState == PCImplIceGatheringState::Complete) {
-    SendLocalIceCandidateToContent(0, "", "");
-  }
-}
-
-void
-PeerConnectionImpl::UpdateDefaultCandidate(const std::string& defaultAddr,
-                                           uint16_t defaultPort,
-                                           const std::string& defaultRtcpAddr,
-                                           uint16_t defaultRtcpPort,
-                                           const std::string& transportId) {
-  CSFLogDebug(LOGTAG, "%s", __FUNCTION__);
-  mJsepSession->UpdateDefaultCandidate(defaultAddr,
-                                       defaultPort,
-                                       defaultRtcpAddr,
-                                       defaultRtcpPort,
-                                       transportId);
-}
-
-void
-PeerConnectionImpl::EndOfLocalCandidates(const std::string& transportId) {
-=======
   JSErrorResult rv;
   mPCObserver->OnStateChange(PCObserverStateType::IceGatheringState, rv);
 }
@@ -3480,26 +2541,11 @@ void PeerConnectionImpl::UpdateDefaultCandidate(
     const std::string& defaultAddr, uint16_t defaultPort,
     const std::string& defaultRtcpAddr, uint16_t defaultRtcpPort,
     const std::string& transportId) {
->>>>>>> upstream-releases
   CSFLogDebug(LOGTAG, "%s", __FUNCTION__);
   mJsepSession->UpdateDefaultCandidate(
       defaultAddr, defaultPort, defaultRtcpAddr, defaultRtcpPort, transportId);
 }
 
-<<<<<<< HEAD
-RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::GetStats(
-    dom::MediaStreamTrack* aSelector, bool aInternalStats) {
-  UniquePtr<RTCStatsQuery> query(new RTCStatsQuery(aInternalStats));
-  nsresult rv = BuildStatsQuery_m(aSelector, query.get());
-  if (NS_FAILED(rv)) {
-    return RTCStatsQueryPromise::CreateAndReject(rv, __func__);
-  }
-||||||| merged common ancestors
-nsresult
-PeerConnectionImpl::BuildStatsQuery_m(
-    mozilla::dom::MediaStreamTrack *aSelector,
-    RTCStatsQuery *query) {
-=======
 RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::GetStats(
     dom::MediaStreamTrack* aSelector, bool aInternalStats,
     bool aRecordTelemetry) {
@@ -3509,7 +2555,6 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::GetStats(
   if (NS_FAILED(rv)) {
     return RTCStatsQueryPromise::CreateAndReject(rv, __func__);
   }
->>>>>>> upstream-releases
 
   nsTArray<RefPtr<MediaPipeline>> pipelines;
   // Gather up pipelines from mMedia so they may be inspected on STS
@@ -3541,17 +2586,8 @@ nsresult PeerConnectionImpl::BuildStatsQuery_m(
   }
 
   // We do not use the pcHandle here, since that's risky to expose to content.
-<<<<<<< HEAD
-  query->report = new RTCStatsReportInternalConstruct(
-      NS_ConvertASCIItoUTF16(mName.c_str()), query->now);
-||||||| merged common ancestors
-  query->report = new RTCStatsReportInternalConstruct(
-      NS_ConvertASCIItoUTF16(mName.c_str()),
-      query->now);
-=======
   query->report.reset(new RTCStatsReportInternalConstruct(
       NS_ConvertASCIItoUTF16(mName.c_str()), query->now));
->>>>>>> upstream-releases
 
   query->iceStartTime = mIceStartTime;
   query->report->mIceRestarts.Construct(mIceRestartCount);
@@ -3603,23 +2639,6 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
       // continue if we don't have a valid conduit
       continue;
     }
-<<<<<<< HEAD
-    const MediaPipeline& mp = *aPipelines[p];
-    bool isAudio = (mp.Conduit()->type() == MediaSessionConduit::AUDIO);
-    nsString kind =
-        isAudio ? NS_LITERAL_STRING("audio") : NS_LITERAL_STRING("video");
-    nsString idstr = kind;
-    idstr.AppendLiteral("_");
-    idstr.AppendInt((uint32_t)p);
-||||||| merged common ancestors
-    const MediaPipeline& mp = *query->pipelines[p];
-    bool isAudio = (mp.Conduit()->type() == MediaSessionConduit::AUDIO);
-    nsString kind = isAudio ?
-        NS_LITERAL_STRING("audio") : NS_LITERAL_STRING("video");
-    nsString idstr = kind;
-    idstr.AppendLiteral("_");
-    idstr.AppendInt((uint32_t)p);
-=======
     const MediaPipeline& mp = *aPipelines[p];
     auto asVideo = mp.Conduit()->AsVideoSessionConduit();
 
@@ -3631,7 +2650,6 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
                                         : NS_LITERAL_STRING("video");
     nsString idstr = kind + NS_LITERAL_STRING("_");
     idstr.AppendInt(static_cast<uint32_t>(p));
->>>>>>> upstream-releases
 
     // TODO(@@NG):ssrcs handle Conduits having multiple stats at the same level
     // This is pending spec work
@@ -3653,97 +2671,34 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
           uint32_t packetsReceived;
           uint64_t bytesReceived;
           uint32_t packetsLost;
-<<<<<<< HEAD
-          int32_t rtt;
-          if (mp.Conduit()->GetRTCPReceiverReport(&jitterMs, &packetsReceived,
-                                                  &bytesReceived, &packetsLost,
-||||||| merged common ancestors
-          int32_t rtt;
-          if (mp.Conduit()->GetRTCPReceiverReport(&timestamp, &jitterMs,
-                                                  &packetsReceived,
-                                                  &bytesReceived,
-                                                  &packetsLost,
-=======
           Maybe<double> rtt;
           if (mp.Conduit()->GetRTCPReceiverReport(&jitterMs, &packetsReceived,
                                                   &bytesReceived, &packetsLost,
->>>>>>> upstream-releases
                                                   &rtt)) {
             remoteId = NS_LITERAL_STRING("outbound_rtcp_") + idstr;
-<<<<<<< HEAD
-            RTCInboundRTPStreamStats s;
-            // TODO Bug 1496533 - use reception time not query time
-            s.mTimestamp.Construct(query->now);
-||||||| merged common ancestors
-            RTCInboundRTPStreamStats s;
-            s.mTimestamp.Construct(timestamp);
-=======
             RTCRemoteInboundRtpStreamStats s;
             // TODO Bug 1496533 - use reception time not query time
             s.mTimestamp.Construct(query->now);
->>>>>>> upstream-releases
             s.mId.Construct(remoteId);
-<<<<<<< HEAD
-            s.mType.Construct(RTCStatsType::Inbound_rtp);
-            ssrc.apply([&s](uint32_t aSsrc) { s.mSsrc.Construct(aSsrc); });
-            s.mMediaType.Construct(
-                kind);  // mediaType is the old name for kind.
-||||||| merged common ancestors
-            s.mType.Construct(RTCStatsType::Inbound_rtp);
-            ssrc.apply([&s](uint32_t aSsrc){s.mSsrc.Construct(aSsrc);});
-            s.mMediaType.Construct(kind); // mediaType is the old name for kind.
-=======
             s.mType.Construct(RTCStatsType::Remote_inbound_rtp);
             ssrc.apply([&s](uint32_t aSsrc) { s.mSsrc.Construct(aSsrc); });
             s.mMediaType.Construct(
                 kind);  // mediaType is the old name for kind.
->>>>>>> upstream-releases
             s.mKind.Construct(kind);
-<<<<<<< HEAD
-            s.mJitter.Construct(double(jitterMs) / 1000);
-            s.mRemoteId.Construct(localId);
-            s.mIsRemote = true;
-||||||| merged common ancestors
-            s.mJitter.Construct(double(jitterMs)/1000);
-            s.mRemoteId.Construct(localId);
-            s.mIsRemote = true;
-=======
             s.mJitter.Construct(double(jitterMs) / 1000);
             s.mLocalId.Construct(localId);
->>>>>>> upstream-releases
             s.mPacketsReceived.Construct(packetsReceived);
             s.mBytesReceived.Construct(bytesReceived);
             s.mPacketsLost.Construct(packetsLost);
-<<<<<<< HEAD
-            if (rtt > 0) {
-              s.mRoundTripTime.Construct(rtt);
-            }
-            query->report->mInboundRTPStreamStats.Value().AppendElement(
-                s, fallible);
-||||||| merged common ancestors
-            if (rtt > 0) {
-              s.mRoundTripTime.Construct(rtt);
-            }
-            query->report->mInboundRTPStreamStats.Value().AppendElement(s,
-                                                                        fallible);
-=======
             rtt.apply([&s](auto r) { s.mRoundTripTime.Construct(r); });
             query->report->mRemoteInboundRtpStreamStats.Value().AppendElement(
                 s, fallible);
->>>>>>> upstream-releases
           }
         }
         // Then, fill in local side (with cross-link to remote only if present)
         {
-<<<<<<< HEAD
-          RTCOutboundRTPStreamStats s;
-          // TODO Bug 1496533 - use reception time not query time
-||||||| merged common ancestors
-          RTCOutboundRTPStreamStats s;
-=======
           RTCOutboundRtpStreamStats s;
           // TODO Bug 1496533 - use reception time not query time
->>>>>>> upstream-releases
           s.mTimestamp.Construct(query->now);
           s.mId.Construct(localId);
           s.mType.Construct(RTCStatsType::Outbound_rtp);
@@ -3773,23 +2728,10 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
             double bitrateStdDev;
             uint32_t droppedFrames;
             uint32_t framesEncoded;
-<<<<<<< HEAD
-            if (mp.Conduit()->GetVideoEncoderStats(
-                    &framerateMean, &framerateStdDev, &bitrateMean,
-                    &bitrateStdDev, &droppedFrames, &framesEncoded)) {
-||||||| merged common ancestors
-            if (mp.Conduit()->GetVideoEncoderStats(&framerateMean,
-                                                   &framerateStdDev,
-                                                   &bitrateMean,
-                                                   &bitrateStdDev,
-                                                   &droppedFrames,
-                                                   &framesEncoded)) {
-=======
             Maybe<uint64_t> qpSum;
             if (conduit->GetVideoEncoderStats(
                     &framerateMean, &framerateStdDev, &bitrateMean,
                     &bitrateStdDev, &droppedFrames, &framesEncoded, &qpSum)) {
->>>>>>> upstream-releases
               s.mFramerateMean.Construct(framerateMean);
               s.mFramerateStdDev.Construct(framerateStdDev);
               s.mBitrateMean.Construct(bitrateMean);
@@ -3798,19 +2740,9 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
               s.mFramesEncoded.Construct(framesEncoded);
               qpSum.apply([&s](uint64_t aQp) { s.mQpSum.Construct(aQp); });
             }
-<<<<<<< HEAD
-          }
-          query->report->mOutboundRTPStreamStats.Value().AppendElement(
-              s, fallible);
-||||||| merged common ancestors
-          }
-          query->report->mOutboundRTPStreamStats.Value().AppendElement(s,
-                                                                       fallible);
-=======
           });
           query->report->mOutboundRtpStreamStats.Value().AppendElement(
               s, fallible);
->>>>>>> upstream-releases
         }
         break;
       }
@@ -3828,48 +2760,20 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
           uint64_t bytesSent;
           if (mp.Conduit()->GetRTCPSenderReport(&packetsSent, &bytesSent)) {
             remoteId = NS_LITERAL_STRING("inbound_rtcp_") + idstr;
-<<<<<<< HEAD
-            RTCOutboundRTPStreamStats s;
-            // TODO Bug 1496533 - use reception time not query time
-            s.mTimestamp.Construct(query->now);
-||||||| merged common ancestors
-            RTCOutboundRTPStreamStats s;
-            s.mTimestamp.Construct(timestamp);
-=======
             RTCRemoteOutboundRtpStreamStats s;
             // TODO Bug 1496533 - use reception time not query time
             s.mTimestamp.Construct(query->now);
->>>>>>> upstream-releases
             s.mId.Construct(remoteId);
-<<<<<<< HEAD
-            s.mType.Construct(RTCStatsType::Outbound_rtp);
-            ssrc.apply([&s](uint32_t aSsrc) { s.mSsrc.Construct(aSsrc); });
-            s.mMediaType.Construct(
-                kind);  // mediaType is the old name for kind.
-||||||| merged common ancestors
-            s.mType.Construct(RTCStatsType::Outbound_rtp);
-            ssrc.apply([&s](uint32_t aSsrc){s.mSsrc.Construct(aSsrc);});
-            s.mMediaType.Construct(kind); // mediaType is the old name for kind.
-=======
             s.mType.Construct(RTCStatsType::Remote_outbound_rtp);
             ssrc.apply([&s](uint32_t aSsrc) { s.mSsrc.Construct(aSsrc); });
             s.mMediaType.Construct(
                 kind);  // mediaType is the old name for kind.
->>>>>>> upstream-releases
             s.mKind.Construct(kind);
             s.mLocalId.Construct(localId);
             s.mPacketsSent.Construct(packetsSent);
             s.mBytesSent.Construct(bytesSent);
-<<<<<<< HEAD
-            query->report->mOutboundRTPStreamStats.Value().AppendElement(
-                s, fallible);
-||||||| merged common ancestors
-            query->report->mOutboundRTPStreamStats.Value().AppendElement(s,
-                                                                         fallible);
-=======
             query->report->mRemoteOutboundRtpStreamStats.Value().AppendElement(
                 s, fallible);
->>>>>>> upstream-releases
           }
         }
         // Then, fill in local side (with cross-link to remote only if present)
@@ -3881,16 +2785,8 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
         s.mMediaType.Construct(kind);  // mediaType is the old name for kind.
         s.mKind.Construct(kind);
         unsigned int jitterMs, packetsLost;
-<<<<<<< HEAD
-        if (mp.Conduit()->GetRTPStats(&jitterMs, &packetsLost)) {
-          s.mJitter.Construct(double(jitterMs) / 1000);
-||||||| merged common ancestors
-        if (mp.Conduit()->GetRTPStats(&jitterMs, &packetsLost)) {
-          s.mJitter.Construct(double(jitterMs)/1000);
-=======
         if (mp.Conduit()->GetRTPReceiverStats(&jitterMs, &packetsLost)) {
           s.mJitter.Construct(double(jitterMs) / 1000);
->>>>>>> upstream-releases
           s.mPacketsLost.Construct(packetsLost);
         }
         if (remoteId.Length()) {
@@ -3899,31 +2795,6 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
         s.mPacketsReceived.Construct(mp.RtpPacketsReceived());
         s.mBytesReceived.Construct(mp.RtpBytesReceived());
 
-<<<<<<< HEAD
-        if (query->internalStats && isAudio) {
-          int32_t jitterBufferDelay;
-          int32_t playoutBufferDelay;
-          int32_t avSyncDelta;
-          if (mp.Conduit()->GetAVStats(&jitterBufferDelay, &playoutBufferDelay,
-                                       &avSyncDelta)) {
-            s.mMozJitterBufferDelay.Construct(jitterBufferDelay);
-            s.mMozAvSyncDelay.Construct(avSyncDelta);
-          }
-        }
-||||||| merged common ancestors
-        if (query->internalStats && isAudio) {
-          int32_t jitterBufferDelay;
-          int32_t playoutBufferDelay;
-          int32_t avSyncDelta;
-          if (mp.Conduit()->GetAVStats(&jitterBufferDelay,
-                                       &playoutBufferDelay,
-                                       &avSyncDelta)) {
-            s.mMozJitterBufferDelay.Construct(jitterBufferDelay);
-            s.mMozAvSyncDelay.Construct(avSyncDelta);
-          }
-        }
-=======
->>>>>>> upstream-releases
         // Fill in packet type statistics
         webrtc::RtcpPacketTypeCounter counters;
         if (mp.Conduit()->GetRecvPacketTypeStats(&counters)) {
@@ -3942,22 +2813,9 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
           double bitrateStdDev;
           uint32_t discardedPackets;
           uint32_t framesDecoded;
-<<<<<<< HEAD
-          if (mp.Conduit()->GetVideoDecoderStats(
-                  &framerateMean, &framerateStdDev, &bitrateMean,
-                  &bitrateStdDev, &discardedPackets, &framesDecoded)) {
-||||||| merged common ancestors
-          if (mp.Conduit()->GetVideoDecoderStats(&framerateMean,
-                                                 &framerateStdDev,
-                                                 &bitrateMean,
-                                                 &bitrateStdDev,
-                                                 &discardedPackets,
-                                                 &framesDecoded)) {
-=======
           if (conduit->GetVideoDecoderStats(
                   &framerateMean, &framerateStdDev, &bitrateMean,
                   &bitrateStdDev, &discardedPackets, &framesDecoded)) {
->>>>>>> upstream-releases
             s.mFramerateMean.Construct(framerateMean);
             s.mFramerateStdDev.Construct(framerateStdDev);
             s.mBitrateMean.Construct(bitrateMean);
@@ -3976,41 +2834,6 @@ RefPtr<RTCStatsQueryPromise> PeerConnectionImpl::ExecuteStatsQuery_s(
     }
   }
 
-<<<<<<< HEAD
-  return aTransportHandler->GetIceStats(std::move(query));
-||||||| merged common ancestors
-  if (query->grabAllLevels) {
-    query->media->GetAllIceStats_s(query->internalStats,
-                                   query->now,
-                                   query->report);
-  } else {
-    query->media->GetIceStats_s(query->transportId,
-                                query->internalStats,
-                                query->now,
-                                query->report);
-  }
-
-  return NS_OK;
-}
-
-void PeerConnectionImpl::GetStatsForPCObserver_s(
-    const std::string& pcHandle, // The Runnable holds the memory
-    nsAutoPtr<RTCStatsQuery> query) {
-
-  MOZ_ASSERT(query);
-  MOZ_ASSERT(query->media);
-  ASSERT_ON_THREAD(query->media->GetSTSThread());
-
-  nsresult rv = PeerConnectionImpl::ExecuteStatsQuery_s(query.get());
-
-  NS_DispatchToMainThread(
-      WrapRunnableNM(
-          &PeerConnectionImpl::DeliverStatsReportToPCObserver_m,
-          pcHandle,
-          rv,
-          query),
-      NS_DISPATCH_NORMAL);
-=======
   std::string transportId;
   if (!query->grabAllLevels) {
     transportId = query->transportId;
@@ -4030,7 +2853,6 @@ void PeerConnectionImpl::GetStatsForPCObserver_s(
           [](nsresult aError) {
             return RTCStatsQueryPromise::CreateAndReject(aError, __func__);
           });
->>>>>>> upstream-releases
 }
 
 void PeerConnectionImpl::DeliverStatsReportToPCObserver_m(
@@ -4039,30 +2861,6 @@ void PeerConnectionImpl::DeliverStatsReportToPCObserver_m(
   // Is the PeerConnectionImpl still around?
   PeerConnectionWrapper pcw(pcHandle);
   if (pcw.impl()) {
-<<<<<<< HEAD
-    RefPtr<PeerConnectionObserver> pco =
-        do_QueryObjectReferent(pcw.impl()->mPCObserver);
-    if (pco) {
-      JSErrorResult rv;
-      if (NS_SUCCEEDED(result)) {
-        pco->OnGetStatsSuccess(*query->report, rv);
-      } else {
-        pco->OnGetStatsError(kInternalError,
-                             ObString("Failed to fetch statistics"), rv);
-      }
-||||||| merged common ancestors
-    RefPtr<PeerConnectionObserver> pco =
-        do_QueryObjectReferent(pcw.impl()->mPCObserver);
-    if (pco) {
-      JSErrorResult rv;
-      if (NS_SUCCEEDED(result)) {
-        pco->OnGetStatsSuccess(*query->report, rv);
-      } else {
-        pco->OnGetStatsError(kInternalError,
-            ObString("Failed to fetch statistics"),
-            rv);
-      }
-=======
     JSErrorResult rv;
     if (NS_SUCCEEDED(result)) {
       pcw.impl()->mPCObserver->OnGetStatsSuccess(*query->report, rv);
@@ -4070,7 +2868,6 @@ void PeerConnectionImpl::DeliverStatsReportToPCObserver_m(
       pcw.impl()->mPCObserver->OnGetStatsError(
           ObString("Failed to fetch statistics"), rv);
     }
->>>>>>> upstream-releases
 
     if (rv.Failed()) {
       CSFLogError(LOGTAG, "Error firing stats observer callback");
@@ -4110,13 +2907,6 @@ void PeerConnectionImpl::startCallTelem() {
   Telemetry::Accumulate(Telemetry::WEBRTC_CALL_COUNT_2, 1);
 }
 
-<<<<<<< HEAD
-nsresult PeerConnectionImpl::DTMFState::Notify(nsITimer* timer) {
-||||||| merged common ancestors
-nsresult
-PeerConnectionImpl::DTMFState::Notify(nsITimer* timer)
-{
-=======
 void PeerConnectionImpl::DTMFState::StopPlayout() {
   if (mSendTimer) {
     mSendTimer->Cancel();
@@ -4132,7 +2922,6 @@ void PeerConnectionImpl::DTMFState::StartPlayout(uint32_t aDelay) {
 }
 
 nsresult PeerConnectionImpl::DTMFState::Notify(nsITimer* timer) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   StopPlayout();
 
@@ -4153,40 +2942,9 @@ nsresult PeerConnectionImpl::DTMFState::Notify(nsITimer* timer) {
       StartPlayout(2000);
     } else {
       // Reset delay if necessary
-<<<<<<< HEAD
-      mSendTimer->InitWithCallback(this, mDuration + mInterToneGap,
-                                   nsITimer::TYPE_ONE_SHOT);
-
-||||||| merged common ancestors
-      mSendTimer->InitWithCallback(this,
-                                   mDuration + mInterToneGap,
-                                   nsITimer::TYPE_ONE_SHOT);
-
-=======
       StartPlayout(mDuration + mInterToneGap);
->>>>>>> upstream-releases
       mTransceiver->InsertDTMFTone(tone, mDuration);
     }
-<<<<<<< HEAD
-  } else {
-    mSendTimer->Cancel();
-  }
-
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(mPCObserver);
-  if (!pco) {
-    NS_WARNING("Failed to dispatch the RTCDTMFToneChange event!");
-    return NS_OK;  // Return is ignored anyhow
-||||||| merged common ancestors
-  } else {
-    mSendTimer->Cancel();
-  }
-
-  RefPtr<PeerConnectionObserver> pco = do_QueryObjectReferent(mPCObserver);
-  if (!pco) {
-    NS_WARNING("Failed to dispatch the RTCDTMFToneChange event!");
-    return NS_OK; // Return is ignored anyhow
-=======
->>>>>>> upstream-releases
   }
 
   RefPtr<dom::MediaStreamTrack> sendTrack = mTransceiver->GetSendTrack();

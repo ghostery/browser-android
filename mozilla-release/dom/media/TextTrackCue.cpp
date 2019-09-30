@@ -31,20 +31,8 @@ NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 
 StaticRefPtr<nsIWebVTTParserWrapper> TextTrackCue::sParserWrapper;
 
-<<<<<<< HEAD
-// Set cue setting defaults based on step 19 & seq.
-// in http://dev.w3.org/html5/webvtt/#parsing
-void TextTrackCue::SetDefaultCueSettings() {
-||||||| merged common ancestors
-// Set cue setting defaults based on step 19 & seq.
-// in http://dev.w3.org/html5/webvtt/#parsing
-void
-TextTrackCue::SetDefaultCueSettings()
-{
-=======
 // Set default value for cue, spec https://w3c.github.io/webvtt/#model-cues
 void TextTrackCue::SetDefaultCueSettings() {
->>>>>>> upstream-releases
   mPositionIsAutoKeyword = true;
   // Spec https://www.w3.org/TR/webvtt1/#webvtt-cue-position-automatic-alignment
   mPositionAlign = PositionAlignSetting::Auto;
@@ -61,29 +49,6 @@ void TextTrackCue::SetDefaultCueSettings() {
 TextTrackCue::TextTrackCue(nsPIDOMWindowInner* aOwnerWindow, double aStartTime,
                            double aEndTime, const nsAString& aText,
                            ErrorResult& aRv)
-<<<<<<< HEAD
-    : DOMEventTargetHelper(aOwnerWindow),
-      mText(aText),
-      mStartTime(aStartTime),
-      mEndTime(aEndTime),
-      mPosition(0.0),
-      mLine(0.0),
-      mReset(false, "TextTrackCue::mReset"),
-      mHaveStartedWatcher(false),
-      mWatchManager(
-          this, GetOwnerGlobal()->AbstractMainThreadFor(TaskCategory::Other)) {
-||||||| merged common ancestors
-  : DOMEventTargetHelper(aOwnerWindow)
-  , mText(aText)
-  , mStartTime(aStartTime)
-  , mEndTime(aEndTime)
-  , mPosition(0.0)
-  , mLine(0.0)
-  , mReset(false, "TextTrackCue::mReset")
-  , mHaveStartedWatcher(false)
-  , mWatchManager(this, GetOwnerGlobal()->AbstractMainThreadFor(TaskCategory::Other))
-{
-=======
     : DOMEventTargetHelper(aOwnerWindow),
       mText(aText),
       mStartTime(aStartTime),
@@ -95,7 +60,6 @@ TextTrackCue::TextTrackCue(nsPIDOMWindowInner* aOwnerWindow, double aStartTime,
       mWatchManager(
           this, GetOwnerGlobal()->AbstractMainThreadFor(TaskCategory::Other)) {
   LOG("create TextTrackCue");
->>>>>>> upstream-releases
   SetDefaultCueSettings();
   MOZ_ASSERT(aOwnerWindow);
   if (NS_FAILED(StashDocument())) {
@@ -103,40 +67,6 @@ TextTrackCue::TextTrackCue(nsPIDOMWindowInner* aOwnerWindow, double aStartTime,
   }
 }
 
-<<<<<<< HEAD
-TextTrackCue::TextTrackCue(nsPIDOMWindowInner* aOwnerWindow, double aStartTime,
-                           double aEndTime, const nsAString& aText,
-                           HTMLTrackElement* aTrackElement, ErrorResult& aRv)
-    : DOMEventTargetHelper(aOwnerWindow),
-      mText(aText),
-      mStartTime(aStartTime),
-      mEndTime(aEndTime),
-      mTrackElement(aTrackElement),
-      mPosition(0.0),
-      mLine(0.0),
-      mReset(false, "TextTrackCue::mReset"),
-      mHaveStartedWatcher(false),
-      mWatchManager(
-          this, GetOwnerGlobal()->AbstractMainThreadFor(TaskCategory::Other)) {
-||||||| merged common ancestors
-TextTrackCue::TextTrackCue(nsPIDOMWindowInner* aOwnerWindow,
-                           double aStartTime,
-                           double aEndTime,
-                           const nsAString& aText,
-                           HTMLTrackElement* aTrackElement,
-                           ErrorResult& aRv)
-  : DOMEventTargetHelper(aOwnerWindow)
-  , mText(aText)
-  , mStartTime(aStartTime)
-  , mEndTime(aEndTime)
-  , mTrackElement(aTrackElement)
-  , mPosition(0.0)
-  , mLine(0.0)
-  , mReset(false, "TextTrackCue::mReset")
-  , mHaveStartedWatcher(false)
-  , mWatchManager(this, GetOwnerGlobal()->AbstractMainThreadFor(TaskCategory::Other))
-{
-=======
 TextTrackCue::TextTrackCue(nsPIDOMWindowInner* aOwnerWindow, double aStartTime,
                            double aEndTime, const nsAString& aText,
                            HTMLTrackElement* aTrackElement, ErrorResult& aRv)
@@ -152,7 +82,6 @@ TextTrackCue::TextTrackCue(nsPIDOMWindowInner* aOwnerWindow, double aStartTime,
       mWatchManager(
           this, GetOwnerGlobal()->AbstractMainThreadFor(TaskCategory::Other)) {
   LOG("create TextTrackCue");
->>>>>>> upstream-releases
   SetDefaultCueSettings();
   MOZ_ASSERT(aOwnerWindow);
   if (NS_FAILED(StashDocument())) {
@@ -289,13 +218,6 @@ PositionAlignSetting TextTrackCue::ComputedPositionAlign() {
   return PositionAlignSetting::Center;
 }
 
-<<<<<<< HEAD
-void TextTrackCue::NotifyDisplayStatesChanged() {
-||||||| merged common ancestors
-void
-TextTrackCue::NotifyDisplayStatesChanged()
-{
-=======
 bool TextTrackCue::IsTextBaseDirectionLTR() const {
   // The returned result by `ubidi_getBaseDirection` might be `neutral` if the
   // text only contains netural charaters. In this case, we would treat its
@@ -305,7 +227,6 @@ bool TextTrackCue::IsTextBaseDirectionLTR() const {
 }
 
 void TextTrackCue::NotifyDisplayStatesChanged() {
->>>>>>> upstream-releases
   if (!mReset) {
     return;
   }
@@ -315,13 +236,6 @@ void TextTrackCue::NotifyDisplayStatesChanged() {
     return;
   }
 
-<<<<<<< HEAD
-  mTrack->GetTextTrackList()
-      ->GetMediaElement()
-      ->NotifyCueDisplayStatesChanged();
-||||||| merged common ancestors
-  mTrack->GetTextTrackList()->GetMediaElement()->NotifyCueDisplayStatesChanged();
-=======
   mTrack->GetTextTrackList()
       ->GetMediaElement()
       ->NotifyCueDisplayStatesChanged();
@@ -338,7 +252,6 @@ void TextTrackCue::SetActive(bool aActive) {
   if (mTrack) {
     mTrack->NotifyCueActiveStateChanged(this);
   }
->>>>>>> upstream-releases
 }
 
 }  // namespace dom

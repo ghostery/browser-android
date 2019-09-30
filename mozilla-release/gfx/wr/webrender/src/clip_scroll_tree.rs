@@ -2,29 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
-use api::{ExternalScrollId, LayoutPoint, LayoutRect, LayoutVector2D};
-use api::{PipelineId, ScrollClamping, ScrollNodeState, ScrollLocation};
-use api::{LayoutSize, LayoutTransform, PropertyBinding, ScrollSensitivity, WorldPoint};
-use gpu_types::TransformPalette;
-use internal_types::{FastHashMap, FastHashSet};
-use print_tree::{PrintTree, PrintTreePrinter};
-use scene::SceneProperties;
-use smallvec::SmallVec;
-use spatial_node::{ScrollFrameInfo, SpatialNode, SpatialNodeType, StickyFrameInfo, ScrollFrameKind};
-use util::{LayoutToWorldFastTransform, ScaleOffset};
-||||||| merged common ancestors
-use api::{ExternalScrollId, LayoutPoint, LayoutRect, LayoutVector2D};
-use api::{PipelineId, ScrollClamping, ScrollNodeState, ScrollLocation};
-use api::{LayoutSize, LayoutTransform, PropertyBinding, ScrollSensitivity, WorldPoint};
-use gpu_types::TransformPalette;
-use internal_types::{FastHashMap, FastHashSet};
-use print_tree::{PrintTree, PrintTreePrinter};
-use scene::SceneProperties;
-use smallvec::SmallVec;
-use spatial_node::{ScrollFrameInfo, SpatialNode, SpatialNodeType, StickyFrameInfo};
-use util::{LayoutToWorldFastTransform, ScaleOffset};
-=======
 use api::{ExternalScrollId, PropertyBinding, ReferenceFrameKind, TransformStyle};
 use api::{PipelineId, ScrollClamping, ScrollNodeState, ScrollLocation, ScrollSensitivity};
 use api::units::*;
@@ -36,7 +13,6 @@ use crate::scene::SceneProperties;
 use crate::spatial_node::{ScrollFrameInfo, SpatialNode, SpatialNodeType, StickyFrameInfo, ScrollFrameKind};
 use std::{ops, u32};
 use crate::util::{FastTransform, LayoutToWorldFastTransform, MatrixHelpers, ScaleOffset, scale_factors};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
 
 pub type ScrollStates = FastHashMap<ExternalScrollId, ScrollFrameInfo>;
 
@@ -70,13 +46,7 @@ impl CoordinateSystem {
     }
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
-#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq, PartialOrd, Ord)]
-||||||| merged common ancestors
-#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq, PartialOrd)]
-=======
 #[derive(Debug, Copy, Clone, Eq, Hash, MallocSizeOf, PartialEq, PartialOrd, Ord)]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct SpatialNodeIndex(pub u32);
@@ -550,13 +520,8 @@ impl ClipScrollTree {
         frame_rect: &LayoutRect,
         content_size: &LayoutSize,
         scroll_sensitivity: ScrollSensitivity,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
-        frame_kind: ScrollFrameKind,
-||||||| merged common ancestors
-=======
         frame_kind: ScrollFrameKind,
         external_scroll_offset: LayoutVector2D,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
     ) -> SpatialNodeIndex {
         let node = SpatialNode::new_scroll_frame(
             pipeline_id,
@@ -565,13 +530,8 @@ impl ClipScrollTree {
             frame_rect,
             content_size,
             scroll_sensitivity,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
-            frame_kind,
-||||||| merged common ancestors
-=======
             frame_kind,
             external_scroll_offset,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/clip_scroll_tree.rs
         );
         self.add_spatial_node(node)
     }
@@ -720,53 +680,6 @@ impl PrintableTree for ClipScrollTree {
         if !self.spatial_nodes.is_empty() {
             self.print_node(self.root_reference_frame_index(), pt);
         }
-    }
-
-    /// Return true if this is a guaranteed identity transform. This
-    /// is conservative, it assumes not identity if a property
-    /// binding animation, or scroll frame is found, for example.
-    pub fn node_is_identity(
-        &self,
-        spatial_node_index: SpatialNodeIndex,
-    ) -> bool {
-        let mut current = spatial_node_index;
-
-        while current != ROOT_SPATIAL_NODE_INDEX {
-            let node = &self.spatial_nodes[current.0];
-
-            match node.node_type {
-                SpatialNodeType::ReferenceFrame(ref info) => {
-                    if !info.source_perspective.is_identity() {
-                        return false;
-                    }
-
-                    match info.source_transform {
-                        PropertyBinding::Value(transform) => {
-                            if transform != LayoutTransform::identity() {
-                                return false;
-                            }
-                        }
-                        PropertyBinding::Binding(..) => {
-                            // Assume not identity since it may change with animation.
-                            return false;
-                        }
-                    }
-                }
-                SpatialNodeType::ScrollFrame(ref info) => {
-                    // Assume not identity since it may change with scrolling.
-                    if let ScrollFrameKind::Explicit = info.frame_kind {
-                        return false;
-                    }
-                }
-                SpatialNodeType::StickyFrame(..) => {
-                    // Assume not identity since it may change with scrolling.
-                    return false;
-                }
-            }
-            current = node.parent.unwrap();
-        }
-
-        true
     }
 }
 

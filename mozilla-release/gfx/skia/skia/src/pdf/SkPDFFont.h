@@ -8,15 +8,8 @@
 #define SkPDFFont_DEFINED
 
 #include "SkAdvancedTypefaceMetrics.h"
-<<<<<<< HEAD
-#include "SkBitSet.h"
-#include "SkPDFCanon.h"
-||||||| merged common ancestors
-#include "SkBitSet.h"
-=======
 #include "SkPDFDocument.h"
 #include "SkPDFGlyphUse.h"
->>>>>>> upstream-releases
 #include "SkPDFTypes.h"
 #include "SkStrikeCache.h"
 #include "SkTypeface.h"
@@ -90,21 +83,10 @@ public:
      *  @param typeface  The typeface to find, not nullptr.
      *  @param glyphID   Specify which section of a large font is of interest.
      */
-<<<<<<< HEAD
-    static sk_sp<SkPDFFont> GetFontResource(SkPDFCanon* canon,
-                                            SkGlyphCache* cache,
-                                            SkTypeface* typeface,
-                                            SkGlyphID glyphID);
-||||||| merged common ancestors
-    static sk_sp<SkPDFFont> GetFontResource(SkPDFCanon* canon,
-                                            SkTypeface* typeface,
-                                            SkGlyphID glyphID);
-=======
     static SkPDFFont* GetFontResource(SkPDFDocument* doc,
                                       SkStrike* cache,
                                       SkTypeface* typeface,
                                       SkGlyphID glyphID);
->>>>>>> upstream-releases
 
     /** Gets SkAdvancedTypefaceMetrics, and caches the result.
      *  @param typeface can not be nullptr.
@@ -113,25 +95,10 @@ public:
     static const SkAdvancedTypefaceMetrics* GetMetrics(const SkTypeface* typeface,
                                                        SkPDFDocument* canon);
 
-<<<<<<< HEAD
-    static const std::vector<SkUnichar>& GetUnicodeMap(const SkTypeface* typeface,
-                                                       SkPDFCanon* canon);
-
-    /** Subset the font based on current usage.
-     *  Must be called before emitObject().
-     */
-    virtual void getFontSubset(SkPDFCanon*) = 0;
-||||||| merged common ancestors
-    /** Subset the font based on current usage.
-     *  Must be called before emitObject().
-     */
-    virtual void getFontSubset(SkPDFCanon*) = 0;
-=======
     static const std::vector<SkUnichar>& GetUnicodeMap(const SkTypeface* typeface,
                                                        SkPDFDocument* canon);
 
     void emitSubset(SkPDFDocument*) const;
->>>>>>> upstream-releases
 
     /**
      *  Return false iff the typeface has its NotEmbeddable flag set.

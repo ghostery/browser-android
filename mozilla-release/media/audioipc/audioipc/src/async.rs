@@ -11,13 +11,8 @@ use futures::Async;
 use futures::Poll;
 #[cfg(unix)]
 use iovec::IoVec;
-<<<<<<< HEAD
-use msg::{RecvMsg, SendMsg};
-||||||| merged common ancestors
-=======
 #[cfg(unix)]
 use msg::{RecvMsg, SendMsg};
->>>>>>> upstream-releases
 use std::io;
 use tokio_io::{AsyncRead, AsyncWrite};
 

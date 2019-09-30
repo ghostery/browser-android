@@ -25,23 +25,6 @@ class nsFilePicker : public nsBaseFilePicker {
   // nsIFilePicker (less what's in nsBaseFilePicker)
   NS_IMETHOD Open(nsIFilePickerShownCallback* aCallback) override;
   NS_IMETHOD AppendFilters(int32_t aFilterMask) override;
-<<<<<<< HEAD
-  NS_IMETHOD AppendFilter(const nsAString &aTitle,
-                          const nsAString &aFilter) override;
-  NS_IMETHOD SetDefaultString(const nsAString &aString) override;
-  NS_IMETHOD GetDefaultString(nsAString &aString) override;
-  NS_IMETHOD SetDefaultExtension(const nsAString &aExtension) override;
-  NS_IMETHOD GetDefaultExtension(nsAString &aExtension) override;
-  NS_IMETHOD GetFilterIndex(int32_t *aFilterIndex) override;
-||||||| merged common ancestors
-  NS_IMETHOD AppendFilter(const nsAString& aTitle,
-                          const nsAString& aFilter) override;
-  NS_IMETHOD SetDefaultString(const nsAString& aString) override;
-  NS_IMETHOD GetDefaultString(nsAString& aString) override;
-  NS_IMETHOD SetDefaultExtension(const nsAString& aExtension) override;
-  NS_IMETHOD GetDefaultExtension(nsAString& aExtension) override;
-  NS_IMETHOD GetFilterIndex(int32_t *aFilterIndex) override;
-=======
   NS_IMETHOD AppendFilter(const nsAString& aTitle,
                           const nsAString& aFilter) override;
   NS_IMETHOD SetDefaultString(const nsAString& aString) override;
@@ -49,21 +32,13 @@ class nsFilePicker : public nsBaseFilePicker {
   NS_IMETHOD SetDefaultExtension(const nsAString& aExtension) override;
   NS_IMETHOD GetDefaultExtension(nsAString& aExtension) override;
   NS_IMETHOD GetFilterIndex(int32_t* aFilterIndex) override;
->>>>>>> upstream-releases
   NS_IMETHOD SetFilterIndex(int32_t aFilterIndex) override;
   NS_IMETHOD GetFile(nsIFile** aFile) override;
   NS_IMETHOD GetFileURL(nsIURI** aFileURL) override;
   NS_IMETHOD GetFiles(nsISimpleEnumerator** aFiles) override;
 
   // nsBaseFilePicker
-<<<<<<< HEAD
-  virtual void InitNative(nsIWidget *aParent, const nsAString &aTitle) override;
-||||||| merged common ancestors
-  virtual void InitNative(nsIWidget *aParent,
-                          const nsAString& aTitle) override;
-=======
   virtual void InitNative(nsIWidget* aParent, const nsAString& aTitle) override;
->>>>>>> upstream-releases
 
   static void Shutdown();
 
@@ -73,10 +48,10 @@ class nsFilePicker : public nsBaseFilePicker {
   nsresult Show(int16_t* aReturn) override;
   void ReadValuesFromFileChooser(void* file_chooser);
 
-  static void OnResponse(void *file_chooser, gint response_id,
+  static void OnResponse(void* file_chooser, gint response_id,
                          gpointer user_data);
-  static void OnDestroy(GtkWidget *file_chooser, gpointer user_data);
-  void Done(void *file_chooser, gint response_id);
+  static void OnDestroy(GtkWidget* file_chooser, gpointer user_data);
+  void Done(void* file_chooser, gint response_id);
 
   nsCOMPtr<nsIWidget> mParentWidget;
   nsCOMPtr<nsIFilePickerShownCallback> mCallback;
@@ -94,35 +69,9 @@ class nsFilePicker : public nsBaseFilePicker {
   nsTArray<nsCString> mFilters;
   nsTArray<nsCString> mFilterNames;
 
-<<<<<<< HEAD
- private:
-  static nsIFile *mPrevDisplayDirectory;
-||||||| merged common ancestors
-private:
-  static nsIFile *mPrevDisplayDirectory;
-=======
  private:
   static nsIFile* mPrevDisplayDirectory;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void *GtkFileChooserNew(const gchar *title, GtkWindow *parent,
-                          GtkFileChooserAction action,
-                          const gchar *accept_label);
-  void GtkFileChooserShow(void *file_chooser);
-  void GtkFileChooserDestroy(void *file_chooser);
-  void GtkFileChooserSetModal(void *file_chooser, GtkWindow *parent_widget,
-                              gboolean modal);
-||||||| merged common ancestors
-  void *GtkFileChooserNew(
-          const gchar *title, GtkWindow *parent,
-          GtkFileChooserAction action,
-          const gchar *accept_label);
-  void GtkFileChooserShow(void *file_chooser);
-  void GtkFileChooserDestroy(void *file_chooser);
-  void GtkFileChooserSetModal(void *file_chooser, GtkWindow* parent_widget,
-          gboolean modal);
-=======
   void* GtkFileChooserNew(const gchar* title, GtkWindow* parent,
                           GtkFileChooserAction action,
                           const gchar* accept_label);
@@ -130,7 +79,6 @@ private:
   void GtkFileChooserDestroy(void* file_chooser);
   void GtkFileChooserSetModal(void* file_chooser, GtkWindow* parent_widget,
                               gboolean modal);
->>>>>>> upstream-releases
 
 #ifdef MOZ_WIDGET_GTK
   GtkFileChooserWidget* mFileChooserDelegate;

@@ -144,28 +144,12 @@ class DOMIntersectionObserver final : public nsISupports,
                                       const Maybe<nsRect>& aIntersectionRect,
                                       double aIntersectionRatio);
 
-<<<<<<< HEAD
-  nsCOMPtr<nsPIDOMWindowInner> mOwner;
-  RefPtr<nsIDocument> mDocument;
-  RefPtr<mozilla::dom::IntersectionCallback> mCallback;
-  RefPtr<Element> mRoot;
-  nsStyleSides mRootMargin;
-  nsTArray<double> mThresholds;
-||||||| merged common ancestors
-  nsCOMPtr<nsPIDOMWindowInner>                    mOwner;
-  RefPtr<nsIDocument>                             mDocument;
-  RefPtr<mozilla::dom::IntersectionCallback>      mCallback;
-  RefPtr<Element>                                 mRoot;
-  nsStyleSides                                    mRootMargin;
-  nsTArray<double>                                mThresholds;
-=======
   nsCOMPtr<nsPIDOMWindowInner> mOwner;
   RefPtr<Document> mDocument;
   RefPtr<mozilla::dom::IntersectionCallback> mCallback;
   RefPtr<Element> mRoot;
   StyleRect<LengthPercentage> mRootMargin;
   nsTArray<double> mThresholds;
->>>>>>> upstream-releases
 
   // Holds raw pointers which are explicitly cleared by UnlinkTarget().
   nsTArray<Element*> mObservationTargets;

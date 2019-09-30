@@ -21,17 +21,8 @@ namespace dom {
 /**
  * Utility class for implementing nsITimeoutHandlers, designed to be subclassed.
  */
-<<<<<<< HEAD
-class TimeoutHandler : public nsITimeoutHandler {
- public:
-||||||| merged common ancestors
-class TimeoutHandler : public nsITimeoutHandler
-{
-public:
-=======
 class TimeoutHandler : public nsISupports {
  public:
->>>>>>> upstream-releases
   // TimeoutHandler doesn't actually contain cycles, but subclasses
   // probably will.
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
@@ -42,38 +33,14 @@ class TimeoutHandler : public nsISupports {
   // Note: The memory pointed to by aFileName is owned by the
   // nsITimeoutHandler and should not be freed by the caller.
   virtual void GetLocation(const char** aFileName, uint32_t* aLineNo,
-<<<<<<< HEAD
-                           uint32_t* aColumn) override;
-  virtual void MarkForCC() override {}
-
- protected:
-||||||| merged common ancestors
-                           uint32_t* aColumn) override;
-  virtual void MarkForCC() override {}
-protected:
-=======
                            uint32_t* aColumn);
   virtual void MarkForCC() {}
 
  protected:
->>>>>>> upstream-releases
   TimeoutHandler() : mFileName(""), mLineNo(0), mColumn(0) {}
   explicit TimeoutHandler(JSContext* aCx);
 
   virtual ~TimeoutHandler() {}
-<<<<<<< HEAD
-
- private:
-  TimeoutHandler(const TimeoutHandler&) = delete;
-  TimeoutHandler& operator=(const TimeoutHandler&) = delete;
-  TimeoutHandler& operator=(const TimeoutHandler&&) = delete;
-||||||| merged common ancestors
-private:
-  TimeoutHandler(const TimeoutHandler&) = delete;
-  TimeoutHandler& operator=(const TimeoutHandler&) = delete;
-  TimeoutHandler& operator=(const TimeoutHandler&&) = delete;
-=======
->>>>>>> upstream-releases
 
   // filename, line number and JS language version string of the
   // caller of setTimeout()

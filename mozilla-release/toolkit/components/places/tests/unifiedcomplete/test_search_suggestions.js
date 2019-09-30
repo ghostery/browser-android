@@ -40,21 +40,11 @@ add_task(async function setup() {
   });
 
   // Install the test engine.
-<<<<<<< HEAD
-  let oldCurrentEngine = Services.search.defaultEngine;
-  registerCleanupFunction(() => Services.search.defaultEngine = oldCurrentEngine);
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  let oldCurrentEngine = Services.search.currentEngine;
-  registerCleanupFunction(() => Services.search.currentEngine = oldCurrentEngine);
-  Services.search.currentEngine = engine;
-=======
   let oldDefaultEngine = await Services.search.getDefault();
   registerCleanupFunction(async () =>
     Services.search.setDefault(oldDefaultEngine)
   );
   Services.search.setDefault(engine);
->>>>>>> upstream-releases
 
   // We must make sure the FormHistoryStartup component is initialized.
   Cc["@mozilla.org/satchel/form-history-startup;1"]
@@ -334,30 +324,11 @@ add_task(async function restrictToken() {
     search: `${UrlbarTokenizer.RESTRICT.SEARCH} hello`,
     searchParam: "enable-actions",
     matches: [
-<<<<<<< HEAD
-      makeSearchMatch(`${UrlbarTokenizer.RESTRICT.SEARCH} hello`,
-                      { searchQuery: "hello", engineName: ENGINE_NAME, heuristic: true }),
-||||||| merged common ancestors
-      // TODO (bug 1177895) This is wrong.
-      makeSearchMatch(SUGGEST_RESTRICT_TOKEN + " hello", { engineName: ENGINE_NAME, heuristic: true }),
-      {
-        uri: makeActionURI(("searchengine"), {
-          engineName: ENGINE_NAME,
-          input: "hello",
-          searchQuery: "hello",
-          searchSuggestion: "hello",
-        }),
-        title: ENGINE_NAME,
-        style: ["action", "searchengine", "suggestion"],
-        icon: "",
-      },
-=======
       makeSearchMatch(`${UrlbarTokenizer.RESTRICT.SEARCH} hello`, {
         searchQuery: "hello",
         engineName: ENGINE_NAME,
         heuristic: true,
       }),
->>>>>>> upstream-releases
       {
         uri: makeActionURI("searchengine", {
           engineName: ENGINE_NAME,
@@ -383,56 +354,6 @@ add_task(async function restrictToken() {
     ],
   });
 
-<<<<<<< HEAD
-  // Typing the search restriction char shows only the Search Engine entry with
-  // no query.
-  await check_autocomplete({
-    search: UrlbarTokenizer.RESTRICT.SEARCH,
-    searchParam: "enable-actions",
-    matches: [
-      makeSearchMatch(UrlbarTokenizer.RESTRICT.SEARCH,
-                      { searchQuery: "", engineName: ENGINE_NAME, heuristic: true }),
-    ],
-  });
-  // Also if followed by multiple spaces.
-  await check_autocomplete({
-    search: UrlbarTokenizer.RESTRICT.SEARCH + "  ",
-    searchParam: "enable-actions",
-    matches: [
-      makeSearchMatch(UrlbarTokenizer.RESTRICT.SEARCH + "  ",
-                      { searchQuery: "", engineName: ENGINE_NAME, heuristic: true }),
-    ],
-  });
-  // Also if followed by a single char.
-  await check_autocomplete({
-    search: UrlbarTokenizer.RESTRICT.SEARCH + "a",
-    searchParam: "enable-actions",
-    matches: [
-      makeSearchMatch(UrlbarTokenizer.RESTRICT.SEARCH + "a",
-                      { searchQuery: "a", engineName: ENGINE_NAME, heuristic: true }),
-    ],
-  });
-  // Also if followed by a space and single char.
-  await check_autocomplete({
-    search: UrlbarTokenizer.RESTRICT.SEARCH + " a",
-    searchParam: "enable-actions",
-    matches: [
-      makeSearchMatch(UrlbarTokenizer.RESTRICT.SEARCH + " a",
-                      { searchQuery: "a", engineName: ENGINE_NAME, heuristic: true }),
-    ],
-  });
-  // Any other restriction char allows to search for it.
-  await check_autocomplete({
-    search: UrlbarTokenizer.RESTRICT.OPENPAGE,
-    searchParam: "enable-actions",
-    matches: [
-      makeSearchMatch(UrlbarTokenizer.RESTRICT.OPENPAGE,
-                      { engineName: ENGINE_NAME, heuristic: true }),
-    ],
-  });
-
-||||||| merged common ancestors
-=======
   // Typing the search restriction char shows only the Search Engine entry with
   // no query.
   await check_autocomplete({
@@ -494,7 +415,6 @@ add_task(async function restrictToken() {
     ],
   });
 
->>>>>>> upstream-releases
   await cleanUpSuggestions();
 });
 

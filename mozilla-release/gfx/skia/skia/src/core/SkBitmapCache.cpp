@@ -5,7 +5,6 @@
  * found in the LICENSE file.
  */
 
-#include "SkAtomics.h"
 #include "SkBitmapCache.h"
 #include "SkBitmapProvider.h"
 #include "SkImage.h"
@@ -28,99 +27,15 @@ void SkNotifyBitmapGenIDIsStale(uint32_t bitmapGenID) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-SkBitmapCacheDesc SkBitmapCacheDesc::Make(uint32_t imageID, SkColorType colorType,
-                                          SkColorSpace* colorSpace, const SkIRect& subset) {
-||||||| merged common ancestors
-/**
- This function finds the bounds of the bitmap *within its pixelRef*.
- If the bitmap lacks a pixelRef, it will return an empty rect, since
- that doesn't make sense.  This may be a useful enough function that
- it should be somewhere else (in SkBitmap?).
- */
-static SkIRect get_bounds_from_bitmap(const SkBitmap& bm) {
-    if (!(bm.pixelRef())) {
-        return SkIRect::MakeEmpty();
-    }
-    SkIPoint origin = bm.pixelRefOrigin();
-    return SkIRect::MakeXYWH(origin.fX, origin.fY, bm.width(), bm.height());
-}
-
-/**
- *  This function finds the bounds of the image. Today this is just the entire bounds,
- *  but in the future we may support subsets within an image, in which case this should
- *  return that subset (see get_bounds_from_bitmap).
- */
-static SkIRect get_bounds_from_image(const SkImage* image) {
-    SkASSERT(image->width() > 0 && image->height() > 0);
-    return SkIRect::MakeWH(image->width(), image->height());
-}
-
-SkBitmapCacheDesc SkBitmapCacheDesc::Make(uint32_t imageID, int origWidth, int origHeight) {
-=======
 SkBitmapCacheDesc SkBitmapCacheDesc::Make(uint32_t imageID, const SkIRect& subset) {
->>>>>>> upstream-releases
     SkASSERT(imageID);
-<<<<<<< HEAD
-    SkASSERT(subset.width() > 0 && subset.height() > 0);
-    return { imageID,
-             colorType,
-             colorSpace ? colorSpace->toXYZD50Hash() : 0,
-             colorSpace ? colorSpace->transferFnHash() : 0,
-             subset };
-}
-
-SkBitmapCacheDesc SkBitmapCacheDesc::Make(const SkBitmap& bm) {
-    SkASSERT(bm.pixelRef());
-    SkIPoint origin = bm.pixelRefOrigin();
-    SkIRect bounds = SkIRect::MakeXYWH(origin.fX, origin.fY, bm.width(), bm.height());
-    return Make(bm.getGenerationID(), bm.colorType(), bm.colorSpace(), bounds);
-||||||| merged common ancestors
-    SkASSERT(origWidth > 0 && origHeight > 0);
-    return { imageID, 0, 0, {0, 0, origWidth, origHeight} };
-}
-
-SkBitmapCacheDesc SkBitmapCacheDesc::Make(const SkBitmap& bm, int scaledWidth, int scaledHeight) {
-    SkASSERT(bm.width() > 0 && bm.height() > 0);
-    SkASSERT(scaledWidth > 0 && scaledHeight > 0);
-    SkASSERT(scaledWidth != bm.width() || scaledHeight != bm.height());
-
-    return { bm.getGenerationID(), scaledWidth, scaledHeight, get_bounds_from_bitmap(bm) };
-}
-
-SkBitmapCacheDesc SkBitmapCacheDesc::Make(const SkBitmap& bm) {
-    SkASSERT(bm.width() > 0 && bm.height() > 0);
-    SkASSERT(bm.pixelRefOrigin() == SkIPoint::Make(0, 0));
-
-    return { bm.getGenerationID(), 0, 0, get_bounds_from_bitmap(bm) };
-}
-
-SkBitmapCacheDesc SkBitmapCacheDesc::Make(const SkImage* image, int scaledWidth, int scaledHeight) {
-    SkASSERT(image->width() > 0 && image->height() > 0);
-    SkASSERT(scaledWidth > 0 && scaledHeight > 0);
-
-    // If the dimensions are the same, should we set them to 0,0?
-    //SkASSERT(scaledWidth != image->width() || scaledHeight != image->height());
-
-    return { image->uniqueID(), scaledWidth, scaledHeight, get_bounds_from_image(image) };
-=======
     SkASSERT(subset.width() > 0 && subset.height() > 0);
     return { imageID, subset };
->>>>>>> upstream-releases
 }
 
 SkBitmapCacheDesc SkBitmapCacheDesc::Make(const SkImage* image) {
-<<<<<<< HEAD
-    SkIRect bounds = SkIRect::MakeWH(image->width(), image->height());
-    return Make(image->uniqueID(), image->colorType(), image->colorSpace(), bounds);
-||||||| merged common ancestors
-    SkASSERT(image->width() > 0 && image->height() > 0);
-
-    return { image->uniqueID(), 0, 0, get_bounds_from_image(image) };
-=======
     SkIRect bounds = SkIRect::MakeWH(image->width(), image->height());
     return Make(image->uniqueID(), bounds);
->>>>>>> upstream-releases
 }
 
 namespace {
@@ -157,28 +72,9 @@ public:
     {
         SkASSERT(!(fDM && fMalloc));    // can't have both
 
-<<<<<<< HEAD
         // We need an ID to return with the bitmap/pixelref. We can't necessarily use the key/desc
         // ID - lazy images cache the same ID with multiple keys (in different color types).
         fPrUniqueID = SkNextID::ImageID();
-        REC_TRACE(" Rec(%d): [%d %d] %d\n",
-                  sk_atomic_inc(&gRecCounter), fInfo.width(), fInfo.height(), fPrUniqueID);
-||||||| merged common ancestors
-        // We need an ID to return with the bitmap/pixelref.
-        // If they are not scaling, we can return the same ID as the key/desc
-        // If they are scaling, we need a new ID
-        if (desc.fScaledWidth == 0 && desc.fScaledHeight == 0) {
-            fPrUniqueID = desc.fImageID;
-        } else {
-            fPrUniqueID = SkNextID::ImageID();
-        }
-        REC_TRACE(" Rec(%d): [%d %d] %d\n",
-                  sk_atomic_inc(&gRecCounter), fInfo.width(), fInfo.height(), fPrUniqueID);
-=======
-        // We need an ID to return with the bitmap/pixelref. We can't necessarily use the key/desc
-        // ID - lazy images cache the same ID with multiple keys (in different color types).
-        fPrUniqueID = SkNextID::ImageID();
->>>>>>> upstream-releases
     }
 
     ~Rec() override {
@@ -279,30 +175,9 @@ void SkBitmapCache::PrivateDeleteRec(Rec* rec) { delete rec; }
 
 SkBitmapCache::RecPtr SkBitmapCache::Alloc(const SkBitmapCacheDesc& desc, const SkImageInfo& info,
                                            SkPixmap* pmap) {
-<<<<<<< HEAD
     // Ensure that the info matches the subset (i.e. the subset is the entire image)
     SkASSERT(info.width() == desc.fSubset.width());
     SkASSERT(info.height() == desc.fSubset.height());
-    SkASSERT(info.colorType() == desc.fColorType);
-    SkASSERT((info.colorSpace() ? info.colorSpace()->toXYZD50Hash() : 0) == desc.fCSXYZHash);
-    SkASSERT((info.colorSpace() ? info.colorSpace()->transferFnHash() : 0) ==
-             desc.fCSTransferFnHash);
-||||||| merged common ancestors
-    // Ensure that the caller is self-consistent:
-    //  - if they are scaling, the info matches the scaled size
-    //  - if they are not, the info matches the subset (i.e. the subset is the entire image)
-    if (desc.fScaledWidth == 0 && desc.fScaledHeight == 0) {
-        SkASSERT(info.width() == desc.fSubset.width());
-        SkASSERT(info.height() == desc.fSubset.height());
-    } else {
-        SkASSERT(info.width() == desc.fScaledWidth);
-        SkASSERT(info.height() == desc.fScaledHeight);
-    }
-=======
-    // Ensure that the info matches the subset (i.e. the subset is the entire image)
-    SkASSERT(info.width() == desc.fSubset.width());
-    SkASSERT(info.height() == desc.fSubset.height());
->>>>>>> upstream-releases
 
     const size_t rb = info.minRowBytes();
     size_t size = info.computeByteSize(rb);
@@ -409,15 +284,6 @@ static SkResourceCache::DiscardableFactory get_fact(SkResourceCache* localCache)
                       : SkResourceCache::GetDiscardableFactory();
 }
 
-<<<<<<< HEAD
-const SkMipMap* SkMipMapCache::AddAndRef(const SkBitmap& src, SkResourceCache* localCache) {
-    SkMipMap* mipmap = SkMipMap::Build(src, get_fact(localCache));
-||||||| merged common ancestors
-const SkMipMap* SkMipMapCache::AddAndRef(const SkBitmap& src,
-                                         SkDestinationSurfaceColorMode colorMode,
-                                         SkResourceCache* localCache) {
-    SkMipMap* mipmap = SkMipMap::Build(src, colorMode, get_fact(localCache));
-=======
 const SkMipMap* SkMipMapCache::AddAndRef(const SkBitmapProvider& provider,
                                          SkResourceCache* localCache) {
     SkBitmap src;
@@ -426,16 +292,8 @@ const SkMipMap* SkMipMapCache::AddAndRef(const SkBitmapProvider& provider,
     }
 
     SkMipMap* mipmap = SkMipMap::Build(src, get_fact(localCache));
->>>>>>> upstream-releases
     if (mipmap) {
-<<<<<<< HEAD
-        MipMapRec* rec = new MipMapRec(SkBitmapCacheDesc::Make(src), mipmap);
-||||||| merged common ancestors
-        MipMapRec* rec = new MipMapRec(src.getGenerationID(), get_bounds_from_bitmap(src),
-                                       colorMode, mipmap);
-=======
         MipMapRec* rec = new MipMapRec(provider.makeCacheDesc(), mipmap);
->>>>>>> upstream-releases
         CHECK_LOCAL(localCache, add, Add, rec);
         provider.notifyAddedToCache();
     }

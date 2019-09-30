@@ -54,90 +54,14 @@
 #define CSS_PSEUDO_ELEMENT_IS_JS_CREATED_NAC (1 << 6)
 // Does this pseudo-element act like an item for containers (such as flex and
 // grid containers) and thus needs parent display-based style fixup?
-<<<<<<< HEAD
 #define CSS_PSEUDO_ELEMENT_IS_FLEX_OR_GRID_ITEM (1 << 7)
 
-namespace mozilla {
-
-// The total count of CSSPseudoElement is less than 256,
-// so use uint8_t as its underlying type.
-typedef uint8_t CSSPseudoElementTypeBase;
-enum class CSSPseudoElementType : CSSPseudoElementTypeBase {
-// If the actual pseudo-elements stop being first here, change
-// GetPseudoType.
-#define CSS_PSEUDO_ELEMENT(_name, _value, _flags) _name,
-#include "nsCSSPseudoElementList.h"
-#undef CSS_PSEUDO_ELEMENT
-  Count,
-  InheritingAnonBox = Count,  // pseudo from nsCSSAnonBoxes,
-                              // IsNonInheritingAnonBox false.
-  NonInheritingAnonBox,  // from nsCSSAnonBoxes, IsNonInheritingAnonBox true.
-#ifdef MOZ_XUL
-  XULTree,
-#endif
-  NotPseudo,
-  MAX
-};
-
-}  // namespace mozilla
-||||||| merged common ancestors
-#define CSS_PSEUDO_ELEMENT_IS_FLEX_OR_GRID_ITEM        (1<<7)
-
-namespace mozilla {
-
-// The total count of CSSPseudoElement is less than 256,
-// so use uint8_t as its underlying type.
-typedef uint8_t CSSPseudoElementTypeBase;
-enum class CSSPseudoElementType : CSSPseudoElementTypeBase {
-  // If the actual pseudo-elements stop being first here, change
-  // GetPseudoType.
-#define CSS_PSEUDO_ELEMENT(_name, _value, _flags) \
-  _name,
-#include "nsCSSPseudoElementList.h"
-#undef CSS_PSEUDO_ELEMENT
-  Count,
-  InheritingAnonBox = Count, // pseudo from nsCSSAnonBoxes,
-                             // IsNonInheritingAnonBox false.
-  NonInheritingAnonBox, // from nsCSSAnonBoxes, IsNonInheritingAnonBox true.
-#ifdef MOZ_XUL
-  XULTree,
-#endif
-  NotPseudo,
-  MAX
-};
-
-} // namespace mozilla
-=======
-#define CSS_PSEUDO_ELEMENT_IS_FLEX_OR_GRID_ITEM (1 << 7)
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-class nsCSSPseudoElements {
-  typedef mozilla::CSSPseudoElementType Type;
-||||||| merged common ancestors
-class nsCSSPseudoElements
-{
-  typedef mozilla::CSSPseudoElementType Type;
-=======
 class nsCSSPseudoElements {
   typedef mozilla::PseudoStyleType Type;
->>>>>>> upstream-releases
   typedef mozilla::CSSEnabledState EnabledState;
 
-<<<<<<< HEAD
  public:
   static bool IsPseudoElement(nsAtom* aAtom);
-
-  static bool IsCSS2PseudoElement(nsAtom* aAtom);
-||||||| merged common ancestors
-public:
-  static bool IsPseudoElement(nsAtom *aAtom);
-
-  static bool IsCSS2PseudoElement(nsAtom *aAtom);
-=======
- public:
-  static bool IsPseudoElement(nsAtom* aAtom);
->>>>>>> upstream-releases
 
   static bool IsCSS2PseudoElement(nsAtom* aAtom);
 
@@ -216,31 +140,13 @@ public:
 
  private:
   // Does the given pseudo-element have all of the flags given?
-<<<<<<< HEAD
-  static bool PseudoElementHasFlags(const Type aType, uint32_t aFlags) {
-    MOZ_ASSERT(aType < Type::Count);
-||||||| merged common ancestors
-  static bool PseudoElementHasFlags(const Type aType, uint32_t aFlags)
-  {
-    MOZ_ASSERT(aType < Type::Count);
-=======
   static bool PseudoElementHasFlags(const Type aType, uint32_t aFlags) {
     MOZ_ASSERT(aType < Type::CSSPseudoElementsEnd);
->>>>>>> upstream-releases
     return (kPseudoElementFlags[size_t(aType)] & aFlags) == aFlags;
   }
 
-<<<<<<< HEAD
-  static bool PseudoElementHasAnyFlag(const Type aType, uint32_t aFlags) {
-    MOZ_ASSERT(aType < Type::Count);
-||||||| merged common ancestors
-  static bool PseudoElementHasAnyFlag(const Type aType, uint32_t aFlags)
-  {
-    MOZ_ASSERT(aType < Type::Count);
-=======
   static bool PseudoElementHasAnyFlag(const Type aType, uint32_t aFlags) {
     MOZ_ASSERT(aType < Type::CSSPseudoElementsEnd);
->>>>>>> upstream-releases
     return (kPseudoElementFlags[size_t(aType)] & aFlags) != 0;
   }
 

@@ -8,11 +8,5 @@ es_PY{
             "guaraní paraguayo",
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.65"}
-||||||| merged common ancestors
-    Version{"2.1.38.39"}
-=======
     Version{"2.1.47.70"}
->>>>>>> upstream-releases
 }

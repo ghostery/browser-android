@@ -47,17 +47,8 @@ nsHTMLContentSerializer::nsHTMLContentSerializer() { mIsHTMLSerializer = true; }
 nsHTMLContentSerializer::~nsHTMLContentSerializer() {}
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsHTMLContentSerializer::AppendDocumentStart(nsIDocument* aDocument,
-                                             nsAString& aStr) {
-||||||| merged common ancestors
-nsHTMLContentSerializer::AppendDocumentStart(nsIDocument *aDocument,
-                                             nsAString& aStr)
-{
-=======
 nsHTMLContentSerializer::AppendDocumentStart(Document* aDocument,
                                              nsAString& aStr) {
->>>>>>> upstream-releases
   return NS_OK;
 }
 

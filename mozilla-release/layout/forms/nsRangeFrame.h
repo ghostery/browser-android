@@ -25,20 +25,9 @@ class Event;
 }  // namespace mozilla
 
 class nsRangeFrame final : public nsContainerFrame,
-<<<<<<< HEAD
-                           public nsIAnonymousContentCreator {
-  friend nsIFrame* NS_NewRangeFrame(nsIPresShell* aPresShell,
-                                    ComputedStyle* aStyle);
-||||||| merged common ancestors
-                           public nsIAnonymousContentCreator
-{
-  friend nsIFrame*
-  NS_NewRangeFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-=======
                            public nsIAnonymousContentCreator {
   friend nsIFrame* NS_NewRangeFrame(mozilla::PresShell* aPresShell,
                                     ComputedStyle* aStyle);
->>>>>>> upstream-releases
 
   friend class nsDisplayRangeFocusRing;
 
@@ -154,22 +143,12 @@ class nsRangeFrame final : public nsContainerFrame,
    */
   void UpdateForValueChange();
 
-<<<<<<< HEAD
- private:
-  nsresult MakeAnonymousDiv(Element** aResult, CSSPseudoElementType aPseudoType,
-||||||| merged common ancestors
-private:
-
-  nsresult MakeAnonymousDiv(Element** aResult,
-                            CSSPseudoElementType aPseudoType,
-=======
  private:
   // Return our preferred size in the cross-axis (the axis perpendicular
   // to the direction of movement of the thumb).
   nscoord AutoCrossSize(nscoord aEm);
 
   nsresult MakeAnonymousDiv(Element** aResult, PseudoStyleType aPseudoType,
->>>>>>> upstream-releases
                             nsTArray<ContentInfo>& aElements);
 
   // Helper function which reflows the anonymous div frames.

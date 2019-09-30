@@ -34,16 +34,9 @@ public:
     static sk_sp<GrVkTextureRenderTarget> MakeWrappedTextureRenderTarget(GrVkGpu*,
                                                                          const GrSurfaceDesc&,
                                                                          GrWrapOwnership,
-<<<<<<< HEAD
-                                                                         const GrVkImageInfo&,
-                                                                         sk_sp<GrVkImageLayout>);
-||||||| merged common ancestors
-                                                                         const GrVkImageInfo*);
-=======
                                                                          GrWrapCacheable,
                                                                          const GrVkImageInfo&,
                                                                          sk_sp<GrVkImageLayout>);
->>>>>>> upstream-releases
 
     GrBackendFormat backendFormat() const override { return this->getBackendFormat(); }
 
@@ -106,31 +99,8 @@ private:
                             const GrVkImageView* texView,
                             const GrVkImageView* colorAttachmentView,
                             GrMipMapsStatus,
-<<<<<<< HEAD
-                            GrBackendObjectOwnership);
-
-    static sk_sp<GrVkTextureRenderTarget> Make(GrVkGpu*,
-                                               const GrSurfaceDesc&,
-                                               const GrVkImageInfo&,
-                                               sk_sp<GrVkImageLayout>,
-                                               GrMipMapsStatus,
-                                               SkBudgeted budgeted,
-                                               GrBackendObjectOwnership,
-                                               bool isWrapped);
-||||||| merged common ancestors
-                            GrBackendObjectOwnership);
-
-    static sk_sp<GrVkTextureRenderTarget> Make(GrVkGpu*,
-                                               const GrSurfaceDesc&,
-                                               const GrVkImageInfo&,
-                                               GrMipMapsStatus,
-                                               SkBudgeted budgeted,
-                                               GrBackendObjectOwnership,
-                                               bool isWrapped);
-=======
                             GrBackendObjectOwnership,
                             GrWrapCacheable);
->>>>>>> upstream-releases
 
     // GrGLRenderTarget accounts for the texture's memory and any MSAA renderbuffer's memory.
     size_t onGpuMemorySize() const override;

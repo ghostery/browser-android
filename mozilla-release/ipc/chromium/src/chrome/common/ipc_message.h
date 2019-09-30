@@ -318,35 +318,12 @@ class Message : public Pickle {
   bool ReadFileDescriptor(PickleIterator* iter,
                           base::FileDescriptor* descriptor) const;
 
-<<<<<<< HEAD
-#if defined(OS_MACOSX)
-  void set_fd_cookie(uint32_t cookie) { header()->cookie = cookie; }
-  uint32_t fd_cookie() const { return header()->cookie; }
-||||||| merged common ancestors
-#if defined(OS_MACOSX)
-  void set_fd_cookie(uint32_t cookie) {
-    header()->cookie = cookie;
-  }
-  uint32_t fd_cookie() const {
-    return header()->cookie;
-  }
-=======
 #  if defined(OS_MACOSX)
   void set_fd_cookie(uint32_t cookie) { header()->cookie = cookie; }
   uint32_t fd_cookie() const { return header()->cookie; }
 #  endif
->>>>>>> upstream-releases
-#endif
-<<<<<<< HEAD
 #endif
 
-||||||| merged common ancestors
-#endif
-
-
-=======
-
->>>>>>> upstream-releases
   friend class Channel;
   friend class MessageReplyDeserializer;
   friend class SyncMessage;
@@ -376,24 +353,10 @@ class Message : public Pickle {
     msgid_t type;       // specifies the user-defined message type
     HeaderFlags flags;  // specifies control flags for the message
 #if defined(OS_POSIX)
-<<<<<<< HEAD
-    uint32_t num_fds;  // the number of descriptors included with this message
-#if defined(OS_MACOSX)
-||||||| merged common ancestors
-    uint32_t num_fds; // the number of descriptors included with this message
-# if defined(OS_MACOSX)
-=======
     uint32_t num_fds;  // the number of descriptors included with this message
 #  if defined(OS_MACOSX)
->>>>>>> upstream-releases
     uint32_t cookie;  // cookie to ACK that the descriptors have been read.
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-# endif
-=======
 #  endif
->>>>>>> upstream-releases
 #endif
     union {
       // For Interrupt messages, a guess at what the *other* side's stack depth

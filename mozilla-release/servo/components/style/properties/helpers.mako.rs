@@ -18,15 +18,9 @@
         #[allow(unused_imports)]
         use cssparser::{Color as CSSParserColor, RGBA};
         #[allow(unused_imports)]
-<<<<<<< HEAD
-        use crate::values::specified::AllowQuirks;
-||||||| merged common ancestors
-        use values::specified::AllowQuirks;
-=======
         use crate::values::specified::AllowQuirks;
         #[allow(unused_imports)]
         use crate::Zero;
->>>>>>> upstream-releases
         #[allow(unused_imports)]
         use smallvec::SmallVec;
         pub use crate::values::specified::${type} as SpecifiedValue;
@@ -126,13 +120,7 @@
             #[allow(unused_imports)]
             use crate::values::{computed, specified};
             #[allow(unused_imports)]
-<<<<<<< HEAD
-            use crate::values::{Auto, Either, None_, Normal};
-||||||| merged common ancestors
-            use values::{Auto, Either, None_, Normal};
-=======
             use crate::values::{Auto, Either, None_};
->>>>>>> upstream-releases
             ${caller.body()}
         }
 
@@ -277,19 +265,9 @@
                 Sorry, this is stupid but needed for now.
             % endif
 
-<<<<<<< HEAD
-            use crate::properties::animated_properties::ListAnimation;
-            use crate::values::animated::{Animate, ToAnimatedValue, ToAnimatedZero, Procedure};
-            use crate::values::distance::{SquaredDistance, ComputeSquaredDistance};
-||||||| merged common ancestors
-            use properties::animated_properties::ListAnimation;
-            use values::animated::{Animate, ToAnimatedValue, ToAnimatedZero, Procedure};
-            use values::distance::{SquaredDistance, ComputeSquaredDistance};
-=======
             use crate::properties::animated_properties::ListAnimation;
             use crate::values::animated::{Animate, ToAnimatedZero, Procedure};
             use crate::values::distance::{SquaredDistance, ComputeSquaredDistance};
->>>>>>> upstream-releases
 
             // FIXME(emilio): For some reason rust thinks that this alias is
             // unused, even though it's clearly used below?
@@ -381,13 +359,7 @@
             }
             % endif
 
-<<<<<<< HEAD
-            style_traits::${separator}::parse(input, |parser| {
-||||||| merged common ancestors
-            ::style_traits::${separator}::parse(input, |parser| {
-=======
             let v = style_traits::${separator}::parse(input, |parser| {
->>>>>>> upstream-releases
                 single_value::parse(context, parser)
             })?;
             Ok(SpecifiedValue(v.into()))
@@ -442,13 +414,7 @@
         #[allow(unused_imports)]
         use crate::properties::{UnparsedValue, ShorthandId};
         #[allow(unused_imports)]
-<<<<<<< HEAD
-        use crate::values::{Auto, Either, None_, Normal};
-||||||| merged common ancestors
-        use values::{Auto, Either, None_, Normal};
-=======
         use crate::values::{Auto, Either, None_};
->>>>>>> upstream-releases
         #[allow(unused_imports)]
         use crate::error_reporting::ParseErrorReporter;
         #[allow(unused_imports)]

@@ -5,11 +5,6 @@
 // Tests that the source tree works.
 
 add_task(async function() {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-sources.js
-  const dbg = await initDebugger("doc-sources.html", "simple1", "simple2", "nested-source", "long.js");
-||||||| merged common ancestors
-  const dbg = await initDebugger("doc-sources.html");
-=======
   const dbg = await initDebugger(
     "doc-sources.html",
     "simple1",
@@ -17,7 +12,6 @@ add_task(async function() {
     "nested-source",
     "long.js"
   );
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-sources.js
   const {
     selectors: { getSelectedSource },
     getState
@@ -45,13 +39,7 @@ add_task(async function() {
 
   ok(fourthNode.classList.contains("focused"), "4th node is focused");
   ok(selectedSource.includes("nested-source.js"), "nested-source is selected");
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-sources.js
-  await assertNodeIsFocused(dbg, 4);
-||||||| merged common ancestors
-
-=======
   await assertNodeIsFocused(dbg, 5);
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-sources.js
   await waitForSelectedSource(dbg, "nested-source");
 
   // Make sure new sources appear in the list.
@@ -61,15 +49,8 @@ add_task(async function() {
     content.document.body.appendChild(script);
   });
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/test/mochitest/browser_dbg-sources.js
-  await waitForSourceCount(dbg, 9);
-  await assertNodeIsFocused(dbg, 4);
-||||||| merged common ancestors
-  await waitForSourceCount(dbg, 9);
-=======
   await waitForSourceCount(dbg, 10);
   await assertNodeIsFocused(dbg, 5);
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/test/mochitest/browser_dbg-sources.js
   is(
     getSourceNodeLabel(dbg, 8),
     "math.min.js",

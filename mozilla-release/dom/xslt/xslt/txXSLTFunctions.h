@@ -49,58 +49,6 @@ class txKeyFunctionCall : public FunctionCall {
  * The definition for the XSLT format-number() function
  **/
 class txFormatNumberFunctionCall : public FunctionCall {
-<<<<<<< HEAD
- public:
-  /**
-   * Creates a new format-number() function call
-   **/
-  txFormatNumberFunctionCall(txStylesheet* aStylesheet,
-                             txNamespaceMap* aMappings);
-
-  TX_DECL_FUNCTION
-
- private:
-  static const char16_t FORMAT_QUOTE;
-
-  enum FormatParseState {
-    Prefix,
-    IntDigit,
-    IntZero,
-    FracZero,
-    FracDigit,
-    Suffix,
-    Finished
-  };
-
-  txStylesheet* mStylesheet;
-  RefPtr<txNamespaceMap> mMappings;
-||||||| merged common ancestors
-
-public:
-
-    /**
-     * Creates a new format-number() function call
-    **/
-    txFormatNumberFunctionCall(txStylesheet* aStylesheet, txNamespaceMap* aMappings);
-
-    TX_DECL_FUNCTION
-
-private:
-    static const char16_t FORMAT_QUOTE;
-
-    enum FormatParseState {
-        Prefix,
-        IntDigit,
-        IntZero,
-        FracZero,
-        FracDigit,
-        Suffix,
-        Finished
-    };
-
-    txStylesheet* mStylesheet;
-    RefPtr<txNamespaceMap> mMappings;
-=======
  public:
   /**
    * Creates a new format-number() function call
@@ -128,7 +76,6 @@ private:
 
   txStylesheet* mStylesheet;
   RefPtr<txNamespaceMap> mMappings;
->>>>>>> upstream-releases
 };
 
 /**

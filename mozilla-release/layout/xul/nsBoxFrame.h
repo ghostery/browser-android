@@ -29,17 +29,8 @@ class DrawTarget;
 }  // namespace gfx
 }  // namespace mozilla
 
-<<<<<<< HEAD
-nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell,
-                         mozilla::ComputedStyle* aStyle, bool aIsRoot,
-||||||| merged common ancestors
-nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell,
-                         mozilla::ComputedStyle* aStyle,
-                         bool aIsRoot,
-=======
 nsIFrame* NS_NewBoxFrame(mozilla::PresShell* aPresShell,
                          mozilla::ComputedStyle* aStyle, bool aIsRoot,
->>>>>>> upstream-releases
                          nsBoxLayout* aLayoutManager);
 nsIFrame* NS_NewBoxFrame(mozilla::PresShell* aPresShell,
                          mozilla::ComputedStyle* aStyle);
@@ -54,17 +45,8 @@ class nsBoxFrame : public nsContainerFrame {
   NS_DECL_QUERYFRAME
 #endif
 
-<<<<<<< HEAD
-  friend nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell,
-                                  ComputedStyle* aStyle, bool aIsRoot,
-||||||| merged common ancestors
-  friend nsIFrame* NS_NewBoxFrame(nsIPresShell* aPresShell,
-                                  ComputedStyle* aStyle,
-                                  bool aIsRoot,
-=======
   friend nsIFrame* NS_NewBoxFrame(mozilla::PresShell* aPresShell,
                                   ComputedStyle* aStyle, bool aIsRoot,
->>>>>>> upstream-releases
                                   nsBoxLayout* aLayoutManager);
   friend nsIFrame* NS_NewBoxFrame(mozilla::PresShell* aPresShell,
                                   ComputedStyle* aStyle);
@@ -131,22 +113,10 @@ class nsBoxFrame : public nsContainerFrame {
     // This is bogus, but it's what we've always done.
     // (Given that we're replaced, we need to say we're a replaced element
     // that contains a block so ReflowInput doesn't tell us to be
-<<<<<<< HEAD
-    // NS_INTRINSICSIZE wide.)
-    return nsContainerFrame::IsFrameOfType(
-        aFlags & ~(nsIFrame::eReplaced | nsIFrame::eReplacedContainsBlock |
-                   eXULBox | nsIFrame::eExcludesIgnorableWhitespace));
-||||||| merged common ancestors
-    // NS_INTRINSICSIZE wide.)
-    return nsContainerFrame::IsFrameOfType(aFlags &
-      ~(nsIFrame::eReplaced | nsIFrame::eReplacedContainsBlock | eXULBox |
-        nsIFrame::eExcludesIgnorableWhitespace));
-=======
     // NS_UNCONSTRAINEDSIZE wide.)
     return nsContainerFrame::IsFrameOfType(
         aFlags & ~(nsIFrame::eReplaced | nsIFrame::eReplacedContainsBlock |
                    eXULBox | nsIFrame::eExcludesIgnorableWhitespace));
->>>>>>> upstream-releases
   }
 
 #ifdef DEBUG_FRAME_DUMP
@@ -183,22 +153,6 @@ class nsBoxFrame : public nsContainerFrame {
    */
   void AppendDirectlyOwnedAnonBoxes(nsTArray<OwnedAnonBox>& aResult) override;
 
-<<<<<<< HEAD
- private:
-  explicit nsBoxFrame(ComputedStyle* aStyle)
-      : nsBoxFrame(aStyle, kClassID, false, nullptr) {}
-
- protected:
-  nsBoxFrame(ComputedStyle* aStyle, ClassID aID, bool aIsRoot = false,
-             nsBoxLayout* aLayoutManager = nullptr);
-||||||| merged common ancestors
-private:
-  explicit nsBoxFrame(ComputedStyle* aStyle)
-    : nsBoxFrame(aStyle, kClassID, false, nullptr) {}
-protected:
-  nsBoxFrame(ComputedStyle* aStyle, ClassID aID, bool aIsRoot = false,
-             nsBoxLayout* aLayoutManager = nullptr);
-=======
  private:
   explicit nsBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsBoxFrame(aStyle, aPresContext, kClassID, false, nullptr) {}
@@ -206,7 +160,6 @@ protected:
  protected:
   nsBoxFrame(ComputedStyle* aStyle, nsPresContext* aPresContext, ClassID aID,
              bool aIsRoot = false, nsBoxLayout* aLayoutManager = nullptr);
->>>>>>> upstream-releases
   virtual ~nsBoxFrame();
 
   virtual bool GetInitialEqualSize(bool& aEqualSize);

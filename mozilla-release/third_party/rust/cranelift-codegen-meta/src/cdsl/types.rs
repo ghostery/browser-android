@@ -90,16 +90,8 @@ impl ValueType {
     }
 
     /// Return the name of this type for generated Rust source files.
-<<<<<<< HEAD
-    pub fn _rust_name(&self) -> String {
-        format!("{}{}", _RUST_NAME_PREFIX, self.to_string().to_uppercase())
-||||||| merged common ancestors
-    pub fn _rust_name(&self) -> String {
-        format!("{}{}", _RUST_NAME_PREFIX, self.name().to_uppercase())
-=======
     pub fn rust_name(&self) -> String {
         format!("{}{}", _RUST_NAME_PREFIX, self.to_string().to_uppercase())
->>>>>>> upstream-releases
     }
 
     /// Return true iff:
@@ -196,46 +188,6 @@ impl LaneType {
         }
     }
 
-<<<<<<< HEAD
-    /// Find the unique number associated with this lane type.
-    pub fn number(self) -> u8 {
-        LANE_BASE + match self {
-            LaneType::BoolType(base_types::Bool::B1) => 0,
-            LaneType::BoolType(base_types::Bool::B8) => 1,
-            LaneType::BoolType(base_types::Bool::B16) => 2,
-            LaneType::BoolType(base_types::Bool::B32) => 3,
-            LaneType::BoolType(base_types::Bool::B64) => 4,
-            LaneType::IntType(base_types::Int::I8) => 5,
-            LaneType::IntType(base_types::Int::I16) => 6,
-            LaneType::IntType(base_types::Int::I32) => 7,
-            LaneType::IntType(base_types::Int::I64) => 8,
-            LaneType::FloatType(base_types::Float::F32) => 9,
-            LaneType::FloatType(base_types::Float::F64) => 10,
-||||||| merged common ancestors
-    /// Get the name of this lane type.
-    pub fn name(&self) -> String {
-        match *self {
-            LaneType::BoolType(_) => format!("b{}", self.lane_bits()),
-            LaneType::FloatType(_) => format!("f{}", self.lane_bits()),
-            LaneType::IntType(_) => format!("i{}", self.lane_bits()),
-        }
-    }
-
-    /// Find the unique number associated with this lane type.
-    pub fn number(&self) -> u8 {
-        LANE_BASE + match *self {
-            LaneType::BoolType(base_types::Bool::B1) => 0,
-            LaneType::BoolType(base_types::Bool::B8) => 1,
-            LaneType::BoolType(base_types::Bool::B16) => 2,
-            LaneType::BoolType(base_types::Bool::B32) => 3,
-            LaneType::BoolType(base_types::Bool::B64) => 4,
-            LaneType::IntType(base_types::Int::I8) => 5,
-            LaneType::IntType(base_types::Int::I16) => 6,
-            LaneType::IntType(base_types::Int::I32) => 7,
-            LaneType::IntType(base_types::Int::I64) => 8,
-            LaneType::FloatType(base_types::Float::F32) => 9,
-            LaneType::FloatType(base_types::Float::F64) => 10,
-=======
     /// Find the unique number associated with this lane type.
     pub fn number(self) -> u8 {
         LANE_BASE
@@ -288,17 +240,6 @@ impl LaneType {
             (*self).into()
         } else {
             ValueType::Vector(VectorType::new(*self, lanes.into()))
-        }
-    }
-}
-
-impl fmt::Display for LaneType {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            LaneType::BoolType(_) => write!(f, "b{}", self.lane_bits()),
-            LaneType::FloatType(_) => write!(f, "f{}", self.lane_bits()),
-            LaneType::IntType(_) => write!(f, "i{}", self.lane_bits()),
->>>>>>> upstream-releases
         }
     }
 }
@@ -417,20 +358,11 @@ impl VectorType {
         self.lanes
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    /// Get the name of this vector type.
-    pub fn name(&self) -> String {
-        format!("{}x{}", self.base.name(), self.lane_count())
-    }
-
-=======
     /// Return the lane type.
     pub fn lane_type(&self) -> LaneType {
         self.base
     }
 
->>>>>>> upstream-releases
     /// Find the unique number associated with this vector type.
     ///
     /// Vector types are encoded with the lane type in the low 4 bits and
@@ -505,19 +437,9 @@ pub enum SpecialType {
 
 impl SpecialType {
     /// Return a string containing the documentation comment for this special type.
-<<<<<<< HEAD
-    pub fn doc(self) -> String {
-        match self {
-            SpecialType::Flag(base_types::Flag::IFlags) => String::from(
-||||||| merged common ancestors
-    pub fn doc(&self) -> String {
-        match *self {
-            SpecialType::Flag(base_types::Flag::IFlags) => String::from(
-=======
     pub fn doc(self) -> String {
         match self {
             SpecialType::Flag(shared_types::Flag::IFlags) => String::from(
->>>>>>> upstream-releases
                 "CPU flags representing the result of an integer comparison. These flags
                 can be tested with an :type:`intcc` condition code.",
             ),
@@ -535,25 +457,11 @@ impl SpecialType {
         }
     }
 
-<<<<<<< HEAD
-    /// Find the unique number associated with this special type.
-    pub fn number(self) -> u8 {
-        match self {
-            SpecialType::Flag(base_types::Flag::IFlags) => 1,
-            SpecialType::Flag(base_types::Flag::FFlags) => 2,
-||||||| merged common ancestors
-    /// Get the name of this special type.
-    pub fn name(&self) -> String {
-        match *self {
-            SpecialType::Flag(base_types::Flag::IFlags) => "iflags".to_string(),
-            SpecialType::Flag(base_types::Flag::FFlags) => "fflags".to_string(),
-=======
     /// Find the unique number associated with this special type.
     pub fn number(self) -> u8 {
         match self {
             SpecialType::Flag(shared_types::Flag::IFlags) => 1,
             SpecialType::Flag(shared_types::Flag::FFlags) => 2,
->>>>>>> upstream-releases
         }
     }
 }
@@ -561,16 +469,8 @@ impl SpecialType {
 impl fmt::Display for SpecialType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-<<<<<<< HEAD
-            SpecialType::Flag(base_types::Flag::IFlags) => write!(f, "iflags"),
-            SpecialType::Flag(base_types::Flag::FFlags) => write!(f, "fflags"),
-||||||| merged common ancestors
-            SpecialType::Flag(base_types::Flag::IFlags) => 1,
-            SpecialType::Flag(base_types::Flag::FFlags) => 2,
-=======
             SpecialType::Flag(shared_types::Flag::IFlags) => write!(f, "iflags"),
             SpecialType::Flag(shared_types::Flag::FFlags) => write!(f, "fflags"),
->>>>>>> upstream-releases
         }
     }
 }

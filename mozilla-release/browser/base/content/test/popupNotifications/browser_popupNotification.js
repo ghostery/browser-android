@@ -309,16 +309,10 @@ var tests = [
     },
     onShown(popup) {
       let notification = popup.children[0];
-<<<<<<< HEAD
-      ok(notification.hasAttribute("buttonhighlight"), "default action is highlighted");
-||||||| merged common ancestors
-      is(notification.getAttribute("buttonhighlight"), "true", "default action is highlighted");
-=======
       ok(
         notification.hasAttribute("buttonhighlight"),
         "default action is highlighted"
       );
->>>>>>> upstream-releases
       triggerMainCommand(popup);
     },
     onHidden(popup) {
@@ -342,13 +336,6 @@ var tests = [
     },
     onShown(popup) {
       let notification = popup.children[0];
-<<<<<<< HEAD
-      is(notification.getAttribute("secondarybuttonhidden"), "true", "secondary button is hidden");
-      ok(notification.hasAttribute("buttonhighlight"), "default action is highlighted");
-||||||| merged common ancestors
-      is(notification.getAttribute("secondarybuttonhidden"), "true", "secondary button is hidden");
-      is(notification.getAttribute("buttonhighlight"), "true", "default action is highlighted");
-=======
       is(
         notification.getAttribute("secondarybuttonhidden"),
         "true",
@@ -358,7 +345,6 @@ var tests = [
         notification.hasAttribute("buttonhighlight"),
         "default action is highlighted"
       );
->>>>>>> upstream-releases
       triggerMainCommand(popup);
     },
     onHidden(popup) {

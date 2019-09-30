@@ -69,16 +69,8 @@ where
 }
 
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-unsafe impl HasFFI for AuthorStyles<crate::gecko::data::GeckoStyleSheet> {
-    type FFIType = crate::gecko_bindings::bindings::RawServoAuthorStyles;
-||||||| merged common ancestors
-unsafe impl HasFFI for AuthorStyles<::gecko::data::GeckoStyleSheet> {
-    type FFIType = ::gecko_bindings::bindings::RawServoAuthorStyles;
-=======
 unsafe impl HasFFI for AuthorStyles<crate::gecko::data::GeckoStyleSheet> {
     type FFIType = crate::gecko_bindings::structs::RawServoAuthorStyles;
->>>>>>> upstream-releases
 }
 #[cfg(feature = "gecko")]
 unsafe impl HasSimpleFFI for AuthorStyles<crate::gecko::data::GeckoStyleSheet> {}

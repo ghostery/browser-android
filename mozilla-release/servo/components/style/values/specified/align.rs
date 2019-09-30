@@ -308,13 +308,6 @@ impl From<AlignContent> for u16 {
 
 /// Value for the `justify-content` property.
 ///
-<<<<<<< HEAD
-/// <https://drafts.csswg.org/css-align/#propdef-justify-content>
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToComputedValue, ToCss)]
-||||||| merged common ancestors
-/// <https://drafts.csswg.org/css-align/#propdef-align-content>
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToComputedValue, ToCss)]
-=======
 /// <https://drafts.csswg.org/css-align/#propdef-justify-content>
 #[derive(
     Clone,
@@ -328,7 +321,6 @@ impl From<AlignContent> for u16 {
     ToResolvedValue,
     ToShmem,
 )]
->>>>>>> upstream-releases
 pub struct JustifyContent(pub ContentDistribution);
 
 impl Parse for JustifyContent {
@@ -534,13 +526,6 @@ impl From<JustifySelf> for u8 {
 
 /// Value of the `align-items` property
 ///
-<<<<<<< HEAD
-/// <https://drafts.csswg.org/css-align/#propdef-align-items>
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToComputedValue, ToCss)]
-||||||| merged common ancestors
-/// <https://drafts.csswg.org/css-align/#self-alignment>
-#[derive(Clone, Copy, Debug, Eq, MallocSizeOf, PartialEq, ToComputedValue, ToCss)]
-=======
 /// <https://drafts.csswg.org/css-align/#propdef-align-items>
 #[derive(
     Clone,
@@ -554,7 +539,6 @@ impl From<JustifySelf> for u8 {
     ToResolvedValue,
     ToShmem,
 )]
->>>>>>> upstream-releases
 pub struct AlignItems(pub AlignFlags);
 
 impl AlignItems {

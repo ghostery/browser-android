@@ -7,23 +7,6 @@ ignoreAllUncaughtExceptions();
 add_task(async function() {
   info("Clicking suggestion list while composing");
 
-<<<<<<< HEAD
-  await BrowserTestUtils.withNewTab({ gBrowser, url: "about:home" }, async function(browser) {
-    // Add a test engine that provides suggestions and switch to it.
-    let currEngine = Services.search.defaultEngine;
-    let engine = await promiseNewEngine("searchSuggestionEngine.xml");
-    let p = promiseContentSearchChange(browser, engine.name);
-    Services.search.defaultEngine = engine;
-    await p;
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({ gBrowser, url: "about:home" }, async function(browser) {
-    // Add a test engine that provides suggestions and switch to it.
-    let currEngine = Services.search.currentEngine;
-    let engine = await promiseNewEngine("searchSuggestionEngine.xml");
-    let p = promiseContentSearchChange(browser, engine.name);
-    Services.search.currentEngine = engine;
-    await p;
-=======
   await BrowserTestUtils.withNewTab(
     { gBrowser, url: "about:home" },
     async function(browser) {
@@ -33,7 +16,6 @@ add_task(async function() {
       let p = promiseContentSearchChange(browser, engine.name);
       await Services.search.setDefault(engine);
       await p;
->>>>>>> upstream-releases
 
       // Clear any search history results
       await new Promise((resolve, reject) => {
@@ -115,25 +97,6 @@ add_task(async function() {
       info("Waiting for search suggestion table unhidden");
       await mutationPromise;
 
-<<<<<<< HEAD
-    // Click the second suggestion.
-    let expectedURL = Services.search.defaultEngine
-      .getSubmission("xbar", null, "homepage").uri.spec;
-    let loadPromise = waitForDocLoadAndStopIt(expectedURL);
-    await BrowserTestUtils.synthesizeMouseAtCenter("#TEMPID", {
-      button: 0,
-    }, browser);
-    await loadPromise;
-||||||| merged common ancestors
-    // Click the second suggestion.
-    let expectedURL = Services.search.currentEngine
-      .getSubmission("xbar", null, "homepage").uri.spec;
-    let loadPromise = waitForDocLoadAndStopIt(expectedURL);
-    await BrowserTestUtils.synthesizeMouseAtCenter("#TEMPID", {
-      button: 0,
-    }, browser);
-    await loadPromise;
-=======
       // Click the second suggestion.
       let expectedURL = (await Services.search.getDefault()).getSubmission(
         "xbar",
@@ -152,26 +115,11 @@ add_task(async function() {
         browser
       );
       await loadPromise;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    Services.search.defaultEngine = currEngine;
-    try {
-      Services.search.removeEngine(engine);
-    } catch (ex) { }
-  });
-||||||| merged common ancestors
-    Services.search.currentEngine = currEngine;
-    try {
-      Services.search.removeEngine(engine);
-    } catch (ex) { }
-  });
-=======
       Services.search.setDefault(currEngine);
       try {
         await Services.search.removeEngine(engine);
       } catch (ex) {}
     }
   );
->>>>>>> upstream-releases
 });

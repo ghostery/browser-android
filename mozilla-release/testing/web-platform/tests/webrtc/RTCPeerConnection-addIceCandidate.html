@@ -269,13 +269,6 @@ a=rtcp-rsize
     t.add_cleanup(() => pc.close());
 
     return pc.setRemoteDescription(sessionDesc)
-<<<<<<< HEAD
-      .then(() => pc.addIceCandidate({
-        candidate: candidateStr1,
-        sdpMLineIndex: sdpMLineIndex1 }));
-||||||| merged common ancestors
-      .then(() => pc.addIceCandidate({ sdpMLineIndex }));
-=======
       .then(() => pc.addIceCandidate(new RTCIceCandidate({
         candidate: candidateStr1,
         sdpMid: sdpMid1 })));
@@ -290,7 +283,6 @@ a=rtcp-rsize
       .then(() => pc.addIceCandidate({
         candidate: candidateStr1,
         sdpMLineIndex: sdpMLineIndex1 }));
->>>>>>> upstream-releases
   }, 'Add candidate with only valid sdpMLineIndex should succeed');
 
   /*
@@ -348,18 +340,9 @@ a=rtcp-rsize
     return pc.setRemoteDescription(sessionDesc)
     .then(() => pc.addIceCandidate({
       candidate: candidateStr1,
-<<<<<<< HEAD
-      sdpMid: sdpMid1,
-      sdpMLineIndex: sdpMLineIndex1,
-      ufrag: null
-||||||| merged common ancestors
-      sdpMid, sdpMLineIndex,
-      ufrag: null
-=======
       sdpMid: sdpMid1,
       sdpMLineIndex: sdpMLineIndex1,
       usernameFragment: null
->>>>>>> upstream-releases
     }))
     .then(() => {
       assert_candidate_line_between(pc.remoteDescription.sdp,
@@ -483,64 +466,6 @@ a=rtcp-rsize
         })));
   }, 'Add candidate with invalid candidate string and both sdpMid and sdpMLineIndex null should reject with TypeError');
 
-<<<<<<< HEAD
-  promise_test(t => {
-    const pc = new RTCPeerConnection();
-
-    t.add_cleanup(() => pc.close());
-
-    return pc.setRemoteDescription(sessionDesc)
-    .then(() =>
-      promise_rejects(t, new TypeError(),
-        pc.addIceCandidate({})));
-  }, 'Add candidate with empty dict should reject with TypeError');
-
-  promise_test(t => {
-    const pc = new RTCPeerConnection();
-
-    t.add_cleanup(() => pc.close());
-
-    return pc.setRemoteDescription(sessionDesc)
-    .then(() =>
-      promise_rejects(t, new TypeError(),
-        pc.addIceCandidate({
-          candidate: '',
-          sdpMid: null,
-          sdpMLineIndex: null,
-          usernameFragment: undefined
-        })));
-  }, 'Add candidate with manually filled default values should reject with TypeError');
-
-||||||| merged common ancestors
-  promise_test(t => {
-    const pc = new RTCPeerConnection();
-
-    t.add_cleanup(() => pc.close());
-
-    return pc.setRemoteDescription(sessionDesc)
-    .then(() =>
-      promise_rejects(t, new TypeError(),
-        pc.addIceCandidate({})));
-  }, 'Add candidate with empty dict should reject with TypeError');
-
-  promise_test(t => {
-    const pc = new RTCPeerConnection();
-
-    t.add_cleanup(() => pc.close());
-
-    return pc.setRemoteDescription(sessionDesc)
-    .then(() =>
-      promise_rejects(t, new TypeError(),
-        pc.addIceCandidate({
-          candidate: '',
-          sdpMid: null,
-          sdpMLineIndex: null,
-          ufrag: undefined
-        })));
-  }, 'Add candidate with manually filled default values should reject with TypeError');
-
-=======
->>>>>>> upstream-releases
   /*
     4.4.2.  addIceCandidate
       4.3.  If candidate.sdpMid is not null, run the following steps:
@@ -638,18 +563,9 @@ a=rtcp-rsize
       promise_rejects(t, 'OperationError',
         pc.addIceCandidate({
           candidate: candidateStr1,
-<<<<<<< HEAD
-          sdpMid: sdpMid1,
-          sdpMLineIndex: sdpMLineIndex1,
-          ufrag: 'invalid'
-||||||| merged common ancestors
-          sdpMid, sdpMLineIndex,
-          ufrag: 'invalid'
-=======
           sdpMid: sdpMid1,
           sdpMLineIndex: sdpMLineIndex1,
           usernameFragment: 'invalid'
->>>>>>> upstream-releases
         })));
   }, 'Add candidate with invalid usernameFragment should reject with OperationError');
 
@@ -688,66 +604,8 @@ a=rtcp-rsize
           candidate: candidateStr2,
           sdpMid: sdpMid2,
           sdpMLineIndex: sdpMLineIndex2,
-<<<<<<< HEAD
-          usernameFragement: usernameFragment1
-||||||| merged common ancestors
-          ufrag: ufrag
-=======
           usernameFragment: usernameFragment1
->>>>>>> upstream-releases
         })));
-<<<<<<< HEAD
   }, 'Add candidate with sdpMid belonging to different usernameFragment should reject with OperationError');
 
-||||||| merged common ancestors
-  }, 'Add candidate with sdpMid belonging to different ufrag should reject with OperationError');
-
-  /*
-    TODO
-    4.3.2.  addIceCandidate
-      4.6.  In parallel, add the ICE candidate candidate as described in [JSEP]
-            (section 4.1.17.). Use candidate.ufrag to identify the ICE generation;
-
-            If the ufrag is null, process the candidate for the most recent ICE
-            generation.
-
-    - Call with candidate string containing partial malformed syntax, i.e. malformed IP.
-      Some browsers may ignore the syntax error and add it to the SDP regardless.
-
-    Non-Testable
-    4.3.2.  addIceCandidate
-      4.6.  (The steps are non-testable because the abort step in enqueue operation
-            steps in before they can reach here):
-        1.  If candidate could not be successfully added the user agent MUST
-            queue a task that runs the following steps:
-          1.  If connection's [[isClosed]] slot is true, then abort
-              these steps.
-
-        2.  If candidate is applied successfully, the user agent MUST queue
-            a task that runs the following steps:
-          1.  If connection's [[isClosed]] slot is true, then abort these steps.
-
-    Issues
-      w3c/webrtc-pc#1213
-        addIceCandidate end of candidates woes
-
-      w3c/webrtc-pc#1216
-        Clarify addIceCandidate behavior when adding candidate after end of candidate
-
-     w3c/webrtc-pc#1227
-        addIceCandidate may add ice candidate to the wrong remote description
-
-      w3c/webrtc-pc#1345
-        Make promise rejection/enqueing consistent
-
-    Coverage Report
-      Total:        23
-      Tested:       19
-      Not Tested:    2
-      Non-Testable:  2
-   */
-=======
-  }, 'Add candidate with sdpMid belonging to different usernameFragment should reject with OperationError');
-
->>>>>>> upstream-releases
 </script>

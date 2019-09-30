@@ -88,52 +88,18 @@ bool LookupBuiltinThunk(void* pc, const CodeRange** codeRange,
 // ReleaseProcessExecutableMemory() so that the latter can assert that all
 // executable code has been released.
 
-<<<<<<< HEAD
-bool EnsureBuiltinThunksInitialized();
-||||||| merged common ancestors
-bool
-EnsureBuiltinThunksInitialized();
-=======
 bool EnsureBuiltinThunksInitialized();
 
 void* HandleThrow(JSContext* cx, WasmFrameIter& iter);
 
 void* SymbolicAddressTarget(SymbolicAddress sym);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void* HandleThrow(JSContext* cx, WasmFrameIter& iter);
-||||||| merged common ancestors
-void*
-HandleThrow(JSContext* cx, WasmFrameIter& iter);
-=======
 void* MaybeGetBuiltinThunk(JSFunction* f, const FuncType& funcType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void* SymbolicAddressTarget(SymbolicAddress sym);
-||||||| merged common ancestors
-void*
-SymbolicAddressTarget(SymbolicAddress sym);
-=======
 void ReleaseBuiltinThunks();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void* MaybeGetBuiltinThunk(HandleFunction f, const FuncType& funcType);
-||||||| merged common ancestors
-void*
-MaybeGetBuiltinThunk(HandleFunction f, const FuncType& funcType);
-=======
 void* AddressOf(SymbolicAddress imm, jit::ABIFunctionType* abiType);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void ReleaseBuiltinThunks();
-||||||| merged common ancestors
-void
-ReleaseBuiltinThunks();
-=======
 #ifdef WASM_CODEGEN_DEBUG
 void PrintI32(int32_t val);
 void PrintF32(float val);
@@ -141,7 +107,6 @@ void PrintF64(double val);
 void PrintPtr(uint8_t* val);
 void PrintText(const char* out);
 #endif
->>>>>>> upstream-releases
 
 }  // namespace wasm
 }  // namespace js

@@ -65,13 +65,7 @@ class ResponsiveImageSelector {
 
   // The document we were created for, or the owner document of the content if
   // we were created for a specific nsIContent.
-<<<<<<< HEAD
-  nsIDocument* Document();
-||||||| merged common ancestors
-  nsIDocument *Document();
-=======
   dom::Document* Document();
->>>>>>> upstream-releases
 
   // Get the url and density for the selected best candidate. These
   // implicitly cause an image to be selected if necessary.

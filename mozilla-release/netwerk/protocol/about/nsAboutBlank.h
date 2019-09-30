@@ -16,14 +16,7 @@ class nsAboutBlank : public nsIAboutModule {
 
   nsAboutBlank() = default;
 
-<<<<<<< HEAD
-  static nsresult Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
-||||||| merged common ancestors
-    static nsresult
-    Create(nsISupports *aOuter, REFNSIID aIID, void **aResult);
-=======
   static nsresult Create(nsISupports* aOuter, REFNSIID aIID, void** aResult);
->>>>>>> upstream-releases
 
  private:
   virtual ~nsAboutBlank() = default;

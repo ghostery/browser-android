@@ -23,14 +23,7 @@ class ThreadEventQueue<InnerQueueT>::NestedSink : public ThreadTargetSink {
       : mQueue(aQueue), mOwner(aOwner) {}
 
   bool PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
-<<<<<<< HEAD
-                EventPriority aPriority) final {
-||||||| merged common ancestors
-                EventPriority aPriority) final
-  {
-=======
                 EventQueuePriority aPriority) final {
->>>>>>> upstream-releases
     return mOwner->PutEventInternal(std::move(aEvent), aPriority, this);
   }
 
@@ -66,42 +59,16 @@ ThreadEventQueue<InnerQueueT>::~ThreadEventQueue() {
   MOZ_ASSERT(mNestedQueues.IsEmpty());
 }
 
-<<<<<<< HEAD
-template <class InnerQueueT>
-bool ThreadEventQueue<InnerQueueT>::PutEvent(
-    already_AddRefed<nsIRunnable>&& aEvent, EventPriority aPriority) {
-||||||| merged common ancestors
-template<class InnerQueueT>
-bool
-ThreadEventQueue<InnerQueueT>::PutEvent(already_AddRefed<nsIRunnable>&& aEvent,
-                                        EventPriority aPriority)
-{
-=======
 template <class InnerQueueT>
 bool ThreadEventQueue<InnerQueueT>::PutEvent(
     already_AddRefed<nsIRunnable>&& aEvent, EventQueuePriority aPriority) {
->>>>>>> upstream-releases
   return PutEventInternal(std::move(aEvent), aPriority, nullptr);
 }
 
-<<<<<<< HEAD
-template <class InnerQueueT>
-bool ThreadEventQueue<InnerQueueT>::PutEventInternal(
-    already_AddRefed<nsIRunnable>&& aEvent, EventPriority aPriority,
-    NestedSink* aSink) {
-||||||| merged common ancestors
-template<class InnerQueueT>
-bool
-ThreadEventQueue<InnerQueueT>::PutEventInternal(already_AddRefed<nsIRunnable>&& aEvent,
-                                                EventPriority aPriority,
-                                                NestedSink* aSink)
-{
-=======
 template <class InnerQueueT>
 bool ThreadEventQueue<InnerQueueT>::PutEventInternal(
     already_AddRefed<nsIRunnable>&& aEvent, EventQueuePriority aPriority,
     NestedSink* aSink) {
->>>>>>> upstream-releases
   // We want to leak the reference when we fail to dispatch it, so that
   // we won't release the event in a wrong thread.
   LeakRefPtr<nsIRunnable> event(std::move(aEvent));
@@ -162,21 +129,9 @@ bool ThreadEventQueue<InnerQueueT>::PutEventInternal(
   return true;
 }
 
-<<<<<<< HEAD
-template <class InnerQueueT>
-already_AddRefed<nsIRunnable> ThreadEventQueue<InnerQueueT>::GetEvent(
-    bool aMayWait, EventPriority* aPriority) {
-||||||| merged common ancestors
-template<class InnerQueueT>
-already_AddRefed<nsIRunnable>
-ThreadEventQueue<InnerQueueT>::GetEvent(bool aMayWait,
-                                        EventPriority* aPriority)
-{
-=======
 template <class InnerQueueT>
 already_AddRefed<nsIRunnable> ThreadEventQueue<InnerQueueT>::GetEvent(
     bool aMayWait, EventQueuePriority* aPriority) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   nsCOMPtr<nsIRunnable> event;
@@ -213,15 +168,6 @@ bool ThreadEventQueue<InnerQueueT>::HasPendingEvent() {
   }
 }
 
-<<<<<<< HEAD
-template <class InnerQueueT>
-bool ThreadEventQueue<InnerQueueT>::ShutdownIfNoPendingEvents() {
-||||||| merged common ancestors
-template<class InnerQueueT>
-bool
-ThreadEventQueue<InnerQueueT>::ShutdownIfNoPendingEvents()
-{
-=======
 template <class InnerQueueT>
 bool ThreadEventQueue<InnerQueueT>::HasPendingHighPriorityEvents() {
   MutexAutoLock lock(mLock);
@@ -237,7 +183,6 @@ bool ThreadEventQueue<InnerQueueT>::HasPendingHighPriorityEvents() {
 
 template <class InnerQueueT>
 bool ThreadEventQueue<InnerQueueT>::ShutdownIfNoPendingEvents() {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
   if (mNestedQueues.IsEmpty() && mBaseQueue->IsEmpty(lock)) {
     mEventsAreDoomed = true;
@@ -349,15 +294,5 @@ void ThreadEventQueue<InnerQueueT>::SetObserver(nsIThreadObserver* aObserver) {
 
 namespace mozilla {
 template class ThreadEventQueue<EventQueue>;
-<<<<<<< HEAD
-template class ThreadEventQueue<PrioritizedEventQueue<EventQueue>>;
-template class ThreadEventQueue<PrioritizedEventQueue<LabeledEventQueue>>;
-}  // namespace mozilla
-||||||| merged common ancestors
-template class ThreadEventQueue<PrioritizedEventQueue<EventQueue>>;
-template class ThreadEventQueue<PrioritizedEventQueue<LabeledEventQueue>>;
-}
-=======
 template class ThreadEventQueue<PrioritizedEventQueue>;
 }  // namespace mozilla
->>>>>>> upstream-releases

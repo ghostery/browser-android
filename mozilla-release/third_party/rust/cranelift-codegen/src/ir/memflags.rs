@@ -89,23 +89,6 @@ impl MemFlags {
     pub fn set_aligned(&mut self) {
         self.set(FlagBit::Aligned)
     }
-<<<<<<< HEAD
-
-    /// Test if the `readonly` flag is set.
-    ///
-    /// Loads with this flag have no memory dependendies.
-    /// This results in indefined behavior if the dereferenced memory is mutated at any time
-    /// between when the function is called and when it is exited.
-    pub fn readonly(self) -> bool {
-        self.read(FlagBit::Readonly)
-    }
-
-    /// Set the `readonly` flag.
-    pub fn set_readonly(&mut self) {
-        self.set(FlagBit::Readonly)
-    }
-||||||| merged common ancestors
-=======
 
     /// Test if the `readonly` flag is set.
     ///
@@ -120,7 +103,6 @@ impl MemFlags {
     pub fn set_readonly(&mut self) {
         self.set(FlagBit::Readonly)
     }
->>>>>>> upstream-releases
 }
 
 impl fmt::Display for MemFlags {

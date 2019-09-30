@@ -95,27 +95,8 @@ var connect = async function() {
   await gClient.connect();
 
   appendStatusMessage("Get root form for toolbox");
-<<<<<<< HEAD
-  if (addonID) {
-    const addonTargetFront = await gClient.mainRoot.getAddon({ id: addonID });
-    await openToolbox({activeTab: addonTargetFront, chrome: true});
-  } else {
-    const front = await gClient.mainRoot.getMainProcess();
-    await openToolbox({activeTab: front, chrome: true});
-  }
-||||||| merged common ancestors
-  if (addonID) {
-    const { addons } = await gClient.listAddons();
-    const addonTargetActor = addons.filter(addon => addon.id === addonID).pop();
-    await openToolbox({form: addonTargetActor, chrome: true});
-  } else {
-    const response = await gClient.mainRoot.getProcess(0);
-    await openToolbox({form: response.form, chrome: true});
-  }
-=======
   const front = await gClient.mainRoot.getMainProcess();
   await openToolbox(front);
->>>>>>> upstream-releases
 };
 
 // Certain options should be toggled since we can assume chrome debugging here
@@ -130,18 +111,11 @@ function setPrefDefaults() {
     true
   );
   Services.prefs.setBoolPref("browser.dom.window.dump.enabled", true);
-<<<<<<< HEAD
-  Services.prefs.setBoolPref("devtools.console.stdout.chrome", true);
-  Services.prefs.setBoolPref("devtools.command-button-noautohide.enabled", true);
-||||||| merged common ancestors
-  Services.prefs.setBoolPref("devtools.command-button-noautohide.enabled", true);
-=======
   Services.prefs.setBoolPref("devtools.console.stdout.chrome", true);
   Services.prefs.setBoolPref(
     "devtools.command-button-noautohide.enabled",
     true
   );
->>>>>>> upstream-releases
   // Bug 1225160 - Using source maps with browser debugging can lead to a crash
   Services.prefs.setBoolPref("devtools.debugger.source-maps-enabled", false);
   Services.prefs.setBoolPref("devtools.preference.new-panel-enabled", false);
@@ -188,32 +162,11 @@ function onCloseCommand(event) {
   window.close();
 }
 
-<<<<<<< HEAD
-async function openToolbox({ form, activeTab, chrome }) {
-  let options = {
-    form,
-    activeTab,
-    client: gClient,
-    chrome,
-  };
-  appendStatusMessage(`Create toolbox target: ${JSON.stringify({form, chrome}, null, 2)}`);
-  const target = await TargetFactory.forRemoteTab(options);
-||||||| merged common ancestors
-async function openToolbox({ form, chrome }) {
-  let options = {
-    form: form,
-    client: gClient,
-    chrome: chrome,
-  };
-  appendStatusMessage(`Create toolbox target: ${JSON.stringify(arguments, null, 2)}`);
-  const target = await TargetFactory.forRemoteTab(options);
-=======
 async function openToolbox(target) {
   const form = target.targetForm;
   appendStatusMessage(
     `Create toolbox target: ${JSON.stringify({ form }, null, 2)}`
   );
->>>>>>> upstream-releases
   const frame = document.getElementById("toolbox-iframe");
 
   // Remember the last panel that was used inside of this profile.

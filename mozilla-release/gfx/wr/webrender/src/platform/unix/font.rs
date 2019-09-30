@@ -673,13 +673,7 @@ impl FontContext {
         key: &GlyphKey,
     ) -> Option<GlyphDimensions> {
         let slot = self.load_glyph(font, key);
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/platform/unix/font.rs
-        slot.and_then(|(slot, scale)| self.get_glyph_dimensions_impl(slot, font, key, scale, true))
-||||||| merged common ancestors
-        slot.and_then(|(slot, scale)| self.get_glyph_dimensions_impl(slot, font, key, Some(scale)))
-=======
         slot.and_then(|(slot, scale)| self.get_glyph_dimensions_impl(slot, &font, key, scale, true))
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/platform/unix/font.rs
     }
 
     fn choose_bitmap_size(&self, face: FT_Face, requested_size: f64) -> FT_Error {
@@ -783,20 +777,8 @@ impl FontContext {
         // Get dimensions of the glyph, to see if we need to rasterize it.
         // Don't apply scaling to the dimensions, as the glyph cache needs to know the actual
         // footprint of the glyph.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/platform/unix/font.rs
-        let dimensions = match self.get_glyph_dimensions_impl(slot, font, key, scale, false) {
-            Some(val) => val,
-            None => return GlyphRasterResult::LoadFailed,
-        };
-||||||| merged common ancestors
-        let dimensions = match self.get_glyph_dimensions_impl(slot, font, key, None) {
-            Some(val) => val,
-            None => return GlyphRasterResult::LoadFailed,
-        };
-=======
         let dimensions = self.get_glyph_dimensions_impl(slot, font, key, scale, false)
                              .ok_or(GlyphRasterError::LoadFailed)?;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/platform/unix/font.rs
         let GlyphDimensions { mut left, mut top, width, height, .. } = dimensions;
 
         // For spaces and other non-printable characters, early out.
@@ -808,16 +790,8 @@ impl FontContext {
         match format {
             FT_Glyph_Format::FT_GLYPH_FORMAT_BITMAP => {}
             FT_Glyph_Format::FT_GLYPH_FORMAT_OUTLINE => {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/platform/unix/font.rs
-                if !self.rasterize_glyph_outline(slot, font, key, scale) {
-                    return GlyphRasterResult::LoadFailed;
-||||||| merged common ancestors
-                if !self.rasterize_glyph_outline(slot, font, key) {
-                    return GlyphRasterResult::LoadFailed;
-=======
                 if !self.rasterize_glyph_outline(slot, font, key, scale) {
                     return Err(GlyphRasterError::LoadFailed);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/platform/unix/font.rs
                 }
             }
             _ => {

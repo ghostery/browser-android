@@ -192,17 +192,7 @@ const TESTS = [
 
 add_task(async function() {
   const target = await addTabTarget(MAIN_DOMAIN + "storage-updates.html");
-<<<<<<< HEAD
   const front = await target.getFront("storage");
-
-  await front.listStores();
-||||||| merged common ancestors
-  const front = target.getFront("storage");
-
-  await front.listStores();
-=======
-  const front = await target.getFront("storage");
->>>>>>> upstream-releases
 
   for (let i = 0; i < TESTS.length; i++) {
     const test = TESTS[i];

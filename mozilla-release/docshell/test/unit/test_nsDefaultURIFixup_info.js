@@ -1,30 +1,9 @@
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-var prefList = ["browser.fixup.typo.scheme", "keyword.enabled",
-                "browser.fixup.domainwhitelist.whitelisted"];
-for (let pref of prefList) {
-  Services.prefs.setBoolPref(pref, true);
-}
-||||||| merged common ancestors
-var urifixup = Cc["@mozilla.org/docshell/urifixup;1"].
-               getService(Ci.nsIURIFixup);
-
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-var prefList = ["browser.fixup.typo.scheme", "keyword.enabled",
-                "browser.fixup.domainwhitelist.whitelisted"];
-for (let pref of prefList) {
-  Services.prefs.setBoolPref(pref, true);
-}
-=======
 const { AddonTestUtils } = ChromeUtils.import(
   "resource://testing-common/AddonTestUtils.jsm"
 );
 const { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
->>>>>>> upstream-releases
 
 const kSearchEngineID = "test_urifixup_search_engine";
 const kSearchEngineURL = "http://www.example.org/?search={searchTerms}";
@@ -47,24 +26,6 @@ var flagInputs = [
   Services.uriFixup.FIXUP_FLAG_FIX_SCHEME_TYPOS,
 ];
 
-<<<<<<< HEAD
-flagInputs.concat([
-  flagInputs[0] | flagInputs[1],
-  flagInputs[1] | flagInputs[2],
-  flagInputs[0] | flagInputs[2],
-  flagInputs[0] | flagInputs[1] | flagInputs[2],
-]);
-
-||||||| merged common ancestors
-flagInputs.concat([
-  flagInputs[0] | flagInputs[1],
-  flagInputs[1] | flagInputs[2],
-  flagInputs[0] | flagInputs[2],
-  flagInputs[0] | flagInputs[1] | flagInputs[2]
-]);
-
-=======
->>>>>>> upstream-releases
 /*
   The following properties are supported for these test cases:
   {
@@ -254,71 +215,31 @@ var testcases = [
     input: "[64:ff9b::8.8.8.8]",
     fixedURI: "http://[64:ff9b::808:808]/",
     alternateURI: "http://[64:ff9b::808:808]/",
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "[64:ff9b::8.8.8.8]/~moz",
     fixedURI: "http://[64:ff9b::808:808]/~moz",
     alternateURI: "http://[64:ff9b::808:808]/~moz",
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "[::1][::1]",
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "[::1][100",
     fixedURI: null,
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "[::1]]",
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "1234",
     fixedURI: "http://0.0.4.210/",
     keywordLookup: true,
@@ -460,17 +381,9 @@ var testcases = [
     input: "café.local",
     fixedURI: "http://xn--caf-dma.local/",
     alternateURI: "http://www.xn--caf-dma.local/",
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "47.6182,-122.830",
     fixedURI: "http://47.6182,-122.830/",
     keywordLookup: true,
@@ -516,111 +429,47 @@ var testcases = [
   {
     input: "moz ?.::%27",
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "mozilla.com/?q=search",
     fixedURI: "http://mozilla.com/?q=search",
     alternateURI: "http://www.mozilla.com/?q=search",
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "mozilla.com?q=search",
     fixedURI: "http://mozilla.com/?q=search",
     alternateURI: "http://www.mozilla.com/?q=search",
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "mozilla.com ?q=search",
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "mozilla.com.?q=search",
     fixedURI: "http://mozilla.com./?q=search",
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "mozilla.com'?q=search",
     fixedURI: "http://mozilla.com'/?q=search",
     alternateURI: "http://www.mozilla.com'/?q=search",
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "mozilla.com':search",
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "[mozilla]",
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "':?",
     fixedURI: "http://'/?",
     alternateURI: "http://www.'.com/?",
@@ -641,17 +490,9 @@ var testcases = [
   {
     input: "' ?.com",
     keywordLookup: true,
-<<<<<<< HEAD
-    protocolChange: true,
-  }, {
-||||||| merged common ancestors
-    protocolChange: true
-  }, {
-=======
     protocolChange: true,
   },
   {
->>>>>>> upstream-releases
     input: "?mozilla",
     keywordLookup: true,
     protocolChange: true,
@@ -894,14 +735,8 @@ function do_single_test_run() {
       }
 
       // Check the fixedURI:
-<<<<<<< HEAD
-      let makeAlternativeURI = flags & Services.uriFixup.FIXUP_FLAGS_MAKE_ALTERNATE_URI;
-||||||| merged common ancestors
-      let makeAlternativeURI = flags & urifixup.FIXUP_FLAGS_MAKE_ALTERNATE_URI;
-=======
       let makeAlternativeURI =
         flags & Services.uriFixup.FIXUP_FLAGS_MAKE_ALTERNATE_URI;
->>>>>>> upstream-releases
       if (makeAlternativeURI && alternativeURI != null) {
         Assert.equal(
           URIInfo.fixedURI.spec,
@@ -917,17 +752,6 @@ function do_single_test_run() {
       }
 
       // Check booleans on input:
-<<<<<<< HEAD
-      let couldDoKeywordLookup = flags & Services.uriFixup.FIXUP_FLAG_ALLOW_KEYWORD_LOOKUP;
-      Assert.equal(!!URIInfo.keywordProviderName, couldDoKeywordLookup && expectKeywordLookup, "keyword lookup as expected");
-      Assert.equal(URIInfo.fixupChangedProtocol, expectProtocolChange, "protocol change as expected");
-      Assert.equal(URIInfo.fixupCreatedAlternateURI, makeAlternativeURI && alternativeURI != null, "alternative URI as expected");
-||||||| merged common ancestors
-      let couldDoKeywordLookup = flags & urifixup.FIXUP_FLAG_ALLOW_KEYWORD_LOOKUP;
-      Assert.equal(!!URIInfo.keywordProviderName, couldDoKeywordLookup && expectKeywordLookup, "keyword lookup as expected");
-      Assert.equal(URIInfo.fixupChangedProtocol, expectProtocolChange, "protocol change as expected");
-      Assert.equal(URIInfo.fixupCreatedAlternateURI, makeAlternativeURI && alternativeURI != null, "alternative URI as expected");
-=======
       let couldDoKeywordLookup =
         flags & Services.uriFixup.FIXUP_FLAG_ALLOW_KEYWORD_LOOKUP;
       Assert.equal(
@@ -945,7 +769,6 @@ function do_single_test_run() {
         makeAlternativeURI && alternativeURI != null,
         "alternative URI as expected"
       );
->>>>>>> upstream-releases
 
       // Check the preferred URI
       if (couldDoKeywordLookup) {

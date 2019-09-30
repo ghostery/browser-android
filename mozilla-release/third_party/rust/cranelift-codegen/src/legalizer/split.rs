@@ -162,21 +162,11 @@ fn split_any(
             // same EBB, there could be multiple arguments missing.
             if num_args > num_fixed_args + repair.hi_num {
                 *args
-<<<<<<< HEAD
-                    .get_mut(
-                        num_fixed_args + repair.hi_num,
-                        &mut pos.func.dfg.value_lists,
-                    ).unwrap() = hi;
-||||||| merged common ancestors
-                    .get_mut(fixed_args + repair.hi_num, &mut pos.func.dfg.value_lists)
-                    .unwrap() = hi;
-=======
                     .get_mut(
                         num_fixed_args + repair.hi_num,
                         &mut pos.func.dfg.value_lists,
                     )
                     .unwrap() = hi;
->>>>>>> upstream-releases
             } else {
                 // We need to append one or more arguments. If we're adding more than one argument,
                 // there must be pending repairs on the stack that will fill in the correct values

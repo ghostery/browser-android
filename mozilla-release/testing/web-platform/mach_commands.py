@@ -47,10 +47,6 @@ class WebPlatformTestsRunnerSetup(MozbuildObject):
             from mozrunner.devices.android_device import verify_android_device, grant_runtime_permissions
             verify_android_device(self, install=True, verbose=False, xre=True, app=package_name)
 
-            # Note that this import may fail in non-fennec trees
-            from mozrunner.devices.android_device import verify_android_device, grant_runtime_permissions
-            verify_android_device(self, install=True, verbose=False, xre=True, app=package_name)
-
             grant_runtime_permissions(self, package_name, kwargs["device_serial"])
             if kwargs["certutil_binary"] is None:
                 kwargs["certutil_binary"] = os.path.join(os.environ.get('MOZ_HOST_BIN'), "certutil")

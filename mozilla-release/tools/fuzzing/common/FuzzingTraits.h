@@ -113,40 +113,7 @@ T RandomFloatingPoint() {
   return x * RandomFloatingPointRange<T>(-1.0, 1.0);
 }
 
-<<<<<<< HEAD
-class FuzzingTraits {
- public:
-  static unsigned int Random(unsigned int aMax);
-  static bool Sometimes(unsigned int aProbability);
-  /**
-   * Frequency() defines how many mutations of a kind shall be applied to a
-   * target buffer by using a user definable factor. The higher the factor,
-   * the less mutations are being made.
-   */
-  static size_t Frequency(const size_t aSize, const uint64_t aFactor);
-};
-
 }  // namespace fuzzing
 }  // namespace mozilla
-||||||| merged common ancestors
-class FuzzingTraits
-{
-public:
-  static unsigned int Random(unsigned int aMax);
-  static bool Sometimes(unsigned int aProbability);
-  /**
-   * Frequency() defines how many mutations of a kind shall be applied to a
-   * target buffer by using a user definable factor. The higher the factor,
-   * the less mutations are being made.
-   */
-  static size_t Frequency(const size_t aSize, const uint64_t aFactor);
-};
-
-} // namespace fuzzing
-} // namespace mozilla
-=======
-}  // namespace fuzzing
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif

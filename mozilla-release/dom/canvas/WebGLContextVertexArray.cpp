@@ -18,83 +18,24 @@ void WebGLContext::BindVertexArray(WebGLVertexArray* array) {
 
   if (array && !ValidateObject("array", *array)) return;
 
-<<<<<<< HEAD
-  if (mBoundVertexArray) {
-    mBoundVertexArray->AddBufferBindCounts(-1);
-  }
-||||||| merged common ancestors
-    if (mBoundVertexArray) {
-        mBoundVertexArray->AddBufferBindCounts(-1);
-    }
-=======
   if (array == nullptr) {
     array = mDefaultVertexArray;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (array == nullptr) {
-    array = mDefaultVertexArray;
-  }
-||||||| merged common ancestors
-    if (array == nullptr) {
-        array = mDefaultVertexArray;
-    }
-=======
-  array->BindVertexArray();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   array->BindVertexArray();
 
   MOZ_ASSERT(mBoundVertexArray == array);
   if (mBoundVertexArray) {
-    mBoundVertexArray->AddBufferBindCounts(+1);
     mBoundVertexArray->mHasBeenBound = true;
   }
-||||||| merged common ancestors
-    array->BindVertexArray();
-
-    MOZ_ASSERT(mBoundVertexArray == array);
-    if (mBoundVertexArray) {
-        mBoundVertexArray->AddBufferBindCounts(+1);
-    }
-=======
-  MOZ_ASSERT(mBoundVertexArray == array);
-  if (mBoundVertexArray) {
-    mBoundVertexArray->mHasBeenBound = true;
-  }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 already_AddRefed<WebGLVertexArray> WebGLContext::CreateVertexArray() {
   const FuncScope funcScope(*this, "createVertexArray");
   if (IsContextLost()) return nullptr;
 
   RefPtr<WebGLVertexArray> globj = CreateVertexArrayImpl();
   return globj.forget();
-||||||| merged common ancestors
-already_AddRefed<WebGLVertexArray>
-WebGLContext::CreateVertexArray()
-{
-    const FuncScope funcScope(*this, "createVertexArray");
-    if (IsContextLost())
-        return nullptr;
-
-    RefPtr<WebGLVertexArray> globj = CreateVertexArrayImpl();
-
-    globj->GenVertexArray();
-
-    return globj.forget();
-=======
-already_AddRefed<WebGLVertexArray> WebGLContext::CreateVertexArray() {
-  const FuncScope funcScope(*this, "createVertexArray");
-  if (IsContextLost()) return nullptr;
-
-  RefPtr<WebGLVertexArray> globj = CreateVertexArrayImpl();
-  return globj.forget();
->>>>>>> upstream-releases
 }
 
 WebGLVertexArray* WebGLContext::CreateVertexArrayImpl() {

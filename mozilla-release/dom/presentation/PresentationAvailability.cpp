@@ -39,23 +39,10 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(PresentationAvailability)
   NS_INTERFACE_MAP_ENTRY(nsIPresentationAvailabilityListener)
 NS_INTERFACE_MAP_END_INHERITING(DOMEventTargetHelper)
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<PresentationAvailability>
-PresentationAvailability::Create(nsPIDOMWindowInner* aWindow,
-                                 const nsTArray<nsString>& aUrls,
-                                 RefPtr<Promise>& aPromise) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<PresentationAvailability>
-PresentationAvailability::Create(nsPIDOMWindowInner* aWindow,
-                                 const nsTArray<nsString>& aUrls,
-                                 RefPtr<Promise>& aPromise)
-{
-=======
 /* static */
 already_AddRefed<PresentationAvailability> PresentationAvailability::Create(
     nsPIDOMWindowInner* aWindow, const nsTArray<nsString>& aUrls,
     RefPtr<Promise>& aPromise) {
->>>>>>> upstream-releases
   RefPtr<PresentationAvailability> availability =
       new PresentationAvailability(aWindow, aUrls);
   return NS_WARN_IF(!availability->Init(aPromise)) ? nullptr
@@ -114,33 +101,15 @@ void PresentationAvailability::Shutdown() {
       NS_FAILED(service->UnregisterAvailabilityListener(mUrls, this)));
 }
 
-<<<<<<< HEAD
-/* virtual */ void PresentationAvailability::DisconnectFromOwner() {
-||||||| merged common ancestors
-/* virtual */ void
-PresentationAvailability::DisconnectFromOwner()
-{
-=======
 /* virtual */
 void PresentationAvailability::DisconnectFromOwner() {
->>>>>>> upstream-releases
   Shutdown();
   DOMEventTargetHelper::DisconnectFromOwner();
 }
 
-<<<<<<< HEAD
-/* virtual */ JSObject* PresentationAvailability::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-PresentationAvailability::WrapObject(JSContext* aCx,
-                                     JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* PresentationAvailability::WrapObject(
     JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return PresentationAvailability_Binding::Wrap(aCx, this, aGivenProto);
 }
 

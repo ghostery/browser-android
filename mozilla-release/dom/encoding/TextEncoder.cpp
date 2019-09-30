@@ -14,32 +14,6 @@ namespace dom {
 
 void TextEncoder::Init() {}
 
-<<<<<<< HEAD
-void TextEncoder::Encode(JSContext* aCx, JS::Handle<JSObject*> aObj,
-                         const nsAString& aString,
-                         JS::MutableHandle<JSObject*> aRetval,
-                         ErrorResult& aRv) {
-  nsAutoCString utf8;
-  nsresult rv;
-  const Encoding* ignored;
-  Tie(rv, ignored) = UTF_8_ENCODING->Encode(aString, utf8);
-  if (NS_FAILED(rv)) {
-    aRv.Throw(rv);
-||||||| merged common ancestors
-void
-TextEncoder::Encode(JSContext* aCx,
-                    JS::Handle<JSObject*> aObj,
-                    const nsAString& aString,
-                    JS::MutableHandle<JSObject*> aRetval,
-                    ErrorResult& aRv)
-{
-  nsAutoCString utf8;
-  nsresult rv;
-  const Encoding* ignored;
-  Tie(rv, ignored) = UTF_8_ENCODING->Encode(aString, utf8);
-  if (NS_FAILED(rv)) {
-    aRv.Throw(rv);
-=======
 void TextEncoder::Encode(JSContext* aCx, JS::Handle<JSObject*> aObj,
                          const nsAString& aString,
                          JS::MutableHandle<JSObject*> aRetval,
@@ -53,7 +27,6 @@ void TextEncoder::Encode(JSContext* aCx, JS::Handle<JSObject*> aObj,
   bufLen *= 3;  // from the contract for ConvertUTF16toUTF8
   if (!bufLen.isValid()) {
     aRv.Throw(NS_ERROR_OUT_OF_MEMORY);
->>>>>>> upstream-releases
     return;
   }
 
@@ -68,16 +41,7 @@ void TextEncoder::Encode(JSContext* aCx, JS::Handle<JSObject*> aObj,
   MOZ_ASSERT(utf8Len <= bufLen.value());
 
   JSAutoRealm ar(aCx, aObj);
-<<<<<<< HEAD
-  JSObject* outView =
-      Uint8Array::Create(aCx, utf8.Length(),
-                         reinterpret_cast<const uint8_t*>(utf8.BeginReading()));
-||||||| merged common ancestors
-  JSObject* outView = Uint8Array::Create(
-    aCx, utf8.Length(), reinterpret_cast<const uint8_t*>(utf8.BeginReading()));
-=======
   JSObject* outView = Uint8Array::Create(aCx, utf8Len, data.get());
->>>>>>> upstream-releases
   if (!outView) {
     aRv.Throw(NS_ERROR_OUT_OF_MEMORY);
     return;
@@ -86,13 +50,6 @@ void TextEncoder::Encode(JSContext* aCx, JS::Handle<JSObject*> aObj,
   aRetval.set(outView);
 }
 
-<<<<<<< HEAD
-void TextEncoder::GetEncoding(nsAString& aEncoding) {
-||||||| merged common ancestors
-void
-TextEncoder::GetEncoding(nsAString& aEncoding)
-{
-=======
 void TextEncoder::EncodeInto(const nsAString& aSrc, const Uint8Array& aDst,
                              TextEncoderEncodeIntoResult& aResult) {
   aDst.ComputeLengthAndData();
@@ -105,7 +62,6 @@ void TextEncoder::EncodeInto(const nsAString& aSrc, const Uint8Array& aDst,
 }
 
 void TextEncoder::GetEncoding(nsAString& aEncoding) {
->>>>>>> upstream-releases
   aEncoding.AssignLiteral("utf-8");
 }
 

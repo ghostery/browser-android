@@ -40,35 +40,6 @@ async function checkColorCycling(container, view) {
     "Color displayed as an RGB value."
   );
 
-<<<<<<< HEAD
-  const tests = [{
-    value: "red",
-    comment: "Color displayed as a color name.",
-  }, {
-    value: "#f00",
-    comment: "Color displayed as an authored value.",
-  }, {
-    value: "hsl(0, 100%, 50%)",
-    comment: "Color displayed as an HSL value again.",
-  }, {
-    value: "rgb(255, 0, 0)",
-    comment: "Color displayed as an RGB value again.",
-  }];
-||||||| merged common ancestors
-  const tests = [{
-    value: "red",
-    comment: "Color displayed as a color name."
-  }, {
-    value: "#f00",
-    comment: "Color displayed as an authored value."
-  }, {
-    value: "hsl(0, 100%, 50%)",
-    comment: "Color displayed as an HSL value again."
-  }, {
-    value: "rgb(255, 0, 0)",
-    comment: "Color displayed as an RGB value again."
-  }];
-=======
   const tests = [
     {
       value: "red",
@@ -87,7 +58,6 @@ async function checkColorCycling(container, view) {
       comment: "Color displayed as an RGB value again.",
     },
   ];
->>>>>>> upstream-releases
 
   for (const test of tests) {
     await checkSwatchShiftClick(container, win, test.value, test.comment);
@@ -100,17 +70,6 @@ async function checkSwatchShiftClick(container, win, expectedValue, comment) {
   swatch.scrollIntoView();
 
   const onUnitChange = swatch.once("unit-change");
-<<<<<<< HEAD
-  EventUtils.synthesizeMouseAtCenter(swatch, {
-    type: "mousedown",
-    shiftKey: true,
-  }, win);
-||||||| merged common ancestors
-  EventUtils.synthesizeMouseAtCenter(swatch, {
-    type: "mousedown",
-    shiftKey: true
-  }, win);
-=======
   EventUtils.synthesizeMouseAtCenter(
     swatch,
     {
@@ -119,7 +78,6 @@ async function checkSwatchShiftClick(container, win, expectedValue, comment) {
     },
     win
   );
->>>>>>> upstream-releases
   // we need to have the mouse up event in order to make sure that the platform
   // lets go of the last container, and is not waiting for something to happen.
   // Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1442153

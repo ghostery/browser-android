@@ -11,16 +11,8 @@
  * This is the class of entry. It will construct the actual implementation
  * according to the value of the "controls" property.
  */
-<<<<<<< HEAD
-this.VideoControlsWidget = class {
-  constructor(shadowRoot) {
-||||||| merged common ancestors
-this.VideoControlsPageWidget = class {
-  constructor(shadowRoot) {
-=======
 this.VideoControlsWidget = class {
   constructor(shadowRoot, prefs) {
->>>>>>> upstream-releases
     this.shadowRoot = shadowRoot;
     this.prefs = prefs;
     this.element = shadowRoot.host;
@@ -46,16 +38,8 @@ this.VideoControlsWidget = class {
 
   /*
    * Actually switch the implementation.
-<<<<<<< HEAD
-   * - With "controls" set, the VideoControlsImplWidget controls should load.
-   * - Without it, on mobile, the NoControlsImplWidget should load, so
-||||||| merged common ancestors
-   * - With "controls" set, the VideoControlsImplPageWidget controls should load.
-   * - Without it, on mobile, the NoControlsImplPageWidget should load, so
-=======
    * - With "controls" set, the VideoControlsImplWidget controls should load.
    * - Without it, on mobile, the NoControlsMobileImplWidget should load, so
->>>>>>> upstream-releases
    *   the user could see the click-to-play button when the video/audio is blocked.
    * - Without it, on desktop, the NoControlsPictureInPictureImpleWidget should load
    *   if the video is being viewed in Picture-in-Picture.
@@ -66,11 +50,6 @@ this.VideoControlsWidget = class {
     if (this.element.controls) {
       newImpl = VideoControlsImplWidget;
     } else if (this.isMobile) {
-<<<<<<< HEAD
-      newImpl = NoControlsImplWidget;
-||||||| merged common ancestors
-      newImpl = NoControlsImplPageWidget;
-=======
       newImpl = NoControlsMobileImplWidget;
     } else if (VideoControlsWidget.isPictureInPictureVideo(this.element)) {
       newImpl = NoControlsPictureInPictureImplWidget;
@@ -79,7 +58,6 @@ this.VideoControlsWidget = class {
       pageURI.startsWith("https://")
     ) {
       newImpl = NoControlsDesktopImplWidget;
->>>>>>> upstream-releases
     }
 
     // Skip if we are asked to load the same implementation, and
@@ -98,15 +76,8 @@ this.VideoControlsWidget = class {
       this.shadowRoot.firstChild.remove();
     }
     if (newImpl) {
-<<<<<<< HEAD
-      this.impl = new newImpl(this.shadowRoot);
-      this.impl.onsetup();
-||||||| merged common ancestors
-      this.impl = new newImpl(this.shadowRoot);
-=======
       this.impl = new newImpl(this.shadowRoot, this.prefs);
       this.impl.onsetup();
->>>>>>> upstream-releases
     } else {
       this.impl = undefined;
     }
@@ -169,16 +140,8 @@ this.VideoControlsWidget = class {
   }
 };
 
-<<<<<<< HEAD
-this.VideoControlsImplWidget = class {
-  constructor(shadowRoot) {
-||||||| merged common ancestors
-this.VideoControlsImplPageWidget = class {
-  constructor(shadowRoot) {
-=======
 this.VideoControlsImplWidget = class {
   constructor(shadowRoot, prefs) {
->>>>>>> upstream-releases
     this.shadowRoot = shadowRoot;
     this.prefs = prefs;
     this.element = shadowRoot.host;
@@ -1329,19 +1292,11 @@ this.VideoControlsImplWidget = class {
         // Suppress fading out the controls until the video has rendered
         // its first frame. But since autoplay videos start off with no
         // controls, let them fade-out so the controls don't get stuck on.
-<<<<<<< HEAD
-        if (!this.firstFrameShown && !isMouseOverVideo &&
-            !this.video.autoplay) {
-||||||| merged common ancestors
-        if (!this.firstFrameShown && !isMouseOver &&
-            !this.video.autoplay) {
-=======
         if (
           !this.firstFrameShown &&
           !isMouseOverVideo &&
           !this.video.autoplay
         ) {
->>>>>>> upstream-releases
           return;
         }
 
@@ -1568,15 +1523,9 @@ this.VideoControlsImplWidget = class {
       },
 
       get isVideoInFullScreen() {
-<<<<<<< HEAD
-        return this.video.isSameNode(this.video.getRootNode().mozFullScreenElement);
-||||||| merged common ancestors
-        return this.document.mozFullScreenElement == this.shadowRoot.host;
-=======
         return this.video.isSameNode(
           this.video.getRootNode().mozFullScreenElement
         );
->>>>>>> upstream-releases
       },
 
       toggleFullscreen() {
@@ -2714,13 +2663,7 @@ this.VideoControlsImplWidget = class {
   }
 };
 
-<<<<<<< HEAD
-this.NoControlsImplWidget = class {
-||||||| merged common ancestors
-this.NoControlsImplPageWidget = class {
-=======
 this.NoControlsMobileImplWidget = class {
->>>>>>> upstream-releases
   constructor(shadowRoot) {
     this.shadowRoot = shadowRoot;
     this.element = shadowRoot.host;

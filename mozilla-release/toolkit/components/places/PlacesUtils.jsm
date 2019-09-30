@@ -263,23 +263,12 @@ const SYNC_BOOKMARK_VALIDATORS = Object.freeze({
         PlacesUtils.isValidGuid(v))
   ),
   parentRecordId: v => SYNC_BOOKMARK_VALIDATORS.recordId(v),
-<<<<<<< HEAD
-  // Sync uses kinds instead of types.
-  kind: simpleValidateFunc(v => typeof v == "string" &&
-                                Object.values(PlacesSyncUtils.bookmarks.KINDS).includes(v)),
-||||||| merged common ancestors
-  // Sync uses kinds instead of types, which distinguish between livemarks and
-  // queries.
-  kind: simpleValidateFunc(v => typeof v == "string" &&
-                                Object.values(PlacesSyncUtils.bookmarks.KINDS).includes(v)),
-=======
   // Sync uses kinds instead of types.
   kind: simpleValidateFunc(
     v =>
       typeof v == "string" &&
       Object.values(PlacesSyncUtils.bookmarks.KINDS).includes(v)
   ),
->>>>>>> upstream-releases
   query: simpleValidateFunc(v => v === null || (typeof v == "string" && v)),
   folder: simpleValidateFunc(
     v =>
@@ -1246,19 +1235,6 @@ var PlacesUtils = {
    * @return (PageInfo)
    */
   validatePageInfo(pageInfo, validateVisits = true) {
-<<<<<<< HEAD
-    return this.validateItemProperties("PageInfo", PAGEINFO_VALIDATORS, pageInfo,
-      { url: { requiredIf: b => !b.guid },
-        guid: { requiredIf: b => !b.url },
-        visits: { requiredIf: b => validateVisits  },
-      });
-||||||| merged common ancestors
-    return this.validateItemProperties("PageInfo", PAGEINFO_VALIDATORS, pageInfo,
-      { url: { requiredIf: b => { typeof b.guid != "string"; } },
-        guid: { requiredIf: b => { typeof b.url != "string"; } },
-        visits: { requiredIf: b => validateVisits  },
-      });
-=======
     return this.validateItemProperties(
       "PageInfo",
       PAGEINFO_VALIDATORS,
@@ -1269,7 +1245,6 @@ var PlacesUtils = {
         visits: { requiredIf: b => validateVisits },
       }
     );
->>>>>>> upstream-releases
   },
   /**
    * Normalize a key to either a string (if it is a valid GUID) or an
@@ -1973,13 +1948,6 @@ XPCOMUtils.defineLazyServiceGetter(
   "nsIAnnotationService"
 );
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-XPCOMUtils.defineLazyServiceGetter(PlacesUtils, "livemarks",
-                                   "@mozilla.org/browser/livemark-service;2",
-                                   "mozIAsyncLivemarks");
-
-=======
 XPCOMUtils.defineLazyServiceGetter(
   PlacesUtils,
   "tagging",
@@ -1987,7 +1955,6 @@ XPCOMUtils.defineLazyServiceGetter(
   "nsITaggingService"
 );
 
->>>>>>> upstream-releases
 XPCOMUtils.defineLazyGetter(this, "bundle", function() {
   const PLACES_STRING_BUNDLE_URI = "chrome://places/locale/places.properties";
   return Services.strings.createBundle(PLACES_STRING_BUNDLE_URI);

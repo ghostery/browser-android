@@ -241,25 +241,9 @@ bs{
                 other{"{0} sati"}
             }
         }
-        minimalPairs{
-            ordinal{
-                other{"Skrenite na {0}. križanju desno."}
-            }
-            plural{
-                few{"{0} sata"}
-                one{"{0} sat"}
-                other{"{0} sati"}
-            }
-        }
         minimumGroupingDigits{"1"}
     }
-<<<<<<< HEAD
-    Version{"2.1.44.88"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
     calendar{
         generic{
             DateTimePatterns{

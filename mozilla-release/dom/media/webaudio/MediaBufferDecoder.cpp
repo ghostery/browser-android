@@ -95,14 +95,8 @@ class MediaDecodeTask final : public Runnable {
     return mDecoderReader;
   }
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   void ReportFailureOnMainThread(WebAudioDecodeJob::ErrorCode aErrorCode) {
     if (NS_IsMainThread()) {
       Cleanup();
@@ -369,24 +363,11 @@ void MediaDecodeTask::FinishDecode() {
       }
     } else {
       for (uint32_t i = 0; i < audioData->mChannels; ++i) {
-<<<<<<< HEAD
-        AudioDataValue* outData =
-            mDecodeJob.mBuffer.ChannelDataForWrite<AudioDataValue>(i) +
-            writeIndex;
-        PodCopy(outData, &bufferData[i * audioData->mFrames],
-                audioData->mFrames);
-||||||| merged common ancestors
-        AudioDataValue* outData = mDecodeJob.mBuffer.
-          ChannelDataForWrite<AudioDataValue>(i) + writeIndex;
-        PodCopy(outData, &bufferData[i * audioData->mFrames],
-                audioData->mFrames);
-=======
         AudioDataValue* outData =
             mDecodeJob.mBuffer.ChannelDataForWrite<AudioDataValue>(i) +
             writeIndex;
         PodCopy(outData, &bufferData[i * audioData->Frames()],
                 audioData->Frames());
->>>>>>> upstream-releases
 
         if (i == audioData->mChannels - 1) {
           writeIndex += audioData->Frames();
@@ -511,24 +492,10 @@ void WebAudioDecodeJob::OnSuccess(ErrorCode aErrorCode) {
 
   RefPtr<AudioBuffer> output(mOutput);
   if (mSuccessCallback) {
-<<<<<<< HEAD
-    ErrorResult rv;
-    mSuccessCallback->Call(*mOutput, rv);
-    // Ignore errors in calling the callback, since there is not much that we
-    // can do about it here.
-    rv.SuppressException();
-||||||| merged common ancestors
-    ErrorResult rv;
-    mSuccessCallback->Call(*mOutput, rv);
-    // Ignore errors in calling the callback, since there is not much that we can
-    // do about it here.
-    rv.SuppressException();
-=======
     RefPtr<DecodeSuccessCallback> callback(mSuccessCallback);
     // Ignore errors in calling the callback, since there is not much that we
     // can do about it here.
     callback->Call(*output);
->>>>>>> upstream-releases
   }
   mPromise->MaybeResolve(output);
 
@@ -540,51 +507,6 @@ void WebAudioDecodeJob::OnFailure(ErrorCode aErrorCode) {
 
   const char* errorMessage;
   switch (aErrorCode) {
-<<<<<<< HEAD
-    case UnknownContent:
-      errorMessage = "MediaDecodeAudioDataUnknownContentType";
-      break;
-    case InvalidContent:
-      errorMessage = "MediaDecodeAudioDataInvalidContent";
-      break;
-    case NoAudio:
-      errorMessage = "MediaDecodeAudioDataNoAudio";
-      break;
-    case NoError:
-      MOZ_FALLTHROUGH_ASSERT("Who passed NoError to OnFailure?");
-      // Fall through to get some sort of a sane error message if this actually
-      // happens at runtime.
-    case UnknownError:
-      MOZ_FALLTHROUGH;
-    default:
-      errorMessage = "MediaDecodeAudioDataUnknownError";
-      break;
-  }
-
-  nsIDocument* doc = nullptr;
-||||||| merged common ancestors
-  case UnknownContent:
-    errorMessage = "MediaDecodeAudioDataUnknownContentType";
-    break;
-  case InvalidContent:
-    errorMessage = "MediaDecodeAudioDataInvalidContent";
-    break;
-  case NoAudio:
-    errorMessage = "MediaDecodeAudioDataNoAudio";
-    break;
-  case NoError:
-    MOZ_FALLTHROUGH_ASSERT("Who passed NoError to OnFailure?");
-    // Fall through to get some sort of a sane error message if this actually
-    // happens at runtime.
-  case UnknownError:
-    MOZ_FALLTHROUGH;
-  default:
-    errorMessage = "MediaDecodeAudioDataUnknownError";
-    break;
-  }
-
-  nsIDocument* doc = nullptr;
-=======
     case UnknownContent:
       errorMessage = "MediaDecodeAudioDataUnknownContentType";
       break;
@@ -606,7 +528,6 @@ void WebAudioDecodeJob::OnFailure(ErrorCode aErrorCode) {
   }
 
   Document* doc = nullptr;
->>>>>>> upstream-releases
   if (nsPIDOMWindowInner* pWindow = mContext->GetParentObject()) {
     doc = pWindow->GetExtantDoc();
   }
@@ -618,21 +539,10 @@ void WebAudioDecodeJob::OnFailure(ErrorCode aErrorCode) {
   // do about it here.
   if (mFailureCallback) {
     nsAutoCString errorString(errorMessage);
-<<<<<<< HEAD
-    RefPtr<DOMException> exception = DOMException::Create(
-        NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR, errorString);
-    mFailureCallback->Call(*exception);
-||||||| merged common ancestors
-    RefPtr<DOMException> exception =
-      DOMException::Create(NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR,
-                           errorString);
-    mFailureCallback->Call(*exception);
-=======
     RefPtr<DOMException> exception = DOMException::Create(
         NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR, errorString);
     RefPtr<DecodeErrorCallback> callback(mFailureCallback);
     callback->Call(*exception);
->>>>>>> upstream-releases
   }
 
   mPromise->MaybeReject(NS_ERROR_DOM_ENCODING_NOT_SUPPORTED_ERR);

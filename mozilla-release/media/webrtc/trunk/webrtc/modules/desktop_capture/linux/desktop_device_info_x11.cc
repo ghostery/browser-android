@@ -2,31 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/desktop_device_info_x11.cc
-#include "modules/desktop_capture/x11/desktop_device_info_x11.h"
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/x11/desktop_device_info_x11.h"
-#include "webrtc/system_wrappers/include/logging.h"
-=======
 #include "modules/desktop_capture/linux/desktop_device_info_x11.h"
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/desktop_device_info_x11.cc
 #include <inttypes.h>
 #include <unistd.h>
 #include <stdio.h>
-<<<<<<< HEAD:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/x11/desktop_device_info_x11.cc
-#include "modules/desktop_capture/x11/shared_x_util.h"
-#include "modules/desktop_capture/x11/x_error_trap.h"
-#include "modules/desktop_capture/x11/x_server_pixel_buffer.h"
-||||||| merged common ancestors
-#include "webrtc/modules/desktop_capture/x11/shared_x_util.h"
-#include "webrtc/modules/desktop_capture/x11/x_error_trap.h"
-#include "webrtc/modules/desktop_capture/x11/x_server_pixel_buffer.h"
-=======
 #include "modules/desktop_capture/linux/shared_x_util.h"
 #include "modules/desktop_capture/linux/x_error_trap.h"
 #include "modules/desktop_capture/linux/x_server_pixel_buffer.h"
 #include "rtc_base/logging.h"
->>>>>>> upstream-releases:mozilla-release/media/webrtc/trunk/webrtc/modules/desktop_capture/linux/desktop_device_info_x11.cc
 
 namespace webrtc {
 

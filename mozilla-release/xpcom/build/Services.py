@@ -50,17 +50,11 @@ service('ThirdPartyUtil', 'mozIThirdPartyUtil',
         "@mozilla.org/thirdpartyutil;1")
 service('URIFixup', 'nsIURIFixup',
         "@mozilla.org/docshell/urifixup;1")
-<<<<<<< HEAD
-service('EffectiveTLDService', 'nsIEffectiveTLDService',
-        "@mozilla.org/network/effective-tld-service;1")
-||||||| merged common ancestors
-=======
 service('Bits', 'nsIBits',
         "@mozilla.org/bits;1")
 # NB: this should also expose nsIXULAppInfo, as does Services.jsm.
 service('AppInfoService', 'nsIXULRuntime',
         "@mozilla.org/xre/app-info;1")
->>>>>>> upstream-releases
 
 # The definition file needs access to the definitions of the particular
 # interfaces. If you add a new interface here, make sure the necessary includes
@@ -93,13 +87,8 @@ CPP_INCLUDES = """
 #include "nsIUUIDGenerator.h"
 #include "nsIGfxInfo.h"
 #include "nsIURIFixup.h"
-<<<<<<< HEAD
-#include "nsIEffectiveTLDService.h"
-||||||| merged common ancestors
-=======
 #include "nsIBits.h"
 #include "nsIXULRuntime.h"
->>>>>>> upstream-releases
 """
 
 #####

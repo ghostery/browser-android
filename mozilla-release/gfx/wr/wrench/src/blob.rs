@@ -8,13 +8,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::Mutex;
 use webrender::api::*;
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/blob.rs
-||||||| merged common ancestors
-use webrender::intersect_for_tile;
-use euclid::size2;
-=======
 use webrender::api::units::{BlobDirtyRect, BlobToDeviceTranslation, TileOffset};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/blob.rs
 
 // Serialize/deserialize the blob.
 

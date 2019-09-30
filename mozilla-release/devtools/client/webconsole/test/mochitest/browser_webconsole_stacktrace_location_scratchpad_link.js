@@ -52,33 +52,15 @@ add_task(async function() {
   const message = await waitFor(() => findMessage(hud, "console.trace()"));
   ok(message, "Found console.trace message from Scratchpad");
 
-<<<<<<< HEAD
-  info("Clicking link to switch to and focus Scratchpad");
-  const anchor = await waitFor(() => message.querySelector(".stacktrace .frame"));
-||||||| merged common ancestors
-=======
   info("Clicking link to switch to and focus Scratchpad");
   const anchor = await waitFor(() =>
     message.querySelector(".stacktrace .frame")
   );
->>>>>>> upstream-releases
   const onScratchpadSelected = toolbox.once("scratchpad-selected");
 
   EventUtils.sendMouseEvent({ type: "mousedown" }, anchor);
   await onScratchpadSelected;
 
-<<<<<<< HEAD
-  is(toolbox.getCurrentPanel(), scratchpadPanel,
-    "Clicking link in stacktrace switches to Scratchpad panel");
-
-  is(Services.ww.activeWindow, toolbox.win.parent, "Scratchpad's toolbox is focused");
-||||||| merged common ancestors
-  is(toolbox.getCurrentPanel(), scratchpadPanel,
-    "Clicking link in stacktrace switches to Scratchpad panel");
-
-  is(Services.ww.activeWindow, toolbox.win.parent,
-     "Scratchpad's toolbox is focused");
-=======
   is(
     toolbox.getCurrentPanel(),
     scratchpadPanel,
@@ -90,5 +72,4 @@ add_task(async function() {
     toolbox.topWindow,
     "Scratchpad's toolbox is focused"
   );
->>>>>>> upstream-releases
 });

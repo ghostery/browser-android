@@ -66,31 +66,11 @@ namespace {
 class PathGeoBuilder {
 public:
     PathGeoBuilder(GrPrimitiveType primitiveType, GrMeshDrawOp::Target* target,
-<<<<<<< HEAD
-                   sk_sp<const GrGeometryProcessor> geometryProcessor, const GrPipeline* pipeline,
-                   const GrPipeline::FixedDynamicState* fixedDynamicState)
-            : fPrimitiveType(primitiveType)
-||||||| merged common ancestors
-                   GrGeometryProcessor* geometryProcessor, const GrPipeline* pipeline)
-            : fMesh(primitiveType)
-=======
                    sk_sp<const GrGeometryProcessor> geometryProcessor)
             : fPrimitiveType(primitiveType)
->>>>>>> upstream-releases
             , fTarget(target)
             , fVertexStride(sizeof(SkPoint))
-<<<<<<< HEAD
             , fGeometryProcessor(std::move(geometryProcessor))
-            , fPipeline(pipeline)
-            , fFixedDynamicState(fixedDynamicState)
-            , fIndexBuffer(nullptr)
-||||||| merged common ancestors
-            , fGeometryProcessor(geometryProcessor)
-            , fPipeline(pipeline)
-            , fIndexBuffer(nullptr)
-=======
-            , fGeometryProcessor(std::move(geometryProcessor))
->>>>>>> upstream-releases
             , fFirstIndex(0)
             , fIndicesInChunk(0)
             , fIndices(nullptr) {
@@ -292,26 +272,11 @@ private:
             if (!this->isIndexed()) {
                 mesh->setNonIndexedNonInstanced(vertexCount);
             } else {
-<<<<<<< HEAD
-                mesh->setIndexed(fIndexBuffer, indexCount, fFirstIndex, 0, vertexCount - 1,
-                                 GrPrimitiveRestart::kNo);
-||||||| merged common ancestors
-                fMesh.setIndexed(fIndexBuffer, indexCount, fFirstIndex, 0, vertexCount - 1);
-=======
                 mesh->setIndexed(std::move(fIndexBuffer), indexCount, fFirstIndex, 0,
                                  vertexCount - 1, GrPrimitiveRestart::kNo);
->>>>>>> upstream-releases
             }
-<<<<<<< HEAD
-            mesh->setVertexData(fVertexBuffer, fFirstVertex);
-            fTarget->draw(fGeometryProcessor, fPipeline, fFixedDynamicState, mesh);
-||||||| merged common ancestors
-            fMesh.setVertexData(fVertexBuffer, fFirstVertex);
-            fTarget->draw(fGeometryProcessor, fPipeline, fMesh);
-=======
             mesh->setVertexData(std::move(fVertexBuffer), fFirstVertex);
             fTarget->recordDraw(fGeometryProcessor, mesh);
->>>>>>> upstream-releases
         }
 
         fTarget->putBackIndices((size_t)(fIndicesInChunk - indexCount));
@@ -347,16 +312,7 @@ private:
     GrPrimitiveType fPrimitiveType;
     GrMeshDrawOp::Target* fTarget;
     size_t fVertexStride;
-<<<<<<< HEAD
     sk_sp<const GrGeometryProcessor> fGeometryProcessor;
-    const GrPipeline* fPipeline;
-    const GrPipeline::FixedDynamicState* fFixedDynamicState;
-||||||| merged common ancestors
-    GrGeometryProcessor* fGeometryProcessor;
-    const GrPipeline* fPipeline;
-=======
-    sk_sp<const GrGeometryProcessor> fGeometryProcessor;
->>>>>>> upstream-releases
 
     sk_sp<const GrBuffer> fVertexBuffer;
     int fFirstVertex;
@@ -379,21 +335,6 @@ private:
 public:
     DEFINE_OP_CLASS_ID
 
-<<<<<<< HEAD
-    static std::unique_ptr<GrDrawOp> Make(GrContext* context,
-                                          GrPaint&& paint,
-                                          const SkPath& path,
-                                          SkScalar tolerance,
-                                          uint8_t coverage,
-                                          const SkMatrix& viewMatrix,
-                                          bool isHairline,
-                                          GrAAType aaType,
-                                          const SkRect& devBounds,
-||||||| merged common ancestors
-    static std::unique_ptr<GrDrawOp> Make(GrPaint&& paint, const SkPath& path, SkScalar tolerance,
-                                          uint8_t coverage, const SkMatrix& viewMatrix,
-                                          bool isHairline, GrAAType aaType, const SkRect& devBounds,
-=======
     static std::unique_ptr<GrDrawOp> Make(GrRecordingContext* context,
                                           GrPaint&& paint,
                                           const SkPath& path,
@@ -403,7 +344,6 @@ public:
                                           bool isHairline,
                                           GrAAType aaType,
                                           const SkRect& devBounds,
->>>>>>> upstream-releases
                                           const GrUserStencilSettings* stencilSettings) {
         return Helper::FactoryHelper<DefaultPathOp>(context, std::move(paint), path, tolerance,
                                                     coverage, viewMatrix, isHairline, aaType,
@@ -447,25 +387,12 @@ public:
 
     FixedFunctionFlags fixedFunctionFlags() const override { return fHelper.fixedFunctionFlags(); }
 
-<<<<<<< HEAD
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip) override {
-||||||| merged common ancestors
-    RequiresDstTexture finalize(const GrCaps& caps, const GrAppliedClip* clip,
-                                GrPixelConfigIsClamped dstIsClamped) override {
-=======
     GrProcessorSet::Analysis finalize(
             const GrCaps& caps, const GrAppliedClip* clip, GrFSAAType fsaaType) override {
->>>>>>> upstream-releases
         GrProcessorAnalysisCoverage gpCoverage =
                 this->coverage() == 0xFF ? GrProcessorAnalysisCoverage::kNone
                                          : GrProcessorAnalysisCoverage::kSingleChannel;
-<<<<<<< HEAD
-        return fHelper.xpRequiresDstTexture(caps, clip, gpCoverage, &fColor);
-||||||| merged common ancestors
-        return fHelper.xpRequiresDstTexture(caps, clip, dstIsClamped, gpCoverage, &fColor);
-=======
         return fHelper.finalizeProcessors(caps, clip, fsaaType, gpCoverage, &fColor);
->>>>>>> upstream-releases
     }
 
 private:
@@ -484,13 +411,7 @@ private:
                                                this->viewMatrix());
         }
 
-<<<<<<< HEAD
-        SkASSERT(gp->debugOnly_vertexStride() == sizeof(SkPoint));
-||||||| merged common ancestors
-        SkASSERT(gp->getVertexStride() == sizeof(SkPoint));
-=======
         SkASSERT(gp->vertexStride() == sizeof(SkPoint));
->>>>>>> upstream-releases
 
         int instanceCount = fPaths.count();
 
@@ -505,17 +426,7 @@ private:
         } else {
             primitiveType = GrPrimitiveType::kTriangles;
         }
-<<<<<<< HEAD
-        auto pipe = fHelper.makePipeline(target);
-        PathGeoBuilder pathGeoBuilder(primitiveType, target, std::move(gp), pipe.fPipeline,
-                                      pipe.fFixedDynamicState);
-||||||| merged common ancestors
-
-        PathGeoBuilder pathGeoBuilder(primitiveType, target, gp.get(),
-                                      fHelper.makePipeline(target));
-=======
         PathGeoBuilder pathGeoBuilder(primitiveType, target, std::move(gp));
->>>>>>> upstream-releases
 
         // fill buffers
         for (int i = 0; i < instanceCount; i++) {
@@ -524,17 +435,11 @@ private:
         }
     }
 
-<<<<<<< HEAD
-    CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
-||||||| merged common ancestors
-    bool onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
-=======
     void onExecute(GrOpFlushState* flushState, const SkRect& chainBounds) override {
         fHelper.executeDrawsAndUploads(this, flushState, chainBounds);
     }
 
     CombineResult onCombineIfPossible(GrOp* t, const GrCaps& caps) override {
->>>>>>> upstream-releases
         DefaultPathOp* that = t->cast<DefaultPathOp>();
         if (!fHelper.isCompatible(that->fHelper, caps, this->bounds(), that->bounds())) {
             return CombineResult::kCannotCombine;
@@ -557,15 +462,7 @@ private:
         }
 
         fPaths.push_back_n(that->fPaths.count(), that->fPaths.begin());
-<<<<<<< HEAD
-        this->joinBounds(*that);
         return CombineResult::kMerged;
-||||||| merged common ancestors
-        this->joinBounds(*that);
-        return true;
-=======
-        return CombineResult::kMerged;
->>>>>>> upstream-releases
     }
 
     const SkPMColor4f& color() const { return fColor; }
@@ -598,14 +495,8 @@ bool GrDefaultPathRenderer::internalDrawPath(GrRenderTargetContext* renderTarget
                                              const SkMatrix& viewMatrix,
                                              const GrShape& shape,
                                              bool stencilOnly) {
-<<<<<<< HEAD
-    GrContext* context = renderTargetContext->surfPriv().getContext();
-
-||||||| merged common ancestors
-=======
     auto context = renderTargetContext->surfPriv().getContext();
 
->>>>>>> upstream-releases
     SkASSERT(GrAAType::kCoverage != aaType);
     SkPath path;
     shape.asPath(&path);
@@ -722,17 +613,8 @@ bool GrDefaultPathRenderer::internalDrawPath(GrRenderTargetContext* renderTarget
             assert_alive(paint);
             renderTargetContext->addDrawOp(
                     clip,
-<<<<<<< HEAD
-                    GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
-                            context, std::move(paint), viewM, localMatrix,
-                            bounds, aaType, passes[p]));
-||||||| merged common ancestors
-                    GrRectOpFactory::MakeNonAAFillWithLocalMatrix(
-                            std::move(paint), viewM, localMatrix, bounds, aaType, passes[p]));
-=======
                     GrFillRectOp::MakeWithLocalMatrix(context, std::move(paint), aaType, viewM,
                                                       localMatrix, bounds, passes[p]));
->>>>>>> upstream-releases
         } else {
             bool stencilPass = stencilOnly || passCount > 1;
             std::unique_ptr<GrDrawOp> op;
@@ -743,14 +625,8 @@ bool GrDefaultPathRenderer::internalDrawPath(GrRenderTargetContext* renderTarget
                                          newCoverage, viewMatrix, isHairline, aaType, devBounds,
                                          passes[p]);
             } else {
-<<<<<<< HEAD
-                op = DefaultPathOp::Make(context, std::move(paint), path, srcSpaceTol, newCoverage,
-||||||| merged common ancestors
-                op = DefaultPathOp::Make(std::move(paint), path, srcSpaceTol, newCoverage,
-=======
                 assert_alive(paint);
                 op = DefaultPathOp::Make(context, std::move(paint), path, srcSpaceTol, newCoverage,
->>>>>>> upstream-releases
                                          viewMatrix, isHairline, aaType, devBounds, passes[p]);
             }
             renderTargetContext->addDrawOp(clip, std::move(op));

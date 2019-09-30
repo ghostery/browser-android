@@ -7,21 +7,10 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/SecondaryPanes/Breakpoints/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/SecondaryPanes/Breakpoints/moz.build
     'Breakpoint.js',
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/SecondaryPanes/Breakpoints/moz.build
-    'BreakpointHeading.js',
-||||||| merged common ancestors
-=======
     'BreakpointHeading.js',
     'BreakpointHeadingsContextMenu.js',
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/SecondaryPanes/Breakpoints/moz.build
     'BreakpointsContextMenu.js',
     'ExceptionOption.js',
     'index.js',

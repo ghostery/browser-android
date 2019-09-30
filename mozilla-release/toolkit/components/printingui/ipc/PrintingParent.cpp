@@ -47,22 +47,10 @@ mozilla::ipc::IPCResult PrintingParent::RecvShowProgress(
 
   nsresult rv = NS_ERROR_INVALID_ARG;
   if (parentWin && pps) {
-<<<<<<< HEAD
-    rv = pps->ShowProgress(parentWin, nullptr, nullptr, observer, isForPrinting,
-                           getter_AddRefs(printProgressListener),
-                           getter_AddRefs(printProgressParams), &notifyOnOpen);
-||||||| merged common ancestors
-    rv = pps->ShowProgress(parentWin, nullptr, nullptr, observer,
-                           isForPrinting,
-                           getter_AddRefs(printProgressListener),
-                           getter_AddRefs(printProgressParams),
-                           &notifyOnOpen);
-=======
     rv = pps->ShowPrintProgressDialog(
         parentWin, nullptr, nullptr, observer, isForPrinting,
         getter_AddRefs(printProgressListener),
         getter_AddRefs(printProgressParams), &notifyOnOpen);
->>>>>>> upstream-releases
   }
 
   if (NS_SUCCEEDED(rv)) {

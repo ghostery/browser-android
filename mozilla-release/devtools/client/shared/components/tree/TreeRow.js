@@ -236,13 +236,8 @@ define(function(require, exports, module) {
         "aria-level": member.level + 1,
         "aria-selected": !!member.selected,
         onClick: this.props.onClick,
-<<<<<<< HEAD
-        onContextMenu: this.props.onContextMenu,
-||||||| merged common ancestors
-=======
         onContextMenu: this.props.onContextMenu,
         onKeyDownCapture: member.active ? this._onKeyDown : undefined,
->>>>>>> upstream-releases
         onMouseOver: this.props.onMouseOver,
         onMouseOut: this.props.onMouseOut,
       };

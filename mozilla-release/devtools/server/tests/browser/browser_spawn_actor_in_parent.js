@@ -23,21 +23,6 @@ add_task(async function() {
     type: { target: true },
   });
 
-<<<<<<< HEAD
-  const tab = gBrowser.getTabForBrowser(browser);
-  const target = await TargetFactory.forTab(tab);
-  await target.attach();
-  const targetFront = target.activeTab;
-  const { client } = target;
-  const form = targetFront.targetForm;
-
-  const inContentFront = InContentFront(client, form);
-||||||| merged common ancestors
-  initDebuggerServer();
-  const client = new DebuggerClient(DebuggerServer.connectPipe());
-  const form = await connectDebuggerClient(client);
-  const inContentFront = InContentFront(client, form);
-=======
   const tab = gBrowser.getTabForBrowser(browser);
   const target = await TargetFactory.forTab(tab);
   await target.attach();
@@ -50,7 +35,6 @@ add_task(async function() {
   inContentFront.actorID = form.inContentActor;
   inContentFront.manage(inContentFront);
 
->>>>>>> upstream-releases
   const isInContent = await inContentFront.isInContent();
   ok(isInContent, "ContentActor really runs in the content process");
   const formSpawn = await inContentFront.spawnInParent(ACTOR_URL);

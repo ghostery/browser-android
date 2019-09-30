@@ -49,21 +49,9 @@ class GeckoMediaPluginServiceChild : public GeckoMediaPluginService {
     // Nothing to do here.
   }
 
-<<<<<<< HEAD
-  virtual RefPtr<GetGMPContentParentPromise> GetContentParent(
-      GMPCrashHelper* aHelper, const nsACString& aNodeIdString,
-      const nsCString& aAPI, const nsTArray<nsCString>& aTags) override;
-||||||| merged common ancestors
-  virtual RefPtr<GetGMPContentParentPromise> GetContentParent(
-    GMPCrashHelper* aHelper,
-    const nsACString& aNodeIdString,
-    const nsCString& aAPI,
-    const nsTArray<nsCString>& aTags) override;
-=======
   RefPtr<GetGMPContentParentPromise> GetContentParent(
       GMPCrashHelper* aHelper, const nsACString& aNodeIdString,
       const nsCString& aAPI, const nsTArray<nsCString>& aTags) override;
->>>>>>> upstream-releases
 
   RefPtr<GetGMPContentParentPromise> GetContentParent(
       GMPCrashHelper* aHelper, const NodeId& aNodeId, const nsCString& aAPI,

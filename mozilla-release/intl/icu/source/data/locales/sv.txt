@@ -234,13 +234,7 @@ sv{
         minimumGroupingDigits{"1"}
         native{"latn"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.94"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.90"}
->>>>>>> upstream-releases
     calendar{
         buddhist{
             availableFormats{
@@ -260,9 +254,6 @@ sv{
                     B{"h:mm B – h:mm B"}
                     h{"h:mm – h:mm B"}
                     m{"h:mm – h:mm B"}
-                }
-                hmv{
-                    h{"h:mm–h:mm a v"}
                 }
             }
         }
@@ -1552,10 +1543,6 @@ sv{
                     "Taishō",
                     "Shōwa",
                     "Heisei",
-<<<<<<< HEAD
-                    "Qqqq",
-||||||| merged common ancestors
-=======
                     "Reiwa",
                 }
             }
@@ -1568,15 +1555,11 @@ sv{
                     B{"h:mm B – h:mm B"}
                     h{"h:mm – h:mm B"}
                     m{"h:mm – h:mm B"}
->>>>>>> upstream-releases
                 }
             }
         }
         persian{
             eras{
-                wide{
-                    "Anno Persarum",
-                }
                 wide{
                     "Anno Persarum",
                 }
@@ -2668,41 +2651,6 @@ sv{
         US{"USA-enheter"}
         metric{"SI-enheter"}
     }
-<<<<<<< HEAD
-    parse{
-        date{
-            lenient{
-                "[\\--/]",
-                "[\\:∶]",
-            }
-        }
-        general{
-            lenient{
-                "[.․。︒﹒．｡]",
-                "['ʼ՚᾽᾿’＇]",
-                "[%٪﹪％]",
-                "[؉‰]",
-                "[\$﹩＄$]",
-                "[£₤]",
-                "[¥￥]",
-                "[₩￦]",
-                "[₨₹{Rp}{Rs}]",
-            }
-        }
-        number{
-            lenient{
-                "[\\-‒⁻₋−➖﹣－]",
-                "[,،٫、︐︑﹐﹑，､]",
-                "[+⁺₊➕﬩﹢＋]",
-            }
-            stricter{
-                "[,٫︐﹐，]",
-                "[.․﹒．｡]",
-            }
-        }
-    }
-||||||| merged common ancestors
-=======
     parse{
         date{
             lenient{
@@ -2731,5 +2679,4 @@ sv{
             }
         }
     }
->>>>>>> upstream-releases
 }

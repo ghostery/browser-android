@@ -17,12 +17,6 @@ namespace mozilla {
 // Forward declaration
 struct StaticXREAppData;
 
-<<<<<<< HEAD
-enum class LauncherFlags : uint32_t {
-||||||| merged common ancestors
-enum class LauncherFlags : uint32_t
-{
-=======
 /**
  * Determine whether or not the current process should be run as the launcher
  * process, and run if so. If we are not supposed to run as the launcher
@@ -33,7 +27,6 @@ Maybe<int> LauncherMain(int& argc, wchar_t* argv[],
                         const StaticXREAppData& aAppData);
 
 enum class LauncherFlags : uint32_t {
->>>>>>> upstream-releases
   eNone = 0,
   eWaitForBrowser = (1 << 0),  // Launcher should block until browser finishes
   eNoDeelevate = (1 << 1),     // If elevated, do not attempt to de-elevate

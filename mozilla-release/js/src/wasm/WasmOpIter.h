@@ -30,19 +30,7 @@ namespace js {
 namespace wasm {
 
 // The kind of a control-flow stack item.
-<<<<<<< HEAD
-enum class LabelKind : uint8_t { Block, Loop, Then, Else };
-||||||| merged common ancestors
-enum class LabelKind : uint8_t
-{
-    Block,
-    Loop,
-    Then,
-    Else
-};
-=======
 enum class LabelKind : uint8_t { Body, Block, Loop, Then, Else };
->>>>>>> upstream-releases
 
 // The type of values on the operand stack during validation. The Any type
 // represents the type of a value produced by an unconditional branch.
@@ -51,35 +39,6 @@ class StackType {
   PackedTypeCode tc_;
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  bool isValidCode() {
-    switch (UnpackTypeCodeType(tc_)) {
-      case TypeCode::I32:
-      case TypeCode::I64:
-      case TypeCode::F32:
-      case TypeCode::F64:
-      case TypeCode::AnyRef:
-      case TypeCode::Ref:
-      case TypeCode::NullRef:
-      case TypeCode::Limit:
-        return true;
-      default:
-        return false;
-||||||| merged common ancestors
-    bool isValidCode() {
-        switch (UnpackTypeCodeType(tc_)) {
-          case TypeCode::I32:
-          case TypeCode::I64:
-          case TypeCode::F32:
-          case TypeCode::F64:
-          case TypeCode::AnyRef:
-          case TypeCode::Ref:
-          case TypeCode::Limit:
-            return true;
-          default:
-            return false;
-        }
-=======
   bool isValidCode() {
     switch (UnpackTypeCodeType(tc_)) {
       case TypeCode::I32:
@@ -94,12 +53,10 @@ class StackType {
         return true;
       default:
         return false;
->>>>>>> upstream-releases
     }
   }
 #endif
 
-<<<<<<< HEAD
  public:
   enum Code {
     I32 = uint8_t(ValType::I32),
@@ -107,161 +64,31 @@ class StackType {
     F32 = uint8_t(ValType::F32),
     F64 = uint8_t(ValType::F64),
 
-    AnyRef = uint8_t(ValType::AnyRef),
-    Ref = uint8_t(ValType::Ref),
-    NullRef = uint8_t(ValType::NullRef),
-
-    TVar = uint8_t(TypeCode::Limit),
-  };
-
-  StackType() : tc_(InvalidPackedTypeCode()) {}
-
-  MOZ_IMPLICIT StackType(Code c) : tc_(PackTypeCode(TypeCode(c))) {
-    MOZ_ASSERT(isValidCode());
-  }
-||||||| merged common ancestors
-  public:
-    enum Code {
-        I32    = uint8_t(ValType::I32),
-        I64    = uint8_t(ValType::I64),
-        F32    = uint8_t(ValType::F32),
-        F64    = uint8_t(ValType::F64),
-
-        AnyRef = uint8_t(ValType::AnyRef),
-        Ref    = uint8_t(ValType::Ref),
-
-        Any    = uint8_t(TypeCode::Limit),
-    };
-
-    StackType() : tc_(InvalidPackedTypeCode()) {}
-
-    MOZ_IMPLICIT StackType(Code c)
-      : tc_(PackTypeCode(TypeCode(c)))
-    {
-        MOZ_ASSERT(isValidCode());
-    }
-=======
- public:
-  enum Code {
-    I32 = uint8_t(ValType::I32),
-    I64 = uint8_t(ValType::I64),
-    F32 = uint8_t(ValType::F32),
-    F64 = uint8_t(ValType::F64),
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  explicit StackType(const ValType& t) : tc_(t.packed()) {}
-||||||| merged common ancestors
-    explicit StackType(const ValType& t)
-      : tc_(t.packed())
-    {}
-=======
     AnyRef = uint8_t(ValType::AnyRef),
     FuncRef = uint8_t(ValType::FuncRef),
     Ref = uint8_t(ValType::Ref),
     NullRef = uint8_t(ValType::NullRef),
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  PackedTypeCode packed() const { return tc_; }
-||||||| merged common ancestors
-    PackedTypeCode packed() const {
-        return tc_;
-    }
-=======
     TVar = uint8_t(TypeCode::Limit),
   };
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  Code code() const { return Code(UnpackTypeCodeType(tc_)); }
-||||||| merged common ancestors
-    Code code() const {
-        return Code(UnpackTypeCodeType(tc_));
-    }
-=======
   StackType() : tc_(InvalidPackedTypeCode()) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t refTypeIndex() const { return UnpackTypeCodeIndex(tc_); }
-||||||| merged common ancestors
-    uint32_t refTypeIndex() const {
-        return UnpackTypeCodeIndex(tc_);
-    }
-=======
   MOZ_IMPLICIT StackType(Code c) : tc_(PackTypeCode(TypeCode(c))) {
     MOZ_ASSERT(isValidCode());
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool isRef() const { return UnpackTypeCodeType(tc_) == TypeCode::Ref; }
-||||||| merged common ancestors
-    bool isRef() const {
-        return UnpackTypeCodeType(tc_) == TypeCode::Ref;
-    }
-=======
   explicit StackType(const ValType& t) : tc_(t.packed()) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool isReference() const {
-    TypeCode tc = UnpackTypeCodeType(tc_);
-    return tc == TypeCode::Ref || tc == TypeCode::AnyRef ||
-           tc == TypeCode::NullRef;
-  }
-||||||| merged common ancestors
-    bool isRefOrAnyRef() const {
-        TypeCode tc = UnpackTypeCodeType(tc_);
-        return tc == TypeCode::Ref || tc == TypeCode::AnyRef;
-    }
-=======
   PackedTypeCode packed() const { return tc_; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool operator==(const StackType& that) const { return tc_ == that.tc_; }
-||||||| merged common ancestors
-    bool operator ==(const StackType& that) const {
-        return tc_ == that.tc_;
-    }
-=======
   Code code() const { return Code(UnpackTypeCodeType(tc_)); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool operator!=(const StackType& that) const { return tc_ != that.tc_; }
-||||||| merged common ancestors
-    bool operator !=(const StackType& that) const {
-        return tc_ != that.tc_;
-    }
-=======
   uint32_t refTypeIndex() const { return UnpackTypeCodeIndex(tc_); }
   bool isRef() const { return UnpackTypeCodeType(tc_) == TypeCode::Ref; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool operator==(Code that) const {
-    MOZ_ASSERT(that != Code::Ref);
-    return code() == that;
-  }
-||||||| merged common ancestors
-    bool operator ==(Code that) const {
-        MOZ_ASSERT(that != Code::Ref);
-        return code() == that;
-    }
-=======
   bool isReference() const { return IsReferenceType(tc_); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool operator!=(Code that) const { return !(*this == that); }
-||||||| merged common ancestors
-    bool operator !=(Code that) const {
-        return !(*this == that);
-    }
-=======
   bool operator==(const StackType& that) const { return tc_ == that.tc_; }
   bool operator!=(const StackType& that) const { return tc_ != that.tc_; }
   bool operator==(Code that) const {
@@ -269,158 +96,16 @@ class StackType {
     return code() == that;
   }
   bool operator!=(Code that) const { return !(*this == that); }
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-static inline ValType NonAnyToValType(StackType type) {
-  MOZ_ASSERT(type != StackType::TVar);
-  return ValType(type.packed());
-||||||| merged common ancestors
-static inline ValType
-NonAnyToValType(StackType type)
-{
-    MOZ_ASSERT(type != StackType::Any);
-    return ValType(type.packed());
-=======
 static inline ValType NonTVarToValType(StackType type) {
   MOZ_ASSERT(type != StackType::TVar);
   return ValType(type.packed());
->>>>>>> upstream-releases
 }
 
 #ifdef DEBUG
 // Families of opcodes that share a signature and validation logic.
 enum class OpKind {
-<<<<<<< HEAD
-  Block,
-  Loop,
-  Unreachable,
-  Drop,
-  I32,
-  I64,
-  F32,
-  F64,
-  Br,
-  BrIf,
-  BrTable,
-  Nop,
-  Unary,
-  Binary,
-  Comparison,
-  Conversion,
-  Load,
-  Store,
-  TeeStore,
-  CurrentMemory,
-  GrowMemory,
-  Select,
-  GetLocal,
-  SetLocal,
-  TeeLocal,
-  GetGlobal,
-  SetGlobal,
-  TeeGlobal,
-  Call,
-  CallIndirect,
-  OldCallDirect,
-  OldCallIndirect,
-  Return,
-  If,
-  Else,
-  End,
-  Wait,
-  Wake,
-  AtomicLoad,
-  AtomicStore,
-  AtomicBinOp,
-  AtomicCompareExchange,
-  OldAtomicLoad,
-  OldAtomicStore,
-  OldAtomicBinOp,
-  OldAtomicCompareExchange,
-  OldAtomicExchange,
-  ExtractLane,
-  ReplaceLane,
-  Swizzle,
-  Shuffle,
-  Splat,
-  MemOrTableCopy,
-  MemOrTableDrop,
-  MemFill,
-  MemOrTableInit,
-  TableGet,
-  TableGrow,
-  TableSet,
-  TableSize,
-  RefNull,
-  StructNew,
-  StructGet,
-  StructSet,
-  StructNarrow,
-||||||| merged common ancestors
-    Block,
-    Loop,
-    Unreachable,
-    Drop,
-    I32,
-    I64,
-    F32,
-    F64,
-    Br,
-    BrIf,
-    BrTable,
-    Nop,
-    Unary,
-    Binary,
-    Comparison,
-    Conversion,
-    Load,
-    Store,
-    TeeStore,
-    CurrentMemory,
-    GrowMemory,
-    Select,
-    GetLocal,
-    SetLocal,
-    TeeLocal,
-    GetGlobal,
-    SetGlobal,
-    TeeGlobal,
-    Call,
-    CallIndirect,
-    OldCallDirect,
-    OldCallIndirect,
-    Return,
-    If,
-    Else,
-    End,
-    Wait,
-    Wake,
-    AtomicLoad,
-    AtomicStore,
-    AtomicBinOp,
-    AtomicCompareExchange,
-    OldAtomicLoad,
-    OldAtomicStore,
-    OldAtomicBinOp,
-    OldAtomicCompareExchange,
-    OldAtomicExchange,
-    ExtractLane,
-    ReplaceLane,
-    Swizzle,
-    Shuffle,
-    Splat,
-    MemOrTableCopy,
-    MemOrTableDrop,
-    MemFill,
-    MemOrTableInit,
-    RefNull,
-    StructNew,
-    StructGet,
-    StructSet,
-    StructNarrow,
-=======
   Block,
   Loop,
   Unreachable,
@@ -488,7 +173,6 @@ enum class OpKind {
   StructGet,
   StructSet,
   StructNarrow,
->>>>>>> upstream-releases
 };
 
 // Return the OpKind for a given Op. This is used for sanity-checking that
@@ -509,135 +193,6 @@ struct LinearMemoryAddress {
 };
 
 template <typename ControlItem>
-<<<<<<< HEAD
-class ControlStackEntry {
-  LabelKind kind_;
-  bool polymorphicBase_;
-  ExprType type_;
-  size_t valueStackStart_;
-  ControlItem controlItem_;
-
- public:
-  ControlStackEntry(LabelKind kind, ExprType type, size_t valueStackStart)
-      : kind_(kind),
-        polymorphicBase_(false),
-        type_(type),
-        valueStackStart_(valueStackStart),
-        controlItem_() {
-    MOZ_ASSERT(type != ExprType::Limit);
-  }
-
-  LabelKind kind() const { return kind_; }
-  ExprType resultType() const { return type_; }
-  ExprType branchTargetType() const {
-    return kind_ == LabelKind::Loop ? ExprType::Void : type_;
-  }
-  size_t valueStackStart() const { return valueStackStart_; }
-  ControlItem& controlItem() { return controlItem_; }
-  void setPolymorphicBase() { polymorphicBase_ = true; }
-  bool polymorphicBase() const { return polymorphicBase_; }
-
-  void switchToElse() {
-    MOZ_ASSERT(kind_ == LabelKind::Then);
-    kind_ = LabelKind::Else;
-    polymorphicBase_ = false;
-  }
-};
-
-// Specialization for when there is no additional data needed.
-template <>
-class ControlStackEntry<Nothing> {
-  LabelKind kind_;
-  bool polymorphicBase_;
-  ExprType type_;
-  size_t valueStackStart_;
-
- public:
-  ControlStackEntry(LabelKind kind, ExprType type, size_t valueStackStart)
-      : kind_(kind),
-        polymorphicBase_(false),
-        type_(type),
-        valueStackStart_(valueStackStart) {
-    MOZ_ASSERT(type != ExprType::Limit);
-  }
-
-  LabelKind kind() const { return kind_; }
-  ExprType resultType() const { return type_; }
-  ExprType branchTargetType() const {
-    return kind_ == LabelKind::Loop ? ExprType::Void : type_;
-  }
-  size_t valueStackStart() const { return valueStackStart_; }
-  Nothing controlItem() { return Nothing(); }
-  void setPolymorphicBase() { polymorphicBase_ = true; }
-  bool polymorphicBase() const { return polymorphicBase_; }
-
-  void switchToElse() {
-    MOZ_ASSERT(kind_ == LabelKind::Then);
-    kind_ = LabelKind::Else;
-    polymorphicBase_ = false;
-  }
-||||||| merged common ancestors
-class ControlStackEntry
-{
-    LabelKind kind_;
-    bool polymorphicBase_;
-    ExprType type_;
-    size_t valueStackStart_;
-    ControlItem controlItem_;
-
-  public:
-    ControlStackEntry(LabelKind kind, ExprType type, size_t valueStackStart)
-      : kind_(kind), polymorphicBase_(false), type_(type), valueStackStart_(valueStackStart),
-        controlItem_()
-    {
-        MOZ_ASSERT(type != ExprType::Limit);
-    }
-
-    LabelKind kind() const { return kind_; }
-    ExprType resultType() const { return type_; }
-    ExprType branchTargetType() const { return kind_ == LabelKind::Loop ? ExprType::Void : type_; }
-    size_t valueStackStart() const { return valueStackStart_; }
-    ControlItem& controlItem() { return controlItem_; }
-    void setPolymorphicBase() { polymorphicBase_ = true; }
-    bool polymorphicBase() const { return polymorphicBase_; }
-
-    void switchToElse() {
-        MOZ_ASSERT(kind_ == LabelKind::Then);
-        kind_ = LabelKind::Else;
-        polymorphicBase_ = false;
-    }
-};
-
-// Specialization for when there is no additional data needed.
-template <>
-class ControlStackEntry<Nothing>
-{
-    LabelKind kind_;
-    bool polymorphicBase_;
-    ExprType type_;
-    size_t valueStackStart_;
-
-  public:
-    ControlStackEntry(LabelKind kind, ExprType type, size_t valueStackStart)
-      : kind_(kind), polymorphicBase_(false), type_(type), valueStackStart_(valueStackStart)
-    {
-        MOZ_ASSERT(type != ExprType::Limit);
-    }
-
-    LabelKind kind() const { return kind_; }
-    ExprType resultType() const { return type_; }
-    ExprType branchTargetType() const { return kind_ == LabelKind::Loop ? ExprType::Void : type_; }
-    size_t valueStackStart() const { return valueStackStart_; }
-    Nothing controlItem() { return Nothing(); }
-    void setPolymorphicBase() { polymorphicBase_ = true; }
-    bool polymorphicBase() const { return polymorphicBase_; }
-
-    void switchToElse() {
-        MOZ_ASSERT(kind_ == LabelKind::Then);
-        kind_ = LabelKind::Else;
-        polymorphicBase_ = false;
-    }
-=======
 class ControlStackEntry {
   // Use a Pair to optimize away empty ControlItem.
   mozilla::Pair<LabelKind, ControlItem> kindAndItem_;
@@ -669,96 +224,9 @@ class ControlStackEntry {
     kindAndItem_.first() = LabelKind::Else;
     polymorphicBase_ = false;
   }
->>>>>>> upstream-releases
 };
 
 template <typename Value>
-<<<<<<< HEAD
-class TypeAndValue {
-  StackType type_;
-  Value value_;
-
- public:
-  TypeAndValue() : type_(StackType::TVar), value_() {}
-  explicit TypeAndValue(StackType type) : type_(type), value_() {}
-  explicit TypeAndValue(ValType type) : type_(StackType(type)), value_() {}
-  TypeAndValue(StackType type, Value value) : type_(type), value_(value) {}
-  TypeAndValue(ValType type, Value value)
-      : type_(StackType(type)), value_(value) {}
-  StackType type() const { return type_; }
-  StackType& typeRef() { return type_; }
-  Value value() const { return value_; }
-  void setValue(Value value) { value_ = value; }
-};
-
-// Specialization for when there is no additional data needed.
-template <>
-class TypeAndValue<Nothing> {
-  StackType type_;
-
- public:
-  TypeAndValue() : type_(StackType::TVar) {}
-  explicit TypeAndValue(StackType type) : type_(type) {}
-  explicit TypeAndValue(ValType type) : type_(StackType(type)) {}
-  TypeAndValue(StackType type, Nothing value) : type_(type) {}
-  TypeAndValue(ValType type, Nothing value) : type_(StackType(type)) {}
-
-  StackType type() const { return type_; }
-  StackType& typeRef() { return type_; }
-  Nothing value() const { return Nothing(); }
-  void setValue(Nothing value) {}
-||||||| merged common ancestors
-class TypeAndValue
-{
-    StackType type_;
-    Value value_;
-
-  public:
-    TypeAndValue() : type_(StackType::Any), value_() {}
-    explicit TypeAndValue(StackType type)
-      : type_(type), value_()
-    {}
-    explicit TypeAndValue(ValType type)
-      : type_(StackType(type)), value_()
-    {}
-    TypeAndValue(StackType type, Value value)
-      : type_(type), value_(value)
-    {}
-    TypeAndValue(ValType type, Value value)
-      : type_(StackType(type)), value_(value)
-    {}
-    StackType type() const {
-        return type_;
-    }
-    StackType& typeRef() {
-        return type_;
-    }
-    Value value() const {
-        return value_;
-    }
-    void setValue(Value value) {
-        value_ = value;
-    }
-};
-
-// Specialization for when there is no additional data needed.
-template <>
-class TypeAndValue<Nothing>
-{
-    StackType type_;
-
-  public:
-    TypeAndValue() : type_(StackType::Any) {}
-    explicit TypeAndValue(StackType type) : type_(type) {}
-    explicit TypeAndValue(ValType type) : type_(StackType(type)) {}
-    TypeAndValue(StackType type, Nothing value) : type_(type) {}
-    TypeAndValue(ValType type, Nothing value) : type_(StackType(type)) {}
-
-    StackType type() const { return type_; }
-    StackType& typeRef() { return type_; }
-    Nothing value() const { return Nothing(); }
-    void setValue(Nothing value) {}
-=======
 class TypeAndValue {
   // Use a Pair to optimize away empty Value.
   mozilla::Pair<StackType, Value> tv_;
@@ -773,7 +241,6 @@ class TypeAndValue {
   StackType& typeRef() { return tv_.first(); }
   Value value() const { return tv_.second(); }
   void setValue(Value value) { tv_.second() = value; }
->>>>>>> upstream-releases
 };
 
 // An iterator over the bytes of a function body. It performs validation
@@ -787,18 +254,8 @@ class MOZ_STACK_CLASS OpIter : private Policy {
   typedef typename Policy::Value Value;
   typedef typename Policy::ControlItem ControlItem;
 
-<<<<<<< HEAD
   Decoder& d_;
   const ModuleEnvironment& env_;
-  ExclusiveDeferredValidationState& dvs_;
-||||||| merged common ancestors
-    Decoder& d_;
-    const ModuleEnvironment& env_;
-    ExclusiveDeferredValidationState& dvs_;
-=======
-  Decoder& d_;
-  const ModuleEnvironment& env_;
->>>>>>> upstream-releases
 
   Vector<TypeAndValue<Value>, 8, SystemAllocPolicy> valueStack_;
   Vector<ControlStackEntry<ControlItem>, 8, SystemAllocPolicy> controlStack_;
@@ -806,160 +263,6 @@ class MOZ_STACK_CLASS OpIter : private Policy {
 #ifdef DEBUG
   OpBytes op_;
 #endif
-<<<<<<< HEAD
-  size_t offsetOfLastReadOp_;
-
-  MOZ_MUST_USE bool readFixedU8(uint8_t* out) { return d_.readFixedU8(out); }
-  MOZ_MUST_USE bool readFixedU32(uint32_t* out) { return d_.readFixedU32(out); }
-  MOZ_MUST_USE bool readVarS32(int32_t* out) { return d_.readVarS32(out); }
-  MOZ_MUST_USE bool readVarU32(uint32_t* out) { return d_.readVarU32(out); }
-  MOZ_MUST_USE bool readVarS64(int64_t* out) { return d_.readVarS64(out); }
-  MOZ_MUST_USE bool readVarU64(uint64_t* out) { return d_.readVarU64(out); }
-  MOZ_MUST_USE bool readFixedF32(float* out) { return d_.readFixedF32(out); }
-  MOZ_MUST_USE bool readFixedF64(double* out) { return d_.readFixedF64(out); }
-
-  MOZ_MUST_USE bool readLinearMemoryAddress(uint32_t byteSize,
-                                            LinearMemoryAddress<Value>* addr);
-  MOZ_MUST_USE bool readLinearMemoryAddressAligned(
-      uint32_t byteSize, LinearMemoryAddress<Value>* addr);
-  MOZ_MUST_USE bool readBlockType(ExprType* expr);
-  MOZ_MUST_USE bool readStructTypeIndex(uint32_t* typeIndex);
-  MOZ_MUST_USE bool readFieldIndex(uint32_t* fieldIndex,
-                                   const StructType& structType);
-
-  MOZ_MUST_USE bool popCallArgs(const ValTypeVector& expectedTypes,
-                                Vector<Value, 8, SystemAllocPolicy>* values);
-
-  MOZ_MUST_USE bool popAnyType(StackType* type, Value* value);
-  MOZ_MUST_USE bool typeMismatch(StackType actual, StackType expected);
-  MOZ_MUST_USE bool popWithType(StackType expectedType, Value* value);
-  MOZ_MUST_USE bool popWithType(ValType valType, Value* value) {
-    return popWithType(StackType(valType), value);
-  }
-  MOZ_MUST_USE bool popWithType(ExprType expectedType, Value* value);
-  MOZ_MUST_USE bool topWithType(ExprType expectedType, Value* value);
-  MOZ_MUST_USE bool topWithType(ValType valType, Value* value);
-
-  MOZ_MUST_USE bool pushControl(LabelKind kind, ExprType type);
-  MOZ_MUST_USE bool checkStackAtEndOfBlock(ExprType* type, Value* value);
-  MOZ_MUST_USE bool getControl(uint32_t relativeDepth,
-                               ControlStackEntry<ControlItem>** controlEntry);
-  MOZ_MUST_USE bool checkBranchValue(uint32_t relativeDepth, ExprType* type,
-                                     Value* value);
-  MOZ_MUST_USE bool checkBrTableEntry(uint32_t* relativeDepth,
-                                      ExprType* branchValueType,
-                                      Value* branchValue);
-
-  MOZ_MUST_USE bool push(StackType t) { return valueStack_.emplaceBack(t); }
-  MOZ_MUST_USE bool push(ValType t) { return valueStack_.emplaceBack(t); }
-  MOZ_MUST_USE bool push(ExprType t) {
-    return IsVoid(t) || push(NonVoidToValType(t));
-  }
-  MOZ_MUST_USE bool push(TypeAndValue<Value> tv) {
-    return valueStack_.append(tv);
-  }
-  void infalliblePush(StackType t) { valueStack_.infallibleEmplaceBack(t); }
-  void infalliblePush(ValType t) {
-    valueStack_.infallibleEmplaceBack(StackType(t));
-  }
-  void infalliblePush(TypeAndValue<Value> tv) {
-    valueStack_.infallibleAppend(tv);
-  }
-
-  void afterUnconditionalBranch() {
-    valueStack_.shrinkTo(controlStack_.back().valueStackStart());
-    controlStack_.back().setPolymorphicBase();
-  }
-
-  inline bool Join(StackType one, StackType two, StackType* result);
-
- public:
-  typedef Vector<Value, 8, SystemAllocPolicy> ValueVector;
-||||||| merged common ancestors
-    size_t offsetOfLastReadOp_;
-
-    MOZ_MUST_USE bool readFixedU8(uint8_t* out) {
-        return d_.readFixedU8(out);
-    }
-    MOZ_MUST_USE bool readFixedU32(uint32_t* out) {
-        return d_.readFixedU32(out);
-    }
-    MOZ_MUST_USE bool readVarS32(int32_t* out) {
-        return d_.readVarS32(out);
-    }
-    MOZ_MUST_USE bool readVarU32(uint32_t* out) {
-        return d_.readVarU32(out);
-    }
-    MOZ_MUST_USE bool readVarS64(int64_t* out) {
-        return d_.readVarS64(out);
-    }
-    MOZ_MUST_USE bool readVarU64(uint64_t* out) {
-        return d_.readVarU64(out);
-    }
-    MOZ_MUST_USE bool readFixedF32(float* out) {
-        return d_.readFixedF32(out);
-    }
-    MOZ_MUST_USE bool readFixedF64(double* out) {
-        return d_.readFixedF64(out);
-    }
-
-    MOZ_MUST_USE bool readLinearMemoryAddress(uint32_t byteSize, LinearMemoryAddress<Value>* addr);
-    MOZ_MUST_USE bool readLinearMemoryAddressAligned(uint32_t byteSize, LinearMemoryAddress<Value>* addr);
-    MOZ_MUST_USE bool readBlockType(ExprType* expr);
-    MOZ_MUST_USE bool readStructTypeIndex(uint32_t* typeIndex);
-    MOZ_MUST_USE bool readFieldIndex(uint32_t* fieldIndex, const StructType& structType);
-
-    MOZ_MUST_USE bool popCallArgs(const ValTypeVector& expectedTypes, Vector<Value, 8, SystemAllocPolicy>* values);
-
-    MOZ_MUST_USE bool popAnyType(StackType* type, Value* value);
-    MOZ_MUST_USE bool typeMismatch(StackType actual, StackType expected);
-    MOZ_MUST_USE bool popWithType(StackType expectedType, Value* value);
-    MOZ_MUST_USE bool popWithType(ValType valType, Value* value) { return popWithType(StackType(valType), value); }
-    MOZ_MUST_USE bool popWithType(ExprType expectedType, Value* value);
-    MOZ_MUST_USE bool topWithType(ExprType expectedType, Value* value);
-    MOZ_MUST_USE bool topWithType(ValType valType, Value* value);
-
-    MOZ_MUST_USE bool pushControl(LabelKind kind, ExprType type);
-    MOZ_MUST_USE bool checkStackAtEndOfBlock(ExprType* type, Value* value);
-    MOZ_MUST_USE bool getControl(uint32_t relativeDepth, ControlStackEntry<ControlItem>** controlEntry);
-    MOZ_MUST_USE bool checkBranchValue(uint32_t relativeDepth, ExprType* type, Value* value);
-    MOZ_MUST_USE bool checkBrTableEntry(uint32_t* relativeDepth, ExprType* branchValueType, Value* branchValue);
-
-    MOZ_MUST_USE bool push(StackType t) {
-        return valueStack_.emplaceBack(t);
-    }
-    MOZ_MUST_USE bool push(ValType t) {
-        return valueStack_.emplaceBack(t);
-    }
-    MOZ_MUST_USE bool push(ExprType t) {
-        return IsVoid(t) || push(NonVoidToValType(t));
-    }
-    MOZ_MUST_USE bool push(TypeAndValue<Value> tv) {
-        return valueStack_.append(tv);
-    }
-    void infalliblePush(StackType t) {
-        valueStack_.infallibleEmplaceBack(t);
-    }
-    void infalliblePush(ValType t) {
-        valueStack_.infallibleEmplaceBack(StackType(t));
-    }
-    void infalliblePush(TypeAndValue<Value> tv) {
-        valueStack_.infallibleAppend(tv);
-    }
-
-    void afterUnconditionalBranch() {
-        valueStack_.shrinkTo(controlStack_.back().valueStackStart());
-        controlStack_.back().setPolymorphicBase();
-    }
-
-    inline bool IsPrefixOf(StackType a, StackType b);
-    inline bool IsSubtypeOf(StackType one, StackType two);
-    inline bool Unify(StackType observed, StackType expected, StackType* result);
-    inline bool Join(StackType one, StackType two, StackType* result);
-
-  public:
-    typedef Vector<Value, 8, SystemAllocPolicy> ValueVector;
-=======
   size_t offsetOfLastReadOp_;
 
   MOZ_MUST_USE bool readFixedU8(uint8_t* out) { return d_.readFixedU8(out); }
@@ -1027,232 +330,18 @@ class MOZ_STACK_CLASS OpIter : private Policy {
 
  public:
   typedef Vector<Value, 8, SystemAllocPolicy> ValueVector;
->>>>>>> upstream-releases
 
 #ifdef DEBUG
-<<<<<<< HEAD
-  explicit OpIter(const ModuleEnvironment& env, Decoder& decoder,
-                  ExclusiveDeferredValidationState& dvs)
-      : d_(decoder),
-        env_(env),
-        dvs_(dvs),
-        op_(OpBytes(Op::Limit)),
-        offsetOfLastReadOp_(0) {}
-||||||| merged common ancestors
-    explicit OpIter(const ModuleEnvironment& env, Decoder& decoder,
-                    ExclusiveDeferredValidationState& dvs)
-      : d_(decoder), env_(env), dvs_(dvs), op_(OpBytes(Op::Limit)), offsetOfLastReadOp_(0)
-    {}
-=======
   explicit OpIter(const ModuleEnvironment& env, Decoder& decoder)
       : d_(decoder),
         env_(env),
         op_(OpBytes(Op::Limit)),
         offsetOfLastReadOp_(0) {}
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-  explicit OpIter(const ModuleEnvironment& env, Decoder& decoder,
-                  ExclusiveDeferredValidationState& dvs)
-      : d_(decoder), env_(env), dvs_(dvs), offsetOfLastReadOp_(0) {}
-||||||| merged common ancestors
-    explicit OpIter(const ModuleEnvironment& env, Decoder& decoder,
-                    ExclusiveDeferredValidationState& dvs)
-      : d_(decoder), env_(env), dvs_(dvs), offsetOfLastReadOp_(0)
-    {}
-=======
   explicit OpIter(const ModuleEnvironment& env, Decoder& decoder)
       : d_(decoder), env_(env), offsetOfLastReadOp_(0) {}
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-  // Return the decoding byte offset.
-  uint32_t currentOffset() const { return d_.currentOffset(); }
-
-  // Return the offset within the entire module of the last-read op.
-  size_t lastOpcodeOffset() const {
-    return offsetOfLastReadOp_ ? offsetOfLastReadOp_ : d_.currentOffset();
-  }
-
-  // Return a BytecodeOffset describing where the current op should be reported
-  // to trap/call.
-  BytecodeOffset bytecodeOffset() const {
-    return BytecodeOffset(lastOpcodeOffset());
-  }
-
-  // Test whether the iterator has reached the end of the buffer.
-  bool done() const { return d_.done(); }
-
-  // Return a pointer to the end of the buffer being decoded by this iterator.
-  const uint8_t* end() const { return d_.end(); }
-
-  // Report a general failure.
-  MOZ_MUST_USE bool fail(const char* msg) MOZ_COLD;
-
-  // Report a general failure with a context
-  MOZ_MUST_USE bool fail_ctx(const char* fmt, const char* context) MOZ_COLD;
-
-  // Report an unrecognized opcode.
-  MOZ_MUST_USE bool unrecognizedOpcode(const OpBytes* expr) MOZ_COLD;
-
-  // Return whether the innermost block has a polymorphic base of its stack.
-  // Ideally this accessor would be removed; consider using something else.
-  bool currentBlockHasPolymorphicBase() const {
-    return !controlStack_.empty() && controlStack_.back().polymorphicBase();
-  }
-
-  // ------------------------------------------------------------------------
-  // Decoding and validation interface.
-
-  MOZ_MUST_USE bool readOp(OpBytes* op);
-  MOZ_MUST_USE bool readFunctionStart(ExprType ret);
-  MOZ_MUST_USE bool readFunctionEnd(const uint8_t* bodyEnd);
-  MOZ_MUST_USE bool readReturn(Value* value);
-  MOZ_MUST_USE bool readBlock();
-  MOZ_MUST_USE bool readLoop();
-  MOZ_MUST_USE bool readIf(Value* condition);
-  MOZ_MUST_USE bool readElse(ExprType* thenType, Value* thenValue);
-  MOZ_MUST_USE bool readEnd(LabelKind* kind, ExprType* type, Value* value);
-  void popEnd();
-  MOZ_MUST_USE bool readBr(uint32_t* relativeDepth, ExprType* type,
-                           Value* value);
-  MOZ_MUST_USE bool readBrIf(uint32_t* relativeDepth, ExprType* type,
-                             Value* value, Value* condition);
-  MOZ_MUST_USE bool readBrTable(Uint32Vector* depths, uint32_t* defaultDepth,
-                                ExprType* branchValueType, Value* branchValue,
-                                Value* index);
-  MOZ_MUST_USE bool readUnreachable();
-  MOZ_MUST_USE bool readDrop();
-  MOZ_MUST_USE bool readUnary(ValType operandType, Value* input);
-  MOZ_MUST_USE bool readConversion(ValType operandType, ValType resultType,
-                                   Value* input);
-  MOZ_MUST_USE bool readBinary(ValType operandType, Value* lhs, Value* rhs);
-  MOZ_MUST_USE bool readComparison(ValType operandType, Value* lhs, Value* rhs);
-  MOZ_MUST_USE bool readLoad(ValType resultType, uint32_t byteSize,
-                             LinearMemoryAddress<Value>* addr);
-  MOZ_MUST_USE bool readStore(ValType resultType, uint32_t byteSize,
-                              LinearMemoryAddress<Value>* addr, Value* value);
-  MOZ_MUST_USE bool readTeeStore(ValType resultType, uint32_t byteSize,
-                                 LinearMemoryAddress<Value>* addr,
-                                 Value* value);
-  MOZ_MUST_USE bool readNop();
-  MOZ_MUST_USE bool readCurrentMemory();
-  MOZ_MUST_USE bool readGrowMemory(Value* input);
-  MOZ_MUST_USE bool readSelect(StackType* type, Value* trueValue,
-                               Value* falseValue, Value* condition);
-  MOZ_MUST_USE bool readGetLocal(const ValTypeVector& locals, uint32_t* id);
-  MOZ_MUST_USE bool readSetLocal(const ValTypeVector& locals, uint32_t* id,
-                                 Value* value);
-  MOZ_MUST_USE bool readTeeLocal(const ValTypeVector& locals, uint32_t* id,
-                                 Value* value);
-  MOZ_MUST_USE bool readGetGlobal(uint32_t* id);
-  MOZ_MUST_USE bool readSetGlobal(uint32_t* id, Value* value);
-  MOZ_MUST_USE bool readTeeGlobal(uint32_t* id, Value* value);
-  MOZ_MUST_USE bool readI32Const(int32_t* i32);
-  MOZ_MUST_USE bool readI64Const(int64_t* i64);
-  MOZ_MUST_USE bool readF32Const(float* f32);
-  MOZ_MUST_USE bool readF64Const(double* f64);
-  MOZ_MUST_USE bool readRefNull();
-  MOZ_MUST_USE bool readCall(uint32_t* calleeIndex, ValueVector* argValues);
-  MOZ_MUST_USE bool readCallIndirect(uint32_t* funcTypeIndex,
-                                     uint32_t* tableIndex, Value* callee,
-                                     ValueVector* argValues);
-  MOZ_MUST_USE bool readOldCallDirect(uint32_t numFuncImports,
-                                      uint32_t* funcIndex,
-                                      ValueVector* argValues);
-  MOZ_MUST_USE bool readOldCallIndirect(uint32_t* funcTypeIndex, Value* callee,
-||||||| merged common ancestors
-    // Return the decoding byte offset.
-    uint32_t currentOffset() const {
-        return d_.currentOffset();
-    }
-
-    // Return the offset within the entire module of the last-read op.
-    size_t lastOpcodeOffset() const {
-        return offsetOfLastReadOp_ ? offsetOfLastReadOp_ : d_.currentOffset();
-    }
-
-    // Return a BytecodeOffset describing where the current op should be reported to trap/call.
-    BytecodeOffset bytecodeOffset() const {
-        return BytecodeOffset(lastOpcodeOffset());
-    }
-
-    // Test whether the iterator has reached the end of the buffer.
-    bool done() const {
-        return d_.done();
-    }
-
-    // Return a pointer to the end of the buffer being decoded by this iterator.
-    const uint8_t* end() const {
-        return d_.end();
-    }
-
-    // Report a general failure.
-    MOZ_MUST_USE bool fail(const char* msg) MOZ_COLD;
-
-    // Report a general failure with a context
-    MOZ_MUST_USE bool fail_ctx(const char* fmt, const char* context) MOZ_COLD;
-
-    // Report an unrecognized opcode.
-    MOZ_MUST_USE bool unrecognizedOpcode(const OpBytes* expr) MOZ_COLD;
-
-    // Return whether the innermost block has a polymorphic base of its stack.
-    // Ideally this accessor would be removed; consider using something else.
-    bool currentBlockHasPolymorphicBase() const {
-        return !controlStack_.empty() && controlStack_.back().polymorphicBase();
-    }
-
-    // ------------------------------------------------------------------------
-    // Decoding and validation interface.
-
-    MOZ_MUST_USE bool readOp(OpBytes* op);
-    MOZ_MUST_USE bool readFunctionStart(ExprType ret);
-    MOZ_MUST_USE bool readFunctionEnd(const uint8_t* bodyEnd);
-    MOZ_MUST_USE bool readReturn(Value* value);
-    MOZ_MUST_USE bool readBlock();
-    MOZ_MUST_USE bool readLoop();
-    MOZ_MUST_USE bool readIf(Value* condition);
-    MOZ_MUST_USE bool readElse(ExprType* thenType, Value* thenValue);
-    MOZ_MUST_USE bool readEnd(LabelKind* kind, ExprType* type, Value* value);
-    void popEnd();
-    MOZ_MUST_USE bool readBr(uint32_t* relativeDepth, ExprType* type, Value* value);
-    MOZ_MUST_USE bool readBrIf(uint32_t* relativeDepth, ExprType* type,
-                               Value* value, Value* condition);
-    MOZ_MUST_USE bool readBrTable(Uint32Vector* depths, uint32_t* defaultDepth,
-                                  ExprType* branchValueType, Value* branchValue, Value* index);
-    MOZ_MUST_USE bool readUnreachable();
-    MOZ_MUST_USE bool readDrop();
-    MOZ_MUST_USE bool readUnary(ValType operandType, Value* input);
-    MOZ_MUST_USE bool readConversion(ValType operandType, ValType resultType, Value* input);
-    MOZ_MUST_USE bool readBinary(ValType operandType, Value* lhs, Value* rhs);
-    MOZ_MUST_USE bool readComparison(ValType operandType, Value* lhs, Value* rhs);
-    MOZ_MUST_USE bool readLoad(ValType resultType, uint32_t byteSize,
-                               LinearMemoryAddress<Value>* addr);
-    MOZ_MUST_USE bool readStore(ValType resultType, uint32_t byteSize,
-                                LinearMemoryAddress<Value>* addr, Value* value);
-    MOZ_MUST_USE bool readTeeStore(ValType resultType, uint32_t byteSize,
-                                   LinearMemoryAddress<Value>* addr, Value* value);
-    MOZ_MUST_USE bool readNop();
-    MOZ_MUST_USE bool readCurrentMemory();
-    MOZ_MUST_USE bool readGrowMemory(Value* input);
-    MOZ_MUST_USE bool readSelect(StackType* type,
-                                 Value* trueValue, Value* falseValue, Value* condition);
-    MOZ_MUST_USE bool readGetLocal(const ValTypeVector& locals, uint32_t* id);
-    MOZ_MUST_USE bool readSetLocal(const ValTypeVector& locals, uint32_t* id, Value* value);
-    MOZ_MUST_USE bool readTeeLocal(const ValTypeVector& locals, uint32_t* id, Value* value);
-    MOZ_MUST_USE bool readGetGlobal(uint32_t* id);
-    MOZ_MUST_USE bool readSetGlobal(uint32_t* id, Value* value);
-    MOZ_MUST_USE bool readTeeGlobal(uint32_t* id, Value* value);
-    MOZ_MUST_USE bool readI32Const(int32_t* i32);
-    MOZ_MUST_USE bool readI64Const(int64_t* i64);
-    MOZ_MUST_USE bool readF32Const(float* f32);
-    MOZ_MUST_USE bool readF64Const(double* f64);
-    MOZ_MUST_USE bool readRefNull(ValType* type);
-    MOZ_MUST_USE bool readCall(uint32_t* calleeIndex, ValueVector* argValues);
-    MOZ_MUST_USE bool readCallIndirect(uint32_t* funcTypeIndex, Value* callee, ValueVector* argValues);
-    MOZ_MUST_USE bool readOldCallDirect(uint32_t numFuncImports, uint32_t* funcIndex,
-=======
   // Return the decoding byte offset.
   uint32_t currentOffset() const { return d_.currentOffset(); }
 
@@ -1348,7 +437,6 @@ class MOZ_STACK_CLASS OpIter : private Policy {
                                       uint32_t* funcIndex,
                                       ValueVector* argValues);
   MOZ_MUST_USE bool readOldCallIndirect(uint32_t* funcTypeIndex, Value* callee,
->>>>>>> upstream-releases
                                         ValueVector* argValues);
   MOZ_MUST_USE bool readWake(LinearMemoryAddress<Value>* addr, Value* count);
   MOZ_MUST_USE bool readWait(LinearMemoryAddress<Value>* addr,
@@ -1359,122 +447,6 @@ class MOZ_STACK_CLASS OpIter : private Policy {
   MOZ_MUST_USE bool readAtomicStore(LinearMemoryAddress<Value>* addr,
                                     ValType resultType, uint32_t byteSize,
                                     Value* value);
-<<<<<<< HEAD
-  MOZ_MUST_USE bool readAtomicRMW(LinearMemoryAddress<Value>* addr,
-                                  ValType resultType, uint32_t byteSize,
-                                  Value* value);
-  MOZ_MUST_USE bool readAtomicCmpXchg(LinearMemoryAddress<Value>* addr,
-                                      ValType resultType, uint32_t byteSize,
-                                      Value* oldValue, Value* newValue);
-  MOZ_MUST_USE bool readMemOrTableCopy(bool isMem, uint32_t* dstMemOrTableIndex,
-                                       Value* dst, uint32_t* srcMemOrTableIndex,
-                                       Value* src, Value* len);
-  MOZ_MUST_USE bool readMemOrTableDrop(bool isMem, uint32_t* segIndex);
-  MOZ_MUST_USE bool readMemFill(Value* start, Value* val, Value* len);
-  MOZ_MUST_USE bool readMemOrTableInit(bool isMem, uint32_t* segIndex,
-                                       uint32_t* dstTableIndex, Value* dst,
-                                       Value* src, Value* len);
-  MOZ_MUST_USE bool readTableGet(uint32_t* tableIndex, Value* index);
-  MOZ_MUST_USE bool readTableGrow(uint32_t* tableIndex, Value* delta,
-                                  Value* initValue);
-  MOZ_MUST_USE bool readTableSet(uint32_t* tableIndex, Value* index,
-                                 Value* value);
-  MOZ_MUST_USE bool readTableSize(uint32_t* tableIndex);
-  MOZ_MUST_USE bool readStructNew(uint32_t* typeIndex, ValueVector* argValues);
-  MOZ_MUST_USE bool readStructGet(uint32_t* typeIndex, uint32_t* fieldIndex,
-                                  Value* ptr);
-  MOZ_MUST_USE bool readStructSet(uint32_t* typeIndex, uint32_t* fieldIndex,
-                                  Value* ptr, Value* val);
-  MOZ_MUST_USE bool readStructNarrow(ValType* inputType, ValType* outputType,
-                                     Value* ptr);
-  MOZ_MUST_USE bool readReferenceType(ValType* type, const char* const context);
-
-  // At a location where readOp is allowed, peek at the next opcode
-  // without consuming it or updating any internal state.
-  // Never fails: returns uint16_t(Op::Limit) in op->b0 if it can't read.
-  void peekOp(OpBytes* op);
-
-  // ------------------------------------------------------------------------
-  // Stack management.
-
-  // Set the result value of the current top-of-value-stack expression.
-  void setResult(Value value) { valueStack_.back().setValue(value); }
-
-  // Return the result value of the current top-of-value-stack expression.
-  Value getResult() { return valueStack_.back().value(); }
-
-  // Return a reference to the top of the control stack.
-  ControlItem& controlItem() { return controlStack_.back().controlItem(); }
-
-  // Return a reference to an element in the control stack.
-  ControlItem& controlItem(uint32_t relativeDepth) {
-    return controlStack_[controlStack_.length() - 1 - relativeDepth]
-        .controlItem();
-  }
-
-  // Return a reference to the outermost element on the control stack.
-  ControlItem& controlOutermost() { return controlStack_[0].controlItem(); }
-
-  // Test whether the control-stack is empty, meaning we've consumed the final
-  // end of the function body.
-  bool controlStackEmpty() const { return controlStack_.empty(); }
-||||||| merged common ancestors
-    MOZ_MUST_USE bool readAtomicCmpXchg(LinearMemoryAddress<Value>* addr,
-                                        ValType resultType,
-                                        uint32_t byteSize,
-                                        Value* oldValue,
-                                        Value* newValue);
-    MOZ_MUST_USE bool readMemOrTableCopy(bool isMem,
-                                         Value* dst, Value* src, Value* len);
-    MOZ_MUST_USE bool readMemOrTableDrop(bool isMem, uint32_t* segIndex);
-    MOZ_MUST_USE bool readMemFill(Value* start, Value* val, Value* len);
-    MOZ_MUST_USE bool readMemOrTableInit(bool isMem, uint32_t* segIndex,
-                                         Value* dst, Value* src, Value* len);
-    MOZ_MUST_USE bool readStructNew(uint32_t* typeIndex, ValueVector* argValues);
-    MOZ_MUST_USE bool readStructGet(uint32_t* typeIndex, uint32_t* fieldIndex, Value* ptr);
-    MOZ_MUST_USE bool readStructSet(uint32_t* typeIndex, uint32_t* fieldIndex, Value* ptr, Value* val);
-    MOZ_MUST_USE bool readStructNarrow(ValType* inputType, ValType* outputType, Value* ptr);
-    MOZ_MUST_USE bool readReferenceType(ValType* type, const char* const context);
-
-    // At a location where readOp is allowed, peek at the next opcode
-    // without consuming it or updating any internal state.
-    // Never fails: returns uint16_t(Op::Limit) in op->b0 if it can't read.
-    void peekOp(OpBytes* op);
-
-    // ------------------------------------------------------------------------
-    // Stack management.
-
-    // Set the result value of the current top-of-value-stack expression.
-    void setResult(Value value) {
-        valueStack_.back().setValue(value);
-    }
-
-    // Return the result value of the current top-of-value-stack expression.
-    Value getResult() {
-        return valueStack_.back().value();
-    }
-
-    // Return a reference to the top of the control stack.
-    ControlItem& controlItem() {
-        return controlStack_.back().controlItem();
-    }
-
-    // Return a reference to an element in the control stack.
-    ControlItem& controlItem(uint32_t relativeDepth) {
-        return controlStack_[controlStack_.length() - 1 - relativeDepth].controlItem();
-    }
-
-    // Return a reference to the outermost element on the control stack.
-    ControlItem& controlOutermost() {
-        return controlStack_[0].controlItem();
-    }
-
-    // Test whether the control-stack is empty, meaning we've consumed the final
-    // end of the function body.
-    bool controlStackEmpty() const {
-        return controlStack_.empty();
-    }
-=======
   MOZ_MUST_USE bool readAtomicRMW(LinearMemoryAddress<Value>* addr,
                                   ValType resultType, uint32_t byteSize,
                                   Value* value);
@@ -1536,32 +508,15 @@ class MOZ_STACK_CLASS OpIter : private Policy {
   // Test whether the control-stack is empty, meaning we've consumed the final
   // end of the function body.
   bool controlStackEmpty() const { return controlStack_.empty(); }
->>>>>>> upstream-releases
 };
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::Join(StackType one, StackType two,
-                                 StackType* result) {
-  if (MOZ_LIKELY(one == two)) {
-    *result = one;
-    return true;
-  }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::IsPrefixOf(StackType a, StackType b)
-{
-    const StructType& other = env_.types[a.refTypeIndex()].structType();
-    return env_.types[b.refTypeIndex()].structType().hasPrefix(other);
-}
-=======
 inline bool OpIter<Policy>::Join(StackType one, StackType two,
                                  StackType* result) const {
   if (MOZ_LIKELY(one == two)) {
     *result = one;
     return true;
   }
->>>>>>> upstream-releases
 
   if (one == StackType::TVar) {
     *result = two;
@@ -1573,37 +528,15 @@ inline bool OpIter<Policy>::Join(StackType one, StackType two,
     return true;
   }
 
-<<<<<<< HEAD
-  if (env_.gcTypesEnabled() == HasGcTypes::True && one.isReference() &&
-      two.isReference()) {
-    if (env_.isRefSubtypeOf(NonAnyToValType(two), NonAnyToValType(one))) {
-      *result = one;
-      return true;
-||||||| merged common ancestors
-    if (observed == StackType::Any) {
-        *result = expected;
-        return true;
-=======
   if (one.isReference() && two.isReference()) {
     if (env_.isRefSubtypeOf(NonTVarToValType(two), NonTVarToValType(one))) {
       *result = one;
       return true;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (env_.isRefSubtypeOf(NonAnyToValType(one), NonAnyToValType(two))) {
-      *result = two;
-      return true;
-||||||| merged common ancestors
-    if (expected == StackType::Any) {
-        *result = observed;
-        return true;
-=======
     if (env_.isRefSubtypeOf(NonTVarToValType(one), NonTVarToValType(two))) {
       *result = two;
       return true;
->>>>>>> upstream-releases
     }
 
     // No subtyping relations between the two types.
@@ -1615,47 +548,6 @@ inline bool OpIter<Policy>::Join(StackType one, StackType two,
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::unrecognizedOpcode(const OpBytes* expr) {
-  UniqueChars error(JS_smprintf("unrecognized opcode: %x %x", expr->b0,
-                                IsPrefixByte(expr->b0) ? expr->b1 : 0));
-  if (!error) {
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::Join(StackType one, StackType two, StackType* result)
-{
-    if (MOZ_LIKELY(one == two)) {
-        *result = one;
-        return true;
-    }
-
-    if (one == StackType::Any) {
-        *result = two;
-        return true;
-    }
-
-    if (two == StackType::Any) {
-        *result = one;
-        return true;
-    }
-
-    if (env_.gcTypesEnabled() == HasGcTypes::True && one.isRefOrAnyRef() && two.isRefOrAnyRef()) {
-        if (IsSubtypeOf(two, one)) {
-            *result = one;
-            return true;
-        }
-
-        if (IsSubtypeOf(one, two)) {
-            *result = two;
-            return true;
-        }
-
-        // No subtyping relations between the two types.
-        *result = StackType::AnyRef;
-        return true;
-    }
-
-=======
 inline bool OpIter<Policy>::checkIsSubtypeOf(ValType actual, ValType expected) {
   if (actual == expected) {
     return true;
@@ -1681,27 +573,7 @@ inline bool OpIter<Policy>::unrecognizedOpcode(const OpBytes* expr) {
   UniqueChars error(JS_smprintf("unrecognized opcode: %x %x", expr->b0,
                                 IsPrefixByte(expr->b0) ? expr->b1 : 0));
   if (!error) {
->>>>>>> upstream-releases
     return false;
-<<<<<<< HEAD
-  }
-
-  return fail(error.get());
-||||||| merged common ancestors
-}
-
-template <typename Policy>
-inline bool
-OpIter<Policy>::unrecognizedOpcode(const OpBytes* expr)
-{
-    UniqueChars error(JS_smprintf("unrecognized opcode: %x %x", expr->b0,
-                                  IsPrefixByte(expr->b0) ? expr->b1 : 0));
-    if (!error) {
-        return false;
-    }
-
-    return fail(error.get());
-=======
   }
 
   return fail(error.get());
@@ -1710,127 +582,30 @@ OpIter<Policy>::unrecognizedOpcode(const OpBytes* expr)
 template <typename Policy>
 inline bool OpIter<Policy>::fail(const char* msg) {
   return d_.fail(lastOpcodeOffset(), msg);
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::fail(const char* msg) {
-  return d_.fail(lastOpcodeOffset(), msg);
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::fail(const char* msg)
-{
-    return d_.fail(lastOpcodeOffset(), msg);
-=======
 inline bool OpIter<Policy>::fail_ctx(const char* fmt, const char* context) {
   UniqueChars error(JS_smprintf(fmt, context));
   if (!error) {
     return false;
   }
   return fail(error.get());
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::fail_ctx(const char* fmt, const char* context) {
-  UniqueChars error(JS_smprintf(fmt, context));
-  if (!error) {
-    return false;
-  }
-  return fail(error.get());
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::fail_ctx(const char* fmt, const char* context)
-{
-    UniqueChars error(JS_smprintf(fmt, context));
-    if (!error) {
-        return false;
-    }
-    return fail(error.get());
-=======
 inline bool OpIter<Policy>::failEmptyStack() {
   return valueStack_.empty() ? fail("popping value from empty stack")
                              : fail("popping value from outside block");
->>>>>>> upstream-releases
 }
 
 // This function pops exactly one value from the stack, yielding TVar types in
 // various cases and therefore making it the caller's responsibility to do the
-<<<<<<< HEAD
-// right thing for StackType::TVar. Prefer (pop|top)WithType.
-template <typename Policy>
-inline bool OpIter<Policy>::popAnyType(StackType* type, Value* value) {
-  ControlStackEntry<ControlItem>& block = controlStack_.back();
-
-  MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
-  if (MOZ_UNLIKELY(valueStack_.length() == block.valueStackStart())) {
-    // If the base of this block's stack is polymorphic, then we can pop a
-    // dummy value of any type; it won't be used since we're in unreachable
-    // code.
-    if (block.polymorphicBase()) {
-      *type = StackType::TVar;
-      *value = Value();
-
-      // Maintain the invariant that, after a pop, there is always memory
-      // reserved to push a value infallibly.
-      return valueStack_.reserve(valueStack_.length() + 1);
-    }
-||||||| merged common ancestors
-// right thing for StackType::Any. Prefer (pop|top)WithType.
-template <typename Policy>
-inline bool
-OpIter<Policy>::popAnyType(StackType* type, Value* value)
-{
-    ControlStackEntry<ControlItem>& block = controlStack_.back();
-
-    MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
-    if (MOZ_UNLIKELY(valueStack_.length() == block.valueStackStart())) {
-        // If the base of this block's stack is polymorphic, then we can pop a
-        // dummy value of any type; it won't be used since we're in unreachable code.
-        if (block.polymorphicBase()) {
-            *type = StackType::Any;
-            *value = Value();
-
-            // Maintain the invariant that, after a pop, there is always memory
-            // reserved to push a value infallibly.
-            return valueStack_.reserve(valueStack_.length() + 1);
-        }
-
-        if (valueStack_.empty()) {
-            return fail("popping value from empty stack");
-        }
-        return fail("popping value from outside block");
-    }
-=======
 // right thing for StackType::TVar. Prefer (pop|top)WithType.
 template <typename Policy>
 inline bool OpIter<Policy>::popStackType(StackType* type, Value* value) {
   ControlStackEntry<ControlItem>& block = controlStack_.back();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (valueStack_.empty()) {
-      return fail("popping value from empty stack");
-    }
-    return fail("popping value from outside block");
-  }
-
-  TypeAndValue<Value>& tv = valueStack_.back();
-  *type = tv.type();
-  *value = tv.value();
-  valueStack_.popBack();
-  return true;
-}
-||||||| merged common ancestors
-    TypeAndValue<Value>& tv = valueStack_.back();
-    *type = tv.type();
-    *value = tv.value();
-    valueStack_.popBack();
-    return true;
-}
-=======
   MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
   if (MOZ_UNLIKELY(valueStack_.length() == block.valueStackStart())) {
     // If the base of this block's stack is polymorphic, then we can pop a
@@ -1839,41 +614,12 @@ inline bool OpIter<Policy>::popStackType(StackType* type, Value* value) {
     if (block.polymorphicBase()) {
       *type = StackType::TVar;
       *value = Value();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename Policy>
-inline bool OpIter<Policy>::typeMismatch(StackType actual, StackType expected) {
-  UniqueChars error(
-      JS_smprintf("type mismatch: expression has type %s but expected %s",
-                  ToCString(NonAnyToValType(actual)),
-                  ToCString(NonAnyToValType(expected))));
-  if (!error) {
-    return false;
-  }
-||||||| merged common ancestors
-template <typename Policy>
-inline bool
-OpIter<Policy>::typeMismatch(StackType actual, StackType expected)
-{
-    UniqueChars error(JS_smprintf("type mismatch: expression has type %s but expected %s",
-                                  ToCString(NonAnyToValType(actual)),
-                                  ToCString(NonAnyToValType(expected))));
-    if (!error) {
-        return false;
-    }
-=======
       // Maintain the invariant that, after a pop, there is always memory
       // reserved to push a value infallibly.
       return valueStack_.reserve(valueStack_.length() + 1);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return fail(error.get());
-||||||| merged common ancestors
-    return fail(error.get());
-=======
     return failEmptyStack();
   }
 
@@ -1882,95 +628,19 @@ OpIter<Policy>::typeMismatch(StackType actual, StackType expected)
   *value = tv.value();
   valueStack_.popBack();
   return true;
->>>>>>> upstream-releases
 }
 
 // This function pops exactly one value from the stack, checking that it has the
 // expected type which can either be a specific value type or a type variable.
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::popWithType(StackType expectedType, Value* value) {
-  ControlStackEntry<ControlItem>& block = controlStack_.back();
-
-  MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
-  if (MOZ_UNLIKELY(valueStack_.length() == block.valueStackStart())) {
-    // If the base of this block's stack is polymorphic, then we can pop a
-    // dummy value of any expected type; it won't be used since we're in
-    // unreachable code.
-    if (block.polymorphicBase()) {
-      *value = Value();
-
-      // Maintain the invariant that, after a pop, there is always memory
-      // reserved to push a value infallibly.
-      return valueStack_.reserve(valueStack_.length() + 1);
-    }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::popWithType(StackType expectedType, Value* value)
-{
-    ControlStackEntry<ControlItem>& block = controlStack_.back();
-
-    MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
-    if (MOZ_UNLIKELY(valueStack_.length() == block.valueStackStart())) {
-        // If the base of this block's stack is polymorphic, then we can pop a
-        // dummy value of any expected type; it won't be used since we're in
-        // unreachable code.
-        if (block.polymorphicBase()) {
-            *value = Value();
-
-            // Maintain the invariant that, after a pop, there is always memory
-            // reserved to push a value infallibly.
-            return valueStack_.reserve(valueStack_.length() + 1);
-        }
-
-        if (valueStack_.empty()) {
-            return fail("popping value from empty stack");
-        }
-        return fail("popping value from outside block");
-    }
-
-    TypeAndValue<Value> tv = valueStack_.popCopy();
-
-    StackType _;
-    if (MOZ_UNLIKELY(!Unify(tv.type(), expectedType, &_))) {
-        return typeMismatch(tv.type(), expectedType);
-    }
-=======
 inline bool OpIter<Policy>::popWithType(ValType expectedType, Value* value) {
   StackType stackType(expectedType);
   if (!popStackType(&stackType, value)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (valueStack_.empty()) {
-      return fail("popping value from empty stack");
-    }
-    return fail("popping value from outside block");
-  }
-
-  TypeAndValue<Value> tv = valueStack_.popCopy();
-
-  StackType observedType = tv.type();
-  if (!(MOZ_LIKELY(observedType == expectedType) ||
-        observedType == StackType::TVar || expectedType == StackType::TVar ||
-        (env_.gcTypesEnabled() == HasGcTypes::True &&
-         observedType.isReference() && expectedType.isReference() &&
-         env_.isRefSubtypeOf(NonAnyToValType(observedType),
-                             NonAnyToValType(expectedType))))) {
-    return typeMismatch(observedType, expectedType);
-  }
-
-  *value = tv.value();
-  return true;
-||||||| merged common ancestors
-    *value = tv.value();
-    return true;
-=======
   return stackType == StackType::TVar ||
          checkIsSubtypeOf(NonTVarToValType(stackType), expectedType);
->>>>>>> upstream-releases
 }
 
 // This function pops as many types from the stack as determined by the given
@@ -1989,71 +659,9 @@ inline bool OpIter<Policy>::popWithType(ExprType expectedType, Value* value) {
 
 // This function is just an optimization of popWithType + push.
 template <typename Policy>
-<<<<<<< HEAD
 inline bool OpIter<Policy>::topWithType(ValType expectedType, Value* value) {
   ControlStackEntry<ControlItem>& block = controlStack_.back();
 
-  MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
-  if (MOZ_UNLIKELY(valueStack_.length() == block.valueStackStart())) {
-    // If the base of this block's stack is polymorphic, then we can just
-    // pull out a dummy value of the expected type; it won't be used since
-    // we're in unreachable code. We must however push this value onto the
-    // stack since it is now fixed to a specific type by this type
-    // constraint.
-    if (block.polymorphicBase()) {
-      if (!valueStack_.emplaceBack(expectedType, Value())) {
-        return false;
-      }
-
-      *value = Value();
-      return true;
-    }
-
-    if (valueStack_.empty()) {
-      return fail("reading value from empty stack");
-    }
-    return fail("reading value from outside block");
-  }
-
-  TypeAndValue<Value>& tv = valueStack_.back();
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::topWithType(ValType expectedType, Value* value)
-{
-    ControlStackEntry<ControlItem>& block = controlStack_.back();
-
-    MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
-    if (MOZ_UNLIKELY(valueStack_.length() == block.valueStackStart())) {
-        // If the base of this block's stack is polymorphic, then we can just
-        // pull out a dummy value of the expected type; it won't be used since
-        // we're in unreachable code. We must however push this value onto the
-        // stack since it is now fixed to a specific type by this type
-        // constraint.
-        if (block.polymorphicBase()) {
-            if (!valueStack_.emplaceBack(expectedType, Value())) {
-                return false;
-            }
-
-            *value = Value();
-            return true;
-        }
-
-        if (valueStack_.empty()) {
-            return fail("reading value from empty stack");
-        }
-        return fail("reading value from outside block");
-    }
-=======
-inline bool OpIter<Policy>::topWithType(ValType expectedType, Value* value) {
-  ControlStackEntry<ControlItem>& block = controlStack_.back();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  StackType observed = tv.type();
-  StackType expected = StackType(expectedType);
-||||||| merged common ancestors
-    TypeAndValue<Value>& tv = valueStack_.back();
-=======
   MOZ_ASSERT(valueStack_.length() >= block.valueStackStart());
   if (valueStack_.length() == block.valueStackStart()) {
     // If the base of this block's stack is polymorphic, then we can just
@@ -2065,34 +673,11 @@ inline bool OpIter<Policy>::topWithType(ValType expectedType, Value* value) {
       if (!valueStack_.emplaceBack(expectedType, Value())) {
         return false;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!MOZ_UNLIKELY(observed == expected)) {
-    if (observed == StackType::TVar ||
-        (env_.gcTypesEnabled() == HasGcTypes::True && observed.isReference() &&
-         expected.isReference() &&
-         env_.isRefSubtypeOf(NonAnyToValType(observed), expectedType))) {
-      tv.typeRef() = expected;
-    } else {
-      return typeMismatch(observed, expected);
-||||||| merged common ancestors
-    if (MOZ_UNLIKELY(!Unify(tv.type(), StackType(expectedType), &tv.typeRef()))) {
-        return typeMismatch(tv.type(), StackType(expectedType));
-=======
       *value = Value();
       return true;
->>>>>>> upstream-releases
     }
-  }
 
-<<<<<<< HEAD
-  *value = tv.value();
-  return true;
-||||||| merged common ancestors
-    *value = tv.value();
-    return true;
-=======
     return failEmptyStack();
   }
 
@@ -2110,7 +695,6 @@ inline bool OpIter<Policy>::topWithType(ValType expectedType, Value* value) {
 
   *value = observed.value();
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
@@ -2166,49 +750,6 @@ inline bool OpIter<Policy>::readBlockType(ExprType* type) {
     return fail("unable to read block signature");
   }
 
-<<<<<<< HEAD
-  bool known = false;
-  switch (uncheckedCode) {
-    case uint8_t(ExprType::Void):
-    case uint8_t(ExprType::I32):
-    case uint8_t(ExprType::I64):
-    case uint8_t(ExprType::F32):
-    case uint8_t(ExprType::F64):
-      known = true;
-      break;
-    case uint8_t(ExprType::Ref):
-      known = env_.gcTypesEnabled() == HasGcTypes::True &&
-              uncheckedRefTypeIndex < MaxTypes &&
-              uncheckedRefTypeIndex < env_.types.length();
-      break;
-    case uint8_t(ExprType::AnyRef):
-      known = env_.gcTypesEnabled() == HasGcTypes::True;
-      break;
-    case uint8_t(ExprType::Limit):
-      break;
-  }
-||||||| merged common ancestors
-    bool known = false;
-    switch (uncheckedCode) {
-      case uint8_t(ExprType::Void):
-      case uint8_t(ExprType::I32):
-      case uint8_t(ExprType::I64):
-      case uint8_t(ExprType::F32):
-      case uint8_t(ExprType::F64):
-        known = true;
-        break;
-      case uint8_t(ExprType::Ref):
-        known = env_.gcTypesEnabled() == HasGcTypes::True &&
-                uncheckedRefTypeIndex < MaxTypes &&
-                uncheckedRefTypeIndex < env_.types.length();
-        break;
-      case uint8_t(ExprType::AnyRef):
-        known = env_.gcTypesEnabled() == HasGcTypes::True;
-        break;
-      case uint8_t(ExprType::Limit):
-        break;
-    }
-=======
   bool known = false;
   switch (uncheckedCode) {
     case uint8_t(ExprType::Void):
@@ -2231,7 +772,6 @@ inline bool OpIter<Policy>::readBlockType(ExprType* type) {
     case uint8_t(ExprType::Limit):
       break;
   }
->>>>>>> upstream-releases
 
   if (!known) {
     return fail("invalid inline block type");
@@ -2275,13 +815,7 @@ inline bool OpIter<Policy>::readFunctionStart(ExprType ret) {
   MOZ_ASSERT(controlStack_.empty());
   MOZ_ASSERT(op_.b0 == uint16_t(Op::Limit));
 
-<<<<<<< HEAD
-  return pushControl(LabelKind::Block, ret);
-||||||| merged common ancestors
-    return pushControl(LabelKind::Block, ret);
-=======
   return pushControl(LabelKind::Body, ret);
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
@@ -2305,16 +839,8 @@ template <typename Policy>
 inline bool OpIter<Policy>::readReturn(Value* value) {
   MOZ_ASSERT(Classify(op_) == OpKind::Return);
 
-<<<<<<< HEAD
-  ControlStackEntry<ControlItem>& body = controlStack_[0];
-  MOZ_ASSERT(body.kind() == LabelKind::Block);
-||||||| merged common ancestors
-    ControlStackEntry<ControlItem>& body = controlStack_[0];
-    MOZ_ASSERT(body.kind() == LabelKind::Block);
-=======
   ControlStackEntry<ControlItem>& body = controlStack_[0];
   MOZ_ASSERT(body.kind() == LabelKind::Body);
->>>>>>> upstream-releases
 
   if (!popWithType(body.resultType(), value)) {
     return false;
@@ -2466,22 +992,6 @@ inline bool OpIter<Policy>::readBrIf(uint32_t* relativeDepth, ExprType* type,
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::checkBrTableEntry(uint32_t* relativeDepth,
-                                              ExprType* branchValueType,
-                                              Value* branchValue) {
-  if (!readVarU32(relativeDepth)) {
-    return false;
-  }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::checkBrTableEntry(uint32_t* relativeDepth, ExprType* branchValueType,
-                                  Value* branchValue)
-{
-    if (!readVarU32(relativeDepth)) {
-        return false;
-    }
-=======
 inline bool OpIter<Policy>::checkBrTableEntry(uint32_t* relativeDepth,
                                               ExprType* branchValueType,
                                               Value* branchValue) {
@@ -2503,60 +1013,13 @@ inline bool OpIter<Policy>::checkBrTableEntry(uint32_t* relativeDepth,
     if (!getControl(*relativeDepth, &block)) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // For the first encountered branch target, do a normal branch value type
-  // check which will change *branchValueType to a non-sentinel value. For all
-  // subsequent branch targets, check that the branch target matches the
-  // now-known branch value type.
-
-  if (*branchValueType == ExprType::Limit) {
-    if (!checkBranchValue(*relativeDepth, branchValueType, branchValue)) {
-      return false;
-    }
-  } else {
-    ControlStackEntry<ControlItem>* block = nullptr;
-    if (!getControl(*relativeDepth, &block)) {
-      return false;
-||||||| merged common ancestors
-    // For the first encountered branch target, do a normal branch value type
-    // check which will change *branchValueType to a non-sentinel value. For all
-    // subsequent branch targets, check that the branch target matches the
-    // now-known branch value type.
-
-    if (*branchValueType == ExprType::Limit) {
-        if (!checkBranchValue(*relativeDepth, branchValueType, branchValue)) {
-            return false;
-        }
-    } else {
-        ControlStackEntry<ControlItem>* block = nullptr;
-        if (!getControl(*relativeDepth, &block)) {
-            return false;
-        }
-
-        if (*branchValueType != block->branchTargetType()) {
-            return fail("br_table targets must all have the same value type");
-        }
-=======
-    if (*branchValueType != block->branchTargetType()) {
-      return fail("br_table targets must all have the same value type");
->>>>>>> upstream-releases
-    }
-  }
-
-<<<<<<< HEAD
     if (*branchValueType != block->branchTargetType()) {
       return fail("br_table targets must all have the same value type");
     }
   }
 
   return true;
-||||||| merged common ancestors
-    return true;
-=======
-  return true;
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
@@ -2610,27 +1073,11 @@ inline bool OpIter<Policy>::readUnreachable() {
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readDrop() {
-  MOZ_ASSERT(Classify(op_) == OpKind::Drop);
-  StackType type;
-  Value value;
-  return popAnyType(&type, &value);
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readDrop()
-{
-    MOZ_ASSERT(Classify(op_) == OpKind::Drop);
-    StackType type;
-    Value value;
-    return popAnyType(&type, &value);
-=======
 inline bool OpIter<Policy>::readDrop() {
   MOZ_ASSERT(Classify(op_) == OpKind::Drop);
   StackType type;
   Value value;
   return popStackType(&type, &value);
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
@@ -2703,30 +1150,6 @@ inline bool OpIter<Policy>::readComparison(ValType operandType, Value* lhs,
 //
 // The zero-ness of the value must be checked by the caller.
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readLinearMemoryAddress(
-    uint32_t byteSize, LinearMemoryAddress<Value>* addr) {
-  if (!env_.usesMemory()) {
-    return fail("can't touch memory without memory");
-  }
-
-  uint8_t alignLog2;
-  if (!readFixedU8(&alignLog2)) {
-    return fail("unable to read load alignment");
-  }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readLinearMemoryAddress(uint32_t byteSize, LinearMemoryAddress<Value>* addr)
-{
-    if (!env_.usesMemory()) {
-        return fail("can't touch memory without memory");
-    }
-
-    uint8_t alignLog2;
-    if (!readFixedU8(&alignLog2)) {
-        return fail("unable to read load alignment");
-    }
-=======
 inline bool OpIter<Policy>::readMemOrTableIndex(bool isMem, uint32_t* index) {
 #ifdef ENABLE_WASM_REFTYPES
   bool readByte = isMem;
@@ -2746,61 +1169,23 @@ inline bool OpIter<Policy>::readMemOrTableIndex(bool isMem, uint32_t* index) {
   }
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!readVarU32(&addr->offset)) {
-    return fail("unable to read load offset");
-  }
-||||||| merged common ancestors
-    if (!readVarU32(&addr->offset)) {
-        return fail("unable to read load offset");
-    }
-=======
 template <typename Policy>
 inline bool OpIter<Policy>::readLinearMemoryAddress(
     uint32_t byteSize, LinearMemoryAddress<Value>* addr) {
   if (!env_.usesMemory()) {
     return fail("can't touch memory without memory");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (alignLog2 >= 32 || (uint32_t(1) << alignLog2) > byteSize) {
-    return fail("greater than natural alignment");
-  }
-||||||| merged common ancestors
-    if (alignLog2 >= 32 || (uint32_t(1) << alignLog2) > byteSize) {
-        return fail("greater than natural alignment");
-    }
-=======
   uint8_t alignLog2;
   if (!readFixedU8(&alignLog2)) {
     return fail("unable to read load alignment");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!popWithType(ValType::I32, &addr->base)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!popWithType(ValType::I32, &addr->base)) {
-        return false;
-    }
-=======
   if (!readVarU32(&addr->offset)) {
     return fail("unable to read load offset");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  addr->align = uint32_t(1) << alignLog2;
-  return true;
-||||||| merged common ancestors
-    addr->align = uint32_t(1) << alignLog2;
-    return true;
-=======
   if (alignLog2 >= 32 || (uint32_t(1) << alignLog2) > byteSize) {
     return fail("greater than natural alignment");
   }
@@ -2811,7 +1196,6 @@ inline bool OpIter<Policy>::readLinearMemoryAddress(
 
   addr->align = uint32_t(1) << alignLog2;
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
@@ -2885,18 +1269,8 @@ inline bool OpIter<Policy>::readNop() {
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readCurrentMemory() {
-  MOZ_ASSERT(Classify(op_) == OpKind::CurrentMemory);
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readCurrentMemory()
-{
-    MOZ_ASSERT(Classify(op_) == OpKind::CurrentMemory);
-=======
 inline bool OpIter<Policy>::readMemorySize() {
   MOZ_ASSERT(Classify(op_) == OpKind::MemorySize);
->>>>>>> upstream-releases
 
   if (!env_.usesMemory()) {
     return fail("can't touch memory without memory");
@@ -2915,18 +1289,8 @@ inline bool OpIter<Policy>::readMemorySize() {
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readGrowMemory(Value* input) {
-  MOZ_ASSERT(Classify(op_) == OpKind::GrowMemory);
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readGrowMemory(Value* input)
-{
-    MOZ_ASSERT(Classify(op_) == OpKind::GrowMemory);
-=======
 inline bool OpIter<Policy>::readMemoryGrow(Value* input) {
   MOZ_ASSERT(Classify(op_) == OpKind::MemoryGrow);
->>>>>>> upstream-releases
 
   if (!env_.usesMemory()) {
     return fail("can't touch memory without memory");
@@ -2959,39 +1323,15 @@ inline bool OpIter<Policy>::readSelect(StackType* type, Value* trueValue,
     return false;
   }
 
-<<<<<<< HEAD
-  StackType falseType;
-  if (!popAnyType(&falseType, falseValue)) {
-    return false;
-  }
-||||||| merged common ancestors
-    StackType falseType;
-    if (!popAnyType(&falseType, falseValue)) {
-        return false;
-    }
-=======
   StackType falseType;
   if (!popStackType(&falseType, falseValue)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  StackType trueType;
-  if (!popAnyType(&trueType, trueValue)) {
-    return false;
-  }
-||||||| merged common ancestors
-    StackType trueType;
-    if (!popAnyType(&trueType, trueValue)) {
-        return false;
-    }
-=======
   StackType trueType;
   if (!popStackType(&trueType, trueValue)) {
     return false;
   }
->>>>>>> upstream-releases
 
   if (!Join(falseType, trueType, type)) {
     return fail("select operand types must match");
@@ -3010,19 +1350,9 @@ inline bool OpIter<Policy>::readGetLocal(const ValTypeVector& locals,
     return false;
   }
 
-<<<<<<< HEAD
-  if (*id >= locals.length()) {
-    return fail("get_local index out of range");
-  }
-||||||| merged common ancestors
-    if (*id >= locals.length()) {
-        return fail("get_local index out of range");
-    }
-=======
   if (*id >= locals.length()) {
     return fail("local.get index out of range");
   }
->>>>>>> upstream-releases
 
   return push(locals[*id]);
 }
@@ -3036,19 +1366,9 @@ inline bool OpIter<Policy>::readSetLocal(const ValTypeVector& locals,
     return false;
   }
 
-<<<<<<< HEAD
-  if (*id >= locals.length()) {
-    return fail("set_local index out of range");
-  }
-||||||| merged common ancestors
-    if (*id >= locals.length()) {
-        return fail("set_local index out of range");
-    }
-=======
   if (*id >= locals.length()) {
     return fail("local.set index out of range");
   }
->>>>>>> upstream-releases
 
   return popWithType(locals[*id], value);
 }
@@ -3062,19 +1382,9 @@ inline bool OpIter<Policy>::readTeeLocal(const ValTypeVector& locals,
     return false;
   }
 
-<<<<<<< HEAD
-  if (*id >= locals.length()) {
-    return fail("set_local index out of range");
-  }
-||||||| merged common ancestors
-    if (*id >= locals.length()) {
-        return fail("set_local index out of range");
-    }
-=======
   if (*id >= locals.length()) {
     return fail("local.set index out of range");
   }
->>>>>>> upstream-releases
 
   return topWithType(locals[*id], value);
 }
@@ -3087,19 +1397,9 @@ inline bool OpIter<Policy>::readGetGlobal(uint32_t* id) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (*id >= env_.globals.length()) {
-    return fail("get_global index out of range");
-  }
-||||||| merged common ancestors
-    if (*id >= env_.globals.length()) {
-        return fail("get_global index out of range");
-    }
-=======
   if (*id >= env_.globals.length()) {
     return fail("global.get index out of range");
   }
->>>>>>> upstream-releases
 
   return push(env_.globals[*id].type());
 }
@@ -3112,19 +1412,9 @@ inline bool OpIter<Policy>::readSetGlobal(uint32_t* id, Value* value) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (*id >= env_.globals.length()) {
-    return fail("set_global index out of range");
-  }
-||||||| merged common ancestors
-    if (*id >= env_.globals.length()) {
-        return fail("set_global index out of range");
-    }
-=======
   if (*id >= env_.globals.length()) {
     return fail("global.set index out of range");
   }
->>>>>>> upstream-releases
 
   if (!env_.globals[*id].isMutable()) {
     return fail("can't write an immutable global");
@@ -3141,19 +1431,9 @@ inline bool OpIter<Policy>::readTeeGlobal(uint32_t* id, Value* value) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (*id >= env_.globals.length()) {
-    return fail("set_global index out of range");
-  }
-||||||| merged common ancestors
-    if (*id >= env_.globals.length()) {
-        return fail("set_global index out of range");
-    }
-=======
   if (*id >= env_.globals.length()) {
     return fail("global.set index out of range");
   }
->>>>>>> upstream-releases
 
   if (!env_.globals[*id].isMutable()) {
     return fail("can't write an immutable global");
@@ -3198,65 +1478,16 @@ inline bool OpIter<Policy>::readRefNull() {
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readReferenceType(ValType* type,
-                                              const char* context) {
-  uint8_t code;
-  uint32_t refTypeIndex;
-
-  if (!d_.readValType(&code, &refTypeIndex)) {
-    return fail_ctx("invalid reference type for %s", context);
-  }
-
-  if (code == uint8_t(ValType::Code::Ref)) {
-    if (refTypeIndex >= env_.types.length()) {
-      return fail_ctx("invalid reference type for %s", context);
-    }
-    if (!env_.types[refTypeIndex].isStructType()) {
-      return fail_ctx("reference to struct required for %s", context);
-    }
-  } else if (code != uint8_t(ValType::Code::AnyRef)) {
-    return fail_ctx("invalid reference type for %s", context);
-  }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readReferenceType(ValType* type, const char* context)
-{
-    uint8_t code;
-    uint32_t refTypeIndex;
-
-    if (!d_.readValType(&code, &refTypeIndex)) {
-        return fail_ctx("invalid reference type for %s", context);
-    }
-
-    if (code == uint8_t(ValType::Code::Ref)) {
-        if (refTypeIndex >= env_.types.length()) {
-            return fail_ctx("invalid reference type for %s", context);
-        }
-        if (!env_.types[refTypeIndex].isStructType()) {
-            return fail_ctx("reference to struct required for %s", context);
-        }
-    } else if (code != uint8_t(ValType::Code::AnyRef)) {
-        return fail_ctx("invalid reference type for %s", context);
-    }
-=======
 inline bool OpIter<Policy>::readValType(ValType* type) {
   return d_.readValType(env_.types, env_.gcTypesEnabled(), type);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *type = ValType(ValType::Code(code), refTypeIndex);
-||||||| merged common ancestors
-    *type = ValType(ValType::Code(code), refTypeIndex);
-=======
 template <typename Policy>
 inline bool OpIter<Policy>::readReferenceType(ValType* type,
                                               const char* context) {
   if (!readValType(type) || !type->isReference()) {
     return fail_ctx("invalid reference type for %s", context);
   }
->>>>>>> upstream-releases
 
   return true;
 }
@@ -3303,7 +1534,6 @@ inline bool OpIter<Policy>::readCall(uint32_t* funcTypeIndex,
 }
 
 template <typename Policy>
-<<<<<<< HEAD
 inline bool OpIter<Policy>::readCallIndirect(uint32_t* funcTypeIndex,
                                              uint32_t* tableIndex,
                                              Value* callee,
@@ -3318,70 +1548,7 @@ inline bool OpIter<Policy>::readCallIndirect(uint32_t* funcTypeIndex,
   if (*funcTypeIndex >= env_.numTypes()) {
     return fail("signature index out of range");
   }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readCallIndirect(uint32_t* funcTypeIndex, Value* callee, ValueVector* argValues)
-{
-    MOZ_ASSERT(Classify(op_) == OpKind::CallIndirect);
 
-    if (!env_.tables.length()) {
-        return fail("can't call_indirect without a table");
-    }
-
-    if (!readVarU32(funcTypeIndex)) {
-        return fail("unable to read call_indirect signature index");
-    }
-=======
-inline bool OpIter<Policy>::readCallIndirect(uint32_t* funcTypeIndex,
-                                             uint32_t* tableIndex,
-                                             Value* callee,
-                                             ValueVector* argValues) {
-  MOZ_ASSERT(Classify(op_) == OpKind::CallIndirect);
-  MOZ_ASSERT(funcTypeIndex != tableIndex);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  uint8_t flags;
-  if (!readFixedU8(&flags)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (*funcTypeIndex >= env_.numTypes()) {
-        return fail("signature index out of range");
-    }
-=======
-  if (!readVarU32(funcTypeIndex)) {
-    return fail("unable to read call_indirect signature index");
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  *tableIndex = 0;
-  if (flags == uint8_t(MemoryTableFlags::HasTableIndex)) {
-    if (!readVarU32(tableIndex)) return false;
-  } else if (flags != uint8_t(MemoryTableFlags::Default)) {
-    return fail("unexpected flags");
-  }
-||||||| merged common ancestors
-    uint8_t flags;
-    if (!readFixedU8(&flags)) {
-        return false;
-    }
-=======
-  if (*funcTypeIndex >= env_.numTypes()) {
-    return fail("signature index out of range");
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (*tableIndex >= env_.tables.length()) {
-    // Special case this for improved user experience.
-    if (!env_.tables.length()) {
-      return fail("can't call_indirect without a table");
-||||||| merged common ancestors
-    if (flags != uint8_t(MemoryTableFlags::Default)) {
-        return fail("unexpected flags");
-=======
   if (!readVarU32(tableIndex)) {
     return false;
   }
@@ -3389,35 +1556,13 @@ inline bool OpIter<Policy>::readCallIndirect(uint32_t* funcTypeIndex,
     // Special case this for improved user experience.
     if (!env_.tables.length()) {
       return fail("can't call_indirect without a table");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    return fail("table index out of range for call_indirect");
-  }
-||||||| merged common ancestors
-=======
     return fail("table index out of range for call_indirect");
   }
   if (env_.tables[*tableIndex].kind != TableKind::FuncRef) {
     return fail("indirect calls must go through a table of 'funcref'");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (env_.tables[*tableIndex].kind != TableKind::AnyFunction) {
-    return fail("indirect calls must go through a table of 'anyfunc'");
-  }
-||||||| merged common ancestors
-    if (!popWithType(ValType::I32, callee)) {
-        return false;
-    }
-=======
-  if (!popWithType(ValType::I32, callee)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (!popWithType(ValType::I32, callee)) {
     return false;
   }
@@ -3425,15 +1570,6 @@ inline bool OpIter<Policy>::readCallIndirect(uint32_t* funcTypeIndex,
   if (!env_.types[*funcTypeIndex].isFuncType()) {
     return fail("expected signature type");
   }
-||||||| merged common ancestors
-    if (!env_.types[*funcTypeIndex].isFuncType()) {
-        return fail("expected signature type");
-    }
-=======
-  if (!env_.types[*funcTypeIndex].isFuncType()) {
-    return fail("expected signature type");
-  }
->>>>>>> upstream-releases
 
   const FuncType& funcType = env_.types[*funcTypeIndex].funcType();
 
@@ -3668,20 +1804,6 @@ inline bool OpIter<Policy>::readMemOrTableCopy(bool isMem,
   MOZ_ASSERT(Classify(op_) == OpKind::MemOrTableCopy);
   MOZ_ASSERT(dstMemOrTableIndex != srcMemOrTableIndex);
 
-<<<<<<< HEAD
-  *dstMemOrTableIndex = 0;
-  *srcMemOrTableIndex = 0;
-||||||| merged common ancestors
-    if (isMem) {
-        if (!env_.usesMemory()) {
-            return fail("can't touch memory without memory");
-        }
-    } else {
-        if (env_.tables.length() == 0) {
-            return fail("can't table.copy without a table");
-        }
-    }
-=======
   // We use (dest, src) everywhere in code but the spec requires (src, dest)
   // encoding order for the immediates.
   if (!readMemOrTableIndex(isMem, srcMemOrTableIndex)) {
@@ -3690,95 +1812,25 @@ inline bool OpIter<Policy>::readMemOrTableCopy(bool isMem,
   if (!readMemOrTableIndex(isMem, dstMemOrTableIndex)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t memOrTableFlags;
-  if (!readVarU32(&memOrTableFlags)) {
-    return fail(isMem ? "unable to read memory flags"
-                      : "unable to read table flags");
-  }
-  if (!isMem && (memOrTableFlags & uint32_t(MemoryTableFlags::HasTableIndex))) {
-    if (!readVarU32(dstMemOrTableIndex)) {
-      return false;
-||||||| merged common ancestors
-    uint8_t memOrTableFlags;
-    if (!readFixedU8(&memOrTableFlags)) {
-        return fail(isMem ? "unable to read memory flags" : "unable to read table flags");
-=======
   if (isMem) {
     if (!env_.usesMemory()) {
       return fail("can't touch memory without memory");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (!readVarU32(srcMemOrTableIndex)) {
-      return false;
-||||||| merged common ancestors
-    if (memOrTableFlags != 0) {
-        return fail(isMem ? "memory flags must be zero" : "table flags must be zero");
-=======
     if (*srcMemOrTableIndex != 0 || *dstMemOrTableIndex != 0) {
       return fail("memory index out of range for memory.copy");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    memOrTableFlags ^= uint32_t(MemoryTableFlags::HasTableIndex);
-  }
-  if (memOrTableFlags != uint32_t(MemoryTableFlags::Default)) {
-    return fail(isMem ? "unrecognized memory flags"
-                      : "unrecognized table flags");
-  }
-
-  if (isMem) {
-    if (!env_.usesMemory()) {
-      return fail("can't touch memory without memory");
-||||||| merged common ancestors
-
-    if (!popWithType(ValType::I32, len)) {
-        return false;
-=======
-  } else {
-    if (*dstMemOrTableIndex >= env_.tables.length() ||
-        *srcMemOrTableIndex >= env_.tables.length()) {
-      return fail("table index out of range for table.copy");
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
   } else {
     if (*dstMemOrTableIndex >= env_.tables.length() ||
         *srcMemOrTableIndex >= env_.tables.length()) {
       return fail("table index out of range for table.copy");
     }
   }
-||||||| merged common ancestors
-
-    if (!popWithType(ValType::I32, src)) {
-        return false;
-    }
-=======
-  }
 
   if (!popWithType(ValType::I32, len)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!popWithType(ValType::I32, len)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!popWithType(ValType::I32, dst)) {
-        return false;
-    }
-=======
-  if (!popWithType(ValType::I32, src)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (!popWithType(ValType::I32, src)) {
     return false;
   }
@@ -3788,54 +1840,13 @@ inline bool OpIter<Policy>::readMemOrTableCopy(bool isMem,
   }
 
   return true;
-||||||| merged common ancestors
-    return true;
-=======
-  if (!popWithType(ValType::I32, dst)) {
-    return false;
-  }
-
-  return true;
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readMemOrTableDrop(bool isMem, uint32_t* segIndex) {
-  MOZ_ASSERT(Classify(op_) == OpKind::MemOrTableDrop);
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readMemOrTableDrop(bool isMem, uint32_t* segIndex)
-{
-    MOZ_ASSERT(Classify(op_) == OpKind::MemOrTableDrop);
-=======
 inline bool OpIter<Policy>::readDataOrElemDrop(bool isData,
                                                uint32_t* segIndex) {
   MOZ_ASSERT(Classify(op_) == OpKind::DataOrElemDrop);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (isMem) {
-    if (!env_.usesMemory()) {
-      return fail("can't touch memory without memory");
-    }
-  } else {
-    if (env_.tables.length() == 0) {
-      return fail("can't table.drop without a table");
-||||||| merged common ancestors
-    if (isMem) {
-        if (!env_.usesMemory()) {
-            return fail("can't touch memory without memory");
-        }
-    } else {
-        if (env_.tables.length() == 0) {
-            return fail("can't table.drop without a table");
-        }
-    }
-
-    if (!readVarU32(segIndex)) {
-        return false;
-=======
   if (!readVarU32(segIndex)) {
     return false;
   }
@@ -3843,42 +1854,13 @@ inline bool OpIter<Policy>::readDataOrElemDrop(bool isData,
   if (isData) {
     if (env_.dataCount.isNothing()) {
       return fail("data.drop requires a DataCount section");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  if (!readVarU32(segIndex)) {
-    return false;
-  }
-
-  if (isMem) {
-    // We can't range-check *segIndex at this point since we don't yet
-    // know how many data segments the module has.  So note the index, but
-    // defer the actual check for now.
-    dvs_.lock()->notifyDataSegmentIndex(*segIndex, d_.currentOffset());
-  } else {
-    if (*segIndex >= env_.elemSegments.length()) {
-      return fail("element segment index out of range for table.drop");
-||||||| merged common ancestors
-
-    if (isMem) {
-        // We can't range-check *segIndex at this point since we don't yet
-        // know how many data segments the module has.  So note the index, but
-        // defer the actual check for now.
-        dvs_.lock()->notifyDataSegmentIndex(*segIndex, d_.currentOffset());
-     } else {
-        if (*segIndex >= env_.elemSegments.length()) {
-            return fail("table.drop index out of range");
-        }
-=======
     if (*segIndex >= *env_.dataCount) {
       return fail("data.drop segment index out of range");
     }
   } else {
     if (*segIndex >= env_.elemSegments.length()) {
       return fail("element segment index out of range for elem.drop");
->>>>>>> upstream-releases
     }
   }
 
@@ -3886,58 +1868,6 @@ inline bool OpIter<Policy>::readDataOrElemDrop(bool isData,
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readMemFill(Value* start, Value* val, Value* len) {
-  MOZ_ASSERT(Classify(op_) == OpKind::MemFill);
-
-  if (!env_.usesMemory()) {
-    return fail("can't touch memory without memory");
-  }
-
-  uint32_t memoryFlags;
-  if (!readVarU32(&memoryFlags)) {
-    return fail("unable to read memory flags");
-  }
-  if (memoryFlags != uint32_t(MemoryTableFlags::Default)) {
-    return fail("unrecognized memory flags");
-  }
-
-  if (!popWithType(ValType::I32, len)) {
-    return false;
-  }
-
-  if (!popWithType(ValType::I32, val)) {
-    return false;
-  }
-
-  if (!popWithType(ValType::I32, start)) {
-    return false;
-  }
-
-  return true;
-}
-
-template <typename Policy>
-inline bool OpIter<Policy>::readMemOrTableInit(bool isMem, uint32_t* segIndex,
-                                               uint32_t* dstTableIndex,
-                                               Value* dst, Value* src,
-                                               Value* len) {
-  MOZ_ASSERT(Classify(op_) == OpKind::MemOrTableInit);
-  MOZ_ASSERT(segIndex != dstTableIndex);
-
-  if (!popWithType(ValType::I32, len)) {
-    return false;
-  }
-
-  if (!popWithType(ValType::I32, src)) {
-    return false;
-  }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readMemFill(Value* start, Value* val, Value* len)
-{
-    MOZ_ASSERT(Classify(op_) == OpKind::MemFill);
-=======
 inline bool OpIter<Policy>::readMemFill(Value* start, Value* val, Value* len) {
   MOZ_ASSERT(Classify(op_) == OpKind::MemFill);
 
@@ -3994,108 +1924,21 @@ inline bool OpIter<Policy>::readMemOrTableInit(bool isMem, uint32_t* segIndex,
   if (!readVarU32(segIndex)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!popWithType(ValType::I32, dst)) {
-    return false;
-  }
-
-  *dstTableIndex = 0;
-
-  uint32_t memOrTableFlags;
-  if (!readVarU32(&memOrTableFlags)) {
-    return fail(isMem ? "unable to read memory flags"
-                      : "unable to read table flags");
-  }
-  if (!isMem && (memOrTableFlags & uint32_t(MemoryTableFlags::HasTableIndex))) {
-    if (!readVarU32(dstTableIndex)) {
-      return false;
-    }
-    memOrTableFlags ^= uint32_t(MemoryTableFlags::HasTableIndex);
-  }
-  if (memOrTableFlags != uint32_t(MemoryTableFlags::Default)) {
-    return fail(isMem ? "unrecognized memory flags"
-                      : "unrecognized table flags");
-  }
-
-  if (isMem) {
-||||||| merged common ancestors
-=======
   uint32_t memOrTableIndex = 0;
   if (!readMemOrTableIndex(isMem, &memOrTableIndex)) {
     return false;
   }
   if (isMem) {
->>>>>>> upstream-releases
     if (!env_.usesMemory()) {
-<<<<<<< HEAD
       return fail("can't touch memory without memory");
     }
-  } else {
-    if (*dstTableIndex >= env_.tables.length()) {
-      return fail("table index out of range for table.init");
-||||||| merged common ancestors
-        return fail("can't touch memory without memory");
-=======
-      return fail("can't touch memory without memory");
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-
-  if (!readVarU32(segIndex)) {
-    return false;
-  }
-
-  if (isMem) {
-    // Same comment as for readMemOrTableDrop.
-    dvs_.lock()->notifyDataSegmentIndex(*segIndex, d_.currentOffset());
-  } else {
-    // Element segments must carry functions exclusively and anyfunc is not
-    // yet a subtype of anyref.
-    if (env_.tables[*dstTableIndex].kind != TableKind::AnyFunction) {
-      return fail("only tables of 'anyfunc' may have element segments");
-||||||| merged common ancestors
-
-    uint8_t memoryFlags;
-    if (!readFixedU8(&memoryFlags)) {
-        return fail("unable to read memory flags");
-=======
     if (memOrTableIndex != 0) {
       return fail("memory index must be zero");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (*segIndex >= env_.elemSegments.length()) {
-      return fail("table.init segment index out of range");
-||||||| merged common ancestors
-    if (memoryFlags != 0) {
-        return fail("memory flags must be zero");
-=======
     if (env_.dataCount.isNothing()) {
       return fail("memory.init requires a DataCount section");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  return true;
-}
-
-template <typename Policy>
-inline bool OpIter<Policy>::readTableGet(uint32_t* tableIndex, Value* index) {
-  MOZ_ASSERT(Classify(op_) == OpKind::TableGet);
-||||||| merged common ancestors
-
-    if (!popWithType(ValType::I32, len)) {
-        return false;
-    }
-
-    if (!popWithType(ValType::I32, val)) {
-        return false;
-    }
-=======
     if (*segIndex >= *env_.dataCount) {
       return fail("memory.init segment index out of range");
     }
@@ -4104,26 +1947,7 @@ inline bool OpIter<Policy>::readTableGet(uint32_t* tableIndex, Value* index) {
       return fail("table index out of range for table.init");
     }
     *dstTableIndex = memOrTableIndex;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!popWithType(ValType::I32, index)) {
-    return false;
-  }
-
-  *tableIndex = 0;
-
-  uint8_t tableFlags;
-  if (!readFixedU8(&tableFlags)) {
-    return fail("unable to read table flags");
-  }
-  if (tableFlags & uint8_t(MemoryTableFlags::HasTableIndex)) {
-    if (!readVarU32(tableIndex)) {
-      return false;
-||||||| merged common ancestors
-    if (!popWithType(ValType::I32, start)) {
-        return false;
-=======
     // Element segments must carry functions exclusively and funcref is not
     // yet a subtype of anyref.
     if (env_.tables[*dstTableIndex].kind != TableKind::FuncRef) {
@@ -4131,89 +1955,24 @@ inline bool OpIter<Policy>::readTableGet(uint32_t* tableIndex, Value* index) {
     }
     if (*segIndex >= env_.elemSegments.length()) {
       return fail("table.init segment index out of range");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    tableFlags ^= uint8_t(MemoryTableFlags::HasTableIndex);
-  }
-  if (tableFlags != uint8_t(MemoryTableFlags::Default)) {
-    return fail("unrecognized table flags");
-  }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (*tableIndex >= env_.tables.length()) {
-    return fail("table index out of range for table.get");
-  }
-  if (env_.tables[*tableIndex].kind != TableKind::AnyRef) {
-    return fail("table.get only on tables of anyref");
-  }
-  if (env_.gcTypesEnabled() == HasGcTypes::False) {
-    return fail("anyref support not enabled");
   }
 
-  infalliblePush(ValType::AnyRef);
   return true;
-||||||| merged common ancestors
-    return true;
-=======
-  return true;
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readTableGrow(uint32_t* tableIndex, Value* delta,
-                                          Value* initValue) {
-  MOZ_ASSERT(Classify(op_) == OpKind::TableGrow);
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readMemOrTableInit(bool isMem, uint32_t* segIndex,
-                                   Value* dst, Value* src, Value* len)
-{
-    MOZ_ASSERT(Classify(op_) == OpKind::MemOrTableInit);
-=======
 inline bool OpIter<Policy>::readTableFill(uint32_t* tableIndex, Value* start,
                                           Value* val, Value* len) {
   MOZ_ASSERT(Classify(op_) == OpKind::TableFill);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!popWithType(ValType::AnyRef, initValue)) {
-    return false;
-  }
-  if (!popWithType(ValType::I32, delta)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (isMem) {
-        if (!env_.usesMemory()) {
-            return fail("can't touch memory without memory");
-        }
-    } else {
-        if (env_.tables.length() == 0) {
-            return fail("can't table.init without a table");
-        }
-    }
-=======
   if (!readVarU32(tableIndex)) {
     return false;
   }
   if (*tableIndex >= env_.tables.length()) {
     return fail("table index out of range for table.fill");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *tableIndex = 0;
-||||||| merged common ancestors
-    if (!popWithType(ValType::I32, len)) {
-        return false;
-    }
-=======
   if (!popWithType(ValType::I32, len)) {
     return false;
   }
@@ -4223,140 +1982,29 @@ inline bool OpIter<Policy>::readTableFill(uint32_t* tableIndex, Value* start,
   if (!popWithType(ValType::I32, start)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint8_t tableFlags;
-  if (!readFixedU8(&tableFlags)) {
-    return fail("unable to read table flags");
-  }
-  if (tableFlags & uint8_t(MemoryTableFlags::HasTableIndex)) {
-    if (!readVarU32(tableIndex)) {
-      return false;
-    }
-    tableFlags ^= uint8_t(MemoryTableFlags::HasTableIndex);
-  }
-  if (tableFlags != uint8_t(MemoryTableFlags::Default)) {
-    return fail("unrecognized table flags");
-  }
-||||||| merged common ancestors
-    if (!popWithType(ValType::I32, src)) {
-        return false;
-    }
-=======
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (*tableIndex >= env_.tables.length()) {
-    return fail("table index out of range for table.grow");
-  }
-  if (env_.tables[*tableIndex].kind != TableKind::AnyRef) {
-    return fail("table.grow only on tables of anyref");
-  }
-  if (env_.gcTypesEnabled() == HasGcTypes::False) {
-    return fail("anyref support not enabled");
-  }
-||||||| merged common ancestors
-    if (!popWithType(ValType::I32, dst)) {
-        return false;
-    }
-=======
 template <typename Policy>
 inline bool OpIter<Policy>::readTableGet(uint32_t* tableIndex, Value* index) {
   MOZ_ASSERT(Classify(op_) == OpKind::TableGet);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  infalliblePush(ValType::I32);
-  return true;
-}
-||||||| merged common ancestors
-    uint8_t memOrTableFlags;
-    if (!readFixedU8(&memOrTableFlags)) {
-        return fail(isMem ? "unable to read memory flags" : "unable to read table flags");
-    }
-    if (memOrTableFlags != 0) {
-        return fail(isMem ? "memory flags must be zero" : "table flags must be zero");
-    }
-=======
   if (!readVarU32(tableIndex)) {
     return false;
   }
   if (*tableIndex >= env_.tables.length()) {
     return fail("table index out of range for table.get");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-template <typename Policy>
-inline bool OpIter<Policy>::readTableSet(uint32_t* tableIndex, Value* index,
-                                         Value* value) {
-  MOZ_ASSERT(Classify(op_) == OpKind::TableSet);
-||||||| merged common ancestors
-    if (!readVarU32(segIndex)) {
-        return false;
-    }
-=======
-  if (!popWithType(ValType::I32, index)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!popWithType(ValType::AnyRef, value)) {
-    return false;
-  }
   if (!popWithType(ValType::I32, index)) {
     return false;
   }
 
-  *tableIndex = 0;
-
-  uint8_t tableFlags;
-  if (!readFixedU8(&tableFlags)) {
-    return fail("unable to read table flags");
-  }
-  if (tableFlags & uint8_t(MemoryTableFlags::HasTableIndex)) {
-    if (!readVarU32(tableIndex)) {
-      return false;
-    }
-    tableFlags ^= uint8_t(MemoryTableFlags::HasTableIndex);
-  }
-  if (tableFlags != uint8_t(MemoryTableFlags::Default)) {
-    return fail("unrecognized table flags");
-  }
-||||||| merged common ancestors
-    if (isMem) {
-        // Same comment as for readMemOrTableDrop.
-        dvs_.lock()->notifyDataSegmentIndex(*segIndex, d_.currentOffset());
-    } else {
-        if (*segIndex >= env_.elemSegments.length()) {
-            return fail("table.init index out of range");
-        }
-    }
-=======
   infalliblePush(ToElemValType(env_.tables[*tableIndex].kind));
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (*tableIndex >= env_.tables.length()) {
-    return fail("table index out of range for table.set");
-  }
-  if (env_.tables[*tableIndex].kind != TableKind::AnyRef) {
-    return fail("table.set only on tables of anyref");
-  }
-  if (env_.gcTypesEnabled() == HasGcTypes::False) {
-    return fail("anyref support not enabled");
-  }
-
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
 template <typename Policy>
 inline bool OpIter<Policy>::readTableGrow(uint32_t* tableIndex,
                                           Value* initValue, Value* delta) {
@@ -4378,134 +2026,36 @@ inline bool OpIter<Policy>::readTableGrow(uint32_t* tableIndex,
 
   infalliblePush(ValType::I32);
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readTableSize(uint32_t* tableIndex) {
-  MOZ_ASSERT(Classify(op_) == OpKind::TableSize);
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readStructTypeIndex(uint32_t* typeIndex)
-{
-    if (!readVarU32(typeIndex)) {
-        return fail("unable to read type index");
-    }
-=======
 inline bool OpIter<Policy>::readTableSet(uint32_t* tableIndex, Value* index,
                                          Value* value) {
   MOZ_ASSERT(Classify(op_) == OpKind::TableSet);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  *tableIndex = 0;
-||||||| merged common ancestors
-    if (*typeIndex >= env_.types.length()) {
-        return fail("type index out of range");
-    }
-=======
   if (!readVarU32(tableIndex)) {
     return false;
   }
   if (*tableIndex >= env_.tables.length()) {
     return fail("table index out of range for table.set");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint8_t tableFlags;
-  if (!readFixedU8(&tableFlags)) {
-    return fail("unable to read table flags");
-  }
-  if (tableFlags & uint8_t(MemoryTableFlags::HasTableIndex)) {
-    if (!readVarU32(tableIndex)) {
-      return false;
-    }
-    tableFlags ^= uint8_t(MemoryTableFlags::HasTableIndex);
-  }
-  if (tableFlags != uint8_t(MemoryTableFlags::Default)) {
-    return fail("unrecognized table flags");
-  }
-||||||| merged common ancestors
-    if (!env_.types[*typeIndex].isStructType()) {
-        return fail("not a struct type");
-    }
-=======
   if (!popWithType(ToElemValType(env_.tables[*tableIndex].kind), value)) {
     return false;
   }
   if (!popWithType(ValType::I32, index)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (*tableIndex >= env_.tables.length()) {
-    return fail("table index out of range for table.size");
-  }
-
-  return push(ValType::I32);
-||||||| merged common ancestors
-    return true;
-=======
   return true;
->>>>>>> upstream-releases
 }
 
 template <typename Policy>
-<<<<<<< HEAD
-inline bool OpIter<Policy>::readStructTypeIndex(uint32_t* typeIndex) {
-  if (!readVarU32(typeIndex)) {
-    return fail("unable to read type index");
-  }
-||||||| merged common ancestors
-inline bool
-OpIter<Policy>::readFieldIndex(uint32_t* fieldIndex, const StructType& structType)
-{
-    if (!readVarU32(fieldIndex)) {
-        return fail("unable to read field index");
-    }
-=======
 inline bool OpIter<Policy>::readTableSize(uint32_t* tableIndex) {
   MOZ_ASSERT(Classify(op_) == OpKind::TableSize);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (*typeIndex >= env_.types.length()) {
-    return fail("type index out of range");
-  }
-||||||| merged common ancestors
-    if (structType.fields_.length() <= *fieldIndex) {
-        return fail("field index out of range");
-    }
-=======
   *tableIndex = 0;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!env_.types[*typeIndex].isStructType()) {
-    return fail("not a struct type");
-  }
-
-  return true;
-}
-
-template <typename Policy>
-inline bool OpIter<Policy>::readFieldIndex(uint32_t* fieldIndex,
-                                           const StructType& structType) {
-  if (!readVarU32(fieldIndex)) {
-    return fail("unable to read field index");
-  }
-
-  if (structType.fields_.length() <= *fieldIndex) {
-    return fail("field index out of range");
-  }
-
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   if (!readVarU32(tableIndex)) {
     return false;
   }
@@ -4545,7 +2095,6 @@ inline bool OpIter<Policy>::readFieldIndex(uint32_t* fieldIndex,
   }
 
   return true;
->>>>>>> upstream-releases
 }
 
 // Semantics of struct.new, struct.get, struct.set, and struct.narrow documented
@@ -4651,7 +2200,6 @@ inline bool OpIter<Policy>::readStructNarrow(ValType* inputType,
       return fail("invalid type combination in struct.narrow");
     }
 
-<<<<<<< HEAD
     const StructType& inputStruct =
         env_.types[inputType->refTypeIndex()].structType();
     const StructType& outputStruct =
@@ -4663,45 +2211,14 @@ inline bool OpIter<Policy>::readStructNarrow(ValType* inputType,
   } else if (*outputType == ValType::AnyRef) {
     if (*inputType != ValType::AnyRef) {
       return fail("invalid type combination in struct.narrow");
-||||||| merged common ancestors
-    if (!popWithType(*inputType, ptr)) {
-        return false;
-=======
-    const StructType& inputStruct =
-        env_.types[inputType->refTypeIndex()].structType();
-    const StructType& outputStruct =
-        env_.types[outputType->refTypeIndex()].structType();
-
-    if (!outputStruct.hasPrefix(inputStruct)) {
-      return fail("invalid narrowing operation");
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
-  } else if (*outputType == ValType::AnyRef) {
-    if (*inputType != ValType::AnyRef) {
-      return fail("invalid type combination in struct.narrow");
     }
   }
 
   if (!popWithType(*inputType, ptr)) {
     return false;
   }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!popWithType(*inputType, ptr)) {
-    return false;
-  }
 
   return push(*outputType);
-||||||| merged common ancestors
-    return push(*outputType);
-=======
-  return push(*outputType);
->>>>>>> upstream-releases
 }
 
 }  // namespace wasm

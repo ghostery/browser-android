@@ -226,23 +226,11 @@ HTMLTextFieldAccessible::NativeAttributes() {
   // has an embedded anonymous input[type=text] (along with spinner buttons).
   // In that case, we would want to take the input type from the parent
   // and not the anonymous content.
-<<<<<<< HEAD
-  nsIContent* widgetElm = BindingParent();
-  if ((widgetElm && widgetElm->AsElement()->GetAttr(kNameSpaceID_None,
-                                                    nsGkAtoms::type, type)) ||
-      mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::type,
-                                     type)) {
-||||||| merged common ancestors
-  nsIContent* widgetElm = BindingParent();
-  if ((widgetElm && widgetElm->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::type, type)) ||
-      mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::type, type)) {
-=======
   nsIContent* widgetElm = BindingOrWidgetParent();
   if ((widgetElm && widgetElm->AsElement()->GetAttr(kNameSpaceID_None,
                                                     nsGkAtoms::type, type)) ||
       mContent->AsElement()->GetAttr(kNameSpaceID_None, nsGkAtoms::type,
                                      type)) {
->>>>>>> upstream-releases
     nsAccUtils::SetAccAttr(attributes, nsGkAtoms::textInputType, type);
     if (!ARIARoleMap() && type.EqualsLiteral("search")) {
       nsAccUtils::SetAccAttr(attributes, nsGkAtoms::xmlroles,
@@ -271,17 +259,8 @@ ENameValueFlag HTMLTextFieldAccessible::NativeName(nsString& aName) const {
   if (!aName.IsEmpty()) return nameFlag;
 
   // If part of compound of XUL widget then grab a name from XUL widget element.
-<<<<<<< HEAD
-  nsIContent* widgetElm = BindingParent();
-  if (widgetElm) XULElmName(mDoc, widgetElm, aName);
-||||||| merged common ancestors
-  nsIContent* widgetElm = BindingParent();
-  if (widgetElm)
-    XULElmName(mDoc, widgetElm, aName);
-=======
   nsIContent* widgetElm = BindingOrWidgetParent();
   if (widgetElm) XULElmName(mDoc, widgetElm, aName);
->>>>>>> upstream-releases
 
   if (!aName.IsEmpty()) return eNameOK;
 

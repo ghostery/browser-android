@@ -1175,68 +1175,6 @@ import android.view.inputmethod.EditorInfo;
                           getConstantName(Action.class, "TYPE_", action.mType) + ")");
         }
         switch (action.mType) {
-<<<<<<< HEAD
-        case Action.TYPE_REPLACE_TEXT: {
-            final Spanned currentText = mText.getCurrentText();
-            final int actionNewEnd = action.mStart + action.mSequence.length();
-            if (mLastTextChangeStart > mLastTextChangeNewEnd ||
-                mLastTextChangeNewEnd > currentText.length() ||
-                action.mStart < mLastTextChangeStart || actionNewEnd > mLastTextChangeNewEnd) {
-                // Replace-text action doesn't match our text change.
-                break;
-            }
-
-            int indexInText = TextUtils.indexOf(currentText, action.mSequence,
-                                                action.mStart, mLastTextChangeNewEnd);
-            if (indexInText < 0 && action.mStart != mLastTextChangeStart) {
-                final String changedText = TextUtils.substring(
-                        currentText, mLastTextChangeStart, actionNewEnd);
-                indexInText = changedText.lastIndexOf(action.mSequence.toString());
-                if (indexInText >= 0) {
-                    indexInText += mLastTextChangeStart;
-                }
-            }
-            if (indexInText < 0) {
-                // Replace-text action doesn't match our current text.
-                break;
-            }
-
-            final int selStart = Selection.getSelectionStart(currentText);
-            final int selEnd = Selection.getSelectionEnd(currentText);
-
-            // Replace-text action matches our current text; copy the new spans to the
-            // current text.
-            mText.currentReplace(indexInText,
-                                 indexInText + action.mSequence.length(),
-                                 action.mSequence);
-            // Make sure selection is preserved.
-            mText.currentSetSelection(selStart, selEnd);
-
-            // The text change is caused by the replace-text event. If the text change
-            // replaced the previous selection, we need to rely on Gecko for an updated
-            // selection, so don't ignore selection change. However, if the text change
-            // did not replace the previous selection, we can ignore the Gecko selection
-            // in favor of the Java selection.
-            mIgnoreSelectionChange = !mLastTextChangeReplacedSelection;
-            break;
-        }
-
-        case Action.TYPE_SET_SPAN:
-            final int len = mText.getCurrentText().length();
-            if (action.mStart > len || action.mEnd > len ||
-                    !TextUtils.substring(mText.getCurrentText(), action.mStart,
-                                         action.mEnd).equals(action.mSequence)) {
-                if (DEBUG) {
-                    Log.d(LOGTAG, "discarding stale set span call");
-||||||| merged common ancestors
-        case Action.TYPE_SET_SPAN:
-            final int len = mText.getCurrentText().length();
-            if (action.mStart > len || action.mEnd > len ||
-                    !TextUtils.substring(mText.getCurrentText(), action.mStart,
-                                         action.mEnd).equals(action.mSequence)) {
-                if (DEBUG) {
-                    Log.d(LOGTAG, "discarding stale set span call");
-=======
             case Action.TYPE_REPLACE_TEXT: {
                 final Spanned currentText = mText.getCurrentText();
                 final int actionNewEnd = action.mStart + action.mSequence.length();
@@ -1260,7 +1198,6 @@ import android.view.inputmethod.EditorInfo;
                 if (indexInText < 0) {
                     // Replace-text action doesn't match our current text.
                     break;
->>>>>>> upstream-releases
                 }
 
                 final int selStart = Selection.getSelectionStart(currentText);
@@ -1282,22 +1219,6 @@ import android.view.inputmethod.EditorInfo;
                 mIgnoreSelectionChange = !mLastTextChangeReplacedSelection;
                 break;
             }
-<<<<<<< HEAD
-            if ((action.mSpanObject == Selection.SELECTION_START ||
-                 action.mSpanObject == Selection.SELECTION_END) &&
-                (action.mStart < mLastTextChangeStart && action.mEnd < mLastTextChangeStart ||
-                 action.mStart > mLastTextChangeOldEnd && action.mEnd > mLastTextChangeOldEnd)) {
-                // Use the Java selection if, between text-change notification and replace-text
-                // processing, we specifically set the selection to outside the replaced range.
-                mLastTextChangeReplacedSelection = false;
-            }
-            mText.currentSetSpan(action.mSpanObject, action.mStart, action.mEnd, action.mSpanFlags);
-            break;
-||||||| merged common ancestors
-            mText.currentSetSpan(action.mSpanObject, action.mStart, action.mEnd, action.mSpanFlags);
-            break;
-=======
->>>>>>> upstream-releases
 
             case Action.TYPE_SET_SPAN:
                 final int len = mText.getCurrentText().length();
@@ -1808,35 +1729,6 @@ import android.view.inputmethod.EditorInfo;
             // Don't ignore the next selection change because we are re-syncing with Gecko
             mIgnoreSelectionChange = false;
 
-<<<<<<< HEAD
-            mLastTextChangeStart = Integer.MAX_VALUE;
-            mLastTextChangeOldEnd = -1;
-            mLastTextChangeNewEnd = -1;
-            mLastTextChangeReplacedSelection = false;
-||||||| merged common ancestors
-        } else if (action != null &&
-                action.mType == Action.TYPE_REPLACE_TEXT &&
-                start <= action.mStart &&
-                oldEnd >= action.mEnd &&
-                newEnd >= action.mStart + action.mSequence.length()) {
-
-            // Try to preserve both old spans and new spans in action.mSequence.
-            // indexInText is where we can find waction.mSequence within the passed in text.
-            final int startWithinText = action.mStart - start;
-            int indexInText = TextUtils.indexOf(text, action.mSequence, startWithinText);
-            if (indexInText < 0 && startWithinText >= action.mSequence.length()) {
-                indexInText = text.toString().lastIndexOf(action.mSequence.toString(),
-                                                          startWithinText);
-            }
-
-            if (indexInText < 0) {
-                // Text was changed from under us. We are forced to discard any new spans.
-                mText.currentReplace(start, oldEnd, text);
-
-                // Don't ignore the next selection change because we are forced to re-sync
-                // with Gecko here.
-                mIgnoreSelectionChange = false;
-=======
             mLastTextChangeStart = Integer.MAX_VALUE;
             mLastTextChangeOldEnd = -1;
             mLastTextChangeNewEnd = -1;
@@ -1846,28 +1738,7 @@ import android.view.inputmethod.EditorInfo;
             final Spanned currentText = mText.getCurrentText();
             final int selStart = Selection.getSelectionStart(currentText);
             final int selEnd = Selection.getSelectionEnd(currentText);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        } else if (!geckoIsSameText(start, oldEnd, text)) {
-            final Spanned currentText = mText.getCurrentText();
-            final int selStart = Selection.getSelectionStart(currentText);
-            final int selEnd = Selection.getSelectionEnd(currentText);
-||||||| merged common ancestors
-            } else if (indexInText == 0 && text.length() == action.mSequence.length() &&
-                    oldEnd - start == action.mEnd - action.mStart) {
-                // The new change exactly matches our saved change, so do a direct replace.
-                mText.currentReplace(start, oldEnd, action.mSequence);
-=======
-            // True if the selection was in the middle of the replaced text; in that case
-            // we don't know where to place the selection after replacement, and must rely
-            // on the Gecko selection.
-            mLastTextChangeReplacedSelection |=
-                (selStart >= start && selStart <= oldEnd) ||
-                (selEnd >= start && selEnd <= oldEnd);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
             // True if the selection was in the middle of the replaced text; in that case
             // we don't know where to place the selection after replacement, and must rely
             // on the Gecko selection.
@@ -1879,45 +1750,6 @@ import android.view.inputmethod.EditorInfo;
             // clear composing spans that span the whole range.
             mText.currentReplace(start, oldEnd, "");
             mText.currentReplace(start, start, text);
-||||||| merged common ancestors
-                // Ignore the next selection change because the selection change is a
-                // side-effect of the replace-text event we sent.
-                mIgnoreSelectionChange = true;
-
-            } else {
-                // The sequence is embedded within the changed text, so we have to perform
-                // replacement in parts. First replace part of text before the sequence.
-                mText.currentReplace(start, action.mStart, text.subSequence(0, indexInText));
-
-                // Then replace part of the text after the sequence.
-                final int actionStart = indexInText + start;
-                final int delta = actionStart - action.mStart;
-                final int actionEnd = delta + action.mEnd;
-
-                final Spanned currentText = mText.getCurrentText();
-                final boolean resetSelStart = Selection.getSelectionStart(currentText) == actionEnd;
-                final boolean resetSelEnd = Selection.getSelectionEnd(currentText) == actionEnd;
-
-                mText.currentReplace(actionEnd, delta + oldEnd, text.subSequence(
-                        indexInText + action.mSequence.length(), text.length()));
-
-                // The replacement above may have shifted our selection, if the selection
-                // was at the start of the replacement range. If so, we need to reset
-                // our selection to the previous position.
-                if (resetSelStart || resetSelEnd) {
-                    mText.currentSetSelection(
-                            resetSelStart ? actionEnd : Selection.getSelectionStart(currentText),
-                            resetSelEnd ? actionEnd : Selection.getSelectionEnd(currentText));
-                }
-
-                // Finally replace the sequence itself to preserve new spans.
-                mText.currentReplace(actionStart, actionEnd, action.mSequence);
-=======
-            // Gecko side initiated the text change. Replace in two steps to properly
-            // clear composing spans that span the whole range.
-            mText.currentReplace(start, oldEnd, "");
-            mText.currentReplace(start, start, text);
->>>>>>> upstream-releases
 
             mLastTextChangeStart = Math.min(start, mLastTextChangeStart);
             mLastTextChangeOldEnd = Math.max(oldEnd, mLastTextChangeOldEnd);
@@ -1932,29 +1764,10 @@ import android.view.inputmethod.EditorInfo;
                     (action.mType == Action.TYPE_REPLACE_TEXT ||
                      action.mType == Action.TYPE_SET_SPAN ||
                      action.mType == Action.TYPE_REMOVE_SPAN));
-<<<<<<< HEAD
 
             mLastTextChangeStart = Math.min(start, mLastTextChangeStart);
             mLastTextChangeOldEnd = Math.max(oldEnd, mLastTextChangeOldEnd);
             mLastTextChangeNewEnd = Math.max(newEnd, mLastTextChangeNewEnd);
-||||||| merged common ancestors
-            return;
-
-        } else {
-            // Gecko side initiated the text change. Replace in two steps to properly
-            // clear composing spans that span the whole range.
-            mText.currentReplace(start, oldEnd, "");
-            mText.currentReplace(start, start, text);
-
-            // Don't ignore the next selection change because we are forced to re-sync
-            // with Gecko here.
-            mIgnoreSelectionChange = false;
-=======
-
-            mLastTextChangeStart = Math.min(start, mLastTextChangeStart);
-            mLastTextChangeOldEnd = Math.max(oldEnd, mLastTextChangeOldEnd);
-            mLastTextChangeNewEnd = Math.max(newEnd, mLastTextChangeNewEnd);
->>>>>>> upstream-releases
         }
 
         // onTextChange is always followed by onSelectionChange, so we let

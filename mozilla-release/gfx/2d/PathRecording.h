@@ -17,14 +17,6 @@
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-struct PathOp {
-  enum OpType {
-||||||| merged common ancestors
-struct PathOp
-{
-  enum OpType {
-=======
 class PathOps {
  public:
   PathOps() {}
@@ -78,7 +70,6 @@ class PathOps {
   void operator=(const PathOps&) = delete;  // assign using std::move()!
 
   enum class OpType : uint32_t {
->>>>>>> upstream-releases
     OP_MOVETO = 0,
     OP_LINETO,
     OP_BEZIERTO,
@@ -119,11 +110,6 @@ class PathOps {
   std::vector<uint8_t> mPathData;
 };
 
-<<<<<<< HEAD
-const int32_t sPointCount[] = {1, 1, 3, 2, 0, 0};
-||||||| merged common ancestors
-const int32_t sPointCount[] = { 1, 1, 3, 2, 0, 0 };
-=======
 template <class S>
 PathOps::PathOps(S& aStream) {
   ReadVector(aStream, mPathData);
@@ -133,40 +119,20 @@ template <class S>
 inline void PathOps::Record(S& aStream) const {
   WriteVector(aStream, mPathData);
 }
->>>>>>> upstream-releases
 
 class PathRecording;
 class DrawEventRecorderPrivate;
 
-<<<<<<< HEAD
-class PathBuilderRecording : public PathBuilder {
- public:
-||||||| merged common ancestors
-class PathBuilderRecording : public PathBuilder
-{
-public:
-=======
 class PathBuilderRecording final : public PathBuilder {
  public:
->>>>>>> upstream-releases
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(PathBuilderRecording, override)
 
-<<<<<<< HEAD
-  PathBuilderRecording(PathBuilder *aBuilder, FillRule aFillRule)
-      : mPathBuilder(aBuilder), mFillRule(aFillRule) {}
-||||||| merged common ancestors
-  PathBuilderRecording(PathBuilder *aBuilder, FillRule aFillRule)
-    : mPathBuilder(aBuilder), mFillRule(aFillRule)
-  {
-  }
-=======
   PathBuilderRecording(PathBuilder* aBuilder, FillRule aFillRule)
       : mPathBuilder(aBuilder), mFillRule(aFillRule) {}
 
   PathBuilderRecording(PathBuilder* aBuilder, const PathOps& aPathOps,
                        FillRule aFillRule)
       : mPathBuilder(aBuilder), mFillRule(aFillRule), mPathOps(aPathOps) {}
->>>>>>> upstream-releases
 
   /* Move the current point in the path, any figure currently being drawn will
    * be considered closed during fill operations, however when stroking the
@@ -178,27 +144,11 @@ class PathBuilderRecording final : public PathBuilder {
   void LineTo(const Point& aPoint) final;
 
   /* Add a cubic bezier curve to the current figure */
-<<<<<<< HEAD
-  virtual void BezierTo(const Point &aCP1, const Point &aCP2,
-                        const Point &aCP3) override;
-||||||| merged common ancestors
-  virtual void BezierTo(const Point &aCP1,
-                        const Point &aCP2,
-                        const Point &aCP3) override;
-=======
   void BezierTo(const Point& aCP1, const Point& aCP2, const Point& aCP3) final;
 
->>>>>>> upstream-releases
   /* Add a quadratic bezier curve to the current figure */
-<<<<<<< HEAD
-  virtual void QuadraticBezierTo(const Point &aCP1, const Point &aCP2) override;
-||||||| merged common ancestors
-  virtual void QuadraticBezierTo(const Point &aCP1,
-                                 const Point &aCP2) override;
-=======
   void QuadraticBezierTo(const Point& aCP1, const Point& aCP2) final;
 
->>>>>>> upstream-releases
   /* Close the current figure, this will essentially generate a line segment
    * from the current point to the starting point for the current figure
    */
@@ -223,25 +173,9 @@ class PathBuilderRecording final : public PathBuilder {
     mPathBuilder->SetBeginPoint(aPoint);
   }
 
-<<<<<<< HEAD
-  virtual BackendType GetBackendType() const override {
-    return BackendType::RECORDING;
-  }
-||||||| merged common ancestors
-  virtual BackendType GetBackendType() const override { return BackendType::RECORDING; }
-=======
   already_AddRefed<Path> Finish() final;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  friend class PathRecording;
-||||||| merged common ancestors
-private:
-  friend class PathRecording;
-=======
   BackendType GetBackendType() const final { return BackendType::RECORDING; }
->>>>>>> upstream-releases
 
  private:
   RefPtr<PathBuilder> mPathBuilder;
@@ -249,28 +183,10 @@ private:
   PathOps mPathOps;
 };
 
-<<<<<<< HEAD
-class PathRecording : public Path {
- public:
-||||||| merged common ancestors
-class PathRecording : public Path
-{
-public:
-=======
 class PathRecording final : public Path {
  public:
->>>>>>> upstream-releases
   MOZ_DECLARE_REFCOUNTED_VIRTUAL_TYPENAME(PathRecording, override)
 
-<<<<<<< HEAD
-  PathRecording(Path *aPath, const std::vector<PathOp> aOps, FillRule aFillRule)
-      : mPath(aPath), mPathOps(aOps), mFillRule(aFillRule) {}
-||||||| merged common ancestors
-  PathRecording(Path *aPath, const std::vector<PathOp> aOps, FillRule aFillRule)
-    : mPath(aPath), mPathOps(aOps), mFillRule(aFillRule)
-  {
-  }
-=======
   PathRecording(Path* aPath, PathOps&& aOps, FillRule aFillRule,
                 const Point& aCurrentPoint, const Point& aBeginPoint)
       : mPath(aPath),
@@ -278,46 +194,9 @@ class PathRecording final : public Path {
         mFillRule(aFillRule),
         mCurrentPoint(aCurrentPoint),
         mBeginPoint(aBeginPoint) {}
->>>>>>> upstream-releases
 
   ~PathRecording();
 
-<<<<<<< HEAD
-  virtual BackendType GetBackendType() const override {
-    return BackendType::RECORDING;
-  }
-  virtual already_AddRefed<PathBuilder> CopyToBuilder(
-      FillRule aFillRule) const override;
-  virtual already_AddRefed<PathBuilder> TransformedCopyToBuilder(
-      const Matrix &aTransform, FillRule aFillRule) const override;
-  virtual bool ContainsPoint(const Point &aPoint,
-                             const Matrix &aTransform) const override {
-    return mPath->ContainsPoint(aPoint, aTransform);
-  }
-  virtual bool StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
-                                   const Point &aPoint,
-                                   const Matrix &aTransform) const override {
-    return mPath->StrokeContainsPoint(aStrokeOptions, aPoint, aTransform);
-  }
-
-  virtual Rect GetBounds(const Matrix &aTransform = Matrix()) const override {
-    return mPath->GetBounds(aTransform);
-  }
-||||||| merged common ancestors
-  virtual BackendType GetBackendType() const override { return BackendType::RECORDING; }
-  virtual already_AddRefed<PathBuilder> CopyToBuilder(FillRule aFillRule) const override;
-  virtual already_AddRefed<PathBuilder> TransformedCopyToBuilder(const Matrix &aTransform,
-                                                             FillRule aFillRule) const override;
-  virtual bool ContainsPoint(const Point &aPoint, const Matrix &aTransform) const override
-  { return mPath->ContainsPoint(aPoint, aTransform); }
-  virtual bool StrokeContainsPoint(const StrokeOptions &aStrokeOptions,
-                                   const Point &aPoint,
-                                   const Matrix &aTransform) const override
-  { return mPath->StrokeContainsPoint(aStrokeOptions, aPoint, aTransform); }
-
-  virtual Rect GetBounds(const Matrix &aTransform = Matrix()) const override
-  { return mPath->GetBounds(aTransform); }
-=======
   BackendType GetBackendType() const final { return BackendType::RECORDING; }
   already_AddRefed<PathBuilder> CopyToBuilder(FillRule aFillRule) const final;
   already_AddRefed<PathBuilder> TransformedCopyToBuilder(
@@ -331,36 +210,15 @@ class PathRecording final : public Path {
                            const Matrix& aTransform) const final {
     return mPath->StrokeContainsPoint(aStrokeOptions, aPoint, aTransform);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual Rect GetStrokedBounds(
-      const StrokeOptions &aStrokeOptions,
-      const Matrix &aTransform = Matrix()) const override {
-    return mPath->GetStrokedBounds(aStrokeOptions, aTransform);
-  }
-||||||| merged common ancestors
-  virtual Rect GetStrokedBounds(const StrokeOptions &aStrokeOptions,
-                                const Matrix &aTransform = Matrix()) const override
-  { return mPath->GetStrokedBounds(aStrokeOptions, aTransform); }
-=======
   Rect GetBounds(const Matrix& aTransform = Matrix()) const final {
     return mPath->GetBounds(aTransform);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void StreamToSink(PathSink *aSink) const override {
-    mPath->StreamToSink(aSink);
-  }
-||||||| merged common ancestors
-  virtual void StreamToSink(PathSink *aSink) const override { mPath->StreamToSink(aSink); }
-=======
   Rect GetStrokedBounds(const StrokeOptions& aStrokeOptions,
                         const Matrix& aTransform = Matrix()) const final {
     return mPath->GetStrokedBounds(aStrokeOptions, aTransform);
   }
->>>>>>> upstream-releases
 
   void StreamToSink(PathSink* aSink) const final { mPath->StreamToSink(aSink); }
 

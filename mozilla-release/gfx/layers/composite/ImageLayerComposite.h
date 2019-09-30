@@ -33,16 +33,8 @@ class ImageLayerComposite : public ImageLayer, public LayerComposite {
  protected:
   virtual ~ImageLayerComposite();
 
-<<<<<<< HEAD
- public:
-  virtual void Disconnect() override;
-||||||| merged common ancestors
-public:
-  virtual void Disconnect() override;
-=======
  public:
   void Disconnect() override;
->>>>>>> upstream-releases
 
   bool SetCompositableHost(CompositableHost* aHost) override;
 
@@ -53,15 +45,8 @@ public:
   void RenderLayer(const gfx::IntRect& aClipRect,
                    const Maybe<gfx::Polygon>& aGeometry) override;
 
-<<<<<<< HEAD
-  virtual void ComputeEffectiveTransforms(
-      const mozilla::gfx::Matrix4x4& aTransformToSurface) override;
-||||||| merged common ancestors
-  virtual void ComputeEffectiveTransforms(const mozilla::gfx::Matrix4x4& aTransformToSurface) override;
-=======
   void ComputeEffectiveTransforms(
       const mozilla::gfx::Matrix4x4& aTransformToSurface) override;
->>>>>>> upstream-releases
 
   void CleanupResources() override;
 
@@ -77,17 +62,8 @@ public:
 
   nsIntRegion GetFullyRenderedRegion() override;
 
-<<<<<<< HEAD
- protected:
-  virtual void PrintInfo(std::stringstream& aStream,
-                         const char* aPrefix) override;
-||||||| merged common ancestors
-protected:
-  virtual void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
-=======
  protected:
   void PrintInfo(std::stringstream& aStream, const char* aPrefix) override;
->>>>>>> upstream-releases
 
  private:
   gfx::SamplingFilter GetSamplingFilter();

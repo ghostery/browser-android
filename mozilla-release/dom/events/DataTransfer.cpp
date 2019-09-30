@@ -100,40 +100,6 @@ static bool PrefProtected() {
 
 static DataTransfer::Mode ModeForEvent(EventMessage aEventMessage) {
   switch (aEventMessage) {
-<<<<<<< HEAD
-    case eCut:
-    case eCopy:
-    case eDragStart:
-      // For these events, we want to be able to add data to the data transfer,
-      // Otherwise, the data is already present.
-      return DataTransfer::Mode::ReadWrite;
-    case eDrop:
-    case ePaste:
-    case ePasteNoFormatting:
-      // For these events we want to be able to read the data which is stored in
-      // the DataTransfer, rather than just the type information.
-      return DataTransfer::Mode::ReadOnly;
-    default:
-      return PrefProtected() ? DataTransfer::Mode::Protected
-                             : DataTransfer::Mode::ReadOnly;
-||||||| merged common ancestors
-  case eCut:
-  case eCopy:
-  case eDragStart:
-    // For these events, we want to be able to add data to the data transfer,
-    // Otherwise, the data is already present.
-    return DataTransfer::Mode::ReadWrite;
-  case eDrop:
-  case ePaste:
-  case ePasteNoFormatting:
-    // For these events we want to be able to read the data which is stored in
-    // the DataTransfer, rather than just the type information.
-    return DataTransfer::Mode::ReadOnly;
-  default:
-    return PrefProtected()
-      ? DataTransfer::Mode::Protected
-      : DataTransfer::Mode::ReadOnly;
-=======
     case eCut:
     case eCopy:
     case eDragStart:
@@ -150,42 +116,11 @@ static DataTransfer::Mode ModeForEvent(EventMessage aEventMessage) {
     default:
       return PrefProtected() ? DataTransfer::Mode::Protected
                              : DataTransfer::Mode::ReadOnly;
->>>>>>> upstream-releases
   }
 }
 
 DataTransfer::DataTransfer(nsISupports* aParent, EventMessage aEventMessage,
                            bool aIsExternal, int32_t aClipboardType)
-<<<<<<< HEAD
-    : mParent(aParent),
-      mDropEffect(nsIDragService::DRAGDROP_ACTION_NONE),
-      mEffectAllowed(nsIDragService::DRAGDROP_ACTION_UNINITIALIZED),
-      mEventMessage(aEventMessage),
-      mCursorState(false),
-      mMode(ModeForEvent(aEventMessage)),
-      mIsExternal(aIsExternal),
-      mUserCancelled(false),
-      mIsCrossDomainSubFrameDrop(false),
-      mClipboardType(aClipboardType),
-      mDragImageX(0),
-      mDragImageY(0) {
-  mItems = new DataTransferItemList(this, aIsExternal);
-||||||| merged common ancestors
-  : mParent(aParent)
-  , mDropEffect(nsIDragService::DRAGDROP_ACTION_NONE)
-  , mEffectAllowed(nsIDragService::DRAGDROP_ACTION_UNINITIALIZED)
-  , mEventMessage(aEventMessage)
-  , mCursorState(false)
-  , mMode(ModeForEvent(aEventMessage))
-  , mIsExternal(aIsExternal)
-  , mUserCancelled(false)
-  , mIsCrossDomainSubFrameDrop(false)
-  , mClipboardType(aClipboardType)
-  , mDragImageX(0)
-  , mDragImageY(0)
-{
-  mItems = new DataTransferItemList(this, aIsExternal);
-=======
     : mParent(aParent),
       mDropEffect(nsIDragService::DRAGDROP_ACTION_NONE),
       mEffectAllowed(nsIDragService::DRAGDROP_ACTION_UNINITIALIZED),
@@ -199,7 +134,6 @@ DataTransfer::DataTransfer(nsISupports* aParent, EventMessage aEventMessage,
       mDragImageX(0),
       mDragImageY(0) {
   mItems = new DataTransferItemList(this);
->>>>>>> upstream-releases
 
   // For external usage, cache the data from the native clipboard or drag.
   if (mIsExternal && mMode != Mode::ReadWrite) {
@@ -215,18 +149,6 @@ DataTransfer::DataTransfer(nsISupports* aParent, EventMessage aEventMessage,
   }
 }
 
-<<<<<<< HEAD
-DataTransfer::DataTransfer(nsISupports* aParent, EventMessage aEventMessage,
-                           const uint32_t aEffectAllowed, bool aCursorState,
-                           bool aIsExternal, bool aUserCancelled,
-||||||| merged common ancestors
-DataTransfer::DataTransfer(nsISupports* aParent,
-                           EventMessage aEventMessage,
-                           const uint32_t aEffectAllowed,
-                           bool aCursorState,
-                           bool aIsExternal,
-                           bool aUserCancelled,
-=======
 DataTransfer::DataTransfer(nsISupports* aParent, EventMessage aEventMessage,
                            nsITransferable* aTransferable)
     : mParent(aParent),
@@ -291,7 +213,6 @@ DataTransfer::DataTransfer(nsISupports* aParent, EventMessage aEventMessage,
 DataTransfer::DataTransfer(nsISupports* aParent, EventMessage aEventMessage,
                            const uint32_t aEffectAllowed, bool aCursorState,
                            bool aIsExternal, bool aUserCancelled,
->>>>>>> upstream-releases
                            bool aIsCrossDomainSubFrameDrop,
                            int32_t aClipboardType, DataTransferItemList* aItems,
                            Element* aDragImage, uint32_t aDragImageX,
@@ -683,22 +604,10 @@ void DataTransfer::MozGetDataAt(JSContext* aCx, const nsAString& aFormat,
   }
 }
 
-<<<<<<< HEAD
-/* static */ bool DataTransfer::PrincipalMaySetData(const nsAString& aType,
-                                                    nsIVariant* aData,
-                                                    nsIPrincipal* aPrincipal) {
-||||||| merged common ancestors
-/* static */ bool
-DataTransfer::PrincipalMaySetData(const nsAString& aType,
-                                  nsIVariant* aData,
-                                  nsIPrincipal* aPrincipal)
-{
-=======
 /* static */
 bool DataTransfer::PrincipalMaySetData(const nsAString& aType,
                                        nsIVariant* aData,
                                        nsIPrincipal* aPrincipal) {
->>>>>>> upstream-releases
   if (!nsContentUtils::IsSystemPrincipal(aPrincipal)) {
     DataTransferItem::eKind kind = DataTransferItem::KindFromData(aData);
     if (kind == DataTransferItem::KIND_OTHER) {
@@ -706,16 +615,6 @@ bool DataTransfer::PrincipalMaySetData(const nsAString& aType,
       return false;
     }
 
-<<<<<<< HEAD
-    if (aType.EqualsASCII(kFileMime) || aType.EqualsASCII(kFilePromiseMime)) {
-      NS_WARNING(
-          "Disallowing adding x-moz-file or x-moz-file-promize types to "
-          "DataTransfer");
-||||||| merged common ancestors
-    if (aType.EqualsASCII(kFileMime) ||
-        aType.EqualsASCII(kFilePromiseMime)) {
-      NS_WARNING("Disallowing adding x-moz-file or x-moz-file-promize types to DataTransfer");
-=======
     if (aType.EqualsASCII(kFileMime) || aType.EqualsASCII(kFilePromiseMime)) {
       NS_WARNING(
           "Disallowing adding x-moz-file or x-moz-file-promize types to "
@@ -730,7 +629,6 @@ bool DataTransfer::PrincipalMaySetData(const nsAString& aType,
     if (!principal->AddonPolicy() &&
         StringBeginsWith(aType, NS_LITERAL_STRING("text/x-moz-place"))) {
       NS_WARNING("Disallowing adding moz-place types to DataTransfer");
->>>>>>> upstream-releases
       return false;
     }
   }
@@ -778,21 +676,9 @@ void DataTransfer::GetExternalClipboardFormats(const int32_t& aWhichClipboard,
 
   if (aPlainTextOnly) {
     bool hasType;
-<<<<<<< HEAD
-    static const char* unicodeMime[] = {kUnicodeMime};
-    nsresult rv = clipboard->HasDataMatchingFlavors(
-        unicodeMime,
-        /* number of flavors to check */ 1, aWhichClipboard, &hasType);
-||||||| merged common ancestors
-    static const char * unicodeMime[] = { kUnicodeMime };
-    nsresult rv = clipboard->HasDataMatchingFlavors(unicodeMime,
-                                                    /* number of flavors to check */ 1,
-                                                    aWhichClipboard, &hasType);
-=======
     AutoTArray<nsCString, 1> unicodeMime = {nsDependentCString(kUnicodeMime)};
     nsresult rv = clipboard->HasDataMatchingFlavors(unicodeMime,
                                                     aWhichClipboard, &hasType);
->>>>>>> upstream-releases
     NS_SUCCEEDED(rv);
     if (hasType) {
       aResult->AppendElement(kUnicodeMime);
@@ -807,19 +693,9 @@ void DataTransfer::GetExternalClipboardFormats(const int32_t& aWhichClipboard,
 
   for (uint32_t f = 0; f < mozilla::ArrayLength(formats); ++f) {
     bool hasType;
-<<<<<<< HEAD
-    nsresult rv = clipboard->HasDataMatchingFlavors(
-        &(formats[f]),
-        /* number of flavors to check */ 1, aWhichClipboard, &hasType);
-||||||| merged common ancestors
-    nsresult rv = clipboard->HasDataMatchingFlavors(&(formats[f]),
-                                                    /* number of flavors to check */ 1,
-                                                    aWhichClipboard, &hasType);
-=======
     AutoTArray<nsCString, 1> format = {nsDependentCString(formats[f])};
     nsresult rv =
         clipboard->HasDataMatchingFlavors(format, aWhichClipboard, &hasType);
->>>>>>> upstream-releases
     NS_SUCCEEDED(rv);
     if (hasType) {
       aResult->AppendElement(formats[f]);
@@ -827,17 +703,6 @@ void DataTransfer::GetExternalClipboardFormats(const int32_t& aWhichClipboard,
   }
 }
 
-<<<<<<< HEAD
-nsresult DataTransfer::SetDataAtInternal(const nsAString& aFormat,
-                                         nsIVariant* aData, uint32_t aIndex,
-                                         nsIPrincipal* aSubjectPrincipal) {
-||||||| merged common ancestors
-nsresult
-DataTransfer::SetDataAtInternal(const nsAString& aFormat, nsIVariant* aData,
-                                uint32_t aIndex,
-                                nsIPrincipal* aSubjectPrincipal)
-{
-=======
 /* static */
 void DataTransfer::GetExternalTransferableFormats(
     nsITransferable* aTransferable, bool aPlainTextOnly,
@@ -879,7 +744,6 @@ void DataTransfer::GetExternalTransferableFormats(
 nsresult DataTransfer::SetDataAtInternal(const nsAString& aFormat,
                                          nsIVariant* aData, uint32_t aIndex,
                                          nsIPrincipal* aSubjectPrincipal) {
->>>>>>> upstream-releases
   if (aFormat.IsEmpty()) {
     return NS_OK;
   }
@@ -1598,13 +1462,7 @@ void DataTransfer::CacheTransferableFormats() {
 void DataTransfer::CacheExternalData(const nsTArray<nsCString>& aTypes,
                                      nsIPrincipal* aPrincipal) {
   bool hasFileData = false;
-<<<<<<< HEAD
-  for (const nsCString& type : typesArray) {
-||||||| merged common ancestors
-  for (const nsCString& type: typesArray) {
-=======
   for (const nsCString& type : aTypes) {
->>>>>>> upstream-releases
     if (type.EqualsLiteral(kCustomTypesMime)) {
       FillInExternalCustomTypes(0, aPrincipal);
     } else if (type.EqualsLiteral(kFileMime) && XRE_IsContentProcess()) {
@@ -1616,30 +1474,15 @@ void DataTransfer::CacheExternalData(const nsTArray<nsCString>& aTypes,
       continue;
     } else {
       // We expect that if kFileMime is supported, then it will be the either at
-<<<<<<< HEAD
-      // index 0 or at index 1 in the typesArray returned by
-      // GetExternalClipboardFormats
-||||||| merged common ancestors
-      // index 0 or at index 1 in the typesArray returned by GetExternalClipboardFormats
-=======
       // index 0 or at index 1 in the aTypes returned by
       // GetExternalClipboardFormats
->>>>>>> upstream-releases
       if (type.EqualsLiteral(kFileMime) && !XRE_IsContentProcess()) {
         hasFileData = true;
       }
       // If we aren't the file data, and we have file data, we want to be hidden
-<<<<<<< HEAD
-      CacheExternalData(
-          type.get(), 0, sysPrincipal,
-          /* hidden = */ !type.EqualsLiteral(kFileMime) && hasFileData);
-||||||| merged common ancestors
-      CacheExternalData(type.get(), 0, sysPrincipal, /* hidden = */ !type.EqualsLiteral(kFileMime) && hasFileData);
-=======
       CacheExternalData(
           type.get(), 0, aPrincipal,
           /* hidden = */ !type.EqualsLiteral(kFileMime) && hasFileData);
->>>>>>> upstream-releases
     }
   }
 }

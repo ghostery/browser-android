@@ -56,19 +56,8 @@ extern nsresult NS_NewByteInputStream(nsIInputStream** aStreamResult,
  * Result will implement nsIStringInputStream, nsITellableStream and
  * nsISeekableStream.
  */
-<<<<<<< HEAD
-extern nsresult NS_NewByteInputStream(
-    nsIInputStream** aStreamResult, const char* aStringToRead,
-    int32_t aLength = -1, nsAssignmentType aAssignment = NS_ASSIGNMENT_DEPEND);
-||||||| merged common ancestors
-extern nsresult
-NS_NewByteInputStream(nsIInputStream** aStreamResult,
-                      const char* aStringToRead, int32_t aLength = -1,
-                      nsAssignmentType aAssignment = NS_ASSIGNMENT_DEPEND);
-=======
 extern nsresult NS_NewByteInputStream(nsIInputStream** aStreamResult,
                                       nsTArray<uint8_t>&& aArray);
->>>>>>> upstream-releases
 
 /**
  * Factory method to get an nsInputStream from an nsACString.  Result will

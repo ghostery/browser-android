@@ -40,38 +40,10 @@ namespace layers {
  *
  * Refer to LayerMetricsWrapper.h for actual documentation on the exposed API.
  */
-<<<<<<< HEAD
-class MOZ_STACK_CLASS WebRenderScrollDataWrapper {
- public:
-||||||| merged common ancestors
-class MOZ_STACK_CLASS WebRenderScrollDataWrapper {
-public:
-=======
 class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
  public:
->>>>>>> upstream-releases
   // Basic constructor for external callers. Starts the walker at the root of
   // the tree.
-<<<<<<< HEAD
-  explicit WebRenderScrollDataWrapper(
-      const APZUpdater& aUpdater, const WebRenderScrollData* aData = nullptr)
-      : mUpdater(&aUpdater),
-        mData(aData),
-        mLayerIndex(0),
-        mContainingSubtreeLastIndex(0),
-        mLayer(nullptr),
-        mMetadataIndex(0) {
-||||||| merged common ancestors
-  explicit WebRenderScrollDataWrapper(const APZUpdater& aUpdater,
-                                      const WebRenderScrollData* aData = nullptr)
-    : mUpdater(&aUpdater)
-    , mData(aData)
-    , mLayerIndex(0)
-    , mContainingSubtreeLastIndex(0)
-    , mLayer(nullptr)
-    , mMetadataIndex(0)
-  {
-=======
   explicit WebRenderScrollDataWrapper(
       const APZUpdater& aUpdater, WRRootId aWrRootId,
       const WebRenderScrollData* aData = nullptr)
@@ -82,7 +54,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
         mContainingSubtreeLastIndex(0),
         mLayer(nullptr),
         mMetadataIndex(0) {
->>>>>>> upstream-releases
     if (!mData) {
       return;
     }
@@ -112,22 +83,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
                              const WebRenderScrollData* aData,
                              size_t aLayerIndex,
                              size_t aContainingSubtreeLastIndex)
-<<<<<<< HEAD
-      : mUpdater(aUpdater),
-        mData(aData),
-        mLayerIndex(aLayerIndex),
-        mContainingSubtreeLastIndex(aContainingSubtreeLastIndex),
-        mLayer(nullptr),
-        mMetadataIndex(0) {
-||||||| merged common ancestors
-    : mUpdater(aUpdater)
-    , mData(aData)
-    , mLayerIndex(aLayerIndex)
-    , mContainingSubtreeLastIndex(aContainingSubtreeLastIndex)
-    , mLayer(nullptr)
-    , mMetadataIndex(0)
-  {
-=======
       : mUpdater(aUpdater),
         mData(aData),
         mWrRootId(aWrRootId),
@@ -135,7 +90,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
         mContainingSubtreeLastIndex(aContainingSubtreeLastIndex),
         mLayer(nullptr),
         mMetadataIndex(0) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mData);
     mLayer = mData->GetLayerData(mLayerIndex);
     MOZ_ASSERT(mLayer);
@@ -156,22 +110,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
                              size_t aContainingSubtreeLastIndex,
                              const WebRenderLayerScrollData* aLayer,
                              uint32_t aMetadataIndex)
-<<<<<<< HEAD
-      : mUpdater(aUpdater),
-        mData(aData),
-        mLayerIndex(aLayerIndex),
-        mContainingSubtreeLastIndex(aContainingSubtreeLastIndex),
-        mLayer(aLayer),
-        mMetadataIndex(aMetadataIndex) {
-||||||| merged common ancestors
-    : mUpdater(aUpdater)
-    , mData(aData)
-    , mLayerIndex(aLayerIndex)
-    , mContainingSubtreeLastIndex(aContainingSubtreeLastIndex)
-    , mLayer(aLayer)
-    , mMetadataIndex(aMetadataIndex)
-  {
-=======
       : mUpdater(aUpdater),
         mData(aData),
         mWrRootId(aWrRootId),
@@ -179,7 +117,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
         mContainingSubtreeLastIndex(aContainingSubtreeLastIndex),
         mLayer(aLayer),
         mMetadataIndex(aMetadataIndex) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mData);
     MOZ_ASSERT(mLayer);
     MOZ_ASSERT(mLayer == mData->GetLayerData(mLayerIndex));
@@ -199,18 +136,9 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
       // If we're still walking around in the virtual container layers created
       // by the ScrollMetadata array, we just need to update the metadata index
       // and that's it.
-<<<<<<< HEAD
-      return WebRenderScrollDataWrapper(mUpdater, mData, mLayerIndex,
-                                        mContainingSubtreeLastIndex, mLayer,
-                                        mMetadataIndex - 1);
-||||||| merged common ancestors
-      return WebRenderScrollDataWrapper(mUpdater, mData, mLayerIndex,
-          mContainingSubtreeLastIndex, mLayer, mMetadataIndex - 1);
-=======
       return WebRenderScrollDataWrapper(mUpdater, mWrRootId, mData, mLayerIndex,
                                         mContainingSubtreeLastIndex, mLayer,
                                         mMetadataIndex - 1);
->>>>>>> upstream-releases
     }
 
     // Otherwise, we need to walk to a different WebRenderLayerScrollData in
@@ -224,15 +152,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
     // its mContainingSubtreeLastIndex.
     if (mLayer->GetDescendantCount() > 0) {
       size_t prevSiblingIndex = mLayerIndex + 1 + mLayer->GetDescendantCount();
-<<<<<<< HEAD
-      size_t subtreeLastIndex =
-          std::min(mContainingSubtreeLastIndex, prevSiblingIndex);
-      return WebRenderScrollDataWrapper(mUpdater, mData, mLayerIndex + 1,
-                                        subtreeLastIndex);
-||||||| merged common ancestors
-      size_t subtreeLastIndex = std::min(mContainingSubtreeLastIndex, prevSiblingIndex);
-      return WebRenderScrollDataWrapper(mUpdater, mData, mLayerIndex + 1, subtreeLastIndex);
-=======
       size_t subtreeLastIndex =
           std::min(mContainingSubtreeLastIndex, prevSiblingIndex);
       return WebRenderScrollDataWrapper(mUpdater, mWrRootId, mData,
@@ -275,7 +194,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
       return WebRenderScrollDataWrapper(mUpdater, newWrRootId, childData,
                                         *layerIndex,
                                         childData->GetLayerCount());
->>>>>>> upstream-releases
     }
 
     // We've run out of descendants. But! If the original layer was a RefLayer,
@@ -283,18 +201,10 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
     // So return a WebRenderScrollDataWrapper for the root of the child layer
     // tree.
     if (mLayer->GetReferentId()) {
-<<<<<<< HEAD
-      return WebRenderScrollDataWrapper(
-          *mUpdater, mUpdater->GetScrollData(*mLayer->GetReferentId()));
-||||||| merged common ancestors
-      return WebRenderScrollDataWrapper(*mUpdater,
-          mUpdater->GetScrollData(*mLayer->GetReferentId()));
-=======
       WRRootId newWrRootId =
           WRRootId(*mLayer->GetReferentId(), mWrRootId.mRenderRoot);
       return WebRenderScrollDataWrapper(*mUpdater, newWrRootId,
                                         mUpdater->GetScrollData(newWrRootId));
->>>>>>> upstream-releases
     }
 
     return WebRenderScrollDataWrapper(*mUpdater, mWrRootId);
@@ -312,16 +222,9 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
     // might be at the last sibling already.
     size_t prevSiblingIndex = mLayerIndex + 1 + mLayer->GetDescendantCount();
     if (prevSiblingIndex < mContainingSubtreeLastIndex) {
-<<<<<<< HEAD
-      return WebRenderScrollDataWrapper(mUpdater, mData, prevSiblingIndex,
-                                        mContainingSubtreeLastIndex);
-||||||| merged common ancestors
-      return WebRenderScrollDataWrapper(mUpdater, mData, prevSiblingIndex, mContainingSubtreeLastIndex);
-=======
       return WebRenderScrollDataWrapper(mUpdater, mWrRootId, mData,
                                         prevSiblingIndex,
                                         mContainingSubtreeLastIndex);
->>>>>>> upstream-releases
     }
     return WebRenderScrollDataWrapper(*mUpdater, mWrRootId);
   }
@@ -405,12 +308,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
     return Nothing();
   }
 
-<<<<<<< HEAD
-  Maybe<ParentLayerIntRect> GetClipRect() const {
-||||||| merged common ancestors
-  Maybe<ParentLayerIntRect> GetClipRect() const
-  {
-=======
   Maybe<wr::RenderRoot> GetReferentRenderRoot() const {
     MOZ_ASSERT(IsValid());
 
@@ -423,7 +320,6 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
   }
 
   Maybe<ParentLayerIntRect> GetClipRect() const {
->>>>>>> upstream-releases
     // TODO
     return Nothing();
   }
@@ -438,14 +334,7 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
     return mLayer->GetScrollbarData();
   }
 
-<<<<<<< HEAD
-  uint64_t GetScrollbarAnimationId() const {
-||||||| merged common ancestors
-  uint64_t GetScrollbarAnimationId() const
-  {
-=======
   Maybe<uint64_t> GetScrollbarAnimationId() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsValid());
     return mLayer->GetScrollbarAnimationId();
   }
@@ -466,43 +355,16 @@ class MOZ_STACK_CLASS WebRenderScrollDataWrapper final {
     return false;
   }
 
-<<<<<<< HEAD
-  const void* GetLayer() const {
-||||||| merged common ancestors
-  const void* GetLayer() const
-  {
-=======
   bool IsAsyncZoomContainer() const {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsValid());
     return mLayer->IsAsyncZoomContainer();
   }
 
-<<<<<<< HEAD
- private:
-  bool AtBottomLayer() const { return mMetadataIndex == 0; }
-||||||| merged common ancestors
-private:
-  bool AtBottomLayer() const
-  {
-    return mMetadataIndex == 0;
-  }
-=======
   const void* GetLayer() const {
     MOZ_ASSERT(IsValid());
     return mLayer;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool AtTopLayer() const {
-    return mLayer->GetScrollMetadataCount() == 0 ||
-           mMetadataIndex == mLayer->GetScrollMetadataCount() - 1;
-||||||| merged common ancestors
-  bool AtTopLayer() const
-  {
-    return mLayer->GetScrollMetadataCount() == 0 || mMetadataIndex == mLayer->GetScrollMetadataCount() - 1;
-=======
   wr::RenderRoot GetRenderRoot() const { return mWrRootId.mRenderRoot; }
 
  private:
@@ -511,7 +373,6 @@ private:
   bool AtTopLayer() const {
     return mLayer->GetScrollMetadataCount() == 0 ||
            mMetadataIndex == mLayer->GetScrollMetadataCount() - 1;
->>>>>>> upstream-releases
   }
 
  private:

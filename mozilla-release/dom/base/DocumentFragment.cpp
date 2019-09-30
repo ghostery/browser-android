@@ -88,24 +88,11 @@ void DocumentFragment::DumpContent(FILE* out, int32_t aIndent,
 }
 #endif
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<DocumentFragment> DocumentFragment::Constructor(
-    const GlobalObject& aGlobal, ErrorResult& aRv) {
-  nsCOMPtr<nsPIDOMWindowInner> window =
-      do_QueryInterface(aGlobal.GetAsSupports());
-||||||| merged common ancestors
-/* static */ already_AddRefed<DocumentFragment>
-DocumentFragment::Constructor(const GlobalObject& aGlobal,
-                              ErrorResult& aRv)
-{
-  nsCOMPtr<nsPIDOMWindowInner> window = do_QueryInterface(aGlobal.GetAsSupports());
-=======
 /* static */
 already_AddRefed<DocumentFragment> DocumentFragment::Constructor(
     const GlobalObject& aGlobal, ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> window =
       do_QueryInterface(aGlobal.GetAsSupports());
->>>>>>> upstream-releases
   if (!window || !window->GetDoc()) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;

@@ -19,19 +19,9 @@ JSRuntime* CompileRuntime::runtime() {
   return reinterpret_cast<JSRuntime*>(this);
 }
 
-<<<<<<< HEAD
-/* static */ CompileRuntime* CompileRuntime::get(JSRuntime* rt) {
-  return reinterpret_cast<CompileRuntime*>(rt);
-||||||| merged common ancestors
-/* static */ CompileRuntime*
-CompileRuntime::get(JSRuntime* rt)
-{
-    return reinterpret_cast<CompileRuntime*>(rt);
-=======
 /* static */
 CompileRuntime* CompileRuntime::get(JSRuntime* rt) {
   return reinterpret_cast<CompileRuntime*>(rt);
->>>>>>> upstream-releases
 }
 
 #ifdef JS_GC_ZEAL
@@ -52,162 +42,42 @@ bool CompileRuntime::jitSupportsFloatingPoint() {
   return runtime()->jitSupportsFloatingPoint;
 }
 
-<<<<<<< HEAD
 bool CompileRuntime::hadOutOfMemory() { return runtime()->hadOutOfMemory; }
 
 bool CompileRuntime::profilingScripts() { return runtime()->profilingScripts; }
-||||||| merged common ancestors
-bool
-CompileRuntime::hadOutOfMemory()
-{
-    return runtime()->hadOutOfMemory;
-}
 
-bool
-CompileRuntime::profilingScripts()
-{
-    return runtime()->profilingScripts;
-}
-=======
-bool CompileRuntime::hadOutOfMemory() { return runtime()->hadOutOfMemory; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 const JSAtomState& CompileRuntime::names() { return *runtime()->commonNames; }
-||||||| merged common ancestors
-const JSAtomState&
-CompileRuntime::names()
-{
-    return *runtime()->commonNames;
-}
-=======
-bool CompileRuntime::profilingScripts() { return runtime()->profilingScripts; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 const PropertyName* CompileRuntime::emptyString() {
   return runtime()->emptyString;
 }
-||||||| merged common ancestors
-const PropertyName*
-CompileRuntime::emptyString()
-{
-    return runtime()->emptyString;
-}
-=======
-const JSAtomState& CompileRuntime::names() { return *runtime()->commonNames; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const StaticStrings& CompileRuntime::staticStrings() {
-  return *runtime()->staticStrings;
-||||||| merged common ancestors
-const StaticStrings&
-CompileRuntime::staticStrings()
-{
-    return *runtime()->staticStrings;
-=======
-const PropertyName* CompileRuntime::emptyString() {
-  return runtime()->emptyString;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-const Value& CompileRuntime::NaNValue() { return runtime()->NaNValue; }
-||||||| merged common ancestors
-const Value&
-CompileRuntime::NaNValue()
-{
-    return runtime()->NaNValue;
-}
-=======
 const StaticStrings& CompileRuntime::staticStrings() {
   return *runtime()->staticStrings;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const Value& CompileRuntime::positiveInfinityValue() {
-  return runtime()->positiveInfinityValue;
-||||||| merged common ancestors
-const Value&
-CompileRuntime::positiveInfinityValue()
-{
-    return runtime()->positiveInfinityValue;
-=======
 const WellKnownSymbols& CompileRuntime::wellKnownSymbols() {
   return *runtime()->wellKnownSymbols;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const WellKnownSymbols& CompileRuntime::wellKnownSymbols() {
-  return *runtime()->wellKnownSymbols;
-||||||| merged common ancestors
-const WellKnownSymbols&
-CompileRuntime::wellKnownSymbols()
-{
-    return *runtime()->wellKnownSymbols;
-=======
 const void* CompileRuntime::mainContextPtr() {
   return runtime()->mainContextFromAnyThread();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const void* CompileRuntime::mainContextPtr() {
-  return runtime()->mainContextFromAnyThread();
-||||||| merged common ancestors
-const void*
-CompileRuntime::mainContextPtr()
-{
-    return runtime()->mainContextFromAnyThread();
-=======
 uint32_t* CompileRuntime::addressOfTenuredAllocCount() {
   return runtime()->mainContextFromAnyThread()->addressOfTenuredAllocCount();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-uint32_t* CompileRuntime::addressOfTenuredAllocCount() {
-  return runtime()->mainContextFromAnyThread()->addressOfTenuredAllocCount();
-||||||| merged common ancestors
-uint32_t*
-CompileRuntime::addressOfTenuredAllocCount()
-{
-    return runtime()->mainContextFromAnyThread()->addressOfTenuredAllocCount();
-=======
 const void* CompileRuntime::addressOfJitStackLimit() {
   return runtime()->mainContextFromAnyThread()->addressOfJitStackLimit();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const void* CompileRuntime::addressOfJitStackLimit() {
-  return runtime()->mainContextFromAnyThread()->addressOfJitStackLimit();
-||||||| merged common ancestors
-const void*
-CompileRuntime::addressOfJitStackLimit()
-{
-    return runtime()->mainContextFromAnyThread()->addressOfJitStackLimit();
-=======
 const void* CompileRuntime::addressOfInterruptBits() {
   return runtime()->mainContextFromAnyThread()->addressOfInterruptBits();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-const void* CompileRuntime::addressOfInterruptBits() {
-  return runtime()->mainContextFromAnyThread()->addressOfInterruptBits();
-||||||| merged common ancestors
-const void*
-CompileRuntime::addressOfInterruptBits()
-{
-    return runtime()->mainContextFromAnyThread()->addressOfInterruptBits();
-=======
 const void* CompileRuntime::addressOfZone() {
   return runtime()->mainContextFromAnyThread()->addressOfZone();
->>>>>>> upstream-releases
 }
 
 #ifdef DEBUG
@@ -224,19 +94,9 @@ bool CompileRuntime::runtimeMatches(JSRuntime* rt) { return rt == runtime(); }
 
 Zone* CompileZone::zone() { return reinterpret_cast<Zone*>(this); }
 
-<<<<<<< HEAD
-/* static */ CompileZone* CompileZone::get(Zone* zone) {
-  return reinterpret_cast<CompileZone*>(zone);
-||||||| merged common ancestors
-/* static */ CompileZone*
-CompileZone::get(Zone* zone)
-{
-    return reinterpret_cast<CompileZone*>(zone);
-=======
 /* static */
 CompileZone* CompileZone::get(Zone* zone) {
   return reinterpret_cast<CompileZone*>(zone);
->>>>>>> upstream-releases
 }
 
 CompileRuntime* CompileZone::runtime() {
@@ -304,19 +164,9 @@ void CompileZone::setMinorGCShouldCancelIonCompilations() {
 
 JS::Realm* CompileRealm::realm() { return reinterpret_cast<JS::Realm*>(this); }
 
-<<<<<<< HEAD
-/* static */ CompileRealm* CompileRealm::get(JS::Realm* realm) {
-  return reinterpret_cast<CompileRealm*>(realm);
-||||||| merged common ancestors
-/* static */ CompileRealm*
-CompileRealm::get(JS::Realm* realm)
-{
-    return reinterpret_cast<CompileRealm*>(realm);
-=======
 /* static */
 CompileRealm* CompileRealm::get(JS::Realm* realm) {
   return reinterpret_cast<CompileRealm*>(realm);
->>>>>>> upstream-releases
 }
 
 CompileZone* CompileRealm::zone() { return CompileZone::get(realm()->zone()); }
@@ -359,46 +209,6 @@ void CompileRealm::setSingletonsAsValues() {
 }
 
 JitCompileOptions::JitCompileOptions()
-<<<<<<< HEAD
-    : cloneSingletons_(false),
-      profilerSlowAssertionsEnabled_(false),
-      offThreadCompilationAvailable_(false)
-#ifdef ENABLE_WASM_GC
-      ,
-      wasmGcEnabled_(false)
-#endif
-{
-}
-
-JitCompileOptions::JitCompileOptions(JSContext* cx) {
-  cloneSingletons_ = cx->realm()->creationOptions().cloneSingletons();
-  profilerSlowAssertionsEnabled_ =
-      cx->runtime()->geckoProfiler().enabled() &&
-      cx->runtime()->geckoProfiler().slowAssertionsEnabled();
-  offThreadCompilationAvailable_ = OffThreadCompilationAvailable(cx);
-#ifdef ENABLE_WASM_GC
-  wasmGcEnabled_ = cx->options().wasmGc();
-#endif
-||||||| merged common ancestors
-  : cloneSingletons_(false),
-    profilerSlowAssertionsEnabled_(false),
-    offThreadCompilationAvailable_(false)
-#ifdef ENABLE_WASM_GC
-    , wasmGcEnabled_(false)
-#endif
-{
-}
-
-JitCompileOptions::JitCompileOptions(JSContext* cx)
-{
-    cloneSingletons_ = cx->realm()->creationOptions().cloneSingletons();
-    profilerSlowAssertionsEnabled_ = cx->runtime()->geckoProfiler().enabled() &&
-                                     cx->runtime()->geckoProfiler().slowAssertionsEnabled();
-    offThreadCompilationAvailable_ = OffThreadCompilationAvailable(cx);
-#ifdef ENABLE_WASM_GC
-    wasmGcEnabled_ = cx->options().wasmGc();
-#endif
-=======
     : cloneSingletons_(false),
       profilerSlowAssertionsEnabled_(false),
       offThreadCompilationAvailable_(false) {}
@@ -409,5 +219,4 @@ JitCompileOptions::JitCompileOptions(JSContext* cx) {
       cx->runtime()->geckoProfiler().enabled() &&
       cx->runtime()->geckoProfiler().slowAssertionsEnabled();
   offThreadCompilationAvailable_ = OffThreadCompilationAvailable(cx);
->>>>>>> upstream-releases
 }

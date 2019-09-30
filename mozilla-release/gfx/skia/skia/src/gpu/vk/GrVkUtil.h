@@ -13,12 +13,7 @@
 #include "GrVkInterface.h"
 #include "SkMacros.h"
 #include "ir/SkSLProgram.h"
-<<<<<<< HEAD
-#include "vk/GrVkDefines.h"
-||||||| merged common ancestors
-=======
 #include "vk/GrVkTypes.h"
->>>>>>> upstream-releases
 
 class GrVkGpu;
 
@@ -45,20 +40,8 @@ bool GrVkFormatIsSupported(VkFormat);
  * Returns true if the passed in VkFormat and GrPixelConfig are compatible with each other.
  */
 bool GrVkFormatPixelConfigPairIsValid(VkFormat, GrPixelConfig);
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-/**
- * Returns true if the given vulkan texture format is sRGB encoded.
- * Also provides the non-sRGB version, if there is one.
- */
-bool GrVkFormatIsSRGB(VkFormat format, VkFormat* linearFormat);
-
-=======
 #endif
 
->>>>>>> upstream-releases
 bool GrSampleCountToVkSampleCount(uint32_t samples, VkSampleCountFlagBits* vkSamples);
 
 bool GrCompileVkShaderModule(const GrVkGpu* gpu,

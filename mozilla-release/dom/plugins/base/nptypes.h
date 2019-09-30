@@ -11,44 +11,6 @@
  * true/false macros are available.
  */
 
-<<<<<<< HEAD
-#if defined(WIN32)
-/*
- * Win32 and OS/2 don't know C99, so define [u]int_16/32/64 here. The bool
- * is predefined tho, both in C and C++.
- */
-typedef short int16_t;
-typedef unsigned short uint16_t;
-typedef int int32_t;
-typedef unsigned int uint32_t;
-typedef long long int64_t;
-typedef unsigned long long uint64_t;
-#elif defined(_AIX) || defined(__sun) || defined(__osf__) || defined(IRIX) || \
-    defined(HPUX)
-/*
- * AIX and SunOS ship a inttypes.h header that defines [u]int32_t,
- * but not bool for C.
- */
-#include <inttypes.h>
-||||||| merged common ancestors
-#if defined(WIN32)
-  /*
-   * Win32 and OS/2 don't know C99, so define [u]int_16/32/64 here. The bool
-   * is predefined tho, both in C and C++.
-   */
-  typedef short int16_t;
-  typedef unsigned short uint16_t;
-  typedef int int32_t;
-  typedef unsigned int uint32_t;
-  typedef long long int64_t;
-  typedef unsigned long long uint64_t;
-#elif defined(_AIX) || defined(__sun) || defined(__osf__) || defined(IRIX) || defined(HPUX)
-  /*
-   * AIX and SunOS ship a inttypes.h header that defines [u]int32_t,
-   * but not bool for C.
-   */
-  #include <inttypes.h>
-=======
 #  if defined(WIN32)
 /*
  * Win32 and OS/2 don't know C99, so define [u]int_16/32/64 here. The bool
@@ -67,33 +29,7 @@ typedef unsigned long long uint64_t;
  * but not bool for C.
  */
 #    include <inttypes.h>
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifndef __cplusplus
-typedef int bool;
-#define true 1
-#define false 0
-#endif
-#elif defined(bsdi) || defined(FREEBSD) || defined(OPENBSD)
-/*
- * BSD/OS, FreeBSD, and OpenBSD ship sys/types.h that define int32_t and
- * u_int32_t.
- */
-#include <sys/types.h>
-||||||| merged common ancestors
-  #ifndef __cplusplus
-    typedef int bool;
-    #define true   1
-    #define false  0
-  #endif
-#elif defined(bsdi) || defined(FREEBSD) || defined(OPENBSD)
-  /*
-   * BSD/OS, FreeBSD, and OpenBSD ship sys/types.h that define int32_t and
-   * u_int32_t.
-   */
-  #include <sys/types.h>
-=======
 #    ifndef __cplusplus
 typedef int bool;
 #      define true 1
@@ -105,76 +41,14 @@ typedef int bool;
  * u_int32_t.
  */
 #    include <sys/types.h>
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/*
- * BSD/OS ships no header that defines uint32_t, nor bool (for C)
- */
-#if defined(bsdi)
-typedef u_int32_t uint32_t;
-typedef u_int64_t uint64_t;
-||||||| merged common ancestors
-  /*
-   * BSD/OS ships no header that defines uint32_t, nor bool (for C)
-   */
-  #if defined(bsdi)
-  typedef u_int32_t uint32_t;
-  typedef u_int64_t uint64_t;
-=======
 /*
  * BSD/OS ships no header that defines uint32_t, nor bool (for C)
  */
 #    if defined(bsdi)
 typedef u_int32_t uint32_t;
 typedef u_int64_t uint64_t;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if !defined(__cplusplus)
-typedef int bool;
-#define true 1
-#define false 0
-#endif
-#else
-/*
- * FreeBSD and OpenBSD define uint32_t and bool.
- */
-#include <inttypes.h>
-#include <stdbool.h>
-#endif
-#elif defined(BEOS)
-#include <inttypes.h>
-#else
-/*
- * For those that ship a standard C99 stdint.h header file, include
- * it. Can't do the same for stdbool.h tho, since some systems ship
- * with a stdbool.h file that doesn't compile!
- */
-#include <stdint.h>
-||||||| merged common ancestors
-  #if !defined(__cplusplus)
-    typedef int bool;
-    #define true   1
-    #define false  0
-  #endif
-  #else
-  /*
-   * FreeBSD and OpenBSD define uint32_t and bool.
-   */
-    #include <inttypes.h>
-    #include <stdbool.h>
-  #endif
-#elif defined(BEOS)
-  #include <inttypes.h>
-#else
-  /*
-   * For those that ship a standard C99 stdint.h header file, include
-   * it. Can't do the same for stdbool.h tho, since some systems ship
-   * with a stdbool.h file that doesn't compile!
-   */
-  #include <stdint.h>
-=======
 #      if !defined(__cplusplus)
 typedef int bool;
 #        define true 1
@@ -196,39 +70,7 @@ typedef int bool;
  * with a stdbool.h file that doesn't compile!
  */
 #    include <stdint.h>
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifndef __cplusplus
-#if !defined(__GNUC__) || (__GNUC__ > 2 || __GNUC_MINOR__ > 95)
-#include <stdbool.h>
-#else
-/*
- * GCC 2.91 can't deal with a typedef for bool, but a #define
- * works.
- */
-#define bool int
-#define true 1
-#define false 0
-#endif
-#endif
-#endif
-||||||| merged common ancestors
-  #ifndef __cplusplus
-    #if !defined(__GNUC__) || (__GNUC__ > 2 || __GNUC_MINOR__ > 95)
-      #include <stdbool.h>
-    #else
-      /*
-       * GCC 2.91 can't deal with a typedef for bool, but a #define
-       * works.
-       */
-      #define bool int
-      #define true   1
-      #define false  0
-    #endif
-  #endif
-#endif
-=======
 #    ifndef __cplusplus
 #      if !defined(__GNUC__) || (__GNUC__ > 2 || __GNUC_MINOR__ > 95)
 #        include <stdbool.h>
@@ -243,6 +85,5 @@ typedef int bool;
 #      endif
 #    endif
 #  endif
->>>>>>> upstream-releases
 
 #endif /* nptypes_h_ */

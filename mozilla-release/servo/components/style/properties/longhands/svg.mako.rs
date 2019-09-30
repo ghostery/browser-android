@@ -181,18 +181,9 @@ ${helpers.single_keyword(
 ${helpers.predefined_type(
     "mask-image",
     "ImageLayer",
-<<<<<<< HEAD
-    "Either::First(None_)",
-    initial_specified_value="Either::First(None_)",
-    parse_method="parse_with_cors_anonymous",
-||||||| merged common ancestors
-    "Either::First(None_)",
-    initial_specified_value="Either::First(None_)",
-=======
     initial_value="computed::ImageLayer::none()",
     initial_specified_value="specified::ImageLayer::none()",
     parse_method="parse_with_cors_anonymous",
->>>>>>> upstream-releases
     spec="https://drafts.fxtf.org/css-masking/#propdef-mask-image",
     vector=True,
     products="gecko",

@@ -14,65 +14,18 @@
 
 #ifdef MOZILLA_INTERNAL_API
 
-<<<<<<< HEAD
-#define ML_ERROR mozilla::LogLevel::Error
-#define ML_WARNING mozilla::LogLevel::Warning
-#define ML_NOTICE mozilla::LogLevel::Info
-#define ML_INFO mozilla::LogLevel::Debug
-#define ML_DEBUG mozilla::LogLevel::Verbose
-||||||| merged common ancestors
-#define ML_ERROR            mozilla::LogLevel::Error
-#define ML_WARNING          mozilla::LogLevel::Warning
-#define ML_NOTICE           mozilla::LogLevel::Info
-#define ML_INFO             mozilla::LogLevel::Debug
-#define ML_DEBUG            mozilla::LogLevel::Verbose
-=======
 #  define ML_ERROR mozilla::LogLevel::Error
 #  define ML_WARNING mozilla::LogLevel::Warning
 #  define ML_NOTICE mozilla::LogLevel::Info
 #  define ML_INFO mozilla::LogLevel::Debug
 #  define ML_DEBUG mozilla::LogLevel::Verbose
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define MOZ_MTLOG_MODULE(n)                       \
-  static mozilla::LogModule* getLogModule() {     \
-    static mozilla::LazyLogModule log(n);         \
-    return static_cast<mozilla::LogModule*>(log); \
-  }
-||||||| merged common ancestors
-#define MOZ_MTLOG_MODULE(n) \
-  static mozilla::LogModule* getLogModule() {   \
-    static mozilla::LazyLogModule log(n);       \
-    return static_cast<mozilla::LogModule*>(log);      \
-  }
-=======
 #  define MOZ_MTLOG_MODULE(n)                       \
     static mozilla::LogModule* getLogModule() {     \
       static mozilla::LazyLogModule log(n);         \
       return static_cast<mozilla::LogModule*>(log); \
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define MOZ_MTLOG(level, b)                                      \
-  do {                                                           \
-    if (MOZ_LOG_TEST(getLogModule(), level)) {                   \
-      std::stringstream str;                                     \
-      str << b;                                                  \
-      MOZ_LOG(getLogModule(), level, ("%s", str.str().c_str())); \
-    }                                                            \
-  } while (0)
-||||||| merged common ancestors
-#define MOZ_MTLOG(level, b)                                       \
-  do {                                                            \
-    if (MOZ_LOG_TEST(getLogModule(), level)) {                    \
-      std::stringstream str;                                      \
-      str << b;                                                   \
-      MOZ_LOG(getLogModule(), level, ("%s", str.str().c_str()));  \
-    }                                                             \
-  } while(0)
-=======
 #  define MOZ_MTLOG(level, b)                                      \
     do {                                                           \
       if (MOZ_LOG_TEST(getLogModule(), level)) {                   \
@@ -81,80 +34,25 @@
         MOZ_LOG(getLogModule(), level, ("%s", str.str().c_str())); \
       }                                                            \
     } while (0)
->>>>>>> upstream-releases
 #else
 // When building mtransport outside of XUL, for example in stand-alone gtests,
 // PR_Logging needs to be used instead of mozilla logging.
 
 #  include "prlog.h"
 
-<<<<<<< HEAD
-#define ML_ERROR PR_LOG_ERROR
-#define ML_WARNING PR_LOG_WARNING
-#define ML_NOTICE PR_LOG_INFO
-#define ML_INFO PR_LOG_DEBUG
-#define ML_DEBUG PR_LOG_VERBOSE
-||||||| merged common ancestors
-#define ML_ERROR            PR_LOG_ERROR
-#define ML_WARNING          PR_LOG_WARNING
-#define ML_NOTICE           PR_LOG_INFO
-#define ML_INFO             PR_LOG_DEBUG
-#define ML_DEBUG            PR_LOG_VERBOSE
-=======
 #  define ML_ERROR PR_LOG_ERROR
 #  define ML_WARNING PR_LOG_WARNING
 #  define ML_NOTICE PR_LOG_INFO
 #  define ML_INFO PR_LOG_DEBUG
 #  define ML_DEBUG PR_LOG_VERBOSE
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define MOZ_MTLOG_MODULE(n)                \
-  static PRLogModuleInfo* getLogModule() { \
-    static PRLogModuleInfo* log;           \
-    if (!log) log = PR_NewLogModule(n);    \
-    return log;                            \
-  }
-||||||| merged common ancestors
-#define MOZ_MTLOG_MODULE(n) \
-  static PRLogModuleInfo* getLogModule() {      \
-    static PRLogModuleInfo* log;                \
-    if (!log)                                   \
-      log = PR_NewLogModule(n);                 \
-    return log;                                 \
-  }
-=======
 #  define MOZ_MTLOG_MODULE(n)                \
     static PRLogModuleInfo* getLogModule() { \
       static PRLogModuleInfo* log;           \
       if (!log) log = PR_NewLogModule(n);    \
       return log;                            \
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define MOZ_MTLOG(level, b)                                     \
-  do {                                                          \
-    if (PR_LOG_TEST(getLogModule(), level)) {                   \
-      std::stringstream str;                                    \
-      str << b;                                                 \
-      PR_LOG(getLogModule(), level, ("%s", str.str().c_str())); \
-    }                                                           \
-  } while (0)
-#endif  // MOZILLA_INTERNAL_API
-#endif  // logging_h__
-||||||| merged common ancestors
-#define MOZ_MTLOG(level, b)                                                         \
-  do {                                                                              \
-    if (PR_LOG_TEST(getLogModule(), level)) {                                       \
-      std::stringstream str;                                                        \
-      str << b;                                                                     \
-      PR_LOG(getLogModule(), level, ("%s", str.str().c_str()));                     \
-    }                                                                               \
-  } while(0)
-#endif // MOZILLA_INTERNAL_API
-#endif // logging_h__
-=======
 #  define MOZ_MTLOG(level, b)                                     \
     do {                                                          \
       if (PR_LOG_TEST(getLogModule(), level)) {                   \
@@ -165,4 +63,3 @@
     } while (0)
 #endif  // MOZILLA_INTERNAL_API
 #endif  // logging_h__
->>>>>>> upstream-releases

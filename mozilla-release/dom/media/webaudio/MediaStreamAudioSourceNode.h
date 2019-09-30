@@ -93,13 +93,6 @@ class MediaStreamAudioSourceNode
   // From PrincipalChangeObserver<MediaStreamTrack>.
   void PrincipalChanged(MediaStreamTrack* aMediaStreamTrack) override;
 
-<<<<<<< HEAD
- protected:
-  explicit MediaStreamAudioSourceNode(AudioContext* aContext);
-||||||| merged common ancestors
-protected:
-  explicit MediaStreamAudioSourceNode(AudioContext* aContext);
-=======
   // This allows implementing the correct behaviour for both
   // MediaElementAudioSourceNode and MediaStreamAudioSourceNode, that have most
   // of their behaviour shared.
@@ -115,19 +108,12 @@ protected:
  protected:
   MediaStreamAudioSourceNode(AudioContext* aContext,
                              TrackChangeBehavior aBehavior);
->>>>>>> upstream-releases
   void Init(DOMMediaStream* aMediaStream, ErrorResult& aRv);
   virtual void Destroy();
   virtual ~MediaStreamAudioSourceNode();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   const TrackChangeBehavior mBehavior;
->>>>>>> upstream-releases
   RefPtr<MediaInputPort> mInputPort;
   RefPtr<DOMMediaStream> mInputStream;
 

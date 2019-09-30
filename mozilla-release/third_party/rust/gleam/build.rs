@@ -29,13 +29,6 @@ fn main() {
         "GL_KHR_blend_equation_advanced",
         "GL_KHR_blend_equation_advanced_coherent",
     ];
-<<<<<<< HEAD
-    let gl_reg = Registry::new(Api::Gl, (3, 3), Profile::Compatibility, Fallbacks::All, gl_extensions);
-    gl_reg.write_bindings(gl_generator::StructGenerator, &mut file_gl)
-||||||| merged common ancestors
-    let gl_reg = Registry::new(Api::Gl, (3, 3), Profile::Core, Fallbacks::All, gl_extensions);
-    gl_reg.write_bindings(gl_generator::StructGenerator, &mut file_gl)
-=======
     let gl_reg = Registry::new(
         Api::Gl,
         (3, 3),
@@ -45,7 +38,6 @@ fn main() {
     );
     gl_reg
         .write_bindings(gl_generator::StructGenerator, &mut file_gl)
->>>>>>> upstream-releases
         .unwrap();
 
     // GLES 3.0 bindings
@@ -59,17 +51,12 @@ fn main() {
         "GL_EXT_texture_storage",
         "GL_OES_EGL_image_external",
         "GL_OES_EGL_image",
-<<<<<<< HEAD
-        "GL_OES_texture_half_float",
-||||||| merged common ancestors
-=======
         "GL_OES_texture_half_float",
         "GL_EXT_shader_pixel_local_storage",
         "GL_ANGLE_provoking_vertex",
         "GL_KHR_debug",
         "GL_KHR_blend_equation_advanced",
         "GL_KHR_blend_equation_advanced_coherent",
->>>>>>> upstream-releases
     ];
     let gles_reg = Registry::new(
         Api::Gles2,

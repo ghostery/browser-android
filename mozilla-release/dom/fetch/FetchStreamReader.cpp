@@ -39,22 +39,10 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(FetchStreamReader)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIOutputStreamCallback)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-/* static */ nsresult FetchStreamReader::Create(
-    JSContext* aCx, nsIGlobalObject* aGlobal, FetchStreamReader** aStreamReader,
-    nsIInputStream** aInputStream) {
-||||||| merged common ancestors
-/* static */ nsresult
-FetchStreamReader::Create(JSContext* aCx, nsIGlobalObject* aGlobal,
-                          FetchStreamReader** aStreamReader,
-                          nsIInputStream** aInputStream)
-{
-=======
 /* static */
 nsresult FetchStreamReader::Create(JSContext* aCx, nsIGlobalObject* aGlobal,
                                    FetchStreamReader** aStreamReader,
                                    nsIInputStream** aInputStream) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCx);
   MOZ_ASSERT(aGlobal);
   MOZ_ASSERT(aStreamReader);

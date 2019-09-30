@@ -26,29 +26,6 @@ add_task(async function() {
 
 async function testTopLeft(inspector, view) {
   const id = "#topleft";
-<<<<<<< HEAD
-  const rules = await assertPseudoElementRulesNumbers(id,
-    inspector, view, {
-      elementRulesNb: 4,
-      firstLineRulesNb: 2,
-      firstLetterRulesNb: 1,
-      selectionRulesNb: 1,
-      afterRulesNb: 1,
-      beforeRulesNb: 2,
-    }
-  );
-||||||| merged common ancestors
-  const rules = await assertPseudoElementRulesNumbers(id,
-    inspector, view, {
-      elementRulesNb: 4,
-      firstLineRulesNb: 2,
-      firstLetterRulesNb: 1,
-      selectionRulesNb: 1,
-      afterRulesNb: 1,
-      beforeRulesNb: 2
-    }
-  );
-=======
   const rules = await assertPseudoElementRulesNumbers(id, inspector, view, {
     elementRulesNb: 4,
     firstLineRulesNb: 2,
@@ -58,7 +35,6 @@ async function testTopLeft(inspector, view) {
     afterRulesNb: 1,
     beforeRulesNb: 2,
   });
->>>>>>> upstream-releases
 
   const gutters = assertGutters(view);
 
@@ -259,17 +235,9 @@ async function testParagraph(inspector, view) {
       selectionRulesNb: 2,
       markerRulesNb: 0,
       beforeRulesNb: 0,
-<<<<<<< HEAD
-      afterRulesNb: 0,
-    });
-||||||| merged common ancestors
-      afterRulesNb: 0
-    });
-=======
       afterRulesNb: 0,
     }
   );
->>>>>>> upstream-releases
 
   assertGutters(view);
 

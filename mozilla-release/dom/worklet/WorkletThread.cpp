@@ -101,17 +101,10 @@ class WorkletJSContext final : public CycleCollectedJSContext {
     nsCycleCollector_startup();
   }
 
-<<<<<<< HEAD
-  ~WorkletJSContext() override {
-||||||| merged common ancestors
-  ~WorkletJSContext() override
-  {
-=======
   // MOZ_CAN_RUN_SCRIPT_BOUNDARY because otherwise we have to annotate the
   // SpiderMonkey JS::JobQueue's destructor as MOZ_CAN_RUN_SCRIPT, which is a
   // bit of a pain.
   MOZ_CAN_RUN_SCRIPT_BOUNDARY ~WorkletJSContext() override {
->>>>>>> upstream-releases
     MOZ_ASSERT(!NS_IsMainThread());
 
     JSContext* cx = MaybeContext();
@@ -185,32 +178,11 @@ class WorkletThread::PrimaryRunnable final : public Runnable {
         mWorkletThread(aWorkletThread) {
     MOZ_ASSERT(aWorkletThread);
     MOZ_ASSERT(NS_IsMainThread());
-<<<<<<< HEAD
-
-    mParentRuntime =
-        JS_GetParentRuntime(CycleCollectedJSContext::Get()->Context());
-    MOZ_ASSERT(mParentRuntime);
-||||||| merged common ancestors
-
-    mParentRuntime =
-      JS_GetParentRuntime(CycleCollectedJSContext::Get()->Context());
-    MOZ_ASSERT(mParentRuntime);
-=======
->>>>>>> upstream-releases
   }
 
   NS_IMETHOD
-<<<<<<< HEAD
-  Run() override {
-    mWorkletThread->RunEventLoop(mParentRuntime);
-||||||| merged common ancestors
-  Run() override
-  {
-    mWorkletThread->RunEventLoop(mParentRuntime);
-=======
   Run() override {
     mWorkletThread->RunEventLoop();
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -238,23 +210,6 @@ class WorkletThread::TerminateRunnable final : public Runnable {
   RefPtr<WorkletThread> mWorkletThread;
 };
 
-<<<<<<< HEAD
-WorkletThread::WorkletThread()
-    : nsThread(MakeNotNull<ThreadEventQueue<mozilla::EventQueue>*>(
-                   MakeUnique<mozilla::EventQueue>()),
-               nsThread::NOT_MAIN_THREAD, kWorkletStackSize),
-      mExitLoop(false),
-      mIsTerminating(false) {
-||||||| merged common ancestors
-WorkletThread::WorkletThread()
-  : nsThread(MakeNotNull<ThreadEventQueue<mozilla::EventQueue>*>(
-               MakeUnique<mozilla::EventQueue>()),
-             nsThread::NOT_MAIN_THREAD, kWorkletStackSize)
-  , mCreationTimeStamp(TimeStamp::Now())
-  , mJSContext(nullptr)
-  , mIsTerminating(false)
-{
-=======
 WorkletThread::WorkletThread(WorkletImpl* aWorkletImpl)
     : nsThread(MakeNotNull<ThreadEventQueue<mozilla::EventQueue>*>(
                    MakeUnique<mozilla::EventQueue>()),
@@ -262,7 +217,6 @@ WorkletThread::WorkletThread(WorkletImpl* aWorkletImpl)
       mWorkletImpl(aWorkletImpl),
       mExitLoop(false),
       mIsTerminating(false) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   nsContentUtils::RegisterShutdownObserver(this);
 }
@@ -273,22 +227,10 @@ WorkletThread::~WorkletThread() {
 }
 
 // static
-<<<<<<< HEAD
-already_AddRefed<WorkletThread> WorkletThread::Create() {
-  RefPtr<WorkletThread> thread = new WorkletThread();
-  if (NS_WARN_IF(NS_FAILED(thread->Init()))) {
-||||||| merged common ancestors
-already_AddRefed<WorkletThread>
-WorkletThread::Create()
-{
-  RefPtr<WorkletThread> thread = new WorkletThread();
-  if (NS_WARN_IF(NS_FAILED(thread->Init()))) {
-=======
 already_AddRefed<WorkletThread> WorkletThread::Create(
     WorkletImpl* aWorkletImpl) {
   RefPtr<WorkletThread> thread = new WorkletThread(aWorkletImpl);
   if (NS_WARN_IF(NS_FAILED(thread->Init(NS_LITERAL_CSTRING("DOM Worklet"))))) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
@@ -330,19 +272,6 @@ WorkletThread::DelayedDispatch(already_AddRefed<nsIRunnable>, uint32_t aFlags) {
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-<<<<<<< HEAD
-void WorkletThread::RunEventLoop(JSRuntime* aParentRuntime) {
-  MOZ_ASSERT(!NS_IsMainThread());
-
-  PR_SetCurrentThreadName("worklet");
-||||||| merged common ancestors
-void
-WorkletThread::RunEventLoop(JSRuntime* aParentRuntime)
-{
-  MOZ_ASSERT(!NS_IsMainThread());
-
-  PR_SetCurrentThreadName("worklet");
-=======
 /* static */
 void WorkletThread::EnsureCycleCollectedJSContext(JSRuntime* aParentRuntime) {
   CycleCollectedJSContext* ccjscx = CycleCollectedJSContext::Get();
@@ -350,15 +279,8 @@ void WorkletThread::EnsureCycleCollectedJSContext(JSRuntime* aParentRuntime) {
     MOZ_ASSERT(ccjscx->GetAsWorkletJSContext());
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  auto context = MakeUnique<WorkletJSContext>();
-||||||| merged common ancestors
-  auto context = MakeUnique<WorkletJSContext>(this);
-=======
   WorkletJSContext* context = new WorkletJSContext();
->>>>>>> upstream-releases
   nsresult rv = context->Initialize(aParentRuntime);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     // TODO: error propagation
@@ -380,30 +302,16 @@ void WorkletThread::EnsureCycleCollectedJSContext(JSRuntime* aParentRuntime) {
   }
 }
 
-<<<<<<< HEAD
-  while (!mExitLoop) {
-||||||| merged common ancestors
-  mJSContext = context->Context();
-
-  while (mJSContext) {
-=======
 void WorkletThread::RunEventLoop() {
   MOZ_ASSERT(!NS_IsMainThread());
 
   PR_SetCurrentThreadName("worklet");
 
   while (!mExitLoop) {
->>>>>>> upstream-releases
     MOZ_ALWAYS_TRUE(NS_ProcessNextEvent(this, /* wait: */ true));
   }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-  MOZ_ASSERT(mJSContext == nullptr);
-=======
 
   DeleteCycleCollectedJSContext();
->>>>>>> upstream-releases
 }
 
 void WorkletThread::Terminate() {
@@ -433,21 +341,6 @@ void WorkletThread::TerminateInternal() {
   NS_DispatchToMainThread(runnable);
 }
 
-<<<<<<< HEAD
-/* static */ bool WorkletThread::IsOnWorkletThread() {
-||||||| merged common ancestors
-JSContext*
-WorkletThread::GetJSContext() const
-{
-  AssertIsOnWorkletThread();
-  MOZ_ASSERT(mJSContext);
-  return mJSContext;
-}
-
-/* static */ bool
-WorkletThread::IsOnWorkletThread()
-{
-=======
 /* static */
 void WorkletThread::DeleteCycleCollectedJSContext() {
   CycleCollectedJSContext* ccjscx = CycleCollectedJSContext::Get();
@@ -462,21 +355,12 @@ void WorkletThread::DeleteCycleCollectedJSContext() {
 
 /* static */
 bool WorkletThread::IsOnWorkletThread() {
->>>>>>> upstream-releases
   CycleCollectedJSContext* ccjscx = CycleCollectedJSContext::Get();
   return ccjscx && ccjscx->GetAsWorkletJSContext();
 }
 
-<<<<<<< HEAD
-/* static */ void WorkletThread::AssertIsOnWorkletThread() {
-||||||| merged common ancestors
-/* static */ void
-WorkletThread::AssertIsOnWorkletThread()
-{
-=======
 /* static */
 void WorkletThread::AssertIsOnWorkletThread() {
->>>>>>> upstream-releases
   MOZ_ASSERT(IsOnWorkletThread());
 }
 

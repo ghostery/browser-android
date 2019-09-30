@@ -9,20 +9,12 @@ describe("PrefsFeed", () => {
   let FAKE_PREFS;
   let sandbox;
   beforeEach(() => {
-<<<<<<< HEAD
-    sandbox = sinon.createSandbox();
-    FAKE_PREFS = new Map([["foo", 1], ["bar", 2]]);
-||||||| merged common ancestors
-    sandbox = sinon.sandbox.create();
-    FAKE_PREFS = new Map([["foo", 1], ["bar", 2]]);
-=======
     sandbox = sinon.createSandbox();
     FAKE_PREFS = new Map([
       ["foo", 1],
       ["bar", 2],
       ["baz", { value: 1, skipBroadcast: true }],
     ]);
->>>>>>> upstream-releases
     feed = new PrefsFeed(FAKE_PREFS);
     const storage = {
       getAll: sandbox.stub().resolves(),

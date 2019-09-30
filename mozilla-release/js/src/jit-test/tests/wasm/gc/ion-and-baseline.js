@@ -14,18 +14,8 @@
 
 var refmod = new WebAssembly.Module(wasmTextToBinary(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-
-      (import $tbl "" "tbl" (table 4 anyfunc))
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-
-      (import $tbl "" "tbl" (table 4 anyfunc))
-=======
       (gc_feature_opt_in 3)
       (import $tbl "" "tbl" (table 4 funcref))
->>>>>>> upstream-releases
       (import $print "" "print" (func (param i32)))
 
       ;; Just a dummy

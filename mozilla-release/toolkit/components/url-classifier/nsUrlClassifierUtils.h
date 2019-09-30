@@ -35,43 +35,15 @@ class nsUrlClassifierUtils final : public nsIUrlClassifierUtils,
   // space), 37(%), and anything 127 or above (special characters).  Url is the
   // string to encode, ret is the encoded string.  Function returns true if
   // ret != url.
-<<<<<<< HEAD
-  bool SpecialEncode(const nsACString& url, bool foldSlashes,
-                     nsACString& _retval);
-||||||| merged common ancestors
-  bool SpecialEncode(const nsACString & url,
-                       bool foldSlashes,
-                       nsACString & _retval);
-=======
   bool SpecialEncode(const nsACString& url, bool foldSlashes,
                      nsACString& _retval);
 
   void ParseIPAddress(const nsACString& host, nsACString& _retval);
   void CanonicalNum(const nsACString& num, uint32_t bytes, bool allowOctal,
                     nsACString& _retval);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void ParseIPAddress(const nsACString& host, nsACString& _retval);
-  void CanonicalNum(const nsACString& num, uint32_t bytes, bool allowOctal,
-                    nsACString& _retval);
-||||||| merged common ancestors
-  void ParseIPAddress(const nsACString & host, nsACString & _retval);
-  void CanonicalNum(const nsACString & num,
-                    uint32_t bytes,
-                    bool allowOctal,
-                    nsACString & _retval);
-=======
   static bool IsMozTestTable(const nsACString& aTableName);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  ~nsUrlClassifierUtils() {}
-||||||| merged common ancestors
-private:
-  ~nsUrlClassifierUtils() {}
-=======
   static bool IsTestTable(const nsACString& aTableName);
 
  private:
@@ -79,7 +51,6 @@ private:
   ~nsUrlClassifierUtils();
 
   nsresult Init();
->>>>>>> upstream-releases
 
   // Disallow copy constructor
   nsUrlClassifierUtils(const nsUrlClassifierUtils&);

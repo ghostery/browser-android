@@ -19,11 +19,6 @@ def find_wptreport(args):
     return parser.parse_known_args(args)[0].log_wptreport
 
 
-<<<<<<< HEAD
-def gzip_file(filename, delete_original=True):
-||||||| merged common ancestors
-def gzip_file(filename):
-=======
 def find_wptscreenshot(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('--log-wptscreenshot', action='store')
@@ -31,7 +26,6 @@ def find_wptscreenshot(args):
 
 
 def gzip_file(filename, delete_original=True):
->>>>>>> upstream-releases
     with open(filename, 'rb') as f_in:
         with gzip.open('%s.gz' % filename, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)

@@ -43,14 +43,8 @@ class Function;
 class MessagePort;
 class MessagePortIdentifier;
 class PerformanceStorage;
-<<<<<<< HEAD
-class RemoteWorkerChild;
-||||||| merged common ancestors
-class SharedWorker;
-=======
 class RemoteWorkerChild;
 class TimeoutHandler;
->>>>>>> upstream-releases
 class WorkerControlRunnable;
 class WorkerCSPEventListener;
 class WorkerDebugger;
@@ -137,34 +131,9 @@ class WorkerPrivate : public RelativeTimeline {
   bool Start();
 
   // Called on the parent thread.
-<<<<<<< HEAD
   bool Notify(WorkerStatus aStatus);
 
   bool Cancel() { return Notify(Canceling); }
-||||||| merged common ancestors
-  bool
-  Notify(WorkerStatus aStatus);
-
-  bool
-  Cancel()
-  {
-    return Notify(Canceling);
-  }
-=======
-  bool Notify(WorkerStatus aStatus);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  bool Kill() { return Notify(Killing); }
-||||||| merged common ancestors
-  bool
-  Kill()
-  {
-    return Notify(Killing);
-  }
-=======
-  bool Cancel() { return Notify(Canceling); }
->>>>>>> upstream-releases
 
   bool Close();
 
@@ -203,17 +172,9 @@ class WorkerPrivate : public RelativeTimeline {
     }
   }
 
-<<<<<<< HEAD
-  WorkerDebugger* Debugger() const {
-||||||| merged common ancestors
-  WorkerDebugger*
-  Debugger() const
-  {
-=======
   nsresult SetIsDebuggerReady(bool aReady);
 
   WorkerDebugger* Debugger() const {
->>>>>>> upstream-releases
     AssertIsOnMainThread();
 
     MOZ_ASSERT(mDebugger);
@@ -234,15 +195,8 @@ class WorkerPrivate : public RelativeTimeline {
     return std::move(mDefaultLocale);
   }
 
-<<<<<<< HEAD
-  void DoRunLoop(JSContext* aCx);
-||||||| merged common ancestors
-  void
-  DoRunLoop(JSContext* aCx);
-=======
   MOZ_CAN_RUN_SCRIPT
   void DoRunLoop(JSContext* aCx);
->>>>>>> upstream-releases
 
   bool InterruptCallback(JSContext* aCx);
 
@@ -275,14 +229,7 @@ class WorkerPrivate : public RelativeTimeline {
                                       const Sequence<JSObject*>& aTransferable,
                                       ErrorResult& aRv);
 
-<<<<<<< HEAD
-  void EnterDebuggerEventLoop();
-||||||| merged common ancestors
-  void
-  EnterDebuggerEventLoop();
-=======
   MOZ_CAN_RUN_SCRIPT void EnterDebuggerEventLoop();
->>>>>>> upstream-releases
 
   void LeaveDebuggerEventLoop();
 
@@ -303,29 +250,12 @@ class WorkerPrivate : public RelativeTimeline {
   static void ReportErrorToConsole(const char* aMessage,
                                    const nsTArray<nsString>& aParams);
 
-<<<<<<< HEAD
-  int32_t SetTimeout(JSContext* aCx, nsIScriptTimeoutHandler* aHandler,
-                     int32_t aTimeout, bool aIsInterval, ErrorResult& aRv);
-||||||| merged common ancestors
-  int32_t
-  SetTimeout(JSContext* aCx, nsIScriptTimeoutHandler* aHandler,
-             int32_t aTimeout, bool aIsInterval,
-             ErrorResult& aRv);
-=======
   int32_t SetTimeout(JSContext* aCx, TimeoutHandler* aHandler, int32_t aTimeout,
                      bool aIsInterval, ErrorResult& aRv);
->>>>>>> upstream-releases
 
   void ClearTimeout(int32_t aId);
 
-<<<<<<< HEAD
-  bool RunExpiredTimeouts(JSContext* aCx);
-||||||| merged common ancestors
-  bool
-  RunExpiredTimeouts(JSContext* aCx);
-=======
   MOZ_CAN_RUN_SCRIPT bool RunExpiredTimeouts(JSContext* aCx);
->>>>>>> upstream-releases
 
   bool RescheduleTimeoutTimer(JSContext* aCx);
 
@@ -348,56 +278,18 @@ class WorkerPrivate : public RelativeTimeline {
                             uint32_t aFrequency);
 #endif
 
-<<<<<<< HEAD
-  void GarbageCollectInternal(JSContext* aCx, bool aShrinking,
-                              bool aCollectChildren);
-||||||| merged common ancestors
-  void
-  GarbageCollectInternal(JSContext* aCx, bool aShrinking,
-                         bool aCollectChildren);
-=======
   void SetLowMemoryStateInternal(JSContext* aCx, bool aState);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void CycleCollectInternal(bool aCollectChildren);
-||||||| merged common ancestors
-  void
-  CycleCollectInternal(bool aCollectChildren);
-=======
   void GarbageCollectInternal(JSContext* aCx, bool aShrinking,
                               bool aCollectChildren);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void OfflineStatusChangeEventInternal(bool aIsOffline);
-||||||| merged common ancestors
-  void
-  OfflineStatusChangeEventInternal(bool aIsOffline);
-=======
   void CycleCollectInternal(bool aCollectChildren);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void MemoryPressureInternal();
-||||||| merged common ancestors
-  void
-  MemoryPressureInternal();
-=======
   void OfflineStatusChangeEventInternal(bool aIsOffline);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetFetchHandlerWasAdded() {
-||||||| merged common ancestors
-  void
-  SetFetchHandlerWasAdded()
-  {
-=======
   void MemoryPressureInternal();
 
   void SetFetchHandlerWasAdded() {
->>>>>>> upstream-releases
     MOZ_ASSERT(IsServiceWorker());
     AssertIsOnWorkerThread();
     mFetchHandlerWasAdded = true;
@@ -424,49 +316,17 @@ class WorkerPrivate : public RelativeTimeline {
     return data->mDebuggerScope;
   }
 
-<<<<<<< HEAD
   nsICSPEventListener* CSPEventListener() const;
 
   void SetThread(WorkerThread* aThread);
-||||||| merged common ancestors
-  nsICSPEventListener*
-  CSPEventListener() const;
-=======
-  nsICSPEventListener* CSPEventListener() const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   void SetWorkerPrivateInWorkerThread(WorkerThread* aThread);
-||||||| merged common ancestors
-  void
-  SetThread(WorkerThread* aThread);
-=======
-  void SetThread(WorkerThread* aThread);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void ResetWorkerPrivateInWorkerThread();
-||||||| merged common ancestors
-  bool
-  IsOnWorkerThread() const;
-=======
-  void SetWorkerPrivateInWorkerThread(WorkerThread* aThread);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  bool IsOnWorkerThread() const;
-
-  void AssertIsOnWorkerThread() const
-||||||| merged common ancestors
-  void
-  AssertIsOnWorkerThread() const
-=======
   void ResetWorkerPrivateInWorkerThread();
 
   bool IsOnWorkerThread() const;
 
   void AssertIsOnWorkerThread() const
->>>>>>> upstream-releases
 #ifdef DEBUG
       ;
 #else
@@ -546,15 +406,6 @@ class WorkerPrivate : public RelativeTimeline {
   // Get the event target to use when dispatching to the main thread
   // from this Worker thread.  This may be the main thread itself or
   // a ThrottledEventQueue to the main thread.
-<<<<<<< HEAD
-  nsIEventTarget* MainThreadEventTarget();
-
-  nsresult DispatchToMainThread(nsIRunnable* aRunnable,
-                                uint32_t aFlags = NS_DISPATCH_NORMAL);
-||||||| merged common ancestors
-  nsIEventTarget*
-  MainThreadEventTarget();
-=======
   nsIEventTarget* MainThreadEventTargetForMessaging();
 
   nsresult DispatchToMainThreadForMessaging(
@@ -563,28 +414,9 @@ class WorkerPrivate : public RelativeTimeline {
   nsresult DispatchToMainThreadForMessaging(
       already_AddRefed<nsIRunnable> aRunnable,
       uint32_t aFlags = NS_DISPATCH_NORMAL);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult DispatchToMainThread(already_AddRefed<nsIRunnable> aRunnable,
-                                uint32_t aFlags = NS_DISPATCH_NORMAL);
-||||||| merged common ancestors
-  nsresult
-  DispatchToMainThread(nsIRunnable* aRunnable,
-                       uint32_t aFlags = NS_DISPATCH_NORMAL);
-=======
   nsIEventTarget* MainThreadEventTarget();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult DispatchDebuggeeToMainThread(
-      already_AddRefed<WorkerDebuggeeRunnable> aRunnable,
-      uint32_t aFlags = NS_DISPATCH_NORMAL);
-||||||| merged common ancestors
-  nsresult
-  DispatchToMainThread(already_AddRefed<nsIRunnable> aRunnable,
-                       uint32_t aFlags = NS_DISPATCH_NORMAL);
-=======
   nsresult DispatchToMainThread(nsIRunnable* aRunnable,
                                 uint32_t aFlags = NS_DISPATCH_NORMAL);
 
@@ -594,7 +426,6 @@ class WorkerPrivate : public RelativeTimeline {
   nsresult DispatchDebuggeeToMainThread(
       already_AddRefed<WorkerDebuggeeRunnable> aRunnable,
       uint32_t aFlags = NS_DISPATCH_NORMAL);
->>>>>>> upstream-releases
 
   // Get an event target that will dispatch runnables as control runnables on
   // the worker thread.  Implement nsICancelableRunnable if you wish to take
@@ -833,94 +664,31 @@ class WorkerPrivate : public RelativeTimeline {
     return mLoadInfo.mPrincipal;
   }
 
-<<<<<<< HEAD
-  nsIPrincipal* GetLoadingPrincipal() const {
-||||||| merged common ancestors
-  nsIPrincipal*
-  GetLoadingPrincipal() const
-  {
-=======
   nsIPrincipal* GetEffectiveStoragePrincipal() const {
->>>>>>> upstream-releases
     AssertIsOnMainThread();
     return mLoadInfo.mStoragePrincipal;
   }
 
-<<<<<<< HEAD
-  const nsAString& Origin() const { return mLoadInfo.mOrigin; }
-||||||| merged common ancestors
-  const nsAString& Origin() const
-  {
-    return mLoadInfo.mOrigin;
-  }
-=======
   nsIPrincipal* GetLoadingPrincipal() const {
     AssertIsOnMainThread();
     return mLoadInfo.mLoadingPrincipal;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsILoadGroup* GetLoadGroup() const {
-||||||| merged common ancestors
-  nsILoadGroup*
-  GetLoadGroup() const
-  {
-=======
   const nsAString& Origin() const { return mLoadInfo.mOrigin; }
 
   nsILoadGroup* GetLoadGroup() const {
->>>>>>> upstream-releases
     AssertIsOnMainThread();
     return mLoadInfo.mLoadGroup;
   }
 
-<<<<<<< HEAD
-  // This method allows the principal to be retrieved off the main thread.
-  // Principals are main-thread objects so the caller must ensure that all
-  // access occurs on the main thread.
-  nsIPrincipal* GetPrincipalDontAssertMainThread() const {
-    return mLoadInfo.mPrincipal;
-  }
-||||||| merged common ancestors
-  // This method allows the principal to be retrieved off the main thread.
-  // Principals are main-thread objects so the caller must ensure that all
-  // access occurs on the main thread.
-  nsIPrincipal*
-  GetPrincipalDontAssertMainThread() const
-  {
-      return mLoadInfo.mPrincipal;
-  }
-=======
   bool UsesSystemPrincipal() const { return mLoadInfo.mPrincipalIsSystem; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool UsesSystemPrincipal() const { return mLoadInfo.mPrincipalIsSystem; }
-||||||| merged common ancestors
-  bool
-  UsesSystemPrincipal() const
-  {
-    return mLoadInfo.mPrincipalIsSystem;
-  }
-=======
   const mozilla::ipc::PrincipalInfo& GetPrincipalInfo() const {
     return *mLoadInfo.mPrincipalInfo;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const mozilla::ipc::PrincipalInfo& GetPrincipalInfo() const {
-    return *mLoadInfo.mPrincipalInfo;
-||||||| merged common ancestors
-  const mozilla::ipc::PrincipalInfo&
-  GetPrincipalInfo() const
-  {
-    return *mLoadInfo.mPrincipalInfo;
-=======
   const mozilla::ipc::PrincipalInfo& GetEffectiveStoragePrincipalInfo() const {
     return *mLoadInfo.mStoragePrincipalInfo;
->>>>>>> upstream-releases
   }
 
   already_AddRefed<nsIChannel> ForgetWorkerChannel() {
@@ -943,39 +711,12 @@ class WorkerPrivate : public RelativeTimeline {
   nsresult SetCSPFromHeaderValues(const nsACString& aCSPHeaderValue,
                                   const nsACString& aCSPReportOnlyHeaderValue);
 
-<<<<<<< HEAD
-  void SetReferrerPolicyFromHeaderValue(
-      const nsACString& aReferrerPolicyHeaderValue);
-||||||| merged common ancestors
-  void
-  SetReferrerPolicyFromHeaderValue(const nsACString& aReferrerPolicyHeaderValue);
-=======
   void StoreCSPOnClient();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  net::ReferrerPolicy GetReferrerPolicy() const {
-    return mLoadInfo.mReferrerPolicy;
-||||||| merged common ancestors
-  net::ReferrerPolicy
-  GetReferrerPolicy() const
-  {
-    return mLoadInfo.mReferrerPolicy;
-=======
   const mozilla::ipc::CSPInfo& GetCSPInfo() const {
     return *mLoadInfo.mCSPInfo;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  void SetReferrerPolicy(net::ReferrerPolicy aReferrerPolicy) {
-    mLoadInfo.mReferrerPolicy = aReferrerPolicy;
-||||||| merged common ancestors
-  void
-  SetReferrerPolicy(net::ReferrerPolicy aReferrerPolicy)
-  {
-    mLoadInfo.mReferrerPolicy = aReferrerPolicy;
-=======
   void UpdateReferrerInfoFromHeader(
       const nsACString& aReferrerPolicyHeaderValue);
 
@@ -983,34 +724,15 @@ class WorkerPrivate : public RelativeTimeline {
 
   uint32_t GetReferrerPolicy() const {
     return mLoadInfo.mReferrerInfo->GetReferrerPolicy();
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  bool IsEvalAllowed() const { return mLoadInfo.mEvalAllowed; }
-||||||| merged common ancestors
-  bool
-  IsEvalAllowed() const
-  {
-    return mLoadInfo.mEvalAllowed;
-  }
-=======
   void SetReferrerInfo(nsIReferrerInfo* aReferrerInfo) {
     mLoadInfo.mReferrerInfo = aReferrerInfo;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetEvalAllowed(bool aEvalAllowed) {
-||||||| merged common ancestors
-  void
-  SetEvalAllowed(bool aEvalAllowed)
-  {
-=======
   bool IsEvalAllowed() const { return mLoadInfo.mEvalAllowed; }
 
   void SetEvalAllowed(bool aEvalAllowed) {
->>>>>>> upstream-releases
     mLoadInfo.mEvalAllowed = aEvalAllowed;
   }
 
@@ -1026,37 +748,15 @@ class WorkerPrivate : public RelativeTimeline {
     mLoadInfo.mXHRParamsAllowed = aAllowed;
   }
 
-<<<<<<< HEAD
-  bool IsStorageAllowed() const {
-||||||| merged common ancestors
-  bool
-  IsStorageAllowed() const
-  {
-=======
   mozilla::StorageAccess StorageAccess() const {
->>>>>>> upstream-releases
     AssertIsOnWorkerThread();
-<<<<<<< HEAD
-    return mLoadInfo.mStorageAllowed ||
-           mLoadInfo.mFirstPartyStorageAccessGranted;
-||||||| merged common ancestors
-    return mLoadInfo.mStorageAllowed || mLoadInfo.mFirstPartyStorageAccessGranted;
-=======
     if (mLoadInfo.mFirstPartyStorageAccessGranted) {
       return mozilla::StorageAccess::eAllow;
     }
 
     return mLoadInfo.mStorageAccess;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  const OriginAttributes& GetOriginAttributes() const {
-||||||| merged common ancestors
-  const OriginAttributes&
-  GetOriginAttributes() const
-  {
-=======
   nsICookieSettings* CookieSettings() const {
     // Any thread.
     MOZ_ASSERT(mLoadInfo.mCookieSettings);
@@ -1064,7 +764,6 @@ class WorkerPrivate : public RelativeTimeline {
   }
 
   const OriginAttributes& GetOriginAttributes() const {
->>>>>>> upstream-releases
     return mLoadInfo.mOriginAttributes;
   }
 
@@ -1085,42 +784,9 @@ class WorkerPrivate : public RelativeTimeline {
     mLoadingWorkerScript = aLoadingWorkerScript;
   }
 
-<<<<<<< HEAD
   RemoteWorkerChild* GetRemoteWorkerController();
 
   void SetRemoteWorkerController(RemoteWorkerChild* aController);
-||||||| merged common ancestors
-  void
-  QueueRunnable(nsIRunnable* aRunnable)
-  {
-    AssertIsOnParentThread();
-    mQueuedRunnables.AppendElement(aRunnable);
-  }
-
-  bool
-  RegisterSharedWorker(SharedWorker* aSharedWorker, MessagePort* aPort);
-
-  void
-  BroadcastErrorToSharedWorkers(JSContext* aCx,
-                                const WorkerErrorReport* aReport,
-                                bool aIsErrorEvent);
-
-  void
-  GetAllSharedWorkers(nsTArray<RefPtr<SharedWorker>>& aSharedWorkers);
-
-  void
-  CloseSharedWorkersForWindow(nsPIDOMWindowInner* aWindow);
-
-  void
-  CloseAllSharedWorkers();
-
-  void
-  FlushReportsToSharedWorkers(nsIConsoleReportCollector* aReporter);
-=======
-  RemoteWorkerChild* GetRemoteWorkerController();
-
-  void SetRemoteWorkerController(RemoteWorkerChild* aController);
->>>>>>> upstream-releases
 
   // We can assume that an nsPIDOMWindow will be available for Freeze, Thaw
   // as these are only used for globals going in and out of the bfcache.
@@ -1139,56 +805,20 @@ class WorkerPrivate : public RelativeTimeline {
 
   bool ProxyReleaseMainThreadObjects();
 
-<<<<<<< HEAD
-  void GarbageCollect(bool aShrinking);
-||||||| merged common ancestors
-  void
-  GarbageCollect(bool aShrinking);
-=======
   void SetLowMemoryState(bool aState);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void CycleCollect(bool aDummy);
-||||||| merged common ancestors
-  void
-  CycleCollect(bool aDummy);
-=======
   void GarbageCollect(bool aShrinking);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult SetPrincipalOnMainThread(nsIPrincipal* aPrincipal,
-                                    nsILoadGroup* aLoadGroup);
-||||||| merged common ancestors
-  nsresult
-  SetPrincipalOnMainThread(nsIPrincipal* aPrincipal, nsILoadGroup* aLoadGroup);
-=======
   void CycleCollect(bool aDummy);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult SetPrincipalFromChannel(nsIChannel* aChannel);
-||||||| merged common ancestors
-  nsresult
-  SetPrincipalFromChannel(nsIChannel* aChannel);
-=======
   nsresult SetPrincipalsAndCSPOnMainThread(nsIPrincipal* aPrincipal,
                                            nsIPrincipal* aStoragePrincipal,
                                            nsILoadGroup* aLoadGroup,
                                            nsIContentSecurityPolicy* aCsp);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool FinalChannelPrincipalIsValid(nsIChannel* aChannel);
-||||||| merged common ancestors
-  bool
-  FinalChannelPrincipalIsValid(nsIChannel* aChannel);
-=======
   nsresult SetPrincipalsAndCSPFromChannel(nsIChannel* aChannel);
 
   bool FinalChannelPrincipalIsValid(nsIChannel* aChannel);
->>>>>>> upstream-releases
 
 #ifdef MOZ_DIAGNOSTIC_ASSERT_ENABLED
   bool PrincipalURIMatchesScriptURL();
@@ -1237,16 +867,9 @@ class WorkerPrivate : public RelativeTimeline {
   bool PrincipalIsValid() const;
 #endif
 
-<<<<<<< HEAD
-  void StartCancelingTimer();
-||||||| merged common ancestors
-  void
-  StartCancelingTimer();
-=======
   void StartCancelingTimer();
 
   nsAString& Id();
->>>>>>> upstream-releases
 
  private:
   WorkerPrivate(WorkerPrivate* aParent, const nsAString& aScriptURL,
@@ -1397,19 +1020,8 @@ class WorkerPrivate : public RelativeTimeline {
   RefPtr<WorkerThread> mThread;
   PRThread* mPRThread;
 
-<<<<<<< HEAD
-  // Accessed from main thread
-||||||| merged common ancestors
-  // Things touched on worker thread only.
-  RefPtr<WorkerGlobalScope> mScope;
-  RefPtr<WorkerDebuggerGlobalScope> mDebuggerScope;
-  nsTArray<WorkerPrivate*> mChildWorkers;
-  nsTObserverArray<WorkerHolder*> mHolders;
-  nsTArray<nsAutoPtr<TimeoutInfo>> mTimeouts;
-=======
   // Accessed from main thread
   RefPtr<ThrottledEventQueue> mMainThreadEventTargetForMessaging;
->>>>>>> upstream-releases
   RefPtr<ThrottledEventQueue> mMainThreadEventTarget;
 
   // Accessed from worker thread and destructing thread
@@ -1466,7 +1078,6 @@ class WorkerPrivate : public RelativeTimeline {
   DOMHighResTimeStamp mCreationTimeHighRes;
 
   // Things touched on worker thread only.
-<<<<<<< HEAD
   struct WorkerThreadAccessible {
     explicit WorkerThreadAccessible(WorkerPrivate* aParent);
 
@@ -1478,56 +1089,7 @@ class WorkerPrivate : public RelativeTimeline {
 
     nsCOMPtr<nsITimer> mTimer;
     nsCOMPtr<nsITimerCallback> mTimerRunnable;
-||||||| merged common ancestors
-  uint32_t mNumHoldersPreventingShutdownStart;
-  uint32_t mDebuggerEventLoopLevel;
-=======
-  struct WorkerThreadAccessible {
-    explicit WorkerThreadAccessible(WorkerPrivate* aParent);
 
-    RefPtr<WorkerGlobalScope> mScope;
-    RefPtr<WorkerDebuggerGlobalScope> mDebuggerScope;
-    nsTArray<WorkerPrivate*> mChildWorkers;
-    nsTObserverArray<WorkerHolder*> mHolders;
-    nsTArray<nsAutoPtr<TimeoutInfo>> mTimeouts;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    nsCOMPtr<nsITimer> mGCTimer;
-||||||| merged common ancestors
-  uint32_t mErrorHandlerRecursionCount;
-  uint32_t mNextTimeoutId;
-=======
-    nsCOMPtr<nsITimer> mTimer;
-    nsCOMPtr<nsITimerCallback> mTimerRunnable;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    RefPtr<MemoryReporter> mMemoryReporter;
-
-    UniquePtr<ClientSource> mClientSource;
-
-    uint32_t mNumHoldersPreventingShutdownStart;
-    uint32_t mDebuggerEventLoopLevel;
-
-    uint32_t mErrorHandlerRecursionCount;
-    uint32_t mNextTimeoutId;
-
-    bool mFrozen;
-    bool mTimerRunning;
-    bool mRunningExpiredTimeouts;
-    bool mPeriodicGCTimerRunning;
-    bool mIdleGCTimerRunning;
-    bool mOnLine;
-  };
-  ThreadBound<WorkerThreadAccessible> mWorkerThreadAccessible;
-
-  bool mParentWindowPaused;
-||||||| merged common ancestors
-  // SharedWorkers may have multiple windows paused, so this must be
-  // a count instead of just a boolean.
-  uint32_t mParentWindowPausedDepth;
-=======
     nsCOMPtr<nsITimer> mGCTimer;
 
     RefPtr<MemoryReporter> mMemoryReporter;
@@ -1558,17 +1120,7 @@ class WorkerPrivate : public RelativeTimeline {
   };
 
   bool mParentWindowPaused;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool mPendingEventQueueClearing;
-||||||| merged common ancestors
-  bool mFrozen;
-  bool mTimerRunning;
-  bool mRunningExpiredTimeouts;
-  bool mPendingEventQueueClearing;
-=======
->>>>>>> upstream-releases
   bool mCancelAllPendingRunnables;
   bool mWorkerScriptExecutedSuccessfully;
   bool mFetchHandlerWasAdded;

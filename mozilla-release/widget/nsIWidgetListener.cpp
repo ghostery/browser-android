@@ -19,17 +19,7 @@ nsIXULWindow* nsIWidgetListener::GetXULWindow() { return nullptr; }
 
 nsView* nsIWidgetListener::GetView() { return nullptr; }
 
-<<<<<<< HEAD
-nsIPresShell* nsIWidgetListener::GetPresShell() { return nullptr; }
-||||||| merged common ancestors
-nsIPresShell*
-nsIWidgetListener::GetPresShell()
-{
-  return nullptr;
-}
-=======
 PresShell* nsIWidgetListener::GetPresShell() { return nullptr; }
->>>>>>> upstream-releases
 
 bool nsIWidgetListener::WindowMoved(nsIWidget* aWidget, int32_t aX,
                                     int32_t aY) {
@@ -78,21 +68,12 @@ void nsIWidgetListener::DidCompositeWindow(
     mozilla::layers::TransactionId aTransactionId,
     const TimeStamp& aCompositeStart, const TimeStamp& aCompositeEnd) {}
 
-<<<<<<< HEAD
-void nsIWidgetListener::RequestRepaint() {}
-||||||| merged common ancestors
-void
-nsIWidgetListener::RequestRepaint()
-{
-}
-=======
 void nsIWidgetListener::RequestRepaint() {}
 
 bool nsIWidgetListener::ShouldNotBeVisible() {
   // Returns false to assume that nothing should happen in most cases.
   return false;
 }
->>>>>>> upstream-releases
 
 nsEventStatus nsIWidgetListener::HandleEvent(WidgetGUIEvent* aEvent,
                                              bool aUseAttachedEvents) {

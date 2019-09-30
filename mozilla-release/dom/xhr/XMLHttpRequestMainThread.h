@@ -201,19 +201,9 @@ class XMLHttpRequestMainThread final : public XMLHttpRequest,
 
   XMLHttpRequestMainThread();
 
-<<<<<<< HEAD
-  void Construct(nsIPrincipal* aPrincipal, nsIGlobalObject* aGlobalObject,
-                 nsIURI* aBaseURI = nullptr, nsILoadGroup* aLoadGroup = nullptr,
-||||||| merged common ancestors
-  void Construct(nsIPrincipal* aPrincipal,
-                 nsIGlobalObject* aGlobalObject,
-                 nsIURI* aBaseURI = nullptr,
-                 nsILoadGroup* aLoadGroup = nullptr,
-=======
   void Construct(nsIPrincipal* aPrincipal, nsIGlobalObject* aGlobalObject,
                  nsICookieSettings* aCookieSettings, bool aForWorker,
                  nsIURI* aBaseURI = nullptr, nsILoadGroup* aLoadGroup = nullptr,
->>>>>>> upstream-releases
                  PerformanceStorage* aPerformanceStorage = nullptr,
                  nsICSPEventListener* aCSPEventListener = nullptr) {
     MOZ_ASSERT(aPrincipal);
@@ -381,14 +371,6 @@ class XMLHttpRequestMainThread final : public XMLHttpRequest,
     return XMLHttpRequestResponseType(mResponseType);
   }
 
-<<<<<<< HEAD
-  virtual void SetResponseType(XMLHttpRequestResponseType aType,
-                               ErrorResult& aRv) override;
-||||||| merged common ancestors
-  virtual void
-  SetResponseType(XMLHttpRequestResponseType aType,
-                  ErrorResult& aRv) override;
-=======
   virtual void SetResponseType(XMLHttpRequestResponseType aType,
                                ErrorResult& aRv) override;
 
@@ -399,80 +381,23 @@ class XMLHttpRequestMainThread final : public XMLHttpRequest,
   virtual void GetResponse(JSContext* aCx,
                            JS::MutableHandle<JS::Value> aResponse,
                            ErrorResult& aRv) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void GetResponse(JSContext* aCx,
-                           JS::MutableHandle<JS::Value> aResponse,
-                           ErrorResult& aRv) override;
-||||||| merged common ancestors
-  virtual void
-  GetResponse(JSContext* aCx, JS::MutableHandle<JS::Value> aResponse,
-              ErrorResult& aRv) override;
-=======
   virtual void GetResponseText(DOMString& aResponseText,
                                ErrorResult& aRv) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void GetResponseText(DOMString& aResponseText,
-                               ErrorResult& aRv) override;
-||||||| merged common ancestors
-  virtual void
-  GetResponseText(DOMString& aResponseText, ErrorResult& aRv) override;
-=======
   void GetResponseText(XMLHttpRequestStringSnapshot& aSnapshot,
                        ErrorResult& aRv);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void GetResponseText(XMLHttpRequestStringSnapshot& aSnapshot,
-                       ErrorResult& aRv);
-||||||| merged common ancestors
-  void
-  GetResponseText(XMLHttpRequestStringSnapshot& aSnapshot,
-                  ErrorResult& aRv);
-=======
   virtual Document* GetResponseXML(ErrorResult& aRv) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual nsIDocument* GetResponseXML(ErrorResult& aRv) override;
-||||||| merged common ancestors
-  virtual nsIDocument*
-  GetResponseXML(ErrorResult& aRv) override;
-=======
   virtual bool MozBackgroundRequest() const override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool MozBackgroundRequest() const override;
-||||||| merged common ancestors
-  virtual bool
-  MozBackgroundRequest() const override;
-=======
   nsresult SetMozBackgroundRequest(bool aMozBackgroundRequest);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult SetMozBackgroundRequest(bool aMozBackgroundRequest);
-||||||| merged common ancestors
-  nsresult
-  SetMozBackgroundRequest(bool aMozBackgroundRequest);
-=======
   virtual void SetMozBackgroundRequest(bool aMozBackgroundRequest,
                                        ErrorResult& aRv) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual void SetMozBackgroundRequest(bool aMozBackgroundRequest,
-                                       ErrorResult& aRv) override;
-||||||| merged common ancestors
-  virtual void
-  SetMozBackgroundRequest(bool aMozBackgroundRequest, ErrorResult& aRv) override;
-=======
   void SetOriginStack(UniquePtr<SerializedStackHolder> aOriginStack);
->>>>>>> upstream-releases
 
   virtual uint16_t ErrorCode() const override {
     return static_cast<uint16_t>(mErrorLoad);
@@ -485,20 +410,9 @@ class XMLHttpRequestMainThread final : public XMLHttpRequest,
   virtual nsIChannel* GetChannel() const override { return mChannel; }
 
   // We need a GetInterface callable from JS for chrome JS
-<<<<<<< HEAD
-  virtual void GetInterface(JSContext* aCx, nsIJSID* aIID,
-                            JS::MutableHandle<JS::Value> aRetval,
-                            ErrorResult& aRv) override;
-||||||| merged common ancestors
-  virtual void
-  GetInterface(JSContext* aCx, nsIJSID* aIID,
-               JS::MutableHandle<JS::Value> aRetval,
-               ErrorResult& aRv) override;
-=======
   virtual void GetInterface(JSContext* aCx, JS::Handle<JS::Value> aIID,
                             JS::MutableHandle<JS::Value> aRetval,
                             ErrorResult& aRv) override;
->>>>>>> upstream-releases
 
   // This fires a trusted readystatechange event, which is not cancelable and
   // doesn't bubble.
@@ -877,14 +791,6 @@ class nsXMLHttpRequestXPCOMifier final : public nsIStreamListener,
   RefPtr<XMLHttpRequestMainThread> mXHR;
 };
 
-<<<<<<< HEAD
-class nsXHRParseEndListener : public nsIDOMEventListener {
- public:
-||||||| merged common ancestors
-class nsXHRParseEndListener : public nsIDOMEventListener
-{
-public:
-=======
 class XMLHttpRequestDoneNotifier : public Runnable {
  public:
   explicit XMLHttpRequestDoneNotifier(XMLHttpRequestMainThread* aXHR)
@@ -908,7 +814,6 @@ class XMLHttpRequestDoneNotifier : public Runnable {
 
 class nsXHRParseEndListener : public nsIDOMEventListener {
  public:
->>>>>>> upstream-releases
   NS_DECL_ISUPPORTS
   NS_IMETHOD HandleEvent(Event* event) override {
     if (mXHR) {

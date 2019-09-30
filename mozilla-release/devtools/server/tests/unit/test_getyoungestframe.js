@@ -1,14 +1,5 @@
 /* eslint-disable strict */
 function run_test() {
-<<<<<<< HEAD
-  Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-  registerCleanupFunction(() => {
-    Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-  });
-  ChromeUtils.import("resource://gre/modules/jsdebugger.jsm");
-||||||| merged common ancestors
-  ChromeUtils.import("resource://gre/modules/jsdebugger.jsm");
-=======
   Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
   registerCleanupFunction(() => {
     Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
@@ -16,7 +7,6 @@ function run_test() {
   const { addDebuggerToGlobal } = ChromeUtils.import(
     "resource://gre/modules/jsdebugger.jsm"
   );
->>>>>>> upstream-releases
   addDebuggerToGlobal(this);
   const xpcInspector = Cc["@mozilla.org/jsinspector;1"].getService(
     Ci.nsIJSInspector

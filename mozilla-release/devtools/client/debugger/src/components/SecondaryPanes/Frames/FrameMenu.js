@@ -1,17 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/SecondaryPanes/Frames/FrameMenu.js
-
-// @flow
-import { showMenu } from "devtools-contextmenu";
-import { copyToTheClipboard } from "../../../utils/clipboard";
-import type { LocalFrame } from "./types";
-import type { ContextMenuItem } from "../../../types";
-import { kebabCase } from "lodash";
-
-||||||| merged common ancestors
-=======
 
 // @flow
 import { showMenu } from "devtools-contextmenu";
@@ -19,7 +8,6 @@ import { copyToTheClipboard } from "../../../utils/clipboard";
 import type { ContextMenuItem, Frame } from "../../../types";
 import { kebabCase } from "lodash";
 
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/SecondaryPanes/Frames/FrameMenu.js
 const blackboxString = "sourceFooter.blackbox";
 const unblackboxString = "sourceFooter.unblackbox";
 
@@ -67,23 +55,12 @@ function blackBoxSource(source, toggleBlackBox) {
   return formatMenuElement(toggleBlackBoxString, () => toggleBlackBox(source));
 }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/components/SecondaryPanes/Frames/FrameMenu.js
-export default function FrameMenu(
-  frame: LocalFrame,
-  frameworkGroupingOn: boolean,
-  callbacks: Object,
-  event: SyntheticMouseEvent<HTMLElement>
-) {
-||||||| merged common ancestors
-function FrameMenu(frame, frameworkGroupingOn, callbacks, event) {
-=======
 export default function FrameMenu(
   frame: Frame,
   frameworkGroupingOn: boolean,
   callbacks: Object,
   event: SyntheticMouseEvent<HTMLElement>
 ) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/components/SecondaryPanes/Frames/FrameMenu.js
   event.stopPropagation();
   event.preventDefault();
 

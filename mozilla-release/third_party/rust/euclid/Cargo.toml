@@ -12,13 +12,7 @@
 
 [package]
 name = "euclid"
-<<<<<<< HEAD
-version = "0.19.3"
-||||||| merged common ancestors
-version = "0.19.0"
-=======
 version = "0.19.5"
->>>>>>> upstream-releases
 authors = ["The Servo Project Developers"]
 description = "Geometry primitives"
 documentation = "https://docs.rs/euclid/"
@@ -26,13 +20,6 @@ keywords = ["matrix", "vector", "linear-algebra", "geometry"]
 categories = ["science"]
 license = "MIT / Apache-2.0"
 repository = "https://github.com/servo/euclid"
-<<<<<<< HEAD
-[dependencies.mint]
-version = "0.5.1"
-optional = true
-
-||||||| merged common ancestors
-=======
 [dependencies.euclid_macros]
 version = "0.1"
 
@@ -40,7 +27,6 @@ version = "0.1"
 version = "0.5.1"
 optional = true
 
->>>>>>> upstream-releases
 [dependencies.num-traits]
 version = "0.2"
 

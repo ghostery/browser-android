@@ -407,12 +407,6 @@ class nsHtml5TreeOperation final {
     mThree.integer = aLineNumber;
   }
 
-<<<<<<< HEAD
-  inline void Init(eHtml5TreeOperation aOpCode, const nsAString& aString) {
-||||||| merged common ancestors
-  inline void Init(eHtml5TreeOperation aOpCode, const nsAString& aString)
-  {
-=======
   inline void InitDeepTree(int32_t aLineNumber) {
     MOZ_ASSERT(mOpCode == eTreeOpUninitialized,
                "Op code must be uninitialized when initializing.");
@@ -421,7 +415,6 @@ class nsHtml5TreeOperation final {
   }
 
   inline void Init(eHtml5TreeOperation aOpCode, const nsAString& aString) {
->>>>>>> upstream-releases
     MOZ_ASSERT(mOpCode == eTreeOpUninitialized,
                "Op code must be uninitialized when initializing.");
 

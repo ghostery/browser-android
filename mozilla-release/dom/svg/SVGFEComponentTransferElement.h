@@ -9,56 +9,12 @@
 
 #include "SVGFilters.h"
 
-<<<<<<< HEAD
-typedef nsSVGFE SVGFEComponentTransferElementBase;
-
 nsresult NS_NewSVGFEComponentTransferElement(
     nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-||||||| merged common ancestors
-typedef nsSVGFE SVGFEComponentTransferElementBase;
-
-nsresult NS_NewSVGFEComponentTransferElement(nsIContent **aResult,
-                                             already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
-=======
-nsresult NS_NewSVGFEComponentTransferElement(
-    nsIContent** aResult, already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo);
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-class SVGFEComponentTransferElement : public SVGFEComponentTransferElementBase {
-  friend nsresult(::NS_NewSVGFEComponentTransferElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
- protected:
-  explicit SVGFEComponentTransferElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-      : SVGFEComponentTransferElementBase(std::move(aNodeInfo)) {}
-  virtual JSObject* WrapNode(JSContext* aCx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-
- public:
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
-                                         nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override {
-    return mStringAttributes[RESULT];
-||||||| merged common ancestors
-class SVGFEComponentTransferElement : public SVGFEComponentTransferElementBase
-{
-  friend nsresult (::NS_NewSVGFEComponentTransferElement(nsIContent **aResult,
-                                                         already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-protected:
-  explicit SVGFEComponentTransferElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGFEComponentTransferElementBase(std::move(aNodeInfo))
-  {
-=======
 typedef SVGFE SVGFEComponentTransferElementBase;
 
 class SVGFEComponentTransferElement : public SVGFEComponentTransferElementBase {
@@ -82,27 +38,8 @@ class SVGFEComponentTransferElement : public SVGFEComponentTransferElementBase {
                                          nsAtom* aAttribute) const override;
   virtual SVGAnimatedString& GetResultImageName() override {
     return mStringAttributes[RESULT];
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  virtual void GetSourceImageNames(
-      nsTArray<nsSVGStringInfo>& aSources) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-public:
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(
-          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
-  virtual void GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources) override;
-=======
   virtual void GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) override;
->>>>>>> upstream-releases
 
   // nsIContent
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;

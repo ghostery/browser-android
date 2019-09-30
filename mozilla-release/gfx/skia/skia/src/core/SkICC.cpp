@@ -172,61 +172,18 @@ static SkFixed float_round_to_fixed(float x) {
     return sk_float_saturate2int((float)floor((double)x * SK_Fixed1 + 0.5));
 }
 
-<<<<<<< HEAD
-static void write_xyz_tag(uint32_t* ptr, const float toXYZD50[9], int col) {
-||||||| merged common ancestors
-static void write_xyz_tag(uint32_t* ptr, const SkMatrix44& toXYZ, int col) {
-=======
 static void write_xyz_tag(uint32_t* ptr, const skcms_Matrix3x3& toXYZD50, int col) {
->>>>>>> upstream-releases
     ptr[0] = SkEndian_SwapBE32(kXYZ_PCSSpace);
     ptr[1] = 0;
-<<<<<<< HEAD
-    ptr[2] = SkEndian_SwapBE32(float_round_to_fixed(toXYZD50[0*3 + col]));
-    ptr[3] = SkEndian_SwapBE32(float_round_to_fixed(toXYZD50[1*3 + col]));
-    ptr[4] = SkEndian_SwapBE32(float_round_to_fixed(toXYZD50[2*3 + col]));
-||||||| merged common ancestors
-    ptr[2] = SkEndian_SwapBE32(float_round_to_fixed(toXYZ.getFloat(0, col)));
-    ptr[3] = SkEndian_SwapBE32(float_round_to_fixed(toXYZ.getFloat(1, col)));
-    ptr[4] = SkEndian_SwapBE32(float_round_to_fixed(toXYZ.getFloat(2, col)));
-=======
     ptr[2] = SkEndian_SwapBE32(float_round_to_fixed(toXYZD50.vals[0][col]));
     ptr[3] = SkEndian_SwapBE32(float_round_to_fixed(toXYZD50.vals[1][col]));
     ptr[4] = SkEndian_SwapBE32(float_round_to_fixed(toXYZD50.vals[2][col]));
->>>>>>> upstream-releases
 }
 
 static void write_trc_tag(uint32_t* ptr, const skcms_TransferFunction& fn) {
     ptr[0] = SkEndian_SwapBE32(kTAG_ParaCurveType);
     ptr[1] = 0;
     ptr[2] = (uint32_t) (SkEndian_SwapBE16(kGABCDEF_ParaCurveType));
-<<<<<<< HEAD
-    ptr[3] = SkEndian_SwapBE32(float_round_to_fixed(fn.fG));
-    ptr[4] = SkEndian_SwapBE32(float_round_to_fixed(fn.fA));
-    ptr[5] = SkEndian_SwapBE32(float_round_to_fixed(fn.fB));
-    ptr[6] = SkEndian_SwapBE32(float_round_to_fixed(fn.fC));
-    ptr[7] = SkEndian_SwapBE32(float_round_to_fixed(fn.fD));
-    ptr[8] = SkEndian_SwapBE32(float_round_to_fixed(fn.fE));
-    ptr[9] = SkEndian_SwapBE32(float_round_to_fixed(fn.fF));
-}
-
-||||||| merged common ancestors
-    ptr[3] = SkEndian_SwapBE32(float_round_to_fixed(fn.fG));
-    ptr[4] = SkEndian_SwapBE32(float_round_to_fixed(fn.fA));
-    ptr[5] = SkEndian_SwapBE32(float_round_to_fixed(fn.fB));
-    ptr[6] = SkEndian_SwapBE32(float_round_to_fixed(fn.fC));
-    ptr[7] = SkEndian_SwapBE32(float_round_to_fixed(fn.fD));
-    ptr[8] = SkEndian_SwapBE32(float_round_to_fixed(fn.fE));
-    ptr[9] = SkEndian_SwapBE32(float_round_to_fixed(fn.fF));
-}
-
-static bool is_3x3(const SkMatrix44& toXYZD50) {
-    return 0.0f == toXYZD50.get(3, 0) && 0.0f == toXYZD50.get(3, 1) && 0.0f == toXYZD50.get(3, 2) &&
-           0.0f == toXYZD50.get(0, 3) && 0.0f == toXYZD50.get(1, 3) && 0.0f == toXYZD50.get(2, 3) &&
-           1.0f == toXYZD50.get(3, 3);
-}
-
-=======
     ptr[3] = SkEndian_SwapBE32(float_round_to_fixed(fn.g));
     ptr[4] = SkEndian_SwapBE32(float_round_to_fixed(fn.a));
     ptr[5] = SkEndian_SwapBE32(float_round_to_fixed(fn.b));
@@ -236,7 +193,6 @@ static bool is_3x3(const SkMatrix44& toXYZD50) {
     ptr[9] = SkEndian_SwapBE32(float_round_to_fixed(fn.f));
 }
 
->>>>>>> upstream-releases
 static bool nearly_equal(float x, float y) {
     // A note on why I chose this tolerance:  transfer_fn_almost_equal() uses a
     // tolerance of 0.001f, which doesn't seem to be enough to distinguish
@@ -260,33 +216,6 @@ static bool nearly_equal(const skcms_TransferFunction& u,
         && nearly_equal(u.f, v.f);
 }
 
-<<<<<<< HEAD
-static bool nearly_equal(const float u[9], const float v[9]) {
-    for (int i = 0; i < 9; i++) {
-        if (!nearly_equal(u[i], v[i])) {
-            return false;
-        }
-    }
-    return true;
-||||||| merged common ancestors
-static bool nearly_equal(const SkMatrix44& toXYZD50, const float standard[9]) {
-    return nearly_equal(toXYZD50.getFloat(0, 0), standard[0])
-        && nearly_equal(toXYZD50.getFloat(0, 1), standard[1])
-        && nearly_equal(toXYZD50.getFloat(0, 2), standard[2])
-        && nearly_equal(toXYZD50.getFloat(1, 0), standard[3])
-        && nearly_equal(toXYZD50.getFloat(1, 1), standard[4])
-        && nearly_equal(toXYZD50.getFloat(1, 2), standard[5])
-        && nearly_equal(toXYZD50.getFloat(2, 0), standard[6])
-        && nearly_equal(toXYZD50.getFloat(2, 1), standard[7])
-        && nearly_equal(toXYZD50.getFloat(2, 2), standard[8])
-        && nearly_equal(toXYZD50.getFloat(0, 3), 0.0f)
-        && nearly_equal(toXYZD50.getFloat(1, 3), 0.0f)
-        && nearly_equal(toXYZD50.getFloat(2, 3), 0.0f)
-        && nearly_equal(toXYZD50.getFloat(3, 0), 0.0f)
-        && nearly_equal(toXYZD50.getFloat(3, 1), 0.0f)
-        && nearly_equal(toXYZD50.getFloat(3, 2), 0.0f)
-        && nearly_equal(toXYZD50.getFloat(3, 3), 1.0f);
-=======
 static bool nearly_equal(const skcms_Matrix3x3& u, const skcms_Matrix3x3& v) {
     for (int r = 0; r < 3; r++) {
         for (int c = 0; c < 3; c++) {
@@ -296,26 +225,13 @@ static bool nearly_equal(const skcms_Matrix3x3& u, const skcms_Matrix3x3& v) {
         }
     }
     return true;
->>>>>>> upstream-releases
 }
 
 // Return nullptr if the color profile doen't have a special name.
-<<<<<<< HEAD
-const char* get_color_profile_description(const SkColorSpaceTransferFn& fn,
-                                          const float toXYZD50[9]) {
-    bool srgb_xfer = nearly_equal(fn, gSRGB_TransferFn);
-    bool srgb_gamut = nearly_equal(toXYZD50, gSRGB_toXYZD50);
-||||||| merged common ancestors
-const char* get_color_profile_description(const SkColorSpaceTransferFn& fn,
-                                          const SkMatrix44& toXYZD50) {
-    bool srgb_xfer = nearly_equal(fn, gSRGB_TransferFn);
-    bool srgb_gamut = nearly_equal(toXYZD50, gSRGB_toXYZD50);
-=======
 const char* get_color_profile_description(const skcms_TransferFunction& fn,
                                           const skcms_Matrix3x3& toXYZD50) {
     bool srgb_xfer = nearly_equal(fn, SkNamedTransferFn::kSRGB);
     bool srgb_gamut = nearly_equal(toXYZD50, SkNamedGamut::kSRGB);
->>>>>>> upstream-releases
     if (srgb_xfer && srgb_gamut) {
         return "sRGB";
     }
@@ -350,16 +266,8 @@ const char* get_color_profile_description(const skcms_TransferFunction& fn,
 }
 
 static void get_color_profile_tag(char dst[kICCDescriptionTagSize],
-<<<<<<< HEAD
-                                 const SkColorSpaceTransferFn& fn,
-                                 const float toXYZD50[9]) {
-||||||| merged common ancestors
-                                 const SkColorSpaceTransferFn& fn,
-                                 const SkMatrix44& toXYZD50) {
-=======
                                  const skcms_TransferFunction& fn,
                                  const skcms_Matrix3x3& toXYZD50) {
->>>>>>> upstream-releases
     SkASSERT(dst);
     if (const char* description = get_color_profile_description(fn, toXYZD50)) {
         SkASSERT(strlen(description) < kICCDescriptionTagSize);
@@ -369,18 +277,7 @@ static void get_color_profile_tag(char dst[kICCDescriptionTagSize],
     } else {
         strncpy(dst, kDescriptionTagBodyPrefix, sizeof(kDescriptionTagBodyPrefix));
         SkMD5 md5;
-<<<<<<< HEAD
-        md5.write(toXYZD50, 9*sizeof(float));
-||||||| merged common ancestors
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                float value = toXYZD50.getFloat(i,j);
-                md5.write(&value, sizeof(value));
-            }
-        }
-=======
         md5.write(&toXYZD50, sizeof(toXYZD50));
->>>>>>> upstream-releases
         static_assert(sizeof(fn) == sizeof(float) * 7, "packed");
         md5.write(&fn, sizeof(fn));
         SkMD5::Digest digest;
@@ -395,38 +292,9 @@ static void get_color_profile_tag(char dst[kICCDescriptionTagSize],
     }
 }
 
-<<<<<<< HEAD
-sk_sp<SkData> SkWriteICCProfile(const SkColorSpaceTransferFn& fn, const float toXYZD50[9]) {
-    if (!is_valid_transfer_fn(fn)) {
-||||||| merged common ancestors
-SkString SkICCGetColorProfileTag(const SkColorSpaceTransferFn& fn,
-                                 const SkMatrix44& toXYZD50) {
-    char tag[kICCDescriptionTagSize];
-    get_color_profile_tag(tag, fn, toXYZD50);
-    size_t len = kICCDescriptionTagSize;
-    while (len > 0 && tag[len - 1] == '\0') {
-        --len;  // tag is padded out with zeros
-    }
-    SkASSERT(len != 0);
-    return SkString(tag, len);
-}
-
-// returns pointer just beyond where we just wrote.
-static uint8_t* string_copy_ascii_to_utf16be(uint8_t* dst, const char* src, size_t count) {
-    while (count-- > 0) {
-        *dst++ = 0;
-        *dst++ = (uint8_t)(*src++);
-    }
-    return dst;
-}
-
-sk_sp<SkData> SkICC::WriteToICC(const SkColorSpaceTransferFn& fn, const SkMatrix44& toXYZD50) {
-    if (!is_3x3(toXYZD50) || !is_valid_transfer_fn(fn)) {
-=======
 sk_sp<SkData> SkWriteICCProfile(const skcms_TransferFunction& fn,
                                 const skcms_Matrix3x3& toXYZD50) {
     if (!is_valid_transfer_fn(fn)) {
->>>>>>> upstream-releases
         return nullptr;
     }
 

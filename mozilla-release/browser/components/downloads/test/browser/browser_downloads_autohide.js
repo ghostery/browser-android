@@ -416,15 +416,9 @@ add_task(async function checkStateWhenHiddenInPalette() {
 
 add_task(async function checkContextMenu() {
   let contextMenu = document.getElementById("toolbar-context-menu");
-<<<<<<< HEAD
-  let checkbox = document.getElementById("toolbar-context-autohide-downloads-button");
-||||||| merged common ancestors
-  let checkbox = contextMenu.querySelector(".customize-context-autoHide");
-=======
   let checkbox = document.getElementById(
     "toolbar-context-autohide-downloads-button"
   );
->>>>>>> upstream-releases
   let button = document.getElementById("downloads-button");
 
   is(

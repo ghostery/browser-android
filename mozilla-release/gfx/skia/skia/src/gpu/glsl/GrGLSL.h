@@ -53,43 +53,6 @@ enum GrGLSLGeneration {
     k320es_GrGLSLGeneration,
 };
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/glsl/GrGLSL.h
-const char* GrGLSLTypeString(const GrShaderCaps*, GrSLType);
-||||||| merged common ancestors
-bool GrGLSLSupportsNamedFragmentShaderOutputs(GrGLSLGeneration);
-
-/**
- * Adds a line of GLSL code to declare the default precision for float types.
- */
-void GrGLSLAppendDefaultFloatPrecisionDeclaration(GrSLPrecision,
-                                                  const GrShaderCaps&,
-                                                  SkString* out);
-
-/**
- * Converts a GrSLPrecision to its corresponding GLSL precision qualifier.
- */
-static inline const char* GrGLSLPrecisionString(GrSLPrecision p) {
-    switch (p) {
-        case kLow_GrSLPrecision:
-            return "lowp";
-        case kMedium_GrSLPrecision:
-            return "mediump";
-        case kHigh_GrSLPrecision:
-            return "highp";
-        case kDefault_GrSLPrecision:
-            return "";
-        default:
-            SK_ABORT("Unexpected precision type.");
-            return "";
-    }
-}
-
-/**
- * Converts a GrSLType to a string containing the name of the equivalent GLSL type.
- */
-const char* GrGLSLTypeString(const GrShaderCaps* shaderCaps, GrSLType t);
-=======
 const char* GrGLSLTypeString(GrSLType);
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/glsl/GrGLSL.h
 
 #endif

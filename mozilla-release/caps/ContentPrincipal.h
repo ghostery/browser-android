@@ -57,11 +57,6 @@ class ContentPrincipal final : public BasePrincipal {
   nsCOMPtr<nsIURI> mDomain;
   nsCOMPtr<nsIURI> mCodebase;
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   virtual nsresult PopulateJSONObject(Json::Value& aObject) override;
   // Serializable keys are the valid enum fields the serialization supports
   enum SerializableKeys { eCodebase = 0, eDomain, eSuffix, eMax = eSuffix };
@@ -77,7 +72,6 @@ protected:
       nsTArray<ContentPrincipal::KeyVal>& aFields);
 
  protected:
->>>>>>> upstream-releases
   virtual ~ContentPrincipal();
 
   bool SubsumesInternal(nsIPrincipal* aOther,

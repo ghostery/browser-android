@@ -251,7 +251,6 @@ LSnapshot* LIRGeneratorShared::buildSnapshot(LInstruction* ins,
 }
 #endif
 
-<<<<<<< HEAD
 void LIRGeneratorShared::assignSnapshot(LInstruction* ins, BailoutKind kind) {
   // assignSnapshot must be called before define/add, since
   // it may add new instructions for emitted-at-use operands.
@@ -262,39 +261,8 @@ void LIRGeneratorShared::assignSnapshot(LInstruction* ins, BailoutKind kind) {
     abort(AbortReason::Alloc, "buildSnapshot failed");
     return;
   }
-||||||| merged common ancestors
-void
-LIRGeneratorShared::assignSnapshot(LInstruction* ins, BailoutKind kind)
-{
-    // assignSnapshot must be called before define/add, since
-    // it may add new instructions for emitted-at-use operands.
-    MOZ_ASSERT(ins->id() == 0);
-
-    LSnapshot* snapshot = buildSnapshot(ins, lastResumePoint_, kind);
-    if (!snapshot) {
-        abort(AbortReason::Alloc, "buildSnapshot failed");
-        return;
-    }
-=======
-void LIRGeneratorShared::assignSnapshot(LInstruction* ins, BailoutKind kind) {
-  // assignSnapshot must be called before define/add, since
-  // it may add new instructions for emitted-at-use operands.
-  MOZ_ASSERT(ins->id() == 0);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  ins->assignSnapshot(snapshot);
-||||||| merged common ancestors
-    ins->assignSnapshot(snapshot);
-=======
-  LSnapshot* snapshot = buildSnapshot(ins, lastResumePoint_, kind);
-  if (!snapshot) {
-    abort(AbortReason::Alloc, "buildSnapshot failed");
-    return;
-  }
 
   ins->assignSnapshot(snapshot);
->>>>>>> upstream-releases
 }
 
 void LIRGeneratorShared::assignSafepoint(LInstruction* ins, MInstruction* mir,
@@ -319,10 +287,6 @@ void LIRGeneratorShared::assignSafepoint(LInstruction* ins, MInstruction* mir,
     return;
   }
 }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 
 void LIRGeneratorShared::assignWasmSafepoint(LInstruction* ins,
                                              MInstruction* mir) {
@@ -336,4 +300,3 @@ void LIRGeneratorShared::assignWasmSafepoint(LInstruction* ins,
     return;
   }
 }
->>>>>>> upstream-releases

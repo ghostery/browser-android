@@ -50,44 +50,18 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
 
   static uint64_t GetNextId();
 
-<<<<<<< HEAD
-  CacheEntry(const nsACString &aStorageID, const nsACString &aURI,
-             const nsACString &aEnhanceID, bool aUseDisk, bool aSkipSizeCheck,
-             bool aPin);
-||||||| merged common ancestors
-  CacheEntry(const nsACString& aStorageID, const nsACString& aURI, const nsACString& aEnhanceID,
-             bool aUseDisk, bool aSkipSizeCheck, bool aPin);
-=======
   CacheEntry(const nsACString& aStorageID, const nsACString& aURI,
              const nsACString& aEnhanceID, bool aUseDisk, bool aSkipSizeCheck,
              bool aPin);
->>>>>>> upstream-releases
 
-  void AsyncOpen(nsICacheEntryOpenCallback *aCallback, uint32_t aFlags);
+  void AsyncOpen(nsICacheEntryOpenCallback* aCallback, uint32_t aFlags);
 
-  CacheEntryHandle *NewHandle();
+  CacheEntryHandle* NewHandle();
   // For a new and recreated entry w/o a callback, we need to wrap it
   // with a handle to detect writing consumer is gone.
-  CacheEntryHandle *NewWriteHandle();
+  CacheEntryHandle* NewWriteHandle();
 
   // Forwarded to from CacheEntryHandle : nsICacheEntry
-<<<<<<< HEAD
-  nsresult GetKey(nsACString &aKey);
-  nsresult GetCacheEntryId(uint64_t *aCacheEntryId);
-  nsresult GetPersistent(bool *aPersistent);
-  nsresult GetFetchCount(int32_t *aFetchCount);
-  nsresult GetLastFetched(uint32_t *aLastFetched);
-  nsresult GetLastModified(uint32_t *aLastModified);
-  nsresult GetExpirationTime(uint32_t *aExpirationTime);
-||||||| merged common ancestors
-  nsresult GetKey(nsACString & aKey);
-  nsresult GetCacheEntryId(uint64_t *aCacheEntryId);
-  nsresult GetPersistent(bool *aPersistent);
-  nsresult GetFetchCount(int32_t *aFetchCount);
-  nsresult GetLastFetched(uint32_t *aLastFetched);
-  nsresult GetLastModified(uint32_t *aLastModified);
-  nsresult GetExpirationTime(uint32_t *aExpirationTime);
-=======
   nsresult GetKey(nsACString& aKey);
   nsresult GetCacheEntryId(uint64_t* aCacheEntryId);
   nsresult GetPersistent(bool* aPersistent);
@@ -95,7 +69,6 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   nsresult GetLastFetched(uint32_t* aLastFetched);
   nsresult GetLastModified(uint32_t* aLastModified);
   nsresult GetExpirationTime(uint32_t* aExpirationTime);
->>>>>>> upstream-releases
   nsresult SetExpirationTime(uint32_t expirationTime);
   nsresult GetOnStartTime(uint64_t* aOnStartTime);
   nsresult GetOnStopTime(uint64_t* aOnStopTime);
@@ -103,30 +76,6 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   nsresult SetContentType(uint8_t aContentType);
   nsresult AddBaseDomainAccess(uint32_t aSiteID);
   nsresult ForceValidFor(uint32_t aSecondsToTheFuture);
-<<<<<<< HEAD
-  nsresult GetIsForcedValid(bool *aIsForcedValid);
-  nsresult OpenInputStream(int64_t offset, nsIInputStream **_retval);
-  nsresult OpenOutputStream(int64_t offset, int64_t predictedSize,
-                            nsIOutputStream **_retval);
-  nsresult GetSecurityInfo(nsISupports **aSecurityInfo);
-  nsresult SetSecurityInfo(nsISupports *aSecurityInfo);
-  nsresult GetStorageDataSize(uint32_t *aStorageDataSize);
-  nsresult AsyncDoom(nsICacheEntryDoomCallback *listener);
-  nsresult GetMetaDataElement(const char *key, char **_retval);
-  nsresult SetMetaDataElement(const char *key, const char *value);
-  nsresult VisitMetaData(nsICacheEntryMetaDataVisitor *visitor);
-||||||| merged common ancestors
-  nsresult GetIsForcedValid(bool *aIsForcedValid);
-  nsresult OpenInputStream(int64_t offset, nsIInputStream * *_retval);
-  nsresult OpenOutputStream(int64_t offset, int64_t predictedSize, nsIOutputStream * *_retval);
-  nsresult GetSecurityInfo(nsISupports * *aSecurityInfo);
-  nsresult SetSecurityInfo(nsISupports *aSecurityInfo);
-  nsresult GetStorageDataSize(uint32_t *aStorageDataSize);
-  nsresult AsyncDoom(nsICacheEntryDoomCallback *listener);
-  nsresult GetMetaDataElement(const char * key, char * *_retval);
-  nsresult SetMetaDataElement(const char * key, const char * value);
-  nsresult VisitMetaData(nsICacheEntryMetaDataVisitor *visitor);
-=======
   nsresult GetIsForcedValid(bool* aIsForcedValid);
   nsresult OpenInputStream(int64_t offset, nsIInputStream** _retval);
   nsresult OpenOutputStream(int64_t offset, int64_t predictedSize,
@@ -138,31 +87,8 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   nsresult GetMetaDataElement(const char* key, char** _retval);
   nsresult SetMetaDataElement(const char* key, const char* value);
   nsresult VisitMetaData(nsICacheEntryMetaDataVisitor* visitor);
->>>>>>> upstream-releases
   nsresult MetaDataReady(void);
   nsresult SetValid(void);
-<<<<<<< HEAD
-  nsresult GetDiskStorageSizeInKB(uint32_t *aDiskStorageSizeInKB);
-  nsresult Recreate(bool aMemoryOnly, nsICacheEntry **_retval);
-  nsresult GetDataSize(int64_t *aDataSize);
-  nsresult GetAltDataSize(int64_t *aAltDataSize);
-  nsresult GetAltDataType(nsACString &aAltDataType);
-  nsresult OpenAlternativeOutputStream(const nsACString &type,
-                                       int64_t predictedSize,
-                                       nsIOutputStream **_retval);
-  nsresult OpenAlternativeInputStream(const nsACString &type,
-                                      nsIInputStream **_retval);
-  nsresult GetLoadContextInfo(nsILoadContextInfo **aLoadContextInfo);
-||||||| merged common ancestors
-  nsresult GetDiskStorageSizeInKB(uint32_t *aDiskStorageSizeInKB);
-  nsresult Recreate(bool aMemoryOnly, nsICacheEntry * *_retval);
-  nsresult GetDataSize(int64_t *aDataSize);
-  nsresult GetAltDataSize(int64_t *aAltDataSize);
-  nsresult GetAltDataType(nsACString &aAltDataType);
-  nsresult OpenAlternativeOutputStream(const nsACString & type, int64_t predictedSize, nsIOutputStream * *_retval);
-  nsresult OpenAlternativeInputStream(const nsACString & type, nsIInputStream * *_retval);
-  nsresult GetLoadContextInfo(nsILoadContextInfo * *aLoadContextInfo);
-=======
   nsresult GetDiskStorageSizeInKB(uint32_t* aDiskStorageSizeInKB);
   nsresult Recreate(bool aMemoryOnly, nsICacheEntry** _retval);
   nsresult GetDataSize(int64_t* aDataSize);
@@ -174,7 +100,6 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   nsresult OpenAlternativeInputStream(const nsACString& type,
                                       nsIInputStream** _retval);
   nsresult GetLoadContextInfo(nsILoadContextInfo** aLoadContextInfo);
->>>>>>> upstream-releases
   nsresult Close(void);
   nsresult MarkValid(void);
   nsresult MaybeMarkValid(void);
@@ -204,7 +129,7 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   bool CanRegister() const;
   void SetRegistered(bool aRegistered);
 
-  TimeStamp const &LoadStart() const { return mLoadStart; }
+  TimeStamp const& LoadStart() const { return mLoadStart; }
 
   enum EPurge {
     PURGE_DATA_ONLY_DISK_BACKED,
@@ -220,35 +145,13 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   nsresult HashingKeyWithStorage(nsACString& aResult) const;
   nsresult HashingKey(nsACString& aResult) const;
 
-<<<<<<< HEAD
-  static nsresult HashingKey(const nsACString &aStorageID,
-                             const nsACString &aEnhanceID, nsIURI *aURI,
-                             nsACString &aResult);
-||||||| merged common ancestors
-  static nsresult HashingKey(const nsACString& aStorageID,
-                             const nsACString& aEnhanceID,
-                             nsIURI* aURI,
-                             nsACString &aResult);
-=======
   static nsresult HashingKey(const nsACString& aStorageID,
                              const nsACString& aEnhanceID, nsIURI* aURI,
                              nsACString& aResult);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  static nsresult HashingKey(const nsACString &aStorageID,
-                             const nsACString &aEnhanceID,
-                             const nsACString &aURISpec, nsACString &aResult);
-||||||| merged common ancestors
-  static nsresult HashingKey(const nsACString& aStorageID,
-                             const nsACString& aEnhanceID,
-                             const nsACString& aURISpec,
-                             nsACString &aResult);
-=======
   static nsresult HashingKey(const nsACString& aStorageID,
                              const nsACString& aEnhanceID,
                              const nsACString& aURISpec, nsACString& aResult);
->>>>>>> upstream-releases
 
   // Accessed only on the service management thread
   double mFrecency;
@@ -271,39 +174,19 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   // We must monitor when a cache entry whose consumer is responsible
   // for writing it the first time gets released.  We must then invoke
   // waiting callbacks to not break the chain.
-<<<<<<< HEAD
-  class Callback {
-   public:
-    Callback(CacheEntry *aEntry, nsICacheEntryOpenCallback *aCallback,
-||||||| merged common ancestors
-  class Callback
-  {
-  public:
-    Callback(CacheEntry* aEntry,
-             nsICacheEntryOpenCallback *aCallback,
-=======
   class Callback {
    public:
     Callback(CacheEntry* aEntry, nsICacheEntryOpenCallback* aCallback,
->>>>>>> upstream-releases
              bool aReadOnly, bool aCheckOnAnyThread, bool aSecret);
     // Special constructor for Callback objects added to the chain
     // just to ensure proper defer dooming (recreation) of this entry.
-<<<<<<< HEAD
-    Callback(CacheEntry *aEntry, bool aDoomWhenFoundInPinStatus);
-    Callback(Callback const &aThat);
-||||||| merged common ancestors
-    Callback(CacheEntry* aEntry, bool aDoomWhenFoundInPinStatus);
-    Callback(Callback const &aThat);
-=======
     Callback(CacheEntry* aEntry, bool aDoomWhenFoundInPinStatus);
     Callback(Callback const& aThat);
->>>>>>> upstream-releases
     ~Callback();
 
     // Called when this callback record changes it's owning entry,
     // mainly during recreation.
-    void ExchangeEntry(CacheEntry *aEntry);
+    void ExchangeEntry(CacheEntry* aEntry);
 
     // Returns true when an entry is about to be "defer" doomed and this is
     // a "defer" callback.
@@ -335,31 +218,6 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
 
   // Since OnCacheEntryAvailable must be invoked on the main thread
   // we need a runnable for it...
-<<<<<<< HEAD
-  class AvailableCallbackRunnable : public Runnable {
-   public:
-    AvailableCallbackRunnable(CacheEntry *aEntry, Callback const &aCallback)
-        : Runnable("CacheEntry::AvailableCallbackRunnable"),
-          mEntry(aEntry),
-          mCallback(aCallback) {}
-
-   private:
-    NS_IMETHOD Run() override {
-||||||| merged common ancestors
-  class AvailableCallbackRunnable : public Runnable
-  {
-  public:
-    AvailableCallbackRunnable(CacheEntry* aEntry,
-                              Callback const &aCallback)
-      : Runnable("CacheEntry::AvailableCallbackRunnable")
-      , mEntry(aEntry)
-      , mCallback(aCallback)
-    {}
-
-  private:
-    NS_IMETHOD Run() override
-    {
-=======
   class AvailableCallbackRunnable : public Runnable {
    public:
     AvailableCallbackRunnable(CacheEntry* aEntry, Callback const& aCallback)
@@ -369,7 +227,6 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
 
    private:
     NS_IMETHOD Run() override {
->>>>>>> upstream-releases
       mEntry->InvokeAvailableCallback(mCallback);
       return NS_OK;
     }
@@ -380,31 +237,6 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
 
   // Since OnCacheEntryDoomed must be invoked on the main thread
   // we need a runnable for it...
-<<<<<<< HEAD
-  class DoomCallbackRunnable : public Runnable {
-   public:
-    DoomCallbackRunnable(CacheEntry *aEntry, nsresult aRv)
-        : Runnable("net::CacheEntry::DoomCallbackRunnable"),
-          mEntry(aEntry),
-          mRv(aRv) {}
-
-   private:
-    NS_IMETHOD Run() override {
-||||||| merged common ancestors
-  class DoomCallbackRunnable : public Runnable
-  {
-  public:
-    DoomCallbackRunnable(CacheEntry* aEntry, nsresult aRv)
-      : Runnable("net::CacheEntry::DoomCallbackRunnable")
-      , mEntry(aEntry)
-      , mRv(aRv)
-    {
-    }
-
-  private:
-    NS_IMETHOD Run() override
-    {
-=======
   class DoomCallbackRunnable : public Runnable {
    public:
     DoomCallbackRunnable(CacheEntry* aEntry, nsresult aRv)
@@ -414,7 +246,6 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
 
    private:
     NS_IMETHOD Run() override {
->>>>>>> upstream-releases
       nsCOMPtr<nsICacheEntryDoomCallback> callback;
       {
         mozilla::MutexAutoLock lock(mEntry->mLock);
@@ -431,56 +262,24 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
 
   // Starts the load or just invokes the callback, bypasses (when required)
   // if busy.  Returns true on job done, false on bypass.
-<<<<<<< HEAD
-  bool Open(Callback &aCallback, bool aTruncate, bool aPriority,
-            bool aBypassIfBusy);
-||||||| merged common ancestors
-  bool Open(Callback & aCallback, bool aTruncate, bool aPriority, bool aBypassIfBusy);
-=======
   bool Open(Callback& aCallback, bool aTruncate, bool aPriority,
             bool aBypassIfBusy);
->>>>>>> upstream-releases
   // Loads from disk asynchronously
   bool Load(bool aTruncate, bool aPriority);
 
-<<<<<<< HEAD
-  void RememberCallback(Callback &aCallback);
-||||||| merged common ancestors
-  void RememberCallback(Callback & aCallback);
-=======
   void RememberCallback(Callback& aCallback);
->>>>>>> upstream-releases
   void InvokeCallbacksLock();
   void InvokeCallbacks();
   bool InvokeCallbacks(bool aReadOnly);
-<<<<<<< HEAD
-  bool InvokeCallback(Callback &aCallback);
-  void InvokeAvailableCallback(Callback const &aCallback);
-  void OnFetched(Callback const &aCallback);
-||||||| merged common ancestors
-  bool InvokeCallback(Callback & aCallback);
-  void InvokeAvailableCallback(Callback const & aCallback);
-  void OnFetched(Callback const & aCallback);
-=======
   bool InvokeCallback(Callback& aCallback);
   void InvokeAvailableCallback(Callback const& aCallback);
   void OnFetched(Callback const& aCallback);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult OpenOutputStreamInternal(int64_t offset, nsIOutputStream **_retval);
-  nsresult OpenInputStreamInternal(int64_t offset, const char *aAltDataType,
-                                   nsIInputStream **_retval);
-||||||| merged common ancestors
-  nsresult OpenOutputStreamInternal(int64_t offset, nsIOutputStream * *_retval);
-  nsresult OpenInputStreamInternal(int64_t offset, const char *aAltDataType, nsIInputStream * *_retval);
-=======
   nsresult OpenOutputStreamInternal(int64_t offset, nsIOutputStream** _retval);
   nsresult OpenInputStreamInternal(int64_t offset, const char* aAltDataType,
                                    nsIInputStream** _retval);
->>>>>>> upstream-releases
 
-  void OnHandleClosed(CacheEntryHandle const *aHandle);
+  void OnHandleClosed(CacheEntryHandle const* aHandle);
 
  private:
   friend class CacheEntryHandle;
@@ -507,19 +306,9 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   // any force-valid timing info for this entry.
   void RemoveForcedValidity();
 
-<<<<<<< HEAD
-  already_AddRefed<CacheEntryHandle> ReopenTruncated(
-      bool aMemoryOnly, nsICacheEntryOpenCallback *aCallback);
-  void TransferCallbacks(CacheEntry &aFromEntry);
-||||||| merged common ancestors
-  already_AddRefed<CacheEntryHandle> ReopenTruncated(bool aMemoryOnly,
-                                                     nsICacheEntryOpenCallback* aCallback);
-  void TransferCallbacks(CacheEntry & aFromEntry);
-=======
   already_AddRefed<CacheEntryHandle> ReopenTruncated(
       bool aMemoryOnly, nsICacheEntryOpenCallback* aCallback);
   void TransferCallbacks(CacheEntry& aFromEntry);
->>>>>>> upstream-releases
 
   mozilla::Mutex mLock;
 
@@ -570,13 +359,7 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   // of the cache file)
   bool mPinningKnown : 1;
 
-<<<<<<< HEAD
-  static char const *StateString(uint32_t aState);
-||||||| merged common ancestors
-  static char const * StateString(uint32_t aState);
-=======
   static char const* StateString(uint32_t aState);
->>>>>>> upstream-releases
 
   enum EState {       // transiting to:
     NOTLOADED = 0,    // -> LOADING | EMPTY
@@ -609,7 +392,7 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   // Weak reference to the current writter.  There can be more then one
   // writer at a time and OnHandleClosed() must be processed only for the
   // current one.
-  CacheEntryHandle *mWriter;
+  CacheEntryHandle* mWriter;
 
   // Background thread scheduled operation.  Set (under the lock) one
   // of this flags to tell the background thread what to do.
@@ -643,120 +426,14 @@ class CacheEntry final : public nsIRunnable, public CacheFileListener {
   const uint64_t mCacheEntryId;
 };
 
-<<<<<<< HEAD
-class CacheEntryHandle final : public nsICacheEntry {
- public:
-  explicit CacheEntryHandle(CacheEntry *aEntry);
-  CacheEntry *Entry() const { return mEntry; }
-||||||| merged common ancestors
-
-class CacheEntryHandle final : public nsICacheEntry
-{
-public:
-  explicit CacheEntryHandle(CacheEntry* aEntry);
-  CacheEntry* Entry() const { return mEntry; }
-=======
 class CacheEntryHandle final : public nsICacheEntry {
  public:
   explicit CacheEntryHandle(CacheEntry* aEntry);
   CacheEntry* Entry() const { return mEntry; }
->>>>>>> upstream-releases
 
   NS_DECL_THREADSAFE_ISUPPORTS
 
   // Default implementation is simply safely forwarded.
-<<<<<<< HEAD
-  NS_IMETHOD GetKey(nsACString &aKey) override { return mEntry->GetKey(aKey); }
-  NS_IMETHOD GetCacheEntryId(uint64_t *aCacheEntryId) override {
-    return mEntry->GetCacheEntryId(aCacheEntryId);
-  }
-  NS_IMETHOD GetPersistent(bool *aPersistent) override {
-    return mEntry->GetPersistent(aPersistent);
-  }
-  NS_IMETHOD GetFetchCount(int32_t *aFetchCount) override {
-    return mEntry->GetFetchCount(aFetchCount);
-  }
-  NS_IMETHOD GetLastFetched(uint32_t *aLastFetched) override {
-    return mEntry->GetLastFetched(aLastFetched);
-  }
-  NS_IMETHOD GetLastModified(uint32_t *aLastModified) override {
-    return mEntry->GetLastModified(aLastModified);
-  }
-  NS_IMETHOD GetExpirationTime(uint32_t *aExpirationTime) override {
-    return mEntry->GetExpirationTime(aExpirationTime);
-  }
-  NS_IMETHOD SetExpirationTime(uint32_t expirationTime) override {
-    return mEntry->SetExpirationTime(expirationTime);
-  }
-  NS_IMETHOD GetOnStartTime(uint64_t *aOnStartTime) override {
-    return mEntry->GetOnStartTime(aOnStartTime);
-  }
-  NS_IMETHOD GetOnStopTime(uint64_t *aOnStopTime) override {
-    return mEntry->GetOnStopTime(aOnStopTime);
-  }
-  NS_IMETHOD SetNetworkTimes(uint64_t onStartTime,
-                             uint64_t onStopTime) override {
-    return mEntry->SetNetworkTimes(onStartTime, onStopTime);
-  }
-  NS_IMETHOD ForceValidFor(uint32_t aSecondsToTheFuture) override {
-    return mEntry->ForceValidFor(aSecondsToTheFuture);
-  }
-  NS_IMETHOD GetIsForcedValid(bool *aIsForcedValid) override {
-    return mEntry->GetIsForcedValid(aIsForcedValid);
-  }
-  NS_IMETHOD OpenInputStream(int64_t offset,
-                             nsIInputStream **_retval) override {
-    return mEntry->OpenInputStream(offset, _retval);
-  }
-  NS_IMETHOD OpenOutputStream(int64_t offset, int64_t predictedSize,
-                              nsIOutputStream **_retval) override {
-    return mEntry->OpenOutputStream(offset, predictedSize, _retval);
-  }
-  NS_IMETHOD GetSecurityInfo(nsISupports **aSecurityInfo) override {
-    return mEntry->GetSecurityInfo(aSecurityInfo);
-  }
-  NS_IMETHOD SetSecurityInfo(nsISupports *aSecurityInfo) override {
-    return mEntry->SetSecurityInfo(aSecurityInfo);
-  }
-  NS_IMETHOD GetStorageDataSize(uint32_t *aStorageDataSize) override {
-    return mEntry->GetStorageDataSize(aStorageDataSize);
-  }
-  NS_IMETHOD AsyncDoom(nsICacheEntryDoomCallback *listener) override {
-    return mEntry->AsyncDoom(listener);
-  }
-  NS_IMETHOD GetMetaDataElement(const char *key, char **_retval) override {
-    return mEntry->GetMetaDataElement(key, _retval);
-  }
-  NS_IMETHOD SetMetaDataElement(const char *key, const char *value) override {
-    return mEntry->SetMetaDataElement(key, value);
-  }
-  NS_IMETHOD VisitMetaData(nsICacheEntryMetaDataVisitor *visitor) override {
-    return mEntry->VisitMetaData(visitor);
-  }
-||||||| merged common ancestors
-  NS_IMETHOD GetKey(nsACString & aKey) override { return mEntry->GetKey(aKey); }
-  NS_IMETHOD GetCacheEntryId(uint64_t *aCacheEntryId) override { return mEntry->GetCacheEntryId(aCacheEntryId); }
-  NS_IMETHOD GetPersistent(bool *aPersistent) override { return mEntry->GetPersistent(aPersistent); }
-  NS_IMETHOD GetFetchCount(int32_t *aFetchCount) override { return mEntry->GetFetchCount(aFetchCount); }
-  NS_IMETHOD GetLastFetched(uint32_t *aLastFetched) override { return mEntry->GetLastFetched(aLastFetched); }
-  NS_IMETHOD GetLastModified(uint32_t *aLastModified) override { return mEntry->GetLastModified(aLastModified); }
-  NS_IMETHOD GetExpirationTime(uint32_t *aExpirationTime) override { return mEntry->GetExpirationTime(aExpirationTime); }
-  NS_IMETHOD SetExpirationTime(uint32_t expirationTime) override { return mEntry->SetExpirationTime(expirationTime); }
-  NS_IMETHOD GetOnStartTime(uint64_t *aOnStartTime) override { return mEntry->GetOnStartTime(aOnStartTime); }
-  NS_IMETHOD GetOnStopTime(uint64_t *aOnStopTime) override { return mEntry->GetOnStopTime(aOnStopTime); }
-  NS_IMETHOD SetNetworkTimes(uint64_t onStartTime, uint64_t onStopTime) override { return mEntry->SetNetworkTimes(onStartTime, onStopTime); }
-  NS_IMETHOD ForceValidFor(uint32_t aSecondsToTheFuture) override { return mEntry->ForceValidFor(aSecondsToTheFuture); }
-  NS_IMETHOD GetIsForcedValid(bool *aIsForcedValid) override { return mEntry->GetIsForcedValid(aIsForcedValid); }
-  NS_IMETHOD OpenInputStream(int64_t offset, nsIInputStream * *_retval) override { return mEntry->OpenInputStream(offset, _retval); }
-  NS_IMETHOD OpenOutputStream(int64_t offset, int64_t predictedSize, nsIOutputStream * *_retval) override { return mEntry->OpenOutputStream(offset, predictedSize, _retval); }
-  NS_IMETHOD GetSecurityInfo(nsISupports * *aSecurityInfo) override { return mEntry->GetSecurityInfo(aSecurityInfo); }
-  NS_IMETHOD SetSecurityInfo(nsISupports *aSecurityInfo) override { return mEntry->SetSecurityInfo(aSecurityInfo); }
-  NS_IMETHOD GetStorageDataSize(uint32_t *aStorageDataSize) override { return mEntry->GetStorageDataSize(aStorageDataSize); }
-  NS_IMETHOD AsyncDoom(nsICacheEntryDoomCallback *listener) override { return mEntry->AsyncDoom(listener); }
-  NS_IMETHOD GetMetaDataElement(const char * key, char * *_retval) override { return mEntry->GetMetaDataElement(key, _retval); }
-  NS_IMETHOD SetMetaDataElement(const char * key, const char * value) override { return mEntry->SetMetaDataElement(key, value); }
-  NS_IMETHOD VisitMetaData(nsICacheEntryMetaDataVisitor *visitor) override { return mEntry->VisitMetaData(visitor); }
-=======
   NS_IMETHOD GetKey(nsACString& aKey) override { return mEntry->GetKey(aKey); }
   NS_IMETHOD GetCacheEntryId(uint64_t* aCacheEntryId) override {
     return mEntry->GetCacheEntryId(aCacheEntryId);
@@ -830,48 +507,8 @@ class CacheEntryHandle final : public nsICacheEntry {
   NS_IMETHOD VisitMetaData(nsICacheEntryMetaDataVisitor* visitor) override {
     return mEntry->VisitMetaData(visitor);
   }
->>>>>>> upstream-releases
   NS_IMETHOD MetaDataReady(void) override { return mEntry->MetaDataReady(); }
   NS_IMETHOD SetValid(void) override { return mEntry->SetValid(); }
-<<<<<<< HEAD
-  NS_IMETHOD GetDiskStorageSizeInKB(uint32_t *aDiskStorageSizeInKB) override {
-    return mEntry->GetDiskStorageSizeInKB(aDiskStorageSizeInKB);
-  }
-  NS_IMETHOD Recreate(bool aMemoryOnly, nsICacheEntry **_retval) override {
-    return mEntry->Recreate(aMemoryOnly, _retval);
-  }
-  NS_IMETHOD GetDataSize(int64_t *aDataSize) override {
-    return mEntry->GetDataSize(aDataSize);
-  }
-  NS_IMETHOD GetAltDataSize(int64_t *aAltDataSize) override {
-    return mEntry->GetAltDataSize(aAltDataSize);
-  }
-  NS_IMETHOD GetAltDataType(nsACString &aType) override {
-    return mEntry->GetAltDataType(aType);
-  }
-  NS_IMETHOD OpenAlternativeOutputStream(const nsACString &type,
-                                         int64_t predictedSize,
-                                         nsIOutputStream **_retval) override {
-    return mEntry->OpenAlternativeOutputStream(type, predictedSize, _retval);
-  }
-  NS_IMETHOD OpenAlternativeInputStream(const nsACString &type,
-                                        nsIInputStream **_retval) override {
-    return mEntry->OpenAlternativeInputStream(type, _retval);
-  }
-  NS_IMETHOD GetLoadContextInfo(
-      nsILoadContextInfo **aLoadContextInfo) override {
-    return mEntry->GetLoadContextInfo(aLoadContextInfo);
-  }
-||||||| merged common ancestors
-  NS_IMETHOD GetDiskStorageSizeInKB(uint32_t *aDiskStorageSizeInKB) override { return mEntry->GetDiskStorageSizeInKB(aDiskStorageSizeInKB); }
-  NS_IMETHOD Recreate(bool aMemoryOnly, nsICacheEntry * *_retval) override { return mEntry->Recreate(aMemoryOnly, _retval); }
-  NS_IMETHOD GetDataSize(int64_t *aDataSize) override { return mEntry->GetDataSize(aDataSize); }
-  NS_IMETHOD GetAltDataSize(int64_t *aAltDataSize) override { return mEntry->GetAltDataSize(aAltDataSize); }
-  NS_IMETHOD GetAltDataType(nsACString &aType) override { return mEntry->GetAltDataType(aType); }
-  NS_IMETHOD OpenAlternativeOutputStream(const nsACString & type, int64_t predictedSize, nsIOutputStream * *_retval) override { return mEntry->OpenAlternativeOutputStream(type, predictedSize, _retval); }
-  NS_IMETHOD OpenAlternativeInputStream(const nsACString & type, nsIInputStream * *_retval) override { return mEntry->OpenAlternativeInputStream(type, _retval); }
-  NS_IMETHOD GetLoadContextInfo(nsILoadContextInfo * *aLoadContextInfo) override { return mEntry->GetLoadContextInfo(aLoadContextInfo); }
-=======
   NS_IMETHOD GetDiskStorageSizeInKB(uint32_t* aDiskStorageSizeInKB) override {
     return mEntry->GetDiskStorageSizeInKB(aDiskStorageSizeInKB);
   }
@@ -900,21 +537,12 @@ class CacheEntryHandle final : public nsICacheEntry {
       nsILoadContextInfo** aLoadContextInfo) override {
     return mEntry->GetLoadContextInfo(aLoadContextInfo);
   }
->>>>>>> upstream-releases
   NS_IMETHOD Close(void) override { return mEntry->Close(); }
   NS_IMETHOD MarkValid(void) override { return mEntry->MarkValid(); }
   NS_IMETHOD MaybeMarkValid(void) override { return mEntry->MaybeMarkValid(); }
-<<<<<<< HEAD
-  NS_IMETHOD HasWriteAccess(bool aWriteAllowed, bool *_retval) override {
-    return mEntry->HasWriteAccess(aWriteAllowed, _retval);
-  }
-||||||| merged common ancestors
-  NS_IMETHOD HasWriteAccess(bool aWriteAllowed, bool *_retval) override { return mEntry->HasWriteAccess(aWriteAllowed, _retval); }
-=======
   NS_IMETHOD HasWriteAccess(bool aWriteAllowed, bool* _retval) override {
     return mEntry->HasWriteAccess(aWriteAllowed, _retval);
   }
->>>>>>> upstream-releases
 
   // Specific implementation:
   NS_IMETHOD Dismiss() override;
@@ -938,7 +566,7 @@ class CacheOutputCloseListener final : public Runnable {
   virtual ~CacheOutputCloseListener() = default;
 
   NS_DECL_NSIRUNNABLE
-  explicit CacheOutputCloseListener(CacheEntry *aEntry);
+  explicit CacheOutputCloseListener(CacheEntry* aEntry);
 
  private:
   RefPtr<CacheEntry> mEntry;

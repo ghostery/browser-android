@@ -59,14 +59,6 @@ Test multiple selectors
           "test/foo-debug",
           "test/foo-opt"
       ],
-<<<<<<< HEAD
-      "templates": {
-          "env": {
-              "TRY_SELECTOR": "fuzzy"
-          }
-      },
-||||||| merged common ancestors
-=======
       "templates": {
           "env": {
               "TRY_SELECTOR": "fuzzy"
@@ -159,7 +151,6 @@ Test exact match
               "TRY_SELECTOR": "fuzzy"
           }
       },
->>>>>>> upstream-releases
       "version": 1
   }
   

@@ -92,18 +92,8 @@ const TEST_CONDITIONS = {
 const TESTS = {
   // Tests that a new set of system add-ons gets installed
   newset: {
-<<<<<<< HEAD
-    // updateList is populated in setup() below
-    updateList: [ ],
-||||||| merged common ancestors
-    updateList: [
-      { id: "system4@tests.mozilla.org", version: "1.0", path: "system4_1.xpi" },
-      { id: "system5@tests.mozilla.org", version: "1.0", path: "system5_1.xpi" },
-    ],
-=======
     // updateList is populated in setup() below
     updateList: [],
->>>>>>> upstream-releases
     finalState: {
       blank: [
         { isUpgrade: false, version: null },
@@ -169,13 +159,7 @@ add_task(async function() {
       let setup = TEST_CONDITIONS[setupName];
       let test = TESTS[testName];
 
-<<<<<<< HEAD
-        await execSystemAddonTest(setupName, setup, test, distroDir);
-||||||| merged common ancestors
-        await execSystemAddonTest(setupName, setup, test, distroDir, root, testserver);
-=======
       await execSystemAddonTest(setupName, setup, test, distroDir);
->>>>>>> upstream-releases
     }
   }
 });

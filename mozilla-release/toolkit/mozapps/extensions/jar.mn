@@ -14,16 +14,6 @@ toolkit.jar:
 * content/mozapps/extensions/extensions.xml                     (content/extensions.xml)
   content/mozapps/extensions/blocklist.xul                      (content/blocklist.xul)
   content/mozapps/extensions/blocklist.js                       (content/blocklist.js)
-<<<<<<< HEAD
-  content/mozapps/extensions/blocklist.css                      (content/blocklist.css)
-  content/mozapps/extensions/blocklist.xml                      (content/blocklist.xml)
-||||||| merged common ancestors
-  content/mozapps/extensions/blocklist.css                      (content/blocklist.css)
-  content/mozapps/extensions/blocklist.xml                      (content/blocklist.xml)
-  content/mozapps/extensions/eula.xul                           (content/eula.xul)
-  content/mozapps/extensions/eula.js                            (content/eula.js)
-=======
->>>>>>> upstream-releases
   content/mozapps/extensions/pluginPrefs.xul                    (content/pluginPrefs.xul)
   content/mozapps/extensions/pluginPrefs.js                     (content/pluginPrefs.js)
   content/mozapps/extensions/OpenH264-license.txt               (content/OpenH264-license.txt)

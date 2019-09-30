@@ -53,18 +53,8 @@ PluginWidgetParent::~PluginWidgetParent() {
   KillWidget();
 }
 
-<<<<<<< HEAD
-mozilla::dom::TabParent* PluginWidgetParent::GetTabParent() {
-  return static_cast<mozilla::dom::TabParent*>(Manager());
-||||||| merged common ancestors
-mozilla::dom::TabParent*
-PluginWidgetParent::GetTabParent()
-{
-  return static_cast<mozilla::dom::TabParent*>(Manager());
-=======
 mozilla::dom::BrowserParent* PluginWidgetParent::GetBrowserParent() {
   return static_cast<mozilla::dom::BrowserParent*>(Manager());
->>>>>>> upstream-releases
 }
 
 void PluginWidgetParent::SetParent(nsIWidget* aParent) {

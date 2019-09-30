@@ -40,17 +40,8 @@ already_AddRefed<gfx::SourceSurface> TextureWrapperImage::GetAsSourceSurface() {
   return dt->Snapshot();
 }
 
-<<<<<<< HEAD
-TextureClient* TextureWrapperImage::GetTextureClient(
-    KnowsCompositor* aForwarder) {
-||||||| merged common ancestors
-TextureClient*
-TextureWrapperImage::GetTextureClient(KnowsCompositor* aForwarder)
-{
-=======
 TextureClient* TextureWrapperImage::GetTextureClient(
     KnowsCompositor* aKnowsCompositor) {
->>>>>>> upstream-releases
   return mTextureClient;
 }
 

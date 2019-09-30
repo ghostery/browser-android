@@ -28,16 +28,8 @@
 #include "PresentationSessionInfo.h"
 
 #ifdef MOZ_WIDGET_ANDROID
-<<<<<<< HEAD
-#include "nsIPresentationNetworkHelper.h"
-#endif  // MOZ_WIDGET_ANDROID
-||||||| merged common ancestors
-#include "nsIPresentationNetworkHelper.h"
-#endif // MOZ_WIDGET_ANDROID
-=======
 #  include "nsIPresentationNetworkHelper.h"
 #endif  // MOZ_WIDGET_ANDROID
->>>>>>> upstream-releases
 
 using namespace mozilla;
 using namespace mozilla::dom;
@@ -203,32 +195,15 @@ NS_IMPL_ISUPPORTS(PresentationSessionInfo,
                   nsIPresentationControlChannelListener,
                   nsIPresentationSessionTransportBuilderListener);
 
-<<<<<<< HEAD
-/* virtual */ nsresult PresentationSessionInfo::Init(
-    nsIPresentationControlChannel* aControlChannel) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-PresentationSessionInfo::Init(nsIPresentationControlChannel* aControlChannel)
-{
-=======
 /* virtual */
 nsresult PresentationSessionInfo::Init(
     nsIPresentationControlChannel* aControlChannel) {
->>>>>>> upstream-releases
   SetControlChannel(aControlChannel);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* virtual */ void PresentationSessionInfo::Shutdown(nsresult aReason) {
-||||||| merged common ancestors
-/* virtual */ void
-PresentationSessionInfo::Shutdown(nsresult aReason)
-{
-=======
 /* virtual */
 void PresentationSessionInfo::Shutdown(nsresult aReason) {
->>>>>>> upstream-releases
   PRES_DEBUG("%s:id[%s], reason[%" PRIx32 "], role[%d]\n", __func__,
              NS_ConvertUTF16toUTF8(mSessionId).get(),
              static_cast<uint32_t>(aReason), mRole);
@@ -365,16 +340,8 @@ nsresult PresentationSessionInfo::ReplyError(nsresult aError) {
   return UntrackFromService();
 }
 
-<<<<<<< HEAD
-/* virtual */ nsresult PresentationSessionInfo::UntrackFromService() {
-||||||| merged common ancestors
-/* virtual */ nsresult
-PresentationSessionInfo::UntrackFromService()
-{
-=======
 /* virtual */
 nsresult PresentationSessionInfo::UntrackFromService() {
->>>>>>> upstream-releases
   nsCOMPtr<nsIPresentationService> service =
       do_GetService(PRESENTATION_SERVICE_CONTRACTID);
   if (NS_WARN_IF(!service)) {
@@ -393,44 +360,16 @@ nsPIDOMWindowInner* PresentationSessionInfo::GetWindow() {
     return nullptr;
   }
   uint64_t windowId = 0;
-<<<<<<< HEAD
   if (NS_WARN_IF(NS_FAILED(
           service->GetWindowIdBySessionId(mSessionId, mRole, &windowId)))) {
-    return nullptr;
-  }
-
-  auto window = nsGlobalWindowInner::GetInnerWindowWithId(windowId);
-  if (!window) {
-||||||| merged common ancestors
-  if (NS_WARN_IF(NS_FAILED(service->GetWindowIdBySessionId(mSessionId,
-                                                           mRole,
-                                                           &windowId)))) {
-    return nullptr;
-  }
-
-  auto window = nsGlobalWindowInner::GetInnerWindowWithId(windowId);
-  if (!window) {
-=======
-  if (NS_WARN_IF(NS_FAILED(
-          service->GetWindowIdBySessionId(mSessionId, mRole, &windowId)))) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
   return nsGlobalWindowInner::GetInnerWindowWithId(windowId);
 }
 
-<<<<<<< HEAD
-/* virtual */ bool PresentationSessionInfo::IsAccessible(
-    base::ProcessId aProcessId) {
-||||||| merged common ancestors
-/* virtual */ bool
-PresentationSessionInfo::IsAccessible(base::ProcessId aProcessId)
-{
-=======
 /* virtual */
 bool PresentationSessionInfo::IsAccessible(base::ProcessId aProcessId) {
->>>>>>> upstream-releases
   // No restriction by default.
   return true;
 }
@@ -1049,20 +988,9 @@ nsresult PresentationControllingInfo::ContinueReconnect() {
 
 // nsIListNetworkAddressesListener
 NS_IMETHODIMP
-<<<<<<< HEAD
-PresentationControllingInfo::OnListedNetworkAddresses(
-    const char** aAddressArray, uint32_t aAddressArraySize) {
-  if (!aAddressArraySize) {
-||||||| merged common ancestors
-PresentationControllingInfo::OnListedNetworkAddresses(const char** aAddressArray,
-                                                      uint32_t aAddressArraySize)
-{
-  if (!aAddressArraySize) {
-=======
 PresentationControllingInfo::OnListedNetworkAddresses(
     const nsTArray<nsCString>& aAddressArray) {
   if (aAddressArray.IsEmpty()) {
->>>>>>> upstream-releases
     return OnListNetworkAddressesFailed();
   }
 
@@ -1073,18 +1001,8 @@ PresentationControllingInfo::OnListedNetworkAddresses(
   // To make consistent code sequence, following function call is dispatched
   // into main thread instead of calling it directly.
   NS_DispatchToMainThread(NewRunnableMethod<nsCString>(
-<<<<<<< HEAD
-      "dom::PresentationControllingInfo::OnGetAddress", this,
-      &PresentationControllingInfo::OnGetAddress, ip));
-||||||| merged common ancestors
-    "dom::PresentationControllingInfo::OnGetAddress",
-    this,
-    &PresentationControllingInfo::OnGetAddress,
-    ip));
-=======
       "dom::PresentationControllingInfo::OnGetAddress", this,
       &PresentationControllingInfo::OnGetAddress, aAddressArray[0]));
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -1584,20 +1502,10 @@ void PresentationPresentingInfo::ResolvedCallback(
     // OOP frame
     // Notify the content process that a receiver page has launched, so it can
     // start monitoring the loading progress.
-<<<<<<< HEAD
-    mContentParent = tabParent->Manager();
-    Unused << NS_WARN_IF(
-        !static_cast<ContentParent*>(mContentParent.get())
-             ->SendNotifyPresentationReceiverLaunched(tabParent, mSessionId));
-||||||| merged common ancestors
-    mContentParent = tabParent->Manager();
-    Unused << NS_WARN_IF(!static_cast<ContentParent*>(mContentParent.get())->SendNotifyPresentationReceiverLaunched(tabParent, mSessionId));
-=======
     mContentParent = browserParent->Manager();
     Unused << NS_WARN_IF(!static_cast<ContentParent*>(mContentParent.get())
                               ->SendNotifyPresentationReceiverLaunched(
                                   browserParent, mSessionId));
->>>>>>> upstream-releases
   } else {
     // In-process frame
     IgnoredErrorResult error;

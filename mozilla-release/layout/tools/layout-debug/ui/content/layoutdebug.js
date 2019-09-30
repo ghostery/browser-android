@@ -65,16 +65,6 @@ nsLDBBrowserContentListener.prototype = {
     this.setButtonEnabled(this.mBackButton, gBrowser.canGoBack);
   },
 
-<<<<<<< HEAD
-  onSecurityChange : function(aWebProgress, aRequest, aState)
-    {
-    },
-||||||| merged common ancestors
-  onSecurityChange : function(aWebProgress, aRequest, aOldState, aState,
-                              aContentBlockingLogJSON)
-    {
-    },
-=======
   onStatusChange: function(aWebProgress, aRequest, aStatus, aMessage) {
     this.mStatusText.value = aMessage;
   },
@@ -82,7 +72,6 @@ nsLDBBrowserContentListener.prototype = {
   onSecurityChange: function(aWebProgress, aRequest, aState) {},
 
   onContentBlockingEvent: function(aWebProgress, aRequest, aEvent) {},
->>>>>>> upstream-releases
 
   // non-interface methods
   setButtonEnabled: function(aButtonElement, aEnabled) {

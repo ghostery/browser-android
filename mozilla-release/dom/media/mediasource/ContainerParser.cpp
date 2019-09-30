@@ -51,74 +51,25 @@ ContainerParser::ContainerParser(const MediaContainerType& aType)
 
 ContainerParser::~ContainerParser() = default;
 
-<<<<<<< HEAD
-MediaResult ContainerParser::IsInitSegmentPresent(MediaByteBuffer* aData) {
-  MSE_DEBUG("aLength=%zu [%x%x%x%x]", aData->Length(),
-            aData->Length() > 0 ? (*aData)[0] : 0,
-            aData->Length() > 1 ? (*aData)[1] : 0,
-            aData->Length() > 2 ? (*aData)[2] : 0,
-            aData->Length() > 3 ? (*aData)[3] : 0);
-||||||| merged common ancestors
-MediaResult
-ContainerParser::IsInitSegmentPresent(MediaByteBuffer* aData)
-{
-  MSE_DEBUG("aLength=%zu [%x%x%x%x]",
-            aData->Length(),
-            aData->Length() > 0 ? (*aData)[0] : 0,
-            aData->Length() > 1 ? (*aData)[1] : 0,
-            aData->Length() > 2 ? (*aData)[2] : 0,
-            aData->Length() > 3 ? (*aData)[3] : 0);
-=======
 MediaResult ContainerParser::IsInitSegmentPresent(const MediaSpan& aData) {
   MSE_DEBUG(
       "aLength=%zu [%x%x%x%x]", aData.Length(),
       aData.Length() > 0 ? aData[0] : 0, aData.Length() > 1 ? aData[1] : 0,
       aData.Length() > 2 ? aData[2] : 0, aData.Length() > 3 ? aData[3] : 0);
->>>>>>> upstream-releases
   return NS_ERROR_NOT_AVAILABLE;
 }
 
-<<<<<<< HEAD
-MediaResult ContainerParser::IsMediaSegmentPresent(MediaByteBuffer* aData) {
-  MSE_DEBUG("aLength=%zu [%x%x%x%x]", aData->Length(),
-            aData->Length() > 0 ? (*aData)[0] : 0,
-            aData->Length() > 1 ? (*aData)[1] : 0,
-            aData->Length() > 2 ? (*aData)[2] : 0,
-            aData->Length() > 3 ? (*aData)[3] : 0);
-||||||| merged common ancestors
-MediaResult
-ContainerParser::IsMediaSegmentPresent(MediaByteBuffer* aData)
-{
-  MSE_DEBUG("aLength=%zu [%x%x%x%x]",
-            aData->Length(),
-            aData->Length() > 0 ? (*aData)[0] : 0,
-            aData->Length() > 1 ? (*aData)[1] : 0,
-            aData->Length() > 2 ? (*aData)[2] : 0,
-            aData->Length() > 3 ? (*aData)[3] : 0);
-=======
 MediaResult ContainerParser::IsMediaSegmentPresent(const MediaSpan& aData) {
   MSE_DEBUG(
       "aLength=%zu [%x%x%x%x]", aData.Length(),
       aData.Length() > 0 ? aData[0] : 0, aData.Length() > 1 ? aData[1] : 0,
       aData.Length() > 2 ? aData[2] : 0, aData.Length() > 3 ? aData[3] : 0);
->>>>>>> upstream-releases
   return NS_ERROR_NOT_AVAILABLE;
 }
 
-<<<<<<< HEAD
-MediaResult ContainerParser::ParseStartAndEndTimestamps(MediaByteBuffer* aData,
-                                                        int64_t& aStart,
-                                                        int64_t& aEnd) {
-||||||| merged common ancestors
-MediaResult
-ContainerParser::ParseStartAndEndTimestamps(MediaByteBuffer* aData,
-                                            int64_t& aStart, int64_t& aEnd)
-{
-=======
 MediaResult ContainerParser::ParseStartAndEndTimestamps(const MediaSpan& aData,
                                                         int64_t& aStart,
                                                         int64_t& aEnd) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_AVAILABLE;
 }
 
@@ -160,14 +111,7 @@ class WebMContainerParser
 
   static const unsigned NS_PER_USEC = 1000;
 
-<<<<<<< HEAD
-  MediaResult IsInitSegmentPresent(MediaByteBuffer* aData) override {
-||||||| merged common ancestors
-  MediaResult IsInitSegmentPresent(MediaByteBuffer* aData) override
-  {
-=======
   MediaResult IsInitSegmentPresent(const MediaSpan& aData) override {
->>>>>>> upstream-releases
     ContainerParser::IsInitSegmentPresent(aData);
     if (aData.Length() < 4) {
       return NS_ERROR_NOT_AVAILABLE;
@@ -176,16 +120,8 @@ class WebMContainerParser
     WebMBufferedParser parser(0);
     nsTArray<WebMTimeDataOffset> mapping;
     ReentrantMonitor dummy("dummy");
-<<<<<<< HEAD
-    bool result =
-        parser.Append(aData->Elements(), aData->Length(), mapping, dummy);
-||||||| merged common ancestors
-    bool result = parser.Append(aData->Elements(), aData->Length(), mapping,
-                                dummy);
-=======
     bool result =
         parser.Append(aData.Elements(), aData.Length(), mapping, dummy);
->>>>>>> upstream-releases
     if (!result) {
       return MediaResult(NS_ERROR_FAILURE,
                          RESULT_DETAIL("Invalid webm content"));
@@ -193,14 +129,7 @@ class WebMContainerParser
     return parser.mInitEndOffset > 0 ? NS_OK : NS_ERROR_NOT_AVAILABLE;
   }
 
-<<<<<<< HEAD
-  MediaResult IsMediaSegmentPresent(MediaByteBuffer* aData) override {
-||||||| merged common ancestors
-  MediaResult IsMediaSegmentPresent(MediaByteBuffer* aData) override
-  {
-=======
   MediaResult IsMediaSegmentPresent(const MediaSpan& aData) override {
->>>>>>> upstream-releases
     ContainerParser::IsMediaSegmentPresent(aData);
     if (aData.Length() < 4) {
       return NS_ERROR_NOT_AVAILABLE;
@@ -210,16 +139,8 @@ class WebMContainerParser
     nsTArray<WebMTimeDataOffset> mapping;
     ReentrantMonitor dummy("dummy");
     parser.AppendMediaSegmentOnly();
-<<<<<<< HEAD
-    bool result =
-        parser.Append(aData->Elements(), aData->Length(), mapping, dummy);
-||||||| merged common ancestors
-    bool result = parser.Append(aData->Elements(), aData->Length(), mapping,
-                                dummy);
-=======
     bool result =
         parser.Append(aData.Elements(), aData.Length(), mapping, dummy);
->>>>>>> upstream-releases
     if (!result) {
       return MediaResult(NS_ERROR_FAILURE,
                          RESULT_DETAIL("Invalid webm content"));
@@ -437,23 +358,12 @@ bool MP4Stream::CachedReadAt(int64_t aOffset, void* aBuffer, size_t aCount,
   return true;
 }
 
-<<<<<<< HEAD
-bool MP4Stream::Length(int64_t* aSize) {
-  if (mResource->GetLength() < 0) return false;
-||||||| merged common ancestors
-bool
-MP4Stream::Length(int64_t* aSize)
-{
-  if (mResource->GetLength() < 0)
-    return false;
-=======
 const uint8_t* MP4Stream::GetContiguousAccess(int64_t aOffset, size_t aSize) {
   return mResource->GetContiguousAccess(aOffset, aSize);
 }
 
 bool MP4Stream::Length(int64_t* aSize) {
   if (mResource->GetLength() < 0) return false;
->>>>>>> upstream-releases
   *aSize = mResource->GetLength();
   return true;
 }
@@ -466,14 +376,7 @@ class MP4ContainerParser : public ContainerParser,
   explicit MP4ContainerParser(const MediaContainerType& aType)
       : ContainerParser(aType) {}
 
-<<<<<<< HEAD
-  MediaResult IsInitSegmentPresent(MediaByteBuffer* aData) override {
-||||||| merged common ancestors
-  MediaResult IsInitSegmentPresent(MediaByteBuffer* aData) override
-  {
-=======
   MediaResult IsInitSegmentPresent(const MediaSpan& aData) override {
->>>>>>> upstream-releases
     ContainerParser::IsInitSegmentPresent(aData);
     // Each MP4 atom has a chunk size and chunk type. The root chunk in an MP4
     // file is the 'ftyp' atom followed by a file type. We just check for a
@@ -490,17 +393,8 @@ class MP4ContainerParser : public ContainerParser,
     return parser.StartWithInitSegment() ? NS_OK : NS_ERROR_NOT_AVAILABLE;
   }
 
-<<<<<<< HEAD
-  MediaResult IsMediaSegmentPresent(MediaByteBuffer* aData) override {
-    if (aData->Length() < 8) {
-||||||| merged common ancestors
-  MediaResult IsMediaSegmentPresent(MediaByteBuffer* aData) override
-  {
-    if (aData->Length() < 8) {
-=======
   MediaResult IsMediaSegmentPresent(const MediaSpan& aData) override {
     if (aData.Length() < 8) {
->>>>>>> upstream-releases
       return NS_ERROR_NOT_AVAILABLE;
     }
     AtomParser parser(*this, aData, AtomParser::StopAt::eMediaSegment);
@@ -512,31 +406,6 @@ class MP4ContainerParser : public ContainerParser,
     return parser.StartWithMediaSegment() ? NS_OK : NS_ERROR_NOT_AVAILABLE;
   }
 
-<<<<<<< HEAD
- private:
-  class AtomParser {
-   public:
-    enum class StopAt { eInitSegment, eMediaSegment, eEnd };
-
-    AtomParser(const MP4ContainerParser& aParser, const MediaByteBuffer* aData,
-               StopAt aStop = StopAt::eEnd) {
-||||||| merged common ancestors
-private:
-  class AtomParser
-  {
-  public:
-    enum class StopAt
-    {
-      eInitSegment,
-      eMediaSegment,
-      eEnd
-    };
-
-    AtomParser(const MP4ContainerParser& aParser,
-               const MediaByteBuffer* aData,
-               StopAt aStop = StopAt::eEnd)
-    {
-=======
  private:
   class AtomParser {
    public:
@@ -544,20 +413,11 @@ private:
 
     AtomParser(const MP4ContainerParser& aParser, const MediaSpan& aData,
                StopAt aStop = StopAt::eEnd) {
->>>>>>> upstream-releases
       mValid = Init(aParser, aData, aStop).isOk();
     }
 
     Result<Ok, nsresult> Init(const MP4ContainerParser& aParser,
-<<<<<<< HEAD
-                              const MediaByteBuffer* aData, StopAt aStop) {
-||||||| merged common ancestors
-                              const MediaByteBuffer* aData,
-                              StopAt aStop)
-    {
-=======
                               const MediaSpan& aData, StopAt aStop) {
->>>>>>> upstream-releases
       const MediaContainerType mType(
           aParser.ContainerType());  // for logging macro.
       BufferReader reader(aData);
@@ -656,16 +516,8 @@ private:
     char mLastInvalidBox[5];
   };
 
-<<<<<<< HEAD
- public:
-  MediaResult ParseStartAndEndTimestamps(MediaByteBuffer* aData,
-||||||| merged common ancestors
-public:
-  MediaResult ParseStartAndEndTimestamps(MediaByteBuffer* aData,
-=======
  public:
   MediaResult ParseStartAndEndTimestamps(const MediaSpan& aData,
->>>>>>> upstream-releases
                                          int64_t& aStart,
                                          int64_t& aEnd) override {
     bool initSegment = NS_SUCCEEDED(IsInitSegmentPresent(aData));
@@ -766,18 +618,7 @@ class ADTSContainerParser
   /// Returns true if the header is parsed successfully.
   /// Returns false if the header is invalid or incomplete,
   /// without modifying the passed-in Header object.
-<<<<<<< HEAD
-  bool Parse(MediaByteBuffer* aData, Header& header) {
-    MOZ_ASSERT(aData);
-
-||||||| merged common ancestors
-  bool Parse(MediaByteBuffer* aData, Header& header)
-  {
-    MOZ_ASSERT(aData);
-
-=======
   bool Parse(const MediaSpan& aData, Header& header) {
->>>>>>> upstream-releases
     // ADTS initialization segments are just the packet header.
     if (aData.Length() < 7) {
       MSE_DEBUG("buffer too short for header.");
@@ -814,14 +655,7 @@ class ADTSContainerParser
     return true;
   }
 
-<<<<<<< HEAD
-  MediaResult IsInitSegmentPresent(MediaByteBuffer* aData) override {
-||||||| merged common ancestors
-  MediaResult IsInitSegmentPresent(MediaByteBuffer* aData) override
-  {
-=======
   MediaResult IsInitSegmentPresent(const MediaSpan& aData) override {
->>>>>>> upstream-releases
     // Call superclass for logging.
     ContainerParser::IsInitSegmentPresent(aData);
 
@@ -837,14 +671,7 @@ class ADTSContainerParser
     return NS_OK;
   }
 
-<<<<<<< HEAD
-  MediaResult IsMediaSegmentPresent(MediaByteBuffer* aData) override {
-||||||| merged common ancestors
-  MediaResult IsMediaSegmentPresent(MediaByteBuffer* aData) override
-  {
-=======
   MediaResult IsMediaSegmentPresent(const MediaSpan& aData) override {
->>>>>>> upstream-releases
     // Call superclass for logging.
     ContainerParser::IsMediaSegmentPresent(aData);
 
@@ -885,27 +712,12 @@ class ADTSContainerParser
     mInitData->AppendElements(aData.Elements(), header.header_length);
 
     // Check that we have enough data for the frame body.
-<<<<<<< HEAD
-    if (aData->Length() < header.frame_length) {
-      MSE_DEBUGV(
-          "Not enough data for %llu byte frame"
-          " in %llu byte buffer.",
-          (unsigned long long)header.frame_length,
-          (unsigned long long)(aData->Length()));
-||||||| merged common ancestors
-    if (aData->Length() < header.frame_length) {
-      MSE_DEBUGV("Not enough data for %llu byte frame"
-                 " in %llu byte buffer.",
-                 (unsigned long long)header.frame_length,
-                 (unsigned long long)(aData->Length()));
-=======
     if (aData.Length() < header.frame_length) {
       MSE_DEBUGV(
           "Not enough data for %llu byte frame"
           " in %llu byte buffer.",
           (unsigned long long)header.frame_length,
           (unsigned long long)(aData.Length()));
->>>>>>> upstream-releases
       return NS_ERROR_NOT_AVAILABLE;
     }
     mCompleteMediaSegmentRange =
@@ -926,18 +738,9 @@ class ADTSContainerParser
 };
 #endif  // MOZ_FMP4
 
-<<<<<<< HEAD
-/*static*/ ContainerParser* ContainerParser::CreateForMIMEType(
-    const MediaContainerType& aType) {
-||||||| merged common ancestors
-/*static*/ ContainerParser*
-ContainerParser::CreateForMIMEType(const MediaContainerType& aType)
-{
-=======
 /*static*/
 ContainerParser* ContainerParser::CreateForMIMEType(
     const MediaContainerType& aType) {
->>>>>>> upstream-releases
   if (aType.Type() == MEDIAMIMETYPE(VIDEO_WEBM) ||
       aType.Type() == MEDIAMIMETYPE(AUDIO_WEBM)) {
     return new WebMContainerParser(aType);

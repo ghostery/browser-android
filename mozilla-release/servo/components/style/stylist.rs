@@ -10,31 +10,6 @@ use crate::dom::{TElement, TShadowRoot};
 use crate::element_state::{DocumentState, ElementState};
 use crate::font_metrics::FontMetricsProvider;
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use crate::gecko_bindings::structs::{ServoStyleSetSizes, StyleRuleInclusion};
-use crate::invalidation::element::invalidation_map::InvalidationMap;
-use crate::invalidation::media_queries::{EffectiveMediaQueryResults, ToMediaListKey};
-use crate::media_queries::Device;
-use crate::properties::{self, CascadeMode, ComputedValues};
-use crate::properties::{AnimationRules, PropertyDeclarationBlock};
-use crate::rule_cache::{RuleCache, RuleCacheConditions};
-use crate::rule_collector::{RuleCollector, containing_shadow_ignoring_svg_use};
-use crate::rule_tree::{CascadeLevel, RuleTree, ShadowCascadeOrder, StrongRuleNode, StyleSource};
-use crate::selector_map::{PrecomputedHashMap, PrecomputedHashSet, SelectorMap, SelectorMapEntry};
-use crate::selector_parser::{PerPseudoElementMap, PseudoElement, SelectorImpl, SnapshotMap};
-use crate::shared_lock::{Locked, SharedRwLockReadGuard, StylesheetGuards};
-use crate::stylesheet_set::{DataValidity, DocumentStylesheetSet, SheetRebuildKind};
-use crate::stylesheet_set::{DocumentStylesheetFlusher, SheetCollectionFlusher};
-use crate::stylesheets::keyframes_rule::KeyframesAnimation;
-use crate::stylesheets::viewport_rule::{self, MaybeNew, ViewportRule};
-use crate::stylesheets::StyleRule;
-use crate::stylesheets::StylesheetInDocument;
-||||||| merged common ancestors
-use gecko_bindings::structs::{ServoStyleSetSizes, StyleRuleInclusion};
-use hashglobe::FailedAllocationError;
-use invalidation::element::invalidation_map::InvalidationMap;
-use invalidation::media_queries::{EffectiveMediaQueryResults, ToMediaListKey};
-=======
 use crate::gecko_bindings::structs::{ServoStyleSetSizes, StyleRuleInclusion};
 use crate::invalidation::element::invalidation_map::InvalidationMap;
 use crate::invalidation::media_queries::{EffectiveMediaQueryResults, ToMediaListKey};
@@ -53,17 +28,7 @@ use crate::stylesheets::keyframes_rule::KeyframesAnimation;
 use crate::stylesheets::viewport_rule::{self, MaybeNew, ViewportRule};
 use crate::stylesheets::StyleRule;
 use crate::stylesheets::StylesheetInDocument;
->>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use crate::stylesheets::{CounterStyleRule, FontFaceRule, FontFeatureValuesRule, PageRule};
-use crate::stylesheets::{CssRule, Origin, OriginSet, PerOrigin, PerOriginIter};
-use crate::thread_state::{self, ThreadState};
-use crate::{Atom, LocalName, Namespace, WeakAtom};
-use hashglobe::FailedAllocationError;
-||||||| merged common ancestors
-use malloc_size_of::{MallocShallowSizeOf, MallocSizeOf, MallocSizeOfOps};
-=======
 use crate::stylesheets::{CounterStyleRule, FontFaceRule, FontFeatureValuesRule, PageRule};
 use crate::stylesheets::{CssRule, Origin, OriginSet, PerOrigin, PerOriginIter};
 use crate::thread_state::{self, ThreadState};
@@ -71,25 +36,8 @@ use crate::{Atom, LocalName, Namespace, WeakAtom};
 use fallible::FallibleVec;
 use hashglobe::FailedAllocationError;
 use malloc_size_of::MallocSizeOf;
->>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
-<<<<<<< HEAD
-use malloc_size_of::MallocUnconditionalShallowSizeOf;
-#[cfg(feature = "gecko")]
-use malloc_size_of::{MallocShallowSizeOf, MallocSizeOf, MallocSizeOfOps};
-||||||| merged common ancestors
-use malloc_size_of::MallocUnconditionalShallowSizeOf;
-use media_queries::Device;
-use properties::{self, CascadeMode, ComputedValues};
-use properties::{AnimationRules, PropertyDeclarationBlock};
-use rule_cache::{RuleCache, RuleCacheConditions};
-use rule_tree::{CascadeLevel, RuleTree, ShadowCascadeOrder, StrongRuleNode, StyleSource};
-use selector_map::{PrecomputedHashMap, PrecomputedHashSet, SelectorMap, SelectorMapEntry};
-use selector_parser::{PerPseudoElementMap, PseudoElement, SelectorImpl, SnapshotMap};
-use selectors::NthIndexCache;
-=======
 use malloc_size_of::{MallocShallowSizeOf, MallocSizeOfOps, MallocUnconditionalShallowSizeOf};
->>>>>>> upstream-releases
 use selectors::attr::{CaseSensitivity, NamespaceConstraint};
 use selectors::bloom::BloomFilter;
 use selectors::matching::VisitedHandlingMode;
@@ -100,14 +48,7 @@ use selectors::visitor::SelectorVisitor;
 use selectors::NthIndexCache;
 use servo_arc::{Arc, ArcBorrow};
 use smallbitvec::SmallBitVec;
-<<<<<<< HEAD
-use std::ops;
-||||||| merged common ancestors
 use smallvec::SmallVec;
-use std::ops;
-=======
-use smallvec::SmallVec;
->>>>>>> upstream-releases
 use std::sync::Mutex;
 use std::{mem, ops};
 use style_traits::viewport::ViewportConstraints;
@@ -1312,37 +1253,6 @@ impl Stylist {
         // the lookups, which means that the bitvecs are comparable. We verify
         // this in the caller by asserting that the bitvecs are same-length.
         let mut results = SmallBitVec::new();
-<<<<<<< HEAD
-
-        let matches_document_rules =
-            element.each_applicable_non_document_style_rule_data(|data, quirks_mode, host| {
-                matching_context.with_shadow_host(host, |matching_context| {
-                    data.selectors_for_cache_revalidation.lookup(
-                        element,
-                        quirks_mode,
-                        |selector_and_hashes| {
-                            results.push(matches_selector(
-                                &selector_and_hashes.selector,
-                                selector_and_hashes.selector_offset,
-                                Some(&selector_and_hashes.hashes),
-                                &element,
-                                matching_context,
-                                flags_setter,
-                            ));
-                            true
-                        },
-                    );
-                })
-            });
-
-        for (data, origin) in self.cascade_data.iter_origins() {
-            if origin == Origin::Author && !matches_document_rules {
-                continue;
-            }
-
-||||||| merged common ancestors
-        for (data, _) in self.cascade_data.iter_origins() {
-=======
 
         let matches_document_rules =
             element.each_applicable_non_document_style_rule_data(|data, host| {
@@ -1370,7 +1280,6 @@ impl Stylist {
                 continue;
             }
 
->>>>>>> upstream-releases
             data.selectors_for_cache_revalidation.lookup(
                 element,
                 self.quirks_mode,

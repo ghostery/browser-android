@@ -143,23 +143,10 @@ public:
 
     /** This is the maximum tile size to use by GPU devices for rendering sw-backed images/bitmaps.
         It is usually the max texture size, unless we're overriding it for testing. */
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
     int maxTileSize() const {
         SkASSERT(fMaxTileSize <= fMaxTextureSize);
         return fMaxTileSize;
     }
-
-    int maxRasterSamples() const { return fMaxRasterSamples; }
-||||||| merged common ancestors
-    int maxTileSize() const { SkASSERT(fMaxTileSize <= fMaxTextureSize); return fMaxTileSize; }
-
-    int maxRasterSamples() const { return fMaxRasterSamples; }
-=======
-    int maxTileSize() const {
-        SkASSERT(fMaxTileSize <= fMaxTextureSize);
-        return fMaxTileSize;
-    }
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     int maxWindowRectangles() const { return fMaxWindowRectangles; }
 
@@ -205,19 +192,6 @@ public:
      * If this returns false then the caller should implement a fallback where a temporary texture
      * is created, pixels are written to it, and then that is copied or drawn into the the surface.
      */
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
-    virtual bool surfaceSupportsWritePixels(const GrSurface*) const = 0;
-
-    /**
-     * Backends may have restrictions on what types of surfaces support GrGpu::readPixels().
-     * If this returns false then the caller should implement a fallback where a temporary texture
-     * is created, the surface is drawn or copied into the temporary, and pixels are read from the
-     * temporary.
-     */
-    virtual bool surfaceSupportsReadPixels(const GrSurface*) const = 0;
-||||||| merged common ancestors
-    virtual bool surfaceSupportsWritePixels(const GrSurface* surface) const = 0;
-=======
     bool surfaceSupportsWritePixels(const GrSurface*) const;
 
     /**
@@ -227,7 +201,6 @@ public:
      * temporary.
      */
     virtual bool surfaceSupportsReadPixels(const GrSurface*) const = 0;
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     /**
      * Given a dst pixel config and a src color type what color type must the caller coax the
@@ -258,40 +231,16 @@ public:
         is not initialized (even if not read by draw calls). */
     bool mustClearUploadedBufferData() const { return fMustClearUploadedBufferData; }
 
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
     /** Returns true if the given backend supports importing AHardwareBuffers via the
      * GrAHardwarebufferImageGenerator. This will only ever be supported on Android devices with API
      * level >= 26.
      * */
     bool supportsAHardwareBufferImages() const { return fSupportsAHardwareBufferImages; }
-
-    bool wireframeMode() const { return fWireframeMode; }
-||||||| merged common ancestors
-    bool wireframeMode() const { return fWireframeMode; }
-=======
-    /** Returns true if the given backend supports importing AHardwareBuffers via the
-     * GrAHardwarebufferImageGenerator. This will only ever be supported on Android devices with API
-     * level >= 26.
-     * */
-    bool supportsAHardwareBufferImages() const { return fSupportsAHardwareBufferImages; }
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     bool wireframeMode() const { return fWireframeMode; }
 
     bool fenceSyncSupport() const { return fFenceSyncSupport; }
     bool crossContextTextureSupport() const { return fCrossContextTextureSupport; }
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
-    /**
-     * Returns whether or not we will be able to do a copy given the passed in params
-     */
-    virtual bool canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
-                                const SkIRect& srcRect, const SkIPoint& dstPoint) const = 0;
-
-    bool dynamicStateArrayGeometryProcessorTextureSupport() const {
-        return fDynamicStateArrayGeometryProcessorTextureSupport;
-    }
-||||||| merged common ancestors
-=======
     /**
      * Returns whether or not we will be able to do a copy given the passed in params
      */
@@ -319,7 +268,6 @@ public:
     bool performStencilClearsAsDraws() const {
         return fPerformStencilClearsAsDraws;
     }
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     /**
      * This is can be called before allocating a texture to be a dst for copySurface. This is only
@@ -368,29 +316,11 @@ public:
 
     const GrDriverBugWorkarounds& workarounds() const { return fDriverBugWorkarounds; }
 
-#ifdef GR_TEST_UTILS
-    /**
-     * Creates a GrBackendFormat which matches the backend texture. If the backend texture is
-     * invalid, the function will return the default GrBackendFormat.
-     */
-    GrBackendFormat createFormatFromBackendTexture(const GrBackendTexture&) const;
-#endif
-
-    const GrDriverBugWorkarounds& workarounds() const { return fDriverBugWorkarounds; }
-
 protected:
     /** Subclasses must call this at the end of their constructors in order to apply caps
         overrides requested by the client. Note that overrides will only reduce the caps never
         expand them. */
     void applyOptionsOverrides(const GrContextOptions& options);
-
-#ifdef GR_TEST_UTILS
-    /**
-     * Subclasses implement this to actually create a GrBackendFormat to match backend texture. At
-     * this point, the backend texture has already been validated.
-     */
-    virtual GrBackendFormat onCreateFormatFromBackendTexture(const GrBackendTexture&) const = 0;
-#endif
 
     sk_sp<GrShaderCaps> fShaderCaps;
 
@@ -413,18 +343,12 @@ protected:
     bool fPreferClientSideDynamicBuffers             : 1;
     bool fPreferFullscreenClears                     : 1;
     bool fMustClearUploadedBufferData                : 1;
-<<<<<<< HEAD:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
-    bool fSupportsAHardwareBufferImages              : 1;
-    bool fHalfFloatVertexAttributeSupport            : 1;
-||||||| merged common ancestors
-=======
     bool fSupportsAHardwareBufferImages              : 1;
     bool fHalfFloatVertexAttributeSupport            : 1;
     bool fClampToBorderSupport                       : 1;
     bool fPerformPartialClearsAsDraws                : 1;
     bool fPerformColorClearsAsDraws                  : 1;
     bool fPerformStencilClearsAsDraws                : 1;
->>>>>>> upstream-releases:mozilla-release/gfx/skia/skia/src/gpu/GrCaps.h
 
     // Driver workaround
     bool fBlacklistCoverageCounting                  : 1;

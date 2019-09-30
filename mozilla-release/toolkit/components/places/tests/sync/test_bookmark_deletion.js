@@ -158,19 +158,6 @@ add_task(async function test_complex_orphaning() {
   info("Apply remote");
   let changesToUpload = await buf.apply();
   deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
-<<<<<<< HEAD
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { remoteRevives: 0, localDeletes: 1, localRevives: 0,
-             remoteDeletes: 1 },
-  }], "Should record telemetry with structure change counts");
-||||||| merged common ancestors
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { new: 3, remoteRevives: 0, localDeletes: 1, localRevives: 0,
-             remoteDeletes: 1 },
-  }], "Should record telemetry with structure change counts");
-=======
   deepEqual(
     mergeTelemetryCounts,
     [
@@ -181,7 +168,6 @@ add_task(async function test_complex_orphaning() {
     ],
     "Should record telemetry with structure change counts"
   );
->>>>>>> upstream-releases
 
   let idsToUpload = inspectChangeRecords(changesToUpload);
   deepEqual(
@@ -436,19 +422,6 @@ add_task(async function test_locally_modified_remotely_deleted() {
   info("Apply remote");
   let changesToUpload = await buf.apply();
   deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
-<<<<<<< HEAD
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { remoteRevives: 0, localDeletes: 0, localRevives: 1,
-             remoteDeletes: 2 },
-  }], "Should record telemetry for local item and remote folder deletions");
-||||||| merged common ancestors
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { new: 2, remoteRevives: 0, localDeletes: 0, localRevives: 1,
-             remoteDeletes: 2 },
-  }], "Should record telemetry for local item and remote folder deletions");
-=======
   deepEqual(
     mergeTelemetryCounts,
     [
@@ -459,7 +432,6 @@ add_task(async function test_locally_modified_remotely_deleted() {
     ],
     "Should record telemetry for local item and remote folder deletions"
   );
->>>>>>> upstream-releases
 
   let idsToUpload = inspectChangeRecords(changesToUpload);
   deepEqual(
@@ -652,19 +624,6 @@ add_task(async function test_locally_deleted_remotely_modified() {
   info("Apply remote");
   let changesToUpload = await buf.apply();
   deepEqual(await buf.fetchUnmergedGuids(), [], "Should merge all items");
-<<<<<<< HEAD
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { remoteRevives: 1, localDeletes: 2, localRevives: 0,
-             remoteDeletes: 0 },
-  }], "Should record telemetry for remote item and local folder deletions");
-||||||| merged common ancestors
-  deepEqual(mergeTelemetryEvents, [{
-    value: "structure",
-    extra: { new: 2, remoteRevives: 1, localDeletes: 2, localRevives: 0,
-             remoteDeletes: 0 },
-  }], "Should record telemetry for remote item and local folder deletions");
-=======
   deepEqual(
     mergeTelemetryCounts,
     [
@@ -675,7 +634,6 @@ add_task(async function test_locally_deleted_remotely_modified() {
     ],
     "Should record telemetry for remote item and local folder deletions"
   );
->>>>>>> upstream-releases
 
   let idsToUpload = inspectChangeRecords(changesToUpload);
   deepEqual(

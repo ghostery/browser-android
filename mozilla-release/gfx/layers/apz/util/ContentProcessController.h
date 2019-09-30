@@ -14,32 +14,16 @@ class nsIObserver;
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class TabChild;
-}  // namespace dom
-||||||| merged common ancestors
-class TabChild;
-} // namespace dom
-=======
 class BrowserChild;
 }  // namespace dom
->>>>>>> upstream-releases
 
 namespace layers {
 
 class APZChild;
 
 /**
-<<<<<<< HEAD
- * ContentProcessController is a GeckoContentController for a TabChild, and is
- * always remoted using PAPZ/APZChild.
-||||||| merged common ancestors
- * ContentProcessController is a GeckoContentController for a TabChild, and is always
- * remoted using PAPZ/APZChild.
-=======
  * ContentProcessController is a GeckoContentController for a BrowserChild, and
  * is always remoted using PAPZ/APZChild.
->>>>>>> upstream-releases
  *
  * ContentProcessController is created in ContentChild when a layer tree id has
  * been allocated for a PBrowser that lives in that content process, and is
@@ -49,47 +33,19 @@ class APZChild;
  * GeckoContentController PAPZ, APZChild, and RemoteContentController must be
  * updated to handle it.
  */
-<<<<<<< HEAD
-class ContentProcessController final : public GeckoContentController {
- public:
-  explicit ContentProcessController(const RefPtr<dom::TabChild>& aBrowser);
-||||||| merged common ancestors
-class ContentProcessController final
-      : public GeckoContentController
-{
-public:
-  explicit ContentProcessController(const RefPtr<dom::TabChild>& aBrowser);
-=======
 class ContentProcessController final : public GeckoContentController {
  public:
   explicit ContentProcessController(const RefPtr<dom::BrowserChild>& aBrowser);
->>>>>>> upstream-releases
 
   // GeckoContentController
 
-<<<<<<< HEAD
-  void RequestContentRepaint(const RepaintRequest& aRequest) override;
-||||||| merged common ancestors
-  void RequestContentRepaint(const FrameMetrics& frame) override;
-=======
   void NotifyLayerTransforms(
       const nsTArray<MatrixMessage>& aTransforms) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void HandleTap(TapType aType, const LayoutDevicePoint& aPoint,
-                 Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
-||||||| merged common ancestors
-  void HandleTap(TapType aType,
-                 const LayoutDevicePoint& aPoint,
-                 Modifiers aModifiers,
-                 const ScrollableLayerGuid& aGuid,
-=======
   void RequestContentRepaint(const RepaintRequest& aRequest) override;
 
   void HandleTap(TapType aType, const LayoutDevicePoint& aPoint,
                  Modifiers aModifiers, const ScrollableLayerGuid& aGuid,
->>>>>>> upstream-releases
                  uint64_t aInputBlockId) override;
 
   void NotifyPinchGesture(PinchGestureInput::PinchGestureType aType,
@@ -123,16 +79,8 @@ class ContentProcessController final : public GeckoContentController {
 
   void DispatchToRepaintThread(already_AddRefed<Runnable> aTask) override;
 
-<<<<<<< HEAD
- private:
-  RefPtr<dom::TabChild> mBrowser;
-||||||| merged common ancestors
-private:
-  RefPtr<dom::TabChild> mBrowser;
-=======
  private:
   RefPtr<dom::BrowserChild> mBrowser;
->>>>>>> upstream-releases
 };
 
 }  // namespace layers

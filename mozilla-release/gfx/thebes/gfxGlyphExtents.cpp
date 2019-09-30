@@ -33,39 +33,6 @@ gfxGlyphExtents::~gfxGlyphExtents() {
   MOZ_COUNT_DTOR(gfxGlyphExtents);
 }
 
-<<<<<<< HEAD
-bool gfxGlyphExtents::GetTightGlyphExtentsAppUnits(gfxFont *aFont,
-                                                   DrawTarget *aDrawTarget,
-                                                   uint32_t aGlyphID,
-                                                   gfxRect *aExtents) {
-  HashEntry *entry = mTightGlyphExtents.GetEntry(aGlyphID);
-  if (!entry) {
-    // Some functions higher up in the call chain deliberately pass in a
-    // nullptr DrawTarget, e.g. GetBaselinePosition() passes nullptr to
-    // gfxTextRun::MeasureText() and that nullptr reaches here.
-    if (!aDrawTarget) {
-      NS_WARNING("Could not get glyph extents (no aDrawTarget)");
-      return false;
-    }
-
-    if (aFont->SetupCairoFont(aDrawTarget)) {
-||||||| merged common ancestors
-bool
-gfxGlyphExtents::GetTightGlyphExtentsAppUnits(gfxFont* aFont,
-    DrawTarget* aDrawTarget, uint32_t aGlyphID, gfxRect* aExtents)
-{
-    HashEntry *entry = mTightGlyphExtents.GetEntry(aGlyphID);
-    if (!entry) {
-        // Some functions higher up in the call chain deliberately pass in a
-        // nullptr DrawTarget, e.g. GetBaselinePosition() passes nullptr to
-        // gfxTextRun::MeasureText() and that nullptr reaches here.
-        if (!aDrawTarget) {
-            NS_WARNING("Could not get glyph extents (no aDrawTarget)");
-            return false;
-        }
-
-        if (aFont->SetupCairoFont(aDrawTarget)) {
-=======
 bool gfxGlyphExtents::GetTightGlyphExtentsAppUnits(gfxFont* aFont,
                                                    DrawTarget* aDrawTarget,
                                                    uint32_t aGlyphID,
@@ -81,7 +48,6 @@ bool gfxGlyphExtents::GetTightGlyphExtentsAppUnits(gfxFont* aFont,
     }
 
     if (aFont->SetupCairoFont(aDrawTarget)) {
->>>>>>> upstream-releases
 #ifdef DEBUG_TEXT_RUN_STORAGE_METRICS
       ++gGlyphExtentsSetupLazyTight;
 #endif
@@ -98,55 +64,16 @@ bool gfxGlyphExtents::GetTightGlyphExtentsAppUnits(gfxFont* aFont,
   return true;
 }
 
-<<<<<<< HEAD
-gfxGlyphExtents::GlyphWidths::~GlyphWidths() {
-  uint32_t i, count = mBlocks.Length();
-  for (i = 0; i < count; ++i) {
-    uintptr_t bits = mBlocks[i];
-    if (bits && !(bits & 0x1)) {
-      delete[] reinterpret_cast<uint16_t *>(bits);
-||||||| merged common ancestors
-gfxGlyphExtents::GlyphWidths::~GlyphWidths()
-{
-    uint32_t i, count = mBlocks.Length();
-    for (i = 0; i < count; ++i) {
-        uintptr_t bits = mBlocks[i];
-        if (bits && !(bits & 0x1)) {
-            delete[] reinterpret_cast<uint16_t *>(bits);
-        }
-=======
 gfxGlyphExtents::GlyphWidths::~GlyphWidths() {
   uint32_t i, count = mBlocks.Length();
   for (i = 0; i < count; ++i) {
     uintptr_t bits = mBlocks[i];
     if (bits && !(bits & 0x1)) {
       delete[] reinterpret_cast<uint16_t*>(bits);
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
-uint32_t gfxGlyphExtents::GlyphWidths::SizeOfExcludingThis(
-    MallocSizeOf aMallocSizeOf) const {
-  uint32_t i;
-  uint32_t size = mBlocks.ShallowSizeOfExcludingThis(aMallocSizeOf);
-  for (i = 0; i < mBlocks.Length(); ++i) {
-    uintptr_t bits = mBlocks[i];
-    if (bits && !(bits & 0x1)) {
-      size += aMallocSizeOf(reinterpret_cast<void *>(bits));
-||||||| merged common ancestors
-uint32_t
-gfxGlyphExtents::GlyphWidths::SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const
-{
-    uint32_t i;
-    uint32_t size = mBlocks.ShallowSizeOfExcludingThis(aMallocSizeOf);
-    for (i = 0; i < mBlocks.Length(); ++i) {
-        uintptr_t bits = mBlocks[i];
-        if (bits && !(bits & 0x1)) {
-            size += aMallocSizeOf(reinterpret_cast<void*>(bits));
-        }
-=======
 uint32_t gfxGlyphExtents::GlyphWidths::SizeOfExcludingThis(
     MallocSizeOf aMallocSizeOf) const {
   uint32_t i;
@@ -155,75 +82,11 @@ uint32_t gfxGlyphExtents::GlyphWidths::SizeOfExcludingThis(
     uintptr_t bits = mBlocks[i];
     if (bits && !(bits & 0x1)) {
       size += aMallocSizeOf(reinterpret_cast<void*>(bits));
->>>>>>> upstream-releases
     }
   }
   return size;
 }
 
-<<<<<<< HEAD
-void gfxGlyphExtents::GlyphWidths::Set(uint32_t aGlyphID, uint16_t aWidth) {
-  uint32_t block = aGlyphID >> BLOCK_SIZE_BITS;
-  uint32_t len = mBlocks.Length();
-  if (block >= len) {
-    uintptr_t *elems = mBlocks.AppendElements(block + 1 - len);
-    if (!elems) return;
-    memset(elems, 0, sizeof(uintptr_t) * (block + 1 - len));
-  }
-
-  uintptr_t bits = mBlocks[block];
-  uint32_t glyphOffset = aGlyphID & (BLOCK_SIZE - 1);
-  if (!bits) {
-    mBlocks[block] = MakeSingle(glyphOffset, aWidth);
-    return;
-  }
-
-  uint16_t *newBlock;
-  if (bits & 0x1) {
-    // Expand the block to a real block. We could avoid this by checking
-    // glyphOffset == GetGlyphOffset(bits), but that never happens so don't
-    // bother
-    newBlock = new uint16_t[BLOCK_SIZE];
-    if (!newBlock) return;
-    uint32_t i;
-    for (i = 0; i < BLOCK_SIZE; ++i) {
-      newBlock[i] = INVALID_WIDTH;
-||||||| merged common ancestors
-void
-gfxGlyphExtents::GlyphWidths::Set(uint32_t aGlyphID, uint16_t aWidth)
-{
-    uint32_t block = aGlyphID >> BLOCK_SIZE_BITS;
-    uint32_t len = mBlocks.Length();
-    if (block >= len) {
-        uintptr_t *elems = mBlocks.AppendElements(block + 1 - len);
-        if (!elems)
-            return;
-        memset(elems, 0, sizeof(uintptr_t)*(block + 1 - len));
-    }
-
-    uintptr_t bits = mBlocks[block];
-    uint32_t glyphOffset = aGlyphID & (BLOCK_SIZE - 1);
-    if (!bits) {
-        mBlocks[block] = MakeSingle(glyphOffset, aWidth);
-        return;
-    }
-
-    uint16_t *newBlock;
-    if (bits & 0x1) {
-        // Expand the block to a real block. We could avoid this by checking
-        // glyphOffset == GetGlyphOffset(bits), but that never happens so don't bother
-        newBlock = new uint16_t[BLOCK_SIZE];
-        if (!newBlock)
-            return;
-        uint32_t i;
-        for (i = 0; i < BLOCK_SIZE; ++i) {
-            newBlock[i] = INVALID_WIDTH;
-        }
-        newBlock[GetGlyphOffset(bits)] = GetWidth(bits);
-        mBlocks[block] = reinterpret_cast<uintptr_t>(newBlock);
-    } else {
-        newBlock = reinterpret_cast<uint16_t *>(bits);
-=======
 void gfxGlyphExtents::GlyphWidths::Set(uint32_t aGlyphID, uint16_t aWidth) {
   uint32_t block = aGlyphID >> BLOCK_SIZE_BITS;
   uint32_t len = mBlocks.Length();
@@ -250,48 +113,15 @@ void gfxGlyphExtents::GlyphWidths::Set(uint32_t aGlyphID, uint16_t aWidth) {
     uint32_t i;
     for (i = 0; i < BLOCK_SIZE; ++i) {
       newBlock[i] = INVALID_WIDTH;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    newBlock[GetGlyphOffset(bits)] = GetWidth(bits);
-    mBlocks[block] = reinterpret_cast<uintptr_t>(newBlock);
-  } else {
-    newBlock = reinterpret_cast<uint16_t *>(bits);
-  }
-  newBlock[glyphOffset] = aWidth;
-||||||| merged common ancestors
-    newBlock[glyphOffset] = aWidth;
-=======
     newBlock[GetGlyphOffset(bits)] = GetWidth(bits);
     mBlocks[block] = reinterpret_cast<uintptr_t>(newBlock);
   } else {
     newBlock = reinterpret_cast<uint16_t*>(bits);
   }
   newBlock[glyphOffset] = aWidth;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void gfxGlyphExtents::SetTightGlyphExtents(uint32_t aGlyphID,
-                                           const gfxRect &aExtentsAppUnits) {
-  HashEntry *entry = mTightGlyphExtents.PutEntry(aGlyphID);
-  if (!entry) return;
-  entry->x = aExtentsAppUnits.X();
-  entry->y = aExtentsAppUnits.Y();
-  entry->width = aExtentsAppUnits.Width();
-  entry->height = aExtentsAppUnits.Height();
-||||||| merged common ancestors
-void
-gfxGlyphExtents::SetTightGlyphExtents(uint32_t aGlyphID, const gfxRect& aExtentsAppUnits)
-{
-    HashEntry *entry = mTightGlyphExtents.PutEntry(aGlyphID);
-    if (!entry)
-        return;
-    entry->x = aExtentsAppUnits.X();
-    entry->y = aExtentsAppUnits.Y();
-    entry->width = aExtentsAppUnits.Width();
-    entry->height = aExtentsAppUnits.Height();
-=======
 void gfxGlyphExtents::SetTightGlyphExtents(uint32_t aGlyphID,
                                            const gfxRect& aExtentsAppUnits) {
   HashEntry* entry = mTightGlyphExtents.PutEntry(aGlyphID);
@@ -300,7 +130,6 @@ void gfxGlyphExtents::SetTightGlyphExtents(uint32_t aGlyphID,
   entry->y = aExtentsAppUnits.Y();
   entry->width = aExtentsAppUnits.Width();
   entry->height = aExtentsAppUnits.Height();
->>>>>>> upstream-releases
 }
 
 size_t gfxGlyphExtents::SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const {

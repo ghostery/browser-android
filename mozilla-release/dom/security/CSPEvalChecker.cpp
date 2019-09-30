@@ -20,23 +20,6 @@ using namespace mozilla::dom;
 
 namespace {
 
-<<<<<<< HEAD
-nsresult CheckInternal(nsIContentSecurityPolicy* aCSP,
-                       nsICSPEventListener* aCSPEventListener,
-                       const nsAString& aExpression,
-                       const nsAString& aFileNameString, uint32_t aLineNum,
-                       uint32_t aColumnNum, bool* aAllowed) {
-||||||| merged common ancestors
-nsresult
-CheckInternal(nsIContentSecurityPolicy* aCSP,
-              nsICSPEventListener* aCSPEventListener,
-              const nsAString& aExpression,
-              const nsAString& aFileNameString,
-              uint32_t aLineNum,
-              uint32_t aColumnNum,
-              bool* aAllowed)
-{
-=======
 // We use the subjectPrincipal to assert that eval() is never
 // executed in system privileged context.
 nsresult CheckInternal(nsIContentSecurityPolicy* aCSP,
@@ -45,7 +28,6 @@ nsresult CheckInternal(nsIContentSecurityPolicy* aCSP,
                        const nsAString& aExpression,
                        const nsAString& aFileNameString, uint32_t aLineNum,
                        uint32_t aColumnNum, bool* aAllowed) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aAllowed);
 
@@ -87,37 +69,6 @@ class WorkerCSPCheckRunnable final : public WorkerMainThreadRunnable {
                          const nsAString& aExpression,
                          const nsAString& aFileNameString, uint32_t aLineNum,
                          uint32_t aColumnNum)
-<<<<<<< HEAD
-      : WorkerMainThreadRunnable(aWorkerPrivate,
-                                 NS_LITERAL_CSTRING("CSP Eval Check")),
-        mExpression(aExpression),
-        mFileNameString(aFileNameString),
-        mLineNum(aLineNum),
-        mColumnNum(aColumnNum),
-        mEvalAllowed(false) {}
-
-  bool MainThreadRun() override {
-    mResult = CheckInternal(
-        mWorkerPrivate->GetCSP(), mWorkerPrivate->CSPEventListener(),
-        mExpression, mFileNameString, mLineNum, mColumnNum, &mEvalAllowed);
-||||||| merged common ancestors
-    : WorkerMainThreadRunnable(aWorkerPrivate,
-                               NS_LITERAL_CSTRING("CSP Eval Check"))
-    , mExpression(aExpression)
-    , mFileNameString(aFileNameString)
-    , mLineNum(aLineNum)
-    , mColumnNum(aColumnNum)
-    , mEvalAllowed(false)
-  {}
-
-  bool
-  MainThreadRun() override
-  {
-    mResult = CheckInternal(mWorkerPrivate->GetCSP(),
-                            mWorkerPrivate->CSPEventListener(),
-                            mExpression, mFileNameString, mLineNum, mColumnNum,
-                            &mEvalAllowed);
-=======
       : WorkerMainThreadRunnable(aWorkerPrivate,
                                  NS_LITERAL_CSTRING("CSP Eval Check")),
         mExpression(aExpression),
@@ -131,7 +82,6 @@ class WorkerCSPCheckRunnable final : public WorkerMainThreadRunnable {
         mWorkerPrivate->GetCSP(), mWorkerPrivate->CSPEventListener(),
         mWorkerPrivate->GetLoadingPrincipal(), mExpression, mFileNameString,
         mLineNum, mColumnNum, &mEvalAllowed);
->>>>>>> upstream-releases
     return true;
   }
 
@@ -152,22 +102,11 @@ class WorkerCSPCheckRunnable final : public WorkerMainThreadRunnable {
 
 }  // namespace
 
-<<<<<<< HEAD
-/* static */ nsresult CSPEvalChecker::CheckForWindow(
-    JSContext* aCx, nsGlobalWindowInner* aWindow, const nsAString& aExpression,
-    bool* aAllowEval) {
-||||||| merged common ancestors
-/* static */ nsresult
-CSPEvalChecker::CheckForWindow(JSContext* aCx, nsGlobalWindowInner* aWindow,
-                               const nsAString& aExpression, bool* aAllowEval)
-{
-=======
 /* static */
 nsresult CSPEvalChecker::CheckForWindow(JSContext* aCx,
                                         nsGlobalWindowInner* aWindow,
                                         const nsAString& aExpression,
                                         bool* aAllowEval) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
   MOZ_ASSERT(aWindow);
   MOZ_ASSERT(aAllowEval);
@@ -207,22 +146,11 @@ nsresult CSPEvalChecker::CheckForWindow(JSContext* aCx,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ nsresult CSPEvalChecker::CheckForWorker(
-    JSContext* aCx, WorkerPrivate* aWorkerPrivate, const nsAString& aExpression,
-    bool* aAllowEval) {
-||||||| merged common ancestors
-/* static */ nsresult
-CSPEvalChecker::CheckForWorker(JSContext* aCx, WorkerPrivate* aWorkerPrivate,
-                               const nsAString& aExpression, bool* aAllowEval)
-{
-=======
 /* static */
 nsresult CSPEvalChecker::CheckForWorker(JSContext* aCx,
                                         WorkerPrivate* aWorkerPrivate,
                                         const nsAString& aExpression,
                                         bool* aAllowEval) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aWorkerPrivate);
   aWorkerPrivate->AssertIsOnWorkerThread();
   MOZ_ASSERT(aAllowEval);

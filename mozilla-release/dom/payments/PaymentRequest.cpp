@@ -9,14 +9,8 @@
 #include "mozilla/dom/FeaturePolicyUtils.h"
 #include "mozilla/dom/PaymentRequest.h"
 #include "mozilla/dom/PaymentRequestChild.h"
-<<<<<<< HEAD
-#include "mozilla/dom/PaymentRequestManager.h"
-||||||| merged common ancestors
-#include "mozilla/dom/PaymentResponse.h"
-=======
 #include "mozilla/dom/PaymentRequestManager.h"
 #include "mozilla/dom/RootedDictionary.h"
->>>>>>> upstream-releases
 #include "mozilla/intl/LocaleService.h"
 #include "mozilla/intl/MozLocale.h"
 #include "mozilla/EventStateManager.h"
@@ -557,14 +551,7 @@ already_AddRefed<PaymentRequest> PaymentRequest::Constructor(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
-||||||| merged common ancestors
-
-  nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
-=======
   nsCOMPtr<Document> doc = window->GetExtantDoc();
->>>>>>> upstream-releases
   if (!doc) {
     aRv.Throw(NS_ERROR_UNEXPECTED);
     return nullptr;
@@ -661,20 +648,12 @@ PaymentRequest::PaymentRequest(nsPIDOMWindowInner* aWindow,
   RegisterActivityObserver();
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> PaymentRequest::CanMakePayment(ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-PaymentRequest::CanMakePayment(ErrorResult& aRv)
-{
-=======
 already_AddRefed<Promise> PaymentRequest::CanMakePayment(ErrorResult& aRv) {
   if (!InFullyActiveDocument()) {
     aRv.Throw(NS_ERROR_DOM_ABORT_ERR);
     return nullptr;
   }
 
->>>>>>> upstream-releases
   if (mState != eCreated) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
@@ -711,15 +690,6 @@ void PaymentRequest::RespondCanMakePayment(bool aResult) {
   mResultPromise = nullptr;
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> PaymentRequest::Show(
-    const Optional<OwningNonNull<Promise>>& aDetailsPromise, ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-PaymentRequest::Show(const Optional<OwningNonNull<Promise>>& aDetailsPromise,
-                     ErrorResult& aRv)
-{
-=======
 already_AddRefed<Promise> PaymentRequest::Show(
     const Optional<OwningNonNull<Promise>>& aDetailsPromise, ErrorResult& aRv) {
   if (!InFullyActiveDocument()) {
@@ -727,7 +697,6 @@ already_AddRefed<Promise> PaymentRequest::Show(
     return nullptr;
   }
 
->>>>>>> upstream-releases
   nsIGlobalObject* global = GetOwnerGlobal();
   nsCOMPtr<nsPIDOMWindowInner> win = do_QueryInterface(global);
   Document* doc = win->GetExtantDoc();
@@ -830,20 +799,12 @@ void PaymentRequest::RespondComplete() {
   mResponse->RespondComplete();
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> PaymentRequest::Abort(ErrorResult& aRv) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-PaymentRequest::Abort(ErrorResult& aRv)
-{
-=======
 already_AddRefed<Promise> PaymentRequest::Abort(ErrorResult& aRv) {
   if (!InFullyActiveDocument()) {
     aRv.Throw(NS_ERROR_DOM_ABORT_ERR);
     return nullptr;
   }
 
->>>>>>> upstream-releases
   if (mState != eInteractive) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
@@ -923,20 +884,12 @@ nsresult PaymentRequest::UpdatePayment(JSContext* aCx,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void PaymentRequest::AbortUpdate(nsresult aRv) {
-||||||| merged common ancestors
-void
-PaymentRequest::AbortUpdate(nsresult aRv, bool aDeferredShow)
-{
-=======
 void PaymentRequest::AbortUpdate(nsresult aRv) {
   // perfect ignoring when the document is not fully active.
   if (!InFullyActiveDocument()) {
     return;
   }
 
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_FAILED(aRv));
 
   if (mState != eInteractive) {
@@ -1118,21 +1071,12 @@ void PaymentRequest::SetOptions(const PaymentOptions& aOptions) {
   mOptions = aOptions;
 }
 
-<<<<<<< HEAD
-void PaymentRequest::ResolvedCallback(JSContext* aCx,
-                                      JS::Handle<JS::Value> aValue) {
-||||||| merged common ancestors
-void
-PaymentRequest::ResolvedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue)
-{
-=======
 void PaymentRequest::ResolvedCallback(JSContext* aCx,
                                       JS::Handle<JS::Value> aValue) {
   if (!InFullyActiveDocument()) {
     return;
   }
 
->>>>>>> upstream-releases
   MOZ_ASSERT(aCx);
   mUpdating = false;
   if (NS_WARN_IF(!aValue.isObject())) {
@@ -1160,43 +1104,16 @@ void PaymentRequest::ResolvedCallback(JSContext* aCx,
   }
 }
 
-<<<<<<< HEAD
-void PaymentRequest::RejectedCallback(JSContext* aCx,
-                                      JS::Handle<JS::Value> aValue) {
-||||||| merged common ancestors
-void
-PaymentRequest::RejectedCallback(JSContext* aCx, JS::Handle<JS::Value> aValue)
-{
-  MOZ_ASSERT(mDeferredShow);
-=======
 void PaymentRequest::RejectedCallback(JSContext* aCx,
                                       JS::Handle<JS::Value> aValue) {
   if (!InFullyActiveDocument()) {
     return;
   }
 
->>>>>>> upstream-releases
   mUpdating = false;
   AbortUpdate(NS_ERROR_DOM_ABORT_ERR);
 }
 
-<<<<<<< HEAD
-void PaymentRequest::RegisterActivityObserver() {
-  if (nsPIDOMWindowInner* window = GetOwner()) {
-    nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
-    if (doc) {
-      doc->RegisterActivityObserver(
-          NS_ISUPPORTS_CAST(nsIDocumentActivity*, this));
-||||||| merged common ancestors
-void
-PaymentRequest::RegisterActivityObserver()
-{
-  if (nsPIDOMWindowInner* window = GetOwner()) {
-    nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
-    if (doc) {
-      doc->RegisterActivityObserver(
-        NS_ISUPPORTS_CAST(nsIDocumentActivity*, this));
-=======
 bool PaymentRequest::InFullyActiveDocument() {
   nsIGlobalObject* global = GetOwnerGlobal();
   if (!global) {
@@ -1215,50 +1132,22 @@ bool PaymentRequest::InFullyActiveDocument() {
   while (parentDoc) {
     if (parentDoc && !parentDoc->IsCurrentActiveDocument()) {
       return false;
->>>>>>> upstream-releases
     }
     parentDoc = parentDoc->GetParentDocument();
   }
   return true;
 }
 
-<<<<<<< HEAD
-void PaymentRequest::UnregisterActivityObserver() {
-||||||| merged common ancestors
-void
-PaymentRequest::UnregisterActivityObserver()
-{
-=======
 void PaymentRequest::RegisterActivityObserver() {
->>>>>>> upstream-releases
   if (nsPIDOMWindowInner* window = GetOwner()) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
-    if (doc) {
-      doc->UnregisterActivityObserver(
-          NS_ISUPPORTS_CAST(nsIDocumentActivity*, this));
-||||||| merged common ancestors
-    nsCOMPtr<nsIDocument> doc = window->GetExtantDoc();
-    if (doc) {
-      doc->UnregisterActivityObserver(
-        NS_ISUPPORTS_CAST(nsIDocumentActivity*, this));
-=======
     mDocument = window->GetExtantDoc();
     if (mDocument) {
       mDocument->RegisterActivityObserver(
           NS_ISUPPORTS_CAST(nsIDocumentActivity*, this));
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
-void PaymentRequest::NotifyOwnerDocumentActivityChanged() {
-||||||| merged common ancestors
-void
-PaymentRequest::NotifyOwnerDocumentActivityChanged()
-{
-=======
 void PaymentRequest::UnregisterActivityObserver() {
   if (mDocument) {
     mDocument->UnregisterActivityObserver(
@@ -1267,7 +1156,6 @@ void PaymentRequest::UnregisterActivityObserver() {
 }
 
 void PaymentRequest::NotifyOwnerDocumentActivityChanged() {
->>>>>>> upstream-releases
   nsPIDOMWindowInner* window = GetOwner();
   NS_ENSURE_TRUE_VOID(window);
   Document* doc = window->GetExtantDoc();

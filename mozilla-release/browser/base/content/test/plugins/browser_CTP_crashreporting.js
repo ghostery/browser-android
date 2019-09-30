@@ -63,87 +63,6 @@ add_task(async function setup() {
  * click-to-play activation.
  */
 add_task(async function() {
-<<<<<<< HEAD
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: PLUGIN_PAGE,
-  }, async function(browser) {
-    // Work around for delayed PluginBindingAttached
-    await promiseUpdatePluginBindings(browser);
-
-    let pluginInfo = await promiseForPluginInfo("test", browser);
-    ok(!pluginInfo.activated, "Plugin should not be activated");
-
-    // Simulate clicking the "Allow Always" button.
-    let notification = PopupNotifications.getNotification("click-to-play-plugins", browser);
-    await promiseForNotificationShown(notification, browser);
-    PopupNotifications.panel.firstElementChild.button.click();
-
-    // Prepare a crash report topic observer that only returns when
-    // the crash report has been successfully sent.
-    let crashReportChecker = (subject, data) => {
-      return (data == "success");
-    };
-    let crashReportPromise = TestUtils.topicObserved("crash-report-status",
-                                                     crashReportChecker);
-
-    await ContentTask.spawn(browser, null, async function() {
-      let plugin = content.document.getElementById("test");
-      plugin.QueryInterface(Ci.nsIObjectLoadingContent);
-
-      await ContentTaskUtils.waitForCondition(() => {
-        return plugin.activated;
-      }, "Waited too long for plugin to activate.");
-
-      try {
-        Cu.waiveXrays(plugin).crash();
-      } catch (e) {
-      }
-
-      let getUI = (id) => {
-        return plugin.openOrClosedShadowRoot.getElementById(id);
-||||||| merged common ancestors
-  await BrowserTestUtils.withNewTab({
-    gBrowser,
-    url: PLUGIN_PAGE,
-  }, async function(browser) {
-    // Work around for delayed PluginBindingAttached
-    await promiseUpdatePluginBindings(browser);
-
-    let pluginInfo = await promiseForPluginInfo("test", browser);
-    ok(!pluginInfo.activated, "Plugin should not be activated");
-
-    // Simulate clicking the "Allow Always" button.
-    let notification = PopupNotifications.getNotification("click-to-play-plugins", browser);
-    await promiseForNotificationShown(notification, browser);
-    PopupNotifications.panel.firstElementChild.button.click();
-
-    // Prepare a crash report topic observer that only returns when
-    // the crash report has been successfully sent.
-    let crashReportChecker = (subject, data) => {
-      return (data == "success");
-    };
-    let crashReportPromise = TestUtils.topicObserved("crash-report-status",
-                                                     crashReportChecker);
-
-    await ContentTask.spawn(browser, null, async function() {
-      let plugin = content.document.getElementById("test");
-      plugin.QueryInterface(Ci.nsIObjectLoadingContent);
-
-      await ContentTaskUtils.waitForCondition(() => {
-        return plugin.activated;
-      }, "Waited too long for plugin to activate.");
-
-      try {
-        Cu.waiveXrays(plugin).crash();
-      } catch (e) {
-      }
-
-      let doc = plugin.ownerDocument;
-
-      let getUI = (anonid) => {
-        return doc.getAnonymousElementByAttribute(plugin, "anonid", anonid);
-=======
   await BrowserTestUtils.withNewTab(
     {
       gBrowser,
@@ -168,7 +87,6 @@ add_task(async function() {
       // the crash report has been successfully sent.
       let crashReportChecker = (subject, data) => {
         return data == "success";
->>>>>>> upstream-releases
       };
       let crashReportPromise = TestUtils.topicObserved(
         "crash-report-status",

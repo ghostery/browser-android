@@ -5,25 +5,11 @@ add_task(async function test_support_tab_separators() {
 
   let extension = ExtensionTestUtils.loadExtension({
     manifest: {
-<<<<<<< HEAD
-      "theme": {
-        "colors": {
-          "frame": "#000",
-          "tab_background_text": "#9400ff",
-          "tab_background_separator":  TAB_SEPARATOR_COLOR,
-||||||| merged common ancestors
-      "theme": {
-        "colors": {
-          "accentcolor": "#000",
-          "textcolor": "#9400ff",
-          "tab_background_separator":  TAB_SEPARATOR_COLOR,
-=======
       theme: {
         colors: {
           frame: "#000",
           tab_background_text: "#9400ff",
           tab_background_separator: TAB_SEPARATOR_COLOR,
->>>>>>> upstream-releases
         },
       },
     },

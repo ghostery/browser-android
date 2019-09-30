@@ -10,73 +10,30 @@
 #include "VRChild.h"
 #include "VRGPUChild.h"
 #include "VRGPUParent.h"
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
 #include "mozilla/dom/ContentParent.h"
 #include "mozilla/MemoryReportingProcess.h"
 #include "mozilla/Preferences.h"
 
->>>>>>> upstream-releases
 namespace mozilla {
 namespace gfx {
 
 static StaticAutoPtr<VRProcessManager> sSingleton;
 
-<<<<<<< HEAD
-/* static */ VRProcessManager* VRProcessManager::Get() { return sSingleton; }
-||||||| merged common ancestors
-/* static */ VRProcessManager*
-VRProcessManager::Get()
-{
-  return sSingleton;
-}
-=======
 /* static */
 VRProcessManager* VRProcessManager::Get() { return sSingleton; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ void VRProcessManager::Initialize() {
-||||||| merged common ancestors
-/* static */ void
-VRProcessManager::Initialize()
-{
-=======
 /* static */
 void VRProcessManager::Initialize() {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess());
   if (sSingleton == nullptr) {
     sSingleton = new VRProcessManager();
   }
 }
 
-<<<<<<< HEAD
-/* static */ void VRProcessManager::Shutdown() { sSingleton = nullptr; }
-||||||| merged common ancestors
-/* static */ void
-VRProcessManager::Shutdown()
-{
-  sSingleton = nullptr;
-}
-=======
 /* static */
 void VRProcessManager::Shutdown() { sSingleton = nullptr; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-VRProcessManager::VRProcessManager() : mProcess(nullptr) {
-||||||| merged common ancestors
-VRProcessManager::VRProcessManager()
- : mProcess(nullptr)
-{
-=======
 VRProcessManager::VRProcessManager() : mProcess(nullptr), mVRChild(nullptr) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(VRProcessManager);
 
   mObserver = new Observer(this);
@@ -111,18 +68,8 @@ void VRProcessManager::LaunchVRProcess() {
   }
 }
 
-<<<<<<< HEAD
-void VRProcessManager::DisableVRProcess(const char* aMessage) {
-  if (!gfxPrefs::VRProcessEnabled()) {
-||||||| merged common ancestors
-void
-VRProcessManager::DisableVRProcess(const char* aMessage)
-{
-  if (!gfxPrefs::VRProcessEnabled()) {
-=======
 void VRProcessManager::DisableVRProcess(const char* aMessage) {
   if (!StaticPrefs::dom_vr_process_enabled()) {
->>>>>>> upstream-releases
     return;
   }
 
@@ -142,16 +89,6 @@ void VRProcessManager::DestroyProcess() {
                                      NS_LITERAL_CSTRING("Destroyed"));
 }
 
-<<<<<<< HEAD
-bool VRProcessManager::CreateGPUBridges(
-    base::ProcessId aOtherProcess,
-    mozilla::ipc::Endpoint<PVRGPUChild>* aOutVRBridge) {
-||||||| merged common ancestors
-bool
-VRProcessManager::CreateGPUBridges(base::ProcessId aOtherProcess,
-                                   mozilla::ipc::Endpoint<PVRGPUChild>* aOutVRBridge)
-{
-=======
 bool VRProcessManager::EnsureVRReady() {
   if (mProcess && !mProcess->IsConnected()) {
     if (!mProcess->WaitForLaunch()) {
@@ -208,7 +145,6 @@ void VRProcessManager::OnProcessUnexpectedShutdown(VRProcessParent* aParent) {
 bool VRProcessManager::CreateGPUBridges(
     base::ProcessId aOtherProcess,
     mozilla::ipc::Endpoint<PVRGPUChild>* aOutVRBridge) {
->>>>>>> upstream-releases
   if (!CreateGPUVRManager(aOtherProcess, aOutVRBridge)) {
     return false;
   }
@@ -269,15 +205,6 @@ void VRProcessManager::OnXPCOMShutdown() {
   CleanShutdown();
 }
 
-<<<<<<< HEAD
-VRChild* VRProcessManager::GetVRChild() { return mProcess->GetActor(); }
-||||||| merged common ancestors
-VRChild*
-VRProcessManager::GetVRChild()
-{
-  return mProcess->GetActor();
-}
-=======
 void VRProcessManager::OnPreferenceChange(const char16_t* aData) {
   // A pref changed. If it's not on the blacklist, inform child processes.
   if (!dom::ContentParent::ShouldSyncPreference(aData)) {
@@ -350,15 +277,6 @@ RefPtr<MemoryReportingProcess> VRProcessManager::GetProcessMemoryReporter() {
   }
   return new VRMemoryReporter();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
 }  // namespace gfx
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
-}  // namespace gfx
-}  // namespace mozilla
->>>>>>> upstream-releases

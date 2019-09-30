@@ -5,23 +5,10 @@
 //!
 //! This module declares the data types used to represent external functions and call signatures.
 
-<<<<<<< HEAD
-use ir::{ArgumentLoc, ExternalName, SigRef, Type};
-use isa::{CallConv, RegInfo, RegUnit};
-use std::fmt;
-use std::str::FromStr;
-||||||| merged common ancestors
-use ir::{ArgumentLoc, ExternalName, SigRef, Type};
-use isa::{RegInfo, RegUnit};
-use settings::CallConv;
-use std::fmt;
-use std::str::FromStr;
-=======
 use crate::ir::{ArgumentLoc, ExternalName, SigRef, Type};
 use crate::isa::{CallConv, RegInfo, RegUnit};
 use core::fmt;
 use core::str::FromStr;
->>>>>>> upstream-releases
 use std::vec::Vec;
 
 /// Function signature.

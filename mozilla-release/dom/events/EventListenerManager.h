@@ -25,15 +25,6 @@ class JSTracer;
 
 struct EventTypeData;
 
-<<<<<<< HEAD
-template <class T>
-class nsCOMArray;
-
-||||||| merged common ancestors
-template<class T> class nsCOMArray;
-
-=======
->>>>>>> upstream-releases
 namespace mozilla {
 
 class ELMCreationDetector;
@@ -331,23 +322,6 @@ class EventListenerManager final : public EventListenerManagerBase {
   /**
    * Remove the current "inline" event listener for aName.
    */
-<<<<<<< HEAD
-  void RemoveEventHandler(nsAtom* aName);
-
-  void HandleEvent(nsPresContext* aPresContext, WidgetEvent* aEvent,
-                   dom::Event** aDOMEvent, dom::EventTarget* aCurrentTarget,
-                   nsEventStatus* aEventStatus, bool aItemInShadowTree) {
-||||||| merged common ancestors
-  void RemoveEventHandler(nsAtom *aName);
-
-  void HandleEvent(nsPresContext* aPresContext,
-                   WidgetEvent* aEvent,
-                   dom::Event** aDOMEvent,
-                   dom::EventTarget* aCurrentTarget,
-                   nsEventStatus* aEventStatus,
-                   bool aItemInShadowTree)
-  {
-=======
   void RemoveEventHandler(nsAtom* aName);
 
   // We only get called from the event dispatch code, which knows to be careful
@@ -358,7 +332,6 @@ class EventListenerManager final : public EventListenerManagerBase {
   void HandleEvent(nsPresContext* aPresContext, WidgetEvent* aEvent,
                    dom::Event** aDOMEvent, dom::EventTarget* aCurrentTarget,
                    nsEventStatus* aEventStatus, bool aItemInShadowTree) {
->>>>>>> upstream-releases
     if (mListeners.IsEmpty() || aEvent->PropagationStopped()) {
       return;
     }
@@ -485,14 +458,6 @@ class EventListenerManager final : public EventListenerManagerBase {
   bool IsApzAwareListener(Listener* aListener);
   bool IsApzAwareEvent(nsAtom* aEvent);
 
-<<<<<<< HEAD
- protected:
-  void HandleEventInternal(nsPresContext* aPresContext, WidgetEvent* aEvent,
-||||||| merged common ancestors
-protected:
-  void HandleEventInternal(nsPresContext* aPresContext,
-                           WidgetEvent* aEvent,
-=======
   /**
    * Remove all event listeners from the event target this EventListenerManager
    * is for.
@@ -502,20 +467,12 @@ protected:
  protected:
   MOZ_CAN_RUN_SCRIPT
   void HandleEventInternal(nsPresContext* aPresContext, WidgetEvent* aEvent,
->>>>>>> upstream-releases
                            dom::Event** aDOMEvent,
                            dom::EventTarget* aCurrentTarget,
                            nsEventStatus* aEventStatus, bool aItemInShadowTree);
 
-<<<<<<< HEAD
-  nsresult HandleEventSubType(Listener* aListener, dom::Event* aDOMEvent,
-||||||| merged common ancestors
-  nsresult HandleEventSubType(Listener* aListener,
-                              dom::Event* aDOMEvent,
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult HandleEventSubType(Listener* aListener, dom::Event* aDOMEvent,
->>>>>>> upstream-releases
                               dom::EventTarget* aCurrentTarget);
 
   /**
@@ -649,16 +606,8 @@ protected:
   // members, please add them to EventListemerManagerBase and check the size
   // at build time.
 
-<<<<<<< HEAD
-  already_AddRefed<nsIScriptGlobalObject> GetScriptGlobalAndDocument(
-      nsIDocument** aDoc);
-||||||| merged common ancestors
-  already_AddRefed<nsIScriptGlobalObject>
-  GetScriptGlobalAndDocument(nsIDocument** aDoc);
-=======
   already_AddRefed<nsIScriptGlobalObject> GetScriptGlobalAndDocument(
       mozilla::dom::Document** aDoc);
->>>>>>> upstream-releases
 
   nsAutoTObserverArray<Listener, 2> mListeners;
   dom::EventTarget* MOZ_NON_OWNING_REF mTarget;

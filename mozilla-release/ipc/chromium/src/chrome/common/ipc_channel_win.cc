@@ -26,22 +26,10 @@
 // so it has to hold the nsAutoOwningThread as a pointer, and we need a slightly
 // different macro.
 #ifdef DEBUG
-<<<<<<< HEAD
-#define ASSERT_OWNINGTHREAD(_class)                              \
-  if (nsAutoOwningThread* owningThread = _mOwningThread.get()) { \
-    owningThread->AssertOwnership(#_class " not thread-safe");   \
-  }
-||||||| merged common ancestors
-#define ASSERT_OWNINGTHREAD(_class) \
-  if (nsAutoOwningThread* owningThread = _mOwningThread.get()) {               \
-    owningThread->AssertOwnership(#_class " not thread-safe"); \
-  }
-=======
 #  define ASSERT_OWNINGTHREAD(_class)                              \
     if (nsAutoOwningThread* owningThread = _mOwningThread.get()) { \
       owningThread->AssertOwnership(#_class " not thread-safe");   \
     }
->>>>>>> upstream-releases
 #else
 #  define ASSERT_OWNINGTHREAD(_class) ((void)0)
 #endif
@@ -165,16 +153,11 @@ bool Channel::ChannelImpl::Send(Message* message) {
              << " in queue)";
 #endif
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 #ifdef FUZZING
   message = mozilla::ipc::Faulty::instance().MutateIPCMessage(
       "Channel::ChannelImpl::Send", message);
 #endif
 
->>>>>>> upstream-releases
   if (closed_) {
     if (mozilla::ipc::LoggingEnabled()) {
       fprintf(stderr,

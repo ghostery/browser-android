@@ -128,13 +128,7 @@ const XPI_PERMISSION = "install";
 
 const XPI_SIGNATURE_CHECK_PERIOD = 24 * 60 * 60;
 
-<<<<<<< HEAD
-const DB_SCHEMA = 28;
-||||||| merged common ancestors
-const DB_SCHEMA = 27;
-=======
 const DB_SCHEMA = 31;
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyPreferenceGetter(
   this,
@@ -1423,21 +1417,6 @@ var XPIStates = {
       }
     }
 
-    // When upgrading from a build prior to bug 857456, convert startup
-    // metadata.
-    let done = false;
-    for (let location of Object.values(state || {})) {
-      for (let data of Object.values(location.addons || {})) {
-        if (!migrateAddonLoader(data)) {
-          done = true;
-          break;
-        }
-      }
-      if (done) {
-        break;
-      }
-    }
-
     logger.debug("Loaded add-on state: ${}", state);
     return state || {};
   },
@@ -1761,19 +1740,8 @@ class BootstrapScope {
     let { addon, runInSafeMode } = this;
     if (Services.appinfo.inSafeMode && !runInSafeMode) {
       return null;
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-    if (addon.type == "extension" && aMethod == "startup") {
-      logger.debug(`Registering manifest for ${this.file.path}`);
-      Components.manager.addBootstrappedManifestLocation(this.file);
     }
 
-=======
-    }
-
->>>>>>> upstream-releases
     try {
       if (!this.scope) {
         this.loadBootstrapScope(aReason);
@@ -1881,34 +1849,6 @@ class BootstrapScope {
       XPIProvider.addAddonsToCrashReporter();
     }
 
-<<<<<<< HEAD
-    logger.debug(`Loading bootstrap scope from ${this.file.path}`);
-
-    if (this.addon.isWebExtension) {
-      switch (this.addon.type) {
-        case "extension":
-        case "theme":
-          this.scope = Extension.getBootstrapScope(this.addon.id, this.file);
-          break;
-||||||| merged common ancestors
-    logger.debug(`Loading bootstrap scope from ${this.file.path}`);
-
-    if (isWebExtension(this.addon.type)) {
-      this.scope = Extension.getBootstrapScope(this.addon.id, this.file);
-    } else if (this.addon.type === "webextension-langpack") {
-      this.scope = Langpack.getBootstrapScope(this.addon.id, this.file);
-    } else if (this.addon.type === "webextension-dictionary") {
-      this.scope = Dictionary.getBootstrapScope(this.addon.id, this.file);
-    } else {
-      let uri = getURIForResourceInFile(this.file, "bootstrap.js").spec;
-
-      let principal = Services.scriptSecurityManager.getSystemPrincipal();
-      this.scope =
-        new Cu.Sandbox(principal, { sandboxName: uri,
-                                    addonId: this.addon.id,
-                                    wantGlobalProperties: ["ChromeUtils"],
-                                    metadata: { addonID: this.addon.id, URI: uri } });
-=======
     logger.debug(`Loading bootstrap scope from ${this.addon.rootURI}`);
 
     if (this.addon.isWebExtension) {
@@ -1917,48 +1857,15 @@ class BootstrapScope {
         case "theme":
           this.scope = Extension.getBootstrapScope();
           break;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        case "locale":
-          this.scope = Langpack.getBootstrapScope(this.addon.id, this.file);
-          break;
-||||||| merged common ancestors
-      try {
-        Object.assign(this.scope, BOOTSTRAP_REASONS);
-=======
         case "locale":
           this.scope = Langpack.getBootstrapScope();
           break;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        case "dictionary":
-          this.scope = Dictionary.getBootstrapScope(this.addon.id, this.file);
-          break;
-||||||| merged common ancestors
-        XPCOMUtils.defineLazyGetter(
-          this.scope, "console",
-          () => new ConsoleAPI({ consoleID: `addon/${this.addon.id}` }));
-=======
         case "dictionary":
           this.scope = Dictionary.getBootstrapScope();
           break;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        default:
-          throw new Error(`Unknown webextension type ${this.addon.type}`);
-      }
-    } else {
-      let loader = AddonManagerPrivate.externalExtensionLoaders.get(this.addon.loader);
-      if (!loader) {
-        throw new Error(`Cannot find loader for ${this.addon.loader}`);
-||||||| merged common ancestors
-        Services.scriptloader.loadSubScript(uri, this.scope);
-      } catch (e) {
-        logger.warn(`Error loading bootstrap.js for ${this.addon.id}`, e);
-=======
         default:
           throw new Error(`Unknown webextension type ${this.addon.type}`);
       }
@@ -1968,16 +1875,7 @@ class BootstrapScope {
       );
       if (!loader) {
         throw new Error(`Cannot find loader for ${this.addon.loader}`);
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-
-      this.scope = loader.loadScope(this.addon, this.file);
-    }
-||||||| merged common ancestors
-    }
-=======
->>>>>>> upstream-releases
 
       this.scope = loader.loadScope(this.addon);
     }
@@ -2171,32 +2069,6 @@ class BootstrapScope {
   }
 }
 
-<<<<<<< HEAD
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1548973
-const MISSING_INTERMEDIATE_CERTIFICATE = "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";
-
-function addMissingIntermediateCertificate() {
-  const PREF_SIGNER_HOTFIXED = "extensions.signer.hotfixed";
-  let hotfixApplied = Services.prefs.getBoolPref(PREF_SIGNER_HOTFIXED, false);
-  if (hotfixApplied) {
-    return;
-  }
-  logger.debug("hotfix for addon signing cert has not been applied; applying");
-
-  try {
-    let certDB = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
-    certDB.addCertFromBase64(MISSING_INTERMEDIATE_CERTIFICATE, ",,");
-    logger.debug("new intermediate certificate added");
-  } catch (e) {
-    logger.error("failed to add new intermediate certificate:", e);
-    return;
-  }
-
-  Services.prefs.setBoolPref(PREF_SIGNER_HOTFIXED, true);
-}
-
-||||||| merged common ancestors
-=======
 let resolveDBReady;
 let dbReadyPromise = new Promise(resolve => {
   resolveDBReady = resolve;
@@ -2206,7 +2078,6 @@ let providerReadyPromise = new Promise(resolve => {
   resolveProviderReady = resolve;
 });
 
->>>>>>> upstream-releases
 var XPIProvider = {
   get name() {
     return "XPIProvider";
@@ -2502,10 +2373,6 @@ var XPIProvider = {
    *        if it is a new profile or the version is unknown
    */
   startup(aAppChanged, aOldAppVersion, aOldPlatformVersion) {
-    // Add missing certificate (bug 1548973). Mistakenly disabled add-ons are
-    // going to be re-enabled because the schema version bump forces a new
-    // signature verification check.
-    addMissingIntermediateCertificate();
     try {
       AddonManagerPrivate.recordTimestamp("XPI_startup_begin");
 
@@ -3295,14 +3162,9 @@ var XPIInternal = {
   getURIForResourceInFile,
   isXPI,
   iterDirectory,
-<<<<<<< HEAD
-  migrateAddonLoader,
-||||||| merged common ancestors
-=======
   maybeResolveURI,
   migrateAddonLoader,
   resolveDBReady,
->>>>>>> upstream-releases
 };
 
 var addonTypes = [

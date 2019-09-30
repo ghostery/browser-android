@@ -15,28 +15,12 @@
 class nsFontInflationData {
   using ReflowInput = mozilla::ReflowInput;
 
-<<<<<<< HEAD
- public:
-  static nsFontInflationData *FindFontInflationDataFor(const nsIFrame *aFrame);
-||||||| merged common ancestors
-public:
-
-  static nsFontInflationData* FindFontInflationDataFor(const nsIFrame *aFrame);
-=======
  public:
   static nsFontInflationData* FindFontInflationDataFor(const nsIFrame* aFrame);
->>>>>>> upstream-releases
 
   // Returns whether the usable width changed (which requires the
   // caller to mark its descendants dirty)
-<<<<<<< HEAD
-  static bool UpdateFontInflationDataISizeFor(const ReflowInput &aReflowInput);
-||||||| merged common ancestors
-  static bool
-    UpdateFontInflationDataISizeFor(const ReflowInput& aReflowInput);
-=======
   static bool UpdateFontInflationDataISizeFor(const ReflowInput& aReflowInput);
->>>>>>> upstream-releases
 
   static void MarkFontInflationDataTextDirty(nsIFrame* aFrame);
 
@@ -49,28 +33,15 @@ public:
 
   nscoord UsableISize() const { return mUsableISize; }
 
-<<<<<<< HEAD
- private:
-  explicit nsFontInflationData(nsIFrame *aBFCFrame);
-||||||| merged common ancestors
-  explicit nsFontInflationData(nsIFrame* aBFCFrame);
-=======
  private:
   explicit nsFontInflationData(nsIFrame* aBFCFrame);
->>>>>>> upstream-releases
 
-  nsFontInflationData(const nsFontInflationData &) = delete;
-  void operator=(const nsFontInflationData &) = delete;
+  nsFontInflationData(const nsFontInflationData&) = delete;
+  void operator=(const nsFontInflationData&) = delete;
 
   void UpdateISize(const ReflowInput& aReflowInput);
   enum SearchDirection { eFromStart, eFromEnd };
-<<<<<<< HEAD
-  static nsIFrame *FindEdgeInflatableFrameIn(nsIFrame *aFrame,
-||||||| merged common ancestors
-  static nsIFrame* FindEdgeInflatableFrameIn(nsIFrame *aFrame,
-=======
   static nsIFrame* FindEdgeInflatableFrameIn(nsIFrame* aFrame,
->>>>>>> upstream-releases
                                              SearchDirection aDirection);
 
   void MarkTextDirty() { mTextDirty = true; }
@@ -82,14 +53,7 @@ public:
   // crosses mTextThreshold.
   void ScanTextIn(nsIFrame* aFrame);
 
-<<<<<<< HEAD
-  static const nsIFrame *FlowRootFor(const nsIFrame *aFrame) {
-||||||| merged common ancestors
-  static const nsIFrame* FlowRootFor(const nsIFrame *aFrame)
-  {
-=======
   static const nsIFrame* FlowRootFor(const nsIFrame* aFrame) {
->>>>>>> upstream-releases
     while (!(aFrame->GetStateBits() & NS_FRAME_FONT_INFLATION_FLOW_ROOT)) {
       aFrame = aFrame->GetParent();
     }

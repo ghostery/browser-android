@@ -8,11 +8,6 @@ const chrome_base =
 Services.scriptloader.loadSubScript(chrome_base + "head.js", this);
 /* import-globals-from ../general/head.js */
 
-<<<<<<< HEAD
-const targetsFixture = [ { id: 1, name: "Foo"}, { id: 2, name: "Bar"} ];
-||||||| merged common ancestors
-const remoteClientsFixture = [ { id: 1, name: "Foo"}, { id: 2, name: "Bar"} ];
-=======
 const fxaDevices = [
   {
     id: 1,
@@ -22,7 +17,6 @@ const fxaDevices = [
   { id: 2, name: "Bar", clientRecord: "bar" }, // Legacy send tab target (no availableCommands).
   { id: 3, name: "Homer" }, // Incompatible target.
 ];
->>>>>>> upstream-releases
 
 let [testTab] = gBrowser.visibleTabs;
 
@@ -55,21 +49,6 @@ add_task(async function setup() {
 });
 
 add_task(async function test_tab_contextmenu() {
-<<<<<<< HEAD
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: true, targets: targetsFixture,
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: true });
-  let expectation = sandbox.mock(gSync)
-                           .expects("sendTabToDevice")
-                           .once()
-                           .withExactArgs("about:mozilla", [{id: 1, name: "Foo"}], "The Book of Mozilla, 11:14");
-||||||| merged common ancestors
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: true, remoteClients: remoteClientsFixture,
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: true });
-  let expectation = sandbox.mock(gSync)
-                           .expects("sendTabToDevice")
-                           .once()
-                           .withExactArgs("about:mozilla", [{id: 1, name: "Foo"}], "The Book of Mozilla, 11:14");
-=======
   const sandbox = setupSendTabMocks({ fxaDevices });
   let expectation = sandbox
     .mock(gSync)
@@ -80,7 +59,6 @@ add_task(async function test_tab_contextmenu() {
       [fxaDevices[1]],
       "The Book of Mozilla, 11:14"
     );
->>>>>>> upstream-releases
 
   updateTabContextMenu(testTab);
   await openTabContextMenu("context_sendTabToDevice");
@@ -106,15 +84,7 @@ add_task(async function test_tab_contextmenu() {
 });
 
 add_task(async function test_tab_contextmenu_unconfigured() {
-<<<<<<< HEAD
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: true, targets: targetsFixture,
-                                      state: UIState.STATUS_NOT_CONFIGURED, isSendableURI: true });
-||||||| merged common ancestors
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: true, remoteClients: remoteClientsFixture,
-                                      state: UIState.STATUS_NOT_CONFIGURED, isSendableURI: true });
-=======
   const sandbox = setupSendTabMocks({ state: UIState.STATUS_NOT_CONFIGURED });
->>>>>>> upstream-releases
 
   updateTabContextMenu(testTab);
   is(
@@ -132,15 +102,7 @@ add_task(async function test_tab_contextmenu_unconfigured() {
 });
 
 add_task(async function test_tab_contextmenu_not_sendable() {
-<<<<<<< HEAD
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: true, targets: [{ id: 1, name: "Foo"}],
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: false });
-||||||| merged common ancestors
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: true, remoteClients: [{ id: 1, name: "Foo"}],
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: false });
-=======
   const sandbox = setupSendTabMocks({ fxaDevices, isSendableURI: false });
->>>>>>> upstream-releases
 
   updateTabContextMenu(testTab);
   is(
@@ -158,15 +120,7 @@ add_task(async function test_tab_contextmenu_not_sendable() {
 });
 
 add_task(async function test_tab_contextmenu_not_synced_yet() {
-<<<<<<< HEAD
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: false, targets: [],
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: true });
-||||||| merged common ancestors
-  const sandbox = setupSendTabMocks({ syncReady: true, clientsSynced: false, remoteClients: [],
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: true });
-=======
   const sandbox = setupSendTabMocks({ fxaDevices: null });
->>>>>>> upstream-releases
 
   updateTabContextMenu(testTab);
   is(
@@ -184,15 +138,7 @@ add_task(async function test_tab_contextmenu_not_synced_yet() {
 });
 
 add_task(async function test_tab_contextmenu_sync_not_ready_configured() {
-<<<<<<< HEAD
-  const sandbox = setupSendTabMocks({ syncReady: false, clientsSynced: false, targets: null,
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: true });
-||||||| merged common ancestors
-  const sandbox = setupSendTabMocks({ syncReady: false, clientsSynced: false, remoteClients: null,
-                                      state: UIState.STATUS_SIGNED_IN, isSendableURI: true });
-=======
   const sandbox = setupSendTabMocks({ syncReady: false });
->>>>>>> upstream-releases
 
   updateTabContextMenu(testTab);
   is(
@@ -210,18 +156,10 @@ add_task(async function test_tab_contextmenu_sync_not_ready_configured() {
 });
 
 add_task(async function test_tab_contextmenu_sync_not_ready_other_state() {
-<<<<<<< HEAD
-  const sandbox = setupSendTabMocks({ syncReady: false, clientsSynced: false, targets: null,
-                                      state: UIState.STATUS_NOT_VERIFIED, isSendableURI: true });
-||||||| merged common ancestors
-  const sandbox = setupSendTabMocks({ syncReady: false, clientsSynced: false, remoteClients: null,
-                                      state: UIState.STATUS_NOT_VERIFIED, isSendableURI: true });
-=======
   const sandbox = setupSendTabMocks({
     syncReady: false,
     state: UIState.STATUS_NOT_VERIFIED,
   });
->>>>>>> upstream-releases
 
   updateTabContextMenu(testTab);
   is(
@@ -254,10 +192,6 @@ add_task(async function test_tab_contextmenu_fxa_disabled() {
   [...document.querySelectorAll(".sync-ui-item")].forEach(
     e => (e.hidden = false)
   );
-});
-
-add_task(async function teardown() {
-  Weave.Service.clientsEngine.getClientType.restore();
 });
 
 add_task(async function teardown() {

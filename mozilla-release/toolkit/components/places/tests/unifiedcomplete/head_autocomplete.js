@@ -57,13 +57,8 @@ var {
 XPCOMUtils.defineLazyModuleGetters(this, {
   UrlbarPrefs: "resource:///modules/UrlbarPrefs.jsm",
   UrlbarProviderOpenTabs: "resource:///modules/UrlbarProviderOpenTabs.jsm",
-<<<<<<< HEAD
-  UrlbarTokenizer: "resource:///modules/UrlbarTokenizer.jsm",
-||||||| merged common ancestors
-=======
   UrlbarTokenizer: "resource:///modules/UrlbarTokenizer.jsm",
   UrlbarUtils: "resource:///modules/UrlbarUtils.jsm",
->>>>>>> upstream-releases
 });
 
 const { AddonTestUtils } = ChromeUtils.import(
@@ -84,24 +79,7 @@ add_task(async function setup() {
 async function cleanup() {
   Services.prefs.clearUserPref("browser.urlbar.autoFill");
   Services.prefs.clearUserPref("browser.urlbar.autoFill.searchEngines");
-<<<<<<< HEAD
-  let suggestPrefs = [
-    "history",
-    "bookmark",
-    "openpage",
-    "searches",
-  ];
-||||||| merged common ancestors
-  let suggestPrefs = [
-    "history",
-    "bookmark",
-    "history.onlyTyped",
-    "openpage",
-    "searches",
-  ];
-=======
   let suggestPrefs = ["history", "bookmark", "openpage", "searches"];
->>>>>>> upstream-releases
   for (let type of suggestPrefs) {
     Services.prefs.clearUserPref("browser.urlbar.suggest." + type);
   }
@@ -411,17 +389,6 @@ var addBookmark = async function(aBookmarkObj) {
   });
 
   if (aBookmarkObj.keyword) {
-<<<<<<< HEAD
-    await PlacesUtils.keywords.insert({ keyword: aBookmarkObj.keyword,
-                                        url: aBookmarkObj.uri instanceof Ci.nsIURI ? aBookmarkObj.uri.spec : aBookmarkObj.uri,
-                                        postData: aBookmarkObj.postData,
-                                      });
-||||||| merged common ancestors
-    await PlacesUtils.keywords.insert({ keyword: aBookmarkObj.keyword,
-                                        url: aBookmarkObj.uri.spec ? aBookmarkObj.uri.spec : aBookmarkObj.uri,
-                                        postData: aBookmarkObj.postData,
-                                      });
-=======
     await PlacesUtils.keywords.insert({
       keyword: aBookmarkObj.keyword,
       url:
@@ -430,23 +397,14 @@ var addBookmark = async function(aBookmarkObj) {
           : aBookmarkObj.uri,
       postData: aBookmarkObj.postData,
     });
->>>>>>> upstream-releases
   }
 
   if (aBookmarkObj.tags) {
-<<<<<<< HEAD
-    let uri = aBookmarkObj.uri instanceof Ci.nsIURI ?
-      aBookmarkObj.uri : Services.io.newURI(aBookmarkObj.uri);
-    PlacesUtils.tagging.tagURI(uri, aBookmarkObj.tags);
-||||||| merged common ancestors
-    PlacesUtils.tagging.tagURI(aBookmarkObj.uri, aBookmarkObj.tags);
-=======
     let uri =
       aBookmarkObj.uri instanceof Ci.nsIURI
         ? aBookmarkObj.uri
         : Services.io.newURI(aBookmarkObj.uri);
     PlacesUtils.tagging.tagURI(uri, aBookmarkObj.tags);
->>>>>>> upstream-releases
   }
 };
 
@@ -649,13 +607,7 @@ add_task(async function ensure_search_engine() {
     template: "http://s.example.com/search",
   });
   let engine = Services.search.getEngineByName("MozSearch");
-<<<<<<< HEAD
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  Services.search.currentEngine = engine;
-=======
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 });
 
 /**

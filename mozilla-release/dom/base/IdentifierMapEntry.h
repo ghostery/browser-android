@@ -32,15 +32,7 @@ namespace mozilla {
 namespace dom {
 class Document;
 class Element;
-<<<<<<< HEAD:mozilla-release/dom/base/nsIdentifierMapEntry.h
-}
-}  // namespace mozilla
-||||||| merged common ancestors
-}
-}
-=======
 }  // namespace dom
->>>>>>> upstream-releases:mozilla-release/dom/base/IdentifierMapEntry.h
 
 /**
  * Right now our identifier map entries contain information for 'name'
@@ -54,21 +46,10 @@ class Element;
  * Perhaps the document.all results should have their own hashtable
  * in nsHTMLDocument.
  */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIdentifierMapEntry.h
-class nsIdentifierMapEntry : public PLDHashEntryHdr {
-  typedef mozilla::dom::Element Element;
-  typedef mozilla::net::ReferrerPolicy ReferrerPolicy;
-||||||| merged common ancestors
-class nsIdentifierMapEntry : public PLDHashEntryHdr
-{
-  typedef mozilla::dom::Element Element;
-  typedef mozilla::net::ReferrerPolicy ReferrerPolicy;
-=======
 class IdentifierMapEntry : public PLDHashEntryHdr {
   typedef dom::Document Document;
   typedef dom::Element Element;
   typedef net::ReferrerPolicy ReferrerPolicy;
->>>>>>> upstream-releases:mozilla-release/dom/base/IdentifierMapEntry.h
 
   /**
    * @see Document::IDTargetObserver, this is just here to avoid include hell.
@@ -124,19 +105,8 @@ class IdentifierMapEntry : public PLDHashEntryHdr {
 
   static KeyTypePointer KeyToPointer(KeyType aKey) { return &aKey; }
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIdentifierMapEntry.h
-  static PLDHashNumber HashKey(const KeyTypePointer aKey) {
-    return aKey->mAtom ? aKey->mAtom->hash()
-                       : mozilla::HashString(aKey->mString);
-||||||| merged common ancestors
-  static PLDHashNumber HashKey(const KeyTypePointer aKey)
-  {
-    return aKey->mAtom ?
-      aKey->mAtom->hash() : mozilla::HashString(aKey->mString);
-=======
   static PLDHashNumber HashKey(const KeyTypePointer aKey) {
     return aKey->mAtom ? aKey->mAtom->hash() : HashString(aKey->mString);
->>>>>>> upstream-releases:mozilla-release/dom/base/IdentifierMapEntry.h
   }
 
   enum { ALLOW_MEMMOVE = false };
@@ -156,16 +126,8 @@ class IdentifierMapEntry : public PLDHashEntryHdr {
   /**
    * Returns the list of all elements associated with this id.
    */
-<<<<<<< HEAD:mozilla-release/dom/base/nsIdentifierMapEntry.h
-  const nsTArray<Element*>& GetIdElements() const { return mIdContentList; }
-||||||| merged common ancestors
-  const nsTArray<Element*>& GetIdElements() const {
-    return mIdContentList;
-  }
-=======
   const nsTArray<Element*>& GetIdElements() const { return mIdContentList; }
 
->>>>>>> upstream-releases:mozilla-release/dom/base/IdentifierMapEntry.h
   /**
    * If this entry has a non-null image element set (using SetImageElement),
    * the image element will be returned, otherwise the same as GetIdElement().
@@ -218,17 +180,8 @@ class IdentifierMapEntry : public PLDHashEntryHdr {
     }
 
     static KeyTypePointer KeyToPointer(KeyType& aKey) { return &aKey; }
-<<<<<<< HEAD:mozilla-release/dom/base/nsIdentifierMapEntry.h
-    static PLDHashNumber HashKey(KeyTypePointer aKey) {
-      return mozilla::HashGeneric(aKey->mCallback, aKey->mData);
-||||||| merged common ancestors
-    static PLDHashNumber HashKey(KeyTypePointer aKey)
-    {
-      return mozilla::HashGeneric(aKey->mCallback, aKey->mData);
-=======
     static PLDHashNumber HashKey(KeyTypePointer aKey) {
       return HashGeneric(aKey->mCallback, aKey->mData);
->>>>>>> upstream-releases:mozilla-release/dom/base/IdentifierMapEntry.h
     }
     enum { ALLOW_MEMMOVE = true };
 
@@ -237,19 +190,9 @@ class IdentifierMapEntry : public PLDHashEntryHdr {
 
   size_t SizeOfExcludingThis(MallocSizeOf aMallocSizeOf) const;
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIdentifierMapEntry.h
- private:
-  nsIdentifierMapEntry(const nsIdentifierMapEntry& aOther) = delete;
-  nsIdentifierMapEntry& operator=(const nsIdentifierMapEntry& aOther) = delete;
-||||||| merged common ancestors
-private:
-  nsIdentifierMapEntry(const nsIdentifierMapEntry& aOther) = delete;
-  nsIdentifierMapEntry& operator=(const nsIdentifierMapEntry& aOther) = delete;
-=======
  private:
   IdentifierMapEntry(const IdentifierMapEntry& aOther) = delete;
   IdentifierMapEntry& operator=(const IdentifierMapEntry& aOther) = delete;
->>>>>>> upstream-releases:mozilla-release/dom/base/IdentifierMapEntry.h
 
   void FireChangeCallbacks(Element* aOldElement, Element* aNewElement,
                            bool aImageOnly = false);
@@ -261,12 +204,6 @@ private:
   RefPtr<Element> mImageElement;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/base/nsIdentifierMapEntry.h
-#endif  // #ifndef nsIdentifierMapEntry_h
-||||||| merged common ancestors
-#endif // #ifndef nsIdentifierMapEntry_h
-=======
 }  // namespace mozilla
 
 #endif  // #ifndef mozilla_IdentifierMapEntry_h
->>>>>>> upstream-releases:mozilla-release/dom/base/IdentifierMapEntry.h

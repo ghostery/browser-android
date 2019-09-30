@@ -599,55 +599,6 @@ static bool TestMap() {
       [&](const BasicValue& aVal) { return aVal.GetTag() * two; });
   MOZ_RELEASE_ASSERT(mappedValue == Some(4));
 
-<<<<<<< HEAD
-  // Check that function object qualifiers are preserved when invoked.
-  struct F
-  {
-      std::integral_constant<int, 1> operator()(int) & { return {}; }
-      std::integral_constant<int, 2> operator()(int) const & { return {}; }
-      std::integral_constant<int, 3> operator()(int) && { return {}; }
-      std::integral_constant<int, 4> operator()(int) const && { return {}; }
-  };
-  Maybe<int> mi = Some(0);
-  const Maybe<int> cmi = Some(0);
-  F f;
-  static_assert(std::is_same<decltype(mi.map(f)),
-                             Maybe<std::integral_constant<int, 1>>>::value,
-                "Maybe.map(&)");
-  MOZ_RELEASE_ASSERT(mi.map(f).value()() == 1);
-  static_assert(std::is_same<decltype(cmi.map(f)),
-                             Maybe<std::integral_constant<int, 1>>>::value,
-                "const Maybe.map(&)");
-  MOZ_RELEASE_ASSERT(cmi.map(f).value()() == 1);
-  const F cf;
-  static_assert(std::is_same<decltype(mi.map(cf)),
-                             Maybe<std::integral_constant<int, 2>>>::value,
-                "Maybe.map(const &)");
-  MOZ_RELEASE_ASSERT(mi.map(cf).value() == 2);
-  static_assert(std::is_same<decltype(cmi.map(cf)),
-                             Maybe<std::integral_constant<int, 2>>>::value,
-                "const Maybe.map(const &)");
-  MOZ_RELEASE_ASSERT(cmi.map(cf).value() == 2);
-  static_assert(std::is_same<decltype(mi.map(F{})),
-                             Maybe<std::integral_constant<int, 3>>>::value,
-                "Maybe.map(&&)");
-  MOZ_RELEASE_ASSERT(mi.map(F{}).value() == 3);
-  static_assert(std::is_same<decltype(cmi.map(F{})),
-                             Maybe<std::integral_constant<int, 3>>>::value,
-                "const Maybe.map(&&)");
-  MOZ_RELEASE_ASSERT(cmi.map(F{}).value() == 3);
-  using CF = const F;
-  static_assert(std::is_same<decltype(mi.map(CF{})),
-                             Maybe<std::integral_constant<int, 4>>>::value,
-                "Maybe.map(const &&)");
-  MOZ_RELEASE_ASSERT(mi.map(CF{}).value() == 4);
-  static_assert(std::is_same<decltype(cmi.map(CF{})),
-                             Maybe<std::integral_constant<int, 4>>>::value,
-                "const Maybe.map(const &&)");
-  MOZ_RELEASE_ASSERT(cmi.map(CF{}).value() == 4);
-
-||||||| merged common ancestors
-=======
   // Check that function object qualifiers are preserved when invoked.
   struct F {
     std::integral_constant<int, 1> operator()(int) & { return {}; }
@@ -693,7 +644,6 @@ static bool TestMap() {
                 "const Maybe.map(const &&)");
   MOZ_RELEASE_ASSERT(cmi.map(CF{}).value() == 4);
 
->>>>>>> upstream-releases
   return true;
 }
 

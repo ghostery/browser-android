@@ -14,14 +14,8 @@
  */
 
 [Constructor(optional (sequence<sequence<USVString>> or record<USVString, USVString> or USVString) init = ""),
-<<<<<<< HEAD
- Exposed=(Window,Worker,WorkerDebugger)]
-||||||| merged common ancestors
- Exposed=(Window,Worker,WorkerDebugger,System)]
-=======
  Exposed=(Window,Worker,WorkerDebugger),
  Serializable]
->>>>>>> upstream-releases
 interface URLSearchParams {
   void append(USVString name, USVString value);
   void delete(USVString name);

@@ -64,20 +64,9 @@ class nsThread : public nsIThreadInternal,
  private:
   nsThread();
 
-<<<<<<< HEAD
- public:
-  // Initialize this as a wrapper for a new PRThread, and optionally give it a
-  // name.
-  nsresult Init(const nsACString& aName = NS_LITERAL_CSTRING(""));
-||||||| merged common ancestors
-public:
-  // Initialize this as a wrapper for a new PRThread, and optionally give it a name.
-  nsresult Init(const nsACString& aName = NS_LITERAL_CSTRING(""));
-=======
  public:
   // Initialize this as a named wrapper for a new PRThread.
   nsresult Init(const nsACString& aName);
->>>>>>> upstream-releases
 
   // Initialize this as a wrapper for the current PRThread.
   nsresult InitCurrentThread();
@@ -151,13 +140,6 @@ public:
   static uint32_t MaxActiveThreads();
 
   const mozilla::TimeStamp& LastLongTaskEnd() { return mLastLongTaskEnd; }
-<<<<<<< HEAD
-  const mozilla::TimeStamp& LastLongNonIdleTaskEnd() {
-    return mLastLongNonIdleTaskEnd;
-  }
-||||||| merged common ancestors
-  const mozilla::TimeStamp& LastLongNonIdleTaskEnd() { return mLastLongNonIdleTaskEnd; }
-=======
   const mozilla::TimeStamp& LastLongNonIdleTaskEnd() {
     return mLastLongNonIdleTaskEnd;
   }
@@ -176,7 +158,6 @@ public:
   // enclosing task and as such do not trigger profiling hooks, observer
   // notifications, etc.
   nsLocalExecutionRecord EnterLocalExecution();
->>>>>>> upstream-releases
 
  private:
   void DoMainThreadSpecificProcessing(bool aReallyWait);
@@ -246,22 +227,7 @@ public:
 
   int8_t mPriority;
 
-<<<<<<< HEAD
-  uint8_t mIsMainThread;
-
-  bool IsMainThread() const {
-    return MainThreadFlag(mIsMainThread) == MAIN_THREAD;
-  }
-||||||| merged common ancestors
-  uint8_t  mIsMainThread;
-
-  bool IsMainThread() const
-  {
-    return MainThreadFlag(mIsMainThread) == MAIN_THREAD;
-  }
-=======
   bool mIsMainThread;
->>>>>>> upstream-releases
 
   // Set to true if this thread creates a JSRuntime.
   bool mCanInvokeJS;
@@ -340,19 +306,9 @@ class MOZ_STACK_CLASS nsThreadEnumerator final {
   mozilla::OffTheBooksMutexAutoLock mMal;
 };
 
-<<<<<<< HEAD
-#if defined(XP_UNIX) && !defined(ANDROID) && !defined(DEBUG) && HAVE_UALARM && \
-    defined(_GNU_SOURCE)
-#define MOZ_CANARY
-||||||| merged common ancestors
-#if defined(XP_UNIX) && !defined(ANDROID) && !defined(DEBUG) && HAVE_UALARM \
-  && defined(_GNU_SOURCE)
-# define MOZ_CANARY
-=======
 #if defined(XP_UNIX) && !defined(ANDROID) && !defined(DEBUG) && HAVE_UALARM && \
     defined(_GNU_SOURCE)
 #  define MOZ_CANARY
->>>>>>> upstream-releases
 
 extern int sCanaryOutputFD;
 #endif

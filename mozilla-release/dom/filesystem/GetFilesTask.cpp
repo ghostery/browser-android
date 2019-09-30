@@ -24,24 +24,10 @@ namespace dom {
  * GetFilesTaskChild
  */
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<GetFilesTaskChild> GetFilesTaskChild::Create(
-    FileSystemBase* aFileSystem, Directory* aDirectory, nsIFile* aTargetPath,
-    bool aRecursiveFlag, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<GetFilesTaskChild>
-GetFilesTaskChild::Create(FileSystemBase* aFileSystem,
-                          Directory* aDirectory,
-                          nsIFile* aTargetPath,
-                          bool aRecursiveFlag,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<GetFilesTaskChild> GetFilesTaskChild::Create(
     FileSystemBase* aFileSystem, Directory* aDirectory, nsIFile* aTargetPath,
     bool aRecursiveFlag, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFileSystem);
   MOZ_ASSERT(aDirectory);
   aFileSystem->AssertIsOnOwningThread();
@@ -151,23 +137,10 @@ void GetFilesTaskChild::HandlerCallback() {
  * GetFilesTaskParent
  */
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<GetFilesTaskParent> GetFilesTaskParent::Create(
-    FileSystemBase* aFileSystem, const FileSystemGetFilesParams& aParam,
-    FileSystemRequestParent* aParent, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<GetFilesTaskParent>
-GetFilesTaskParent::Create(FileSystemBase* aFileSystem,
-                           const FileSystemGetFilesParams& aParam,
-                           FileSystemRequestParent* aParent,
-                           ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<GetFilesTaskParent> GetFilesTaskParent::Create(
     FileSystemBase* aFileSystem, const FileSystemGetFilesParams& aParam,
     FileSystemRequestParent* aParent, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(XRE_IsParentProcess(), "Only call from parent process!");
   AssertIsOnBackgroundThread();
   MOZ_ASSERT(aFileSystem);

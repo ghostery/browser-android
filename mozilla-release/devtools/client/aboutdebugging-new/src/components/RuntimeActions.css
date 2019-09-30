@@ -2,22 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/mozglue/tests/gtest/InjectorDLL/InjectorDLL.cpp
-#include <windows.h>
-
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD aReason, LPVOID) { return TRUE; }
-||||||| merged common ancestors
-#include <windows.h>
-
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD aReason, LPVOID)
-{
-  return TRUE;
-}
-
-=======
 .runtime-actions__toolbar {
   column-gap: var(--base-unit);
   display: flex;
   justify-content: right;
 }
->>>>>>> upstream-releases:mozilla-release/devtools/client/aboutdebugging-new/src/components/RuntimeActions.css

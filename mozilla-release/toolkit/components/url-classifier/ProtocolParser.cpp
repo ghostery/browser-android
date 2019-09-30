@@ -778,14 +778,6 @@ nsresult ProtocolParserProtobuf::ProcessOneResponse(
   }
 
   // Convert threat type to list name.
-<<<<<<< HEAD
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-      do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-||||||| merged common ancestors
-  nsCOMPtr<nsIUrlClassifierUtils> urlUtil =
-    do_GetService(NS_URLCLASSIFIERUTILS_CONTRACTID);
-=======
->>>>>>> upstream-releases
   nsCString possibleListNames;
   nsresult rv = urlUtil->ConvertThreatTypeToListNames(aResponse.threat_type(),
                                                       possibleListNames);

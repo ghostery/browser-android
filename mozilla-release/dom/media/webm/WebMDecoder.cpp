@@ -17,18 +17,9 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
-    const MediaContainerType& aType, MediaResult& aError) {
-||||||| merged common ancestors
-/* static */ nsTArray<UniquePtr<TrackInfo>>
-WebMDecoder::GetTracksInfo(const MediaContainerType& aType, MediaResult& aError)
-{
-=======
 /* static */
 nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
     const MediaContainerType& aType, MediaResult& aError) {
->>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
   const bool isVideo = aType.Type() == MEDIAMIMETYPE("video/webm");
 
@@ -92,18 +83,8 @@ nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
 }
 
 /* static */
-<<<<<<< HEAD
-bool WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
-  if (!StaticPrefs::MediaWebMEnabled()) {
-||||||| merged common ancestors
-bool
-WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType)
-{
-  if (!StaticPrefs::MediaWebMEnabled()) {
-=======
 bool WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
   if (!StaticPrefs::media_webm_enabled()) {
->>>>>>> upstream-releases
     return false;
   }
 
@@ -132,18 +113,9 @@ bool WebMDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
-    const MediaContainerType& aType) {
-||||||| merged common ancestors
-/* static */ nsTArray<UniquePtr<TrackInfo>>
-WebMDecoder::GetTracksInfo(const MediaContainerType& aType)
-{
-=======
 /* static */
 nsTArray<UniquePtr<TrackInfo>> WebMDecoder::GetTracksInfo(
     const MediaContainerType& aType) {
->>>>>>> upstream-releases
   MediaResult rv = NS_OK;
   return GetTracksInfo(aType, rv);
 }

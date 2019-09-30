@@ -15,20 +15,6 @@ var { ActorRegistry } = require("devtools/server/actors/utils/actor-registry");
 var DevToolsUtils = require("devtools/shared/DevToolsUtils");
 var { dumpn } = DevToolsUtils;
 
-<<<<<<< HEAD
-loader.lazyRequireGetter(this, "Authentication", "devtools/shared/security/auth");
-loader.lazyRequireGetter(this, "LocalDebuggerTransport", "devtools/shared/transport/local-transport", true);
-loader.lazyRequireGetter(this, "ChildDebuggerTransport", "devtools/shared/transport/child-transport", true);
-loader.lazyRequireGetter(this, "WorkerThreadWorkerDebuggerTransport", "devtools/shared/transport/worker-transport", true);
-loader.lazyRequireGetter(this, "MainThreadWorkerDebuggerTransport", "devtools/shared/transport/worker-transport", true);
-||||||| merged common ancestors
-loader.lazyRequireGetter(this, "DebuggerSocket", "devtools/shared/security/socket", true);
-loader.lazyRequireGetter(this, "Authentication", "devtools/shared/security/auth");
-loader.lazyRequireGetter(this, "LocalDebuggerTransport", "devtools/shared/transport/local-transport", true);
-loader.lazyRequireGetter(this, "ChildDebuggerTransport", "devtools/shared/transport/child-transport", true);
-loader.lazyRequireGetter(this, "WorkerThreadWorkerDebuggerTransport", "devtools/shared/transport/worker-transport", true);
-loader.lazyRequireGetter(this, "MainThreadWorkerDebuggerTransport", "devtools/shared/transport/worker-transport", true);
-=======
 loader.lazyRequireGetter(
   this,
   "Authentication",
@@ -58,7 +44,6 @@ loader.lazyRequireGetter(
   "devtools/shared/transport/worker-transport",
   true
 );
->>>>>>> upstream-releases
 
 loader.lazyGetter(this, "generateUUID", () => {
   // eslint-disable-next-line no-shadow
@@ -940,18 +925,12 @@ var DebuggerServer = {
    * that all our actors have names beginning with |forwardingPrefix + '/'|.
    * In particular, the root actor's name will be |forwardingPrefix + '/root'|.
    */
-<<<<<<< HEAD
-  _onConnection(transport, forwardingPrefix, noRootActor = false, socketListener = null) {
-||||||| merged common ancestors
-  _onConnection(transport, forwardingPrefix, noRootActor = false) {
-=======
   _onConnection(
     transport,
     forwardingPrefix,
     noRootActor = false,
     socketListener = null
   ) {
->>>>>>> upstream-releases
     let connID;
     if (forwardingPrefix) {
       connID = forwardingPrefix + "/";
@@ -963,17 +942,11 @@ var DebuggerServer = {
       connID = "server" + loader.id + ".conn" + this._nextConnID++ + ".";
     }
 
-<<<<<<< HEAD
-    const conn = new DebuggerServerConnection(connID, transport, socketListener);
-||||||| merged common ancestors
-    const conn = new DebuggerServerConnection(connID, transport);
-=======
     const conn = new DebuggerServerConnection(
       connID,
       transport,
       socketListener
     );
->>>>>>> upstream-releases
     this._connections[connID] = conn;
 
     // Create a root actor for the connection and send the hello packet.
@@ -1323,17 +1296,6 @@ DebuggerServerConnection.prototype = {
       });
 
     this._actorResponses.set(from, responsePromise);
-  },
-
-  /**
-   * This function returns whether the connection was accepted by passed SocketListener.
-   *
-   * @param {SocketListener} socketListener
-   * @return {Boolean} return true if this connection was accepted by socketListener,
-   *         else returns false.
-   */
-  isAcceptedBy(socketListener) {
-    return this._socketListener === socketListener;
   },
 
   /**

@@ -245,21 +245,11 @@
 #  include "mozilla/dom/SpeechSynthesis.h"
 #endif
 
-#include "mozilla/HashFunctions.h"
-
 // Apple system headers seem to have a check() macro.  <sigh>
 #ifdef check
 class nsIScriptTimeoutHandler;
-<<<<<<< HEAD
-#undef check
-#endif  // check
-||||||| merged common ancestors
-#undef check
-#endif // check
-=======
 #  undef check
 #endif  // check
->>>>>>> upstream-releases
 #include "AccessCheck.h"
 
 #ifdef ANDROID
@@ -270,13 +260,7 @@ class nsIScriptTimeoutHandler;
 #  include <process.h>
 #  define getpid _getpid
 #else
-<<<<<<< HEAD
-#include <unistd.h>  // for getpid()
-||||||| merged common ancestors
-#include <unistd.h> // for getpid()
-=======
 #  include <unistd.h>  // for getpid()
->>>>>>> upstream-releases
 #endif
 
 using namespace mozilla;
@@ -307,35 +291,6 @@ using mozilla::TimeStamp;
 
 // Same as FORWARD_TO_INNER, but this will create a fresh inner if an
 // inner doesn't already exists.
-<<<<<<< HEAD
-#define FORWARD_TO_INNER_CREATE(method, args, err_rval) \
-  PR_BEGIN_MACRO                                        \
-  if (!mInnerWindow) {                                  \
-    if (mIsClosed) {                                    \
-      return err_rval;                                  \
-    }                                                   \
-    nsCOMPtr<nsIDocument> kungFuDeathGrip = GetDoc();   \
-    ::mozilla::Unused << kungFuDeathGrip;               \
-    if (!mInnerWindow) {                                \
-      return err_rval;                                  \
-    }                                                   \
-  }                                                     \
-  return GetCurrentInnerWindowInternal()->method args;  \
-||||||| merged common ancestors
-#define FORWARD_TO_INNER_CREATE(method, args, err_rval)                 \
-  PR_BEGIN_MACRO                                                        \
-  if (!mInnerWindow) {                                                  \
-    if (mIsClosed) {                                                    \
-      return err_rval;                                                  \
-    }                                                                   \
-    nsCOMPtr<nsIDocument> kungFuDeathGrip = GetDoc();                   \
-    ::mozilla::Unused << kungFuDeathGrip;                               \
-    if (!mInnerWindow) {                                                \
-      return err_rval;                                                  \
-    }                                                                   \
-  }                                                                     \
-  return GetCurrentInnerWindowInternal()->method args;                  \
-=======
 #define FORWARD_TO_INNER_CREATE(method, args, err_rval) \
   PR_BEGIN_MACRO                                        \
   if (!mInnerWindow) {                                  \
@@ -349,7 +304,6 @@ using mozilla::TimeStamp;
     }                                                   \
   }                                                     \
   return GetCurrentInnerWindowInternal()->method args;  \
->>>>>>> upstream-releases
   PR_END_MACRO
 
 static LazyLogModule gDOMLeakPRLogOuter("DOMLeakOuter");
@@ -357,28 +311,10 @@ extern LazyLogModule gPageCacheLog;
 
 static int32_t gOpenPopupSpamCount = 0;
 
-<<<<<<< HEAD
-static int32_t gOpenPopupSpamCount = 0;
-
-nsGlobalWindowOuter::OuterWindowByIdTable*
-    nsGlobalWindowOuter::sOuterWindowsById = nullptr;
-||||||| merged common ancestors
-static int32_t              gOpenPopupSpamCount               = 0;
-=======
 static bool gSyncContentBlockingNotifications = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-extern mozilla::LazyLogModule gAutoplayPermissionLog;
-
-#define AUTOPLAY_LOG(msg, ...) \
-  MOZ_LOG(gAutoplayPermissionLog, LogLevel::Debug, (msg, ##__VA_ARGS__))
-||||||| merged common ancestors
-nsGlobalWindowOuter::OuterWindowByIdTable *nsGlobalWindowOuter::sOuterWindowsById = nullptr;
-=======
 nsGlobalWindowOuter::OuterWindowByIdTable*
     nsGlobalWindowOuter::sOuterWindowsById = nullptr;
->>>>>>> upstream-releases
 
 /* static */
 nsPIDOMWindowOuter* nsPIDOMWindowOuter::GetFromCurrentInner(
@@ -399,16 +335,6 @@ nsPIDOMWindowOuter* nsPIDOMWindowOuter::GetFromCurrentInner(
 // nsOuterWindowProxy: Outer Window Proxy
 //*****************************************************************************
 
-<<<<<<< HEAD
-class nsOuterWindowProxy : public js::Wrapper {
- public:
-  constexpr nsOuterWindowProxy() : js::Wrapper(0) {}
-||||||| merged common ancestors
-class nsOuterWindowProxy : public js::Wrapper
-{
-public:
-  constexpr nsOuterWindowProxy() : js::Wrapper(0) { }
-=======
 // Give OuterWindowProxyClass 2 reserved slots, like the other wrappers, so
 // JSObject::swap can swap it with CrossCompartmentWrappers without requiring
 // malloc.
@@ -427,75 +353,12 @@ class nsOuterWindowProxy : public MaybeCrossOriginObject<js::Wrapper> {
 
  public:
   constexpr nsOuterWindowProxy() : Base(0) {}
->>>>>>> upstream-releases
 
   bool finalizeInBackground(const JS::Value& priv) const override {
     return false;
   }
 
   // Standard internal methods
-<<<<<<< HEAD
-  bool getOwnPropertyDescriptor(
-      JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-      JS::MutableHandle<JS::PropertyDescriptor> desc) const override;
-  bool defineProperty(JSContext* cx, JS::Handle<JSObject*> proxy,
-                      JS::Handle<jsid> id,
-                      JS::Handle<JS::PropertyDescriptor> desc,
-                      JS::ObjectOpResult& result) const override;
-  bool ownPropertyKeys(JSContext* cx, JS::Handle<JSObject*> proxy,
-                       JS::AutoIdVector& props) const override;
-  bool delete_(JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-               JS::ObjectOpResult& result) const override;
-
-  bool getPrototypeIfOrdinary(
-      JSContext* cx, JS::Handle<JSObject*> proxy, bool* isOrdinary,
-      JS::MutableHandle<JSObject*> protop) const override;
-
-  JSObject* enumerate(JSContext* cx,
-                      JS::Handle<JSObject*> proxy) const override;
-  bool preventExtensions(JSContext* cx, JS::Handle<JSObject*> proxy,
-                         JS::ObjectOpResult& result) const override;
-  bool isExtensible(JSContext* cx, JS::Handle<JSObject*> proxy,
-                    bool* extensible) const override;
-  bool has(JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-           bool* bp) const override;
-  bool get(JSContext* cx, JS::Handle<JSObject*> proxy,
-           JS::Handle<JS::Value> receiver, JS::Handle<jsid> id,
-||||||| merged common ancestors
-  bool getOwnPropertyDescriptor(JSContext* cx,
-                                JS::Handle<JSObject*> proxy,
-                                JS::Handle<jsid> id,
-                                JS::MutableHandle<JS::PropertyDescriptor> desc)
-                                const override;
-  bool defineProperty(JSContext* cx,
-                      JS::Handle<JSObject*> proxy,
-                      JS::Handle<jsid> id,
-                      JS::Handle<JS::PropertyDescriptor> desc,
-                      JS::ObjectOpResult &result) const override;
-  bool ownPropertyKeys(JSContext *cx,
-                       JS::Handle<JSObject*> proxy,
-                       JS::AutoIdVector &props) const override;
-  bool delete_(JSContext *cx, JS::Handle<JSObject*> proxy,
-                       JS::Handle<jsid> id,
-                       JS::ObjectOpResult &result) const override;
-
-  bool getPrototypeIfOrdinary(JSContext* cx,
-                              JS::Handle<JSObject*> proxy,
-                              bool* isOrdinary,
-                              JS::MutableHandle<JSObject*> protop) const override;
-
-  JSObject* enumerate(JSContext *cx, JS::Handle<JSObject*> proxy) const override;
-  bool preventExtensions(JSContext* cx,
-                         JS::Handle<JSObject*> proxy,
-                         JS::ObjectOpResult& result) const override;
-  bool isExtensible(JSContext *cx, JS::Handle<JSObject*> proxy, bool *extensible)
-                    const override;
-  bool has(JSContext *cx, JS::Handle<JSObject*> proxy,
-           JS::Handle<jsid> id, bool *bp) const override;
-  bool get(JSContext *cx, JS::Handle<JSObject*> proxy,
-           JS::Handle<JS::Value> receiver,
-           JS::Handle<jsid> id,
-=======
   /**
    * Implementation of [[GetOwnProperty]] as defined at
    * https://html.spec.whatwg.org/multipage/window-object.html#windowproxy-getownproperty
@@ -569,18 +432,7 @@ class nsOuterWindowProxy : public MaybeCrossOriginObject<js::Wrapper> {
    */
   bool get(JSContext* cx, JS::Handle<JSObject*> proxy,
            JS::Handle<JS::Value> receiver, JS::Handle<jsid> id,
->>>>>>> upstream-releases
            JS::MutableHandle<JS::Value> vp) const override;
-<<<<<<< HEAD
-  bool set(JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-           JS::Handle<JS::Value> v, JS::Handle<JS::Value> receiver,
-           JS::ObjectOpResult& result) const override;
-||||||| merged common ancestors
-  bool set(JSContext *cx, JS::Handle<JSObject*> proxy,
-           JS::Handle<jsid> id, JS::Handle<JS::Value> v,
-           JS::Handle<JS::Value> receiver,
-           JS::ObjectOpResult &result) const override;
-=======
 
   /**
    * Implementation of [[Set]] internal method as defined at
@@ -597,30 +449,8 @@ class nsOuterWindowProxy : public MaybeCrossOriginObject<js::Wrapper> {
   bool set(JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
            JS::Handle<JS::Value> v, JS::Handle<JS::Value> receiver,
            JS::ObjectOpResult& result) const override;
->>>>>>> upstream-releases
 
   // SpiderMonkey extensions
-<<<<<<< HEAD
-  bool getPropertyDescriptor(
-      JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-      JS::MutableHandle<JS::PropertyDescriptor> desc) const override;
-  bool hasOwn(JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-              bool* bp) const override;
-  bool getOwnEnumerablePropertyKeys(JSContext* cx, JS::Handle<JSObject*> proxy,
-                                    JS::AutoIdVector& props) const override;
-  const char* className(JSContext* cx,
-||||||| merged common ancestors
-  bool getPropertyDescriptor(JSContext* cx,
-                             JS::Handle<JSObject*> proxy,
-                             JS::Handle<jsid> id,
-                             JS::MutableHandle<JS::PropertyDescriptor> desc)
-                             const override;
-  bool hasOwn(JSContext *cx, JS::Handle<JSObject*> proxy,
-              JS::Handle<jsid> id, bool *bp) const override;
-  bool getOwnEnumerablePropertyKeys(JSContext *cx, JS::Handle<JSObject*> proxy,
-                                    JS::AutoIdVector &props) const override;
-  const char *className(JSContext *cx,
-=======
   /**
    * Implementation of SpiderMonkey extension which just checks whether this
    * object has the property.  Basically Object.getOwnPropertyDescriptor(obj,
@@ -653,7 +483,6 @@ class nsOuterWindowProxy : public MaybeCrossOriginObject<js::Wrapper> {
    * Hook used by SpiderMonkey to implement Object.prototype.toString.
    */
   const char* className(JSContext* cx,
->>>>>>> upstream-releases
                         JS::Handle<JSObject*> wrapper) const override;
 
   void finalize(JSFreeOp* fop, JSObject* proxy) const override;
@@ -664,25 +493,11 @@ class nsOuterWindowProxy : public MaybeCrossOriginObject<js::Wrapper> {
 
   static const nsOuterWindowProxy singleton;
 
-<<<<<<< HEAD
- protected:
-  static nsGlobalWindowOuter* GetOuterWindow(JSObject* proxy) {
-    nsGlobalWindowOuter* outerWindow =
-        nsGlobalWindowOuter::FromSupports(static_cast<nsISupports*>(
-            js::GetProxyReservedSlot(proxy, 0).toPrivate()));
-||||||| merged common ancestors
-protected:
-  static nsGlobalWindowOuter* GetOuterWindow(JSObject *proxy)
-  {
-    nsGlobalWindowOuter* outerWindow = nsGlobalWindowOuter::FromSupports(
-      static_cast<nsISupports*>(js::GetProxyReservedSlot(proxy, 0).toPrivate()));
-=======
  protected:
   static nsGlobalWindowOuter* GetOuterWindow(JSObject* proxy) {
     nsGlobalWindowOuter* outerWindow =
         nsGlobalWindowOuter::FromSupports(static_cast<nsISupports*>(
             js::GetProxyReservedSlot(proxy, OUTER_WINDOW_SLOT).toPrivate()));
->>>>>>> upstream-releases
     return outerWindow;
   }
 
@@ -694,69 +509,25 @@ protected:
 
   // Returns a non-null window only if id is an index and we have a
   // window at that index.
-<<<<<<< HEAD
-  already_AddRefed<nsPIDOMWindowOuter> GetSubframeWindow(
-      JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id) const;
-||||||| merged common ancestors
-  already_AddRefed<nsPIDOMWindowOuter>
-  GetSubframeWindow(JSContext *cx,
-                    JS::Handle<JSObject*> proxy,
-                    JS::Handle<jsid> id) const;
-=======
   Nullable<WindowProxyHolder> GetSubframeWindow(JSContext* cx,
                                                 JS::Handle<JSObject*> proxy,
                                                 JS::Handle<jsid> id) const;
 
   bool AppendIndexedPropertyNames(JSObject* proxy,
                                   JS::MutableHandleVector<jsid> props) const;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  bool AppendIndexedPropertyNames(JSContext* cx, JSObject* proxy,
-                                  JS::AutoIdVector& props) const;
-||||||| merged common ancestors
-  bool AppendIndexedPropertyNames(JSContext *cx, JSObject *proxy,
-                                  JS::AutoIdVector &props) const;
-=======
   using MaybeCrossOriginObjectMixins::EnsureHolder;
   bool EnsureHolder(JSContext* cx, JS::Handle<JSObject*> proxy,
                     JS::MutableHandle<JSObject*> holder) const override;
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-// Give OuterWindowProxyClass 2 reserved slots, like the other wrappers, so
-// JSObject::swap can swap it with CrossCompartmentWrappers without requiring
-// malloc.
-const js::Class OuterWindowProxyClass = PROXY_CLASS_DEF(
-    "Proxy", JSCLASS_HAS_RESERVED_SLOTS(2)); /* additional class flags */
-||||||| merged common ancestors
-// Give OuterWindowProxyClass 2 reserved slots, like the other wrappers, so
-// JSObject::swap can swap it with CrossCompartmentWrappers without requiring
-// malloc.
-const js::Class OuterWindowProxyClass = PROXY_CLASS_DEF(
-    "Proxy",
-    JSCLASS_HAS_RESERVED_SLOTS(2)); /* additional class flags */
-=======
 const char* nsOuterWindowProxy::className(JSContext* cx,
                                           JS::Handle<JSObject*> proxy) const {
   MOZ_ASSERT(js::IsProxy(proxy));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const char* nsOuterWindowProxy::className(JSContext* cx,
-                                          JS::Handle<JSObject*> proxy) const {
-  MOZ_ASSERT(js::IsProxy(proxy));
-||||||| merged common ancestors
-const char *
-nsOuterWindowProxy::className(JSContext *cx, JS::Handle<JSObject*> proxy) const
-{
-    MOZ_ASSERT(js::IsProxy(proxy));
-=======
   if (!IsPlatformObjectSameOrigin(cx, proxy)) {
     return "Object";
   }
->>>>>>> upstream-releases
 
   return "Window";
 }
@@ -778,68 +549,6 @@ void nsOuterWindowProxy::finalize(JSFreeOp* fop, JSObject* proxy) const {
   }
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::getPropertyDescriptor(
-    JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-    JS::MutableHandle<JS::PropertyDescriptor> desc) const {
-  // The only thing we can do differently from js::Wrapper is shadow stuff with
-  // our indexed properties, so we can just try getOwnPropertyDescriptor and if
-  // that gives us nothing call on through to js::Wrapper.
-  desc.object().set(nullptr);
-  if (!getOwnPropertyDescriptor(cx, proxy, id, desc)) {
-    return false;
-  }
-
-  if (desc.object()) {
-    return true;
-  }
-
-  return js::Wrapper::getPropertyDescriptor(cx, proxy, id, desc);
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::getPropertyDescriptor(JSContext* cx,
-                                          JS::Handle<JSObject*> proxy,
-                                          JS::Handle<jsid> id,
-                                          JS::MutableHandle<JS::PropertyDescriptor> desc) const
-{
-  // The only thing we can do differently from js::Wrapper is shadow stuff with
-  // our indexed properties, so we can just try getOwnPropertyDescriptor and if
-  // that gives us nothing call on through to js::Wrapper.
-  desc.object().set(nullptr);
-  if (!getOwnPropertyDescriptor(cx, proxy, id, desc)) {
-    return false;
-  }
-
-  if (desc.object()) {
-    return true;
-  }
-
-  return js::Wrapper::getPropertyDescriptor(cx, proxy, id, desc);
-=======
-/**
- * IsNonConfigurableReadonlyPrimitiveGlobalProp returns true for
- * property names that fit the following criteria:
- *
- * 1) The ES spec defines a property with that name on globals.
- * 2) The property is non-configurable.
- * 3) The property is non-writable (readonly).
- * 4) The value of the property is a primitive (so doesn't change
- *    observably on when navigation happens).
- *
- * Such properties can act as actual non-configurable properties on a
- * WindowProxy, because they are not affected by navigation.
- */
-#ifndef RELEASE_OR_BETA
-static bool IsNonConfigurableReadonlyPrimitiveGlobalProp(JSContext* cx,
-                                                         JS::Handle<jsid> id) {
-  return id == GetJSIDByIndex(cx, XPCJSContext::IDX_NAN) ||
-         id == GetJSIDByIndex(cx, XPCJSContext::IDX_UNDEFINED) ||
-         id == GetJSIDByIndex(cx, XPCJSContext::IDX_INFINITY);
->>>>>>> upstream-releases
-}
-#endif
-
-<<<<<<< HEAD
 /**
  * IsNonConfigurableReadonlyPrimitiveGlobalProp returns true for
  * property names that fit the following criteria:
@@ -862,25 +571,12 @@ static bool IsNonConfigurableReadonlyPrimitiveGlobalProp(JSContext* cx,
 }
 #endif
 
-bool nsOuterWindowProxy::getOwnPropertyDescriptor(
-    JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
-    JS::MutableHandle<JS::PropertyDescriptor> desc) const {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::getOwnPropertyDescriptor(JSContext* cx,
-                                             JS::Handle<JSObject*> proxy,
-                                             JS::Handle<jsid> id,
-                                             JS::MutableHandle<JS::PropertyDescriptor> desc)
-                                             const
-{
-=======
 bool nsOuterWindowProxy::getOwnPropertyDescriptor(
     JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
     JS::MutableHandle<JS::PropertyDescriptor> desc) const {
   // First check for indexed access.  This is
   // https://html.spec.whatwg.org/multipage/window-object.html#windowproxy-getownproperty
   // step 2, mostly.
->>>>>>> upstream-releases
   bool found;
   if (!GetSubframeWindow(cx, proxy, id, desc.value(), found)) {
     return false;
@@ -891,22 +587,6 @@ bool nsOuterWindowProxy::getOwnPropertyDescriptor(
     return true;
   }
 
-<<<<<<< HEAD
-  bool ok = js::Wrapper::getOwnPropertyDescriptor(cx, proxy, id, desc);
-  if (!ok) {
-    return false;
-  }
-
-#ifndef RELEASE_OR_BETA  // To be turned on in bug 1496510.
-  if (!IsNonConfigurableReadonlyPrimitiveGlobalProp(cx, id)) {
-    desc.setConfigurable(true);
-  }
-#endif
-
-  return true;
-||||||| merged common ancestors
-  return js::Wrapper::getOwnPropertyDescriptor(cx, proxy, id, desc);
-=======
   bool isSameOrigin = IsPlatformObjectSameOrigin(cx, proxy);
 
   // If we did not find a subframe, we could still have an indexed property
@@ -978,31 +658,12 @@ bool nsOuterWindowProxy::getOwnPropertyDescriptor(
 
   // And step 7.
   return CrossOriginPropertyFallback(cx, proxy, id, desc);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::defineProperty(JSContext* cx,
-                                        JS::Handle<JSObject*> proxy,
-                                        JS::Handle<jsid> id,
-                                        JS::Handle<JS::PropertyDescriptor> desc,
-                                        JS::ObjectOpResult& result) const {
-  if (IsArrayIndex(GetArrayIndexFromId(cx, id))) {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::defineProperty(JSContext* cx,
-                                   JS::Handle<JSObject*> proxy,
-                                   JS::Handle<jsid> id,
-                                   JS::Handle<JS::PropertyDescriptor> desc,
-                                   JS::ObjectOpResult &result) const
-{
-  if (IsArrayIndex(GetArrayIndexFromId(cx, id))) {
-=======
 bool nsOuterWindowProxy::definePropertySameOrigin(
     JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id,
     JS::Handle<JS::PropertyDescriptor> desc, JS::ObjectOpResult& result) const {
   if (IsArrayIndex(GetArrayIndexFromId(id))) {
->>>>>>> upstream-releases
     // Spec says to Reject whether this is a supported index or not,
     // since we have no indexed setter or indexed creator.  It is up
     // to the caller to decide whether to throw a TypeError.
@@ -1073,21 +734,9 @@ bool nsOuterWindowProxy::definePropertySameOrigin(
   return true;
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::ownPropertyKeys(JSContext* cx,
-                                         JS::Handle<JSObject*> proxy,
-                                         JS::AutoIdVector& props) const {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::ownPropertyKeys(JSContext *cx,
-                                    JS::Handle<JSObject*> proxy,
-                                    JS::AutoIdVector &props) const
-{
-=======
 bool nsOuterWindowProxy::ownPropertyKeys(
     JSContext* cx, JS::Handle<JSObject*> proxy,
     JS::MutableHandleVector<jsid> props) const {
->>>>>>> upstream-releases
   // Just our indexed stuff followed by our "normal" own property names.
   if (!AppendIndexedPropertyNames(proxy, props)) {
     return false;
@@ -1128,18 +777,6 @@ bool nsOuterWindowProxy::ownPropertyKeys(
   return xpc::AppendCrossOriginWhitelistedPropNames(cx, props);
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::delete_(JSContext* cx, JS::Handle<JSObject*> proxy,
-                                 JS::Handle<jsid> id,
-                                 JS::ObjectOpResult& result) const {
-  if (nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id)) {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::delete_(JSContext *cx, JS::Handle<JSObject*> proxy,
-                            JS::Handle<jsid> id, JS::ObjectOpResult &result) const
-{
-  if (nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id)) {
-=======
 bool nsOuterWindowProxy::delete_(JSContext* cx, JS::Handle<JSObject*> proxy,
                                  JS::Handle<jsid> id,
                                  JS::ObjectOpResult& result) const {
@@ -1148,7 +785,6 @@ bool nsOuterWindowProxy::delete_(JSContext* cx, JS::Handle<JSObject*> proxy,
   }
 
   if (!GetSubframeWindow(cx, proxy, id).IsNull()) {
->>>>>>> upstream-releases
     // Fail (which means throw if strict, else return false).
     return result.failCantDeleteWindowElement();
   }
@@ -1166,117 +802,23 @@ bool nsOuterWindowProxy::delete_(JSContext* cx, JS::Handle<JSObject*> proxy,
   return js::Wrapper::delete_(cx, proxy, id, result);
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::getPrototypeIfOrdinary(
-    JSContext* cx, JS::Handle<JSObject*> proxy, bool* isOrdinary,
-    JS::MutableHandle<JSObject*> protop) const {
-  // Window's [[GetPrototypeOf]] trap isn't the ordinary definition:
-  //
-  //   https://html.spec.whatwg.org/multipage/browsers.html#windowproxy-getprototypeof
-  //
-  // We nonetheless can implement it with a static [[Prototype]], because
-  // wrapper-class handlers (particularly, XOW in FilteringWrapper.cpp) supply
-  // all non-ordinary behavior.
-  //
-  // But from a spec point of view, it's the exact same object in both cases --
-  // only the observer's changed.  So this getPrototypeIfOrdinary trap on the
-  // non-wrapper object *must* report non-ordinary, even if static [[Prototype]]
-  // usually means ordinary.
-  *isOrdinary = false;
-  return true;
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::getPrototypeIfOrdinary(JSContext* cx,
-                                           JS::Handle<JSObject*> proxy,
-                                           bool* isOrdinary,
-                                           JS::MutableHandle<JSObject*> protop) const
-{
-  // Window's [[GetPrototypeOf]] trap isn't the ordinary definition:
-  //
-  //   https://html.spec.whatwg.org/multipage/browsers.html#windowproxy-getprototypeof
-  //
-  // We nonetheless can implement it with a static [[Prototype]], because
-  // wrapper-class handlers (particularly, XOW in FilteringWrapper.cpp) supply
-  // all non-ordinary behavior.
-  //
-  // But from a spec point of view, it's the exact same object in both cases --
-  // only the observer's changed.  So this getPrototypeIfOrdinary trap on the
-  // non-wrapper object *must* report non-ordinary, even if static [[Prototype]]
-  // usually means ordinary.
-  *isOrdinary = false;
-  return true;
-=======
 JSObject* nsOuterWindowProxy::getSameOriginPrototype(JSContext* cx) const {
   return Window_Binding::GetProtoObjectHandle(cx);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::preventExtensions(JSContext* cx,
-                                           JS::Handle<JSObject*> proxy,
-                                           JS::ObjectOpResult& result) const {
-  // If [[Extensible]] could be false, then navigating a window could navigate
-  // to a window that's [[Extensible]] after being at one that wasn't: an
-  // invariant violation.  So never change a window's extensibility.
-  return result.failCantPreventExtensions();
-}
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::preventExtensions(JSContext* cx,
-                                      JS::Handle<JSObject*> proxy,
-                                      JS::ObjectOpResult& result) const
-{
-  // If [[Extensible]] could be false, then navigating a window could navigate
-  // to a window that's [[Extensible]] after being at one that wasn't: an
-  // invariant violation.  So never change a window's extensibility.
-  return result.failCantPreventExtensions();
-}
-=======
 bool nsOuterWindowProxy::has(JSContext* cx, JS::Handle<JSObject*> proxy,
                              JS::Handle<jsid> id, bool* bp) const {
   // We could just directly forward this method to js::BaseProxyHandler, but
   // that involves reifying the actual property descriptor, which might be more
   // work than we have to do for has() on the Window.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::isExtensible(JSContext* cx,
-                                      JS::Handle<JSObject*> proxy,
-                                      bool* extensible) const {
-  // See above.
-  *extensible = true;
-  return true;
-}
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::isExtensible(JSContext *cx, JS::Handle<JSObject*> proxy,
-                                 bool *extensible) const
-{
-  // See above.
-  *extensible = true;
-  return true;
-}
-=======
   if (!IsPlatformObjectSameOrigin(cx, proxy)) {
     // In the cross-origin case we only have own properties.  Just call hasOwn
     // directly.
     return hasOwn(cx, proxy, id, bp);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::has(JSContext* cx, JS::Handle<JSObject*> proxy,
-                             JS::Handle<jsid> id, bool* bp) const {
-  if (nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id)) {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::has(JSContext *cx, JS::Handle<JSObject*> proxy,
-                        JS::Handle<jsid> id, bool *bp) const
-{
-  if (nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id)) {
-=======
   if (!GetSubframeWindow(cx, proxy, id).IsNull()) {
->>>>>>> upstream-releases
     *bp = true;
     return true;
   }
@@ -1288,17 +830,6 @@ nsOuterWindowProxy::has(JSContext *cx, JS::Handle<JSObject*> proxy,
   return js::Wrapper::has(cx, proxy, id, bp);
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::hasOwn(JSContext* cx, JS::Handle<JSObject*> proxy,
-                                JS::Handle<jsid> id, bool* bp) const {
-  if (nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id)) {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::hasOwn(JSContext *cx, JS::Handle<JSObject*> proxy,
-                           JS::Handle<jsid> id, bool *bp) const
-{
-  if (nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id)) {
-=======
 bool nsOuterWindowProxy::hasOwn(JSContext* cx, JS::Handle<JSObject*> proxy,
                                 JS::Handle<jsid> id, bool* bp) const {
   // We could just directly forward this method to js::BaseProxyHandler, but
@@ -1321,7 +852,6 @@ bool nsOuterWindowProxy::hasOwn(JSContext* cx, JS::Handle<JSObject*> proxy,
   }
 
   if (!GetSubframeWindow(cx, proxy, id).IsNull()) {
->>>>>>> upstream-releases
     *bp = true;
     return true;
   }
@@ -1378,22 +908,6 @@ bool nsOuterWindowProxy::get(JSContext* cx, JS::Handle<JSObject*> proxy,
   return MaybeWrapValue(cx, vp);
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::set(JSContext* cx, JS::Handle<JSObject*> proxy,
-                             JS::Handle<jsid> id, JS::Handle<JS::Value> v,
-                             JS::Handle<JS::Value> receiver,
-                             JS::ObjectOpResult& result) const {
-  if (IsArrayIndex(GetArrayIndexFromId(cx, id))) {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::set(JSContext *cx, JS::Handle<JSObject*> proxy,
-                        JS::Handle<jsid> id,
-                        JS::Handle<JS::Value> v,
-                        JS::Handle<JS::Value> receiver,
-                        JS::ObjectOpResult &result) const
-{
-  if (IsArrayIndex(GetArrayIndexFromId(cx, id))) {
-=======
 bool nsOuterWindowProxy::set(JSContext* cx, JS::Handle<JSObject*> proxy,
                              JS::Handle<jsid> id, JS::Handle<JS::Value> v,
                              JS::Handle<JS::Value> receiver,
@@ -1403,7 +917,6 @@ bool nsOuterWindowProxy::set(JSContext* cx, JS::Handle<JSObject*> proxy,
   }
 
   if (IsArrayIndex(GetArrayIndexFromId(id))) {
->>>>>>> upstream-releases
     // Reject the set.  It's up to the caller to decide whether to throw a
     // TypeError.  If the caller is strict mode JS code, it'll throw.
     return result.failReadOnly();
@@ -1425,15 +938,6 @@ bool nsOuterWindowProxy::set(JSContext* cx, JS::Handle<JSObject*> proxy,
   return js::Wrapper::set(cx, proxy, id, wrappedArg, wrappedReceiver, result);
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::getOwnEnumerablePropertyKeys(
-    JSContext* cx, JS::Handle<JSObject*> proxy, JS::AutoIdVector& props) const {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::getOwnEnumerablePropertyKeys(JSContext *cx, JS::Handle<JSObject*> proxy,
-                                                 JS::AutoIdVector &props) const
-{
-=======
 bool nsOuterWindowProxy::getOwnEnumerablePropertyKeys(
     JSContext* cx, JS::Handle<JSObject*> proxy,
     JS::MutableHandleVector<jsid> props) const {
@@ -1443,7 +947,6 @@ bool nsOuterWindowProxy::getOwnEnumerablePropertyKeys(
   // only return the enumerable ones.  But maybe there's value in having
   // somewhat faster for-in iteration on Window objects...
 
->>>>>>> upstream-releases
   // Like ownPropertyKeys, our indexed stuff followed by our "normal" enumerable
   // own property names.
   if (!AppendIndexedPropertyNames(proxy, props)) {
@@ -1471,43 +974,9 @@ bool nsOuterWindowProxy::getOwnEnumerablePropertyKeys(
     JS_MarkCrossZoneId(cx, id);
   }
 
-<<<<<<< HEAD
-JSObject* nsOuterWindowProxy::enumerate(JSContext* cx,
-                                        JS::Handle<JSObject*> proxy) const {
-  // BaseProxyHandler::enumerate seems to do what we want here: fall
-  // back on the property names returned from js::GetPropertyKeys()
-  return js::BaseProxyHandler::enumerate(cx, proxy);
-||||||| merged common ancestors
-JSObject*
-nsOuterWindowProxy::enumerate(JSContext *cx, JS::Handle<JSObject*> proxy) const
-{
-  // BaseProxyHandler::enumerate seems to do what we want here: fall
-  // back on the property names returned from js::GetPropertyKeys()
-  return js::BaseProxyHandler::enumerate(cx, proxy);
-=======
   return js::AppendUnique(cx, props, innerProps);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::GetSubframeWindow(JSContext* cx,
-                                           JS::Handle<JSObject*> proxy,
-                                           JS::Handle<jsid> id,
-                                           JS::MutableHandle<JS::Value> vp,
-                                           bool& found) const {
-  nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id);
-  if (!frame) {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::GetSubframeWindow(JSContext *cx,
-                                      JS::Handle<JSObject*> proxy,
-                                      JS::Handle<jsid> id,
-                                      JS::MutableHandle<JS::Value> vp,
-                                      bool& found) const
-{
-  nsCOMPtr<nsPIDOMWindowOuter> frame = GetSubframeWindow(cx, proxy, id);
-  if (!frame) {
-=======
 bool nsOuterWindowProxy::GetSubframeWindow(JSContext* cx,
                                            JS::Handle<JSObject*> proxy,
                                            JS::Handle<jsid> id,
@@ -1515,7 +984,6 @@ bool nsOuterWindowProxy::GetSubframeWindow(JSContext* cx,
                                            bool& found) const {
   Nullable<WindowProxyHolder> frame = GetSubframeWindow(cx, proxy, id);
   if (frame.IsNull()) {
->>>>>>> upstream-releases
     found = false;
     return true;
   }
@@ -1524,22 +992,9 @@ bool nsOuterWindowProxy::GetSubframeWindow(JSContext* cx,
   return WrapObject(cx, frame.Value(), vp);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsOuterWindowProxy::GetSubframeWindow(
-    JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id) const {
-  uint32_t index = GetArrayIndexFromId(cx, id);
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsOuterWindowProxy::GetSubframeWindow(JSContext *cx,
-                                      JS::Handle<JSObject*> proxy,
-                                      JS::Handle<jsid> id) const
-{
-  uint32_t index = GetArrayIndexFromId(cx, id);
-=======
 Nullable<WindowProxyHolder> nsOuterWindowProxy::GetSubframeWindow(
     JSContext* cx, JS::Handle<JSObject*> proxy, JS::Handle<jsid> id) const {
   uint32_t index = GetArrayIndexFromId(id);
->>>>>>> upstream-releases
   if (!IsArrayIndex(index)) {
     return nullptr;
   }
@@ -1548,18 +1003,8 @@ Nullable<WindowProxyHolder> nsOuterWindowProxy::GetSubframeWindow(
   return win->IndexedGetterOuter(index);
 }
 
-<<<<<<< HEAD
-bool nsOuterWindowProxy::AppendIndexedPropertyNames(
-    JSContext* cx, JSObject* proxy, JS::AutoIdVector& props) const {
-||||||| merged common ancestors
-bool
-nsOuterWindowProxy::AppendIndexedPropertyNames(JSContext *cx, JSObject *proxy,
-                                               JS::AutoIdVector &props) const
-{
-=======
 bool nsOuterWindowProxy::AppendIndexedPropertyNames(
     JSObject* proxy, JS::MutableHandleVector<jsid> props) const {
->>>>>>> upstream-releases
   uint32_t length = GetOuterWindow(proxy)->Length();
   MOZ_ASSERT(int32_t(length) >= 0);
   if (!props.reserve(props.length() + length)) {
@@ -1574,13 +1019,6 @@ bool nsOuterWindowProxy::AppendIndexedPropertyNames(
   return true;
 }
 
-<<<<<<< HEAD
-size_t nsOuterWindowProxy::objectMoved(JSObject* obj, JSObject* old) const {
-||||||| merged common ancestors
-size_t
-nsOuterWindowProxy::objectMoved(JSObject *obj, JSObject *old) const
-{
-=======
 bool nsOuterWindowProxy::EnsureHolder(
     JSContext* cx, JS::Handle<JSObject*> proxy,
     JS::MutableHandle<JSObject*> holder) const {
@@ -1590,7 +1028,6 @@ bool nsOuterWindowProxy::EnsureHolder(
 }
 
 size_t nsOuterWindowProxy::objectMoved(JSObject* obj, JSObject* old) const {
->>>>>>> upstream-releases
   nsGlobalWindowOuter* outerWindow = GetOuterWindow(obj);
   if (outerWindow) {
     outerWindow->UpdateWrapper(obj, old);
@@ -1647,48 +1084,6 @@ static JSObject* NewOuterWindowProxy(JSContext* cx,
 //*****************************************************************************
 
 nsGlobalWindowOuter::nsGlobalWindowOuter(uint64_t aWindowID)
-<<<<<<< HEAD
-    : nsPIDOMWindowOuter(aWindowID),
-      mIdleFuzzFactor(0),
-      mIdleCallbackIndex(-1),
-      mCurrentlyIdle(false),
-      mAddActiveEventFuzzTime(true),
-      mFullscreen(false),
-      mFullscreenMode(false),
-      mIsClosed(false),
-      mInClose(false),
-      mHavePendingClose(false),
-      mHadOriginalOpener(false),
-      mIsPopupSpam(false),
-      mBlockScriptedClosingFlag(false),
-      mWasOffline(false),
-      mCreatingInnerWindow(false),
-      mIsChrome(false),
-      mAllowScriptsToClose(false),
-      mTopLevelOuterContentWindow(false),
-      mHasStorageAccess(false),
-||||||| merged common ancestors
-  : nsPIDOMWindowOuter(aWindowID),
-    mIdleFuzzFactor(0),
-    mIdleCallbackIndex(-1),
-    mCurrentlyIdle(false),
-    mAddActiveEventFuzzTime(true),
-    mFullscreen(false),
-    mFullscreenMode(false),
-    mIsClosed(false),
-    mInClose(false),
-    mHavePendingClose(false),
-    mHadOriginalOpener(false),
-    mIsPopupSpam(false),
-    mBlockScriptedClosingFlag(false),
-    mWasOffline(false),
-    mCreatingInnerWindow(false),
-    mIsChrome(false),
-    mAllowScriptsToClose(false),
-    mTopLevelOuterContentWindow(false),
-    mHasStorageAccess(false),
-    mSerial(0),
-=======
     : nsPIDOMWindowOuter(aWindowID),
       mFullscreen(false),
       mFullscreenMode(false),
@@ -1704,7 +1099,6 @@ nsGlobalWindowOuter::nsGlobalWindowOuter(uint64_t aWindowID)
       mAllowScriptsToClose(false),
       mTopLevelOuterContentWindow(false),
       mHasStorageAccess(false),
->>>>>>> upstream-releases
 #ifdef DEBUG
       mSerial(0),
       mSetOpenerWindowCalled(false),
@@ -1852,10 +1246,6 @@ nsGlobalWindowOuter::~nsGlobalWindowOuter() {
   nsCOMPtr<nsIObserverService> obs = mozilla::services::GetObserverService();
   if (obs) {
     obs->RemoveObserver(this, PERM_CHANGE_NOTIFICATION);
-  }
-  nsCOMPtr<nsIPrefBranch> prefBranch = do_GetService(NS_PREFSERVICE_CONTRACTID);
-  if (prefBranch) {
-    prefBranch->RemoveObserver("network.cookie.cookieBehavior", this);
   }
 
   nsLayoutStatics::Release();
@@ -2067,17 +1457,8 @@ bool nsGlobalWindowOuter::IsBlackForCC(bool aTracingNeeded) {
   // has a strong reference to the nsGlobalWindowOuter. We're using the
   // mInnerWindow pointer as a flag for that whole chain.
   return (nsCCUncollectableMarker::InGeneration(GetMarkedCCGeneration()) ||
-<<<<<<< HEAD
-          HasKnownLiveWrapper()) &&
-         (!aTracingNeeded || HasNothingToTrace(ToSupports(this)));
-||||||| merged common ancestors
-          HasKnownLiveWrapper()) &&
-         (!aTracingNeeded ||
-          HasNothingToTrace(ToSupports(this)));
-=======
           (mInnerWindow && HasKnownLiveWrapper())) &&
          (!aTracingNeeded || HasNothingToTrace(ToSupports(this)));
->>>>>>> upstream-releases
 }
 
 //*****************************************************************************
@@ -2100,37 +1481,9 @@ nsresult nsGlobalWindowOuter::EnsureScriptEnvironment() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
 nsIScriptContext* nsGlobalWindowOuter::GetScriptContext() { return mContext; }
 
-JSObject* nsGlobalWindowOuter::GetGlobalJSObject() {
-  return FastGetGlobalJSObject();
-}
-||||||| merged common ancestors
-nsIScriptContext *
-nsGlobalWindowOuter::GetScriptContext()
-{
-  return mContext;
-}
-
-JSObject *
-nsGlobalWindowOuter::GetGlobalJSObject()
-{
-  return FastGetGlobalJSObject();
-}
-=======
-nsIScriptContext* nsGlobalWindowOuter::GetScriptContext() { return mContext; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool nsGlobalWindowOuter::WouldReuseInnerWindow(nsIDocument* aNewDocument) {
-||||||| merged common ancestors
-bool
-nsGlobalWindowOuter::WouldReuseInnerWindow(nsIDocument* aNewDocument)
-{
-=======
 bool nsGlobalWindowOuter::WouldReuseInnerWindow(Document* aNewDocument) {
->>>>>>> upstream-releases
   // We reuse the inner window when:
   // a. We are currently at our original document.
   // b. At least one of the following conditions are true:
@@ -2170,16 +1523,8 @@ bool nsGlobalWindowOuter::WouldReuseInnerWindow(Document* aNewDocument) {
   return false;
 }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::SetInitialPrincipalToSubject() {
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::SetInitialPrincipalToSubject()
-{
-=======
 void nsGlobalWindowOuter::SetInitialPrincipalToSubject(
     nsIContentSecurityPolicy* aCSP) {
->>>>>>> upstream-releases
   // First, grab the subject principal.
   nsCOMPtr<nsIPrincipal> newWindowPrincipal =
       nsContentUtils::SubjectPrincipalOrSystemIfNativeCaller();
@@ -2229,56 +1574,12 @@ void nsGlobalWindowOuter::SetInitialPrincipalToSubject(
   }
 }
 
-<<<<<<< HEAD
-PopupControlState nsGlobalWindowOuter::PushPopupControlState(
-    PopupControlState aState, bool aForce) const {
-  return nsContentUtils::PushPopupControlState(aState, aForce);
-}
-
-void nsGlobalWindowOuter::PopPopupControlState(PopupControlState aState) const {
-  nsContentUtils::PopPopupControlState(aState);
-}
-
-PopupControlState nsGlobalWindowOuter::GetPopupControlState() const {
-  return nsContentUtils::GetPopupControlState();
-}
-
 #define WINDOWSTATEHOLDER_IID                        \
   {                                                  \
     0x0b917c3e, 0xbd50, 0x4683, {                    \
       0xaf, 0xc9, 0xc7, 0x81, 0x07, 0xae, 0x33, 0x26 \
     }                                                \
   }
-||||||| merged common ancestors
-PopupControlState
-nsGlobalWindowOuter::PushPopupControlState(PopupControlState aState,
-                                           bool aForce) const
-{
-  return nsContentUtils::PushPopupControlState(aState, aForce);
-}
-
-void
-nsGlobalWindowOuter::PopPopupControlState(PopupControlState aState) const
-{
-  nsContentUtils::PopPopupControlState(aState);
-}
-
-PopupControlState
-nsGlobalWindowOuter::GetPopupControlState() const
-{
-  return nsContentUtils::GetPopupControlState();
-}
-
-#define WINDOWSTATEHOLDER_IID \
-{0x0b917c3e, 0xbd50, 0x4683, {0xaf, 0xc9, 0xc7, 0x81, 0x07, 0xae, 0x33, 0x26}}
-=======
-#define WINDOWSTATEHOLDER_IID                        \
-  {                                                  \
-    0x0b917c3e, 0xbd50, 0x4683, {                    \
-      0xaf, 0xc9, 0xc7, 0x81, 0x07, 0xae, 0x33, 0x26 \
-    }                                                \
-  }
->>>>>>> upstream-releases
 
 class WindowStateHolder final : public nsISupports {
  public:
@@ -2329,17 +1630,8 @@ WindowStateHolder::~WindowStateHolder() {
 
 NS_IMPL_ISUPPORTS(WindowStateHolder, WindowStateHolder)
 
-<<<<<<< HEAD
-bool nsGlobalWindowOuter::ComputeIsSecureContext(nsIDocument* aDocument,
-                                                 SecureContextFlags aFlags) {
-||||||| merged common ancestors
-bool
-nsGlobalWindowOuter::ComputeIsSecureContext(nsIDocument* aDocument, SecureContextFlags aFlags)
-{
-=======
 bool nsGlobalWindowOuter::ComputeIsSecureContext(Document* aDocument,
                                                  SecureContextFlags aFlags) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIPrincipal> principal = aDocument->NodePrincipal();
   if (nsContentUtils::IsSystemPrincipal(principal)) {
     return true;
@@ -2457,15 +1749,6 @@ static bool InitializeLegacyNetscapeObject(JSContext* aCx,
   return JS_DefineFunctions(aCx, obj, EnablePrivilegeSpec);
 }
 
-<<<<<<< HEAD
-static JS::RealmCreationOptions& SelectZone(
-    nsGlobalWindowInner* aNewInner, JS::RealmCreationOptions& aOptions) {
-||||||| merged common ancestors
-static JS::RealmCreationOptions&
-SelectZone(nsGlobalWindowInner* aNewInner,
-           JS::RealmCreationOptions& aOptions)
-{
-=======
 struct MOZ_STACK_CLASS CompartmentFinderState {
   explicit CompartmentFinderState(nsIPrincipal* aPrincipal)
       : principal(aPrincipal), compartment(nullptr) {}
@@ -2511,13 +1794,7 @@ static JS::RealmCreationOptions& SelectZone(
     return aOptions.setExistingCompartment(xpc::PrivilegedJunkScope());
   }
 
->>>>>>> upstream-releases
   if (aNewInner->GetOuterWindow()) {
-<<<<<<< HEAD
-    nsGlobalWindowOuter* top = aNewInner->GetTopInternal();
-||||||| merged common ancestors
-    nsGlobalWindowOuter *top = aNewInner->GetTopInternal();
-=======
     nsGlobalWindowOuter* top = aNewInner->GetTopInternal();
     if (top == aNewInner->GetOuterWindow()) {
       // We're a toplevel load.  Use a new zone.  This way, when we do
@@ -2525,7 +1802,6 @@ static JS::RealmCreationOptions& SelectZone(
       // across navigations.
       return aOptions.setNewCompartmentAndZone();
     }
->>>>>>> upstream-releases
 
     // If we have a top-level window, use its zone.
     if (top && top->GetGlobalJSObject()) {
@@ -2597,31 +1873,13 @@ static nsresult CreateNativeGlobalForInner(JSContext* aCx,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsGlobalWindowOuter::SetNewDocument(nsIDocument* aDocument,
-                                             nsISupports* aState,
-                                             bool aForceReuseInnerWindow) {
-||||||| merged common ancestors
-nsresult
-nsGlobalWindowOuter::SetNewDocument(nsIDocument* aDocument,
-                                    nsISupports* aState,
-                                    bool aForceReuseInnerWindow)
-{
-=======
 nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
                                              nsISupports* aState,
                                              bool aForceReuseInnerWindow) {
->>>>>>> upstream-releases
   MOZ_ASSERT(mDocumentPrincipal == nullptr,
-<<<<<<< HEAD
-             "mDocumentPrincipal prematurely set!");
-||||||| merged common ancestors
-                  "mDocumentPrincipal prematurely set!");
-=======
              "mDocumentPrincipal prematurely set!");
   MOZ_ASSERT(mDocumentStoragePrincipal == nullptr,
              "mDocumentStoragePrincipal prematurely set!");
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocument);
 
   // Bail out early if we're in process of closing down the window.
@@ -2814,18 +2072,8 @@ nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
 
       SetWrapper(mContext->GetWindowProxy());
     } else {
-<<<<<<< HEAD
-      JS::ExposeObjectToActiveJS(newInnerGlobal);
       JS::Rooted<JSObject*> outerObject(
           cx, NewOuterWindowProxy(cx, newInnerGlobal, thisChrome));
-||||||| merged common ancestors
-      JS::ExposeObjectToActiveJS(newInnerGlobal);
-      JS::Rooted<JSObject*> outerObject(cx,
-        NewOuterWindowProxy(cx, newInnerGlobal, thisChrome));
-=======
-      JS::Rooted<JSObject*> outerObject(
-          cx, NewOuterWindowProxy(cx, newInnerGlobal, thisChrome));
->>>>>>> upstream-releases
       if (!outerObject) {
         NS_ERROR("out of memory");
         return NS_ERROR_FAILURE;
@@ -2848,15 +2096,8 @@ nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
         return NS_ERROR_FAILURE;
       }
 
-<<<<<<< HEAD
-      js::SetProxyReservedSlot(outerObject, 0,
-                               js::PrivateValue(ToSupports(this)));
-||||||| merged common ancestors
-      js::SetProxyReservedSlot(outerObject, 0, js::PrivateValue(ToSupports(this)));
-=======
       js::SetProxyReservedSlot(outerObject, OUTER_WINDOW_SLOT,
                                js::PrivateValue(ToSupports(this)));
->>>>>>> upstream-releases
 
       SetWrapper(outerObject);
 
@@ -2931,50 +2172,6 @@ nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
 
   if (!aState) {
     if (reUseInnerWindow) {
-<<<<<<< HEAD
-      if (newInnerWindow->mDoc != aDocument) {
-        newInnerWindow->mDoc = aDocument;
-
-        // The storage objects contain the URL of the window. We have to
-        // recreate them when the innerWindow is reused.
-        newInnerWindow->mLocalStorage = nullptr;
-        newInnerWindow->mSessionStorage = nullptr;
-        newInnerWindow->mPerformance = nullptr;
-
-        // This must be called after nullifying the internal objects because
-        // here we could recreate them, calling the getter methods, and store
-        // them into the JS slots. If we nullify them after, the slot values and
-        // the objects will be out of sync.
-        newInnerWindow->ClearDocumentDependentSlots(cx);
-
-        // When replacing an initial about:blank document we call
-        // ExecutionReady again to update the client creation URL.
-        rv = newInnerWindow->ExecutionReady();
-        NS_ENSURE_SUCCESS(rv, rv);
-      }
-||||||| merged common ancestors
-
-      if (newInnerWindow->mDoc != aDocument) {
-        newInnerWindow->mDoc = aDocument;
-
-        // The storage objects contain the URL of the window. We have to
-        // recreate them when the innerWindow is reused.
-        newInnerWindow->mLocalStorage = nullptr;
-        newInnerWindow->mSessionStorage = nullptr;
-        newInnerWindow->mPerformance = nullptr;
-
-        // This must be called after nullifying the internal objects because
-        // here we could recreate them, calling the getter methods, and store
-        // them into the JS slots. If we nullify them after, the slot values and
-        // the objects will be out of sync.
-        newInnerWindow->ClearDocumentDependentSlots(cx);
-
-        // When replacing an initial about:blank document we call
-        // ExecutionReady again to update the client creation URL.
-        rv = newInnerWindow->ExecutionReady();
-        NS_ENSURE_SUCCESS(rv, rv);
-      }
-=======
       MOZ_RELEASE_ASSERT(newInnerWindow->mDoc != aDocument);
       newInnerWindow->mDoc = aDocument;
 
@@ -2994,7 +2191,6 @@ nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
       // ExecutionReady again to update the client creation URL.
       rv = newInnerWindow->ExecutionReady();
       NS_ENSURE_SUCCESS(rv, rv);
->>>>>>> upstream-releases
     } else {
       newInnerWindow->InnerSetNewDocument(cx, aDocument);
 
@@ -3021,10 +2217,6 @@ nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
   // for our BrowsingContext if it isn't already.
   mInnerWindow->GetWindowGlobalChild()->SendUpdateDocumentURI(
       aDocument->GetDocumentURI());
-  mInnerWindow->GetWindowGlobalChild()->SendBecomeCurrentWindowGlobal();
-
-  // Tell the WindowGlobalParent that it should become the current window global
-  // for our BrowsingContext if it isn't already.
   mInnerWindow->GetWindowGlobalChild()->SendBecomeCurrentWindowGlobal();
 
   // We no longer need the old inner window.  Start its destruction if
@@ -3076,38 +2268,6 @@ nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
 
   mHasStorageAccess = false;
   nsIURI* uri = aDocument->GetDocumentURI();
-<<<<<<< HEAD
-  if (newInnerWindow) {
-    if (StaticPrefs::network_cookie_cookieBehavior() ==
-            nsICookieService::BEHAVIOR_REJECT_TRACKER &&
-        nsContentUtils::IsThirdPartyWindowOrChannel(newInnerWindow, nullptr,
-                                                    uri) &&
-        nsContentUtils::IsTrackingResourceWindow(newInnerWindow)) {
-      // Grant storage access by default if the first-party storage access
-      // permission has been granted already.
-      // Don't notify in this case, since we would be notifying the user
-      // needlessly.
-      mHasStorageAccess =
-          AntiTrackingCommon::IsFirstPartyStorageAccessGrantedFor(
-              newInnerWindow, uri, nullptr);
-    }
-||||||| merged common ancestors
-  if (newInnerWindow) {
-    if (AntiTrackingCommon::ShouldHonorContentBlockingCookieRestrictions() &&
-        StaticPrefs::network_cookie_cookieBehavior() ==
-          nsICookieService::BEHAVIOR_REJECT_TRACKER &&
-        nsContentUtils::IsThirdPartyWindowOrChannel(newInnerWindow, nullptr,
-                                                    uri) &&
-        nsContentUtils::IsTrackingResourceWindow(newInnerWindow)) {
-      // Grant storage access by default if the first-party storage access
-      // permission has been granted already.
-      // Don't notify in this case, since we would be notifying the user needlessly.
-      mHasStorageAccess =
-        AntiTrackingCommon::IsFirstPartyStorageAccessGrantedFor(newInnerWindow,
-                                                                uri,
-                                                                nullptr);
-    }
-=======
   if (newInnerWindow &&
       aDocument->CookieSettings()->GetRejectThirdPartyTrackers() &&
       nsContentUtils::IsThirdPartyWindowOrChannel(newInnerWindow, nullptr,
@@ -3119,7 +2279,6 @@ nsresult nsGlobalWindowOuter::SetNewDocument(Document* aDocument,
     // needlessly.
     mHasStorageAccess = AntiTrackingCommon::IsFirstPartyStorageAccessGrantedFor(
         newInnerWindow, uri, nullptr);
->>>>>>> upstream-releases
   }
 
   return NS_OK;
@@ -3166,19 +2325,9 @@ void nsGlobalWindowOuter::DispatchDOMWindowCreated() {
   }
 
   // Fire DOMWindowCreated at chrome event listeners
-<<<<<<< HEAD
-  nsContentUtils::DispatchChromeEvent(mDoc, mDoc,
-                                      NS_LITERAL_STRING("DOMWindowCreated"),
-                                      CanBubble::eYes, Cancelable::eNo);
-||||||| merged common ancestors
-  nsContentUtils::DispatchChromeEvent(mDoc, mDoc, NS_LITERAL_STRING("DOMWindowCreated"),
-                                      CanBubble::eYes,
-                                      Cancelable::eNo);
-=======
   nsContentUtils::DispatchChromeEvent(mDoc, ToSupports(mDoc),
                                       NS_LITERAL_STRING("DOMWindowCreated"),
                                       CanBubble::eYes, Cancelable::eNo);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIObserverService> observerService =
       mozilla::services::GetObserverService();
@@ -3201,29 +2350,15 @@ void nsGlobalWindowOuter::DispatchDOMWindowCreated() {
 
 void nsGlobalWindowOuter::ClearStatus() { SetStatusOuter(EmptyString()); }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::SetDocShell(nsIDocShell* aDocShell) {
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::SetDocShell(nsIDocShell* aDocShell)
-{
-=======
 void nsGlobalWindowOuter::SetDocShell(nsDocShell* aDocShell) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDocShell);
 
   if (aDocShell == mDocShell) {
     return;
   }
 
-<<<<<<< HEAD
-  mDocShell = aDocShell;  // Weak Reference
-||||||| merged common ancestors
-  mDocShell = aDocShell; // Weak Reference
-=======
   mDocShell = aDocShell;
   mBrowsingContext = aDocShell->GetBrowsingContext();
->>>>>>> upstream-releases
 
   nsCOMPtr<nsPIDOMWindowOuter> parentWindow = GetScriptableParentOrNull();
   MOZ_RELEASE_ASSERT(!parentWindow || !mTabGroup ||
@@ -3231,21 +2366,7 @@ void nsGlobalWindowOuter::SetDocShell(nsDocShell* aDocShell) {
                          nsGlobalWindowOuter::Cast(parentWindow)->mTabGroup);
 
   mTopLevelOuterContentWindow =
-<<<<<<< HEAD
       !mIsChrome && GetScriptableTopInternal() == this;
-
-  if (mFrames) {
-    mFrames->SetDocShell(aDocShell);
-  }
-||||||| merged common ancestors
-    !mIsChrome && GetScriptableTopInternal() == this;
-
-  if (mFrames) {
-    mFrames->SetDocShell(aDocShell);
-  }
-=======
-      !mIsChrome && GetScriptableTopInternal() == this;
->>>>>>> upstream-releases
 
   // Get our enclosing chrome shell and retrieve its global window impl, so
   // that we can do some forwarding to the chrome document.
@@ -3328,40 +2449,15 @@ void nsGlobalWindowOuter::DetachFromDocShell() {
     // When we're about to destroy a top level content window
     // (for example a tab), we trigger a full GC by passing null as the last
     // param. We also trigger a full GC for chrome windows.
-<<<<<<< HEAD
-    nsJSContext::PokeGC(JS::gcreason::SET_DOC_SHELL,
-                        (mTopLevelOuterContentWindow || mIsChrome)
-                            ? nullptr
-                            : GetWrapperPreserveColor());
-||||||| merged common ancestors
-    nsJSContext::PokeGC(JS::gcreason::SET_DOC_SHELL,
-                        (mTopLevelOuterContentWindow || mIsChrome) ?
-                          nullptr : GetWrapperPreserveColor());
-=======
     nsJSContext::PokeGC(JS::GCReason::SET_DOC_SHELL,
                         (mTopLevelOuterContentWindow || mIsChrome)
                             ? nullptr
                             : GetWrapperPreserveColor());
->>>>>>> upstream-releases
     mContext = nullptr;
   }
 
-<<<<<<< HEAD
-  mDocShell = nullptr;  // Weak Reference
-
-  if (mFrames) {
-    mFrames->SetDocShell(nullptr);
-  }
-||||||| merged common ancestors
-  mDocShell = nullptr; // Weak Reference
-
-  if (mFrames) {
-    mFrames->SetDocShell(nullptr);
-  }
-=======
   mDocShell = nullptr;
   mBrowsingContext->ClearDocShell();
->>>>>>> upstream-releases
 
   MaybeForgiveSpamCount();
   CleanUp();
@@ -3371,19 +2467,11 @@ void nsGlobalWindowOuter::SetOpenerWindow(nsPIDOMWindowOuter* aOpener,
                                           bool aOriginalOpener) {
   nsWeakPtr opener = do_GetWeakReference(aOpener);
   if (opener == mOpener) {
-<<<<<<< HEAD
-    MOZ_DIAGNOSTIC_ASSERT(
-        !aOpener || !aOpener->GetDocShell() ||
-        (GetBrowsingContext() &&
-         GetBrowsingContext()->GetOpener() == aOpener->GetBrowsingContext()));
-||||||| merged common ancestors
-=======
     MOZ_DIAGNOSTIC_ASSERT(!aOpener || !aOpener->GetDocShell() ||
                           (GetBrowsingContext() &&
                            aOpener->GetBrowsingContext() &&
                            aOpener->GetBrowsingContext()->Id() ==
                                GetBrowsingContext()->GetOpenerId()));
->>>>>>> upstream-releases
     return;
   }
 
@@ -3396,26 +2484,6 @@ void nsGlobalWindowOuter::SetOpenerWindow(nsPIDOMWindowOuter* aOpener,
   mOpener = opener.forget();
   NS_ASSERTION(mOpener || !aOpener, "Opener must support weak references!");
 
-<<<<<<< HEAD
-  if (mDocShell) {
-    MOZ_DIAGNOSTIC_ASSERT(
-        !aOriginalOpener || !aOpener ||
-        // TODO(farre): Allowing to set a closed or closing window as
-        // opener is not ideal, since it won't have a docshell and
-        // therefore no browsing context. This means that we're
-        // effectively setting the browsing context opener to null and
-        // the window opener to a closed window. This needs to be
-        // cleaned up, see Bug 1511353.
-        nsGlobalWindowOuter::Cast(aOpener)->IsClosedOrClosing() ||
-        aOpener->GetBrowsingContext() == GetBrowsingContext()->GetOpener());
-    // TODO(farre): Here we really wish to only consider the case
-    // where 'aOriginalOpener'. See bug 1509016.
-    GetBrowsingContext()->SetOpener(aOpener ? aOpener->GetBrowsingContext()
-                                            : nullptr);
-  }
-
-||||||| merged common ancestors
-=======
   if (mDocShell) {
     MOZ_DIAGNOSTIC_ASSERT(
         !aOriginalOpener || !aOpener ||
@@ -3437,7 +2505,6 @@ void nsGlobalWindowOuter::SetOpenerWindow(nsPIDOMWindowOuter* aOpener,
                                             : nullptr);
   }
 
->>>>>>> upstream-releases
   // Check that the js visible opener matches! We currently don't depend on this
   // being true outside of nightly, so we disable the assertion in optimized
   // release / beta builds.
@@ -3708,18 +2775,8 @@ nsIPrincipal* nsGlobalWindowOuter::GetEffectiveStoragePrincipal() {
 // nsGlobalWindowOuter::nsIDOMWindow
 //*****************************************************************************
 
-<<<<<<< HEAD
-void nsPIDOMWindowOuter::SetInitialKeyboardIndicators(
-    UIStateChangeType aShowAccelerators, UIStateChangeType aShowFocusRings) {
-||||||| merged common ancestors
-void
-nsPIDOMWindowOuter::SetInitialKeyboardIndicators(
-  UIStateChangeType aShowAccelerators, UIStateChangeType aShowFocusRings)
-{
-=======
 void nsPIDOMWindowOuter::SetInitialKeyboardIndicators(
     UIStateChangeType aShowFocusRings) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!GetCurrentInnerWindow());
 
   nsPIDOMWindowOuter* piWin = GetPrivateRoot();
@@ -3739,16 +2796,7 @@ void nsPIDOMWindowOuter::SetInitialKeyboardIndicators(
     windowRoot->SetShowFocusRings(aShowFocusRings == UIStateChangeType_Set);
   }
 
-<<<<<<< HEAD
-  nsContentUtils::SetKeyboardIndicatorsOnRemoteChildren(
-      GetOuterWindow(), aShowAccelerators, aShowFocusRings);
-||||||| merged common ancestors
-  nsContentUtils::SetKeyboardIndicatorsOnRemoteChildren(GetOuterWindow(),
-                                                        aShowAccelerators,
-                                                        aShowFocusRings);
-=======
   nsContentUtils::SetKeyboardIndicatorsOnRemoteChildren(this, aShowFocusRings);
->>>>>>> upstream-releases
 }
 
 Element* nsPIDOMWindowOuter::GetFrameElementInternal() const {
@@ -3874,41 +2922,9 @@ bool nsPIDOMWindowOuter::GetServiceWorkersTestingEnabled() {
   return topWindow->mServiceWorkersTestingEnabled;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetParentOuter() {
-  if (!mDocShell) {
-    return nullptr;
-  }
-
-  nsCOMPtr<nsPIDOMWindowOuter> parent;
-  if (mDocShell->GetIsMozBrowser()) {
-    parent = this;
-  } else {
-    parent = GetParent();
-  }
-
-  return parent.forget();
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsGlobalWindowOuter::GetParentOuter()
-{
-  if (!mDocShell) {
-    return nullptr;
-  }
-
-  nsCOMPtr<nsPIDOMWindowOuter> parent;
-  if (mDocShell->GetIsMozBrowser()) {
-    parent = this;
-  } else {
-    parent = GetParent();
-  }
-
-  return parent.forget();
-=======
 Nullable<WindowProxyHolder> nsGlobalWindowOuter::GetParentOuter() {
   BrowsingContext* bc = GetBrowsingContext();
   return bc ? bc->GetParent(IgnoreErrors()) : nullptr;
->>>>>>> upstream-releases
 }
 
 /**
@@ -3918,17 +2934,6 @@ Nullable<WindowProxyHolder> nsGlobalWindowOuter::GetParentOuter() {
  * mozbrowser> boundaries, so if |this| is contained by an <iframe
  * mozbrowser>, we will return |this| as its own parent.
  */
-<<<<<<< HEAD
-nsPIDOMWindowOuter* nsGlobalWindowOuter::GetScriptableParent() {
-  nsCOMPtr<nsPIDOMWindowOuter> parent = GetParentOuter();
-  return parent.get();
-||||||| merged common ancestors
-nsPIDOMWindowOuter*
-nsGlobalWindowOuter::GetScriptableParent()
-{
-  nsCOMPtr<nsPIDOMWindowOuter> parent = GetParentOuter();
-  return parent.get();
-=======
 nsPIDOMWindowOuter* nsGlobalWindowOuter::GetScriptableParent() {
   if (!mDocShell) {
     return nullptr;
@@ -3940,7 +2945,6 @@ nsPIDOMWindowOuter* nsGlobalWindowOuter::GetScriptableParent() {
 
   nsCOMPtr<nsPIDOMWindowOuter> parent = GetParent();
   return parent;
->>>>>>> upstream-releases
 }
 
 /**
@@ -3973,18 +2977,9 @@ already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetParent() {
   return win.forget();
 }
 
-<<<<<<< HEAD
-static nsresult GetTopImpl(nsGlobalWindowOuter* aWin, nsPIDOMWindowOuter** aTop,
-                           bool aScriptable) {
-||||||| merged common ancestors
-static nsresult
-GetTopImpl(nsGlobalWindowOuter* aWin, nsPIDOMWindowOuter** aTop, bool aScriptable)
-{
-=======
 static nsresult GetTopImpl(nsGlobalWindowOuter* aWin, nsIURI* aURIBeingLoaded,
                            nsPIDOMWindowOuter** aTop, bool aScriptable,
                            bool aExcludingExtensionAccessibleContentFrames) {
->>>>>>> upstream-releases
   *aTop = nullptr;
 
   MOZ_ASSERT_IF(aExcludingExtensionAccessibleContentFrames, !aScriptable);
@@ -4001,20 +2996,9 @@ static nsresult GetTopImpl(nsGlobalWindowOuter* aWin, nsIURI* aURIBeingLoaded,
     prevParent = parent;
 
     if (aScriptable) {
-<<<<<<< HEAD
-      newParent = parent->GetScriptableParent();
-    } else {
-      newParent = parent->GetParent();
-||||||| merged common ancestors
-      newParent = parent->GetScriptableParent();
-    }
-    else {
-      newParent = parent->GetParent();
-=======
       parent = parent->GetScriptableParent();
     } else {
       parent = parent->GetParent();
->>>>>>> upstream-releases
     }
 
     if (aExcludingExtensionAccessibleContentFrames) {
@@ -4078,13 +3062,6 @@ nsPIDOMWindowOuter* nsGlobalWindowOuter::GetScriptableTop() {
   return window.get();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetTop() {
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsGlobalWindowOuter::GetTop()
-{
-=======
 already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetTop() {
   nsCOMPtr<nsPIDOMWindowOuter> window;
   GetTopImpl(this, /* aURIBeingLoaded = */ nullptr, getter_AddRefs(window),
@@ -4096,7 +3073,6 @@ already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetTop() {
 already_AddRefed<nsPIDOMWindowOuter>
 nsGlobalWindowOuter::GetTopExcludingExtensionAccessibleContentFrames(
     nsIURI* aURIBeingLoaded) {
->>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowOuter> window;
   GetTopImpl(this, aURIBeingLoaded, getter_AddRefs(window),
              /* aScriptable = */ false,
@@ -4131,22 +3107,10 @@ void nsGlobalWindowOuter::GetContentOuter(JSContext* aCx,
 already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetContentInternal(
     ErrorResult& aError, CallerType aCallerType) {
   // First check for a named frame named "content"
-<<<<<<< HEAD
-  nsCOMPtr<nsPIDOMWindowOuter> domWindow =
-      GetChildWindow(NS_LITERAL_STRING("content"));
-  if (domWindow) {
-    return domWindow.forget();
-||||||| merged common ancestors
-  nsCOMPtr<nsPIDOMWindowOuter> domWindow =
-    GetChildWindow(NS_LITERAL_STRING("content"));
-  if (domWindow) {
-    return domWindow.forget();
-=======
   RefPtr<BrowsingContext> bc = GetChildWindow(NS_LITERAL_STRING("content"));
   if (bc) {
     nsCOMPtr<nsPIDOMWindowOuter> content(bc->GetDOMWindow());
     return content.forget();
->>>>>>> upstream-releases
   }
 
   // If we're contained in <iframe mozbrowser>, then GetContent is the same as
@@ -4210,57 +3174,18 @@ bool nsGlobalWindowOuter::GetClosedOuter() {
   return mIsClosed || !mDocShell;
 }
 
-<<<<<<< HEAD
 bool nsGlobalWindowOuter::Closed() { return GetClosedOuter(); }
-
-nsDOMWindowList* nsGlobalWindowOuter::GetFrames() {
-  if (!mFrames && mDocShell) {
-    mFrames = new nsDOMWindowList(mDocShell);
-  }
-||||||| merged common ancestors
-bool
-nsGlobalWindowOuter::Closed()
-{
-  return GetClosedOuter();
-}
-
-nsDOMWindowList*
-nsGlobalWindowOuter::GetFrames()
-{
-  if (!mFrames && mDocShell) {
-    mFrames = new nsDOMWindowList(mDocShell);
-  }
-=======
-bool nsGlobalWindowOuter::Closed() { return GetClosedOuter(); }
->>>>>>> upstream-releases
 
 Nullable<WindowProxyHolder> nsGlobalWindowOuter::IndexedGetterOuter(
     uint32_t aIndex) {
   BrowsingContext* bc = GetBrowsingContext();
   NS_ENSURE_TRUE(bc, nullptr);
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::IndexedGetterOuter(
-    uint32_t aIndex) {
-  nsDOMWindowList* windows = GetFrames();
-  NS_ENSURE_TRUE(windows, nullptr);
-
-  return windows->IndexedGetter(aIndex);
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsGlobalWindowOuter::IndexedGetterOuter(uint32_t aIndex)
-{
-  nsDOMWindowList* windows = GetFrames();
-  NS_ENSURE_TRUE(windows, nullptr);
-
-  return windows->IndexedGetter(aIndex);
-=======
   const BrowsingContext::Children& children = bc->GetChildren();
   if (aIndex < children.Length()) {
     return WindowProxyHolder(children[aIndex]);
   }
   return nullptr;
->>>>>>> upstream-releases
 }
 
 nsIControllers* nsGlobalWindowOuter::GetControllersOuter(ErrorResult& aError) {
@@ -4272,34 +3197,9 @@ nsIControllers* nsGlobalWindowOuter::GetControllersOuter(ErrorResult& aError) {
     }
 
     // Add in the default controller
-<<<<<<< HEAD
-    nsCOMPtr<nsIController> controller =
-        nsBaseCommandController::CreateWindowController();
-    if (!controller) {
-      aError.Throw(NS_ERROR_FAILURE);
-      return nullptr;
-    }
-
-    mControllers->InsertControllerAt(0, controller);
-    nsCOMPtr<nsIControllerContext> controllerContext =
-        do_QueryInterface(controller);
-    if (!controllerContext) {
-||||||| merged common ancestors
-    nsCOMPtr<nsIController> controller =
-      nsBaseCommandController::CreateWindowController();
-    if (!controller) {
-      aError.Throw(NS_ERROR_FAILURE);
-      return nullptr;
-    }
-
-    mControllers->InsertControllerAt(0, controller);
-    nsCOMPtr<nsIControllerContext> controllerContext = do_QueryInterface(controller);
-    if (!controllerContext) {
-=======
     RefPtr<nsBaseCommandController> commandController =
         nsBaseCommandController::CreateWindowController();
     if (!commandController) {
->>>>>>> upstream-releases
       aError.Throw(NS_ERROR_FAILURE);
       return nullptr;
     }
@@ -4442,17 +3342,8 @@ nsresult nsGlobalWindowOuter::GetInnerSize(CSSIntSize& aSize) {
 
   NS_ENSURE_STATE(mDocShell);
 
-<<<<<<< HEAD
-  RefPtr<nsPresContext> presContext = mDocShell->GetPresContext();
-  RefPtr<nsIPresShell> presShell = mDocShell->GetPresShell();
-||||||| merged common ancestors
-  RefPtr<nsPresContext> presContext;
-  mDocShell->GetPresContext(getter_AddRefs(presContext));
-  RefPtr<nsIPresShell> presShell = mDocShell->GetPresShell();
-=======
   RefPtr<nsPresContext> presContext = mDocShell->GetPresContext();
   PresShell* presShell = mDocShell->GetPresShell();
->>>>>>> upstream-releases
 
   if (!presContext || !presShell) {
     aSize = CSSIntSize(0, 0);
@@ -4461,40 +3352,15 @@ nsresult nsGlobalWindowOuter::GetInnerSize(CSSIntSize& aSize) {
 
   // If the visual viewport has been overriden, return that.
   if (presShell->IsVisualViewportSizeSet()) {
-<<<<<<< HEAD
-    aSize = CSSIntRect::FromAppUnitsRounded(presShell->GetVisualViewportSize());
-  } else {
-    RefPtr<nsViewManager> viewManager = presShell->GetViewManager();
-    if (viewManager) {
-      viewManager->FlushDelayedResize(false);
-    }
-||||||| merged common ancestors
-    aSize = CSSIntRect::FromAppUnitsRounded(
-      presShell->GetVisualViewportSize());
-  } else {
-    RefPtr<nsViewManager> viewManager = presShell->GetViewManager();
-    if (viewManager) {
-      viewManager->FlushDelayedResize(false);
-    }
-=======
     aSize = CSSIntRect::FromAppUnitsRounded(presShell->GetVisualViewportSize());
     return NS_OK;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    aSize =
-        CSSIntRect::FromAppUnitsRounded(presContext->GetVisibleArea().Size());
-||||||| merged common ancestors
-    aSize = CSSIntRect::FromAppUnitsRounded(
-      presContext->GetVisibleArea().Size());
-=======
   // Whether or not the css viewport has been overridden, we can get the
   // correct value by looking at the visible area of the presContext.
   RefPtr<nsViewManager> viewManager = presShell->GetViewManager();
   if (viewManager) {
     viewManager->FlushDelayedResize(false);
->>>>>>> upstream-releases
   }
 
   aSize = CSSIntRect::FromAppUnitsRounded(presContext->GetVisibleArea().Size());
@@ -4537,21 +3403,10 @@ void nsGlobalWindowOuter::SetInnerWidthOuter(int32_t aInnerWidth,
     return;
   }
 
-<<<<<<< HEAD
-  RefPtr<nsIPresShell> presShell = mDocShell->GetPresShell();
-
-  if (presShell && presShell->GetIsViewportOverridden()) {
-||||||| merged common ancestors
-  RefPtr<nsIPresShell> presShell = mDocShell->GetPresShell();
-
-  if (presShell && presShell->GetIsViewportOverridden())
-  {
-=======
   // We're going to set both viewports. If the css viewport has been
   // overridden, change the css viewport override. The visual viewport
   // will adopt this value via the logic in ::GetInnerSize().
   if (presShell && presShell->GetIsViewportOverridden()) {
->>>>>>> upstream-releases
     nscoord height = 0;
 
     RefPtr<nsPresContext> presContext;
@@ -4616,13 +3471,6 @@ void nsGlobalWindowOuter::SetInnerHeightOuter(int32_t aInnerHeight,
   if (presShell && presShell->GetIsViewportOverridden()) {
     nscoord width = 0;
 
-<<<<<<< HEAD
-  if (presShell && presShell->GetIsViewportOverridden()) {
-||||||| merged common ancestors
-  if (presShell && presShell->GetIsViewportOverridden())
-  {
-=======
->>>>>>> upstream-releases
     RefPtr<nsPresContext> presContext;
     presContext = presShell->GetPresContext();
 
@@ -4964,17 +3812,8 @@ nsresult nsGlobalWindowOuter::SetDocShellWidthAndHeight(int32_t aInnerWidth,
   docShell->GetTreeOwner(getter_AddRefs(treeOwner));
   NS_ENSURE_TRUE(treeOwner, NS_ERROR_FAILURE);
 
-<<<<<<< HEAD
-  NS_ENSURE_SUCCESS(
-      treeOwner->SizeShellTo(mDocShell, aInnerWidth, aInnerHeight),
-      NS_ERROR_FAILURE);
-||||||| merged common ancestors
-  NS_ENSURE_SUCCESS(treeOwner->SizeShellTo(mDocShell, aInnerWidth, aInnerHeight),
-                    NS_ERROR_FAILURE);
-=======
   NS_ENSURE_SUCCESS(treeOwner->SizeShellTo(docShell, aInnerWidth, aInnerHeight),
                     NS_ERROR_FAILURE);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -5094,84 +3933,23 @@ CSSPoint nsGlobalWindowOuter::GetScrollXY(bool aDoFlush) {
   return CSSPoint::FromAppUnits(scrollPos);
 }
 
-<<<<<<< HEAD
 double nsGlobalWindowOuter::GetScrollXOuter() { return GetScrollXY(false).x; }
 
 double nsGlobalWindowOuter::GetScrollYOuter() { return GetScrollXY(false).y; }
-||||||| merged common ancestors
-double
-nsGlobalWindowOuter::GetScrollXOuter()
-{
-  return GetScrollXY(false).x;
-}
-
-double
-nsGlobalWindowOuter::GetScrollYOuter()
-{
-  return GetScrollXY(false).y;
-}
-=======
-double nsGlobalWindowOuter::GetScrollXOuter() { return GetScrollXY(false).x; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-uint32_t nsGlobalWindowOuter::Length() {
-  nsDOMWindowList* windows = GetFrames();
-||||||| merged common ancestors
-uint32_t
-nsGlobalWindowOuter::Length()
-{
-  nsDOMWindowList* windows = GetFrames();
-=======
-double nsGlobalWindowOuter::GetScrollYOuter() { return GetScrollXY(false).y; }
->>>>>>> upstream-releases
 
 uint32_t nsGlobalWindowOuter::Length() {
   BrowsingContext* bc = GetBrowsingContext();
   return bc ? bc->GetChildren().Length() : 0;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetTopOuter() {
-  nsCOMPtr<nsPIDOMWindowOuter> top = GetScriptableTop();
-  return top.forget();
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsGlobalWindowOuter::GetTopOuter()
-{
-  nsCOMPtr<nsPIDOMWindowOuter> top = GetScriptableTop();
-  return top.forget();
-=======
 Nullable<WindowProxyHolder> nsGlobalWindowOuter::GetTopOuter() {
   BrowsingContext* bc = GetBrowsingContext();
   return bc ? bc->GetTop(IgnoreErrors()) : nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsPIDOMWindowOuter* nsGlobalWindowOuter::GetChildWindow(
-    const nsAString& aName) {
-  nsCOMPtr<nsIDocShell> docShell(GetDocShell());
-  NS_ENSURE_TRUE(docShell, nullptr);
-
-  nsCOMPtr<nsIDocShellTreeItem> child;
-  docShell->FindChildWithName(aName, false, true, nullptr, nullptr,
-                              getter_AddRefs(child));
-||||||| merged common ancestors
-nsPIDOMWindowOuter*
-nsGlobalWindowOuter::GetChildWindow(const nsAString& aName)
-{
-  nsCOMPtr<nsIDocShell> docShell(GetDocShell());
-  NS_ENSURE_TRUE(docShell, nullptr);
-
-  nsCOMPtr<nsIDocShellTreeItem> child;
-  docShell->FindChildWithName(aName, false, true, nullptr, nullptr,
-                              getter_AddRefs(child));
-=======
 already_AddRefed<BrowsingContext> nsGlobalWindowOuter::GetChildWindow(
     const nsAString& aName) {
   NS_ENSURE_TRUE(mBrowsingContext, nullptr);
->>>>>>> upstream-releases
 
   return do_AddRef(mBrowsingContext->FindChildWithName(aName));
 }
@@ -5289,16 +4067,7 @@ nsresult nsGlobalWindowOuter::SetFullScreen(bool aFullscreen) {
                                aFullscreen);
 }
 
-<<<<<<< HEAD
-static void FinishDOMFullscreenChange(nsIDocument* aDoc,
-                                      bool aInDOMFullscreen) {
-||||||| merged common ancestors
-static void
-FinishDOMFullscreenChange(nsIDocument* aDoc, bool aInDOMFullscreen)
-{
-=======
 static void FinishDOMFullscreenChange(Document* aDoc, bool aInDOMFullscreen) {
->>>>>>> upstream-releases
   if (aInDOMFullscreen) {
     // Ask the document to handle any pending DOM fullscreen change.
     if (!Document::HandlePendingFullscreenRequests(aDoc)) {
@@ -5676,17 +4445,8 @@ bool nsGlobalWindowOuter::SetWidgetFullscreen(FullscreenReason aReason,
   return NS_SUCCEEDED(rv);
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsGlobalWindowOuter::FullscreenWillChange(
-    bool aIsFullscreen) {
-||||||| merged common ancestors
-/* virtual */ void
-nsGlobalWindowOuter::FullscreenWillChange(bool aIsFullscreen)
-{
-=======
 /* virtual */
 void nsGlobalWindowOuter::FullscreenWillChange(bool aIsFullscreen) {
->>>>>>> upstream-releases
   if (aIsFullscreen) {
     DispatchCustomEvent(NS_LITERAL_STRING("willenterfullscreen"));
   } else {
@@ -5694,17 +4454,8 @@ void nsGlobalWindowOuter::FullscreenWillChange(bool aIsFullscreen) {
   }
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsGlobalWindowOuter::FinishFullscreenChange(
-    bool aIsFullscreen) {
-||||||| merged common ancestors
-/* virtual */ void
-nsGlobalWindowOuter::FinishFullscreenChange(bool aIsFullscreen)
-{
-=======
 /* virtual */
 void nsGlobalWindowOuter::FinishFullscreenChange(bool aIsFullscreen) {
->>>>>>> upstream-releases
   if (aIsFullscreen != mFullscreen) {
     NS_WARNING("Failed to toggle fullscreen state of the widget");
     // We failed to make the widget enter fullscreen.
@@ -5733,19 +4484,9 @@ void nsGlobalWindowOuter::FinishFullscreenChange(bool aIsFullscreen) {
   DispatchCustomEvent(NS_LITERAL_STRING("fullscreen"));
 
   if (!NS_WARN_IF(!IsChromeWindow())) {
-<<<<<<< HEAD
-    if (nsCOMPtr<nsIPresShell> shell =
-            do_QueryReferent(mChromeFields.mFullscreenPresShell)) {
-      if (nsRefreshDriver* rd = shell->GetRefreshDriver()) {
-||||||| merged common ancestors
-    if (nsCOMPtr<nsIPresShell> shell =
-        do_QueryReferent(mChromeFields.mFullscreenPresShell)) {
-      if (nsRefreshDriver* rd = shell->GetRefreshDriver()) {
-=======
     if (RefPtr<PresShell> presShell =
             do_QueryReferent(mChromeFields.mFullscreenPresShell)) {
       if (nsRefreshDriver* rd = presShell->GetRefreshDriver()) {
->>>>>>> upstream-releases
         rd->Thaw();
       }
       mChromeFields.mFullscreenPresShell = nullptr;
@@ -5810,30 +4551,12 @@ void nsGlobalWindowOuter::EnsureReflowFlushAndPaint() {
                "EnsureReflowFlushAndPaint() called with no "
                "docshell!");
 
-<<<<<<< HEAD
   if (!mDocShell) return;
 
-  nsCOMPtr<nsIPresShell> presShell = mDocShell->GetPresShell();
-||||||| merged common ancestors
-  if (!mDocShell)
-    return;
-
-  nsCOMPtr<nsIPresShell> presShell = mDocShell->GetPresShell();
-=======
-  if (!mDocShell) return;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!presShell) return;
-||||||| merged common ancestors
-  if (!presShell)
-    return;
-=======
   RefPtr<PresShell> presShell = mDocShell->GetPresShell();
   if (!presShell) {
     return;
   }
->>>>>>> upstream-releases
 
   // Flush pending reflows.
   if (mDoc) {
@@ -5876,22 +4599,9 @@ void nsGlobalWindowOuter::MakeScriptDialogTitle(
           fixedURI->GetDisplayPrePath(prepath);
 
           NS_ConvertUTF8toUTF16 ucsPrePath(prepath);
-<<<<<<< HEAD
-          const char16_t* formatStrings[] = {ucsPrePath.get()};
-          nsContentUtils::FormatLocalizedString(
-              nsContentUtils::eCOMMON_DIALOG_PROPERTIES, "ScriptDlgHeading",
-              formatStrings, aOutTitle);
-||||||| merged common ancestors
-          const char16_t *formatStrings[] = { ucsPrePath.get() };
-          nsContentUtils::FormatLocalizedString(nsContentUtils::eCOMMON_DIALOG_PROPERTIES,
-                                                "ScriptDlgHeading",
-                                                formatStrings,
-                                                aOutTitle);
-=======
           nsContentUtils::FormatLocalizedString(
               aOutTitle, nsContentUtils::eCOMMON_DIALOG_PROPERTIES,
               "ScriptDlgHeading", ucsPrePath);
->>>>>>> upstream-releases
         }
       }
     }
@@ -6136,18 +4846,8 @@ void nsGlobalWindowOuter::PromptOuter(const nsAString& aMessage,
   }
 }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::FocusOuter(ErrorResult& aError) {
-  nsIFocusManager* fm = nsFocusManager::GetFocusManager();
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::FocusOuter(ErrorResult& aError)
-{
-  nsIFocusManager* fm = nsFocusManager::GetFocusManager();
-=======
 void nsGlobalWindowOuter::FocusOuter() {
   nsFocusManager* fm = nsFocusManager::GetFocusManager();
->>>>>>> upstream-releases
   if (!fm) {
     return;
   }
@@ -6165,17 +4865,9 @@ void nsGlobalWindowOuter::FocusOuter() {
   // window which opened us to raise us at times when popups are allowed
   // (bugs 355482 and 369306).
   bool canFocus = CanSetProperty("dom.disable_window_flip") ||
-<<<<<<< HEAD
-                  (opener == callerOuter &&
-                   RevisePopupAbuseLevel(GetPopupControlState()) < openBlocked);
-||||||| merged common ancestors
-                    (opener == callerOuter &&
-                     RevisePopupAbuseLevel(GetPopupControlState()) < openBlocked);
-=======
                   (opener == callerOuter &&
                    RevisePopupAbuseLevel(PopupBlocker::GetPopupControlState()) <
                        PopupBlocker::openBlocked);
->>>>>>> upstream-releases
 
   nsCOMPtr<mozIDOMWindowProxy> activeDOMWindow;
   fm->GetActiveWindow(getter_AddRefs(activeDOMWindow));
@@ -6208,36 +4900,6 @@ void nsGlobalWindowOuter::FocusOuter() {
   // Don't look for a presshell if we're a root chrome window that's got
   // about:blank loaded.  We don't want to focus our widget in that case.
   // XXXbz should we really be checking for IsInitialDocument() instead?
-<<<<<<< HEAD
-  bool lookForPresShell = true;
-  if (mDocShell->ItemType() == nsIDocShellTreeItem::typeChrome &&
-      GetPrivateRoot() == this && mDoc) {
-    nsIURI* ourURI = mDoc->GetDocumentURI();
-    if (ourURI) {
-      lookForPresShell = !NS_IsAboutBlank(ourURI);
-    }
-  }
-
-  if (lookForPresShell) {
-    presShell = mDocShell->GetEldestPresShell();
-  }
-
-||||||| merged common ancestors
-  bool lookForPresShell = true;
-  if (mDocShell->ItemType() == nsIDocShellTreeItem::typeChrome &&
-      GetPrivateRoot() == this && mDoc) {
-    nsIURI* ourURI = mDoc->GetDocumentURI();
-    if (ourURI) {
-      lookForPresShell = !NS_IsAboutBlank(ourURI);
-    }
-  }
-
-  if (lookForPresShell) {
-    mDocShell->GetEldestPresShell(getter_AddRefs(presShell));
-  }
-
-=======
->>>>>>> upstream-releases
   nsCOMPtr<nsIDocShellTreeItem> parentDsti;
   mDocShell->GetParent(getter_AddRefs(parentDsti));
 
@@ -6250,23 +4912,8 @@ void nsGlobalWindowOuter::FocusOuter() {
       return;
     }
 
-<<<<<<< HEAD
-    RefPtr<Element> frame = parentdoc->FindContentForSubDocument(mDoc);
-    if (frame) {
-      uint32_t flags = nsIFocusManager::FLAG_NOSCROLL;
-      if (canFocus) flags |= nsIFocusManager::FLAG_RAISE;
-      aError = fm->SetFocus(frame, flags);
-||||||| merged common ancestors
-    RefPtr<Element> frame = parentdoc->FindContentForSubDocument(mDoc);
-    if (frame) {
-      uint32_t flags = nsIFocusManager::FLAG_NOSCROLL;
-      if (canFocus)
-        flags |= nsIFocusManager::FLAG_RAISE;
-      aError = fm->SetFocus(frame, flags);
-=======
     if (Element* frame = parentdoc->FindContentForSubDocument(mDoc)) {
       nsContentUtils::RequestFrameFocus(*frame, canFocus);
->>>>>>> upstream-releases
     }
     return;
   }
@@ -6656,17 +5303,9 @@ void nsGlobalWindowOuter::SizeToContentOuter(CallerType aCallerType,
 
   nsIntSize newDevSize(CSSToDevIntPixels(cssSize));
 
-<<<<<<< HEAD
-  aError =
-      treeOwner->SizeShellTo(mDocShell, newDevSize.width, newDevSize.height);
-||||||| merged common ancestors
-  aError = treeOwner->SizeShellTo(mDocShell, newDevSize.width,
-                                  newDevSize.height);
-=======
   nsCOMPtr<nsIDocShell> docShell = mDocShell;
   aError =
       treeOwner->SizeShellTo(docShell, newDevSize.width, newDevSize.height);
->>>>>>> upstream-releases
 }
 
 already_AddRefed<nsPIWindowRoot> nsGlobalWindowOuter::GetTopWindowRoot() {
@@ -6680,22 +5319,9 @@ already_AddRefed<nsPIWindowRoot> nsGlobalWindowOuter::GetTopWindowRoot() {
   return window.forget();
 }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::FirePopupBlockedEvent(
-    nsIDocument* aDoc, nsIURI* aPopupURI, const nsAString& aPopupWindowName,
-    const nsAString& aPopupWindowFeatures) {
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::FirePopupBlockedEvent(nsIDocument* aDoc,
-                                           nsIURI* aPopupURI,
-                                           const nsAString& aPopupWindowName,
-                                           const nsAString& aPopupWindowFeatures)
-{
-=======
 void nsGlobalWindowOuter::FirePopupBlockedEvent(
     Document* aDoc, nsIURI* aPopupURI, const nsAString& aPopupWindowName,
     const nsAString& aPopupWindowFeatures) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDoc);
 
   // Fire a "DOMPopupBlocked" event so that the UI can hear about
@@ -6718,25 +5344,11 @@ void nsGlobalWindowOuter::FirePopupBlockedEvent(
   aDoc->DispatchEvent(*event);
 }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::NotifyContentBlockingState(unsigned aState,
-                                                     nsIChannel* aChannel,
-                                                     bool aBlocked,
-                                                     nsIURI* aURIHint) {
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::NotifyContentBlockingState(unsigned aState,
-                                                nsIChannel* aChannel,
-                                                bool aBlocked,
-                                                nsIURI* aURIHint)
-{
-=======
 void nsGlobalWindowOuter::NotifyContentBlockingEvent(
     unsigned aEvent, nsIChannel* aChannel, bool aBlocked, nsIURI* aURIHint,
     nsIChannel* aTrackingChannel,
     const mozilla::Maybe<AntiTrackingCommon::StorageAccessGrantedReason>&
         aReason) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aURIHint);
   DebugOnly<bool> isCookiesBlockedTracker =
       aEvent == nsIWebProgressListener::STATE_COOKIES_BLOCKED_TRACKER;
@@ -6777,114 +5389,6 @@ void nsGlobalWindowOuter::NotifyContentBlockingEvent(
           return;
         }
 
-<<<<<<< HEAD
-  // Notify nsIWebProgressListeners of this security event.
-  // Can be used to change the UI state.
-  nsresult rv = NS_OK;
-  nsCOMPtr<nsISecurityEventSink> eventSink = do_QueryInterface(docShell, &rv);
-  NS_ENSURE_SUCCESS_VOID(rv);
-  uint32_t state = 0;
-  nsCOMPtr<nsISecureBrowserUI> securityUI;
-  docShell->GetSecurityUI(getter_AddRefs(securityUI));
-  if (!securityUI) {
-    return;
-  }
-  securityUI->GetState(&state);
-  nsAutoString origin;
-  nsContentUtils::GetUTFOrigin(aURIHint, origin);
-
-  bool blockedValue = aBlocked;
-  bool unblocked = false;
-  if (aState == nsIWebProgressListener::STATE_BLOCKED_TRACKING_CONTENT) {
-    doc->SetHasTrackingContentBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasTrackingContentBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_LOADED_TRACKING_CONTENT) {
-    doc->SetHasTrackingContentLoaded(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasTrackingContentLoaded();
-    }
-  } else if (aState ==
-             nsIWebProgressListener::STATE_COOKIES_BLOCKED_BY_PERMISSION) {
-    doc->SetHasCookiesBlockedByPermission(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasCookiesBlockedByPermission();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_BLOCKED_TRACKER) {
-    doc->SetHasTrackingCookiesBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasTrackingCookiesBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_BLOCKED_ALL) {
-    doc->SetHasAllCookiesBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasAllCookiesBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_BLOCKED_FOREIGN) {
-    doc->SetHasForeignCookiesBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasForeignCookiesBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_LOADED) {
-    MOZ_ASSERT(!aBlocked,
-               "We don't expected to see blocked STATE_COOKIES_LOADED");
-    // Note that the logic in this branch is the logical negation of the logic
-    // in other branches, since the nsIDocument API we have is phrased in
-    // "loaded" terms as opposed to "blocked" terms.
-    blockedValue = !aBlocked;
-    doc->SetHasCookiesLoaded(blockedValue, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasCookiesLoaded();
-    }
-||||||| merged common ancestors
-  // Notify nsIWebProgressListeners of this security event.
-  // Can be used to change the UI state.
-  nsresult rv = NS_OK;
-  nsCOMPtr<nsISecurityEventSink> eventSink = do_QueryInterface(docShell, &rv);
-  NS_ENSURE_SUCCESS_VOID(rv);
-  uint32_t state = 0;
-  nsCOMPtr<nsISecureBrowserUI> securityUI;
-  docShell->GetSecurityUI(getter_AddRefs(securityUI));
-  if (!securityUI) {
-    return;
-  }
-  securityUI->GetState(&state);
-  nsAutoString origin;
-  nsContentUtils::GetUTFOrigin(aURIHint, origin);
-
-  bool unblocked = false;
-  if (aState == nsIWebProgressListener::STATE_BLOCKED_TRACKING_CONTENT) {
-    doc->SetHasTrackingContentBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasTrackingContentBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_BLOCKED_SLOW_TRACKING_CONTENT) {
-    doc->SetHasSlowTrackingContentBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasSlowTrackingContentBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_BLOCKED_BY_PERMISSION) {
-    doc->SetHasCookiesBlockedByPermission(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasCookiesBlockedByPermission();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_BLOCKED_TRACKER) {
-    doc->SetHasTrackingCookiesBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasTrackingCookiesBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_BLOCKED_ALL) {
-    doc->SetHasAllCookiesBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasAllCookiesBlocked();
-    }
-  } else if (aState == nsIWebProgressListener::STATE_COOKIES_BLOCKED_FOREIGN) {
-    doc->SetHasForeignCookiesBlocked(aBlocked, origin);
-    if (!aBlocked) {
-      unblocked = !doc->GetHasForeignCookiesBlocked();
-    }
-=======
         // Notify nsIWebProgressListeners of this content blocking event.
         // Can be used to change the UI state.
         uint32_t event = 0;
@@ -7020,82 +5524,24 @@ void nsGlobalWindowOuter::NotifyContentBlockingEvent(
   nsresult rv;
   if (gSyncContentBlockingNotifications) {
     rv = func->Run();
->>>>>>> upstream-releases
   } else {
     rv = NS_DispatchToCurrentThreadQueue(func.forget(), 100,
                                          EventQueuePriority::Idle);
   }
-<<<<<<< HEAD
-  const uint32_t oldState = state;
-  if (blockedValue) {
-    state |= aState;
-  } else if (unblocked) {
-    state &= ~aState;
-||||||| merged common ancestors
-  const uint32_t oldState = state;
-  if (aBlocked) {
-    state |= aState;
-  } else if (unblocked) {
-    state &= ~aState;
-=======
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-
-  if (state == oldState
-#ifdef ANDROID
-      // GeckoView always needs to notify about blocked trackers, since the
-      // GeckoView API always needs to report the URI and type of any blocked
-      // tracker.
-      // We use a platform-dependent code path here because reporting this
-      // notification on desktop platforms isn't necessary and doing so can have
-      // a big performance cost.
-      && aState != nsIWebProgressListener::STATE_BLOCKED_TRACKING_CONTENT
-#endif
-  ) {
-    // Avoid dispatching repeated notifications when nothing has changed
-    return;
-  }
-
-  eventSink->OnSecurityChange(aChannel, state);
-||||||| merged common ancestors
-
-  eventSink->OnSecurityChange(aChannel, oldState, state, doc->GetContentBlockingLog());
-=======
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-// static
-bool nsGlobalWindowOuter::SameLoadingURI(nsIDocument* aDoc,
-                                         nsIChannel* aChannel) {
-||||||| merged common ancestors
-//static
-bool
-nsGlobalWindowOuter::SameLoadingURI(nsIDocument *aDoc, nsIChannel *aChannel)
-{
-=======
 // static
 bool nsGlobalWindowOuter::SameLoadingURI(Document* aDoc, nsIChannel* aChannel) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIURI> docURI = aDoc->GetDocumentURI();
   if (!docURI) {
     return false;
   }
-<<<<<<< HEAD
-
-  nsCOMPtr<nsIPrincipal> channelLoadingPrincipal =
-      channelLoadInfo->LoadingPrincipal();
-||||||| merged common ancestors
-
-  nsCOMPtr<nsIPrincipal> channelLoadingPrincipal = channelLoadInfo->LoadingPrincipal();
-=======
   nsCOMPtr<nsILoadInfo> channelLoadInfo = aChannel->LoadInfo();
   nsCOMPtr<nsIPrincipal> channelLoadingPrincipal =
       channelLoadInfo->LoadingPrincipal();
->>>>>>> upstream-releases
   if (!channelLoadingPrincipal) {
     // TYPE_DOCUMENT loads will not have a channelLoadingPrincipal. But top
     // level loads should not be blocked by Tracking Protection, so we will
@@ -7124,19 +5570,8 @@ bool nsGlobalWindowOuter::CanSetProperty(const char* aPrefName) {
   return !Preferences::GetBool(aPrefName, true);
 }
 
-<<<<<<< HEAD
-bool nsGlobalWindowOuter::PopupWhitelisted() {
-  if (mDoc && nsContentUtils::CanShowPopup(mDoc->NodePrincipal())) {
-||||||| merged common ancestors
-bool
-nsGlobalWindowOuter::PopupWhitelisted()
-{
-  if (mDoc && nsContentUtils::CanShowPopup(mDoc->NodePrincipal()))
-  {
-=======
 bool nsGlobalWindowOuter::PopupWhitelisted() {
   if (mDoc && PopupBlocker::CanShowPopupByPermission(mDoc->NodePrincipal())) {
->>>>>>> upstream-releases
     return true;
   }
 
@@ -7154,17 +5589,8 @@ bool nsGlobalWindowOuter::PopupWhitelisted() {
  * routine to determine whether to allow the new window.
  * Returns a value from the PopupControlState enum.
  */
-<<<<<<< HEAD
-PopupControlState nsGlobalWindowOuter::RevisePopupAbuseLevel(
-    PopupControlState aControl) {
-||||||| merged common ancestors
-PopupControlState
-nsGlobalWindowOuter::RevisePopupAbuseLevel(PopupControlState aControl)
-{
-=======
 PopupBlocker::PopupControlState nsGlobalWindowOuter::RevisePopupAbuseLevel(
     PopupBlocker::PopupControlState aControl) {
->>>>>>> upstream-releases
   NS_ASSERTION(mDocShell, "Must have docshell");
 
   if (mDocShell->ItemType() != nsIDocShellTreeItem::typeContent) {
@@ -7173,37 +5599,6 @@ PopupBlocker::PopupControlState nsGlobalWindowOuter::RevisePopupAbuseLevel(
 
   PopupBlocker::PopupControlState abuse = aControl;
   switch (abuse) {
-<<<<<<< HEAD
-    case openControlled:
-    case openBlocked:
-    case openOverridden:
-      if (PopupWhitelisted()) abuse = PopupControlState(abuse - 1);
-      break;
-    case openAbused:
-      if (PopupWhitelisted())
-        // Skip openBlocked
-        abuse = openControlled;
-      break;
-    case openAllowed:
-      break;
-    default:
-      NS_WARNING("Strange PopupControlState!");
-||||||| merged common ancestors
-  case openControlled:
-  case openBlocked:
-  case openOverridden:
-    if (PopupWhitelisted())
-      abuse = PopupControlState(abuse - 1);
-    break;
-  case openAbused:
-    if (PopupWhitelisted())
-      //Skip openBlocked
-      abuse = openControlled;
-    break;
-  case openAllowed: break;
-  default:
-    NS_WARNING("Strange PopupControlState!");
-=======
     case PopupBlocker::openControlled:
     case PopupBlocker::openBlocked:
     case PopupBlocker::openOverridden:
@@ -7219,20 +5614,11 @@ PopupBlocker::PopupControlState nsGlobalWindowOuter::RevisePopupAbuseLevel(
       break;
     default:
       NS_WARNING("Strange PopupControlState!");
->>>>>>> upstream-releases
   }
 
   // limit the number of simultaneously open popups
-<<<<<<< HEAD
-  if (abuse == openAbused || abuse == openBlocked || abuse == openControlled) {
-||||||| merged common ancestors
-  if (abuse == openAbused ||
-      abuse == openBlocked ||
-      abuse == openControlled) {
-=======
   if (abuse == PopupBlocker::openAbused || abuse == PopupBlocker::openBlocked ||
       abuse == PopupBlocker::openControlled) {
->>>>>>> upstream-releases
     int32_t popupMax = Preferences::GetInt("dom.popup_maximum", -1);
     if (popupMax >= 0 && gOpenPopupSpamCount >= popupMax)
       abuse = PopupBlocker::openOverridden;
@@ -7245,13 +5631,6 @@ PopupBlocker::PopupControlState nsGlobalWindowOuter::RevisePopupAbuseLevel(
       StaticPrefs::dom_block_multiple_popups() && !PopupWhitelisted() &&
       !PopupBlocker::TryUsePopupOpeningToken(mDoc->NodePrincipal())) {
     abuse = PopupBlocker::openBlocked;
-  }
-
-  // If this popup is allowed, let's block any other for this event, forcing
-  // openBlocked state.
-  if ((abuse == openAllowed || abuse == openControlled) &&
-      StaticPrefs::dom_block_multiple_popups() && !PopupWhitelisted()) {
-    nsContentUtils::PushPopupControlState(openBlocked, true);
   }
 
   return abuse;
@@ -7278,17 +5657,8 @@ void nsGlobalWindowOuter::FireAbuseEvents(
 
   nsIURI* baseURL = nullptr;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIDocument> doc = GetEntryDocument();
-  if (doc) baseURL = doc->GetDocBaseURI();
-||||||| merged common ancestors
-  nsCOMPtr<nsIDocument> doc = GetEntryDocument();
-  if (doc)
-    baseURL = doc->GetDocBaseURI();
-=======
   nsCOMPtr<Document> doc = GetEntryDocument();
   if (doc) baseURL = doc->GetDocBaseURI();
->>>>>>> upstream-releases
 
   // use the base URI to build what would have been the popup's URI
   nsCOMPtr<nsIIOService> ios(do_GetService(NS_IOSERVICE_CONTRACTID));
@@ -7301,20 +5671,9 @@ void nsGlobalWindowOuter::FireAbuseEvents(
                         aPopupWindowFeatures);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::OpenOuter(
-    const nsAString& aUrl, const nsAString& aName, const nsAString& aOptions,
-    ErrorResult& aError) {
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsGlobalWindowOuter::OpenOuter(const nsAString& aUrl, const nsAString& aName,
-                               const nsAString& aOptions, ErrorResult& aError)
-{
-=======
 Nullable<WindowProxyHolder> nsGlobalWindowOuter::OpenOuter(
     const nsAString& aUrl, const nsAString& aName, const nsAString& aOptions,
     ErrorResult& aError) {
->>>>>>> upstream-releases
   nsCOMPtr<nsPIDOMWindowOuter> window;
   aError = OpenJS(aUrl, aName, aOptions, getter_AddRefs(window));
   RefPtr<BrowsingContext> bc;
@@ -7376,24 +5735,11 @@ nsresult nsGlobalWindowOuter::OpenDialog(const nsAString& aUrl,
 }
 
 // Like Open, but passes aNavigate=false.
-<<<<<<< HEAD
-/* virtual */ nsresult nsGlobalWindowOuter::OpenNoNavigate(
-    const nsAString& aUrl, const nsAString& aName, const nsAString& aOptions,
-    nsPIDOMWindowOuter** _retval) {
-||||||| merged common ancestors
-/* virtual */ nsresult
-nsGlobalWindowOuter::OpenNoNavigate(const nsAString& aUrl,
-                                    const nsAString& aName,
-                                    const nsAString& aOptions,
-                                    nsPIDOMWindowOuter **_retval)
-{
-=======
 /* virtual */
 nsresult nsGlobalWindowOuter::OpenNoNavigate(const nsAString& aUrl,
                                              const nsAString& aName,
                                              const nsAString& aOptions,
                                              nsPIDOMWindowOuter** _retval) {
->>>>>>> upstream-releases
   return OpenInternal(aUrl, aName, aOptions,
                       false,             // aDialog
                       false,             // aContentModal
@@ -7406,24 +5752,10 @@ nsresult nsGlobalWindowOuter::OpenNoNavigate(const nsAString& aUrl,
                       _retval);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::OpenDialogOuter(
-    JSContext* aCx, const nsAString& aUrl, const nsAString& aName,
-    const nsAString& aOptions, const Sequence<JS::Value>& aExtraArgument,
-    ErrorResult& aError) {
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsGlobalWindowOuter::OpenDialogOuter(JSContext* aCx, const nsAString& aUrl,
-                                     const nsAString& aName, const nsAString& aOptions,
-                                     const Sequence<JS::Value>& aExtraArgument,
-                                     ErrorResult& aError)
-{
-=======
 Nullable<WindowProxyHolder> nsGlobalWindowOuter::OpenDialogOuter(
     JSContext* aCx, const nsAString& aUrl, const nsAString& aName,
     const nsAString& aOptions, const Sequence<JS::Value>& aExtraArgument,
     ErrorResult& aError) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIJSArgArray> argvArray;
   aError =
       NS_CreateJSArgv(aCx, aExtraArgument.Length(), aExtraArgument.Elements(),
@@ -7450,30 +5782,14 @@ Nullable<WindowProxyHolder> nsGlobalWindowOuter::OpenDialogOuter(
   return WindowProxyHolder(bc.forget());
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter> nsGlobalWindowOuter::GetFramesOuter() {
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsGlobalWindowOuter::GetFramesOuter()
-{
-=======
 BrowsingContext* nsGlobalWindowOuter::GetFramesOuter() {
->>>>>>> upstream-releases
   RefPtr<nsPIDOMWindowOuter> frames(this);
   FlushPendingNotifications(FlushType::ContentAndNotify);
   return mBrowsingContext;
 }
 
-<<<<<<< HEAD
-nsGlobalWindowInner* nsGlobalWindowOuter::CallerInnerWindow(JSContext* aCx) {
-||||||| merged common ancestors
-nsGlobalWindowInner*
-nsGlobalWindowOuter::CallerInnerWindow(JSContext* aCx)
-{
-=======
 /* static */
 nsGlobalWindowInner* nsGlobalWindowOuter::CallerInnerWindow(JSContext* aCx) {
->>>>>>> upstream-releases
   nsIGlobalObject* global = GetIncumbentGlobal();
   NS_ENSURE_TRUE(global, nullptr);
   JS::Rooted<JSObject*> scope(aCx, global->GetGlobalJSObject());
@@ -7491,20 +5807,12 @@ nsGlobalWindowInner* nsGlobalWindowOuter::CallerInnerWindow(JSContext* aCx) {
     bool ok = JS_GetPrototype(aCx, scope, &scopeProto);
     NS_ENSURE_TRUE(ok, nullptr);
     if (scopeProto && xpc::IsSandboxPrototypeProxy(scopeProto) &&
-<<<<<<< HEAD
-        (scopeProto =
-             js::CheckedUnwrap(scopeProto, /* stopAtWindowProxy = */ false))) {
-||||||| merged common ancestors
-        (scopeProto = js::CheckedUnwrap(scopeProto, /* stopAtWindowProxy = */ false)))
-    {
-=======
         // Our current Realm on aCx is the sandbox.  Using that for the
         // CheckedUnwrapDynamic call makes sense: if the sandbox can unwrap the
         // window, we can use it.  And we do want CheckedUnwrapDynamic, because
         // the whole point is to unwrap windows.
         (scopeProto = js::CheckedUnwrapDynamic(
              scopeProto, aCx, /* stopAtWindowProxy = */ false))) {
->>>>>>> upstream-releases
       global = xpc::NativeGlobal(scopeProto);
       NS_ENSURE_TRUE(global, nullptr);
     }
@@ -7516,29 +5824,12 @@ nsGlobalWindowInner* nsGlobalWindowOuter::CallerInnerWindow(JSContext* aCx) {
   return nsGlobalWindowInner::Cast(win);
 }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::PostMessageMozOuter(JSContext* aCx,
-                                              JS::Handle<JS::Value> aMessage,
-                                              const nsAString& aTargetOrigin,
-                                              JS::Handle<JS::Value> aTransfer,
-                                              nsIPrincipal& aSubjectPrincipal,
-                                              ErrorResult& aError) {
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::PostMessageMozOuter(JSContext* aCx, JS::Handle<JS::Value> aMessage,
-                                         const nsAString& aTargetOrigin,
-                                         JS::Handle<JS::Value> aTransfer,
-                                         nsIPrincipal& aSubjectPrincipal,
-                                         ErrorResult& aError)
-{
-=======
 /* static */
 bool nsGlobalWindowOuter::GatherPostMessageData(
     JSContext* aCx, const nsAString& aTargetOrigin, BrowsingContext** aSource,
     nsAString& aOrigin, nsIURI** aTargetOriginURI,
     nsIPrincipal** aCallerPrincipal, nsGlobalWindowInner** aCallerInnerWindow,
     nsIURI** aCallerDocumentURI, ErrorResult& aError) {
->>>>>>> upstream-releases
   //
   // Window.postMessage is an intentional subversion of the same-origin policy.
   // As such, this code must be particularly careful in the information it
@@ -7582,44 +5873,14 @@ bool nsGlobalWindowOuter::GatherPostMessageData(
 
   if (callerOuterURI) {
     // if the principal has a URI, use that to generate the origin
-<<<<<<< HEAD
-    nsContentUtils::GetUTFOrigin(callerPrin, origin);
-  } else if (callerInnerWin) {
-    // otherwise use the URI of the document to generate origin
-    nsCOMPtr<nsIDocument> doc = callerInnerWin->GetExtantDoc();
-    if (!doc) {
-      return;
-||||||| merged common ancestors
-    nsContentUtils::GetUTFOrigin(callerPrin, origin);
-  }
-  else if (callerInnerWin) {
-    // otherwise use the URI of the document to generate origin
-    nsCOMPtr<nsIDocument> doc = callerInnerWin->GetExtantDoc();
-    if (!doc) {
-      return;
-=======
     nsContentUtils::GetUTFOrigin(callerPrin, aOrigin);
   } else if (callerInnerWin) {
     if (!*aCallerDocumentURI) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    callerOuterURI = doc->GetDocumentURI();
-    // if the principal has a URI, use that to generate the origin
-    nsContentUtils::GetUTFOrigin(callerOuterURI, origin);
-  } else {
-||||||| merged common ancestors
-    callerOuterURI = doc->GetDocumentURI();
-    // if the principal has a URI, use that to generate the origin
-    nsContentUtils::GetUTFOrigin(callerOuterURI, origin);
-  }
-  else {
-=======
     // otherwise use the URI of the document to generate origin
     nsContentUtils::GetUTFOrigin(*aCallerDocumentURI, aOrigin);
   } else {
->>>>>>> upstream-releases
     // in case of a sandbox with a system principal origin can be empty
     if (!nsContentUtils::IsSystemPrincipal(callerPrin)) {
       return false;
@@ -7678,38 +5939,6 @@ bool nsGlobalWindowOuter::GetPrincipalForPostMessage(
   }
   // "*" indicates no specific origin is required.
   else if (!aTargetOrigin.EqualsASCII("*")) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIURI> originURI;
-    if (NS_FAILED(NS_NewURI(getter_AddRefs(originURI), aTargetOrigin))) {
-      aError.Throw(NS_ERROR_DOM_SYNTAX_ERR);
-      return;
-    }
-
-    nsresult rv = NS_MutateURI(originURI)
-                      .SetUserPass(EmptyCString())
-                      .SetPathQueryRef(EmptyCString())
-                      .Finalize(originURI);
-    if (NS_FAILED(rv)) {
-      return;
-    }
-
-||||||| merged common ancestors
-    nsCOMPtr<nsIURI> originURI;
-    if (NS_FAILED(NS_NewURI(getter_AddRefs(originURI), aTargetOrigin))) {
-      aError.Throw(NS_ERROR_DOM_SYNTAX_ERR);
-      return;
-    }
-
-    nsresult rv = NS_MutateURI(originURI)
-                    .SetUserPass(EmptyCString())
-                    .SetPathQueryRef(EmptyCString())
-                    .Finalize(originURI);
-    if (NS_FAILED(rv)) {
-      return;
-    }
-
-=======
->>>>>>> upstream-releases
     OriginAttributes attrs = aSubjectPrincipal.OriginAttributesRef();
     if (aSubjectPrincipal.IsSystemPrincipal()) {
       auto principal = BasePrincipal::Cast(GetPrincipal());
@@ -7729,22 +5958,6 @@ bool nsGlobalWindowOuter::GetPrincipalForPostMessage(
         }
 
         nsContentUtils::LogSimpleConsoleError(
-<<<<<<< HEAD
-            NS_ConvertUTF8toUTF16(nsPrintfCString(
-                R"(Attempting to post a message to window with url "%s" and )"
-                R"(origin "%s" from a system principal scope with mismatched )"
-                R"(origin "%s".)",
-                targetURL.get(), targetOrigin.get(), sourceOrigin.get())),
-            "DOM", !!principal->PrivateBrowsingId());
-||||||| merged common ancestors
-          NS_ConvertUTF8toUTF16(nsPrintfCString(
-            R"(Attempting to post a message to window with url "%s" and )"
-            R"(origin "%s" from a system principal scope with mismatched )"
-            R"(origin "%s".)",
-            targetURL.get(), targetOrigin.get(), sourceOrigin.get())),
-          "DOM",
-          !!principal->PrivateBrowsingId());
-=======
             NS_ConvertUTF8toUTF16(nsPrintfCString(
                 R"(Attempting to post a message to window with url "%s" and )"
                 R"(origin "%s" from a system principal scope with mismatched )"
@@ -7752,7 +5965,6 @@ bool nsGlobalWindowOuter::GetPrincipalForPostMessage(
                 targetURL.get(), targetOrigin.get(), sourceOrigin.get())),
             "DOM", !!principal->PrivateBrowsingId(),
             nsContentUtils::IsSystemPrincipal(principal));
->>>>>>> upstream-releases
 
         attrs = principal->OriginAttributesRef();
       }
@@ -7760,47 +5972,11 @@ bool nsGlobalWindowOuter::GetPrincipalForPostMessage(
 
     // Create a nsIPrincipal inheriting the app/browser attributes from the
     // caller.
-<<<<<<< HEAD
-    providedPrincipal =
-        BasePrincipal::CreateCodebasePrincipal(originURI, attrs);
-||||||| merged common ancestors
-    providedPrincipal = BasePrincipal::CreateCodebasePrincipal(originURI, attrs);
-=======
     providedPrincipal =
         BasePrincipal::CreateCodebasePrincipal(aTargetOriginURI, attrs);
->>>>>>> upstream-releases
     if (NS_WARN_IF(!providedPrincipal)) {
       return false;
     }
-<<<<<<< HEAD
-  } else {
-    // We still need to check the originAttributes if the target origin is '*'.
-    // But we will ingore the FPD here since the FPDs are possible to be
-    // different.
-    auto principal = BasePrincipal::Cast(GetPrincipal());
-    NS_ENSURE_TRUE_VOID(principal);
-
-    OriginAttributes targetAttrs = principal->OriginAttributesRef();
-    OriginAttributes sourceAttrs = aSubjectPrincipal.OriginAttributesRef();
-    // We have to exempt the check of OA if the subject prioncipal is a system
-    // principal since there are many tests try to post messages to content from
-    // chrome with a mismatch OA. For example, using the ContentTask.spawn() to
-    // post a message into a private browsing window. The injected code in
-    // ContentTask.spawn() will be executed under the system principal and the
-    // OA of the system principal mismatches with the OA of a private browsing
-    // window.
-    MOZ_DIAGNOSTIC_ASSERT(aSubjectPrincipal.GetIsSystemPrincipal() ||
-                          sourceAttrs.EqualsIgnoringFPD(targetAttrs));
-
-    // If 'privacy.firstparty.isolate.block_post_message' is true, we will block
-    // postMessage across different first party domains.
-    if (OriginAttributes::IsBlockPostMessageForFPI() &&
-        !aSubjectPrincipal.GetIsSystemPrincipal() &&
-        sourceAttrs.mFirstPartyDomain != targetAttrs.mFirstPartyDomain) {
-      return;
-    }
-||||||| merged common ancestors
-=======
   } else {
     // We still need to check the originAttributes if the target origin is '*'.
     // But we will ingore the FPD here since the FPDs are possible to be
@@ -7858,47 +6034,15 @@ void nsGlobalWindowOuter::PostMessageMozOuter(JSContext* aCx,
                                   callerPrincipal, aSubjectPrincipal,
                                   getter_AddRefs(providedPrincipal))) {
     return;
->>>>>>> upstream-releases
   }
 
   // Create and asynchronously dispatch a runnable which will handle actual DOM
   // event creation and dispatch.
-<<<<<<< HEAD
-  RefPtr<PostMessageEvent> event =
-      new PostMessageEvent(nsContentUtils::IsCallerChrome() || !callerInnerWin
-                               ? nullptr
-                               : callerInnerWin->GetOuterWindowInternal(),
-                           origin, this, providedPrincipal,
-                           callerInnerWin ? callerInnerWin->GetDoc() : nullptr);
-
-  JS::Rooted<JS::Value> message(aCx, aMessage);
-  JS::Rooted<JS::Value> transfer(aCx, aTransfer);
-
-  event->Write(aCx, message, transfer, JS::CloneDataPolicy(), aError);
-||||||| merged common ancestors
-  RefPtr<PostMessageEvent> event =
-    new PostMessageEvent(nsContentUtils::IsCallerChrome() || !callerInnerWin
-                         ? nullptr
-                         : callerInnerWin->GetOuterWindowInternal(),
-                         origin,
-                         this,
-                         providedPrincipal,
-                         callerInnerWin
-                         ? callerInnerWin->GetDoc()
-                         : nullptr,
-                         nsContentUtils::IsCallerChrome());
-
-  JS::Rooted<JS::Value> message(aCx, aMessage);
-  JS::Rooted<JS::Value> transfer(aCx, aTransfer);
-
-  event->Write(aCx, message, transfer, JS::CloneDataPolicy(), aError);
-=======
   RefPtr<PostMessageEvent> event = new PostMessageEvent(
       sourceBc, origin, this, providedPrincipal,
       callerInnerWindow ? callerInnerWindow->WindowID() : 0, callerDocumentURI);
 
   event->Write(aCx, aMessage, aTransfer, aError);
->>>>>>> upstream-releases
   if (NS_WARN_IF(aError.Failed())) {
     return;
   }
@@ -7949,31 +6093,12 @@ class nsCloseEvent : public Runnable {
   bool mIndirect;
 
   nsCloseEvent(nsGlobalWindowOuter* aWindow, bool aIndirect)
-<<<<<<< HEAD
       : mozilla::Runnable("nsCloseEvent"),
         mWindow(aWindow),
         mIndirect(aIndirect) {}
 
  public:
   static nsresult PostCloseEvent(nsGlobalWindowOuter* aWindow, bool aIndirect) {
-||||||| merged common ancestors
-    : mozilla::Runnable("nsCloseEvent")
-    , mWindow(aWindow)
-    , mIndirect(aIndirect)
-  {}
-
-public:
-
-  static nsresult
-  PostCloseEvent(nsGlobalWindowOuter* aWindow, bool aIndirect) {
-=======
-      : mozilla::Runnable("nsCloseEvent"),
-        mWindow(aWindow),
-        mIndirect(aIndirect) {}
-
- public:
-  static nsresult PostCloseEvent(nsGlobalWindowOuter* aWindow, bool aIndirect) {
->>>>>>> upstream-releases
     nsCOMPtr<nsIRunnable> ev = new nsCloseEvent(aWindow, aIndirect);
     nsresult rv = aWindow->Dispatch(TaskCategory::Other, ev.forget());
     if (NS_SUCCEEDED(rv)) aWindow->MaybeForgiveSpamCount();
@@ -8190,20 +6315,8 @@ void nsGlobalWindowOuter::ReallyCloseWindow() {
            that closes the window). */
         // XXXbz now that we have mHavePendingClose, is this needed?
         bool isTab;
-<<<<<<< HEAD
-        if (rootWin == this || !bwin ||
-            (NS_SUCCEEDED(
-                 bwin->IsTabContentWindow(GetOuterWindowInternal(), &isTab)) &&
-             isTab)) {
-||||||| merged common ancestors
-        if (rootWin == this ||
-            !bwin ||
-            (NS_SUCCEEDED(bwin->IsTabContentWindow(GetOuterWindowInternal(),
-                                                   &isTab)) && isTab)) {
-=======
         if (rootWin == this || !bwin ||
             (NS_SUCCEEDED(bwin->IsTabContentWindow(this, &isTab)) && isTab)) {
->>>>>>> upstream-releases
           treeOwnerAsWin->Destroy();
         }
       }
@@ -8228,24 +6341,11 @@ void nsGlobalWindowOuter::EnterModalState() {
   EventStateManager* activeESM = static_cast<EventStateManager*>(
       EventStateManager::GetActiveEventStateManager());
   if (activeESM && activeESM->GetPresContext()) {
-<<<<<<< HEAD
-    nsIPresShell* activeShell = activeESM->GetPresContext()->GetPresShell();
-    if (activeShell && (nsContentUtils::ContentIsCrossDocDescendantOf(
-                            activeShell->GetDocument(), mDoc) ||
-                        nsContentUtils::ContentIsCrossDocDescendantOf(
-                            mDoc, activeShell->GetDocument()))) {
-||||||| merged common ancestors
-    nsIPresShell* activeShell = activeESM->GetPresContext()->GetPresShell();
-    if (activeShell && (
-        nsContentUtils::ContentIsCrossDocDescendantOf(activeShell->GetDocument(), mDoc) ||
-        nsContentUtils::ContentIsCrossDocDescendantOf(mDoc, activeShell->GetDocument()))) {
-=======
     PresShell* activePresShell = activeESM->GetPresContext()->GetPresShell();
     if (activePresShell && (nsContentUtils::ContentIsCrossDocDescendantOf(
                                 activePresShell->GetDocument(), mDoc) ||
                             nsContentUtils::ContentIsCrossDocDescendantOf(
                                 mDoc, activePresShell->GetDocument()))) {
->>>>>>> upstream-releases
       EventStateManager::ClearGlobalActiveContent(activeESM);
 
       PresShell::ReleaseCapturingContent();
@@ -8312,18 +6412,9 @@ void nsGlobalWindowOuter::LeaveModalState() {
     }
 
     if (topWin->mSuspendedDoc) {
-<<<<<<< HEAD
-      nsCOMPtr<nsIDocument> currentDoc = topWin->GetExtantDoc();
-      topWin->mSuspendedDoc->UnsuppressEventHandlingAndFireEvents(
-          currentDoc == topWin->mSuspendedDoc);
-||||||| merged common ancestors
-      nsCOMPtr<nsIDocument> currentDoc = topWin->GetExtantDoc();
-      topWin->mSuspendedDoc->UnsuppressEventHandlingAndFireEvents(currentDoc == topWin->mSuspendedDoc);
-=======
       nsCOMPtr<Document> currentDoc = topWin->GetExtantDoc();
       topWin->mSuspendedDoc->UnsuppressEventHandlingAndFireEvents(
           currentDoc == topWin->mSuspendedDoc);
->>>>>>> upstream-releases
       topWin->mSuspendedDoc = nullptr;
     }
   }
@@ -8405,75 +6496,30 @@ Element* nsGlobalWindowOuter::GetFrameElement() {
 }
 
 namespace {
-<<<<<<< HEAD
-class ChildCommandDispatcher : public Runnable {
- public:
-  ChildCommandDispatcher(nsPIWindowRoot* aRoot, nsITabChild* aTabChild,
-||||||| merged common ancestors
-class ChildCommandDispatcher : public Runnable
-{
-public:
-  ChildCommandDispatcher(nsPIWindowRoot* aRoot,
-                         nsITabChild* aTabChild,
-=======
 class ChildCommandDispatcher : public Runnable {
  public:
   ChildCommandDispatcher(nsPIWindowRoot* aRoot, nsIBrowserChild* aBrowserChild,
->>>>>>> upstream-releases
                          const nsAString& aAction)
-<<<<<<< HEAD
-      : mozilla::Runnable("ChildCommandDispatcher"),
-        mRoot(aRoot),
-        mTabChild(aTabChild),
-        mAction(aAction) {}
-||||||| merged common ancestors
-    : mozilla::Runnable("ChildCommandDispatcher")
-    , mRoot(aRoot)
-    , mTabChild(aTabChild)
-    , mAction(aAction)
-  {
-  }
-=======
       : mozilla::Runnable("ChildCommandDispatcher"),
         mRoot(aRoot),
         mBrowserChild(aBrowserChild),
         mAction(aAction) {}
->>>>>>> upstream-releases
 
   NS_IMETHOD Run() override {
     nsTArray<nsCString> enabledCommands, disabledCommands;
     mRoot->GetEnabledDisabledCommands(enabledCommands, disabledCommands);
     if (enabledCommands.Length() || disabledCommands.Length()) {
-<<<<<<< HEAD
-      mTabChild->EnableDisableCommands(mAction, enabledCommands,
-                                       disabledCommands);
-||||||| merged common ancestors
-      mTabChild->EnableDisableCommands(mAction, enabledCommands, disabledCommands);
-=======
       mBrowserChild->EnableDisableCommands(mAction, enabledCommands,
                                            disabledCommands);
->>>>>>> upstream-releases
     }
 
     return NS_OK;
   }
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<nsPIWindowRoot> mRoot;
-  nsCOMPtr<nsITabChild> mTabChild;
-  nsString mAction;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsPIWindowRoot>             mRoot;
-  nsCOMPtr<nsITabChild>                mTabChild;
-  nsString                             mAction;
-=======
  private:
   nsCOMPtr<nsPIWindowRoot> mRoot;
   nsCOMPtr<nsIBrowserChild> mBrowserChild;
   nsString mAction;
->>>>>>> upstream-releases
 };
 
 class CommandDispatcher : public Runnable {
@@ -8598,15 +6644,7 @@ bool nsGlobalWindowOuter::FindOuter(const nsAString& aString,
 // EventTarget
 //*****************************************************************************
 
-<<<<<<< HEAD
-nsPIDOMWindowOuter* nsGlobalWindowOuter::GetOwnerGlobalForBindings() {
-||||||| merged common ancestors
-nsPIDOMWindowOuter*
-nsGlobalWindowOuter::GetOwnerGlobalForBindings()
-{
-=======
 nsPIDOMWindowOuter* nsGlobalWindowOuter::GetOwnerGlobalForBindingsInternal() {
->>>>>>> upstream-releases
   return this;
 }
 
@@ -8642,17 +6680,8 @@ nsPIDOMWindowOuter* nsGlobalWindowOuter::GetPrivateParent() {
     if (!chromeElement)
       return nullptr;  // This is ok, just means a null parent.
 
-<<<<<<< HEAD
-    nsIDocument* doc = chromeElement->GetComposedDoc();
-    if (!doc) return nullptr;  // This is ok, just means a null parent.
-||||||| merged common ancestors
-    nsIDocument* doc = chromeElement->GetComposedDoc();
-    if (!doc)
-      return nullptr;             // This is ok, just means a null parent.
-=======
     Document* doc = chromeElement->GetComposedDoc();
     if (!doc) return nullptr;  // This is ok, just means a null parent.
->>>>>>> upstream-releases
 
     return doc->GetWindow();
   }
@@ -8727,15 +6756,7 @@ void nsGlobalWindowOuter::ActivateOrDeactivate(bool aActivate) {
   }
 }
 
-<<<<<<< HEAD
-static bool NotifyDocumentTree(nsIDocument* aDocument, void* aData) {
-||||||| merged common ancestors
-static bool
-NotifyDocumentTree(nsIDocument* aDocument, void* aData)
-{
-=======
 static bool NotifyDocumentTree(Document* aDocument, void* aData) {
->>>>>>> upstream-releases
   aDocument->EnumerateSubDocuments(NotifyDocumentTree, nullptr);
   aDocument->UpdateDocumentStates(NS_DOCUMENT_STATE_WINDOW_INACTIVE, true);
   return true;
@@ -8836,18 +6857,8 @@ bool nsGlobalWindowOuter::ShouldShowFocusRing() {
   FORWARD_TO_INNER(ShouldShowFocusRing, (), false);
 }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::SetKeyboardIndicators(
-    UIStateChangeType aShowAccelerators, UIStateChangeType aShowFocusRings) {
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::SetKeyboardIndicators(UIStateChangeType aShowAccelerators,
-                                           UIStateChangeType aShowFocusRings)
-{
-=======
 void nsGlobalWindowOuter::SetKeyboardIndicators(
     UIStateChangeType aShowFocusRings) {
->>>>>>> upstream-releases
   nsPIDOMWindowOuter* piWin = GetPrivateRoot();
   if (!piWin) {
     return;
@@ -8867,16 +6878,7 @@ void nsGlobalWindowOuter::SetKeyboardIndicators(
     windowRoot->SetShowFocusRings(aShowFocusRings == UIStateChangeType_Set);
   }
 
-<<<<<<< HEAD
-  nsContentUtils::SetKeyboardIndicatorsOnRemoteChildren(
-      GetOuterWindow(), aShowAccelerators, aShowFocusRings);
-||||||| merged common ancestors
-  nsContentUtils::SetKeyboardIndicatorsOnRemoteChildren(GetOuterWindow(),
-                                                        aShowAccelerators,
-                                                        aShowFocusRings);
-=======
   nsContentUtils::SetKeyboardIndicatorsOnRemoteChildren(this, aShowFocusRings);
->>>>>>> upstream-releases
 
   bool newShouldShowFocusRing = ShouldShowFocusRing();
   if (mInnerWindow && nsGlobalWindowInner::Cast(mInnerWindow)->mHasFocus &&
@@ -8931,23 +6933,8 @@ nsresult nsGlobalWindowOuter::GetInterfaceInternal(const nsIID& aIID,
   if (aIID.Equals(NS_GET_IID(nsIWebNavigation))) {
     nsCOMPtr<nsIWebNavigation> webNav(do_QueryInterface(mDocShell));
     webNav.forget(aSink);
-<<<<<<< HEAD
-  } else if (aIID.Equals(NS_GET_IID(nsIDocShell))) {
-    nsGlobalWindowOuter* outer = GetOuterWindowInternal();
-    NS_ENSURE_TRUE(outer, NS_ERROR_NOT_INITIALIZED);
-
-    nsCOMPtr<nsIDocShell> docShell = outer->mDocShell;
-||||||| merged common ancestors
-  }
-  else if (aIID.Equals(NS_GET_IID(nsIDocShell))) {
-    nsGlobalWindowOuter* outer = GetOuterWindowInternal();
-    NS_ENSURE_TRUE(outer, NS_ERROR_NOT_INITIALIZED);
-
-    nsCOMPtr<nsIDocShell> docShell = outer->mDocShell;
-=======
   } else if (aIID.Equals(NS_GET_IID(nsIDocShell))) {
     nsCOMPtr<nsIDocShell> docShell = mDocShell;
->>>>>>> upstream-releases
     docShell.forget(aSink);
   }
 #ifdef NS_PRINTING
@@ -9018,10 +7005,6 @@ nsGlobalWindowOuter::Observe(nsISupports* aSupports, const char* aTopic,
         return NS_OK;
       }
     }
-  } else if (!nsCRT::strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID)) {
-    // Reset the storage access permission when our cookie policy changes.
-    mHasStorageAccess = false;
-    return NS_OK;
   }
   return NS_OK;
 }
@@ -9237,28 +7220,11 @@ nsresult nsGlobalWindowOuter::OpenInternal(
     if (!aCalledNoScript) {
       // We asserted at the top of this function that aNavigate is true for
       // !aCalledNoScript.
-<<<<<<< HEAD
-      rv = pwwatch->OpenWindow2(
-          this, url.IsVoid() ? nullptr : url.get(), name_ptr, options_ptr,
-          /* aCalledFromScript = */ true, aDialog, aNavigate, argv,
-          isPopupSpamWindow, forceNoOpener, aLoadState,
-          getter_AddRefs(domReturn));
-||||||| merged common ancestors
-      rv = pwwatch->OpenWindow2(this, url.IsVoid() ? nullptr : url.get(),
-                                name_ptr,
-                                options_ptr, /* aCalledFromScript = */ true,
-                                aDialog, aNavigate, argv,
-                                isPopupSpamWindow,
-                                forceNoOpener,
-                                aLoadInfo,
-                                getter_AddRefs(domReturn));
-=======
       rv = pwwatch->OpenWindow2(
           this, url.IsVoid() ? nullptr : url.get(), name_ptr, options_ptr,
           /* aCalledFromScript = */ true, aDialog, aNavigate, argv,
           isPopupSpamWindow, forceNoOpener, forceNoReferrer, aLoadState,
           getter_AddRefs(domReturn));
->>>>>>> upstream-releases
     } else {
       // Force a system caller here so that the window watcher won't screw us
       // up.  We do NOT want this case looking at the JS context on the stack
@@ -9274,29 +7240,11 @@ nsresult nsGlobalWindowOuter::OpenInternal(
         nojsapi.emplace();
       }
 
-<<<<<<< HEAD
-      rv = pwwatch->OpenWindow2(
-          this, url.IsVoid() ? nullptr : url.get(), name_ptr, options_ptr,
-          /* aCalledFromScript = */ false, aDialog, aNavigate, aExtraArgument,
-          isPopupSpamWindow, forceNoOpener, aLoadState,
-          getter_AddRefs(domReturn));
-||||||| merged common ancestors
-      rv = pwwatch->OpenWindow2(this, url.IsVoid() ? nullptr : url.get(),
-                                name_ptr,
-                                options_ptr, /* aCalledFromScript = */ false,
-                                aDialog, aNavigate, aExtraArgument,
-                                isPopupSpamWindow,
-                                forceNoOpener,
-                                aLoadInfo,
-                                getter_AddRefs(domReturn));
-
-=======
       rv = pwwatch->OpenWindow2(
           this, url.IsVoid() ? nullptr : url.get(), name_ptr, options_ptr,
           /* aCalledFromScript = */ false, aDialog, aNavigate, aExtraArgument,
           isPopupSpamWindow, forceNoOpener, forceNoReferrer, aLoadState,
           getter_AddRefs(domReturn));
->>>>>>> upstream-releases
     }
   }
 
@@ -9308,26 +7256,8 @@ nsresult nsGlobalWindowOuter::OpenInternal(
     MaybeAllowStorageForOpenedWindow(uri);
   }
 
-<<<<<<< HEAD
-  NS_ENSURE_TRUE(domReturn, NS_OK);
-  nsCOMPtr<nsPIDOMWindowOuter> outerReturn =
-      nsPIDOMWindowOuter::From(domReturn);
-  outerReturn.swap(*aReturn);
-
-  if (aDoJSFixups) {
-    nsCOMPtr<nsIDOMChromeWindow> chrome_win(do_QueryInterface(*aReturn));
-||||||| merged common ancestors
-  NS_ENSURE_TRUE(domReturn, NS_OK);
-  nsCOMPtr<nsPIDOMWindowOuter> outerReturn =
-    nsPIDOMWindowOuter::From(domReturn);
-  outerReturn.swap(*aReturn);
-
-  if (aDoJSFixups) {
-    nsCOMPtr<nsIDOMChromeWindow> chrome_win(do_QueryInterface(*aReturn));
-=======
   if (domReturn && aDoJSFixups) {
     nsCOMPtr<nsIDOMChromeWindow> chrome_win(do_QueryInterface(domReturn));
->>>>>>> upstream-releases
     if (!chrome_win) {
       // A new non-chrome window was created from a call to
       // window.open() from JavaScript, make sure there's a document in
@@ -9464,30 +7394,12 @@ void nsGlobalWindowOuter::FlushPendingNotifications(FlushType aType) {
   }
 }
 
-<<<<<<< HEAD
-void nsGlobalWindowOuter::EnsureSizeAndPositionUpToDate() {
-  // If we're a subframe, make sure our size is up to date.  It's OK that this
-  // crosses the content/chrome boundary, since chrome can have pending reflows
-  // too.
-  nsGlobalWindowOuter* parent = nsGlobalWindowOuter::Cast(GetPrivateParent());
-  if (parent) {
-||||||| merged common ancestors
-void
-nsGlobalWindowOuter::EnsureSizeAndPositionUpToDate()
-{
-  // If we're a subframe, make sure our size is up to date.  It's OK that this
-  // crosses the content/chrome boundary, since chrome can have pending reflows
-  // too.
-  nsGlobalWindowOuter *parent = nsGlobalWindowOuter::Cast(GetPrivateParent());
-  if (parent) {
-=======
 void nsGlobalWindowOuter::EnsureSizeAndPositionUpToDate() {
   // If we're a subframe, make sure our size is up to date.  Make sure to go
   // through the document chain rather than the window chain to not flush on
   // detached iframes, see bug 1545516.
   if (mDoc && mDoc->StyleOrLayoutObservablyDependsOnParentDocumentLayout()) {
     RefPtr<Document> parent = mDoc->GetParentDocument();
->>>>>>> upstream-releases
     parent->FlushPendingNotifications(FlushType::Layout);
   }
 }
@@ -9579,26 +7491,11 @@ nsIDOMWindowUtils* nsGlobalWindowOuter::WindowUtils() {
   return mWindowUtils;
 }
 
-<<<<<<< HEAD
-// Note: This call will lock the cursor, it will not change as it moves.
-// To unlock, the cursor must be set back to CURSOR_AUTO.
-void nsGlobalWindowOuter::SetCursorOuter(const nsAString& aCursor,
-                                         ErrorResult& aError) {
-  int32_t cursor;
-||||||| merged common ancestors
-//Note: This call will lock the cursor, it will not change as it moves.
-//To unlock, the cursor must be set back to CURSOR_AUTO.
-void
-nsGlobalWindowOuter::SetCursorOuter(const nsAString& aCursor, ErrorResult& aError)
-{
-  int32_t cursor;
-=======
 // Note: This call will lock the cursor, it will not change as it moves.
 // To unlock, the cursor must be set back to Auto.
 void nsGlobalWindowOuter::SetCursorOuter(const nsAString& aCursor,
                                          ErrorResult& aError) {
   StyleCursorKind cursor;
->>>>>>> upstream-releases
 
   if (aCursor.EqualsLiteral("auto")) {
     cursor = StyleCursorKind::Auto;
@@ -9644,17 +7541,8 @@ void nsGlobalWindowOuter::SetCursorOuter(const nsAString& aCursor,
     }
 
     // Call esm and set cursor.
-<<<<<<< HEAD
-    aError = presContext->EventStateManager()->SetCursor(
-        cursor, nullptr, false, 0.0f, 0.0f, widget, true);
-||||||| merged common ancestors
-    aError = presContext->EventStateManager()->SetCursor(cursor, nullptr,
-                                                         false, 0.0f, 0.0f,
-                                                         widget, true);
-=======
     aError = presContext->EventStateManager()->SetCursor(
         cursor, nullptr, Nothing(), widget, true);
->>>>>>> upstream-releases
   }
 }
 
@@ -9692,33 +7580,15 @@ ChromeMessageBroadcaster* nsGlobalWindowOuter::GetGroupMessageManager(
   return GetCurrentInnerWindowInternal()->GetGroupMessageManager(aGroup);
 }
 
-<<<<<<< HEAD
-void nsPIDOMWindowOuter::SetOpenerForInitialContentBrowser(
-    nsPIDOMWindowOuter* aOpenerWindow) {
-||||||| merged common ancestors
-void
-nsPIDOMWindowOuter::SetOpenerForInitialContentBrowser(nsPIDOMWindowOuter* aOpenerWindow)
-{
-=======
 void nsPIDOMWindowOuter::SetOpenerForInitialContentBrowser(
     BrowsingContext* aOpenerWindow) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mOpenerForInitialContentBrowser,
              "Don't set OpenerForInitialContentBrowser twice!");
   mOpenerForInitialContentBrowser = aOpenerWindow;
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsPIDOMWindowOuter>
-nsPIDOMWindowOuter::TakeOpenerForInitialContentBrowser() {
-||||||| merged common ancestors
-already_AddRefed<nsPIDOMWindowOuter>
-nsPIDOMWindowOuter::TakeOpenerForInitialContentBrowser()
-{
-=======
 already_AddRefed<BrowsingContext>
 nsPIDOMWindowOuter::TakeOpenerForInitialContentBrowser() {
->>>>>>> upstream-releases
   // Intentionally forget our own member
   return mOpenerForInitialContentBrowser.forget();
 }
@@ -9778,19 +7648,10 @@ void nsGlobalWindowOuter::ReportLargeAllocStatus() {
                                   nsContentUtils::eDOM_PROPERTIES, message);
 }
 
-<<<<<<< HEAD
-#if defined(_WINDOWS_) && !defined(MOZ_WRAPPED_WINDOWS_H)
-#pragma message("wrapper failure reason: " MOZ_WINDOWS_WRAPPER_DISABLED_REASON)
-#error "Never include unwrapped windows.h in this file!"
-||||||| merged common ancestors
-#ifdef _WINDOWS_
-#error "Never include windows.h in this file!"
-=======
 #if defined(_WINDOWS_) && !defined(MOZ_WRAPPED_WINDOWS_H)
 #  pragma message( \
       "wrapper failure reason: " MOZ_WINDOWS_WRAPPER_DISABLED_REASON)
 #  error "Never include unwrapped windows.h in this file!"
->>>>>>> upstream-releases
 #endif
 
 // Helper called by methods that move/resize the window,
@@ -9927,18 +7788,9 @@ mozilla::dom::TabGroup* nsPIDOMWindowOuter::TabGroup() {
   return nsGlobalWindowOuter::Cast(this)->TabGroupOuter();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<nsGlobalWindowOuter> nsGlobalWindowOuter::Create(
-    nsIDocShell* aDocShell, bool aIsChrome) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<nsGlobalWindowOuter>
-nsGlobalWindowOuter::Create(nsIDocShell* aDocShell, bool aIsChrome)
-{
-=======
 /* static */
 already_AddRefed<nsGlobalWindowOuter> nsGlobalWindowOuter::Create(
     nsDocShell* aDocShell, bool aIsChrome) {
->>>>>>> upstream-releases
   uint64_t outerWindowID = aDocShell->GetOuterWindowID();
   RefPtr<nsGlobalWindowOuter> window = new nsGlobalWindowOuter(outerWindowID);
   if (aIsChrome) {
@@ -9949,27 +7801,12 @@ already_AddRefed<nsGlobalWindowOuter> nsGlobalWindowOuter::Create(
   window->InitWasOffline();
   nsCOMPtr<nsIObserverService> obs = mozilla::services::GetObserverService();
   if (obs) {
-<<<<<<< HEAD
     // Delay calling AddObserver until we hit the event loop, in case we may be
     // in the middle of modifying the observer list somehow.
     NS_DispatchToMainThread(
         NS_NewRunnableFunction("PermChangeDelayRunnable", [obs, window] {
           obs->AddObserver(window, PERM_CHANGE_NOTIFICATION, true);
         }));
-  }
-  nsCOMPtr<nsIPrefBranch> prefBranch = do_GetService(NS_PREFSERVICE_CONTRACTID);
-  if (prefBranch) {
-    prefBranch->AddObserver("network.cookie.cookieBehavior", window, true);
-||||||| merged common ancestors
-    obs->AddObserver(window, PERM_CHANGE_NOTIFICATION, true);
-=======
-    // Delay calling AddObserver until we hit the event loop, in case we may be
-    // in the middle of modifying the observer list somehow.
-    NS_DispatchToMainThread(
-        NS_NewRunnableFunction("PermChangeDelayRunnable", [obs, window] {
-          obs->AddObserver(window, PERM_CHANGE_NOTIFICATION, true);
-        }));
->>>>>>> upstream-releases
   }
   return window.forget();
 }
@@ -9978,78 +7815,7 @@ nsIURI* nsPIDOMWindowOuter::GetDocumentURI() const {
   return mDoc ? mDoc->GetDocumentURI() : mDocumentURI.get();
 }
 
-<<<<<<< HEAD
-void nsPIDOMWindowOuter::NotifyTemporaryAutoplayPermissionChanged(
-    int32_t aState, const nsAString& aPrePath) {
-  MOZ_ASSERT(int32_t(nsIPermissionManager::ALLOW_ACTION) ==
-                 int32_t(nsIDOMWindowUtils::PERMISSION_ALLOW) &&
-             int32_t(nsIPermissionManager::DENY_ACTION) ==
-                 int32_t(nsIDOMWindowUtils::PERMISSION_DENY) &&
-             int32_t(nsIPermissionManager::UNKNOWN_ACTION) ==
-                 int32_t(nsIDOMWindowUtils::PERMISSION_UNKNOWN));
-
-  bool isAllowed = aState == nsIDOMWindowUtils::PERMISSION_ALLOW;
-  switch (aState) {
-    case nsIDOMWindowUtils::PERMISSION_ALLOW:
-    case nsIDOMWindowUtils::PERMISSION_DENY:
-      AUTOPLAY_LOG("update temporary autoplay permission");
-      mAutoplayTemporaryPermission.Put(
-          aPrePath, PermissionInfo(isAllowed, TimeStamp::Now()));
-      break;
-    case nsIDOMWindowUtils::PERMISSION_UNKNOWN:
-      if (!aPrePath.Length()) {
-        AUTOPLAY_LOG("remove temporary autoplay permission for all domains");
-        mAutoplayTemporaryPermission.Clear();
-      } else {
-        AUTOPLAY_LOG("remove temporary autoplay permission");
-        mAutoplayTemporaryPermission.Remove(aPrePath);
-      }
-      break;
-    default:
-      AUTOPLAY_LOG("ERROR! non-defined permission state!");
-  }
-}
-
-bool nsPIDOMWindowOuter::HasTemporaryAutoplayPermission() {
-  if (!mDoc) {
-    return false;
-  }
-
-  nsIPrincipal* principal = mDoc->NodePrincipal();
-  if (!principal) {
-    return false;
-  }
-
-  nsCOMPtr<nsIURI> URI;
-  nsresult rv = principal->GetURI(getter_AddRefs(URI));
-  if (NS_FAILED(rv) || !URI) {
-    return false;
-  }
-
-  nsAutoCString prePath;
-  URI->GetPrePath(prePath);
-  NS_ConvertUTF8toUTF16 key(prePath);
-  PermissionInfo info = mAutoplayTemporaryPermission.Get(key);
-  int32_t expireTime = Preferences::GetInt(
-      "privacy.temporary_permission_expire_time_ms", 3600 * 1000);
-  if (info.first && TimeStamp::Now() - info.second >=
-                        TimeDuration::FromMilliseconds(expireTime)) {
-    AUTOPLAY_LOG("remove expired temporary autoplay permission");
-    mAutoplayTemporaryPermission.Remove(key);
-    return false;
-  }
-  return info.first;
-}
-
 void nsPIDOMWindowOuter::MaybeCreateDoc() {
-||||||| merged common ancestors
-
-void
-nsPIDOMWindowOuter::MaybeCreateDoc()
-{
-=======
-void nsPIDOMWindowOuter::MaybeCreateDoc() {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mDoc);
   if (nsIDocShell* docShell = GetDocShell()) {
     // Note that |document| here is the same thing as our mDoc, but we
@@ -10072,18 +7838,8 @@ void nsPIDOMWindowOuter::SetChromeEventHandlerInternal(
   mMessageManager = nullptr;
 }
 
-<<<<<<< HEAD
-mozilla::dom::DocGroup* nsPIDOMWindowOuter::GetDocGroup() const {
-  nsIDocument* doc = GetExtantDoc();
-||||||| merged common ancestors
-mozilla::dom::DocGroup*
-nsPIDOMWindowOuter::GetDocGroup() const
-{
-  nsIDocument* doc = GetExtantDoc();
-=======
 mozilla::dom::DocGroup* nsPIDOMWindowOuter::GetDocGroup() const {
   Document* doc = GetExtantDoc();
->>>>>>> upstream-releases
   if (doc) {
     return doc->GetDocGroup();
   }
@@ -10091,47 +7847,6 @@ mozilla::dom::DocGroup* nsPIDOMWindowOuter::GetDocGroup() const {
 }
 
 nsPIDOMWindowOuter::nsPIDOMWindowOuter(uint64_t aWindowID)
-<<<<<<< HEAD
-    : mFrameElement(nullptr),
-      mDocShell(nullptr),
-      mModalStateDepth(0),
-      mIsActive(false),
-      mIsBackground(false),
-      mMediaSuspend(
-          Preferences::GetBool("media.block-autoplay-until-in-foreground", true)
-              ? nsISuspendedTypes::SUSPENDED_BLOCK
-              : nsISuspendedTypes::NONE_SUSPENDED),
-      mAudioMuted(false),
-      mAudioVolume(1.0),
-      mDesktopModeViewport(false),
-      mIsRootOuterWindow(false),
-      mInnerWindow(nullptr),
-      mWindowID(aWindowID),
-      mMarkedCCGeneration(0),
-      mServiceWorkersTestingEnabled(false),
-      mLargeAllocStatus(LargeAllocStatus::NONE) {}
-||||||| merged common ancestors
-  : mFrameElement(nullptr)
-  , mDocShell(nullptr)
-  , mModalStateDepth(0)
-  , mIsActive(false)
-  , mIsBackground(false)
-  , mMediaSuspend(
-      Preferences::GetBool("media.block-autoplay-until-in-foreground", true)
-        ? nsISuspendedTypes::SUSPENDED_BLOCK
-        : nsISuspendedTypes::NONE_SUSPENDED)
-  , mAudioMuted(false)
-  , mAudioVolume(1.0)
-  , mDesktopModeViewport(false)
-  , mIsRootOuterWindow(false)
-  , mInnerWindow(nullptr)
-  , mWindowID(aWindowID)
-  , mMarkedCCGeneration(0)
-  , mServiceWorkersTestingEnabled(false)
-  , mLargeAllocStatus(LargeAllocStatus::NONE)
-{
-}
-=======
     : mFrameElement(nullptr),
       mModalStateDepth(0),
       mIsActive(false),
@@ -10149,33 +7864,5 @@ nsPIDOMWindowOuter::nsPIDOMWindowOuter(uint64_t aWindowID)
       mMarkedCCGeneration(0),
       mServiceWorkersTestingEnabled(false),
       mLargeAllocStatus(LargeAllocStatus::NONE) {}
->>>>>>> upstream-releases
 
 nsPIDOMWindowOuter::~nsPIDOMWindowOuter() {}
-<<<<<<< HEAD
-
-nsAutoPopupStatePusherInternal::nsAutoPopupStatePusherInternal(
-    PopupControlState aState, bool aForce)
-    : mOldState(nsContentUtils::PushPopupControlState(aState, aForce)) {}
-
-nsAutoPopupStatePusherInternal::~nsAutoPopupStatePusherInternal() {
-  nsContentUtils::PopPopupControlState(mOldState);
-}
-
-mozilla::dom::BrowsingContext* nsPIDOMWindowOuter::GetBrowsingContext() const {
-  return mDocShell ? nsDocShell::Cast(mDocShell)->GetBrowsingContext()
-                   : nullptr;
-}
-||||||| merged common ancestors
-
-nsAutoPopupStatePusherInternal::nsAutoPopupStatePusherInternal(PopupControlState aState, bool aForce)
-  : mOldState(nsContentUtils::PushPopupControlState(aState, aForce))
-{
-}
-
-nsAutoPopupStatePusherInternal::~nsAutoPopupStatePusherInternal()
-{
-  nsContentUtils::PopPopupControlState(mOldState);
-}
-=======
->>>>>>> upstream-releases

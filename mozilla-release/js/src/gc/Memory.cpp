@@ -14,56 +14,13 @@
 #include "js/HeapAPI.h"
 #include "vm/Runtime.h"
 
-<<<<<<< HEAD
-#if defined(XP_WIN)
-
-#include "mozilla/Sprintf.h"
-#include "util/Windows.h"
-#include <psapi.h>
-
-#elif defined(SOLARIS)
-||||||| merged common ancestors
-#if defined(XP_WIN)
-
-# include "mozilla/Sprintf.h"
-# include "util/Windows.h"
-# include <psapi.h>
-
-#elif defined(SOLARIS)
-=======
 #ifdef XP_WIN
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#include <sys/mman.h>
-#include <unistd.h>
-||||||| merged common ancestors
-# include <sys/mman.h>
-# include <unistd.h>
-=======
 #  include "util/Windows.h"
 #  include <psapi.h>
->>>>>>> upstream-releases
 
 #else
 
-<<<<<<< HEAD
-#include <algorithm>
-#include <errno.h>
-#include <sys/mman.h>
-#include <sys/resource.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-||||||| merged common ancestors
-# include <algorithm>
-# include <errno.h>
-# include <sys/mman.h>
-# include <sys/resource.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <unistd.h>
-=======
 #  include <algorithm>
 #  include <errno.h>
 #  include <sys/mman.h>
@@ -71,7 +28,6 @@
 #  include <sys/stat.h>
 #  include <sys/types.h>
 #  include <unistd.h>
->>>>>>> upstream-releases
 
 #endif
 
@@ -87,19 +43,6 @@ static size_t pageSize = 0;
 /* The OS allocation granularity may not match the page size. */
 static size_t allocGranularity = 0;
 
-<<<<<<< HEAD
-#if defined(XP_UNIX)
-// The addresses handed out by mmap may grow up or down.
-static mozilla::Atomic<int, mozilla::Relaxed,
-                       mozilla::recordreplay::Behavior::DontPreserve>
-    growthDirection(0);
-||||||| merged common ancestors
-#if defined(XP_UNIX)
-// The addresses handed out by mmap may grow up or down.
-static mozilla::Atomic<int,
-                       mozilla::Relaxed,
-                       mozilla::recordreplay::Behavior::DontPreserve> growthDirection(0);
-=======
 /* The number of bits used by addresses on this platform. */
 static size_t numAddressBits = 0;
 
@@ -122,7 +65,6 @@ static mozilla::Atomic<int, mozilla::Relaxed,
 static mozilla::Atomic<int, mozilla::Relaxed,
                        mozilla::recordreplay::Behavior::DontPreserve>
     growthDirection(0);
->>>>>>> upstream-releases
 #endif
 
 /*
@@ -133,36 +75,7 @@ static mozilla::Atomic<int, mozilla::Relaxed,
  */
 static const int MaxLastDitchAttempts = 32;
 
-<<<<<<< HEAD
-static void GetNewChunk(void** aAddress, void** aRetainedAddr, size_t size,
-                        size_t alignment);
-static void* MapAlignedPagesSlow(size_t size, size_t alignment);
-static void* MapAlignedPagesLastDitch(size_t size, size_t alignment);
-
-size_t SystemPageSize() { return pageSize; }
-
-static bool DecommitEnabled() { return pageSize == ArenaSize; }
-
-||||||| merged common ancestors
-static void GetNewChunk(void** aAddress, void** aRetainedAddr, size_t size, size_t alignment);
-static void* MapAlignedPagesSlow(size_t size, size_t alignment);
-static void* MapAlignedPagesLastDitch(size_t size, size_t alignment);
-
-size_t
-SystemPageSize()
-{
-    return pageSize;
-}
-
-static bool
-DecommitEnabled()
-{
-    return pageSize == ArenaSize;
-}
-
-=======
 #ifdef JS_64BIT
->>>>>>> upstream-releases
 /*
  * On some 64-bit platforms we can use a random, scattershot allocator that
  * tries addresses from the available range at random. If the address range
@@ -186,61 +99,11 @@ DecommitEnabled()
  * for huge allocations - this matches the 8TiB per process address space limit
  * that we're already subject to on Windows.
  */
-<<<<<<< HEAD
-static inline size_t OffsetFromAligned(void* p, size_t alignment) {
-  return uintptr_t(p) % alignment;
-}
-||||||| merged common ancestors
-static inline size_t
-OffsetFromAligned(void* p, size_t alignment)
-{
-    return uintptr_t(p) % alignment;
-}
-=======
 static const size_t MinAddressBitsForRandomAlloc = 43;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void* TestMapAlignedPagesLastDitch(size_t size, size_t alignment) {
-  return MapAlignedPagesLastDitch(size, alignment);
-}
-||||||| merged common ancestors
-void*
-TestMapAlignedPagesLastDitch(size_t size, size_t alignment)
-{
-    return MapAlignedPagesLastDitch(size, alignment);
-}
-=======
 /* The lower limit for huge allocations. This is fairly arbitrary. */
 static const size_t HugeAllocationSize = 1024 * 1024 * 1024;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if defined(XP_WIN)
-
-void InitMemorySubsystem() {
-  if (pageSize == 0) {
-    SYSTEM_INFO sysinfo;
-    GetSystemInfo(&sysinfo);
-    pageSize = sysinfo.dwPageSize;
-    allocGranularity = sysinfo.dwAllocationGranularity;
-  }
-}
-||||||| merged common ancestors
-
-#if defined(XP_WIN)
-
-void
-InitMemorySubsystem()
-{
-    if (pageSize == 0) {
-        SYSTEM_INFO sysinfo;
-        GetSystemInfo(&sysinfo);
-        pageSize = sysinfo.dwPageSize;
-        allocGranularity = sysinfo.dwAllocationGranularity;
-    }
-}
-=======
 /* The minimum and maximum valid addresses that can be allocated into. */
 static size_t minValidAddress = 0;
 static size_t maxValidAddress = 0;
@@ -248,117 +111,19 @@ static size_t maxValidAddress = 0;
 /* The upper limit for smaller allocations and the lower limit for huge ones. */
 static size_t hugeSplit = 0;
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-||||||| merged common ancestors
-#  if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
-=======
 size_t SystemPageSize() { return pageSize; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static inline void* MapMemoryAt(void* desired, size_t length, int flags,
-                                int prot = PAGE_READWRITE) {
-  return VirtualAlloc(desired, length, flags, prot);
-}
-||||||| merged common ancestors
-static inline void*
-MapMemoryAt(void* desired, size_t length, int flags, int prot = PAGE_READWRITE)
-{
-    return VirtualAlloc(desired, length, flags, prot);
-}
-=======
 size_t SystemAddressBits() { return numAddressBits; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static inline void* MapMemory(size_t length, int flags,
-                              int prot = PAGE_READWRITE) {
-  return VirtualAlloc(nullptr, length, flags, prot);
-||||||| merged common ancestors
-static inline void*
-MapMemory(size_t length, int flags, int prot = PAGE_READWRITE)
-{
-    return VirtualAlloc(nullptr, length, flags, prot);
-=======
 bool UsingScattershotAllocator() {
 #ifdef JS_64BIT
   return numAddressBits >= MinAddressBitsForRandomAlloc;
 #else
   return false;
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void* MapAlignedPages(size_t size, size_t alignment) {
-  MOZ_ASSERT(size >= alignment);
-  MOZ_ASSERT(size >= allocGranularity);
-  MOZ_ASSERT(size % alignment == 0);
-  MOZ_ASSERT(size % pageSize == 0);
-  MOZ_ASSERT_IF(alignment < allocGranularity,
-                allocGranularity % alignment == 0);
-  MOZ_ASSERT_IF(alignment > allocGranularity,
-                alignment % allocGranularity == 0);
-
-  void* p = MapMemory(size, MEM_COMMIT | MEM_RESERVE);
-
-  // Special case: If we want allocation alignment, no further work is needed.
-  if (alignment == allocGranularity) {
-    return p;
-  }
-
-  if (OffsetFromAligned(p, alignment) == 0) {
-    return p;
-  }
-
-  void* retainedAddr;
-  GetNewChunk(&p, &retainedAddr, size, alignment);
-  if (retainedAddr) {
-    UnmapPages(retainedAddr, size);
-  }
-  if (p) {
-    if (OffsetFromAligned(p, alignment) == 0) {
-      return p;
-    }
-    UnmapPages(p, size);
-  }
-||||||| merged common ancestors
-void*
-MapAlignedPages(size_t size, size_t alignment)
-{
-    MOZ_ASSERT(size >= alignment);
-    MOZ_ASSERT(size >= allocGranularity);
-    MOZ_ASSERT(size % alignment == 0);
-    MOZ_ASSERT(size % pageSize == 0);
-    MOZ_ASSERT_IF(alignment < allocGranularity, allocGranularity % alignment == 0);
-    MOZ_ASSERT_IF(alignment > allocGranularity, alignment % allocGranularity == 0);
-
-    void* p = MapMemory(size, MEM_COMMIT | MEM_RESERVE);
-
-    /* Special case: If we want allocation alignment, no further work is needed. */
-    if (alignment == allocGranularity) {
-        return p;
-    }
-
-    if (OffsetFromAligned(p, alignment) == 0) {
-        return p;
-    }
-
-    void* retainedAddr;
-    GetNewChunk(&p, &retainedAddr, size, alignment);
-    if (retainedAddr) {
-        UnmapPages(retainedAddr, size);
-    }
-    if (p) {
-        if (OffsetFromAligned(p, alignment) == 0) {
-            return p;
-        }
-        UnmapPages(p, size);
-    }
-=======
 enum class Commit : bool {
   No = false,
   Yes = true,
@@ -383,324 +148,33 @@ enum class PageAccess : int {
   ReadWriteExecute = PROT_READ | PROT_WRITE | PROT_EXEC,
 };
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  p = MapAlignedPagesSlow(size, alignment);
-  if (!p) {
-    return MapAlignedPagesLastDitch(size, alignment);
-  }
-||||||| merged common ancestors
-    p = MapAlignedPagesSlow(size, alignment);
-    if (!p) {
-        return MapAlignedPagesLastDitch(size, alignment);
-    }
-=======
 template <bool AlwaysGetNew = true>
 static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
                             size_t length, size_t alignment);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(OffsetFromAligned(p, alignment) == 0);
-  return p;
-}
-||||||| merged common ancestors
-    MOZ_ASSERT(OffsetFromAligned(p, alignment) == 0);
-    return p;
-}
-=======
 static void* MapAlignedPagesSlow(size_t length, size_t alignment);
 static void* MapAlignedPagesLastDitch(size_t length, size_t alignment);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void* MapAlignedPagesSlow(size_t size, size_t alignment) {
-  /*
-   * Windows requires that there be a 1:1 mapping between VM allocation
-   * and deallocation operations.  Therefore, take care here to acquire the
-   * final result via one mapping operation.  This means unmapping any
-   * preliminary result that is not correctly aligned.
-   */
-  void* p;
-  do {
-    /*
-     * Over-allocate in order to map a memory region that is definitely
-     * large enough, then deallocate and allocate again the correct size,
-     * within the over-sized mapping.
-     *
-     * Since we're going to unmap the whole thing anyway, the first
-     * mapping doesn't have to commit pages.
-     */
-    size_t reserveSize = size + alignment - pageSize;
-    p = MapMemory(reserveSize, MEM_RESERVE);
-    if (!p) {
-      return nullptr;
-    }
-    void* chunkStart = (void*)AlignBytes(uintptr_t(p), alignment);
-    UnmapPages(p, reserveSize);
-    p = MapMemoryAt(chunkStart, size, MEM_COMMIT | MEM_RESERVE);
-
-    /* Failure here indicates a race with another thread, so try again. */
-  } while (!p);
-||||||| merged common ancestors
-static void*
-MapAlignedPagesSlow(size_t size, size_t alignment)
-{
-    /*
-     * Windows requires that there be a 1:1 mapping between VM allocation
-     * and deallocation operations.  Therefore, take care here to acquire the
-     * final result via one mapping operation.  This means unmapping any
-     * preliminary result that is not correctly aligned.
-     */
-    void* p;
-    do {
-        /*
-         * Over-allocate in order to map a memory region that is definitely
-         * large enough, then deallocate and allocate again the correct size,
-         * within the over-sized mapping.
-         *
-         * Since we're going to unmap the whole thing anyway, the first
-         * mapping doesn't have to commit pages.
-         */
-        size_t reserveSize = size + alignment - pageSize;
-        p = MapMemory(reserveSize, MEM_RESERVE);
-        if (!p) {
-            return nullptr;
-        }
-        void* chunkStart = (void*)AlignBytes(uintptr_t(p), alignment);
-        UnmapPages(p, reserveSize);
-        p = MapMemoryAt(chunkStart, size, MEM_COMMIT | MEM_RESERVE);
-
-        /* Failure here indicates a race with another thread, so try again. */
-    } while (!p);
-=======
 #ifdef JS_64BIT
 static void* MapAlignedPagesRandom(size_t length, size_t alignment);
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return p;
-||||||| merged common ancestors
-    return p;
-=======
 void* TestMapAlignedPagesLastDitch(size_t length, size_t alignment) {
   return MapAlignedPagesLastDitch(length, alignment);
->>>>>>> upstream-releases
 }
 
 /*
  * We can only decommit unused pages if the hardcoded Arena
  * size matches the page size for the running process.
  */
-<<<<<<< HEAD
-static void* MapAlignedPagesLastDitch(size_t size, size_t alignment) {
-  void* tempMaps[MaxLastDitchAttempts];
-  int attempt = 0;
-  void* p = MapMemory(size, MEM_COMMIT | MEM_RESERVE);
-  if (OffsetFromAligned(p, alignment) == 0) {
-    return p;
-  }
-  for (; attempt < MaxLastDitchAttempts; ++attempt) {
-    GetNewChunk(&p, tempMaps + attempt, size, alignment);
-    if (OffsetFromAligned(p, alignment) == 0) {
-      if (tempMaps[attempt]) {
-        UnmapPages(tempMaps[attempt], size);
-      }
-      break;
-    }
-    if (!tempMaps[attempt]) {
-      break; /* Bail if GetNewChunk failed. */
-    }
-  }
-  if (OffsetFromAligned(p, alignment)) {
-    UnmapPages(p, size);
-    p = nullptr;
-  }
-  while (--attempt >= 0) {
-    UnmapPages(tempMaps[attempt], size);
-  }
-  return p;
-}
-
-/*
- * On Windows, map and unmap calls must be matched, so we deallocate the
- * unaligned chunk, then reallocate the unaligned part to block off the
- * old address and force the allocator to give us a new one.
- */
-static void GetNewChunk(void** aAddress, void** aRetainedAddr, size_t size,
-                        size_t alignment) {
-  void* address = *aAddress;
-  void* retainedAddr = nullptr;
-  do {
-    size_t retainedSize;
-    size_t offset = OffsetFromAligned(address, alignment);
-    if (!offset) {
-      break;
-    }
-    UnmapPages(address, size);
-    retainedSize = alignment - offset;
-    retainedAddr = MapMemoryAt(address, retainedSize, MEM_RESERVE);
-    address = MapMemory(size, MEM_COMMIT | MEM_RESERVE);
-    /* If retainedAddr is null here, we raced with another thread. */
-  } while (!retainedAddr);
-  *aAddress = address;
-  *aRetainedAddr = retainedAddr;
-}
-
-void UnmapPages(void* p, size_t size) {
-  // ASan does not automatically unpoison memory, so we have to do this here.
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-
-  MOZ_ALWAYS_TRUE(VirtualFree(p, 0, MEM_RELEASE));
-}
-
-bool MarkPagesUnused(void* p, size_t size) {
-  MOZ_MAKE_MEM_NOACCESS(p, size);
-||||||| merged common ancestors
-static void*
-MapAlignedPagesLastDitch(size_t size, size_t alignment)
-{
-    void* tempMaps[MaxLastDitchAttempts];
-    int attempt = 0;
-    void* p = MapMemory(size, MEM_COMMIT | MEM_RESERVE);
-    if (OffsetFromAligned(p, alignment) == 0) {
-        return p;
-    }
-    for (; attempt < MaxLastDitchAttempts; ++attempt) {
-        GetNewChunk(&p, tempMaps + attempt, size, alignment);
-        if (OffsetFromAligned(p, alignment) == 0) {
-            if (tempMaps[attempt]) {
-                UnmapPages(tempMaps[attempt], size);
-            }
-            break;
-        }
-        if (!tempMaps[attempt]) {
-            break; /* Bail if GetNewChunk failed. */
-        }
-    }
-    if (OffsetFromAligned(p, alignment)) {
-        UnmapPages(p, size);
-        p = nullptr;
-    }
-    while (--attempt >= 0) {
-        UnmapPages(tempMaps[attempt], size);
-    }
-    return p;
-}
-
-/*
- * On Windows, map and unmap calls must be matched, so we deallocate the
- * unaligned chunk, then reallocate the unaligned part to block off the
- * old address and force the allocator to give us a new one.
- */
-static void
-GetNewChunk(void** aAddress, void** aRetainedAddr, size_t size, size_t alignment)
-{
-    void* address = *aAddress;
-    void* retainedAddr = nullptr;
-    do {
-        size_t retainedSize;
-        size_t offset = OffsetFromAligned(address, alignment);
-        if (!offset) {
-            break;
-        }
-        UnmapPages(address, size);
-        retainedSize = alignment - offset;
-        retainedAddr = MapMemoryAt(address, retainedSize, MEM_RESERVE);
-        address = MapMemory(size, MEM_COMMIT | MEM_RESERVE);
-        /* If retainedAddr is null here, we raced with another thread. */
-    } while (!retainedAddr);
-    *aAddress = address;
-    *aRetainedAddr = retainedAddr;
-}
-
-void
-UnmapPages(void* p, size_t size)
-{
-    // ASan does not automatically unpoison memory, so we have to do this here.
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-
-    MOZ_ALWAYS_TRUE(VirtualFree(p, 0, MEM_RELEASE));
-}
-
-bool
-MarkPagesUnused(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_NOACCESS(p, size);
-=======
 static inline bool DecommitEnabled() { return pageSize == ArenaSize; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!DecommitEnabled()) {
-    return true;
-  }
-
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-  LPVOID p2 = MapMemoryAt(p, size, MEM_RESET);
-  return p2 == p;
-||||||| merged common ancestors
-    if (!DecommitEnabled()) {
-        return true;
-    }
-
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-    LPVOID p2 = MapMemoryAt(p, size, MEM_RESET);
-    return p2 == p;
-=======
 /* Returns the offset from the nearest aligned address at or below |region|. */
 static inline size_t OffsetFromAligned(void* region, size_t alignment) {
   return uintptr_t(region) % alignment;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MarkPagesInUse(void* p, size_t size) {
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-
-  if (!DecommitEnabled()) {
-    return;
-  }
-
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-}
-
-size_t GetPageFaultCount() {
-  if (mozilla::recordreplay::IsRecordingOrReplaying()) {
-    return 0;
-  }
-  PROCESS_MEMORY_COUNTERS pmc;
-  if (!GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc))) {
-    return 0;
-  }
-  return pmc.PageFaultCount;
-||||||| merged common ancestors
-void
-MarkPagesInUse(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-
-    if (!DecommitEnabled()) {
-        return;
-    }
-
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-}
-
-size_t
-GetPageFaultCount()
-{
-    if (mozilla::recordreplay::IsRecordingOrReplaying()) {
-        return 0;
-    }
-    PROCESS_MEMORY_COUNTERS pmc;
-    if (!GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc))) {
-        return 0;
-    }
-    return pmc.PageFaultCount;
-=======
 template <Commit commit, PageAccess prot>
 static inline void* MapInternal(void* desired, size_t length) {
   void* region = nullptr;
@@ -717,193 +191,28 @@ static inline void* MapInternal(void* desired, size_t length) {
   }
 #endif
   return region;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void* AllocateMappedContent(int fd, size_t offset, size_t length,
-                            size_t alignment) {
-  MOZ_ASSERT(length && alignment);
-
-  // The allocation granularity and the requested offset
-  // must both be divisible by the requested alignment.
-  // Alignments larger than the allocation granularity are not supported.
-  if (allocGranularity % alignment != 0 || offset % alignment != 0) {
-    return nullptr;
-  }
-
-  HANDLE hFile = reinterpret_cast<HANDLE>(intptr_t(fd));
-
-  // This call will fail if the file does not exist, which is what we want.
-  HANDLE hMap = CreateFileMapping(hFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
-  if (!hMap) {
-    return nullptr;
-  }
-
-  size_t alignedOffset = offset - (offset % allocGranularity);
-  size_t alignedLength = length + (offset % allocGranularity);
-||||||| merged common ancestors
-void*
-AllocateMappedContent(int fd, size_t offset, size_t length, size_t alignment)
-{
-    MOZ_ASSERT(length && alignment);
-
-    // The allocation granularity and the requested offset
-    // must both be divisible by the requested alignment.
-    // Alignments larger than the allocation granularity are not supported.
-    if (allocGranularity % alignment != 0 || offset % alignment != 0) {
-        return nullptr;
-    }
-
-    HANDLE hFile = reinterpret_cast<HANDLE>(intptr_t(fd));
-
-    // This call will fail if the file does not exist, which is what we want.
-    HANDLE hMap = CreateFileMapping(hFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
-    if (!hMap) {
-        return nullptr;
-    }
-
-    size_t alignedOffset = offset - (offset % allocGranularity);
-    size_t alignedLength = length + (offset % allocGranularity);
-=======
 static inline void UnmapInternal(void* region, size_t length) {
   MOZ_ASSERT(region && OffsetFromAligned(region, allocGranularity) == 0);
   MOZ_ASSERT(length > 0 && length % pageSize == 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  DWORD offsetH = uint32_t(uint64_t(alignedOffset) >> 32);
-  DWORD offsetL = uint32_t(alignedOffset);
-
-  // If the offset or length are out of bounds, this call will fail.
-  uint8_t* map = static_cast<uint8_t*>(
-      MapViewOfFile(hMap, FILE_MAP_COPY, offsetH, offsetL, alignedLength));
-
-  // This just decreases the file mapping object's internal reference count;
-  // it won't actually be destroyed until we unmap the associated view.
-  CloseHandle(hMap);
-
-  if (!map) {
-    return nullptr;
-  }
-
-#ifdef DEBUG
-  // Zero out data before and after the desired mapping to catch errors early.
-  if (offset != alignedOffset) {
-    memset(map, 0, offset - alignedOffset);
-  }
-  if (alignedLength % pageSize) {
-    memset(map + alignedLength, 0, pageSize - (alignedLength % pageSize));
-  }
-||||||| merged common ancestors
-    DWORD offsetH = uint32_t(uint64_t(alignedOffset) >> 32);
-    DWORD offsetL = uint32_t(alignedOffset);
-
-    // If the offset or length are out of bounds, this call will fail.
-    uint8_t* map = static_cast<uint8_t*>(MapViewOfFile(hMap, FILE_MAP_COPY, offsetH,
-                                                       offsetL, alignedLength));
-
-    // This just decreases the file mapping object's internal reference count;
-    // it won't actually be destroyed until we unmap the associated view.
-    CloseHandle(hMap);
-
-    if (!map) {
-        return nullptr;
-    }
-
-#ifdef DEBUG
-    // Zero out data before and after the desired mapping to catch errors early.
-    if (offset != alignedOffset) {
-        memset(map, 0, offset - alignedOffset);
-    }
-    if (alignedLength % pageSize) {
-        memset(map + alignedLength, 0, pageSize - (alignedLength % pageSize));
-    }
-=======
 #ifdef XP_WIN
   MOZ_RELEASE_ASSERT(VirtualFree(region, 0, MEM_RELEASE) != 0);
 #else
   if (munmap(region, length)) {
     MOZ_RELEASE_ASSERT(errno == ENOMEM);
   }
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-
-  return map + (offset - alignedOffset);
-||||||| merged common ancestors
-
-    return map + (offset - alignedOffset);
-=======
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void DeallocateMappedContent(void* p, size_t /*length*/) {
-  if (!p) {
-    return;
-  }
-||||||| merged common ancestors
-void
-DeallocateMappedContent(void* p, size_t /*length*/)
-{
-    if (!p) {
-        return;
-    }
-=======
 template <Commit commit = Commit::Yes, PageAccess prot = PageAccess::ReadWrite>
 static inline void* MapMemory(size_t length) {
   MOZ_ASSERT(length > 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Calculate the address originally returned by MapViewOfFile.
-  // This is needed because AllocateMappedContent returns a pointer
-  // that might be offset from the view, as the beginning of a
-  // view must be aligned with the allocation granularity.
-  uintptr_t map = uintptr_t(p) - (uintptr_t(p) % allocGranularity);
-  MOZ_ALWAYS_TRUE(UnmapViewOfFile(reinterpret_cast<void*>(map)));
-||||||| merged common ancestors
-    // Calculate the address originally returned by MapViewOfFile.
-    // This is needed because AllocateMappedContent returns a pointer
-    // that might be offset from the view, as the beginning of a
-    // view must be aligned with the allocation granularity.
-    uintptr_t map = uintptr_t(p) - (uintptr_t(p) % allocGranularity);
-    MOZ_ALWAYS_TRUE(UnmapViewOfFile(reinterpret_cast<void*>(map)));
-=======
   return MapInternal<commit, prot>(nullptr, length);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#else  // Various APIs are unavailable.
-
-void* MapAlignedPages(size_t size, size_t alignment) {
-  MOZ_ASSERT(size >= alignment);
-  MOZ_ASSERT(size >= allocGranularity);
-  MOZ_ASSERT(size % alignment == 0);
-  MOZ_ASSERT(size % pageSize == 0);
-  MOZ_ASSERT_IF(alignment < allocGranularity,
-                allocGranularity % alignment == 0);
-  MOZ_ASSERT_IF(alignment > allocGranularity,
-                alignment % allocGranularity == 0);
-
-  void* p = _aligned_malloc(size, alignment);
-||||||| merged common ancestors
-#  else // Various APIs are unavailable.
-
-void*
-MapAlignedPages(size_t size, size_t alignment)
-{
-    MOZ_ASSERT(size >= alignment);
-    MOZ_ASSERT(size >= allocGranularity);
-    MOZ_ASSERT(size % alignment == 0);
-    MOZ_ASSERT(size % pageSize == 0);
-    MOZ_ASSERT_IF(alignment < allocGranularity, allocGranularity % alignment == 0);
-    MOZ_ASSERT_IF(alignment > allocGranularity, alignment % allocGranularity == 0);
-
-    void* p = _aligned_malloc(size, alignment);
-=======
 /*
  * Attempts to map memory at the given address, but allows the system
  * to return a different address that may still be suitable.
@@ -912,42 +221,12 @@ template <Commit commit = Commit::Yes, PageAccess prot = PageAccess::ReadWrite>
 static inline void* MapMemoryAtFuzzy(void* desired, size_t length) {
   MOZ_ASSERT(desired && OffsetFromAligned(desired, allocGranularity) == 0);
   MOZ_ASSERT(length > 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(OffsetFromAligned(p, alignment) == 0);
-  return p;
-||||||| merged common ancestors
-    MOZ_ASSERT(OffsetFromAligned(p, alignment) == 0);
-    return p;
-=======
   // Note that some platforms treat the requested address as a hint, so the
   // returned address might not match the requested address.
   return MapInternal<commit, prot>(desired, length);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void* MapAlignedPagesLastDitch(size_t size, size_t alignment) {
-  return nullptr;
-}
-
-void UnmapPages(void* p, size_t size) {
-  // ASan does not automatically unpoison memory, so we have to do this here.
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-||||||| merged common ancestors
-static void*
-MapAlignedPagesLastDitch(size_t size, size_t alignment)
-{
-    return nullptr;
-}
-
-void
-UnmapPages(void* p, size_t size)
-{
-    // ASan does not automatically unpoison memory, so we have to do this here.
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-=======
 /*
  * Attempts to map memory at the given address, returning nullptr if
  * the system returns any address other than the requested one.
@@ -956,34 +235,12 @@ template <Commit commit = Commit::Yes, PageAccess prot = PageAccess::ReadWrite>
 static inline void* MapMemoryAt(void* desired, size_t length) {
   MOZ_ASSERT(desired && OffsetFromAligned(desired, allocGranularity) == 0);
   MOZ_ASSERT(length > 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  _aligned_free(p);
-}
-||||||| merged common ancestors
-    _aligned_free(p);
-}
-=======
   void* region = MapInternal<commit, prot>(desired, length);
   if (!region) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool MarkPagesUnused(void* p, size_t size) {
-  MOZ_MAKE_MEM_NOACCESS(p, size);
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-  return true;
-||||||| merged common ancestors
-bool
-MarkPagesUnused(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_NOACCESS(p, size);
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-    return true;
-=======
   // On some platforms mmap treats the desired address as a hint, so
   // check that the address we got is the address we requested.
   if (region != desired) {
@@ -991,59 +248,16 @@ MarkPagesUnused(void* p, size_t size)
     return nullptr;
   }
   return region;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MarkPagesInUse(void* p, size_t size) {
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-}
-||||||| merged common ancestors
-bool
-MarkPagesInUse(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-}
-=======
 #ifdef JS_64BIT
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-size_t GetPageFaultCount() {
-  // GetProcessMemoryInfo is unavailable.
-  return 0;
-}
-||||||| merged common ancestors
-size_t
-GetPageFaultCount()
-{
-    // GetProcessMemoryInfo is unavailable.
-    return 0;
-}
-=======
 /* Returns a random number in the given range. */
 static inline uint64_t GetNumberInRange(uint64_t minNum, uint64_t maxNum) {
   const uint64_t MaxRand = UINT64_C(0xffffffffffffffff);
   maxNum -= minNum;
   uint64_t binSize = 1 + (MaxRand - maxNum) / (maxNum + 1);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void* AllocateMappedContent(int fd, size_t offset, size_t length,
-                            size_t alignment) {
-  // Not implemented.
-  return nullptr;
-}
-||||||| merged common ancestors
-void*
-AllocateMappedContent(int fd, size_t offset, size_t length, size_t alignment)
-{
-    // Not implemented.
-    return nullptr;
-}
-=======
   uint64_t rndNum;
   do {
     mozilla::Maybe<uint64_t> result;
@@ -1053,43 +267,13 @@ AllocateMappedContent(int fd, size_t offset, size_t length, size_t alignment)
     } while (!result);
     rndNum = result.value() / binSize;
   } while (rndNum > maxNum);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Deallocate mapped memory for object.
-void DeallocateMappedContent(void* p, size_t length) {
-  // Not implemented.
-||||||| merged common ancestors
-// Deallocate mapped memory for object.
-void
-DeallocateMappedContent(void* p, size_t length)
-{
-    // Not implemented.
-=======
   return minNum + rndNum;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-#endif
-
-#elif defined(SOLARIS)
-||||||| merged common ancestors
-#  endif
-
-#elif defined(SOLARIS)
-=======
 #  ifndef XP_WIN
 static inline uint64_t FindAddressLimitInner(size_t highBit, size_t tries);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifndef MAP_NOSYNC
-#define MAP_NOSYNC 0
-||||||| merged common ancestors
-#ifndef MAP_NOSYNC
-# define MAP_NOSYNC 0
-=======
 /*
  * The address range available to applications depends on both hardware and
  * kernel configuration. For example, AArch64 on Linux uses addresses with
@@ -1173,63 +357,7 @@ void InitMemorySubsystem() {
 #else
     pageSize = size_t(sysconf(_SC_PAGESIZE));
     allocGranularity = pageSize;
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-
-void InitMemorySubsystem() {
-  if (pageSize == 0) {
-    pageSize = allocGranularity = size_t(sysconf(_SC_PAGESIZE));
-  }
-}
-
-void* MapAlignedPages(size_t size, size_t alignment) {
-  MOZ_ASSERT(size >= alignment);
-  MOZ_ASSERT(size >= allocGranularity);
-  MOZ_ASSERT(size % alignment == 0);
-  MOZ_ASSERT(size % pageSize == 0);
-  MOZ_ASSERT_IF(alignment < allocGranularity,
-                allocGranularity % alignment == 0);
-  MOZ_ASSERT_IF(alignment > allocGranularity,
-                alignment % allocGranularity == 0);
-
-  int prot = PROT_READ | PROT_WRITE;
-  int flags = MAP_PRIVATE | MAP_ANON | MAP_ALIGN | MAP_NOSYNC;
-
-  void* p = mmap((caddr_t)alignment, size, prot, flags, -1, 0);
-  if (p == MAP_FAILED) {
-    return nullptr;
-  }
-  return p;
-||||||| merged common ancestors
-
-void
-InitMemorySubsystem()
-{
-    if (pageSize == 0) {
-        pageSize = allocGranularity = size_t(sysconf(_SC_PAGESIZE));
-    }
-}
-
-void*
-MapAlignedPages(size_t size, size_t alignment)
-{
-    MOZ_ASSERT(size >= alignment);
-    MOZ_ASSERT(size >= allocGranularity);
-    MOZ_ASSERT(size % alignment == 0);
-    MOZ_ASSERT(size % pageSize == 0);
-    MOZ_ASSERT_IF(alignment < allocGranularity, allocGranularity % alignment == 0);
-    MOZ_ASSERT_IF(alignment > allocGranularity, alignment % allocGranularity == 0);
-
-    int prot = PROT_READ | PROT_WRITE;
-    int flags = MAP_PRIVATE | MAP_ANON | MAP_ALIGN | MAP_NOSYNC;
-
-    void* p = mmap((caddr_t)alignment, size, prot, flags, -1, 0);
-    if (p == MAP_FAILED) {
-        return nullptr;
-    }
-    return p;
-=======
 #ifdef JS_64BIT
 #  ifdef XP_WIN
     minValidAddress = size_t(sysinfo.lpMinimumApplicationAddress);
@@ -1253,122 +381,40 @@ MapAlignedPages(size_t size, size_t alignment)
     numAddressBits = 32;
 #endif
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void* MapAlignedPagesLastDitch(size_t size, size_t alignment) {
-  return nullptr;
-||||||| merged common ancestors
-static void*
-MapAlignedPagesLastDitch(size_t size, size_t alignment)
-{
-    return nullptr;
-=======
 #ifdef JS_64BIT
 /* The JS engine uses 47-bit pointers; all higher bits must be clear. */
 static inline bool IsInvalidRegion(void* region, size_t length) {
   const uint64_t invalidPointerMask = UINT64_C(0xffff800000000000);
   return (uintptr_t(region) + length - 1) & invalidPointerMask;
->>>>>>> upstream-releases
 }
 #endif
 
-<<<<<<< HEAD
-void UnmapPages(void* p, size_t size) {
-  // ASan does not automatically unpoison memory, so we have to do this here.
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-
-  MOZ_ALWAYS_TRUE(0 == munmap((caddr_t)p, size));
-}
-||||||| merged common ancestors
-void
-UnmapPages(void* p, size_t size)
-{
-    // ASan does not automatically unpoison memory, so we have to do this here.
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-
-    MOZ_ALWAYS_TRUE(0 == munmap((caddr_t)p, size));
-}
-=======
 void* MapAlignedPages(size_t length, size_t alignment) {
   MOZ_RELEASE_ASSERT(length > 0 && alignment > 0);
   MOZ_RELEASE_ASSERT(length % pageSize == 0);
   MOZ_RELEASE_ASSERT(std::max(alignment, allocGranularity) %
                          std::min(alignment, allocGranularity) ==
                      0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool MarkPagesUnused(void* p, size_t size) {
-  MOZ_MAKE_MEM_NOACCESS(p, size);
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-  return true;
-}
-||||||| merged common ancestors
-bool
-MarkPagesUnused(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_NOACCESS(p, size);
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-    return true;
-}
-=======
   // Smaller alignments aren't supported by the allocation functions.
   if (alignment < allocGranularity) {
     alignment = allocGranularity;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool MarkPagesInUse(void* p, size_t size) {
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-||||||| merged common ancestors
-bool
-MarkPagesInUse(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-=======
 #ifdef JS_64BIT
   // Use the scattershot allocator if the address range is large enough.
   if (UsingScattershotAllocator()) {
     void* region = MapAlignedPagesRandom(length, alignment);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!DecommitEnabled()) {
-    return;
-  }
-||||||| merged common ancestors
-    if (!DecommitEnabled()) {
-        return;
-    }
-=======
     MOZ_RELEASE_ASSERT(!IsInvalidRegion(region, length));
     MOZ_ASSERT(OffsetFromAligned(region, alignment) == 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-}
-||||||| merged common ancestors
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-}
-=======
     return region;
   }
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-size_t GetPageFaultCount() { return 0; }
-||||||| merged common ancestors
-size_t
-GetPageFaultCount()
-{
-    return 0;
-}
-=======
   // Try to allocate the region. If the returned address is aligned,
   // either we OOMed (region is nullptr) or we're done.
   void* region = MapMemory(length);
@@ -1384,49 +430,19 @@ GetPageFaultCount()
     MOZ_ASSERT(!retainedRegion);
     return region;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void* AllocateMappedContent(int fd, size_t offset, size_t length,
-                            size_t alignment) {
-  // Not implemented.
-  return nullptr;
-}
-||||||| merged common ancestors
-void*
-AllocateMappedContent(int fd, size_t offset, size_t length, size_t alignment)
-{
-    // Not implemented.
-    return nullptr;
-}
-=======
   // On failure, the unaligned region is retained unless we OOMed. We don't
   // use the retained region on this path (see the last ditch allocator).
   if (retainedRegion) {
     UnmapInternal(retainedRegion, length);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-// Deallocate mapped memory for object.
-void DeallocateMappedContent(void* p, size_t length) {
-  // Not implemented.
-}
-||||||| merged common ancestors
-// Deallocate mapped memory for object.
-void
-DeallocateMappedContent(void* p, size_t length)
-{
-    // Not implemented.
-}
-=======
   // If it fails to align the given region, TryToAlignChunk() returns the
   // next valid region that we might be able to align (unless we OOMed).
   if (region) {
     MOZ_ASSERT(OffsetFromAligned(region, alignment) != 0);
     UnmapInternal(region, length);
   }
->>>>>>> upstream-releases
 
   // Since we couldn't align the first region, fall back to allocating a
   // region large enough that we can definitely align it.
@@ -1437,293 +453,13 @@ DeallocateMappedContent(void* p, size_t length)
     region = MapAlignedPagesLastDitch(length, alignment);
   }
 
-<<<<<<< HEAD
-void InitMemorySubsystem() {
-  if (pageSize == 0) {
-    pageSize = allocGranularity = size_t(sysconf(_SC_PAGESIZE));
-  }
-||||||| merged common ancestors
-void
-InitMemorySubsystem()
-{
-    if (pageSize == 0) {
-        pageSize = allocGranularity = size_t(sysconf(_SC_PAGESIZE));
-    }
-=======
   // At this point we should either have an aligned region or nullptr.
   MOZ_ASSERT(OffsetFromAligned(region, alignment) == 0);
   return region;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static inline void* MapMemoryAt(void* desired, size_t length,
-                                int prot = PROT_READ | PROT_WRITE,
-                                int flags = MAP_PRIVATE | MAP_ANON, int fd = -1,
-                                off_t offset = 0) {
-||||||| merged common ancestors
-static inline void*
-MapMemoryAt(void* desired, size_t length, int prot = PROT_READ | PROT_WRITE,
-            int flags = MAP_PRIVATE | MAP_ANON, int fd = -1, off_t offset = 0)
-{
-=======
 #ifdef JS_64BIT
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#if defined(__ia64__) || defined(__aarch64__) ||  \
-    (defined(__sparc__) && defined(__arch64__) && \
-     (defined(__NetBSD__) || defined(__linux__)))
-  MOZ_ASSERT((0xffff800000000000ULL & (uintptr_t(desired) + length - 1)) == 0);
-#endif
-  void* region = mmap(desired, length, prot, flags, fd, offset);
-  if (region == MAP_FAILED) {
-    return nullptr;
-  }
-  /*
-   * mmap treats the given address as a hint unless the MAP_FIXED flag is
-   * used (which isn't usually what you want, as this overrides existing
-   * mappings), so check that the address we got is the address we wanted.
-   */
-  if (region != desired) {
-    if (munmap(region, length)) {
-      MOZ_ASSERT(errno == ENOMEM);
-    }
-    return nullptr;
-  }
-  return region;
-}
-
-static inline void* MapMemory(size_t length, int prot = PROT_READ | PROT_WRITE,
-                              int flags = MAP_PRIVATE | MAP_ANON, int fd = -1,
-                              off_t offset = 0) {
-#if defined(__ia64__) || \
-    (defined(__sparc__) && defined(__arch64__) && defined(__NetBSD__))
-  /*
-   * The JS engine assumes that all allocated pointers have their high 17 bits
-   * clear, which ia64's mmap doesn't support directly. However, we can emulate
-   * it by passing mmap an "addr" parameter with those bits clear. The mmap will
-   * return that address, or the nearest available memory above that address,
-   * providing a near-guarantee that those bits are clear. If they are not, we
-   * return nullptr below to indicate out-of-memory.
-   *
-   * The addr is chosen as 0x0000070000000000, which still allows about 120TB of
-   * virtual address space.
-   *
-   * See Bug 589735 for more information.
-   */
-  void* region =
-      mmap((void*)0x0000070000000000, length, prot, flags, fd, offset);
-  if (region == MAP_FAILED) {
-    return nullptr;
-  }
-  /*
-   * If the allocated memory doesn't have its upper 17 bits clear, consider it
-   * as out of memory.
-   */
-  if ((uintptr_t(region) + (length - 1)) & 0xffff800000000000) {
-    if (munmap(region, length)) {
-      MOZ_ASSERT(errno == ENOMEM);
-    }
-    return nullptr;
-  }
-  return region;
-#elif defined(__aarch64__) || \
-    (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-  /*
-   * There might be similar virtual address issue on arm64 which depends on
-   * hardware and kernel configurations. But the work around is slightly
-   * different due to the different mmap behavior.
-   *
-   * TODO: Merge with the above code block if this implementation works for
-   * ia64 and sparc64.
-   */
-  const uintptr_t start = UINT64_C(0x0000070000000000);
-  const uintptr_t end = UINT64_C(0x0000800000000000);
-  const uintptr_t step = ChunkSize;
-  /*
-   * Optimization options if there are too many retries in practice:
-   * 1. Examine /proc/self/maps to find an available address. This file is
-   *    not always available, however. In addition, even if we examine
-   *    /proc/self/maps, we may still need to retry several times due to
-   *    racing with other threads.
-   * 2. Use a global/static variable with lock to track the addresses we have
-   *    allocated or tried.
-   */
-  uintptr_t hint;
-  void* region = MAP_FAILED;
-  for (hint = start; region == MAP_FAILED && hint + length <= end;
-       hint += step) {
-    region = mmap((void*)hint, length, prot, flags, fd, offset);
-    if (region != MAP_FAILED) {
-      if ((uintptr_t(region) + (length - 1)) & 0xffff800000000000) {
-        if (munmap(region, length)) {
-          MOZ_ASSERT(errno == ENOMEM);
-        }
-        region = MAP_FAILED;
-      }
-    }
-  }
-  return region == MAP_FAILED ? nullptr : region;
-#else
-  void* region = MozTaggedAnonymousMmap(nullptr, length, prot, flags, fd,
-                                        offset, "js-gc-heap");
-  if (region == MAP_FAILED) {
-    return nullptr;
-  }
-  return region;
-#endif
-}
-
-void* MapAlignedPages(size_t size, size_t alignment) {
-  MOZ_ASSERT(size >= alignment);
-  MOZ_ASSERT(size >= allocGranularity);
-  MOZ_ASSERT(size % alignment == 0);
-  MOZ_ASSERT(size % pageSize == 0);
-  MOZ_ASSERT_IF(alignment < allocGranularity,
-                allocGranularity % alignment == 0);
-  MOZ_ASSERT_IF(alignment > allocGranularity,
-                alignment % allocGranularity == 0);
-
-  void* p = MapMemory(size);
-
-  /* Special case: If we want page alignment, no further work is needed. */
-  if (alignment == allocGranularity) {
-    return p;
-  }
-
-  if (OffsetFromAligned(p, alignment) == 0) {
-    return p;
-  }
-
-  void* retainedAddr;
-  GetNewChunk(&p, &retainedAddr, size, alignment);
-  if (retainedAddr) {
-    UnmapPages(retainedAddr, size);
-  }
-  if (p) {
-    if (OffsetFromAligned(p, alignment) == 0) {
-      return p;
-||||||| merged common ancestors
-#if defined(__ia64__) || defined(__aarch64__) || \
-    (defined(__sparc__) && defined(__arch64__) && (defined(__NetBSD__) || defined(__linux__)))
-    MOZ_ASSERT((0xffff800000000000ULL & (uintptr_t(desired) + length - 1)) == 0);
-#endif
-    void* region = mmap(desired, length, prot, flags, fd, offset);
-    if (region == MAP_FAILED) {
-        return nullptr;
-    }
-    /*
-     * mmap treats the given address as a hint unless the MAP_FIXED flag is
-     * used (which isn't usually what you want, as this overrides existing
-     * mappings), so check that the address we got is the address we wanted.
-     */
-    if (region != desired) {
-        if (munmap(region, length)) {
-            MOZ_ASSERT(errno == ENOMEM);
-        }
-        return nullptr;
-    }
-    return region;
-}
-
-static inline void*
-MapMemory(size_t length, int prot = PROT_READ | PROT_WRITE,
-          int flags = MAP_PRIVATE | MAP_ANON, int fd = -1, off_t offset = 0)
-{
-#if defined(__ia64__) || (defined(__sparc__) && defined(__arch64__) && defined(__NetBSD__))
-    /*
-     * The JS engine assumes that all allocated pointers have their high 17 bits clear,
-     * which ia64's mmap doesn't support directly. However, we can emulate it by passing
-     * mmap an "addr" parameter with those bits clear. The mmap will return that address,
-     * or the nearest available memory above that address, providing a near-guarantee
-     * that those bits are clear. If they are not, we return nullptr below to indicate
-     * out-of-memory.
-     *
-     * The addr is chosen as 0x0000070000000000, which still allows about 120TB of virtual
-     * address space.
-     *
-     * See Bug 589735 for more information.
-     */
-    void* region = mmap((void*)0x0000070000000000, length, prot, flags, fd, offset);
-    if (region == MAP_FAILED) {
-        return nullptr;
-    }
-    /*
-     * If the allocated memory doesn't have its upper 17 bits clear, consider it
-     * as out of memory.
-     */
-    if ((uintptr_t(region) + (length - 1)) & 0xffff800000000000) {
-        if (munmap(region, length)) {
-            MOZ_ASSERT(errno == ENOMEM);
-        }
-        return nullptr;
-    }
-    return region;
-#elif defined(__aarch64__) || (defined(__sparc__) && defined(__arch64__) && defined(__linux__))
-   /*
-    * There might be similar virtual address issue on arm64 which depends on
-    * hardware and kernel configurations. But the work around is slightly
-    * different due to the different mmap behavior.
-    *
-    * TODO: Merge with the above code block if this implementation works for
-    * ia64 and sparc64.
-    */
-    const uintptr_t start = UINT64_C(0x0000070000000000);
-    const uintptr_t end   = UINT64_C(0x0000800000000000);
-    const uintptr_t step  = ChunkSize;
-   /*
-    * Optimization options if there are too many retries in practice:
-    * 1. Examine /proc/self/maps to find an available address. This file is
-    *    not always available, however. In addition, even if we examine
-    *    /proc/self/maps, we may still need to retry several times due to
-    *    racing with other threads.
-    * 2. Use a global/static variable with lock to track the addresses we have
-    *    allocated or tried.
-    */
-    uintptr_t hint;
-    void* region = MAP_FAILED;
-    for (hint = start; region == MAP_FAILED && hint + length <= end; hint += step) {
-        region = mmap((void*)hint, length, prot, flags, fd, offset);
-        if (region != MAP_FAILED) {
-            if ((uintptr_t(region) + (length - 1)) & 0xffff800000000000) {
-                if (munmap(region, length)) {
-                    MOZ_ASSERT(errno == ENOMEM);
-                }
-                region = MAP_FAILED;
-            }
-        }
-    }
-    return region == MAP_FAILED ? nullptr : region;
-#else
-    void* region = MozTaggedAnonymousMmap(nullptr, length, prot, flags, fd, offset, "js-gc-heap");
-    if (region == MAP_FAILED) {
-        return nullptr;
-    }
-    return region;
-#endif
-}
-
-void*
-MapAlignedPages(size_t size, size_t alignment)
-{
-    MOZ_ASSERT(size >= alignment);
-    MOZ_ASSERT(size >= allocGranularity);
-    MOZ_ASSERT(size % alignment == 0);
-    MOZ_ASSERT(size % pageSize == 0);
-    MOZ_ASSERT_IF(alignment < allocGranularity, allocGranularity % alignment == 0);
-    MOZ_ASSERT_IF(alignment > allocGranularity, alignment % allocGranularity == 0);
-
-    void* p = MapMemory(size);
-
-    /* Special case: If we want page alignment, no further work is needed. */
-    if (alignment == allocGranularity) {
-        return p;
-    }
-
-    if (OffsetFromAligned(p, alignment) == 0) {
-        return p;
-=======
 /*
  * This allocator takes advantage of the large address range on some 64-bit
  * platforms to allocate in a scattershot manner, choosing addresses at random
@@ -1778,35 +514,7 @@ static void* MapAlignedPagesRandom(size_t length, size_t alignment) {
     }
     if (OffsetFromAligned(region, alignment) == 0) {
       return region;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    UnmapPages(p, size);
-  }
-
-  p = MapAlignedPagesSlow(size, alignment);
-  if (!p) {
-    return MapAlignedPagesLastDitch(size, alignment);
-  }
-||||||| merged common ancestors
-
-    void* retainedAddr;
-    GetNewChunk(&p, &retainedAddr, size, alignment);
-    if (retainedAddr) {
-        UnmapPages(retainedAddr, size);
-    }
-    if (p) {
-        if (OffsetFromAligned(p, alignment) == 0) {
-            return p;
-        }
-        UnmapPages(p, size);
-    }
-
-    p = MapAlignedPagesSlow(size, alignment);
-    if (!p) {
-        return MapAlignedPagesLastDitch(size, alignment);
-    }
-=======
     void* retainedRegion = nullptr;
     if (TryToAlignChunk<false>(&region, &retainedRegion, length, alignment)) {
       MOZ_ASSERT(region && OffsetFromAligned(region, alignment) == 0);
@@ -1828,82 +536,10 @@ static void* MapAlignedPagesRandom(size_t length, size_t alignment) {
   if (length < HugeAllocationSize) {
     MOZ_CRASH("Couldn't allocate even after 1000 tries!");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(OffsetFromAligned(p, alignment) == 0);
-  return p;
-||||||| merged common ancestors
-    MOZ_ASSERT(OffsetFromAligned(p, alignment) == 0);
-    return p;
-=======
   return nullptr;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void* MapAlignedPagesSlow(size_t size, size_t alignment) {
-  /* Overallocate and unmap the region's edges. */
-  size_t reqSize = size + alignment - pageSize;
-  void* region = MapMemory(reqSize);
-  if (!region) {
-    return nullptr;
-  }
-
-  void* regionEnd = (void*)(uintptr_t(region) + reqSize);
-  void* front;
-  void* end;
-  if (growthDirection <= 0) {
-    size_t offset = OffsetFromAligned(regionEnd, alignment);
-    end = (void*)(uintptr_t(regionEnd) - offset);
-    front = (void*)(uintptr_t(end) - size);
-  } else {
-    size_t offset = OffsetFromAligned(region, alignment);
-    front = (void*)(uintptr_t(region) + (offset ? alignment - offset : 0));
-    end = (void*)(uintptr_t(front) + size);
-  }
-
-  if (front != region) {
-    UnmapPages(region, uintptr_t(front) - uintptr_t(region));
-  }
-  if (end != regionEnd) {
-    UnmapPages(end, uintptr_t(regionEnd) - uintptr_t(end));
-  }
-
-  return front;
-||||||| merged common ancestors
-static void*
-MapAlignedPagesSlow(size_t size, size_t alignment)
-{
-    /* Overallocate and unmap the region's edges. */
-    size_t reqSize = size + alignment - pageSize;
-    void* region = MapMemory(reqSize);
-    if (!region) {
-        return nullptr;
-    }
-
-    void* regionEnd = (void*)(uintptr_t(region) + reqSize);
-    void* front;
-    void* end;
-    if (growthDirection <= 0) {
-        size_t offset = OffsetFromAligned(regionEnd, alignment);
-        end = (void*)(uintptr_t(regionEnd) - offset);
-        front = (void*)(uintptr_t(end) - size);
-    } else {
-        size_t offset = OffsetFromAligned(region, alignment);
-        front = (void*)(uintptr_t(region) + (offset ? alignment - offset : 0));
-        end = (void*)(uintptr_t(front) + size);
-    }
-
-    if (front != region) {
-        UnmapPages(region, uintptr_t(front) - uintptr_t(region));
-    }
-    if (end != regionEnd) {
-        UnmapPages(end, uintptr_t(regionEnd) - uintptr_t(end));
-    }
-
-    return front;
-=======
 #endif  // defined(JS_64BIT)
 
 static void* MapAlignedPagesSlow(size_t length, size_t alignment) {
@@ -1943,7 +579,6 @@ static void* MapAlignedPagesSlow(size_t length, size_t alignment) {
   } while (!alignedRegion);
 
   return alignedRegion;
->>>>>>> upstream-releases
 }
 
 /*
@@ -1954,50 +589,6 @@ static void* MapAlignedPagesSlow(size_t length, size_t alignment) {
  * by temporarily holding onto the unaligned parts of each chunk until the
  * allocator gives us a chunk that either is, or can be aligned.
  */
-<<<<<<< HEAD
-static void* MapAlignedPagesLastDitch(size_t size, size_t alignment) {
-  void* tempMaps[MaxLastDitchAttempts];
-  int attempt = 0;
-  void* p = MapMemory(size);
-  if (OffsetFromAligned(p, alignment) == 0) {
-    return p;
-  }
-  for (; attempt < MaxLastDitchAttempts; ++attempt) {
-    GetNewChunk(&p, tempMaps + attempt, size, alignment);
-    if (OffsetFromAligned(p, alignment) == 0) {
-      if (tempMaps[attempt]) {
-        UnmapPages(tempMaps[attempt], size);
-      }
-      break;
-||||||| merged common ancestors
-static void*
-MapAlignedPagesLastDitch(size_t size, size_t alignment)
-{
-    void* tempMaps[MaxLastDitchAttempts];
-    int attempt = 0;
-    void* p = MapMemory(size);
-    if (OffsetFromAligned(p, alignment) == 0) {
-        return p;
-    }
-    for (; attempt < MaxLastDitchAttempts; ++attempt) {
-        GetNewChunk(&p, tempMaps + attempt, size, alignment);
-        if (OffsetFromAligned(p, alignment) == 0) {
-            if (tempMaps[attempt]) {
-                UnmapPages(tempMaps[attempt], size);
-            }
-            break;
-        }
-        if (!tempMaps[attempt]) {
-            break; /* Bail if GetNewChunk failed. */
-        }
-    }
-    if (OffsetFromAligned(p, alignment)) {
-        UnmapPages(p, size);
-        p = nullptr;
-    }
-    while (--attempt >= 0) {
-        UnmapPages(tempMaps[attempt], size);
-=======
 static void* MapAlignedPagesLastDitch(size_t length, size_t alignment) {
   void* tempMaps[MaxLastDitchAttempts];
   int attempt = 0;
@@ -2045,24 +636,7 @@ static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
     if (offset == 0) {
       // If the address is aligned, either we hit OOM or we're done.
       break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (!tempMaps[attempt]) {
-      break; /* Bail if GetNewChunk failed. */
-    }
-  }
-  if (OffsetFromAligned(p, alignment)) {
-    UnmapPages(p, size);
-    p = nullptr;
-  }
-  while (--attempt >= 0) {
-    UnmapPages(tempMaps[attempt], size);
-  }
-  return p;
-||||||| merged common ancestors
-    return p;
-=======
     UnmapInternal(region, length);
     retainedLength = alignment - offset;
     retainedRegion = MapMemoryAt<Commit::No>(region, retainedLength);
@@ -2080,7 +654,6 @@ static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
   *aRegion = region;
   *aRetainedRegion = retainedRegion;
   return region && result;
->>>>>>> upstream-releases
 }
 
 #else  // !defined(XP_WIN)
@@ -2091,58 +664,6 @@ static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
  * are handed out in increasing or decreasing order, we have to try both
  * directions (depending on the environment, one will always fail).
  */
-<<<<<<< HEAD
-static void GetNewChunk(void** aAddress, void** aRetainedAddr, size_t size,
-                        size_t alignment) {
-  void* address = *aAddress;
-  void* retainedAddr = nullptr;
-  bool addrsGrowDown = growthDirection <= 0;
-  int i = 0;
-  for (; i < 2; ++i) {
-    /* Try the direction indicated by growthDirection. */
-    if (addrsGrowDown) {
-      size_t offset = OffsetFromAligned(address, alignment);
-      void* head = (void*)((uintptr_t)address - offset);
-      void* tail = (void*)((uintptr_t)head + size);
-      if (MapMemoryAt(head, offset)) {
-        UnmapPages(tail, offset);
-        if (growthDirection >= -8) {
-          --growthDirection;
-||||||| merged common ancestors
-static void
-GetNewChunk(void** aAddress, void** aRetainedAddr, size_t size, size_t alignment)
-{
-    void* address = *aAddress;
-    void* retainedAddr = nullptr;
-    bool addrsGrowDown = growthDirection <= 0;
-    int i = 0;
-    for (; i < 2; ++i) {
-        /* Try the direction indicated by growthDirection. */
-        if (addrsGrowDown) {
-            size_t offset = OffsetFromAligned(address, alignment);
-            void* head = (void*)((uintptr_t)address - offset);
-            void* tail = (void*)((uintptr_t)head + size);
-            if (MapMemoryAt(head, offset)) {
-                UnmapPages(tail, offset);
-                if (growthDirection >= -8) {
-                    --growthDirection;
-                }
-                address = head;
-                break;
-            }
-        } else {
-            size_t offset = alignment - OffsetFromAligned(address, alignment);
-            void* head = (void*)((uintptr_t)address + offset);
-            void* tail = (void*)((uintptr_t)address + size);
-            if (MapMemoryAt(tail, offset)) {
-                UnmapPages(address, offset);
-                if (growthDirection <= 8) {
-                    ++growthDirection;
-                }
-                address = head;
-                break;
-            }
-=======
 template <bool AlwaysGetNew>
 static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
                             size_t length, size_t alignment) {
@@ -2163,25 +684,7 @@ static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
         UnmapInternal(regionStart, offsetUpper);
         if (directionUncertain) {
           ++growthDirection;
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        address = head;
-        break;
-      }
-    } else {
-      size_t offset = alignment - OffsetFromAligned(address, alignment);
-      void* head = (void*)((uintptr_t)address + offset);
-      void* tail = (void*)((uintptr_t)address + size);
-      if (MapMemoryAt(tail, offset)) {
-        UnmapPages(address, offset);
-        if (growthDirection <= 8) {
-          ++growthDirection;
-||||||| merged common ancestors
-        /* If we're confident in the growth direction, don't try the other. */
-        if (growthDirection < -8 || growthDirection > 8) {
-            break;
-=======
         regionStart = upperStart;
         break;
       }
@@ -2193,51 +696,15 @@ static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
         UnmapInternal(lowerEnd, offsetLower);
         if (directionUncertain) {
           --growthDirection;
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-        address = head;
-        break;
-      }
-||||||| merged common ancestors
-        /* If that failed, try the opposite direction. */
-        addrsGrowDown = !addrsGrowDown;
-=======
         regionStart = lowerStart;
         break;
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    /* If we're confident in the growth direction, don't try the other. */
-    if (growthDirection < -8 || growthDirection > 8) {
-      break;
-||||||| merged common ancestors
-    /* If our current chunk cannot be aligned, see if the next one is aligned. */
-    if (OffsetFromAligned(address, alignment)) {
-        retainedAddr = address;
-        address = MapMemory(size);
-=======
     // If we're confident in the growth direction, don't try the other.
     if (!directionUncertain) {
       break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    /* If that failed, try the opposite direction. */
-    addrsGrowDown = !addrsGrowDown;
-  }
-  /* If our current chunk cannot be aligned, see if the next one is aligned. */
-  if (OffsetFromAligned(address, alignment)) {
-    retainedAddr = address;
-    address = MapMemory(size);
-  }
-  *aAddress = address;
-  *aRetainedAddr = retainedAddr;
-||||||| merged common ancestors
-    *aAddress = address;
-    *aRetainedAddr = retainedAddr;
-=======
     addressesGrowUpward = !addressesGrowUpward;
   }
 
@@ -2258,32 +725,10 @@ static bool TryToAlignChunk(void** aRegion, void** aRetainedRegion,
   *aRegion = regionStart;
   *aRetainedRegion = retainedRegion;
   return regionStart && result;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void UnmapPages(void* p, size_t size) {
-  // ASan does not automatically unpoison memory, so we have to do this here.
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-||||||| merged common ancestors
-void
-UnmapPages(void* p, size_t size)
-{
-    // ASan does not automatically unpoison memory, so we have to do this here.
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-=======
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (munmap(p, size)) {
-    MOZ_ASSERT(errno == ENOMEM);
-  }
-||||||| merged common ancestors
-    if (munmap(p, size)) {
-        MOZ_ASSERT(errno == ENOMEM);
-    }
-=======
 void UnmapPages(void* region, size_t length) {
   MOZ_RELEASE_ASSERT(region &&
                      OffsetFromAligned(region, allocGranularity) == 0);
@@ -2293,32 +738,12 @@ void UnmapPages(void* region, size_t length) {
   MOZ_MAKE_MEM_UNDEFINED(region, length);
 
   UnmapInternal(region, length);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool MarkPagesUnused(void* p, size_t size) {
-  MOZ_MAKE_MEM_NOACCESS(p, size);
-||||||| merged common ancestors
-bool
-MarkPagesUnused(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_NOACCESS(p, size);
-=======
 bool MarkPagesUnused(void* region, size_t length) {
   MOZ_RELEASE_ASSERT(region);
   MOZ_RELEASE_ASSERT(length > 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!DecommitEnabled()) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!DecommitEnabled()) {
-        return false;
-    }
-=======
   // pageSize == ArenaSize doesn't necessarily hold, but this function is
   // used by the GC to decommit unused Arenas, so we don't want to assert
   // if pageSize > ArenaSize.
@@ -2326,17 +751,7 @@ bool MarkPagesUnused(void* region, size_t length) {
   MOZ_ASSERT(length % ArenaSize == 0);
 
   MOZ_MAKE_MEM_NOACCESS(region, length);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-#if defined(XP_SOLARIS)
-  int result = posix_madvise(p, size, POSIX_MADV_DONTNEED);
-||||||| merged common ancestors
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-#if defined(XP_SOLARIS)
-    int result = posix_madvise(p, size, POSIX_MADV_DONTNEED);
-=======
   if (!DecommitEnabled()) {
     return true;
   }
@@ -2351,59 +766,21 @@ bool MarkPagesUnused(void* region, size_t length) {
   return madvise(region, length, MADV_FREE) == 0;
 #elif defined(XP_SOLARIS)
   return posix_madvise(region, length, POSIX_MADV_DONTNEED) == 0;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-  int result = madvise(p, size, MADV_DONTNEED);
-||||||| merged common ancestors
-    int result = madvise(p, size, MADV_DONTNEED);
-=======
   return madvise(region, length, MADV_DONTNEED) == 0;
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  return result != -1;
-||||||| merged common ancestors
-    return result != -1;
-=======
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void MarkPagesInUse(void* p, size_t size) {
-  MOZ_MAKE_MEM_UNDEFINED(p, size);
-||||||| merged common ancestors
-void
-MarkPagesInUse(void* p, size_t size)
-{
-    MOZ_MAKE_MEM_UNDEFINED(p, size);
-=======
 void MarkPagesInUse(void* region, size_t length) {
   MOZ_RELEASE_ASSERT(region);
   MOZ_RELEASE_ASSERT(length > 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!DecommitEnabled()) {
-    return;
-  }
-||||||| merged common ancestors
-    if (!DecommitEnabled()) {
-        return;
-    }
-=======
   // pageSize == ArenaSize doesn't necessarily hold, but this function is
   // used by the GC to recommit Arenas that were previously decommitted,
   // so we don't want to assert if pageSize > ArenaSize.
   MOZ_ASSERT(OffsetFromAligned(region, ArenaSize) == 0);
   MOZ_ASSERT(length % ArenaSize == 0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-||||||| merged common ancestors
-    MOZ_ASSERT(OffsetFromAligned(p, pageSize) == 0);
-=======
   MOZ_MAKE_MEM_UNDEFINED(region, length);
 
   if (!DecommitEnabled()) {
@@ -2412,34 +789,8 @@ void MarkPagesInUse(void* region, size_t length) {
   // We can't commit part of a page.
   MOZ_RELEASE_ASSERT(OffsetFromAligned(region, pageSize) == 0);
   MOZ_RELEASE_ASSERT(length % pageSize == 0);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-size_t GetPageFaultCount() {
-  if (mozilla::recordreplay::IsRecordingOrReplaying()) {
-    return 0;
-  }
-  struct rusage usage;
-  int err = getrusage(RUSAGE_SELF, &usage);
-  if (err) {
-    return 0;
-  }
-  return usage.ru_majflt;
-||||||| merged common ancestors
-size_t
-GetPageFaultCount()
-{
-    if (mozilla::recordreplay::IsRecordingOrReplaying()) {
-        return 0;
-    }
-    struct rusage usage;
-    int err = getrusage(RUSAGE_SELF, &usage);
-    if (err) {
-        return 0;
-    }
-    return usage.ru_majflt;
-=======
 size_t GetPageFaultCount() {
   if (mozilla::recordreplay::IsRecordingOrReplaying()) {
     return 0;
@@ -2458,19 +809,8 @@ size_t GetPageFaultCount() {
   }
   return usage.ru_majflt;
 #endif
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void* AllocateMappedContent(int fd, size_t offset, size_t length,
-                            size_t alignment) {
-  MOZ_ASSERT(length && alignment);
-||||||| merged common ancestors
-void*
-AllocateMappedContent(int fd, size_t offset, size_t length, size_t alignment)
-{
-    MOZ_ASSERT(length && alignment);
-=======
 void* AllocateMappedContent(int fd, size_t offset, size_t length,
                             size_t alignment) {
   if (length == 0 || alignment == 0 || offset % alignment != 0 ||
@@ -2479,23 +819,7 @@ void* AllocateMappedContent(int fd, size_t offset, size_t length,
           0) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // The allocation granularity and the requested offset
-  // must both be divisible by the requested alignment.
-  // Alignments larger than the allocation granularity are not supported.
-  if (allocGranularity % alignment != 0 || offset % alignment != 0) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    // The allocation granularity and the requested offset
-    // must both be divisible by the requested alignment.
-    // Alignments larger than the allocation granularity are not supported.
-    if (allocGranularity % alignment != 0 || offset % alignment != 0) {
-        return nullptr;
-    }
-=======
   size_t alignedOffset = offset - (offset % allocGranularity);
   size_t alignedLength = length + (offset % allocGranularity);
 
@@ -2531,54 +855,17 @@ void* AllocateMappedContent(int fd, size_t offset, size_t length,
     map = static_cast<uint8_t*>(
         MapViewOfFileEx(hMap, FILE_MAP_COPY, offsetH, offsetL, alignedLength,
                         reinterpret_cast<void*>(region)));
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Sanity check the offset and size, as mmap does not do this for us.
-  struct stat st;
-  if (fstat(fd, &st) || offset >= uint64_t(st.st_size) ||
-      length > uint64_t(st.st_size) - offset) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    // Sanity check the offset and size, as mmap does not do this for us.
-    struct stat st;
-    if (fstat(fd, &st) || offset >= uint64_t(st.st_size) || length > uint64_t(st.st_size) - offset) {
-        return nullptr;
-    }
-=======
     // Retry if another thread mapped the address we were trying to use.
     if (map || GetLastError() != ERROR_INVALID_ADDRESS) {
       break;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  size_t alignedOffset = offset - (offset % allocGranularity);
-  size_t alignedLength = length + (offset % allocGranularity);
-||||||| merged common ancestors
-    size_t alignedOffset = offset - (offset % allocGranularity);
-    size_t alignedLength = length + (offset % allocGranularity);
-=======
   // This just decreases the file mapping object's internal reference count;
   // it won't actually be destroyed until we unmap the associated view.
   CloseHandle(hMap);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint8_t* map = static_cast<uint8_t*>(MapMemory(
-      alignedLength, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, alignedOffset));
-  if (!map) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    uint8_t* map = static_cast<uint8_t*>(MapMemory(alignedLength, PROT_READ | PROT_WRITE,
-                                                   MAP_PRIVATE, fd, alignedOffset));
-    if (!map) {
-        return nullptr;
-    }
-=======
   if (!map) {
     return nullptr;
   }
@@ -2605,7 +892,6 @@ void* AllocateMappedContent(int fd, size_t offset, size_t length,
     return nullptr;
   }
 #endif
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   // Zero out data before and after the desired mapping to catch errors early.
@@ -2620,47 +906,13 @@ void* AllocateMappedContent(int fd, size_t offset, size_t length,
   return map + (offset - alignedOffset);
 }
 
-<<<<<<< HEAD
-void DeallocateMappedContent(void* p, size_t length) {
-  if (!p) {
-    return;
-  }
-||||||| merged common ancestors
-void
-DeallocateMappedContent(void* p, size_t length)
-{
-    if (!p) {
-        return;
-    }
-=======
 void DeallocateMappedContent(void* region, size_t length) {
   if (!region) {
     return;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Calculate the address originally returned by mmap.
-  // This is needed because AllocateMappedContent returns a pointer
-  // that might be offset from the mapping, as the beginning of a
-  // mapping must be aligned with the allocation granularity.
-  uintptr_t map = uintptr_t(p) - (uintptr_t(p) % allocGranularity);
-  size_t alignedLength = length + (uintptr_t(p) % allocGranularity);
-  UnmapPages(reinterpret_cast<void*>(map), alignedLength);
-}
-||||||| merged common ancestors
-    // Calculate the address originally returned by mmap.
-    // This is needed because AllocateMappedContent returns a pointer
-    // that might be offset from the mapping, as the beginning of a
-    // mapping must be aligned with the allocation granularity.
-    uintptr_t map = uintptr_t(p) - (uintptr_t(p) % allocGranularity);
-    size_t alignedLength = length + (uintptr_t(p) % allocGranularity);
-    UnmapPages(reinterpret_cast<void*>(map), alignedLength);
-}
-=======
   // Due to bug 1502562, the following assertion does not currently hold.
   // MOZ_RELEASE_ASSERT(length > 0);
->>>>>>> upstream-releases
 
   // Calculate the address originally returned by the system call.
   // This is needed because AllocateMappedContent returns a pointer
@@ -2677,40 +929,6 @@ void DeallocateMappedContent(void* region, size_t length) {
 #endif
 }
 
-<<<<<<< HEAD
-void ProtectPages(void* p, size_t size) {
-  MOZ_ASSERT(size % pageSize == 0);
-  MOZ_RELEASE_ASSERT(size > 0);
-  MOZ_RELEASE_ASSERT(p);
-#if defined(XP_WIN)
-  DWORD oldProtect;
-  if (!VirtualProtect(p, size, PAGE_NOACCESS, &oldProtect)) {
-    MOZ_CRASH_UNSAFE_PRINTF(
-        "VirtualProtect(PAGE_NOACCESS) failed! Error code: %lu",
-        GetLastError());
-  }
-#else  // assume Unix
-  if (mprotect(p, size, PROT_NONE)) {
-    MOZ_CRASH("mprotect(PROT_NONE) failed");
-  }
-||||||| merged common ancestors
-void
-ProtectPages(void* p, size_t size)
-{
-    MOZ_ASSERT(size % pageSize == 0);
-    MOZ_RELEASE_ASSERT(size > 0);
-    MOZ_RELEASE_ASSERT(p);
-#if defined(XP_WIN)
-    DWORD oldProtect;
-    if (!VirtualProtect(p, size, PAGE_NOACCESS, &oldProtect)) {
-        MOZ_CRASH_UNSAFE_PRINTF("VirtualProtect(PAGE_NOACCESS) failed! Error code: %lu",
-                                GetLastError());
-    }
-#else  // assume Unix
-    if (mprotect(p, size, PROT_NONE)) {
-        MOZ_CRASH("mprotect(PROT_NONE) failed");
-    }
-=======
 static inline void ProtectMemory(void* region, size_t length, PageAccess prot) {
   MOZ_RELEASE_ASSERT(region && OffsetFromAligned(region, pageSize) == 0);
   MOZ_RELEASE_ASSERT(length > 0 && length % pageSize == 0);
@@ -2720,94 +938,19 @@ static inline void ProtectMemory(void* region, size_t length, PageAccess prot) {
                      0);
 #else
   MOZ_RELEASE_ASSERT(mprotect(region, length, int(prot)) == 0);
->>>>>>> upstream-releases
 #endif
 }
 
-<<<<<<< HEAD
-void MakePagesReadOnly(void* p, size_t size) {
-  MOZ_ASSERT(size % pageSize == 0);
-  MOZ_RELEASE_ASSERT(size > 0);
-  MOZ_RELEASE_ASSERT(p);
-#if defined(XP_WIN)
-  DWORD oldProtect;
-  if (!VirtualProtect(p, size, PAGE_READONLY, &oldProtect)) {
-    MOZ_CRASH_UNSAFE_PRINTF(
-        "VirtualProtect(PAGE_READONLY) failed! Error code: %lu",
-        GetLastError());
-  }
-#else  // assume Unix
-  if (mprotect(p, size, PROT_READ)) {
-    MOZ_CRASH("mprotect(PROT_READ) failed");
-  }
-#endif
-||||||| merged common ancestors
-void
-MakePagesReadOnly(void* p, size_t size)
-{
-    MOZ_ASSERT(size % pageSize == 0);
-    MOZ_RELEASE_ASSERT(size > 0);
-    MOZ_RELEASE_ASSERT(p);
-#if defined(XP_WIN)
-    DWORD oldProtect;
-    if (!VirtualProtect(p, size, PAGE_READONLY, &oldProtect)) {
-        MOZ_CRASH_UNSAFE_PRINTF("VirtualProtect(PAGE_READONLY) failed! Error code: %lu",
-                                GetLastError());
-    }
-#else  // assume Unix
-    if (mprotect(p, size, PROT_READ)) {
-        MOZ_CRASH("mprotect(PROT_READ) failed");
-    }
-#endif
-=======
 void ProtectPages(void* region, size_t length) {
   ProtectMemory(region, length, PageAccess::None);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void UnprotectPages(void* p, size_t size) {
-  MOZ_ASSERT(size % pageSize == 0);
-  MOZ_RELEASE_ASSERT(size > 0);
-  MOZ_RELEASE_ASSERT(p);
-#if defined(XP_WIN)
-  DWORD oldProtect;
-  if (!VirtualProtect(p, size, PAGE_READWRITE, &oldProtect)) {
-    MOZ_CRASH_UNSAFE_PRINTF(
-        "VirtualProtect(PAGE_READWRITE) failed! Error code: %lu",
-        GetLastError());
-  }
-#else  // assume Unix
-  if (mprotect(p, size, PROT_READ | PROT_WRITE)) {
-    MOZ_CRASH("mprotect(PROT_READ | PROT_WRITE) failed");
-  }
-#endif
-||||||| merged common ancestors
-void
-UnprotectPages(void* p, size_t size)
-{
-    MOZ_ASSERT(size % pageSize == 0);
-    MOZ_RELEASE_ASSERT(size > 0);
-    MOZ_RELEASE_ASSERT(p);
-#if defined(XP_WIN)
-    DWORD oldProtect;
-    if (!VirtualProtect(p, size, PAGE_READWRITE, &oldProtect)) {
-        MOZ_CRASH_UNSAFE_PRINTF("VirtualProtect(PAGE_READWRITE) failed! Error code: %lu",
-                                GetLastError());
-    }
-#else  // assume Unix
-    if (mprotect(p, size, PROT_READ | PROT_WRITE)) {
-        MOZ_CRASH("mprotect(PROT_READ | PROT_WRITE) failed");
-    }
-#endif
-=======
 void MakePagesReadOnly(void* region, size_t length) {
   ProtectMemory(region, length, PageAccess::Read);
 }
 
 void UnprotectPages(void* region, size_t length) {
   ProtectMemory(region, length, PageAccess::ReadWrite);
->>>>>>> upstream-releases
 }
 
 }  // namespace gc

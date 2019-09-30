@@ -287,16 +287,6 @@ var testOSXFontSmoothing = function(resisting) {
   div.style.MozOsxFontSmoothing = "unset";
   document.documentElement.appendChild(div);
   let readBack = window.getComputedStyle(div).MozOsxFontSmoothing;
-<<<<<<< HEAD
-  div.remove();
-  let smoothingPref = SpecialPowers.getBoolPref("layout.css.osx-font-smoothing.enabled", false);
-  is(readBack, resisting ? "" : (smoothingPref ? "auto" : ""),
-               "-moz-osx-font-smoothing");
-||||||| merged common ancestors
-  let smoothingPref = SpecialPowers.getBoolPref("layout.css.osx-font-smoothing.enabled", false);
-  is(readBack, resisting ? "" : (smoothingPref ? "auto" : ""),
-               "-moz-osx-font-smoothing");
-=======
   div.remove();
   let smoothingPref = SpecialPowers.getBoolPref(
     "layout.css.osx-font-smoothing.enabled",
@@ -307,7 +297,6 @@ var testOSXFontSmoothing = function(resisting) {
     resisting ? "" : smoothingPref ? "auto" : "",
     "-moz-osx-font-smoothing"
   );
->>>>>>> upstream-releases
 };
 
 // __sleep(timeoutMs)__.

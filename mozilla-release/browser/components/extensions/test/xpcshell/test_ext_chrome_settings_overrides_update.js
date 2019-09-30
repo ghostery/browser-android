@@ -66,35 +66,14 @@ add_task(async function test_overrides_update_removal() {
   let extension = ExtensionTestUtils.loadExtension(extensionInfo);
 
   let defaultHomepageURL = HomePage.get();
-<<<<<<< HEAD
-  let defaultEngineName = Services.search.defaultEngine.name;
-||||||| merged common ancestors
-  let defaultEngineName = Services.search.currentEngine.name;
-=======
   let defaultEngineName = (await Services.search.getDefault()).name;
   ok(defaultEngineName !== "DuckDuckGo", "Default engine is not DuckDuckGo.");
->>>>>>> upstream-releases
 
   let prefPromise = promisePrefChanged(HOMEPAGE_URI);
   await extension.startup();
   await AddonTestUtils.waitForSearchProviderStartup(extension);
   await prefPromise;
 
-<<<<<<< HEAD
-  equal(extension.version, "1.0", "The installed addon has the expected version.");
-  ok(HomePage.get().endsWith(HOMEPAGE_URI),
-     "Home page url is overridden by the extension.");
-  equal(Services.search.defaultEngine.name,
-        "DuckDuckGo",
-        "Default engine is overridden by the extension");
-||||||| merged common ancestors
-  equal(extension.version, "1.0", "The installed addon has the expected version.");
-  ok(HomePage.get().endsWith(HOMEPAGE_URI),
-     "Home page url is overridden by the extension.");
-  equal(Services.search.currentEngine.name,
-        "DuckDuckGo",
-        "Default engine is overridden by the extension");
-=======
   equal(
     extension.version,
     "1.0",
@@ -109,7 +88,6 @@ add_task(async function test_overrides_update_removal() {
     "DuckDuckGo",
     "Builtin default engine was set default by extension"
   );
->>>>>>> upstream-releases
 
   extensionInfo.manifest = {
     version: "2.0",
@@ -124,23 +102,6 @@ add_task(async function test_overrides_update_removal() {
   await extension.upgrade(extensionInfo);
   await prefPromise;
 
-<<<<<<< HEAD
-  equal(extension.version, "2.0", "The updated addon has the expected version.");
-  equal(HomePage.get(),
-        defaultHomepageURL,
-        "Home page url reverted to the default after update.");
-  equal(Services.search.defaultEngine.name,
-        defaultEngineName,
-        "Default engine reverted to the default after update.");
-||||||| merged common ancestors
-  equal(extension.version, "2.0", "The updated addon has the expected version.");
-  equal(HomePage.get(),
-        defaultHomepageURL,
-        "Home page url reverted to the default after update.");
-  equal(Services.search.currentEngine.name,
-        defaultEngineName,
-        "Default engine reverted to the default after update.");
-=======
   equal(
     extension.version,
     "2.0",
@@ -156,7 +117,6 @@ add_task(async function test_overrides_update_removal() {
     defaultEngineName,
     "Default engine reverted to the default after update."
   );
->>>>>>> upstream-releases
 
   await extension.unload();
 });

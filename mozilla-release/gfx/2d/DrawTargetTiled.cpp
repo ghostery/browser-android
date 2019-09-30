@@ -372,13 +372,6 @@ void DrawTargetTiled::PopLayer() {
   mPushedLayers.pop_back();
 }
 
-<<<<<<< HEAD
-void DrawTargetTiled::PadEdges(const IntRegion& aRegion) {
-||||||| merged common ancestors
-void
-DrawTargetTiled::PadEdges(const IntRegion& aRegion)
-{
-=======
 RefPtr<DrawTarget> DrawTargetTiled::CreateClippedDrawTarget(
     const Rect& aBounds, SurfaceFormat aFormat) {
   Rect deviceRect = mTransform.TransformBounds(aBounds);
@@ -417,7 +410,6 @@ RefPtr<DrawTarget> DrawTargetTiled::CreateClippedDrawTarget(
 }
 
 void DrawTargetTiled::PadEdges(const IntRegion& aRegion) {
->>>>>>> upstream-releases
   for (size_t i = 0; i < mTiles.size(); i++) {
     if (mTiles[i].mClippedOut) {
       continue;

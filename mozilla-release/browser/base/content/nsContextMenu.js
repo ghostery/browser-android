@@ -1968,23 +1968,11 @@ nsContextMenu.prototype = {
     }
 
     // format "Search <engine> for <selection>" string to show in menu
-<<<<<<< HEAD
-    let engineName = Services.search.defaultEngine.name;
-    var menuLabel = gNavigatorBundle.getFormattedString("contextMenuSearch",
-                                                        [engineName,
-                                                         selectedText]);
-||||||| merged common ancestors
-    let engineName = Services.search.currentEngine.name;
-    var menuLabel = gNavigatorBundle.getFormattedString("contextMenuSearch",
-                                                        [engineName,
-                                                         selectedText]);
-=======
     let engineName = Services.search.defaultEngine.name;
     var menuLabel = gNavigatorBundle.getFormattedString("contextMenuSearch", [
       engineName,
       selectedText,
     ]);
->>>>>>> upstream-releases
     menuItem.label = menuLabel;
     menuItem.accessKey = gNavigatorBundle.getString(
       "contextMenuSearch.accesskey"

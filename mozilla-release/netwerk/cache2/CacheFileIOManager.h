@@ -49,20 +49,10 @@ class CacheFileHandle final : public nsISupports {
   NS_DECL_THREADSAFE_ISUPPORTS
   bool DispatchRelease();
 
-<<<<<<< HEAD
-  CacheFileHandle(const SHA1Sum::Hash *aHash, bool aPriority,
-                  PinningStatus aPinning);
-  CacheFileHandle(const nsACString &aKey, bool aPriority,
-                  PinningStatus aPinning);
-||||||| merged common ancestors
-  CacheFileHandle(const SHA1Sum::Hash *aHash, bool aPriority, PinningStatus aPinning);
-  CacheFileHandle(const nsACString &aKey, bool aPriority, PinningStatus aPinning);
-=======
   CacheFileHandle(const SHA1Sum::Hash* aHash, bool aPriority,
                   PinningStatus aPinning);
   CacheFileHandle(const nsACString& aKey, bool aPriority,
                   PinningStatus aPinning);
->>>>>>> upstream-releases
   void Log();
   bool IsDoomed() const { return mIsDoomed; }
   const SHA1Sum::Hash* Hash() const { return mHash; }
@@ -72,13 +62,7 @@ class CacheFileHandle final : public nsISupports {
   bool FileExists() const { return mFileExists; }
   bool IsClosed() const { return mClosed; }
   bool IsSpecialFile() const { return mSpecialFile; }
-<<<<<<< HEAD
-  nsCString &Key() { return mKey; }
-||||||| merged common ancestors
-  nsCString & Key() { return mKey; }
-=======
   nsCString& Key() { return mKey; }
->>>>>>> upstream-releases
 
   // Returns false when this handle has been doomed based on the pinning state
   // update.
@@ -124,43 +108,6 @@ class CacheFileHandle final : public nsISupports {
   // - when writing: writing data (not metadata) OR the physical file handle is
   //   not currently open
   // - when truncating: the physical file handle is not currently open
-<<<<<<< HEAD
-  // When set it prevents any further writes or truncates on such handles to
-  // happen immediately after shutdown and gives a chance to write metadata of
-  // already open files quickly as possible (only that renders them actually
-  // usable by the cache.)
-  bool mKilled : 1;
-  // For existing files this is always pre-set to UNKNOWN.  The status is
-  // udpated accordingly after the matadata has been parsed. For new files the
-  // flag is set according to which storage kind is opening the cache entry and
-  // remains so for the handle's lifetime. The status can only change from
-  // UNKNOWN (if set so initially) to one of PINNED or NON_PINNED and it stays
-  // unchanged afterwards. This status is only accessed on the IO thread.
-  PinningStatus mPinning;
-
-  nsCOMPtr<nsIFile> mFile;
-  int64_t mFileSize;
-  PRFileDesc *mFD;  // if null then the file doesn't exists on the disk
-  nsCString mKey;
-||||||| merged common ancestors
-  // When set it prevents any further writes or truncates on such handles to happen immediately
-  // after shutdown and gives a chance to write metadata of already open files quickly as possible
-  // (only that renders them actually usable by the cache.)
-  bool                 mKilled : 1;
-  // For existing files this is always pre-set to UNKNOWN.  The status is udpated accordingly
-  // after the matadata has been parsed.
-  // For new files the flag is set according to which storage kind is opening
-  // the cache entry and remains so for the handle's lifetime.
-  // The status can only change from UNKNOWN (if set so initially) to one of PINNED or NON_PINNED
-  // and it stays unchanged afterwards.
-  // This status is only accessed on the IO thread.
-  PinningStatus        mPinning;
-
-  nsCOMPtr<nsIFile>    mFile;
-  int64_t              mFileSize;
-  PRFileDesc          *mFD;  // if null then the file doesn't exists on the disk
-  nsCString            mKey;
-=======
   // When set it prevents any further writes or truncates on such handles to
   // happen immediately after shutdown and gives a chance to write metadata of
   // already open files quickly as possible (only that renders them actually
@@ -178,7 +125,6 @@ class CacheFileHandle final : public nsISupports {
   int64_t mFileSize;
   PRFileDesc* mFD;  // if null then the file doesn't exists on the disk
   nsCString mKey;
->>>>>>> upstream-releases
 };
 
 class CacheFileHandles {
@@ -186,24 +132,6 @@ class CacheFileHandles {
   CacheFileHandles();
   ~CacheFileHandles();
 
-<<<<<<< HEAD
-  nsresult GetHandle(const SHA1Sum::Hash *aHash, CacheFileHandle **_retval);
-  nsresult NewHandle(const SHA1Sum::Hash *aHash, bool aPriority,
-                     CacheFileHandle::PinningStatus aPinning,
-                     CacheFileHandle **_retval);
-  void RemoveHandle(CacheFileHandle *aHandlle);
-  void GetAllHandles(nsTArray<RefPtr<CacheFileHandle> > *_retval);
-  void GetActiveHandles(nsTArray<RefPtr<CacheFileHandle> > *_retval);
-  void ClearAll();
-||||||| merged common ancestors
-  nsresult GetHandle(const SHA1Sum::Hash *aHash, CacheFileHandle **_retval);
-  nsresult NewHandle(const SHA1Sum::Hash *aHash, bool aPriority,
-                     CacheFileHandle::PinningStatus aPinning, CacheFileHandle **_retval);
-  void     RemoveHandle(CacheFileHandle *aHandlle);
-  void     GetAllHandles(nsTArray<RefPtr<CacheFileHandle> > *_retval);
-  void     GetActiveHandles(nsTArray<RefPtr<CacheFileHandle> > *_retval);
-  void     ClearAll();
-=======
   nsresult GetHandle(const SHA1Sum::Hash* aHash, CacheFileHandle** _retval);
   nsresult NewHandle(const SHA1Sum::Hash* aHash, bool aPriority,
                      CacheFileHandle::PinningStatus aPinning,
@@ -212,54 +140,27 @@ class CacheFileHandles {
   void GetAllHandles(nsTArray<RefPtr<CacheFileHandle> >* _retval);
   void GetActiveHandles(nsTArray<RefPtr<CacheFileHandle> >* _retval);
   void ClearAll();
->>>>>>> upstream-releases
   uint32_t HandleCount();
 
 #ifdef DEBUG_HANDLES
-<<<<<<< HEAD
-  void Log(CacheFileHandlesEntry *entry);
-||||||| merged common ancestors
-  void     Log(CacheFileHandlesEntry *entry);
-=======
   void Log(CacheFileHandlesEntry* entry);
->>>>>>> upstream-releases
 #endif
 
   // Memory reporting
   size_t SizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
   size_t SizeOfIncludingThis(mozilla::MallocSizeOf mallocSizeOf) const;
 
-<<<<<<< HEAD
-  class HandleHashKey : public PLDHashEntryHdr {
-   public:
-    typedef const SHA1Sum::Hash &KeyType;
-    typedef const SHA1Sum::Hash *KeyTypePointer;
-||||||| merged common ancestors
-  class HandleHashKey : public PLDHashEntryHdr
-  {
-  public:
-    typedef const SHA1Sum::Hash& KeyType;
-    typedef const SHA1Sum::Hash* KeyTypePointer;
-=======
   class HandleHashKey : public PLDHashEntryHdr {
    public:
     typedef const SHA1Sum::Hash& KeyType;
     typedef const SHA1Sum::Hash* KeyTypePointer;
->>>>>>> upstream-releases
 
     explicit HandleHashKey(KeyTypePointer aKey) {
       MOZ_COUNT_CTOR(HandleHashKey);
       mHash = MakeUnique<uint8_t[]>(SHA1Sum::kHashSize);
       memcpy(mHash.get(), aKey, sizeof(SHA1Sum::Hash));
     }
-<<<<<<< HEAD
-    HandleHashKey(const HandleHashKey &aOther) {
-||||||| merged common ancestors
-    HandleHashKey(const HandleHashKey& aOther)
-    {
-=======
     HandleHashKey(const HandleHashKey& aOther) {
->>>>>>> upstream-releases
       MOZ_ASSERT_UNREACHABLE("HandleHashKey copy constructor is forbidden!");
     }
     ~HandleHashKey() { MOZ_COUNT_DTOR(HandleHashKey); }
@@ -267,41 +168,18 @@ class CacheFileHandles {
     bool KeyEquals(KeyTypePointer aKey) const {
       return memcmp(mHash.get(), aKey, sizeof(SHA1Sum::Hash)) == 0;
     }
-<<<<<<< HEAD
-    static KeyTypePointer KeyToPointer(KeyType aKey) { return &aKey; }
-    static PLDHashNumber HashKey(KeyTypePointer aKey) {
-      return (reinterpret_cast<const uint32_t *>(aKey))[0];
-||||||| merged common ancestors
-    static KeyTypePointer KeyToPointer(KeyType aKey)
-    {
-      return &aKey;
-    }
-    static PLDHashNumber HashKey(KeyTypePointer aKey)
-    {
-      return (reinterpret_cast<const uint32_t *>(aKey))[0];
-=======
     static KeyTypePointer KeyToPointer(KeyType aKey) { return &aKey; }
     static PLDHashNumber HashKey(KeyTypePointer aKey) {
       return (reinterpret_cast<const uint32_t*>(aKey))[0];
->>>>>>> upstream-releases
     }
 
-    void AddHandle(CacheFileHandle *aHandle);
-    void RemoveHandle(CacheFileHandle *aHandle);
+    void AddHandle(CacheFileHandle* aHandle);
+    void RemoveHandle(CacheFileHandle* aHandle);
     already_AddRefed<CacheFileHandle> GetNewestHandle();
     void GetHandles(nsTArray<RefPtr<CacheFileHandle> >& aResult);
 
-<<<<<<< HEAD
-    SHA1Sum::Hash *Hash() const {
-      return reinterpret_cast<SHA1Sum::Hash *>(mHash.get());
-||||||| merged common ancestors
-    SHA1Sum::Hash *Hash() const
-    {
-      return reinterpret_cast<SHA1Sum::Hash*>(mHash.get());
-=======
     SHA1Sum::Hash* Hash() const {
       return reinterpret_cast<SHA1Sum::Hash*>(mHash.get());
->>>>>>> upstream-releases
     }
     bool IsEmpty() const { return mHandles.Length() == 0; }
 
@@ -325,7 +203,7 @@ class CacheFileHandles {
     // only and CacheFileHandle removes itself from this table in its dtor
     // that may only be called on the same thread as we work with the hashtable
     // since we dispatch its Release() to this thread.
-    nsTArray<CacheFileHandle *> mHandles;
+    nsTArray<CacheFileHandle*> mHandles;
   };
 
  private:
@@ -393,43 +271,13 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
 
   // Make aFile's WriteMetadataIfNeeded be called automatically after
   // a short interval.
-<<<<<<< HEAD
-  static nsresult ScheduleMetadataWrite(CacheFile *aFile);
-||||||| merged common ancestors
-  static nsresult ScheduleMetadataWrite(CacheFile * aFile);
-=======
   static nsresult ScheduleMetadataWrite(CacheFile* aFile);
->>>>>>> upstream-releases
   // Remove aFile from the scheduling registry array.
   // WriteMetadataIfNeeded will not be automatically called.
-<<<<<<< HEAD
-  static nsresult UnscheduleMetadataWrite(CacheFile *aFile);
-||||||| merged common ancestors
-  static nsresult UnscheduleMetadataWrite(CacheFile * aFile);
-=======
   static nsresult UnscheduleMetadataWrite(CacheFile* aFile);
->>>>>>> upstream-releases
   // Shuts the scheduling off and flushes all pending metadata writes.
   static nsresult ShutdownMetadataWriteScheduling();
 
-<<<<<<< HEAD
-  static nsresult OpenFile(const nsACString &aKey, uint32_t aFlags,
-                           CacheFileIOListener *aCallback);
-  static nsresult Read(CacheFileHandle *aHandle, int64_t aOffset, char *aBuf,
-                       int32_t aCount, CacheFileIOListener *aCallback);
-  static nsresult Write(CacheFileHandle *aHandle, int64_t aOffset,
-                        const char *aBuf, int32_t aCount, bool aValidate,
-                        bool aTruncate, CacheFileIOListener *aCallback);
-||||||| merged common ancestors
-  static nsresult OpenFile(const nsACString &aKey,
-                           uint32_t aFlags, CacheFileIOListener *aCallback);
-  static nsresult Read(CacheFileHandle *aHandle, int64_t aOffset,
-                       char *aBuf, int32_t aCount,
-                       CacheFileIOListener *aCallback);
-  static nsresult Write(CacheFileHandle *aHandle, int64_t aOffset,
-                        const char *aBuf, int32_t aCount, bool aValidate,
-                        bool aTruncate, CacheFileIOListener *aCallback);
-=======
   static nsresult OpenFile(const nsACString& aKey, uint32_t aFlags,
                            CacheFileIOListener* aCallback);
   static nsresult Read(CacheFileHandle* aHandle, int64_t aOffset, char* aBuf,
@@ -437,7 +285,6 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
   static nsresult Write(CacheFileHandle* aHandle, int64_t aOffset,
                         const char* aBuf, int32_t aCount, bool aValidate,
                         bool aTruncate, CacheFileIOListener* aCallback);
->>>>>>> upstream-releases
   // PinningDoomRestriction:
   // NO_RESTRICTION
   //    no restriction is checked, the file is simply always doomed
@@ -465,35 +312,6 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
                              CacheFileIOListener* aCallback);
   static nsresult EvictIfOverLimit();
   static nsresult EvictAll();
-<<<<<<< HEAD
-  static nsresult EvictByContext(nsILoadContextInfo *aLoadContextInfo,
-                                 bool aPinning, const nsAString &aOrigin);
-
-  static nsresult InitIndexEntry(CacheFileHandle *aHandle,
-                                 OriginAttrsHash aOriginAttrsHash,
-                                 bool aAnonymous, bool aPinning);
-  static nsresult UpdateIndexEntry(CacheFileHandle *aHandle,
-                                   const uint32_t *aFrecency,
-                                   const uint32_t *aExpirationTime,
-                                   const bool *aHasAltData,
-                                   const uint16_t *aOnStartTime,
-                                   const uint16_t *aOnStopTime);
-||||||| merged common ancestors
-  static nsresult EvictByContext(nsILoadContextInfo *aLoadContextInfo,
-                                 bool aPinning,
-                                 const nsAString& aOrigin);
-
-  static nsresult InitIndexEntry(CacheFileHandle *aHandle,
-                                 OriginAttrsHash  aOriginAttrsHash,
-                                 bool             aAnonymous,
-                                 bool             aPinning);
-  static nsresult UpdateIndexEntry(CacheFileHandle *aHandle,
-                                   const uint32_t  *aFrecency,
-                                   const uint32_t  *aExpirationTime,
-                                   const bool      *aHasAltData,
-                                   const uint16_t  *aOnStartTime,
-                                   const uint16_t  *aOnStopTime);
-=======
   static nsresult EvictByContext(nsILoadContextInfo* aLoadContextInfo,
                                  bool aPinning, const nsAString& aOrigin);
 
@@ -508,33 +326,23 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
                                    const uint8_t* aContentType,
                                    const uint16_t* aBaseDomainAccessCount,
                                    const uint32_t aTelemetryReportID);
->>>>>>> upstream-releases
 
   static nsresult UpdateIndexEntry();
 
   enum EEnumerateMode { ENTRIES, DOOMED };
 
-  static void GetCacheDirectory(nsIFile **result);
+  static void GetCacheDirectory(nsIFile** result);
 #if defined(MOZ_WIDGET_ANDROID)
-  static void GetProfilelessCacheDirectory(nsIFile **result);
+  static void GetProfilelessCacheDirectory(nsIFile** result);
 #endif
 
   // Calls synchronously OnEntryInfo for an entry with the given hash.
   // Tries to find an existing entry in the service hashtables first, if not
   // found, loads synchronously from disk file.
   // Callable on the IO thread only.
-<<<<<<< HEAD
-  static nsresult GetEntryInfo(
-      const SHA1Sum::Hash *aHash,
-      CacheStorageService::EntryInfoCallback *aCallback);
-||||||| merged common ancestors
-  static nsresult GetEntryInfo(const SHA1Sum::Hash *aHash,
-                               CacheStorageService::EntryInfoCallback *aCallback);
-=======
   static nsresult GetEntryInfo(
       const SHA1Sum::Hash* aHash,
       CacheStorageService::EntryInfoCallback* aCallback);
->>>>>>> upstream-releases
 
   // Memory reporting
   static size_t SizeOfExcludingThis(mozilla::MallocSizeOf mallocSizeOf);
@@ -563,30 +371,6 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
   nsresult InitInternal();
   nsresult ShutdownInternal();
 
-<<<<<<< HEAD
-  nsresult OpenFileInternal(const SHA1Sum::Hash *aHash, const nsACString &aKey,
-                            uint32_t aFlags, CacheFileHandle **_retval);
-  nsresult OpenSpecialFileInternal(const nsACString &aKey, uint32_t aFlags,
-                                   CacheFileHandle **_retval);
-  nsresult CloseHandleInternal(CacheFileHandle *aHandle);
-  nsresult ReadInternal(CacheFileHandle *aHandle, int64_t aOffset, char *aBuf,
-                        int32_t aCount);
-  nsresult WriteInternal(CacheFileHandle *aHandle, int64_t aOffset,
-                         const char *aBuf, int32_t aCount, bool aValidate,
-||||||| merged common ancestors
-  nsresult OpenFileInternal(const SHA1Sum::Hash *aHash,
-                            const nsACString &aKey,
-                            uint32_t aFlags,
-                            CacheFileHandle **_retval);
-  nsresult OpenSpecialFileInternal(const nsACString &aKey,
-                                   uint32_t aFlags,
-                                   CacheFileHandle **_retval);
-  nsresult CloseHandleInternal(CacheFileHandle *aHandle);
-  nsresult ReadInternal(CacheFileHandle *aHandle, int64_t aOffset,
-                        char *aBuf, int32_t aCount);
-  nsresult WriteInternal(CacheFileHandle *aHandle, int64_t aOffset,
-                         const char *aBuf, int32_t aCount, bool aValidate,
-=======
   nsresult OpenFileInternal(const SHA1Sum::Hash* aHash, const nsACString& aKey,
                             uint32_t aFlags, CacheFileHandle** _retval);
   nsresult OpenSpecialFileInternal(const nsACString& aKey, uint32_t aFlags,
@@ -596,24 +380,7 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
                         int32_t aCount);
   nsresult WriteInternal(CacheFileHandle* aHandle, int64_t aOffset,
                          const char* aBuf, int32_t aCount, bool aValidate,
->>>>>>> upstream-releases
                          bool aTruncate);
-<<<<<<< HEAD
-  nsresult DoomFileInternal(
-      CacheFileHandle *aHandle,
-      PinningDoomRestriction aPinningStatusRestriction = NO_RESTRICTION);
-  nsresult DoomFileByKeyInternal(const SHA1Sum::Hash *aHash);
-  nsresult MaybeReleaseNSPRHandleInternal(CacheFileHandle *aHandle,
-                                          bool aIgnoreShutdownLag = false);
-  nsresult TruncateSeekSetEOFInternal(CacheFileHandle *aHandle,
-||||||| merged common ancestors
-  nsresult DoomFileInternal(CacheFileHandle *aHandle,
-                            PinningDoomRestriction aPinningStatusRestriction = NO_RESTRICTION);
-  nsresult DoomFileByKeyInternal(const SHA1Sum::Hash *aHash);
-  nsresult MaybeReleaseNSPRHandleInternal(CacheFileHandle *aHandle,
-                                     bool aIgnoreShutdownLag = false);
-  nsresult TruncateSeekSetEOFInternal(CacheFileHandle *aHandle,
-=======
   nsresult DoomFileInternal(
       CacheFileHandle* aHandle,
       PinningDoomRestriction aPinningStatusRestriction = NO_RESTRICTION);
@@ -621,23 +388,14 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
   nsresult MaybeReleaseNSPRHandleInternal(CacheFileHandle* aHandle,
                                           bool aIgnoreShutdownLag = false);
   nsresult TruncateSeekSetEOFInternal(CacheFileHandle* aHandle,
->>>>>>> upstream-releases
                                       int64_t aTruncatePos, int64_t aEOFPos);
   nsresult RenameFileInternal(CacheFileHandle* aHandle,
                               const nsACString& aNewName);
   nsresult EvictIfOverLimitInternal();
   nsresult OverLimitEvictionInternal();
   nsresult EvictAllInternal();
-<<<<<<< HEAD
-  nsresult EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo,
-                                  bool aPinning, const nsAString &aOrigin);
-||||||| merged common ancestors
-  nsresult EvictByContextInternal(nsILoadContextInfo *aLoadContextInfo,
-                                  bool aPinning, const nsAString& aOrigin);
-=======
   nsresult EvictByContextInternal(nsILoadContextInfo* aLoadContextInfo,
                                   bool aPinning, const nsAString& aOrigin);
->>>>>>> upstream-releases
 
   nsresult TrashDirectory(nsIFile* aFile);
   static void OnTrashTimer(nsITimer* aTimer, void* aClosure);
@@ -655,39 +413,15 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
   nsresult CheckAndCreateDir(nsIFile* aFile, const char* aDir,
                              bool aEnsureEmptyDir);
   nsresult CreateCacheTree();
-<<<<<<< HEAD
-  nsresult OpenNSPRHandle(CacheFileHandle *aHandle, bool aCreate = false);
-  void NSPRHandleUsed(CacheFileHandle *aHandle);
-||||||| merged common ancestors
-  nsresult OpenNSPRHandle(CacheFileHandle *aHandle, bool aCreate = false);
-  void     NSPRHandleUsed(CacheFileHandle *aHandle);
-=======
   nsresult OpenNSPRHandle(CacheFileHandle* aHandle, bool aCreate = false);
   void NSPRHandleUsed(CacheFileHandle* aHandle);
->>>>>>> upstream-releases
 
   // Removing all cache files during shutdown
-<<<<<<< HEAD
-  nsresult SyncRemoveDir(nsIFile *aFile, const char *aDir);
-  void SyncRemoveAllCacheFiles();
-||||||| merged common ancestors
-  nsresult SyncRemoveDir(nsIFile *aFile, const char *aDir);
-  void     SyncRemoveAllCacheFiles();
-=======
   nsresult SyncRemoveDir(nsIFile* aFile, const char* aDir);
   void SyncRemoveAllCacheFiles();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult ScheduleMetadataWriteInternal(CacheFile *aFile);
-  nsresult UnscheduleMetadataWriteInternal(CacheFile *aFile);
-||||||| merged common ancestors
-  nsresult ScheduleMetadataWriteInternal(CacheFile * aFile);
-  nsresult UnscheduleMetadataWriteInternal(CacheFile * aFile);
-=======
   nsresult ScheduleMetadataWriteInternal(CacheFile* aFile);
   nsresult UnscheduleMetadataWriteInternal(CacheFile* aFile);
->>>>>>> upstream-releases
   nsresult ShutdownMetadataWriteSchedulingInternal();
 
   static nsresult CacheIndexStateChanged();
@@ -717,25 +451,6 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
   // w/o the profile name in the path.  Here it is stored.
   nsCOMPtr<nsIFile> mCacheProfilelessDirectory;
 #endif
-<<<<<<< HEAD
-  bool mTreeCreated;
-  bool mTreeCreationFailed;
-  CacheFileHandles mHandles;
-  nsTArray<CacheFileHandle *> mHandlesByLastUsed;
-  nsTArray<CacheFileHandle *> mSpecialHandles;
-  nsTArray<RefPtr<CacheFile> > mScheduledMetadataWrites;
-  nsCOMPtr<nsITimer> mMetadataWritesTimer;
-  bool mOverLimitEvicting;
-||||||| merged common ancestors
-  bool                                 mTreeCreated;
-  bool                                 mTreeCreationFailed;
-  CacheFileHandles                     mHandles;
-  nsTArray<CacheFileHandle *>          mHandlesByLastUsed;
-  nsTArray<CacheFileHandle *>          mSpecialHandles;
-  nsTArray<RefPtr<CacheFile> >         mScheduledMetadataWrites;
-  nsCOMPtr<nsITimer>                   mMetadataWritesTimer;
-  bool                                 mOverLimitEvicting;
-=======
   bool mTreeCreated;
   bool mTreeCreationFailed;
   CacheFileHandles mHandles;
@@ -744,7 +459,6 @@ class CacheFileIOManager final : public nsITimerCallback, public nsINamed {
   nsTArray<RefPtr<CacheFile> > mScheduledMetadataWrites;
   nsCOMPtr<nsITimer> mMetadataWritesTimer;
   bool mOverLimitEvicting;
->>>>>>> upstream-releases
   // When overlimit eviction is too slow and cache size reaches 105% of the
   // limit, this flag is set and no other content is cached to prevent
   // uncontrolled cache growing.

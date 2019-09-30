@@ -33,14 +33,8 @@
 #include "mozilla/BrowserElementParent.h"
 #include "mozilla/Components.h"
 #include "mozilla/NullPrincipal.h"
-<<<<<<< HEAD
-#include "nsDocShellLoadState.h"
-||||||| merged common ancestors
-#include "nsDocShellLoadInfo.h"
-=======
 #include "nsDocShell.h"
 #include "nsDocShellLoadState.h"
->>>>>>> upstream-releases
 
 #include "nsIScriptObjectPrincipal.h"
 #include "nsIURI.h"
@@ -187,40 +181,19 @@ nsContentTreeOwner::GetPrimaryContentShell(nsIDocShellTreeItem** aShell) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsContentTreeOwner::TabParentAdded(nsITabParent* aTab, bool aPrimary) {
-||||||| merged common ancestors
-nsContentTreeOwner::TabParentAdded(nsITabParent* aTab, bool aPrimary)
-{
-=======
 nsContentTreeOwner::RemoteTabAdded(nsIRemoteTab* aTab, bool aPrimary) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mXULWindow);
   return mXULWindow->RemoteTabAdded(aTab, aPrimary);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsContentTreeOwner::TabParentRemoved(nsITabParent* aTab) {
-||||||| merged common ancestors
-nsContentTreeOwner::TabParentRemoved(nsITabParent* aTab)
-{
-=======
 nsContentTreeOwner::RemoteTabRemoved(nsIRemoteTab* aTab) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mXULWindow);
   return mXULWindow->RemoteTabRemoved(aTab);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsContentTreeOwner::GetPrimaryTabParent(nsITabParent** aTab) {
-||||||| merged common ancestors
-nsContentTreeOwner::GetPrimaryTabParent(nsITabParent** aTab)
-{
-=======
 nsContentTreeOwner::GetPrimaryRemoteTab(nsIRemoteTab** aTab) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mXULWindow);
   return mXULWindow->GetPrimaryRemoteTab(aTab);
 }
@@ -387,42 +360,19 @@ NS_IMETHODIMP nsContentTreeOwner::OnBeforeLinkTraversal(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsContentTreeOwner::ShouldLoadURI(
-    nsIDocShell* aDocShell, nsIURI* aURI, nsIURI* aReferrer, bool aHasPostData,
-    nsIPrincipal* aTriggeringPrincipal, bool* _retval) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsContentTreeOwner::ShouldLoadURI(nsIDocShell *aDocShell,
-                                                nsIURI *aURI,
-                                                nsIURI *aReferrer,
-                                                bool aHasPostData,
-                                                nsIPrincipal* aTriggeringPrincipal,
-                                                bool *_retval)
-{
-=======
 NS_IMETHODIMP nsContentTreeOwner::ShouldLoadURI(
     nsIDocShell* aDocShell, nsIURI* aURI, nsIURI* aReferrer, bool aHasPostData,
     nsIPrincipal* aTriggeringPrincipal, nsIContentSecurityPolicy* aCsp,
     bool* _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mXULWindow);
 
   nsCOMPtr<nsIXULBrowserWindow> xulBrowserWindow;
   mXULWindow->GetXULBrowserWindow(getter_AddRefs(xulBrowserWindow));
 
   if (xulBrowserWindow)
-<<<<<<< HEAD
-    return xulBrowserWindow->ShouldLoadURI(aDocShell, aURI, aReferrer,
-                                           aHasPostData, aTriggeringPrincipal,
-                                           _retval);
-||||||| merged common ancestors
-    return xulBrowserWindow->ShouldLoadURI(aDocShell, aURI, aReferrer, aHasPostData,
-                                           aTriggeringPrincipal, _retval);
-=======
     return xulBrowserWindow->ShouldLoadURI(aDocShell, aURI, aReferrer,
                                            aHasPostData, aTriggeringPrincipal,
                                            aCsp, _retval);
->>>>>>> upstream-releases
 
   *_retval = true;
   return NS_OK;
@@ -435,24 +385,10 @@ NS_IMETHODIMP nsContentTreeOwner::ShouldLoadURIInThisProcess(nsIURI* aURI,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsContentTreeOwner::ReloadInFreshProcess(
-    nsIDocShell* aDocShell, nsIURI* aURI, nsIURI* aReferrer,
-    nsIPrincipal* aTriggeringPrincipal, uint32_t aLoadFlags, bool* aRetVal) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsContentTreeOwner::ReloadInFreshProcess(nsIDocShell* aDocShell,
-                                                       nsIURI* aURI,
-                                                       nsIURI* aReferrer,
-                                                       nsIPrincipal* aTriggeringPrincipal,
-                                                       uint32_t aLoadFlags,
-                                                       bool* aRetVal)
-{
-=======
 NS_IMETHODIMP nsContentTreeOwner::ReloadInFreshProcess(
     nsIDocShell* aDocShell, nsIURI* aURI, nsIURI* aReferrer,
     nsIPrincipal* aTriggeringPrincipal, uint32_t aLoadFlags,
     nsIContentSecurityPolicy* aCsp, bool* aRetVal) {
->>>>>>> upstream-releases
   NS_WARNING("Cannot reload in fresh process from a nsContentTreeOwner!");
   *aRetVal = false;
   return NS_OK;
@@ -716,15 +652,7 @@ NS_IMETHODIMP nsContentTreeOwner::SetTitle(const nsAString& aTitle) {
       //
       nsCOMPtr<nsIDocShellTreeItem> dsitem;
       GetPrimaryContentShell(getter_AddRefs(dsitem));
-<<<<<<< HEAD
-      nsCOMPtr<nsIScriptObjectPrincipal> doc =
-          do_QueryInterface(dsitem ? dsitem->GetDocument() : nullptr);
-||||||| merged common ancestors
-      nsCOMPtr<nsIScriptObjectPrincipal> doc =
-        do_QueryInterface(dsitem ? dsitem->GetDocument() : nullptr);
-=======
       RefPtr<dom::Document> doc = dsitem ? dsitem->GetDocument() : nullptr;
->>>>>>> upstream-releases
       if (doc) {
         nsCOMPtr<nsIURI> uri;
         nsIPrincipal* principal = doc->GetPrincipal();
@@ -771,35 +699,12 @@ NS_IMETHODIMP nsContentTreeOwner::SetTitle(const nsAString& aTitle) {
 // nsContentTreeOwner: nsIWindowProvider
 //*****************************************************************************
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsContentTreeOwner::ProvideWindow(
-    mozIDOMWindowProxy* aParent, uint32_t aChromeFlags, bool aCalledFromJS,
-    bool aPositionSpecified, bool aSizeSpecified, nsIURI* aURI,
-    const nsAString& aName, const nsACString& aFeatures, bool aForceNoOpener,
-    nsDocShellLoadState* aLoadState, bool* aWindowIsNew,
-    mozIDOMWindowProxy** aReturn) {
-||||||| merged common ancestors
-nsContentTreeOwner::ProvideWindow(mozIDOMWindowProxy* aParent,
-                                  uint32_t aChromeFlags,
-                                  bool aCalledFromJS,
-                                  bool aPositionSpecified,
-                                  bool aSizeSpecified,
-                                  nsIURI* aURI,
-                                  const nsAString& aName,
-                                  const nsACString& aFeatures,
-                                  bool aForceNoOpener,
-                                  nsDocShellLoadInfo* aLoadInfo,
-                                  bool* aWindowIsNew,
-                                  mozIDOMWindowProxy** aReturn)
-{
-=======
 nsContentTreeOwner::ProvideWindow(
     mozIDOMWindowProxy* aParent, uint32_t aChromeFlags, bool aCalledFromJS,
     bool aPositionSpecified, bool aSizeSpecified, nsIURI* aURI,
     const nsAString& aName, const nsACString& aFeatures, bool aForceNoOpener,
     bool aForceNoReferrer, nsDocShellLoadState* aLoadState, bool* aWindowIsNew,
     mozIDOMWindowProxy** aReturn) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aParent);
 
   auto* parentWin = nsPIDOMWindowOuter::From(aParent);
@@ -858,18 +763,9 @@ nsContentTreeOwner::ProvideWindow(
     }
   }
 
-<<<<<<< HEAD
-  int32_t openLocation = nsWindowWatcher::GetWindowOpenLocation(
-      parent, aChromeFlags, aCalledFromJS, aPositionSpecified, aSizeSpecified);
-||||||| merged common ancestors
-  int32_t openLocation =
-    nsWindowWatcher::GetWindowOpenLocation(parent, aChromeFlags, aCalledFromJS,
-                                           aPositionSpecified, aSizeSpecified);
-=======
   int32_t openLocation = nsWindowWatcher::GetWindowOpenLocation(
       parentWin, aChromeFlags, aCalledFromJS, aPositionSpecified,
       aSizeSpecified);
->>>>>>> upstream-releases
 
   if (openLocation != nsIBrowserDOMWindow::OPEN_NEWTAB &&
       openLocation != nsIBrowserDOMWindow::OPEN_CURRENTWINDOW) {
@@ -911,21 +807,10 @@ nsContentTreeOwner::ProvideWindow(
     //
     // This method handles setting the opener for us, so we don't need to set it
     // ourselves.
-<<<<<<< HEAD
-    RefPtr<NullPrincipal> nullPrincipal =
-        NullPrincipal::CreateWithoutOriginAttributes();
-    return browserDOMWin->CreateContentWindow(aURI, aParent, openLocation,
-                                              flags, nullPrincipal, aReturn);
-||||||| merged common ancestors
-    RefPtr<NullPrincipal> nullPrincipal = NullPrincipal::CreateWithoutOriginAttributes();
-    return browserDOMWin->CreateContentWindow(aURI, aParent, openLocation,
-                                              flags, nullPrincipal, aReturn);
-=======
     RefPtr<NullPrincipal> nullPrincipal =
         NullPrincipal::CreateWithoutOriginAttributes();
     return browserDOMWin->CreateContentWindow(
         aURI, aParent, openLocation, flags, nullPrincipal, nullptr, aReturn);
->>>>>>> upstream-releases
   }
 }
 

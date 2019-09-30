@@ -33,77 +33,6 @@ inline void ArrayObject::setLength(JSContext* cx, uint32_t length) {
   getElementsHeader()->length = length;
 }
 
-<<<<<<< HEAD
-/* static */ inline ArrayObject* ArrayObject::createArrayInternal(
-    JSContext* cx, gc::AllocKind kind, gc::InitialHeap heap, HandleShape shape,
-    HandleObjectGroup group, AutoSetNewObjectMetadata&) {
-  const js::Class* clasp = group->clasp();
-  MOZ_ASSERT(shape && group);
-  MOZ_ASSERT(clasp == shape->getObjectClass());
-  MOZ_ASSERT(clasp == &ArrayObject::class_);
-  MOZ_ASSERT_IF(clasp->hasFinalize(), heap == gc::TenuredHeap);
-  MOZ_ASSERT_IF(group->hasUnanalyzedPreliminaryObjects(),
-                heap == js::gc::TenuredHeap);
-
-  // Arrays can use their fixed slots to store elements, so can't have shapes
-  // which allow named properties to be stored in the fixed slots.
-  MOZ_ASSERT(shape->numFixedSlots() == 0);
-
-  size_t nDynamicSlots = dynamicSlotsCount(0, shape->slotSpan(), clasp);
-  JSObject* obj = js::Allocate<JSObject>(cx, kind, nDynamicSlots, heap, clasp);
-  if (!obj) {
-    return nullptr;
-  }
-
-  ArrayObject* aobj = static_cast<ArrayObject*>(obj);
-  aobj->initGroup(group);
-  aobj->initShape(shape);
-  // NOTE: Dynamic slots are created internally by Allocate<JSObject>.
-  if (!nDynamicSlots) {
-    aobj->initSlots(nullptr);
-  }
-
-  MOZ_ASSERT(clasp->shouldDelayMetadataBuilder());
-  cx->realm()->setObjectPendingMetadata(cx, aobj);
-
-  return aobj;
-||||||| merged common ancestors
-/* static */ inline ArrayObject*
-ArrayObject::createArrayInternal(JSContext* cx, gc::AllocKind kind, gc::InitialHeap heap,
-                                 HandleShape shape, HandleObjectGroup group,
-                                 AutoSetNewObjectMetadata&)
-{
-    const js::Class* clasp = group->clasp();
-    MOZ_ASSERT(shape && group);
-    MOZ_ASSERT(clasp == shape->getObjectClass());
-    MOZ_ASSERT(clasp == &ArrayObject::class_);
-    MOZ_ASSERT_IF(clasp->hasFinalize(), heap == gc::TenuredHeap);
-    MOZ_ASSERT_IF(group->hasUnanalyzedPreliminaryObjects(),
-                  heap == js::gc::TenuredHeap);
-
-    // Arrays can use their fixed slots to store elements, so can't have shapes
-    // which allow named properties to be stored in the fixed slots.
-    MOZ_ASSERT(shape->numFixedSlots() == 0);
-
-    size_t nDynamicSlots = dynamicSlotsCount(0, shape->slotSpan(), clasp);
-    JSObject* obj = js::Allocate<JSObject>(cx, kind, nDynamicSlots, heap, clasp);
-    if (!obj) {
-        return nullptr;
-    }
-
-    ArrayObject* aobj = static_cast<ArrayObject*>(obj);
-    aobj->initGroup(group);
-    aobj->initShape(shape);
-    // NOTE: Dynamic slots are created internally by Allocate<JSObject>.
-    if (!nDynamicSlots) {
-        aobj->initSlots(nullptr);
-    }
-
-    MOZ_ASSERT(clasp->shouldDelayMetadataBuilder());
-    cx->realm()->setObjectPendingMetadata(cx, aobj);
-
-    return aobj;
-=======
 /* static */ inline ArrayObject* ArrayObject::createArrayInternal(
     JSContext* cx, gc::AllocKind kind, gc::InitialHeap heap, HandleShape shape,
     HandleObjectGroup group, AutoSetNewObjectMetadata&) {
@@ -139,7 +68,6 @@ ArrayObject::createArrayInternal(JSContext* cx, gc::AllocKind kind, gc::InitialH
   cx->realm()->setObjectPendingMetadata(cx, aobj);
 
   return aobj;
->>>>>>> upstream-releases
 }
 
 /* static */ inline ArrayObject* ArrayObject::finishCreateArray(

@@ -66,50 +66,23 @@ async function performTests() {
   ok(true, "$_ wasn't re-assigned");
 
   info("Check that $_ gets the value of the last resolved await expression");
-<<<<<<< HEAD
-  const delays = [2000, 1000, 4000, 3000];
-  const inputs = delays.map(delay => `await new Promise(
-    r => setTimeout(() => r("await-concurrent-" + ${delay}), ${delay}))`);
-||||||| merged common ancestors
-  const delays = [1000, 500, 2000, 1500];
-  const inputs = delays.map(delay => `await new Promise(
-    r => setTimeout(() => r("await-concurrent-" + ${delay}), ${delay}))`);
-=======
   const delays = [2000, 1000, 4000, 3000];
   const inputs = delays.map(
     delay => `await new Promise(
     r => setTimeout(() => r("await-concurrent-" + ${delay}), ${delay}))`
   );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Let's wait for the message that should be displayed last.
-  const onMessage = waitForMessage(hud, "await-concurrent-4000", ".message.result");
-||||||| merged common ancestors
-  // Let's wait for the message that sould be displayed last.
-  const onMessage = waitForMessage(hud, "await-concurrent-2000", ".message.result");
-=======
   // Let's wait for the message that should be displayed last.
   const onMessage = waitForMessage(
     hud,
     "await-concurrent-4000",
     ".message.result"
   );
->>>>>>> upstream-releases
   for (const input of inputs) {
     jsterm.execute(input);
   }
   await onMessage;
 
-<<<<<<< HEAD
-  await executeAndWaitForResultMessage(`"result: " + $_`,
-    `"result: await-concurrent-4000"`);
-  ok(true, "$_ was replaced with the last resolving top-level await evaluation result");
-||||||| merged common ancestors
-  await executeAndWaitForResultMessage(`"result: " + $_`,
-    `"result: await-concurrent-2000"`);
-  ok(true, "$_ was replaced with the last resolving top-level await evaluation result");
-=======
   await executeAndWaitForResultMessage(
     `"result: " + $_`,
     `"result: await-concurrent-4000"`
@@ -118,5 +91,4 @@ async function performTests() {
     true,
     "$_ was replaced with the last resolving top-level await evaluation result"
   );
->>>>>>> upstream-releases
 }

@@ -40,17 +40,7 @@ class TestWindowHandles(WindowManagerMixin, MarionetteTestCase):
             self.assertIsInstance(handle, types.StringTypes)
 
     def test_chrome_window_handles_with_scopes(self):
-<<<<<<< HEAD
-        # Open a browser and a non-browser (about window) chrome window
-        self.open_window(
-            trigger=lambda: self.marionette.execute_script("OpenBrowserWindow();"))
-||||||| merged common ancestors
-        # Open a browser and a non-browser (about window) chrome window
-        self.open_window(
-            trigger=lambda: self.marionette.execute_script("window.open();"))
-=======
         new_browser = self.open_window()
->>>>>>> upstream-releases
         self.assert_window_handles()
         self.assertEqual(len(self.marionette.chrome_window_handles), len(self.start_windows) + 1)
         self.assertIn(new_browser, self.marionette.chrome_window_handles)
@@ -71,24 +61,8 @@ class TestWindowHandles(WindowManagerMixin, MarionetteTestCase):
             self.assertEqual(self.marionette.window_handles,
                              window_handles_in_chrome_scope)
 
-<<<<<<< HEAD
-    def test_chrome_window_handles_after_opening_new_dialog(self):
-        xul_dialog = "chrome://marionette/content/test_dialog.xul"
-        new_win = self.open_chrome_window(xul_dialog)
-||||||| merged common ancestors
-    def test_chrome_window_handles_after_opening_new_dialog(self):
-        xul_dialog = "chrome://marionette/content/test_dialog.xul"
-
-        def open_via_js():
-            self.marionette.execute_script("""
-                window.openDialog(arguments[0]);
-            """, script_args=(xul_dialog,))
-
-        new_win = self.open_window(trigger=open_via_js)
-=======
     def test_chrome_window_handles_after_opening_new_chrome_window(self):
         new_window = self.open_chrome_window(self.xul_dialog)
->>>>>>> upstream-releases
         self.assert_window_handles()
         self.assertEqual(len(self.marionette.chrome_window_handles), len(self.start_windows) + 1)
         self.assertIn(new_window, self.marionette.chrome_window_handles)
@@ -157,25 +131,9 @@ class TestWindowHandles(WindowManagerMixin, MarionetteTestCase):
         self.assert_window_handles()
         self.assertEqual(self.marionette.current_window_handle, self.start_tab)
 
-<<<<<<< HEAD
-    def test_window_handles_after_opening_new_dialog(self):
-        xul_dialog = "chrome://marionette/content/test_dialog.xul"
-        new_win = self.open_chrome_window(xul_dialog)
-||||||| merged common ancestors
-    def test_window_handles_after_opening_new_dialog(self):
-        xul_dialog = "chrome://marionette/content/test_dialog.xul"
-
-        def open_via_js():
-            self.marionette.execute_script("""
-                window.openDialog(arguments[0]);
-            """, script_args=(xul_dialog,))
-
-        new_win = self.open_window(trigger=open_via_js)
-=======
     def test_window_handles_after_opening_new_foreground_tab(self):
         with self.marionette.using_context("content"):
             new_tab = self.open_tab(focus=True)
->>>>>>> upstream-releases
         self.assert_window_handles()
         self.assertEqual(len(self.marionette.window_handles), len(self.start_tabs) + 1)
         self.assertIn(new_tab, self.marionette.window_handles)

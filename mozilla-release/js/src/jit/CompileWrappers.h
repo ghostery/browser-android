@@ -39,44 +39,16 @@ class CompileRuntime {
   bool hadOutOfMemory();
   bool profilingScripts();
 
-<<<<<<< HEAD
-  const JSAtomState& names();
-  const PropertyName* emptyString();
-  const StaticStrings& staticStrings();
-  const Value& NaNValue();
-  const Value& positiveInfinityValue();
-  const WellKnownSymbols& wellKnownSymbols();
-||||||| merged common ancestors
-    const JSAtomState& names();
-    const PropertyName* emptyString();
-    const StaticStrings& staticStrings();
-    const Value& NaNValue();
-    const Value& positiveInfinityValue();
-    const WellKnownSymbols& wellKnownSymbols();
-=======
   const JSAtomState& names();
   const PropertyName* emptyString();
   const StaticStrings& staticStrings();
   const WellKnownSymbols& wellKnownSymbols();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const void* mainContextPtr();
-  uint32_t* addressOfTenuredAllocCount();
-  const void* addressOfJitStackLimit();
-  const void* addressOfInterruptBits();
-||||||| merged common ancestors
-    const void* mainContextPtr();
-    uint32_t* addressOfTenuredAllocCount();
-    const void* addressOfJitStackLimit();
-    const void* addressOfInterruptBits();
-=======
   const void* mainContextPtr();
   uint32_t* addressOfTenuredAllocCount();
   const void* addressOfJitStackLimit();
   const void* addressOfInterruptBits();
   const void* addressOfZone();
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   bool isInsideNursery(gc::Cell* cell);
@@ -157,38 +129,10 @@ class JitCompileOptions {
     return offThreadCompilationAvailable_;
   }
 
-<<<<<<< HEAD
-#ifdef ENABLE_WASM_GC
-  bool wasmGcEnabled() const { return wasmGcEnabled_; }
-#endif
-
  private:
   bool cloneSingletons_;
   bool profilerSlowAssertionsEnabled_;
   bool offThreadCompilationAvailable_;
-#ifdef ENABLE_WASM_GC
-  bool wasmGcEnabled_;
-#endif
-||||||| merged common ancestors
-#ifdef ENABLE_WASM_GC
-    bool wasmGcEnabled() const {
-        return wasmGcEnabled_;
-    }
-#endif
-
-  private:
-    bool cloneSingletons_;
-    bool profilerSlowAssertionsEnabled_;
-    bool offThreadCompilationAvailable_;
-#ifdef ENABLE_WASM_GC
-    bool wasmGcEnabled_;
-#endif
-=======
- private:
-  bool cloneSingletons_;
-  bool profilerSlowAssertionsEnabled_;
-  bool offThreadCompilationAvailable_;
->>>>>>> upstream-releases
 };
 
 }  // namespace jit

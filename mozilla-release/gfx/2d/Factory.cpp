@@ -40,28 +40,11 @@
 #endif
 
 #ifdef WIN32
-<<<<<<< HEAD
-#include "DrawTargetD2D1.h"
-#include "ScaledFontDWrite.h"
-#include "NativeFontResourceDWrite.h"
-#include <d3d10_1.h>
-#include "HelpersD2D.h"
-#include "HelpersWinFonts.h"
-||||||| merged common ancestors
-#include "DrawTargetD2D1.h"
-#include "ScaledFontDWrite.h"
-#include "NativeFontResourceDWrite.h"
-#include <d3d10_1.h>
-#include "HelpersD2D.h"
-#include "HelpersWinFonts.h"
-#include "mozilla/Mutex.h"
-=======
 #  include "DrawTargetD2D1.h"
 #  include "ScaledFontDWrite.h"
 #  include "NativeFontResourceDWrite.h"
 #  include <d3d10_1.h>
 #  include "HelpersD2D.h"
->>>>>>> upstream-releases
 #endif
 
 #include "DrawTargetCapture.h"
@@ -80,18 +63,8 @@
 #include "mozilla/CheckedInt.h"
 
 #ifdef MOZ_ENABLE_FREETYPE
-<<<<<<< HEAD
-#include "ft2build.h"
-#include FT_FREETYPE_H
-||||||| merged common ancestors
-#include "ft2build.h"
-#include FT_FREETYPE_H
-
-#include "mozilla/Mutex.h"
-=======
 #  include "ft2build.h"
 #  include FT_FREETYPE_H
->>>>>>> upstream-releases
 #endif
 #include "MainThreadUtils.h"
 #include "mozilla/Preferences.h"
@@ -110,19 +83,9 @@ enum CPUIDRegister { eax = 0, ebx = 1, ecx = 2, edx = 3 };
 
 #ifdef HAVE_CPUID_H
 
-<<<<<<< HEAD
-#if !(defined(__SSE2__) || defined(_M_X64) ||      \
-      (defined(_M_IX86_FP) && _M_IX86_FP >= 2)) || \
-    !defined(__SSE4__)
-||||||| merged common ancestors
-#if !(defined(__SSE2__) || defined(_M_X64) || \
-     (defined(_M_IX86_FP) && _M_IX86_FP >= 2)) || \
-    !defined(__SSE4__)
-=======
 #  if !(defined(__SSE2__) || defined(_M_X64) ||      \
         (defined(_M_IX86_FP) && _M_IX86_FP >= 2)) || \
       !defined(__SSE4__)
->>>>>>> upstream-releases
 // cpuid.h is available on gcc 4.3 and higher on i386 and x86_64
 #    include <cpuid.h>
 
@@ -145,90 +108,6 @@ static inline bool HasCPUIDBit(unsigned int level, CPUIDRegister reg,
 #  elif defined(__SUNPRO_CC) && (defined(__i386) || defined(__x86_64__))
 
 // Define a function identical to MSVC function.
-<<<<<<< HEAD
-#ifdef __i386
-static void __cpuid(int CPUInfo[4], int InfoType) {
-  asm("xchg %esi, %ebx\n"
-      "cpuid\n"
-      "movl %eax, (%edi)\n"
-      "movl %ebx, 4(%edi)\n"
-      "movl %ecx, 8(%edi)\n"
-      "movl %edx, 12(%edi)\n"
-      "xchg %esi, %ebx\n"
-      :
-      : "a"(InfoType),  // %eax
-        "D"(CPUInfo)    // %edi
-      : "%ecx", "%edx", "%esi");
-}
-#else
-static void __cpuid(int CPUInfo[4], int InfoType) {
-  asm("xchg %rsi, %rbx\n"
-      "cpuid\n"
-      "movl %eax, (%rdi)\n"
-      "movl %ebx, 4(%rdi)\n"
-      "movl %ecx, 8(%rdi)\n"
-      "movl %edx, 12(%rdi)\n"
-      "xchg %rsi, %rbx\n"
-      :
-      : "a"(InfoType),  // %eax
-        "D"(CPUInfo)    // %rdi
-      : "%ecx", "%edx", "%rsi");
-}
-
-#define HAVE_CPU_DETECTION
-#endif
-#endif
-
-#ifdef HAVE_CPU_DETECTION
-static inline bool HasCPUIDBit(unsigned int level, CPUIDRegister reg,
-                               unsigned int bit) {
-||||||| merged common ancestors
-#ifdef __i386
-static void
-__cpuid(int CPUInfo[4], int InfoType)
-{
-  asm (
-    "xchg %esi, %ebx\n"
-    "cpuid\n"
-    "movl %eax, (%edi)\n"
-    "movl %ebx, 4(%edi)\n"
-    "movl %ecx, 8(%edi)\n"
-    "movl %edx, 12(%edi)\n"
-    "xchg %esi, %ebx\n"
-    :
-    : "a"(InfoType), // %eax
-      "D"(CPUInfo) // %edi
-    : "%ecx", "%edx", "%esi"
-  );
-}
-#else
-static void
-__cpuid(int CPUInfo[4], int InfoType)
-{
-  asm (
-    "xchg %rsi, %rbx\n"
-    "cpuid\n"
-    "movl %eax, (%rdi)\n"
-    "movl %ebx, 4(%rdi)\n"
-    "movl %ecx, 8(%rdi)\n"
-    "movl %edx, 12(%rdi)\n"
-    "xchg %rsi, %rbx\n"
-    :
-    : "a"(InfoType), // %eax
-      "D"(CPUInfo) // %rdi
-    : "%ecx", "%edx", "%rsi"
-  );
-}
-
-#define HAVE_CPU_DETECTION
-#endif
-#endif
-
-#ifdef HAVE_CPU_DETECTION
-static inline bool
-HasCPUIDBit(unsigned int level, CPUIDRegister reg, unsigned int bit)
-{
-=======
 #    ifdef __i386
 static void __cpuid(int CPUInfo[4], int InfoType) {
   asm("xchg %esi, %ebx\n"
@@ -265,7 +144,6 @@ static void __cpuid(int CPUInfo[4], int InfoType) {
 #  ifdef HAVE_CPU_DETECTION
 static inline bool HasCPUIDBit(unsigned int level, CPUIDRegister reg,
                                unsigned int bit) {
->>>>>>> upstream-releases
   // Check that the level in question is supported.
   volatile int regs[4];
   __cpuid((int*)regs, level & 0x80000000u);
@@ -335,25 +213,12 @@ StaticMutex Factory::mDeviceLock;
 StaticMutex Factory::mDTDependencyLock;
 #endif
 
-<<<<<<< HEAD
-DrawEventRecorder* Factory::mRecorder;
-||||||| merged common ancestors
-DrawEventRecorder *Factory::mRecorder;
-=======
 bool Factory::mBGRSubpixelOrder = false;
 
 DrawEventRecorder* Factory::mRecorder;
->>>>>>> upstream-releases
 
 mozilla::gfx::Config* Factory::sConfig = nullptr;
 
-<<<<<<< HEAD
-void Factory::Init(const Config& aConfig) {
-||||||| merged common ancestors
-void
-Factory::Init(const Config& aConfig)
-{
-=======
 static void PrefChanged(const char* aPref, void*) {
   mozilla::gfx::LoggingPrefs::sGfxLogLevel =
       Preferences::GetInt(StaticPrefs::GetPrefName_gfx_logging_level(),
@@ -361,20 +226,11 @@ static void PrefChanged(const char* aPref, void*) {
 }
 
 void Factory::Init(const Config& aConfig) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!sConfig);
   sConfig = new Config(aConfig);
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-#ifdef MOZ_ENABLE_FREETYPE
-  mFTLock = new Mutex("Factory::mFTLock");
-#endif
-=======
   Preferences::RegisterCallback(
       PrefChanged,
       nsDependentCString(StaticPrefs::GetPrefName_gfx_logging_level()));
->>>>>>> upstream-releases
 }
 
 void Factory::ShutDown() {
@@ -661,29 +517,6 @@ already_AddRefed<DrawTarget> Factory::CreateOffsetDrawTarget(
 
 bool Factory::DoesBackendSupportDataDrawtarget(BackendType aType) {
   switch (aType) {
-<<<<<<< HEAD
-    case BackendType::DIRECT2D:
-    case BackendType::DIRECT2D1_1:
-    case BackendType::RECORDING:
-    case BackendType::NONE:
-    case BackendType::BACKEND_LAST:
-    case BackendType::WEBRENDER_TEXT:
-      return false;
-    case BackendType::CAIRO:
-    case BackendType::SKIA:
-      return true;
-||||||| merged common ancestors
-  case BackendType::DIRECT2D:
-  case BackendType::DIRECT2D1_1:
-  case BackendType::RECORDING:
-  case BackendType::NONE:
-  case BackendType::BACKEND_LAST:
-  case BackendType::WEBRENDER_TEXT:
-    return false;
-  case BackendType::CAIRO:
-  case BackendType::SKIA:
-    return true;
-=======
     case BackendType::DIRECT2D:
     case BackendType::DIRECT2D1_1:
     case BackendType::RECORDING:
@@ -695,7 +528,6 @@ bool Factory::DoesBackendSupportDataDrawtarget(BackendType aType) {
     case BackendType::CAIRO:
     case BackendType::SKIA:
       return true;
->>>>>>> upstream-releases
   }
 
   return false;
@@ -723,22 +555,10 @@ already_AddRefed<ScaledFont> Factory::CreateScaledFontForNativeFont(
     Float aSize, cairo_scaled_font_t* aScaledFont) {
   switch (aNativeFont.mType) {
 #ifdef WIN32
-<<<<<<< HEAD
-    case NativeFontType::GDI_LOGFONT: {
-      RefPtr<ScaledFontWin> font = MakeAndAddRef<ScaledFontWin>(
-          static_cast<LOGFONT*>(aNativeFont.mFont), aUnscaledFont, aSize);
-#ifdef USE_CAIRO
-||||||| merged common ancestors
-  case NativeFontType::GDI_LOGFONT:
-    {
-      RefPtr<ScaledFontWin> font = MakeAndAddRef<ScaledFontWin>(static_cast<LOGFONT*>(aNativeFont.mFont), aUnscaledFont, aSize);
-#ifdef USE_CAIRO
-=======
     case NativeFontType::GDI_LOGFONT: {
       RefPtr<ScaledFontWin> font = MakeAndAddRef<ScaledFontWin>(
           static_cast<LOGFONT*>(aNativeFont.mFont), aUnscaledFont, aSize);
 #  ifdef USE_CAIRO
->>>>>>> upstream-releases
       if (aScaledFont) {
         font->SetCairoScaledFont(aScaledFont);
       } else {
@@ -851,15 +671,10 @@ already_AddRefed<SourceSurface> Factory::CreateDualSourceSurface(
   return newSource.forget();
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 void Factory::SetBGRSubpixelOrder(bool aBGR) { mBGRSubpixelOrder = aBGR; }
 
 bool Factory::GetBGRSubpixelOrder() { return mBGRSubpixelOrder; }
 
->>>>>>> upstream-releases
 #ifdef MOZ_ENABLE_FREETYPE
 void Factory::SetFTLibrary(FT_Library aFTLibrary) { mFTLibrary = aFTLibrary; }
 
@@ -1061,34 +876,6 @@ RefPtr<IDWriteFactory> Factory::EnsureDWriteFactory() {
   return mDWriteFactory;
 }
 
-<<<<<<< HEAD
-RefPtr<IDWriteFontCollection> Factory::GetDWriteSystemFonts(bool aUpdate) {
-  StaticMutexAutoLock lock(mDeviceLock);
-
-  if (mDWriteSystemFonts && !aUpdate) {
-    return mDWriteSystemFonts;
-  }
-
-  if (!mDWriteFactory) {
-    return nullptr;
-  }
-
-  RefPtr<IDWriteFontCollection> systemFonts;
-  HRESULT hr =
-      mDWriteFactory->GetSystemFontCollection(getter_AddRefs(systemFonts));
-  if (FAILED(hr)) {
-    gfxWarning() << "Failed to create DWrite system font collection";
-    return nullptr;
-  }
-  mDWriteSystemFonts = systemFonts;
-
-  return mDWriteSystemFonts;
-||||||| merged common ancestors
-bool
-Factory::SupportsD2D1()
-{
-  return !!D2DFactory();
-=======
 RefPtr<IDWriteFontCollection> Factory::GetDWriteSystemFonts(bool aUpdate) {
   StaticMutexAutoLock lock(mDeviceLock);
 
@@ -1144,7 +931,6 @@ RefPtr<ID2D1DeviceContext> Factory::GetD2DDeviceContext() {
   *ptr = dc;
 
   return *ptr;
->>>>>>> upstream-releases
 }
 
 bool Factory::SupportsD2D1() { return !!D2DFactory(); }
@@ -1170,80 +956,18 @@ void Factory::D2DCleanup() {
   DrawTargetD2D1::CleanupD2D();
 }
 
-<<<<<<< HEAD
-already_AddRefed<ScaledFont> Factory::CreateScaledFontForDWriteFont(
-    IDWriteFontFace* aFontFace, const gfxFontStyle* aStyle,
-    const RefPtr<UnscaledFont>& aUnscaledFont, float aSize,
-    bool aUseEmbeddedBitmap, bool aForceGDIMode,
-    IDWriteRenderingParams* aParams, Float aGamma, Float aContrast) {
-||||||| merged common ancestors
-already_AddRefed<ScaledFont>
-Factory::CreateScaledFontForDWriteFont(IDWriteFontFace* aFontFace,
-                                       const gfxFontStyle* aStyle,
-                                       const RefPtr<UnscaledFont>& aUnscaledFont,
-                                       float aSize,
-                                       bool aUseEmbeddedBitmap,
-                                       bool aForceGDIMode,
-                                       IDWriteRenderingParams* aParams,
-                                       Float aGamma,
-                                       Float aContrast)
-{
-=======
 already_AddRefed<ScaledFont> Factory::CreateScaledFontForDWriteFont(
     IDWriteFontFace* aFontFace, const gfxFontStyle* aStyle,
     const RefPtr<UnscaledFont>& aUnscaledFont, float aSize,
     bool aUseEmbeddedBitmap, int aRenderingMode,
     IDWriteRenderingParams* aParams, Float aGamma, Float aContrast) {
->>>>>>> upstream-releases
   return MakeAndAddRef<ScaledFontDWrite>(aFontFace, aUnscaledFont, aSize,
-<<<<<<< HEAD
-                                         aUseEmbeddedBitmap, aForceGDIMode,
-                                         aParams, aGamma, aContrast, aStyle);
-||||||| merged common ancestors
-                                         aUseEmbeddedBitmap, aForceGDIMode,
-                                         aParams, aGamma, aContrast,
-                                         aStyle);
-=======
                                          aUseEmbeddedBitmap,
                                          (DWRITE_RENDERING_MODE)aRenderingMode,
                                          aParams, aGamma, aContrast, aStyle);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 #endif  // WIN32
-
-#ifdef USE_SKIA_GPU
-already_AddRefed<DrawTarget> Factory::CreateDrawTargetSkiaWithGrContext(
-    GrContext* aGrContext, const IntSize& aSize, SurfaceFormat aFormat) {
-  RefPtr<DrawTarget> newTarget = new DrawTargetSkia();
-  if (!newTarget->InitWithGrContext(aGrContext, aSize, aFormat)) {
-    return nullptr;
-  }
-  return newTarget.forget();
-}
-
-#endif  // USE_SKIA_GPU
-||||||| merged common ancestors
-#endif // XP_WIN
-
-#ifdef USE_SKIA_GPU
-already_AddRefed<DrawTarget>
-Factory::CreateDrawTargetSkiaWithGrContext(GrContext* aGrContext,
-                                           const IntSize &aSize,
-                                           SurfaceFormat aFormat)
-{
-  RefPtr<DrawTarget> newTarget = new DrawTargetSkia();
-  if (!newTarget->InitWithGrContext(aGrContext, aSize, aFormat)) {
-    return nullptr;
-  }
-  return newTarget.forget();
-}
-
-#endif // USE_SKIA_GPU
-=======
-#endif  // WIN32
->>>>>>> upstream-releases
 
 #ifdef USE_SKIA
 already_AddRefed<DrawTarget> Factory::CreateDrawTargetWithSkCanvas(
@@ -1420,13 +1144,6 @@ void CriticalLogger::CrashAction(LogReason aReason) {
   }
 }
 
-<<<<<<< HEAD
-}  // namespace gfx
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace gfx
-} // namespace mozilla
-=======
 #ifdef WIN32
 void LogWStr(const wchar_t* aWStr, std::stringstream& aOut) {
   int n =
@@ -1441,4 +1158,3 @@ void LogWStr(const wchar_t* aWStr, std::stringstream& aOut) {
 
 }  // namespace gfx
 }  // namespace mozilla
->>>>>>> upstream-releases

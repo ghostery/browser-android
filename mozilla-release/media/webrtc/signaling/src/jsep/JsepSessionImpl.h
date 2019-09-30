@@ -99,35 +99,16 @@ class JsepSessionImpl : public JsepSession {
   virtual Result SetRemoteDescription(JsepSdpType type,
                                       const std::string& sdp) override;
 
-<<<<<<< HEAD
-  virtual nsresult AddRemoteIceCandidate(const std::string& candidate,
-                                         const std::string& mid,
-                                         const Maybe<uint16_t>& level,
-                                         std::string* transportId) override;
-||||||| merged common ancestors
-  virtual nsresult AddRemoteIceCandidate(const std::string& candidate,
-                                         const std::string& mid,
-                                         uint16_t level,
-                                         std::string* transportId) override;
-=======
   virtual Result AddRemoteIceCandidate(const std::string& candidate,
                                        const std::string& mid,
                                        const Maybe<uint16_t>& level,
                                        const std::string& ufrag,
                                        std::string* transportId) override;
->>>>>>> upstream-releases
 
   virtual nsresult AddLocalIceCandidate(const std::string& candidate,
                                         const std::string& transportId,
-<<<<<<< HEAD
-                                        uint16_t* level, std::string* mid,
-||||||| merged common ancestors
-                                        uint16_t* level,
-                                        std::string* mid,
-=======
                                         const std::string& ufrag,
                                         uint16_t* level, std::string* mid,
->>>>>>> upstream-releases
                                         bool* skipped) override;
 
   virtual nsresult UpdateDefaultCandidate(
@@ -210,31 +191,9 @@ class JsepSessionImpl : public JsepSession {
                                   SdpSetupAttribute::Role dtlsRole);
   nsresult CopyPreviousTransportParams(const Sdp& oldAnswer,
                                        const Sdp& offerersPreviousSdp,
-<<<<<<< HEAD
                                        const Sdp& newOffer, Sdp* newLocal);
-  void CopyPreviousMsid(const Sdp& oldLocal, Sdp* newLocal);
-||||||| merged common ancestors
-                                       const Sdp& newOffer,
-                                       Sdp* newLocal);
-  void CopyPreviousMsid(const Sdp& oldLocal, Sdp* newLocal);
-=======
-                                       const Sdp& newOffer, Sdp* newLocal);
->>>>>>> upstream-releases
   void EnsureMsid(Sdp* remote);
   void SetupBundle(Sdp* sdp) const;
-<<<<<<< HEAD
-  nsresult GetRemoteIds(const Sdp& sdp, const SdpMediaSection& msection,
-                        std::vector<std::string>* streamIds,
-                        std::string* trackId);
-  nsresult RemoveDuplicateTrackIds(Sdp* sdp);
-||||||| merged common ancestors
-  nsresult GetRemoteIds(const Sdp& sdp,
-                        const SdpMediaSection& msection,
-                        std::vector<std::string>* streamIds,
-                        std::string* trackId);
-  nsresult RemoveDuplicateTrackIds(Sdp* sdp);
-=======
->>>>>>> upstream-releases
   nsresult CreateOfferMsection(const JsepOfferOptions& options,
                                JsepTransceiver& transceiver, Sdp* local);
   nsresult CreateAnswerMsection(const JsepAnswerOptions& options,
@@ -293,14 +252,8 @@ class JsepSessionImpl : public JsepSession {
   // Used to prevent duplicate local SSRCs. Not used to prevent local/remote or
   // remote-only duplication, which will be important for EKT but not now.
   std::set<uint32_t> mSsrcs;
-<<<<<<< HEAD
-  UniquePtr<Sdp> mGeneratedLocalDescription;  // Created but not set.
-||||||| merged common ancestors
-  UniquePtr<Sdp> mGeneratedLocalDescription; // Created but not set.
-=======
   UniquePtr<Sdp> mGeneratedOffer;   // Created but not set.
   UniquePtr<Sdp> mGeneratedAnswer;  // Created but not set.
->>>>>>> upstream-releases
   UniquePtr<Sdp> mCurrentLocalDescription;
   UniquePtr<Sdp> mCurrentRemoteDescription;
   UniquePtr<Sdp> mPendingLocalDescription;

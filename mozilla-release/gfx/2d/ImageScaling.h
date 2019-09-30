@@ -15,28 +15,6 @@
 namespace mozilla {
 namespace gfx {
 
-<<<<<<< HEAD
-class ImageHalfScaler {
- public:
-  ImageHalfScaler(uint8_t *aData, int32_t aStride, const IntSize &aSize)
-      : mOrigData(aData),
-        mOrigStride(aStride),
-        mOrigSize(aSize),
-        mDataStorage(nullptr),
-        mData(nullptr),
-        mStride(0) {}
-||||||| merged common ancestors
-class ImageHalfScaler
-{
-public:
-  ImageHalfScaler(uint8_t *aData, int32_t aStride, const IntSize &aSize)
-    : mOrigData(aData), mOrigStride(aStride), mOrigSize(aSize)
-    , mDataStorage(nullptr)
-    , mData(nullptr)
-    , mStride(0)
-  {
-  }
-=======
 class ImageHalfScaler {
  public:
   ImageHalfScaler(uint8_t* aData, int32_t aStride, const IntSize& aSize)
@@ -46,7 +24,6 @@ class ImageHalfScaler {
         mDataStorage(nullptr),
         mData(nullptr),
         mStride(0) {}
->>>>>>> upstream-releases
 
   ~ImageHalfScaler() { delete[] mDataStorage; }
 
@@ -56,26 +33,6 @@ class ImageHalfScaler {
   IntSize GetSize() const { return mSize; }
   uint32_t GetStride() const { return mStride; }
 
-<<<<<<< HEAD
- private:
-  void HalfImage2D(uint8_t *aSource, int32_t aSourceStride,
-                   const IntSize &aSourceSize, uint8_t *aDest,
-                   uint32_t aDestStride);
-  void HalfImageVertical(uint8_t *aSource, int32_t aSourceStride,
-                         const IntSize &aSourceSize, uint8_t *aDest,
-                         uint32_t aDestStride);
-  void HalfImageHorizontal(uint8_t *aSource, int32_t aSourceStride,
-                           const IntSize &aSourceSize, uint8_t *aDest,
-                           uint32_t aDestStride);
-||||||| merged common ancestors
-private:
-  void HalfImage2D(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                   uint8_t *aDest, uint32_t aDestStride);
-  void HalfImageVertical(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                         uint8_t *aDest, uint32_t aDestStride);
-  void HalfImageHorizontal(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                           uint8_t *aDest, uint32_t aDestStride);
-=======
  private:
   void HalfImage2D(uint8_t* aSource, int32_t aSourceStride,
                    const IntSize& aSourceSize, uint8_t* aDest,
@@ -86,28 +43,9 @@ private:
   void HalfImageHorizontal(uint8_t* aSource, int32_t aSourceStride,
                            const IntSize& aSourceSize, uint8_t* aDest,
                            uint32_t aDestStride);
->>>>>>> upstream-releases
 
   // This is our SSE2 scaling function. Our destination must always be 16-byte
   // aligned and use a 16-byte aligned stride.
-<<<<<<< HEAD
-  void HalfImage2D_SSE2(uint8_t *aSource, int32_t aSourceStride,
-                        const IntSize &aSourceSize, uint8_t *aDest,
-                        uint32_t aDestStride);
-  void HalfImageVertical_SSE2(uint8_t *aSource, int32_t aSourceStride,
-                              const IntSize &aSourceSize, uint8_t *aDest,
-                              uint32_t aDestStride);
-  void HalfImageHorizontal_SSE2(uint8_t *aSource, int32_t aSourceStride,
-                                const IntSize &aSourceSize, uint8_t *aDest,
-                                uint32_t aDestStride);
-||||||| merged common ancestors
-  void HalfImage2D_SSE2(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                        uint8_t *aDest, uint32_t aDestStride);
-  void HalfImageVertical_SSE2(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                              uint8_t *aDest, uint32_t aDestStride);
-  void HalfImageHorizontal_SSE2(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                                uint8_t *aDest, uint32_t aDestStride);
-=======
   void HalfImage2D_SSE2(uint8_t* aSource, int32_t aSourceStride,
                         const IntSize& aSourceSize, uint8_t* aDest,
                         uint32_t aDestStride);
@@ -117,26 +55,7 @@ private:
   void HalfImageHorizontal_SSE2(uint8_t* aSource, int32_t aSourceStride,
                                 const IntSize& aSourceSize, uint8_t* aDest,
                                 uint32_t aDestStride);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void HalfImage2D_C(uint8_t *aSource, int32_t aSourceStride,
-                     const IntSize &aSourceSize, uint8_t *aDest,
-                     uint32_t aDestStride);
-  void HalfImageVertical_C(uint8_t *aSource, int32_t aSourceStride,
-                           const IntSize &aSourceSize, uint8_t *aDest,
-                           uint32_t aDestStride);
-  void HalfImageHorizontal_C(uint8_t *aSource, int32_t aSourceStride,
-                             const IntSize &aSourceSize, uint8_t *aDest,
-                             uint32_t aDestStride);
-||||||| merged common ancestors
-  void HalfImage2D_C(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                     uint8_t *aDest, uint32_t aDestStride);
-  void HalfImageVertical_C(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                           uint8_t *aDest, uint32_t aDestStride);
-  void HalfImageHorizontal_C(uint8_t *aSource, int32_t aSourceStride, const IntSize &aSourceSize,
-                             uint8_t *aDest, uint32_t aDestStride);
-=======
   void HalfImage2D_C(uint8_t* aSource, int32_t aSourceStride,
                      const IntSize& aSourceSize, uint8_t* aDest,
                      uint32_t aDestStride);
@@ -146,7 +65,6 @@ private:
   void HalfImageHorizontal_C(uint8_t* aSource, int32_t aSourceStride,
                              const IntSize& aSourceSize, uint8_t* aDest,
                              uint32_t aDestStride);
->>>>>>> upstream-releases
 
   uint8_t* mOrigData;
   int32_t mOrigStride;

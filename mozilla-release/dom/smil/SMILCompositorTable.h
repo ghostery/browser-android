@@ -19,11 +19,6 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositorTable.h
-#endif  // NS_SMILCOMPOSITORTABLE_H_
-||||||| merged common ancestors
-#endif // NS_SMILCOMPOSITORTABLE_H_
-=======
 class SMILCompositor;
 
 typedef nsTHashtable<SMILCompositor> SMILCompositorTable;
@@ -31,4 +26,3 @@ typedef nsTHashtable<SMILCompositor> SMILCompositorTable;
 }  // namespace mozilla
 
 #endif  // mozilla_SMILCompositorTable_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositorTable.h

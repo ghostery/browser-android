@@ -18,20 +18,10 @@ namespace mozilla {
 namespace widget {
 
 // static
-<<<<<<< HEAD
-void WidgetUtils::Shutdown() { WidgetKeyboardEvent::Shutdown(); }
-||||||| merged common ancestors
-void
-WidgetUtils::Shutdown()
-{
-  WidgetKeyboardEvent::Shutdown();
-}
-=======
 void WidgetUtils::Shutdown() {
   WidgetKeyboardEvent::Shutdown();
   InternalEditorInputEvent::Shutdown();
 }
->>>>>>> upstream-releases
 
 // static
 already_AddRefed<nsIWidget> WidgetUtils::DOMWindowToWidget(

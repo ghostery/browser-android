@@ -35,11 +35,6 @@ class RecordEntry {
   ValueType mValue;
 };
 
-<<<<<<< HEAD
-}  // namespace binding_detail
-||||||| merged common ancestors
-} // namespace binding_detail
-=======
 // Specialize for a JSObject* ValueType and initialize it on construction, so we
 // don't need to worry about un-initialized JSObject* floating around.
 template <typename KeyType>
@@ -56,7 +51,6 @@ class RecordEntry<KeyType, JSObject*> {
 };
 
 }  // namespace binding_detail
->>>>>>> upstream-releases
 
 template <typename KeyType, typename ValueType>
 class Record {

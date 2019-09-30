@@ -44,27 +44,6 @@ namespace wr {
 static StaticRefPtr<RenderThread> sRenderThread;
 
 RenderThread::RenderThread(base::Thread* aThread)
-<<<<<<< HEAD
-    : mThread(aThread),
-      mFrameCountMapLock("RenderThread.mFrameCountMapLock"),
-      mRenderTextureMapLock("RenderThread.mRenderTextureMapLock"),
-      mHasShutdown(false),
-      mHandlingDeviceReset(false) {}
-
-RenderThread::~RenderThread() {
-||||||| merged common ancestors
-  : mThread(aThread)
-  , mFrameCountMapLock("RenderThread.mFrameCountMapLock")
-  , mRenderTextureMapLock("RenderThread.mRenderTextureMapLock")
-  , mHasShutdown(false)
-  , mHandlingDeviceReset(false)
-{
-
-}
-
-RenderThread::~RenderThread()
-{
-=======
     : mThread(aThread),
       mWindowInfos("RenderThread.mWindowInfos"),
       mRenderTextureMapLock("RenderThread.mRenderTextureMapLock"),
@@ -73,7 +52,6 @@ RenderThread::~RenderThread()
       mHandlingWebRenderError(false) {}
 
 RenderThread::~RenderThread() {
->>>>>>> upstream-releases
   MOZ_ASSERT(mRenderTexturesDeferred.empty());
   delete mThread;
 }
@@ -255,13 +233,6 @@ size_t RenderThread::RendererCount() {
   return mRenderers.size();
 }
 
-<<<<<<< HEAD
-void RenderThread::HandleFrame(wr::WindowId aWindowId, bool aRender) {
-||||||| merged common ancestors
-void
-RenderThread::HandleFrame(wr::WindowId aWindowId, bool aRender)
-{
-=======
 void RenderThread::SetCompositionRecorderForWindow(
     wr::WindowId aWindowId,
     RefPtr<layers::WebRenderCompositionRecorder>&& aCompositionRecorder) {
@@ -294,7 +265,6 @@ void RenderThread::SetCompositionRecorderForWindow(
 }
 
 void RenderThread::HandleFrame(wr::WindowId aWindowId, bool aRender) {
->>>>>>> upstream-releases
   if (mHasShutdown) {
     return;
   }
@@ -317,24 +287,11 @@ void RenderThread::HandleFrame(wr::WindowId aWindowId, bool aRender) {
   TimeStamp startTime;
   VsyncId startId;
 
-<<<<<<< HEAD
-  bool hadSlowFrame;
-  {  // scope lock
-    MutexAutoLock lock(mFrameCountMapLock);
-    auto it = mWindowInfos.find(AsUint64(aWindowId));
-    MOZ_ASSERT(it != mWindowInfos.end());
-||||||| merged common ancestors
-  { // scope lock
-    MutexAutoLock lock(mFrameCountMapLock);
-    auto it = mWindowInfos.find(AsUint64(aWindowId));
-    MOZ_ASSERT(it != mWindowInfos.end());
-=======
   bool hadSlowFrame;
   {  // scope lock
     auto windows = mWindowInfos.Lock();
     auto it = windows->find(AsUint64(aWindowId));
     MOZ_ASSERT(it != windows->end());
->>>>>>> upstream-releases
     WindowInfo* info = it->second;
     MOZ_ASSERT(info->mPendingCount > 0);
     startTime = info->mStartTimes.front();
@@ -343,18 +300,10 @@ void RenderThread::HandleFrame(wr::WindowId aWindowId, bool aRender) {
     info->mHadSlowFrame = false;
   }
 
-<<<<<<< HEAD
-  UpdateAndRender(aWindowId, startId, startTime, aRender,
-                  /* aReadbackSize */ Nothing(),
-                  /* aReadbackBuffer */ Nothing(), hadSlowFrame);
-||||||| merged common ancestors
-  UpdateAndRender(aWindowId, startTime, aRender, /* aReadbackSize */ Nothing(), /* aReadbackBuffer */ Nothing());
-=======
   UpdateAndRender(aWindowId, startId, startTime, aRender,
                   /* aReadbackSize */ Nothing(),
                   /* aReadbackFormat */ Nothing(),
                   /* aReadbackBuffer */ Nothing(), hadSlowFrame);
->>>>>>> upstream-releases
   FrameRenderingComplete(aWindowId);
 }
 
@@ -415,22 +364,12 @@ static void NotifyDidRender(layers::CompositorBridgeParent* aBridge,
 
   for (uintptr_t i = 0; i < info.epochs.length; i++) {
     aBridge->NotifyPipelineRendered(
-<<<<<<< HEAD
-        info.epochs.data[i].pipeline_id, info.epochs.data[i].epoch,
-        aCompositeStartId, aCompositeStart, aRenderStart, aEnd, &aStats);
-||||||| merged common ancestors
-        aInfo.epochs.data[i].pipeline_id,
-        aInfo.epochs.data[i].epoch,
-        aStart,
-        aEnd);
-=======
         info.epochs.data[i].pipeline_id, info.epochs.data[i].epoch,
         aCompositeStartId, aCompositeStart, aRenderStart, aEnd, &aStats);
   }
 
   if (aBridge->GetWrBridge()) {
     aBridge->GetWrBridge()->CompositeIfNeeded();
->>>>>>> upstream-releases
   }
 }
 
@@ -442,24 +381,6 @@ static void NotifyDidStartRender(layers::CompositorBridgeParent* aBridge) {
   }
 }
 
-<<<<<<< HEAD
-void RenderThread::UpdateAndRender(wr::WindowId aWindowId,
-                                   const VsyncId& aStartId,
-                                   const TimeStamp& aStartTime, bool aRender,
-                                   const Maybe<gfx::IntSize>& aReadbackSize,
-                                   const Maybe<Range<uint8_t>>& aReadbackBuffer,
-                                   bool aHadSlowFrame) {
-  AUTO_PROFILER_TRACING("Paint", "Composite");
-||||||| merged common ancestors
-void
-RenderThread::UpdateAndRender(wr::WindowId aWindowId,
-                              const TimeStamp& aStartTime,
-                              bool aRender,
-                              const Maybe<gfx::IntSize>& aReadbackSize,
-                              const Maybe<Range<uint8_t>>& aReadbackBuffer)
-{
-  AUTO_PROFILER_TRACING("Paint", "Composite");
-=======
 void RenderThread::UpdateAndRender(
     wr::WindowId aWindowId, const VsyncId& aStartId,
     const TimeStamp& aStartTime, bool aRender,
@@ -467,7 +388,6 @@ void RenderThread::UpdateAndRender(
     const Maybe<wr::ImageFormat>& aReadbackFormat,
     const Maybe<Range<uint8_t>>& aReadbackBuffer, bool aHadSlowFrame) {
   AUTO_PROFILER_TRACING("Paint", "Composite", GRAPHICS);
->>>>>>> upstream-releases
   MOZ_ASSERT(IsInRenderThread());
   MOZ_ASSERT(aRender || aReadbackBuffer.isNothing());
 
@@ -488,15 +408,8 @@ void RenderThread::UpdateAndRender(
   bool rendered = false;
   RendererStats stats = {0};
   if (aRender) {
-<<<<<<< HEAD
-    rendered = renderer->UpdateAndRender(aReadbackSize, aReadbackBuffer,
-                                         aHadSlowFrame, &stats);
-||||||| merged common ancestors
-    renderer->UpdateAndRender(aReadbackSize, aReadbackBuffer);
-=======
     rendered = renderer->UpdateAndRender(
         aReadbackSize, aReadbackFormat, aReadbackBuffer, aHadSlowFrame, &stats);
->>>>>>> upstream-releases
   } else {
     renderer->Update();
   }
@@ -504,27 +417,6 @@ void RenderThread::UpdateAndRender(
   renderer->CheckGraphicsResetStatus();
 
   TimeStamp end = TimeStamp::Now();
-<<<<<<< HEAD
-  auto info = renderer->FlushPipelineInfo();
-
-  layers::CompositorThreadHolder::Loop()->PostTask(
-      NewRunnableFunction("NotifyDidRenderRunnable", &NotifyDidRender,
-                          renderer->GetCompositorBridge(), info, aStartId,
-                          aStartTime, start, end, aRender, stats));
-
-  if (rendered) {
-    // Wait for GPU after posting NotifyDidRender, since the wait is not
-    // necessary for the NotifyDidRender.
-    // The wait is necessary for Textures recycling of AsyncImagePipelineManager
-    // and for avoiding GPU queue is filled with too much tasks.
-    // WaitForGPU's implementation is different for each platform.
-    renderer->WaitForGPU();
-  }
-
-||||||| merged common ancestors
-
-  auto info = renderer->FlushPipelineInfo();
-=======
   RefPtr<WebRenderPipelineInfo> info = renderer->FlushPipelineInfo();
 
   layers::CompositorThreadHolder::Loop()->PostTask(
@@ -556,7 +448,6 @@ void RenderThread::UpdateAndRender(
     renderer->WaitForGPU();
   }
 
->>>>>>> upstream-releases
   RefPtr<layers::AsyncImagePipelineManager> pipelineMgr =
       renderer->GetCompositorBridge()->GetAsyncImagePipelineManager();
   // pipelineMgr should always be non-null here because it is only nulled out
@@ -613,69 +504,26 @@ bool RenderThread::TooManyPendingFrames(wr::WindowId aWindowId) {
   return info->mPendingCount > info->mRenderingCount;
 }
 
-<<<<<<< HEAD
-bool RenderThread::IsDestroyed(wr::WindowId aWindowId) {
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-||||||| merged common ancestors
-bool
-RenderThread::IsDestroyed(wr::WindowId aWindowId)
-{
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-=======
 bool RenderThread::IsDestroyed(wr::WindowId aWindowId) {
   auto windows = mWindowInfos.Lock();
   auto it = windows->find(AsUint64(aWindowId));
   if (it == windows->end()) {
->>>>>>> upstream-releases
     return true;
   }
 
   return it->second->mIsDestroyed;
 }
 
-<<<<<<< HEAD
-void RenderThread::SetDestroyed(wr::WindowId aWindowId) {
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-||||||| merged common ancestors
-void
-RenderThread::SetDestroyed(wr::WindowId aWindowId)
-{
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-=======
 void RenderThread::SetDestroyed(wr::WindowId aWindowId) {
   auto windows = mWindowInfos.Lock();
   auto it = windows->find(AsUint64(aWindowId));
   if (it == windows->end()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(false);
     return;
   }
   it->second->mIsDestroyed = true;
 }
 
-<<<<<<< HEAD
-void RenderThread::IncPendingFrameCount(wr::WindowId aWindowId,
-                                        const VsyncId& aStartId,
-                                        const TimeStamp& aStartTime) {
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-||||||| merged common ancestors
-void
-RenderThread::IncPendingFrameCount(wr::WindowId aWindowId, const TimeStamp& aStartTime)
-{
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-=======
 void RenderThread::IncPendingFrameCount(wr::WindowId aWindowId,
                                         const VsyncId& aStartId,
                                         const TimeStamp& aStartTime,
@@ -683,86 +531,24 @@ void RenderThread::IncPendingFrameCount(wr::WindowId aWindowId,
   auto windows = mWindowInfos.Lock();
   auto it = windows->find(AsUint64(aWindowId));
   if (it == windows->end()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(false);
     return;
   }
   it->second->mPendingCount++;
   it->second->mStartTimes.push(aStartTime);
-<<<<<<< HEAD
-  it->second->mStartIds.push(aStartId);
-||||||| merged common ancestors
-=======
   it->second->mStartIds.push(aStartId);
   it->second->mDocFrameCounts.push(aDocFrameCount);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void RenderThread::DecPendingFrameCount(wr::WindowId aWindowId) {
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-||||||| merged common ancestors
-void
-RenderThread::DecPendingFrameCount(wr::WindowId aWindowId)
-{
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-=======
 mozilla::Pair<bool, bool> RenderThread::IncRenderingFrameCount(
     wr::WindowId aWindowId, bool aRender) {
   auto windows = mWindowInfos.Lock();
   auto it = windows->find(AsUint64(aWindowId));
   if (it == windows->end()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(false);
     return MakePair(false, false);
   }
-<<<<<<< HEAD
-  info->mPendingCount--;
-  // This function gets called for "nop frames" where nothing was rendered or
-  // composited. But we count this time because the non-WR codepath equivalent
-  // in CompositorBridgeParent::ComposeToTarget also counts such frames. And
-  // anyway this should be relatively infrequent so it shouldn't skew the
-  // numbers much.
-  mozilla::Telemetry::AccumulateTimeDelta(mozilla::Telemetry::COMPOSITE_TIME,
-                                          info->mStartTimes.front());
-  info->mStartTimes.pop();
-  info->mStartIds.pop();
-}
-||||||| merged common ancestors
-  info->mPendingCount--;
-  // This function gets called for "nop frames" where nothing was rendered or
-  // composited. But we count this time because the non-WR codepath equivalent
-  // in CompositorBridgeParent::ComposeToTarget also counts such frames. And
-  // anyway this should be relatively infrequent so it shouldn't skew the
-  // numbers much.
-  mozilla::Telemetry::AccumulateTimeDelta(mozilla::Telemetry::COMPOSITE_TIME,
-                                          info->mStartTimes.front());
-  info->mStartTimes.pop();
-}
-=======
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void RenderThread::IncRenderingFrameCount(wr::WindowId aWindowId) {
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-    MOZ_ASSERT(false);
-    return;
-||||||| merged common ancestors
-void
-RenderThread::IncRenderingFrameCount(wr::WindowId aWindowId)
-{
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-    MOZ_ASSERT(false);
-    return;
-=======
   it->second->mDocFramesSeen++;
   if (it->second->mDocFramesSeen < it->second->mDocFrameCounts.front()) {
     it->second->mRender |= aRender;
@@ -776,28 +562,13 @@ RenderThread::IncRenderingFrameCount(wr::WindowId aWindowId)
     it->second->mDocFrameCounts.pop();
     it->second->mDocFramesSeen = 0;
     return MakePair(true, render);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-void RenderThread::FrameRenderingComplete(wr::WindowId aWindowId) {
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-||||||| merged common ancestors
-void
-RenderThread::FrameRenderingComplete(wr::WindowId aWindowId)
-{
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-=======
 void RenderThread::FrameRenderingComplete(wr::WindowId aWindowId) {
   auto windows = mWindowInfos.Lock();
   auto it = windows->find(AsUint64(aWindowId));
   if (it == windows->end()) {
->>>>>>> upstream-releases
     MOZ_ASSERT(false);
     return;
   }
@@ -816,10 +587,6 @@ void RenderThread::FrameRenderingComplete(wr::WindowId aWindowId) {
   mozilla::Telemetry::AccumulateTimeDelta(mozilla::Telemetry::COMPOSITE_TIME,
                                           info->mStartTimes.front());
   info->mStartTimes.pop();
-<<<<<<< HEAD
-  info->mStartIds.pop();
-||||||| merged common ancestors
-=======
   info->mStartIds.pop();
 }
 
@@ -832,31 +599,10 @@ void RenderThread::NotifySlowFrame(wr::WindowId aWindowId) {
   }
   WindowInfo* info = it->second;
   info->mHadSlowFrame = true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-void RenderThread::NotifySlowFrame(wr::WindowId aWindowId) {
-  MutexAutoLock lock(mFrameCountMapLock);
-  auto it = mWindowInfos.find(AsUint64(aWindowId));
-  if (it == mWindowInfos.end()) {
-    MOZ_ASSERT(false);
-    return;
-  }
-  WindowInfo* info = it->second;
-  info->mHadSlowFrame = true;
 }
 
 void RenderThread::RegisterExternalImage(
     uint64_t aExternalImageId, already_AddRefed<RenderTextureHost> aTexture) {
-||||||| merged common ancestors
-void
-RenderThread::RegisterExternalImage(uint64_t aExternalImageId, already_AddRefed<RenderTextureHost> aTexture)
-{
-=======
-void RenderThread::RegisterExternalImage(
-    uint64_t aExternalImageId, already_AddRefed<RenderTextureHost> aTexture) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mRenderTextureMapLock);
 
   if (mHasShutdown) {
@@ -895,14 +641,6 @@ void RenderThread::UnregisterExternalImage(uint64_t aExternalImageId) {
   }
 }
 
-<<<<<<< HEAD
-void RenderThread::UpdateRenderTextureHost(uint64_t aSrcExternalImageId,
-                                           uint64_t aWrappedExternalImageId) {
-||||||| merged common ancestors
-void
-RenderThread::UpdateRenderTextureHost(uint64_t aSrcExternalImageId, uint64_t aWrappedExternalImageId)
-{
-=======
 void RenderThread::PrepareForUse(uint64_t aExternalImageId) {
   if (!IsInRenderThread()) {
     Loop()->PostTask(NewRunnableMethod<uint64_t>(
@@ -954,7 +692,6 @@ void RenderThread::NotifyNotUsed(uint64_t aExternalImageId) {
 
 void RenderThread::UpdateRenderTextureHost(uint64_t aSrcExternalImageId,
                                            uint64_t aWrappedExternalImageId) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aSrcExternalImageId != aWrappedExternalImageId);
   MOZ_ASSERT(RenderThread::IsInRenderThread());
 
@@ -974,24 +711,6 @@ void RenderThread::UpdateRenderTextureHost(uint64_t aSrcExternalImageId,
     MOZ_ASSERT_UNREACHABLE("unexpected to happen");
     return;
   }
-<<<<<<< HEAD
-  if (!wrapper->IsInited()) {
-    wrapper->UpdateRenderTextureHost(wrapped->second);
-    MOZ_ASSERT(wrapper->IsInited());
-  } else {
-    Loop()->PostTask(NewRunnableMethod<RenderTextureHost*>(
-        "RenderTextureHostWrapper::UpdateRenderTextureHost", wrapper,
-        &RenderTextureHostWrapper::UpdateRenderTextureHost, wrapped->second));
-||||||| merged common ancestors
-  if (!wrapper->IsInited()) {
-    wrapper->UpdateRenderTextureHost(wrapped->second);
-    MOZ_ASSERT(wrapper->IsInited());
-  } else {
-    Loop()->PostTask(NewRunnableMethod<RenderTextureHost*>(
-      "RenderTextureHostWrapper::UpdateRenderTextureHost",
-      wrapper, &RenderTextureHostWrapper::UpdateRenderTextureHost, wrapped->second
-    ));
-=======
   wrapper->UpdateRenderTextureHost(wrapped->second);
 }
 
@@ -1001,7 +720,6 @@ void RenderThread::NofityForUse(uint64_t aExternalImageId) {
   MutexAutoLock lock(mRenderTextureMapLock);
   if (mHasShutdown) {
     return;
->>>>>>> upstream-releases
   }
   auto it = mRenderTextures.find(aExternalImageId);
   if (it == mRenderTextures.end()) {
@@ -1042,17 +760,8 @@ void RenderThread::InitDeviceTask() {
   MOZ_ASSERT(!mSharedGL);
 
   mSharedGL = CreateGLContext();
-<<<<<<< HEAD
-  if (XRE_IsGPUProcess() && gfx::gfxVars::UseWebRenderProgramBinary()) {
-    ProgramCache();
-||||||| merged common ancestors
-  if (XRE_IsGPUProcess() &&
-      gfx::gfxVars::UseWebRenderProgramBinary()) {
-    ProgramCache();
-=======
   if (gfx::gfxVars::UseWebRenderProgramBinaryDisk()) {
     mProgramCache = MakeUnique<WebRenderProgramCache>(ThreadPool().Raw());
->>>>>>> upstream-releases
   }
   // Query the shared GL context to force the
   // lazy initialization to happen now.
@@ -1105,19 +814,9 @@ void RenderThread::SimulateDeviceReset() {
   }
 }
 
-<<<<<<< HEAD
-WebRenderProgramCache* RenderThread::ProgramCache() {
-  MOZ_ASSERT(IsInRenderThread());
-||||||| merged common ancestors
-WebRenderProgramCache*
-RenderThread::ProgramCache()
-{
-  MOZ_ASSERT(IsInRenderThread());
-=======
 static void DoNotifyWebRenderError(WebRenderError aError) {
   layers::CompositorManagerParent::NotifyWebRenderError(aError);
 }
->>>>>>> upstream-releases
 
 void RenderThread::HandleWebRenderError(WebRenderError aError) {
   if (mHandlingWebRenderError) {
@@ -1244,13 +943,6 @@ static already_AddRefed<gl::GLContext> CreateGLContextANGLE() {
 }
 #endif
 
-<<<<<<< HEAD
-static already_AddRefed<gl::GLContext> CreateGLContext() {
-||||||| merged common ancestors
-static already_AddRefed<gl::GLContext>
-CreateGLContext()
-{
-=======
 #if defined(MOZ_WIDGET_ANDROID) || defined(MOZ_WAYLAND)
 static already_AddRefed<gl::GLContext> CreateGLContextEGL() {
   nsCString discardFailureId;
@@ -1273,7 +965,6 @@ static already_AddRefed<gl::GLContext> CreateGLContextEGL() {
 #endif
 
 static already_AddRefed<gl::GLContext> CreateGLContext() {
->>>>>>> upstream-releases
 #ifdef XP_WIN
   if (gfx::gfxVars::UseWebRenderANGLE()) {
     return CreateGLContextANGLE();
@@ -1294,16 +985,6 @@ static already_AddRefed<gl::GLContext> CreateGLContext() {
 
 extern "C" {
 
-<<<<<<< HEAD
-static void HandleFrame(mozilla::wr::WrWindowId aWindowId, bool aRender) {
-  mozilla::wr::RenderThread::Get()->IncRenderingFrameCount(aWindowId);
-  mozilla::wr::RenderThread::Get()->HandleFrame(aWindowId, aRender);
-||||||| merged common ancestors
-static void HandleFrame(mozilla::wr::WrWindowId aWindowId, bool aRender)
-{
-  mozilla::wr::RenderThread::Get()->IncRenderingFrameCount(aWindowId);
-  mozilla::wr::RenderThread::Get()->HandleFrame(aWindowId, aRender);
-=======
 static void HandleFrame(mozilla::wr::WrWindowId aWindowId, bool aRender) {
   auto incResult = mozilla::wr::RenderThread::Get()->IncRenderingFrameCount(
       aWindowId, aRender);
@@ -1311,7 +992,6 @@ static void HandleFrame(mozilla::wr::WrWindowId aWindowId, bool aRender) {
     mozilla::wr::RenderThread::Get()->HandleFrame(aWindowId,
                                                   incResult.second());
   }
->>>>>>> upstream-releases
 }
 
 void wr_notifier_wake_up(mozilla::wr::WrWindowId aWindowId) {
@@ -1334,22 +1014,11 @@ void wr_notifier_external_event(mozilla::wr::WrWindowId aWindowId,
                                              std::move(evt));
 }
 
-<<<<<<< HEAD
-void wr_schedule_render(mozilla::wr::WrWindowId aWindowId) {
-  RefPtr<mozilla::layers::CompositorBridgeParent> cbp = mozilla::layers::
-      CompositorBridgeParent::GetCompositorBridgeParentFromWindowId(aWindowId);
-||||||| merged common ancestors
-void wr_schedule_render(mozilla::wr::WrWindowId aWindowId)
-{
-  RefPtr<mozilla::layers::CompositorBridgeParent> cbp =
-      mozilla::layers::CompositorBridgeParent::GetCompositorBridgeParentFromWindowId(aWindowId);
-=======
 void wr_schedule_render(mozilla::wr::WrWindowId aWindowId,
                         const mozilla::wr::WrDocumentId* aDocumentIds,
                         size_t aDocumentIdsCount) {
   RefPtr<mozilla::layers::CompositorBridgeParent> cbp = mozilla::layers::
       CompositorBridgeParent::GetCompositorBridgeParentFromWindowId(aWindowId);
->>>>>>> upstream-releases
   if (cbp) {
     wr::RenderRootSet renderRoots;
     for (size_t i = 0; i < aDocumentIdsCount; ++i) {

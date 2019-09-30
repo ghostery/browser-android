@@ -12,33 +12,10 @@
 namespace mozilla {
 namespace devtools {
 
-<<<<<<< HEAD
-class HeapSnapshotTempFileHelperParent
-    : public PHeapSnapshotTempFileHelperParent {
-  explicit HeapSnapshotTempFileHelperParent() {}
-  void ActorDestroy(ActorDestroyReason why) override {}
-  mozilla::ipc::IPCResult RecvOpenHeapSnapshotTempFile(
-      OpenHeapSnapshotTempFileResponse* outResponse) override;
-||||||| merged common ancestors
-class HeapSnapshotTempFileHelperParent : public PHeapSnapshotTempFileHelperParent
-{
-    explicit HeapSnapshotTempFileHelperParent() { }
-    void ActorDestroy(ActorDestroyReason why) override { }
-    mozilla::ipc::IPCResult RecvOpenHeapSnapshotTempFile(OpenHeapSnapshotTempFileResponse* outResponse)
-        override;
-=======
 class HeapSnapshotTempFileHelperParent
     : public PHeapSnapshotTempFileHelperParent {
   friend class PHeapSnapshotTempFileHelperParent;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  static inline PHeapSnapshotTempFileHelperParent* Create();
-||||||| merged common ancestors
-  public:
-    static inline PHeapSnapshotTempFileHelperParent* Create();
-=======
   explicit HeapSnapshotTempFileHelperParent() {}
   void ActorDestroy(ActorDestroyReason why) override {}
   mozilla::ipc::IPCResult RecvOpenHeapSnapshotTempFile(
@@ -46,7 +23,6 @@ class HeapSnapshotTempFileHelperParent
 
  public:
   static inline PHeapSnapshotTempFileHelperParent* Create();
->>>>>>> upstream-releases
 };
 
 /* static */ inline PHeapSnapshotTempFileHelperParent*

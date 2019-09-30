@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-// |jit-test| skip-if: !('oomTest' in this)
-
-(function () {
-    g = newGlobal();
-    g.parent = this;
-    g.eval("(function() { var dbg = Debugger(parent); dbg.onEnterFrame = function() {} } )")
-    ``;
-    oomTest(async function() {}, {expectExceptionOnFailure: false});
-})()
-||||||| merged common ancestors
-=======
 // |jit-test| skip-if: !('oomTest' in this)
 
 ignoreUnhandledRejections();
@@ -21,4 +9,3 @@ ignoreUnhandledRejections();
     ``;
     oomTest(async function() {}, {expectExceptionOnFailure: false});
 })()
->>>>>>> upstream-releases

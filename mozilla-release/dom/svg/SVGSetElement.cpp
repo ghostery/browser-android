@@ -31,15 +31,7 @@ NS_IMPL_ELEMENT_CLONE_WITH_INIT(SVGSetElement)
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-nsSMILAnimationFunction& SVGSetElement::AnimationFunction() {
-||||||| merged common ancestors
-nsSMILAnimationFunction&
-SVGSetElement::AnimationFunction()
-{
-=======
 SMILAnimationFunction& SVGSetElement::AnimationFunction() {
->>>>>>> upstream-releases
   return mAnimationFunction;
 }
 

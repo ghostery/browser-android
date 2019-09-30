@@ -16,22 +16,10 @@
 #include "mozilla/Services.h"
 
 #ifdef DEBUG
-<<<<<<< HEAD
-#define ASSERT_OWNING_THREAD()                           \
-  do {                                                   \
-    MOZ_ASSERT(mOwningEventTarget->IsOnCurrentThread()); \
-  } while (0)
-||||||| merged common ancestors
-#define ASSERT_OWNING_THREAD()                                                 \
-  do {                                                                         \
-    MOZ_ASSERT(mOwningEventTarget->IsOnCurrentThread());               \
-  } while(0)
-=======
 #  define ASSERT_OWNING_THREAD()                           \
     do {                                                   \
       MOZ_ASSERT(mOwningEventTarget->IsOnCurrentThread()); \
     } while (0)
->>>>>>> upstream-releases
 #else
 #  define ASSERT_OWNING_THREAD() /* nothing */
 #endif
@@ -458,19 +446,12 @@ LazyIdleThread::GetLastLongNonIdleTaskEnd(TimeStamp* _retval) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-LazyIdleThread::AsyncShutdown() {
-||||||| merged common ancestors
-LazyIdleThread::AsyncShutdown()
-{
-=======
 LazyIdleThread::SetNameForWakeupTelemetry(const nsACString& aName) {
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
 LazyIdleThread::AsyncShutdown() {
->>>>>>> upstream-releases
   ASSERT_OWNING_THREAD();
   return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -502,12 +483,6 @@ LazyIdleThread::HasPendingEvents(bool* aHasPendingEvents) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-LazyIdleThread::IdleDispatch(already_AddRefed<nsIRunnable> aEvent) {
-||||||| merged common ancestors
-LazyIdleThread::IdleDispatch(already_AddRefed<nsIRunnable> aEvent)
-{
-=======
 LazyIdleThread::HasPendingHighPriorityEvents(bool* aHasPendingEvents) {
   // This is only supposed to be called from the thread itself so it's not
   // implemented here.
@@ -518,7 +493,6 @@ LazyIdleThread::HasPendingHighPriorityEvents(bool* aHasPendingEvents) {
 NS_IMETHODIMP
 LazyIdleThread::DispatchToQueue(already_AddRefed<nsIRunnable> aEvent,
                                 EventQueuePriority aQueue) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -553,17 +527,8 @@ LazyIdleThread::Notify(nsITimer* aTimer) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-LazyIdleThread::GetName(nsACString& aName) {
-  aName.AssignLiteral("LazyIdleThread");
-||||||| merged common ancestors
-LazyIdleThread::GetName(nsACString& aName)
-{
-  aName.AssignLiteral("LazyIdleThread");
-=======
 LazyIdleThread::GetName(nsACString& aName) {
   aName.Assign(mName);
->>>>>>> upstream-releases
   return NS_OK;
 }
 

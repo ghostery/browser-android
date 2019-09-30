@@ -89,64 +89,6 @@ using dom::AutoNoJSAPI;
 //*****************************************************************************
 
 nsXULWindow::nsXULWindow(uint32_t aChromeFlags)
-<<<<<<< HEAD
-    : mChromeTreeOwner(nullptr),
-      mContentTreeOwner(nullptr),
-      mPrimaryContentTreeOwner(nullptr),
-      mModalStatus(NS_OK),
-      mContinueModalLoop(false),
-      mDebuting(false),
-      mChromeLoaded(false),
-      mSizingShellFromXUL(false),
-      mShowAfterLoad(false),
-      mIntrinsicallySized(false),
-      mCenterAfterLoad(false),
-      mIsHiddenWindow(false),
-      mLockedUntilChromeLoad(false),
-      mIgnoreXULSize(false),
-      mIgnoreXULPosition(false),
-      mChromeFlagsFrozen(false),
-      mIgnoreXULSizeMode(false),
-      mDestroying(false),
-      mRegistered(false),
-      mPersistentAttributesDirty(0),
-      mPersistentAttributesMask(0),
-      mChromeFlags(aChromeFlags),
-      mNextTabParentId(0) {}
-
-nsXULWindow::~nsXULWindow() { Destroy(); }
-||||||| merged common ancestors
-  : mChromeTreeOwner(nullptr),
-    mContentTreeOwner(nullptr),
-    mPrimaryContentTreeOwner(nullptr),
-    mModalStatus(NS_OK),
-    mContinueModalLoop(false),
-    mDebuting(false),
-    mChromeLoaded(false),
-    mSizingShellFromXUL(false),
-    mShowAfterLoad(false),
-    mIntrinsicallySized(false),
-    mCenterAfterLoad(false),
-    mIsHiddenWindow(false),
-    mLockedUntilChromeLoad(false),
-    mIgnoreXULSize(false),
-    mIgnoreXULPosition(false),
-    mChromeFlagsFrozen(false),
-    mIgnoreXULSizeMode(false),
-    mDestroying(false),
-    mRegistered(false),
-    mPersistentAttributesDirty(0),
-    mPersistentAttributesMask(0),
-    mChromeFlags(aChromeFlags),
-    mNextTabParentId(0)
-{
-}
-
-nsXULWindow::~nsXULWindow()
-{
-  Destroy();
-}
-=======
     : mChromeTreeOwner(nullptr),
       mContentTreeOwner(nullptr),
       mPrimaryContentTreeOwner(nullptr),
@@ -172,7 +114,6 @@ nsXULWindow::~nsXULWindow()
       mNextRemoteTabId(0) {}
 
 nsXULWindow::~nsXULWindow() { Destroy(); }
->>>>>>> upstream-releases
 
 //*****************************************************************************
 // nsXULWindow::nsISupports
@@ -352,14 +293,7 @@ NS_IMETHODIMP nsXULWindow::GetPrimaryContentShell(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXULWindow::TabParentAdded(nsITabParent* aTab, bool aPrimary) {
-||||||| merged common ancestors
-nsXULWindow::TabParentAdded(nsITabParent* aTab, bool aPrimary)
-{
-=======
 nsXULWindow::RemoteTabAdded(nsIRemoteTab* aTab, bool aPrimary) {
->>>>>>> upstream-releases
   if (aPrimary) {
     mPrimaryBrowserParent = aTab;
     mPrimaryContentShell = nullptr;
@@ -371,37 +305,17 @@ nsXULWindow::RemoteTabAdded(nsIRemoteTab* aTab, bool aPrimary) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXULWindow::TabParentRemoved(nsITabParent* aTab) {
-  if (aTab == mPrimaryTabParent) {
-    mPrimaryTabParent = nullptr;
-||||||| merged common ancestors
-nsXULWindow::TabParentRemoved(nsITabParent* aTab)
-{
-  if (aTab == mPrimaryTabParent) {
-    mPrimaryTabParent = nullptr;
-=======
 nsXULWindow::RemoteTabRemoved(nsIRemoteTab* aTab) {
   if (aTab == mPrimaryBrowserParent) {
     mPrimaryBrowserParent = nullptr;
->>>>>>> upstream-releases
   }
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXULWindow::GetPrimaryTabParent(nsITabParent** aTab) {
-  nsCOMPtr<nsITabParent> tab = mPrimaryTabParent;
-||||||| merged common ancestors
-nsXULWindow::GetPrimaryTabParent(nsITabParent** aTab)
-{
-  nsCOMPtr<nsITabParent> tab = mPrimaryTabParent;
-=======
 nsXULWindow::GetPrimaryRemoteTab(nsIRemoteTab** aTab) {
   nsCOMPtr<nsIRemoteTab> tab = mPrimaryBrowserParent;
->>>>>>> upstream-releases
   tab.forget(aTab);
   return NS_OK;
 }
@@ -558,16 +472,6 @@ NS_IMETHODIMP nsXULWindow::Destroy() {
       bool isParentHiddenWindow = false;
 
       if (appShell) {
-<<<<<<< HEAD
-        nsCOMPtr<nsIXULWindow> hiddenWindow;
-        appShell->GetHiddenWindow(getter_AddRefs(hiddenWindow));
-        if (hiddenWindow) baseHiddenWindow = do_GetInterface(hiddenWindow);
-||||||| merged common ancestors
-        nsCOMPtr<nsIXULWindow> hiddenWindow;
-        appShell->GetHiddenWindow(getter_AddRefs(hiddenWindow));
-        if (hiddenWindow)
-          baseHiddenWindow = do_GetInterface(hiddenWindow);
-=======
         bool hasHiddenWindow = false;
         appShell->GetHasHiddenWindow(&hasHiddenWindow);
         if (hasHiddenWindow) {
@@ -579,26 +483,12 @@ NS_IMETHODIMP nsXULWindow::Destroy() {
             isParentHiddenWindow = (baseHiddenWindow == parent);
           }
         }
->>>>>>> upstream-releases
       }
 
       // somebody screwed up somewhere. hiddenwindow shouldn't be anybody's
       // parent. still, when it happens, skip activating it.
-<<<<<<< HEAD
-      if (baseHiddenWindow != parent) {
-        nsCOMPtr<nsIWidget> parentWidget;
-        parent->GetMainWidget(getter_AddRefs(parentWidget));
-        if (parentWidget) parentWidget->PlaceBehind(eZPlacementTop, 0, true);
-||||||| merged common ancestors
-      if (baseHiddenWindow != parent) {
-        nsCOMPtr<nsIWidget> parentWidget;
-        parent->GetMainWidget(getter_AddRefs(parentWidget));
-        if (parentWidget)
-          parentWidget->PlaceBehind(eZPlacementTop, 0, true);
-=======
       if (!isParentHiddenWindow) {
         parentWidget->PlaceBehind(eZPlacementTop, 0, true);
->>>>>>> upstream-releases
       }
     }
   }
@@ -1793,19 +1683,9 @@ nsresult nsXULWindow::SetPersistentValue(const nsAtom* aAttr,
     }
   }
 
-<<<<<<< HEAD
-  return mLocalStore->SetValue(
-      uri, windowElementId, nsDependentAtomString(aAttr), maybeConvertedValue);
-||||||| merged common ancestors
-  return mLocalStore->SetValue(uri,
-                               windowElementId,
-                               nsDependentAtomString(aAttr),
-                               maybeConvertedValue);
-=======
   return mLocalStore->SetValue(
       uri, windowElementId, nsDependentAtomString(aAttr), maybeConvertedValue);
 #endif
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP nsXULWindow::SavePersistentAttributes() {
@@ -1955,17 +1835,8 @@ nsresult nsXULWindow::ContentShellAdded(nsIDocShellTreeItem* aContentShell,
     NS_ENSURE_SUCCESS(EnsurePrimaryContentTreeOwner(), NS_ERROR_FAILURE);
     aContentShell->SetTreeOwner(mPrimaryContentTreeOwner);
     mPrimaryContentShell = aContentShell;
-<<<<<<< HEAD
-    mPrimaryTabParent = nullptr;
-  } else {
-||||||| merged common ancestors
-    mPrimaryTabParent = nullptr;
-  }
-  else {
-=======
     mPrimaryBrowserParent = nullptr;
   } else {
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(EnsureContentTreeOwner(), NS_ERROR_FAILURE);
     aContentShell->SetTreeOwner(mContentTreeOwner);
     if (mPrimaryContentShell == aContentShell) mPrimaryContentShell = nullptr;
@@ -1982,42 +1853,18 @@ nsresult nsXULWindow::ContentShellRemoved(nsIDocShellTreeItem* aContentShell) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXULWindow::GetPrimaryContentSize(int32_t* aWidth, int32_t* aHeight) {
-  if (mPrimaryTabParent) {
-    return GetPrimaryTabParentSize(aWidth, aHeight);
-||||||| merged common ancestors
-nsXULWindow::GetPrimaryContentSize(int32_t* aWidth,
-                                   int32_t* aHeight)
-{
-  if (mPrimaryTabParent) {
-    return GetPrimaryTabParentSize(aWidth, aHeight);
-=======
 nsXULWindow::GetPrimaryContentSize(int32_t* aWidth, int32_t* aHeight) {
   if (mPrimaryBrowserParent) {
     return GetPrimaryRemoteTabSize(aWidth, aHeight);
->>>>>>> upstream-releases
   } else if (mPrimaryContentShell) {
     return GetPrimaryContentShellSize(aWidth, aHeight);
   }
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult nsXULWindow::GetPrimaryTabParentSize(int32_t* aWidth,
-                                              int32_t* aHeight) {
-  TabParent* tabParent = TabParent::GetFrom(mPrimaryTabParent);
-||||||| merged common ancestors
-nsresult
-nsXULWindow::GetPrimaryTabParentSize(int32_t* aWidth,
-                                     int32_t* aHeight)
-{
-  TabParent* tabParent = TabParent::GetFrom(mPrimaryTabParent);
-=======
 nsresult nsXULWindow::GetPrimaryRemoteTabSize(int32_t* aWidth,
                                               int32_t* aHeight) {
   BrowserHost* host = BrowserHost::GetFrom(mPrimaryBrowserParent.get());
->>>>>>> upstream-releases
   // Need strong ref, since Client* can run script.
   nsCOMPtr<Element> element = host->GetOwnerElement();
   NS_ENSURE_STATE(element);
@@ -2048,37 +1895,16 @@ nsresult nsXULWindow::GetPrimaryContentShellSize(int32_t* aWidth,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsXULWindow::SetPrimaryContentSize(int32_t aWidth, int32_t aHeight) {
-  if (mPrimaryTabParent) {
-    return SetPrimaryTabParentSize(aWidth, aHeight);
-||||||| merged common ancestors
-nsXULWindow::SetPrimaryContentSize(int32_t aWidth,
-                                   int32_t aHeight)
-{
-  if (mPrimaryTabParent) {
-    return SetPrimaryTabParentSize(aWidth, aHeight);
-=======
 nsXULWindow::SetPrimaryContentSize(int32_t aWidth, int32_t aHeight) {
   if (mPrimaryBrowserParent) {
     return SetPrimaryRemoteTabSize(aWidth, aHeight);
->>>>>>> upstream-releases
   } else if (mPrimaryContentShell) {
     return SizeShellTo(mPrimaryContentShell, aWidth, aHeight);
   }
   return NS_ERROR_UNEXPECTED;
 }
 
-<<<<<<< HEAD
-nsresult nsXULWindow::SetPrimaryTabParentSize(int32_t aWidth, int32_t aHeight) {
-||||||| merged common ancestors
-nsresult
-nsXULWindow::SetPrimaryTabParentSize(int32_t aWidth,
-                                     int32_t aHeight)
-{
-=======
 nsresult nsXULWindow::SetPrimaryRemoteTabSize(int32_t aWidth, int32_t aHeight) {
->>>>>>> upstream-releases
   int32_t shellWidth, shellHeight;
   GetPrimaryRemoteTabSize(&shellWidth, &shellHeight);
 
@@ -2129,73 +1955,29 @@ NS_IMETHODIMP nsXULWindow::ExitModalLoop(nsresult aStatus) {
 
 // top-level function to create a new window
 NS_IMETHODIMP nsXULWindow::CreateNewWindow(int32_t aChromeFlags,
-<<<<<<< HEAD
-                                           nsITabParent* aOpeningTab,
-                                           mozIDOMWindowProxy* aOpener,
-                                           uint64_t aNextTabParentId,
-                                           nsIXULWindow** _retval) {
-||||||| merged common ancestors
-                                           nsITabParent *aOpeningTab,
-                                           mozIDOMWindowProxy *aOpener,
-                                           uint64_t aNextTabParentId,
-                                           nsIXULWindow **_retval)
-{
-=======
                                            nsIRemoteTab* aOpeningTab,
                                            mozIDOMWindowProxy* aOpener,
                                            uint64_t aNextRemoteTabId,
                                            nsIXULWindow** _retval) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(_retval);
 
   if (aChromeFlags & nsIWebBrowserChrome::CHROME_OPENAS_CHROME) {
-<<<<<<< HEAD
-    MOZ_RELEASE_ASSERT(
-        aNextTabParentId == 0,
-        "Unexpected next tab parent ID, should never have a non-zero "
-        "nextTabParentId when creating a new chrome window");
-||||||| merged common ancestors
-    MOZ_RELEASE_ASSERT(aNextTabParentId == 0,
-                       "Unexpected next tab parent ID, should never have a non-zero nextTabParentId when creating a new chrome window");
-=======
     MOZ_RELEASE_ASSERT(
         aNextRemoteTabId == 0,
         "Unexpected next remote tab ID, should never have a non-zero "
         "aNextRemoteTabId when creating a new chrome window");
->>>>>>> upstream-releases
     return CreateNewChromeWindow(aChromeFlags, aOpeningTab, aOpener, _retval);
   }
-<<<<<<< HEAD
-  return CreateNewContentWindow(aChromeFlags, aOpeningTab, aOpener,
-                                aNextTabParentId, _retval);
-||||||| merged common ancestors
-  return CreateNewContentWindow(aChromeFlags, aOpeningTab, aOpener, aNextTabParentId, _retval);
-=======
   return CreateNewContentWindow(aChromeFlags, aOpeningTab, aOpener,
                                 aNextRemoteTabId, _retval);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP nsXULWindow::CreateNewChromeWindow(int32_t aChromeFlags,
-<<<<<<< HEAD
-                                                 nsITabParent* aOpeningTab,
-                                                 mozIDOMWindowProxy* aOpener,
-                                                 nsIXULWindow** _retval) {
-  nsCOMPtr<nsIAppShellService> appShell(
-      do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
-||||||| merged common ancestors
-                                                 nsITabParent *aOpeningTab,
-                                                 mozIDOMWindowProxy *aOpener,
-                                                 nsIXULWindow **_retval)
-{
-  nsCOMPtr<nsIAppShellService> appShell(do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
-=======
                                                  nsIRemoteTab* aOpeningTab,
                                                  mozIDOMWindowProxy* aOpener,
                                                  nsIXULWindow** _retval) {
   nsCOMPtr<nsIAppShellService> appShell(
       do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(appShell, NS_ERROR_FAILURE);
 
   // Just do a normal create of a window and return.
@@ -2214,28 +1996,12 @@ NS_IMETHODIMP nsXULWindow::CreateNewChromeWindow(int32_t aChromeFlags,
 }
 
 NS_IMETHODIMP nsXULWindow::CreateNewContentWindow(int32_t aChromeFlags,
-<<<<<<< HEAD
-                                                  nsITabParent* aOpeningTab,
-                                                  mozIDOMWindowProxy* aOpener,
-                                                  uint64_t aNextTabParentId,
-                                                  nsIXULWindow** _retval) {
-  nsCOMPtr<nsIAppShellService> appShell(
-      do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
-||||||| merged common ancestors
-                                                  nsITabParent *aOpeningTab,
-                                                  mozIDOMWindowProxy *aOpener,
-                                                  uint64_t aNextTabParentId,
-                                                  nsIXULWindow **_retval)
-{
-  nsCOMPtr<nsIAppShellService> appShell(do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
-=======
                                                   nsIRemoteTab* aOpeningTab,
                                                   mozIDOMWindowProxy* aOpener,
                                                   uint64_t aNextRemoteTabId,
                                                   nsIXULWindow** _retval) {
   nsCOMPtr<nsIAppShellService> appShell(
       do_GetService(NS_APPSHELLSERVICE_CONTRACTID));
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(appShell, NS_ERROR_FAILURE);
 
   // We need to create a new top level window and then enter a nested
@@ -2284,15 +2050,8 @@ NS_IMETHODIMP nsXULWindow::CreateNewContentWindow(int32_t aChromeFlags,
     MOZ_ASSERT(docShell);
     nsCOMPtr<nsPIDOMWindowOuter> window = docShell->GetWindow();
     MOZ_ASSERT(window);
-<<<<<<< HEAD
-    window->SetOpenerForInitialContentBrowser(
-        nsPIDOMWindowOuter::From(aOpener));
-||||||| merged common ancestors
-    window->SetOpenerForInitialContentBrowser(nsPIDOMWindowOuter::From(aOpener));
-=======
     window->SetOpenerForInitialContentBrowser(
         nsPIDOMWindowOuter::From(aOpener)->GetBrowsingContext());
->>>>>>> upstream-releases
   }
 
   xulWin->LockUntilChromeLoad();
@@ -2312,17 +2071,8 @@ NS_IMETHODIMP nsXULWindow::CreateNewContentWindow(int32_t aChromeFlags,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsXULWindow::GetHasPrimaryContent(bool* aResult) {
-  *aResult = mPrimaryTabParent || mPrimaryContentShell;
-||||||| merged common ancestors
-NS_IMETHODIMP nsXULWindow::GetHasPrimaryContent(bool* aResult)
-{
-  *aResult = mPrimaryTabParent || mPrimaryContentShell;
-=======
 NS_IMETHODIMP nsXULWindow::GetHasPrimaryContent(bool* aResult) {
   *aResult = mPrimaryBrowserParent || mPrimaryContentShell;
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -2564,13 +2314,6 @@ nsXULWindow::BeforeStartLayout() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-void nsXULWindow::LoadPersistentWindowState() {
-||||||| merged common ancestors
-void
-nsXULWindow::LoadPersistentWindowState()
-{
-=======
 NS_IMETHODIMP
 nsXULWindow::LockAspectRatio(bool aShouldLock) {
   mWindow->LockAspectRatio(aShouldLock);
@@ -2578,7 +2321,6 @@ nsXULWindow::LockAspectRatio(bool aShouldLock) {
 }
 
 void nsXULWindow::LoadPersistentWindowState() {
->>>>>>> upstream-releases
   nsCOMPtr<dom::Element> docShellElement = GetWindowDOMElement();
   if (!docShellElement) {
     return;
@@ -2742,20 +2484,8 @@ nsresult nsXULWindow::GetTabCount(uint32_t* aResult) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsXULWindow::GetNextTabParentId(uint64_t* aNextTabParentId) {
-  NS_ENSURE_ARG_POINTER(aNextTabParentId);
-  *aNextTabParentId = mNextTabParentId;
-||||||| merged common ancestors
-nsresult
-nsXULWindow::GetNextTabParentId(uint64_t* aNextTabParentId)
-{
-  NS_ENSURE_ARG_POINTER(aNextTabParentId);
-  *aNextTabParentId = mNextTabParentId;
-=======
 nsresult nsXULWindow::GetNextRemoteTabId(uint64_t* aNextRemoteTabId) {
   NS_ENSURE_ARG_POINTER(aNextRemoteTabId);
   *aNextRemoteTabId = mNextRemoteTabId;
->>>>>>> upstream-releases
   return NS_OK;
 }

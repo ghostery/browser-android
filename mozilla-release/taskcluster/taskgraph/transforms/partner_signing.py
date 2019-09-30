@@ -24,18 +24,10 @@ def define_upstream_artifacts(config, jobs):
         return
 
     for job in jobs:
-<<<<<<< HEAD
-        dep_job = job['primary-dependency']
-        repack_id = job['extra']['repack_id']
-||||||| merged common ancestors
-        dep_job = job['dependent-task']
-        repack_id = job['extra']['repack_id']
-=======
         dep_job = job['primary-dependency']
         job['attributes'] = copy_attributes_from_dependent_job(dep_job)
 
         repack_ids = job['extra']['repack_ids']
->>>>>>> upstream-releases
         artifacts_specifications = generate_specifications_of_artifacts_to_sign(
             config,
             job,

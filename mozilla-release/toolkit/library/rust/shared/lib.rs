@@ -50,8 +50,6 @@ extern crate arrayvec;
 
 extern crate audio_thread_priority;
 
-extern crate arrayvec;
-
 use std::boxed::Box;
 use std::env;
 use std::ffi::{CStr, CString};
@@ -169,138 +167,12 @@ pub extern "C" fn intentional_panic(message: *const c_char) {
     panic!("{}", unsafe { CStr::from_ptr(message) }.to_string_lossy());
 }
 
-<<<<<<< HEAD
-extern "C" {
-    // We can't use MOZ_CrashOOL directly because it may be weakly linked
-    // to libxul, and rust can't handle that.
-    fn GeckoCrashOOL(filename: *const c_char, line: c_int, reason: *const c_char) -> !;
-}
-
-/// Truncate a string at the closest unicode character boundary
-/// ```
-/// assert_eq!(str_truncate_valid("éà", 3), "é");
-/// assert_eq!(str_truncate_valid("éà", 4), "éè");
-/// ```
-fn str_truncate_valid(s: &str, mut mid: usize) -> &str {
-    loop {
-        if let Some(res) = s.get(..mid) {
-            return res;
-        }
-        mid -= 1;
-    }
-||||||| merged common ancestors
-/// Contains the panic message, if set.
-static mut PANIC_REASON: Option<*const str> = None;
-
-/// Configure a panic hook to capture panic messages for crash reports.
-///
-/// We don't store this in `gMozCrashReason` because:
-/// a) Rust strings aren't null-terminated, so we'd have to allocate
-///    memory to get a null-terminated string
-/// b) The panic=abort handler is going to call `abort()` on non-Windows,
-///    which is `mozalloc_abort` for us, which will use `MOZ_CRASH` and
-///    overwrite `gMozCrashReason` with an unhelpful string.
-#[no_mangle]
-pub extern "C" fn install_rust_panic_hook() {
-    let default_hook = panic::take_hook();
-    panic::set_hook(Box::new(move |info| {
-        // Try to handle &str/String payloads, which should handle 99% of cases.
-        let payload = info.payload();
-        // We'll hold a raw *const str here, but it will be OK because
-        // Rust is going to abort the process before the payload could be
-        // deallocated.
-        if let Some(s) = payload.downcast_ref::<&str>() {
-            unsafe { PANIC_REASON = Some(*s as *const str); }
-        } else if let Some(s) = payload.downcast_ref::<String>() {
-            unsafe { PANIC_REASON = Some(s.as_str() as *const str); }
-        } else {
-            // Not the most helpful thing, but seems unlikely to happen
-            // in practice.
-            println!("Unhandled panic payload!");
-        }
-        // Fall through to the default hook so we still print the reason and
-        // backtrace to the console.
-        default_hook(info);
-    }));
-=======
 extern "C" {
     // We can't use MOZ_Crash directly because it may be weakly linked
     // to libxul, and rust can't handle that.
     fn GeckoCrash(filename: *const c_char, line: c_int, reason: *const c_char) -> !;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/// Similar to ArrayString, but with terminating nul character.
-#[derive(Debug, PartialEq)]
-struct ArrayCString<A: Array<Item = u8>> {
-    inner: ArrayString<A>,
-}
-
-impl<S: AsRef<str>, A: Array<Item = u8>> From<S> for ArrayCString<A> {
-    /// Contrary to ArrayString::from, truncates at the closest unicode
-    /// character boundary.
-    /// ```
-    /// assert_eq!(ArrayCString::<[_; 4]>::from("éà"),
-    ///            ArrayCString::<[_; 4]>::from("é"));
-    /// assert_eq!(&*ArrayCString::<[_; 4]>::from("éà"), "é\0");
-    /// ```
-    fn from(s: S) -> Self {
-        let s = s.as_ref();
-        let len = cmp::min(s.len(), A::capacity() - 1);
-        let mut result = Self {
-            inner: ArrayString::from(str_truncate_valid(s, len)).unwrap(),
-        };
-        result.inner.push('\0');
-        result
-    }
-}
-
-impl<A: Array<Item = u8>> Deref for ArrayCString<A> {
-    type Target = str;
-
-    fn deref(&self) -> &str {
-        self.inner.as_str()
-    }
-}
-
-fn panic_hook(info: &panic::PanicInfo) {
-    // Try to handle &str/String payloads, which should handle 99% of cases.
-    let payload = info.payload();
-    let message = if let Some(s) = payload.downcast_ref::<&str>() {
-        s
-    } else if let Some(s) = payload.downcast_ref::<String>() {
-        s.as_str()
-    } else {
-        // Not the most helpful thing, but seems unlikely to happen
-        // in practice.
-        "Unhandled rust panic payload!"
-    };
-    let (filename, line) = if let Some(loc) = info.location() {
-        (loc.file(), loc.line())
-    } else {
-        ("unknown.rs", 0)
-    };
-    // Copy the message and filename to the stack in order to safely add
-    // a terminating nul character (since rust strings don't come with one
-    // and GeckoCrashOOL wants one).
-    let message = ArrayCString::<[_; 512]>::from(message);
-    let filename = ArrayCString::<[_; 512]>::from(filename);
-    unsafe {
-        GeckoCrashOOL(filename.as_ptr() as *const c_char, line as c_int,
-                      message.as_ptr() as *const c_char);
-||||||| merged common ancestors
-#[no_mangle]
-pub extern "C" fn get_rust_panic_reason(reason: *mut *const c_char, length: *mut usize) -> bool {
-    unsafe {
-        if let Some(s) = PANIC_REASON {
-            *reason = s as *const c_char;
-            *length = (*s).len();
-            true
-        } else {
-            false
-        }
-=======
 /// Truncate a string at the closest unicode character boundary
 /// ```
 /// assert_eq!(str_truncate_valid("éà", 3), "é");
@@ -312,55 +184,14 @@ fn str_truncate_valid(s: &str, mut mid: usize) -> &str {
             return res;
         }
         mid -= 1;
->>>>>>> upstream-releases
     }
 }
 
-<<<<<<< HEAD
-/// Configure a panic hook to redirect rust panics to Gecko's MOZ_CrashOOL.
-#[no_mangle]
-pub extern "C" fn install_rust_panic_hook() {
-    panic::set_hook(Box::new(panic_hook));
-}
-
-// Wrap the rust system allocator to override the OOM handler, redirecting
-// to Gecko's, which interacts with the crash reporter.
-// This relies on unstable APIs that have not changed between 1.24 and 1.27.
-// In 1.27, the API changed, so we'll need to adapt to those changes before
-// we can ship with 1.27. As of writing, there might still be further changes
-// to those APIs before 1.27 is released, so we wait for those.
-#[cfg(feature = "oom_with_global_alloc")]
-mod global_alloc {
-    extern crate alloc;
-    extern crate alloc_system;
-
-    use self::alloc::allocator::{Alloc, AllocErr, Layout};
-    use self::alloc_system::System;
-
-    pub struct GeckoHeap;
-||||||| merged common ancestors
-// Wrap the rust system allocator to override the OOM handler, redirecting
-// to Gecko's, which interacts with the crash reporter.
-// This relies on unstable APIs that have not changed between 1.24 and 1.27.
-// In 1.27, the API changed, so we'll need to adapt to those changes before
-// we can ship with 1.27. As of writing, there might still be further changes
-// to those APIs before 1.27 is released, so we wait for those.
-#[cfg(feature = "oom_with_global_alloc")]
-mod global_alloc {
-    extern crate alloc;
-    extern crate alloc_system;
-
-    use self::alloc::allocator::{Alloc, AllocErr, Layout};
-    use self::alloc_system::System;
-
-    pub struct GeckoHeap;
-=======
 /// Similar to ArrayString, but with terminating nul character.
 #[derive(Debug, PartialEq)]
 struct ArrayCString<A: Array<Item = u8>> {
     inner: ArrayString<A>,
 }
->>>>>>> upstream-releases
 
 impl<S: AsRef<str>, A: Array<Item = u8>> From<S> for ArrayCString<A> {
     /// Contrary to ArrayString::from, truncates at the closest unicode

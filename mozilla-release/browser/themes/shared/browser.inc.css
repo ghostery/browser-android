@@ -19,13 +19,6 @@
   --space-above-tabbar: 8px;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-:root[sessionrestored]:-moz-lwtheme {
-  transition: @themeTransition@;
-}
-
-=======
 @media (min-resolution: 1.5dppx) {
   :root {
     --tabs-navbar-shadow-size: 0.5px;
@@ -38,7 +31,6 @@
   }
 }
 
->>>>>>> upstream-releases
 /* Increase contrast of UI links on dark themes */
 
 :root[lwt-popup-brighttext] panel .text-link {
@@ -47,20 +39,8 @@
 
 /* Toolbar / content area border */
 
-<<<<<<< HEAD
-#navigator-toolbox::after {
-  content: "";
-  display: -moz-box;
-  border-bottom: 1px solid var(--chrome-content-separator-color);
-||||||| merged common ancestors
-#navigator-toolbox::after {
-  content: "";
-  display: -moz-box;
-  border-bottom: 1px solid var(--toolbox-border-bottom-color);
-=======
 #navigator-toolbox {
   border-bottom: 1px solid var(--chrome-content-separator-color);
->>>>>>> upstream-releases
 }
 
 :root[customizing] #navigator-toolbox {
@@ -202,18 +182,6 @@
   margin: 2px 4px;
 }
 
-<<<<<<< HEAD
-/* Contextual Feature Recommendation popup-notification */
-
-||||||| merged common ancestors
-/* Contextual Feature Recommendation popup-notification */
-
-:root {
-  --cfr-notification-header-image: url(resource://activity-stream/data/content/assets/glyph-help-24.svg);
-  --cfr-notification-footer-star: url(resource://activity-stream/data/content/assets/glyph-star-17.svg);
-}
-
-=======
 /* Permissions popup learn more link. */
 #addon-webext-perm-info {
   margin-inline-start: 0;
@@ -221,7 +189,6 @@
 
 /* Contextual Feature Recommendation popup-notification */
 
->>>>>>> upstream-releases
 #cfr-notification-header {
   width: 100%;
   text-align: center;

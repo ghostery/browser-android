@@ -48,7 +48,3 @@
 .connect-page__troubleshoot--network {
   padding-inline: calc(var(--base-unit) * 6);
 }
-
-.connect-page__disabled-section {
-  color: var(--grey-40);
-}

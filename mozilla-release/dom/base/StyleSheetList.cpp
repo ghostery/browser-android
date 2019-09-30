@@ -23,18 +23,9 @@ NS_INTERFACE_MAP_END
 NS_IMPL_CYCLE_COLLECTING_ADDREF(StyleSheetList)
 NS_IMPL_CYCLE_COLLECTING_RELEASE(StyleSheetList)
 
-<<<<<<< HEAD
-/* virtual */ JSObject* StyleSheetList::WrapObject(
-    JSContext* aCx, JS::Handle<JSObject*> aGivenProto) {
-||||||| merged common ancestors
-/* virtual */ JSObject*
-StyleSheetList::WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto)
-{
-=======
 /* virtual */
 JSObject* StyleSheetList::WrapObject(JSContext* aCx,
                                      JS::Handle<JSObject*> aGivenProto) {
->>>>>>> upstream-releases
   return StyleSheetList_Binding::Wrap(aCx, this, aGivenProto);
 }
 

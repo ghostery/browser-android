@@ -38,17 +38,8 @@ void RedirectChannelRegistrar::Shutdown() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-RedirectChannelRegistrar::RegisterChannel(nsIChannel *channel,
-                                          uint32_t *_retval) {
-||||||| merged common ancestors
-RedirectChannelRegistrar::RegisterChannel(nsIChannel *channel,
-                                          uint32_t *_retval)
-{
-=======
 RedirectChannelRegistrar::RegisterChannel(nsIChannel* channel,
                                           uint32_t* _retval) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   mRealChannels.Put(mId, channel);
@@ -64,14 +55,7 @@ RedirectChannelRegistrar::RegisterChannel(nsIChannel* channel,
 
 NS_IMETHODIMP
 RedirectChannelRegistrar::GetRegisteredChannel(uint32_t id,
-<<<<<<< HEAD
-                                               nsIChannel **_retval) {
-||||||| merged common ancestors
-                                               nsIChannel **_retval)
-{
-=======
                                                nsIChannel** _retval) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   if (!mRealChannels.Get(id, _retval)) return NS_ERROR_NOT_AVAILABLE;
@@ -80,18 +64,8 @@ RedirectChannelRegistrar::GetRegisteredChannel(uint32_t id,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-RedirectChannelRegistrar::LinkChannels(uint32_t id, nsIParentChannel *channel,
-                                       nsIChannel **_retval) {
-||||||| merged common ancestors
-RedirectChannelRegistrar::LinkChannels(uint32_t id,
-                                       nsIParentChannel *channel,
-                                       nsIChannel** _retval)
-{
-=======
 RedirectChannelRegistrar::LinkChannels(uint32_t id, nsIParentChannel* channel,
                                        nsIChannel** _retval) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   if (!mRealChannels.Get(id, _retval)) return NS_ERROR_NOT_AVAILABLE;
@@ -102,14 +76,7 @@ RedirectChannelRegistrar::LinkChannels(uint32_t id, nsIParentChannel* channel,
 
 NS_IMETHODIMP
 RedirectChannelRegistrar::GetParentChannel(uint32_t id,
-<<<<<<< HEAD
-                                           nsIParentChannel **_retval) {
-||||||| merged common ancestors
-                                           nsIParentChannel **_retval)
-{
-=======
                                            nsIParentChannel** _retval) {
->>>>>>> upstream-releases
   MutexAutoLock lock(mLock);
 
   if (!mParentChannels.Get(id, _retval)) return NS_ERROR_NOT_AVAILABLE;

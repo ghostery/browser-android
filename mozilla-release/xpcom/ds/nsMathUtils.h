@@ -31,19 +31,9 @@ inline int32_t NS_lround(double aNum) {
 /* NS_roundup30 rounds towards infinity for positive and       */
 /* negative numbers.                                           */
 
-<<<<<<< HEAD
-#if defined(XP_WIN32) && defined(_M_IX86) && !defined(__GNUC__) && \
-    !defined(__clang__)
-inline int32_t NS_lroundup30(float x) {
-||||||| merged common ancestors
-#if defined(XP_WIN32) && defined(_M_IX86) && !defined(__GNUC__) && !defined(__clang__)
-inline int32_t NS_lroundup30(float x)
-{
-=======
 #if defined(XP_WIN) && defined(_M_IX86) && !defined(__GNUC__) && \
     !defined(__clang__)
 inline int32_t NS_lroundup30(float x) {
->>>>>>> upstream-releases
   /* Code derived from Laurent de Soras' paper at             */
   /* http://ldesoras.free.fr/doc/articles/rounding_en.pdf     */
 

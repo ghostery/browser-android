@@ -6,14 +6,6 @@
 
 #include "vm/List-inl.h"
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILRepeatCount.cpp
-/*static*/ const double nsSMILRepeatCount::kNotSet = -1.0;
-/*static*/ const double nsSMILRepeatCount::kIndefinite = -2.0;
-||||||| merged common ancestors
-/*static*/ const double nsSMILRepeatCount::kNotSet     = -1.0;
-/*static*/ const double nsSMILRepeatCount::kIndefinite = -2.0;
-=======
 using namespace js;
 
 const Class ListObject::class_ = {"List"};
->>>>>>> upstream-releases:mozilla-release/js/src/vm/List.cpp

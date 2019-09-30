@@ -24,33 +24,8 @@ extern mozilla::LogModule* GetSourceBufferResourceLog();
 
 namespace mozilla {
 
-<<<<<<< HEAD
-ResourceItem::ResourceItem(MediaByteBuffer* aData) : mData(aData) {}
-
-size_t ResourceItem::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
-  // size including this
-  size_t size = aMallocSizeOf(this);
-
-  // size excluding this
-  size += mData->ShallowSizeOfExcludingThis(aMallocSizeOf);
-||||||| merged common ancestors
-ResourceItem::ResourceItem(MediaByteBuffer* aData)
-  : mData(aData)
-{
-}
-
-size_t
-ResourceItem::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const
-{
-  // size including this
-  size_t size = aMallocSizeOf(this);
-
-  // size excluding this
-  size += mData->ShallowSizeOfExcludingThis(aMallocSizeOf);
-=======
 ResourceItem::ResourceItem(const MediaSpan& aData, uint64_t aOffset)
     : mData(aData), mOffset(aOffset) {}
->>>>>>> upstream-releases
 
 size_t ResourceItem::SizeOfIncludingThis(MallocSizeOf aMallocSizeOf) const {
   return aMallocSizeOf(this);
@@ -67,15 +42,6 @@ ResourceQueue::ResourceQueue()
 
 uint64_t ResourceQueue::GetOffset() { return mOffset; }
 
-<<<<<<< HEAD
-uint64_t ResourceQueue::GetLength() { return mLogicalLength; }
-||||||| merged common ancestors
-uint64_t
-ResourceQueue::GetLength()
-{
-  return mLogicalLength;
-}
-=======
 uint64_t ResourceQueue::GetLength() { return mLogicalLength; }
 
 const uint8_t* ResourceQueue::GetContiguousAccess(int64_t aOffset,
@@ -91,28 +57,14 @@ const uint8_t* ResourceQueue::GetContiguousAccess(int64_t aOffset,
   }
   return item->mData.Elements() + offset;
 }
->>>>>>> upstream-releases
 
 void ResourceQueue::CopyData(uint64_t aOffset, uint32_t aCount, char* aDest) {
   uint32_t offset = 0;
   uint32_t start = GetAtOffset(aOffset, &offset);
-<<<<<<< HEAD
-  uint32_t end =
-      std::min(GetAtOffset(aOffset + aCount, nullptr) + 1, uint32_t(GetSize()));
-  for (uint32_t i = start; i < end; ++i) {
-    ResourceItem* item = ResourceAt(i);
-    uint32_t bytes = std::min(aCount, uint32_t(item->mData->Length() - offset));
-||||||| merged common ancestors
-  uint32_t end = std::min(GetAtOffset(aOffset + aCount, nullptr) + 1, uint32_t(GetSize()));
-  for (uint32_t i = start; i < end; ++i) {
-    ResourceItem* item = ResourceAt(i);
-    uint32_t bytes = std::min(aCount, uint32_t(item->mData->Length() - offset));
-=======
   size_t i = start;
   while (i < uint32_t(GetSize()) && aCount > 0) {
     ResourceItem* item = ResourceAt(i++);
     uint32_t bytes = std::min(aCount, uint32_t(item->mData.Length() - offset));
->>>>>>> upstream-releases
     if (bytes != 0) {
       memcpy(aDest, item->mData.Elements() + offset, bytes);
       offset = 0;
@@ -122,99 +74,33 @@ void ResourceQueue::CopyData(uint64_t aOffset, uint32_t aCount, char* aDest) {
   }
 }
 
-<<<<<<< HEAD
-void ResourceQueue::AppendItem(MediaByteBuffer* aData) {
-  mLogicalLength += aData->Length();
-  Push(new ResourceItem(aData));
-||||||| merged common ancestors
-void
-ResourceQueue::AppendItem(MediaByteBuffer* aData)
-{
-  mLogicalLength += aData->Length();
-  Push(new ResourceItem(aData));
-=======
 void ResourceQueue::AppendItem(const MediaSpan& aData) {
   uint64_t offset = mLogicalLength;
   mLogicalLength += aData.Length();
   Push(new ResourceItem(aData, offset));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-uint32_t ResourceQueue::Evict(uint64_t aOffset, uint32_t aSizeToEvict,
-                              ErrorResult& aRv) {
-  SBR_DEBUG("Evict(aOffset=%" PRIu64 ", aSizeToEvict=%u)", aOffset,
-            aSizeToEvict);
-  return EvictBefore(std::min(aOffset, mOffset + (uint64_t)aSizeToEvict), aRv);
-||||||| merged common ancestors
-uint32_t
-ResourceQueue::Evict(uint64_t aOffset, uint32_t aSizeToEvict,
-                     ErrorResult& aRv)
-{
-  SBR_DEBUG("Evict(aOffset=%" PRIu64 ", aSizeToEvict=%u)",
-            aOffset, aSizeToEvict);
-  return EvictBefore(std::min(aOffset, mOffset + (uint64_t)aSizeToEvict), aRv);
-=======
 uint32_t ResourceQueue::Evict(uint64_t aOffset, uint32_t aSizeToEvict) {
   SBR_DEBUG("Evict(aOffset=%" PRIu64 ", aSizeToEvict=%u)", aOffset,
             aSizeToEvict);
   return EvictBefore(std::min(aOffset, mOffset + (uint64_t)aSizeToEvict));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-uint32_t ResourceQueue::EvictBefore(uint64_t aOffset, ErrorResult& aRv) {
-||||||| merged common ancestors
-uint32_t ResourceQueue::EvictBefore(uint64_t aOffset, ErrorResult& aRv)
-{
-=======
 uint32_t ResourceQueue::EvictBefore(uint64_t aOffset) {
->>>>>>> upstream-releases
   SBR_DEBUG("EvictBefore(%" PRIu64 ")", aOffset);
   uint32_t evicted = 0;
   while (ResourceItem* item = ResourceAt(0)) {
-<<<<<<< HEAD
-    SBR_DEBUG("item=%p length=%zu offset=%" PRIu64, item, item->mData->Length(),
-              mOffset);
-    if (item->mData->Length() + mOffset >= aOffset) {
-||||||| merged common ancestors
-    SBR_DEBUG("item=%p length=%zu offset=%" PRIu64,
-              item, item->mData->Length(), mOffset);
-    if (item->mData->Length() + mOffset >= aOffset) {
-=======
     SBR_DEBUG("item=%p length=%zu offset=%" PRIu64, item, item->mData.Length(),
               mOffset);
     if (item->mData.Length() + mOffset >= aOffset) {
->>>>>>> upstream-releases
       if (aOffset <= mOffset) {
         break;
       }
       uint32_t offset = aOffset - mOffset;
       mOffset += offset;
       evicted += offset;
-<<<<<<< HEAD
-      RefPtr<MediaByteBuffer> data = new MediaByteBuffer;
-      if (!data->AppendElements(item->mData->Elements() + offset,
-                                item->mData->Length() - offset, fallible)) {
-        aRv.Throw(NS_ERROR_OUT_OF_MEMORY);
-        return 0;
-      }
-
-      item->mData = data;
-||||||| merged common ancestors
-      RefPtr<MediaByteBuffer> data = new MediaByteBuffer;
-      if (!data->AppendElements(item->mData->Elements() + offset,
-                                item->mData->Length() - offset,
-                                fallible)) {
-        aRv.Throw(NS_ERROR_OUT_OF_MEMORY);
-        return 0;
-      }
-
-      item->mData = data;
-=======
       item->mData.RemoveFront(offset);
       item->mOffset += offset;
->>>>>>> upstream-releases
       break;
     }
     mOffset += item->mData.Length();
@@ -228,22 +114,10 @@ uint32_t ResourceQueue::EvictAll() {
   SBR_DEBUG("EvictAll()");
   uint32_t evicted = 0;
   while (ResourceItem* item = ResourceAt(0)) {
-<<<<<<< HEAD
-    SBR_DEBUG("item=%p length=%zu offset=%" PRIu64, item, item->mData->Length(),
-              mOffset);
-    mOffset += item->mData->Length();
-    evicted += item->mData->Length();
-||||||| merged common ancestors
-    SBR_DEBUG("item=%p length=%zu offset=%" PRIu64,
-              item, item->mData->Length(), mOffset);
-    mOffset += item->mData->Length();
-    evicted += item->mData->Length();
-=======
     SBR_DEBUG("item=%p length=%zu offset=%" PRIu64, item, item->mData.Length(),
               mOffset);
     mOffset += item->mData.Length();
     evicted += item->mData.Length();
->>>>>>> upstream-releases
     delete PopFront();
   }
   return evicted;
@@ -293,17 +167,8 @@ ResourceItem* ResourceQueue::ResourceAt(uint32_t aIndex) const {
   return static_cast<ResourceItem*>(ObjectAt(aIndex));
 }
 
-<<<<<<< HEAD
-uint32_t ResourceQueue::GetAtOffset(uint64_t aOffset,
-                                    uint32_t* aResourceOffset) {
-||||||| merged common ancestors
-uint32_t
-ResourceQueue::GetAtOffset(uint64_t aOffset, uint32_t *aResourceOffset)
-{
-=======
 uint32_t ResourceQueue::GetAtOffset(uint64_t aOffset,
                                     uint32_t* aResourceOffset) const {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(aOffset >= mOffset);
 
   size_t hi = GetSize();

@@ -72,25 +72,10 @@ struct DynamicScalarDefinition {
   bool builtin;
   nsCString name;
 
-<<<<<<< HEAD
-  bool operator==(const DynamicScalarDefinition& rhs) const {
-    return type == rhs.type && dataset == rhs.dataset &&
-           expired == rhs.expired && keyed == rhs.keyed &&
-           name.Equals(rhs.name);
-||||||| merged common ancestors
-  bool operator ==(const DynamicScalarDefinition& rhs) const
-  {
-    return type == rhs.type &&
-           dataset == rhs.dataset &&
-           expired == rhs.expired &&
-           keyed == rhs.keyed &&
-           name.Equals(rhs.name);
-=======
   bool operator==(const DynamicScalarDefinition& rhs) const {
     return type == rhs.type && dataset == rhs.dataset &&
            expired == rhs.expired && keyed == rhs.keyed &&
            builtin == rhs.builtin && name.Equals(rhs.name);
->>>>>>> upstream-releases
   }
 };
 

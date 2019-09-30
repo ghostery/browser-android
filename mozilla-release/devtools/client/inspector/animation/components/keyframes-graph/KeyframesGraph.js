@@ -36,13 +36,7 @@ class KeyframesGraph extends PureComponent {
 
     return dom.div(
       {
-<<<<<<< HEAD
-        className: `keyframes-graph ${ name }`,
-||||||| merged common ancestors
-        className: `keyframes-graph ${ name }`
-=======
         className: `keyframes-graph ${name}`,
->>>>>>> upstream-releases
       },
       KeyframesGraphPath({
         getComputedStyle,

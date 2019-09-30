@@ -21,16 +21,6 @@ pub fn expand_derive_serialize(input: &syn::DeriveInput) -> Result<TokenStream, 
     let ident = &cont.ident;
     let params = Parameters::new(&cont);
     let (impl_generics, ty_generics, where_clause) = params.generics.split_for_impl();
-<<<<<<< HEAD
-    let suffix = ident.to_string().trim_left_matches("r#").to_owned();
-    let dummy_const = Ident::new(
-        &format!("_IMPL_SERIALIZE_FOR_{}", suffix),
-        Span::call_site(),
-    );
-||||||| merged common ancestors
-    let dummy_const = Ident::new(&format!("_IMPL_SERIALIZE_FOR_{}", ident), Span::call_site());
-=======
->>>>>>> upstream-releases
     let body = Stmts(serialize_body(&cont, &params));
 
     let impl_block = if let Some(remote) = cont.attrs.remote() {
@@ -61,34 +51,7 @@ pub fn expand_derive_serialize(input: &syn::DeriveInput) -> Result<TokenStream, 
         }
     };
 
-<<<<<<< HEAD
-    let try_replacement = try::replacement();
-    let generated = quote! {
-        #[allow(non_upper_case_globals, unused_attributes, unused_qualifications)]
-        const #dummy_const: () = {
-            #[allow(unknown_lints)]
-            #[cfg_attr(feature = "cargo-clippy", allow(useless_attribute))]
-            #[allow(rust_2018_idioms)]
-            extern crate serde as _serde;
-            #try_replacement
-            #impl_block
-        };
-    };
-    Ok(generated)
-||||||| merged common ancestors
-    let try_replacement = try::replacement();
-    let generated = quote! {
-        #[allow(non_upper_case_globals, unused_attributes, unused_qualifications)]
-        const #dummy_const: () = {
-            extern crate serde as _serde;
-            #try_replacement
-            #impl_block
-        };
-    };
-    Ok(generated)
-=======
     Ok(dummy::wrap_in_const("SERIALIZE", ident, impl_block))
->>>>>>> upstream-releases
 }
 
 fn precondition(cx: &Ctxt, cont: &Container) {
@@ -306,7 +269,8 @@ fn serialize_tuple_struct(
                 let field_expr = get_member(params, field, &Member::Unnamed(index));
                 quote!(if #path(#field_expr) { 0 } else { 1 })
             }
-        }).fold(quote!(0), |sum, expr| quote!(#sum + #expr));
+        })
+        .fold(quote!(0), |sum, expr| quote!(#sum + #expr));
 
     quote_block! {
         let #let_mut __serde_state = try!(_serde::Serializer::serialize_tuple_struct(__serializer, #type_name, #len));
@@ -365,18 +329,11 @@ fn serialize_struct_as_struct(
                 let field_expr = get_member(params, field, &field.member);
                 quote!(if #path(#field_expr) { 0 } else { 1 })
             }
-<<<<<<< HEAD
-        }).fold(quote!(0), |sum, expr| quote!(#sum + #expr));
-||||||| merged common ancestors
-        })
-        .fold(quote!(0), |sum, expr| quote!(#sum + #expr));
-=======
         })
         .fold(
             quote!(#tag_field_exists as usize),
             |sum, expr| quote!(#sum + #expr),
         );
->>>>>>> upstream-releases
 
     quote_block! {
         let #let_mut __serde_state = try!(_serde::Serializer::serialize_struct(__serializer, #type_name, #len));
@@ -414,18 +371,11 @@ fn serialize_struct_as_map(
                     let field_expr = get_member(params, field, &field.member);
                     quote!(if #path(#field_expr) { 0 } else { 1 })
                 }
-<<<<<<< HEAD
-            }).fold(quote!(0), |sum, expr| quote!(#sum + #expr));
-||||||| merged common ancestors
-            })
-            .fold(quote!(0), |sum, expr| quote!(#sum + #expr));
-=======
             })
             .fold(
                 quote!(#tag_field_exists as usize),
                 |sum, expr| quote!(#sum + #expr),
             );
->>>>>>> upstream-releases
         quote!(_serde::export::Some(#len))
     };
 
@@ -447,7 +397,8 @@ fn serialize_enum(params: &Parameters, variants: &[Variant], cattrs: &attr::Cont
         .enumerate()
         .map(|(variant_index, variant)| {
             serialize_variant(params, variant, variant_index as u32, cattrs)
-        }).collect();
+        })
+        .collect();
 
     quote_expr! {
         match *#self_var {
@@ -859,7 +810,8 @@ fn serialize_tuple_variant(
                 let field_expr = Ident::new(&format!("__field{}", i), Span::call_site());
                 quote!(if #path(#field_expr) { 0 } else { 1 })
             }
-        }).fold(quote!(0), |sum, expr| quote!(#sum + #expr));
+        })
+        .fold(quote!(0), |sum, expr| quote!(#sum + #expr));
 
     match context {
         TupleVariant::ExternallyTagged {
@@ -936,7 +888,8 @@ fn serialize_struct_variant<'a>(
                 Some(path) => quote!(if #path(#member) { 0 } else { 1 }),
                 None => quote!(1),
             }
-        }).fold(quote!(0), |sum, expr| quote!(#sum + #expr));
+        })
+        .fold(quote!(0), |sum, expr| quote!(#sum + #expr));
 
     match context {
         StructVariant::ExternallyTagged {
@@ -1115,7 +1068,8 @@ fn serialize_tuple_struct_visitor(
                 None => ser,
                 Some(skip) => quote!(if !#skip { #ser }),
             }
-        }).collect()
+        })
+        .collect()
 }
 
 fn serialize_struct_visitor(
@@ -1210,7 +1164,8 @@ fn wrap_serialize_variant_with(
                 }
             };
             quote!(#id)
-        }).collect();
+        })
+        .collect();
     wrap_serialize_with(
         params,
         serialize_with,

@@ -328,29 +328,6 @@ class FontPropertyValue extends PureComponent {
     );
 
     // Show the `name` prop value as an additional label if the `nameLabel` prop is true.
-<<<<<<< HEAD
-    const detailEl = nameLabel ?
-      dom.span(
-        {
-          className: "font-control-label-detail",
-          id: `detail-${name}`,
-        },
-        this.getPropLabel("name")
-      )
-      :
-      null;
-||||||| merged common ancestors
-    const detailEl = nameLabel ?
-      dom.span(
-        {
-          className: "font-control-label-detail",
-          id: `detail-${name}`
-        },
-        this.getPropLabel("name")
-      )
-      :
-      null;
-=======
     const detailEl = nameLabel
       ? dom.span(
           {
@@ -360,7 +337,6 @@ class FontPropertyValue extends PureComponent {
           this.getPropLabel("name")
         )
       : null;
->>>>>>> upstream-releases
 
     return createElement(Fragment, null, labelEl, detailEl);
   }

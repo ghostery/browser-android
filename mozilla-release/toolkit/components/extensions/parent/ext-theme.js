@@ -89,25 +89,11 @@ class Theme {
    *   properties can be found in the schema under ThemeType.
    */
   load() {
-<<<<<<< HEAD
-    const {extension, details} = this;
-
-    if (details.colors) {
-      this.loadColors(details.colors);
-    }
-||||||| merged common ancestors
-    const {details} = this;
-
-    if (details.colors) {
-      this.loadColors(details.colors);
-    }
-=======
     if (!this.lwtData) {
       this.loadDetails(this.details, this.lwtStyles);
       if (this.darkDetails) {
         this.loadDetails(this.darkDetails, this.lwtDarkStyles);
       }
->>>>>>> upstream-releases
 
       this.lwtData = {
         theme: this.lwtStyles,
@@ -127,20 +113,6 @@ class Theme {
       this.extension.saveStartupData();
     }
 
-<<<<<<< HEAD
-    this.loadMetadata(extension);
-
-    let lwtData = {
-      theme: this.lwtStyles,
-    };
-
-||||||| merged common ancestors
-    let lwtData = {
-      theme: this.lwtStyles,
-    };
-
-=======
->>>>>>> upstream-releases
     if (this.windowId) {
       this.lwtData.window = getWinUtils(
         windowTracker.getWindow(this.windowId)
@@ -395,20 +367,6 @@ class Theme {
     }
   }
 
-<<<<<<< HEAD
-  /**
-   * Helper method for loading extension metadata required by downstream
-   * consumers.
-   *
-   * @param {Object} extension Extension object.
-   */
-  loadMetadata(extension) {
-    this.lwtStyles.id = extension.id;
-    this.lwtStyles.version = extension.version;
-  }
-
-||||||| merged common ancestors
-=======
   /**
    * Helper method for loading extension metadata required by downstream
    * consumers.
@@ -421,7 +379,6 @@ class Theme {
     styles.version = extension.version;
   }
 
->>>>>>> upstream-releases
   static unload(windowId) {
     let lwtData = {
       theme: null,

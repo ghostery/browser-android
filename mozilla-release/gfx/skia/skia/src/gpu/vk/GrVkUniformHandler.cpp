@@ -259,23 +259,10 @@ GrGLSLUniformHandler::UniformHandle GrVkUniformHandler::internalAddUniformArray(
     return GrGLSLUniformHandler::UniformHandle(fUniforms.count() - 1);
 }
 
-<<<<<<< HEAD
-GrGLSLUniformHandler::SamplerHandle GrVkUniformHandler::addSampler(GrSwizzle swizzle,
-                                                                   GrTextureType type,
-                                                                   GrSLPrecision precision,
-                                                                   const char* name) {
-||||||| merged common ancestors
-GrGLSLUniformHandler::SamplerHandle GrVkUniformHandler::addSampler(uint32_t visibility,
-                                                                   GrSwizzle swizzle,
-                                                                   GrSLType type,
-                                                                   GrSLPrecision precision,
-                                                                   const char* name) {
-=======
 GrGLSLUniformHandler::SamplerHandle GrVkUniformHandler::addSampler(const GrTexture* texture,
                                                                    const GrSamplerState& state,
                                                                    const char* name,
                                                                    const GrShaderCaps* shaderCaps) {
->>>>>>> upstream-releases
     SkASSERT(name && strlen(name));
     SkString mangleName;
     char prefix = 'u';

@@ -396,17 +396,8 @@ class nsNativeThemeCocoa : private nsNativeTheme, public nsITheme {
   bool CreateWebRenderCommandsForWidget(mozilla::wr::DisplayListBuilder& aBuilder,
                                         mozilla::wr::IpcResourceUpdateQueue& aResources,
                                         const mozilla::layers::StackingContextHelper& aSc,
-<<<<<<< HEAD
-                                        mozilla::layers::WebRenderLayerManager* aManager,
-                                        nsIFrame* aFrame, StyleAppearance aAppearance,
-||||||| merged common ancestors
-                                        mozilla::layers::WebRenderLayerManager* aManager,
-                                        nsIFrame* aFrame,
-                                        WidgetType aWidgetType,
-=======
                                         mozilla::layers::RenderRootStateManager* aManager,
                                         nsIFrame* aFrame, StyleAppearance aAppearance,
->>>>>>> upstream-releases
                                         const nsRect& aRect) override;
   MOZ_MUST_USE LayoutDeviceIntMargin GetWidgetBorder(nsDeviceContext* aContext, nsIFrame* aFrame,
                                                      StyleAppearance aAppearance) override;

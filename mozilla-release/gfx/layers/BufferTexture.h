@@ -30,29 +30,11 @@ class BufferTextureData : public TextureData {
                                    TextureAllocationFlags aAllocFlags,
                                    LayersIPCChannel* aAllocator);
 
-<<<<<<< HEAD
-  static BufferTextureData* CreateForYCbCr(
-      KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
-      gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
-      gfx::ColorDepth aColorDepth, YUVColorSpace aYUVColorSpace,
-      TextureFlags aTextureFlags);
-||||||| merged common ancestors
-  static BufferTextureData* CreateForYCbCr(KnowsCompositor* aAllocator,
-                                           gfx::IntSize aYSize,
-                                           uint32_t aYStride,
-                                           gfx::IntSize aCbCrSize,
-                                           uint32_t aCbCrStride,
-                                           StereoMode aStereoMode,
-                                           gfx::ColorDepth aColorDepth,
-                                           YUVColorSpace aYUVColorSpace,
-                                           TextureFlags aTextureFlags);
-=======
   static BufferTextureData* CreateForYCbCr(
       KnowsCompositor* aAllocator, gfx::IntSize aYSize, uint32_t aYStride,
       gfx::IntSize aCbCrSize, uint32_t aCbCrStride, StereoMode aStereoMode,
       gfx::ColorDepth aColorDepth, gfx::YUVColorSpace aYUVColorSpace,
       TextureFlags aTextureFlags);
->>>>>>> upstream-releases
 
   bool Lock(OpenMode aMode) override { return true; }
 

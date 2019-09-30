@@ -14,20 +14,9 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-// A hash entry that uses a RefPtr<dom::Element>, CSSPseudoElementType pair
-class PseudoElementHashEntry : public PLDHashEntryHdr {
- public:
-||||||| merged common ancestors
-// A hash entry that uses a RefPtr<dom::Element>, CSSPseudoElementType pair
-class PseudoElementHashEntry : public PLDHashEntryHdr
-{
-public:
-=======
 // A hash entry that uses a RefPtr<dom::Element>, PseudoStyleType pair
 class PseudoElementHashEntry : public PLDHashEntryHdr {
  public:
->>>>>>> upstream-releases
   typedef NonOwningAnimationTarget KeyType;
   typedef const NonOwningAnimationTarget* KeyTypePointer;
 

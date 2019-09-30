@@ -539,19 +539,6 @@ add_task(async function test_archiveCleanup() {
   await checkArchive();
 
   // Make sure we're correctly updating the related histograms.
-<<<<<<< HEAD
-  h = Telemetry.getHistogramById("TELEMETRY_PING_SIZE_EXCEEDED_ARCHIVED").snapshot();
-  Assert.equal(h.sum, 1, "Telemetry must report 1 oversized ping in the archive.");
-  h = Telemetry.getHistogramById("TELEMETRY_DISCARDED_ARCHIVED_PINGS_SIZE_MB").snapshot();
-  Assert.equal(h.values[archivedPingSizeMB], 1,
-               "Telemetry must report the correct size for the oversized ping.");
-||||||| merged common ancestors
-  h = Telemetry.getHistogramById("TELEMETRY_PING_SIZE_EXCEEDED_ARCHIVED").snapshot();
-  Assert.equal(h.sum, 1, "Telemetry must report 1 oversized ping in the archive.");
-  h = Telemetry.getHistogramById("TELEMETRY_DISCARDED_ARCHIVED_PINGS_SIZE_MB").snapshot();
-  Assert.equal(h.counts[archivedPingSizeMB], 1,
-               "Telemetry must report the correct size for the oversized ping.");
-=======
   h = Telemetry.getHistogramById(
     "TELEMETRY_PING_SIZE_EXCEEDED_ARCHIVED"
   ).snapshot();
@@ -568,7 +555,6 @@ add_task(async function test_archiveCleanup() {
     1,
     "Telemetry must report the correct size for the oversized ping."
   );
->>>>>>> upstream-releases
 });
 
 add_task(async function test_clientId() {
@@ -622,23 +608,6 @@ add_task(async function test_InvalidPingType() {
   ];
 
   for (let type of TYPES) {
-<<<<<<< HEAD
-    let histogram = Telemetry.getKeyedHistogramById("TELEMETRY_INVALID_PING_TYPE_SUBMITTED");
-    Assert.ok(!(type in histogram.snapshot()),
-                 "Should not have counted this invalid ping yet: " + type);
-    Assert.ok(promiseRejects(TelemetryController.submitExternalPing(type, {})),
-              "Ping type should have been rejected.");
-    Assert.equal(histogram.snapshot()[type].sum, 1,
-                 "Should have counted this as an invalid ping type.");
-||||||| merged common ancestors
-    let histogram = Telemetry.getKeyedHistogramById("TELEMETRY_INVALID_PING_TYPE_SUBMITTED");
-    Assert.equal(histogram.snapshot(type).sum, 0,
-                 "Should not have counted this invalid ping yet: " + type);
-    Assert.ok(promiseRejects(TelemetryController.submitExternalPing(type, {})),
-              "Ping type should have been rejected.");
-    Assert.equal(histogram.snapshot(type).sum, 1,
-                 "Should have counted this as an invalid ping type.");
-=======
     let histogram = Telemetry.getKeyedHistogramById(
       "TELEMETRY_INVALID_PING_TYPE_SUBMITTED"
     );
@@ -655,7 +624,6 @@ add_task(async function test_InvalidPingType() {
       1,
       "Should have counted this as an invalid ping type."
     );
->>>>>>> upstream-releases
   }
 });
 

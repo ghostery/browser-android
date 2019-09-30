@@ -12,32 +12,6 @@
 #include "nsAutoPtr.h"
 #include "nsSVGContainerFrame.h"
 
-<<<<<<< HEAD
-class nsSVGGFrame : public nsSVGDisplayContainerFrame {
-  friend nsIFrame* NS_NewSVGGFrame(nsIPresShell* aPresShell,
-                                   ComputedStyle* aStyle);
-  explicit nsSVGGFrame(ComputedStyle* aStyle) : nsSVGGFrame(aStyle, kClassID) {}
-
- protected:
-  nsSVGGFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
-      : nsSVGDisplayContainerFrame(aStyle, aID) {}
-
- public:
-||||||| merged common ancestors
-class nsSVGGFrame : public nsSVGDisplayContainerFrame
-{
-  friend nsIFrame*
-  NS_NewSVGGFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle);
-  explicit nsSVGGFrame(ComputedStyle* aStyle)
-    : nsSVGGFrame(aStyle, kClassID) {}
-
-protected:
-  nsSVGGFrame(ComputedStyle* aStyle, nsIFrame::ClassID aID)
-    : nsSVGDisplayContainerFrame(aStyle, aID)
-  {}
-
-public:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
@@ -54,7 +28,6 @@ class nsSVGGFrame : public nsSVGDisplayContainerFrame {
       : nsSVGDisplayContainerFrame(aStyle, aPresContext, aID) {}
 
  public:
->>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsSVGGFrame)
 
 #ifdef DEBUG

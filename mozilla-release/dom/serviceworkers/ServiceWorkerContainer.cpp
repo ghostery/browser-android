@@ -43,13 +43,7 @@
 
 // This is defined to something else on Windows
 #ifdef DispatchMessage
-<<<<<<< HEAD
-#undef DispatchMessage
-||||||| merged common ancestors
-  #undef DispatchMessage
-=======
 #  undef DispatchMessage
->>>>>>> upstream-releases
 #endif
 
 namespace mozilla {
@@ -88,17 +82,8 @@ bool IsServiceWorkersTestingEnabledInWindow(JSObject* const aGlobal) {
 
 }  // namespace
 
-<<<<<<< HEAD
-/* static */ bool ServiceWorkerContainer::IsEnabled(JSContext* aCx,
-                                                    JSObject* aGlobal) {
-||||||| merged common ancestors
-/* static */ bool
-ServiceWorkerContainer::IsEnabled(JSContext* aCx, JSObject* aGlobal)
-{
-=======
 /* static */
 bool ServiceWorkerContainer::IsEnabled(JSContext* aCx, JSObject* aGlobal) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   JS::Rooted<JSObject*> global(aCx, aGlobal);
@@ -373,24 +358,6 @@ already_AddRefed<Promise> ServiceWorkerContainer::Register(
   // Verify that the global is valid and has permission to store
   // data.  We perform this late so that we can report the final
   // scope URL in any error message.
-<<<<<<< HEAD
-  Unused << GetGlobalIfValid(aRv, [&](nsIDocument* aDoc) {
-    NS_ConvertUTF8toUTF16 reportScope(cleanedScopeURL);
-    const char16_t* param[] = {reportScope.get()};
-    nsContentUtils::ReportToConsole(
-        nsIScriptError::errorFlag, NS_LITERAL_CSTRING("Service Workers"), aDoc,
-        nsContentUtils::eDOM_PROPERTIES, "ServiceWorkerRegisterStorageError",
-        param, 1);
-||||||| merged common ancestors
-  Unused << GetGlobalIfValid(aRv, [&](nsIDocument* aDoc) {
-    NS_ConvertUTF8toUTF16 reportScope(cleanedScopeURL);
-    const char16_t* param[] = { reportScope.get() };
-    nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
-                                    NS_LITERAL_CSTRING("Service Workers"),
-                                    aDoc, nsContentUtils::eDOM_PROPERTIES,
-                                    "ServiceWorkerRegisterStorageError",
-                                    param, 1);
-=======
   Unused << GetGlobalIfValid(aRv, [&](Document* aDoc) {
     AutoTArray<nsString, 1> param;
     CopyUTF8toUTF16(cleanedScopeURL, *param.AppendElement());
@@ -398,7 +365,6 @@ already_AddRefed<Promise> ServiceWorkerContainer::Register(
                                     NS_LITERAL_CSTRING("Service Workers"), aDoc,
                                     nsContentUtils::eDOM_PROPERTIES,
                                     "ServiceWorkerRegisterStorageError", param);
->>>>>>> upstream-releases
   });
 
   window->NoteCalledRegisterForServiceWorkerScope(cleanedScopeURL);
@@ -435,20 +401,9 @@ already_AddRefed<ServiceWorker> ServiceWorkerContainer::GetController() {
   return ref.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> ServiceWorkerContainer::GetRegistrations(
-    ErrorResult& aRv) {
-  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-ServiceWorkerContainer::GetRegistrations(ErrorResult& aRv)
-{
-  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
-=======
 already_AddRefed<Promise> ServiceWorkerContainer::GetRegistrations(
     ErrorResult& aRv) {
   nsIGlobalObject* global = GetGlobalIfValid(aRv, [](Document* aDoc) {
->>>>>>> upstream-releases
     nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
                                     NS_LITERAL_CSTRING("Service Workers"), aDoc,
                                     nsContentUtils::eDOM_PROPERTIES,
@@ -505,21 +460,9 @@ void ServiceWorkerContainer::StartMessages() {
   mMessagesStarted = true;
 }
 
-<<<<<<< HEAD
-already_AddRefed<Promise> ServiceWorkerContainer::GetRegistration(
-    const nsAString& aURL, ErrorResult& aRv) {
-  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
-||||||| merged common ancestors
-already_AddRefed<Promise>
-ServiceWorkerContainer::GetRegistration(const nsAString& aURL,
-                                        ErrorResult& aRv)
-{
-  nsIGlobalObject* global = GetGlobalIfValid(aRv, [](nsIDocument* aDoc) {
-=======
 already_AddRefed<Promise> ServiceWorkerContainer::GetRegistration(
     const nsAString& aURL, ErrorResult& aRv) {
   nsIGlobalObject* global = GetGlobalIfValid(aRv, [](Document* aDoc) {
->>>>>>> upstream-releases
     nsContentUtils::ReportToConsole(nsIScriptError::errorFlag,
                                     NS_LITERAL_CSTRING("Service Workers"), aDoc,
                                     nsContentUtils::eDOM_PROPERTIES,
@@ -664,20 +607,9 @@ void ServiceWorkerContainer::GetScopeForUrl(const nsAString& aUrl,
   aRv = swm->GetScopeForUrl(doc->NodePrincipal(), aUrl, aScope);
 }
 
-<<<<<<< HEAD
-nsIGlobalObject* ServiceWorkerContainer::GetGlobalIfValid(
-    ErrorResult& aRv,
-    const std::function<void(nsIDocument*)>&& aStorageFailureCB) const {
-||||||| merged common ancestors
-nsIGlobalObject*
-ServiceWorkerContainer::GetGlobalIfValid(ErrorResult& aRv,
-                                         const std::function<void(nsIDocument*)>&& aStorageFailureCB) const
-{
-=======
 nsIGlobalObject* ServiceWorkerContainer::GetGlobalIfValid(
     ErrorResult& aRv,
     const std::function<void(Document*)>&& aStorageFailureCB) const {
->>>>>>> upstream-releases
   // For now we require a window since ServiceWorkerContainer is
   // not exposed on worker globals yet.  The main thing we need
   // to fix here to support that is the storage access check via

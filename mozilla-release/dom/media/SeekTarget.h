@@ -24,93 +24,31 @@ struct SeekTarget {
     NextFrame,
   };
   SeekTarget()
-<<<<<<< HEAD
       : mTime(media::TimeUnit::Invalid()),
         mType(SeekTarget::Invalid),
         mVideoOnly(false) {}
-  SeekTarget(int64_t aTimeUsecs, Type aType, bool aVideoOnly = false)
-      : mTime(media::TimeUnit::FromMicroseconds(aTimeUsecs)),
-        mType(aType),
-        mVideoOnly(aVideoOnly) {}
-||||||| merged common ancestors
-    : mTime(media::TimeUnit::Invalid())
-    , mType(SeekTarget::Invalid)
-    , mVideoOnly(false)
-  {
-  }
-  SeekTarget(int64_t aTimeUsecs, Type aType, bool aVideoOnly = false)
-    : mTime(media::TimeUnit::FromMicroseconds(aTimeUsecs))
-    , mType(aType)
-    , mVideoOnly(aVideoOnly)
-  {
-  }
-=======
-      : mTime(media::TimeUnit::Invalid()),
-        mType(SeekTarget::Invalid),
-        mVideoOnly(false) {}
->>>>>>> upstream-releases
   SeekTarget(const media::TimeUnit& aTime, Type aType, bool aVideoOnly = false)
-<<<<<<< HEAD
-      : mTime(aTime), mType(aType), mVideoOnly(aVideoOnly) {}
-||||||| merged common ancestors
-    : mTime(aTime)
-    , mType(aType)
-    , mVideoOnly(aVideoOnly)
-  {
-  }
-=======
       : mTime(aTime), mType(aType), mVideoOnly(aVideoOnly) {
     MOZ_ASSERT(mTime.IsValid());
   }
->>>>>>> upstream-releases
   SeekTarget(const SeekTarget& aOther)
-<<<<<<< HEAD
-      : mTime(aOther.mTime),
-        mType(aOther.mType),
-        mVideoOnly(aOther.mVideoOnly) {}
-||||||| merged common ancestors
-    : mTime(aOther.mTime)
-    , mType(aOther.mType)
-    , mVideoOnly(aOther.mVideoOnly)
-  {
-  }
-=======
       : mTime(aOther.mTime),
         mType(aOther.mType),
         mVideoOnly(aOther.mVideoOnly) {
     MOZ_ASSERT(mTime.IsValid());
   }
->>>>>>> upstream-releases
   bool IsValid() const { return mType != SeekTarget::Invalid; }
   void Reset() {
     mTime = media::TimeUnit::Invalid();
     mType = SeekTarget::Invalid;
     mVideoOnly = false;
   }
-<<<<<<< HEAD
-  media::TimeUnit GetTime() const {
-    NS_ASSERTION(mTime.IsValid(), "Invalid SeekTarget");
-||||||| merged common ancestors
-  media::TimeUnit GetTime() const
-  {
-    NS_ASSERTION(mTime.IsValid(), "Invalid SeekTarget");
-=======
   media::TimeUnit GetTime() const {
     MOZ_ASSERT(mTime.IsValid(), "Invalid SeekTarget");
->>>>>>> upstream-releases
     return mTime;
   }
-<<<<<<< HEAD
-  void SetTime(const media::TimeUnit& aTime) {
-    NS_ASSERTION(aTime.IsValid(), "Invalid SeekTarget destination");
-||||||| merged common ancestors
-  void SetTime(const media::TimeUnit& aTime)
-  {
-    NS_ASSERTION(aTime.IsValid(), "Invalid SeekTarget destination");
-=======
   void SetTime(const media::TimeUnit& aTime) {
     MOZ_ASSERT(aTime.IsValid(), "Invalid SeekTarget destination");
->>>>>>> upstream-releases
     mTime = aTime;
   }
   void SetType(Type aType) { mType = aType; }

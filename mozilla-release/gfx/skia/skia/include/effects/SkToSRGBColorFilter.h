@@ -27,15 +27,6 @@ public:
             GrRecordingContext*, const GrColorSpaceInfo&) const override;
 #endif
 
-<<<<<<< HEAD
-    Factory getFactory() const override { return CreateProc; }
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkToSRGBColorFilter)
-
-=======
->>>>>>> upstream-releases
 private:
     SK_FLATTENABLE_HOOKS(SkToSRGBColorFilter)
 
@@ -43,8 +34,6 @@ private:
     SkToSRGBColorFilter(sk_sp<SkColorSpace>);
     void onAppendStages(SkRasterPipeline*, SkColorSpace*, SkArenaAlloc*,
                         bool shaderIsOpaque) const override;
-    static sk_sp<SkFlattenable> CreateProc(SkReadBuffer&);
-    friend class SkFlattenable::PrivateInitializer;
 
     sk_sp<SkColorSpace> fSrcColorSpace;
 

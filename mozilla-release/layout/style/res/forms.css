@@ -131,17 +131,7 @@ textarea {
   vertical-align: text-bottom;
   cursor: text;
   resize: both;
-<<<<<<< HEAD
-  -moz-user-select: text;
-||||||| merged common ancestors
-  -moz-binding: url("chrome://global/content/platformHTMLBindings.xml#textAreas");
-  -moz-appearance: textfield-multiline;
-  text-indent: 0;
-  -moz-user-select: text;
-  text-shadow: none;
-=======
   user-select: text;
->>>>>>> upstream-releases
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-clip-box: content-box;
@@ -615,14 +605,7 @@ input[type="submit"] {
   background-color: ButtonFace;
   cursor: default;
   box-sizing: border-box;
-<<<<<<< HEAD
-  -moz-user-select: none;
-||||||| merged common ancestors
-  -moz-user-select: none;
-  -moz-binding: none;
-=======
   user-select: none;
->>>>>>> upstream-releases
 }
 
 /* Text-related properties for buttons: these ones are not shared with
@@ -899,59 +882,15 @@ meter {
 
 input[type=range] {
   -moz-appearance: range;
-<<<<<<< HEAD
-  display: inline-block;
   margin: 2px;
-||||||| merged common ancestors
-  display: inline-block;
-  inline-size: 12em;
-  block-size: 1.3em;
-  margin-inline-start: 0.7em;
-  margin-inline-end: 0.7em;
-  margin-block-start: 0;
-  margin-block-end: 0;
-=======
-  margin: 2px;
->>>>>>> upstream-releases
   /* Override some rules that apply on all input types: */
   cursor: default;
   padding: unset;
   border: unset;
   /* Prevent nsFrame::HandlePress setting mouse capture to this element. */
-<<<<<<< HEAD
-  -moz-user-select: none ! important;
-}
-
-||||||| merged common ancestors
-  -moz-user-select: none ! important;
-}
-
-input[type=range][orient=block] {
-  inline-size: 1.3em;
-  block-size: 12em;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  margin-block-start: 0.7em;
-  margin-block-end: 0.7em;
-}
-
-input[type=range][orient=horizontal] {
-  width: 12em;
-  height: 1.3em;
-  margin: 0 0.7em;
-}
-
-input[type=range][orient=vertical] {
-  width: 1.3em;
-  height: 12em;
-  margin: 0.7em 0;
-}
-
-=======
   user-select: none !important;
 }
 
->>>>>>> upstream-releases
 /**
  * Ideally we'd also require :-moz-focusring here, but that doesn't currently
  * work. Instead we only use the -moz-focus-outer border style if
@@ -980,34 +919,9 @@ input[type=range]::-moz-range-track {
   direction: unset !important;
   block-size: 0.2em;
   /* Prevent nsFrame::HandlePress setting mouse capture to this element. */
-<<<<<<< HEAD
-  -moz-user-select: none ! important;
-}
-
-||||||| merged common ancestors
-  -moz-user-select: none ! important;
-}
-
-input[type=range][orient=block]::-moz-range-track {
-  inline-size: 0.2em;
-  block-size: 100%;
-}
-
-input[type=range][orient=horizontal]::-moz-range-track {
-  width: 100%;
-  height: 0.2em;
-}
-
-input[type=range][orient=vertical]::-moz-range-track {
-  width: 0.2em;
-  height: 100%;
-}
-
-=======
   user-select: none !important;
 }
 
->>>>>>> upstream-releases
 /**
  * Layout handles positioning of this pseudo-element specially (so that content
  * authors can concentrate on styling this pseudo-element without worrying

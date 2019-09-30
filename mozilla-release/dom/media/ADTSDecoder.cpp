@@ -10,32 +10,15 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ bool ADTSDecoder::IsEnabled() {
-||||||| merged common ancestors
-/* static */ bool
-ADTSDecoder::IsEnabled()
-{
-=======
 /* static */
 bool ADTSDecoder::IsEnabled() {
->>>>>>> upstream-releases
   RefPtr<PDMFactory> platform = new PDMFactory();
   return platform->SupportsMimeType(NS_LITERAL_CSTRING("audio/mp4a-latm"),
                                     /* DecoderDoctorDiagnostics* */ nullptr);
 }
 
-<<<<<<< HEAD
-/* static */ bool ADTSDecoder::IsSupportedType(
-    const MediaContainerType& aContainerType) {
-||||||| merged common ancestors
-/* static */ bool
-ADTSDecoder::IsSupportedType(const MediaContainerType& aContainerType)
-{
-=======
 /* static */
 bool ADTSDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
->>>>>>> upstream-releases
   if (aContainerType.Type() == MEDIAMIMETYPE("audio/aac") ||
       aContainerType.Type() == MEDIAMIMETYPE("audio/aacp") ||
       aContainerType.Type() == MEDIAMIMETYPE("audio/x-aac")) {
@@ -46,18 +29,9 @@ bool ADTSDecoder::IsSupportedType(const MediaContainerType& aContainerType) {
   return false;
 }
 
-<<<<<<< HEAD
-/* static */ nsTArray<UniquePtr<TrackInfo>> ADTSDecoder::GetTracksInfo(
-    const MediaContainerType& aType) {
-||||||| merged common ancestors
-/* static */ nsTArray<UniquePtr<TrackInfo>>
-ADTSDecoder::GetTracksInfo(const MediaContainerType& aType)
-{
-=======
 /* static */
 nsTArray<UniquePtr<TrackInfo>> ADTSDecoder::GetTracksInfo(
     const MediaContainerType& aType) {
->>>>>>> upstream-releases
   nsTArray<UniquePtr<TrackInfo>> tracks;
   if (!IsSupportedType(aType)) {
     return tracks;

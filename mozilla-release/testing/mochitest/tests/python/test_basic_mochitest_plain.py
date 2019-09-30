@@ -110,17 +110,6 @@ def test_output_leak(runtests):
     assert tbpl_status == TBPL_WARNING
     assert log_level == WARNING
 
-<<<<<<< HEAD
-    leaks = filter_action('mozleak_total', lines)
-    assert len(leaks) == 1
-    assert leaks[0]['process'] == "default"
-    assert leaks[0]['bytes'] == 19915
-||||||| merged common ancestors
-    errors = filter_action('log', lines)
-    errors = [e for e in errors if e['level'] == 'ERROR']
-    assert len(errors) == 1
-    assert 'leakcheck' in errors[0]['message']
-=======
     leak_totals = filter_action('mozleak_total', lines)
     found_leaks = False
     for lt in leak_totals:
@@ -136,7 +125,6 @@ def test_output_leak(runtests):
         assert lt['objects'] == ['IntentionallyLeakedObject']
 
     assert found_leaks, "At least one process should have leaked"
->>>>>>> upstream-releases
 
 
 if __name__ == '__main__':

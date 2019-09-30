@@ -18,12 +18,7 @@
 #include "mozilla/StaticPrefs.h"
 #include "mozilla/ChaosMode.h"
 #include "mozilla/LoadInfo.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "mozilla/Telemetry.h"
-=======
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 
 #include "nsImageModule.h"
 #include "imgRequestProxy.h"
@@ -89,18 +84,9 @@ class imgMemoryReporter final : public nsIMemoryReporter {
                             nsISupports* aData, bool aAnonymize) override {
     MOZ_ASSERT(NS_IsMainThread());
 
-<<<<<<< HEAD
-    layers::CompositorManagerChild* manager =
-        CompositorManagerChild::GetInstance();
-    if (!manager || !gfxPrefs::ImageMemDebugReporting()) {
-||||||| merged common ancestors
-    layers::CompositorManagerChild* manager = CompositorManagerChild::GetInstance();
-    if (!manager || !gfxPrefs::ImageMemDebugReporting()) {
-=======
     layers::CompositorManagerChild* manager =
         CompositorManagerChild::GetInstance();
     if (!manager || !StaticPrefs::image_mem_debug_reporting()) {
->>>>>>> upstream-releases
       layers::SharedSurfacesMemoryReport sharedSurfaces;
       FinishCollectReports(aHandleReport, aData, aAnonymize, sharedSurfaces);
       return NS_OK;
@@ -110,25 +96,6 @@ class imgMemoryReporter final : public nsIMemoryReporter {
     nsCOMPtr<nsIHandleReportCallback> handleReport(aHandleReport);
     nsCOMPtr<nsISupports> data(aData);
     manager->SendReportSharedSurfacesMemory(
-<<<<<<< HEAD
-        [=](layers::SharedSurfacesMemoryReport aReport) {
-          self->FinishCollectReports(handleReport, data, aAnonymize, aReport);
-        },
-        [=](mozilla::ipc::ResponseRejectReason aReason) {
-          layers::SharedSurfacesMemoryReport sharedSurfaces;
-          self->FinishCollectReports(handleReport, data, aAnonymize,
-                                     sharedSurfaces);
-        });
-||||||| merged common ancestors
-      [=](layers::SharedSurfacesMemoryReport aReport) {
-        self->FinishCollectReports(handleReport, data, aAnonymize, aReport);
-      },
-      [=](mozilla::ipc::ResponseRejectReason aReason) {
-        layers::SharedSurfacesMemoryReport sharedSurfaces;
-        self->FinishCollectReports(handleReport, data, aAnonymize, sharedSurfaces);
-      }
-    );
-=======
         [=](layers::SharedSurfacesMemoryReport aReport) {
           self->FinishCollectReports(handleReport, data, aAnonymize, aReport);
         },
@@ -137,7 +104,6 @@ class imgMemoryReporter final : public nsIMemoryReporter {
           self->FinishCollectReports(handleReport, data, aAnonymize,
                                      sharedSurfaces);
         });
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -297,19 +263,9 @@ class imgMemoryReporter final : public nsIMemoryReporter {
 
       summaryTotal += counter;
 
-<<<<<<< HEAD
-      if (counter.IsNotable() || gfxPrefs::ImageMemDebugReporting()) {
-        ReportImage(aHandleReport, aData, aPathPrefix, counter,
-                    aSharedSurfaces);
-||||||| merged common ancestors
-      if (counter.IsNotable() || gfxPrefs::ImageMemDebugReporting()) {
-        ReportImage(aHandleReport, aData, aPathPrefix,
-                    counter, aSharedSurfaces);
-=======
       if (counter.IsNotable() || StaticPrefs::image_mem_debug_reporting()) {
         ReportImage(aHandleReport, aData, aPathPrefix, counter,
                     aSharedSurfaces);
->>>>>>> upstream-releases
       } else {
         ImageMemoryReporter::TrimSharedSurfaces(counter, aSharedSurfaces);
         nonNotableTotal += counter;
@@ -388,19 +344,9 @@ class imgMemoryReporter final : public nsIMemoryReporter {
       if (counter.Type() == SurfaceMemoryCounterType::NORMAL) {
         PlaybackType playback = counter.Key().Playback();
         if (playback == PlaybackType::eAnimated) {
-<<<<<<< HEAD
-          if (gfxPrefs::ImageMemDebugReporting()) {
-            surfacePathPrefix.AppendPrintf(
-                " (animation %4u)", uint32_t(counter.Values().FrameIndex()));
-||||||| merged common ancestors
-          if (gfxPrefs::ImageMemDebugReporting()) {
-            surfacePathPrefix.AppendPrintf(" (animation %4u)",
-                                           uint32_t(counter.Values().FrameIndex()));
-=======
           if (StaticPrefs::image_mem_debug_reporting()) {
             surfacePathPrefix.AppendPrintf(
                 " (animation %4u)", uint32_t(counter.Values().FrameIndex()));
->>>>>>> upstream-releases
           } else {
             surfacePathPrefix.AppendLiteral(" (animation)");
           }
@@ -880,23 +826,9 @@ static nsresult NewImageChannel(
       // triggeringPrincipal as the channel's originAttributes. This allows the
       // favicon loading from XUL will use the correct originAttributes.
 
-<<<<<<< HEAD
-      nsCOMPtr<nsILoadInfo> loadInfo = (*aResult)->GetLoadInfo();
-      if (loadInfo) {
-        rv = loadInfo->SetOriginAttributes(
-            aTriggeringPrincipal->OriginAttributesRef());
-      }
-||||||| merged common ancestors
-      nsCOMPtr<nsILoadInfo> loadInfo = (*aResult)->GetLoadInfo();
-      if (loadInfo) {
-        rv =
-          loadInfo->SetOriginAttributes(aTriggeringPrincipal->OriginAttributesRef());
-      }
-=======
       nsCOMPtr<nsILoadInfo> loadInfo = (*aResult)->LoadInfo();
       rv = loadInfo->SetOriginAttributes(
           aTriggeringPrincipal->OriginAttributesRef());
->>>>>>> upstream-releases
     }
   } else {
     // either we are loading something inside a document, in which case
@@ -904,26 +836,6 @@ static nsresult NewImageChannel(
     // outside a document, in which case the triggeringPrincipal and
     // triggeringPrincipal should always be the systemPrincipal.
     // However, there are exceptions: one is Notifications which create a
-<<<<<<< HEAD
-    // channel in the parent prcoess in which case we can't get a
-    // requestingNode.
-    rv = NS_NewChannel(aResult, aURI, nsContentUtils::GetSystemPrincipal(),
-                       securityFlags, aPolicyType,
-                       nullptr,  // PerformanceStorage
-                       nullptr,  // loadGroup
-                       callbacks, aLoadFlags);
-||||||| merged common ancestors
-    // channel in the parent prcoess in which case we can't get a requestingNode.
-    rv = NS_NewChannel(aResult,
-                       aURI,
-                       nsContentUtils::GetSystemPrincipal(),
-                       securityFlags,
-                       aPolicyType,
-                       nullptr,   // PerformanceStorage
-                       nullptr,   // loadGroup
-                       callbacks,
-                       aLoadFlags);
-=======
     // channel in the parent process in which case we can't get a
     // requestingNode.
     rv = NS_NewChannel(aResult, aURI, nsContentUtils::GetSystemPrincipal(),
@@ -932,7 +844,6 @@ static nsresult NewImageChannel(
                        nullptr,  // PerformanceStorage
                        nullptr,  // loadGroup
                        callbacks, aLoadFlags);
->>>>>>> upstream-releases
 
     if (NS_FAILED(rv)) {
       return rv;
@@ -1007,16 +918,8 @@ static nsresult NewImageChannel(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* static */ uint32_t imgCacheEntry::SecondsFromPRTime(PRTime prTime) {
-||||||| merged common ancestors
-/* static */ uint32_t
-imgCacheEntry::SecondsFromPRTime(PRTime prTime)
-{
-=======
 /* static */
 uint32_t imgCacheEntry::SecondsFromPRTime(PRTime prTime) {
->>>>>>> upstream-releases
   return uint32_t(int64_t(prTime) / int64_t(PR_USEC_PER_SEC));
 }
 
@@ -1175,26 +1078,10 @@ imgCacheQueue::const_iterator imgCacheQueue::end() const {
   return mQueue.end();
 }
 
-<<<<<<< HEAD
-nsresult imgLoader::CreateNewProxyForRequest(
-    imgRequest* aRequest, nsILoadGroup* aLoadGroup,
-    nsIDocument* aLoadingDocument, imgINotificationObserver* aObserver,
-    nsLoadFlags aLoadFlags, imgRequestProxy** _retval) {
-||||||| merged common ancestors
-nsresult
-imgLoader::CreateNewProxyForRequest(imgRequest* aRequest,
-                                    nsILoadGroup* aLoadGroup,
-                                    nsIDocument* aLoadingDocument,
-                                    imgINotificationObserver* aObserver,
-                                    nsLoadFlags aLoadFlags,
-                                    imgRequestProxy** _retval)
-{
-=======
 nsresult imgLoader::CreateNewProxyForRequest(
     imgRequest* aRequest, nsILoadGroup* aLoadGroup, Document* aLoadingDocument,
     imgINotificationObserver* aObserver, nsLoadFlags aLoadFlags,
     imgRequestProxy** _retval) {
->>>>>>> upstream-releases
   LOG_SCOPE_WITH_PARAM(gImgLog, "imgLoader::CreateNewProxyForRequest",
                        "imgRequest", aRequest);
 
@@ -1276,16 +1163,8 @@ NS_IMPL_ISUPPORTS(imgLoader, imgILoader, nsIContentSniffer, imgICache,
 static imgLoader* gNormalLoader = nullptr;
 static imgLoader* gPrivateBrowsingLoader = nullptr;
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<imgLoader> imgLoader::CreateImageLoader() {
-||||||| merged common ancestors
-/* static */ already_AddRefed<imgLoader>
-imgLoader::CreateImageLoader()
-{
-=======
 /* static */
 already_AddRefed<imgLoader> imgLoader::CreateImageLoader() {
->>>>>>> upstream-releases
   // In some cases, such as xpctests, XPCOM modules are not automatically
   // initialized.  We need to make sure that our module is initialized before
   // we hand out imgLoader instances and code starts using them.
@@ -1371,20 +1250,9 @@ imgCacheQueue& imgLoader::GetCacheQueue(const ImageCacheKey& aKey) {
   return GetCacheQueue(aKey.IsChrome());
 }
 
-<<<<<<< HEAD
-void imgLoader::GlobalInit() {
-  sCacheTimeWeight = gfxPrefs::ImageCacheTimeWeight() / 1000.0;
-  int32_t cachesize = gfxPrefs::ImageCacheSize();
-||||||| merged common ancestors
-void imgLoader::GlobalInit()
-{
-  sCacheTimeWeight = gfxPrefs::ImageCacheTimeWeight() / 1000.0;
-  int32_t cachesize = gfxPrefs::ImageCacheSize();
-=======
 void imgLoader::GlobalInit() {
   sCacheTimeWeight = StaticPrefs::image_cache_timeweight() / 1000.0;
   int32_t cachesize = StaticPrefs::image_cache_size();
->>>>>>> upstream-releases
   sCacheMaxSize = cachesize > 0 ? cachesize : 0;
 
   sMemReporter = new imgMemoryReporter();
@@ -1533,15 +1401,7 @@ imgLoader::RemoveEntriesFromPrincipal(nsIPrincipal* aPrincipal) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgLoader::RemoveEntry(nsIURI* aURI, nsIDocument* aDoc) {
-||||||| merged common ancestors
-imgLoader::RemoveEntry(nsIURI* aURI,
-                       nsIDocument* aDoc)
-{
-=======
 imgLoader::RemoveEntry(nsIURI* aURI, Document* aDoc) {
->>>>>>> upstream-releases
   if (aURI) {
     OriginAttributes attrs;
     if (aDoc) {
@@ -1560,18 +1420,8 @@ imgLoader::RemoveEntry(nsIURI* aURI, Document* aDoc) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgLoader::FindEntryProperties(nsIURI* uri, nsIDocument* aDoc,
-                               nsIProperties** _retval) {
-||||||| merged common ancestors
-imgLoader::FindEntryProperties(nsIURI* uri,
-                               nsIDocument* aDoc,
-                               nsIProperties** _retval)
-{
-=======
 imgLoader::FindEntryProperties(nsIURI* uri, Document* aDoc,
                                nsIProperties** _retval) {
->>>>>>> upstream-releases
   *_retval = nullptr;
 
   OriginAttributes attrs;
@@ -1602,14 +1452,7 @@ imgLoader::FindEntryProperties(nsIURI* uri, Document* aDoc,
 }
 
 NS_IMETHODIMP_(void)
-<<<<<<< HEAD
-imgLoader::ClearCacheForControlledDocument(nsIDocument* aDoc) {
-||||||| merged common ancestors
-imgLoader::ClearCacheForControlledDocument(nsIDocument* aDoc)
-{
-=======
 imgLoader::ClearCacheForControlledDocument(Document* aDoc) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDoc);
   AutoTArray<RefPtr<imgCacheEntry>, 128> entriesToBeRemoved;
   imgCacheTable& cache = GetCache(false);
@@ -1804,34 +1647,6 @@ void imgLoader::CheckCacheLimits(imgCacheTable& cache, imgCacheQueue& queue) {
   }
 }
 
-<<<<<<< HEAD
-bool imgLoader::ValidateRequestWithNewChannel(
-    imgRequest* request, nsIURI* aURI, nsIURI* aInitialDocumentURI,
-    nsIURI* aReferrerURI, ReferrerPolicy aReferrerPolicy,
-    nsILoadGroup* aLoadGroup, imgINotificationObserver* aObserver,
-    nsISupports* aCX, nsIDocument* aLoadingDocument, nsLoadFlags aLoadFlags,
-    nsContentPolicyType aLoadPolicyType, imgRequestProxy** aProxyRequest,
-    nsIPrincipal* aTriggeringPrincipal, int32_t aCORSMode,
-    bool* aNewChannelCreated) {
-||||||| merged common ancestors
-bool
-imgLoader::ValidateRequestWithNewChannel(imgRequest* request,
-                                         nsIURI* aURI,
-                                         nsIURI* aInitialDocumentURI,
-                                         nsIURI* aReferrerURI,
-                                         ReferrerPolicy aReferrerPolicy,
-                                         nsILoadGroup* aLoadGroup,
-                                         imgINotificationObserver* aObserver,
-                                         nsISupports* aCX,
-                                         nsIDocument* aLoadingDocument,
-                                         nsLoadFlags aLoadFlags,
-                                         nsContentPolicyType aLoadPolicyType,
-                                         imgRequestProxy** aProxyRequest,
-                                         nsIPrincipal* aTriggeringPrincipal,
-                                         int32_t aCORSMode,
-                                         bool* aNewChannelCreated)
-{
-=======
 bool imgLoader::ValidateRequestWithNewChannel(
     imgRequest* request, nsIURI* aURI, nsIURI* aInitialDocumentURI,
     nsIURI* aReferrerURI, ReferrerPolicy aReferrerPolicy,
@@ -1840,7 +1655,6 @@ bool imgLoader::ValidateRequestWithNewChannel(
     nsContentPolicyType aLoadPolicyType, imgRequestProxy** aProxyRequest,
     nsIPrincipal* aTriggeringPrincipal, int32_t aCORSMode,
     bool* aNewChannelCreated) {
->>>>>>> upstream-releases
   // now we need to insert a new channel request object inbetween the real
   // request and the proxy that basically delays loading the image until it
   // gets a 304 or figures out that this needs to be a new request
@@ -1928,18 +1742,9 @@ bool imgLoader::ValidateRequestWithNewChannel(
   hvc->AddProxy(req);
 
   mozilla::net::PredictorLearn(aURI, aInitialDocumentURI,
-<<<<<<< HEAD
-                               nsINetworkPredictor::LEARN_LOAD_SUBRESOURCE,
-                               aLoadGroup);
-  rv = newChannel->AsyncOpen2(listener);
-||||||| merged common ancestors
-                               nsINetworkPredictor::LEARN_LOAD_SUBRESOURCE, aLoadGroup);
-  rv = newChannel->AsyncOpen2(listener);
-=======
                                nsINetworkPredictor::LEARN_LOAD_SUBRESOURCE,
                                aLoadGroup);
   rv = newChannel->AsyncOpen(listener);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     req->CancelAndForgetObserver(rv);
     return false;
@@ -1949,35 +1754,6 @@ bool imgLoader::ValidateRequestWithNewChannel(
   return true;
 }
 
-<<<<<<< HEAD
-bool imgLoader::ValidateEntry(
-    imgCacheEntry* aEntry, nsIURI* aURI, nsIURI* aInitialDocumentURI,
-    nsIURI* aReferrerURI, ReferrerPolicy aReferrerPolicy,
-    nsILoadGroup* aLoadGroup, imgINotificationObserver* aObserver,
-    nsISupports* aCX, nsIDocument* aLoadingDocument, nsLoadFlags aLoadFlags,
-    nsContentPolicyType aLoadPolicyType, bool aCanMakeNewChannel,
-    bool* aNewChannelCreated, imgRequestProxy** aProxyRequest,
-    nsIPrincipal* aTriggeringPrincipal, int32_t aCORSMode) {
-||||||| merged common ancestors
-bool
-imgLoader::ValidateEntry(imgCacheEntry* aEntry,
-                         nsIURI* aURI,
-                         nsIURI* aInitialDocumentURI,
-                         nsIURI* aReferrerURI,
-                         ReferrerPolicy aReferrerPolicy,
-                         nsILoadGroup* aLoadGroup,
-                         imgINotificationObserver* aObserver,
-                         nsISupports* aCX,
-                         nsIDocument* aLoadingDocument,
-                         nsLoadFlags aLoadFlags,
-                         nsContentPolicyType aLoadPolicyType,
-                         bool aCanMakeNewChannel,
-                         bool* aNewChannelCreated,
-                         imgRequestProxy** aProxyRequest,
-                         nsIPrincipal* aTriggeringPrincipal,
-                         int32_t aCORSMode)
-{
-=======
 bool imgLoader::ValidateEntry(
     imgCacheEntry* aEntry, nsIURI* aURI, nsIURI* aInitialDocumentURI,
     nsIURI* aReferrerURI, ReferrerPolicy aReferrerPolicy,
@@ -1986,7 +1762,6 @@ bool imgLoader::ValidateEntry(
     nsContentPolicyType aLoadPolicyType, bool aCanMakeNewChannel,
     bool* aNewChannelCreated, imgRequestProxy** aProxyRequest,
     nsIPrincipal* aTriggeringPrincipal, int32_t aCORSMode) {
->>>>>>> upstream-releases
   LOG_SCOPE(gImgLog, "imgLoader::ValidateEntry");
 
   // If the expiration time is zero, then the request has not gotten far enough
@@ -2048,16 +1823,8 @@ bool imgLoader::ValidateEntry(
   // XXX: we also check the window ID because the loadID() can return a reused
   //      pointer of a document. This can still happen for non-document image
   //      cache entries.
-<<<<<<< HEAD
-  void* key = (void*)aCX;
-  nsCOMPtr<nsIDocument> doc = do_QueryInterface(aCX);
-||||||| merged common ancestors
-  void *key = (void*) aCX;
-  nsCOMPtr<nsIDocument> doc = do_QueryInterface(aCX);
-=======
   void* key = (void*)aCX;
   nsCOMPtr<Document> doc = do_QueryInterface(aCX);
->>>>>>> upstream-releases
   uint64_t innerWindowID = doc ? doc->InnerWindowID() : 0;
   if (request->LoadId() != key || request->InnerWindowID() != innerWindowID) {
     // If we would need to revalidate this entry, but we're being told to
@@ -2244,11 +2011,6 @@ void imgLoader::RemoveFromUncachedImages(imgRequest* aRequest) {
   mUncachedImages.RemoveEntry(aRequest);
 }
 
-<<<<<<< HEAD
-#define LOAD_FLAGS_CACHE_MASK \
-  (nsIRequest::LOAD_BYPASS_CACHE | nsIRequest::LOAD_FROM_CACHE)
-||||||| merged common ancestors
-=======
 bool imgLoader::PreferLoadFromCache(nsIURI* aURI) const {
   // If we are trying to load an image from a protocol that doesn't support
   // caching (e.g. thumbnails via the moz-page-thumb:// protocol, or icons via
@@ -2259,92 +2021,15 @@ bool imgLoader::PreferLoadFromCache(nsIURI* aURI) const {
   return (NS_SUCCEEDED(aURI->SchemeIs("moz-page-thumb", &match)) && match) ||
          (NS_SUCCEEDED(aURI->SchemeIs("moz-extension", &match)) && match);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#define LOAD_FLAGS_VALIDATE_MASK                              \
-  (nsIRequest::VALIDATE_ALWAYS | nsIRequest::VALIDATE_NEVER | \
-   nsIRequest::VALIDATE_ONCE_PER_SESSION)
-||||||| merged common ancestors
-#define LOAD_FLAGS_CACHE_MASK    (nsIRequest::LOAD_BYPASS_CACHE | \
-                                  nsIRequest::LOAD_FROM_CACHE)
-
-#define LOAD_FLAGS_VALIDATE_MASK (nsIRequest::VALIDATE_ALWAYS |   \
-                                  nsIRequest::VALIDATE_NEVER |    \
-                                  nsIRequest::VALIDATE_ONCE_PER_SESSION)
-=======
 #define LOAD_FLAGS_CACHE_MASK \
   (nsIRequest::LOAD_BYPASS_CACHE | nsIRequest::LOAD_FROM_CACHE)
 
 #define LOAD_FLAGS_VALIDATE_MASK                              \
   (nsIRequest::VALIDATE_ALWAYS | nsIRequest::VALIDATE_NEVER | \
    nsIRequest::VALIDATE_ONCE_PER_SESSION)
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgLoader::LoadImageXPCOM(
-    nsIURI* aURI, nsIURI* aInitialDocumentURI, nsIURI* aReferrerURI,
-    const nsAString& aReferrerPolicy, nsIPrincipal* aTriggeringPrincipal,
-    nsILoadGroup* aLoadGroup, imgINotificationObserver* aObserver,
-    nsISupports* aCX, nsLoadFlags aLoadFlags, nsISupports* aCacheKey,
-    nsContentPolicyType aContentPolicyType, imgIRequest** _retval) {
-  // Optional parameter, so defaults to 0 (== TYPE_INVALID)
-  if (!aContentPolicyType) {
-    aContentPolicyType = nsIContentPolicy::TYPE_INTERNAL_IMAGE;
-  }
-  imgRequestProxy* proxy;
-  ReferrerPolicy refpol = ReferrerPolicyFromString(aReferrerPolicy);
-  nsCOMPtr<nsINode> node = do_QueryInterface(aCX);
-  nsCOMPtr<nsIDocument> doc = do_QueryInterface(aCX);
-  nsresult rv =
-      LoadImage(aURI, aInitialDocumentURI, aReferrerURI, refpol,
-                aTriggeringPrincipal, 0, aLoadGroup, aObserver, node, doc,
-                aLoadFlags, aCacheKey, aContentPolicyType, EmptyString(),
-                /* aUseUrgentStartForChannel */ false, &proxy);
-  *_retval = proxy;
-  return rv;
-||||||| merged common ancestors
-imgLoader::LoadImageXPCOM(nsIURI* aURI,
-                          nsIURI* aInitialDocumentURI,
-                          nsIURI* aReferrerURI,
-                          const nsAString& aReferrerPolicy,
-                          nsIPrincipal* aTriggeringPrincipal,
-                          nsILoadGroup* aLoadGroup,
-                          imgINotificationObserver* aObserver,
-                          nsISupports* aCX,
-                          nsLoadFlags aLoadFlags,
-                          nsISupports* aCacheKey,
-                          nsContentPolicyType aContentPolicyType,
-                          imgIRequest** _retval)
-{
-    // Optional parameter, so defaults to 0 (== TYPE_INVALID)
-    if (!aContentPolicyType) {
-      aContentPolicyType = nsIContentPolicy::TYPE_INTERNAL_IMAGE;
-    }
-    imgRequestProxy* proxy;
-    ReferrerPolicy refpol = ReferrerPolicyFromString(aReferrerPolicy);
-    nsCOMPtr<nsINode> node = do_QueryInterface(aCX);
-    nsCOMPtr<nsIDocument> doc = do_QueryInterface(aCX);
-    nsresult rv = LoadImage(aURI,
-                            aInitialDocumentURI,
-                            aReferrerURI,
-                            refpol,
-                            aTriggeringPrincipal,
-                            0,
-                            aLoadGroup,
-                            aObserver,
-                            node,
-                            doc,
-                            aLoadFlags,
-                            aCacheKey,
-                            aContentPolicyType,
-                            EmptyString(),
-                            /* aUseUrgentStartForChannel */ false,
-                            &proxy);
-    *_retval = proxy;
-    return rv;
-=======
 imgLoader::LoadImageXPCOM(
     nsIURI* aURI, nsIURI* aInitialDocumentURI, nsIURI* aReferrerURI,
     const nsAString& aReferrerPolicy, nsIPrincipal* aTriggeringPrincipal,
@@ -2366,39 +2051,8 @@ imgLoader::LoadImageXPCOM(
                 /* aUseUrgentStartForChannel */ false, &proxy);
   *_retval = proxy;
   return rv;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult imgLoader::LoadImage(
-    nsIURI* aURI, nsIURI* aInitialDocumentURI, nsIURI* aReferrerURI,
-    ReferrerPolicy aReferrerPolicy, nsIPrincipal* aTriggeringPrincipal,
-    uint64_t aRequestContextID, nsILoadGroup* aLoadGroup,
-    imgINotificationObserver* aObserver, nsINode* aContext,
-    nsIDocument* aLoadingDocument, nsLoadFlags aLoadFlags,
-    nsISupports* aCacheKey, nsContentPolicyType aContentPolicyType,
-    const nsAString& initiatorType, bool aUseUrgentStartForChannel,
-    imgRequestProxy** _retval) {
-||||||| merged common ancestors
-nsresult
-imgLoader::LoadImage(nsIURI* aURI,
-                     nsIURI* aInitialDocumentURI,
-                     nsIURI* aReferrerURI,
-                     ReferrerPolicy aReferrerPolicy,
-                     nsIPrincipal* aTriggeringPrincipal,
-                     uint64_t aRequestContextID,
-                     nsILoadGroup* aLoadGroup,
-                     imgINotificationObserver* aObserver,
-                     nsINode *aContext,
-                     nsIDocument* aLoadingDocument,
-                     nsLoadFlags aLoadFlags,
-                     nsISupports* aCacheKey,
-                     nsContentPolicyType aContentPolicyType,
-                     const nsAString& initiatorType,
-                     bool aUseUrgentStartForChannel,
-                     imgRequestProxy** _retval)
-{
-=======
 nsresult imgLoader::LoadImage(
     nsIURI* aURI, nsIURI* aInitialDocumentURI, nsIURI* aReferrerURI,
     ReferrerPolicy aReferrerPolicy, nsIPrincipal* aTriggeringPrincipal,
@@ -2407,7 +2061,6 @@ nsresult imgLoader::LoadImage(
     Document* aLoadingDocument, nsLoadFlags aLoadFlags, nsISupports* aCacheKey,
     nsContentPolicyType aContentPolicyType, const nsAString& initiatorType,
     bool aUseUrgentStartForChannel, imgRequestProxy** _retval) {
->>>>>>> upstream-releases
   VerifyCacheSizes();
 
   NS_ASSERTION(aURI, "imgLoader::LoadImage -- NULL URI pointer");
@@ -2453,25 +2106,7 @@ nsresult imgLoader::LoadImage(
   // Get the default load flags from the loadgroup (if possible)...
   if (aLoadGroup) {
     aLoadGroup->GetLoadFlags(&requestFlags);
-<<<<<<< HEAD
-
-    // If we are trying to load a thumbnail via the moz-page-thumb:// protocol,
-    // load it directly from the cache to prevent re-decoding the image. See Bug
-    // 1373258
-    // TODO: Bug 1406134
-    bool isThumbnailScheme = false;
-    if (NS_SUCCEEDED(aURI->SchemeIs("moz-page-thumb", &isThumbnailScheme)) &&
-        isThumbnailScheme) {
-||||||| merged common ancestors
-
-    // If we are trying to load a thumbnail via the moz-page-thumb:// protocol, load
-    // it directly from the cache to prevent re-decoding the image. See Bug 1373258
-    // TODO: Bug 1406134
-    bool isThumbnailScheme = false;
-    if (NS_SUCCEEDED(aURI->SchemeIs("moz-page-thumb", &isThumbnailScheme)) && isThumbnailScheme) {
-=======
     if (PreferLoadFromCache(aURI)) {
->>>>>>> upstream-releases
       requestFlags |= nsIRequest::LOAD_FROM_CACHE;
     }
   }
@@ -2549,21 +2184,10 @@ nsresult imgLoader::LoadImage(
         // - we don't have cache. We are not in this if() stmt. A new channel is
         //   created and that triggers the CSP checks.
         // - We have a cache entry and this is blocked by CSP directives.
-<<<<<<< HEAD
-        DebugOnly<bool> shouldLoad = ShouldLoadCachedImage(
-            request, aLoadingDocument, aTriggeringPrincipal, aContentPolicyType,
-            /* aSendCSPViolationReports */ true);
-||||||| merged common ancestors
-        DebugOnly<bool> shouldLoad =
-          ShouldLoadCachedImage(request, aLoadingDocument, aTriggeringPrincipal,
-                                aContentPolicyType,
-                                /* aSendCSPViolationReports */ true);
-=======
         DebugOnly<bool> shouldLoad =
             ShouldLoadCachedImage(request, ToSupports(aLoadingDocument),
                                   aTriggeringPrincipal, aContentPolicyType,
                                   /* aSendCSPViolationReports */ true);
->>>>>>> upstream-releases
         MOZ_ASSERT(shouldLoad);
       }
     } else {
@@ -2636,20 +2260,9 @@ nsresult imgLoader::LoadImage(
     // create the proxy listener
     nsCOMPtr<nsIStreamListener> listener = new ProxyListener(request.get());
 
-<<<<<<< HEAD
-    MOZ_LOG(
-        gImgLog, LogLevel::Debug,
-        ("[this=%p] imgLoader::LoadImage -- Calling channel->AsyncOpen2()\n",
-         this));
-||||||| merged common ancestors
-    MOZ_LOG(gImgLog, LogLevel::Debug,
-           ("[this=%p] imgLoader::LoadImage -- Calling channel->AsyncOpen2()\n",
-            this));
-=======
     MOZ_LOG(gImgLog, LogLevel::Debug,
             ("[this=%p] imgLoader::LoadImage -- Calling channel->AsyncOpen()\n",
              this));
->>>>>>> upstream-releases
 
     mozilla::net::PredictorLearn(aURI, aInitialDocumentURI,
                                  nsINetworkPredictor::LEARN_LOAD_SUBRESOURCE,
@@ -2658,23 +2271,11 @@ nsresult imgLoader::LoadImage(
     nsresult openRes = newChannel->AsyncOpen(listener);
 
     if (NS_FAILED(openRes)) {
-<<<<<<< HEAD
-      MOZ_LOG(
-          gImgLog, LogLevel::Debug,
-          ("[this=%p] imgLoader::LoadImage -- AsyncOpen2() failed: 0x%" PRIx32
-           "\n",
-           this, static_cast<uint32_t>(openRes)));
-||||||| merged common ancestors
-      MOZ_LOG(gImgLog, LogLevel::Debug,
-             ("[this=%p] imgLoader::LoadImage -- AsyncOpen2() failed: 0x%" PRIx32 "\n",
-              this, static_cast<uint32_t>(openRes)));
-=======
       MOZ_LOG(
           gImgLog, LogLevel::Debug,
           ("[this=%p] imgLoader::LoadImage -- AsyncOpen() failed: 0x%" PRIx32
            "\n",
            this, static_cast<uint32_t>(openRes)));
->>>>>>> upstream-releases
       request->CancelAndAbort(openRes);
       return openRes;
     }
@@ -2782,23 +2383,7 @@ nsresult imgLoader::LoadImageWithChannel(nsIChannel* channel,
   nsLoadFlags requestFlags = nsIRequest::LOAD_NORMAL;
   channel->GetLoadFlags(&requestFlags);
 
-<<<<<<< HEAD
-  // If we are trying to load a thumbnail via the moz-page-thumb:// protocol,
-  // load it directly from the cache to prevent re-decoding the image. See Bug
-  // 1373258
-  // TODO: Bug 1406134
-  bool isThumbnailScheme = false;
-  if (NS_SUCCEEDED(uri->SchemeIs("moz-page-thumb", &isThumbnailScheme)) &&
-      isThumbnailScheme) {
-||||||| merged common ancestors
-  // If we are trying to load a thumbnail via the moz-page-thumb:// protocol, load
-  // it directly from the cache to prevent re-decoding the image. See Bug 1373258
-  // TODO: Bug 1406134
-  bool isThumbnailScheme = false;
-  if (NS_SUCCEEDED(uri->SchemeIs("moz-page-thumb", &isThumbnailScheme)) && isThumbnailScheme) {
-=======
   if (PreferLoadFromCache(uri)) {
->>>>>>> upstream-releases
     requestFlags |= nsIRequest::LOAD_FROM_CACHE;
   }
 
@@ -2827,30 +2412,11 @@ nsresult imgLoader::LoadImageWithChannel(nsIChannel* channel,
       nsCOMPtr<nsILoadInfo> loadInfo = channel->LoadInfo();
       // if there is a loadInfo, use the right contentType, otherwise
       // default to the internal image type
-<<<<<<< HEAD
-      nsContentPolicyType policyType =
-          loadInfo ? loadInfo->InternalContentPolicyType()
-                   : nsIContentPolicy::TYPE_INTERNAL_IMAGE;
-
-      if (ValidateEntry(entry, uri, nullptr, nullptr, RP_Unset, nullptr,
-                        aObserver, aCX, doc, requestFlags, policyType, false,
-                        nullptr, nullptr, nullptr, imgIRequest::CORS_NONE)) {
-||||||| merged common ancestors
-      nsContentPolicyType policyType = loadInfo
-        ? loadInfo->InternalContentPolicyType()
-        : nsIContentPolicy::TYPE_INTERNAL_IMAGE;
-
-      if (ValidateEntry(entry, uri, nullptr, nullptr, RP_Unset,
-                        nullptr, aObserver, aCX, doc, requestFlags,
-                        policyType, false, nullptr, nullptr,
-                        nullptr, imgIRequest::CORS_NONE)) {
-=======
       nsContentPolicyType policyType = loadInfo->InternalContentPolicyType();
 
       if (ValidateEntry(entry, uri, nullptr, nullptr, RP_Unset, nullptr,
                         aObserver, aCX, doc, requestFlags, policyType, false,
                         nullptr, nullptr, nullptr, imgIRequest::CORS_NONE)) {
->>>>>>> upstream-releases
         request = entry->GetRequest();
       } else {
         nsCOMPtr<nsICacheInfoChannel> cacheChan(do_QueryInterface(channel));
@@ -3079,14 +2645,7 @@ ProxyListener::~ProxyListener() { /* destructor code */
 /** nsIRequestObserver methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ProxyListener::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt) {
-||||||| merged common ancestors
-ProxyListener::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt)
-{
-=======
 ProxyListener::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   if (!mDestListener) {
     return NS_ERROR_FAILURE;
   }
@@ -3133,17 +2692,7 @@ ProxyListener::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ProxyListener::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
-                             nsresult status) {
-||||||| merged common ancestors
-ProxyListener::OnStopRequest(nsIRequest* aRequest,
-                             nsISupports* ctxt,
-                             nsresult status)
-{
-=======
 ProxyListener::OnStopRequest(nsIRequest* aRequest, nsresult status) {
->>>>>>> upstream-releases
   if (!mDestListener) {
     return NS_ERROR_FAILURE;
   }
@@ -3154,32 +2703,13 @@ ProxyListener::OnStopRequest(nsIRequest* aRequest, nsresult status) {
 /** nsIStreamListener methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-ProxyListener::OnDataAvailable(nsIRequest* aRequest, nsISupports* ctxt,
-                               nsIInputStream* inStr, uint64_t sourceOffset,
-                               uint32_t count) {
-||||||| merged common ancestors
-ProxyListener::OnDataAvailable(nsIRequest* aRequest, nsISupports* ctxt,
-                               nsIInputStream* inStr, uint64_t sourceOffset,
-                               uint32_t count)
-{
-=======
 ProxyListener::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* inStr,
                                uint64_t sourceOffset, uint32_t count) {
->>>>>>> upstream-releases
   if (!mDestListener) {
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  return mDestListener->OnDataAvailable(aRequest, ctxt, inStr, sourceOffset,
-                                        count);
-||||||| merged common ancestors
-  return mDestListener->OnDataAvailable(aRequest, ctxt, inStr,
-                                        sourceOffset, count);
-=======
   return mDestListener->OnDataAvailable(aRequest, inStr, sourceOffset, count);
->>>>>>> upstream-releases
 }
 
 /** nsThreadRetargetableStreamListener methods **/
@@ -3301,14 +2831,7 @@ void imgCacheValidator::UpdateProxies(bool aCancelRequest, bool aSyncNotify) {
 /** nsIRequestObserver methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgCacheValidator::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt) {
-||||||| merged common ancestors
-imgCacheValidator::OnStartRequest(nsIRequest* aRequest, nsISupports* ctxt)
-{
-=======
 imgCacheValidator::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   // We may be holding on to a document, so ensure that it's released.
   nsCOMPtr<nsISupports> context = mContext.forget();
 
@@ -3392,17 +2915,7 @@ imgCacheValidator::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgCacheValidator::OnStopRequest(nsIRequest* aRequest, nsISupports* ctxt,
-                                 nsresult status) {
-||||||| merged common ancestors
-imgCacheValidator::OnStopRequest(nsIRequest* aRequest,
-                                 nsISupports* ctxt,
-                                 nsresult status)
-{
-=======
 imgCacheValidator::OnStopRequest(nsIRequest* aRequest, nsresult status) {
->>>>>>> upstream-releases
   // Be sure we've released the document that we may have been holding on to.
   mContext = nullptr;
 
@@ -3416,19 +2929,8 @@ imgCacheValidator::OnStopRequest(nsIRequest* aRequest, nsresult status) {
 /** nsIStreamListener methods **/
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-imgCacheValidator::OnDataAvailable(nsIRequest* aRequest, nsISupports* ctxt,
-                                   nsIInputStream* inStr, uint64_t sourceOffset,
-                                   uint32_t count) {
-||||||| merged common ancestors
-imgCacheValidator::OnDataAvailable(nsIRequest* aRequest, nsISupports* ctxt,
-                                   nsIInputStream* inStr,
-                                   uint64_t sourceOffset, uint32_t count)
-{
-=======
 imgCacheValidator::OnDataAvailable(nsIRequest* aRequest, nsIInputStream* inStr,
                                    uint64_t sourceOffset, uint32_t count) {
->>>>>>> upstream-releases
   if (!mDestListener) {
     // XXX see bug 113959
     uint32_t _retval;

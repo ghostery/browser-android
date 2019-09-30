@@ -7,16 +7,9 @@
 #define WSRunObject_h
 
 #include "mozilla/dom/Text.h"
-<<<<<<< HEAD
-#include "mozilla/EditorBase.h"
-#include "mozilla/EditorDOMPoint.h"  // for EditorDOMPoint
-||||||| merged common ancestors
-#include "mozilla/EditorDOMPoint.h" // for EditorDOMPoint
-=======
 #include "mozilla/EditAction.h"
 #include "mozilla/EditorBase.h"
 #include "mozilla/EditorDOMPoint.h"  // for EditorDOMPoint
->>>>>>> upstream-releases
 
 namespace mozilla {
 
@@ -151,11 +144,6 @@ class MOZ_STACK_CLASS WSRunObject final {
   enum { eAfter = 1 << 1 };
   enum { eBoth = eBefore | eAfter };
 
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-=======
   /**
    * The constructors take 2 DOM points.  They represent a range in an editing
    * host.  aScanEndPoint (aScanEndNode and aScanEndOffset) must be later
@@ -171,7 +159,6 @@ class MOZ_STACK_CLASS WSRunObject final {
               const EditorDOMPointBase<PT, CT>& aScanStartPoint,
               const EditorDOMPointBase<PT, CT>& aScanEndPoint);
   template <typename PT, typename CT>
->>>>>>> upstream-releases
   WSRunObject(HTMLEditor* aHTMLEditor,
               const EditorDOMPointBase<PT, CT>& aScanStartPoint)
       : WSRunObject(aHTMLEditor, aScanStartPoint, aScanStartPoint) {}
@@ -253,22 +240,9 @@ class MOZ_STACK_CLASS WSRunObject final {
    * @return                The new <br> node.  If failed to create new <br>
    *                        node, returns nullptr.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  already_AddRefed<dom::Element> InsertBreak(
-      Selection& aSelection, const EditorDOMPointBase<PT, CT>& aPointToInsert,
-      nsIEditor::EDirection aSelect);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  already_AddRefed<dom::Element>
-  InsertBreak(Selection& aSelection,
-              const EditorDOMPointBase<PT, CT>& aPointToInsert,
-              nsIEditor::EDirection aSelect);
-=======
   MOZ_CAN_RUN_SCRIPT already_AddRefed<dom::Element> InsertBreak(
       Selection& aSelection, const EditorDOMPoint& aPointToInsert,
       nsIEditor::EDirection aSelect);
->>>>>>> upstream-releases
 
   /**
    * InsertText() inserts aStringToInsert to mScanStartPoint and makes any
@@ -289,22 +263,9 @@ class MOZ_STACK_CLASS WSRunObject final {
    *                        does nothing during composition, returns NS_OK.
    *                        Otherwise, an error code.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  nsresult InsertText(nsIDocument& aDocument, const nsAString& aStringToInsert,
-                      const EditorDOMPointBase<PT, CT>& aPointToInsert,
-                      EditorRawDOMPoint* aPointAfterInsertedString = nullptr);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  nsresult InsertText(nsIDocument& aDocument,
-                      const nsAString& aStringToInsert,
-                      const EditorDOMPointBase<PT, CT>& aPointToInsert,
-                      EditorRawDOMPoint* aPointAfterInsertedString = nullptr);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult
   InsertText(dom::Document& aDocument, const nsAString& aStringToInsert,
              EditorRawDOMPoint* aPointAfterInsertedString = nullptr);
->>>>>>> upstream-releases
 
   // DeleteWSBackward deletes a single visible piece of ws before the ws
   // point (the point to create the wsRunObject, passed to its constructor).
@@ -355,15 +316,9 @@ class MOZ_STACK_CLASS WSRunObject final {
   // be safely converted to regular ascii space and converts them.
   MOZ_CAN_RUN_SCRIPT nsresult AdjustWhitespace();
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   Element* GetEditingHost() const { return mEditingHost; }
 
  protected:
->>>>>>> upstream-releases
   // WSFragment represents a single run of ws (all leadingws, or all normalws,
   // or all trailingws, or all leading+trailingws).  Note that this single run
   // may still span multiple nodes.
@@ -433,18 +388,8 @@ protected:
    * When aEndPoint is in a text node, removes the text data before the point.
    * Removes any nodes between them.
    */
-<<<<<<< HEAD
-  template <typename PT1, typename CT1, typename PT2, typename CT2>
-  nsresult DeleteRange(const EditorDOMPointBase<PT1, CT1>& aStartPoint,
-                       const EditorDOMPointBase<PT2, CT2>& aEndPoint);
-||||||| merged common ancestors
-  template<typename PT1, typename CT1, typename PT2, typename CT2>
-  nsresult DeleteRange(const EditorDOMPointBase<PT1, CT1>& aStartPoint,
-                       const EditorDOMPointBase<PT2, CT2>& aEndPoint);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult DeleteRange(const EditorDOMPoint& aStartPoint,
                                           const EditorDOMPoint& aEndPoint);
->>>>>>> upstream-releases
 
   /**
    * GetNextCharPoint() returns next character's point of aPoint.  If there is
@@ -503,17 +448,9 @@ protected:
    * @param outEndOffset    [out] The offset of last ASCII whitespace in
    *                              outEndNode.
    */
-<<<<<<< HEAD
-  void GetASCIIWhitespacesBounds(int16_t aDir, nsINode* aNode, int32_t aOffset,
-||||||| merged common ancestors
-  void GetASCIIWhitespacesBounds(int16_t aDir,
-                                 nsINode* aNode,
-                                 int32_t aOffset,
-=======
   template <typename PT, typename CT>
   void GetASCIIWhitespacesBounds(int16_t aDir,
                                  const EditorDOMPointBase<PT, CT>& aPoint,
->>>>>>> upstream-releases
                                  dom::Text** outStartNode,
                                  int32_t* outStartOffset,
                                  dom::Text** outEndNode, int32_t* outEndOffset);
@@ -544,13 +481,7 @@ protected:
                              bool aForward) const;
 
   char16_t GetCharAt(dom::Text* aTextNode, int32_t aOffset) const;
-<<<<<<< HEAD
-  nsresult CheckTrailingNBSPOfRun(WSFragment* aRun);
-||||||| merged common ancestors
-  nsresult CheckTrailingNBSPOfRun(WSFragment *aRun);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult CheckTrailingNBSPOfRun(WSFragment* aRun);
->>>>>>> upstream-releases
 
   /**
    * ReplacePreviousNBSPIfUnncessary() replaces previous character of aPoint
@@ -560,76 +491,23 @@ protected:
    * @param aPoint      Current insertion point.  Its previous character is
    *                    unnecessary NBSP will be checked.
    */
-<<<<<<< HEAD
-  template <typename PT, typename CT>
-  nsresult ReplacePreviousNBSPIfUnncessary(
-      WSFragment* aRun, const EditorDOMPointBase<PT, CT>& aPoint);
-||||||| merged common ancestors
-  template<typename PT, typename CT>
-  nsresult
-  ReplacePreviousNBSPIfUnncessary(WSFragment* aRun,
-                                  const EditorDOMPointBase<PT, CT>& aPoint);
-=======
   MOZ_CAN_RUN_SCRIPT nsresult ReplacePreviousNBSPIfUnncessary(
       WSFragment* aRun, const EditorDOMPoint& aPoint);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  nsresult CheckLeadingNBSP(WSFragment* aRun, nsINode* aNode, int32_t aOffset);
-||||||| merged common ancestors
-  nsresult CheckLeadingNBSP(WSFragment* aRun, nsINode* aNode,
-                            int32_t aOffset);
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult CheckLeadingNBSP(WSFragment* aRun, nsINode* aNode, int32_t aOffset);
->>>>>>> upstream-releases
 
   MOZ_CAN_RUN_SCRIPT nsresult Scrub();
   bool IsBlockNode(nsINode* aNode);
 
-<<<<<<< HEAD
-  EditorRawDOMPoint Point() const { return EditorRawDOMPoint(mNode, mOffset); }
-  EditorRawDOMPoint StartPoint() const {
-    return EditorRawDOMPoint(mStartNode, mStartOffset);
-||||||| merged common ancestors
-  EditorRawDOMPoint Point() const
-  {
-    return EditorRawDOMPoint(mNode, mOffset);
-  }
-  EditorRawDOMPoint StartPoint() const
-  {
-    return EditorRawDOMPoint(mStartNode, mStartOffset);
-=======
   EditorDOMPoint StartPoint() const {
     return EditorDOMPoint(mStartNode, mStartOffset);
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  EditorRawDOMPoint EndPoint() const {
-    return EditorRawDOMPoint(mEndNode, mEndOffset);
-||||||| merged common ancestors
-  EditorRawDOMPoint EndPoint() const
-  {
-    return EditorRawDOMPoint(mEndNode, mEndOffset);
-=======
   EditorDOMPoint EndPoint() const {
     return EditorDOMPoint(mEndNode, mEndOffset);
->>>>>>> upstream-releases
   }
 
   // The node passed to our constructor.
-<<<<<<< HEAD
-  nsCOMPtr<nsINode> mNode;
-  // The offset passed to our contructor.
-  int32_t mOffset;
-  // Together, the above represent the point at which we are building up ws
-  // info.
-||||||| merged common ancestors
-  nsCOMPtr<nsINode> mNode;
-  // The offset passed to our contructor.
-  int32_t mOffset;
-  // Together, the above represent the point at which we are building up ws info.
-=======
   EditorDOMPoint mScanStartPoint;
   EditorDOMPoint mScanEndPoint;
 
@@ -638,7 +516,6 @@ protected:
 
   // Together, the above represent the point at which we are building up ws
   // info.
->>>>>>> upstream-releases
 
   // true if we are in preformatted whitespace context.
   bool mPRE;

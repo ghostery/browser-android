@@ -171,22 +171,10 @@ AudioBuffer::~AudioBuffer() {
   mozilla::DropJSObjects(this);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioBuffer> AudioBuffer::Constructor(
-    const GlobalObject& aGlobal, const AudioBufferOptions& aOptions,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioBuffer>
-AudioBuffer::Constructor(const GlobalObject& aGlobal,
-                         const AudioBufferOptions& aOptions,
-                         ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<AudioBuffer> AudioBuffer::Constructor(
     const GlobalObject& aGlobal, const AudioBufferOptions& aOptions,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (!aOptions.mNumberOfChannels) {
     aRv.Throw(NS_ERROR_DOM_NOT_SUPPORTED_ERR);
     return nullptr;
@@ -213,28 +201,12 @@ void AudioBuffer::SetSharedChannels(
   mSharedChannels.mBufferFormat = AUDIO_FORMAT_FLOAT32;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioBuffer> AudioBuffer::Create(
-    nsPIDOMWindowInner* aWindow, uint32_t aNumberOfChannels, uint32_t aLength,
-    float aSampleRate,
-    already_AddRefed<ThreadSharedFloatArrayBufferList> aInitialContents,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioBuffer>
-AudioBuffer::Create(nsPIDOMWindowInner* aWindow, uint32_t aNumberOfChannels,
-                    uint32_t aLength, float aSampleRate,
-                    already_AddRefed<ThreadSharedFloatArrayBufferList>
-                      aInitialContents,
-                    ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<AudioBuffer> AudioBuffer::Create(
     nsPIDOMWindowInner* aWindow, uint32_t aNumberOfChannels, uint32_t aLength,
     float aSampleRate,
     already_AddRefed<ThreadSharedFloatArrayBufferList> aInitialContents,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<ThreadSharedFloatArrayBufferList> initialContents = aInitialContents;
   RefPtr<AudioBuffer> buffer =
       new AudioBuffer(aWindow, aNumberOfChannels, aLength, aSampleRate, aRv);
@@ -250,21 +222,10 @@ already_AddRefed<AudioBuffer> AudioBuffer::Create(
   return buffer.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<AudioBuffer> AudioBuffer::Create(
-    nsPIDOMWindowInner* aWindow, float aSampleRate,
-    AudioChunk&& aInitialContents) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<AudioBuffer>
-AudioBuffer::Create(nsPIDOMWindowInner* aWindow, float aSampleRate,
-                    AudioChunk&& aInitialContents)
-{
-=======
 /* static */
 already_AddRefed<AudioBuffer> AudioBuffer::Create(
     nsPIDOMWindowInner* aWindow, float aSampleRate,
     AudioChunk&& aInitialContents) {
->>>>>>> upstream-releases
   AudioChunk initialContents = aInitialContents;
   ErrorResult rv;
   RefPtr<AudioBuffer> buffer =
@@ -297,20 +258,6 @@ static void CopyChannelDataToFloat(const AudioChunk& aChunk, uint32_t aChannel,
   }
 }
 
-<<<<<<< HEAD
-bool AudioBuffer::RestoreJSChannelData(JSContext* aJSContext) {
-  nsPIDOMWindowInner* global = GetParentObject();
-  if (!global || !global->AsGlobal()->GetGlobalJSObject()) {
-    return false;
-  }
-
-  JSAutoRealm ar(aJSContext, global->AsGlobal()->GetGlobalJSObject());
-
-||||||| merged common ancestors
-bool
-AudioBuffer::RestoreJSChannelData(JSContext* aJSContext)
-{
-=======
 bool AudioBuffer::RestoreJSChannelData(JSContext* aJSContext) {
   nsPIDOMWindowInner* global = GetParentObject();
   if (!global || !global->AsGlobal()->HasJSGlobal()) {
@@ -319,7 +266,6 @@ bool AudioBuffer::RestoreJSChannelData(JSContext* aJSContext) {
 
   JSAutoRealm ar(aJSContext, global->AsGlobal()->GetGlobalJSObject());
 
->>>>>>> upstream-releases
   for (uint32_t i = 0; i < mJSChannels.Length(); ++i) {
     if (mJSChannels[i]) {
       // Already have data in JS array.
@@ -356,21 +302,7 @@ void AudioBuffer::CopyFromChannel(const Float32Array& aDestination,
                                   uint32_t aStartInChannel, ErrorResult& aRv) {
   aDestination.ComputeLengthAndData();
 
-<<<<<<< HEAD
-  uint32_t length = aDestination.Length();
-  CheckedInt<uint32_t> end = aStartInChannel;
-  end += length;
-  if (aChannelNumber >= NumberOfChannels() || !end.isValid() ||
-      end.value() > Length()) {
-||||||| merged common ancestors
-  uint32_t length = aDestination.Length();
-  CheckedInt<uint32_t> end = aStartInChannel;
-  end += length;
-  if (aChannelNumber >= NumberOfChannels() ||
-      !end.isValid() || end.value() > Length()) {
-=======
   if (aChannelNumber >= NumberOfChannels() || aStartInChannel > Length()) {
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_INDEX_SIZE_ERR);
     return;
   }
@@ -410,21 +342,7 @@ void AudioBuffer::CopyToChannel(JSContext* aJSContext,
                                 uint32_t aStartInChannel, ErrorResult& aRv) {
   aSource.ComputeLengthAndData();
 
-<<<<<<< HEAD
-  uint32_t length = aSource.Length();
-  CheckedInt<uint32_t> end = aStartInChannel;
-  end += length;
-  if (aChannelNumber >= NumberOfChannels() || !end.isValid() ||
-      end.value() > Length()) {
-||||||| merged common ancestors
-  uint32_t length = aSource.Length();
-  CheckedInt<uint32_t> end = aStartInChannel;
-  end += length;
-  if (aChannelNumber >= NumberOfChannels() ||
-      !end.isValid() || end.value() > Length()) {
-=======
   if (aChannelNumber >= NumberOfChannels() || aStartInChannel > Length()) {
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_INDEX_SIZE_ERR);
     return;
   }
@@ -468,19 +386,6 @@ void AudioBuffer::GetChannelData(JSContext* aJSContext, uint32_t aChannel,
 }
 
 already_AddRefed<ThreadSharedFloatArrayBufferList>
-<<<<<<< HEAD
-AudioBuffer::StealJSArrayDataIntoSharedChannels(JSContext* aJSContext) {
-  nsPIDOMWindowInner* global = GetParentObject();
-  if (!global || !global->AsGlobal()->GetGlobalJSObject()) {
-    return nullptr;
-  }
-
-  JSAutoRealm ar(aJSContext, global->AsGlobal()->GetGlobalJSObject());
-
-||||||| merged common ancestors
-AudioBuffer::StealJSArrayDataIntoSharedChannels(JSContext* aJSContext)
-{
-=======
 AudioBuffer::StealJSArrayDataIntoSharedChannels(JSContext* aJSContext) {
   nsPIDOMWindowInner* global = GetParentObject();
   if (!global || !global->AsGlobal()->HasJSGlobal()) {
@@ -489,7 +394,6 @@ AudioBuffer::StealJSArrayDataIntoSharedChannels(JSContext* aJSContext) {
 
   JSAutoRealm ar(aJSContext, global->AsGlobal()->GetGlobalJSObject());
 
->>>>>>> upstream-releases
   // "1. If any of the AudioBuffer's ArrayBuffer have been detached, abort
   // these steps, and return a zero-length channel data buffers to the
   // invoker."
@@ -516,22 +420,10 @@ AudioBuffer::StealJSArrayDataIntoSharedChannels(JSContext* aJSContext) {
     // The channel data arrays should all have originated in
     // RestoreJSChannelData, where they are created unshared.
     MOZ_ASSERT(!isSharedMemory);
-<<<<<<< HEAD
-    auto stolenData = arrayBuffer
-                          ? static_cast<float*>(JS_StealArrayBufferContents(
-                                aJSContext, arrayBuffer))
-                          : nullptr;
-||||||| merged common ancestors
-    auto stolenData =
-      arrayBuffer ? static_cast<float*>(
-                      JS_StealArrayBufferContents(aJSContext, arrayBuffer))
-                  : nullptr;
-=======
     auto stolenData = arrayBuffer
                           ? static_cast<float*>(JS::StealArrayBufferContents(
                                 aJSContext, arrayBuffer))
                           : nullptr;
->>>>>>> upstream-releases
     if (stolenData) {
       result->SetData(i, stolenData, js_free, stolenData);
     } else {

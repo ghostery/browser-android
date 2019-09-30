@@ -41,19 +41,12 @@
 
 #define DEFAULT_PROTOCOL_VERSION "2.2"
 
-<<<<<<< HEAD
-static char int_to_hex_digit(int32_t i) {
-||||||| merged common ancestors
-static char int_to_hex_digit(int32_t i)
-{
-=======
 using namespace mozilla;
 using namespace mozilla::safebrowsing;
 
 static mozilla::StaticRefPtr<nsUrlClassifierUtils> gUrlClassifierUtils;
 
 static char int_to_hex_digit(int32_t i) {
->>>>>>> upstream-releases
   NS_ASSERTION((i >= 0) && (i <= 15), "int too big in int_to_hex_digit");
   return static_cast<char>(((i < 10) ? (i + '0') : ((i - 10) + 'A')));
 }
@@ -128,21 +121,9 @@ static PlatformType GetPlatformType() {
 typedef FetchThreatListUpdatesRequest_ListUpdateRequest ListUpdateRequest;
 typedef FetchThreatListUpdatesRequest_ListUpdateRequest_Constraints Constraints;
 
-<<<<<<< HEAD
-static void InitListUpdateRequest(ThreatType aThreatType,
-                                  const char* aStateBase64,
-                                  ListUpdateRequest* aListUpdateRequest) {
-||||||| merged common ancestors
-static void
-InitListUpdateRequest(ThreatType aThreatType,
-                      const char* aStateBase64,
-                      ListUpdateRequest* aListUpdateRequest)
-{
-=======
 static void InitListUpdateRequest(ThreatType aThreatType,
                                   const nsCString& aStateBase64,
                                   ListUpdateRequest* aListUpdateRequest) {
->>>>>>> upstream-releases
   aListUpdateRequest->set_threat_type(aThreatType);
   PlatformType platform = GetPlatformType();
 #if defined(ANDROID)
@@ -204,13 +185,6 @@ static bool IsAllowedOnCurrentPlatform(uint32_t aThreatType) {
   return true;
 }
 
-<<<<<<< HEAD
-}  // end of namespace safebrowsing.
-}  // end of namespace mozilla.
-||||||| merged common ancestors
-} // end of namespace safebrowsing.
-} // end of namespace mozilla.
-=======
 }  // end of namespace safebrowsing.
 }  // end of namespace mozilla.
 
@@ -240,16 +214,8 @@ nsUrlClassifierUtils* nsUrlClassifierUtils::GetInstance() {
 
   return gUrlClassifierUtils;
 }
->>>>>>> upstream-releases
 
 nsUrlClassifierUtils::nsUrlClassifierUtils()
-<<<<<<< HEAD
-    : mProviderDictLock("nsUrlClassifierUtils.mProviderDictLock") {}
-||||||| merged common ancestors
-  : mProviderDictLock("nsUrlClassifierUtils.mProviderDictLock")
-{
-}
-=======
     : mProviderDictLock("nsUrlClassifierUtils.mProviderDictLock") {}
 
 nsUrlClassifierUtils::~nsUrlClassifierUtils() {
@@ -258,7 +224,6 @@ nsUrlClassifierUtils::~nsUrlClassifierUtils() {
     gUrlClassifierUtils = nullptr;
   }
 }
->>>>>>> upstream-releases
 
 nsresult nsUrlClassifierUtils::Init() {
   // nsIUrlClassifierUtils is a thread-safe service so it's
@@ -327,43 +292,6 @@ static const struct {
   const char* mListName;
   uint32_t mThreatType;
 } THREAT_TYPE_CONV_TABLE[] = {
-<<<<<<< HEAD
-    {"goog-malware-proto", MALWARE_THREAT},                   // 1
-    {"googpub-phish-proto", SOCIAL_ENGINEERING_PUBLIC},       // 2
-    {"goog-unwanted-proto", UNWANTED_SOFTWARE},               // 3
-    {"goog-harmful-proto", POTENTIALLY_HARMFUL_APPLICATION},  // 4
-    {"goog-phish-proto", SOCIAL_ENGINEERING},                 // 5
-
-    // For application reputation
-    {"goog-badbinurl-proto", MALICIOUS_BINARY},            // 7
-    {"goog-downloadwhite-proto", CSD_DOWNLOAD_WHITELIST},  // 9
-
-    // For login reputation
-    {"goog-passwordwhite-proto", CSD_WHITELIST},  // 8
-
-    // For testing purpose.
-    {"test-phish-proto", SOCIAL_ENGINEERING_PUBLIC},  // 2
-    {"test-unwanted-proto", UNWANTED_SOFTWARE},       // 3
-    {"test-passwordwhite-proto", CSD_WHITELIST},      // 8
-||||||| merged common ancestors
-  { "goog-malware-proto",  MALWARE_THREAT},                  // 1
-  { "googpub-phish-proto", SOCIAL_ENGINEERING_PUBLIC},       // 2
-  { "goog-unwanted-proto", UNWANTED_SOFTWARE},               // 3
-  { "goog-harmful-proto",  POTENTIALLY_HARMFUL_APPLICATION}, // 4
-  { "goog-phish-proto",    SOCIAL_ENGINEERING},              // 5
-
-  // For application reputation
-  { "goog-badbinurl-proto", MALICIOUS_BINARY},            // 7
-  { "goog-downloadwhite-proto", CSD_DOWNLOAD_WHITELIST},  // 9
-
-  // For login reputation
-  { "goog-passwordwhite-proto", CSD_WHITELIST}, // 8
-
-  // For testing purpose.
-  { "test-phish-proto",    SOCIAL_ENGINEERING_PUBLIC}, // 2
-  { "test-unwanted-proto", UNWANTED_SOFTWARE},         // 3
-  { "test-passwordwhite-proto", CSD_WHITELIST},        // 8
-=======
     {"goog-malware-proto", MALWARE_THREAT},                   // 1
     {"googpub-phish-proto", SOCIAL_ENGINEERING_PUBLIC},       // 2
     {"goog-unwanted-proto", UNWANTED_SOFTWARE},               // 3
@@ -384,7 +312,6 @@ static const struct {
     {"test-unwanted-proto", UNWANTED_SOFTWARE},          // 3
     {"moztest-passwordwhite-proto", CSD_WHITELIST},      // 8
     {"test-passwordwhite-proto", CSD_WHITELIST},         // 8
->>>>>>> upstream-releases
 };
 
 NS_IMETHODIMP
@@ -469,22 +396,9 @@ nsUrlClassifierUtils::GetProtocolVersion(const nsACString& aProvider,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsUrlClassifierUtils::MakeUpdateRequestV4(const char** aListNames,
-                                          const char** aStatesBase64,
-                                          uint32_t aCount,
-                                          nsACString& aRequest) {
-||||||| merged common ancestors
-nsUrlClassifierUtils::MakeUpdateRequestV4(const char** aListNames,
-                                          const char** aStatesBase64,
-                                          uint32_t aCount,
-                                          nsACString &aRequest)
-{
-=======
 nsUrlClassifierUtils::MakeUpdateRequestV4(
     const nsTArray<nsCString>& aListNames,
     const nsTArray<nsCString>& aStatesBase64, nsACString& aRequest) {
->>>>>>> upstream-releases
   using namespace mozilla::safebrowsing;
 
   if (aListNames.Length() != aStatesBase64.Length()) {
@@ -501,27 +415,12 @@ nsUrlClassifierUtils::MakeUpdateRequestV4(
       continue;  // Unknown list name.
     }
     if (!IsAllowedOnCurrentPlatform(threatType)) {
-<<<<<<< HEAD
-      NS_WARNING(
-          nsPrintfCString(
-              "Threat type %d (%s) is unsupported on current platform: %d",
-              threatType, aListNames[i], GetPlatformType())
-              .get());
-      continue;  // Some threat types are not available on some platforms.
-||||||| merged common ancestors
-      NS_WARNING(nsPrintfCString("Threat type %d (%s) is unsupported on current platform: %d",
-                                 threatType,
-                                 aListNames[i],
-                                 GetPlatformType()).get());
-      continue; // Some threat types are not available on some platforms.
-=======
       NS_WARNING(
           nsPrintfCString(
               "Threat type %d (%s) is unsupported on current platform: %d",
               threatType, aListNames[i].get(), GetPlatformType())
               .get());
       continue;  // Some threat types are not available on some platforms.
->>>>>>> upstream-releases
     }
     auto lur = r.mutable_list_update_requests()->Add();
     InitListUpdateRequest(static_cast<ThreatType>(threatType), aStatesBase64[i],
@@ -543,22 +442,6 @@ nsUrlClassifierUtils::MakeUpdateRequestV4(
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsUrlClassifierUtils::MakeFindFullHashRequestV4(const char** aListNames,
-                                                const char** aListStatesBase64,
-                                                const char** aPrefixesBase64,
-                                                uint32_t aListCount,
-                                                uint32_t aPrefixCount,
-                                                nsACString& aRequest) {
-||||||| merged common ancestors
-nsUrlClassifierUtils::MakeFindFullHashRequestV4(const char** aListNames,
-                                                const char** aListStatesBase64,
-                                                const char** aPrefixesBase64,
-                                                uint32_t aListCount,
-                                                uint32_t aPrefixCount,
-                                                nsACString &aRequest)
-{
-=======
 nsUrlClassifierUtils::MakeFindFullHashRequestV4(
     const nsTArray<nsCString>& aListNames,
     const nsTArray<nsCString>& aListStatesBase64,
@@ -567,7 +450,6 @@ nsUrlClassifierUtils::MakeFindFullHashRequestV4(
     return NS_ERROR_INVALID_ARG;
   }
 
->>>>>>> upstream-releases
   FindFullHashesRequest r;
   r.set_allocated_client(CreateClientInfo());
 
@@ -583,34 +465,14 @@ nsUrlClassifierUtils::MakeFindFullHashRequestV4(
   for (uint32_t i = 0; i < aListNames.Length(); i++) {
     // Add threat types.
     uint32_t threatType;
-<<<<<<< HEAD
-    rv = ConvertListNameToThreatType(nsDependentCString(aListNames[i]),
-                                     &threatType);
-||||||| merged common ancestors
-    rv = ConvertListNameToThreatType(nsDependentCString(aListNames[i]), &threatType);
-=======
     rv = ConvertListNameToThreatType(aListNames[i], &threatType);
->>>>>>> upstream-releases
     NS_ENSURE_SUCCESS(rv, rv);
     if (!IsAllowedOnCurrentPlatform(threatType)) {
-<<<<<<< HEAD
-      NS_WARNING(
-          nsPrintfCString(
-              "Threat type %d (%s) is unsupported on current platform: %d",
-              threatType, aListNames[i], GetPlatformType())
-              .get());
-||||||| merged common ancestors
-      NS_WARNING(nsPrintfCString("Threat type %d (%s) is unsupported on current platform: %d",
-                                 threatType,
-                                 aListNames[i],
-                                 GetPlatformType()).get());
-=======
       NS_WARNING(
           nsPrintfCString(
               "Threat type %d (%s) is unsupported on current platform: %d",
               threatType, aListNames[i].get(), GetPlatformType())
               .get());
->>>>>>> upstream-releases
       continue;
     }
     threatInfo->add_threat_types((ThreatType)threatType);
@@ -919,24 +781,9 @@ nsUrlClassifierUtils::ParseFindFullHashResponseV4(
     }
     auto& hash = m.threat().hash();
     auto cacheDurationSec = m.cache_duration().seconds();
-<<<<<<< HEAD
     aCallback->OnCompleteHashFound(
         nsDependentCString(hash.c_str(), hash.length()), tableNames,
         cacheDurationSec);
-
-    Telemetry::Accumulate(Telemetry::URLCLASSIFIER_POSITIVE_CACHE_DURATION,
-                          cacheDurationSec * PR_MSEC_PER_SEC);
-||||||| merged common ancestors
-    aCallback->OnCompleteHashFound(nsDependentCString(hash.c_str(), hash.length()),
-                                   tableNames, cacheDurationSec);
-
-    Telemetry::Accumulate(Telemetry::URLCLASSIFIER_POSITIVE_CACHE_DURATION,
-                          cacheDurationSec * PR_MSEC_PER_SEC);
-=======
-    aCallback->OnCompleteHashFound(
-        nsDependentCString(hash.c_str(), hash.length()), tableNames,
-        cacheDurationSec);
->>>>>>> upstream-releases
   }
 
   auto minWaitDuration = DurationToMs(r.minimum_wait_duration());
@@ -1241,15 +1088,6 @@ bool nsUrlClassifierUtils::SpecialEncode(const nsACString& url,
   return changed;
 }
 
-<<<<<<< HEAD
-bool nsUrlClassifierUtils::ShouldURLEscape(const unsigned char c) const {
-  return c <= 32 || c == '%' || c >= 127;
-||||||| merged common ancestors
-bool
-nsUrlClassifierUtils::ShouldURLEscape(const unsigned char c) const
-{
-  return c <= 32 || c == '%' || c >=127;
-=======
 bool nsUrlClassifierUtils::ShouldURLEscape(const unsigned char c) const {
   return c <= 32 || c == '%' || c >= 127;
 }
@@ -1267,5 +1105,4 @@ bool nsUrlClassifierUtils::IsMozTestTable(const nsACString& aTableName) {
 bool nsUrlClassifierUtils::IsTestTable(const nsACString& aTableName) {
   return IsMozTestTable(aTableName) ||
          StringBeginsWith(aTableName, NS_LITERAL_CSTRING("test"));
->>>>>>> upstream-releases
 }

@@ -134,32 +134,6 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
     SetStyleFromUnion(aValue, Style::FILL);
   }
 
-<<<<<<< HEAD
-  already_AddRefed<CanvasGradient> CreateLinearGradient(double aX0, double aY0,
-                                                        double aX1,
-                                                        double aY1) override;
-  already_AddRefed<CanvasGradient> CreateRadialGradient(
-      double aX0, double aY0, double aR0, double aX1, double aY1, double aR1,
-      ErrorResult& aError) override;
-  already_AddRefed<CanvasPattern> CreatePattern(
-      const CanvasImageSource& aElement, const nsAString& aRepeat,
-      ErrorResult& aError) override;
-||||||| merged common ancestors
-  already_AddRefed<CanvasGradient>
-    CreateLinearGradient(double aX0, double aY0, double aX1, double aY1) override;
-  already_AddRefed<CanvasGradient>
-    CreateRadialGradient(double aX0, double aY0, double aR0,
-                         double aX1, double aY1, double aR1,
-                         ErrorResult& aError) override;
-  already_AddRefed<CanvasPattern>
-    CreatePattern(const CanvasImageSource& aElement,
-                  const nsAString& aRepeat, ErrorResult& aError) override;
-
-  double ShadowOffsetX() override
-  {
-    return CurrentState().shadowOffset.x;
-  }
-=======
   already_AddRefed<CanvasGradient> CreateLinearGradient(double aX0, double aY0,
                                                         double aX1,
                                                         double aY1) override;
@@ -171,18 +145,8 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
       ErrorResult& aError) override;
 
   double ShadowOffsetX() override { return CurrentState().shadowOffset.x; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  double ShadowOffsetX() override { return CurrentState().shadowOffset.x; }
 
   void SetShadowOffsetX(double aShadowOffsetX) override {
-||||||| merged common ancestors
-  void SetShadowOffsetX(double aShadowOffsetX) override
-  {
-=======
-  void SetShadowOffsetX(double aShadowOffsetX) override {
->>>>>>> upstream-releases
     CurrentState().shadowOffset.x = ToFloat(aShadowOffsetX);
   }
 
@@ -413,31 +377,8 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
                   double aH, const nsAString& aBgColor, uint32_t aFlags,
                   mozilla::ErrorResult& aError);
 
-<<<<<<< HEAD
-  enum RenderingMode {
-    SoftwareBackendMode,
-    OpenGLBackendMode,
-    DefaultBackendMode
-  };
-
-  bool SwitchRenderingMode(RenderingMode aRenderingMode);
-
   // Eventually this should be deprecated. Keeping for now to keep the binding
   // functional.
-||||||| merged common ancestors
-  enum RenderingMode {
-    SoftwareBackendMode,
-    OpenGLBackendMode,
-    DefaultBackendMode
-  };
-
-  bool SwitchRenderingMode(RenderingMode aRenderingMode);
-
-  // Eventually this should be deprecated. Keeping for now to keep the binding functional.
-=======
-  // Eventually this should be deprecated. Keeping for now to keep the binding
-  // functional.
->>>>>>> upstream-releases
   void Demote();
 
   nsresult Redraw();
@@ -448,19 +389,9 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
 
   // nsICanvasRenderingContextInternal
   /**
-<<<<<<< HEAD
-   * Gets the pres shell from either the canvas element or the doc shell
-   */
-  nsIPresShell* GetPresShell() final {
-||||||| merged common ancestors
-    * Gets the pres shell from either the canvas element or the doc shell
-    */
-  nsIPresShell* GetPresShell() final {
-=======
    * Gets the pres shell from either the canvas element or the doc shell
    */
   PresShell* GetPresShell() final {
->>>>>>> upstream-releases
     if (mCanvasElement) {
       return mCanvasElement->OwnerDoc()->GetPresShell();
     }
@@ -477,29 +408,8 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
                             const nsAString& aEncoderOptions,
                             nsIInputStream** aStream) override;
 
-<<<<<<< HEAD
-  already_AddRefed<mozilla::gfx::SourceSurface> GetSurfaceSnapshot(
-      gfxAlphaType* aOutAlphaType = nullptr) override {
-    EnsureTarget();
-    if (aOutAlphaType) {
-      *aOutAlphaType = (mOpaque ? gfxAlphaType::Opaque : gfxAlphaType::Premult);
-    }
-    return mTarget->Snapshot();
-  }
-||||||| merged common ancestors
-  already_AddRefed<mozilla::gfx::SourceSurface>
-  GetSurfaceSnapshot(gfxAlphaType* aOutAlphaType = nullptr) override
-  {
-    EnsureTarget();
-    if (aOutAlphaType) {
-      *aOutAlphaType = (mOpaque ? gfxAlphaType::Opaque : gfxAlphaType::Premult);
-    }
-    return mTarget->Snapshot();
-  }
-=======
   already_AddRefed<mozilla::gfx::SourceSurface> GetSurfaceSnapshot(
       gfxAlphaType* aOutAlphaType = nullptr) override;
->>>>>>> upstream-releases
 
   virtual void SetOpaqueValueFromOpaqueAttr(bool aOpaqueAttrValue) override;
   bool GetIsOpaque() override { return mOpaque; }
@@ -650,15 +560,8 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
 
   // Returns whether a filter was successfully parsed.
   bool ParseFilter(const nsAString& aString,
-<<<<<<< HEAD
-                   nsTArray<nsStyleFilter>& aFilterChain, ErrorResult& aError);
-||||||| merged common ancestors
-                   nsTArray<nsStyleFilter>& aFilterChain,
-                   ErrorResult& aError);
-=======
                    StyleOwnedSlice<StyleFilter>& aFilterChain,
                    ErrorResult& aError);
->>>>>>> upstream-releases
 
   // Returns whether the font was successfully updated.
   bool SetFontInternal(const nsAString& aFont, mozilla::ErrorResult& aError);
@@ -700,17 +603,8 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
    *
    * Returns true on success.
    */
-<<<<<<< HEAD
-  RenderingMode EnsureTarget(
-      const gfx::Rect* aCoveredRect = nullptr,
-      RenderingMode aRenderMode = RenderingMode::DefaultBackendMode);
-||||||| merged common ancestors
-  RenderingMode EnsureTarget(const gfx::Rect* aCoveredRect = nullptr,
-                             RenderingMode aRenderMode = RenderingMode::DefaultBackendMode);
-=======
   bool EnsureTarget(const gfx::Rect* aCoveredRect = nullptr,
                     bool aWillClear = false);
->>>>>>> upstream-releases
 
   void RestoreClipsAndTransformToTarget();
 
@@ -765,18 +659,9 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
   mozilla::gfx::SurfaceFormat GetSurfaceFormat() const;
 
   /**
-<<<<<<< HEAD
-   * Returns true if we know for sure that the pattern for a given style is
-   * opaque. Usefull to know if we can discard the content below in certain
-   * situations.
-||||||| merged common ancestors
-   * Returns true if we know for sure that the pattern for a given style is opaque.
-   * Usefull to know if we can discard the content below in certain situations.
-=======
    * Returns true if we know for sure that the pattern for a given style is
    * opaque. Usefull to know if we can discard the content below in certain
    * situations. Optionally checks if the pattern is a color pattern.
->>>>>>> upstream-releases
    */
   bool PatternIsOpaque(Style aStyle, bool* aIsColor = nullptr) const;
 
@@ -989,18 +874,7 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
    */
   nsresult DrawOrMeasureText(const nsAString& aText, float aX, float aY,
                              const Optional<double>& aMaxWidth,
-<<<<<<< HEAD
                              TextDrawOperation aOp, float* aWidth);
-
-  bool CheckSizeForSkiaGL(mozilla::gfx::IntSize aSize);
-||||||| merged common ancestors
-                             TextDrawOperation aOp,
-                             float* aWidth);
-
-  bool CheckSizeForSkiaGL(mozilla::gfx::IntSize aSize);
-=======
-                             TextDrawOperation aOp, float* aWidth);
->>>>>>> upstream-releases
 
   // A clip or a transform, recorded and restored in order.
   struct ClipState {
@@ -1017,122 +891,12 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
 
   // state stack handling
   class ContextState {
-<<<<<<< HEAD
-   public:
-    ContextState()
-        : textAlign(TextAlign::START),
-          textBaseline(TextBaseline::ALPHABETIC),
-          shadowColor(0),
-          lineWidth(1.0f),
-          miterLimit(10.0f),
-          globalAlpha(1.0f),
-          shadowBlur(0.0),
-          dashOffset(0.0f),
-          op(mozilla::gfx::CompositionOp::OP_OVER),
-          fillRule(mozilla::gfx::FillRule::FILL_WINDING),
-          lineCap(mozilla::gfx::CapStyle::BUTT),
-          lineJoin(mozilla::gfx::JoinStyle::MITER_OR_BEVEL),
-          filterString(u"none"),
-          filterSourceGraphicTainted(false),
-          imageSmoothingEnabled(true),
-          fontExplicitLanguage(false) {}
-
-    ContextState(const ContextState& aOther)
-        : fontGroup(aOther.fontGroup),
-          fontLanguage(aOther.fontLanguage),
-          fontFont(aOther.fontFont),
-          gradientStyles(aOther.gradientStyles),
-          patternStyles(aOther.patternStyles),
-          colorStyles(aOther.colorStyles),
-          font(aOther.font),
-          textAlign(aOther.textAlign),
-          textBaseline(aOther.textBaseline),
-          shadowColor(aOther.shadowColor),
-          transform(aOther.transform),
-          shadowOffset(aOther.shadowOffset),
-          lineWidth(aOther.lineWidth),
-          miterLimit(aOther.miterLimit),
-          globalAlpha(aOther.globalAlpha),
-          shadowBlur(aOther.shadowBlur),
-          dash(aOther.dash),
-          dashOffset(aOther.dashOffset),
-          op(aOther.op),
-          fillRule(aOther.fillRule),
-          lineCap(aOther.lineCap),
-          lineJoin(aOther.lineJoin),
-          filterString(aOther.filterString),
-          filterChain(aOther.filterChain),
-          autoSVGFiltersObserver(aOther.autoSVGFiltersObserver),
-          filter(aOther.filter),
-          filterAdditionalImages(aOther.filterAdditionalImages),
-          filterSourceGraphicTainted(aOther.filterSourceGraphicTainted),
-          imageSmoothingEnabled(aOther.imageSmoothingEnabled),
-          fontExplicitLanguage(aOther.fontExplicitLanguage) {}
-
-    void SetColorStyle(Style aWhichStyle, nscolor aColor) {
-||||||| merged common ancestors
-  public:
-    ContextState() : textAlign(TextAlign::START),
-                     textBaseline(TextBaseline::ALPHABETIC),
-                     shadowColor(0),
-                     lineWidth(1.0f),
-                     miterLimit(10.0f),
-                     globalAlpha(1.0f),
-                     shadowBlur(0.0),
-                     dashOffset(0.0f),
-                     op(mozilla::gfx::CompositionOp::OP_OVER),
-                     fillRule(mozilla::gfx::FillRule::FILL_WINDING),
-                     lineCap(mozilla::gfx::CapStyle::BUTT),
-                     lineJoin(mozilla::gfx::JoinStyle::MITER_OR_BEVEL),
-                     filterString(u"none"),
-                     filterSourceGraphicTainted(false),
-                     imageSmoothingEnabled(true),
-                     fontExplicitLanguage(false)
-    { }
-
-    ContextState(const ContextState& aOther)
-        : fontGroup(aOther.fontGroup),
-          fontLanguage(aOther.fontLanguage),
-          fontFont(aOther.fontFont),
-          gradientStyles(aOther.gradientStyles),
-          patternStyles(aOther.patternStyles),
-          colorStyles(aOther.colorStyles),
-          font(aOther.font),
-          textAlign(aOther.textAlign),
-          textBaseline(aOther.textBaseline),
-          shadowColor(aOther.shadowColor),
-          transform(aOther.transform),
-          shadowOffset(aOther.shadowOffset),
-          lineWidth(aOther.lineWidth),
-          miterLimit(aOther.miterLimit),
-          globalAlpha(aOther.globalAlpha),
-          shadowBlur(aOther.shadowBlur),
-          dash(aOther.dash),
-          dashOffset(aOther.dashOffset),
-          op(aOther.op),
-          fillRule(aOther.fillRule),
-          lineCap(aOther.lineCap),
-          lineJoin(aOther.lineJoin),
-          filterString(aOther.filterString),
-          filterChain(aOther.filterChain),
-          autoSVGFiltersObserver(aOther.autoSVGFiltersObserver),
-          filter(aOther.filter),
-          filterAdditionalImages(aOther.filterAdditionalImages),
-          filterSourceGraphicTainted(aOther.filterSourceGraphicTainted),
-          imageSmoothingEnabled(aOther.imageSmoothingEnabled),
-          fontExplicitLanguage(aOther.fontExplicitLanguage)
-    { }
-
-    void SetColorStyle(Style aWhichStyle, nscolor aColor)
-    {
-=======
    public:
     ContextState();
     ContextState(const ContextState& aOther);
     ~ContextState();
 
     void SetColorStyle(Style aWhichStyle, nscolor aColor) {
->>>>>>> upstream-releases
       colorStyles[aWhichStyle] = aColor;
       gradientStyles[aWhichStyle] = nullptr;
       patternStyles[aWhichStyle] = nullptr;
@@ -1239,41 +1003,6 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
   // other helpers
   void GetAppUnitsValues(int32_t* aPerDevPixel, int32_t* aPerCSSPixel) {
     // If we don't have a canvas element, we just return something generic.
-<<<<<<< HEAD
-    int32_t devPixel = 60;
-    int32_t cssPixel = 60;
-
-    nsIPresShell* ps = GetPresShell();
-    nsPresContext* pc;
-
-    if (!ps) goto FINISH;
-    pc = ps->GetPresContext();
-    if (!pc) goto FINISH;
-    devPixel = pc->AppUnitsPerDevPixel();
-    cssPixel = AppUnitsPerCSSPixel();
-
-  FINISH:
-    if (aPerDevPixel) *aPerDevPixel = devPixel;
-    if (aPerCSSPixel) *aPerCSSPixel = cssPixel;
-||||||| merged common ancestors
-    int32_t devPixel = 60;
-    int32_t cssPixel = 60;
-
-    nsIPresShell *ps = GetPresShell();
-    nsPresContext *pc;
-
-    if (!ps) goto FINISH;
-    pc = ps->GetPresContext();
-    if (!pc) goto FINISH;
-    devPixel = pc->AppUnitsPerDevPixel();
-    cssPixel = AppUnitsPerCSSPixel();
-
-  FINISH:
-    if (aPerDevPixel)
-      *aPerDevPixel = devPixel;
-    if (aPerCSSPixel)
-      *aPerCSSPixel = cssPixel;
-=======
     if (aPerDevPixel) {
       *aPerDevPixel = 60;
     }
@@ -1294,21 +1023,10 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
     if (aPerCSSPixel) {
       *aPerCSSPixel = AppUnitsPerCSSPixel();
     }
->>>>>>> upstream-releases
   }
 
   friend struct CanvasBidiProcessor;
   friend class CanvasDrawObserver;
-<<<<<<< HEAD
-  friend class ImageBitmap;
-
-  void SetWriteOnly() { mWriteOnly = true; }
-
-  bool IsWriteOnly() const { return mWriteOnly; }
-
-  bool mWriteOnly;
-||||||| merged common ancestors
-=======
   friend class ImageBitmap;
 
   void SetWriteOnly();
@@ -1316,7 +1034,6 @@ class CanvasRenderingContext2D final : public nsICanvasRenderingContextInternal,
   bool IsWriteOnly() const { return mWriteOnly; }
 
   bool mWriteOnly;
->>>>>>> upstream-releases
 };
 
 size_t BindingJSObjectMallocBytes(CanvasRenderingContext2D* aContext);

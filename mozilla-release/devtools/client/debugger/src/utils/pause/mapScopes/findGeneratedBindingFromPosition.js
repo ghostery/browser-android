@@ -13,21 +13,6 @@ import type { ApplicableBinding } from "./getApplicableBindingsForOriginalPositi
 
 import { createObjectClient } from "../../../client/firefox";
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
-export type GeneratedDescriptor = {
-  name: string,
-  // Falsy if the binding itself matched a location, but the location didn't
-  // have a value descriptor attached. Happens if the binding was 'this'
-  // or if there was a mismatch between client and generated scopes.
-  desc: ?BindingContents,
-
-  expression: string
-};
-||||||| merged common ancestors
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-=======
 export type GeneratedDescriptor = {
   name: string,
   // Falsy if the binding itself matched a location, but the location didn't
@@ -37,7 +22,6 @@ export type GeneratedDescriptor = {
 
   expression: string,
 };
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
 
 /**
  * Given a mapped range over the generated source, attempt to resolve a real
@@ -175,16 +159,8 @@ async function mapBindingReferenceToDescriptor({
   binding,
   range,
   firstInRange,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
-  firstOnLine
-}: ApplicableBinding): Promise<GeneratedDescriptor | null> {
-||||||| merged common ancestors
-  firstOnLine
-}) {
-=======
   firstOnLine,
 }: ApplicableBinding): Promise<GeneratedDescriptor | null> {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
   // Allow the mapping to point anywhere within the generated binding
   // location to allow for less than perfect sourcemaps. Since you also
   // need at least one character between identifiers, we also give one
@@ -217,16 +193,8 @@ async function mapBindingReferenceToDescriptor({
  */
 async function mapImportReferenceToDescriptor({
   binding,
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
-  range
-}: ApplicableBinding): Promise<GeneratedDescriptor | null> {
-||||||| merged common ancestors
-  range
-}) {
-=======
   range,
 }: ApplicableBinding): Promise<GeneratedDescriptor | null> {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
   if (binding.loc.type !== "ref") {
     return null;
   }
@@ -309,21 +277,6 @@ async function mapImportReferenceToDescriptor({
     }
   }
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
-  return desc
-    ? {
-        name: binding.name,
-        desc,
-        expression
-      }
-    : null;
-||||||| merged common ancestors
-  return desc ? {
-    name: binding.name,
-    desc,
-    expression
-  } : null;
-=======
   return desc
     ? {
         name: binding.name,
@@ -331,7 +284,6 @@ async function mapImportReferenceToDescriptor({
         expression,
       }
     : null;
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/pause/mapScopes/findGeneratedBindingFromPosition.js
 }
 
 function isPrimitiveValue(desc: ?BindingContents) {

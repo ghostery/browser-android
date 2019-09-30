@@ -16,14 +16,9 @@
 #include "mozilla/IMEStateManager.h"
 #include "mozilla/MiscEvents.h"
 #include "mozilla/Preferences.h"
-<<<<<<< HEAD
-#include "mozilla/StaticPrefs.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/PresShell.h"
 #include "mozilla/RangeBoundary.h"
 #include "mozilla/StaticPrefs.h"
->>>>>>> upstream-releases
 #include "mozilla/TextComposition.h"
 #include "mozilla/TextEvents.h"
 #include "mozilla/Unused.h"
@@ -56,63 +51,9 @@ namespace mozilla {
 
 bool TextComposition::sHandlingSelectionEvent = false;
 
-<<<<<<< HEAD
-TextComposition::TextComposition(nsPresContext* aPresContext, nsINode* aNode,
-                                 TabParent* aTabParent,
-||||||| merged common ancestors
-TextComposition::TextComposition(nsPresContext* aPresContext,
-                                 nsINode* aNode,
-                                 TabParent* aTabParent,
-=======
 TextComposition::TextComposition(nsPresContext* aPresContext, nsINode* aNode,
                                  BrowserParent* aBrowserParent,
->>>>>>> upstream-releases
                                  WidgetCompositionEvent* aCompositionEvent)
-<<<<<<< HEAD
-    : mPresContext(aPresContext),
-      mNode(aNode),
-      mTabParent(aTabParent),
-      mNativeContext(aCompositionEvent->mNativeIMEContext),
-      mCompositionStartOffset(0),
-      mTargetClauseOffsetInComposition(0),
-      mCompositionStartOffsetInTextNode(UINT32_MAX),
-      mCompositionLengthInTextNode(UINT32_MAX),
-      mIsSynthesizedForTests(aCompositionEvent->mFlags.mIsSynthesizedForTests),
-      mIsComposing(false),
-      mIsEditorHandlingEvent(false),
-      mIsRequestingCommit(false),
-      mIsRequestingCancel(false),
-      mRequestedToCommitOrCancel(false),
-      mHasDispatchedDOMTextEvent(false),
-      mHasReceivedCommitEvent(false),
-      mWasNativeCompositionEndEventDiscarded(false),
-      mAllowControlCharacters(Preferences::GetBool(
-          "dom.compositionevent.allow_control_characters", false)),
-      mWasCompositionStringEmpty(true) {
-||||||| merged common ancestors
-  : mPresContext(aPresContext)
-  , mNode(aNode)
-  , mTabParent(aTabParent)
-  , mNativeContext(aCompositionEvent->mNativeIMEContext)
-  , mCompositionStartOffset(0)
-  , mTargetClauseOffsetInComposition(0)
-  , mCompositionStartOffsetInTextNode(UINT32_MAX)
-  , mCompositionLengthInTextNode(UINT32_MAX)
-  , mIsSynthesizedForTests(aCompositionEvent->mFlags.mIsSynthesizedForTests)
-  , mIsComposing(false)
-  , mIsEditorHandlingEvent(false)
-  , mIsRequestingCommit(false)
-  , mIsRequestingCancel(false)
-  , mRequestedToCommitOrCancel(false)
-  , mHasDispatchedDOMTextEvent(false)
-  , mHasReceivedCommitEvent(false)
-  , mWasNativeCompositionEndEventDiscarded(false)
-  , mAllowControlCharacters(
-      Preferences::GetBool("dom.compositionevent.allow_control_characters",
-                           false))
-  , mWasCompositionStringEmpty(true)
-{
-=======
     : mPresContext(aPresContext),
       mNode(aNode),
       mBrowserParent(aBrowserParent),
@@ -133,7 +74,6 @@ TextComposition::TextComposition(nsPresContext* aPresContext, nsINode* aNode,
       mAllowControlCharacters(Preferences::GetBool(
           "dom.compositionevent.allow_control_characters", false)),
       mWasCompositionStringEmpty(true) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCompositionEvent->mNativeIMEContext.IsValid());
 }
 
@@ -154,21 +94,9 @@ bool TextComposition::IsValidStateForComposition(nsIWidget* aWidget) const {
          !mPresContext->PresShell()->IsDestroying();
 }
 
-<<<<<<< HEAD
-bool TextComposition::MaybeDispatchCompositionUpdate(
-    const WidgetCompositionEvent* aCompositionEvent) {
-  MOZ_RELEASE_ASSERT(!mTabParent);
-||||||| merged common ancestors
-bool
-TextComposition::MaybeDispatchCompositionUpdate(
-                   const WidgetCompositionEvent* aCompositionEvent)
-{
-  MOZ_RELEASE_ASSERT(!mTabParent);
-=======
 bool TextComposition::MaybeDispatchCompositionUpdate(
     const WidgetCompositionEvent* aCompositionEvent) {
   MOZ_RELEASE_ASSERT(!mBrowserParent);
->>>>>>> upstream-releases
 
   if (!IsValidStateForComposition(aCompositionEvent->mWidget)) {
     return false;
@@ -188,26 +116,10 @@ bool TextComposition::MaybeDispatchCompositionUpdate(
   return IsValidStateForComposition(aCompositionEvent->mWidget);
 }
 
-<<<<<<< HEAD
-BaseEventFlags TextComposition::CloneAndDispatchAs(
-    const WidgetCompositionEvent* aCompositionEvent, EventMessage aMessage,
-    nsEventStatus* aStatus, EventDispatchingCallback* aCallBack) {
-  MOZ_RELEASE_ASSERT(!mTabParent);
-||||||| merged common ancestors
-BaseEventFlags
-TextComposition::CloneAndDispatchAs(
-                   const WidgetCompositionEvent* aCompositionEvent,
-                   EventMessage aMessage,
-                   nsEventStatus* aStatus,
-                   EventDispatchingCallback* aCallBack)
-{
-  MOZ_RELEASE_ASSERT(!mTabParent);
-=======
 BaseEventFlags TextComposition::CloneAndDispatchAs(
     const WidgetCompositionEvent* aCompositionEvent, EventMessage aMessage,
     nsEventStatus* aStatus, EventDispatchingCallback* aCallBack) {
   MOZ_RELEASE_ASSERT(!mBrowserParent);
->>>>>>> upstream-releases
 
   MOZ_ASSERT(IsValidStateForComposition(aCompositionEvent->mWidget),
              "Should be called only when it's safe to dispatch an event");
@@ -504,25 +416,6 @@ void TextComposition::DispatchCompositionEvent(
 }
 
 // static
-<<<<<<< HEAD
-void TextComposition::HandleSelectionEvent(
-    nsPresContext* aPresContext, TabParent* aTabParent,
-    WidgetSelectionEvent* aSelectionEvent) {
-  // If the content is a container of TabParent, composition should be in the
-  // remote process.
-  if (aTabParent) {
-    Unused << aTabParent->SendSelectionEvent(*aSelectionEvent);
-||||||| merged common ancestors
-void
-TextComposition::HandleSelectionEvent(nsPresContext* aPresContext,
-                                      TabParent* aTabParent,
-                                      WidgetSelectionEvent* aSelectionEvent)
-{
-  // If the content is a container of TabParent, composition should be in the
-  // remote process.
-  if (aTabParent) {
-    Unused << aTabParent->SendSelectionEvent(*aSelectionEvent);
-=======
 void TextComposition::HandleSelectionEvent(
     nsPresContext* aPresContext, BrowserParent* aBrowserParent,
     WidgetSelectionEvent* aSelectionEvent) {
@@ -530,7 +423,6 @@ void TextComposition::HandleSelectionEvent(
   // the remote process.
   if (aBrowserParent) {
     Unused << aBrowserParent->SendSelectionEvent(*aSelectionEvent);
->>>>>>> upstream-releases
     aSelectionEvent->StopPropagation();
     return;
   }
@@ -591,21 +483,9 @@ uint32_t TextComposition::GetSelectionStartOffset() {
   return selectedTextEvent.mReply.mOffset;
 }
 
-<<<<<<< HEAD
-void TextComposition::OnCompositionEventDispatched(
-    const WidgetCompositionEvent* aCompositionEvent) {
-  MOZ_RELEASE_ASSERT(!mTabParent);
-||||||| merged common ancestors
-void
-TextComposition::OnCompositionEventDispatched(
-                   const WidgetCompositionEvent* aCompositionEvent)
-{
-  MOZ_RELEASE_ASSERT(!mTabParent);
-=======
 void TextComposition::OnCompositionEventDispatched(
     const WidgetCompositionEvent* aCompositionEvent) {
   MOZ_RELEASE_ASSERT(!mBrowserParent);
->>>>>>> upstream-releases
 
   if (!IsValidStateForComposition(aCompositionEvent->mWidget)) {
     return;
@@ -740,18 +620,8 @@ void TextComposition::EditorWillHandleCompositionChangeEvent(
       "attribute value of the latest compositionupdate event");
 }
 
-<<<<<<< HEAD
-void TextComposition::OnEditorDestroyed() {
-  MOZ_RELEASE_ASSERT(!mTabParent);
-||||||| merged common ancestors
-void
-TextComposition::OnEditorDestroyed()
-{
-  MOZ_RELEASE_ASSERT(!mTabParent);
-=======
 void TextComposition::OnEditorDestroyed() {
   MOZ_RELEASE_ASSERT(!mBrowserParent);
->>>>>>> upstream-releases
 
   MOZ_ASSERT(!mIsEditorHandlingEvent,
              "The editor should have stopped listening events");
@@ -770,35 +640,15 @@ void TextComposition::EditorDidHandleCompositionChangeEvent() {
   mIsEditorHandlingEvent = false;
 }
 
-<<<<<<< HEAD
-void TextComposition::StartHandlingComposition(EditorBase* aEditorBase) {
-  MOZ_RELEASE_ASSERT(!mTabParent);
-||||||| merged common ancestors
-void
-TextComposition::StartHandlingComposition(EditorBase* aEditorBase)
-{
-  MOZ_RELEASE_ASSERT(!mTabParent);
-=======
 void TextComposition::StartHandlingComposition(EditorBase* aEditorBase) {
   MOZ_RELEASE_ASSERT(!mBrowserParent);
->>>>>>> upstream-releases
 
   MOZ_ASSERT(!HasEditor(), "There is a handling editor already");
   mEditorBaseWeak = do_GetWeakReference(static_cast<nsIEditor*>(aEditorBase));
 }
 
-<<<<<<< HEAD
-void TextComposition::EndHandlingComposition(EditorBase* aEditorBase) {
-  MOZ_RELEASE_ASSERT(!mTabParent);
-||||||| merged common ancestors
-void
-TextComposition::EndHandlingComposition(EditorBase* aEditorBase)
-{
-  MOZ_RELEASE_ASSERT(!mTabParent);
-=======
 void TextComposition::EndHandlingComposition(EditorBase* aEditorBase) {
   MOZ_RELEASE_ASSERT(!mBrowserParent);
->>>>>>> upstream-releases
 
 #ifdef DEBUG
   RefPtr<EditorBase> editorBase = GetEditorBase();
@@ -971,22 +821,10 @@ TextComposition::CompositionEventDispatcher::Run() {
       NS_ASSERTION(selectedText.mSucceeded, "Failed to get selected text");
       compStart.mData = selectedText.mReply.mString;
       compStart.mFlags.mIsSynthesizedForTests =
-<<<<<<< HEAD
-          mTextComposition->IsSynthesizedForTests();
-      IMEStateManager::DispatchCompositionEvent(mEventTarget, presContext,
-                                                &compStart, &status, nullptr,
-                                                mIsSynthesizedEvent);
-||||||| merged common ancestors
-        mTextComposition->IsSynthesizedForTests();
-      IMEStateManager::DispatchCompositionEvent(mEventTarget, presContext,
-                                                &compStart, &status, nullptr,
-                                                mIsSynthesizedEvent);
-=======
           mTextComposition->IsSynthesizedForTests();
       IMEStateManager::DispatchCompositionEvent(
           mEventTarget, presContext, mTextComposition->mBrowserParent,
           &compStart, &status, nullptr, mIsSynthesizedEvent);
->>>>>>> upstream-releases
       break;
     }
     case eCompositionChange:
@@ -998,22 +836,10 @@ TextComposition::CompositionEventDispatcher::Run() {
         compEvent.mData = mData;
       }
       compEvent.mFlags.mIsSynthesizedForTests =
-<<<<<<< HEAD
-          mTextComposition->IsSynthesizedForTests();
-      IMEStateManager::DispatchCompositionEvent(mEventTarget, presContext,
-                                                &compEvent, &status, nullptr,
-                                                mIsSynthesizedEvent);
-||||||| merged common ancestors
-        mTextComposition->IsSynthesizedForTests();
-      IMEStateManager::DispatchCompositionEvent(mEventTarget, presContext,
-                                                &compEvent, &status, nullptr,
-                                                mIsSynthesizedEvent);
-=======
           mTextComposition->IsSynthesizedForTests();
       IMEStateManager::DispatchCompositionEvent(
           mEventTarget, presContext, mTextComposition->mBrowserParent,
           &compEvent, &status, nullptr, mIsSynthesizedEvent);
->>>>>>> upstream-releases
       break;
     }
     default:

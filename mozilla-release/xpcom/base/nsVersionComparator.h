@@ -64,32 +64,14 @@ struct Version {
 
   ~Version() { free(versionContent); }
 
-<<<<<<< HEAD
-  bool operator<(const Version& aRhs) const {
-    return CompareVersions(versionContent, aRhs.ReadContent()) == -1;
-||||||| merged common ancestors
-  bool operator<(const Version& aRhs) const
-  {
-    return CompareVersions(versionContent, aRhs.ReadContent()) == -1;
-=======
   bool operator<(const Version& aRhs) const {
     return CompareVersions(versionContent, aRhs.ReadContent()) < 0;
->>>>>>> upstream-releases
   }
   bool operator<=(const Version& aRhs) const {
     return CompareVersions(versionContent, aRhs.ReadContent()) < 1;
   }
-<<<<<<< HEAD
-  bool operator>(const Version& aRhs) const {
-    return CompareVersions(versionContent, aRhs.ReadContent()) == 1;
-||||||| merged common ancestors
-  bool operator>(const Version& aRhs) const
-  {
-    return CompareVersions(versionContent, aRhs.ReadContent()) == 1;
-=======
   bool operator>(const Version& aRhs) const {
     return CompareVersions(versionContent, aRhs.ReadContent()) > 0;
->>>>>>> upstream-releases
   }
   bool operator>=(const Version& aRhs) const {
     return CompareVersions(versionContent, aRhs.ReadContent()) > -1;
@@ -100,32 +82,14 @@ struct Version {
   bool operator!=(const Version& aRhs) const {
     return CompareVersions(versionContent, aRhs.ReadContent()) != 0;
   }
-<<<<<<< HEAD
-  bool operator<(const char* aRhs) const {
-    return CompareVersions(versionContent, aRhs) == -1;
-||||||| merged common ancestors
-  bool operator<(const char* aRhs) const
-  {
-    return CompareVersions(versionContent, aRhs) == -1;
-=======
   bool operator<(const char* aRhs) const {
     return CompareVersions(versionContent, aRhs) < 0;
->>>>>>> upstream-releases
   }
   bool operator<=(const char* aRhs) const {
     return CompareVersions(versionContent, aRhs) < 1;
   }
-<<<<<<< HEAD
-  bool operator>(const char* aRhs) const {
-    return CompareVersions(versionContent, aRhs) == 1;
-||||||| merged common ancestors
-  bool operator>(const char* aRhs) const
-  {
-    return CompareVersions(versionContent, aRhs) == 1;
-=======
   bool operator>(const char* aRhs) const {
     return CompareVersions(versionContent, aRhs) > 0;
->>>>>>> upstream-releases
   }
   bool operator>=(const char* aRhs) const {
     return CompareVersions(versionContent, aRhs) > -1;
@@ -141,98 +105,6 @@ struct Version {
   char* versionContent;
 };
 
-<<<<<<< HEAD
-#ifdef XP_WIN
-struct VersionW {
-  explicit VersionW(const char16_t* aVersionStringW) {
-    versionContentW =
-        reinterpret_cast<char16_t*>(wcsdup(char16ptr_t(aVersionStringW)));
-  }
-
-  const char16_t* ReadContentW() const { return versionContentW; }
-
-  ~VersionW() { free(versionContentW); }
-
-  bool operator<(const VersionW& aRhs) const {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) == -1;
-  }
-  bool operator<=(const VersionW& aRhs) const {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) < 1;
-  }
-  bool operator>(const VersionW& aRhs) const {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) == 1;
-  }
-  bool operator>=(const VersionW& aRhs) const {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) > -1;
-  }
-  bool operator==(const VersionW& aRhs) const {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) == 0;
-  }
-  bool operator!=(const VersionW& aRhs) const {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) != 0;
-  }
-
- private:
-  char16_t* versionContentW;
-};
-#endif
-
 }  // namespace mozilla
-||||||| merged common ancestors
-#ifdef XP_WIN
-struct VersionW
-{
-  explicit VersionW(const char16_t* aVersionStringW)
-  {
-    versionContentW =
-      reinterpret_cast<char16_t*>(wcsdup(char16ptr_t(aVersionStringW)));
-  }
-
-  const char16_t* ReadContentW() const
-  {
-    return versionContentW;
-  }
-
-  ~VersionW()
-  {
-    free(versionContentW);
-  }
-
-  bool operator<(const VersionW& aRhs) const
-  {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) == -1;
-  }
-  bool operator<=(const VersionW& aRhs) const
-  {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) < 1;
-  }
-  bool operator>(const VersionW& aRhs) const
-  {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) == 1;
-  }
-  bool operator>=(const VersionW& aRhs) const
-  {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) > -1;
-  }
-  bool operator==(const VersionW& aRhs) const
-  {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) == 0;
-  }
-  bool operator!=(const VersionW& aRhs) const
-  {
-    return CompareVersions(versionContentW, aRhs.ReadContentW()) != 0;
-  }
-
-private:
-  char16_t* versionContentW;
-};
-#endif
-
-} // namespace mozilla
-
-#endif // nsVersionComparator_h__
-=======
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 #endif  // nsVersionComparator_h__

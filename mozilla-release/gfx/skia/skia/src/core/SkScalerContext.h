@@ -38,37 +38,7 @@ enum SkScalerContextFlags : uint32_t {
     kFakeGammaAndBoostContrast = kFakeGamma | kBoostContrast,
 };
 
-<<<<<<< HEAD
-struct SkScalerContextEffects {
-    SkScalerContextEffects() : fPathEffect(nullptr), fMaskFilter(nullptr) {}
-    SkScalerContextEffects(SkPathEffect* pe, SkMaskFilter* mf)
-        : fPathEffect(pe), fMaskFilter(mf) {}
-    explicit SkScalerContextEffects(const SkPaint& paint)
-        : fPathEffect(paint.getPathEffect())
-        , fMaskFilter(paint.getMaskFilter()) {}
-
-    SkPathEffect*   fPathEffect;
-    SkMaskFilter*   fMaskFilter;
-};
-
 enum SkAxisAlignment : uint32_t {
-||||||| merged common ancestors
-struct SkScalerContextEffects {
-    SkScalerContextEffects() : fPathEffect(nullptr), fMaskFilter(nullptr) {}
-    SkScalerContextEffects(SkPathEffect* pe, SkMaskFilter* mf)
-        : fPathEffect(pe), fMaskFilter(mf) {}
-    explicit SkScalerContextEffects(const SkPaint& paint)
-        : fPathEffect(paint.getPathEffect())
-        , fMaskFilter(paint.getMaskFilter()) {}
-
-    SkPathEffect*   fPathEffect;
-    SkMaskFilter*   fMaskFilter;
-};
-
-enum SkAxisAlignment {
-=======
-enum SkAxisAlignment : uint32_t {
->>>>>>> upstream-releases
     kNone_SkAxisAlignment,
     kX_SkAxisAlignment,
     kY_SkAxisAlignment
@@ -217,20 +187,10 @@ public:
                          SkMatrix* remainingRotation = nullptr,
                          SkMatrix* total = nullptr);
 
-<<<<<<< HEAD
-    SkAxisAlignment computeAxisAlignmentForHText() const;
-
-    inline SkPaint::Hinting getHinting() const;
-    inline void setHinting(SkPaint::Hinting);
-||||||| merged common ancestors
-    inline SkPaint::Hinting getHinting() const;
-    inline void setHinting(SkPaint::Hinting);
-=======
     SkAxisAlignment computeAxisAlignmentForHText() const;
 
     inline SkFontHinting getHinting() const;
     inline void setHinting(SkFontHinting);
->>>>>>> upstream-releases
 
     SkMask::Format getFormat() const {
         return static_cast<SkMask::Format>(fMaskFormat);
@@ -321,16 +281,8 @@ public:
     void        getAdvance(SkGlyph*);
     void        getMetrics(SkGlyph*);
     void        getImage(const SkGlyph&);
-<<<<<<< HEAD
-    bool SK_WARN_UNUSED_RESULT getPath(SkPackedGlyphID, SkPath*);
-    void        getFontMetrics(SkPaint::FontMetrics*);
-||||||| merged common ancestors
-    void        getPath(SkPackedGlyphID, SkPath*);
-    void        getFontMetrics(SkPaint::FontMetrics*);
-=======
     bool SK_WARN_UNUSED_RESULT getPath(SkPackedGlyphID, SkPath*);
     void        getFontMetrics(SkFontMetrics*);
->>>>>>> upstream-releases
 
     /** Return the size in bytes of the associated gamma lookup table
      */
@@ -350,8 +302,7 @@ public:
                                   SkScalerContextFlags scalerContextFlags,
                                   const SkMatrix& deviceMatrix,
                                   SkScalerContextRec* rec,
-                                  SkScalerContextEffects* effects,
-                                  bool enableTypefaceFiltering = true);
+                                  SkScalerContextEffects* effects);
 
     // If we are creating rec and effects from a font only, then there is no device around either.
     static void MakeRecAndEffectsFromFont(const SkFont& font,

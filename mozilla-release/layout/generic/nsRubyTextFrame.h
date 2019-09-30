@@ -45,28 +45,11 @@ class nsRubyTextFrame final : public nsRubyContentFrame {
     return GetStateBits() & NS_RUBY_TEXT_FRAME_AUTOHIDE;
   }
 
-<<<<<<< HEAD
- protected:
-  friend nsContainerFrame* NS_NewRubyTextFrame(nsIPresShell* aPresShell,
-||||||| merged common ancestors
-protected:
-  friend nsContainerFrame* NS_NewRubyTextFrame(nsIPresShell* aPresShell,
-=======
  protected:
   friend nsContainerFrame* NS_NewRubyTextFrame(mozilla::PresShell* aPresShell,
->>>>>>> upstream-releases
                                                ComputedStyle* aStyle);
-<<<<<<< HEAD
-  explicit nsRubyTextFrame(ComputedStyle* aStyle)
-      : nsRubyContentFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-  explicit nsRubyTextFrame(ComputedStyle* aStyle)
-    : nsRubyContentFrame(aStyle, kClassID)
-  {}
-=======
   explicit nsRubyTextFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       : nsRubyContentFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 };
 
 #endif /* nsRubyTextFrame_h___ */

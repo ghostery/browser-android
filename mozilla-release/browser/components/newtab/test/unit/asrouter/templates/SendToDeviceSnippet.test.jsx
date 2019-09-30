@@ -53,23 +53,11 @@ describe("SendToDeviceSnippet", () => {
   }
 
   beforeEach(() => {
-<<<<<<< HEAD
-    sandbox = sinon.createSandbox();
-    jsonResponse = {status: "ok"};
-    fetchStub = sandbox.stub(global, "fetch")
-      .returns(Promise.resolve({json: () => Promise.resolve(jsonResponse)}));
-||||||| merged common ancestors
-    sandbox = sinon.sandbox.create();
-    jsonResponse = {status: "ok"};
-    fetchStub = sandbox.stub(global, "fetch")
-      .returns(Promise.resolve({json: () => Promise.resolve(jsonResponse)}));
-=======
     sandbox = sinon.createSandbox();
     jsonResponse = { status: "ok" };
     fetchStub = sandbox
       .stub(global, "fetch")
       .returns(Promise.resolve({ json: () => Promise.resolve(jsonResponse) }));
->>>>>>> upstream-releases
   });
   afterEach(() => {
     sandbox.restore();

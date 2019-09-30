@@ -51,7 +51,6 @@ namespace mozilla {
 class OriginAttributes;
 
 namespace dom {
-class BrowsingContext;
 class ChromeMessageSender;
 class ContentParent;
 class TabListener;
@@ -72,22 +71,10 @@ class StructuredCloneData;
 
 }  // namespace dom
 
-<<<<<<< HEAD
-namespace layout {
-class RenderFrame;
-}  // namespace layout
-}  // namespace mozilla
-||||||| merged common ancestors
-namespace layout {
-class RenderFrameParent;
-} // namespace layout
-} // namespace mozilla
-=======
 namespace ipc {
 class MessageChannel;
 }  // namespace ipc
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 #if defined(MOZ_WIDGET_GTK)
 typedef struct _GtkWidget GtkWidget;
@@ -106,15 +93,6 @@ class nsFrameLoader final : public nsStubMutationObserver,
                             public nsWrapperCache {
   friend class AutoResetInShow;
   friend class AutoResetInFrameSwap;
-<<<<<<< HEAD
-  typedef mozilla::dom::PBrowserParent PBrowserParent;
-  typedef mozilla::dom::TabParent TabParent;
-  typedef mozilla::layout::RenderFrame RenderFrame;
-||||||| merged common ancestors
-  typedef mozilla::dom::PBrowserParent PBrowserParent;
-  typedef mozilla::dom::TabParent TabParent;
-  typedef mozilla::layout::RenderFrameParent RenderFrameParent;
-=======
   typedef mozilla::dom::Document Document;
   typedef mozilla::dom::BrowserParent BrowserParent;
   typedef mozilla::dom::BrowserBridgeChild BrowserBridgeChild;
@@ -125,27 +103,12 @@ class nsFrameLoader final : public nsStubMutationObserver,
   static nsFrameLoader* Create(mozilla::dom::Element* aOwner,
                                mozilla::dom::BrowsingContext* aOpener,
                                bool aNetworkCreated);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- public:
-  static nsFrameLoader* Create(
-      mozilla::dom::Element* aOwner, nsPIDOMWindowOuter* aOpener,
-      bool aNetworkCreated,
-      int32_t aJSPluginID = nsFakePluginTag::NOT_JSPLUGIN);
-||||||| merged common ancestors
-public:
-  static nsFrameLoader* Create(mozilla::dom::Element* aOwner,
-                               nsPIDOMWindowOuter* aOpener,
-                               bool aNetworkCreated,
-                               int32_t aJSPluginID = nsFakePluginTag::NOT_JSPLUGIN);
-=======
   // Called by nsFrameLoaderOwner::ChangeRemoteness when switching out
   // FrameLoaders.
   static nsFrameLoader* Create(mozilla::dom::Element* aOwner,
                                BrowsingContext* aPreservedBrowsingContext,
                                const mozilla::dom::RemotenessOptions& aOptions);
->>>>>>> upstream-releases
 
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_FRAMELOADER_IID)
 
@@ -158,32 +121,16 @@ public:
   void StartDestroy();
   void DestroyDocShell();
   void DestroyComplete();
-<<<<<<< HEAD
-  nsIDocShell* GetExistingDocShell() { return mDocShell; }
-  mozilla::dom::InProcessTabChildMessageManager* GetTabChildMessageManager()
-      const {
-||||||| merged common ancestors
-  nsIDocShell* GetExistingDocShell() { return mDocShell; }
-  mozilla::dom::InProcessTabChildMessageManager* GetTabChildMessageManager() const
-  {
-=======
   nsIDocShell* GetExistingDocShell() const {
     return mBrowsingContext ? mBrowsingContext->GetDocShell() : nullptr;
   }
   mozilla::dom::InProcessBrowserChildMessageManager*
   GetBrowserChildMessageManager() const {
->>>>>>> upstream-releases
     return mChildMessageManager;
   }
   nsresult CreateStaticClone(nsFrameLoader* aDest);
-<<<<<<< HEAD
-  nsresult UpdatePositionAndSize(nsSubDocumentFrame* aIFrame);
-||||||| merged common ancestors
-  nsresult UpdatePositionAndSize(nsSubDocumentFrame *aIFrame);
-=======
   nsresult UpdatePositionAndSize(nsSubDocumentFrame* aIFrame);
   void SendIsUnderHiddenEmbedderElement(bool aIsUnderHiddenEmbedderElement);
->>>>>>> upstream-releases
 
   // WebIDL methods
 
@@ -248,16 +195,9 @@ public:
 
   void RequestUpdatePosition(mozilla::ErrorResult& aRv);
 
-<<<<<<< HEAD
-  void Print(uint64_t aOuterWindowID, nsIPrintSettings* aPrintSettings,
-||||||| merged common ancestors
-  void Print(uint64_t aOuterWindowID,
-             nsIPrintSettings* aPrintSettings,
-=======
   bool RequestTabStateFlush(uint32_t aFlushId, bool aIsFinal = false);
 
   void Print(uint64_t aOuterWindowID, nsIPrintSettings* aPrintSettings,
->>>>>>> upstream-releases
              nsIWebProgressListener* aProgressListener,
              mozilla::ErrorResult& aRv);
 
@@ -281,19 +221,6 @@ public:
 
   uint64_t ChildID() const { return mChildID; }
 
-<<<<<<< HEAD
-  bool ClampScrollPosition() const { return mClampScrollPosition; }
-  void SetClampScrollPosition(bool aClamp);
-
-||||||| merged common ancestors
-  bool ClampScrollPosition() const { return mClampScrollPosition; }
-  void SetClampScrollPosition(bool aClamp);
-
-  bool ClipSubdocument() const { return mClipSubdocument; }
-  void SetClipSubdocument(bool aClip);
-
-=======
->>>>>>> upstream-releases
   bool DepthTooGreat() const { return mDepthTooGreat; }
 
   bool IsDead() const { return mDestroyCalled; }
@@ -320,20 +247,11 @@ public:
    * Called from the layout frame associated with this frame loader;
    * this notifies us to hook up with the widget and view.
    */
-<<<<<<< HEAD
-  bool Show(int32_t marginWidth, int32_t marginHeight, int32_t scrollbarPrefX,
-            int32_t scrollbarPrefY, nsSubDocumentFrame* frame);
-||||||| merged common ancestors
-  bool Show(int32_t marginWidth, int32_t marginHeight,
-              int32_t scrollbarPrefX, int32_t scrollbarPrefY,
-              nsSubDocumentFrame* frame);
-=======
   MOZ_CAN_RUN_SCRIPT_BOUNDARY bool Show(int32_t marginWidth,
                                         int32_t marginHeight,
                                         int32_t scrollbarPrefX,
                                         int32_t scrollbarPrefY,
                                         nsSubDocumentFrame* frame);
->>>>>>> upstream-releases
 
   void MaybeShowFrame();
 
@@ -377,18 +295,9 @@ public:
    * Return the document that owns this, or null if we don't have
    * an owner.
    */
-<<<<<<< HEAD
-  nsIDocument* GetOwnerDoc() const {
-    return mOwnerContent ? mOwnerContent->OwnerDoc() : nullptr;
-  }
-||||||| merged common ancestors
-  nsIDocument* GetOwnerDoc() const
-  { return mOwnerContent ? mOwnerContent->OwnerDoc() : nullptr; }
-=======
   Document* GetOwnerDoc() const {
     return mOwnerContent ? mOwnerContent->OwnerDoc() : nullptr;
   }
->>>>>>> upstream-releases
 
   /**
    * Returns whether this frame is a remote frame.
@@ -417,28 +326,13 @@ public:
    *
    * This must only be called if this is a remote frame.
    */
-<<<<<<< HEAD
-  RenderFrame* GetCurrentRenderFrame() const;
-||||||| merged common ancestors
-  RenderFrameParent* GetCurrentRenderFrame() const;
-=======
   mozilla::layers::LayersId GetLayersId() const;
->>>>>>> upstream-releases
 
   mozilla::dom::ChromeMessageSender* GetFrameMessageManager() {
     return mMessageManager;
   }
 
   mozilla::dom::Element* GetOwnerContent() { return mOwnerContent; }
-<<<<<<< HEAD
-
-  bool ShouldClampScrollPosition() { return mClampScrollPosition; }
-||||||| merged common ancestors
-  bool ShouldClipSubdocument() { return mClipSubdocument; }
-
-  bool ShouldClampScrollPosition() { return mClampScrollPosition; }
-=======
->>>>>>> upstream-releases
 
   mozilla::dom::ParentSHistory* GetParentSHistory() { return mParentSHistory; }
 
@@ -495,26 +389,8 @@ public:
   virtual JSObject* WrapObject(JSContext* cx,
                                JS::Handle<JSObject*> aGivenProto) override;
 
-<<<<<<< HEAD
-  virtual JSObject* WrapObject(JSContext* cx,
-                               JS::Handle<JSObject*> aGivenProto) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapObject(JSContext* cx, JS::Handle<JSObject*> aGivenProto) override;
-=======
   void SkipBrowsingContextDetach();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  nsFrameLoader(mozilla::dom::Element* aOwner, nsPIDOMWindowOuter* aOpener,
-                bool aNetworkCreated, int32_t aJSPluginID);
-||||||| merged common ancestors
-private:
-  nsFrameLoader(mozilla::dom::Element* aOwner,
-                nsPIDOMWindowOuter* aOpener,
-                bool aNetworkCreated,
-                int32_t aJSPluginID);
-=======
   void MaybeNotifyCrashed(mozilla::dom::BrowsingContext* aBrowsingContext,
                           mozilla::ipc::MessageChannel* aChannel);
 
@@ -525,7 +401,6 @@ private:
   nsFrameLoader(mozilla::dom::Element* aOwner,
                 mozilla::dom::BrowsingContext* aBrowsingContext,
                 const mozilla::dom::RemotenessOptions& aOptions);
->>>>>>> upstream-releases
   ~nsFrameLoader();
 
   void SetOwnerContent(mozilla::dom::Element* aContent);
@@ -533,27 +408,6 @@ private:
   bool ShouldUseRemoteProcess();
 
   /**
-<<<<<<< HEAD
-   * Return true if the frame is a remote frame. Return false otherwise
-   */
-  bool IsRemoteFrame();
-
-  bool IsForJSPlugin() { return mJSPluginID != nsFakePluginTag::NOT_JSPLUGIN; }
-
-  /**
-||||||| merged common ancestors
-   * Return true if the frame is a remote frame. Return false otherwise
-   */
-  bool IsRemoteFrame();
-
-  bool IsForJSPlugin()
-  {
-    return mJSPluginID != nsFakePluginTag::NOT_JSPLUGIN;
-  }
-
-  /**
-=======
->>>>>>> upstream-releases
    * Is this a frame loader for an isolated <iframe mozbrowser>?
    *
    * By default, mozbrowser frames are isolated.  Isolation can be disabled by
@@ -608,28 +462,8 @@ private:
   bool ShowRemoteFrame(const mozilla::ScreenIntSize& size,
                        nsSubDocumentFrame* aFrame = nullptr);
 
-<<<<<<< HEAD
   void AddTreeItemToTreeOwner(nsIDocShellTreeItem* aItem,
                               nsIDocShellTreeOwner* aOwner);
-
-  nsAtom* TypeAttrName() const {
-    return mOwnerContent->IsXULElement() ? nsGkAtoms::type
-                                         : nsGkAtoms::mozframetype;
-  }
-||||||| merged common ancestors
-  bool AddTreeItemToTreeOwner(nsIDocShellTreeItem* aItem,
-                              nsIDocShellTreeOwner* aOwner,
-                              int32_t aParentType,
-                              nsIDocShell* aParentNode);
-
-  nsAtom* TypeAttrName() const {
-    return mOwnerContent->IsXULElement()
-             ? nsGkAtoms::type : nsGkAtoms::mozframetype;
-  }
-=======
-  void AddTreeItemToTreeOwner(nsIDocShellTreeItem* aItem,
-                              nsIDocShellTreeOwner* aOwner);
->>>>>>> upstream-releases
 
   void InitializeBrowserAPI();
   void DestroyBrowserFrameScripts();
@@ -637,33 +471,16 @@ private:
   nsresult GetNewTabContext(mozilla::dom::MutableTabContext* aTabContext,
                             nsIURI* aURI = nullptr);
 
-<<<<<<< HEAD
-  enum TabParentChange { eTabParentRemoved, eTabParentChanged };
-  void MaybeUpdatePrimaryTabParent(TabParentChange aChange);
-||||||| merged common ancestors
-  enum TabParentChange {
-    eTabParentRemoved,
-    eTabParentChanged
-  };
-  void MaybeUpdatePrimaryTabParent(TabParentChange aChange);
-=======
   enum BrowserParentChange { eBrowserParentRemoved, eBrowserParentChanged };
   void MaybeUpdatePrimaryBrowserParent(BrowserParentChange aChange);
->>>>>>> upstream-releases
 
   nsresult PopulateUserContextIdFromAttribute(mozilla::OriginAttributes& aAttr);
 
   RefPtr<mozilla::dom::BrowsingContext> mBrowsingContext;
   nsCOMPtr<nsIURI> mURIToLoad;
   nsCOMPtr<nsIPrincipal> mTriggeringPrincipal;
-<<<<<<< HEAD
-  mozilla::dom::Element* mOwnerContent;  // WEAK
-||||||| merged common ancestors
-  mozilla::dom::Element* mOwnerContent; // WEAK
-=======
   nsCOMPtr<nsIContentSecurityPolicy> mCsp;
   mozilla::dom::Element* mOwnerContent;  // WEAK
->>>>>>> upstream-releases
 
   // After the frameloader has been removed from the DOM but before all of the
   // messages from the frame have been received, we keep a strong reference to
@@ -714,16 +531,7 @@ private:
   bool mLoadingOriginalSrc : 1;
 
   bool mRemoteBrowserShown : 1;
-<<<<<<< HEAD
-  bool mRemoteFrame : 1;
-  bool mClampScrollPosition : 1;
-||||||| merged common ancestors
-  bool mRemoteFrame : 1;
-  bool mClipSubdocument : 1;
-  bool mClampScrollPosition : 1;
-=======
   bool mIsRemoteFrame : 1;
->>>>>>> upstream-releases
   bool mObservingOwnerContent : 1;
 
   // When an out-of-process nsFrameLoader crashes, an event is fired on the

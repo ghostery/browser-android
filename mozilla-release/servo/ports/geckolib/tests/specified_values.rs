@@ -1,16 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
-<<<<<<< HEAD
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
-
-use style;
-||||||| merged common ancestors
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-use style;
-=======
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
->>>>>>> upstream-releases
 
 #[cfg(all(test, target_pointer_width = "64"))]
 #[test]

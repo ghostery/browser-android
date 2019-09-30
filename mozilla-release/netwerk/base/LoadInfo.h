@@ -33,35 +33,15 @@ class XMLHttpRequestMainThread;
 }  // namespace dom
 
 namespace net {
-<<<<<<< HEAD
-class OptionalLoadInfoArgs;
-}  // namespace net
-||||||| merged common ancestors
-class OptionalLoadInfoArgs;
-} // namespace net
-=======
 class LoadInfoArgs;
 }  // namespace net
->>>>>>> upstream-releases
 
 namespace ipc {
 // we have to forward declare that function so we can use it as a friend.
-<<<<<<< HEAD
-nsresult LoadInfoArgsToLoadInfo(
-    const mozilla::net::OptionalLoadInfoArgs& aLoadInfoArgs,
-    nsILoadInfo** outLoadInfo);
-}  // namespace ipc
-||||||| merged common ancestors
-nsresult
-LoadInfoArgsToLoadInfo(const mozilla::net::OptionalLoadInfoArgs& aLoadInfoArgs,
-                       nsILoadInfo** outLoadInfo);
-} // namespace ipc
-=======
 nsresult LoadInfoArgsToLoadInfo(
     const Maybe<mozilla::net::LoadInfoArgs>& aLoadInfoArgs,
     nsILoadInfo** outLoadInfo);
 }  // namespace ipc
->>>>>>> upstream-releases
 
 namespace net {
 
@@ -110,11 +90,6 @@ class LoadInfo final : public nsILoadInfo {
   void SetBrowserWouldUpgradeInsecureRequests();
   void SetIsFromProcessingFrameAttributes();
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   // Hands off from the cspToInherit functionality!
   //
   // For navigations, GetCSPToInherit returns what the spec calls the
@@ -142,7 +117,6 @@ private:
   }
 
  private:
->>>>>>> upstream-releases
   // private constructor that is only allowed to be called from within
   // HttpChannelParent and FTPChannelParent declared as friends undeneath.
   // In e10s we can not serialize nsINode, hence we store the innerWindowID.
@@ -159,56 +133,17 @@ private:
            const Maybe<mozilla::dom::ClientInfo>& aInitialClientInfo,
            const Maybe<mozilla::dom::ServiceWorkerDescriptor>& aController,
            nsSecurityFlags aSecurityFlags,
-<<<<<<< HEAD
-           nsContentPolicyType aContentPolicyType, LoadTainting aTainting,
-           bool aUpgradeInsecureRequests, bool aBrowserUpgradeInsecureRequests,
-           bool aBrowserWouldUpgradeInsecureRequests, bool aVerifySignedContent,
-           bool aEnforceSRI, bool aForceAllowDataURI,
-           bool aAllowInsecureRedirectToDataURI,
-||||||| merged common ancestors
-           nsContentPolicyType aContentPolicyType,
-           LoadTainting aTainting,
-           bool aUpgradeInsecureRequests,
-           bool aBrowserUpgradeInsecureRequests,
-           bool aBrowserWouldUpgradeInsecureRequests,
-           bool aVerifySignedContent,
-           bool aEnforceSRI,
-           bool aForceAllowDataURI,
-           bool aAllowInsecureRedirectToDataURI,
-=======
            nsContentPolicyType aContentPolicyType, LoadTainting aTainting,
            bool aUpgradeInsecureRequests, bool aBrowserUpgradeInsecureRequests,
            bool aBrowserWouldUpgradeInsecureRequests, bool aForceAllowDataURI,
            bool aAllowInsecureRedirectToDataURI, bool aBypassCORSChecks,
->>>>>>> upstream-releases
            bool aSkipContentPolicyCheckForWebRequest,
-<<<<<<< HEAD
-           bool aForceInheritPrincipalDropped, uint64_t aInnerWindowID,
-           uint64_t aOuterWindowID, uint64_t aParentOuterWindowID,
-           uint64_t aTopOuterWindowID, uint64_t aFrameOuterWindowID,
-           bool aEnforceSecurity, bool aInitialSecurityCheckDone,
-           bool aIsThirdPartyRequest, bool aIsDocshellReload,
-           bool aSendCSPViolationEvents,
-||||||| merged common ancestors
-           bool aForceInheritPrincipalDropped,
-           uint64_t aInnerWindowID,
-           uint64_t aOuterWindowID,
-           uint64_t aParentOuterWindowID,
-           uint64_t aTopOuterWindowID,
-           uint64_t aFrameOuterWindowID,
-           bool aEnforceSecurity,
-           bool aInitialSecurityCheckDone,
-           bool aIsThirdPartyRequest,
-           bool aIsDocshellReload,
-           bool aSendCSPViolationEvents,
-=======
            bool aForceInheritPrincipalDropped, uint64_t aInnerWindowID,
            uint64_t aOuterWindowID, uint64_t aParentOuterWindowID,
            uint64_t aTopOuterWindowID, uint64_t aFrameOuterWindowID,
            uint64_t aBrowsingContextID, uint64_t aFrameBrowsingContextID,
            bool aInitialSecurityCheckDone, bool aIsThirdPartyRequest,
            bool aIsDocshellReload, bool aSendCSPViolationEvents,
->>>>>>> upstream-releases
            const OriginAttributes& aOriginAttributes,
            RedirectHistoryArray& aRedirectChainIncludingInternalRedirects,
            RedirectHistoryArray& aRedirectChain,
@@ -217,35 +152,17 @@ private:
            const nsTArray<nsCString>& aUnsafeHeaders, bool aForcePreflight,
            bool aIsPreflight, bool aLoadTriggeredFromExternal,
            bool aServiceWorkerTaintingSynthesized,
-<<<<<<< HEAD
-           bool aDocumentHasUserInteracted, bool aDocumentHasLoaded);
-||||||| merged common ancestors
-           bool aDocumentHasUserInteracted,
-           bool aDocumentHasLoaded);
-=======
            bool aDocumentHasUserInteracted, bool aDocumentHasLoaded,
            const nsAString& aCspNonce, uint32_t aRequestBlockingReason);
->>>>>>> upstream-releases
   LoadInfo(const LoadInfo& rhs);
 
   NS_IMETHOD GetRedirects(JSContext* aCx,
                           JS::MutableHandle<JS::Value> aRedirects,
                           const RedirectHistoryArray& aArra);
 
-<<<<<<< HEAD
-  friend nsresult mozilla::ipc::LoadInfoArgsToLoadInfo(
-      const mozilla::net::OptionalLoadInfoArgs& aLoadInfoArgs,
-      nsILoadInfo** outLoadInfo);
-||||||| merged common ancestors
-  friend nsresult
-  mozilla::ipc::LoadInfoArgsToLoadInfo(
-    const mozilla::net::OptionalLoadInfoArgs& aLoadInfoArgs,
-    nsILoadInfo** outLoadInfo);
-=======
   friend nsresult mozilla::ipc::LoadInfoArgsToLoadInfo(
       const Maybe<mozilla::net::LoadInfoArgs>& aLoadInfoArgs,
       nsILoadInfo** outLoadInfo);
->>>>>>> upstream-releases
 
   ~LoadInfo() = default;
 
@@ -257,126 +174,6 @@ private:
   void SetIncludeCookiesSecFlag();
   friend class mozilla::dom::XMLHttpRequestMainThread;
 
-<<<<<<< HEAD
-  // if you add a member, please also update the copy constructor and consider
-  // if it should be merged from parent channel through
-  // ParentLoadInfoForwarderArgs.
-  nsCOMPtr<nsIPrincipal> mLoadingPrincipal;
-  nsCOMPtr<nsIPrincipal> mTriggeringPrincipal;
-  nsCOMPtr<nsIPrincipal> mPrincipalToInherit;
-  nsCOMPtr<nsIPrincipal> mSandboxedLoadingPrincipal;
-  nsCOMPtr<nsIPrincipal> mTopLevelPrincipal;
-  nsCOMPtr<nsIPrincipal> mTopLevelStorageAreaPrincipal;
-  nsCOMPtr<nsIURI> mResultPrincipalURI;
-  nsCOMPtr<nsICSPEventListener> mCSPEventListener;
-
-  Maybe<mozilla::dom::ClientInfo> mClientInfo;
-  UniquePtr<mozilla::dom::ClientSource> mReservedClientSource;
-  Maybe<mozilla::dom::ClientInfo> mReservedClientInfo;
-  Maybe<mozilla::dom::ClientInfo> mInitialClientInfo;
-  Maybe<mozilla::dom::ServiceWorkerDescriptor> mController;
-  RefPtr<mozilla::dom::PerformanceStorage> mPerformanceStorage;
-
-  nsWeakPtr mLoadingContext;
-  nsWeakPtr mContextForTopLevelLoad;
-  nsSecurityFlags mSecurityFlags;
-  nsContentPolicyType mInternalContentPolicyType;
-  LoadTainting mTainting;
-  bool mUpgradeInsecureRequests;
-  bool mBrowserUpgradeInsecureRequests;
-  bool mBrowserWouldUpgradeInsecureRequests;
-  bool mVerifySignedContent;
-  bool mEnforceSRI;
-  bool mForceAllowDataURI;
-  bool mAllowInsecureRedirectToDataURI;
-  bool mSkipContentPolicyCheckForWebRequest;
-  bool mOriginalFrameSrcLoad;
-  bool mForceInheritPrincipalDropped;
-  uint64_t mInnerWindowID;
-  uint64_t mOuterWindowID;
-  uint64_t mParentOuterWindowID;
-  uint64_t mTopOuterWindowID;
-  uint64_t mFrameOuterWindowID;
-  bool mEnforceSecurity;
-  bool mInitialSecurityCheckDone;
-  bool mIsThirdPartyContext;
-  bool mIsDocshellReload;
-  bool mSendCSPViolationEvents;
-  OriginAttributes mOriginAttributes;
-  RedirectHistoryArray mRedirectChainIncludingInternalRedirects;
-  RedirectHistoryArray mRedirectChain;
-  nsTArray<nsCOMPtr<nsIPrincipal>> mAncestorPrincipals;
-  nsTArray<uint64_t> mAncestorOuterWindowIDs;
-  nsTArray<nsCString> mCorsUnsafeHeaders;
-  bool mForcePreflight;
-  bool mIsPreflight;
-  bool mLoadTriggeredFromExternal;
-  bool mServiceWorkerTaintingSynthesized;
-  bool mDocumentHasUserInteracted;
-  bool mDocumentHasLoaded;
-||||||| merged common ancestors
-  // if you add a member, please also update the copy constructor and consider if
-  // it should be merged from parent channel through ParentLoadInfoForwarderArgs.
-  nsCOMPtr<nsIPrincipal>           mLoadingPrincipal;
-  nsCOMPtr<nsIPrincipal>           mTriggeringPrincipal;
-  nsCOMPtr<nsIPrincipal>           mPrincipalToInherit;
-  nsCOMPtr<nsIPrincipal>           mSandboxedLoadingPrincipal;
-  nsCOMPtr<nsIPrincipal>           mTopLevelPrincipal;
-  nsCOMPtr<nsIPrincipal>           mTopLevelStorageAreaPrincipal;
-  nsCOMPtr<nsIURI>                 mResultPrincipalURI;
-  nsCOMPtr<nsICSPEventListener>    mCSPEventListener;
-
-  Maybe<mozilla::dom::ClientInfo>               mClientInfo;
-  UniquePtr<mozilla::dom::ClientSource>         mReservedClientSource;
-  Maybe<mozilla::dom::ClientInfo>               mReservedClientInfo;
-  Maybe<mozilla::dom::ClientInfo>               mInitialClientInfo;
-  Maybe<mozilla::dom::ServiceWorkerDescriptor>  mController;
-  RefPtr<mozilla::dom::PerformanceStorage>      mPerformanceStorage;
-
-  nsWeakPtr                        mLoadingContext;
-  nsWeakPtr                        mContextForTopLevelLoad;
-  nsSecurityFlags                  mSecurityFlags;
-  nsContentPolicyType              mInternalContentPolicyType;
-  LoadTainting                     mTainting;
-  bool                             mUpgradeInsecureRequests;
-  bool                             mBrowserUpgradeInsecureRequests;
-  bool                             mBrowserWouldUpgradeInsecureRequests;
-  bool                             mVerifySignedContent;
-  bool                             mEnforceSRI;
-  bool                             mForceAllowDataURI;
-  bool                             mAllowInsecureRedirectToDataURI;
-  bool                             mSkipContentPolicyCheckForWebRequest;
-  bool                             mOriginalFrameSrcLoad;
-  bool                             mForceInheritPrincipalDropped;
-  uint64_t                         mInnerWindowID;
-  uint64_t                         mOuterWindowID;
-  uint64_t                         mParentOuterWindowID;
-  uint64_t                         mTopOuterWindowID;
-  uint64_t                         mFrameOuterWindowID;
-  bool                             mEnforceSecurity;
-  bool                             mInitialSecurityCheckDone;
-  bool                             mIsThirdPartyContext;
-  bool                             mIsDocshellReload;
-  bool                             mSendCSPViolationEvents;
-  OriginAttributes                 mOriginAttributes;
-  RedirectHistoryArray             mRedirectChainIncludingInternalRedirects;
-  RedirectHistoryArray             mRedirectChain;
-  nsTArray<nsCOMPtr<nsIPrincipal>> mAncestorPrincipals;
-  nsTArray<uint64_t>               mAncestorOuterWindowIDs;
-  nsTArray<nsCString>              mCorsUnsafeHeaders;
-
-  mozilla::Telemetry::LABELS_DOCUMENT_ANALYTICS_TRACKER_FASTBLOCKED mTrackerBlockedReason;
-
-  bool                             mForcePreflight;
-  bool                             mIsPreflight;
-  bool                             mLoadTriggeredFromExternal;
-  bool                             mServiceWorkerTaintingSynthesized;
-
-  bool                             mIsTracker;
-  bool                             mIsTrackerBlocked;
-  bool                             mDocumentHasUserInteracted;
-  bool                             mDocumentHasLoaded;
-=======
   // nsDocShell::OpenInitializedChannel needs to update the loadInfo with
   // the correct browsingContext.
   friend class ::nsDocShell;
@@ -447,7 +244,6 @@ private:
   bool mDocumentHasUserInteracted;
   bool mDocumentHasLoaded;
   nsString mCspNonce;
->>>>>>> upstream-releases
 
   // Is true if this load was triggered by processing the attributes of the
   // browsing context container.

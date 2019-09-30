@@ -106,19 +106,12 @@ var initTable = {
     "nsIScriptSecurityManager",
   ],
   storage: ["@mozilla.org/storage/service;1", "mozIStorageService"],
-<<<<<<< HEAD
-  domStorageManager: ["@mozilla.org/dom/localStorage-manager;1", "nsIDOMStorageManager"],
-  lsm: ["@mozilla.org/dom/localStorage-manager;1", "nsILocalStorageManager"],
-||||||| merged common ancestors
-  domStorageManager: ["@mozilla.org/dom/localStorage-manager;1", "nsIDOMStorageManager"],
-=======
   domStorageManager: [
     "@mozilla.org/dom/localStorage-manager;1",
     "nsIDOMStorageManager",
   ],
   lsm: ["@mozilla.org/dom/localStorage-manager;1", "nsILocalStorageManager"],
   search: ["@mozilla.org/browser/search-service;1", "nsISearchService"],
->>>>>>> upstream-releases
   strings: ["@mozilla.org/intl/stringbundle;1", "nsIStringBundleService"],
   telemetry: ["@mozilla.org/base/telemetry;1", "nsITelemetry"],
   textToSubURI: ["@mozilla.org/intl/texttosuburi;1", "nsITextToSubURI"],

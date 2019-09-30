@@ -9,15 +9,7 @@
 namespace mozilla {
 namespace media {
 
-<<<<<<< HEAD
-already_AddRefed<nsIAsyncShutdownClient> GetShutdownBarrier() {
-||||||| merged common ancestors
-already_AddRefed<nsIAsyncShutdownClient>
-GetShutdownBarrier()
-{
-=======
 RefPtr<nsIAsyncShutdownClient> GetShutdownBarrier() {
->>>>>>> upstream-releases
   nsCOMPtr<nsIAsyncShutdownService> svc = services::GetAsyncShutdown();
   MOZ_RELEASE_ASSERT(svc);
 

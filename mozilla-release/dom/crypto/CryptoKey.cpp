@@ -1138,16 +1138,8 @@ bool CryptoKey::PublicKeyValid(SECKEYPublicKey* aPubKey) {
   return (rv == SECSuccess);
 }
 
-<<<<<<< HEAD
-bool CryptoKey::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const {
-||||||| merged common ancestors
-bool
-CryptoKey::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const
-{
-=======
 bool CryptoKey::WriteStructuredClone(JSContext* aCX,
                                      JSStructuredCloneWriter* aWriter) const {
->>>>>>> upstream-releases
   // Write in five pieces
   // 1. Attributes
   // 2. Symmetric key as raw (if present)
@@ -1173,18 +1165,10 @@ bool CryptoKey::WriteStructuredClone(JSContext* aCX,
          WriteBuffer(aWriter, pub) && mAlgorithm.WriteStructuredClone(aWriter);
 }
 
-<<<<<<< HEAD
-bool CryptoKey::ReadStructuredClone(JSStructuredCloneReader* aReader) {
-||||||| merged common ancestors
-bool
-CryptoKey::ReadStructuredClone(JSStructuredCloneReader* aReader)
-{
-=======
 // static
 already_AddRefed<CryptoKey> CryptoKey::ReadStructuredClone(
     JSContext* aCx, nsIGlobalObject* aGlobal,
     JSStructuredCloneReader* aReader) {
->>>>>>> upstream-releases
   // Ensure that NSS is initialized.
   if (!EnsureNSSInitializedChromeOrContent()) {
     return nullptr;
@@ -1195,72 +1179,30 @@ already_AddRefed<CryptoKey> CryptoKey::ReadStructuredClone(
   uint32_t version;
   CryptoBuffer sym, priv, pub;
 
-<<<<<<< HEAD
-  bool read = JS_ReadUint32Pair(aReader, &mAttributes, &version) &&
-              (version == CRYPTOKEY_SC_VERSION) && ReadBuffer(aReader, sym) &&
-              ReadBuffer(aReader, priv) && ReadBuffer(aReader, pub) &&
-              mAlgorithm.ReadStructuredClone(aReader);
-||||||| merged common ancestors
-  bool read = JS_ReadUint32Pair(aReader, &mAttributes, &version) &&
-              (version == CRYPTOKEY_SC_VERSION) &&
-              ReadBuffer(aReader, sym) &&
-              ReadBuffer(aReader, priv) &&
-              ReadBuffer(aReader, pub) &&
-              mAlgorithm.ReadStructuredClone(aReader);
-=======
   bool read = JS_ReadUint32Pair(aReader, &key->mAttributes, &version) &&
               (version == CRYPTOKEY_SC_VERSION) && ReadBuffer(aReader, sym) &&
               ReadBuffer(aReader, priv) && ReadBuffer(aReader, pub) &&
               key->mAlgorithm.ReadStructuredClone(aReader);
->>>>>>> upstream-releases
   if (!read) {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  if (sym.Length() > 0 && !mSymKey.Assign(sym)) {
-    return false;
-||||||| merged common ancestors
-  if (sym.Length() > 0 && !mSymKey.Assign(sym))  {
-    return false;
-=======
   if (sym.Length() > 0 && !key->mSymKey.Assign(sym)) {
     return nullptr;
->>>>>>> upstream-releases
   }
   if (priv.Length() > 0) {
     key->mPrivateKey = CryptoKey::PrivateKeyFromPkcs8(priv);
   }
-<<<<<<< HEAD
-  if (pub.Length() > 0) {
-    mPublicKey = CryptoKey::PublicKeyFromSpki(pub);
-||||||| merged common ancestors
-  if (pub.Length() > 0)  {
-    mPublicKey = CryptoKey::PublicKeyFromSpki(pub);
-=======
   if (pub.Length() > 0) {
     key->mPublicKey = CryptoKey::PublicKeyFromSpki(pub);
->>>>>>> upstream-releases
   }
 
   // Ensure that what we've read is consistent
   // If the attributes indicate a key type, should have a key of that type
-<<<<<<< HEAD
-  if (!((GetKeyType() == SECRET && mSymKey.Length() > 0) ||
-        (GetKeyType() == PRIVATE && mPrivateKey) ||
-        (GetKeyType() == PUBLIC && mPublicKey))) {
-    return false;
-||||||| merged common ancestors
-  if (!((GetKeyType() == SECRET  && mSymKey.Length() > 0) ||
-        (GetKeyType() == PRIVATE && mPrivateKey) ||
-        (GetKeyType() == PUBLIC  && mPublicKey))) {
-    return false;
-=======
   if (!((key->GetKeyType() == SECRET && key->mSymKey.Length() > 0) ||
         (key->GetKeyType() == PRIVATE && key->mPrivateKey) ||
         (key->GetKeyType() == PUBLIC && key->mPublicKey))) {
     return nullptr;
->>>>>>> upstream-releases
   }
 
   return key.forget();

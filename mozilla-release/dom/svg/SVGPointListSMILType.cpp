@@ -20,15 +20,7 @@ SVGPointListSMILType SVGPointListSMILType::sSingleton;
 //----------------------------------------------------------------------
 // nsISMILType implementation
 
-<<<<<<< HEAD
-void SVGPointListSMILType::Init(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGPointListSMILType::Init(nsSMILValue &aValue) const
-{
-=======
 void SVGPointListSMILType::Init(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.IsNull(), "Unexpected value type");
 
   SVGPointListAndInfo* pointList = new SVGPointListAndInfo();
@@ -37,33 +29,15 @@ void SVGPointListSMILType::Init(SMILValue& aValue) const {
   aValue.mType = this;
 }
 
-<<<<<<< HEAD
-void SVGPointListSMILType::Destroy(nsSMILValue& aValue) const {
-||||||| merged common ancestors
-void
-SVGPointListSMILType::Destroy(nsSMILValue& aValue) const
-{
-=======
 void SVGPointListSMILType::Destroy(SMILValue& aValue) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aValue.mType == this, "Unexpected SMIL value type");
   delete static_cast<SVGPointListAndInfo*>(aValue.mU.mPtr);
   aValue.mU.mPtr = nullptr;
   aValue.mType = SMILNullType::Singleton();
 }
 
-<<<<<<< HEAD
-nsresult SVGPointListSMILType::Assign(nsSMILValue& aDest,
-                                      const nsSMILValue& aSrc) const {
-||||||| merged common ancestors
-nsresult
-SVGPointListSMILType::Assign(nsSMILValue& aDest,
-                              const nsSMILValue& aSrc) const
-{
-=======
 nsresult SVGPointListSMILType::Assign(SMILValue& aDest,
                                       const SMILValue& aSrc) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == aSrc.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL value");
 
@@ -74,18 +48,8 @@ nsresult SVGPointListSMILType::Assign(SMILValue& aDest,
   return dest->CopyFrom(*src);
 }
 
-<<<<<<< HEAD
-bool SVGPointListSMILType::IsEqual(const nsSMILValue& aLeft,
-                                   const nsSMILValue& aRight) const {
-||||||| merged common ancestors
-bool
-SVGPointListSMILType::IsEqual(const nsSMILValue& aLeft,
-                               const nsSMILValue& aRight) const
-{
-=======
 bool SVGPointListSMILType::IsEqual(const SMILValue& aLeft,
                                    const SMILValue& aRight) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aLeft.mType == aRight.mType, "Incompatible SMIL types");
   MOZ_ASSERT(aLeft.mType == this, "Unexpected type for SMIL value");
 
@@ -93,21 +57,9 @@ bool SVGPointListSMILType::IsEqual(const SMILValue& aLeft,
          *static_cast<const SVGPointListAndInfo*>(aRight.mU.mPtr);
 }
 
-<<<<<<< HEAD
-nsresult SVGPointListSMILType::Add(nsSMILValue& aDest,
-                                   const nsSMILValue& aValueToAdd,
-                                   uint32_t aCount) const {
-||||||| merged common ancestors
-nsresult
-SVGPointListSMILType::Add(nsSMILValue& aDest,
-                          const nsSMILValue& aValueToAdd,
-                          uint32_t aCount) const
-{
-=======
 nsresult SVGPointListSMILType::Add(SMILValue& aDest,
                                    const SMILValue& aValueToAdd,
                                    uint32_t aCount) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aDest.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aValueToAdd.mType == this, "Incompatible SMIL type");
 
@@ -145,21 +97,9 @@ nsresult SVGPointListSMILType::Add(SMILValue& aDest,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGPointListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                               const nsSMILValue& aTo,
-                                               double& aDistance) const {
-||||||| merged common ancestors
-nsresult
-SVGPointListSMILType::ComputeDistance(const nsSMILValue& aFrom,
-                                      const nsSMILValue& aTo,
-                                      double& aDistance) const
-{
-=======
 nsresult SVGPointListSMILType::ComputeDistance(const SMILValue& aFrom,
                                                const SMILValue& aTo,
                                                double& aDistance) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aFrom.mType == this, "Unexpected SMIL type");
   MOZ_ASSERT(aTo.mType == this, "Incompatible SMIL type");
 
@@ -193,24 +133,10 @@ nsresult SVGPointListSMILType::ComputeDistance(const SMILValue& aFrom,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult SVGPointListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                           const nsSMILValue& aEndVal,
-                                           double aUnitDistance,
-                                           nsSMILValue& aResult) const {
-||||||| merged common ancestors
-nsresult
-SVGPointListSMILType::Interpolate(const nsSMILValue& aStartVal,
-                                  const nsSMILValue& aEndVal,
-                                  double aUnitDistance,
-                                  nsSMILValue& aResult) const
-{
-=======
 nsresult SVGPointListSMILType::Interpolate(const SMILValue& aStartVal,
                                            const SMILValue& aEndVal,
                                            double aUnitDistance,
                                            SMILValue& aResult) const {
->>>>>>> upstream-releases
   MOZ_ASSERT(aStartVal.mType == aEndVal.mType,
              "Trying to interpolate different types");
   MOZ_ASSERT(aStartVal.mType == this, "Unexpected types for interpolation");

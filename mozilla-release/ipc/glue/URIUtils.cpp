@@ -46,35 +46,15 @@ void SerializeURI(nsIURI* aURI, URIParams& aParams) {
   }
 }
 
-<<<<<<< HEAD
-void SerializeURI(nsIURI* aURI, OptionalURIParams& aParams) {
-||||||| merged common ancestors
-void
-SerializeURI(nsIURI* aURI,
-             OptionalURIParams& aParams)
-{
-=======
 void SerializeURI(nsIURI* aURI, Maybe<URIParams>& aParams) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (aURI) {
     URIParams params;
     SerializeURI(aURI, params);
-<<<<<<< HEAD
-    aParams = params;
-  } else {
-    aParams = mozilla::void_t();
-||||||| merged common ancestors
-    aParams = params;
-  }
-  else {
-    aParams = mozilla::void_t();
-=======
     aParams = Some(std::move(params));
   } else {
     aParams = Nothing();
->>>>>>> upstream-releases
   }
 }
 
@@ -136,15 +116,7 @@ already_AddRefed<nsIURI> DeserializeURI(const URIParams& aParams) {
   return uri.forget();
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIURI> DeserializeURI(const OptionalURIParams& aParams) {
-||||||| merged common ancestors
-already_AddRefed<nsIURI>
-DeserializeURI(const OptionalURIParams& aParams)
-{
-=======
 already_AddRefed<nsIURI> DeserializeURI(const Maybe<URIParams>& aParams) {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   nsCOMPtr<nsIURI> uri;

@@ -8,38 +8,13 @@
 // escaping checks -- highly dependent on the default index handler output
 // format
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-var srv, dir, dirEntries;
-=======
-var srv, dir, gDirEntries;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
 var srv, dir, gDirEntries;
 
 XPCOMUtils.defineLazyGetter(this, "BASE_URL", function() {
-||||||| merged common ancestors
-XPCOMUtils.defineLazyGetter(this, 'BASE_URL', function() {
-=======
-XPCOMUtils.defineLazyGetter(this, "BASE_URL", function() {
->>>>>>> upstream-releases
   return "http://localhost:" + srv.identity.primaryPort + "/";
 });
 
-<<<<<<< HEAD
-Cu.importGlobalProperties(["DOMParser"]);
-
 function run_test() {
-||||||| merged common ancestors
-Cu.importGlobalProperties(["DOMParser"]);
-
-function run_test()
-{
-=======
-function run_test() {
->>>>>>> upstream-releases
   createTestDirectory();
 
   srv = createServer();
@@ -104,15 +79,7 @@ function destroyTestDirectory() {
   dir.remove(true);
 }
 
-<<<<<<< HEAD
-
 /** ***********
-||||||| merged common ancestors
-
-/*************
-=======
-/** ***********
->>>>>>> upstream-releases
  * UTILITIES *
  *************/
 
@@ -238,19 +205,10 @@ function makeFile(name, isDirectory, parentDir, lst) {
   try {
     file.append(name);
     file.create(type, 0o755);
-<<<<<<< HEAD
-    lst.push({name, isDirectory});
-  } catch (e) { /* OS probably doesn't like file name, skip */ }
-||||||| merged common ancestors
-    lst.push({name: name, isDirectory: isDirectory});
-  }
-  catch (e) { /* OS probably doesn't like file name, skip */ }
-=======
     lst.push({ name, isDirectory });
   } catch (e) {
     /* OS probably doesn't like file name, skip */
   }
->>>>>>> upstream-releases
 }
 
 /** *******
@@ -274,41 +232,16 @@ XPCOMUtils.defineLazyGetter(this, "tests", function() {
 function start(ch) {
   Assert.equal(ch.getResponseHeader("Content-Type"), "text/html;charset=utf-8");
 }
-<<<<<<< HEAD
-function stopRootDirectory(ch, cx, status, data) {
-  dataCheck(data, BASE_URL, "/", gDirEntries[0]);
-||||||| merged common ancestors
-function stopRootDirectory(ch, cx, status, data)
-{
-  dataCheck(data, BASE_URL, "/", dirEntries[0]);
-=======
 function stopRootDirectory(ch, status, data) {
   dataCheck(data, BASE_URL, "/", gDirEntries[0]);
->>>>>>> upstream-releases
 }
 
 // check non-top-level, too
-<<<<<<< HEAD
-function stopFooDirectory(ch, cx, status, data) {
-  dataCheck(data, BASE_URL + "foo/", "/foo/", gDirEntries[1]);
-||||||| merged common ancestors
-function stopFooDirectory(ch, cx, status, data)
-{
-  dataCheck(data, BASE_URL + "foo/", "/foo/", dirEntries[1]);
-=======
 function stopFooDirectory(ch, status, data) {
   dataCheck(data, BASE_URL + "foo/", "/foo/", gDirEntries[1]);
->>>>>>> upstream-releases
 }
 
 // trailing-caret leaf with hidden files
-<<<<<<< HEAD
-function stopTrailingCaretDirectory(ch, cx, status, data) {
-||||||| merged common ancestors
-function stopTrailingCaretDirectory(ch, cx, status, data)
-{
-=======
 function stopTrailingCaretDirectory(ch, status, data) {
->>>>>>> upstream-releases
   hiddenDataCheck(data, BASE_URL + "bar/folder^/", "/bar/folder^/");
 }

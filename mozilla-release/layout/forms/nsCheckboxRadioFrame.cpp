@@ -21,36 +21,15 @@ using mozilla::dom::HTMLInputElement;
 
 //#define FCF_NOISY
 
-<<<<<<< HEAD
-nsCheckboxRadioFrame* NS_NewCheckboxRadioFrame(nsIPresShell* aPresShell,
-                                               ComputedStyle* aStyle) {
-  return new (aPresShell) nsCheckboxRadioFrame(aStyle);
-||||||| merged common ancestors
-nsCheckboxRadioFrame*
-NS_NewCheckboxRadioFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsCheckboxRadioFrame(aStyle);
-=======
 nsCheckboxRadioFrame* NS_NewCheckboxRadioFrame(PresShell* aPresShell,
                                                ComputedStyle* aStyle) {
   return new (aPresShell)
       nsCheckboxRadioFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsCheckboxRadioFrame::nsCheckboxRadioFrame(ComputedStyle* aStyle)
-    : nsAtomicContainerFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-nsCheckboxRadioFrame::nsCheckboxRadioFrame(ComputedStyle* aStyle)
-  : nsAtomicContainerFrame(aStyle, kClassID)
-{
-}
-=======
 nsCheckboxRadioFrame::nsCheckboxRadioFrame(ComputedStyle* aStyle,
                                            nsPresContext* aPresContext)
     : nsAtomicContainerFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
 
 nsCheckboxRadioFrame::~nsCheckboxRadioFrame() {}
 
@@ -67,34 +46,16 @@ NS_QUERYFRAME_HEAD(nsCheckboxRadioFrame)
   NS_QUERYFRAME_ENTRY(nsIFormControlFrame)
 NS_QUERYFRAME_TAIL_INHERITING(nsAtomicContainerFrame)
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsCheckboxRadioFrame::GetMinISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsCheckboxRadioFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsCheckboxRadioFrame::GetMinISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_MIN_INLINE_SIZE(this, result);
   result = StyleDisplay()->HasAppearance() ? DefaultSize() : 0;
   return result;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsCheckboxRadioFrame::GetPrefISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsCheckboxRadioFrame::GetPrefISize(gfxContext* aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsCheckboxRadioFrame::GetPrefISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result;
   DISPLAY_PREF_INLINE_SIZE(this, result);
   result = StyleDisplay()->HasAppearance() ? DefaultSize() : 0;

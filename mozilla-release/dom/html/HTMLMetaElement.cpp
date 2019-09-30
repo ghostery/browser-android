@@ -31,22 +31,9 @@ HTMLMetaElement::~HTMLMetaElement() {}
 
 NS_IMPL_ELEMENT_CLONE(HTMLMetaElement)
 
-<<<<<<< HEAD
-void HTMLMetaElement::SetMetaReferrer(nsIDocument* aDocument) {
-  if (!aDocument || !AttrValueIs(kNameSpaceID_None, nsGkAtoms::name,
-                                 nsGkAtoms::referrer, eIgnoreCase)) {
-||||||| merged common ancestors
-
-void
-HTMLMetaElement::SetMetaReferrer(nsIDocument* aDocument)
-{
-  if (!aDocument ||
-      !AttrValueIs(kNameSpaceID_None, nsGkAtoms::name, nsGkAtoms::referrer, eIgnoreCase)) {
-=======
 void HTMLMetaElement::SetMetaReferrer(Document* aDocument) {
   if (!aDocument || !AttrValueIs(kNameSpaceID_None, nsGkAtoms::name,
                                  nsGkAtoms::referrer, eIgnoreCase)) {
->>>>>>> upstream-releases
     return;
   }
   nsAutoString content;
@@ -54,18 +41,9 @@ void HTMLMetaElement::SetMetaReferrer(Document* aDocument) {
 
   Element* headElt = aDocument->GetHeadElement();
   if (headElt && nsContentUtils::ContentIsDescendantOf(this, headElt)) {
-<<<<<<< HEAD
-    content = nsContentUtils::TrimWhitespace<nsContentUtils::IsHTMLWhitespace>(
-        content);
-    aDocument->SetHeaderData(nsGkAtoms::referrer, content);
-||||||| merged common ancestors
-      content = nsContentUtils::TrimWhitespace<nsContentUtils::IsHTMLWhitespace>(content);
-      aDocument->SetHeaderData(nsGkAtoms::referrer, content);
-=======
     content = nsContentUtils::TrimWhitespace<nsContentUtils::IsHTMLWhitespace>(
         content);
     aDocument->UpdateReferrerInfoFromMeta(content, false);
->>>>>>> upstream-releases
   }
 }
 
@@ -75,13 +53,7 @@ nsresult HTMLMetaElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
                                        nsIPrincipal* aSubjectPrincipal,
                                        bool aNotify) {
   if (aNameSpaceID == kNameSpaceID_None) {
-<<<<<<< HEAD
-    nsIDocument* document = GetUncomposedDoc();
-||||||| merged common ancestors
-    nsIDocument *document = GetUncomposedDoc();
-=======
     Document* document = GetUncomposedDoc();
->>>>>>> upstream-releases
     if (aName == nsGkAtoms::content) {
       if (document && AttrValueIs(kNameSpaceID_None, nsGkAtoms::name,
                                   nsGkAtoms::viewport, eIgnoreCase)) {
@@ -99,67 +71,26 @@ nsresult HTMLMetaElement::AfterSetAttr(int32_t aNameSpaceID, nsAtom* aName,
       aNameSpaceID, aName, aValue, aOldValue, aSubjectPrincipal, aNotify);
 }
 
-<<<<<<< HEAD
-nsresult HTMLMetaElement::BindToTree(nsIDocument* aDocument,
-                                     nsIContent* aParent,
-                                     nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLMetaElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                            nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLElement::BindToTree(aDocument, aParent,
-                                                 aBindingParent);
-=======
 nsresult HTMLMetaElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   nsresult rv = nsGenericHTMLElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   NS_ENSURE_SUCCESS(rv, rv);
-<<<<<<< HEAD
-  if (aDocument && AttrValueIs(kNameSpaceID_None, nsGkAtoms::name,
-                               nsGkAtoms::viewport, eIgnoreCase)) {
-||||||| merged common ancestors
-  if (aDocument &&
-      AttrValueIs(kNameSpaceID_None, nsGkAtoms::name, nsGkAtoms::viewport, eIgnoreCase)) {
-=======
   if (!IsInUncomposedDoc()) {
     return rv;
   }
   Document& doc = aContext.OwnerDoc();
   if (AttrValueIs(kNameSpaceID_None, nsGkAtoms::name, nsGkAtoms::viewport,
                   eIgnoreCase)) {
->>>>>>> upstream-releases
     nsAutoString content;
     GetContent(content);
     nsContentUtils::ProcessViewportInfo(&doc, content);
   }
 
-<<<<<<< HEAD
-  if (StaticPrefs::security_csp_enable() && aDocument &&
-      !aDocument->IsLoadedAsData() &&
-      AttrValueIs(kNameSpaceID_None, nsGkAtoms::httpEquiv, nsGkAtoms::headerCSP,
-                  eIgnoreCase)) {
-    // only accept <meta http-equiv="Content-Security-Policy" content=""> if it
-    // appears in the <head> element.
-    Element* headElt = aDocument->GetHeadElement();
-||||||| merged common ancestors
-  if (StaticPrefs::security_csp_enable() && aDocument &&
-      !aDocument->IsLoadedAsData() &&
-      AttrValueIs(kNameSpaceID_None, nsGkAtoms::httpEquiv, nsGkAtoms::headerCSP, eIgnoreCase)) {
-
-    // only accept <meta http-equiv="Content-Security-Policy" content=""> if it appears
-    // in the <head> element.
-    Element* headElt = aDocument->GetHeadElement();
-=======
   if (StaticPrefs::security_csp_enable() && !doc.IsLoadedAsData() &&
       AttrValueIs(kNameSpaceID_None, nsGkAtoms::httpEquiv, nsGkAtoms::headerCSP,
                   eIgnoreCase)) {
     // only accept <meta http-equiv="Content-Security-Policy" content=""> if it
     // appears in the <head> element.
     Element* headElt = doc.GetHeadElement();
->>>>>>> upstream-releases
     if (headElt && nsContentUtils::ContentIsDescendantOf(this, headElt)) {
       nsAutoString content;
       GetContent(content);
@@ -174,22 +105,11 @@ nsresult HTMLMetaElement::BindToTree(BindContext& aContext, nsINode& aParent) {
             documentURI->GetAsciiSpec(documentURIspec);
           }
 
-<<<<<<< HEAD
-          LOG(
-              ("HTMLMetaElement %p sets CSP '%s' on document=%p, "
-               "document-uri=%s",
-               this, NS_ConvertUTF16toUTF8(content).get(), aDocument,
-               documentURIspec.get()));
-||||||| merged common ancestors
-          LOG(("HTMLMetaElement %p sets CSP '%s' on document=%p, document-uri=%s",
-               this, NS_ConvertUTF16toUTF8(content).get(), aDocument, documentURIspec.get()));
-=======
           LOG(
               ("HTMLMetaElement %p sets CSP '%s' on document=%p, "
                "document-uri=%s",
                this, NS_ConvertUTF16toUTF8(content).get(), &doc,
                documentURIspec.get()));
->>>>>>> upstream-releases
         }
 
         // Multiple CSPs (delivered through either header of meta tag) need to
@@ -215,38 +135,15 @@ nsresult HTMLMetaElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return rv;
 }
 
-<<<<<<< HEAD
-void HTMLMetaElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
-||||||| merged common ancestors
-void
-HTMLMetaElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-  nsCOMPtr<nsIDocument> oldDoc = GetUncomposedDoc();
-=======
 void HTMLMetaElement::UnbindFromTree(bool aNullParent) {
   nsCOMPtr<Document> oldDoc = GetUncomposedDoc();
->>>>>>> upstream-releases
   CreateAndDispatchEvent(oldDoc, NS_LITERAL_STRING("DOMMetaRemoved"));
   nsGenericHTMLElement::UnbindFromTree(aNullParent);
 }
 
-<<<<<<< HEAD
-void HTMLMetaElement::CreateAndDispatchEvent(nsIDocument* aDoc,
-                                             const nsAString& aEventName) {
-  if (!aDoc) return;
-||||||| merged common ancestors
-void
-HTMLMetaElement::CreateAndDispatchEvent(nsIDocument* aDoc,
-                                        const nsAString& aEventName)
-{
-  if (!aDoc)
-    return;
-=======
 void HTMLMetaElement::CreateAndDispatchEvent(Document* aDoc,
                                              const nsAString& aEventName) {
   if (!aDoc) return;
->>>>>>> upstream-releases
 
   RefPtr<AsyncEventDispatcher> asyncDispatcher = new AsyncEventDispatcher(
       this, aEventName, CanBubble::eYes, ChromeOnlyDispatch::eYes);

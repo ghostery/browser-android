@@ -372,18 +372,6 @@ function runSubtestsSeriallyInFreshWindows(aSubtests) {
         w.subtestDone = advanceSubtestExecution;
         w.isApzSubtest = true;
         w.SimpleTest = SimpleTest;
-<<<<<<< HEAD
-        w.is = function(a, b, msg) { return is(a, b, aFile + " | " + msg); };
-        w.ok = function(cond, msg) {
-          arguments[1] = aFile + " | " + msg;
-          // Forward all arguments to SimpleTest.ok where we will check that ok() was
-          // called with at most 2 arguments.
-          return SimpleTest.ok.apply(SimpleTest, arguments);
-        };
-||||||| merged common ancestors
-        w.is = function(a, b, msg) { return is(a, b, aFile + " | " + msg); };
-        w.ok = function(cond, name, diag) { return ok(cond, aFile + " | " + name, diag); };
-=======
         w.dump = function(msg) {
           return dump(aFile + " | " + msg);
         };
@@ -405,7 +393,6 @@ function runSubtestsSeriallyInFreshWindows(aSubtests) {
         w.todo = function(cond, msg) {
           return todo(cond, aFile + " | " + msg);
         };
->>>>>>> upstream-releases
         if (test.onload) {
           w.addEventListener(
             "load",
@@ -552,14 +539,8 @@ async function waitUntilApzStable() {
 // that the root layer tree is pointing to the content layer tree, but does
 // not guarantee the subsequent paint; this function does that job.
 async function forceLayerTreeToCompositor() {
-<<<<<<< HEAD
-  // Modify a style property to force a layout flush
-  document.body.style.left = "1px";
-||||||| merged common ancestors
-=======
   // Modify a style property to force a layout flush
   document.body.style.boxSizing = "border-box";
->>>>>>> upstream-releases
   var utils = SpecialPowers.getDOMWindowUtils(window);
   if (!utils.isMozAfterPaintPending) {
     dump("Forcing a paint since none was pending already...\n");
@@ -617,15 +598,6 @@ function runContinuation(testFunction) {
         }
       }
 
-<<<<<<< HEAD
-      try {
-        driveTest();
-      } catch (ex) {
-        SimpleTest.ok(false, "APZ test continuation failed with exception: " + ex);
-      }
-||||||| merged common ancestors
-      driveTest();
-=======
       try {
         driveTest();
       } catch (ex) {
@@ -634,7 +606,6 @@ function runContinuation(testFunction) {
           "APZ test continuation failed with exception: " + ex
         );
       }
->>>>>>> upstream-releases
     });
   };
 }

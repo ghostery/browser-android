@@ -306,31 +306,12 @@ enum TypeCode {
 
 // Descriptor of one field in a StructType. The name of the field is stored
 // as the key to the hash entry.
-<<<<<<< HEAD
-struct FieldInfo {
-  JS::Heap<JSObject*> mType;  // CType of the field
-  size_t mIndex;              // index of the field in the struct (first is 0)
-  size_t mOffset;             // offset of the field in the struct, in bytes
-
-  void trace(JSTracer* trc) { JS::TraceEdge(trc, &mType, "fieldType"); }
-||||||| merged common ancestors
-struct FieldInfo
-{
-  JS::Heap<JSObject*> mType;    // CType of the field
-  size_t              mIndex;   // index of the field in the struct (first is 0)
-  size_t              mOffset;  // offset of the field in the struct, in bytes
-
-  void trace(JSTracer* trc) {
-    JS::TraceEdge(trc, &mType, "fieldType");
-  }
-=======
 struct FieldInfo {
   HeapPtr<JSObject*> mType;  // CType of the field
   size_t mIndex;             // index of the field in the struct (first is 0)
   size_t mOffset;            // offset of the field in the struct, in bytes
 
   void trace(JSTracer* trc) { TraceEdge(trc, &mType, "fieldType"); }
->>>>>>> upstream-releases
 };
 
 struct UnbarrieredFieldInfo {
@@ -410,28 +391,12 @@ struct FunctionInfo {
 // Parameters necessary for invoking a JS function from a C closure.
 struct ClosureInfo {
   JSContext* cx;
-<<<<<<< HEAD
-  JS::Heap<JSObject*> closureObj;  // CClosure object
-  JS::Heap<JSObject*> typeObj;     // FunctionType describing the C function
-  JS::Heap<JSObject*> thisObj;  // 'this' object to use for the JS function call
-  JS::Heap<JSObject*> jsfnObj;  // JS function
-  void* errResult;       // Result that will be returned if the closure throws
-  ffi_closure* closure;  // The C closure itself
-||||||| merged common ancestors
-  JS::Heap<JSObject*> closureObj;  // CClosure object
-  JS::Heap<JSObject*> typeObj;     // FunctionType describing the C function
-  JS::Heap<JSObject*> thisObj;     // 'this' object to use for the JS function call
-  JS::Heap<JSObject*> jsfnObj;     // JS function
-  void* errResult;                 // Result that will be returned if the closure throws
-  ffi_closure* closure;            // The C closure itself
-=======
   HeapPtr<JSObject*> closureObj;  // CClosure object
   HeapPtr<JSObject*> typeObj;     // FunctionType describing the C function
   HeapPtr<JSObject*> thisObj;  // 'this' object to use for the JS function call
   HeapPtr<JSObject*> jsfnObj;  // JS function
   void* errResult;       // Result that will be returned if the closure throws
   ffi_closure* closure;  // The C closure itself
->>>>>>> upstream-releases
 
   // Anything conditionally freed in the destructor should be initialized to
   // nullptr here.

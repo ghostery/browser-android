@@ -17,79 +17,6 @@ static bool GlobalResolve(JSContext* cx, JS::HandleObject obj, JS::HandleId id,
   return JS_ResolveStandardClass(cx, obj, id, resolvedp);
 }
 
-<<<<<<< HEAD
-BEGIN_TEST(testRedefineGlobalEval) {
-  static const JSClassOps clsOps = {nullptr,
-                                    nullptr,
-                                    nullptr,
-                                    JS_NewEnumerateStandardClasses,
-                                    GlobalResolve,
-                                    nullptr,
-                                    nullptr,
-                                    nullptr,
-                                    nullptr,
-                                    nullptr,
-                                    JS_GlobalObjectTraceHook};
-
-  static const JSClass cls = {"global", JSCLASS_GLOBAL_FLAGS, &clsOps};
-
-  /* Create the global object. */
-  JS::RealmOptions options;
-  JS::Rooted<JSObject*> g(
-      cx,
-      JS_NewGlobalObject(cx, &cls, nullptr, JS::FireOnNewGlobalHook, options));
-  if (!g) {
-    return false;
-  }
-
-  JSAutoRealm ar(cx, g);
-  JS::Rooted<JS::Value> v(cx);
-  CHECK(JS_GetProperty(cx, g, "Object", &v));
-
-  static const char data[] =
-      "Object.defineProperty(this, 'eval', { configurable: false });";
-
-  JS::CompileOptions opts(cx);
-
-  CHECK(JS::EvaluateUtf8(cx, opts.setFileAndLine(__FILE__, __LINE__), data,
-                         mozilla::ArrayLength(data) - 1, &v));
-
-  return true;
-||||||| merged common ancestors
-BEGIN_TEST(testRedefineGlobalEval)
-{
-    static const JSClassOps clsOps = {
-        nullptr, nullptr,
-        nullptr, JS_NewEnumerateStandardClasses, GlobalResolve, nullptr, nullptr,
-        nullptr, nullptr, nullptr,
-        JS_GlobalObjectTraceHook
-    };
-
-    static const JSClass cls = {
-        "global", JSCLASS_GLOBAL_FLAGS,
-        &clsOps
-    };
-
-    /* Create the global object. */
-    JS::RealmOptions options;
-    JS::Rooted<JSObject*> g(cx, JS_NewGlobalObject(cx, &cls, nullptr, JS::FireOnNewGlobalHook, options));
-    if (!g) {
-        return false;
-    }
-
-    JSAutoRealm ar(cx, g);
-    JS::Rooted<JS::Value> v(cx);
-    CHECK(JS_GetProperty(cx, g, "Object", &v));
-
-    static const char data[] = "Object.defineProperty(this, 'eval', { configurable: false });";
-
-    JS::CompileOptions opts(cx);
-
-    CHECK(JS::EvaluateUtf8(cx, opts.setFileAndLine(__FILE__, __LINE__),
-                           data, mozilla::ArrayLength(data) - 1, &v));
-
-    return true;
-=======
 BEGIN_TEST(testRedefineGlobalEval) {
   static const JSClassOps clsOps = {nullptr,
                                     nullptr,
@@ -131,6 +58,5 @@ BEGIN_TEST(testRedefineGlobalEval) {
                                 srcBuf, &v));
 
   return true;
->>>>>>> upstream-releases
 }
 END_TEST(testRedefineGlobalEval)

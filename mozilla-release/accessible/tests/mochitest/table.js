@@ -705,21 +705,6 @@ function testTableSelection(aIdentifier, aCellsArray, aMsg) {
     let rowIdx = acc.getRowIndexAt(selCells[i]);
     var expectedSelCellAccessible = acc.getCellAt(rowIdx, colIdx);
 
-<<<<<<< HEAD
-    is(actualSelCellAccessible, expectedSelCellAccessible,
-       msg + "getSelectedCells: Cell at index " + selCells[i] +
-       " should be selected.");
-
-    ok(actualSelCellAccessible.isSelected(),
-       "isSelected: Cell at index " + selCells[i] + " should be selected.");
-||||||| merged common ancestors
-    ok(actualSelCellAccessible, expectedSelCellAccessible,
-       msg + "getSelectedCells: Cell at index " + selCells[i] +
-       " should be selected.");
-
-    ok(actualSelCellAccessible.isSelected(),
-       "isSelected: Cell at index " + selCells[i] + " should be selected.");
-=======
     is(
       actualSelCellAccessible,
       expectedSelCellAccessible,
@@ -733,7 +718,6 @@ function testTableSelection(aIdentifier, aCellsArray, aMsg) {
       actualSelCellAccessible.isSelected(),
       "isSelected: Cell at index " + selCells[i] + " should be selected."
     );
->>>>>>> upstream-releases
   }
 
   // selected states tests

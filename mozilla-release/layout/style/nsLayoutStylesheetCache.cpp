@@ -102,17 +102,10 @@
 using namespace mozilla;
 using namespace mozilla::css;
 
-<<<<<<< HEAD
-NS_IMPL_ISUPPORTS(nsLayoutStylesheetCache, nsIObserver, nsIMemoryReporter)
-||||||| merged common ancestors
-NS_IMPL_ISUPPORTS(
-  nsLayoutStylesheetCache, nsIObserver, nsIMemoryReporter)
-=======
 #define PREF_LEGACY_STYLESHEET_CUSTOMIZATION \
   "toolkit.legacyUserProfileCustomizations.stylesheets"
 
 NS_IMPL_ISUPPORTS(nsLayoutStylesheetCache, nsIObserver, nsIMemoryReporter)
->>>>>>> upstream-releases
 
 nsresult nsLayoutStylesheetCache::Observe(nsISupports* aSubject,
                                           const char* aTopic,
@@ -122,69 +115,12 @@ nsresult nsLayoutStylesheetCache::Observe(nsISupports* aSubject,
     mUserChromeSheet = nullptr;
   } else if (!strcmp(aTopic, "profile-do-change")) {
     InitFromProfile();
-<<<<<<< HEAD
-  } else if (strcmp(aTopic, "chrome-flush-skin-caches") == 0 ||
-             strcmp(aTopic, "chrome-flush-caches") == 0) {
-    mScrollbarsSheet = nullptr;
-    mFormsSheet = nullptr;
   } else {
-||||||| merged common ancestors
-  }
-  else if (strcmp(aTopic, "chrome-flush-skin-caches") == 0 ||
-           strcmp(aTopic, "chrome-flush-caches") == 0) {
-    mScrollbarsSheet = nullptr;
-    mFormsSheet = nullptr;
-  }
-  else {
-=======
-  } else {
->>>>>>> upstream-releases
     MOZ_ASSERT_UNREACHABLE("Unexpected observer topic.");
   }
   return NS_OK;
 }
 
-<<<<<<< HEAD
-#define STYLE_SHEET(identifier_, url_, lazy_)                                  \
-  StyleSheet* nsLayoutStylesheetCache::identifier_##Sheet() {                  \
-    if (lazy_ && !m##identifier_##Sheet) {                                     \
-      LoadSheetURL(url_, &m##identifier_##Sheet, eAgentSheetFeatures, eCrash); \
-    }                                                                          \
-    return m##identifier_##Sheet;                                              \
-  }
-#include "mozilla/UserAgentStyleSheetList.h"
-#undef STYLE_SHEET
-
-StyleSheet* nsLayoutStylesheetCache::UserContentSheet() {
-||||||| merged common ancestors
-StyleSheet*
-nsLayoutStylesheetCache::ScrollbarsSheet()
-{
-  if (!mScrollbarsSheet) {
-    // Scrollbars don't need access to unsafe rules
-    LoadSheetURL("chrome://global/skin/scrollbars.css",
-                 &mScrollbarsSheet, eSafeAgentSheetFeatures, eCrash);
-  }
-
-  return mScrollbarsSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::FormsSheet()
-{
-  if (!mFormsSheet) {
-    // forms.css needs access to unsafe rules
-    LoadSheetURL("resource://gre-resources/forms.css",
-                 &mFormsSheet, eAgentSheetFeatures, eCrash);
-  }
-
-  return mFormsSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::UserContentSheet()
-{
-=======
 #define STYLE_SHEET(identifier_, url_, shared_)                                \
   NotNull<StyleSheet*> nsLayoutStylesheetCache::identifier_##Sheet() {         \
     if (!m##identifier_##Sheet) {                                              \
@@ -196,128 +132,14 @@ nsLayoutStylesheetCache::UserContentSheet()
 #undef STYLE_SHEET
 
 StyleSheet* nsLayoutStylesheetCache::GetUserContentSheet() {
->>>>>>> upstream-releases
   return mUserContentSheet;
 }
 
-<<<<<<< HEAD
-StyleSheet* nsLayoutStylesheetCache::UserChromeSheet() {
-||||||| merged common ancestors
-StyleSheet*
-nsLayoutStylesheetCache::UserChromeSheet()
-{
-=======
 StyleSheet* nsLayoutStylesheetCache::GetUserChromeSheet() {
->>>>>>> upstream-releases
   return mUserChromeSheet;
 }
 
-<<<<<<< HEAD
-StyleSheet* nsLayoutStylesheetCache::ChromePreferenceSheet(
-    nsPresContext* aPresContext) {
-||||||| merged common ancestors
-StyleSheet*
-nsLayoutStylesheetCache::UASheet()
-{
-  if (!mUASheet) {
-    LoadSheetURL("resource://gre-resources/ua.css",
-                 &mUASheet, eAgentSheetFeatures, eCrash);
-  }
-
-  return mUASheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::HTMLSheet()
-{
-  return mHTMLSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::MinimalXULSheet()
-{
-  return mMinimalXULSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::XULSheet()
-{
-  if (!mXULSheet) {
-    LoadSheetURL("chrome://global/content/xul.css",
-                 &mXULSheet, eAgentSheetFeatures, eCrash);
-  }
-
-  return mXULSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::XULComponentsSheet()
-{
-  if (!mXULComponentsSheet) {
-    LoadSheetURL("chrome://global/content/components.css",
-                 &mXULComponentsSheet, eAgentSheetFeatures, eCrash);
-  }
-
-  return mXULComponentsSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::QuirkSheet()
-{
-  return mQuirkSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::SVGSheet()
-{
-  return mSVGSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::MathMLSheet()
-{
-  if (!mMathMLSheet) {
-    LoadSheetURL("resource://gre-resources/mathml.css",
-                 &mMathMLSheet, eAgentSheetFeatures, eCrash);
-  }
-
-  return mMathMLSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::CounterStylesSheet()
-{
-  return mCounterStylesSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::NoScriptSheet()
-{
-  if (!mNoScriptSheet) {
-    LoadSheetURL("resource://gre-resources/noscript.css",
-                 &mNoScriptSheet, eAgentSheetFeatures, eCrash);
-  }
-
-  return mNoScriptSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::NoFramesSheet()
-{
-  if (!mNoFramesSheet) {
-    LoadSheetURL("resource://gre-resources/noframes.css",
-                 &mNoFramesSheet, eAgentSheetFeatures, eCrash);
-  }
-
-  return mNoFramesSheet;
-}
-
-StyleSheet*
-nsLayoutStylesheetCache::ChromePreferenceSheet(nsPresContext* aPresContext)
-{
-=======
 StyleSheet* nsLayoutStylesheetCache::ChromePreferenceSheet() {
->>>>>>> upstream-releases
   if (!mChromePreferenceSheet) {
     BuildPreferenceSheet(&mChromePreferenceSheet,
                          PreferenceSheet::ChromePrefs());
@@ -326,16 +148,7 @@ StyleSheet* nsLayoutStylesheetCache::ChromePreferenceSheet() {
   return mChromePreferenceSheet;
 }
 
-<<<<<<< HEAD
-StyleSheet* nsLayoutStylesheetCache::ContentPreferenceSheet(
-    nsPresContext* aPresContext) {
-||||||| merged common ancestors
-StyleSheet*
-nsLayoutStylesheetCache::ContentPreferenceSheet(nsPresContext* aPresContext)
-{
-=======
 StyleSheet* nsLayoutStylesheetCache::ContentPreferenceSheet() {
->>>>>>> upstream-releases
   if (!mContentPreferenceSheet) {
     BuildPreferenceSheet(&mContentPreferenceSheet,
                          PreferenceSheet::ContentPrefs());
@@ -368,20 +181,6 @@ MOZ_DEFINE_MALLOC_SIZE_OF(LayoutStylesheetCacheMallocSizeOf)
 
 NS_IMETHODIMP
 nsLayoutStylesheetCache::CollectReports(nsIHandleReportCallback* aHandleReport,
-<<<<<<< HEAD
-                                        nsISupports* aData, bool aAnonymize) {
-  MOZ_COLLECT_REPORT("explicit/layout/style-sheet-cache", KIND_HEAP,
-                     UNITS_BYTES,
-                     SizeOfIncludingThis(LayoutStylesheetCacheMallocSizeOf),
-                     "Memory used for some built-in style sheets.");
-||||||| merged common ancestors
-                                        nsISupports* aData, bool aAnonymize)
-{
-  MOZ_COLLECT_REPORT(
-    "explicit/layout/style-sheet-cache", KIND_HEAP, UNITS_BYTES,
-    SizeOfIncludingThis(LayoutStylesheetCacheMallocSizeOf),
-    "Memory used for some built-in style sheets.");
-=======
                                         nsISupports* aData, bool aAnonymize) {
   MOZ_COLLECT_REPORT("explicit/layout/style-sheet-cache/unshared", KIND_HEAP,
                      UNITS_BYTES,
@@ -396,7 +195,6 @@ nsLayoutStylesheetCache::CollectReports(nsIHandleReportCallback* aHandleReport,
         "Memory used for built-in style sheets that are shared to "
         "child processes.");
   }
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -405,21 +203,11 @@ size_t nsLayoutStylesheetCache::SizeOfIncludingThis(
     mozilla::MallocSizeOf aMallocSizeOf) const {
   size_t n = aMallocSizeOf(this);
 
-<<<<<<< HEAD
-#define MEASURE(s) n += s ? s->SizeOfIncludingThis(aMallocSizeOf) : 0;
-
-#define STYLE_SHEET(identifier_, url_, lazy_) MEASURE(m##identifier_##Sheet);
-#include "mozilla/UserAgentStyleSheetList.h"
-#undef STYLE_SHEET
-||||||| merged common ancestors
-  #define MEASURE(s) n += s ? s->SizeOfIncludingThis(aMallocSizeOf) : 0;
-=======
 #define MEASURE(s) n += s ? s->SizeOfIncludingThis(aMallocSizeOf) : 0;
 
 #define STYLE_SHEET(identifier_, url_, shared_) MEASURE(m##identifier_##Sheet);
 #include "mozilla/UserAgentStyleSheetList.h"
 #undef STYLE_SHEET
->>>>>>> upstream-releases
 
   MEASURE(mChromePreferenceSheet);
   MEASURE(mContentPreferenceSheet);
@@ -433,18 +221,8 @@ size_t nsLayoutStylesheetCache::SizeOfIncludingThis(
   return n;
 }
 
-<<<<<<< HEAD
-nsLayoutStylesheetCache::nsLayoutStylesheetCache() {
-  nsCOMPtr<nsIObserverService> obsSvc = mozilla::services::GetObserverService();
-||||||| merged common ancestors
-nsLayoutStylesheetCache::nsLayoutStylesheetCache()
-{
-  nsCOMPtr<nsIObserverService> obsSvc =
-    mozilla::services::GetObserverService();
-=======
 nsLayoutStylesheetCache::nsLayoutStylesheetCache() : mUsedSharedMemory(0) {
   nsCOMPtr<nsIObserverService> obsSvc = mozilla::services::GetObserverService();
->>>>>>> upstream-releases
   NS_ASSERTION(obsSvc, "No global observer service?");
 
   if (obsSvc) {
@@ -455,31 +233,6 @@ nsLayoutStylesheetCache::nsLayoutStylesheetCache() : mUsedSharedMemory(0) {
   // Load user style sheets.
   InitFromProfile();
 
-<<<<<<< HEAD
-  // And make sure that we load our UA sheets.  No need to do this
-  // per-profile, since they're profile-invariant.
-#define STYLE_SHEET(identifier_, url_, lazy_)                                \
-  if (!lazy_) {                                                              \
-    LoadSheetURL(url_, &m##identifier_##Sheet, eAgentSheetFeatures, eCrash); \
-  }
-#include "mozilla/UserAgentStyleSheetList.h"
-#undef STYLE_SHEET
-
-||||||| merged common ancestors
-  // And make sure that we load our UA sheets.  No need to do this
-  // per-profile, since they're profile-invariant.
-  LoadSheetURL("resource://gre-resources/counterstyles.css",
-               &mCounterStylesSheet, eAgentSheetFeatures, eCrash);
-  LoadSheetURL("resource://gre-resources/html.css",
-               &mHTMLSheet, eAgentSheetFeatures, eCrash);
-  LoadSheetURL("chrome://global/content/minimal-xul.css",
-               &mMinimalXULSheet, eAgentSheetFeatures, eCrash);
-  LoadSheetURL("resource://gre-resources/quirk.css",
-               &mQuirkSheet, eAgentSheetFeatures, eCrash);
-  LoadSheetURL("resource://gre/res/svg.css",
-               &mSVGSheet, eAgentSheetFeatures, eCrash);
-=======
->>>>>>> upstream-releases
   if (XRE_IsParentProcess()) {
     // We know we need xul.css for the UI, so load that now too:
     XULSheet();
@@ -534,12 +287,6 @@ nsLayoutStylesheetCache::nsLayoutStylesheetCache() : mUsedSharedMemory(0) {
   }
 }
 
-<<<<<<< HEAD
-nsLayoutStylesheetCache::~nsLayoutStylesheetCache() {
-||||||| merged common ancestors
-nsLayoutStylesheetCache::~nsLayoutStylesheetCache()
-{
-=======
 void nsLayoutStylesheetCache::LoadSheetFromSharedMemory(
     const char* aURL, RefPtr<StyleSheet>* aSheet, SheetParsingMode aParsingMode,
     Shm* aSharedMemory, Header* aHeader, UserAgentStyleSheetID aSheetID) {
@@ -642,7 +389,6 @@ void nsLayoutStylesheetCache::InitSharedSheetsInParent() {
 }
 
 nsLayoutStylesheetCache::~nsLayoutStylesheetCache() {
->>>>>>> upstream-releases
   mozilla::UnregisterWeakMemoryReporter(this);
 }
 
@@ -650,16 +396,8 @@ void nsLayoutStylesheetCache::InitMemoryReporter() {
   mozilla::RegisterWeakMemoryReporter(this);
 }
 
-<<<<<<< HEAD
-/* static */ nsLayoutStylesheetCache* nsLayoutStylesheetCache::Singleton() {
-||||||| merged common ancestors
-/* static */ nsLayoutStylesheetCache*
-nsLayoutStylesheetCache::Singleton()
-{
-=======
 /* static */
 nsLayoutStylesheetCache* nsLayoutStylesheetCache::Singleton() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!gStyleCache) {
@@ -677,16 +415,6 @@ nsLayoutStylesheetCache* nsLayoutStylesheetCache::Singleton() {
   return gStyleCache;
 }
 
-<<<<<<< HEAD
-void nsLayoutStylesheetCache::InitFromProfile() {
-  nsCOMPtr<nsIXULRuntime> appInfo =
-      do_GetService("@mozilla.org/xre/app-info;1");
-||||||| merged common ancestors
-void
-nsLayoutStylesheetCache::InitFromProfile()
-{
-  nsCOMPtr<nsIXULRuntime> appInfo = do_GetService("@mozilla.org/xre/app-info;1");
-=======
 void nsLayoutStylesheetCache::InitFromProfile() {
   if (!Preferences::GetBool(PREF_LEGACY_STYLESHEET_CUSTOMIZATION)) {
     return;
@@ -694,7 +422,6 @@ void nsLayoutStylesheetCache::InitFromProfile() {
 
   nsCOMPtr<nsIXULRuntime> appInfo =
       do_GetService("@mozilla.org/xre/app-info;1");
->>>>>>> upstream-releases
   if (appInfo) {
     bool inSafeMode = false;
     appInfo->GetInSafeMode(&inSafeMode);
@@ -715,33 +442,10 @@ void nsLayoutStylesheetCache::InitFromProfile() {
   contentFile->Append(NS_LITERAL_STRING("userContent.css"));
   chromeFile->Append(NS_LITERAL_STRING("userChrome.css"));
 
-<<<<<<< HEAD
   LoadSheetFile(contentFile, &mUserContentSheet, eUserSheetFeatures,
                 eLogToConsole);
   LoadSheetFile(chromeFile, &mUserChromeSheet, eUserSheetFeatures,
                 eLogToConsole);
-
-  if (XRE_IsParentProcess()) {
-    // We're interested specifically in potential chrome customizations,
-    // so we only need data points from the parent process
-    Telemetry::Accumulate(Telemetry::USER_CHROME_CSS_LOADED,
-                          mUserChromeSheet != nullptr);
-  }
-||||||| merged common ancestors
-  LoadSheetFile(contentFile, &mUserContentSheet, eUserSheetFeatures, eLogToConsole);
-  LoadSheetFile(chromeFile, &mUserChromeSheet, eUserSheetFeatures, eLogToConsole);
-
-  if (XRE_IsParentProcess()) {
-    // We're interested specifically in potential chrome customizations,
-    // so we only need data points from the parent process
-    Telemetry::Accumulate(Telemetry::USER_CHROME_CSS_LOADED, mUserChromeSheet != nullptr);
-  }
-=======
-  LoadSheetFile(contentFile, &mUserContentSheet, eUserSheetFeatures,
-                eLogToConsole);
-  LoadSheetFile(chromeFile, &mUserChromeSheet, eUserSheetFeatures,
-                eLogToConsole);
->>>>>>> upstream-releases
 }
 
 void nsLayoutStylesheetCache::LoadSheetURL(const char* aURL,
@@ -771,552 +475,9 @@ void nsLayoutStylesheetCache::LoadSheetFile(nsIFile* aFile,
   LoadSheet(uri, aSheet, aParsingMode, aFailureAction);
 }
 
-<<<<<<< HEAD
-static inline nsresult ComputeCRC32(nsIFile* aFile, uint32_t* aResult) {
-  PRFileDesc* fd;
-  nsresult rv = aFile->OpenNSPRFileDesc(PR_RDONLY, 0, &fd);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  uint32_t crc = crc32(0, nullptr, 0);
-
-  unsigned char buf[512];
-  int32_t n;
-  while ((n = PR_Read(fd, buf, sizeof(buf))) > 0) {
-    crc = crc32(crc, buf, n);
-  }
-  PR_Close(fd);
-
-  if (n < 0) {
-    return NS_ERROR_FAILURE;
-  }
-
-  *aResult = crc;
-  return NS_OK;
-}
-
-static void ListInterestingFiles(
-    nsString& aAnnotation, nsIFile* aFile,
-    const nsTArray<nsString>& aInterestingFilenames) {
-  nsString filename;
-  aFile->GetLeafName(filename);
-  for (const nsString& interestingFilename : aInterestingFilenames) {
-    if (interestingFilename == filename) {
-      nsString path;
-      aFile->GetPath(path);
-      aAnnotation.AppendLiteral("  ");
-      aAnnotation.Append(path);
-      aAnnotation.AppendLiteral(" (");
-      int64_t size;
-      if (NS_SUCCEEDED(aFile->GetFileSize(&size))) {
-        aAnnotation.AppendPrintf("%" PRId64, size);
-      } else {
-        aAnnotation.AppendLiteral("???");
-      }
-      aAnnotation.AppendLiteral(" bytes, crc32 = ");
-      uint32_t crc;
-      nsresult rv = ComputeCRC32(aFile, &crc);
-      if (NS_SUCCEEDED(rv)) {
-        aAnnotation.AppendPrintf("0x%08x)\n", crc);
-      } else {
-        aAnnotation.AppendPrintf("error 0x%08x)\n", uint32_t(rv));
-      }
-      return;
-    }
-  }
-
-  bool isDir = false;
-  aFile->IsDirectory(&isDir);
-
-  if (!isDir) {
-    return;
-  }
-
-  nsCOMPtr<nsIDirectoryEnumerator> entries;
-  if (NS_FAILED(aFile->GetDirectoryEntries(getter_AddRefs(entries)))) {
-    aAnnotation.AppendLiteral("  (failed to enumerated directory)\n");
-    return;
-  }
-
-  for (;;) {
-    nsCOMPtr<nsIFile> file;
-    if (NS_FAILED(entries->GetNextFile(getter_AddRefs(file)))) {
-      aAnnotation.AppendLiteral("  (failed during directory enumeration)\n");
-      return;
-    }
-    if (!file) {
-      break;
-    }
-    ListInterestingFiles(aAnnotation, file, aInterestingFilenames);
-  }
-}
-
-// Generate a crash report annotation to help debug issues with style
-// sheets failing to load (bug 1194856).
-static void AnnotateCrashReport(nsIURI* aURI) {
-  nsAutoCString spec;
-  nsAutoCString scheme;
-  nsDependentCSubstring filename;
-  if (aURI) {
-    spec = aURI->GetSpecOrDefault();
-    aURI->GetScheme(scheme);
-    int32_t i = spec.RFindChar('/');
-    if (i != -1) {
-      filename.Rebind(spec, i + 1);
-    }
-  }
-
-  nsString annotation;
-
-  // The URL of the sheet that failed to load.
-  annotation.AppendLiteral("Error loading sheet: ");
-  annotation.Append(NS_ConvertUTF8toUTF16(spec).get());
-  annotation.Append('\n');
-
-  annotation.AppendLiteral("NS_ERROR_FILE_CORRUPTION reason: ");
-  if (nsZipArchive::sFileCorruptedReason) {
-    annotation.Append(
-        NS_ConvertUTF8toUTF16(nsZipArchive::sFileCorruptedReason).get());
-    annotation.Append('\n');
-  } else {
-    annotation.AppendLiteral("(none)\n");
-  }
-
-  // The jar: or file: URL that the sheet's resource: or chrome: URL
-  // resolves to.
-  if (scheme.EqualsLiteral("resource")) {
-    annotation.AppendLiteral("Real location: ");
-    nsCOMPtr<nsISubstitutingProtocolHandler> handler;
-    nsCOMPtr<nsIIOService> io(do_GetIOService());
-    if (io) {
-      nsCOMPtr<nsIProtocolHandler> ph;
-      io->GetProtocolHandler(scheme.get(), getter_AddRefs(ph));
-      if (ph) {
-        handler = do_QueryInterface(ph);
-      }
-    }
-    if (!handler) {
-      annotation.AppendLiteral("(ResolveURI failed)\n");
-    } else {
-      nsAutoCString resolvedSpec;
-      nsresult rv = handler->ResolveURI(aURI, resolvedSpec);
-      if (NS_FAILED(rv)) {
-        annotation.AppendPrintf("(ResolveURI failed with 0x%08" PRIx32 ")\n",
-                                static_cast<uint32_t>(rv));
-      }
-      annotation.Append(NS_ConvertUTF8toUTF16(resolvedSpec));
-      annotation.Append('\n');
-    }
-  } else if (scheme.EqualsLiteral("chrome")) {
-    annotation.AppendLiteral("Real location: ");
-    nsCOMPtr<nsIChromeRegistry> reg =
-        mozilla::services::GetChromeRegistryService();
-    if (!reg) {
-      annotation.AppendLiteral("(no chrome registry)\n");
-    } else {
-      nsCOMPtr<nsIURI> resolvedURI;
-      reg->ConvertChromeURL(aURI, getter_AddRefs(resolvedURI));
-      if (!resolvedURI) {
-        annotation.AppendLiteral("(ConvertChromeURL failed)\n");
-      } else {
-        annotation.Append(
-            NS_ConvertUTF8toUTF16(resolvedURI->GetSpecOrDefault()));
-        annotation.Append('\n');
-      }
-    }
-  }
-
-  nsTArray<nsString> interestingFiles;
-  interestingFiles.AppendElement(NS_LITERAL_STRING("chrome.manifest"));
-  interestingFiles.AppendElement(NS_LITERAL_STRING("omni.ja"));
-  interestingFiles.AppendElement(NS_ConvertUTF8toUTF16(filename));
-
-  annotation.AppendLiteral("GRE directory: ");
-  nsCOMPtr<nsIFile> file;
-  nsDirectoryService::gService->Get(NS_GRE_DIR, NS_GET_IID(nsIFile),
-                                    getter_AddRefs(file));
-  if (file) {
-    // The Firefox installation directory.
-    nsString path;
-    file->GetPath(path);
-    annotation.Append(path);
-    annotation.Append('\n');
-
-    // List interesting files -- any chrome.manifest or omni.ja file or any file
-    // whose name is the sheet's filename -- under the Firefox installation
-    // directory.
-    annotation.AppendLiteral("Interesting files in the GRE directory:\n");
-    ListInterestingFiles(annotation, file, interestingFiles);
-
-    // If the Firefox installation directory has a chrome.manifest file, let's
-    // see what's in it.
-    file->Append(NS_LITERAL_STRING("chrome.manifest"));
-    bool exists = false;
-    file->Exists(&exists);
-    if (exists) {
-      annotation.AppendLiteral("Contents of chrome.manifest:\n[[[\n");
-      PRFileDesc* fd;
-      if (NS_SUCCEEDED(file->OpenNSPRFileDesc(PR_RDONLY, 0, &fd))) {
-        nsCString contents;
-        char buf[512];
-        int32_t n;
-        while ((n = PR_Read(fd, buf, sizeof(buf))) > 0) {
-          contents.Append(buf, n);
-        }
-        if (n < 0) {
-          annotation.AppendLiteral("  (error while reading)\n");
-        } else {
-          annotation.Append(NS_ConvertUTF8toUTF16(contents));
-        }
-        PR_Close(fd);
-      }
-      annotation.AppendLiteral("]]]\n");
-    }
-  } else {
-    annotation.AppendLiteral("(none)\n");
-  }
-
-  // The jar: or file: URL prefix that chrome: and resource: URLs get translated
-  // to.
-  annotation.AppendLiteral("GRE omnijar URI string: ");
-  nsCString uri;
-  nsresult rv = Omnijar::GetURIString(Omnijar::GRE, uri);
-  if (NS_FAILED(rv)) {
-    annotation.AppendLiteral("(failed)\n");
-  } else {
-    annotation.Append(NS_ConvertUTF8toUTF16(uri));
-    annotation.Append('\n');
-  }
-
-  RefPtr<nsZipArchive> zip = Omnijar::GetReader(Omnijar::GRE);
-  if (zip) {
-    // List interesting files in the GRE omnijar.
-    annotation.AppendLiteral("Interesting files in the GRE omnijar:\n");
-    nsZipFind* find;
-    rv = zip->FindInit(nullptr, &find);
-    if (NS_FAILED(rv)) {
-      annotation.AppendPrintf("  (FindInit failed with 0x%08" PRIx32 ")\n",
-                              static_cast<uint32_t>(rv));
-    } else if (!find) {
-      annotation.AppendLiteral("  (FindInit returned null)\n");
-    } else {
-      const char* result;
-      uint16_t len;
-      while (NS_SUCCEEDED(find->FindNext(&result, &len))) {
-        nsCString itemPathname;
-        nsString itemFilename;
-        itemPathname.Append(result, len);
-        int32_t i = itemPathname.RFindChar('/');
-        if (i != -1) {
-          itemFilename = NS_ConvertUTF8toUTF16(Substring(itemPathname, i + 1));
-        }
-        for (const nsString& interestingFile : interestingFiles) {
-          if (interestingFile == itemFilename) {
-            annotation.AppendLiteral("  ");
-            annotation.Append(NS_ConvertUTF8toUTF16(itemPathname));
-            nsZipItem* item = zip->GetItem(itemPathname.get());
-            if (!item) {
-              annotation.AppendLiteral(" (GetItem failed)\n");
-            } else {
-              annotation.AppendPrintf(" (%d bytes, crc32 = 0x%08x)\n",
-                                      item->RealSize(), item->CRC32());
-            }
-            break;
-          }
-        }
-      }
-      delete find;
-    }
-  } else {
-    annotation.AppendLiteral("No GRE omnijar\n");
-  }
-
-  CrashReporter::AnnotateCrashReport(
-      CrashReporter::Annotation::SheetLoadFailure,
-      NS_ConvertUTF16toUTF8(annotation));
-}
-
 static void ErrorLoadingSheet(nsIURI* aURI, const char* aMsg,
                               FailureAction aFailureAction) {
   nsPrintfCString errorMessage("%s loading built-in stylesheet '%s'", aMsg,
-||||||| merged common ancestors
-static inline nsresult
-ComputeCRC32(nsIFile* aFile, uint32_t* aResult)
-{
-  PRFileDesc* fd;
-  nsresult rv = aFile->OpenNSPRFileDesc(PR_RDONLY, 0, &fd);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  uint32_t crc = crc32(0, nullptr, 0);
-
-  unsigned char buf[512];
-  int32_t n;
-  while ((n = PR_Read(fd, buf, sizeof(buf))) > 0) {
-    crc = crc32(crc, buf, n);
-  }
-  PR_Close(fd);
-
-  if (n < 0) {
-    return NS_ERROR_FAILURE;
-  }
-
-  *aResult = crc;
-  return NS_OK;
-}
-
-static void
-ListInterestingFiles(nsString& aAnnotation, nsIFile* aFile,
-                     const nsTArray<nsString>& aInterestingFilenames)
-{
-  nsString filename;
-  aFile->GetLeafName(filename);
-  for (const nsString& interestingFilename : aInterestingFilenames) {
-    if (interestingFilename == filename) {
-      nsString path;
-      aFile->GetPath(path);
-      aAnnotation.AppendLiteral("  ");
-      aAnnotation.Append(path);
-      aAnnotation.AppendLiteral(" (");
-      int64_t size;
-      if (NS_SUCCEEDED(aFile->GetFileSize(&size))) {
-        aAnnotation.AppendPrintf("%" PRId64, size);
-      } else {
-        aAnnotation.AppendLiteral("???");
-      }
-      aAnnotation.AppendLiteral(" bytes, crc32 = ");
-      uint32_t crc;
-      nsresult rv = ComputeCRC32(aFile, &crc);
-      if (NS_SUCCEEDED(rv)) {
-        aAnnotation.AppendPrintf("0x%08x)\n", crc);
-      } else {
-        aAnnotation.AppendPrintf("error 0x%08x)\n", uint32_t(rv));
-      }
-      return;
-    }
-  }
-
-  bool isDir = false;
-  aFile->IsDirectory(&isDir);
-
-  if (!isDir) {
-    return;
-  }
-
-  nsCOMPtr<nsIDirectoryEnumerator> entries;
-  if (NS_FAILED(aFile->GetDirectoryEntries(getter_AddRefs(entries)))) {
-    aAnnotation.AppendLiteral("  (failed to enumerated directory)\n");
-    return;
-  }
-
-  for (;;) {
-    nsCOMPtr<nsIFile> file;
-    if (NS_FAILED(entries->GetNextFile(getter_AddRefs(file)))) {
-      aAnnotation.AppendLiteral("  (failed during directory enumeration)\n");
-      return;
-    }
-    if (!file) {
-      break;
-    }
-    ListInterestingFiles(aAnnotation, file, aInterestingFilenames);
-  }
-}
-
-// Generate a crash report annotation to help debug issues with style
-// sheets failing to load (bug 1194856).
-static void
-AnnotateCrashReport(nsIURI* aURI)
-{
-  nsAutoCString spec;
-  nsAutoCString scheme;
-  nsDependentCSubstring filename;
-  if (aURI) {
-    spec = aURI->GetSpecOrDefault();
-    aURI->GetScheme(scheme);
-    int32_t i = spec.RFindChar('/');
-    if (i != -1) {
-      filename.Rebind(spec, i + 1);
-    }
-  }
-
-  nsString annotation;
-
-  // The URL of the sheet that failed to load.
-  annotation.AppendLiteral("Error loading sheet: ");
-  annotation.Append(NS_ConvertUTF8toUTF16(spec).get());
-  annotation.Append('\n');
-
-  annotation.AppendLiteral("NS_ERROR_FILE_CORRUPTION reason: ");
-  if (nsZipArchive::sFileCorruptedReason) {
-    annotation.Append(NS_ConvertUTF8toUTF16(nsZipArchive::sFileCorruptedReason).get());
-    annotation.Append('\n');
-  } else {
-    annotation.AppendLiteral("(none)\n");
-  }
-
-  // The jar: or file: URL that the sheet's resource: or chrome: URL
-  // resolves to.
-  if (scheme.EqualsLiteral("resource")) {
-    annotation.AppendLiteral("Real location: ");
-    nsCOMPtr<nsISubstitutingProtocolHandler> handler;
-    nsCOMPtr<nsIIOService> io(do_GetIOService());
-    if (io) {
-      nsCOMPtr<nsIProtocolHandler> ph;
-      io->GetProtocolHandler(scheme.get(), getter_AddRefs(ph));
-      if (ph) {
-        handler = do_QueryInterface(ph);
-      }
-    }
-    if (!handler) {
-      annotation.AppendLiteral("(ResolveURI failed)\n");
-    } else {
-      nsAutoCString resolvedSpec;
-      nsresult rv = handler->ResolveURI(aURI, resolvedSpec);
-      if (NS_FAILED(rv)) {
-        annotation.AppendPrintf("(ResolveURI failed with 0x%08" PRIx32 ")\n",
-                                static_cast<uint32_t>(rv));
-      }
-      annotation.Append(NS_ConvertUTF8toUTF16(resolvedSpec));
-      annotation.Append('\n');
-    }
-  } else if (scheme.EqualsLiteral("chrome")) {
-    annotation.AppendLiteral("Real location: ");
-    nsCOMPtr<nsIChromeRegistry> reg =
-      mozilla::services::GetChromeRegistryService();
-    if (!reg) {
-      annotation.AppendLiteral("(no chrome registry)\n");
-    } else {
-      nsCOMPtr<nsIURI> resolvedURI;
-      reg->ConvertChromeURL(aURI, getter_AddRefs(resolvedURI));
-      if (!resolvedURI) {
-        annotation.AppendLiteral("(ConvertChromeURL failed)\n");
-      } else {
-        annotation.Append(
-          NS_ConvertUTF8toUTF16(resolvedURI->GetSpecOrDefault()));
-        annotation.Append('\n');
-      }
-    }
-  }
-
-  nsTArray<nsString> interestingFiles;
-  interestingFiles.AppendElement(NS_LITERAL_STRING("chrome.manifest"));
-  interestingFiles.AppendElement(NS_LITERAL_STRING("omni.ja"));
-  interestingFiles.AppendElement(NS_ConvertUTF8toUTF16(filename));
-
-  annotation.AppendLiteral("GRE directory: ");
-  nsCOMPtr<nsIFile> file;
-  nsDirectoryService::gService->Get(NS_GRE_DIR, NS_GET_IID(nsIFile),
-                                    getter_AddRefs(file));
-  if (file) {
-    // The Firefox installation directory.
-    nsString path;
-    file->GetPath(path);
-    annotation.Append(path);
-    annotation.Append('\n');
-
-    // List interesting files -- any chrome.manifest or omni.ja file or any file
-    // whose name is the sheet's filename -- under the Firefox installation
-    // directory.
-    annotation.AppendLiteral("Interesting files in the GRE directory:\n");
-    ListInterestingFiles(annotation, file, interestingFiles);
-
-    // If the Firefox installation directory has a chrome.manifest file, let's
-    // see what's in it.
-    file->Append(NS_LITERAL_STRING("chrome.manifest"));
-    bool exists = false;
-    file->Exists(&exists);
-    if (exists) {
-      annotation.AppendLiteral("Contents of chrome.manifest:\n[[[\n");
-      PRFileDesc* fd;
-      if (NS_SUCCEEDED(file->OpenNSPRFileDesc(PR_RDONLY, 0, &fd))) {
-        nsCString contents;
-        char buf[512];
-        int32_t n;
-        while ((n = PR_Read(fd, buf, sizeof(buf))) > 0) {
-          contents.Append(buf, n);
-        }
-        if (n < 0) {
-          annotation.AppendLiteral("  (error while reading)\n");
-        } else {
-          annotation.Append(NS_ConvertUTF8toUTF16(contents));
-        }
-        PR_Close(fd);
-      }
-      annotation.AppendLiteral("]]]\n");
-    }
-  } else {
-    annotation.AppendLiteral("(none)\n");
-  }
-
-  // The jar: or file: URL prefix that chrome: and resource: URLs get translated
-  // to.
-  annotation.AppendLiteral("GRE omnijar URI string: ");
-  nsCString uri;
-  nsresult rv = Omnijar::GetURIString(Omnijar::GRE, uri);
-  if (NS_FAILED(rv)) {
-    annotation.AppendLiteral("(failed)\n");
-  } else {
-    annotation.Append(NS_ConvertUTF8toUTF16(uri));
-    annotation.Append('\n');
-  }
-
-  RefPtr<nsZipArchive> zip = Omnijar::GetReader(Omnijar::GRE);
-  if (zip) {
-    // List interesting files in the GRE omnijar.
-    annotation.AppendLiteral("Interesting files in the GRE omnijar:\n");
-    nsZipFind* find;
-    rv = zip->FindInit(nullptr, &find);
-    if (NS_FAILED(rv)) {
-      annotation.AppendPrintf("  (FindInit failed with 0x%08" PRIx32 ")\n",
-                              static_cast<uint32_t>(rv));
-    } else if (!find) {
-      annotation.AppendLiteral("  (FindInit returned null)\n");
-    } else {
-      const char* result;
-      uint16_t len;
-      while (NS_SUCCEEDED(find->FindNext(&result, &len))) {
-        nsCString itemPathname;
-        nsString itemFilename;
-        itemPathname.Append(result, len);
-        int32_t i = itemPathname.RFindChar('/');
-        if (i != -1) {
-          itemFilename = NS_ConvertUTF8toUTF16(Substring(itemPathname, i + 1));
-        }
-        for (const nsString& interestingFile : interestingFiles) {
-          if (interestingFile == itemFilename) {
-            annotation.AppendLiteral("  ");
-            annotation.Append(NS_ConvertUTF8toUTF16(itemPathname));
-            nsZipItem* item = zip->GetItem(itemPathname.get());
-            if (!item) {
-              annotation.AppendLiteral(" (GetItem failed)\n");
-            } else {
-              annotation.AppendPrintf(" (%d bytes, crc32 = 0x%08x)\n",
-                                      item->RealSize(),
-                                      item->CRC32());
-            }
-            break;
-          }
-        }
-      }
-      delete find;
-    }
-  } else {
-    annotation.AppendLiteral("No GRE omnijar\n");
-  }
-
-  CrashReporter::AnnotateCrashReport(
-    CrashReporter::Annotation::SheetLoadFailure,
-    NS_ConvertUTF16toUTF8(annotation));
-}
-
-static void
-ErrorLoadingSheet(nsIURI* aURI, const char* aMsg, FailureAction aFailureAction)
-{
-  nsPrintfCString errorMessage("%s loading built-in stylesheet '%s'",
-                               aMsg,
-=======
-static void ErrorLoadingSheet(nsIURI* aURI, const char* aMsg,
-                              FailureAction aFailureAction) {
-  nsPrintfCString errorMessage("%s loading built-in stylesheet '%s'", aMsg,
->>>>>>> upstream-releases
                                aURI ? aURI->GetSpecOrDefault().get() : "");
   if (aFailureAction == eLogToConsole) {
     nsCOMPtr<nsIConsoleService> cs =
@@ -1363,42 +524,18 @@ void nsLayoutStylesheetCache::LoadSheet(nsIURI* aURI,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void nsLayoutStylesheetCache::InvalidatePreferenceSheets() {
-||||||| merged common ancestors
-/* static */ void
-nsLayoutStylesheetCache::InvalidatePreferenceSheets()
-{
-=======
 /* static */
 void nsLayoutStylesheetCache::InvalidatePreferenceSheets() {
->>>>>>> upstream-releases
   if (gStyleCache) {
     gStyleCache->mContentPreferenceSheet = nullptr;
     gStyleCache->mChromePreferenceSheet = nullptr;
   }
 }
 
-<<<<<<< HEAD
-void nsLayoutStylesheetCache::BuildPreferenceSheet(
-    RefPtr<StyleSheet>* aSheet, nsPresContext* aPresContext) {
-  *aSheet = new StyleSheet(eAgentSheetFeatures, CORS_NONE,
-                           mozilla::net::RP_Unset, dom::SRIMetadata());
-||||||| merged common ancestors
-void
-nsLayoutStylesheetCache::BuildPreferenceSheet(RefPtr<StyleSheet>* aSheet,
-                                              nsPresContext* aPresContext)
-{
-  *aSheet = new StyleSheet(eAgentSheetFeatures,
-                           CORS_NONE,
-                           mozilla::net::RP_Unset,
-                           dom::SRIMetadata());
-=======
 void nsLayoutStylesheetCache::BuildPreferenceSheet(
     RefPtr<StyleSheet>* aSheet, const PreferenceSheet::Prefs& aPrefs) {
   *aSheet = new StyleSheet(eAgentSheetFeatures, CORS_NONE,
                            mozilla::net::RP_Unset, dom::SRIMetadata());
->>>>>>> upstream-releases
 
   StyleSheet* sheet = *aSheet;
 
@@ -1433,25 +570,10 @@ void nsLayoutStylesheetCache::BuildPreferenceSheet(
       NS_GET_R_G_B(linkColor), NS_GET_R_G_B(activeColor),
       NS_GET_R_G_B(visitedColor));
 
-<<<<<<< HEAD
-  bool underlineLinks =
-      aPresContext->GetCachedBoolPref(kPresContext_UnderlineLinks);
-  sheetText.AppendPrintf("*|*:any-link%s { text-decoration: %s; }\n",
-                         underlineLinks ? ":not(svg|a)" : "",
-                         underlineLinks ? "underline" : "none");
-||||||| merged common ancestors
-  bool underlineLinks =
-    aPresContext->GetCachedBoolPref(kPresContext_UnderlineLinks);
-  sheetText.AppendPrintf(
-      "*|*:any-link%s { text-decoration: %s; }\n",
-      underlineLinks ? ":not(svg|a)" : "",
-      underlineLinks ? "underline" : "none");
-=======
   bool underlineLinks = aPrefs.mUnderlineLinks;
   sheetText.AppendPrintf("*|*:any-link%s { text-decoration: %s; }\n",
                          underlineLinks ? ":not(svg|a)" : "",
                          underlineLinks ? "underline" : "none");
->>>>>>> upstream-releases
 
   // Rules for focus styling.
 
@@ -1533,30 +655,10 @@ bool nsLayoutStylesheetCache::ShareToProcess(
 }
 
 mozilla::StaticRefPtr<nsLayoutStylesheetCache>
-<<<<<<< HEAD
-    nsLayoutStylesheetCache::gStyleCache;
-||||||| merged common ancestors
-nsLayoutStylesheetCache::gStyleCache;
-=======
     nsLayoutStylesheetCache::gStyleCache;
 
 mozilla::StaticRefPtr<mozilla::css::Loader> nsLayoutStylesheetCache::gCSSLoader;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-mozilla::StaticRefPtr<mozilla::css::Loader> nsLayoutStylesheetCache::gCSSLoader;
-||||||| merged common ancestors
-mozilla::StaticRefPtr<mozilla::css::Loader>
-nsLayoutStylesheetCache::gCSSLoader;
-=======
 mozilla::StaticRefPtr<nsIURI> nsLayoutStylesheetCache::gUserContentSheetURL;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-mozilla::StaticRefPtr<nsIURI> nsLayoutStylesheetCache::gUserContentSheetURL;
-||||||| merged common ancestors
-mozilla::StaticRefPtr<nsIURI>
-nsLayoutStylesheetCache::gUserContentSheetURL;
-=======
 StaticRefPtr<nsLayoutStylesheetCacheShm> nsLayoutStylesheetCache::sSharedMemory;
->>>>>>> upstream-releases

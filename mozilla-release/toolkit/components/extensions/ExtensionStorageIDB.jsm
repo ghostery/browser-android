@@ -20,13 +20,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   OS: "resource://gre/modules/osfile.jsm",
 });
 
-<<<<<<< HEAD
-XPCOMUtils.defineLazyServiceGetter(this, "quotaManagerService",
-                                   "@mozilla.org/dom/quota-manager-service;1",
-                                   "nsIQuotaManagerService");
-
-||||||| merged common ancestors
-=======
 XPCOMUtils.defineLazyServiceGetter(
   this,
   "quotaManagerService",
@@ -34,7 +27,6 @@ XPCOMUtils.defineLazyServiceGetter(
   "nsIQuotaManagerService"
 );
 
->>>>>>> upstream-releases
 // The userContextID reserved for the extension storage (its purpose is ensuring that the IndexedDB
 // storage used by the browser.storage.local API is not directly accessible from the extension code,
 // it is defined and reserved as "userContextIdInternal.webextStorageLocal" in ContextualIdentityService.jsm).
@@ -413,11 +405,6 @@ async function migrateJSONFileData(extension, storagePrincipal) {
   }
 
   try {
-<<<<<<< HEAD
-    idbConn = await ExtensionStorageIDB.open(storagePrincipal, extension.hasPermission("unlimitedStorage"));
-||||||| merged common ancestors
-    idbConn = await ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal);
-=======
     abortIfShuttingDown();
     idbConn = await ExtensionStorageIDB.open(
       storagePrincipal,
@@ -425,7 +412,6 @@ async function migrateJSONFileData(extension, storagePrincipal) {
     );
     abortIfShuttingDown();
 
->>>>>>> upstream-releases
     hasEmptyIDB = await idbConn.isEmpty();
 
     if (!hasEmptyIDB) {
@@ -737,22 +723,6 @@ this.ExtensionStorageIDB = {
     return this.selectedBackendPromises.get(extension);
   },
 
-<<<<<<< HEAD
-  persist(storagePrincipal) {
-    return new Promise((resolve, reject) => {
-      const request = quotaManagerService.persist(storagePrincipal);
-      request.callback = () => {
-        if (request.resultCode === Cr.NS_OK) {
-          resolve();
-        } else {
-          reject(new Error(`Failed to persist storage for principal: ${storagePrincipal.originNoSuffix}`));
-        }
-      };
-    });
-  },
-
-||||||| merged common ancestors
-=======
   persist(storagePrincipal) {
     return new Promise((resolve, reject) => {
       const request = quotaManagerService.persist(storagePrincipal);
@@ -772,7 +742,6 @@ this.ExtensionStorageIDB = {
     });
   },
 
->>>>>>> upstream-releases
   /**
    * Open a connection to the IDB storage.local db for a given extension.
    * given extension.
@@ -786,17 +755,6 @@ this.ExtensionStorageIDB = {
    * @returns {Promise<ExtensionStorageLocalIDB>}
    *          Return a promise which resolves to the opened IDB connection.
    */
-<<<<<<< HEAD
-  open(storagePrincipal, persisted) {
-    if (!storagePrincipal) {
-      return Promise.reject(new Error("Unexpected empty principal"));
-    }
-    let setPersistentMode = persisted ? this.persist(storagePrincipal) : Promise.resolve();
-    return setPersistentMode.then(() => ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal));
-||||||| merged common ancestors
-  open(storagePrincipal) {
-    return ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal);
-=======
   open(storagePrincipal, persisted) {
     if (!storagePrincipal) {
       return Promise.reject(new Error("Unexpected empty principal"));
@@ -807,7 +765,6 @@ this.ExtensionStorageIDB = {
     return setPersistentMode.then(() =>
       ExtensionStorageLocalIDB.openForPrincipal(storagePrincipal)
     );
->>>>>>> upstream-releases
   },
 
   addOnChangedListener(extensionId, listener) {

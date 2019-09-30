@@ -16,27 +16,6 @@
 #include "mozilla/AnimationEventDispatcher.h"
 #include "mozilla/AnimationTarget.h"
 #include "mozilla/AutoRestore.h"
-<<<<<<< HEAD
-#include "mozilla/Maybe.h"          // For Maybe
-#include "mozilla/TypeTraits.h"     // For std::forward<>
-#include "nsAnimationManager.h"     // For CSSAnimation
-#include "nsDOMMutationObserver.h"  // For nsAutoAnimationMutationBatch
-#include "nsIDocument.h"            // For nsIDocument
-#include "nsIPresShell.h"           // For nsIPresShell
-#include "nsThreadUtils.h"  // For nsRunnableMethod and nsRevocableEventPtr
-#include "nsTransitionManager.h"      // For CSSTransition
-#include "PendingAnimationTracker.h"  // For PendingAnimationTracker
-||||||| merged common ancestors
-#include "mozilla/Maybe.h" // For Maybe
-#include "mozilla/TypeTraits.h" // For std::forward<>
-#include "nsAnimationManager.h" // For CSSAnimation
-#include "nsDOMMutationObserver.h" // For nsAutoAnimationMutationBatch
-#include "nsIDocument.h" // For nsIDocument
-#include "nsIPresShell.h" // For nsIPresShell
-#include "nsThreadUtils.h" // For nsRunnableMethod and nsRevocableEventPtr
-#include "nsTransitionManager.h" // For CSSTransition
-#include "PendingAnimationTracker.h" // For PendingAnimationTracker
-=======
 #include "mozilla/DeclarationBlock.h"
 #include "mozilla/Maybe.h"       // For Maybe
 #include "mozilla/TypeTraits.h"  // For std::forward<>
@@ -47,7 +26,6 @@
 #include "nsThreadUtils.h"  // For nsRunnableMethod and nsRevocableEventPtr
 #include "nsTransitionManager.h"      // For CSSTransition
 #include "PendingAnimationTracker.h"  // For PendingAnimationTracker
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace dom {
@@ -85,49 +63,10 @@ class MOZ_RAII AutoMutationBatchForAnimation {
     MOZ_GUARD_OBJECT_NOTIFIER_INIT;
     Maybe<NonOwningAnimationTarget> target =
         nsNodeUtils::GetTargetForAnimation(&aAnimation);
-<<<<<<< HEAD
     if (!target) {
       return;
     }
 
-    // For mutation observers, we use the OwnerDoc.
-    nsIDocument* doc = target->mElement->OwnerDoc();
-    if (!doc) {
-      return;
-||||||| merged common ancestors
-      if (!target) {
-        return;
-      }
-
-      // For mutation observers, we use the OwnerDoc.
-      nsIDocument* doc = target->mElement->OwnerDoc();
-      if (!doc) {
-        return;
-      }
-
-      mAutoBatch.emplace(doc);
-=======
-    if (!target) {
-      return;
->>>>>>> upstream-releases
-    }
-
-<<<<<<< HEAD
-    mAutoBatch.emplace(doc);
-  }
-
- private:
-  MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-  Maybe<nsAutoAnimationMutationBatch> mAutoBatch;
-};
-}  // namespace
-||||||| merged common ancestors
-  private:
-    MOZ_DECL_USE_GUARD_OBJECT_NOTIFIER
-    Maybe<nsAutoAnimationMutationBatch> mAutoBatch;
-  };
-}
-=======
     // For mutation observers, we use the OwnerDoc.
     mAutoBatch.emplace(target->mElement->OwnerDoc());
   }
@@ -137,30 +76,16 @@ class MOZ_RAII AutoMutationBatchForAnimation {
   Maybe<nsAutoAnimationMutationBatch> mAutoBatch;
 };
 }  // namespace
->>>>>>> upstream-releases
 
 // ---------------------------------------------------------------------------
 //
 // Animation interface:
 //
 // ---------------------------------------------------------------------------
-<<<<<<< HEAD
-/* static */ already_AddRefed<Animation> Animation::Constructor(
-    const GlobalObject& aGlobal, AnimationEffect* aEffect,
-    const Optional<AnimationTimeline*>& aTimeline, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Animation>
-Animation::Constructor(const GlobalObject& aGlobal,
-                       AnimationEffect* aEffect,
-                       const Optional<AnimationTimeline*>& aTimeline,
-                       ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Animation> Animation::Constructor(
     const GlobalObject& aGlobal, AnimationEffect* aEffect,
     const Optional<AnimationTimeline*>& aTimeline, ErrorResult& aRv) {
->>>>>>> upstream-releases
   nsCOMPtr<nsIGlobalObject> global = do_QueryInterface(aGlobal.GetAsSupports());
   RefPtr<Animation> animation = new Animation(global);
 
@@ -168,16 +93,8 @@ already_AddRefed<Animation> Animation::Constructor(
   if (aTimeline.WasPassed()) {
     timeline = aTimeline.Value();
   } else {
-<<<<<<< HEAD
-    nsIDocument* document =
-        AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
-||||||| merged common ancestors
-    nsIDocument* document =
-      AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
-=======
     Document* document =
         AnimationUtils::GetCurrentRealmDocument(aGlobal.Context());
->>>>>>> upstream-releases
     if (!document) {
       aRv.Throw(NS_ERROR_FAILURE);
       return nullptr;
@@ -557,17 +474,6 @@ Promise* Animation::GetFinished(ErrorResult& aRv) {
   return mFinished;
 }
 
-<<<<<<< HEAD
-void Animation::Cancel() {
-  CancelNoUpdate();
-  PostUpdate();
-||||||| merged common ancestors
-void
-Animation::Cancel()
-{
-  CancelNoUpdate();
-  PostUpdate();
-=======
 // https://drafts.csswg.org/web-animations/#cancel-an-animation
 void Animation::Cancel(PostRestyleMode aPostRestyle) {
   bool newlyIdle = false;
@@ -603,7 +509,6 @@ void Animation::Cancel(PostRestyleMode aPostRestyle) {
   if (newlyIdle && aPostRestyle == PostRestyleMode::IfNeeded) {
     PostUpdate();
   }
->>>>>>> upstream-releases
 }
 
 // https://drafts.csswg.org/web-animations/#finish-an-animation
@@ -1027,81 +932,9 @@ void Animation::SilentlySetCurrentTime(const TimeDuration& aSeekTime) {
   mPreviousCurrentTime.SetNull();
 }
 
-<<<<<<< HEAD
-// https://drafts.csswg.org/web-animations/#cancel-an-animation
-void Animation::CancelNoUpdate() {
-  if (PlayState() != AnimationPlayState::Idle) {
-    ResetPendingTasks();
-
-    if (mFinished) {
-      mFinished->MaybeReject(NS_ERROR_DOM_ABORT_ERR);
-    }
-    ResetFinishedPromise();
-
-    QueuePlaybackEvent(NS_LITERAL_STRING("cancel"),
-                       GetTimelineCurrentTimeAsTimeStamp());
-  }
-
-  StickyTimeDuration activeTime =
-      mEffect ? mEffect->GetComputedTiming().mActiveTime : StickyTimeDuration();
-
-  mHoldTime.SetNull();
-  mStartTime.SetNull();
-
-  UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Async);
-
-  if (mTimeline) {
-    mTimeline->RemoveAnimation(this);
-  }
-  MaybeQueueCancelEvent(activeTime);
-}
-
-bool Animation::ShouldBeSynchronizedWithMainThread(
-    nsCSSPropertyID aProperty, const nsIFrame* aFrame,
-    AnimationPerformanceWarning::Type& aPerformanceWarning) const {
-||||||| merged common ancestors
-// https://drafts.csswg.org/web-animations/#cancel-an-animation
-void
-Animation::CancelNoUpdate()
-{
-  if (PlayState() != AnimationPlayState::Idle) {
-    ResetPendingTasks();
-
-    if (mFinished) {
-      mFinished->MaybeReject(NS_ERROR_DOM_ABORT_ERR);
-    }
-    ResetFinishedPromise();
-
-    QueuePlaybackEvent(NS_LITERAL_STRING("cancel"),
-                       GetTimelineCurrentTimeAsTimeStamp());
-  }
-
-  StickyTimeDuration activeTime = mEffect
-                                  ? mEffect->GetComputedTiming().mActiveTime
-                                  : StickyTimeDuration();
-
-  mHoldTime.SetNull();
-  mStartTime.SetNull();
-
-  UpdateTiming(SeekFlag::NoSeek, SyncNotifyFlag::Async);
-
-  if (mTimeline) {
-    mTimeline->RemoveAnimation(this);
-  }
-  MaybeQueueCancelEvent(activeTime);
-}
-
-bool
-Animation::ShouldBeSynchronizedWithMainThread(
-  nsCSSPropertyID aProperty,
-  const nsIFrame* aFrame,
-  AnimationPerformanceWarning::Type& aPerformanceWarning) const
-{
-=======
 bool Animation::ShouldBeSynchronizedWithMainThread(
     const nsCSSPropertyIDSet& aPropertySet, const nsIFrame* aFrame,
     AnimationPerformanceWarning::Type& aPerformanceWarning) const {
->>>>>>> upstream-releases
   // Only synchronize playing animations
   if (!IsPlaying()) {
     return false;
@@ -1123,33 +956,15 @@ bool Animation::ShouldBeSynchronizedWithMainThread(
   // because it's cheaper, but also because it's often the most useful thing
   // to know when you're debugging performance.
   if (mSyncWithGeometricAnimations &&
-<<<<<<< HEAD
-      keyframeEffect->HasAnimationOfProperty(eCSSProperty_transform)) {
-    aPerformanceWarning =
-        AnimationPerformanceWarning::Type::TransformWithSyncGeometricAnimations;
-||||||| merged common ancestors
-      keyframeEffect->HasAnimationOfProperty(eCSSProperty_transform)) {
-    aPerformanceWarning = AnimationPerformanceWarning::Type::
-                          TransformWithSyncGeometricAnimations;
-=======
       keyframeEffect->HasAnimationOfPropertySet(
           nsCSSPropertyIDSet::TransformLikeProperties())) {
     aPerformanceWarning =
         AnimationPerformanceWarning::Type::TransformWithSyncGeometricAnimations;
->>>>>>> upstream-releases
     return true;
   }
 
-<<<<<<< HEAD
-  return keyframeEffect->ShouldBlockAsyncTransformAnimations(
-      aFrame, aPerformanceWarning);
-||||||| merged common ancestors
-  return keyframeEffect->
-           ShouldBlockAsyncTransformAnimations(aFrame, aPerformanceWarning);
-=======
   return keyframeEffect->ShouldBlockAsyncTransformAnimations(
       aFrame, aPropertySet, aPerformanceWarning);
->>>>>>> upstream-releases
 }
 
 void Animation::UpdateRelevance() {
@@ -1165,13 +980,6 @@ void Animation::UpdateRelevance() {
   }
 }
 
-<<<<<<< HEAD
-bool Animation::HasLowerCompositeOrderThan(const Animation& aOther) const {
-||||||| merged common ancestors
-bool
-Animation::HasLowerCompositeOrderThan(const Animation& aOther) const
-{
-=======
 template <class T>
 bool IsMarkupAnimation(T* aAnimation) {
   return aAnimation && aAnimation->IsTiedToMarkup();
@@ -1285,7 +1093,6 @@ void Animation::Remove() {
 }
 
 bool Animation::HasLowerCompositeOrderThan(const Animation& aOther) const {
->>>>>>> upstream-releases
   // 0. Object-equality case
   if (&aOther == this) {
     return false;
@@ -1432,13 +1239,6 @@ void Animation::NotifyEffectTimingUpdated() {
   UpdateTiming(Animation::SeekFlag::NoSeek, Animation::SyncNotifyFlag::Async);
 }
 
-<<<<<<< HEAD
-void Animation::NotifyGeometricAnimationsStartingThisFrame() {
-||||||| merged common ancestors
-void
-Animation::NotifyGeometricAnimationsStartingThisFrame()
-{
-=======
 void Animation::NotifyEffectPropertiesUpdated() {
   MOZ_ASSERT(mEffect,
              "We should only update effect properties when we have a target "
@@ -1456,7 +1256,6 @@ void Animation::NotifyEffectTargetUpdated() {
 }
 
 void Animation::NotifyGeometricAnimationsStartingThisFrame() {
->>>>>>> upstream-releases
   if (!IsNewlyStarted() || !mEffect) {
     return;
   }
@@ -1733,15 +1532,7 @@ void Animation::UpdateFinishedState(SeekFlag aSeekFlag,
   mPreviousCurrentTime = GetCurrentTimeAsDuration();
 }
 
-<<<<<<< HEAD
-void Animation::UpdateEffect() {
-||||||| merged common ancestors
-void
-Animation::UpdateEffect()
-{
-=======
 void Animation::UpdateEffect(PostRestyleMode aPostRestyle) {
->>>>>>> upstream-releases
   if (mEffect) {
     UpdateRelevance();
 
@@ -1752,20 +1543,8 @@ void Animation::UpdateEffect(PostRestyleMode aPostRestyle) {
   }
 }
 
-<<<<<<< HEAD
-void Animation::FlushUnanimatedStyle() const {
-  nsIDocument* doc = GetRenderedDocument();
-  if (doc) {
-||||||| merged common ancestors
-void
-Animation::FlushUnanimatedStyle() const
-{
-  nsIDocument* doc = GetRenderedDocument();
-  if (doc) {
-=======
 void Animation::FlushUnanimatedStyle() const {
   if (Document* doc = GetRenderedDocument()) {
->>>>>>> upstream-releases
     doc->FlushPendingNotifications(
         ChangesToFlush(FlushType::Style, false /* flush animations */));
   }
@@ -1897,15 +1676,7 @@ StickyTimeDuration Animation::EffectEnd() const {
   return mEffect->SpecifiedTiming().EndTime();
 }
 
-<<<<<<< HEAD
-nsIDocument* Animation::GetRenderedDocument() const {
-||||||| merged common ancestors
-nsIDocument*
-Animation::GetRenderedDocument() const
-{
-=======
 Document* Animation::GetRenderedDocument() const {
->>>>>>> upstream-releases
   if (!mEffect || !mEffect->AsKeyframeEffect()) {
     return nullptr;
   }
@@ -1913,15 +1684,7 @@ Document* Animation::GetRenderedDocument() const {
   return mEffect->AsKeyframeEffect()->GetRenderedDocument();
 }
 
-<<<<<<< HEAD
-nsIDocument* Animation::GetTimelineDocument() const {
-||||||| merged common ancestors
-nsIDocument*
-Animation::GetTimelineDocument() const
-{
-=======
 Document* Animation::GetTimelineDocument() const {
->>>>>>> upstream-releases
   return mTimeline ? mTimeline->GetDocument() : nullptr;
 }
 

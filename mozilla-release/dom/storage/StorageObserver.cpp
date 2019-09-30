@@ -135,18 +135,8 @@ void StorageObserver::NoteBackgroundThread(nsIEventTarget* aBackgroundThread) {
   mBackgroundThread = aBackgroundThread;
 }
 
-<<<<<<< HEAD
-nsresult StorageObserver::ClearMatchingOrigin(const char16_t* aData,
-                                              nsACString& aOriginScope) {
-||||||| merged common ancestors
-nsresult
-StorageObserver::ClearMatchingOrigin(const char16_t* aData,
-                                     nsACString& aOriginScope)
-{
-=======
 nsresult StorageObserver::GetOriginScope(const char16_t* aData,
                                          nsACString& aOriginScope) {
->>>>>>> upstream-releases
   nsresult rv;
 
   NS_ConvertUTF16toUTF8 domain(aData);
@@ -172,30 +162,6 @@ nsresult StorageObserver::GetOriginScope(const char16_t* aData,
     return rv;
   }
 
-<<<<<<< HEAD
-  if (!NextGenLocalStorageEnabled()) {
-    if (XRE_IsParentProcess()) {
-      StorageDBChild* storageChild = StorageDBChild::GetOrCreate();
-      if (NS_WARN_IF(!storageChild)) {
-        return NS_ERROR_FAILURE;
-      }
-
-      storageChild->SendClearMatchingOrigin(originScope);
-    }
-  }
-
-||||||| merged common ancestors
-  if (XRE_IsParentProcess()) {
-    StorageDBChild* storageChild = StorageDBChild::GetOrCreate();
-    if (NS_WARN_IF(!storageChild)) {
-      return NS_ERROR_FAILURE;
-    }
-
-    storageChild->SendClearMatchingOrigin(originScope);
-  }
-
-=======
->>>>>>> upstream-releases
   aOriginScope = originScope;
   return NS_OK;
 }

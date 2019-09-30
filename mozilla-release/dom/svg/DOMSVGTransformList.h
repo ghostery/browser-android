@@ -20,16 +20,8 @@ namespace mozilla {
 namespace dom {
 class SVGElement;
 class SVGMatrix;
-<<<<<<< HEAD
-class SVGTransform;
-}  // namespace dom
-||||||| merged common ancestors
-class SVGTransform;
-} // namespace dom
-=======
 class DOMSVGTransform;
 }  // namespace dom
->>>>>>> upstream-releases
 
 /**
  * Class DOMSVGTransformList
@@ -56,20 +48,9 @@ class DOMSVGTransformList final : public nsISupports, public nsWrapperCache {
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_CLASS(DOMSVGTransformList)
 
-<<<<<<< HEAD
-  DOMSVGTransformList(dom::SVGAnimatedTransformList* aAList,
-                      const SVGTransformList& aInternalList)
-      : mAList(aAList) {
-||||||| merged common ancestors
-  DOMSVGTransformList(dom::SVGAnimatedTransformList *aAList,
-                      const SVGTransformList &aInternalList)
-    : mAList(aAList)
-  {
-=======
   DOMSVGTransformList(dom::DOMSVGAnimatedTransformList* aAList,
                       const SVGTransformList& aInternalList)
       : mAList(aAList) {
->>>>>>> upstream-releases
     // aInternalList must be passed in explicitly because we can't use
     // InternalList() here. (Because it depends on IsAnimValList, which depends
     // on this object having been assigned to aAList's mBaseVal or mAnimVal,
@@ -119,37 +100,6 @@ class DOMSVGTransformList final : public nsISupports, public nsWrapperCache {
       dom::DOMSVGTransform& newItem, ErrorResult& error);
   already_AddRefed<dom::DOMSVGTransform> GetItem(uint32_t index,
                                                  ErrorResult& error);
-<<<<<<< HEAD
-  already_AddRefed<dom::SVGTransform> GetItem(uint32_t index,
-                                              ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> IndexedGetter(uint32_t index, bool& found,
-                                                    ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> InsertItemBefore(
-      dom::SVGTransform& newItem, uint32_t index, ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> ReplaceItem(dom::SVGTransform& newItem,
-                                                  uint32_t index,
-                                                  ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> RemoveItem(uint32_t index,
-                                                 ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> AppendItem(dom::SVGTransform& newItem,
-                                                 ErrorResult& error) {
-||||||| merged common ancestors
-  already_AddRefed<dom::SVGTransform> GetItem(uint32_t index,
-                                              ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> IndexedGetter(uint32_t index, bool& found,
-                                                    ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> InsertItemBefore(dom::SVGTransform& newItem,
-                                                       uint32_t index,
-                                                       ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> ReplaceItem(dom::SVGTransform& newItem,
-                                                  uint32_t index,
-                                                  ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> RemoveItem(uint32_t index,
-                                                 ErrorResult& error);
-  already_AddRefed<dom::SVGTransform> AppendItem(dom::SVGTransform& newItem,
-                                                 ErrorResult& error)
-  {
-=======
   already_AddRefed<dom::DOMSVGTransform> IndexedGetter(uint32_t index,
                                                        bool& found,
                                                        ErrorResult& error);
@@ -161,41 +111,15 @@ class DOMSVGTransformList final : public nsISupports, public nsWrapperCache {
                                                     ErrorResult& error);
   already_AddRefed<dom::DOMSVGTransform> AppendItem(
       dom::DOMSVGTransform& newItem, ErrorResult& error) {
->>>>>>> upstream-releases
     return InsertItemBefore(newItem, LengthNoFlush(), error);
   }
-<<<<<<< HEAD
-  already_AddRefed<dom::SVGTransform> CreateSVGTransformFromMatrix(
-      dom::SVGMatrix& matrix);
-  already_AddRefed<dom::SVGTransform> Consolidate(ErrorResult& error);
-  uint32_t Length() const { return NumberOfItems(); }
-||||||| merged common ancestors
-  already_AddRefed<dom::SVGTransform> CreateSVGTransformFromMatrix(dom::SVGMatrix& matrix);
-  already_AddRefed<dom::SVGTransform> Consolidate(ErrorResult& error);
-  uint32_t Length() const
-  {
-    return NumberOfItems();
-  }
-=======
   already_AddRefed<dom::DOMSVGTransform> CreateSVGTransformFromMatrix(
       dom::SVGMatrix& matrix);
   already_AddRefed<dom::DOMSVGTransform> Consolidate(ErrorResult& error);
   uint32_t Length() const { return NumberOfItems(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
- private:
-  nsSVGElement* Element() const { return mAList->mElement; }
-||||||| merged common ancestors
-private:
-
-  nsSVGElement* Element() const {
-    return mAList->mElement;
-  }
-=======
  private:
   dom::SVGElement* Element() const { return mAList->mElement; }
->>>>>>> upstream-releases
 
   /// Used to determine if this list is the baseVal or animVal list.
   bool IsAnimValList() const {

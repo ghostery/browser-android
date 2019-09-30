@@ -12,15 +12,7 @@
 #include "Logging.h"
 #include "Zip.h"
 
-<<<<<<< HEAD
-already_AddRefed<Zip> Zip::Create(const char *filename) {
-||||||| merged common ancestors
-already_AddRefed<Zip>
-Zip::Create(const char *filename)
-{
-=======
 already_AddRefed<Zip> Zip::Create(const char* filename) {
->>>>>>> upstream-releases
   /* Open and map the file in memory */
   AutoCloseFD fd(open(filename, O_RDONLY));
   if (fd == -1) {
@@ -47,17 +39,8 @@ already_AddRefed<Zip> Zip::Create(const char* filename) {
   return Create(filename, mapped, size);
 }
 
-<<<<<<< HEAD
-already_AddRefed<Zip> Zip::Create(const char *filename, void *mapped,
-                                  size_t size) {
-||||||| merged common ancestors
-already_AddRefed<Zip>
-Zip::Create(const char *filename, void *mapped, size_t size)
-{
-=======
 already_AddRefed<Zip> Zip::Create(const char* filename, void* mapped,
                                   size_t size) {
->>>>>>> upstream-releases
   RefPtr<Zip> zip = new Zip(filename, mapped, size);
 
   // If neither the first Local File entry nor central directory entries
@@ -71,25 +54,6 @@ already_AddRefed<Zip> Zip::Create(const char* filename, void* mapped,
   return zip.forget();
 }
 
-<<<<<<< HEAD
-Zip::Zip(const char *filename, void *mapped, size_t size)
-    : name(filename ? strdup(filename) : nullptr),
-      mapped(mapped),
-      size(size),
-      nextFile(LocalFile::validate(mapped))  // first Local File entry
-      ,
-      nextDir(nullptr),
-      entries(nullptr) {
-||||||| merged common ancestors
-Zip::Zip(const char *filename, void *mapped, size_t size)
-: name(filename ? strdup(filename) : nullptr)
-, mapped(mapped)
-, size(size)
-, nextFile(LocalFile::validate(mapped)) // first Local File entry
-, nextDir(nullptr)
-, entries(nullptr)
-{
-=======
 Zip::Zip(const char* filename, void* mapped, size_t size)
     : name(filename ? strdup(filename) : nullptr),
       mapped(mapped),
@@ -98,7 +62,6 @@ Zip::Zip(const char* filename, void* mapped, size_t size)
       ,
       nextDir(nullptr),
       entries(nullptr) {
->>>>>>> upstream-releases
   pthread_mutex_init(&mutex, nullptr);
   // If the first local file entry couldn't be found (which can happen
   // with optimized jars), check the first central directory entry.
@@ -114,15 +77,7 @@ Zip::~Zip() {
   pthread_mutex_destroy(&mutex);
 }
 
-<<<<<<< HEAD
-bool Zip::GetStream(const char *path, Zip::Stream *out) const {
-||||||| merged common ancestors
-bool
-Zip::GetStream(const char *path, Zip::Stream *out) const
-{
-=======
 bool Zip::GetStream(const char* path, Zip::Stream* out) const {
->>>>>>> upstream-releases
   AutoLock lock(&mutex);
 
   DEBUG_LOG("%s - GetFile %s", name, path);
@@ -175,16 +130,8 @@ bool Zip::GetStream(const char* path, Zip::Stream* out) const {
 
   /* Find the Local File header corresponding to the Directory entry that
    * was found. */
-<<<<<<< HEAD
-  nextFile =
-      LocalFile::validate(static_cast<const char *>(mapped) + nextDir->offset);
-||||||| merged common ancestors
-  nextFile = LocalFile::validate(static_cast<const char *>(mapped)
-                             + nextDir->offset);
-=======
   nextFile =
       LocalFile::validate(static_cast<const char*>(mapped) + nextDir->offset);
->>>>>>> upstream-releases
   if (!nextFile) {
     ERROR("%s - Couldn't find the Local File header for %s", name, path);
     return false;
@@ -204,33 +151,12 @@ bool Zip::GetStream(const char* path, Zip::Stream* out) const {
   return true;
 }
 
-<<<<<<< HEAD
-const Zip::DirectoryEntry *Zip::GetFirstEntry() const {
-  if (entries) return entries;
-||||||| merged common ancestors
-const Zip::DirectoryEntry *
-Zip::GetFirstEntry() const
-{
-  if (entries)
-    return entries;
-=======
 const Zip::DirectoryEntry* Zip::GetFirstEntry() const {
   if (entries) return entries;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const CentralDirectoryEnd *end = nullptr;
-  const char *_end =
-      static_cast<const char *>(mapped) + size - sizeof(CentralDirectoryEnd);
-||||||| merged common ancestors
-  const CentralDirectoryEnd *end = nullptr;
-  const char *_end = static_cast<const char *>(mapped) + size
-                     - sizeof(CentralDirectoryEnd);
-=======
   const CentralDirectoryEnd* end = nullptr;
   const char* _end =
       static_cast<const char*>(mapped) + size - sizeof(CentralDirectoryEnd);
->>>>>>> upstream-releases
 
   /* Scan for the Central Directory End */
   for (; _end > mapped && !end; _end--)
@@ -240,16 +166,8 @@ const Zip::DirectoryEntry* Zip::GetFirstEntry() const {
     return nullptr;
   }
 
-<<<<<<< HEAD
-  entries =
-      DirectoryEntry::validate(static_cast<const char *>(mapped) + end->offset);
-||||||| merged common ancestors
-  entries = DirectoryEntry::validate(static_cast<const char *>(mapped)
-                                 + end->offset);
-=======
   entries =
       DirectoryEntry::validate(static_cast<const char*>(mapped) + end->offset);
->>>>>>> upstream-releases
   if (!entries) {
     ERROR("%s - Couldn't find central directory record", name);
   }
@@ -259,22 +177,10 @@ const Zip::DirectoryEntry* Zip::GetFirstEntry() const {
 bool Zip::VerifyCRCs() const {
   AutoLock lock(&mutex);
 
-<<<<<<< HEAD
-  for (const DirectoryEntry *entry = GetFirstEntry(); entry;
-       entry = entry->GetNext()) {
-    const LocalFile *file =
-        LocalFile::validate(static_cast<const char *>(mapped) + entry->offset);
-||||||| merged common ancestors
-  for (const DirectoryEntry *entry = GetFirstEntry();
-       entry; entry = entry->GetNext()) {
-    const LocalFile *file = LocalFile::validate(
-        static_cast<const char *>(mapped) + entry->offset);
-=======
   for (const DirectoryEntry* entry = GetFirstEntry(); entry;
        entry = entry->GetNext()) {
     const LocalFile* file =
         LocalFile::validate(static_cast<const char*>(mapped) + entry->offset);
->>>>>>> upstream-releases
     uint32_t crc = crc32(0, nullptr, 0);
 
     DEBUG_LOG("%.*s: crc=%08x", int(entry->filenameSize),
@@ -282,7 +188,7 @@ bool Zip::VerifyCRCs() const {
               uint32_t(entry->CRC32));
 
     if (entry->compression == Stream::Type::STORE) {
-      crc = crc32(crc, static_cast<const uint8_t *>(file->GetData()),
+      crc = crc32(crc, static_cast<const uint8_t*>(file->GetData()),
                   entry->compressedSize);
       DEBUG_LOG(" STORE size=%d crc=%08x", int(entry->compressedSize), crc);
 
@@ -290,16 +196,8 @@ bool Zip::VerifyCRCs() const {
       z_stream zstream;
       Bytef buffer[1024];
       zstream.avail_in = entry->compressedSize;
-<<<<<<< HEAD
-      zstream.next_in =
-          reinterpret_cast<Bytef *>(const_cast<void *>(file->GetData()));
-||||||| merged common ancestors
-      zstream.next_in = reinterpret_cast<Bytef *>(
-                        const_cast<void *>(file->GetData()));
-=======
       zstream.next_in =
           reinterpret_cast<Bytef*>(const_cast<void*>(file->GetData()));
->>>>>>> upstream-releases
       zstream.zalloc = nullptr;
       zstream.zfree = nullptr;
       zstream.opaque = nullptr;
@@ -342,25 +240,11 @@ ZipCollection ZipCollection::Singleton;
 
 static pthread_mutex_t sZipCollectionMutex = PTHREAD_MUTEX_INITIALIZER;
 
-<<<<<<< HEAD
-already_AddRefed<Zip> ZipCollection::GetZip(const char *path) {
-||||||| merged common ancestors
-already_AddRefed<Zip>
-ZipCollection::GetZip(const char *path)
-{
-=======
 already_AddRefed<Zip> ZipCollection::GetZip(const char* path) {
->>>>>>> upstream-releases
   {
     AutoLock lock(&sZipCollectionMutex);
     /* Search the list of Zips we already have for a match */
-<<<<<<< HEAD
-    for (const auto &zip : Singleton.zips) {
-||||||| merged common ancestors
-    for (const auto& zip: Singleton.zips) {
-=======
     for (const auto& zip : Singleton.zips) {
->>>>>>> upstream-releases
       if (zip->GetName() && (strcmp(zip->GetName(), path) == 0)) {
         return RefPtr<Zip>(zip).forget();
       }
@@ -369,29 +253,13 @@ already_AddRefed<Zip> ZipCollection::GetZip(const char* path) {
   return Zip::Create(path);
 }
 
-<<<<<<< HEAD
-void ZipCollection::Register(Zip *zip) {
-||||||| merged common ancestors
-void
-ZipCollection::Register(Zip *zip)
-{
-=======
 void ZipCollection::Register(Zip* zip) {
->>>>>>> upstream-releases
   AutoLock lock(&sZipCollectionMutex);
   DEBUG_LOG("ZipCollection::Register(\"%s\")", zip->GetName());
   Singleton.zips.push_back(zip);
 }
 
-<<<<<<< HEAD
-void ZipCollection::Forget(const Zip *zip) {
-||||||| merged common ancestors
-void
-ZipCollection::Forget(const Zip *zip)
-{
-=======
 void ZipCollection::Forget(const Zip* zip) {
->>>>>>> upstream-releases
   AutoLock lock(&sZipCollectionMutex);
   if (zip->refCount() > 1) {
     // Someone has acquired a reference before we had acquired the lock,

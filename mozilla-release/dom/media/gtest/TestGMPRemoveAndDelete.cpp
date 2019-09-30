@@ -338,22 +338,9 @@ GMPErr GMPRemoveTest::Decode() {
   return mDecodeResult;
 }
 
-<<<<<<< HEAD
-void
-GMPRemoveTest::gmp_Decode()
-{
-  // from gmp-fake.cpp
-  #pragma pack(push, 1)
-||||||| merged common ancestors
-void
-GMPRemoveTest::gmp_Decode()
-{
-  // from gmp-fake.cpp
-=======
 void GMPRemoveTest::gmp_Decode() {
 // from gmp-fake.cpp
 #pragma pack(push, 1)
->>>>>>> upstream-releases
   struct EncodedFrame {
     struct SPSNalu {
       uint32_t size_;
@@ -375,12 +362,7 @@ void GMPRemoveTest::gmp_Decode() {
       uint32_t timestamp_;
     } idr_nalu;
   };
-<<<<<<< HEAD
-  #pragma pack(pop)
-||||||| merged common ancestors
-=======
 #pragma pack(pop)
->>>>>>> upstream-releases
 
   GMPVideoFrame* absFrame;
   GMPErr err = mHost->CreateFrame(kGMPEncodedVideoFrame, &absFrame);

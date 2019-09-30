@@ -24,28 +24,11 @@ bool FuzzingTraits::Sometimes(unsigned int aProbability) {
   return FuzzingTraits::Random(aProbability) == 0;
 }
 
-<<<<<<< HEAD
-/*static */
-size_t FuzzingTraits::Frequency(const size_t aSize, const uint64_t aFactor) {
-||||||| merged common ancestors
-/*static */
-size_t
-FuzzingTraits::Frequency(const size_t aSize, const uint64_t aFactor)
-{
-=======
 /* static */
 size_t FuzzingTraits::Frequency(const size_t aSize, const uint64_t aFactor) {
->>>>>>> upstream-releases
   return RandomIntegerRange<size_t>(0, ceil(float(aSize) / aFactor)) + 1;
 }
 
-<<<<<<< HEAD
-}  // namespace fuzzing
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace fuzzing
-} // namespace mozilla
-=======
 /* static */
 std::mt19937_64& FuzzingTraits::Rng() {
   static std::mt19937_64 rng;
@@ -56,4 +39,3 @@ std::mt19937_64& FuzzingTraits::Rng() {
 
 }  // namespace fuzzing
 }  // namespace mozilla
->>>>>>> upstream-releases

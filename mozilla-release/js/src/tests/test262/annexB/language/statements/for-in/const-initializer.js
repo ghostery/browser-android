@@ -10,15 +10,7 @@ negative:
   type: SyntaxError
 ---*/
 
-<<<<<<< HEAD
-$DONOTEVALUATE();
-throw NotEarlyError;
-||||||| merged common ancestors
-throw "Test262: This statement should not be evaluated.";
-throw NotEarlyError;
-=======
 $DONOTEVALUATE();
 
->>>>>>> upstream-releases
 for (const a = 0 in {});
 

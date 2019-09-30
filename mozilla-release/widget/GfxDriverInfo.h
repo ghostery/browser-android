@@ -9,74 +9,6 @@
 #include "nsString.h"
 
 // Macros for adding a blocklist item to the static list.
-<<<<<<< HEAD
-#define APPEND_TO_DRIVER_BLOCKLIST(os, vendor, devices, feature,            \
-                                   featureStatus, driverComparator,         \
-                                   driverVersion, ruleId, suggestedVersion) \
-  sDriverInfo->AppendElement(GfxDriverInfo(                                 \
-      os, vendor, devices, feature, featureStatus, driverComparator,        \
-      driverVersion, ruleId, suggestedVersion))
-#define APPEND_TO_DRIVER_BLOCKLIST2(os, vendor, devices, feature,           \
-                                    featureStatus, driverComparator,        \
-                                    driverVersion, ruleId)                  \
-  sDriverInfo->AppendElement(GfxDriverInfo(os, vendor, devices, feature,    \
-                                           featureStatus, driverComparator, \
-                                           driverVersion, ruleId))
-
-#define APPEND_TO_DRIVER_BLOCKLIST_RANGE(                           \
-    os, vendor, devices, feature, featureStatus, driverComparator,  \
-    driverVersion, driverVersionMax, ruleId, suggestedVersion)      \
-  do {                                                              \
-    MOZ_ASSERT(driverComparator == DRIVER_BETWEEN_EXCLUSIVE ||      \
-               driverComparator == DRIVER_BETWEEN_INCLUSIVE ||      \
-               driverComparator == DRIVER_BETWEEN_INCLUSIVE_START); \
-    GfxDriverInfo info(os, vendor, devices, feature, featureStatus, \
-                       driverComparator, driverVersion, ruleId,     \
-                       suggestedVersion);                           \
-    info.mDriverVersionMax = driverVersionMax;                      \
-    sDriverInfo->AppendElement(info);                               \
-  } while (false)
-
-#define APPEND_TO_DRIVER_BLOCKLIST_RANGE_GPU2(                      \
-    os, vendor, devices, feature, featureStatus, driverComparator,  \
-    driverVersion, driverVersionMax, ruleId, suggestedVersion)      \
-  do {                                                              \
-    MOZ_ASSERT(driverComparator == DRIVER_BETWEEN_EXCLUSIVE ||      \
-               driverComparator == DRIVER_BETWEEN_INCLUSIVE ||      \
-               driverComparator == DRIVER_BETWEEN_INCLUSIVE_START); \
-    GfxDriverInfo info(os, vendor, devices, feature, featureStatus, \
-                       driverComparator, driverVersion, ruleId,     \
-                       suggestedVersion, false, true);              \
-    info.mDriverVersionMax = driverVersionMax;                      \
-    sDriverInfo->AppendElement(info);                               \
-  } while (false)
-||||||| merged common ancestors
-#define APPEND_TO_DRIVER_BLOCKLIST(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, ruleId, suggestedVersion) \
-    sDriverInfo->AppendElement(GfxDriverInfo(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, ruleId, suggestedVersion))
-#define APPEND_TO_DRIVER_BLOCKLIST2(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, ruleId) \
-    sDriverInfo->AppendElement(GfxDriverInfo(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, ruleId))
-
-#define APPEND_TO_DRIVER_BLOCKLIST_RANGE(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, driverVersionMax, ruleId, suggestedVersion) \
-    do { \
-      MOZ_ASSERT(driverComparator == DRIVER_BETWEEN_EXCLUSIVE || \
-                 driverComparator == DRIVER_BETWEEN_INCLUSIVE || \
-                 driverComparator == DRIVER_BETWEEN_INCLUSIVE_START); \
-      GfxDriverInfo info(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, ruleId, suggestedVersion); \
-      info.mDriverVersionMax = driverVersionMax; \
-      sDriverInfo->AppendElement(info); \
-    } while (false)
-
-#define APPEND_TO_DRIVER_BLOCKLIST_RANGE_GPU2(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, driverVersionMax, ruleId, suggestedVersion) \
-    do { \
-      MOZ_ASSERT(driverComparator == DRIVER_BETWEEN_EXCLUSIVE || \
-                 driverComparator == DRIVER_BETWEEN_INCLUSIVE || \
-                 driverComparator == DRIVER_BETWEEN_INCLUSIVE_START); \
-      GfxDriverInfo info(os, vendor, devices, feature, featureStatus, driverComparator, driverVersion, ruleId, suggestedVersion, false, true); \
-      info.mDriverVersionMax = driverVersionMax; \
-      sDriverInfo->AppendElement(info); \
-    } while (false)
-
-=======
 #define APPEND_TO_DRIVER_BLOCKLIST(os, vendor, driverVendor, devices, feature, \
                                    featureStatus, driverComparator,            \
                                    driverVersion, ruleId, suggestedVersion)    \
@@ -119,7 +51,6 @@
     info.mDriverVersionMax = driverVersionMax;                                 \
     sDriverInfo->AppendElement(info);                                          \
   } while (false)
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace widget {
@@ -226,31 +157,15 @@ typedef nsTArray<nsString> GfxDeviceFamily;
 struct GfxDriverInfo {
   // If |ownDevices| is true, you are transferring ownership of the devices
   // array, and it will be deleted when this GfxDriverInfo is destroyed.
-<<<<<<< HEAD
-  GfxDriverInfo(OperatingSystem os, nsAString &vendor, GfxDeviceFamily *devices,
-||||||| merged common ancestors
-  GfxDriverInfo(OperatingSystem os, nsAString& vendor, GfxDeviceFamily* devices,
-=======
   GfxDriverInfo(OperatingSystem os, const nsAString& vendor,
                 const nsAString& driverVendor, GfxDeviceFamily* devices,
->>>>>>> upstream-releases
                 int32_t feature, int32_t featureStatus, VersionComparisonOp op,
-<<<<<<< HEAD
-                uint64_t driverVersion, const char *ruleId,
-                const char *suggestedVersion = nullptr, bool ownDevices = false,
-                bool gpu2 = false);
-||||||| merged common ancestors
-                uint64_t driverVersion, const char *ruleId,
-                const char *suggestedVersion = nullptr,
-                bool ownDevices = false, bool gpu2 = false);
-=======
                 uint64_t driverVersion, const char* ruleId,
                 const char* suggestedVersion = nullptr, bool ownDevices = false,
                 bool gpu2 = false);
->>>>>>> upstream-releases
 
   GfxDriverInfo();
-  GfxDriverInfo(const GfxDriverInfo &);
+  GfxDriverInfo(const GfxDriverInfo&);
   ~GfxDriverInfo();
 
   OperatingSystem mOperatingSystem;
@@ -259,8 +174,8 @@ struct GfxDriverInfo {
   nsString mAdapterVendor;
   nsString mDriverVendor;
 
-  static GfxDeviceFamily *const allDevices;
-  GfxDeviceFamily *mDevices;
+  static GfxDeviceFamily* const allDevices;
+  GfxDeviceFamily* mDevices;
 
   // Whether the mDevices array should be deleted when this structure is
   // deallocated. False by default.
@@ -283,11 +198,11 @@ struct GfxDriverInfo {
   const char* mSuggestedVersion;
   nsCString mRuleId;
 
-  static const GfxDeviceFamily *GetDeviceFamily(DeviceFamily id);
-  static GfxDeviceFamily *sDeviceFamilies[DeviceFamilyMax];
+  static const GfxDeviceFamily* GetDeviceFamily(DeviceFamily id);
+  static GfxDeviceFamily* sDeviceFamilies[DeviceFamilyMax];
 
-  static const nsAString &GetDeviceVendor(DeviceVendor id);
-  static nsAString *sDeviceVendors[DeviceVendorMax];
+  static const nsAString& GetDeviceVendor(DeviceVendor id);
+  static nsAString* sDeviceVendors[DeviceVendorMax];
 
   static const nsAString& GetDriverVendor(DriverVendor id);
   static nsAString* sDriverVendors[DriverVendorMax];
@@ -318,27 +233,13 @@ inline uint64_t V(uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
 }
 
 // All destination string storage needs to have at least 5 bytes available.
-<<<<<<< HEAD
-inline bool SplitDriverVersion(const char *aSource, char *aAStr, char *aBStr,
-                               char *aCStr, char *aDStr) {
-||||||| merged common ancestors
-inline bool SplitDriverVersion(const char *aSource, char *aAStr, char *aBStr, char *aCStr, char *aDStr)
-{
-=======
 inline bool SplitDriverVersion(const char* aSource, char* aAStr, char* aBStr,
                                char* aCStr, char* aDStr) {
->>>>>>> upstream-releases
   // sscanf doesn't do what we want here to we parse this manually.
   int len = strlen(aSource);
 
   // This "4" is hardcoded in a few places, including once as a 3.
-<<<<<<< HEAD
-  char *dest[4] = {aAStr, aBStr, aCStr, aDStr};
-||||||| merged common ancestors
-  char *dest[4] = { aAStr, aBStr, aCStr, aDStr };
-=======
   char* dest[4] = {aAStr, aBStr, aCStr, aDStr};
->>>>>>> upstream-releases
   unsigned destIdx = 0;
   unsigned destPos = 0;
 
@@ -385,14 +286,7 @@ inline bool SplitDriverVersion(const char* aSource, char* aAStr, char* aBStr,
 // a little strange but this method seems to do the right thing for all
 // different vendor's driver strings. i.e. .98 will become 9800, which is
 // larger than .978 which would become 9780.
-<<<<<<< HEAD
-inline void PadDriverDecimal(char *aString) {
-||||||| merged common ancestors
-inline void PadDriverDecimal(char *aString)
-{
-=======
 inline void PadDriverDecimal(char* aString) {
->>>>>>> upstream-releases
   for (int i = 0; i < 4; i++) {
     if (!aString[i]) {
       for (int c = i; c < 4; c++) {
@@ -404,17 +298,8 @@ inline void PadDriverDecimal(char* aString) {
   aString[4] = 0;
 }
 
-<<<<<<< HEAD
-inline bool ParseDriverVersion(const nsAString &aVersion,
-                               uint64_t *aNumericVersion) {
-||||||| merged common ancestors
-inline bool
-ParseDriverVersion(const nsAString& aVersion, uint64_t *aNumericVersion)
-{
-=======
 inline bool ParseDriverVersion(const nsAString& aVersion,
                                uint64_t* aNumericVersion) {
->>>>>>> upstream-releases
   *aNumericVersion = 0;
 
 #if defined(XP_WIN) || defined(MOZ_X11)

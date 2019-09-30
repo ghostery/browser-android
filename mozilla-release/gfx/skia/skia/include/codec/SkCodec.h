@@ -789,11 +789,6 @@ protected:
 
     virtual int onOutputScanline(int inputScanline) const;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    bool initializeColorXform(const SkImageInfo& dstInfo, SkEncodedInfo::Alpha,
-                              SkTransferFunctionBehavior premulBehavior);
-=======
     /**
      *  Return whether we can convert to dst.
      *
@@ -802,7 +797,6 @@ protected:
     virtual bool conversionSupported(const SkImageInfo& dst, bool srcIsOpaque,
                                      bool needsColorXform);
 
->>>>>>> upstream-releases
     // Some classes never need a colorXform e.g.
     // - ICO uses its embedded codec's colorXform
     // - WBMP is just Black/White
@@ -849,29 +843,8 @@ private:
 
     bool                               fStartedIncrementalDecode;
 
-<<<<<<< HEAD
-    /**
-     *  Return whether we can convert to dst.
-     *
-     *  Will be called for the appropriate frame, prior to initializing the colorXform.
-     */
-    virtual bool conversionSupported(const SkImageInfo& dst, bool srcIsOpaque,
-                                     bool needsColorXform);
-
     bool initializeColorXform(const SkImageInfo& dstInfo, SkEncodedInfo::Alpha, bool srcIsOpaque);
 
-||||||| merged common ancestors
-    /**
-     *  Return whether {srcColor, srcIsOpaque, srcCS} can convert to dst.
-     *
-     *  Will be called for the appropriate frame, prior to initializing the colorXform.
-     */
-    virtual bool conversionSupported(const SkImageInfo& dst, SkColorType srcColor,
-                                     bool srcIsOpaque, const SkColorSpace* srcCS) const;
-=======
-    bool initializeColorXform(const SkImageInfo& dstInfo, SkEncodedInfo::Alpha, bool srcIsOpaque);
-
->>>>>>> upstream-releases
     /**
      *  Return whether these dimensions are supported as a scale.
      *

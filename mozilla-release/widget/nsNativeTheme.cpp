@@ -39,14 +39,6 @@ nsNativeTheme::nsNativeTheme() : mAnimatedContentTimeout(UINT32_MAX) {}
 
 NS_IMPL_ISUPPORTS(nsNativeTheme, nsITimerCallback, nsINamed)
 
-<<<<<<< HEAD
-nsIPresShell* nsNativeTheme::GetPresShell(nsIFrame* aFrame) {
-  if (!aFrame) return nullptr;
-
-  nsPresContext* context = aFrame->PresContext();
-  return context ? context->GetPresShell() : nullptr;
-}
-
 EventStates nsNativeTheme::GetContentState(nsIFrame* aFrame,
                                            StyleAppearance aAppearance) {
   if (!aFrame) return EventStates();
@@ -55,57 +47,8 @@ EventStates nsNativeTheme::GetContentState(nsIFrame* aFrame,
                              aAppearance == StyleAppearance::Radio) &&
                             aFrame->GetContent()->IsXULElement();
   if (isXULCheckboxRadio) aFrame = aFrame->GetParent();
-||||||| merged common ancestors
-nsIPresShell *
-nsNativeTheme::GetPresShell(nsIFrame* aFrame)
-{
-  if (!aFrame)
-    return nullptr;
 
-  nsPresContext* context = aFrame->PresContext();
-  return context ? context->GetPresShell() : nullptr;
-}
-
-EventStates
-nsNativeTheme::GetContentState(nsIFrame* aFrame, StyleAppearance aWidgetType)
-{
-  if (!aFrame)
-    return EventStates();
-
-  bool isXULCheckboxRadio =
-    (aWidgetType == StyleAppearance::Checkbox ||
-     aWidgetType == StyleAppearance::Radio) &&
-    aFrame->GetContent()->IsXULElement();
-  if (isXULCheckboxRadio)
-    aFrame = aFrame->GetParent();
-=======
-EventStates nsNativeTheme::GetContentState(nsIFrame* aFrame,
-                                           StyleAppearance aAppearance) {
-  if (!aFrame) return EventStates();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (!aFrame->GetContent()) return EventStates();
-||||||| merged common ancestors
-  if (!aFrame->GetContent())
-    return EventStates();
-=======
-  bool isXULCheckboxRadio = (aAppearance == StyleAppearance::Checkbox ||
-                             aAppearance == StyleAppearance::Radio) &&
-                            aFrame->GetContent()->IsXULElement();
-  if (isXULCheckboxRadio) aFrame = aFrame->GetParent();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsIPresShell* shell = GetPresShell(aFrame);
-  if (!shell) return EventStates();
-||||||| merged common ancestors
-  nsIPresShell *shell = GetPresShell(aFrame);
-  if (!shell)
-    return EventStates();
-=======
-  if (!aFrame->GetContent()) return EventStates();
->>>>>>> upstream-releases
 
   nsIContent* frameContent = aFrame->GetContent();
   EventStates flags;
@@ -388,16 +331,8 @@ bool nsNativeTheme::IsDisabled(nsIFrame* aFrame, EventStates aEventStates) {
       eCaseMatters);
 }
 
-<<<<<<< HEAD
-/* static */ bool nsNativeTheme::IsFrameRTL(nsIFrame* aFrame) {
-||||||| merged common ancestors
-/* static */ bool
-nsNativeTheme::IsFrameRTL(nsIFrame* aFrame)
-{
-=======
 /* static */
 bool nsNativeTheme::IsFrameRTL(nsIFrame* aFrame) {
->>>>>>> upstream-releases
   if (!aFrame) {
     return false;
   }

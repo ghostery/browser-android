@@ -130,20 +130,12 @@ FTPChannelChild::GetUploadStream(nsIInputStream** stream) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelChild::AsyncOpen(::nsIStreamListener* listener,
-                           nsISupports* aContext) {
-||||||| merged common ancestors
-FTPChannelChild::AsyncOpen(::nsIStreamListener* listener, nsISupports* aContext)
-{
-=======
 FTPChannelChild::AsyncOpen(nsIStreamListener* aListener) {
   nsCOMPtr<nsIStreamListener> listener = aListener;
   nsresult rv =
       nsContentSecurityManager::doContentSecurityCheck(this, listener);
   NS_ENSURE_SUCCESS(rv, rv);
 
->>>>>>> upstream-releases
   LOG(("FTPChannelChild::AsyncOpen [this=%p]\n", this));
 
   NS_ENSURE_TRUE((gNeckoChild), NS_ERROR_FAILURE);
@@ -156,48 +148,11 @@ FTPChannelChild::AsyncOpen(nsIStreamListener* aListener) {
 
   // Port checked in parent, but duplicate here so we can return with error
   // immediately, as we've done since before e10s.
-<<<<<<< HEAD
-  nsresult rv;
   rv = NS_CheckPortSafety(nsBaseChannel::URI());  // Need to disambiguate,
                                                   // because in the child ipdl,
                                                   // a typedef URI is defined...
   if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-  nsresult rv;
-  rv = NS_CheckPortSafety(nsBaseChannel::URI()); // Need to disambiguate,
-                                                 // because in the child ipdl,
-                                                 // a typedef URI is defined...
-  if (NS_FAILED(rv))
-    return rv;
-=======
-  rv = NS_CheckPortSafety(nsBaseChannel::URI());  // Need to disambiguate,
-                                                  // because in the child ipdl,
-                                                  // a typedef URI is defined...
-  if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  mozilla::dom::TabChild* tabChild = nullptr;
-  nsCOMPtr<nsITabChild> iTabChild;
-  NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup, NS_GET_IID(nsITabChild),
-                                getter_AddRefs(iTabChild));
-  GetCallback(iTabChild);
-  if (iTabChild) {
-    tabChild = static_cast<mozilla::dom::TabChild*>(iTabChild.get());
-  }
-  if (MissingRequiredTabChild(tabChild, "ftp")) {
-||||||| merged common ancestors
-  mozilla::dom::TabChild* tabChild = nullptr;
-  nsCOMPtr<nsITabChild> iTabChild;
-  NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup,
-                                NS_GET_IID(nsITabChild),
-                                getter_AddRefs(iTabChild));
-  GetCallback(iTabChild);
-  if (iTabChild) {
-    tabChild = static_cast<mozilla::dom::TabChild*>(iTabChild.get());
-  }
-  if (MissingRequiredTabChild(tabChild, "ftp")) {
-=======
   mozilla::dom::BrowserChild* browserChild = nullptr;
   nsCOMPtr<nsIBrowserChild> iBrowserChild;
   NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup,
@@ -209,7 +164,6 @@ FTPChannelChild::AsyncOpen(nsIStreamListener* aListener) {
         static_cast<mozilla::dom::BrowserChild*>(iBrowserChild.get());
   }
   if (MissingRequiredBrowserChild(browserChild, "ftp")) {
->>>>>>> upstream-releases
     return NS_ERROR_ILLEGAL_VALUE;
   }
 
@@ -239,17 +193,8 @@ FTPChannelChild::AsyncOpen(nsIStreamListener* aListener) {
   // This must happen before the constructor message is sent.
   SetupNeckoTarget();
 
-<<<<<<< HEAD
-  gNeckoChild->SendPFTPChannelConstructor(
-      this, tabChild, IPC::SerializedLoadContext(this), openArgs);
-||||||| merged common ancestors
-  gNeckoChild->
-    SendPFTPChannelConstructor(this, tabChild, IPC::SerializedLoadContext(this),
-                               openArgs);
-=======
   gNeckoChild->SendPFTPChannelConstructor(
       this, browserChild, IPC::SerializedLoadContext(this), openArgs);
->>>>>>> upstream-releases
 
   // The socket transport layer in the chrome process now has a logical ref to
   // us until OnStopRequest is called.
@@ -372,17 +317,8 @@ void FTPChannelChild::DoOnStartRequest(const nsresult& aChannelStatus,
   }
 
   AutoEventEnqueuer ensureSerialDispatch(mEventQ);
-<<<<<<< HEAD
-  rv = mListener->OnStartRequest(this, mListenerContext);
-  if (NS_FAILED(rv)) Cancel(rv);
-||||||| merged common ancestors
-  rv = mListener->OnStartRequest(this, mListenerContext);
-  if (NS_FAILED(rv))
-    Cancel(rv);
-=======
   rv = mListener->OnStartRequest(this);
   if (NS_FAILED(rv)) Cancel(rv);
->>>>>>> upstream-releases
 
   if (mDivertingToParent) {
     mListener = nullptr;
@@ -487,38 +423,17 @@ void FTPChannelChild::DoOnDataAvailable(const nsresult& channelStatus,
   // support only reading part of the data, allowing later calls to read the
   // rest.
   nsCOMPtr<nsIInputStream> stringStream;
-<<<<<<< HEAD
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stringStream), data.get(),
-                                      count, NS_ASSIGNMENT_DEPEND);
-||||||| merged common ancestors
-  nsresult rv = NS_NewByteInputStream(getter_AddRefs(stringStream),
-                                      data.get(),
-                                      count,
-                                      NS_ASSIGNMENT_DEPEND);
-=======
   nsresult rv =
       NS_NewByteInputStream(getter_AddRefs(stringStream),
                             MakeSpan(data).To(count), NS_ASSIGNMENT_DEPEND);
->>>>>>> upstream-releases
   if (NS_FAILED(rv)) {
     Cancel(rv);
     return;
   }
 
   AutoEventEnqueuer ensureSerialDispatch(mEventQ);
-<<<<<<< HEAD
-  rv = mListener->OnDataAvailable(this, mListenerContext, stringStream, offset,
-                                  count);
-  if (NS_FAILED(rv)) Cancel(rv);
-||||||| merged common ancestors
-  rv = mListener->OnDataAvailable(this, mListenerContext,
-                                  stringStream, offset, count);
-  if (NS_FAILED(rv))
-    Cancel(rv);
-=======
   rv = mListener->OnDataAvailable(this, stringStream, offset, count);
   if (NS_FAILED(rv)) Cancel(rv);
->>>>>>> upstream-releases
   stringStream->Close();
 }
 
@@ -555,63 +470,8 @@ mozilla::ipc::IPCResult FTPChannelChild::RecvOnStopRequest(
   return IPC_OK();
 }
 
-<<<<<<< HEAD
-class nsFtpChildAsyncAlert : public Runnable {
- public:
-  nsFtpChildAsyncAlert(nsIPrompt* aPrompter, nsString aResponseMsg)
-      : Runnable("nsFtpChildAsyncAlert"),
-        mPrompter(aPrompter),
-        mResponseMsg(std::move(aResponseMsg)) {}
-
- protected:
-  virtual ~nsFtpChildAsyncAlert() = default;
-
- public:
-  NS_IMETHOD Run() override {
-    if (mPrompter) {
-      mPrompter->Alert(nullptr, mResponseMsg.get());
-    }
-    return NS_OK;
-  }
-
- private:
-  nsCOMPtr<nsIPrompt> mPrompter;
-  nsString mResponseMsg;
-};
-
 class MaybeDivertOnStopFTPEvent
     : public NeckoTargetChannelEvent<FTPChannelChild> {
-||||||| merged common ancestors
-class nsFtpChildAsyncAlert : public Runnable
-{
-public:
-  nsFtpChildAsyncAlert(nsIPrompt *aPrompter, nsString aResponseMsg)
-    : Runnable("nsFtpChildAsyncAlert")
-    , mPrompter(aPrompter)
-    , mResponseMsg(std::move(aResponseMsg))
-  {
-  }
-protected:
-  virtual ~nsFtpChildAsyncAlert() = default;
-public:
-  NS_IMETHOD Run() override
-  {
-    if (mPrompter) {
-      mPrompter->Alert(nullptr, mResponseMsg.get());
-    }
-    return NS_OK;
-  }
-private:
-  nsCOMPtr<nsIPrompt> mPrompter;
-  nsString mResponseMsg;
-};
-
-class MaybeDivertOnStopFTPEvent : public NeckoTargetChannelEvent<FTPChannelChild>
-{
-=======
-class MaybeDivertOnStopFTPEvent
-    : public NeckoTargetChannelEvent<FTPChannelChild> {
->>>>>>> upstream-releases
  public:
   MaybeDivertOnStopFTPEvent(FTPChannelChild* child,
                             const nsresult& aChannelStatus)
@@ -656,47 +516,7 @@ void FTPChannelChild::DoOnStopRequest(const nsresult& aChannelStatus,
     // we initiate protocol deletion below.
     mIsPending = false;
     AutoEventEnqueuer ensureSerialDispatch(mEventQ);
-<<<<<<< HEAD
-    (void)mListener->OnStopRequest(this, mListenerContext, aChannelStatus);
-
-    if (NS_FAILED(aChannelStatus) && !aErrorMsg.IsEmpty()) {
-      nsCOMPtr<nsIPrompt> prompter;
-      GetCallback(prompter);
-      if (prompter) {
-        nsCOMPtr<nsIRunnable> alertEvent;
-        if (aUseUTF8) {
-          alertEvent = new nsFtpChildAsyncAlert(
-              prompter, NS_ConvertUTF8toUTF16(aErrorMsg));
-        } else {
-          alertEvent = new nsFtpChildAsyncAlert(
-              prompter, NS_ConvertASCIItoUTF16(aErrorMsg));
-        }
-
-        Dispatch(alertEvent.forget());
-      }
-    }
-||||||| merged common ancestors
-    (void)mListener->OnStopRequest(this, mListenerContext, aChannelStatus);
-
-    if (NS_FAILED(aChannelStatus) && !aErrorMsg.IsEmpty()) {
-      nsCOMPtr<nsIPrompt> prompter;
-      GetCallback(prompter);
-      if (prompter) {
-        nsCOMPtr<nsIRunnable> alertEvent;
-        if (aUseUTF8) {
-          alertEvent = new nsFtpChildAsyncAlert(prompter,
-                             NS_ConvertUTF8toUTF16(aErrorMsg));
-        } else {
-          alertEvent = new nsFtpChildAsyncAlert(prompter,
-                             NS_ConvertASCIItoUTF16(aErrorMsg));
-        }
-
-        Dispatch(alertEvent.forget());
-      }
-    }
-=======
     (void)mListener->OnStopRequest(this, aChannelStatus);
->>>>>>> upstream-releases
 
     mListener = nullptr;
 
@@ -868,24 +688,6 @@ FTPChannelChild::ConnectParent(uint32_t id) {
 
   LOG(("FTPChannelChild::ConnectParent [this=%p]\n", this));
 
-<<<<<<< HEAD
-  mozilla::dom::TabChild* tabChild = nullptr;
-  nsCOMPtr<nsITabChild> iTabChild;
-  NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup, NS_GET_IID(nsITabChild),
-                                getter_AddRefs(iTabChild));
-  GetCallback(iTabChild);
-  if (iTabChild) {
-    tabChild = static_cast<mozilla::dom::TabChild*>(iTabChild.get());
-||||||| merged common ancestors
-  mozilla::dom::TabChild* tabChild = nullptr;
-  nsCOMPtr<nsITabChild> iTabChild;
-  NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup,
-                                NS_GET_IID(nsITabChild),
-                                getter_AddRefs(iTabChild));
-  GetCallback(iTabChild);
-  if (iTabChild) {
-    tabChild = static_cast<mozilla::dom::TabChild*>(iTabChild.get());
-=======
   mozilla::dom::BrowserChild* browserChild = nullptr;
   nsCOMPtr<nsIBrowserChild> iBrowserChild;
   NS_QueryNotificationCallbacks(mCallbacks, mLoadGroup,
@@ -895,7 +697,6 @@ FTPChannelChild::ConnectParent(uint32_t id) {
   if (iBrowserChild) {
     browserChild =
         static_cast<mozilla::dom::BrowserChild*>(iBrowserChild.get());
->>>>>>> upstream-releases
   }
 
   // This must happen before the constructor message is sent.
@@ -907,17 +708,8 @@ FTPChannelChild::ConnectParent(uint32_t id) {
 
   FTPChannelConnectArgs connectArgs(id);
 
-<<<<<<< HEAD
-  if (!gNeckoChild->SendPFTPChannelConstructor(
-          this, tabChild, IPC::SerializedLoadContext(this), connectArgs)) {
-||||||| merged common ancestors
-  if (!gNeckoChild->SendPFTPChannelConstructor(this, tabChild,
-                                               IPC::SerializedLoadContext(this),
-                                               connectArgs)) {
-=======
   if (!gNeckoChild->SendPFTPChannelConstructor(
           this, browserChild, IPC::SerializedLoadContext(this), connectArgs)) {
->>>>>>> upstream-releases
     return NS_ERROR_FAILURE;
   }
 
@@ -1018,24 +810,9 @@ void FTPChannelChild::SetupNeckoTarget() {
   if (mNeckoTarget) {
     return;
   }
-<<<<<<< HEAD
-
-  nsCOMPtr<nsILoadInfo> loadInfo;
-  GetLoadInfo(getter_AddRefs(loadInfo));
-
-  mNeckoTarget =
-      nsContentUtils::GetEventTargetByLoadInfo(loadInfo, TaskCategory::Network);
-||||||| merged common ancestors
-
-  nsCOMPtr<nsILoadInfo> loadInfo;
-  GetLoadInfo(getter_AddRefs(loadInfo));
-
-  mNeckoTarget = nsContentUtils::GetEventTargetByLoadInfo(loadInfo, TaskCategory::Network);
-=======
   nsCOMPtr<nsILoadInfo> loadInfo = LoadInfo();
   mNeckoTarget =
       nsContentUtils::GetEventTargetByLoadInfo(loadInfo, TaskCategory::Network);
->>>>>>> upstream-releases
   if (!mNeckoTarget) {
     return;
   }

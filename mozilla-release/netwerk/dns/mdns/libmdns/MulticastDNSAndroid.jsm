@@ -7,16 +7,9 @@
 
 var EXPORTED_SYMBOLS = ["MulticastDNS"];
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-=======
 const { EventDispatcher } = ChromeUtils.import(
   "resource://gre/modules/Messaging.jsm"
 );
->>>>>>> upstream-releases
 
 const DEBUG = false;
 
@@ -161,16 +154,8 @@ function parsePropertyBag2(bag) {
   for (let { name } of bag.enumerator) {
     let value = bag.getPropertyAsACString(name);
     attributes.push({
-<<<<<<< HEAD
-      "name": name,
-      "value": value,
-||||||| merged common ancestors
-      "name": name,
-      "value": value
-=======
       name,
       value,
->>>>>>> upstream-releases
     });
   }
 

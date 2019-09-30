@@ -21,15 +21,8 @@ const {
 
 const InspectAction = createFactory(require("./InspectAction"));
 
-<<<<<<< HEAD
-const Actions = require("../../actions/index");
-const Types = require("../../types/index");
-||||||| merged common ancestors
-const Actions = require("../../actions/index");
-=======
 const Types = require("../../types/index");
 const { SERVICE_WORKER_STATUSES } = require("../../constants");
->>>>>>> upstream-releases
 
 /**
  * This component displays buttons for service worker.
@@ -38,19 +31,9 @@ class ServiceWorkerAction extends PureComponent {
   static get propTypes() {
     return {
       dispatch: PropTypes.func.isRequired,
-<<<<<<< HEAD
-      // Provided by wrapping the component with FluentReact.withLocalization.
-      getString: PropTypes.func.isRequired,
-      target: Types.debugTarget.isRequired,
-||||||| merged common ancestors
-      // Provided by wrapping the component with FluentReact.withLocalization.
-      getString: PropTypes.func.isRequired,
-      target: PropTypes.object.isRequired,
-=======
       // Provided by redux state
       runtimeDetails: Types.runtimeDetails.isRequired,
       target: Types.debugTarget.isRequired,
->>>>>>> upstream-releases
     };
   }
 
@@ -94,15 +77,7 @@ class ServiceWorkerAction extends PureComponent {
 
     return Localized(
       {
-<<<<<<< HEAD
-        className: "default-button",
-        onClick: e => onClick(),
-||||||| merged common ancestors
-        className: "aboutdebugging-button",
-        onClick: e => onClick(),
-=======
         id: this._getStatusLocalizationId(status),
->>>>>>> upstream-releases
       },
       dom.span(
         {
@@ -114,16 +89,6 @@ class ServiceWorkerAction extends PureComponent {
   }
 
   render() {
-<<<<<<< HEAD
-    return dom.div(
-      {
-        className: "toolbar",
-      },
-      this._renderAction()
-    );
-||||||| merged common ancestors
-    return dom.div({}, this._renderAction());
-=======
     return dom.div(
       {
         className: "service-worker-action",
@@ -131,7 +96,6 @@ class ServiceWorkerAction extends PureComponent {
       this._renderStatus(),
       this._renderInspectAction()
     );
->>>>>>> upstream-releases
   }
 }
 

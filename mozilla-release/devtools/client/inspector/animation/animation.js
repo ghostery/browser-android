@@ -234,19 +234,10 @@ class AnimationInspector {
   async doSetCurrentTimes(currentTime) {
     const { animations, timeScale } = this.state;
     currentTime = currentTime + timeScale.minStartTime;
-<<<<<<< HEAD
-    const animationsFront = await this.animationsFrontPromise;
-    await animationsFront.setCurrentTimes(animations, currentTime, true,
-                                               { relativeToCreatedTime: true });
-||||||| merged common ancestors
-    await this.animationsFront.setCurrentTimes(animations, currentTime, true,
-                                               { relativeToCreatedTime: true });
-=======
     const animationsFront = await this.animationsFrontPromise;
     await animationsFront.setCurrentTimes(animations, currentTime, true, {
       relativeToCreatedTime: true,
     });
->>>>>>> upstream-releases
   }
 
   /**
@@ -730,16 +721,8 @@ class AnimationInspector {
     const animationsFront = await this.animationsFrontPromise;
     const animations =
       selection.isConnected() && selection.isElementNode()
-<<<<<<< HEAD
-      ? await animationsFront.getAnimationPlayersForNode(selection.nodeFront)
-      : [];
-||||||| merged common ancestors
-      ? await this.animationsFront.getAnimationPlayersForNode(selection.nodeFront)
-      : [];
-=======
         ? await animationsFront.getAnimationPlayersForNode(selection.nodeFront)
         : [];
->>>>>>> upstream-releases
     this.updateState(animations);
     this.setAnimationStateChangedListenerEnabled(true);
 

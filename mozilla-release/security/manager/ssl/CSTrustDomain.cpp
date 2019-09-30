@@ -29,15 +29,6 @@ static LazyLogModule gTrustDomainPRLog("CSTrustDomain");
 #define CSTrust_LOG(args) MOZ_LOG(gTrustDomainPRLog, LogLevel::Debug, args)
 
 CSTrustDomain::CSTrustDomain(UniqueCERTCertList& certChain)
-<<<<<<< HEAD
-    : mCertChain(certChain),
-      mCertBlocklist(do_GetService(NS_CERTBLOCKLIST_CONTRACTID)) {}
-||||||| merged common ancestors
-  : mCertChain(certChain)
-  , mCertBlocklist(do_GetService(NS_CERTBLOCKLIST_CONTRACTID))
-{
-}
-=======
     : mCertChain(certChain),
 #ifdef MOZ_NEW_CERT_STORAGE
       mCertBlocklist(do_GetService(NS_CERT_STORAGE_CID)) {
@@ -46,7 +37,6 @@ CSTrustDomain::CSTrustDomain(UniqueCERTCertList& certChain)
       mCertBlocklist(do_GetService(NS_CERTBLOCKLIST_CONTRACTID)) {
 }
 #endif
->>>>>>> upstream-releases
 
 Result CSTrustDomain::GetCertTrust(EndEntityOrCA endEntityOrCA,
                                    const CertPolicyId& policy,
@@ -78,16 +68,9 @@ Result CSTrustDomain::GetCertTrust(EndEntityOrCA endEntityOrCA,
   nsAutoCString encSubject;
   nsAutoCString encPubKey;
 
-<<<<<<< HEAD
-  nsresult nsrv = BuildRevocationCheckStrings(candidateCert.get(), encIssuer,
-                                              encSerial, encSubject, encPubKey);
-||||||| merged common ancestors
-  nsresult nsrv = BuildRevocationCheckStrings(candidateCert.get(), encIssuer, encSerial, encSubject, encPubKey);
-=======
   nsresult nsrv = BuildRevocationCheckStrings(candidateCert.get(), encIssuer,
                                               encSerial, encSubject, encPubKey);
 #endif
->>>>>>> upstream-releases
   if (NS_FAILED(nsrv)) {
     return Result::FATAL_ERROR_LIBRARY_FAILURE;
   }
@@ -98,17 +81,9 @@ Result CSTrustDomain::GetCertTrust(EndEntityOrCA endEntityOrCA,
       issuerBytes, serialBytes, subjectBytes, pubKeyBytes, &revocationState);
 #else
   bool isCertRevoked;
-<<<<<<< HEAD
-  nsrv = mCertBlocklist->IsCertRevoked(encIssuer, encSerial, encSubject,
-                                       encPubKey, &isCertRevoked);
-||||||| merged common ancestors
-  nsrv = mCertBlocklist->IsCertRevoked(
-    encIssuer, encSerial, encSubject, encPubKey, &isCertRevoked);
-=======
   nsrv = mCertBlocklist->IsCertRevoked(encIssuer, encSerial, encSubject,
                                        encPubKey, &isCertRevoked);
 #endif
->>>>>>> upstream-releases
   if (NS_FAILED(nsrv)) {
     return Result::FATAL_ERROR_LIBRARY_FAILURE;
   }

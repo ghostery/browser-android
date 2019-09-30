@@ -85,25 +85,6 @@ SimpleTest.waitForFocus(async function() {
       let basePosX = rect.width * baseX;
       let basePosY = rect.height * baseY;
 
-<<<<<<< HEAD
-      let inputEventExpected = true;
-      function onInput(aEvent) {
-        if (!inputEventExpected) {
-          ok(false, "\"input\" event shouldn't be fired after stopping resizing");
-          return;
-        }
-        ok(aEvent instanceof InputEvent,
-           '"input" event should be dispatched with InputEvent interface');
-        is(aEvent.cancelable, false,
-           '"input" event should be never cancelable');
-        is(aEvent.bubbles, true,
-           '"input" event should always bubble');
-      }
-
-      content.addEventListener("input", onInput);
-
-||||||| merged common ancestors
-=======
       let inputEventExpected = true;
       function onInput(aEvent) {
         if (!inputEventExpected) {
@@ -126,7 +107,6 @@ SimpleTest.waitForFocus(async function() {
 
       content.addEventListener("input", onInput);
 
->>>>>>> upstream-releases
       // Click on the correct resizer
       synthesizeMouse(target, basePosX, basePosY, {type: "mousedown"});
       // Drag it delta pixels to the right and bottom (or maybe left and top!)

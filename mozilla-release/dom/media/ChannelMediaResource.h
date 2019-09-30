@@ -121,14 +121,8 @@ class ChannelMediaResource
   void Suspend(bool aCloseImmediately) override;
   void Resume() override;
   already_AddRefed<nsIPrincipal> GetCurrentPrincipal() override;
-<<<<<<< HEAD
-  bool CanClone() override;
-||||||| merged common ancestors
-  bool     CanClone() override;
-=======
   bool HadCrossOriginRedirects() override;
   bool CanClone() override;
->>>>>>> upstream-releases
   already_AddRefed<BaseMediaResource> CloneData(
       MediaResourceCallback* aDecoder) override;
   nsresult ReadFromCache(char* aBuffer, int64_t aOffset,

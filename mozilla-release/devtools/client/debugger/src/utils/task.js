@@ -11,16 +11,8 @@
  */
 export const Task = {
   // XXX: Not sure if this works in all cases...
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/task.js
-  async: function(task) {
-    return function() {
-||||||| merged common ancestors
-  async: function (task) {
-    return function () {
-=======
   async: function(task: any) {
     return function() {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/task.js
       return Task.spawn(task, this, arguments);
     };
   },
@@ -30,16 +22,8 @@ export const Task = {
    * @param task A generator function
    * @return A promise, resolved when the task terminates
    */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/task.js
-  spawn: function(task, scope, args) {
-    return new Promise(function(resolve, reject) {
-||||||| merged common ancestors
-  spawn: function (task, scope, args) {
-    return new Promise(function (resolve, reject) {
-=======
   spawn: function(task: any, scope: any, args: any): Promise<any> {
     return new Promise(function(resolve, reject) {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/task.js
       const iterator = task.apply(scope, args);
 
       const callNext = lastValue => {
@@ -60,13 +44,5 @@ export const Task = {
 
       callNext(undefined);
     });
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/task.js
-  }
-};
-||||||| merged common ancestors
-  }
-};
-=======
   },
 };
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/task.js

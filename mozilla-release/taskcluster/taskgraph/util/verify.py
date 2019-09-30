@@ -29,16 +29,8 @@ class VerificationSequence(object):
     """
     _verifications = attr.ib(factory=dict)
 
-<<<<<<< HEAD
-    def __call__(self, graph_name, graph):
-        for verification in self._verifications.get(graph_name, []):
-||||||| merged common ancestors
-    def __call__(self, graph_name, graph):
-        for verification in self.verifications.get(graph_name, []):
-=======
     def __call__(self, graph_name, graph, graph_config):
         for verification in self._verifications.get(graph_name, []):
->>>>>>> upstream-releases
             scratch_pad = {}
             graph.for_each_task(verification, scratch_pad=scratch_pad, graph_config=graph_config)
             verification(None, graph, scratch_pad=scratch_pad, graph_config=graph_config)
@@ -190,36 +182,6 @@ def verify_dependency_tiers(task, taskgraph, scratch_pad, graph_config):
                                 d, printable_tier(tiers[d])))
 
 
-<<<<<<< HEAD
-@verifications.add('full_task_graph')
-def verify_required_signoffs(task, taskgraph, scratch_pad):
-    """
-    Task with required signoffs can't be dependencies of tasks with less
-    required signoffs.
-    """
-    all_required_signoffs = scratch_pad
-    if task is not None:
-        all_required_signoffs[task.label] = set(task.attributes.get('required_signoffs', []))
-    else:
-        def printable_signoff(signoffs):
-            if len(signoffs) == 1:
-                return 'required signoff {}'.format(*signoffs)
-            elif signoffs:
-                return 'required signoffs {}'.format(', '.join(signoffs))
-            else:
-                return 'no required signoffs'
-        for task in taskgraph.tasks.itervalues():
-            required_signoffs = all_required_signoffs[task.label]
-            for d in task.dependencies.itervalues():
-                if required_signoffs < all_required_signoffs[d]:
-                    raise Exception(
-                        '{} ({}) cannot depend on {} ({})'
-                        .format(task.label, printable_signoff(required_signoffs),
-                                d, printable_signoff(all_required_signoffs[d])))
-
-
-||||||| merged common ancestors
-=======
 @verifications.add('full_task_graph')
 def verify_required_signoffs(task, taskgraph, scratch_pad, graph_config):
     """
@@ -247,7 +209,6 @@ def verify_required_signoffs(task, taskgraph, scratch_pad, graph_config):
                                 d, printable_signoff(all_required_signoffs[d])))
 
 
->>>>>>> upstream-releases
 @verifications.add('optimized_task_graph')
 def verify_always_optimized(task, taskgraph, scratch_pad, graph_config):
     """

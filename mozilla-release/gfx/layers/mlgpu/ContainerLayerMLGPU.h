@@ -55,11 +55,6 @@ class ContainerLayerMLGPU final : public ContainerLayer, public LayerMLGPU {
 
   void ComputeIntermediateSurfaceBounds();
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   // Similar to ContainerLayerComposite, we need to include the pres shell
   // resolution, if there is one, in the layer's post-scale.
   float GetPostXScale() const override {
@@ -70,7 +65,6 @@ protected:
   }
 
  protected:
->>>>>>> upstream-releases
   bool OnPrepareToRender(FrameBuilder* aBuilder) override;
   void OnLayerManagerChange(LayerManagerMLGPU* aManager) override;
 

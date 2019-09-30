@@ -45,13 +45,6 @@ GrBackendTextureImageGenerator::Make(sk_sp<GrTexture> texture, GrSurfaceOrigin o
     context->priv().getResourceCache()->insertCrossContextGpuResource(texture.get());
 
     GrBackendTexture backendTexture = texture->getBackendTexture();
-<<<<<<< HEAD
-    if (!context->contextPriv().caps()->validateBackendTexture(backendTexture, colorType,
-                                                               &backendTexture.fConfig)) {
-        return nullptr;
-    }
-||||||| merged common ancestors
-=======
     GrBackendFormat backendFormat = backendTexture.getBackendFormat();
     if (!backendFormat.isValid()) {
         return nullptr;
@@ -61,7 +54,6 @@ GrBackendTextureImageGenerator::Make(sk_sp<GrTexture> texture, GrSurfaceOrigin o
     if (backendTexture.fConfig == kUnknown_GrPixelConfig) {
         return nullptr;
     }
->>>>>>> upstream-releases
 
     SkImageInfo info = SkImageInfo::Make(texture->width(), texture->height(), colorType, alphaType,
                                          std::move(colorSpace));
@@ -100,21 +92,11 @@ void GrBackendTextureImageGenerator::ReleaseRefHelper_TextureReleaseProc(void* c
 }
 
 sk_sp<GrTextureProxy> GrBackendTextureImageGenerator::onGenerateTexture(
-<<<<<<< HEAD
-        GrContext* context, const SkImageInfo& info, const SkIPoint& origin, bool willNeedMipMaps) {
-||||||| merged common ancestors
-        GrContext* context, const SkImageInfo& info, const SkIPoint& origin,
-        SkTransferFunctionBehavior, bool willNeedMipMaps) {
-=======
         GrRecordingContext* context, const SkImageInfo& info,
         const SkIPoint& origin, bool willNeedMipMaps) {
->>>>>>> upstream-releases
     SkASSERT(context);
 
     if (context->backend() != fBackendTexture.backend()) {
-        return nullptr;
-    }
-    if (info.colorType() != this->getInfo().colorType()) {
         return nullptr;
     }
     if (info.colorType() != this->getInfo().colorType()) {
@@ -160,29 +142,8 @@ sk_sp<GrTextureProxy> GrBackendTextureImageGenerator::onGenerateTexture(
     GrBackendTexture backendTexture = fBackendTexture;
     RefHelper* refHelper = fRefHelper;
 
-<<<<<<< HEAD
-    GrTextureType textureType = GrTextureType::k2D;
-    GrGLTextureInfo glInfo;
-    if (backendTexture.getGLTextureInfo(&glInfo)) {
-        textureType = GrGLTexture::TextureTypeFromTarget(glInfo.fTarget);
-    }
-    sk_sp<GrTextureProxy> proxy = proxyProvider->createLazyProxy(
-            [refHelper, releaseProcHelper, semaphore, backendTexture]
-            (GrResourceProvider* resourceProvider) {
-                if (!resourceProvider) {
-                    return sk_sp<GrTexture>();
-                }
-||||||| merged common ancestors
-    sk_sp<GrTextureProxy> proxy = proxyProvider->createLazyProxy(
-            [refHelper, releaseProcHelper, semaphore, backendTexture]
-            (GrResourceProvider* resourceProvider) {
-                if (!resourceProvider) {
-                    return sk_sp<GrTexture>();
-                }
-=======
     GrBackendFormat format = backendTexture.getBackendFormat();
     SkASSERT(format.isValid());
->>>>>>> upstream-releases
 
     sk_sp<GrTextureProxy> proxy = proxyProvider->createLazyProxy(
             [refHelper, releaseProcHelper, semaphore,
@@ -219,15 +180,9 @@ sk_sp<GrTextureProxy> GrBackendTextureImageGenerator::onGenerateTexture(
                 }
 
                 return tex;
-<<<<<<< HEAD
-            },
-            desc, fSurfaceOrigin, mipMapped, textureType, SkBackingFit::kExact, SkBudgeted::kNo);
-||||||| merged common ancestors
-=======
             },
             format, desc, fSurfaceOrigin, mipMapped, GrInternalSurfaceFlags::kReadOnly,
             SkBackingFit::kExact, SkBudgeted::kNo);
->>>>>>> upstream-releases
 
     if (!proxy) {
         return nullptr;
@@ -243,36 +198,17 @@ sk_sp<GrTextureProxy> GrBackendTextureImageGenerator::onGenerateTexture(
         // because Vulkan will want to do the copy as a draw. All other copies would require a
         // layout change in Vulkan and we do not change the layout of borrowed images.
         GrMipMapped mipMapped = willNeedMipMaps ? GrMipMapped::kYes : GrMipMapped::kNo;
-<<<<<<< HEAD
-||||||| merged common ancestors
-        sk_sp<SkColorSpace> colorSpace;
-        if (GrPixelConfigIsSRGB(desc.fConfig)) {
-            colorSpace = SkColorSpace::MakeSRGB();
-        }
-=======
 
         GrBackendFormat format = proxy->backendFormat().makeTexture2D();
         if (!format.isValid()) {
             return nullptr;
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        sk_sp<GrRenderTargetContext> rtContext(
-            context->contextPriv().makeDeferredRenderTargetContext(
-                SkBackingFit::kExact, info.width(), info.height(), proxy->config(), nullptr, 1,
-                mipMapped, proxy->origin(), nullptr, SkBudgeted::kYes));
-||||||| merged common ancestors
-        sk_sp<GrRenderTargetContext> rtContext(context->makeDeferredRenderTargetContext(
-                SkBackingFit::kExact, info.width(), info.height(), proxy->config(),
-                std::move(colorSpace), 1, mipMapped, proxy->origin(), nullptr, SkBudgeted::kYes));
-=======
         sk_sp<GrRenderTargetContext> rtContext(
             context->priv().makeDeferredRenderTargetContext(
                 format, SkBackingFit::kExact, info.width(), info.height(),
                 proxy->config(), nullptr, 1, mipMapped, proxy->origin(), nullptr,
                 SkBudgeted::kYes));
->>>>>>> upstream-releases
 
         if (!rtContext) {
             return nullptr;

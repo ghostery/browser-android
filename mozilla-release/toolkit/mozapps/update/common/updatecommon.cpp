@@ -3,16 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #if defined(XP_WIN)
-<<<<<<< HEAD
-#include <windows.h>
-#include <winioctl.h>  // for FSCTL_GET_REPARSE_POINT
-||||||| merged common ancestors
-#include <windows.h>
-#include <winioctl.h> // for FSCTL_GET_REPARSE_POINT
-=======
 #  include <windows.h>
 #  include <winioctl.h>  // for FSCTL_GET_REPARSE_POINT
->>>>>>> upstream-releases
 #endif
 
 #include <stdio.h>

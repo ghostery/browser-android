@@ -311,16 +311,8 @@ public:
     /// Use indices or vertices in CPU arrays rather than VBOs for dynamic content.
     bool useNonVBOVertexAndIndexDynamicData() const { return fUseNonVBOVertexAndIndexDynamicData; }
 
-<<<<<<< HEAD
-    bool surfaceSupportsWritePixels(const GrSurface*) const override;
     bool surfaceSupportsReadPixels(const GrSurface*) const override;
     GrColorType supportedReadPixelsColorType(GrPixelConfig, GrColorType) const override;
-||||||| merged common ancestors
-    bool surfaceSupportsWritePixels(const GrSurface* surface) const override;
-=======
-    bool surfaceSupportsReadPixels(const GrSurface*) const override;
-    GrColorType supportedReadPixelsColorType(GrPixelConfig, GrColorType) const override;
->>>>>>> upstream-releases
 
     /// Does ReadPixels support reading readConfig pixels from a FBO that is surfaceConfig?
     bool readPixelsSupported(GrPixelConfig surfaceConfig,
@@ -384,25 +376,6 @@ public:
         return fRequiresCullFaceEnableDisableWhenDrawingLinesAfterNonLines;
     }
 
-<<<<<<< HEAD
-    // Intel Skylake instanced draws get corrupted if we mix them with normal ones. Adding a flush
-    // in between seems to resolve this.
-    bool requiresFlushBetweenNonAndInstancedDraws() const {
-        return fRequiresFlushBetweenNonAndInstancedDraws;
-    }
-
-    // Some Adreno drivers refuse to ReadPixels from an MSAA buffer that has stencil attached.
-    bool detachStencilFromMSAABuffersBeforeReadPixels() const {
-        return fDetachStencilFromMSAABuffersBeforeReadPixels;
-    }
-
-    // Returns the observed maximum number of instances the driver can handle in a single draw call
-    // without crashing, or 'pendingInstanceCount' if this workaround is not necessary.
-||||||| merged common ancestors
-    // Returns the observed maximum number of instances the driver can handle in a single call to
-    // glDrawArraysInstanced without crashing, or 'pendingInstanceCount' if this
-    // workaround is not necessary.
-=======
     // Some Adreno drivers refuse to ReadPixels from an MSAA buffer that has stencil attached.
     bool detachStencilFromMSAABuffersBeforeReadPixels() const {
         return fDetachStencilFromMSAABuffersBeforeReadPixels;
@@ -416,36 +389,12 @@ public:
 
     // Returns the observed maximum number of instances the driver can handle in a single draw call
     // without crashing, or 'pendingInstanceCount' if this workaround is not necessary.
->>>>>>> upstream-releases
     // NOTE: the return value may be larger than pendingInstanceCount.
     int maxInstancesPerDrawWithoutCrashing(int pendingInstanceCount) const {
         return (fMaxInstancesPerDrawWithoutCrashing)
                 ? fMaxInstancesPerDrawWithoutCrashing : pendingInstanceCount;
     }
 
-<<<<<<< HEAD
-    bool canCopyTexSubImage(GrPixelConfig dstConfig, bool dstHasMSAARenderBuffer,
-                            bool dstIsTextureable, bool dstIsGLTexture2D,
-                            GrSurfaceOrigin dstOrigin,
-                            GrPixelConfig srcConfig, bool srcHasMSAARenderBuffer,
-                            bool srcIsTextureable, bool srcIsGLTexture2D,
-                            GrSurfaceOrigin srcOrigin) const;
-    bool canCopyAsBlit(GrPixelConfig dstConfig, int dstSampleCnt,
-                       bool dstIsTextureable, bool dstIsGLTexture2D,
-                       GrSurfaceOrigin dstOrigin,
-                       GrPixelConfig srcConfig, int srcSampleCnt,
-                       bool srcIsTextureable, bool srcIsGLTexture2D,
-                       GrSurfaceOrigin srcOrigin, const SkRect& srcBounds,
-                       const SkIRect& srcRect, const SkIPoint& dstPoint) const;
-    bool canCopyAsDraw(GrPixelConfig dstConfig, bool srcIsTextureable) const;
-
-    bool canCopySurface(const GrSurfaceProxy* dst, const GrSurfaceProxy* src,
-                        const SkIRect& srcRect, const SkIPoint& dstPoint) const override;
-
-    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
-||||||| merged common ancestors
-    bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc,
-=======
     bool canCopyTexSubImage(GrPixelConfig dstConfig, bool dstHasMSAARenderBuffer,
                             bool dstIsTextureable, bool dstIsGLTexture2D,
                             GrSurfaceOrigin dstOrigin,
@@ -462,7 +411,6 @@ public:
     bool canCopyAsDraw(GrPixelConfig dstConfig, bool srcIsTextureable) const;
 
     bool initDescForDstCopy(const GrRenderTargetProxy* src, GrSurfaceDesc* desc, GrSurfaceOrigin*,
->>>>>>> upstream-releases
                             bool* rectsMustMatch, bool* disallowSubrect) const override;
 
     bool programBinarySupport() const { return fProgramBinarySupport; }
@@ -479,10 +427,6 @@ public:
 
     GrBackendFormat getBackendFormatFromGrColorType(GrColorType ct,
                                                     GrSRGBEncoded srgbEncoded) const override;
-
-#if GR_TEST_UTILS
-    GrGLStandard standard() const { return fStandard; }
-#endif
 
 #if GR_TEST_UTILS
     GrGLStandard standard() const { return fStandard; }
@@ -509,15 +453,6 @@ private:
 
     void onApplyOptionsOverrides(const GrContextOptions& options) override;
 
-<<<<<<< HEAD
-#ifdef GR_TEST_UTILS
-    GrBackendFormat onCreateFormatFromBackendTexture(const GrBackendTexture&) const override;
-#endif
-
-||||||| merged common ancestors
-    bool onIsMixedSamplesSupportedForRT(const GrBackendRenderTarget&) const override;
-=======
->>>>>>> upstream-releases
     bool onIsWindowRectanglesSupportedForRT(const GrBackendRenderTarget&) const override;
 
     void initFSAASupport(const GrContextOptions& contextOptions, const GrGLContextInfo&,
@@ -579,17 +514,9 @@ private:
     bool fDisallowTexSubImageForUnormConfigTexturesEverBoundToFBO : 1;
     bool fUseDrawInsteadOfAllRenderTargetWrites : 1;
     bool fRequiresCullFaceEnableDisableWhenDrawingLinesAfterNonLines : 1;
-<<<<<<< HEAD
-    bool fRequiresFlushBetweenNonAndInstancedDraws : 1;
-    bool fDetachStencilFromMSAABuffersBeforeReadPixels : 1;
-    int fMaxInstancesPerDrawWithoutCrashing;
-||||||| merged common ancestors
-    int fMaxInstancesPerDrawArraysWithoutCrashing;
-=======
     bool fDetachStencilFromMSAABuffersBeforeReadPixels : 1;
     bool fDontSetBaseOrMaxLevelForExternalTextures : 1;
     int fMaxInstancesPerDrawWithoutCrashing;
->>>>>>> upstream-releases
 
     uint32_t fBlitFramebufferFlags;
 

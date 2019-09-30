@@ -465,24 +465,6 @@ class MediaRecorder::Session : public PrincipalChangeObserver<MediaStreamTrack>,
   friend class EncoderErrorNotifierRunnable;
   friend class PushBlobRunnable;
   friend class DestroyRunnable;
-<<<<<<< HEAD
-
- public:
-  Session(MediaRecorder* aRecorder, int32_t aTimeSlice)
-      : mRecorder(aRecorder),
-        mMediaStreamReady(false),
-        mTimeSlice(aTimeSlice),
-        mRunningState(RunningState::Idling) {
-||||||| merged common ancestors
-  friend class TracksAvailableCallback;
-
-public:
-  Session(MediaRecorder* aRecorder, int32_t aTimeSlice)
-    : mRecorder(aRecorder)
-    , mTimeSlice(aTimeSlice)
-    , mRunningState(RunningState::Idling)
-  {
-=======
 
  public:
   Session(MediaRecorder* aRecorder, uint32_t aTimeSlice)
@@ -490,7 +472,6 @@ public:
         mMediaStreamReady(false),
         mTimeSlice(aTimeSlice),
         mRunningState(RunningState::Idling) {
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_IsMainThread());
 
     aRecorder->GetMimeType(mMimeType);
@@ -625,17 +606,9 @@ public:
       return NS_ERROR_FAILURE;
     }
 
-<<<<<<< HEAD
-    mEncoder->Suspend(TimeStamp::Now());
-    NS_DispatchToMainThread(
-        new DispatchEventRunnable(this, NS_LITERAL_STRING("pause")));
-||||||| merged common ancestors
-    mEncoder->Suspend(TimeStamp::Now());
-=======
     mEncoder->Suspend();
     NS_DispatchToMainThread(
         new DispatchEventRunnable(this, NS_LITERAL_STRING("pause")));
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -647,17 +620,9 @@ public:
       return NS_ERROR_FAILURE;
     }
 
-<<<<<<< HEAD
-    mEncoder->Resume(TimeStamp::Now());
-    NS_DispatchToMainThread(
-        new DispatchEventRunnable(this, NS_LITERAL_STRING("resume")));
-||||||| merged common ancestors
-    mEncoder->Resume(TimeStamp::Now());
-=======
     mEncoder->Resume();
     NS_DispatchToMainThread(
         new DispatchEventRunnable(this, NS_LITERAL_STRING("resume")));
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -852,21 +817,9 @@ public:
     aTrack.AddPrincipalChangeObserver(this);
   }
 
-<<<<<<< HEAD
-  bool PrincipalSubsumes(nsIPrincipal* aPrincipal) {
-    if (!mRecorder->GetOwner()) return false;
-    nsCOMPtr<nsIDocument> doc = mRecorder->GetOwner()->GetExtantDoc();
-||||||| merged common ancestors
-  bool PrincipalSubsumes(nsIPrincipal* aPrincipal)
-  {
-    if (!mRecorder->GetOwner())
-      return false;
-    nsCOMPtr<nsIDocument> doc = mRecorder->GetOwner()->GetExtantDoc();
-=======
   bool PrincipalSubsumes(nsIPrincipal* aPrincipal) {
     if (!mRecorder->GetOwner()) return false;
     nsCOMPtr<Document> doc = mRecorder->GetOwner()->GetExtantDoc();
->>>>>>> upstream-releases
     if (!doc) {
       return false;
     }
@@ -892,19 +845,9 @@ public:
 
   bool AudioNodePrincipalSubsumes() {
     MOZ_ASSERT(mRecorder->mAudioNode);
-<<<<<<< HEAD
-    nsIDocument* doc = mRecorder->mAudioNode->GetOwner()
-                           ? mRecorder->mAudioNode->GetOwner()->GetExtantDoc()
-                           : nullptr;
-||||||| merged common ancestors
-    nsIDocument* doc = mRecorder->mAudioNode->GetOwner()
-                       ? mRecorder->mAudioNode->GetOwner()->GetExtantDoc()
-                       : nullptr;
-=======
     Document* doc = mRecorder->mAudioNode->GetOwner()
                         ? mRecorder->mAudioNode->GetOwner()->GetExtantDoc()
                         : nullptr;
->>>>>>> upstream-releases
     nsCOMPtr<nsIPrincipal> principal = doc ? doc->NodePrincipal() : nullptr;
     return PrincipalSubsumes(principal);
   }
@@ -954,25 +897,6 @@ public:
             promises.AppendElement(iter.Get()->GetKey()->Shutdown());
           }
           gSessions.Clear();
-<<<<<<< HEAD
-          ShutdownPromise::All(GetCurrentThreadSerialEventTarget(), promises)
-              ->Then(GetCurrentThreadSerialEventTarget(), __func__,
-                     [ticket]() mutable {
-                       MOZ_ASSERT(gSessions.Count() == 0);
-                       // Unblock shutdown
-                       ticket = nullptr;
-                     },
-                     []() { MOZ_CRASH("Not reached"); });
-||||||| merged common ancestors
-          ShutdownPromise::All(GetCurrentThreadSerialEventTarget(), promises)->Then(
-            GetCurrentThreadSerialEventTarget(), __func__,
-            [ticket]() mutable {
-              MOZ_ASSERT(gSessions.Count() == 0);
-              // Unblock shutdown
-              ticket = nullptr;
-            },
-            []() { MOZ_CRASH("Not reached"); });
-=======
           ShutdownPromise::All(GetCurrentThreadSerialEventTarget(), promises)
               ->Then(
                   GetCurrentThreadSerialEventTarget(), __func__,
@@ -982,7 +906,6 @@ public:
                     ticket = nullptr;
                   },
                   []() { MOZ_CRASH("Not reached"); });
->>>>>>> upstream-releases
           return NS_OK;
         }
       };
@@ -1028,20 +951,9 @@ public:
     // At this stage, the API doesn't allow UA to choose the output mimeType
     // format.
 
-<<<<<<< HEAD
-    mEncoder = MediaEncoder::CreateEncoder(
-        mEncoderThread, NS_LITERAL_STRING(""), audioBitrate, videoBitrate,
-        aTrackTypes, aTrackRate);
-||||||| merged common ancestors
-    mEncoder = MediaEncoder::CreateEncoder(mEncoderThread,
-                                           NS_LITERAL_STRING(""),
-                                           audioBitrate, videoBitrate,
-                                           aTrackTypes, aTrackRate);
-=======
     mEncoder =
         MediaEncoder::CreateEncoder(mEncoderThread, mMimeType, audioBitrate,
                                     videoBitrate, aTrackTypes, aTrackRate);
->>>>>>> upstream-releases
 
     if (!mEncoder) {
       LOG(LogLevel::Error, ("Session.InitEncoder !mEncoder %p", this));
@@ -1379,17 +1291,8 @@ void MediaRecorder::SetMimeType(const nsString& aMimeType) {
 
 void MediaRecorder::GetMimeType(nsString& aMimeType) { aMimeType = mMimeType; }
 
-<<<<<<< HEAD
-void MediaRecorder::Start(const Optional<int32_t>& aTimeSlice,
-                          ErrorResult& aResult) {
-||||||| merged common ancestors
-void
-MediaRecorder::Start(const Optional<int32_t>& aTimeSlice, ErrorResult& aResult)
-{
-=======
 void MediaRecorder::Start(const Optional<uint32_t>& aTimeSlice,
                           ErrorResult& aResult) {
->>>>>>> upstream-releases
   LOG(LogLevel::Debug, ("MediaRecorder.Start %p", this));
 
   InitializeDomExceptions();
@@ -1408,23 +1311,10 @@ void MediaRecorder::Start(const Optional<uint32_t>& aTimeSlice,
     // to record, we should throw a security error.
     bool subsumes = false;
     nsPIDOMWindowInner* window;
-<<<<<<< HEAD
-    nsIDocument* doc;
-    if (!(window = GetOwner()) || !(doc = window->GetExtantDoc()) ||
-        NS_FAILED(doc->NodePrincipal()->Subsumes(mDOMStream->GetPrincipal(),
-                                                 &subsumes)) ||
-||||||| merged common ancestors
-    nsIDocument* doc;
-    if (!(window = GetOwner()) ||
-        !(doc = window->GetExtantDoc()) ||
-        NS_FAILED(doc->NodePrincipal()->Subsumes(
-                    mDOMStream->GetPrincipal(), &subsumes)) ||
-=======
     Document* doc;
     if (!(window = GetOwner()) || !(doc = window->GetExtantDoc()) ||
         NS_FAILED(doc->NodePrincipal()->Subsumes(mDOMStream->GetPrincipal(),
                                                  &subsumes)) ||
->>>>>>> upstream-releases
         !subsumes) {
       aResult.Throw(NS_ERROR_DOM_SECURITY_ERR);
       return;
@@ -1512,28 +1402,12 @@ JSObject* MediaRecorder::WrapObject(JSContext* aCx,
   return MediaRecorder_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
-    const GlobalObject& aGlobal, DOMMediaStream& aStream,
-    const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
-  nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
-      do_QueryInterface(aGlobal.GetAsSupports());
-||||||| merged common ancestors
-/* static */ already_AddRefed<MediaRecorder>
-MediaRecorder::Constructor(const GlobalObject& aGlobal,
-                           DOMMediaStream& aStream,
-                           const MediaRecorderOptions& aInitDict,
-                           ErrorResult& aRv)
-{
-  nsCOMPtr<nsPIDOMWindowInner> ownerWindow = do_QueryInterface(aGlobal.GetAsSupports());
-=======
 /* static */
 already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
     const GlobalObject& aGlobal, DOMMediaStream& aStream,
     const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
   nsCOMPtr<nsPIDOMWindowInner> ownerWindow =
       do_QueryInterface(aGlobal.GetAsSupports());
->>>>>>> upstream-releases
   if (!ownerWindow) {
     aRv.Throw(NS_ERROR_FAILURE);
     return nullptr;
@@ -1549,24 +1423,10 @@ already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
   return object.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
-    const GlobalObject& aGlobal, AudioNode& aSrcAudioNode, uint32_t aSrcOutput,
-    const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MediaRecorder>
-MediaRecorder::Constructor(const GlobalObject& aGlobal,
-                           AudioNode& aSrcAudioNode,
-                           uint32_t aSrcOutput,
-                           const MediaRecorderOptions& aInitDict,
-                           ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MediaRecorder> MediaRecorder::Constructor(
     const GlobalObject& aGlobal, AudioNode& aSrcAudioNode, uint32_t aSrcOutput,
     const MediaRecorderOptions& aInitDict, ErrorResult& aRv) {
->>>>>>> upstream-releases
   // Allow recording from audio node only when pref is on.
   if (!Preferences::GetBool("media.recorder.audio_node.enabled", false)) {
     // Pretending that this constructor is not defined.
@@ -1858,31 +1718,6 @@ RefPtr<MediaRecorder::SizeOfPromise> MediaRecorder::SizeOfExcludingThis(
     promises.AppendElement(session->SizeOfExcludingThis(aMallocSizeOf));
   }
 
-<<<<<<< HEAD
-  SizeOfPromise::All(GetCurrentThreadSerialEventTarget(), promises)
-      ->Then(GetCurrentThreadSerialEventTarget(), __func__,
-             [holder](const nsTArray<size_t>& sizes) {
-               size_t total = 0;
-               for (const size_t& size : sizes) {
-                 total += size;
-               }
-               holder->Resolve(total, __func__);
-             },
-             []() { MOZ_CRASH("Unexpected reject"); });
-||||||| merged common ancestors
-  SizeOfPromise::All(GetCurrentThreadSerialEventTarget(), promises)->Then(
-    GetCurrentThreadSerialEventTarget(), __func__,
-    [holder](const nsTArray<size_t>& sizes) {
-      size_t total = 0;
-      for (const size_t& size : sizes) {
-        total += size;
-      }
-      holder->Resolve(total, __func__);
-    },
-    []() {
-      MOZ_CRASH("Unexpected reject");
-    });
-=======
   SizeOfPromise::All(GetCurrentThreadSerialEventTarget(), promises)
       ->Then(
           GetCurrentThreadSerialEventTarget(), __func__,
@@ -1894,7 +1729,6 @@ RefPtr<MediaRecorder::SizeOfPromise> MediaRecorder::SizeOfExcludingThis(
             holder->Resolve(total, __func__);
           },
           []() { MOZ_CRASH("Unexpected reject"); });
->>>>>>> upstream-releases
 
   return promise;
 }

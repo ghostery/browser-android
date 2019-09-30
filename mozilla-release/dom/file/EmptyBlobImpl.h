@@ -17,29 +17,15 @@ class EmptyBlobImpl final : public BaseBlobImpl {
   NS_INLINE_DECL_REFCOUNTING_INHERITED(EmptyBlobImpl, BaseBlobImpl)
 
   explicit EmptyBlobImpl(const nsAString& aContentType)
-<<<<<<< HEAD
-      : BaseBlobImpl(aContentType, 0 /* aLength */) {
-||||||| merged common ancestors
-    : BaseBlobImpl(aContentType, 0 /* aLength */)
-  {
-=======
       : BaseBlobImpl(NS_LITERAL_STRING("EmptyBlobImpl"), aContentType,
                      0 /* aLength */) {
->>>>>>> upstream-releases
     mImmutable = true;
   }
 
   EmptyBlobImpl(const nsAString& aName, const nsAString& aContentType,
                 int64_t aLastModifiedDate)
-<<<<<<< HEAD
-      : BaseBlobImpl(aName, aContentType, 0, aLastModifiedDate) {
-||||||| merged common ancestors
-    : BaseBlobImpl(aName, aContentType, 0, aLastModifiedDate)
-  {
-=======
       : BaseBlobImpl(NS_LITERAL_STRING("EmptyBlobImpl"), aName, aContentType, 0,
                      aLastModifiedDate) {
->>>>>>> upstream-releases
     mImmutable = true;
   }
 

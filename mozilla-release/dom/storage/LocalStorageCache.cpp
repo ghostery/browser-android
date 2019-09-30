@@ -70,28 +70,6 @@ NS_IMETHODIMP_(void) LocalStorageCacheBridge::Release(void) {
 // LocalStorageCache
 
 LocalStorageCache::LocalStorageCache(const nsACString* aOriginNoSuffix)
-<<<<<<< HEAD
-    : mActor(nullptr),
-      mOriginNoSuffix(*aOriginNoSuffix),
-      mMonitor("LocalStorageCache"),
-      mLoaded(false),
-      mLoadResult(NS_OK),
-      mInitialized(false),
-      mPersistent(false),
-      mSessionOnlyDataSetActive(false),
-      mPreloadTelemetryRecorded(false) {
-||||||| merged common ancestors
-  : mActor(nullptr)
-  , mOriginNoSuffix(*aOriginNoSuffix)
-  , mMonitor("LocalStorageCache")
-  , mLoaded(false)
-  , mLoadResult(NS_OK)
-  , mInitialized(false)
-  , mPersistent(false)
-  , mSessionOnlyDataSetActive(false)
-  , mPreloadTelemetryRecorded(false)
-{
-=======
     : mActor(nullptr),
       mOriginNoSuffix(*aOriginNoSuffix),
       mMonitor("LocalStorageCache"),
@@ -100,7 +78,6 @@ LocalStorageCache::LocalStorageCache(const nsACString* aOriginNoSuffix)
       mInitialized(false),
       mPersistent(false),
       mPreloadTelemetryRecorded(false) {
->>>>>>> upstream-releases
   MOZ_COUNT_CTOR(LocalStorageCache);
 }
 
@@ -203,64 +180,9 @@ const nsCString LocalStorageCache::Origin() const {
   return LocalStorageManager::CreateOrigin(mOriginSuffix, mOriginNoSuffix);
 }
 
-<<<<<<< HEAD
-LocalStorageCache::Data& LocalStorageCache::DataSet(
-    const LocalStorage* aStorage) {
-  uint32_t index = GetDataSetIndex(aStorage);
-
-  if (index == kSessionSet && !mSessionOnlyDataSetActive) {
-    // Session only data set is demanded but not filled with
-    // current data set, copy to session only set now.
-
-    WaitForPreload(Telemetry::LOCALDOMSTORAGE_SESSIONONLY_PRELOAD_BLOCKING_MS);
-
-    Data& defaultSet = mData[kDefaultSet];
-    Data& sessionSet = mData[kSessionSet];
-
-    for (auto iter = defaultSet.mKeys.Iter(); !iter.Done(); iter.Next()) {
-      sessionSet.mKeys.Put(iter.Key(), iter.UserData());
-    }
-
-    mSessionOnlyDataSetActive = true;
-
-    // This updates sessionSet.mOriginQuotaUsage and also updates global usage
-    // for all session only data
-    ProcessUsageDelta(kSessionSet, defaultSet.mOriginQuotaUsage);
-  }
-
-  return mData[index];
-||||||| merged common ancestors
-LocalStorageCache::Data&
-LocalStorageCache::DataSet(const LocalStorage* aStorage)
-{
-  uint32_t index = GetDataSetIndex(aStorage);
-
-  if (index == kSessionSet && !mSessionOnlyDataSetActive) {
-    // Session only data set is demanded but not filled with
-    // current data set, copy to session only set now.
-
-    WaitForPreload(Telemetry::LOCALDOMSTORAGE_SESSIONONLY_PRELOAD_BLOCKING_MS);
-
-    Data& defaultSet = mData[kDefaultSet];
-    Data& sessionSet = mData[kSessionSet];
-
-    for (auto iter = defaultSet.mKeys.Iter(); !iter.Done(); iter.Next()) {
-      sessionSet.mKeys.Put(iter.Key(), iter.UserData());
-    }
-
-    mSessionOnlyDataSetActive = true;
-
-    // This updates sessionSet.mOriginQuotaUsage and also updates global usage
-    // for all session only data
-    ProcessUsageDelta(kSessionSet, defaultSet.mOriginQuotaUsage);
-  }
-
-  return mData[index];
-=======
 LocalStorageCache::Data& LocalStorageCache::DataSet(
     const LocalStorage* aStorage) {
   return mData[GetDataSetIndex(aStorage)];
->>>>>>> upstream-releases
 }
 
 bool LocalStorageCache::ProcessUsageDelta(const LocalStorage* aStorage,

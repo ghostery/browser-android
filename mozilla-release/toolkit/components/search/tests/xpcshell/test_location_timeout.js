@@ -60,23 +60,6 @@ add_task(async function test_location_timeout() {
   // test server is still blocked on our promise.
   equal(getProbeSum("SEARCH_SERVICE_COUNTRY_FETCH_TIME_MS"), 0);
 
-<<<<<<< HEAD
-    // should have set the flag indicating we saw a timeout.
-    let histogram = Services.telemetry.getHistogramById("SEARCH_SERVICE_COUNTRY_TIMEOUT");
-    let snapshot = histogram.snapshot();
-    deepEqual(snapshot.values, {0: 0, 1: 1, 2: 0});
-    // should not yet have SEARCH_SERVICE_COUNTRY_FETCH_TIME_MS recorded as our
-    // test server is still blocked on our promise.
-    equal(getProbeSum("SEARCH_SERVICE_COUNTRY_FETCH_TIME_MS"), 0);
-||||||| merged common ancestors
-    // should have set the flag indicating we saw a timeout.
-    let histogram = Services.telemetry.getHistogramById("SEARCH_SERVICE_COUNTRY_TIMEOUT");
-    let snapshot = histogram.snapshot();
-    deepEqual(snapshot.counts, [0, 1, 0]);
-    // should not yet have SEARCH_SERVICE_COUNTRY_FETCH_TIME_MS recorded as our
-    // test server is still blocked on our promise.
-    equal(getProbeSum("SEARCH_SERVICE_COUNTRY_FETCH_TIME_MS"), 0);
-=======
   let notification = SearchTestUtils.promiseSearchNotification(
     "geoip-lookup-xhr-complete"
   );
@@ -84,7 +67,6 @@ add_task(async function test_location_timeout() {
   // search service to notify of that the response was received.
   resolveContinuePromise();
   await notification;
->>>>>>> upstream-releases
 
   // now we *should* have a report of how long the response took even though
   // it timed out.

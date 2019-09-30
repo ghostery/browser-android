@@ -38,20 +38,8 @@ class SharedRGBImage : public Image {
  protected:
   virtual ~SharedRGBImage();
 
-<<<<<<< HEAD
- public:
-  TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override;
-
-  uint8_t* GetBuffer() const override;
-||||||| merged common ancestors
-public:
-  TextureClient* GetTextureClient(KnowsCompositor* aForwarder) override;
-
-  uint8_t* GetBuffer() const override;
-=======
  public:
   TextureClient* GetTextureClient(KnowsCompositor* aKnowsCompositor) override;
->>>>>>> upstream-releases
 
   gfx::IntSize GetSize() const override;
 

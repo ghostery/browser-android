@@ -3,23 +3,6 @@
 
 const updatesDir = FileUtils.getDir("ProfD", ["features"]);
 
-<<<<<<< HEAD
-AddonTestUtils.usePrivilegedSignatures = id => "system";
-
-add_task(async function setup() {
-  // Build the test sets
-  let dir = FileUtils.getDir("ProfD", ["sysfeatures", "app1"], true);
-  let xpi = await getSystemAddonXPI(1, "1.0");
-  xpi.copyTo(dir, "system1@tests.mozilla.org.xpi");
-
-  xpi = await getSystemAddonXPI(2, "1.0");
-  xpi.copyTo(dir, "system2@tests.mozilla.org.xpi");
-||||||| merged common ancestors
-// Build the test sets
-var dir = FileUtils.getDir("ProfD", ["sysfeatures", "app1"], true);
-do_get_file("data/system_addons/system1_1.xpi").copyTo(dir, "system1@tests.mozilla.org.xpi");
-do_get_file("data/system_addons/system2_1.xpi").copyTo(dir, "system2@tests.mozilla.org.xpi");
-=======
 AddonTestUtils.usePrivilegedSignatures = id => "system";
 
 add_task(async function setup() {
@@ -37,25 +20,6 @@ add_task(async function setup() {
 
   xpi = await getSystemAddonXPI(3, "1.0");
   xpi.copyTo(dir, "system3@tests.mozilla.org.xpi");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  dir = FileUtils.getDir("ProfD", ["sysfeatures", "app2"], true);
-  xpi = await getSystemAddonXPI(1, "2.0");
-  xpi.copyTo(dir, "system1@tests.mozilla.org.xpi");
-||||||| merged common ancestors
-dir = FileUtils.getDir("ProfD", ["sysfeatures", "app2"], true);
-do_get_file("data/system_addons/system1_2.xpi").copyTo(dir, "system1@tests.mozilla.org.xpi");
-do_get_file("data/system_addons/system3_1.xpi").copyTo(dir, "system3@tests.mozilla.org.xpi");
-=======
-  dir = FileUtils.getDir("ProfD", ["sysfeatures", "app3"], true);
-  xpi = await getSystemAddonXPI(1, "1.0");
-  xpi.copyTo(dir, "system1@tests.mozilla.org.xpi");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  xpi = await getSystemAddonXPI(3, "1.0");
-  xpi.copyTo(dir, "system3@tests.mozilla.org.xpi");
 
   dir = FileUtils.getDir("ProfD", ["sysfeatures", "app3"], true);
   xpi = await getSystemAddonXPI(1, "1.0");
@@ -64,15 +28,6 @@ do_get_file("data/system_addons/system3_1.xpi").copyTo(dir, "system3@tests.mozil
   xpi = await getSystemAddonXPI(3, "1.0");
   xpi.copyTo(dir, "system3@tests.mozilla.org.xpi");
 });
-||||||| merged common ancestors
-dir = FileUtils.getDir("ProfD", ["sysfeatures", "app3"], true);
-do_get_file("data/system_addons/system1_1_badcert.xpi").copyTo(dir, "system1@tests.mozilla.org.xpi");
-do_get_file("data/system_addons/system3_1.xpi").copyTo(dir, "system3@tests.mozilla.org.xpi");
-=======
-  xpi = await getSystemAddonXPI(3, "1.0");
-  xpi.copyTo(dir, "system3@tests.mozilla.org.xpi");
-});
->>>>>>> upstream-releases
 
 const distroDir = FileUtils.getDir("ProfD", ["sysfeatures", "app0"], true);
 registerDirectory("XREAppFeat", distroDir);
@@ -375,14 +330,6 @@ add_task(async function test_skips_additional() {
 add_task(async function test_revert() {
   manuallyUninstall(updatesDir, "system2@tests.mozilla.org");
 
-<<<<<<< HEAD
-  await overrideBuiltIns({ "system": ["system1@tests.mozilla.org", "system2@tests.mozilla.org", "system3@tests.mozilla.org", "system5@tests.mozilla.org"] });
-||||||| merged common ancestors
-  // With the add-on physically gone from disk we won't see uninstall events
-  BootstrapMonitor.clear("system2@tests.mozilla.org");
-
-  await overrideBuiltIns({ "system": ["system1@tests.mozilla.org", "system2@tests.mozilla.org", "system3@tests.mozilla.org", "system5@tests.mozilla.org"] });
-=======
   await overrideBuiltIns({
     system: [
       "system1@tests.mozilla.org",
@@ -391,7 +338,6 @@ add_task(async function test_revert() {
       "system5@tests.mozilla.org",
     ],
   });
->>>>>>> upstream-releases
   await promiseStartupManager();
 
   // With system add-on 2 gone the updated set is now invalid so it reverts to
@@ -506,16 +452,6 @@ add_task(async function test_bad_profile_cert() {
 add_task(async function test_bad_app_cert() {
   gAppInfo.version = "3";
   distroDir.leafName = "app3";
-<<<<<<< HEAD
-
-  AddonTestUtils.usePrivilegedSignatures = id => {
-    return (id === "system1@tests.mozilla.org") ? false : "system";
-  };
-
-  await overrideBuiltIns({ "system": ["system1@tests.mozilla.org", "system2@tests.mozilla.org", "system3@tests.mozilla.org", "system5@tests.mozilla.org"] });
-||||||| merged common ancestors
-  await overrideBuiltIns({ "system": ["system1@tests.mozilla.org", "system2@tests.mozilla.org", "system3@tests.mozilla.org", "system5@tests.mozilla.org"] });
-=======
 
   AddonTestUtils.usePrivilegedSignatures = id => {
     return id === "system1@tests.mozilla.org" ? false : "system";
@@ -529,7 +465,6 @@ add_task(async function test_bad_app_cert() {
       "system5@tests.mozilla.org",
     ],
   });
->>>>>>> upstream-releases
   await promiseStartupManager();
 
   // Since we updated the app version, the system addon set should be reset as well.

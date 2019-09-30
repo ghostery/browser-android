@@ -19,7 +19,6 @@ namespace dom {
 
 typedef SVGFELightingElement SVGFESpecularLightingElementBase;
 
-<<<<<<< HEAD
 class SVGFESpecularLightingElement : public SVGFESpecularLightingElementBase {
   friend nsresult(::NS_NewSVGFESpecularLightingElement(
       nsIContent** aResult,
@@ -33,34 +32,6 @@ class SVGFESpecularLightingElement : public SVGFESpecularLightingElementBase {
                              JS::Handle<JSObject*> aGivenProto) override;
 
  public:
-||||||| merged common ancestors
-class SVGFESpecularLightingElement : public SVGFESpecularLightingElementBase
-{
-  friend nsresult (::NS_NewSVGFESpecularLightingElement(nsIContent **aResult,
-                                                        already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-protected:
-  explicit SVGFESpecularLightingElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGFESpecularLightingElementBase(std::move(aNodeInfo))
-  {
-  }
-  virtual JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-public:
-=======
-class SVGFESpecularLightingElement : public SVGFESpecularLightingElementBase {
-  friend nsresult(::NS_NewSVGFESpecularLightingElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
- protected:
-  explicit SVGFESpecularLightingElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-      : SVGFESpecularLightingElementBase(std::move(aNodeInfo)) {}
-  virtual JSObject* WrapNode(JSContext* aCx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-
- public:
->>>>>>> upstream-releases
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
   virtual FilterPrimitiveDescription GetPrimitiveDescription(

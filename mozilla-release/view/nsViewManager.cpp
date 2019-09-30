@@ -22,15 +22,7 @@
 #include "nsPresContext.h"
 #include "GeckoProfiler.h"
 #include "nsRefreshDriver.h"
-<<<<<<< HEAD
-#include "mozilla/Preferences.h"
 #include "nsContentUtils.h"  // for nsAutoScriptBlocker
-||||||| merged common ancestors
-#include "mozilla/Preferences.h"
-#include "nsContentUtils.h" // for nsAutoScriptBlocker
-=======
-#include "nsContentUtils.h"  // for nsAutoScriptBlocker
->>>>>>> upstream-releases
 #include "nsLayoutUtils.h"
 #include "Layers.h"
 #include "gfxPlatform.h"
@@ -186,18 +178,9 @@ void nsViewManager::DoSetWindowDimensions(nscoord aWidth, nscoord aHeight) {
   if (!oldDim.IsEqualEdges(newDim)) {
     // Don't resize the widget. It is already being set elsewhere.
     mRootView->SetDimensions(newDim, true, false);
-<<<<<<< HEAD
-    if (mPresShell)
-      mPresShell->ResizeReflow(aWidth, aHeight, oldDim.Width(),
-                               oldDim.Height());
-||||||| merged common ancestors
-    if (mPresShell)
-      mPresShell->ResizeReflow(aWidth, aHeight, oldDim.Width(), oldDim.Height());
-=======
     if (RefPtr<PresShell> presShell = mPresShell) {
       presShell->ResizeReflow(aWidth, aHeight, oldDim.Width(), oldDim.Height());
     }
->>>>>>> upstream-releases
   }
 }
 
@@ -348,26 +331,11 @@ void nsViewManager::Refresh(nsView* aView,
         printf_stderr("--COMPOSITE-- %p\n", presShell.get());
       }
 #endif
-<<<<<<< HEAD
-      uint32_t paintFlags = nsIPresShell::PAINT_COMPOSITE;
       LayerManager* manager = widget->GetLayerManager();
-||||||| merged common ancestors
-      uint32_t paintFlags = nsIPresShell::PAINT_COMPOSITE;
-      LayerManager *manager = widget->GetLayerManager();
-=======
-      LayerManager* manager = widget->GetLayerManager();
->>>>>>> upstream-releases
       if (!manager->NeedsWidgetInvalidation()) {
         manager->FlushRendering();
       } else {
-<<<<<<< HEAD
-        mPresShell->Paint(aView, damageRegion, paintFlags);
-||||||| merged common ancestors
-        mPresShell->Paint(aView, damageRegion,
-                          paintFlags);
-=======
         presShell->Paint(aView, damageRegion, PaintFlags::PaintComposite);
->>>>>>> upstream-releases
       }
 #ifdef MOZ_DUMP_PAINTING
       if (nsLayoutUtils::InvalidationDebuggingIsEnabled()) {
@@ -414,16 +382,8 @@ void nsViewManager::ProcessPendingUpdatesForView(nsView* aView,
       view->ResetWidgetBounds(false, true);
     }
   }
-<<<<<<< HEAD
-  if (rootShell->GetViewManager() != this) {
-    return;  // presentation might have been torn down
-||||||| merged common ancestors
-  if (rootShell->GetViewManager() != this) {
-    return; // presentation might have been torn down
-=======
   if (rootPresShell->GetViewManager() != this) {
     return;  // presentation might have been torn down
->>>>>>> upstream-releases
   }
   if (aFlushDirtyRegion) {
     nsAutoScriptBlocker scriptBlocker;
@@ -492,18 +452,9 @@ void nsViewManager::ProcessPendingUpdatesPaint(nsIWidget* aWidget) {
     if (RefPtr<PresShell> presShell = mPresShell) {
 #ifdef MOZ_DUMP_PAINTING
       if (nsLayoutUtils::InvalidationDebuggingIsEnabled()) {
-<<<<<<< HEAD
-        printf_stderr(
-            "---- PAINT START ----PresShell(%p), nsView(%p), nsIWidget(%p)\n",
-            mPresShell, view, aWidget);
-||||||| merged common ancestors
-        printf_stderr("---- PAINT START ----PresShell(%p), nsView(%p), nsIWidget(%p)\n",
-                      mPresShell, view, aWidget);
-=======
         printf_stderr(
             "---- PAINT START ----PresShell(%p), nsView(%p), nsIWidget(%p)\n",
             presShell.get(), view, aWidget);
->>>>>>> upstream-releases
       }
 #endif
 
@@ -705,25 +656,10 @@ void nsViewManager::InvalidateViews(nsView* aView) {
   }
 }
 
-<<<<<<< HEAD
-void nsViewManager::WillPaintWindow(nsIWidget* aWidget) {
-  RefPtr<nsIWidget> widget(aWidget);
-  if (widget) {
-    nsView* view = nsView::GetViewFor(widget);
-    LayerManager* manager = widget->GetLayerManager();
-||||||| merged common ancestors
-void nsViewManager::WillPaintWindow(nsIWidget* aWidget)
-{
-  RefPtr<nsIWidget> widget(aWidget);
-  if (widget) {
-    nsView* view = nsView::GetViewFor(widget);
-    LayerManager* manager = widget->GetLayerManager();
-=======
 void nsViewManager::WillPaintWindow(nsIWidget* aWidget) {
   if (aWidget) {
     nsView* view = nsView::GetViewFor(aWidget);
     LayerManager* manager = aWidget->GetLayerManager();
->>>>>>> upstream-releases
     if (view &&
         (view->ForcedRepaint() || !manager->NeedsWidgetInvalidation())) {
       ProcessPendingUpdates();
@@ -759,22 +695,9 @@ bool nsViewManager::PaintWindow(nsIWidget* aWidget,
   return true;
 }
 
-<<<<<<< HEAD
-void nsViewManager::DidPaintWindow() {
-  nsCOMPtr<nsIPresShell> shell = mPresShell;
-  if (shell) {
-    shell->DidPaintWindow();
-||||||| merged common ancestors
-void nsViewManager::DidPaintWindow()
-{
-  nsCOMPtr<nsIPresShell> shell = mPresShell;
-  if (shell) {
-    shell->DidPaintWindow();
-=======
 void nsViewManager::DidPaintWindow() {
   if (RefPtr<PresShell> presShell = mPresShell) {
     presShell->DidPaintWindow();
->>>>>>> upstream-releases
   }
 }
 
@@ -824,38 +747,9 @@ void nsViewManager::DispatchEvent(WidgetGUIEvent* aEvent, nsView* aView,
     // Hold a refcount to the presshell. The continued existence of the
     // presshell will delay deletion of this view hierarchy should the event
     // want to cause its destruction in, say, some JavaScript event handler.
-<<<<<<< HEAD
-    nsCOMPtr<nsIPresShell> shell = view->GetViewManager()->GetPresShell();
-    if (shell) {
-      if (aEvent->mMessage == eMouseDown || aEvent->mMessage == eMouseUp) {
-        AutoWeakFrame weakFrame(frame);
-        shell->FlushPendingNotifications(FlushType::Layout);
-        if (!weakFrame.IsAlive()) {
-          *aStatus = nsEventStatus_eIgnore;
-          return;
-        }
-      }
-      shell->HandleEvent(frame, aEvent, false, aStatus);
-      return;
-||||||| merged common ancestors
-    nsCOMPtr<nsIPresShell> shell = view->GetViewManager()->GetPresShell();
-    if (shell) {
-      if (aEvent->mMessage == eMouseDown ||
-          aEvent->mMessage == eMouseUp) {
-        AutoWeakFrame weakFrame(frame);
-        shell->FlushPendingNotifications(FlushType::Layout);
-        if (!weakFrame.IsAlive()) {
-          *aStatus = nsEventStatus_eIgnore;
-          return;
-        }
-      }
-      shell->HandleEvent(frame, aEvent, false, aStatus);
-	  return;
-=======
     if (RefPtr<PresShell> presShell = view->GetViewManager()->GetPresShell()) {
       presShell->HandleEvent(frame, aEvent, false, aStatus);
       return;
->>>>>>> upstream-releases
     }
   }
 

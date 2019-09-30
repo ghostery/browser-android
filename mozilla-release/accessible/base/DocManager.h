@@ -41,32 +41,15 @@ class DocManager : public nsIWebProgressListener,
   /**
    * Return document accessible for the given presshell.
    */
-<<<<<<< HEAD
-  DocAccessible* GetDocAccessible(const nsIPresShell* aPresShell) {
-    if (!aPresShell) return nullptr;
-||||||| merged common ancestors
-  DocAccessible* GetDocAccessible(const nsIPresShell* aPresShell)
-  {
-    if (!aPresShell)
-      return nullptr;
-=======
   DocAccessible* GetDocAccessible(const PresShell* aPresShell) {
     if (!aPresShell) {
       return nullptr;
     }
->>>>>>> upstream-releases
 
     DocAccessible* doc = aPresShell->GetDocAccessible();
-<<<<<<< HEAD
-    if (doc) return doc;
-||||||| merged common ancestors
-    if (doc)
-      return doc;
-=======
     if (doc) {
       return doc;
     }
->>>>>>> upstream-releases
 
     return GetDocAccessible(aPresShell->GetDocument());
   }
@@ -163,28 +146,13 @@ class DocManager : public nsIWebProgressListener,
    * @param  aLoadEventType  [in] specifies the event type to fire load event,
    *                           if 0 then no event is fired
    */
-<<<<<<< HEAD
-  void HandleDOMDocumentLoad(nsIDocument* aDocument, uint32_t aLoadEventType);
-||||||| merged common ancestors
-  void HandleDOMDocumentLoad(nsIDocument* aDocument,
-                             uint32_t aLoadEventType);
-=======
   void HandleDOMDocumentLoad(dom::Document* aDocument, uint32_t aLoadEventType);
->>>>>>> upstream-releases
 
   /**
    * Add/remove 'pagehide' and 'DOMContentLoaded' event listeners.
    */
-<<<<<<< HEAD
-  void AddListeners(nsIDocument* aDocument, bool aAddPageShowListener);
-  void RemoveListeners(nsIDocument* aDocument);
-||||||| merged common ancestors
-  void AddListeners(nsIDocument *aDocument, bool aAddPageShowListener);
-  void RemoveListeners(nsIDocument* aDocument);
-=======
   void AddListeners(dom::Document* aDocument, bool aAddPageShowListener);
   void RemoveListeners(dom::Document* aDocument);
->>>>>>> upstream-releases
 
   /**
    * Create document or root accessible.
@@ -196,16 +164,8 @@ class DocManager : public nsIWebProgressListener,
    */
   void ClearDocCache();
 
-<<<<<<< HEAD
-  typedef nsRefPtrHashtable<nsPtrHashKey<const nsIDocument>, DocAccessible>
-      DocAccessibleHashtable;
-||||||| merged common ancestors
-  typedef nsRefPtrHashtable<nsPtrHashKey<const nsIDocument>, DocAccessible>
-    DocAccessibleHashtable;
-=======
   typedef nsRefPtrHashtable<nsPtrHashKey<const dom::Document>, DocAccessible>
       DocAccessibleHashtable;
->>>>>>> upstream-releases
   DocAccessibleHashtable mDocAccessibleCache;
 
   typedef nsRefPtrHashtable<nsPtrHashKey<const DocAccessible>,
@@ -226,21 +186,9 @@ class DocManager : public nsIWebProgressListener,
  * Note this returns the doc accessible for the primary pres shell if there is
  * more than one.
  */
-<<<<<<< HEAD
-inline DocAccessible* GetExistingDocAccessible(const nsIDocument* aDocument) {
-  nsIPresShell* ps = aDocument->GetShell();
-  return ps ? ps->GetDocAccessible() : nullptr;
-||||||| merged common ancestors
-inline DocAccessible*
-GetExistingDocAccessible(const nsIDocument* aDocument)
-{
-  nsIPresShell* ps = aDocument->GetShell();
-  return ps ? ps->GetDocAccessible() : nullptr;
-=======
 inline DocAccessible* GetExistingDocAccessible(const dom::Document* aDocument) {
   PresShell* presShell = aDocument->GetPresShell();
   return presShell ? presShell->GetDocAccessible() : nullptr;
->>>>>>> upstream-releases
 }
 
 }  // namespace a11y

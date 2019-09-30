@@ -187,55 +187,6 @@ impl FontContext {
         self.add_font_descriptor(font_key, &DEFAULT_FONT_DESCRIPTOR);
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/platform/windows/font.rs
-    pub fn load_system_font(font_handle: &dwrote::FontDescriptor, update: bool) -> Result<dwrote::Font, String> {
-        let system_fc = dwrote::FontCollection::get_system(update);
-        // A version of get_font_from_descriptor() that panics early to help with bug 1455848
-        if let Some(family) = system_fc.get_font_family_by_name(&font_handle.family_name) {
-            let font = family.get_first_matching_font(font_handle.weight, font_handle.stretch, font_handle.style);
-            // Exact matches only here
-            if font.weight() == font_handle.weight &&
-                font.stretch() == font_handle.stretch &&
-                font.style() == font_handle.style
-            {
-                Ok(font)
-            } else {
-                // We can't depend on the family's fonts being in a particular order, so the first match may not
-                // be an exact match, even though it is sufficiently close to be a match. As a slower fallback,
-                // try looking through all of the fonts in the family for an exact match. The caller should have
-                // verified that an exact match exists so that this search shouldn't fail.
-                (0 .. family.get_font_count()).filter_map(|idx| {
-                    let alt = family.get_font(idx);
-                    if alt.weight() == font_handle.weight &&
-                        alt.stretch() == font_handle.stretch &&
-                        alt.style() == font_handle.style
-                    {
-                        Some(alt)
-                    } else {
-                        None
-                    }
-                }).next().ok_or_else(|| {
-                    format!("font mismatch for descriptor {:?} {:?}", font_handle, font.to_descriptor())
-                })
-||||||| merged common ancestors
-    pub fn add_native_font(&mut self, font_key: &FontKey, font_handle: dwrote::FontDescriptor) {
-        if self.fonts.contains_key(font_key) {
-            return;
-        }
-
-        let system_fc = dwrote::FontCollection::system();
-        // A version of get_font_from_descriptor() that panics early to help with bug 1455848
-        let font = if let Some(family) = system_fc.get_font_family_by_name(&font_handle.family_name) {
-            let font = family.get_first_matching_font(font_handle.weight, font_handle.stretch, font_handle.style);
-            // Exact matches only here
-            if font.weight() == font_handle.weight &&
-                font.stretch() == font_handle.stretch &&
-                font.style() == font_handle.style
-            {
-                font
-            } else {
-                panic!("font mismatch for descriptor {:?} {:?}", font_handle, font.to_descriptor())
-=======
     pub fn add_native_font(&mut self, font_key: &FontKey, font_handle: NativeFontHandle) {
         if self.fonts.contains_key(font_key) {
             return;
@@ -251,33 +202,7 @@ impl FontContext {
                     FontFace { cached: Some(font.key.clone()), file: font.file.clone(), index, face },
                 );
                 return;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/platform/windows/font.rs
             }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/platform/windows/font.rs
-        } else {
-            Err(format!("missing font family for descriptor {:?}", font_handle))
-        }
-    }
-
-    pub fn add_native_font(&mut self, font_key: &FontKey, font_handle: dwrote::FontDescriptor) {
-        if self.fonts.contains_key(font_key) {
-            return;
-        }
-        // First try to load the font without updating the system font collection.
-        // If the font can't be found, try again after updating the system font collection.
-        // If even that fails, panic...
-        let font = Self::load_system_font(&font_handle, false).unwrap_or_else(|_| {
-            Self::load_system_font(&font_handle, true).unwrap()
-        });
-        let face = font.create_font_face();
-        self.fonts.insert(*font_key, face);
-||||||| merged common ancestors
-        } else {
-            panic!("missing font family for descriptor {:?}", font_handle)
-        };
-        let face = font.create_font_face();
-        self.fonts.insert(*font_key, face);
-=======
         }
         if let Some(file) = dwrote::FontFile::new_from_path(&font_handle.path) {
             // The font is not in the cache yet, so try to create the font and insert it in the cache.
@@ -295,7 +220,6 @@ impl FontContext {
         // XXX add_native_font needs to have a way to return an error
         debug!("DWrite WR failed to load font from path, using Arial instead");
         self.add_font_descriptor(font_key, &DEFAULT_FONT_DESCRIPTOR);
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/platform/windows/font.rs
     }
 
     pub fn delete_font(&mut self, font_key: &FontKey) {
@@ -627,28 +551,10 @@ impl FontContext {
             None
         };
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/platform/windows/font.rs
-        let analysis = self.create_glyph_analysis(font, key, size, transform, bitmaps);
-        let texture_type = dwrite_texture_type(font.render_mode);
-
-        let bounds = analysis.get_alpha_texture_bounds(texture_type);
-        let width = (bounds.right - bounds.left) as i32;
-        let height = (bounds.bottom - bounds.top) as i32;
-
-||||||| merged common ancestors
-        let analysis = self.create_glyph_analysis(font, key, size, transform, bitmaps);
-        let texture_type = dwrite_texture_type(font.render_mode);
-
-        let bounds = analysis.get_alpha_texture_bounds(texture_type);
-        let width = (bounds.right - bounds.left) as u32;
-        let height = (bounds.bottom - bounds.top) as u32;
-
-=======
         let (analysis, texture_type, bounds) = self.create_glyph_analysis(font, key, size, transform, bitmaps)
                                                    .or(Err(GlyphRasterError::LoadFailed))?;
         let width = (bounds.right - bounds.left) as i32;
         let height = (bounds.bottom - bounds.top) as i32;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/platform/windows/font.rs
         // Alpha texture bounds can sometimes return an empty rect
         // Such as for spaces
         if width == 0 || height == 0 {

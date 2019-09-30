@@ -10,14 +10,9 @@
 #include "GrCaps.h"
 #include "GrGpu.h"
 #include "GrGpuCommandBuffer.h"
-<<<<<<< HEAD
-#include "GrMemoryPool.h"
-||||||| merged common ancestors
-=======
 #include "GrMemoryPool.h"
 #include "GrRecordingContext.h"
 #include "GrRecordingContextPriv.h"
->>>>>>> upstream-releases
 #include "GrRect.h"
 #include "GrRenderTargetContext.h"
 #include "GrResourceAllocator.h"
@@ -317,14 +312,6 @@ bool GrRenderTargetOpList::OpChain::prependChain(OpChain* that, const GrCaps& ca
     return true;
 }
 
-<<<<<<< HEAD
-GrRenderTargetOpList::GrRenderTargetOpList(GrResourceProvider* resourceProvider,
-                                           sk_sp<GrOpMemoryPool> opMemoryPool,
-                                           GrRenderTargetProxy* proxy,
-||||||| merged common ancestors
-GrRenderTargetOpList::GrRenderTargetOpList(GrRenderTargetProxy* proxy,
-                                           GrResourceProvider* resourceProvider,
-=======
 std::unique_ptr<GrOp> GrRenderTargetOpList::OpChain::appendOp(
         std::unique_ptr<GrOp> op, GrProcessorSet::Analysis processorAnalysis,
         const DstProxy* dstProxy, const GrAppliedClip* appliedClip, const GrCaps& caps,
@@ -364,29 +351,12 @@ inline void GrRenderTargetOpList::OpChain::validate() const {
 GrRenderTargetOpList::GrRenderTargetOpList(GrResourceProvider* resourceProvider,
                                            sk_sp<GrOpMemoryPool> opMemoryPool,
                                            GrRenderTargetProxy* proxy,
->>>>>>> upstream-releases
                                            GrAuditTrail* auditTrail)
         : INHERITED(resourceProvider, std::move(opMemoryPool), proxy, auditTrail)
         , fLastClipStackGenID(SK_InvalidUniqueID)
         SkDEBUGCODE(, fNumClips(0)) {
 }
 
-<<<<<<< HEAD
-void GrRenderTargetOpList::RecordedOp::deleteOp(GrOpMemoryPool* opMemoryPool) {
-    opMemoryPool->release(std::move(fOp));
-}
-
-void GrRenderTargetOpList::deleteOps() {
-    for (int i = 0; i < fRecordedOps.count(); ++i) {
-        if (fRecordedOps[i].fOp) {
-            fRecordedOps[i].deleteOp(fOpMemoryPool.get());
-        }
-    }
-    fRecordedOps.reset();
-}
-
-||||||| merged common ancestors
-=======
 void GrRenderTargetOpList::deleteOps() {
     for (auto& chain : fOpChains) {
         chain.deleteOps(fOpMemoryPool.get());
@@ -394,7 +364,6 @@ void GrRenderTargetOpList::deleteOps() {
     fOpChains.reset();
 }
 
->>>>>>> upstream-releases
 GrRenderTargetOpList::~GrRenderTargetOpList() {
     this->deleteOps();
 }
@@ -431,19 +400,7 @@ void GrRenderTargetOpList::visitProxies_debugOnly(const GrOp::VisitProxyFunc& fu
         chain.visitProxies(func, GrOp::VisitorType::kOther);
     }
 }
-<<<<<<< HEAD
 
-static void assert_chain_bounds(const GrOp* op) {
-    SkASSERT(op->isChainHead());
-    auto headBounds = op->bounds();
-    while ((op = op->nextInChain())) {
-        SkASSERT(headBounds.contains(op->bounds()));
-    }
-}
-||||||| merged common ancestors
-=======
-
->>>>>>> upstream-releases
 #endif
 
 void GrRenderTargetOpList::onPrepare(GrOpFlushState* flushState) {
@@ -454,16 +411,8 @@ void GrRenderTargetOpList::onPrepare(GrOpFlushState* flushState) {
 #endif
 
     // Loop over the ops that haven't yet been prepared.
-<<<<<<< HEAD
-    for (int i = 0; i < fRecordedOps.count(); ++i) {
-        if (fRecordedOps[i].fOp && fRecordedOps[i].fOp->isChainHead()) {
-||||||| merged common ancestors
-    for (int i = 0; i < fRecordedOps.count(); ++i) {
-        if (fRecordedOps[i].fOp) {
-=======
     for (const auto& chain : fOpChains) {
         if (chain.head()) {
->>>>>>> upstream-releases
 #ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
             TRACE_EVENT0("skia", chain.head()->name());
 #endif
@@ -473,12 +422,6 @@ void GrRenderTargetOpList::onPrepare(GrOpFlushState* flushState) {
                 chain.appliedClip(),
                 chain.dstProxy()
             };
-<<<<<<< HEAD
-            SkDEBUGCODE(assert_chain_bounds(opArgs.fOp));
-||||||| merged common ancestors
-
-=======
->>>>>>> upstream-releases
             flushState->setOpArgs(&opArgs);
             chain.head()->prepare(flushState);
             flushState->setOpArgs(nullptr);
@@ -486,21 +429,6 @@ void GrRenderTargetOpList::onPrepare(GrOpFlushState* flushState) {
     }
 }
 
-<<<<<<< HEAD
-static GrGpuRTCommandBuffer* create_command_buffer(GrGpu* gpu,
-                                                   GrRenderTarget* rt,
-                                                   GrSurfaceOrigin origin,
-                                                   GrLoadOp colorLoadOp,
-                                                   GrColor loadClearColor,
-                                                   GrLoadOp stencilLoadOp) {
-||||||| merged common ancestors
-static std::unique_ptr<GrGpuRTCommandBuffer> create_command_buffer(GrGpu* gpu,
-                                                                   GrRenderTarget* rt,
-                                                                   GrSurfaceOrigin origin,
-                                                                   GrLoadOp colorLoadOp,
-                                                                   GrColor loadClearColor,
-                                                                   GrLoadOp stencilLoadOp) {
-=======
 static GrGpuRTCommandBuffer* create_command_buffer(GrGpu* gpu,
                                                    GrRenderTarget* rt,
                                                    GrSurfaceOrigin origin,
@@ -508,7 +436,6 @@ static GrGpuRTCommandBuffer* create_command_buffer(GrGpu* gpu,
                                                    GrLoadOp colorLoadOp,
                                                    const SkPMColor4f& loadClearColor,
                                                    GrLoadOp stencilLoadOp) {
->>>>>>> upstream-releases
     const GrGpuRTCommandBuffer::LoadAndStoreInfo kColorLoadStoreInfo {
         colorLoadOp,
         GrStoreOp::kStore,
@@ -525,44 +452,13 @@ static GrGpuRTCommandBuffer* create_command_buffer(GrGpu* gpu,
         GrStoreOp::kStore,
     };
 
-<<<<<<< HEAD
-    return gpu->getCommandBuffer(rt, origin, kColorLoadStoreInfo, stencilLoadAndStoreInfo);
-||||||| merged common ancestors
-    std::unique_ptr<GrGpuRTCommandBuffer> buffer(
-                            gpu->createCommandBuffer(rt, origin,
-                                                     kColorLoadStoreInfo,
-                                                     stencilLoadAndStoreInfo));
-    return buffer;
-}
-
-static inline void finish_command_buffer(GrGpuRTCommandBuffer* buffer) {
-    if (!buffer) {
-        return;
-    }
-
-    buffer->end();
-    buffer->submit();
-=======
     return gpu->getCommandBuffer(rt, origin, bounds, kColorLoadStoreInfo, stencilLoadAndStoreInfo);
->>>>>>> upstream-releases
 }
 
 // TODO: this is where GrOp::renderTarget is used (which is fine since it
 // is at flush time). However, we need to store the RenderTargetProxy in the
 // Ops and instantiate them here.
 bool GrRenderTargetOpList::onExecute(GrOpFlushState* flushState) {
-<<<<<<< HEAD
-    // TODO: Forcing the execution of the discard here isn't ideal since it will cause us to do a
-    // discard and then store the data back in memory so that the load op on future draws doesn't
-    // think the memory is unitialized. Ideally we would want a system where we are tracking whether
-    // the proxy itself has valid data or not, and then use that as a signal on whether we should be
-    // loading or discarding. In that world we wouldni;t need to worry about executing oplists with
-    // no ops just to do a discard.
-    if (0 == fRecordedOps.count() && GrLoadOp::kClear != fColorLoadOp &&
-        GrLoadOp::kDiscard != fColorLoadOp) {
-||||||| merged common ancestors
-    if (0 == fRecordedOps.count() && GrLoadOp::kClear != fColorLoadOp) {
-=======
     // TODO: Forcing the execution of the discard here isn't ideal since it will cause us to do a
     // discard and then store the data back in memory so that the load op on future draws doesn't
     // think the memory is unitialized. Ideally we would want a system where we are tracking whether
@@ -571,7 +467,6 @@ bool GrRenderTargetOpList::onExecute(GrOpFlushState* flushState) {
     // no ops just to do a discard.
     if (fOpChains.empty() && GrLoadOp::kClear != fColorLoadOp &&
         GrLoadOp::kDiscard != fColorLoadOp) {
->>>>>>> upstream-releases
         return false;
     }
 
@@ -580,11 +475,6 @@ bool GrRenderTargetOpList::onExecute(GrOpFlushState* flushState) {
 
     // TODO: at the very least, we want the stencil store op to always be discard (at this
     // level). In Vulkan, sub-command buffers would still need to load & store the stencil buffer.
-<<<<<<< HEAD
-    GrGpuRTCommandBuffer* commandBuffer = create_command_buffer(
-||||||| merged common ancestors
-    std::unique_ptr<GrGpuRTCommandBuffer> commandBuffer = create_command_buffer(
-=======
 
     // Make sure load ops are not kClear if the GPU needs to use draws for clears
     SkASSERT(fColorLoadOp != GrLoadOp::kClear ||
@@ -592,35 +482,19 @@ bool GrRenderTargetOpList::onExecute(GrOpFlushState* flushState) {
     SkASSERT(fStencilLoadOp != GrLoadOp::kClear ||
              !flushState->gpu()->caps()->performStencilClearsAsDraws());
     GrGpuRTCommandBuffer* commandBuffer = create_command_buffer(
->>>>>>> upstream-releases
                                                     flushState->gpu(),
                                                     fTarget.get()->peekRenderTarget(),
                                                     fTarget.get()->origin(),
-<<<<<<< HEAD
-                                                    fColorLoadOp,
-                                                    fLoadClearColor,
-||||||| merged common ancestors
-                                                    fColorLoadOp, fLoadClearColor,
-=======
                                                     fTarget.get()->getBoundsRect(),
                                                     fColorLoadOp,
                                                     fLoadClearColor,
->>>>>>> upstream-releases
                                                     fStencilLoadOp);
     flushState->setCommandBuffer(commandBuffer);
     commandBuffer->begin();
 
     // Draw all the generated geometry.
-<<<<<<< HEAD
-    for (int i = 0; i < fRecordedOps.count(); ++i) {
-        if (!fRecordedOps[i].fOp || !fRecordedOps[i].fOp->isChainHead()) {
-||||||| merged common ancestors
-    for (int i = 0; i < fRecordedOps.count(); ++i) {
-        if (!fRecordedOps[i].fOp) {
-=======
     for (const auto& chain : fOpChains) {
         if (!chain.head()) {
->>>>>>> upstream-releases
             continue;
         }
 #ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
@@ -662,11 +536,6 @@ void GrRenderTargetOpList::discard() {
     }
 }
 
-<<<<<<< HEAD
-void GrRenderTargetOpList::fullClear(GrContext* context, GrColor color) {
-||||||| merged common ancestors
-void GrRenderTargetOpList::fullClear(const GrCaps& caps, GrColor color) {
-=======
 void GrRenderTargetOpList::setStencilLoadOp(GrLoadOp op) {
     fStencilLoadOp = op;
 }
@@ -675,25 +544,7 @@ void GrRenderTargetOpList::setColorLoadOp(GrLoadOp op, const SkPMColor4f& color)
     fColorLoadOp = op;
     fLoadClearColor = color;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // This is conservative. If the opList is marked as needing a stencil buffer then there
-    // may be a prior op that writes to the stencil buffer. Although the clear will ignore the
-    // stencil buffer, following draw ops may not so we can't get rid of all the preceding ops.
-    // Beware! If we ever add any ops that have a side effect beyond modifying the stencil
-    // buffer we will need a more elaborate tracking system (skbug.com/7002).
-    if (this->isEmpty() || !fTarget.get()->asRenderTargetProxy()->needsStencil()) {
-        this->deleteOps();
-||||||| merged common ancestors
-    // This is conservative. If the opList is marked as needing a stencil buffer then there
-    // may be a prior op that writes to the stencil buffer. Although the clear will ignore the
-    // stencil buffer, following draw ops may not so we can't get rid of all the preceding ops.
-    // Beware! If we ever add any ops that have a side effect beyond modifying the stencil
-    // buffer we will need a more elaborate tracking system (skbug.com/7002).
-    if (this->isEmpty() || !fTarget.get()->asRenderTargetProxy()->needsStencil()) {
-        fRecordedOps.reset();
-=======
 bool GrRenderTargetOpList::resetForFullscreenClear() {
     // Mark the color load op as discard (this may be followed by a clearColorOnLoad call to make
     // the load op kClear, or it may be followed by an explicit op). In the event of an absClear()
@@ -711,47 +562,23 @@ bool GrRenderTargetOpList::resetForFullscreenClear() {
     // track the wait ops separately from normal ops, we have to avoid clearing out any ops.
     if (this->isEmpty() || (!fTarget.get()->asRenderTargetProxy()->needsStencil() && !fHasWaitOp)) {
         this->deleteOps();
->>>>>>> upstream-releases
         fDeferredProxies.reset();
 
-<<<<<<< HEAD
-    std::unique_ptr<GrClearOp> op(GrClearOp::Make(context, GrFixedClip::Disabled(),
-                                                  color, fTarget.get()));
-    if (!op) {
-        return;
-||||||| merged common ancestors
-    std::unique_ptr<GrClearOp> op(GrClearOp::Make(GrFixedClip::Disabled(), color, fTarget.get()));
-    if (!op) {
-        return;
-=======
         // If the opList is using a render target which wraps a vulkan command buffer, we can't do a
         // clear load since we cannot change the render pass that we are using. Thus we fall back to
         // making a clear op in this case.
         return !fTarget.get()->asRenderTargetProxy()->wrapsVkSecondaryCB();
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    this->recordOp(std::move(op), *context->contextPriv().caps());
-||||||| merged common ancestors
-    this->recordOp(std::move(op), caps);
-=======
     // Could not empty the list, so an op must be added to handle the clear
     return false;
->>>>>>> upstream-releases
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // This closely parallels GrTextureOpList::copySurface but renderTargetOpLists
 // also store the applied clip and dest proxy with the op
-<<<<<<< HEAD
-bool GrRenderTargetOpList::copySurface(GrContext* context,
-||||||| merged common ancestors
-bool GrRenderTargetOpList::copySurface(const GrCaps& caps,
-=======
 bool GrRenderTargetOpList::copySurface(GrRecordingContext* context,
->>>>>>> upstream-releases
                                        GrSurfaceProxy* dst,
                                        GrSurfaceProxy* src,
                                        const SkIRect& srcRect,
@@ -762,13 +589,7 @@ bool GrRenderTargetOpList::copySurface(GrRecordingContext* context,
         return false;
     }
 
-<<<<<<< HEAD
-    this->addOp(std::move(op), *context->contextPriv().caps());
-||||||| merged common ancestors
-    this->addOp(std::move(op), caps);
-=======
     this->addOp(std::move(op), *context->priv().caps());
->>>>>>> upstream-releases
     return true;
 }
 
@@ -781,24 +602,10 @@ void GrRenderTargetOpList::purgeOpsWithUninstantiatedProxies() {
     };
     for (OpChain& recordedOp : fOpChains) {
         hasUninstantiatedProxy = false;
-<<<<<<< HEAD
-        if (recordedOp.fOp) {
-            recordedOp.visitProxies(checkInstantiation);
-        }
-||||||| merged common ancestors
-        recordedOp.visitProxies(checkInstantiation);
-=======
         recordedOp.visitProxies(checkInstantiation, GrOp::VisitorType::kOther);
->>>>>>> upstream-releases
         if (hasUninstantiatedProxy) {
             // When instantiation of the proxy fails we drop the Op
-<<<<<<< HEAD
-            recordedOp.deleteOp(fOpMemoryPool.get());
-||||||| merged common ancestors
-            recordedOp.fOp = nullptr;
-=======
             recordedOp.deleteOps(fOpMemoryPool.get());
->>>>>>> upstream-releases
         }
     }
 }
@@ -840,75 +647,11 @@ void GrRenderTargetOpList::gatherProxyIntervals(GrResourceAllocator* alloc) cons
     }
 }
 
-<<<<<<< HEAD
-static inline bool can_reorder(const SkRect& a, const SkRect& b) { return !GrRectsOverlap(a, b); }
-
-GrOp::CombineResult GrRenderTargetOpList::combineIfPossible(const RecordedOp& a, GrOp* b,
-                                                            const GrAppliedClip* bClip,
-                                                            const DstProxy* bDstProxy,
-                                                            const GrCaps& caps) {
-    if (a.fAppliedClip) {
-        if (!bClip) {
-            return GrOp::CombineResult::kCannotCombine;
-        }
-        if (*a.fAppliedClip != *bClip) {
-            return GrOp::CombineResult::kCannotCombine;
-        }
-    } else if (bClip) {
-        return GrOp::CombineResult::kCannotCombine;
-    }
-    if (bDstProxy) {
-        if (a.fDstProxy != *bDstProxy) {
-            return GrOp::CombineResult::kCannotCombine;
-        }
-    } else if (a.fDstProxy.proxy()) {
-        return GrOp::CombineResult::kCannotCombine;
-    }
-    return a.fOp->combineIfPossible(b, caps);
-}
-
-uint32_t GrRenderTargetOpList::recordOp(std::unique_ptr<GrOp> op,
-                                        const GrCaps& caps,
-                                        GrAppliedClip* clip,
-                                        const DstProxy* dstProxy) {
-||||||| merged common ancestors
-static inline bool can_reorder(const SkRect& a, const SkRect& b) { return !GrRectsOverlap(a, b); }
-
-bool GrRenderTargetOpList::combineIfPossible(const RecordedOp& a, GrOp* b,
-                                             const GrAppliedClip* bClip,
-                                             const DstProxy* bDstProxy,
-                                             const GrCaps& caps) {
-    if (a.fAppliedClip) {
-        if (!bClip) {
-            return false;
-        }
-        if (*a.fAppliedClip != *bClip) {
-            return false;
-        }
-    } else if (bClip) {
-        return false;
-    }
-    if (bDstProxy) {
-        if (a.fDstProxy != *bDstProxy) {
-            return false;
-        }
-    } else if (a.fDstProxy.proxy()) {
-        return false;
-    }
-    return a.fOp->combineIfPossible(b, caps);
-}
-
-void GrRenderTargetOpList::recordOp(std::unique_ptr<GrOp> op,
-                                    const GrCaps& caps,
-                                    GrAppliedClip* clip,
-                                    const DstProxy* dstProxy) {
-=======
 void GrRenderTargetOpList::recordOp(
         std::unique_ptr<GrOp> op, GrProcessorSet::Analysis processorAnalysis, GrAppliedClip* clip,
         const DstProxy* dstProxy, const GrCaps& caps) {
     SkDEBUGCODE(op->validate();)
     SkASSERT(processorAnalysis.requiresDstTexture() == (dstProxy && dstProxy->proxy()));
->>>>>>> upstream-releases
     SkASSERT(fTarget.get());
 
     // A closed GrOpList should never receive new/more ops
@@ -932,66 +675,20 @@ void GrRenderTargetOpList::recordOp(
                op->bounds().fRight, op->bounds().fBottom);
     GrOP_INFO(SkTabString(op->dumpInfo(), 1).c_str());
     GrOP_INFO("\tOutcome:\n");
-<<<<<<< HEAD
-    int maxCandidates = SkTMin(kMaxOpLookback, fRecordedOps.count());
-||||||| merged common ancestors
-    int maxCandidates = SkTMin(kMaxOpLookback, fRecordedOps.count());
-    // If we don't have a valid destination render target then we cannot reorder.
-=======
     int maxCandidates = SkTMin(kMaxOpChainDistance, fOpChains.count());
->>>>>>> upstream-releases
     if (maxCandidates) {
         int i = 0;
         while (true) {
-<<<<<<< HEAD
-            const RecordedOp& candidate = fRecordedOps.fromBack(i);
-            auto combineResult = this->combineIfPossible(candidate, op.get(), clip, dstProxy, caps);
-            switch (combineResult) {
-                case GrOp::CombineResult::kMayChain:
-                    // See skbug.com/8491 for an explanation of why op chaining is disabled.
-                    break;
-                case GrOp::CombineResult::kMerged:
-                    GrOP_INFO("\t\tBackward: Combining with (%s, opID: %u)\n",
-                              candidate.fOp->name(), candidate.fOp->uniqueID());
-                    GrOP_INFO("\t\t\tBackward: Combined op info:\n");
-                    GrOP_INFO(SkTabString(candidate.fOp->dumpInfo(), 4).c_str());
-                    GR_AUDIT_TRAIL_OPS_RESULT_COMBINED(fAuditTrail, candidate.fOp.get(), op.get());
-                    fOpMemoryPool->release(std::move(op));
-                    return SK_InvalidUniqueID;
-                case GrOp::CombineResult::kCannotCombine:
-                    break;
-||||||| merged common ancestors
-            const RecordedOp& candidate = fRecordedOps.fromBack(i);
-
-            if (this->combineIfPossible(candidate, op.get(), clip, dstProxy, caps)) {
-                GrOP_INFO("\t\tBackward: Combining with (%s, opID: %u)\n", candidate.fOp->name(),
-                          candidate.fOp->uniqueID());
-                GrOP_INFO("\t\t\tBackward: Combined op info:\n");
-                GrOP_INFO(SkTabString(candidate.fOp->dumpInfo(), 4).c_str());
-                GR_AUDIT_TRAIL_OPS_RESULT_COMBINED(fAuditTrail, candidate.fOp.get(), op.get());
-                return;
-=======
             OpChain& candidate = fOpChains.fromBack(i);
             op = candidate.appendOp(std::move(op), processorAnalysis, dstProxy, clip, caps,
                                     fOpMemoryPool.get(), fAuditTrail);
             if (!op) {
                 return;
->>>>>>> upstream-releases
             }
             // Stop going backwards if we would cause a painter's order violation.
-<<<<<<< HEAD
-            if (!can_reorder(candidate.fOp->bounds(), op->bounds())) {
-                GrOP_INFO("\t\tBackward: Intersects with (%s, opID: %u)\n", candidate.fOp->name(),
-                          candidate.fOp->uniqueID());
-||||||| merged common ancestors
-            if (!can_reorder(fRecordedOps.fromBack(i).fOp->bounds(), op->bounds())) {
-                GrOP_INFO("\t\tBackward: Intersects with (%s, opID: %u)\n", candidate.fOp->name(),
-                          candidate.fOp->uniqueID());
-=======
             if (!can_reorder(candidate.bounds(), op->bounds())) {
                 GrOP_INFO("\t\tBackward: Intersects with chain (%s, head opID: %u)\n",
                           candidate.head()->name(), candidate.head()->uniqueID());
->>>>>>> upstream-releases
                 break;
             }
             if (++i == maxCandidates) {
@@ -1006,114 +703,34 @@ void GrRenderTargetOpList::recordOp(
         clip = fClipAllocator.make<GrAppliedClip>(std::move(*clip));
         SkDEBUGCODE(fNumClips++;)
     }
-<<<<<<< HEAD
-    fRecordedOps.emplace_back(std::move(op), clip, dstProxy);
-    return this->uniqueID();
-||||||| merged common ancestors
-    fRecordedOps.emplace_back(std::move(op), clip, dstProxy);
-    fRecordedOps.back().fOp->wasRecorded(this);
-=======
     fOpChains.emplace_back(std::move(op), processorAnalysis, clip, dstProxy);
->>>>>>> upstream-releases
 }
 
 void GrRenderTargetOpList::forwardCombine(const GrCaps& caps) {
     SkASSERT(!this->isClosed());
-<<<<<<< HEAD
-    GrOP_INFO("opList: %d ForwardCombine %d ops:\n", this->uniqueID(), fRecordedOps.count());
-
-    for (int i = 0; i < fRecordedOps.count() - 1; ++i) {
-        GrOp* op = fRecordedOps[i].fOp.get();
-        int maxCandidateIdx = SkTMin(i + kMaxOpLookahead, fRecordedOps.count() - 1);
-||||||| merged common ancestors
-
-    GrOP_INFO("opList: %d ForwardCombine %d ops:\n", this->uniqueID(), fRecordedOps.count());
-
-    for (int i = 0; i < fRecordedOps.count() - 1; ++i) {
-        GrOp* op = fRecordedOps[i].fOp.get();
-
-        int maxCandidateIdx = SkTMin(i + kMaxOpLookahead, fRecordedOps.count() - 1);
-=======
     GrOP_INFO("opList: %d ForwardCombine %d ops:\n", this->uniqueID(), fOpChains.count());
 
     for (int i = 0; i < fOpChains.count() - 1; ++i) {
         OpChain& chain = fOpChains[i];
         int maxCandidateIdx = SkTMin(i + kMaxOpChainDistance, fOpChains.count() - 1);
->>>>>>> upstream-releases
         int j = i + 1;
         while (true) {
-<<<<<<< HEAD
-            const RecordedOp& candidate = fRecordedOps[j];
-            auto combineResult =
-                    this->combineIfPossible(fRecordedOps[i], candidate.fOp.get(),
-                                            candidate.fAppliedClip, &candidate.fDstProxy, caps);
-            switch (combineResult) {
-                case GrOp::CombineResult::kMayChain:
-                    // See skbug.com/8491 for an explanation of why op chaining is disabled.
-                    break;
-                case GrOp::CombineResult::kMerged:
-                    GrOP_INFO("\t\t%d: (%s opID: %u) -> Combining with (%s, opID: %u)\n", i,
-                              op->name(), op->uniqueID(), candidate.fOp->name(),
-                              candidate.fOp->uniqueID());
-                    GR_AUDIT_TRAIL_OPS_RESULT_COMBINED(fAuditTrail, op, candidate.fOp.get());
-                    fOpMemoryPool->release(std::move(fRecordedOps[j].fOp));
-                    fRecordedOps[j].fOp = std::move(fRecordedOps[i].fOp);
-                    break;
-                case GrOp::CombineResult::kCannotCombine:
-                    break;
-            }
-            if (!fRecordedOps[i].fOp) {
-||||||| merged common ancestors
-            const RecordedOp& candidate = fRecordedOps[j];
-
-            if (this->combineIfPossible(fRecordedOps[i], candidate.fOp.get(),
-                                        candidate.fAppliedClip, &candidate.fDstProxy, caps)) {
-                GrOP_INFO("\t\t%d: (%s opID: %u) -> Combining with (%s, opID: %u)\n",
-                          i, op->name(), op->uniqueID(),
-                          candidate.fOp->name(), candidate.fOp->uniqueID());
-                GR_AUDIT_TRAIL_OPS_RESULT_COMBINED(fAuditTrail, op, candidate.fOp.get());
-                fRecordedOps[j].fOp = std::move(fRecordedOps[i].fOp);
-=======
             OpChain& candidate = fOpChains[j];
             if (candidate.prependChain(&chain, caps, fOpMemoryPool.get(), fAuditTrail)) {
->>>>>>> upstream-releases
                 break;
             }
             // Stop traversing if we would cause a painter's order violation.
-<<<<<<< HEAD
-            if (!can_reorder(candidate.fOp->bounds(), op->bounds())) {
-                GrOP_INFO("\t\t%d: (%s opID: %u) -> Intersects with (%s, opID: %u)\n",
-                          i, op->name(), op->uniqueID(),
-                          candidate.fOp->name(), candidate.fOp->uniqueID());
-||||||| merged common ancestors
-            if (!can_reorder(fRecordedOps[j].fOp->bounds(), op->bounds())) {
-                GrOP_INFO("\t\t%d: (%s opID: %u) -> Intersects with (%s, opID: %u)\n",
-                          i, op->name(), op->uniqueID(),
-                          candidate.fOp->name(), candidate.fOp->uniqueID());
-=======
             if (!can_reorder(chain.bounds(), candidate.bounds())) {
                 GrOP_INFO(
                         "\t\t%d: chain (%s head opID: %u) -> "
                         "Intersects with chain (%s, head opID: %u)\n",
                         i, chain.head()->name(), chain.head()->uniqueID(), candidate.head()->name(),
                         candidate.head()->uniqueID());
->>>>>>> upstream-releases
                 break;
             }
-<<<<<<< HEAD
-            if (++j > maxCandidateIdx) {
-                GrOP_INFO("\t\t%d: (%s opID: %u) -> Reached max lookahead or end of array\n", i,
-                          op->name(), op->uniqueID());
-||||||| merged common ancestors
-            ++j;
-            if (j > maxCandidateIdx) {
-                GrOP_INFO("\t\t%d: (%s opID: %u) -> Reached max lookahead or end of array\n",
-                          i, op->name(), op->uniqueID());
-=======
             if (++j > maxCandidateIdx) {
                 GrOP_INFO("\t\t%d: chain (%s opID: %u) -> Reached max lookahead or end of array\n",
                           i, chain.head()->name(), chain.head()->uniqueID());
->>>>>>> upstream-releases
                 break;
             }
         }

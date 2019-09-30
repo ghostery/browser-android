@@ -29,49 +29,6 @@ class AutoCriticalSection {
   LPCRITICAL_SECTION mSection;
 };
 
-<<<<<<< HEAD
-class ImpersonationScope {
- private:
-  bool success;
-
- public:
-  explicit ImpersonationScope(HANDLE token) {
-    success = token && SetThreadToken(nullptr, token);
-  }
-
-  MOZ_IMPLICIT operator bool() const { return success; }
-
-  ~ImpersonationScope() {
-    if (success) {
-      RevertToSelf();
-    }
-  }
-||||||| merged common ancestors
-template<>
-class nsAutoRefTraits<HKEY>
-{
-public:
-  typedef HKEY RawRef;
-  static HKEY Void()
-  {
-    return nullptr;
-  }
-=======
-template <>
-class nsAutoRefTraits<HKEY> {
- public:
-  typedef HKEY RawRef;
-  static HKEY Void() { return nullptr; }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
- private:
-  ImpersonationScope(const ImpersonationScope&) = delete;
-  ImpersonationScope& operator=(const ImpersonationScope&) = delete;
-  ImpersonationScope(ImpersonationScope&&) = delete;
-  ImpersonationScope& operator=(ImpersonationScope&&) = delete;
-};
-
 template <>
 class nsAutoRefTraits<HKEY> {
  public:
@@ -79,12 +36,6 @@ class nsAutoRefTraits<HKEY> {
   static HKEY Void() { return nullptr; }
 
   static void Release(RawRef aFD) {
-||||||| merged common ancestors
-  static void Release(RawRef aFD)
-  {
-=======
-  static void Release(RawRef aFD) {
->>>>>>> upstream-releases
     if (aFD != Void()) {
       RegCloseKey(aFD);
     }
@@ -259,24 +210,6 @@ class nsAutoRefTraits<nsHPRINTER> {
   static void Release(RawRef hPrinter) { ::ClosePrinter(hPrinter); }
 };
 
-<<<<<<< HEAD
-template <>
-class nsAutoRefTraits<PSID> {
- public:
-  typedef PSID RawRef;
-  static RawRef Void() { return nullptr; }
-
-  static void Release(RawRef aFD) {
-    if (aFD != Void()) {
-      FreeSid(aFD);
-    }
-  }
-};
-
-||||||| merged common ancestors
-
-=======
->>>>>>> upstream-releases
 typedef nsAutoRef<HKEY> nsAutoRegKey;
 typedef nsAutoRef<HDC> nsAutoHDC;
 typedef nsAutoRef<HBRUSH> nsAutoBrush;
@@ -288,7 +221,6 @@ typedef nsAutoRef<HMODULE> nsModuleHandle;
 typedef nsAutoRef<DEVMODEW*> nsAutoDevMode;
 typedef nsAutoRef<nsHGLOBAL> nsAutoGlobalMem;
 typedef nsAutoRef<nsHPRINTER> nsAutoPrinter;
-typedef nsAutoRef<PSID> nsAutoSid;
 
 namespace {
 
@@ -351,16 +283,6 @@ struct LocalFreeDeleter {
   void operator()(void* aPtr) { ::LocalFree(aPtr); }
 };
 
-<<<<<<< HEAD
-// for UnqiuePtr<_PROC_THREAD_ATTRIBUTE_LIST, ProcThreadAttributeListDeleter>
-struct ProcThreadAttributeListDeleter {
-  void operator()(void* aPtr) {
-    ::DeleteProcThreadAttributeList(
-        static_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(aPtr));
-  }
-};
-||||||| merged common ancestors
-=======
 // for UniquePtr to store a PSID
 struct FreeSidDeleter {
   void operator()(void* aPtr) { ::FreeSid(aPtr); }
@@ -369,5 +291,4 @@ struct FreeSidDeleter {
 // This typedef will work for storing a PSID in a UniquePtr and should make
 // things a bit more readable.
 typedef mozilla::UniquePtr<void, FreeSidDeleter> UniqueSidPtr;
->>>>>>> upstream-releases
 #endif

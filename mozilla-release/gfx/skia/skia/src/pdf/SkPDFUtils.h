@@ -44,17 +44,8 @@ namespace SkPDFUtils {
 
 const char* BlendModeName(SkBlendMode);
 
-<<<<<<< HEAD
-sk_sp<SkPDFArray> RectToArray(const SkRect& rect);
-sk_sp<SkPDFArray> MatrixToArray(const SkMatrix& matrix);
-||||||| merged common ancestors
-sk_sp<SkPDFArray> RectToArray(const SkRect& rect);
-sk_sp<SkPDFArray> MatrixToArray(const SkMatrix& matrix);
-void AppendTransform(const SkMatrix& matrix, SkWStream* content);
-=======
 std::unique_ptr<SkPDFArray> RectToArray(const SkRect& rect);
 std::unique_ptr<SkPDFArray> MatrixToArray(const SkMatrix& matrix);
->>>>>>> upstream-releases
 
 void MoveTo(SkScalar x, SkScalar y, SkWStream* content);
 void AppendLine(SkScalar x, SkScalar y, SkWStream* content);

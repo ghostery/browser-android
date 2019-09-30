@@ -298,97 +298,6 @@ class RequestListItem extends Component {
         onMouseDown,
         onDoubleClick,
       },
-<<<<<<< HEAD
-        columns.status && RequestListColumnStatus({ item }),
-        columns.method && RequestListColumnMethod({ item }),
-        columns.domain && RequestListColumnDomain({
-            item,
-            onSecurityIconMouseDown,
-        }),
-        columns.file && RequestListColumnFile({ item }),
-        columns.protocol && RequestListColumnProtocol({ item }),
-        columns.scheme && RequestListColumnScheme({ item }),
-        columns.remoteip && RequestListColumnRemoteIP({ item }),
-        columns.cause && RequestListColumnCause({
-          item,
-          onCauseBadgeMouseDown,
-        }),
-        columns.type && RequestListColumnType({ item }),
-        columns.cookies && RequestListColumnCookies({ connector, item }),
-        columns.setCookies && RequestListColumnSetCookies({ connector, item }),
-        columns.transferred && RequestListColumnTransferredSize({ item }),
-        columns.contentSize && RequestListColumnContentSize({ item }),
-        columns.startTime && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "start",
-        }),
-        columns.endTime && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "end",
-        }),
-        columns.responseTime && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "response",
-        }),
-        columns.duration && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "duration",
-        }),
-        columns.latency && RequestListColumnTime({
-||||||| merged common ancestors
-        columns.status && RequestListColumnStatus({ item }),
-        columns.method && RequestListColumnMethod({ item }),
-        columns.file && RequestListColumnFile({ item }),
-        columns.protocol && RequestListColumnProtocol({ item }),
-        columns.scheme && RequestListColumnScheme({ item }),
-        columns.domain && RequestListColumnDomain({
-          item,
-          onSecurityIconMouseDown,
-        }),
-        columns.remoteip && RequestListColumnRemoteIP({ item }),
-        columns.cause && RequestListColumnCause({
-          item,
-          onCauseBadgeMouseDown,
-        }),
-        columns.type && RequestListColumnType({ item }),
-        columns.cookies && RequestListColumnCookies({ connector, item }),
-        columns.setCookies && RequestListColumnSetCookies({ connector, item }),
-        columns.transferred && RequestListColumnTransferredSize({ item }),
-        columns.contentSize && RequestListColumnContentSize({ item }),
-        columns.startTime && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "start",
-        }),
-        columns.endTime && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "end",
-        }),
-        columns.responseTime && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "response",
-        }),
-        columns.duration && RequestListColumnTime({
-          connector,
-          item,
-          firstRequestStartedMillis,
-          type: "duration",
-        }),
-        columns.latency && RequestListColumnTime({
-=======
       ...COLUMN_COMPONENTS.filter(({ column }) => columns[column]).map(
         ({ column, ColumnComponent, props: columnProps }) =>
           column &&
@@ -409,7 +318,6 @@ class RequestListItem extends Component {
       ),
       ...RESPONSE_HEADERS.filter(header => columns[header]).map(header =>
         RequestListColumnResponseHeader({
->>>>>>> upstream-releases
           connector,
           item,
           header,

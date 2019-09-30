@@ -17,18 +17,8 @@
 #include "mozilla/gfx/Swizzle.h"
 #include "mozilla/Mutex.h"
 #include "mozilla/ScopeExit.h"
-<<<<<<< HEAD
 #include "nsNetUtil.h"
 #include "nsStreamUtils.h"
-#include "ImageBitmapColorUtils.h"
-#include "ImageBitmapUtils.h"
-||||||| merged common ancestors
-#include "ImageBitmapColorUtils.h"
-#include "ImageBitmapUtils.h"
-=======
-#include "nsNetUtil.h"
-#include "nsStreamUtils.h"
->>>>>>> upstream-releases
 #include "ImageUtils.h"
 #include "imgLoader.h"
 #include "imgTools.h"
@@ -419,65 +409,6 @@ class CreateImageFromRawDataInMainThreadSyncTask final
   const Maybe<IntRect>& mCropRect;
 };
 
-<<<<<<< HEAD
-static bool CheckSecurityForElements(bool aIsWriteOnly, bool aCORSUsed,
-                                     nsIPrincipal* aPrincipal) {
-  if (aIsWriteOnly || !aPrincipal) {
-    return false;
-  }
-
-  if (!aCORSUsed) {
-    nsIGlobalObject* incumbentSettingsObject = GetIncumbentGlobal();
-    if (NS_WARN_IF(!incumbentSettingsObject)) {
-      return false;
-    }
-
-    nsIPrincipal* principal = incumbentSettingsObject->PrincipalOrNull();
-    if (NS_WARN_IF(!principal) || !(principal->Subsumes(aPrincipal))) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-static bool CheckSecurityForElements(
-    const nsLayoutUtils::SurfaceFromElementResult& aRes) {
-  return CheckSecurityForElements(aRes.mIsWriteOnly, aRes.mCORSUsed,
-                                  aRes.mPrincipal);
-}
-
-||||||| merged common ancestors
-static bool
-CheckSecurityForHTMLElements(bool aIsWriteOnly, bool aCORSUsed, nsIPrincipal* aPrincipal)
-{
-  if (aIsWriteOnly || !aPrincipal) {
-    return false;
-  }
-
-  if (!aCORSUsed) {
-    nsIGlobalObject* incumbentSettingsObject = GetIncumbentGlobal();
-    if (NS_WARN_IF(!incumbentSettingsObject)) {
-      return false;
-    }
-
-    nsIPrincipal* principal = incumbentSettingsObject->PrincipalOrNull();
-    if (NS_WARN_IF(!principal) || !(principal->Subsumes(aPrincipal))) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-static bool
-CheckSecurityForHTMLElements(const nsLayoutUtils::SurfaceFromElementResult& aRes)
-{
-  return CheckSecurityForHTMLElements(aRes.mIsWriteOnly, aRes.mCORSUsed, aRes.mPrincipal);
-}
-
-=======
->>>>>>> upstream-releases
 /*
  * A wrapper to the nsLayoutUtils::SurfaceFromElement() function followed by the
  * security checking.
@@ -496,15 +427,7 @@ static already_AddRefed<SourceSurface> GetSurfaceFromElement(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  // check write-only mode
-  *aWriteOnly = !CheckSecurityForElements(res);
-||||||| merged common ancestors
-  return surface.forget();
-}
-=======
   *aWriteOnly = res.mIsWriteOnly;
->>>>>>> upstream-releases
 
   return surface.forget();
 }
@@ -555,156 +478,6 @@ void ImageBitmap::SetPictureRect(const IntRect& aRect, ErrorResult& aRv) {
   mPictureRect = FixUpNegativeDimension(aRect, aRv);
 }
 
-<<<<<<< HEAD
-static already_AddRefed<SourceSurface> ConvertColorFormatIfNeeded(
-    RefPtr<SourceSurface> aSurface) {
-  const SurfaceFormat srcFormat = aSurface->GetFormat();
-  if (srcFormat == SurfaceFormat::R8G8B8A8 ||
-      srcFormat == SurfaceFormat::B8G8R8A8 ||
-      srcFormat == SurfaceFormat::R8G8B8X8 ||
-      srcFormat == SurfaceFormat::B8G8R8X8 ||
-      srcFormat == SurfaceFormat::A8R8G8B8 ||
-      srcFormat == SurfaceFormat::X8R8G8B8) {
-    return aSurface.forget();
-  }
-
-  if (srcFormat == SurfaceFormat::A8 || srcFormat == SurfaceFormat::Depth) {
-    return nullptr;
-  }
-
-  const int bytesPerPixel = BytesPerPixel(SurfaceFormat::B8G8R8A8);
-  const IntSize dstSize = aSurface->GetSize();
-  const uint32_t dstStride = dstSize.width * bytesPerPixel;
-
-  RefPtr<DataSourceSurface> dstDataSurface =
-      Factory::CreateDataSourceSurfaceWithStride(
-          dstSize, SurfaceFormat::B8G8R8A8, dstStride);
-  if (NS_WARN_IF(!dstDataSurface)) {
-    return nullptr;
-  }
-
-  RefPtr<DataSourceSurface> srcDataSurface = aSurface->GetDataSurface();
-  if (NS_WARN_IF(!srcDataSurface)) {
-    return nullptr;
-  }
-
-  DataSourceSurface::ScopedMap srcMap(srcDataSurface, DataSourceSurface::READ);
-  DataSourceSurface::ScopedMap dstMap(dstDataSurface, DataSourceSurface::WRITE);
-  if (NS_WARN_IF(!srcMap.IsMapped()) || NS_WARN_IF(!dstMap.IsMapped())) {
-    return nullptr;
-  }
-
-  int rv = 0;
-  if (srcFormat == SurfaceFormat::R8G8B8) {
-    rv = RGB24ToBGRA32(srcMap.GetData(), srcMap.GetStride(), dstMap.GetData(),
-                       dstMap.GetStride(), dstSize.width, dstSize.height);
-  } else if (srcFormat == SurfaceFormat::B8G8R8) {
-    rv = BGR24ToBGRA32(srcMap.GetData(), srcMap.GetStride(), dstMap.GetData(),
-                       dstMap.GetStride(), dstSize.width, dstSize.height);
-  } else if (srcFormat == SurfaceFormat::HSV) {
-    rv = HSVToBGRA32((const float*)srcMap.GetData(), srcMap.GetStride(),
-                     dstMap.GetData(), dstMap.GetStride(), dstSize.width,
-                     dstSize.height);
-  } else if (srcFormat == SurfaceFormat::Lab) {
-    rv = LabToBGRA32((const float*)srcMap.GetData(), srcMap.GetStride(),
-                     dstMap.GetData(), dstMap.GetStride(), dstSize.width,
-                     dstSize.height);
-  }
-
-  if (NS_WARN_IF(rv != 0)) {
-    return nullptr;
-  }
-
-  return dstDataSurface.forget();
-}
-
-||||||| merged common ancestors
-void
-ImageBitmap::SetIsCroppingAreaOutSideOfSourceImage(const IntSize& aSourceSize,
-                                                   const Maybe<IntRect>& aCroppingRect)
-{
-  // No cropping at all.
-  if (aCroppingRect.isNothing()) {
-    mIsCroppingAreaOutSideOfSourceImage = false;
-    return;
-  }
-
-  if (aCroppingRect->X() < 0 || aCroppingRect->Y() < 0 ||
-      aCroppingRect->Width() > aSourceSize.width ||
-      aCroppingRect->Height() > aSourceSize.height) {
-    mIsCroppingAreaOutSideOfSourceImage = true;
-  }
-}
-
-static already_AddRefed<SourceSurface>
-ConvertColorFormatIfNeeded(RefPtr<SourceSurface> aSurface)
-{
-  const SurfaceFormat srcFormat = aSurface->GetFormat();
-  if (srcFormat == SurfaceFormat::R8G8B8A8 ||
-      srcFormat == SurfaceFormat::B8G8R8A8 ||
-      srcFormat == SurfaceFormat::R8G8B8X8 ||
-      srcFormat == SurfaceFormat::B8G8R8X8 ||
-      srcFormat == SurfaceFormat::A8R8G8B8 ||
-      srcFormat == SurfaceFormat::X8R8G8B8) {
-    return aSurface.forget();
-  }
-
-  if (srcFormat == SurfaceFormat::A8 ||
-      srcFormat == SurfaceFormat::Depth) {
-    return nullptr;
-  }
-
-  const int bytesPerPixel = BytesPerPixel(SurfaceFormat::B8G8R8A8);
-  const IntSize dstSize = aSurface->GetSize();
-  const uint32_t dstStride = dstSize.width * bytesPerPixel;
-
-  RefPtr<DataSourceSurface> dstDataSurface =
-    Factory::CreateDataSourceSurfaceWithStride(dstSize,
-                                               SurfaceFormat::B8G8R8A8,
-                                               dstStride);
-  if (NS_WARN_IF(!dstDataSurface)) {
-    return nullptr;
-  }
-
-  RefPtr<DataSourceSurface> srcDataSurface = aSurface->GetDataSurface();
-  if (NS_WARN_IF(!srcDataSurface)) {
-    return nullptr;
-  }
-
-  DataSourceSurface::ScopedMap srcMap(srcDataSurface, DataSourceSurface::READ);
-  DataSourceSurface::ScopedMap dstMap(dstDataSurface, DataSourceSurface::WRITE);
-  if (NS_WARN_IF(!srcMap.IsMapped()) || NS_WARN_IF(!dstMap.IsMapped())) {
-    return nullptr;
-  }
-
-  int rv = 0;
-  if (srcFormat == SurfaceFormat::R8G8B8) {
-    rv = RGB24ToBGRA32(srcMap.GetData(), srcMap.GetStride(),
-                       dstMap.GetData(), dstMap.GetStride(),
-                       dstSize.width, dstSize.height);
-  } else if (srcFormat == SurfaceFormat::B8G8R8) {
-    rv = BGR24ToBGRA32(srcMap.GetData(), srcMap.GetStride(),
-                       dstMap.GetData(), dstMap.GetStride(),
-                       dstSize.width, dstSize.height);
-  } else if (srcFormat == SurfaceFormat::HSV) {
-    rv = HSVToBGRA32((const float*)srcMap.GetData(), srcMap.GetStride(),
-                     dstMap.GetData(), dstMap.GetStride(),
-                     dstSize.width, dstSize.height);
-  } else if (srcFormat == SurfaceFormat::Lab) {
-    rv = LabToBGRA32((const float*)srcMap.GetData(), srcMap.GetStride(),
-                     dstMap.GetData(), dstMap.GetStride(),
-                     dstSize.width, dstSize.height);
-  }
-
-  if (NS_WARN_IF(rv != 0)) {
-    return nullptr;
-  }
-
-  return dstDataSurface.forget();
-}
-
-=======
->>>>>>> upstream-releases
 /*
  * The functionality of PrepareForDrawTarget method:
  * (1) Get a SourceSurface from the mData (which is a layers::Image).
@@ -849,20 +622,9 @@ UniquePtr<ImageBitmapCloneData> ImageBitmap::ToCloneData() const {
   return result;
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateFromSourceSurface(
-    nsIGlobalObject* aGlobal, gfx::SourceSurface* aSource, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateFromSourceSurface(nsIGlobalObject* aGlobal,
-                                     gfx::SourceSurface* aSource,
-                                     ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateFromSourceSurface(
     nsIGlobalObject* aGlobal, gfx::SourceSurface* aSource, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<layers::Image> data = CreateImageFromSurface(aSource);
   RefPtr<ImageBitmap> ret =
       new ImageBitmap(aGlobal, data, false /* writeOnly */);
@@ -870,19 +632,9 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateFromSourceSurface(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateFromCloneData(
-    nsIGlobalObject* aGlobal, ImageBitmapCloneData* aData) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateFromCloneData(nsIGlobalObject* aGlobal,
-                                 ImageBitmapCloneData* aData)
-{
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateFromCloneData(
     nsIGlobalObject* aGlobal, ImageBitmapCloneData* aData) {
->>>>>>> upstream-releases
   RefPtr<layers::Image> data = CreateImageFromSurface(aData->mSurface);
 
   RefPtr<ImageBitmap> ret =
@@ -895,32 +647,12 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateFromCloneData(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateFromOffscreenCanvas(nsIGlobalObject* aGlobal,
-                                       OffscreenCanvas& aOffscreenCanvas,
-                                       ErrorResult& aRv) {
-  // Check write-only mode.
-  bool writeOnly = aOffscreenCanvas.IsWriteOnly();
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateFromOffscreenCanvas(nsIGlobalObject* aGlobal,
-                                       OffscreenCanvas& aOffscreenCanvas,
-                                       ErrorResult& aRv)
-{
-  // Check origin-clean.
-  if (aOffscreenCanvas.IsWriteOnly()) {
-    aRv.Throw(NS_ERROR_DOM_SECURITY_ERR);
-    return nullptr;
-  }
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateFromOffscreenCanvas(
     nsIGlobalObject* aGlobal, OffscreenCanvas& aOffscreenCanvas,
     ErrorResult& aRv) {
   // Check write-only mode.
   bool writeOnly = aOffscreenCanvas.IsWriteOnly();
->>>>>>> upstream-releases
 
   nsLayoutUtils::SurfaceFromElementResult res =
       nsLayoutUtils::SurfaceFromOffscreenCanvas(
@@ -942,28 +674,16 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateFromOffscreenCanvas(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
-    nsIGlobalObject* aGlobal, HTMLImageElement& aImageEl,
-    const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateInternal(nsIGlobalObject* aGlobal, HTMLImageElement& aImageEl,
-                            const Maybe<IntRect>& aCropRect, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
     nsIGlobalObject* aGlobal, HTMLImageElement& aImageEl,
     const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
->>>>>>> upstream-releases
   // Check if the image element is completely available or not.
   if (!aImageEl.Complete()) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
   }
 
-<<<<<<< HEAD
   bool writeOnly = true;
 
   // Get the SourceSurface out from the image element and then do security
@@ -980,24 +700,9 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
 
   if (NS_WARN_IF(!data)) {
     aRv.Throw(NS_ERROR_NOT_AVAILABLE);
-||||||| merged common ancestors
-  // Check if the image element is a bitmap (e.g. it's a vector graphic) or not.
-  if (!HasRasterImage(aImageEl)) {
-    aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
-=======
-  bool writeOnly = true;
-
-  // Get the SourceSurface out from the image element and then do security
-  // checking.
-  RefPtr<SourceSurface> surface =
-      GetSurfaceFromElement(aGlobal, aImageEl, &writeOnly, aRv);
-
-  if (NS_WARN_IF(aRv.Failed())) {
->>>>>>> upstream-releases
     return nullptr;
   }
 
-<<<<<<< HEAD
   RefPtr<ImageBitmap> ret = new ImageBitmap(aGlobal, data, writeOnly);
 
   // Set the picture rectangle.
@@ -1008,13 +713,21 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   return ret.forget();
 }
 
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
+/* static */
+already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
     nsIGlobalObject* aGlobal, SVGImageElement& aImageEl,
     const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
   bool writeOnly = true;
 
-||||||| merged common ancestors
-=======
+  // Get the SourceSurface out from the image element and then do security
+  // checking.
+  RefPtr<SourceSurface> surface =
+      GetSurfaceFromElement(aGlobal, aImageEl, &writeOnly, aRv);
+
+  if (NS_WARN_IF(aRv.Failed())) {
+    return nullptr;
+  }
+
   // Create ImageBitmap.
   RefPtr<layers::Image> data = CreateImageFromSurface(surface);
 
@@ -1035,58 +748,10 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
 
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
-    nsIGlobalObject* aGlobal, SVGImageElement& aImageEl,
-    const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
-  bool writeOnly = true;
-
->>>>>>> upstream-releases
-  // Get the SourceSurface out from the image element and then do security
-  // checking.
-  RefPtr<SourceSurface> surface =
-      GetSurfaceFromElement(aGlobal, aImageEl, &writeOnly, aRv);
-
-  if (NS_WARN_IF(aRv.Failed())) {
-    return nullptr;
-  }
-
-  // Create ImageBitmap.
-  RefPtr<layers::Image> data = CreateImageFromSurface(surface);
-
-  if (NS_WARN_IF(!data)) {
-    aRv.Throw(NS_ERROR_NOT_AVAILABLE);
-    return nullptr;
-  }
-
-  RefPtr<ImageBitmap> ret = new ImageBitmap(aGlobal, data, writeOnly);
-
-  // Set the picture rectangle.
-  if (ret && aCropRect.isSome()) {
-    ret->SetPictureRect(aCropRect.ref(), aRv);
-  }
-
-  return ret.forget();
-}
-
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
     nsIGlobalObject* aGlobal, HTMLVideoElement& aVideoEl,
     const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
   aVideoEl.MarkAsContentSource(
       mozilla::dom::HTMLVideoElement::CallerAPI::CREATE_IMAGEBITMAP);
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateInternal(nsIGlobalObject* aGlobal, HTMLVideoElement& aVideoEl,
-                            const Maybe<IntRect>& aCropRect, ErrorResult& aRv)
-{
-  aVideoEl.MarkAsContentSource(mozilla::dom::HTMLVideoElement::CallerAPI::CREATE_IMAGEBITMAP);
-=======
-/* static */
-already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
-    nsIGlobalObject* aGlobal, HTMLVideoElement& aVideoEl,
-    const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
-  aVideoEl.MarkAsContentSource(
-      mozilla::dom::HTMLVideoElement::CallerAPI::CREATE_IMAGEBITMAP);
->>>>>>> upstream-releases
 
   // Check network state.
   if (aVideoEl.NetworkState() == NETWORK_EMPTY) {
@@ -1106,17 +771,8 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   nsCOMPtr<nsIPrincipal> principal = aVideoEl.GetCurrentVideoPrincipal();
   bool hadCrossOriginRedirects = aVideoEl.HadCrossOriginRedirects();
   bool CORSUsed = aVideoEl.GetCORSMode() != CORS_NONE;
-<<<<<<< HEAD
-  bool writeOnly = !CheckSecurityForElements(false, CORSUsed, principal);
-||||||| merged common ancestors
-  if (!CheckSecurityForHTMLElements(false, CORSUsed, principal)) {
-    aRv.Throw(NS_ERROR_DOM_SECURITY_ERR);
-    return nullptr;
-  }
-=======
   bool writeOnly =
       CheckWriteOnlySecurity(CORSUsed, principal, hadCrossOriginRedirects);
->>>>>>> upstream-releases
 
   // Create ImageBitmap.
   RefPtr<layers::Image> data = aVideoEl.GetCurrentImage();
@@ -1134,21 +790,10 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
-    nsIGlobalObject* aGlobal, HTMLCanvasElement& aCanvasEl,
-    const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateInternal(nsIGlobalObject* aGlobal, HTMLCanvasElement& aCanvasEl,
-                            const Maybe<IntRect>& aCropRect, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
     nsIGlobalObject* aGlobal, HTMLCanvasElement& aCanvasEl,
     const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (aCanvasEl.Width() == 0 || aCanvasEl.Height() == 0) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
@@ -1212,21 +857,10 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
-    nsIGlobalObject* aGlobal, ImageData& aImageData,
-    const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateInternal(nsIGlobalObject* aGlobal, ImageData& aImageData,
-                            const Maybe<IntRect>& aCropRect, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
     nsIGlobalObject* aGlobal, ImageData& aImageData,
     const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
->>>>>>> upstream-releases
   // Copy data into SourceSurface.
   dom::Uint8ClampedArray array;
   DebugOnly<bool> inited = array.Init(aImageData.GetDataObject());
@@ -1280,21 +914,6 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
-    nsIGlobalObject* aGlobal, CanvasRenderingContext2D& aCanvasCtx,
-    const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
-  nsCOMPtr<nsPIDOMWindowInner> win = do_QueryInterface(aGlobal);
-  nsGlobalWindowInner* window = nsGlobalWindowInner::Cast(win);
-  if (NS_WARN_IF(!window) || !window->GetExtantDoc()) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateInternal(nsIGlobalObject* aGlobal, CanvasRenderingContext2D& aCanvasCtx,
-                            const Maybe<IntRect>& aCropRect, ErrorResult& aRv)
-{
-  // Check origin-clean.
-  if (aCanvasCtx.GetCanvas()->IsWriteOnly()) {
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
     nsIGlobalObject* aGlobal, CanvasRenderingContext2D& aCanvasCtx,
@@ -1302,21 +921,10 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   nsCOMPtr<nsPIDOMWindowInner> win = do_QueryInterface(aGlobal);
   nsGlobalWindowInner* window = nsGlobalWindowInner::Cast(win);
   if (NS_WARN_IF(!window) || !window->GetExtantDoc()) {
->>>>>>> upstream-releases
     aRv.Throw(NS_ERROR_DOM_SECURITY_ERR);
     return nullptr;
   }
 
-<<<<<<< HEAD
-  window->GetExtantDoc()->WarnOnceAbout(
-      nsIDocument::eCreateImageBitmapCanvasRenderingContext2D);
-
-  // Check write-only mode.
-  bool writeOnly =
-      aCanvasCtx.GetCanvas()->IsWriteOnly() || aCanvasCtx.IsWriteOnly();
-
-||||||| merged common ancestors
-=======
   window->GetExtantDoc()->WarnOnceAbout(
       Document::eCreateImageBitmapCanvasRenderingContext2D);
 
@@ -1324,7 +932,6 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   bool writeOnly =
       aCanvasCtx.GetCanvas()->IsWriteOnly() || aCanvasCtx.IsWriteOnly();
 
->>>>>>> upstream-releases
   RefPtr<SourceSurface> surface = aCanvasCtx.GetSurfaceSnapshot();
 
   if (NS_WARN_IF(!surface)) {
@@ -1357,21 +964,10 @@ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
   return ret.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
-    nsIGlobalObject* aGlobal, ImageBitmap& aImageBitmap,
-    const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageBitmap>
-ImageBitmap::CreateInternal(nsIGlobalObject* aGlobal, ImageBitmap& aImageBitmap,
-                            const Maybe<IntRect>& aCropRect, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<ImageBitmap> ImageBitmap::CreateInternal(
     nsIGlobalObject* aGlobal, ImageBitmap& aImageBitmap,
     const Maybe<IntRect>& aCropRect, ErrorResult& aRv) {
->>>>>>> upstream-releases
   if (!aImageBitmap.mData) {
     aRv.Throw(NS_ERROR_DOM_INVALID_STATE_ERR);
     return nullptr;
@@ -1588,21 +1184,10 @@ static void AsyncCreateImageBitmapFromBlob(Promise* aPromise,
   NS_DispatchToCurrentThread(task);
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<Promise> ImageBitmap::Create(
-    nsIGlobalObject* aGlobal, const ImageBitmapSource& aSrc,
-    const Maybe<gfx::IntRect>& aCropRect, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<Promise>
-ImageBitmap::Create(nsIGlobalObject* aGlobal, const ImageBitmapSource& aSrc,
-                    const Maybe<gfx::IntRect>& aCropRect, ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<Promise> ImageBitmap::Create(
     nsIGlobalObject* aGlobal, const ImageBitmapSource& aSrc,
     const Maybe<gfx::IntRect>& aCropRect, ErrorResult& aRv) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aGlobal);
 
   RefPtr<Promise> promise = Promise::Create(aGlobal, aRv);
@@ -1671,26 +1256,11 @@ already_AddRefed<Promise> ImageBitmap::Create(
   return promise.forget();
 }
 
-<<<<<<< HEAD
-/*static*/ JSObject* ImageBitmap::ReadStructuredClone(
-    JSContext* aCx, JSStructuredCloneReader* aReader, nsIGlobalObject* aParent,
-    const nsTArray<RefPtr<DataSourceSurface>>& aClonedSurfaces,
-    uint32_t aIndex) {
-||||||| merged common ancestors
-/*static*/ JSObject*
-ImageBitmap::ReadStructuredClone(JSContext* aCx,
-                                 JSStructuredCloneReader* aReader,
-                                 nsIGlobalObject* aParent,
-                                 const nsTArray<RefPtr<DataSourceSurface>>& aClonedSurfaces,
-                                 uint32_t aIndex)
-{
-=======
 /*static*/
 JSObject* ImageBitmap::ReadStructuredClone(
     JSContext* aCx, JSStructuredCloneReader* aReader, nsIGlobalObject* aParent,
     const nsTArray<RefPtr<DataSourceSurface>>& aClonedSurfaces,
     uint32_t aIndex) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aCx);
   MOZ_ASSERT(aReader);
   // aParent might be null.
@@ -1752,24 +1322,11 @@ JSObject* ImageBitmap::ReadStructuredClone(
   return &(value.toObject());
 }
 
-<<<<<<< HEAD
-/*static*/ bool ImageBitmap::WriteStructuredClone(
-    JSStructuredCloneWriter* aWriter,
-    nsTArray<RefPtr<DataSourceSurface>>& aClonedSurfaces,
-    ImageBitmap* aImageBitmap) {
-||||||| merged common ancestors
-/*static*/ bool
-ImageBitmap::WriteStructuredClone(JSStructuredCloneWriter* aWriter,
-                                  nsTArray<RefPtr<DataSourceSurface>>& aClonedSurfaces,
-                                  ImageBitmap* aImageBitmap)
-{
-=======
 /*static*/
 bool ImageBitmap::WriteStructuredClone(
     JSStructuredCloneWriter* aWriter,
     nsTArray<RefPtr<DataSourceSurface>>& aClonedSurfaces,
     ImageBitmap* aImageBitmap) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aWriter);
   MOZ_ASSERT(aImageBitmap);
 
@@ -1834,25 +1391,10 @@ size_t BindingJSObjectMallocBytes(ImageBitmap* aBitmap) {
   return aBitmap->GetAllocatedSize();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<CreateImageBitmapFromBlob>
-CreateImageBitmapFromBlob::Create(Promise* aPromise, nsIGlobalObject* aGlobal,
-                                  Blob& aBlob, const Maybe<IntRect>& aCropRect,
-                                  nsIEventTarget* aMainThreadEventTarget) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<CreateImageBitmapFromBlob>
-CreateImageBitmapFromBlob::Create(Promise* aPromise,
-                                  nsIGlobalObject* aGlobal,
-                                  Blob& aBlob,
-                                  const Maybe<IntRect>& aCropRect,
-                                  nsIEventTarget* aMainThreadEventTarget)
-{
-=======
 /* static */
 already_AddRefed<CreateImageBitmapFromBlob> CreateImageBitmapFromBlob::Create(
     Promise* aPromise, nsIGlobalObject* aGlobal, Blob& aBlob,
     const Maybe<IntRect>& aCropRect, nsIEventTarget* aMainThreadEventTarget) {
->>>>>>> upstream-releases
   // Get the internal stream of the blob.
   nsCOMPtr<nsIInputStream> stream;
   ErrorResult error;

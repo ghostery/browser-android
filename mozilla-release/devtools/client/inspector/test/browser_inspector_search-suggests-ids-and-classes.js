@@ -29,29 +29,6 @@ const KEY_STATES = [
   ["VK_BACK_SPACE", []],
   // Test that mixed tags, classes and ids are grouped by types, sorted by
   // count and alphabetical order
-<<<<<<< HEAD
-  ["b", [
-    ["button", 3],
-    ["body", 1],
-    [".bc", 3],
-    [".ba", 1],
-    [".bb", 1],
-    ["#ba", 1],
-    ["#bb", 1],
-    ["#bc", 1],
-  ]],
-||||||| merged common ancestors
-  ["b", [
-    ["button", 3],
-    ["body", 1],
-    [".bc", 3],
-    [".ba", 1],
-    [".bb", 1],
-    ["#ba", 1],
-    ["#bb", 1],
-    ["#bc", 1]
-  ]],
-=======
   [
     "b",
     [
@@ -65,7 +42,6 @@ const KEY_STATES = [
       ["#bc", 1],
     ],
   ],
->>>>>>> upstream-releases
 ];
 
 const TEST_URL = `<span class="span" id="span">

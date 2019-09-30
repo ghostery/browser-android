@@ -23,19 +23,9 @@ struct SpecialObject : public JSObject {
 };
 
 struct ErrorResult {
-<<<<<<< HEAD
-  bool hasObj;
-  JSObject *obj;
-  void trace() {}
-||||||| merged common ancestors
-    bool hasObj;
-    JSObject *obj;
-    void trace() {}
-=======
   bool hasObj;
   JSObject* obj;
   void trace() {}
->>>>>>> upstream-releases
 } ANNOTATE("Suppressed GC Pointer");
 
 struct OkContainer {
@@ -44,13 +34,7 @@ struct OkContainer {
 };
 
 struct UnrootedPointer {
-<<<<<<< HEAD
-  JSObject *obj;
-||||||| merged common ancestors
-    JSObject *obj;
-=======
   JSObject* obj;
->>>>>>> upstream-releases
 };
 
 template <typename T>
@@ -62,21 +46,14 @@ extern void js_GC() ANNOTATE("GC Call") ANNOTATE("Slow");
 
 void js_GC() {}
 
-<<<<<<< HEAD
-void root_arg(JSObject *obj, JSObject *random) {
-||||||| merged common ancestors
-void root_arg(JSObject *obj, JSObject *random)
-{
-=======
 void root_arg(JSObject* obj, JSObject* random) {
->>>>>>> upstream-releases
   // Use all these types so they get included in the output.
   SpecialObject so;
   UnrootedPointer up;
   Bogon b;
   OkContainer okc;
-  Rooted<JSObject *> ro;
-  Rooted<SpecialObject *> rso;
+  Rooted<JSObject*> ro;
+  Rooted<SpecialObject*> rso;
 
   obj = random;
 

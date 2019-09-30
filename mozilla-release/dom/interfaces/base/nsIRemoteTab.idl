@@ -12,16 +12,6 @@ webidl WindowGlobalParent;
 [builtinclass, scriptable, uuid(8e49f7b0-1f98-4939-bf91-e9c39cd56434)]
 interface nsIRemoteTab : nsISupports
 {
-<<<<<<< HEAD:mozilla-release/dom/interfaces/base/nsITabParent.idl
-  void getChildProcessOffset(out int32_t aCssX, out int32_t aCssY);
-
-||||||| merged common ancestors
-  void getChildProcessOffset(out int32_t aCssX, out int32_t aCssY);
-
-  readonly attribute boolean useAsyncPanZoom;
-
-=======
->>>>>>> upstream-releases:mozilla-release/dom/interfaces/base/nsIRemoteTab.idl
   /**
    * Manages the docshell active state of the remote browser. Setting the
    * docShell to be active will also cause it to render layers and upload
@@ -123,20 +113,6 @@ interface nsIRemoteTab : nsISupports
    * specified filename. Returns whether the process is being recorded.
    */
   bool saveRecording(in AString aFileName);
-<<<<<<< HEAD:mozilla-release/dom/interfaces/base/nsITabParent.idl
-
-  /**
-   * Asynchronously retrieve a JSON string representing a log of the
-   * content blocking events happened so far in the current tab from the
-   * content process.
-   *
-   * This returns a Promise which resolves to a string on success, and is
-   * rejected on failure.  For documentation on the string format, please
-   * see nsISecureBrowserUI.contentBlockingLogJSON.
-   */
-  Promise getContentBlockingLog();
-||||||| merged common ancestors
-=======
 
   /**
    * Asynchronously retrieve a JSON string representing a log of the
@@ -170,5 +146,4 @@ interface nsIRemoteTab : nsISupports
    * Notify the remote tab that the resolution has changed.
    */
   [noscript] void notifyResolutionChanged();
->>>>>>> upstream-releases:mozilla-release/dom/interfaces/base/nsIRemoteTab.idl
 };

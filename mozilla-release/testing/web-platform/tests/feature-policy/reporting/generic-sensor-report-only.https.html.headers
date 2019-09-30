@@ -1,6 +1,1 @@
-<<<<<<< HEAD
-Feature-Policy: ambient-light-sensor-report-only 'none'; accelerometer-report-only 'none'; gyroscope-report-only 'none'; magnetometer-report-only 'none'
-||||||| merged common ancestors
-=======
 Feature-Policy-Report-Only: ambient-light-sensor 'none'; accelerometer 'none'; gyroscope 'none'; magnetometer 'none'
->>>>>>> upstream-releases

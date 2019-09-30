@@ -91,21 +91,9 @@ pub fn png(
     let (fb_size, data, settings) = match surface {
         ReadSurface::Screen => {
             let dim = window.get_inner_size();
-<<<<<<< HEAD:mozilla-release/gfx/wr/wrench/src/png.rs
-            let rect = DeviceIntRect::new(DeviceIntPoint::zero(), dim);
-            let data = wrench.renderer
-                .read_pixels_rgba8(rect);
-            (rect.size, data, SaveSettings {
-||||||| merged common ancestors
-            let rect = DeviceUintRect::new(DeviceUintPoint::zero(), dim);
-            let data = wrench.renderer
-                .read_pixels_rgba8(rect);
-            (rect.size, data, SaveSettings {
-=======
             let rect = FramebufferIntSize::new(dim.width, dim.height).into();
             let data = wrench.renderer.read_pixels_rgba8(rect);
             (dim, data, SaveSettings {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/wrench/src/png.rs
                 flip_vertical: true,
                 try_crop: true,
             })

@@ -37,42 +37,16 @@
 #endif
 
 #ifdef STRING_BUFFER_CANARY
-<<<<<<< HEAD
-#define CHECK_STRING_BUFFER_CANARY(c)                      \
-  do {                                                     \
-    if ((c) != CANARY_OK) {                                \
-      MOZ_CRASH_UNSAFE_PRINTF("Bad canary value 0x%x", c); \
-    }                                                      \
-  } while (0)
-||||||| merged common ancestors
-#define CHECK_STRING_BUFFER_CANARY(c)                                     \
-  do {                                                                    \
-    if ((c) != CANARY_OK) {                                               \
-      MOZ_CRASH_UNSAFE_PRINTF("Bad canary value 0x%x", c);                  \
-    }                                                                     \
-  } while(0)
-=======
 #  define CHECK_STRING_BUFFER_CANARY(c)                      \
     do {                                                     \
       if ((c) != CANARY_OK) {                                \
         MOZ_CRASH_UNSAFE_PRINTF("Bad canary value 0x%x", c); \
       }                                                      \
     } while (0)
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define CHECK_STRING_BUFFER_CANARY(c) \
-  do {                                \
-  } while (0)
-||||||| merged common ancestors
-#define CHECK_STRING_BUFFER_CANARY(c)                                     \
-  do {                                                                    \
-  } while(0)
-=======
 #  define CHECK_STRING_BUFFER_CANARY(c) \
     do {                                \
     } while (0)
->>>>>>> upstream-releases
 #endif
 
 using mozilla::Atomic;
@@ -135,13 +109,7 @@ class nsStringStats {
   AtomicInt mAdoptFreeCount;
 };
 static nsStringStats gStringStats;
-<<<<<<< HEAD
-#define STRING_STAT_INCREMENT(_s) (gStringStats.m##_s##Count)++
-||||||| merged common ancestors
-#define STRING_STAT_INCREMENT(_s) (gStringStats.m ## _s ## Count)++
-=======
 #  define STRING_STAT_INCREMENT(_s) (gStringStats.m##_s##Count)++
->>>>>>> upstream-releases
 #else
 #  define STRING_STAT_INCREMENT(_s)
 #endif

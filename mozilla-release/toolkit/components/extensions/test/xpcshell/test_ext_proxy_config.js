@@ -257,82 +257,6 @@ add_task(async function test_browser_settings() {
     }
   );
 
-<<<<<<< HEAD
-  await testProxy(
-    {
-      proxyType: "manual",
-      http: "http://www.mozilla.org",
-      ftp: "ftp://www.mozilla.org",
-      ssl: "https://www.mozilla.org",
-      socks: "mozilla.org",
-      socksVersion: 4,
-      passthrough: ".mozilla.org",
-    },
-    {
-      "network.proxy.type": proxySvc.PROXYCONFIG_MANUAL,
-      "network.proxy.http": "www.mozilla.org",
-      "network.proxy.http_port": 80,
-      "network.proxy.share_proxy_settings": false,
-      "network.proxy.ftp": "www.mozilla.org",
-      "network.proxy.ftp_port": 21,
-      "network.proxy.ssl": "www.mozilla.org",
-      "network.proxy.ssl_port": 443,
-      "network.proxy.socks": "mozilla.org",
-      "network.proxy.socks_port": 1080,
-      "network.proxy.socks_version": 4,
-      "network.proxy.no_proxies_on": ".mozilla.org",
-    },
-    {
-      proxyType: "manual",
-      http: "www.mozilla.org:80",
-      httpProxyAll: false,
-      ftp: "www.mozilla.org:21",
-      ssl: "www.mozilla.org:443",
-      socks: "mozilla.org:1080",
-      socksVersion: 4,
-      passthrough: ".mozilla.org",
-    }
-  );
-
-
-  await testProxy(
-    {
-      proxyType: "manual",
-      http: "http://www.mozilla.org:80",
-      ftp: "ftp://www.mozilla.org:21",
-      ssl: "https://www.mozilla.org:443",
-      socks: "mozilla.org:1080",
-      socksVersion: 4,
-      passthrough: ".mozilla.org",
-    },
-    {
-      "network.proxy.type": proxySvc.PROXYCONFIG_MANUAL,
-      "network.proxy.http": "www.mozilla.org",
-      "network.proxy.http_port": 80,
-      "network.proxy.share_proxy_settings": false,
-      "network.proxy.ftp": "www.mozilla.org",
-      "network.proxy.ftp_port": 21,
-      "network.proxy.ssl": "www.mozilla.org",
-      "network.proxy.ssl_port": 443,
-      "network.proxy.socks": "mozilla.org",
-      "network.proxy.socks_port": 1080,
-      "network.proxy.socks_version": 4,
-      "network.proxy.no_proxies_on": ".mozilla.org",
-    },
-    {
-      proxyType: "manual",
-      http: "www.mozilla.org:80",
-      httpProxyAll: false,
-      ftp: "www.mozilla.org:21",
-      ssl: "www.mozilla.org:443",
-      socks: "mozilla.org:1080",
-      socksVersion: 4,
-      passthrough: ".mozilla.org",
-    }
-  );
-
-||||||| merged common ancestors
-=======
   await testProxy(
     {
       proxyType: "manual",
@@ -441,7 +365,6 @@ add_task(async function test_browser_settings() {
     }
   );
 
->>>>>>> upstream-releases
   // Test resetting values.
   await testProxy(
     {

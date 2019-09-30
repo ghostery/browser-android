@@ -231,30 +231,14 @@ already_AddRefed<BlobImpl> Deserialize(const IPCBlob& aIPCBlob);
 
 // These 4 methods serialize aBlobImpl into aIPCBlob using the right manager.
 
-<<<<<<< HEAD
-nsresult Serialize(BlobImpl* aBlobImpl, nsIContentChild* aManager,
-                   IPCBlob& aIPCBlob);
-||||||| merged common ancestors
-nsresult
-Serialize(BlobImpl* aBlobImpl, nsIContentChild* aManager, IPCBlob& aIPCBlob);
-=======
 nsresult Serialize(BlobImpl* aBlobImpl, ContentChild* aManager,
                    IPCBlob& aIPCBlob);
->>>>>>> upstream-releases
 
 nsresult Serialize(BlobImpl* aBlobImpl,
                    mozilla::ipc::PBackgroundChild* aManager, IPCBlob& aIPCBlob);
 
-<<<<<<< HEAD
-nsresult Serialize(BlobImpl* aBlobImpl, nsIContentParent* aManager,
-                   IPCBlob& aIPCBlob);
-||||||| merged common ancestors
-nsresult
-Serialize(BlobImpl* aBlobImpl, nsIContentParent* aManager, IPCBlob& aIPCBlob);
-=======
 nsresult Serialize(BlobImpl* aBlobImpl, ContentParent* aManager,
                    IPCBlob& aIPCBlob);
->>>>>>> upstream-releases
 
 nsresult Serialize(BlobImpl* aBlobImpl,
                    mozilla::ipc::PBackgroundParent* aManager,
@@ -273,17 +257,8 @@ namespace ipc {
 // be successfully serialized, a warning will be produced and a nullptr will be
 // sent over the wire. When Read()-ing a BlobImpl,
 // __always make sure to handle null!__
-<<<<<<< HEAD
-template <>
-struct IPDLParamTraits<mozilla::dom::BlobImpl> {
-||||||| merged common ancestors
-template<>
-struct IPDLParamTraits<mozilla::dom::BlobImpl>
-{
-=======
 template <>
 struct IPDLParamTraits<mozilla::dom::BlobImpl*> {
->>>>>>> upstream-releases
   static void Write(IPC::Message* aMsg, IProtocol* aActor,
                     mozilla::dom::BlobImpl* aParam);
   static bool Read(const IPC::Message* aMsg, PickleIterator* aIter,

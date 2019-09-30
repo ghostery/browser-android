@@ -25,45 +25,12 @@ namespace mozilla {
 // of a series animation functions according to the rules of SMIL composition
 // including prioritising animations.
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.h
-class nsSMILCompositor : public PLDHashEntryHdr {
- public:
-  typedef nsSMILTargetIdentifier KeyType;
-||||||| merged common ancestors
-class nsSMILCompositor : public PLDHashEntryHdr
-{
-public:
-  typedef nsSMILTargetIdentifier KeyType;
-=======
 class SMILCompositor : public PLDHashEntryHdr {
  public:
   typedef SMILTargetIdentifier KeyType;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.h
   typedef const KeyType& KeyTypeRef;
   typedef const KeyType* KeyTypePointer;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.h
-  explicit nsSMILCompositor(KeyTypePointer aKey)
-      : mKey(*aKey), mForceCompositing(false) {}
-  nsSMILCompositor(nsSMILCompositor&& toMove)
-      : PLDHashEntryHdr(std::move(toMove)),
-        mKey(std::move(toMove.mKey)),
-        mAnimationFunctions(std::move(toMove.mAnimationFunctions)),
-        mForceCompositing(false) {}
-  ~nsSMILCompositor() {}
-||||||| merged common ancestors
-  explicit nsSMILCompositor(KeyTypePointer aKey)
-   : mKey(*aKey),
-     mForceCompositing(false)
-  { }
-  nsSMILCompositor(nsSMILCompositor&& toMove)
-    : PLDHashEntryHdr(std::move(toMove)),
-      mKey(std::move(toMove.mKey)),
-      mAnimationFunctions(std::move(toMove.mAnimationFunctions)),
-      mForceCompositing(false)
-  { }
-  ~nsSMILCompositor() { }
-=======
   explicit SMILCompositor(KeyTypePointer aKey)
       : mKey(*aKey), mForceCompositing(false) {}
   SMILCompositor(SMILCompositor&& toMove) noexcept
@@ -71,7 +38,6 @@ class SMILCompositor : public PLDHashEntryHdr {
         mKey(std::move(toMove.mKey)),
         mAnimationFunctions(std::move(toMove.mAnimationFunctions)),
         mForceCompositing(false) {}
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.h
 
   // PLDHashEntryHdr methods
   KeyTypeRef GetKey() const { return mKey; }
@@ -109,15 +75,7 @@ class SMILCompositor : public PLDHashEntryHdr {
   //
   // @param aBaseComputedStyle  An optional ComputedStyle which, if set, will be
   //                           used when fetching the base style.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.h
-  mozilla::UniquePtr<nsISMILAttr> CreateSMILAttr(
-      mozilla::ComputedStyle* aBaseComputedStyle);
-||||||| merged common ancestors
-  mozilla::UniquePtr<nsISMILAttr>
-  CreateSMILAttr(mozilla::ComputedStyle* aBaseComputedStyle);
-=======
   UniquePtr<SMILAttr> CreateSMILAttr(ComputedStyle* aBaseComputedStyle);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.h
 
   // Returns the CSS property this compositor should animate, or
   // eCSSProperty_UNKNOWN if this compositor does not animate a CSS property.
@@ -161,12 +119,6 @@ class SMILCompositor : public PLDHashEntryHdr {
   SMILValue mCachedBaseValue;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILCompositor.h
-#endif  // NS_SMILCOMPOSITOR_H_
-||||||| merged common ancestors
-#endif // NS_SMILCOMPOSITOR_H_
-=======
 }  // namespace mozilla
 
 #endif  // mozilla_SMILCompositor_h
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILCompositor.h

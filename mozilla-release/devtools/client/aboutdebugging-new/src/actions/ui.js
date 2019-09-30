@@ -14,17 +14,6 @@ const {
   ADB_ADDON_STATUS_UPDATED,
   ADB_READY_UPDATED,
   DEBUG_TARGET_COLLAPSIBILITY_UPDATED,
-<<<<<<< HEAD
-  NETWORK_LOCATIONS_UPDATED,
-  PAGE_SELECTED,
-  PAGE_TYPES,
-  USB_RUNTIMES_SCAN_START,
-  USB_RUNTIMES_SCAN_SUCCESS,
-||||||| merged common ancestors
-  NETWORK_LOCATIONS_UPDATED,
-  PAGE_SELECTED,
-  PAGES,
-=======
   HIDE_PROFILER_DIALOG,
   NETWORK_LOCATIONS_UPDATE_FAILURE,
   NETWORK_LOCATIONS_UPDATE_START,
@@ -37,7 +26,6 @@ const {
   SHOW_PROFILER_DIALOG,
   USB_RUNTIMES_SCAN_START,
   USB_RUNTIMES_SCAN_SUCCESS,
->>>>>>> upstream-releases
 } = require("../constants");
 
 const NetworkLocationsModule = require("../modules/network-locations");
@@ -48,52 +36,8 @@ const Actions = require("./index");
 
 function selectPage(page, runtimeId) {
   return async (dispatch, getState) => {
-<<<<<<< HEAD
-    const isSamePage = (oldPage, newPage) => {
-      if (newPage === PAGE_TYPES.RUNTIME && oldPage === PAGE_TYPES.RUNTIME) {
-        return runtimeId === getState().runtimes.selectedRuntimeId;
-      }
-      return newPage === oldPage;
-    };
-
-    const currentPage = getState().ui.selectedPage;
-    // Nothing to dispatch if the page is the same as the current page, or
-    // if we are not providing any page.
-    // Note: maybe we should have a PAGE_SELECTED_FAILURE action for proper logging
-    if (!page || isSamePage(currentPage, page)) {
-      return;
-    }
-||||||| merged common ancestors
-    const currentPage = getState().ui.selectedPage;
-    // Nothing to dispatch if the page is the same as the current page.
-    if (page === currentPage) {
-      return;
-    }
-=======
     dispatch({ type: SELECT_PAGE_START });
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Stop watching current runtime, if currently on a RUNTIME page.
-    if (currentPage === PAGE_TYPES.RUNTIME) {
-      const currentRuntimeId = getState().runtimes.selectedRuntimeId;
-      await dispatch(Actions.unwatchRuntime(currentRuntimeId));
-    }
-
-    // Start watching current runtime, if moving to a RUNTIME page.
-    if (page === PAGE_TYPES.RUNTIME) {
-      await dispatch(Actions.watchRuntime(runtimeId));
-||||||| merged common ancestors
-    // Stop watching current runtime, if currently on a DEVICE or THIS_FIREFOX page.
-    if (_isRuntimePage(currentPage)) {
-      const currentRuntimeId = getState().runtimes.selectedRuntimeId;
-      await dispatch(Actions.unwatchRuntime(currentRuntimeId));
-    }
-
-    // Start watching current runtime, if moving to a DEVICE or THIS_FIREFOX page.
-    if (_isRuntimePage(page)) {
-      await dispatch(Actions.watchRuntime(runtimeId));
-=======
     try {
       const isSamePage = (oldPage, newPage) => {
         if (newPage === PAGE_TYPES.RUNTIME && oldPage === PAGE_TYPES.RUNTIME) {
@@ -139,16 +83,7 @@ function selectPage(page, runtimeId) {
       dispatch({ type: SELECT_PAGE_SUCCESS, page });
     } catch (e) {
       dispatch({ type: SELECT_PAGE_FAILURE, error: e });
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-
-    dispatch({ type: PAGE_SELECTED, page, runtimeId });
-||||||| merged common ancestors
-
-    dispatch({ type: PAGE_SELECTED, page });
-=======
->>>>>>> upstream-releases
   };
 }
 
@@ -219,27 +154,8 @@ function uninstallAdbAddon() {
       await adbAddon.uninstall();
       dispatch({ type: ADB_ADDON_UNINSTALL_SUCCESS });
     } catch (e) {
-<<<<<<< HEAD
       dispatch({ type: ADB_ADDON_UNINSTALL_FAILURE, error: e });
     }
-  };
-}
-
-function scanUSBRuntimes() {
-  return async (dispatch, getState) => {
-    // do not re-scan if we are already doing it
-    if (getState().ui.isScanningUsb) {
-      return;
-||||||| merged common ancestors
-      dispatch({ type: ADB_ADDON_UNINSTALL_FAILURE, error: e.message });
-=======
-      dispatch({ type: ADB_ADDON_UNINSTALL_FAILURE, error: e });
->>>>>>> upstream-releases
-    }
-
-    dispatch({ type: USB_RUNTIMES_SCAN_START });
-    await refreshUSBRuntimes();
-    dispatch({ type: USB_RUNTIMES_SCAN_SUCCESS });
   };
 }
 

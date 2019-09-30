@@ -610,16 +610,8 @@ PluginVersion:
 
 ProcessType:
   description: >
-<<<<<<< HEAD
-    Type of the process that crashed, can hold the values "content", "plugin",
-    "gpu" or "rdd" currently.
-||||||| merged common ancestors
-    Type of the process that crashed, can hold the values "content", "plugin" or
-    "gpu" currently.
-=======
     Type of the process that crashed, the possible values are defined in
     GeckoProcessTypes.h.
->>>>>>> upstream-releases
   type: string
 
 ProductName:

@@ -36,34 +36,6 @@ GrVkTexture::GrVkTexture(GrVkGpu* gpu,
     }
 }
 
-<<<<<<< HEAD
-GrVkTexture::GrVkTexture(GrVkGpu* gpu,
-                         Wrapped,
-                         const GrSurfaceDesc& desc,
-                         const GrVkImageInfo& info,
-                         sk_sp<GrVkImageLayout> layout,
-                         const GrVkImageView* view,
-                         GrMipMapsStatus mipMapsStatus,
-                         GrBackendObjectOwnership ownership)
-        : GrSurface(gpu, desc)
-        , GrVkImage(info, std::move(layout), ownership)
-        , INHERITED(gpu, desc, GrTextureType::k2D, mipMapsStatus)
-        , fTextureView(view) {
-||||||| merged common ancestors
-GrVkTexture::GrVkTexture(GrVkGpu* gpu,
-                         Wrapped,
-                         const GrSurfaceDesc& desc,
-                         const GrVkImageInfo& info,
-                         const GrVkImageView* view,
-                         GrMipMapsStatus mipMapsStatus,
-                         GrBackendObjectOwnership ownership)
-    : GrSurface(gpu, desc)
-    , GrVkImage(info, ownership)
-    , INHERITED(gpu, desc, kTexture2DSampler_GrSLType, highest_filter_mode(desc.fConfig),
-                mipMapsStatus)
-    , fTextureView(view)
-    , fLinearTextureView(nullptr) {
-=======
 GrVkTexture::GrVkTexture(GrVkGpu* gpu, const GrSurfaceDesc& desc, const GrVkImageInfo& info,
                          sk_sp<GrVkImageLayout> layout, const GrVkImageView* view,
                          GrMipMapsStatus mipMapsStatus, GrBackendObjectOwnership ownership,
@@ -72,7 +44,6 @@ GrVkTexture::GrVkTexture(GrVkGpu* gpu, const GrSurfaceDesc& desc, const GrVkImag
         , GrVkImage(info, std::move(layout), ownership)
         , INHERITED(gpu, desc, GrTextureType::k2D, mipMapsStatus)
         , fTextureView(view) {
->>>>>>> upstream-releases
     SkASSERT((GrMipMapsStatus::kNotAllocated == mipMapsStatus) == (1 == info.fLevelCount));
     if (ioType == kRead_GrIOType) {
         this->setReadOnly();
@@ -121,33 +92,15 @@ sk_sp<GrVkTexture> GrVkTexture::MakeNewTexture(GrVkGpu* gpu, SkBudgeted budgeted
 
 sk_sp<GrVkTexture> GrVkTexture::MakeWrappedTexture(GrVkGpu* gpu, const GrSurfaceDesc& desc,
                                                    GrWrapOwnership wrapOwnership,
-<<<<<<< HEAD
-                                                   const GrVkImageInfo& info,
-                                                   sk_sp<GrVkImageLayout> layout) {
-||||||| merged common ancestors
-                                                   const GrVkImageInfo* info) {
-    SkASSERT(info);
-=======
                                                    GrWrapCacheable cacheable, GrIOType ioType,
                                                    const GrVkImageInfo& info,
                                                    sk_sp<GrVkImageLayout> layout) {
->>>>>>> upstream-releases
     // Wrapped textures require both image and allocation (because they can be mapped)
     SkASSERT(VK_NULL_HANDLE != info.fImage && VK_NULL_HANDLE != info.fAlloc.fMemory);
 
-<<<<<<< HEAD
-    const GrVkImageView* imageView = GrVkImageView::Create(gpu, info.fImage, info.fFormat,
-                                                           GrVkImageView::kColor_Type,
-                                                           info.fLevelCount);
-||||||| merged common ancestors
-    const GrVkImageView* imageView = GrVkImageView::Create(gpu, info->fImage, info->fFormat,
-                                                           GrVkImageView::kColor_Type,
-                                                           info->fLevelCount);
-=======
     const GrVkImageView* imageView = GrVkImageView::Create(
             gpu, info.fImage, info.fFormat, GrVkImageView::kColor_Type, info.fLevelCount,
             info.fYcbcrConversionInfo);
->>>>>>> upstream-releases
     if (!imageView) {
         return nullptr;
     }
@@ -157,16 +110,8 @@ sk_sp<GrVkTexture> GrVkTexture::MakeWrappedTexture(GrVkGpu* gpu, const GrSurface
 
     GrBackendObjectOwnership ownership = kBorrow_GrWrapOwnership == wrapOwnership
             ? GrBackendObjectOwnership::kBorrowed : GrBackendObjectOwnership::kOwned;
-<<<<<<< HEAD
-    return sk_sp<GrVkTexture>(new GrVkTexture(gpu, kWrapped, desc, info, std::move(layout),
-                                              imageView, mipMapsStatus, ownership));
-||||||| merged common ancestors
-    return sk_sp<GrVkTexture>(new GrVkTexture(gpu, kWrapped, desc, *info, imageView,
-                                              mipMapsStatus, ownership));
-=======
     return sk_sp<GrVkTexture>(new GrVkTexture(gpu, desc, info, std::move(layout), imageView,
                                               mipMapsStatus, ownership, cacheable, ioType));
->>>>>>> upstream-releases
 }
 
 GrVkTexture::~GrVkTexture() {
@@ -224,79 +169,6 @@ const GrVkImageView* GrVkTexture::textureView() {
     return fTextureView;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-bool GrVkTexture::reallocForMipmap(GrVkGpu* gpu, uint32_t mipLevels) {
-    if (mipLevels == 1) {
-        // don't need to do anything for a 1x1 texture
-        return false;
-    }
-
-    const GrVkResource* oldResource = this->resource();
-
-    // We shouldn't realloc something that doesn't belong to us
-    if (fIsBorrowed) {
-        return false;
-    }
-
-    bool renderTarget = SkToBool(this->asRenderTarget());
-
-    VkImageUsageFlags usageFlags = VK_IMAGE_USAGE_SAMPLED_BIT;
-    if (renderTarget) {
-        usageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-    }
-    usageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-
-    GrVkImage::ImageDesc imageDesc;
-    imageDesc.fImageType = VK_IMAGE_TYPE_2D;
-    imageDesc.fFormat = fInfo.fFormat;
-    imageDesc.fWidth = this->width();
-    imageDesc.fHeight = this->height();
-    imageDesc.fLevels = mipLevels;
-    imageDesc.fSamples = 1;
-    imageDesc.fImageTiling = VK_IMAGE_TILING_OPTIMAL;
-    imageDesc.fUsageFlags = usageFlags;
-    imageDesc.fMemProps = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-
-    GrVkImageInfo info;
-    if (!GrVkImage::InitImageInfo(gpu, imageDesc, &info)) {
-        return false;
-    }
-
-    // have to create a new image view for new resource
-    const GrVkImageView* oldView = fTextureView;
-    VkImage image = info.fImage;
-    const GrVkImageView* textureView = GrVkImageView::Create(gpu, image, info.fFormat,
-                                                             GrVkImageView::kColor_Type, mipLevels);
-    if (!textureView) {
-        GrVkImage::DestroyImageInfo(gpu, &info);
-        return false;
-    }
-
-    if (renderTarget) {
-        GrVkTextureRenderTarget* texRT = static_cast<GrVkTextureRenderTarget*>(this);
-        if (!texRT->updateForMipmap(gpu, info)) {
-            GrVkImage::DestroyImageInfo(gpu, &info);
-            return false;
-        }
-    }
-
-    oldResource->unref(gpu);
-    oldView->unref(gpu);
-    if (fLinearTextureView) {
-        fLinearTextureView->unref(gpu);
-        fLinearTextureView = nullptr;
-    }
-
-    this->setNewResource(info.fImage, info.fAlloc, info.fImageTiling);
-    fTextureView = textureView;
-    fInfo = info;
-    // SetMaxMipMapLevel stores the max level not the number of levels
-    this->texturePriv().setMaxMipMapLevel(mipLevels-1);
-
-    return true;
-}
-=======
 void GrVkTexture::addIdleProc(sk_sp<GrRefCntedCallback> idleProc, IdleState type) {
     INHERITED::addIdleProc(idleProc, type);
     if (type == IdleState::kFinished) {
@@ -364,4 +236,3 @@ void GrVkTexture::removeFinishIdleProcs() {
     SkASSERT(resourceIdx == resource->idleProcCnt());
     fIdleProcs = procsToKeep;
 }
->>>>>>> upstream-releases

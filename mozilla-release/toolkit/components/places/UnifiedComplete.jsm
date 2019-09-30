@@ -55,37 +55,6 @@ const QUERYINDEX_URL = 1;
 const QUERYINDEX_TITLE = 2;
 const QUERYINDEX_BOOKMARKED = 3;
 const QUERYINDEX_BOOKMARKTITLE = 4;
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-const QUERYINDEX_TAGS          = 5;
-const QUERYINDEX_VISITCOUNT    = 6;
-const QUERYINDEX_TYPED         = 7;
-const QUERYINDEX_PLACEID       = 8;
-const QUERYINDEX_SWITCHTAB     = 9;
-const QUERYINDEX_FRECENCY      = 10;
-
-||||||| merged common ancestors
-const QUERYINDEX_TAGS          = 5;
-const QUERYINDEX_VISITCOUNT    = 6;
-const QUERYINDEX_TYPED         = 7;
-const QUERYINDEX_PLACEID       = 8;
-const QUERYINDEX_SWITCHTAB     = 9;
-const QUERYINDEX_FRECENCY      = 10;
-
-// The special characters below can be typed into the urlbar to either restrict
-// the search to visited history, bookmarked, tagged pages; or force a match on
-// just the title text or url.
-const TOKEN_TO_BEHAVIOR_MAP = new Map([
-  ["^", "history"],
-  ["*", "bookmark"],
-  ["+", "tag"],
-  ["%", "openpage"],
-  ["~", "typed"],
-  ["?", "searches"],
-  ["#", "title"],
-  ["$", "url"],
-]);
-
-=======
 const QUERYINDEX_TAGS = 5;
 //    QUERYINDEX_VISITCOUNT    = 6;
 //    QUERYINDEX_TYPED         = 7;
@@ -93,7 +62,6 @@ const QUERYINDEX_PLACEID = 8;
 const QUERYINDEX_SWITCHTAB = 9;
 const QUERYINDEX_FRECENCY = 10;
 
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
 // If a URL starts with one of these prefixes, then we don't provide search
 // suggestions for it.
 const DISALLOWED_URLLIKE_PREFIXES = ["http", "https", "ftp"];
@@ -382,15 +350,6 @@ XPCOMUtils.defineLazyPreferenceGetter(
   "services.sync.username"
 );
 
-// The special characters below can be typed into the urlbar to either restrict
-// the search to visited history, bookmarked, tagged pages; or force a match on
-// just the title text or url.
-XPCOMUtils.defineLazyGetter(this, "TOKEN_TO_BEHAVIOR_MAP", () => new Map(
-  Object.entries(UrlbarTokenizer.RESTRICT).map(
-    ([type, char]) => [char, type.toLowerCase()]
-  )
-));
-
 function setTimeout(callback, ms) {
   let timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
   timer.initWithCallback(callback, ms, timer.TYPE_ONE_SHOT);
@@ -608,38 +567,6 @@ function substringAfter(sourceStr, targetStr) {
 }
 
 /**
- * Returns the portion of a string starting at the index where another string
- * begins.
- *
- * @param   {string} sourceStr
- *          The string to search within.
- * @param   {string} targetStr
- *          The string to search for.
- * @returns {string} The substring within sourceStr starting at targetStr, or
- *          the empty string if targetStr does not occur in sourceStr.
- */
-function substringAt(sourceStr, targetStr) {
-  let index = sourceStr.indexOf(targetStr);
-  return index < 0 ? "" : sourceStr.substr(index);
-}
-
-/**
- * Returns the portion of a string starting at the index where another string
- * ends.
- *
- * @param   {string} sourceStr
- *          The string to search within.
- * @param   {string} targetStr
- *          The string to search for.
- * @returns {string} The substring within sourceStr where targetStr ends, or the
- *          empty string if targetStr does not occur in sourceStr.
- */
-function substringAfter(sourceStr, targetStr) {
-  let index = sourceStr.indexOf(targetStr);
-  return index < 0 ? "" : sourceStr.substr(index + targetStr.length);
-}
-
-/**
  * Manages a single instance of an autocomplete search.
  *
  * The first three parameters all originate from the similarly named parameters
@@ -751,40 +678,6 @@ function Search(
       ? firstToken
       : null;
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-  let unfilteredTokens = getUnfilteredSearchTokens(this._searchString);
-
-  // We handle any leading restriction character specially, in particular for
-  // a search restriction we also handle the case where there's no space before
-  // the query, like "?porcupine".
-  if (unfilteredTokens.length > 1 &&
-      this._trimmedOriginalSearchString.startsWith(unfilteredTokens[0]) &&
-      Object.values(UrlbarTokenizer.RESTRICT).includes(unfilteredTokens[0])) {
-    this._leadingRestrictionToken = unfilteredTokens[0];
-  } else if (this._trimmedOriginalSearchString.startsWith(UrlbarTokenizer.RESTRICT.SEARCH)) {
-    this._leadingRestrictionToken = UrlbarTokenizer.RESTRICT.SEARCH;
-  }
-
-  this._searchTokens = this.filterTokens(unfilteredTokens);
-
-  // The heuristic token is the first filtered search token, but only when it's
-  // actually the first thing in the search string.  If a prefix or restriction
-  // character occurs first, then the heurstic token is null.  We use the
-  // heuristic token to help determine the heuristic result.  It may be a Places
-  // keyword, a search engine alias, an extension keyword, or simply a URL or
-  // part of the search string the user has typed.  We won't know until we
-  // create the heuristic result.
-  this._heuristicToken =
-    this._searchTokens[0] &&
-      this._trimmedOriginalSearchString.startsWith(this._searchTokens[0]) ?
-    this._searchTokens[0] :
-    null;
-
-||||||| merged common ancestors
-  this._searchTokens =
-    this.filterTokens(getUnfilteredSearchTokens(this._searchString));
-=======
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
   this._keywordSubstitute = null;
 
   this._prohibitSearchSuggestions = prohibitSearchSuggestions;
@@ -860,20 +753,7 @@ Search.prototype = {
    */
   setBehavior(type) {
     type = type.toUpperCase();
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    this._behavior |=
-      Ci.mozIPlacesAutoComplete["BEHAVIOR_" + type];
-||||||| merged common ancestors
-    this._behavior |=
-      Ci.mozIPlacesAutoComplete["BEHAVIOR_" + type];
-
-    // Setting the "typed" behavior should also set the "history" behavior.
-    if (type == "TYPED") {
-      this.setBehavior("history");
-    }
-=======
     this._behavior |= Ci.mozIPlacesAutoComplete["BEHAVIOR_" + type];
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
   },
 
   /**
@@ -919,20 +799,11 @@ Search.prototype = {
 
   /**
    * Given an array of tokens, this function determines which query should be
-   * ran.  It also removes any special search tokens.  The given array of tokens
-   * is modified in place and returned.
+   * ran.  It also removes any special search tokens.
    *
    * @param tokens
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-   *        An array of search tokens.  This array is modified in place.
-   * @return The given array of tokens, modified to remove special search tokens.
-||||||| merged common ancestors
-   *        An array of search tokens.
-   * @return the filtered list of tokens to search with.
-=======
    *        An array of search tokens.
    * @return A new, filtered array of tokens.
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
    */
   filterTokens(tokens) {
     let foundToken = false;
@@ -1100,28 +971,6 @@ Search.prototype = {
         return;
       }
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-      // If the heuristic result is a search engine result with an empty query
-      // and we have either a token alias or the search restriction char, then
-      // we're done.  We want to show only that single result as a clear hint
-      // that the user can continue typing to search.
-      // For the restriction character case, also consider a single char query
-      // or just the char itself, anyway we don't return search suggestions
-      // unless at least 2 chars have been typed. Thus "?__" and "? a" should
-      // finish here, while "?aa" should continue.
-      let emptyQueryTokenAlias = this._searchEngineAliasMatch &&
-                                  this._searchEngineAliasMatch.isTokenAlias &&
-                                  !this._searchEngineAliasMatch.query;
-      let emptySearchRestriction = this._trimmedOriginalSearchString.length <= 3 &&
-                                   this._leadingRestrictionToken == UrlbarTokenizer.RESTRICT.SEARCH &&
-                                   /\s*\S?$/.test(this._trimmedOriginalSearchString);
-      if (emptySearchRestriction || emptyQueryTokenAlias) {
-||||||| merged common ancestors
-      // If the heuristic result is a search engine result with an alias and an
-      // empty query, then we're done.  We want to show only that single result
-      // as a clear hint that the user can continue typing to search.
-      if (this._searchEngineAliasMatch && !this._searchEngineAliasMatch.query) {
-=======
       // If the heuristic result is a search engine result with an empty query
       // and we have either a token alias or the search restriction char, then
       // we're done.  We want to show only that single result as a clear hint
@@ -1139,7 +988,6 @@ Search.prototype = {
         this._leadingRestrictionToken == UrlbarTokenizer.RESTRICT.SEARCH &&
         /\s*\S?$/.test(this._trimmedOriginalSearchString);
       if (emptySearchRestriction || emptyQueryTokenAlias) {
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
         this._cleanUpNonCurrentMatches(null, false);
         this._autocompleteSearch.finishSearch(true);
         return;
@@ -1149,24 +997,12 @@ Search.prototype = {
     // Only add extension suggestions if the first token is a registered keyword
     // and the search string has characters after the first token.
     let extensionsCompletePromise = Promise.resolve();
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    if (this._heuristicToken &&
-        ExtensionSearchHandler.isKeywordRegistered(this._heuristicToken) &&
-        substringAfter(this._originalSearchString, this._heuristicToken) &&
-        !this._searchEngineAliasMatch) {
-||||||| merged common ancestors
-    if (this._searchTokens.length > 0 &&
-        ExtensionSearchHandler.isKeywordRegistered(this._searchTokens[0]) &&
-        this._originalSearchString.length > this._searchTokens[0].length &&
-        !this._searchEngineAliasMatch) {
-=======
     if (
       this._heuristicToken &&
       ExtensionSearchHandler.isKeywordRegistered(this._heuristicToken) &&
       substringAfter(this._originalSearchString, this._heuristicToken) &&
       !this._searchEngineAliasMatch
     ) {
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
       // Do not await on this, since extensions cannot notify when they are done
       // adding results, it may take too long.
       extensionsCompletePromise = this._matchExtensionSuggestions();
@@ -1177,25 +1013,6 @@ Search.prototype = {
     // Start adding search suggestions, unless they aren't required or the
     // window is private.
     let searchSuggestionsCompletePromise = Promise.resolve();
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    if (this._enableActions &&
-        this.hasBehavior("search") &&
-        !this._inPrivateWindow) {
-      let query =
-        this._searchEngineAliasMatch ? this._searchEngineAliasMatch.query :
-        substringAt(this._originalSearchString, this._searchTokens[0]);
-||||||| merged common ancestors
-    if (this._enableActions &&
-        this.hasBehavior("searches") &&
-        !this._inPrivateWindow) {
-      // Get the query string stripped of any engine alias or restriction token.
-      // In the former case, _searchTokens[0] will be the alias, so use
-      // this._searchEngineHeuristicMatch.query.  In the latter case, the token
-      // has been removed from _searchTokens, so use _searchTokens.join().
-      let query =
-        this._searchEngineAliasMatch ? this._searchEngineAliasMatch.query :
-        this._searchTokens.join(" ");
-=======
     if (
       this._enableActions &&
       this.hasBehavior("search") &&
@@ -1204,7 +1021,6 @@ Search.prototype = {
       let query = this._searchEngineAliasMatch
         ? this._searchEngineAliasMatch.query
         : substringAt(this._originalSearchString, this._searchTokens[0].value);
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
       if (query) {
         // Limit the string sent for search suggestions to a maximum length.
         query = query.substr(
@@ -1226,41 +1042,11 @@ Search.prototype = {
             (this._searchEngineAliasMatch &&
               this._searchEngineAliasMatch.alias) ||
             "";
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-          searchSuggestionsCompletePromise =
-            this._matchSearchSuggestions(engine, query, alias);
-          // If the user has used a search engine token alias, then the only
-          // results we want to show are suggestions from that engine, so we're
-          // done.  We're also done if we're restricting results to suggestions.
-          if ((this._searchEngineAliasMatch &&
-               this._searchEngineAliasMatch.isTokenAlias) ||
-              this.hasBehavior("restrict")) {
-            // Wait for the suggestions to be added.
-            await searchSuggestionsCompletePromise;
-            this._cleanUpNonCurrentMatches(null);
-            this._autocompleteSearch.finishSearch(true);
-            return;
-          }
-||||||| merged common ancestors
-          searchSuggestionsCompletePromise =
-            this._matchSearchSuggestions(engine, query, alias);
-          // If the user has used a search engine alias, then the only results
-          // we want to show are suggestions from that engine, so we're done.
-          // We're also done if we're restricting results to suggestions.
-          if (alias || this.hasBehavior("restrict")) {
-            // Wait for the suggestions to be added.
-            await searchSuggestionsCompletePromise;
-            this._cleanUpNonCurrentMatches(null);
-            this._autocompleteSearch.finishSearch(true);
-            return;
-          }
-=======
           searchSuggestionsCompletePromise = this._matchSearchSuggestions(
             engine,
             query,
             alias
           );
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
         }
       }
     }
@@ -1345,27 +1131,6 @@ Search.prototype = {
 
     this._matchAboutPages();
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    // If we do not have enough matches search again with MATCH_ANYWHERE, to
-    // get more matches.
-    let count = this._counts[UrlbarUtils.MATCH_GROUP.GENERAL] +
-                this._counts[UrlbarUtils.MATCH_GROUP.HEURISTIC];
-    if (count < UrlbarPrefs.get("maxRichResults")) {
-      this._matchBehavior = Ci.mozIPlacesAutoComplete.MATCH_ANYWHERE;
-      for (let [query, params] of [ this._adaptiveQuery,
-                                    this._searchQuery ]) {
-||||||| merged common ancestors
-    // If we do not have enough results, and our match type is
-    // MATCH_BOUNDARY_ANYWHERE, search again with MATCH_ANYWHERE to get more
-    // results.
-    let count = this._counts[UrlbarUtils.MATCH_GROUP.GENERAL] +
-                this._counts[UrlbarUtils.MATCH_GROUP.HEURISTIC];
-    if (this._matchBehavior == MATCH_BOUNDARY_ANYWHERE &&
-        count < UrlbarPrefs.get("maxRichResults")) {
-      this._matchBehavior = MATCH_ANYWHERE;
-      for (let [query, params] of [ this._adaptiveQuery,
-                                    this._searchQuery ]) {
-=======
     // If we do not have enough matches search again with MATCH_ANYWHERE, to
     // get more matches.
     let count =
@@ -1374,7 +1139,6 @@ Search.prototype = {
     if (count < this._maxResults) {
       this._matchBehavior = Ci.mozIPlacesAutoComplete.MATCH_ANYWHERE;
       for (let [query, params] of [this._adaptiveQuery, this._searchQuery]) {
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
         await conn.executeCached(query, params, this._onResultRow.bind(this));
         if (!this.pending) {
           return;
@@ -1730,23 +1494,12 @@ Search.prototype = {
       return true;
     }
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    // Never prohibit suggestions when the user has used a search engine token
-    // alias.  We want "@engine query" to return suggestions from the engine.
-    if (this._searchEngineAliasMatch &&
-        this._searchEngineAliasMatch.isTokenAlias) {
-||||||| merged common ancestors
-    // Never prohibit suggestions when the user has used a search engine alias.
-    // We want "@engine query" to return suggestions from the engine.
-    if (this._searchEngineAliasMatch) {
-=======
     // Never prohibit suggestions when the user has used a search engine token
     // alias.  We want "@engine query" to return suggestions from the engine.
     if (
       this._searchEngineAliasMatch &&
       this._searchEngineAliasMatch.isTokenAlias
     ) {
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
       return false;
     }
 
@@ -1813,17 +1566,6 @@ Search.prototype = {
   },
 
   _matchExtensionHeuristicResult() {
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    if (this._heuristicToken &&
-        ExtensionSearchHandler.isKeywordRegistered(this._heuristicToken) &&
-        substringAfter(this._originalSearchString, this._heuristicToken)) {
-      let description =
-        ExtensionSearchHandler.getDescription(this._heuristicToken);
-||||||| merged common ancestors
-    if (ExtensionSearchHandler.isKeywordRegistered(this._searchTokens[0]) &&
-        this._originalSearchString.length > this._searchTokens[0].length) {
-      let description = ExtensionSearchHandler.getDescription(this._searchTokens[0]);
-=======
     if (
       this._heuristicToken &&
       ExtensionSearchHandler.isKeywordRegistered(this._heuristicToken) &&
@@ -1832,7 +1574,6 @@ Search.prototype = {
       let description = ExtensionSearchHandler.getDescription(
         this._heuristicToken
       );
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
       this._addExtensionMatch(this._originalSearchString, description);
       return true;
     }
@@ -1849,17 +1590,10 @@ Search.prototype = {
       return false;
     }
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    let searchString =
-      substringAfter(this._originalSearchString, keyword).trim();
-||||||| merged common ancestors
-    let searchString = this._trimmedOriginalSearchString.substr(keyword.length + 1);
-=======
     let searchString = substringAfter(
       this._originalSearchString,
       keyword
     ).trim();
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
 
     let url = null,
       postData = null;
@@ -1997,18 +1731,6 @@ Search.prototype = {
     if (!engine || !this.pending) {
       return false;
     }
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    // Strip a leading restriction char.
-    let query = this._leadingRestrictionToken ?
-      substringAfter(this._trimmedOriginalSearchString, this._leadingRestrictionToken).trim() :
-      this._trimmedOriginalSearchString;
-    this._addSearchEngineMatch({ engine, query });
-||||||| merged common ancestors
-    this._addSearchEngineMatch({
-      engine,
-      query: this._originalSearchString,
-    });
-=======
     // Strip a leading search restriction char, because we prepend it to text
     // when the search shortcut is used and it's not user typed. Don't strip
     // other restriction chars, so that it's possible to search for things
@@ -2018,7 +1740,6 @@ Search.prototype = {
       query = substringAfter(query, this._leadingRestrictionToken).trim();
     }
     this._addSearchEngineMatch({ engine, query });
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
     return true;
   },
 
@@ -2105,21 +1826,6 @@ Search.prototype = {
   },
 
   _matchExtensionSuggestions() {
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    let promise = ExtensionSearchHandler.handleSearch(this._heuristicToken, this._originalSearchString,
-      suggestions => {
-        for (let suggestion of suggestions) {
-          let content = `${this._heuristicToken} ${suggestion.content}`;
-          this._addExtensionMatch(content, suggestion.description);
-        }
-||||||| merged common ancestors
-    let promise = ExtensionSearchHandler.handleSearch(this._searchTokens[0], this._originalSearchString,
-      suggestions => {
-        for (let suggestion of suggestions) {
-          let content = `${this._searchTokens[0]} ${suggestion.content}`;
-          this._addExtensionMatch(content, suggestion.description);
-        }
-=======
     let data = {
       keyword: this._heuristicToken,
       text: this._originalSearchString,
@@ -2129,7 +1835,6 @@ Search.prototype = {
       for (let suggestion of suggestions) {
         let content = `${this._heuristicToken} ${suggestion.content}`;
         this._addExtensionMatch(content, suggestion.description);
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
       }
     });
     // Remove previous search matches sooner than the maximum timeout, otherwise
@@ -2761,23 +2466,12 @@ Search.prototype = {
    * previously set urlbar suggestion preferences.
    */
   get _suggestionPrefQuery() {
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    if (!this.hasBehavior("restrict") && this.hasBehavior("history") &&
-        this.hasBehavior("bookmark")) {
-      return defaultQuery();
-||||||| merged common ancestors
-    if (!this.hasBehavior("restrict") && this.hasBehavior("history") &&
-        this.hasBehavior("bookmark")) {
-      return this.hasBehavior("typed") ? defaultQuery("AND h.typed = 1")
-                                       : defaultQuery();
-=======
     if (
       !this.hasBehavior("restrict") &&
       this.hasBehavior("history") &&
       this.hasBehavior("bookmark")
     ) {
       return defaultQuery();
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
     }
     let conditions = [];
     if (this.hasBehavior("history")) {
@@ -3220,45 +2914,6 @@ UnifiedComplete.prototype = {
       }
     }
 
-<<<<<<< HEAD:mozilla-release/toolkit/components/places/UnifiedComplete.js
-    let search = this._currentSearch = new Search(searchString, searchParam,
-                                                  listener, this,
-                                                  prohibitSearchSuggestions,
-                                                  previousResult);
-    this.getDatabaseHandle().then(conn => search.execute(conn))
-                            .catch(ex => {
-                              dump(`Query failed: ${ex}\n`);
-                              Cu.reportError(ex);
-                            })
-                            .then(() => {
-                              if (search == this._currentSearch) {
-                                this.finishSearch(true);
-                              }
-                            });
-||||||| merged common ancestors
-    this._currentSearch = new Search(searchString, searchParam, listener,
-                                     this, prohibitSearchSuggestions,
-                                     previousResult);
-
-    // If we are not enabled, we need to return now.  Notice we need an empty
-    // result regardless, so we still create the Search object.
-    if (!UrlbarPrefs.get("autocomplete.enabled")) {
-      this.finishSearch(true);
-      return;
-    }
-
-    let search = this._currentSearch;
-    this.getDatabaseHandle().then(conn => search.execute(conn))
-                            .catch(ex => {
-                              dump(`Query failed: ${ex}\n`);
-                              Cu.reportError(ex);
-                            })
-                            .then(() => {
-                              if (search == this._currentSearch) {
-                                this.finishSearch(true);
-                              }
-                            });
-=======
     let search = (this._currentSearch = new Search(
       searchString,
       searchParam,
@@ -3278,7 +2933,6 @@ UnifiedComplete.prototype = {
           this.finishSearch(true);
         }
       });
->>>>>>> upstream-releases:mozilla-release/toolkit/components/places/UnifiedComplete.jsm
   },
 
   stopSearch() {

@@ -83,14 +83,8 @@ typedef OfflineResourceList ApplicationCache;
 
   [Throws, CrossOriginCallable, NeedsSubjectPrincipal]
   void postMessage(any message, DOMString targetOrigin, optional sequence<object> transfer = []);
-<<<<<<< HEAD
-  [Throws, CrossOriginCallable, NeedsSubjectPrincipal]
-  void postMessage(any message, optional WindowPostMessageOptions options);
-||||||| merged common ancestors
-=======
   [Throws, CrossOriginCallable, NeedsSubjectPrincipal]
   void postMessage(any message, optional WindowPostMessageOptions options = {});
->>>>>>> upstream-releases
 
   // also has obsolete members
 };
@@ -373,19 +367,12 @@ partial interface Window {
    */
   [Constant, Throws, ChromeOnly]
   readonly attribute nsIDOMWindowUtils windowUtils;
-<<<<<<< HEAD
-
-  [ChromeOnly]
-  readonly attribute boolean hasOpenerForInitialContentBrowser;
-||||||| merged common ancestors
-=======
 
   [ChromeOnly]
   readonly attribute boolean hasOpenerForInitialContentBrowser;
 
   [ChromeOnly]
   WindowGlobalChild getWindowGlobalChild();
->>>>>>> upstream-releases
 };
 
 Window implements TouchEventHandlers;

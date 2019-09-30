@@ -107,13 +107,7 @@ add_task(async function() {
 
   // Check the heuristic result.
   let result = promiseValues[2];
-<<<<<<< HEAD:mozilla-release/browser/base/content/test/urlbar/browser_urlbarAddonIframe.js
-  let engineName = Services.search.defaultEngine.name;
-||||||| merged common ancestors
-  let engineName = Services.search.currentEngine.name;
-=======
   let engineName = (await Services.search.getDefault()).name;
->>>>>>> upstream-releases:mozilla-release/browser/components/urlbar/tests/legacy/browser_urlbarAddonIframe.js
   Assert.deepEqual(
     PlacesUtils.parseActionUrl(result.url),
     {

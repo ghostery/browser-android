@@ -136,29 +136,15 @@ abc =
 
         [abc] = list(self.parser)
         self.assertEqual(abc.key, 'abc')
-<<<<<<< HEAD:mozilla-release/third_party/python/compare-locales/compare_locales/tests/test_ftl.py
-        self.assertEqual(abc.raw_val, None)
-        self.assertEqual(abc.all, 'abc\n    .attr = Attr')
-||||||| merged common ancestors
-        self.assertEqual(abc.val, None)
-        self.assertEqual(abc.all, 'abc\n    .attr = Attr')
-=======
         self.assertEqual(abc.raw_val, None)
         self.assertEqual(abc.all, 'abc =\n    .attr = Attr')
->>>>>>> upstream-releases:mozilla-release/third_party/python/compare-locales/compare_locales/tests/fluent/test_parser.py
         attributes = list(abc.attributes)
         self.assertEqual(len(attributes), 1)
         attr = attributes[0]
         self.assertEqual(attr.key, 'attr')
-<<<<<<< HEAD:mozilla-release/third_party/python/compare-locales/compare_locales/tests/test_ftl.py
-        self.assertEqual(attr.raw_val, 'Attr')
-||||||| merged common ancestors
-        self.assertEqual(attr.val, 'Attr')
-=======
         self.assertEqual(attr.raw_val, 'Attr')
         self.assertEqual(abc.value_position(), (1, 4))
         self.assertEqual(attr.value_position(), (2, 13))
->>>>>>> upstream-releases:mozilla-release/third_party/python/compare-locales/compare_locales/tests/fluent/test_parser.py
 
     def test_non_localizable(self):
         self.parser.readContents(b'''\
@@ -252,71 +238,9 @@ baz = Baz
         entities = self.parser.walk()
 
         entity = next(entities)
-<<<<<<< HEAD:mozilla-release/third_party/python/compare-locales/compare_locales/tests/test_ftl.py
-        self.assertTrue(isinstance(entity,  parser.FluentComment))
-        self.assertEqual(entity.all, '// Resource Comment')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.all, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.FluentEntity))
-        self.assertEqual(entity.raw_val, 'Foo')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.all, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity,  parser.FluentComment))
-        self.assertEqual(
-            entity.all,
-            '// Section Comment\n[[ Section Header ]]'
-        )
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.all, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.FluentEntity))
-        self.assertEqual(entity.raw_val, 'Bar')
-||||||| merged common ancestors
-        self.assertTrue(isinstance(entity,  parser.FluentComment))
-        self.assertEqual(entity.all, '// Resource Comment')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.all, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.FluentEntity))
-        self.assertEqual(entity.val, 'Foo')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.all, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity,  parser.FluentComment))
-        self.assertEqual(
-            entity.all,
-            '// Section Comment\n[[ Section Header ]]'
-        )
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.all, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.FluentEntity))
-        self.assertEqual(entity.val, 'Bar')
-=======
         # ensure that fluent comments are FluentComments and Comments
         # Legacy comments (//) are Junk
         self.assertTrue(isinstance(entity,  parser.Junk))
->>>>>>> upstream-releases:mozilla-release/third_party/python/compare-locales/compare_locales/tests/fluent/test_parser.py
 
         entity = next(entities)
         self.assertTrue(isinstance(entity, parser.Whitespace))
@@ -336,87 +260,12 @@ baz = Baz
         self.assertTrue(isinstance(entity, parser.Whitespace))
 
         entity = next(entities)
-<<<<<<< HEAD:mozilla-release/third_party/python/compare-locales/compare_locales/tests/test_ftl.py
-        self.assertTrue(isinstance(entity, parser.FluentEntity))
-        self.assertEqual(entity.raw_val, 'Baz')
-        self.assertEqual(entity.entry.comment.content, 'Baz Comment')
-||||||| merged common ancestors
-        self.assertTrue(isinstance(entity, parser.FluentEntity))
-        self.assertEqual(entity.val, 'Baz')
-        self.assertEqual(entity.entry.comment.content, 'Baz Comment')
-=======
         self.assertTrue(isinstance(entity,   parser.Comment))
         self.assertEqual(entity.val, 'Standalone Comment')
->>>>>>> upstream-releases:mozilla-release/third_party/python/compare-locales/compare_locales/tests/fluent/test_parser.py
 
         entity = next(entities)
         self.assertTrue(isinstance(entity, parser.Whitespace))
         self.assertEqual(entity.all, '\n')
-
-        with self.assertRaises(StopIteration):
-            next(entities)
-
-    def test_junk(self):
-        self.parser.readUnicode('''\
-# Comment
-
-Line of junk
-
-# Comment
-msg = value
-''')
-        entities = self.parser.walk()
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity,  parser.FluentComment))
-<<<<<<< HEAD:mozilla-release/third_party/python/compare-locales/compare_locales/tests/test_ftl.py
-
-        # now test the actual .val values, .raw_val is None
-        self.assertTrue(isinstance(entity,   parser.Comment))
-        self.assertEqual(entity.val, 'Legacy Comment')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity,   parser.Comment))
-        self.assertEqual(entity.val, 'Resource Comment')
-||||||| merged common ancestors
-
-        # now test the actual .val values
-        self.assertTrue(isinstance(entity,   parser.Comment))
-        self.assertEqual(entity.val, 'Legacy Comment')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity,   parser.Comment))
-        self.assertEqual(entity.val, 'Resource Comment')
-=======
-        self.assertEqual(entity.val, 'Comment')
->>>>>>> upstream-releases:mozilla-release/third_party/python/compare-locales/compare_locales/tests/fluent/test_parser.py
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.raw_val, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity,  parser.Junk))
-        self.assertEqual(entity.raw_val, 'Line of junk')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.raw_val, '\n\n')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.FluentEntity))
-        self.assertEqual(entity.raw_val, 'value')
-        self.assertEqual(entity.entry.comment.content, 'Comment')
-
-        entity = next(entities)
-        self.assertTrue(isinstance(entity, parser.Whitespace))
-        self.assertEqual(entity.raw_val, '\n')
 
         with self.assertRaises(StopIteration):
             next(entities)

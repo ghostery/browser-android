@@ -23,28 +23,12 @@ namespace mozilla {
 //  2. set (with non-negative, non-zero count value)
 //  3. indefinite
 //
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILRepeatCount.h
-class nsSMILRepeatCount {
- public:
-  nsSMILRepeatCount() : mCount(kNotSet) {}
-  explicit nsSMILRepeatCount(double aCount) : mCount(kNotSet) {
-    SetCount(aCount);
-  }
-||||||| merged common ancestors
-class nsSMILRepeatCount
-{
-public:
-  nsSMILRepeatCount() : mCount(kNotSet) {}
-  explicit nsSMILRepeatCount(double aCount)
-    : mCount(kNotSet) { SetCount(aCount); }
-=======
 class SMILRepeatCount {
  public:
   SMILRepeatCount() : mCount(kNotSet) {}
   explicit SMILRepeatCount(double aCount) : mCount(kNotSet) {
     SetCount(aCount);
   }
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILRepeatCount.h
 
   operator double() const {
     MOZ_ASSERT(IsDefinite(),
@@ -55,14 +39,7 @@ class SMILRepeatCount {
   bool IsIndefinite() const { return mCount == kIndefinite; }
   bool IsSet() const { return mCount != kNotSet; }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILRepeatCount.h
-  nsSMILRepeatCount& operator=(double aCount) {
-||||||| merged common ancestors
-  nsSMILRepeatCount& operator=(double aCount)
-  {
-=======
   SMILRepeatCount& operator=(double aCount) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILRepeatCount.h
     SetCount(aCount);
     return *this;
   }

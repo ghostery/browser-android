@@ -29,48 +29,22 @@ bincode = "1.0"
 bitflags = "1.0"
 byteorder = "1.0"
 cfg-if = "0.1.2"
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/Cargo.toml
-||||||| merged common ancestors
-euclid = "0.19"
-=======
 cstr = "0.1.2"
 euclid = { version = "0.19.5", features = ["serde"] }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/Cargo.toml
 fxhash = "0.2.1"
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/Cargo.toml
-gleam = "0.6.8"
-image = { optional = true, version = "0.20" }
-||||||| merged common ancestors
-gleam = "0.6.3"
-image = { optional = true, version = "0.19" }
-=======
 gleam = "0.6.17"
 image_loader = { optional = true, version = "0.21", package = "image", default-features = false, features = ["png_codec"] }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/Cargo.toml
 lazy_static = "1"
 log = "0.4"
 malloc_size_of_derive = "0.1"
 num-traits = "0.2"
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/Cargo.toml
-plane-split = "0.13.3"
-png = { optional = true, version = "0.12" }
-||||||| merged common ancestors
-plane-split = "0.13.2"
-png = { optional = true, version = "0.12" }
-=======
 plane-split = "0.13.9"
 png = { optional = true, version = "0.14" }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/Cargo.toml
 rayon = "1"
 ron = { optional = true, version = "0.1.7" }
 serde = { optional = true, version = "1.0", features = ["serde_derive"] }
 serde_json = { optional = true, version = "1.0" }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/Cargo.toml
-sha2 = "0.7"
-||||||| merged common ancestors
-=======
 sha2 = "0.8"
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/Cargo.toml
 smallvec = "0.6"
 thread_profiler = "0.1.1"
 time = "0.1"
@@ -111,13 +85,7 @@ freetype = { version = "0.4", default-features = false }
 libc = "0.2"
 
 [target.'cfg(target_os = "windows")'.dependencies]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/Cargo.toml
-dwrote = "0.6.2"
-||||||| merged common ancestors
-dwrote = "0.5.2"
-=======
 dwrote = "0.9"
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/Cargo.toml
 
 [target.'cfg(target_os = "macos")'.dependencies]
 core-foundation = "0.6"

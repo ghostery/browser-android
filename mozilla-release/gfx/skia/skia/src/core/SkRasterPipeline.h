@@ -12,26 +12,10 @@
 #include "SkColor.h"
 #include "SkImageInfo.h"
 #include "SkNx.h"
-<<<<<<< HEAD
-#include "SkTArray.h"
-||||||| merged common ancestors
-#include "SkPM4f.h"
-#include "SkTArray.h"
-=======
 #include "SkTArray.h" // TODO: unused
->>>>>>> upstream-releases
 #include "SkTypes.h"
 #include <functional>
-<<<<<<< HEAD
-#include <vector>
-#include "../jumper/SkJumper.h"
-||||||| merged common ancestors
-#include <vector>
-
-struct SkJumper_Engine;
-=======
 #include <vector>  // TODO: unused
->>>>>>> upstream-releases
 
 /**
  * SkRasterPipeline provides a cheap way to chain together a pixel processing pipeline.
@@ -54,19 +38,9 @@ struct SkJumper_Engine;
     M(clamp_0) M(clamp_1) M(clamp_a) M(clamp_a_dst) M(clamp_gamut) \
     M(unpremul) M(premul) M(premul_dst)                            \
     M(force_opaque) M(force_opaque_dst)                            \
-<<<<<<< HEAD
-    M(set_rgb) M(unbounded_set_rgb) M(swap_rb)                     \
-    M(from_srgb) M(to_srgb)                                        \
-    M(black_color) M(white_color) M(uniform_color) M(unbounded_uniform_color) \
-||||||| merged common ancestors
-    M(set_rgb) M(swap_rb) M(invert)                                \
-    M(from_srgb) M(from_srgb_dst) M(to_srgb)                       \
-    M(black_color) M(white_color) M(uniform_color)                 \
-=======
     M(set_rgb) M(unbounded_set_rgb) M(swap_rb) M(swap_rb_dst)      \
     M(from_srgb) M(to_srgb)                                        \
     M(black_color) M(white_color) M(uniform_color) M(unbounded_uniform_color) \
->>>>>>> upstream-releases
     M(seed_shader) M(dither)                                       \
     M(load_a8)   M(load_a8_dst)   M(store_a8)   M(gather_a8)       \
     M(load_565)  M(load_565_dst)  M(store_565)  M(gather_565)      \
@@ -118,12 +92,6 @@ struct SkJumper_Engine;
     M(mask_2pt_conical_degenerates) M(apply_vector_mask)           \
     M(byte_tables)                                                 \
     M(rgb_to_hsl) M(hsl_to_rgb)                                    \
-<<<<<<< HEAD
-    M(gauss_a_to_rgba)
-||||||| merged common ancestors
-    M(clut_3D) M(clut_4D)                                          \
-    M(gauss_a_to_rgba)
-=======
     M(gauss_a_to_rgba)                                             \
     M(emboss)
 
@@ -205,7 +173,6 @@ struct SkRasterPipeline_EmbossCtx {
 };
 
 
->>>>>>> upstream-releases
 
 class SkRasterPipeline {
 public:
@@ -253,23 +220,6 @@ public:
         this->append_constant_color(alloc, color.vec());
     }
 
-<<<<<<< HEAD
-    // Like append_constant_color() but only affecting r,g,b, ignoring the alpha channel.
-    void append_set_rgb(SkArenaAlloc*, const float rgb[3]);
-
-    void append_set_rgb(SkArenaAlloc* alloc, const SkColor4f& color) {
-        this->append_set_rgb(alloc, color.vec());
-    }
-
-    void append_load    (SkColorType, const SkJumper_MemoryCtx*);
-    void append_load_dst(SkColorType, const SkJumper_MemoryCtx*);
-    void append_store   (SkColorType, const SkJumper_MemoryCtx*);
-
-    void append_gamut_clamp_if_normalized(const SkImageInfo&);
-||||||| merged common ancestors
-    // Helper to append(seed_shader) with the normal {+0.5,+1.5,+2.5,...} argument it expects.
-    void append_seed_shader();
-=======
     // Like append_constant_color() but only affecting r,g,b, ignoring the alpha channel.
     void append_set_rgb(SkArenaAlloc*, const float rgb[3]);
 
@@ -282,7 +232,6 @@ public:
     void append_store   (SkColorType, const SkRasterPipeline_MemoryCtx*);
 
     void append_gamut_clamp_if_normalized(const SkImageInfo&);
->>>>>>> upstream-releases
 
     bool empty() const { return fStages == nullptr; }
 

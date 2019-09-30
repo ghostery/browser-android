@@ -14,24 +14,10 @@
 namespace mozilla {
 namespace layers {
 
-<<<<<<< HEAD
-void TouchActionHelper::UpdateAllowedBehavior(
-    uint32_t aTouchActionValue, bool aConsiderPanning,
-    TouchBehaviorFlags& aOutBehavior) {
-  if (aTouchActionValue != NS_STYLE_TOUCH_ACTION_AUTO) {
-||||||| merged common ancestors
-void
-TouchActionHelper::UpdateAllowedBehavior(uint32_t aTouchActionValue,
-                                         bool aConsiderPanning,
-                                         TouchBehaviorFlags& aOutBehavior)
-{
-  if (aTouchActionValue != NS_STYLE_TOUCH_ACTION_AUTO) {
-=======
 static void UpdateAllowedBehavior(StyleTouchAction aTouchActionValue,
                                   bool aConsiderPanning,
                                   TouchBehaviorFlags& aOutBehavior) {
   if (aTouchActionValue != StyleTouchAction_AUTO) {
->>>>>>> upstream-releases
     // Double-tap-zooming need property value AUTO
     aOutBehavior &= ~AllowedTouchBehavior::DOUBLE_TAP_ZOOM;
     if (aTouchActionValue != StyleTouchAction_MANIPULATION) {
@@ -46,33 +32,14 @@ static void UpdateAllowedBehavior(StyleTouchAction aTouchActionValue,
       aOutBehavior &= ~AllowedTouchBehavior::HORIZONTAL_PAN;
     }
 
-<<<<<<< HEAD
-    // Values pan-x and pan-y set at the same time to the same element do not
-    // affect panning constraints. Therefore we need to check whether pan-x is
-    // set without pan-y and the same for pan-y.
-    if ((aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_X) &&
-        !(aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_Y)) {
-||||||| merged common ancestors
-    // Values pan-x and pan-y set at the same time to the same element do not affect panning constraints.
-    // Therefore we need to check whether pan-x is set without pan-y and the same for pan-y.
-    if ((aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_X) && !(aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_Y)) {
-=======
     // Values pan-x and pan-y set at the same time to the same element do not
     // affect panning constraints. Therefore we need to check whether pan-x is
     // set without pan-y and the same for pan-y.
     if ((aTouchActionValue & StyleTouchAction_PAN_X) &&
         !(aTouchActionValue & StyleTouchAction_PAN_Y)) {
->>>>>>> upstream-releases
       aOutBehavior &= ~AllowedTouchBehavior::VERTICAL_PAN;
-<<<<<<< HEAD
-    } else if ((aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_Y) &&
-               !(aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_X)) {
-||||||| merged common ancestors
-    } else if ((aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_Y) && !(aTouchActionValue & NS_STYLE_TOUCH_ACTION_PAN_X)) {
-=======
     } else if ((aTouchActionValue & StyleTouchAction_PAN_Y) &&
                !(aTouchActionValue & StyleTouchAction_PAN_X)) {
->>>>>>> upstream-releases
       aOutBehavior &= ~AllowedTouchBehavior::HORIZONTAL_PAN;
     }
   }
@@ -89,16 +56,9 @@ TouchBehaviorFlags TouchActionHelper::GetAllowedTouchBehavior(
   nsPoint relativePoint =
       nsLayoutUtils::GetEventCoordinatesRelativeTo(aWidget, aPoint, aRootFrame);
 
-<<<<<<< HEAD
-  nsIFrame* target = nsLayoutUtils::GetFrameForPoint(
-      aRootFrame, relativePoint, nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME);
-||||||| merged common ancestors
-  nsIFrame *target = nsLayoutUtils::GetFrameForPoint(aRootFrame, relativePoint, nsLayoutUtils::IGNORE_ROOT_SCROLL_FRAME);
-=======
   nsIFrame* target = nsLayoutUtils::GetFrameForPoint(
       aRootFrame, relativePoint,
       nsLayoutUtils::FrameForPointOption::IgnoreRootScrollFrame);
->>>>>>> upstream-releases
   if (!target) {
     return behavior;
   }
@@ -126,20 +86,10 @@ TouchBehaviorFlags TouchActionHelper::GetAllowedTouchBehavior(
 
   bool considerPanning = true;
 
-<<<<<<< HEAD
-  for (nsIFrame* frame = target; frame && frame->GetContent() && behavior;
-       frame = frame->GetParent()) {
-    UpdateAllowedBehavior(nsLayoutUtils::GetTouchActionFromFrame(frame),
-                          considerPanning, behavior);
-||||||| merged common ancestors
-  for (nsIFrame *frame = target; frame && frame->GetContent() && behavior; frame = frame->GetParent()) {
-    UpdateAllowedBehavior(nsLayoutUtils::GetTouchActionFromFrame(frame), considerPanning, behavior);
-=======
   for (nsIFrame* frame = target; frame && frame->GetContent() && behavior;
        frame = frame->GetInFlowParent()) {
     UpdateAllowedBehavior(nsLayoutUtils::GetTouchActionFromFrame(frame),
                           considerPanning, behavior);
->>>>>>> upstream-releases
 
     if (frame == nearestScrollableFrame) {
       // We met the scrollable element, after it we shouldn't consider

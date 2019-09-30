@@ -24,7 +24,7 @@ struct PointD : public BasePoint<double, PointD> {
 
   PointD() : Super() {}
   PointD(double aX, double aY) : Super(aX, aY) {}
-  MOZ_IMPLICIT PointD(const Point &aPoint) : Super(aPoint.x, aPoint.y) {}
+  MOZ_IMPLICIT PointD(const Point& aPoint) : Super(aPoint.x, aPoint.y) {}
 
   Point ToPoint() const {
     return Point(static_cast<Float>(x), static_cast<Float>(y));
@@ -33,36 +33,15 @@ struct PointD : public BasePoint<double, PointD> {
 
 struct BezierControlPoints {
   BezierControlPoints() {}
-<<<<<<< HEAD
-  BezierControlPoints(const PointD &aCP1, const PointD &aCP2,
-                      const PointD &aCP3, const PointD &aCP4)
-      : mCP1(aCP1), mCP2(aCP2), mCP3(aCP3), mCP4(aCP4) {}
-||||||| merged common ancestors
-  BezierControlPoints(const PointD &aCP1, const PointD &aCP2,
-                      const PointD &aCP3, const PointD &aCP4)
-    : mCP1(aCP1), mCP2(aCP2), mCP3(aCP3), mCP4(aCP4)
-  {
-  }
-=======
   BezierControlPoints(const PointD& aCP1, const PointD& aCP2,
                       const PointD& aCP3, const PointD& aCP4)
       : mCP1(aCP1), mCP2(aCP2), mCP3(aCP3), mCP4(aCP4) {}
->>>>>>> upstream-releases
 
   PointD mCP1, mCP2, mCP3, mCP4;
 };
 
-<<<<<<< HEAD
-void FlattenBezier(const BezierControlPoints &aPoints, PathSink *aSink,
-                   double aTolerance);
-||||||| merged common ancestors
-void
-FlattenBezier(const BezierControlPoints &aPoints,
-              PathSink *aSink, double aTolerance);
-=======
 void FlattenBezier(const BezierControlPoints& aPoints, PathSink* aSink,
                    double aTolerance);
->>>>>>> upstream-releases
 
 Path::Path() {}
 
@@ -73,15 +52,7 @@ Float Path::ComputeLength() {
   return mFlattenedPath->ComputeLength();
 }
 
-<<<<<<< HEAD
-Point Path::ComputePointAtLength(Float aLength, Point *aTangent) {
-||||||| merged common ancestors
-Point
-Path::ComputePointAtLength(Float aLength, Point* aTangent)
-{
-=======
 Point Path::ComputePointAtLength(Float aLength, Point* aTangent) {
->>>>>>> upstream-releases
   EnsureFlattenedPath();
   return mFlattenedPath->ComputePointAtLength(aLength, aTangent);
 }
@@ -97,15 +68,7 @@ void Path::EnsureFlattenedPath() {
 // error) of the approximation from the actual Bezier curve.
 const Float kFlatteningTolerance = 0.0001f;
 
-<<<<<<< HEAD
-void FlattenedPath::MoveTo(const Point &aPoint) {
-||||||| merged common ancestors
-void
-FlattenedPath::MoveTo(const Point &aPoint)
-{
-=======
 void FlattenedPath::MoveTo(const Point& aPoint) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mCalculatedLength);
   FlatPathOp op;
   op.mType = FlatPathOp::OP_MOVETO;
@@ -115,15 +78,7 @@ void FlattenedPath::MoveTo(const Point& aPoint) {
   mBeginPoint = aPoint;
 }
 
-<<<<<<< HEAD
-void FlattenedPath::LineTo(const Point &aPoint) {
-||||||| merged common ancestors
-void
-FlattenedPath::LineTo(const Point &aPoint)
-{
-=======
 void FlattenedPath::LineTo(const Point& aPoint) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mCalculatedLength);
   FlatPathOp op;
   op.mType = FlatPathOp::OP_LINETO;
@@ -131,34 +86,14 @@ void FlattenedPath::LineTo(const Point& aPoint) {
   mPathOps.push_back(op);
 }
 
-<<<<<<< HEAD
-void FlattenedPath::BezierTo(const Point &aCP1, const Point &aCP2,
-                             const Point &aCP3) {
-||||||| merged common ancestors
-void
-FlattenedPath::BezierTo(const Point &aCP1,
-                        const Point &aCP2,
-                        const Point &aCP3)
-{
-=======
 void FlattenedPath::BezierTo(const Point& aCP1, const Point& aCP2,
                              const Point& aCP3) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mCalculatedLength);
   FlattenBezier(BezierControlPoints(CurrentPoint(), aCP1, aCP2, aCP3), this,
                 kFlatteningTolerance);
 }
 
-<<<<<<< HEAD
-void FlattenedPath::QuadraticBezierTo(const Point &aCP1, const Point &aCP2) {
-||||||| merged common ancestors
-void
-FlattenedPath::QuadraticBezierTo(const Point &aCP1,
-                                 const Point &aCP2)
-{
-=======
 void FlattenedPath::QuadraticBezierTo(const Point& aCP1, const Point& aCP2) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mCalculatedLength);
   // We need to elevate the degree of this quadratic B�zier to cubic, so we're
   // going to add an intermediate control point, and recompute control point 1.
@@ -177,23 +112,10 @@ void FlattenedPath::Close() {
   LineTo(mBeginPoint);
 }
 
-<<<<<<< HEAD
-void FlattenedPath::Arc(const Point &aOrigin, float aRadius, float aStartAngle,
-                        float aEndAngle, bool aAntiClockwise) {
-  ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle,
-              aAntiClockwise);
-||||||| merged common ancestors
-void
-FlattenedPath::Arc(const Point &aOrigin, float aRadius, float aStartAngle,
-                   float aEndAngle, bool aAntiClockwise)
-{
-  ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle, aAntiClockwise);
-=======
 void FlattenedPath::Arc(const Point& aOrigin, float aRadius, float aStartAngle,
                         float aEndAngle, bool aAntiClockwise) {
   ArcToBezier(this, aOrigin, Size(aRadius, aRadius), aStartAngle, aEndAngle,
               aAntiClockwise);
->>>>>>> upstream-releases
 }
 
 Float FlattenedPath::ComputeLength() {
@@ -215,15 +137,7 @@ Float FlattenedPath::ComputeLength() {
   return mCachedLength;
 }
 
-<<<<<<< HEAD
-Point FlattenedPath::ComputePointAtLength(Float aLength, Point *aTangent) {
-||||||| merged common ancestors
-Point
-FlattenedPath::ComputePointAtLength(Float aLength, Point *aTangent)
-{
-=======
 Point FlattenedPath::ComputePointAtLength(Float aLength, Point* aTangent) {
->>>>>>> upstream-releases
   // We track the last point that -wasn't- in the same place as the current
   // point so if we pass the edge of the path with a bunch of zero length
   // paths we still get the correct tangent vector.
@@ -268,24 +182,10 @@ Point FlattenedPath::ComputePointAtLength(Float aLength, Point* aTangent) {
 
 // This function explicitly permits aControlPoints to refer to the same object
 // as either of the other arguments.
-<<<<<<< HEAD
-static void SplitBezier(const BezierControlPoints &aControlPoints,
-                        BezierControlPoints *aFirstSegmentControlPoints,
-                        BezierControlPoints *aSecondSegmentControlPoints,
-                        double t) {
-||||||| merged common ancestors
-static void 
-SplitBezier(const BezierControlPoints &aControlPoints,
-            BezierControlPoints *aFirstSegmentControlPoints,
-            BezierControlPoints *aSecondSegmentControlPoints,
-            double t)
-{
-=======
 static void SplitBezier(const BezierControlPoints& aControlPoints,
                         BezierControlPoints* aFirstSegmentControlPoints,
                         BezierControlPoints* aSecondSegmentControlPoints,
                         double t) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aSecondSegmentControlPoints);
 
   *aSecondSegmentControlPoints = aControlPoints;
@@ -312,19 +212,8 @@ static void SplitBezier(const BezierControlPoints& aControlPoints,
   aSecondSegmentControlPoints->mCP3 = cp3a;
 }
 
-<<<<<<< HEAD
-static void FlattenBezierCurveSegment(const BezierControlPoints &aControlPoints,
-                                      PathSink *aSink, double aTolerance) {
-||||||| merged common ancestors
-static void
-FlattenBezierCurveSegment(const BezierControlPoints &aControlPoints,
-                          PathSink *aSink,
-                          double aTolerance)
-{
-=======
 static void FlattenBezierCurveSegment(const BezierControlPoints& aControlPoints,
                                       PathSink* aSink, double aTolerance) {
->>>>>>> upstream-releases
   /* The algorithm implemented here is based on:
    * http://cis.usouthal.edu/~hain/general/Publications/Bezier/Bezier%20Offset%20Curves.pdf
    *
@@ -372,24 +261,10 @@ static void FlattenBezierCurveSegment(const BezierControlPoints& aControlPoints,
   aSink->LineTo(currentCP.mCP4.ToPoint());
 }
 
-<<<<<<< HEAD
-static inline void FindInflectionApproximationRange(
-    BezierControlPoints aControlPoints, double *aMin, double *aMax, double aT,
-    double aTolerance) {
-  SplitBezier(aControlPoints, nullptr, &aControlPoints, aT);
-||||||| merged common ancestors
-static inline void
-FindInflectionApproximationRange(BezierControlPoints aControlPoints,
-                                 double *aMin, double *aMax, double aT,
-                                 double aTolerance)
-{
-    SplitBezier(aControlPoints, nullptr, &aControlPoints, aT);
-=======
 static inline void FindInflectionApproximationRange(
     BezierControlPoints aControlPoints, double* aMin, double* aMax, double aT,
     double aTolerance) {
   SplitBezier(aControlPoints, nullptr, &aControlPoints, aT);
->>>>>>> upstream-releases
 
   PointD cp21 = aControlPoints.mCP2 - aControlPoints.mCP1;
   PointD cp41 = aControlPoints.mCP4 - aControlPoints.mCP1;
@@ -482,20 +357,9 @@ static inline void FindInflectionApproximationRange(
  * I haven't looked into whether the formulation of the quadratic formula in
  * hain has any numerical advantages over the one used below.
  */
-<<<<<<< HEAD
-static inline void FindInflectionPoints(
-    const BezierControlPoints &aControlPoints, double *aT1, double *aT2,
-    uint32_t *aCount) {
-||||||| merged common ancestors
-static inline void
-FindInflectionPoints(const BezierControlPoints &aControlPoints,
-                     double *aT1, double *aT2, uint32_t *aCount)
-{
-=======
 static inline void FindInflectionPoints(
     const BezierControlPoints& aControlPoints, double* aT1, double* aT2,
     uint32_t* aCount) {
->>>>>>> upstream-releases
   // Find inflection points.
   // See www.faculty.idc.ac.il/arik/quality/appendixa.html for an explanation
   // of this approach.
@@ -564,18 +428,8 @@ static inline void FindInflectionPoints(
   }
 }
 
-<<<<<<< HEAD
-void FlattenBezier(const BezierControlPoints &aControlPoints, PathSink *aSink,
-                   double aTolerance) {
-||||||| merged common ancestors
-void
-FlattenBezier(const BezierControlPoints &aControlPoints,
-              PathSink *aSink, double aTolerance)
-{
-=======
 void FlattenBezier(const BezierControlPoints& aControlPoints, PathSink* aSink,
                    double aTolerance) {
->>>>>>> upstream-releases
   double t1;
   double t2;
   uint32_t count;

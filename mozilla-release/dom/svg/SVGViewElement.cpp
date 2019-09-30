@@ -19,29 +19,6 @@ JSObject* SVGViewElement::WrapNode(JSContext* aCx,
   return SVGViewElement_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-nsSVGEnumMapping SVGViewElement::sZoomAndPanMap[] = {
-    {nsGkAtoms::disable, SVG_ZOOMANDPAN_DISABLE},
-    {nsGkAtoms::magnify, SVG_ZOOMANDPAN_MAGNIFY},
-    {nullptr, 0}};
-
-nsSVGElement::EnumInfo SVGViewElement::sEnumInfo[1] = {
-    {nsGkAtoms::zoomAndPan, sZoomAndPanMap, SVG_ZOOMANDPAN_MAGNIFY}};
-||||||| merged common ancestors
-nsSVGEnumMapping SVGViewElement::sZoomAndPanMap[] = {
-  {nsGkAtoms::disable, SVG_ZOOMANDPAN_DISABLE},
-  {nsGkAtoms::magnify, SVG_ZOOMANDPAN_MAGNIFY},
-  {nullptr, 0}
-};
-
-nsSVGElement::EnumInfo SVGViewElement::sEnumInfo[1] =
-{
-  { nsGkAtoms::zoomAndPan,
-    sZoomAndPanMap,
-    SVG_ZOOMANDPAN_MAGNIFY
-  }
-};
-=======
 SVGEnumMapping SVGViewElement::sZoomAndPanMap[] = {
     {nsGkAtoms::disable, SVG_ZOOMANDPAN_DISABLE},
     {nsGkAtoms::magnify, SVG_ZOOMANDPAN_MAGNIFY},
@@ -49,7 +26,6 @@ SVGEnumMapping SVGViewElement::sZoomAndPanMap[] = {
 
 SVGElement::EnumInfo SVGViewElement::sEnumInfo[1] = {
     {nsGkAtoms::zoomAndPan, sZoomAndPanMap, SVG_ZOOMANDPAN_MAGNIFY}};
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // Implementation
@@ -87,43 +63,14 @@ SVGViewElement::PreserveAspectRatio() {
 //----------------------------------------------------------------------
 // SVGElement methods
 
-<<<<<<< HEAD
-nsSVGElement::EnumAttributesInfo SVGViewElement::GetEnumInfo() {
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
-||||||| merged common ancestors
-nsSVGElement::EnumAttributesInfo
-SVGViewElement::GetEnumInfo()
-{
-  return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
-                            ArrayLength(sEnumInfo));
-=======
 SVGElement::EnumAttributesInfo SVGViewElement::GetEnumInfo() {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo, ArrayLength(sEnumInfo));
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsSVGViewBox* SVGViewElement::GetViewBox() { return &mViewBox; }
-||||||| merged common ancestors
-nsSVGViewBox *
-SVGViewElement::GetViewBox()
-{
-  return &mViewBox;
-}
-=======
 SVGAnimatedViewBox* SVGViewElement::GetAnimatedViewBox() { return &mViewBox; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-SVGAnimatedPreserveAspectRatio* SVGViewElement::GetPreserveAspectRatio() {
-||||||| merged common ancestors
-SVGAnimatedPreserveAspectRatio *
-SVGViewElement::GetPreserveAspectRatio()
-{
-=======
 SVGAnimatedPreserveAspectRatio*
 SVGViewElement::GetAnimatedPreserveAspectRatio() {
->>>>>>> upstream-releases
   return &mPreserveAspectRatio;
 }
 

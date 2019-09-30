@@ -54,13 +54,7 @@ using mozilla::Telemetry::Common::IsInDataset;
 using mozilla::Telemetry::Common::IsValidIdentifierString;
 using mozilla::Telemetry::Common::LogToBrowserConsole;
 using mozilla::Telemetry::Common::RecordedProcessType;
-<<<<<<< HEAD
-||||||| merged common ancestors
-using mozilla::Telemetry::Common::IsValidIdentifierString;
-using mozilla::Telemetry::Common::GetCurrentProduct;
-=======
 using mozilla::Telemetry::Common::StringHashSet;
->>>>>>> upstream-releases
 using mozilla::Telemetry::Common::SupportedProduct;
 
 namespace TelemetryIPCAccumulator = mozilla::TelemetryIPCAccumulator;
@@ -167,51 +161,6 @@ StaticAutoPtr<nsTArray<RefPtr<nsAtom>>> gDynamicStoreNames;
 struct DynamicScalarInfo : BaseScalarInfo {
   nsCString mDynamicName;
   bool mDynamicExpiration;
-<<<<<<< HEAD
-  uint32_t store_count;
-  uint32_t store_offset;
-
-  DynamicScalarInfo(uint32_t aKind, bool aRecordOnRelease, bool aExpired,
-                    const nsACString& aName, bool aKeyed, bool aBuiltin,
-                    const nsTArray<nsCString>& aStores)
-      : BaseScalarInfo(
-            aKind,
-            aRecordOnRelease ? nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT
-                             : nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN,
-            RecordedProcessType::All, aKeyed, GetCurrentProduct(), aBuiltin),
-        mDynamicName(aName),
-        mDynamicExpiration(aExpired) {
-    store_count = aStores.Length();
-    if (store_count == 0) {
-      store_count = 1;
-      store_offset = kMaxStaticStoreOffset;
-    } else {
-      store_offset = kMaxStaticStoreOffset + 1 + gDynamicStoreNames->Length();
-      for (const auto& storeName : aStores) {
-        gDynamicStoreNames->AppendElement(NS_Atomize(storeName));
-      }
-      MOZ_ASSERT(
-          gDynamicStoreNames->Length() < UINT32_MAX - kMaxStaticStoreOffset - 1,
-          "Too many dynamic scalar store names. Overflow.");
-    }
-  };
-||||||| merged common ancestors
-
-  DynamicScalarInfo(uint32_t aKind, bool aRecordOnRelease,
-                    bool aExpired, const nsACString& aName,
-                    bool aKeyed, bool aBuiltin)
-    : BaseScalarInfo(aKind,
-                     aRecordOnRelease ?
-                     nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT :
-                     nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN,
-                     RecordedProcessType::All,
-                     aKeyed,
-                     GetCurrentProduct(),
-                     aBuiltin)
-    , mDynamicName(aName)
-    , mDynamicExpiration(aExpired)
-  {}
-=======
   uint32_t store_count;
   uint32_t store_offset;
 
@@ -239,7 +188,6 @@ struct DynamicScalarInfo : BaseScalarInfo {
           "Too many dynamic scalar store names. Overflow.");
     }
   };
->>>>>>> upstream-releases
 
   // The following functions will read the stored text
   // instead of looking it up in the statically generated
@@ -729,31 +677,11 @@ ScalarResult ScalarString::SetValue(const nsAString& aValue) {
 nsresult ScalarString::GetValue(const nsACString& aStoreName, bool aClearStore,
                                 nsCOMPtr<nsIVariant>& aResult) {
   nsCOMPtr<nsIWritableVariant> outVar(new nsVariant());
-<<<<<<< HEAD
   size_t storeIndex = 0;
   nsresult rv = StoreIndex(aStoreName, &storeIndex);
   if (NS_FAILED(rv)) {
     return rv;
   }
-  if (!HasValueInStore(storeIndex)) {
-    return NS_ERROR_NO_CONTENT;
-  }
-  rv = outVar->SetAsAString(mStorage[storeIndex]);
-||||||| merged common ancestors
-  nsresult rv = outVar->SetAsAString(mStorage);
-=======
-  size_t storeIndex = 0;
-  nsresult rv = StoreIndex(aStoreName, &storeIndex);
->>>>>>> upstream-releases
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-<<<<<<< HEAD
-  if (aClearStore) {
-    ClearValueInStore(storeIndex);
-  }
-||||||| merged common ancestors
-=======
   if (!HasValueInStore(storeIndex)) {
     return NS_ERROR_NO_CONTENT;
   }
@@ -764,7 +692,6 @@ nsresult ScalarString::GetValue(const nsACString& aStoreName, bool aClearStore,
   if (aClearStore) {
     ClearValueInStore(storeIndex);
   }
->>>>>>> upstream-releases
   aResult = outVar.forget();
   return NS_OK;
 }
@@ -899,20 +826,10 @@ class KeyedScalar {
  public:
   typedef mozilla::Pair<nsCString, nsCOMPtr<nsIVariant>> KeyValuePair;
 
-<<<<<<< HEAD
-  explicit KeyedScalar(const BaseScalarInfo& info)
-      : mScalarInfo(info), mMaximumNumberOfKeys(kMaximumNumberOfKeys){};
-||||||| merged common ancestors
-  explicit KeyedScalar(uint32_t aScalarKind)
-    : mScalarKind(aScalarKind)
-    , mMaximumNumberOfKeys(kMaximumNumberOfKeys)
-  { };
-=======
   // We store the name instead of a reference to the BaseScalarInfo because
   // the BaseScalarInfo can move if it's from a dynamic scalar.
   explicit KeyedScalar(const BaseScalarInfo& info)
       : mScalarName(info.name()), mMaximumNumberOfKeys(kMaximumNumberOfKeys){};
->>>>>>> upstream-releases
   ~KeyedScalar() = default;
 
   // Set, Add and SetMaximum functions as described in the Telemetry IDL.
@@ -952,12 +869,6 @@ class KeyedScalar {
 
   const nsCString mScalarName;
   ScalarKeysMapType mScalarKeys;
-<<<<<<< HEAD
-  const BaseScalarInfo& mScalarInfo;
-||||||| merged common ancestors
-  const uint32_t mScalarKind;
-=======
->>>>>>> upstream-releases
   uint32_t mMaximumNumberOfKeys;
 
   ScalarResult GetScalarForKey(const StaticMutexAutoLock& locker,
@@ -1097,15 +1008,6 @@ nsresult KeyedScalar::GetValue(const nsACString& aStoreName, bool aClearStorage,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-// Forward declaration
-nsresult internal_GetKeyedScalarByEnum(const StaticMutexAutoLock& lock,
-                                       const ScalarKey& aId,
-                                       ProcessID aProcessStorage,
-                                       KeyedScalar** aRet);
-
-||||||| merged common ancestors
-=======
 // Forward declaration
 nsresult internal_GetKeyedScalarByEnum(const StaticMutexAutoLock& lock,
                                        const ScalarKey& aId,
@@ -1116,7 +1018,6 @@ nsresult internal_GetKeyedScalarByEnum(const StaticMutexAutoLock& lock,
 nsresult internal_GetEnumByScalarName(const StaticMutexAutoLock& lock,
                                       const nsACString& aName, ScalarKey* aId);
 
->>>>>>> upstream-releases
 /**
  * Get the scalar for the referenced key.
  * If there's no such key, instantiate a new Scalar object with the
@@ -1150,31 +1051,6 @@ ScalarResult KeyedScalar::GetScalarForKey(const StaticMutexAutoLock& locker,
 
   const BaseScalarInfo& info = internal_GetScalarInfo(locker, uniqueId);
   if (mScalarKeys.Count() >= mMaximumNumberOfKeys) {
-<<<<<<< HEAD
-    if (aKey.EqualsLiteral("telemetry.keyed_scalars_exceed_limit")) {
-      return ScalarResult::TooManyKeys;
-    }
-
-    KeyedScalar* scalarExceed = nullptr;
-
-    ScalarKey uniqueId{
-        static_cast<uint32_t>(
-            mozilla::Telemetry::ScalarID::TELEMETRY_KEYED_SCALARS_EXCEED_LIMIT),
-        false};
-
-    ProcessID process = ProcessID::Parent;
-    nsresult rv =
-        internal_GetKeyedScalarByEnum(locker, uniqueId, process, &scalarExceed);
-
-    if (NS_FAILED(rv)) {
-      return ScalarResult::TooManyKeys;
-    }
-
-    scalarExceed->AddValue(locker, NS_ConvertUTF8toUTF16(mScalarInfo.name()),
-                           1);
-
-||||||| merged common ancestors
-=======
     if (aKey.EqualsLiteral("telemetry.keyed_scalars_exceed_limit")) {
       return ScalarResult::TooManyKeys;
     }
@@ -1196,17 +1072,10 @@ ScalarResult KeyedScalar::GetScalarForKey(const StaticMutexAutoLock& locker,
 
     scalarExceed->AddValue(locker, NS_ConvertUTF8toUTF16(info.name()), 1);
 
->>>>>>> upstream-releases
     return ScalarResult::TooManyKeys;
   }
 
-<<<<<<< HEAD
-  scalar = internal_ScalarAllocate(mScalarInfo);
-||||||| merged common ancestors
-  scalar = internal_ScalarAllocate(mScalarKind);
-=======
   scalar = internal_ScalarAllocate(info);
->>>>>>> upstream-releases
   if (!scalar) {
     return ScalarResult::InvalidType;
   }
@@ -2346,7 +2215,6 @@ void internal_ApplyScalarActions(
             scalar->SetValue(upd.mData->as<nsString>());
             break;
         }
-<<<<<<< HEAD
         break;
       }
       case ScalarActionType::eAdd: {
@@ -2366,69 +2234,6 @@ void internal_ApplyScalarActions(
         if (scalarType != nsITelemetry::SCALAR_TYPE_COUNT) {
           NS_WARNING("Attempting to setMaximum on a non count scalar.");
           continue;
-||||||| merged common ancestors
-      case ScalarActionType::eAdd:
-        {
-          if (scalarType != nsITelemetry::SCALAR_TYPE_COUNT) {
-            NS_WARNING("Attempting to add on a non count scalar.");
-            continue;
-          }
-          // We only support adding uint32_t.
-          if (!upd.mData->is<uint32_t>()) {
-            NS_WARNING("Attempting to add to a count scalar with a non-integer.");
-            continue;
-          }
-          scalar->AddValue(upd.mData->as<uint32_t>());
-          break;
-=======
-        break;
-      }
-      case ScalarActionType::eAdd: {
-        if (scalarType != nsITelemetry::SCALAR_TYPE_COUNT) {
-          NS_WARNING("Attempting to add on a non count scalar.");
-          continue;
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-        // We only support SetMaximum on uint32_t.
-        if (!upd.mData->is<uint32_t>()) {
-          NS_WARNING(
-              "Attempting to setMaximum a count scalar to a non-integer.");
-          continue;
-||||||| merged common ancestors
-      case ScalarActionType::eSetMaximum:
-        {
-          if (scalarType != nsITelemetry::SCALAR_TYPE_COUNT) {
-            NS_WARNING("Attempting to setMaximum on a non count scalar.");
-            continue;
-          }
-          // We only support SetMaximum on uint32_t.
-          if (!upd.mData->is<uint32_t>()) {
-            NS_WARNING("Attempting to setMaximum a count scalar to a non-integer.");
-            continue;
-          }
-          scalar->SetMaximum(upd.mData->as<uint32_t>());
-          break;
-=======
-        // We only support adding uint32_t.
-        if (!upd.mData->is<uint32_t>()) {
-          NS_WARNING("Attempting to add to a count scalar with a non-integer.");
-          continue;
->>>>>>> upstream-releases
-        }
-<<<<<<< HEAD
-        scalar->SetMaximum(upd.mData->as<uint32_t>());
-        break;
-      }
-||||||| merged common ancestors
-=======
-        scalar->AddValue(upd.mData->as<uint32_t>());
-        break;
-      }
-      case ScalarActionType::eSetMaximum: {
-        if (scalarType != nsITelemetry::SCALAR_TYPE_COUNT) {
-          NS_WARNING("Attempting to setMaximum on a non count scalar.");
-          continue;
         }
         // We only support SetMaximum on uint32_t.
         if (!upd.mData->is<uint32_t>()) {
@@ -2439,7 +2244,6 @@ void internal_ApplyScalarActions(
         scalar->SetMaximum(upd.mData->as<uint32_t>());
         break;
       }
->>>>>>> upstream-releases
       default:
         NS_WARNING("Unsupported action coming from scalar child updates.");
     }
@@ -3881,26 +3685,6 @@ void TelemetryScalar::AddDynamicScalarDefinitions(
 
   // Populate the definitions array before acquiring the lock.
   for (auto def : aDefs) {
-<<<<<<< HEAD
-    bool recordOnRelease =
-        def.dataset == nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-    dynamicStubs.AppendElement(DynamicScalarInfo{def.type,
-                                                 recordOnRelease,
-                                                 def.expired,
-                                                 def.name,
-                                                 def.keyed,
-                                                 false /* builtin */,
-                                                 {} /* stores */});
-||||||| merged common ancestors
-    bool recordOnRelease = def.dataset == nsITelemetry::DATASET_RELEASE_CHANNEL_OPTOUT;
-    dynamicStubs.AppendElement(DynamicScalarInfo{
-      def.type,
-      recordOnRelease,
-      def.expired,
-      def.name,
-      def.keyed,
-      false /* builtin */});
-=======
     bool recordOnRelease = def.dataset == nsITelemetry::DATASET_ALL_CHANNELS;
     dynamicStubs.AppendElement(DynamicScalarInfo{def.type,
                                                  recordOnRelease,
@@ -3909,7 +3693,6 @@ void TelemetryScalar::AddDynamicScalarDefinitions(
                                                  def.keyed,
                                                  def.builtin,
                                                  {} /* stores */});
->>>>>>> upstream-releases
   }
 
   {
@@ -3961,22 +3744,10 @@ nsresult TelemetryScalar::SerializeScalars(mozilla::JSONWriter& aWriter) {
     StaticMutexAutoLock locker(gTelemetryScalarsMutex);
     // For persistence, we care about all the datasets. Worst case, they
     // will be empty.
-<<<<<<< HEAD
-    nsresult rv = internal_GetScalarSnapshot(
-        locker, scalarsToReflect, nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN,
-        false, /*aClearScalars*/
-        NS_LITERAL_CSTRING("main"));
-||||||| merged common ancestors
-    nsresult rv = internal_GetScalarSnapshot(locker,
-                                             scalarsToReflect,
-                                             nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN,
-                                             false /*aClearScalars*/);
-=======
     nsresult rv = internal_GetScalarSnapshot(
         locker, scalarsToReflect, nsITelemetry::DATASET_PRERELEASE_CHANNELS,
         false, /*aClearScalars*/
         NS_LITERAL_CSTRING("main"));
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       return rv;
     }
@@ -4023,22 +3794,10 @@ nsresult TelemetryScalar::SerializeKeyedScalars(mozilla::JSONWriter& aWriter) {
     StaticMutexAutoLock locker(gTelemetryScalarsMutex);
     // For persistence, we care about all the datasets. Worst case, they
     // will be empty.
-<<<<<<< HEAD
-    nsresult rv = internal_GetKeyedScalarSnapshot(
-        locker, keyedScalarsToReflect,
-        nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN, false, /*aClearScalars*/
-        NS_LITERAL_CSTRING("main"));
-||||||| merged common ancestors
-    nsresult rv = internal_GetKeyedScalarSnapshot(locker,
-                                         keyedScalarsToReflect,
-                                         nsITelemetry::DATASET_RELEASE_CHANNEL_OPTIN,
-                                         false /*aClearScalars*/);
-=======
     nsresult rv = internal_GetKeyedScalarSnapshot(
         locker, keyedScalarsToReflect,
         nsITelemetry::DATASET_PRERELEASE_CHANNELS, false, /*aClearScalars*/
         NS_LITERAL_CSTRING("main"));
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       return rv;
     }

@@ -956,17 +956,11 @@ public class GeckoSessionTestRule implements TestRule {
      * @return GeckoRuntime object.
      */
     public @NonNull GeckoRuntime getRuntime() {
-<<<<<<< HEAD
-        return RuntimeCreator.getRuntime();
-||||||| merged common ancestors
-        return sRuntime;
-=======
         return RuntimeCreator.getRuntime();
     }
 
     public @Nullable GeckoDisplay getDisplay() {
         return mDisplay;
->>>>>>> upstream-releases
     }
 
     protected static Object setDelegate(final @NonNull Class<?> cls,

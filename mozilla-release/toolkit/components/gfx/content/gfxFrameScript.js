@@ -1,13 +1,6 @@
 /* eslint-env mozilla/frame-script */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
->>>>>>> upstream-releases
 
 const gfxFrameScript = {
   domUtils: null,
@@ -24,18 +17,6 @@ const gfxFrameScript = {
 
     this.domUtils = content.windowUtils;
 
-<<<<<<< HEAD
-    let triggeringPrincipal = Services.scriptSecurityManager.getSystemPrincipal();
-    webNav.loadURI("chrome://gfxsanity/content/sanitytest.html",
-                   Ci.nsIWebNavigation.LOAD_FLAGS_NONE,
-                   null, null, null, triggeringPrincipal);
-
-||||||| merged common ancestors
-    webNav.loadURI("chrome://gfxsanity/content/sanitytest.html",
-                   Ci.nsIWebNavigation.LOAD_FLAGS_NONE,
-                   null, null, null);
-
-=======
     let loadURIOptions = {
       triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal(),
     };
@@ -43,7 +24,6 @@ const gfxFrameScript = {
       "chrome://gfxsanity/content/sanitytest.html",
       loadURIOptions
     );
->>>>>>> upstream-releases
   },
 
   handleEvent(aEvent) {

@@ -326,17 +326,8 @@ bool RTCCertificate::WriteCertificate(JSStructuredCloneWriter* aWriter) const {
   return JS_WriteBytes(aWriter, certs->certs[0].data, certs->certs[0].len);
 }
 
-<<<<<<< HEAD
-bool RTCCertificate::WriteStructuredClone(
-    JSStructuredCloneWriter* aWriter) const {
-||||||| merged common ancestors
-bool
-RTCCertificate::WriteStructuredClone(JSStructuredCloneWriter* aWriter) const
-{
-=======
 bool RTCCertificate::WriteStructuredClone(
     JSContext* aCx, JSStructuredCloneWriter* aWriter) const {
->>>>>>> upstream-releases
   if (!mPrivateKey || !mCertificate) {
     return false;
   }
@@ -373,13 +364,6 @@ bool RTCCertificate::ReadCertificate(JSStructuredCloneReader* aReader) {
   return !!mCertificate;
 }
 
-<<<<<<< HEAD
-bool RTCCertificate::ReadStructuredClone(JSStructuredCloneReader* aReader) {
-||||||| merged common ancestors
-bool
-RTCCertificate::ReadStructuredClone(JSStructuredCloneReader* aReader)
-{
-=======
 // static
 already_AddRefed<RTCCertificate> RTCCertificate::ReadStructuredClone(
     JSContext* aCx, nsIGlobalObject* aGlobal,
@@ -388,7 +372,6 @@ already_AddRefed<RTCCertificate> RTCCertificate::ReadStructuredClone(
     // These objects are mainthread-only.
     return nullptr;
   }
->>>>>>> upstream-releases
   uint32_t version, authType;
   if (!JS_ReadUint32Pair(aReader, &version, &authType) ||
       version != RTCCERTIFICATE_SC_VERSION) {
@@ -407,14 +390,7 @@ already_AddRefed<RTCCertificate> RTCCertificate::ReadStructuredClone(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  return ReadPrivateKey(aReader) && ReadCertificate(aReader);
-||||||| merged common ancestors
-  return ReadPrivateKey(aReader) &&
-      ReadCertificate(aReader);
-=======
   return cert.forget();
->>>>>>> upstream-releases
 }
 
 }  // namespace dom

@@ -23,23 +23,4 @@ class nsAboutRedirector : public nsIAboutModule {
   virtual ~nsAboutRedirector() {}
 };
 
-<<<<<<< HEAD
-/* 56ebedd4-6ccf-48e8-bdae-adc77f044567 */
-#define NS_ABOUT_REDIRECTOR_MODULE_CID               \
-  {                                                  \
-    0x56ebedd4, 0x6ccf, 0x48e8, {                    \
-      0xbd, 0xae, 0xad, 0xc7, 0x7f, 0x04, 0x45, 0x67 \
-    }                                                \
-  }
-
 #endif  // nsAboutRedirector_h__
-||||||| merged common ancestors
-/* 56ebedd4-6ccf-48e8-bdae-adc77f044567 */
-#define NS_ABOUT_REDIRECTOR_MODULE_CID \
-{ 0x56ebedd4, 0x6ccf, 0x48e8, \
-  { 0xbd, 0xae, 0xad, 0xc7, 0x7f, 0x04, 0x45, 0x67 } }
-
-#endif // nsAboutRedirector_h__
-=======
-#endif  // nsAboutRedirector_h__
->>>>>>> upstream-releases

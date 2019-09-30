@@ -65,17 +65,7 @@ class TextTrackList final : public DOMEventTargetHelper {
   IMPL_EVENT_HANDLER(addtrack)
   IMPL_EVENT_HANDLER(removetrack)
 
-<<<<<<< HEAD
-  bool mPendingTextTrackChange = false;
-
  private:
-||||||| merged common ancestors
-  bool mPendingTextTrackChange = false;
-
-private:
-=======
- private:
->>>>>>> upstream-releases
   ~TextTrackList();
 
   nsTArray<RefPtr<TextTrack>> mTextTracks;

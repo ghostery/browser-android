@@ -166,14 +166,6 @@ this.tabExtras = class extends ExtensionAPI {
               },
             };
             windowTracker.addListener("progress", listener);
-<<<<<<< HEAD:mozilla-release/browser/extensions/webcompat-reporter/experimentalAPIs/tabExtras.js
-            let triggeringPrincipal = Services.scriptSecurityManager.createNullPrincipal({});
-            tab.browser.webNavigation.loadURIWithOptions(url, null, null, null,
-                                                         post, null, null, triggeringPrincipal);
-||||||| merged common ancestors
-            tab.browser.webNavigation.loadURIWithOptions(url, null, null, null,
-                                                         post, null, null, null);
-=======
 
             let loadURIOptions = {
               triggeringPrincipal: Services.scriptSecurityManager.createNullPrincipal(
@@ -182,7 +174,6 @@ this.tabExtras = class extends ExtensionAPI {
               postData,
             };
             tab.browser.webNavigation.loadURI(url, loadURIOptions);
->>>>>>> upstream-releases:mozilla-release/browser/extensions/report-site-issue/experimentalAPIs/tabExtras.js
           });
         },
         async getWebcompatInfo(tabId) {

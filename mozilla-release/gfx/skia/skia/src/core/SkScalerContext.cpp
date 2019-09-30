@@ -32,41 +32,6 @@
 #include "SkTextFormatParams.h"
 #include "SkTo.h"
 #include "SkWriteBuffer.h"
-<<<<<<< HEAD
-#include <new>
-||||||| merged common ancestors
-
-void SkGlyph::toMask(SkMask* mask) const {
-    SkASSERT(mask);
-
-    mask->fImage = (uint8_t*)fImage;
-    mask->fBounds.set(fLeft, fTop, fLeft + fWidth, fTop + fHeight);
-    mask->fRowBytes = this->rowBytes();
-    mask->fFormat = static_cast<SkMask::Format>(fMaskFormat);
-}
-
-size_t SkGlyph::computeImageSize() const {
-    const size_t size = this->rowBytes() * fHeight;
-
-    switch (fMaskFormat) {
-        case SkMask::k3D_Format:
-            return 3 * size;
-        default:
-            return size;
-    }
-}
-
-void SkGlyph::zeroMetrics() {
-    fAdvanceX = 0;
-    fAdvanceY = 0;
-    fWidth    = 0;
-    fHeight   = 0;
-    fTop      = 0;
-    fLeft     = 0;
-    fRsbDelta = 0;
-    fLsbDelta = 0;
-}
-=======
 #include <new>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -93,7 +58,6 @@ SkScalerContextRec SkScalerContext::PreprocessRec(const SkTypeface& typeface,
     }
 
     SkColor lumColor = rec.getLuminanceColor();
->>>>>>> upstream-releases
 
     if (rec.fMaskFormat == SkMask::kA8_Format) {
         U8CPU lum = SkComputeLuminance(SkColorGetR(lumColor),
@@ -165,52 +129,6 @@ static const SkMaskGamma& cached_mask_gamma(SkScalar contrast, SkScalar paintGam
     return *gMaskGamma;
 }
 
-<<<<<<< HEAD
-/**
- * Expands fDeviceGamma, fPaintGamma, fContrast, and fLumBits into a mask pre-blend.
- */
-SkMaskGamma::PreBlend SkScalerContext::GetMaskPreBlend(const SkScalerContextRec& rec) {
-    SkAutoMutexAcquire ama(gMaskGammaCacheMutex);
-    const SkMaskGamma& maskGamma = cached_mask_gamma(rec.getContrast(),
-                                                     rec.getPaintGamma(),
-                                                     rec.getDeviceGamma());
-    return maskGamma.preBlend(rec.getLuminanceColor());
-}
-
-size_t SkScalerContext::GetGammaLUTSize(SkScalar contrast, SkScalar paintGamma,
-                                        SkScalar deviceGamma, int* width, int* height) {
-    SkAutoMutexAcquire ama(gMaskGammaCacheMutex);
-    const SkMaskGamma& maskGamma = cached_mask_gamma(contrast,
-                                                     paintGamma,
-                                                     deviceGamma);
-
-    maskGamma.getGammaTableDimensions(width, height);
-    size_t size = (*width)*(*height)*sizeof(uint8_t);
-
-    return size;
-}
-
-bool SkScalerContext::GetGammaLUTData(SkScalar contrast, SkScalar paintGamma, SkScalar deviceGamma,
-                                      uint8_t* data) {
-    SkAutoMutexAcquire ama(gMaskGammaCacheMutex);
-    const SkMaskGamma& maskGamma = cached_mask_gamma(contrast,
-                                                     paintGamma,
-                                                     deviceGamma);
-    const uint8_t* gammaTables = maskGamma.getGammaTables();
-    if (!gammaTables) {
-        return false;
-||||||| merged common ancestors
-void SkScalerContext::getMetrics(SkGlyph* glyph) {
-    generateMetrics(glyph);
-
-    // for now we have separate cache entries for devkerning on and off
-    // in the future we might share caches, but make our measure/draw
-    // code make the distinction. Thus we zap the values if the caller
-    // has not asked for them.
-    if ((fRec.fFlags & SkScalerContext::kDevKernText_Flag) == 0) {
-        // no devkern, so zap the fields
-        glyph->fLsbDelta = glyph->fRsbDelta = 0;
-=======
 /**
  * Expands fDeviceGamma, fPaintGamma, fContrast, and fLumBits into a mask pre-blend.
  */
@@ -247,7 +165,6 @@ bool SkScalerContext::GetGammaLUTData(SkScalar contrast, SkScalar paintGamma, Sk
     const uint8_t* gammaTables = maskGamma.getGammaTables();
     if (!gammaTables) {
         return false;
->>>>>>> upstream-releases
     }
 
     int width, height;
@@ -652,18 +569,6 @@ void SkScalerContext::getImage(const SkGlyph& origGlyph) {
                 dst += dstRB;
             }
             SkMask::FreeImage(dstM.fImage);
-<<<<<<< HEAD
-
-            if (SkMask::kA8_Format == dstM.fFormat && fPreBlendForFilter.isApplicable()) {
-                applyLUTToA8Mask(srcM, fPreBlendForFilter.fG);
-            }
-||||||| merged common ancestors
-
-            if (fPreBlendForFilter.isApplicable()) {
-                applyLUTToA8Mask(srcM, fPreBlendForFilter.fG);
-            }
-=======
->>>>>>> upstream-releases
         }
     }
 }
@@ -934,22 +839,11 @@ protected:
         glyph->zeroMetrics();
     }
     void generateImage(const SkGlyph& glyph) override {}
-<<<<<<< HEAD
-    bool generatePath(SkGlyphID glyph, SkPath* path) override {
-        path->reset();
-        return false;
-    }
-    void generateFontMetrics(SkPaint::FontMetrics* metrics) override {
-||||||| merged common ancestors
-    void generatePath(SkGlyphID glyph, SkPath* path) override {}
-    void generateFontMetrics(SkPaint::FontMetrics* metrics) override {
-=======
     bool generatePath(SkGlyphID glyph, SkPath* path) override {
         path->reset();
         return false;
     }
     void generateFontMetrics(SkFontMetrics* metrics) override {
->>>>>>> upstream-releases
         if (metrics) {
             sk_bzero(metrics, sizeof(*metrics));
         }
@@ -1032,34 +926,13 @@ void SkScalerContext::MakeRecAndEffects(const SkFont& font, const SkPaint& paint
                                         SkScalerContextFlags scalerContextFlags,
                                         const SkMatrix& deviceMatrix,
                                         SkScalerContextRec* rec,
-<<<<<<< HEAD
-                                        SkScalerContextEffects* effects,
-                                        bool enableTypefaceFiltering) {
-    SkASSERT(deviceMatrix == nullptr || !deviceMatrix->hasPerspective());
-||||||| merged common ancestors
-                                        SkScalerContextEffects* effects) {
-    SkASSERT(deviceMatrix == nullptr || !deviceMatrix->hasPerspective());
-=======
                                         SkScalerContextEffects* effects) {
     SkASSERT(!deviceMatrix.hasPerspective());
 
     sk_bzero(rec, sizeof(SkScalerContextRec));
 
     SkTypeface* typeface = font.getTypefaceOrDefault();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    sk_bzero(rec, sizeof(SkScalerContextRec));
-
-    SkTypeface* typeface = SkPaintPriv::GetTypefaceOrDefault(paint);
-
-||||||| merged common ancestors
-    SkTypeface* typeface = paint.getTypeface();
-    if (nullptr == typeface) {
-        typeface = SkTypeface::GetDefaultTypeface();
-    }
-=======
->>>>>>> upstream-releases
     rec->fFontID = typeface->uniqueID();
     rec->fTextSize = font.getSize();
     rec->fPreScaleX = font.getScaleX();
@@ -1164,19 +1037,6 @@ void SkScalerContext::MakeRecAndEffects(const SkFont& font, const SkPaint& paint
     if (font.isForceAutoHinting()) {
         flags |= SkScalerContext::kForceAutohinting_Flag;
     }
-<<<<<<< HEAD
-    if (paint.isVerticalText()) {
-        flags |= SkScalerContext::kVertical_Flag;
-    }
-||||||| merged common ancestors
-    if (paint.isVerticalText()) {
-        flags |= SkScalerContext::kVertical_Flag;
-    }
-    if (paint.getFlags() & SkPaint::kGenA8FromLCD_Flag) {
-        flags |= SkScalerContext::kGenA8FromLCD_Flag;
-    }
-=======
->>>>>>> upstream-releases
     rec->fFlags = SkToU16(flags);
 
     // these modify fFlags, so do them after assigning fFlags
@@ -1201,24 +1061,6 @@ void SkScalerContext::MakeRecAndEffects(const SkFont& font, const SkPaint& paint
     rec->setContrast(0.5f);
 #endif
 
-<<<<<<< HEAD
-    // Allow the fonthost to modify our rec before we use it as a key into the
-    // cache. This way if we're asking for something that they will ignore,
-    // they can modify our rec up front, so we don't create duplicate cache
-    // entries.
-    if (enableTypefaceFiltering) {
-        typeface->onFilterRec(rec);
-    }
-
-||||||| merged common ancestors
-    // Allow the fonthost to modify our rec before we use it as a key into the
-    // cache. This way if we're asking for something that they will ignore,
-    // they can modify our rec up front, so we don't create duplicate cache
-    // entries.
-    typeface->onFilterRec(rec);
-
-=======
->>>>>>> upstream-releases
     if (!SkToBool(scalerContextFlags & SkScalerContextFlags::kFakeGamma)) {
         rec->ignoreGamma();
     }
@@ -1227,87 +1069,6 @@ void SkScalerContext::MakeRecAndEffects(const SkFont& font, const SkPaint& paint
     }
 
     new (effects) SkScalerContextEffects{paint};
-<<<<<<< HEAD
-    if (effects->fMaskFilter) {
-        // Pre-blend is not currently applied to filtered text.
-        // The primary filter is blur, for which contrast makes no sense,
-        // and for which the destination guess error is more visible.
-        // Also, all existing users of blur have calibrated for linear.
-        // TODO: this means fPreBlendForFilter is never used?
-        rec->ignorePreBlend();
-    }
-
-    bool luminanceColorWillBeUsed = rec->getDeviceGamma() != SK_Scalar1 ||
-                                    rec->getPaintGamma()  != SK_Scalar1;
-    // If we're asking for A8, we force the colorlum to be gray, since that
-    // limits the number of unique entries, and the scaler will only look at
-    // the lum of one of them.
-    switch (rec->fMaskFormat) {
-        case SkMask::kLCD16_Format: if (luminanceColorWillBeUsed) {
-            // filter down the luminance color to a finite number of bits
-            SkColor color = rec->getLuminanceColor();
-            rec->setLuminanceColor(SkMaskGamma::CanonicalColor(color));
-        } break;
-        case SkMask::kA8_Format: if (luminanceColorWillBeUsed) {
-            // filter down the luminance to a single component, since A8 can't
-            // use per-component information
-            SkColor color = rec->getLuminanceColor();
-            U8CPU lum = SkComputeLuminance(SkColorGetR(color),
-                                           SkColorGetG(color),
-                                           SkColorGetB(color));
-            // reduce to our finite number of bits
-            color = SkColorSetRGB(lum, lum, lum);
-            rec->setLuminanceColor(SkMaskGamma::CanonicalColor(color));
-        } break;
-        case SkMask::kBW_Format:
-            // No need to differentiate gamma or apply contrast if we're BW
-            rec->ignorePreBlend();
-            break;
-    }
-||||||| merged common ancestors
-    if (effects->fPathEffect) {
-        rec->fMaskFormat = SkMask::kA8_Format;  // force antialiasing when we do the scan conversion
-        // seems like we could support kLCD as well at this point...
-    }
-    if (effects->fMaskFilter) {
-        // force antialiasing with maskfilters
-        rec->fMaskFormat = SkMask::kA8_Format;
-        // Pre-blend is not currently applied to filtered text.
-        // The primary filter is blur, for which contrast makes no sense,
-        // and for which the destination guess error is more visible.
-        // Also, all existing users of blur have calibrated for linear.
-        rec->ignorePreBlend();
-    }
-
-    // If we're asking for A8, we force the colorlum to be gray, since that
-    // limits the number of unique entries, and the scaler will only look at
-    // the lum of one of them.
-    switch (rec->fMaskFormat) {
-        case SkMask::kLCD16_Format: {
-            // filter down the luminance color to a finite number of bits
-            SkColor color = rec->getLuminanceColor();
-            rec->setLuminanceColor(SkMaskGamma::CanonicalColor(color));
-            break;
-        }
-        case SkMask::kA8_Format: {
-            // filter down the luminance to a single component, since A8 can't
-            // use per-component information
-            SkColor color = rec->getLuminanceColor();
-            U8CPU lum = SkComputeLuminance(SkColorGetR(color),
-                                           SkColorGetG(color),
-                                           SkColorGetB(color));
-            // reduce to our finite number of bits
-            color = SkColorSetRGB(lum, lum, lum);
-            rec->setLuminanceColor(SkMaskGamma::CanonicalColor(color));
-            break;
-        }
-        case SkMask::kBW_Format:
-            // No need to differentiate gamma or apply contrast if we're BW
-            rec->ignorePreBlend();
-            break;
-    }
-=======
->>>>>>> upstream-releases
 }
 
 SkDescriptor* SkScalerContext::MakeDescriptorForPaths(SkFontID typefaceID,

@@ -159,13 +159,8 @@ class XPCShellTestThread(Thread):
         self.log = kwargs.get('log')
         self.app_dir_key = kwargs.get('app_dir_key')
         self.interactive = kwargs.get('interactive')
-<<<<<<< HEAD
-        self.prefsFile = kwargs.get('prefsFile')
-||||||| merged common ancestors
-=======
         self.prefsFile = kwargs.get('prefsFile')
         self.verboseIfFails = kwargs.get('verboseIfFails')
->>>>>>> upstream-releases
 
         # only one of these will be set to 1. adding them to the totals in
         # the harness
@@ -1219,18 +1214,11 @@ class XPCShellTests(object):
             fixedInfo[k] = v
         self.mozInfo = fixedInfo
 
-<<<<<<< HEAD
-        self.mozInfo['serviceworker_e10s'] = prefs.get(
-            'dom.serviceWorkers.parent_intercept', False)
-
-||||||| merged common ancestors
-=======
         self.mozInfo['fission'] = prefs.get('fission.autostart', False)
         self.mozInfo['serviceworker_e10s'] = prefs.get(
             'dom.serviceWorkers.parent_intercept', False)
         self.mozInfo['webrender'] = self.enable_webrender
 
->>>>>>> upstream-releases
         mozinfo.update(self.mozInfo)
 
         return True
@@ -1396,16 +1384,9 @@ class XPCShellTests(object):
             'keep_going': self.keepGoing,
             'log': self.log,
             'interactive': self.interactive,
-<<<<<<< HEAD
-            'app_dir_key': appDirKey,
-            'prefsFile': self.prefsFile,
-||||||| merged common ancestors
-            'app_dir_key': appDirKey
-=======
             'app_dir_key': appDirKey,
             'prefsFile': self.prefsFile,
             'verboseIfFails': self.verboseIfFails,
->>>>>>> upstream-releases
         }
 
         if self.sequential:

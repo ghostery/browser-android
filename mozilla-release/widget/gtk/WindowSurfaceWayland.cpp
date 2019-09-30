@@ -20,12 +20,6 @@
 #include <fcntl.h>
 #include <errno.h>
 
-<<<<<<< HEAD
-namespace mozilla {
-namespace widget {
-
-||||||| merged common ancestors
-=======
 #undef LOG
 #ifdef MOZ_LOGGING
 #  include "mozilla/Logging.h"
@@ -44,7 +38,6 @@ namespace widget {
 bool WindowSurfaceWayland::mUseDMABuf = false;
 bool WindowSurfaceWayland::mUseDMABufInitialized = false;
 
->>>>>>> upstream-releases
 /*
   Wayland multi-thread rendering scheme
 
@@ -188,221 +181,6 @@ We allocate shared memory (shm) by mmap(..., MAP_SHARED,...) as an interface
 between us and wayland compositor. We draw our graphics data to the shm and
 handle to wayland compositor by WindowBackBuffer/WindowSurfaceWayland
 (wl_buffer/wl_surface).
-<<<<<<< HEAD
-*/
-
-#define BUFFER_BPP 4
-gfx::SurfaceFormat WindowBackBuffer::mFormat = gfx::SurfaceFormat::B8G8R8A8;
-
-int WaylandShmPool::CreateTemporaryFile(int aSize) {
-||||||| merged common ancestors
-*/
-
-namespace mozilla {
-namespace widget {
-
-#define BUFFER_BPP 4
-
-// TODO: How many rendering threads do we actualy handle?
-static nsCOMArray<nsWaylandDisplay> gWaylandDisplays;
-static StaticMutex gWaylandDisplaysMutex;
-
-// Each thread which is using wayland connection (wl_display) has to operate
-// its own wl_event_queue. Main Firefox thread wl_event_queue is handled
-// by Gtk main loop, other threads/wl_event_queue has to be handled by us.
-//
-// nsWaylandDisplay is our interface to wayland compositor. It provides wayland
-// global objects as we need (wl_display, wl_shm) and operates wl_event_queue on
-// compositor (not the main) thread.
-static nsWaylandDisplay* WaylandDisplayGet(wl_display *aDisplay);
-static void WaylandDisplayRelease(wl_display *aDisplay);
-static void WaylandDisplayLoop(wl_display *aDisplay);
-
-// TODO: Bug 1467125 - We need to integrate wl_display_dispatch_queue_pending() with
-// compositor event loop.
-#define EVENT_LOOP_DELAY (1000/240)
-
-// Get WaylandDisplay for given wl_display and actual calling thread.
-static nsWaylandDisplay*
-WaylandDisplayGetLocked(wl_display *aDisplay, const StaticMutexAutoLock&)
-{
-  nsWaylandDisplay* waylandDisplay = nullptr;
-
-  int len = gWaylandDisplays.Count();
-  for (int i = 0; i < len; i++) {
-    if (gWaylandDisplays[i]->Matches(aDisplay)) {
-      waylandDisplay = gWaylandDisplays[i];
-      break;
-    }
-  }
-
-  if (!waylandDisplay) {
-    waylandDisplay = new nsWaylandDisplay(aDisplay);
-    gWaylandDisplays.AppendObject(waylandDisplay);
-  }
-
-  NS_ADDREF(waylandDisplay);
-  return waylandDisplay;
-}
-
-static nsWaylandDisplay*
-WaylandDisplayGet(wl_display *aDisplay)
-{
-  StaticMutexAutoLock lock(gWaylandDisplaysMutex);
-  return WaylandDisplayGetLocked(aDisplay, lock);
-}
-
-static bool
-WaylandDisplayReleaseLocked(wl_display *aDisplay,
-                            const StaticMutexAutoLock&)
-{
-  int len = gWaylandDisplays.Count();
-  for (int i = 0; i < len; i++) {
-    if (gWaylandDisplays[i]->Matches(aDisplay)) {
-      int rc = gWaylandDisplays[i]->Release();
-      // nsCOMArray::AppendObject()/RemoveObjectAt() also call AddRef()/Release()
-      // so remove WaylandDisplay when ref count is 1.
-      if (rc == 1) {
-        gWaylandDisplays.RemoveObjectAt(i);
-      }
-      return true;
-    }
-  }
-  MOZ_ASSERT(false, "Missing nsWaylandDisplay for this thread!");
-  return false;
-}
-
-static void
-WaylandDisplayRelease(wl_display *aDisplay)
-{
-  StaticMutexAutoLock lock(gWaylandDisplaysMutex);
-  WaylandDisplayReleaseLocked(aDisplay, lock);
-}
-
-static void
-WaylandDisplayLoopLocked(wl_display* aDisplay,
-                         const StaticMutexAutoLock&)
-{
-  int len = gWaylandDisplays.Count();
-  for (int i = 0; i < len; i++) {
-    if (gWaylandDisplays[i]->Matches(aDisplay)) {
-      if (gWaylandDisplays[i]->DisplayLoop()) {
-        MessageLoop::current()->PostDelayedTask(
-            NewRunnableFunction("WaylandDisplayLoop",
-                               &WaylandDisplayLoop,
-                               aDisplay),
-            EVENT_LOOP_DELAY);
-      }
-      break;
-    }
-  }
-}
-
-static void
-WaylandDisplayLoop(wl_display* aDisplay)
-{
-  MOZ_ASSERT(!NS_IsMainThread());
-  StaticMutexAutoLock lock(gWaylandDisplaysMutex);
-  WaylandDisplayLoopLocked(aDisplay, lock);
-}
-
-static void
-global_registry_handler(void *data, wl_registry *registry, uint32_t id,
-                        const char *interface, uint32_t version)
-{
-  if (strcmp(interface, "wl_shm") == 0) {
-    auto interface = reinterpret_cast<nsWaylandDisplay *>(data);
-    auto shm = static_cast<wl_shm*>(
-        wl_registry_bind(registry, id, &wl_shm_interface, 1));
-    wl_proxy_set_queue((struct wl_proxy *)shm, interface->GetEventQueue());
-    interface->SetShm(shm);
-  }
-}
-
-static void
-global_registry_remover(void *data, wl_registry *registry, uint32_t id)
-{
-}
-
-static const struct wl_registry_listener registry_listener = {
-  global_registry_handler,
-  global_registry_remover
-};
-
-wl_shm*
-nsWaylandDisplay::GetShm()
-{
-  MOZ_ASSERT(mThreadId == PR_GetCurrentThread());
-
-  if (!mShm) {
-    // wl_shm is not provided by Gtk so we need to query wayland directly
-    // See weston/simple-shm.c and create_display() for reference.
-    wl_registry* registry = wl_display_get_registry(mDisplay);
-    wl_registry_add_listener(registry, &registry_listener, this);
-
-    wl_proxy_set_queue((struct wl_proxy *)registry, mEventQueue);
-    if (mEventQueue) {
-      wl_display_roundtrip_queue(mDisplay, mEventQueue);
-    } else {
-      wl_display_roundtrip(mDisplay);
-    }
-
-    MOZ_RELEASE_ASSERT(mShm, "Wayland registry query failed!");
-  }
-
-  return(mShm);
-}
-
-bool
-nsWaylandDisplay::DisplayLoop()
-{
-  wl_display_dispatch_queue_pending(mDisplay, mEventQueue);
-  return true;
-}
-
-bool
-nsWaylandDisplay::Matches(wl_display *aDisplay)
-{
-  return mThreadId == PR_GetCurrentThread() && aDisplay == mDisplay;
-}
-
-NS_IMPL_ISUPPORTS(nsWaylandDisplay, nsISupports);
-
-nsWaylandDisplay::nsWaylandDisplay(wl_display *aDisplay)
-  : mThreadId(PR_GetCurrentThread())
-  // gfx::SurfaceFormat::B8G8R8A8 is a basic Wayland format
-  // and is always present.
-  // TODO: Provide also format without alpha (Bug 1470126).
-  , mFormat(gfx::SurfaceFormat::B8G8R8A8)
-  , mShm(nullptr)
-  , mDisplay(aDisplay)
-{
-  if (NS_IsMainThread()) {
-    // Use default event queue in main thread operated by Gtk+.
-    mEventQueue = nullptr;
-  } else {
-    mEventQueue = wl_display_create_queue(mDisplay);
-    MessageLoop::current()->PostTask(NewRunnableFunction(
-        "WaylandDisplayLoop", &WaylandDisplayLoop, mDisplay));
-  }
-}
-
-nsWaylandDisplay::~nsWaylandDisplay()
-{
-  MOZ_ASSERT(mThreadId == PR_GetCurrentThread());
-  // Owned by Gtk+, we don't need to release
-  mDisplay = nullptr;
-
-  if (mEventQueue) {
-    wl_event_queue_destroy(mEventQueue);
-    mEventQueue = nullptr;
-  }
-}
-
-int
-WaylandShmPool::CreateTemporaryFile(int aSize)
-{
-=======
 
 WindowBackBufferDMABuf
 
@@ -421,7 +199,6 @@ available and gfx.wayland_dmabuf_backend.enabled preference is set.
 gfx::SurfaceFormat WindowBackBuffer::mFormat = gfx::SurfaceFormat::B8G8R8A8;
 
 int WaylandShmPool::CreateTemporaryFile(int aSize) {
->>>>>>> upstream-releases
   const char* tmppath = getenv("XDG_RUNTIME_DIR");
   MOZ_RELEASE_ASSERT(tmppath, "Missing XDG_RUNTIME_DIR env variable.");
 
@@ -532,38 +309,17 @@ static void buffer_release(void* data, wl_buffer* buffer) {
 
 static const struct wl_buffer_listener buffer_listener = {buffer_release};
 
-<<<<<<< HEAD
-void WindowBackBuffer::Create(int aWidth, int aHeight) {
-||||||| merged common ancestors
-void WindowBackBuffer::Create(int aWidth, int aHeight)
-{
-=======
 void WindowBackBufferShm::Create(int aWidth, int aHeight) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!IsAttached(), "We can't resize attached buffers.");
 
   int newBufferSize = aWidth * aHeight * BUFFER_BPP;
   mShmPool.Resize(newBufferSize);
 
-<<<<<<< HEAD
-  mWaylandBuffer =
-      wl_shm_pool_create_buffer(mShmPool.GetShmPool(), 0, aWidth, aHeight,
-                                aWidth * BUFFER_BPP, WL_SHM_FORMAT_ARGB8888);
-  wl_proxy_set_queue((struct wl_proxy*)mWaylandBuffer,
-                     mWaylandDisplay->GetEventQueue());
-||||||| merged common ancestors
-  mWaylandBuffer = wl_shm_pool_create_buffer(mShmPool.GetShmPool(), 0,
-                                            aWidth, aHeight, aWidth*BUFFER_BPP,
-                                            WL_SHM_FORMAT_ARGB8888);
-  wl_proxy_set_queue((struct wl_proxy *)mWaylandBuffer,
-                     mWaylandDisplay->GetEventQueue());
-=======
   mWaylandBuffer =
       wl_shm_pool_create_buffer(mShmPool.GetShmPool(), 0, aWidth, aHeight,
                                 aWidth * BUFFER_BPP, WL_SHM_FORMAT_ARGB8888);
   wl_proxy_set_queue((struct wl_proxy*)mWaylandBuffer,
                      GetWaylandDisplay()->GetEventQueue());
->>>>>>> upstream-releases
   wl_buffer_add_listener(mWaylandBuffer, &buffer_listener, this);
 
   mWidth = aWidth;
@@ -575,59 +331,17 @@ void WindowBackBufferShm::Create(int aWidth, int aHeight) {
       mWaylandBuffer ? wl_proxy_get_id((struct wl_proxy*)mWaylandBuffer) : -1));
 }
 
-<<<<<<< HEAD
-void WindowBackBuffer::Release() {
-||||||| merged common ancestors
-void WindowBackBuffer::Release()
-{
-=======
 void WindowBackBufferShm::Release() {
   LOGWAYLAND(("%s [%p]\n", __PRETTY_FUNCTION__, (void*)this));
 
->>>>>>> upstream-releases
   wl_buffer_destroy(mWaylandBuffer);
   mWidth = mHeight = 0;
 }
 
-<<<<<<< HEAD
-void WindowBackBuffer::Clear() {
-  memset(mShmPool.GetImageData(), 0, mHeight * mWidth * BUFFER_BPP);
-}
-
-WindowBackBuffer::WindowBackBuffer(nsWaylandDisplay* aWaylandDisplay,
-                                   int aWidth, int aHeight)
-    : mShmPool(aWaylandDisplay, aWidth * aHeight * BUFFER_BPP),
-      mWaylandBuffer(nullptr),
-      mWidth(aWidth),
-      mHeight(aHeight),
-      mAttached(false),
-      mWaylandDisplay(aWaylandDisplay) {
-  Create(aWidth, aHeight);
-||||||| merged common ancestors
-WindowBackBuffer::WindowBackBuffer(nsWaylandDisplay* aWaylandDisplay,
-                                   int aWidth, int aHeight)
- : mShmPool(aWaylandDisplay, aWidth*aHeight*BUFFER_BPP)
-  ,mWaylandBuffer(nullptr)
-  ,mWidth(aWidth)
-  ,mHeight(aHeight)
-  ,mAttached(false)
-  ,mWaylandDisplay(aWaylandDisplay)
-{
-  Create(aWidth, aHeight);
-=======
 void WindowBackBufferShm::Clear() {
   memset(mShmPool.GetImageData(), 0, mHeight * mWidth * BUFFER_BPP);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-WindowBackBuffer::~WindowBackBuffer() { Release(); }
-||||||| merged common ancestors
-WindowBackBuffer::~WindowBackBuffer()
-{
-  Release();
-}
-=======
 WindowBackBufferShm::WindowBackBufferShm(nsWaylandDisplay* aWaylandDisplay,
                                          int aWidth, int aHeight)
     : WindowBackBuffer(aWaylandDisplay),
@@ -638,18 +352,7 @@ WindowBackBufferShm::WindowBackBufferShm(nsWaylandDisplay* aWaylandDisplay,
       mAttached(false) {
   Create(aWidth, aHeight);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool WindowBackBuffer::Resize(int aWidth, int aHeight) {
-  if (aWidth == mWidth && aHeight == mHeight) return true;
-||||||| merged common ancestors
-bool
-WindowBackBuffer::Resize(int aWidth, int aHeight)
-{
-  if (aWidth == mWidth && aHeight == mHeight)
-    return true;
-=======
 WindowBackBufferShm::~WindowBackBufferShm() { Release(); }
 
 bool WindowBackBufferShm::Resize(int aWidth, int aHeight) {
@@ -657,7 +360,6 @@ bool WindowBackBufferShm::Resize(int aWidth, int aHeight) {
 
   LOGWAYLAND(
       ("%s [%p] %d %d\n", __PRETTY_FUNCTION__, (void*)this, aWidth, aHeight));
->>>>>>> upstream-releases
 
   Release();
   Create(aWidth, aHeight);
@@ -665,15 +367,6 @@ bool WindowBackBufferShm::Resize(int aWidth, int aHeight) {
   return (mWaylandBuffer != nullptr);
 }
 
-<<<<<<< HEAD
-void WindowBackBuffer::Attach(wl_surface* aSurface) {
-  wl_surface_attach(aSurface, mWaylandBuffer, 0, 0);
-||||||| merged common ancestors
-void
-WindowBackBuffer::Attach(wl_surface* aSurface)
-{
-  wl_surface_attach(aSurface, mWaylandBuffer, 0, 0);
-=======
 void WindowBackBuffer::Attach(wl_surface* aSurface) {
   LOGWAYLAND(
       ("%s [%p] wl_surface %p ID %d wl_buffer %p ID %d\n", __PRETTY_FUNCTION__,
@@ -683,21 +376,11 @@ void WindowBackBuffer::Attach(wl_surface* aSurface) {
        GetWlBuffer() ? wl_proxy_get_id((struct wl_proxy*)GetWlBuffer()) : -1));
 
   wl_surface_attach(aSurface, GetWlBuffer(), 0, 0);
->>>>>>> upstream-releases
   wl_surface_commit(aSurface);
   wl_display_flush(WaylandDisplayGetWLDisplay());
   SetAttached();
 }
 
-<<<<<<< HEAD
-void WindowBackBuffer::Detach() { mAttached = false; }
-||||||| merged common ancestors
-void
-WindowBackBuffer::Detach()
-{
-  mAttached = false;
-}
-=======
 void WindowBackBufferShm::Detach(wl_buffer* aBuffer) {
   LOGWAYLAND(("%s [%p] wl_buffer %p ID %d\n", __PRETTY_FUNCTION__, (void*)this,
               (void*)aBuffer,
@@ -705,69 +388,27 @@ void WindowBackBufferShm::Detach(wl_buffer* aBuffer) {
 
   mAttached = false;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool WindowBackBuffer::SetImageDataFromBuffer(
-    class WindowBackBuffer* aSourceBuffer) {
-  if (!IsMatchingSize(aSourceBuffer)) {
-    Resize(aSourceBuffer->mWidth, aSourceBuffer->mHeight);
-||||||| merged common ancestors
-bool
-WindowBackBuffer::SetImageDataFromBuffer(
-  class WindowBackBuffer* aSourceBuffer)
-{
-  if (!IsMatchingSize(aSourceBuffer)) {
-    Resize(aSourceBuffer->mWidth, aSourceBuffer->mHeight);
-=======
 bool WindowBackBufferShm::SetImageDataFromBuffer(
     class WindowBackBuffer* aSourceBuffer) {
   auto sourceBuffer = static_cast<class WindowBackBufferShm*>(aSourceBuffer);
   if (!IsMatchingSize(sourceBuffer)) {
     Resize(sourceBuffer->mWidth, sourceBuffer->mHeight);
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  mShmPool.SetImageDataFromPool(
-      &aSourceBuffer->mShmPool,
-      aSourceBuffer->mWidth * aSourceBuffer->mHeight * BUFFER_BPP);
-||||||| merged common ancestors
-  mShmPool.SetImageDataFromPool(&aSourceBuffer->mShmPool,
-    aSourceBuffer->mWidth * aSourceBuffer->mHeight * BUFFER_BPP);
-=======
   mShmPool.SetImageDataFromPool(
       &sourceBuffer->mShmPool,
       sourceBuffer->mWidth * sourceBuffer->mHeight * BUFFER_BPP);
->>>>>>> upstream-releases
   return true;
 }
 
-<<<<<<< HEAD
-already_AddRefed<gfx::DrawTarget> WindowBackBuffer::Lock() {
-||||||| merged common ancestors
-already_AddRefed<gfx::DrawTarget>
-WindowBackBuffer::Lock()
-{
-=======
 already_AddRefed<gfx::DrawTarget> WindowBackBufferShm::Lock() {
   LOGWAYLAND((
       "%s [%p] [%d x %d] wl_buffer %p ID %d\n", __PRETTY_FUNCTION__,
       (void*)this, mWidth, mHeight, (void*)mWaylandBuffer,
       mWaylandBuffer ? wl_proxy_get_id((struct wl_proxy*)mWaylandBuffer) : -1));
 
->>>>>>> upstream-releases
   gfx::IntSize lockSize(mWidth, mHeight);
-<<<<<<< HEAD
-  return gfxPlatform::CreateDrawTargetForData(
-      static_cast<unsigned char*>(mShmPool.GetImageData()), lockSize,
-      BUFFER_BPP * mWidth, mFormat);
-||||||| merged common ancestors
-  return gfxPlatform::CreateDrawTargetForData(static_cast<unsigned char*>(mShmPool.GetImageData()),
-                                              lockSize,
-                                              BUFFER_BPP * mWidth,
-                                              mWaylandDisplay->GetSurfaceFormat());
-=======
   mIsLocked = true;
   return gfxPlatform::CreateDrawTargetForData(
       static_cast<unsigned char*>(mShmPool.GetImageData()), lockSize,
@@ -815,17 +456,8 @@ int WindowBackBufferDMABuf::GetHeight() { return mDMAbufSurface.GetHeight(); }
 
 wl_buffer* WindowBackBufferDMABuf::GetWlBuffer() {
   return mDMAbufSurface.GetWLBuffer();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void frame_callback_handler(void* data, struct wl_callback* callback,
-                                   uint32_t time) {
-||||||| merged common ancestors
-static void
-frame_callback_handler(void *data, struct wl_callback *callback, uint32_t time)
-{
-=======
 bool WindowBackBufferDMABuf::IsLocked() { return mDMAbufSurface.IsMapped(); }
 
 bool WindowBackBufferDMABuf::Resize(int aWidth, int aHeight) {
@@ -848,7 +480,6 @@ void WindowBackBufferDMABuf::Clear() { mDMAbufSurface.Clear(); }
 
 static void frame_callback_handler(void* data, struct wl_callback* callback,
                                    uint32_t time) {
->>>>>>> upstream-releases
   auto surface = reinterpret_cast<WindowSurfaceWayland*>(data);
   surface->FrameCallbackHandler();
 
@@ -899,45 +530,15 @@ WindowSurfaceWayland::~WindowSurfaceWayland() {
   }
 }
 
-<<<<<<< HEAD
-  if (!mIsMainThread) {
-    // We can be destroyed from main thread even though we was created/used
-    // in compositor thread. We have to unref/delete WaylandDisplay in
-    // compositor thread then and we can't use MessageLoop::current() here.
-    mDisplayThreadMessageLoop->PostTask(NewRunnableFunction(
-        "WaylandDisplayRelease", &WaylandDisplayRelease, mWaylandDisplay));
-  } else {
-    WaylandDisplayRelease(mWaylandDisplay);
-||||||| merged common ancestors
-  if (!mIsMainThread) {
-    // We can be destroyed from main thread even though we was created/used
-    // in compositor thread. We have to unref/delete WaylandDisplay in compositor
-    // thread then and we can't use MessageLoop::current() here.
-    mDisplayThreadMessageLoop->PostTask(
-      NewRunnableFunction("WaylandDisplayRelease",
-                          &WaylandDisplayRelease,
-                          mWaylandDisplay->GetDisplay()));
-  } else {
-    WaylandDisplayRelease(mWaylandDisplay->GetDisplay());
-=======
 bool WindowSurfaceWayland::UseDMABufBackend() {
   if (!mUseDMABufInitialized) {
     mUseDMABuf = nsWaylandDisplay::IsDMABufEnabled();
     LOGWAYLAND(("%s DMABuf state %d\n", __PRETTY_FUNCTION__, mUseDMABuf));
     mUseDMABufInitialized = true;
->>>>>>> upstream-releases
   }
   return mUseDMABuf;
 }
 
-<<<<<<< HEAD
-WindowBackBuffer* WindowSurfaceWayland::GetWaylandBufferToDraw(int aWidth,
-                                                               int aHeight) {
-||||||| merged common ancestors
-WindowBackBuffer*
-WindowSurfaceWayland::GetWaylandBufferToDraw(int aWidth, int aHeight)
-{
-=======
 WindowBackBuffer* WindowSurfaceWayland::CreateWaylandBuffer(int aWidth,
                                                             int aHeight) {
   if (UseDMABufBackend()) {
@@ -969,7 +570,6 @@ WindowBackBuffer* WindowSurfaceWayland::GetWaylandBufferToDraw(
               (void*)this, aWidth, aHeight));
 
   // There's no buffer created yet, create a new one.
->>>>>>> upstream-releases
   if (!mWaylandBuffer) {
     MOZ_ASSERT(aFullScreenUpdate, "Created new buffer for partial drawing!");
     LOGWAYLAND(("%s [%p] Created new buffer [%d x %d]\n", __PRETTY_FUNCTION__,
@@ -1065,26 +665,6 @@ WindowBackBuffer* WindowSurfaceWayland::GetWaylandBufferToDraw(
   return mWaylandBuffer;
 }
 
-<<<<<<< HEAD
-already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::LockWaylandBuffer(
-    int aWidth, int aHeight, bool aClearBuffer) {
-  WindowBackBuffer* buffer = GetWaylandBufferToDraw(aWidth, aHeight);
-  if (!buffer) {
-    NS_WARNING(
-        "WindowSurfaceWayland::LockWaylandBuffer(): No buffer available");
-    return nullptr;
-  }
-
-  if (aClearBuffer) {
-    buffer->Clear();
-||||||| merged common ancestors
-already_AddRefed<gfx::DrawTarget>
-WindowSurfaceWayland::LockWaylandBuffer(int aWidth, int aHeight)
-{
-  WindowBackBuffer* buffer = GetWaylandBufferToDraw(aWidth, aHeight);
-  if (buffer) {
-    return buffer->Lock();
-=======
 already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::LockWaylandBuffer(
     int aWidth, int aHeight, bool aClearBuffer, bool aFullScreenUpdate) {
   WindowBackBuffer* buffer =
@@ -1097,15 +677,8 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::LockWaylandBuffer(
     NS_WARNING(
         "WindowSurfaceWayland::LockWaylandBuffer(): No buffer available");
     return nullptr;
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-  return buffer->Lock();
-||||||| merged common ancestors
-  NS_WARNING("WindowSurfaceWayland::LockWaylandBuffer(): No buffer available");
-  return nullptr;
-=======
   if (aClearBuffer) {
     buffer->Clear();
   }
@@ -1116,7 +689,6 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::LockWaylandBuffer(
 void WindowSurfaceWayland::UnlockWaylandBuffer() {
   LOGWAYLAND(("%s [%p]\n", __PRETTY_FUNCTION__, (void*)this));
   mWaylandBuffer->Unlock();
->>>>>>> upstream-releases
 }
 
 already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::LockImageSurface(
@@ -1131,16 +703,6 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::LockImageSurface(
     }
   }
 
-<<<<<<< HEAD
-  return gfxPlatform::CreateDrawTargetForData(
-      mImageSurface->Data(), mImageSurface->GetSize(), mImageSurface->Stride(),
-      WindowBackBuffer::GetSurfaceFormat());
-||||||| merged common ancestors
-  return gfxPlatform::CreateDrawTargetForData(mImageSurface->Data(),
-                                              mImageSurface->GetSize(),
-                                              mImageSurface->Stride(),
-                                              mWaylandDisplay->GetSurfaceFormat());
-=======
   return gfxPlatform::CreateDrawTargetForData(
       mImageSurface->Data(), mImageSurface->GetSize(), mImageSurface->Stride(),
       WindowBackBuffer::GetSurfaceFormat());
@@ -1167,7 +729,6 @@ static bool IsPopupFullScreenUpdate(LayoutDeviceIntRect& screenRect,
 
   return (screenRect.width == lockSize.width &&
           screenRect.height == lockSize.height);
->>>>>>> upstream-releases
 }
 
 /*
@@ -1192,17 +753,6 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::Lock(
   gfx::IntSize lockSize(bounds.XMost(), bounds.YMost());
 
   // Are we asked for entire nsWindow to draw?
-<<<<<<< HEAD
-  mDrawToWaylandBufferDirectly =
-      (aRegion.GetNumRects() == 1 && bounds.x == 0 && bounds.y == 0 &&
-       lockSize.width == screenRect.width &&
-       lockSize.height == screenRect.height);
-||||||| merged common ancestors
-  mDrawToWaylandBufferDirectly = (aRegion.GetNumRects() == 1 &&
-                              bounds.x == 0 && bounds.y == 0 &&
-                              lockSize.width == screenRect.width &&
-                              lockSize.height == screenRect.height);
-=======
   bool isTransparentPopup =
       mWindow->IsWaylandPopup() &&
       (eTransparencyTransparent == mWindow->GetTransparencyMode());
@@ -1235,17 +785,8 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::Lock(
     mDrawToWaylandBufferDirectly = true;
     needsClear = true;
   }
->>>>>>> upstream-releases
 
   if (mDrawToWaylandBufferDirectly) {
-<<<<<<< HEAD
-    RefPtr<gfx::DrawTarget> dt =
-        LockWaylandBuffer(screenRect.width, screenRect.height,
-                          mWindow->WaylandSurfaceNeedsClear());
-||||||| merged common ancestors
-    RefPtr<gfx::DrawTarget> dt = LockWaylandBuffer(screenRect.width,
-                                                   screenRect.height);
-=======
     // If there's any pending image commit scratch them as we're going
     // to redraw the whole sceen anyway.
     mDelayedImageCommits.Clear();
@@ -1253,7 +794,6 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::Lock(
     RefPtr<gfx::DrawTarget> dt =
         LockWaylandBuffer(screenRect.width, screenRect.height, needsClear,
                           /* aFullScreenUpdate */ true);
->>>>>>> upstream-releases
     if (dt) {
       if (bufferRedraw) {
         mLastScreenRect = screenRect;
@@ -1270,14 +810,6 @@ already_AddRefed<gfx::DrawTarget> WindowSurfaceWayland::Lock(
   return LockImageSurface(lockSize);
 }
 
-<<<<<<< HEAD
-bool WindowSurfaceWayland::CommitImageSurfaceToWaylandBuffer(
-    const LayoutDeviceIntRegion& aRegion) {
-||||||| merged common ancestors
-bool
-WindowSurfaceWayland::CommitImageSurfaceToWaylandBuffer(const LayoutDeviceIntRegion& aRegion)
-{
-=======
 void WindowImageSurface::Draw(gfx::SourceSurface* aSurface,
                               gfx::DrawTarget* aDest,
                               const LayoutDeviceIntRegion& aRegion) {
@@ -1321,7 +853,6 @@ void WindowSurfaceWayland::DrawDelayedImageCommits(
 bool WindowSurfaceWayland::CommitImageSurfaceToWaylandBuffer(
     const LayoutDeviceIntRegion& aRegion,
     LayoutDeviceIntRegion& aWaylandBufferDamage) {
->>>>>>> upstream-releases
   MOZ_ASSERT(!mDrawToWaylandBufferDirectly);
 
   LayoutDeviceIntRect screenRect = mWindow->GetBounds();
@@ -1332,35 +863,15 @@ bool WindowSurfaceWayland::CommitImageSurfaceToWaylandBuffer(
     return false;
   }
 
-<<<<<<< HEAD
-  RefPtr<gfx::DrawTarget> dt = LockWaylandBuffer(
-      screenRect.width, screenRect.height, mWindow->WaylandSurfaceNeedsClear());
-||||||| merged common ancestors
-  RefPtr<gfx::DrawTarget> dt = LockWaylandBuffer(screenRect.width,
-                                                 screenRect.height);
-=======
   LOGWAYLAND(("%s [%p] screenSize [%d x %d]\n", __PRETTY_FUNCTION__,
               (void*)this, screenRect.width, screenRect.height));
 
->>>>>>> upstream-releases
   RefPtr<gfx::SourceSurface> surf =
-<<<<<<< HEAD
-      gfx::Factory::CreateSourceSurfaceForCairoSurface(
-          mImageSurface->CairoSurface(), mImageSurface->GetSize(),
-          mImageSurface->Format());
-  if (!dt || !surf) {
-||||||| merged common ancestors
-    gfx::Factory::CreateSourceSurfaceForCairoSurface(mImageSurface->CairoSurface(),
-                                                     mImageSurface->GetSize(),
-                                                     mImageSurface->Format());
-  if (!dt || !surf) {
-=======
       gfx::Factory::CreateSourceSurfaceForCairoSurface(
           mImageSurface->CairoSurface(), mImageSurface->GetSize(),
           mImageSurface->Format());
   if (!surf) {
     NS_WARNING("Failed to create source cairo surface!");
->>>>>>> upstream-releases
     return false;
   }
 
@@ -1407,13 +918,6 @@ static void WaylandBufferDelayCommitHandler(WindowSurfaceWayland** aSurface) {
   }
 }
 
-<<<<<<< HEAD
-void WindowSurfaceWayland::CommitWaylandBuffer() {
-||||||| merged common ancestors
-void
-WindowSurfaceWayland::CommitWaylandBuffer()
-{
-=======
 void WindowSurfaceWayland::CalcRectScale(LayoutDeviceIntRect& aRect,
                                          int aScale) {
   aRect.x = aRect.x / aScale;
@@ -1425,7 +929,6 @@ void WindowSurfaceWayland::CalcRectScale(LayoutDeviceIntRect& aRect,
 }
 
 void WindowSurfaceWayland::CommitWaylandBuffer() {
->>>>>>> upstream-releases
   MOZ_ASSERT(mPendingCommit, "Committing empty surface!");
 
   LOGWAYLAND(("%s [%p]\n", __PRETTY_FUNCTION__, (void*)this));
@@ -1508,32 +1011,15 @@ void WindowSurfaceWayland::CommitWaylandBuffer() {
     mNeedScaleFactorUpdate = true;
   } else {
     gint scaleFactor = mWindow->GdkScaleFactor();
-<<<<<<< HEAD
-    for (auto iter = mWaylandBufferDamage.RectIter(); !iter.Done();
-         iter.Next()) {
-      const mozilla::LayoutDeviceIntRect& r = iter.Get();
-||||||| merged common ancestors
-    for (auto iter = mWaylandBufferDamage.RectIter(); !iter.Done(); iter.Next()) {
-      const mozilla::LayoutDeviceIntRect &r = iter.Get();
-=======
     for (auto iter = mWaylandBufferDamage.RectIter(); !iter.Done();
          iter.Next()) {
       mozilla::LayoutDeviceIntRect r = iter.Get();
->>>>>>> upstream-releases
       // We need to remove the scale factor because the wl_surface_damage
       // also multiplies by current  scale factor.
-<<<<<<< HEAD
-      wl_surface_damage(waylandSurface, r.x / scaleFactor, r.y / scaleFactor,
-                        r.width / scaleFactor, r.height / scaleFactor);
-||||||| merged common ancestors
-      wl_surface_damage(waylandSurface, r.x/scaleFactor, r.y/scaleFactor,
-                        r.width/scaleFactor, r.height/scaleFactor);
-=======
       if (scaleFactor > 1) {
         CalcRectScale(r, scaleFactor);
       }
       wl_surface_damage(waylandSurface, r.x, r.y, r.width, r.height);
->>>>>>> upstream-releases
     }
   }
 

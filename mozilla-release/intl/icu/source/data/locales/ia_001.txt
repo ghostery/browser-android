@@ -1,19 +1,5 @@
 ﻿// © 2016 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html#License
-<<<<<<< HEAD:mozilla-release/intl/icu/source/data/locales/ia_001.txt
 ia_001{
-    Version{"2.1.44.15"}
-||||||| merged common ancestors
-ff_GN{
-    Currencies{
-        GNF{
-            "FG",
-            "GNF",
-        }
-    }
-    Version{"2.1.38.69"}
-=======
-ff_GN{
-    "%%ALIAS"{"ff_Latn_GN"}
->>>>>>> upstream-releases:mozilla-release/intl/icu/source/data/curr/ff_GN.txt
+    Version{"2.1.47.82"}
 }

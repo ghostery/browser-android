@@ -52,22 +52,7 @@ nsProperties::Has(const char* prop, bool* result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProperties::GetKeys(uint32_t* aCount, char*** aKeys) {
-  if (NS_WARN_IF(!aCount) || NS_WARN_IF(!aKeys)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-||||||| merged common ancestors
-nsProperties::GetKeys(uint32_t* aCount, char*** aKeys)
-{
-  if (NS_WARN_IF(!aCount) || NS_WARN_IF(!aKeys)) {
-    return NS_ERROR_INVALID_ARG;
-  }
-
-=======
 nsProperties::GetKeys(nsTArray<nsCString>& aKeys) {
->>>>>>> upstream-releases
   uint32_t count = Count();
   aKeys.SetCapacity(count);
 

@@ -19,19 +19,7 @@ export let requestStore = new PaymentsStore({
     // preserveFieldValues: true,
     selectedStateKey: "selectedPaymentCard",
   },
-<<<<<<< HEAD
   "shipping-address-page": {
-    guid: null,
-  },
-  "payer-address-page": {
-    guid: null,
-  },
-  "billing-address-page": {
-||||||| merged common ancestors
-  "address-page": {
-=======
-  "shipping-address-page": {
->>>>>>> upstream-releases
     guid: null,
   },
   "payer-address-page": {

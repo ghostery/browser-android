@@ -28,50 +28,6 @@ using namespace js;
 
 // ES2018 draft rev 7a2d3f053ecc2336fc19f377c55d52d78b11b296
 // 23.4.3.1 WeakSet.prototype.add ( value )
-<<<<<<< HEAD
-/* static */ MOZ_ALWAYS_INLINE bool WeakSetObject::add_impl(
-    JSContext* cx, const CallArgs& args) {
-  MOZ_ASSERT(is(args.thisv()));
-
-  // Step 4.
-  if (!args.get(0).isObject()) {
-    ReportNotObjectWithName(cx, "WeakSet value", args.get(0));
-    return false;
-  }
-
-  // Steps 5-7.
-  RootedObject value(cx, &args[0].toObject());
-  Rooted<WeakSetObject*> map(cx, &args.thisv().toObject().as<WeakSetObject>());
-  if (!WeakCollectionPutEntryInternal(cx, map, value, TrueHandleValue)) {
-    return false;
-  }
-
-  // Steps 6.a.i, 8.
-  args.rval().set(args.thisv());
-  return true;
-||||||| merged common ancestors
-MOZ_ALWAYS_INLINE bool
-WeakSet_add_impl(JSContext* cx, const CallArgs& args)
-{
-    MOZ_ASSERT(IsWeakSet(args.thisv()));
-
-    // Step 4.
-    if (!args.get(0).isObject()) {
-        ReportNotObjectWithName(cx, "WeakSet value", args.get(0));
-        return false;
-    }
-
-    // Steps 5-7.
-    RootedObject value(cx, &args[0].toObject());
-    Rooted<WeakSetObject*> map(cx, &args.thisv().toObject().as<WeakSetObject>());
-    if (!WeakCollectionPutEntryInternal(cx, map, value, TrueHandleValue)) {
-        return false;
-    }
-
-    // Steps 6.a.i, 8.
-    args.rval().set(args.thisv());
-    return true;
-=======
 /* static */ MOZ_ALWAYS_INLINE bool WeakSetObject::add_impl(
     JSContext* cx, const CallArgs& args) {
   MOZ_ASSERT(is(args.thisv()));
@@ -92,30 +48,14 @@ WeakSet_add_impl(JSContext* cx, const CallArgs& args)
   // Steps 6.a.i, 8.
   args.rval().set(args.thisv());
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool WeakSetObject::add(JSContext* cx, unsigned argc, Value* vp) {
-  // Steps 1-3.
-  CallArgs args = CallArgsFromVp(argc, vp);
-  return CallNonGenericMethod<WeakSetObject::is, WeakSetObject::add_impl>(cx,
-                                                                          args);
-||||||| merged common ancestors
-static bool
-WeakSet_add(JSContext* cx, unsigned argc, Value* vp)
-{
-    // Steps 1-3.
-    CallArgs args = CallArgsFromVp(argc, vp);
-    return CallNonGenericMethod<IsWeakSet, WeakSet_add_impl>(cx, args);
-=======
 /* static */
 bool WeakSetObject::add(JSContext* cx, unsigned argc, Value* vp) {
   // Steps 1-3.
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<WeakSetObject::is, WeakSetObject::add_impl>(cx,
                                                                           args);
->>>>>>> upstream-releases
 }
 
 // ES2018 draft rev 7a2d3f053ecc2336fc19f377c55d52d78b11b296
@@ -146,28 +86,12 @@ bool WeakSetObject::add(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool WeakSetObject::delete_(JSContext* cx, unsigned argc,
-                                         Value* vp) {
-  // Steps 1-3.
-  CallArgs args = CallArgsFromVp(argc, vp);
-  return CallNonGenericMethod<WeakSetObject::is, WeakSetObject::delete_impl>(
-      cx, args);
-||||||| merged common ancestors
-static bool
-WeakSet_delete(JSContext* cx, unsigned argc, Value* vp)
-{
-    // Steps 1-3.
-    CallArgs args = CallArgsFromVp(argc, vp);
-    return CallNonGenericMethod<IsWeakSet, WeakSet_delete_impl>(cx, args);
-=======
 /* static */
 bool WeakSetObject::delete_(JSContext* cx, unsigned argc, Value* vp) {
   // Steps 1-3.
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<WeakSetObject::is, WeakSetObject::delete_impl>(
       cx, args);
->>>>>>> upstream-releases
 }
 
 // ES2018 draft rev 7a2d3f053ecc2336fc19f377c55d52d78b11b296
@@ -197,27 +121,12 @@ bool WeakSetObject::delete_(JSContext* cx, unsigned argc, Value* vp) {
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool WeakSetObject::has(JSContext* cx, unsigned argc, Value* vp) {
-  // Steps 1-3.
-  CallArgs args = CallArgsFromVp(argc, vp);
-  return CallNonGenericMethod<WeakSetObject::is, WeakSetObject::has_impl>(cx,
-                                                                          args);
-||||||| merged common ancestors
-static bool
-WeakSet_has(JSContext* cx, unsigned argc, Value* vp)
-{
-    // Steps 1-3.
-    CallArgs args = CallArgsFromVp(argc, vp);
-    return CallNonGenericMethod<IsWeakSet, WeakSet_has_impl>(cx, args);
-=======
 /* static */
 bool WeakSetObject::has(JSContext* cx, unsigned argc, Value* vp) {
   // Steps 1-3.
   CallArgs args = CallArgsFromVp(argc, vp);
   return CallNonGenericMethod<WeakSetObject::is, WeakSetObject::has_impl>(cx,
                                                                           args);
->>>>>>> upstream-releases
 }
 
 const ClassSpec WeakSetObject::classSpec_ = {
@@ -256,57 +165,6 @@ bool WeakSetObject::isBuiltinAdd(HandleValue add) {
   return IsNativeFunction(add, WeakSetObject::add);
 }
 
-<<<<<<< HEAD
-bool WeakSetObject::construct(JSContext* cx, unsigned argc, Value* vp) {
-  // Based on our "Set" implementation instead of the more general ES6 steps.
-  CallArgs args = CallArgsFromVp(argc, vp);
-
-  if (!ThrowIfNotConstructing(cx, args, "WeakSet")) {
-    return false;
-  }
-
-  RootedObject proto(cx);
-  if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-    return false;
-  }
-
-  Rooted<WeakSetObject*> obj(cx, WeakSetObject::create(cx, proto));
-  if (!obj) {
-    return false;
-  }
-
-  if (!args.get(0).isNullOrUndefined()) {
-    RootedValue iterable(cx, args[0]);
-    bool optimized = false;
-    if (!IsOptimizableInitForSet<GlobalObject::getOrCreateWeakSetPrototype,
-                                 isBuiltinAdd>(cx, obj, iterable, &optimized)) {
-      return false;
-||||||| merged common ancestors
-bool
-WeakSetObject::isBuiltinAdd(HandleValue add)
-{
-    return IsNativeFunction(add, WeakSet_add);
-}
-
-bool
-WeakSetObject::construct(JSContext* cx, unsigned argc, Value* vp)
-{
-    // Based on our "Set" implementation instead of the more general ES6 steps.
-    CallArgs args = CallArgsFromVp(argc, vp);
-
-    if (!ThrowIfNotConstructing(cx, args, "WeakSet")) {
-        return false;
-    }
-
-    RootedObject proto(cx);
-    if (!GetPrototypeFromBuiltinConstructor(cx, args, &proto)) {
-        return false;
-    }
-
-    Rooted<WeakSetObject*> obj(cx, WeakSetObject::create(cx, proto));
-    if (!obj) {
-        return false;
-=======
 bool WeakSetObject::construct(JSContext* cx, unsigned argc, Value* vp) {
   // Based on our "Set" implementation instead of the more general ES6 steps.
   CallArgs args = CallArgsFromVp(argc, vp);
@@ -331,29 +189,8 @@ bool WeakSetObject::construct(JSContext* cx, unsigned argc, Value* vp) {
     if (!IsOptimizableInitForSet<GlobalObject::getOrCreateWeakSetPrototype,
                                  isBuiltinAdd>(cx, obj, iterable, &optimized)) {
       return false;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (optimized) {
-      RootedValue keyVal(cx);
-      RootedObject keyObject(cx);
-      RootedArrayObject array(cx, &iterable.toObject().as<ArrayObject>());
-      for (uint32_t index = 0; index < array->getDenseInitializedLength();
-           ++index) {
-        keyVal.set(array->getDenseElement(index));
-        MOZ_ASSERT(!keyVal.isMagic(JS_ELEMENTS_HOLE));
-
-        if (keyVal.isPrimitive()) {
-          ReportNotObjectWithName(cx, "WeakSet value", keyVal);
-          return false;
-||||||| merged common ancestors
-    if (!args.get(0).isNullOrUndefined()) {
-        RootedValue iterable(cx, args[0]);
-        bool optimized = false;
-        if (!IsOptimizableInitForSet<GlobalObject::getOrCreateWeakSetPrototype, isBuiltinAdd>(cx, obj, iterable, &optimized)) {
-            return false;
-=======
     if (optimized) {
       RootedValue keyVal(cx);
       RootedObject keyObject(cx);
@@ -366,7 +203,6 @@ bool WeakSetObject::construct(JSContext* cx, unsigned argc, Value* vp) {
         if (keyVal.isPrimitive()) {
           ReportNotObject(cx, JSMSG_OBJECT_REQUIRED_WEAKSET_VAL, keyVal);
           return false;
->>>>>>> upstream-releases
         }
 
         keyObject = &keyVal.toObject();

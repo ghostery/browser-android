@@ -217,44 +217,6 @@ already_AddRefed<nsXULElement> nsXULElement::CreateFromPrototype(
   return nullptr;
 }
 
-<<<<<<< HEAD
-nsresult nsXULElement::CreateFromPrototype(nsXULPrototypeElement* aPrototype,
-                                           nsIDocument* aDocument,
-                                           bool aIsScriptable, bool aIsRoot,
-                                           Element** aResult) {
-  // Create an nsXULElement from a prototype
-  MOZ_ASSERT(aPrototype != nullptr, "null ptr");
-  if (!aPrototype) return NS_ERROR_NULL_POINTER;
-||||||| merged common ancestors
-    return nullptr;
-}
-
-nsresult
-nsXULElement::CreateFromPrototype(nsXULPrototypeElement* aPrototype,
-                                  nsIDocument* aDocument,
-                                  bool aIsScriptable,
-                                  bool aIsRoot,
-                                  Element** aResult)
-{
-    // Create an nsXULElement from a prototype
-    MOZ_ASSERT(aPrototype != nullptr, "null ptr");
-    if (! aPrototype)
-        return NS_ERROR_NULL_POINTER;
-
-    MOZ_ASSERT(aResult != nullptr, "null ptr");
-    if (! aResult)
-        return NS_ERROR_NULL_POINTER;
-
-    RefPtr<mozilla::dom::NodeInfo> nodeInfo;
-    if (aDocument) {
-        mozilla::dom::NodeInfo* ni = aPrototype->mNodeInfo;
-        nodeInfo = aDocument->NodeInfoManager()->
-          GetNodeInfo(ni->NameAtom(), ni->GetPrefixAtom(), ni->NamespaceID(),
-                      ELEMENT_NODE);
-    } else {
-        nodeInfo = aPrototype->mNodeInfo;
-    }
-=======
 nsresult nsXULElement::CreateFromPrototype(nsXULPrototypeElement* aPrototype,
                                            Document* aDocument,
                                            bool aIsScriptable, bool aIsRoot,
@@ -262,7 +224,6 @@ nsresult nsXULElement::CreateFromPrototype(nsXULPrototypeElement* aPrototype,
   // Create an nsXULElement from a prototype
   MOZ_ASSERT(aPrototype != nullptr, "null ptr");
   if (!aPrototype) return NS_ERROR_NULL_POINTER;
->>>>>>> upstream-releases
 
   MOZ_ASSERT(aResult != nullptr, "null ptr");
   if (!aResult) return NS_ERROR_NULL_POINTER;
@@ -295,22 +256,10 @@ nsresult NS_NewXULElement(Element** aResult,
       nodeInfo->NamespaceEquals(kNameSpaceID_XUL),
       "Trying to create XUL elements that don't have the XUL namespace");
 
-<<<<<<< HEAD
-  nsIDocument* doc = nodeInfo->GetDocument();
-  if (doc && !doc->AllowXULXBL()) {
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-||||||| merged common ancestors
-    nsIDocument* doc = nodeInfo->GetDocument();
-    if (doc && !doc->AllowXULXBL()) {
-        return NS_ERROR_NOT_AVAILABLE;
-    }
-=======
   Document* doc = nodeInfo->GetDocument();
   if (doc && !doc->AllowXULXBL()) {
     return NS_ERROR_NOT_AVAILABLE;
   }
->>>>>>> upstream-releases
 
   return nsContentUtils::NewXULOrHTMLElement(aResult, nodeInfo, aFromParser,
                                              aIsAtom, aDefinition);
@@ -344,36 +293,8 @@ NS_IMPL_ADDREF_INHERITED(nsXULElement, nsStyledElement)
 NS_IMPL_RELEASE_INHERITED(nsXULElement, nsStyledElement)
 
 NS_INTERFACE_TABLE_HEAD_CYCLE_COLLECTION_INHERITED(nsXULElement)
-<<<<<<< HEAD
-  NS_ELEMENT_INTERFACE_TABLE_TO_MAP_SEGUE
-
-  nsCOMPtr<nsISupports> iface =
-      CustomElementRegistry::CallGetCustomInterface(this, aIID);
-  if (iface) {
-    iface->QueryInterface(aIID, aInstancePtr);
-    if (*aInstancePtr) {
-      return NS_OK;
-    }
-  }
-
-NS_INTERFACE_MAP_END_INHERITING(nsStyledElement)
-||||||| merged common ancestors
-    NS_ELEMENT_INTERFACE_TABLE_TO_MAP_SEGUE
-
-    nsCOMPtr<nsISupports> iface =
-      CustomElementRegistry::CallGetCustomInterface(this, aIID);
-    if (iface) {
-      iface->QueryInterface(aIID, aInstancePtr);
-      if (*aInstancePtr) {
-        return NS_OK;
-      }
-    }
-
-NS_INTERFACE_MAP_END_INHERITING(Element)
-=======
   NS_ELEMENT_INTERFACE_TABLE_TO_MAP_SEGUE
 NS_INTERFACE_MAP_END_INHERITING(nsStyledElement)
->>>>>>> upstream-releases
 
 //----------------------------------------------------------------------
 // nsINode interface
@@ -410,7 +331,6 @@ nsresult nsXULElement::Clone(mozilla::dom::NodeInfo* aNodeInfo,
       attrValue.SetTo(*originalValue);
     }
 
-<<<<<<< HEAD
     bool oldValueSet;
     if (originalName->IsAtom()) {
       rv = element->mAttrs.SetAndSwapAttr(originalName->Atom(), attrValue,
@@ -430,57 +350,8 @@ nsresult nsXULElement::Clone(mozilla::dom::NodeInfo* aNodeInfo,
     }
     if (originalName->Equals(nsGkAtoms::style)) {
       element->SetMayHaveStyle();
-||||||| merged common ancestors
-        bool oldValueSet;
-        if (originalName->IsAtom()) {
-           rv = element->mAttrs.SetAndSwapAttr(originalName->Atom(),
-                                               attrValue,
-                                               &oldValueSet);
-        } else {
-            rv = element->mAttrs.SetAndSwapAttr(originalName->NodeInfo(),
-                                                attrValue,
-                                                &oldValueSet);
-        }
-        NS_ENSURE_SUCCESS(rv, rv);
-        element->AddListenerFor(*originalName);
-        if (originalName->Equals(nsGkAtoms::id) &&
-            !originalValue->IsEmptyString()) {
-            element->SetHasID();
-        }
-        if (originalName->Equals(nsGkAtoms::_class)) {
-            element->SetMayHaveClass();
-        }
-        if (originalName->Equals(nsGkAtoms::style)) {
-            element->SetMayHaveStyle();
-        }
-=======
-    bool oldValueSet;
-    if (originalName->IsAtom()) {
-      rv = element->mAttrs.SetAndSwapAttr(originalName->Atom(), attrValue,
-                                          &oldValueSet);
-    } else {
-      rv = element->mAttrs.SetAndSwapAttr(originalName->NodeInfo(), attrValue,
-                                          &oldValueSet);
-    }
-    NS_ENSURE_SUCCESS(rv, rv);
-    element->AddListenerFor(*originalName);
-    if (originalName->Equals(nsGkAtoms::id) &&
-        !originalValue->IsEmptyString()) {
-      element->SetHasID();
-    }
-    if (originalName->Equals(nsGkAtoms::_class)) {
-      element->SetMayHaveClass();
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
-  }
-||||||| merged common ancestors
-=======
-    if (originalName->Equals(nsGkAtoms::style)) {
-      element->SetMayHaveStyle();
     }
   }
->>>>>>> upstream-releases
 
   element.forget(aResult);
   return rv;
@@ -488,26 +359,6 @@ nsresult nsXULElement::Clone(mozilla::dom::NodeInfo* aNodeInfo,
 
 //----------------------------------------------------------------------
 
-<<<<<<< HEAD
-EventListenerManager* nsXULElement::GetEventListenerManagerForAttr(
-    nsAtom* aAttrName, bool* aDefer) {
-  // XXXbz sXBL/XBL2 issue: should we instead use GetComposedDoc()
-  // here, override BindToTree for those classes and munge event
-  // listeners there?
-  nsIDocument* doc = OwnerDoc();
-||||||| merged common ancestors
-EventListenerManager*
-nsXULElement::GetEventListenerManagerForAttr(nsAtom* aAttrName, bool* aDefer)
-{
-    // XXXbz sXBL/XBL2 issue: should we instead use GetComposedDoc()
-    // here, override BindToTree for those classes and munge event
-    // listeners there?
-    nsIDocument* doc = OwnerDoc();
-
-    nsPIDOMWindowInner *window;
-    Element *root = doc->GetRootElement();
-    if ((!root || root == this) && (window = doc->GetInnerWindow())) {
-=======
 EventListenerManager* nsXULElement::GetEventListenerManagerForAttr(
     nsAtom* aAttrName, bool* aDefer) {
   // XXXbz sXBL/XBL2 issue: should we instead use GetComposedDoc()
@@ -519,28 +370,10 @@ EventListenerManager* nsXULElement::GetEventListenerManagerForAttr(
   Element* root = doc->GetRootElement();
   if ((!root || root == this) && (window = doc->GetInnerWindow())) {
     nsCOMPtr<EventTarget> piTarget = do_QueryInterface(window);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsPIDOMWindowInner* window;
-  Element* root = doc->GetRootElement();
-  if ((!root || root == this) && (window = doc->GetInnerWindow())) {
-    nsCOMPtr<EventTarget> piTarget = do_QueryInterface(window);
 
     *aDefer = false;
     return piTarget->GetOrCreateListenerManager();
   }
-||||||| merged common ancestors
-        nsCOMPtr<EventTarget> piTarget = do_QueryInterface(window);
-
-        *aDefer = false;
-        return piTarget->GetOrCreateListenerManager();
-    }
-=======
-    *aDefer = false;
-    return piTarget->GetOrCreateListenerManager();
-  }
->>>>>>> upstream-releases
 
   return nsStyledElement::GetEventListenerManagerForAttr(aAttrName, aDefer);
 }
@@ -637,13 +470,6 @@ bool nsXULElement::IsFocusableInternal(int32_t* aTabIndex, bool aWithMouse) {
   return shouldFocus;
 }
 
-<<<<<<< HEAD
-bool nsXULElement::HasMenu() {
-||||||| merged common ancestors
-bool
-nsXULElement::HasMenu()
-{
-=======
 int32_t nsXULElement::ScreenX() {
   nsIFrame* frame = GetPrimaryFrame(FlushType::Layout);
   return frame ? frame->GetScreenRect().x : 0;
@@ -655,7 +481,6 @@ int32_t nsXULElement::ScreenY() {
 }
 
 bool nsXULElement::HasMenu() {
->>>>>>> upstream-releases
   nsMenuFrame* menu = do_QueryFrame(GetPrimaryFrame());
   return menu != nullptr;
 }
@@ -688,24 +513,11 @@ bool nsXULElement::PerformAccesskey(bool aKeyCausesActivation,
       return false;
     }
 
-<<<<<<< HEAD
-    // XXXsmaug Should we use ShadowRoot::GetElementById in case
-    //         content is in Shadow DOM?
-    nsCOMPtr<nsIDocument> document = content->GetUncomposedDoc();
-    if (!document) {
-      return false;
-||||||| merged common ancestors
-        content = document->GetElementById(control);
-        if (!content) {
-            return false;
-        }
-=======
     // XXXsmaug Should we use ShadowRoot::GetElementById in case
     //         content is in Shadow DOM?
     nsCOMPtr<Document> document = content->GetUncomposedDoc();
     if (!document) {
       return false;
->>>>>>> upstream-releases
     }
 
     content = document->GetElementById(control);
@@ -719,31 +531,6 @@ bool nsXULElement::PerformAccesskey(bool aKeyCausesActivation,
     return false;
   }
 
-<<<<<<< HEAD
-  bool focused = false;
-  nsXULElement* elm = FromNode(content);
-  if (elm) {
-    // Define behavior for each type of XUL element.
-    if (!content->IsXULElement(nsGkAtoms::toolbarbutton)) {
-      nsIFocusManager* fm = nsFocusManager::GetFocusManager();
-      if (fm) {
-        nsCOMPtr<Element> elementToFocus;
-        // for radio buttons, focus the radiogroup instead
-        if (content->IsXULElement(nsGkAtoms::radio)) {
-          nsCOMPtr<nsIDOMXULSelectControlItemElement> controlItem(
-              do_QueryInterface(content));
-          if (controlItem) {
-            bool disabled;
-            controlItem->GetDisabled(&disabled);
-            if (!disabled) {
-              nsCOMPtr<nsIDOMXULSelectControlElement> selectControl;
-              controlItem->GetControl(getter_AddRefs(selectControl));
-              elementToFocus = do_QueryInterface(selectControl);
-||||||| merged common ancestors
-              // Return true if the element became focused.
-              nsPIDOMWindowOuter* window = OwnerDoc()->GetWindow();
-              focused = (window && window->GetFocusedElement());
-=======
   bool focused = false;
   nsXULElement* elm = FromNode(content);
   if (elm) {
@@ -761,7 +548,6 @@ bool nsXULElement::PerformAccesskey(bool aKeyCausesActivation,
             controlItem->GetDisabled(&disabled);
             if (!disabled) {
               controlItem->GetControl(getter_AddRefs(elementToFocus));
->>>>>>> upstream-releases
             }
           }
         } else {
@@ -774,21 +560,8 @@ bool nsXULElement::PerformAccesskey(bool aKeyCausesActivation,
           nsPIDOMWindowOuter* window = OwnerDoc()->GetWindow();
           focused = (window && window->GetFocusedElement());
         }
-<<<<<<< HEAD
-      }
-||||||| merged common ancestors
-    } else {
-        return content->PerformAccesskey(aKeyCausesActivation, aIsTrustedEvent);
-=======
       }
     }
-    if (aKeyCausesActivation &&
-        !content->IsAnyOfXULElements(nsGkAtoms::textbox, nsGkAtoms::menulist)) {
-      elm->ClickWithInputSource(MouseEvent_Binding::MOZ_SOURCE_KEYBOARD,
-                                aIsTrustedEvent);
->>>>>>> upstream-releases
-    }
-<<<<<<< HEAD
     if (aKeyCausesActivation &&
         !content->IsAnyOfXULElements(nsGkAtoms::textbox, nsGkAtoms::menulist)) {
       elm->ClickWithInputSource(MouseEvent_Binding::MOZ_SOURCE_KEYBOARD,
@@ -797,12 +570,6 @@ bool nsXULElement::PerformAccesskey(bool aKeyCausesActivation,
   } else {
     return content->PerformAccesskey(aKeyCausesActivation, aIsTrustedEvent);
   }
-||||||| merged common ancestors
-=======
-  } else {
-    return content->PerformAccesskey(aKeyCausesActivation, aIsTrustedEvent);
-  }
->>>>>>> upstream-releases
 
   return focused;
 }
@@ -840,55 +607,11 @@ void nsXULElement::MaybeAddPopupListener(nsAtom* aLocalName) {
 //
 // nsIContent interface
 //
-<<<<<<< HEAD
 void nsXULElement::UpdateEditableState(bool aNotify) {
   // Don't call through to Element here because the things
   // it does don't work for cases when we're an editable control.
   nsIContent* parent = GetParent();
 
-  SetEditableFlag(parent && parent->HasFlag(NODE_IS_EDITABLE));
-  UpdateState(aNotify);
-}
-
-class XULInContentErrorReporter : public Runnable {
- public:
-  explicit XULInContentErrorReporter(nsIDocument* aDocument)
-      : mozilla::Runnable("XULInContentErrorReporter"), mDocument(aDocument) {}
-||||||| merged common ancestors
-void
-nsXULElement::UpdateEditableState(bool aNotify)
-{
-    // Don't call through to Element here because the things
-    // it does don't work for cases when we're an editable control.
-    nsIContent *parent = GetParent();
-
-    SetEditableFlag(parent && parent->HasFlag(NODE_IS_EDITABLE));
-    UpdateState(aNotify);
-}
-
-class XULInContentErrorReporter : public Runnable
-{
-public:
-  explicit XULInContentErrorReporter(nsIDocument* aDocument)
-    : mozilla::Runnable("XULInContentErrorReporter")
-    , mDocument(aDocument)
-  {
-  }
-=======
-void nsXULElement::UpdateEditableState(bool aNotify) {
-  // Don't call through to Element here because the things
-  // it does don't work for cases when we're an editable control.
-  nsIContent* parent = GetParent();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  NS_IMETHOD Run() override {
-    mDocument->WarnOnceAbout(nsIDocument::eImportXULIntoContent, false);
-||||||| merged common ancestors
-  NS_IMETHOD Run() override
-  {
-    mDocument->WarnOnceAbout(nsIDocument::eImportXULIntoContent, false);
-=======
   SetEditableFlag(parent && parent->HasFlag(NODE_IS_EDITABLE));
   UpdateState(aNotify);
 }
@@ -900,20 +623,11 @@ class XULInContentErrorReporter : public Runnable {
 
   NS_IMETHOD Run() override {
     mDocument->WarnOnceAbout(Document::eImportXULIntoContent, false);
->>>>>>> upstream-releases
     return NS_OK;
   }
 
-<<<<<<< HEAD
- private:
-  nsCOMPtr<nsIDocument> mDocument;
-||||||| merged common ancestors
-private:
-  nsCOMPtr<nsIDocument> mDocument;
-=======
  private:
   OwningNonNull<Document> mDocument;
->>>>>>> upstream-releases
 };
 
 static bool NeedTooltipSupport(const nsXULElement& aXULElement) {
@@ -927,26 +641,6 @@ static bool NeedTooltipSupport(const nsXULElement& aXULElement) {
          aXULElement.GetBoolAttr(nsGkAtoms::tooltiptext);
 }
 
-<<<<<<< HEAD
-nsresult nsXULElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                                  nsIContent* aBindingParent) {
-  if (!aBindingParent && aDocument && !aDocument->IsLoadedAsInteractiveData() &&
-      !aDocument->AllowXULXBL() &&
-      !aDocument->HasWarnedAbout(nsIDocument::eImportXULIntoContent)) {
-    nsContentUtils::AddScriptRunner(new XULInContentErrorReporter(aDocument));
-||||||| merged common ancestors
-nsresult
-nsXULElement::BindToTree(nsIDocument* aDocument,
-                         nsIContent* aParent,
-                         nsIContent* aBindingParent)
-{
-  if (!aBindingParent &&
-      aDocument &&
-      !aDocument->IsLoadedAsInteractiveData() &&
-      !aDocument->AllowXULXBL() &&
-      !aDocument->HasWarnedAbout(nsIDocument::eImportXULIntoContent)) {
-    nsContentUtils::AddScriptRunner(new XULInContentErrorReporter(aDocument));
-=======
 nsresult nsXULElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   nsresult rv = nsStyledElement::BindToTree(aContext, aParent);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -958,7 +652,6 @@ nsresult nsXULElement::BindToTree(BindContext& aContext, nsINode& aParent) {
       !doc.IsLoadedAsInteractiveData() && !doc.AllowXULXBL() &&
       !doc.HasWarnedAbout(Document::eImportXULIntoContent)) {
     nsContentUtils::AddScriptRunner(new XULInContentErrorReporter(doc));
->>>>>>> upstream-releases
   }
 
   if (!IsInComposedDoc()) {
@@ -976,30 +669,6 @@ nsresult nsXULElement::BindToTree(BindContext& aContext, nsINode& aParent) {
     // document.
     nsAtom* tag = NodeInfo()->NameAtom();
     MOZ_ASSERT(
-<<<<<<< HEAD
-        // scrollbar parts
-        tag == nsGkAtoms::scrollbar || tag == nsGkAtoms::scrollbarbutton ||
-            tag == nsGkAtoms::scrollcorner || tag == nsGkAtoms::slider ||
-            tag == nsGkAtoms::thumb ||
-            // other
-            tag == nsGkAtoms::datetimebox || tag == nsGkAtoms::resizer ||
-            tag == nsGkAtoms::label || tag == nsGkAtoms::videocontrols,
-        "Unexpected XUL element in non-XUL doc");
-||||||| merged common ancestors
-      // scrollbar parts
-      tag == nsGkAtoms::scrollbar ||
-      tag == nsGkAtoms::scrollbarbutton ||
-      tag == nsGkAtoms::scrollcorner ||
-      tag == nsGkAtoms::slider ||
-      tag == nsGkAtoms::thumb ||
-      // other
-      tag == nsGkAtoms::datetimebox ||
-      tag == nsGkAtoms::resizer ||
-      tag == nsGkAtoms::label ||
-      tag == nsGkAtoms::videocontrols,
-      "Unexpected XUL element in non-XUL doc"
-    );
-=======
         // scrollbar parts
         tag == nsGkAtoms::scrollbar || tag == nsGkAtoms::scrollbarbutton ||
             tag == nsGkAtoms::scrollcorner || tag == nsGkAtoms::slider ||
@@ -1007,7 +676,6 @@ nsresult nsXULElement::BindToTree(BindContext& aContext, nsINode& aParent) {
             // other
             tag == nsGkAtoms::resizer || tag == nsGkAtoms::label,
         "Unexpected XUL element in non-XUL doc");
->>>>>>> upstream-releases
   }
 #endif
 
@@ -1016,16 +684,8 @@ nsresult nsXULElement::BindToTree(BindContext& aContext, nsINode& aParent) {
     nsXBLService::AttachGlobalKeyHandler(this);
   }
 
-<<<<<<< HEAD
-  if (doc && NeedTooltipSupport(*this)) {
-    AddTooltipSupport();
-||||||| merged common ancestors
-  if (doc && NeedTooltipSupport(*this)) {
-      AddTooltipSupport();
-=======
   if (NeedTooltipSupport(*this)) {
     AddTooltipSupport();
->>>>>>> upstream-releases
   }
 
   if (XULBroadcastManager::MayNeedListener(*this)) {
@@ -1038,45 +698,15 @@ nsresult nsXULElement::BindToTree(BindContext& aContext, nsINode& aParent) {
   return rv;
 }
 
-<<<<<<< HEAD
-void nsXULElement::UnbindFromTree(bool aDeep, bool aNullParent) {
-  if (NodeInfo()->Equals(nsGkAtoms::keyset, kNameSpaceID_XUL)) {
-    nsXBLService::DetachGlobalKeyHandler(this);
-  }
-||||||| merged common ancestors
-void
-nsXULElement::UnbindFromTree(bool aDeep, bool aNullParent)
-{
-    if (NodeInfo()->Equals(nsGkAtoms::keyset, kNameSpaceID_XUL)) {
-        nsXBLService::DetachGlobalKeyHandler(this);
-    }
-=======
 void nsXULElement::UnbindFromTree(bool aNullParent) {
   if (NodeInfo()->Equals(nsGkAtoms::keyset, kNameSpaceID_XUL)) {
     nsXBLService::DetachGlobalKeyHandler(this);
   }
->>>>>>> upstream-releases
 
   if (NeedTooltipSupport(*this)) {
     RemoveTooltipSupport();
   }
 
-<<<<<<< HEAD
-  nsIDocument* doc = GetComposedDoc();
-  if (doc && doc->HasXULBroadcastManager() &&
-      XULBroadcastManager::MayNeedListener(*this)) {
-    RefPtr<XULBroadcastManager> broadcastManager =
-        doc->GetXULBroadcastManager();
-    broadcastManager->RemoveListener(this);
-  }
-||||||| merged common ancestors
-    nsIDocument* doc = GetComposedDoc();
-    if (doc && doc->HasXULBroadcastManager() &&
-        XULBroadcastManager::MayNeedListener(*this)) {
-        RefPtr<XULBroadcastManager> broadcastManager = doc->GetXULBroadcastManager();
-        broadcastManager->RemoveListener(this);
-    }
-=======
   Document* doc = GetComposedDoc();
   if (doc && doc->HasXULBroadcastManager() &&
       XULBroadcastManager::MayNeedListener(*this)) {
@@ -1084,7 +714,6 @@ void nsXULElement::UnbindFromTree(bool aNullParent) {
         doc->GetXULBroadcastManager();
     broadcastManager->RemoveListener(this);
   }
->>>>>>> upstream-releases
 
   // mControllers can own objects that are implemented
   // in JavaScript (such as some implementations of
@@ -1102,145 +731,18 @@ void nsXULElement::UnbindFromTree(bool aNullParent) {
     slots->mControllers = nullptr;
   }
 
-<<<<<<< HEAD
-  nsStyledElement::UnbindFromTree(aDeep, aNullParent);
-||||||| merged common ancestors
-    nsStyledElement::UnbindFromTree(aDeep, aNullParent);
-=======
   nsStyledElement::UnbindFromTree(aNullParent);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void nsXULElement::UnregisterAccessKey(const nsAString& aOldValue) {
-  // If someone changes the accesskey, unregister the old one
-  //
-  nsIDocument* doc = GetComposedDoc();
-  if (doc && !aOldValue.IsEmpty()) {
-    nsIPresShell* shell = doc->GetShell();
-
-    if (shell) {
-      Element* element = this;
-
-      // find out what type of content node this is
-      if (mNodeInfo->Equals(nsGkAtoms::label)) {
-        // For anonymous labels the unregistering must
-        // occur on the binding parent control.
-        // XXXldb: And what if the binding parent is null?
-        nsIContent* bindingParent = GetBindingParent();
-        element = bindingParent ? bindingParent->AsElement() : nullptr;
-      }
-
-      if (element) {
-        shell->GetPresContext()->EventStateManager()->UnregisterAccessKey(
-            element, aOldValue.First());
-      }
-||||||| merged common ancestors
-void
-nsXULElement::UnregisterAccessKey(const nsAString& aOldValue)
-{
-    // If someone changes the accesskey, unregister the old one
-    //
-    nsIDocument* doc = GetComposedDoc();
-    if (doc && !aOldValue.IsEmpty()) {
-        nsIPresShell *shell = doc->GetShell();
-
-        if (shell) {
-            Element* element = this;
-
-            // find out what type of content node this is
-            if (mNodeInfo->Equals(nsGkAtoms::label)) {
-                // For anonymous labels the unregistering must
-                // occur on the binding parent control.
-                // XXXldb: And what if the binding parent is null?
-                nsIContent* bindingParent = GetBindingParent();
-                element = bindingParent ? bindingParent->AsElement() : nullptr;
-            }
-
-            if (element) {
-                shell->GetPresContext()->EventStateManager()->
-                    UnregisterAccessKey(element, aOldValue.First());
-            }
-        }
-=======
 void nsXULElement::DoneAddingChildren(bool aHaveNotified) {
   if (IsXULElement(nsGkAtoms::linkset)) {
     Document* doc = GetComposedDoc();
     if (doc) {
       doc->OnL10nResourceContainerParsed();
->>>>>>> upstream-releases
     }
   }
 }
 
-<<<<<<< HEAD
-nsresult nsXULElement::BeforeSetAttr(int32_t aNamespaceID, nsAtom* aName,
-                                     const nsAttrValueOrString* aValue,
-                                     bool aNotify) {
-  if (aNamespaceID == kNameSpaceID_None && aName == nsGkAtoms::accesskey &&
-      IsInUncomposedDoc()) {
-    nsAutoString oldValue;
-    if (GetAttr(aNamespaceID, aName, oldValue)) {
-      UnregisterAccessKey(oldValue);
-    }
-  } else if (aNamespaceID == kNameSpaceID_None &&
-             (aName == nsGkAtoms::command || aName == nsGkAtoms::observes) &&
-             IsInUncomposedDoc()) {
-    //         XXX sXBL/XBL2 issue! Owner or current document?
-    // XXX Why does this not also remove broadcast listeners if the
-    // "element" attribute was changed on an <observer>?
-    nsAutoString oldValue;
-    GetAttr(kNameSpaceID_None, nsGkAtoms::observes, oldValue);
-    if (oldValue.IsEmpty()) {
-      GetAttr(kNameSpaceID_None, nsGkAtoms::command, oldValue);
-    }
-||||||| merged common ancestors
-nsresult
-nsXULElement::BeforeSetAttr(int32_t aNamespaceID, nsAtom* aName,
-                            const nsAttrValueOrString* aValue, bool aNotify)
-{
-    if (aNamespaceID == kNameSpaceID_None && aName == nsGkAtoms::accesskey &&
-        IsInUncomposedDoc()) {
-        nsAutoString oldValue;
-        if (GetAttr(aNamespaceID, aName, oldValue)) {
-            UnregisterAccessKey(oldValue);
-        }
-    } else if (aNamespaceID == kNameSpaceID_None &&
-               (aName == nsGkAtoms::command || aName == nsGkAtoms::observes) &&
-               IsInUncomposedDoc()) {
-//         XXX sXBL/XBL2 issue! Owner or current document?
-        // XXX Why does this not also remove broadcast listeners if the
-        // "element" attribute was changed on an <observer>?
-        nsAutoString oldValue;
-        GetAttr(kNameSpaceID_None, nsGkAtoms::observes, oldValue);
-        if (oldValue.IsEmpty()) {
-          GetAttr(kNameSpaceID_None, nsGkAtoms::command, oldValue);
-        }
-
-        nsIDocument* doc = GetUncomposedDoc();
-        if (!oldValue.IsEmpty() && doc->HasXULBroadcastManager()) {
-            RefPtr<XULBroadcastManager> broadcastManager = doc->GetXULBroadcastManager();
-            broadcastManager->RemoveListener(this);
-        }
-    } else if (aNamespaceID == kNameSpaceID_None &&
-               aValue &&
-               mNodeInfo->Equals(nsGkAtoms::window) &&
-               aName == nsGkAtoms::chromemargin) {
-      nsAttrValue attrValue;
-      // Make sure the margin format is valid first
-      if (!attrValue.ParseIntMarginValue(aValue->String())) {
-        return NS_ERROR_INVALID_ARG;
-      }
-    } else if (aNamespaceID == kNameSpaceID_None &&
-               aName == nsGkAtoms::usercontextid) {
-        nsAutoString oldValue;
-        bool hasAttribute = GetAttr(kNameSpaceID_None, nsGkAtoms::usercontextid, oldValue);
-        if (hasAttribute && (!aValue || !aValue->String().Equals(oldValue))) {
-          MOZ_ASSERT(false, "Changing usercontextid is not allowed.");
-          return NS_ERROR_INVALID_ARG;
-        }
-    }
-=======
 void nsXULElement::UnregisterAccessKey(const nsAString& aOldValue) {
   // If someone changes the accesskey, unregister the old one
   //
@@ -1259,60 +761,7 @@ void nsXULElement::UnregisterAccessKey(const nsAString& aOldValue) {
         nsIContent* bindingParent = GetBindingParent();
         element = bindingParent ? bindingParent->AsElement() : nullptr;
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    nsIDocument* doc = GetUncomposedDoc();
-    if (!oldValue.IsEmpty() && doc->HasXULBroadcastManager()) {
-      RefPtr<XULBroadcastManager> broadcastManager =
-          doc->GetXULBroadcastManager();
-      broadcastManager->RemoveListener(this);
-    }
-  } else if (aNamespaceID == kNameSpaceID_None && aValue &&
-             mNodeInfo->Equals(nsGkAtoms::window) &&
-             aName == nsGkAtoms::chromemargin) {
-    nsAttrValue attrValue;
-    // Make sure the margin format is valid first
-    if (!attrValue.ParseIntMarginValue(aValue->String())) {
-      return NS_ERROR_INVALID_ARG;
-    }
-  } else if (aNamespaceID == kNameSpaceID_None &&
-             aName == nsGkAtoms::usercontextid) {
-    nsAutoString oldValue;
-    bool hasAttribute =
-        GetAttr(kNameSpaceID_None, nsGkAtoms::usercontextid, oldValue);
-    if (hasAttribute && (!aValue || !aValue->String().Equals(oldValue))) {
-      MOZ_ASSERT(false, "Changing usercontextid is not allowed.");
-      return NS_ERROR_INVALID_ARG;
-    }
-  }
-||||||| merged common ancestors
-    return nsStyledElement::BeforeSetAttr(aNamespaceID, aName,
-                                          aValue, aNotify);
-}
-
-nsresult
-nsXULElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
-                           const nsAttrValue* aValue,
-                           const nsAttrValue* aOldValue,
-                           nsIPrincipal* aSubjectPrincipal,
-                           bool aNotify)
-{
-    if (aNamespaceID == kNameSpaceID_None) {
-        if (aValue) {
-            // Add popup and event listeners. We can't call AddListenerFor since
-            // the attribute isn't set yet.
-            MaybeAddPopupListener(aName);
-            if (nsContentUtils::IsEventAttributeName(aName, EventNameType_XUL)) {
-                if (aValue->Type() == nsAttrValue::eString) {
-                    SetEventHandler(aName, aValue->GetStringValue(), true);
-                } else {
-                    nsAutoString body;
-                    aValue->ToString(body);
-                    SetEventHandler(aName, body, true);
-                }
-            }
-=======
       if (element) {
         presShell->GetPresContext()->EventStateManager()->UnregisterAccessKey(
             element, aOldValue.First());
@@ -1366,7 +815,6 @@ nsresult nsXULElement::BeforeSetAttr(int32_t aNamespaceID, nsAtom* aName,
       return NS_ERROR_INVALID_ARG;
     }
   }
->>>>>>> upstream-releases
 
   return nsStyledElement::BeforeSetAttr(aNamespaceID, aName, aValue, aNotify);
 }
@@ -1391,31 +839,6 @@ nsresult nsXULElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
         }
       }
 
-<<<<<<< HEAD
-      nsIDocument* document = GetUncomposedDoc();
-
-      // Hide chrome if needed
-      if (mNodeInfo->Equals(nsGkAtoms::window)) {
-        if (aName == nsGkAtoms::hidechrome) {
-          HideWindowChrome(
-              aValue->Equals(NS_LITERAL_STRING("true"), eCaseMatters));
-        } else if (aName == nsGkAtoms::chromemargin) {
-          SetChromeMargins(aValue);
-        } else if (aName == nsGkAtoms::windowtype && document &&
-                   document->GetRootElement() == this) {
-          MaybeUpdatePrivateLifetime();
-||||||| merged common ancestors
-        if (aName == nsGkAtoms::tooltip || aName == nsGkAtoms::tooltiptext) {
-            if (!!aValue != !!aOldValue &&
-                IsInComposedDoc() &&
-                !NodeInfo()->Equals(nsGkAtoms::treechildren)) {
-                if (aValue) {
-                    AddTooltipSupport();
-                } else {
-                    RemoveTooltipSupport();
-                }
-            }
-=======
       Document* document = GetUncomposedDoc();
 
       // Hide chrome if needed
@@ -1428,41 +851,7 @@ nsresult nsXULElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
         } else if (aName == nsGkAtoms::windowtype && document &&
                    document->GetRootElement() == this) {
           MaybeUpdatePrivateLifetime();
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      }
-      // title and drawintitlebar are settable on
-      // any root node (windows, dialogs, etc)
-      if (document && document->GetRootElement() == this) {
-        if (aName == nsGkAtoms::title) {
-          document->NotifyPossibleTitleChange(false);
-        } else if (aName == nsGkAtoms::drawintitlebar) {
-          SetDrawsInTitlebar(
-              aValue->Equals(NS_LITERAL_STRING("true"), eCaseMatters));
-        } else if (aName == nsGkAtoms::drawtitle) {
-          SetDrawsTitle(
-              aValue->Equals(NS_LITERAL_STRING("true"), eCaseMatters));
-        } else if (aName == nsGkAtoms::localedir) {
-          // if the localedir changed on the root element, reset the document
-          // direction
-          if (document->IsXULDocument()) {
-            document->AsXULDocument()->ResetDocumentDirection();
-          }
-        } else if (aName == nsGkAtoms::lwtheme ||
-                   aName == nsGkAtoms::lwthemetextcolor) {
-          // if the lwtheme changed, make sure to reset the document lwtheme
-          // cache
-          document->ResetDocumentLWTheme();
-          UpdateBrightTitlebarForeground(document);
-        } else if (aName == nsGkAtoms::brighttitlebarforeground) {
-          UpdateBrightTitlebarForeground(document);
-||||||| merged common ancestors
-        nsIDocument* doc = GetComposedDoc();
-        if (doc && doc->HasXULBroadcastManager()) {
-            RefPtr<XULBroadcastManager> broadcastManager = doc->GetXULBroadcastManager();
-            broadcastManager->AttributeChanged(this, aNamespaceID, aName);
-=======
       }
       // title and drawintitlebar are settable on
       // any root node (windows, dialogs, etc)
@@ -1487,24 +876,7 @@ nsresult nsXULElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
           UpdateBrightTitlebarForeground(document);
         } else if (aName == nsGkAtoms::brighttitlebarforeground) {
           UpdateBrightTitlebarForeground(document);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      }
-    } else {
-      if (mNodeInfo->Equals(nsGkAtoms::window)) {
-        if (aName == nsGkAtoms::hidechrome) {
-          HideWindowChrome(false);
-        } else if (aName == nsGkAtoms::chromemargin) {
-          ResetChromeMargins();
-||||||| merged common ancestors
-        if (doc && XULBroadcastManager::MayNeedListener(*this)) {
-            if (!doc->HasXULBroadcastManager()) {
-                doc->InitializeXULBroadcastManager();
-            }
-            XULBroadcastManager* broadcastManager = doc->GetXULBroadcastManager();
-            broadcastManager->AddListener(this);
-=======
       }
     } else {
       if (mNodeInfo->Equals(nsGkAtoms::window)) {
@@ -1532,42 +904,10 @@ nsresult nsXULElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
           SetDrawsInTitlebar(false);
         } else if (aName == nsGkAtoms::drawtitle) {
           SetDrawsTitle(false);
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      }
-||||||| merged common ancestors
-=======
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      nsIDocument* doc = GetUncomposedDoc();
-      if (doc && doc->GetRootElement() == this) {
-        if (aName == nsGkAtoms::localedir) {
-          // if the localedir changed on the root element, reset the document
-          // direction
-          if (doc->IsXULDocument()) {
-            doc->AsXULDocument()->ResetDocumentDirection();
-          }
-        } else if ((aName == nsGkAtoms::lwtheme ||
-                    aName == nsGkAtoms::lwthemetextcolor)) {
-          // if the lwtheme changed, make sure to restyle appropriately
-          doc->ResetDocumentLWTheme();
-          UpdateBrightTitlebarForeground(doc);
-        } else if (aName == nsGkAtoms::brighttitlebarforeground) {
-          UpdateBrightTitlebarForeground(doc);
-        } else if (aName == nsGkAtoms::drawintitlebar) {
-          SetDrawsInTitlebar(false);
-        } else if (aName == nsGkAtoms::drawtitle) {
-          SetDrawsTitle(false);
-        }
-      }
-||||||| merged common ancestors
-        // XXX need to check if they're changing an event handler: if
-        // so, then we need to unhook the old one.  Or something.
-=======
     if (aName == nsGkAtoms::tooltip || aName == nsGkAtoms::tooltiptext) {
       if (!!aValue != !!aOldValue && IsInComposedDoc() &&
           !NodeInfo()->Equals(nsGkAtoms::treechildren)) {
@@ -1590,32 +930,6 @@ nsresult nsXULElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
       }
       XULBroadcastManager* broadcastManager = doc->GetXULBroadcastManager();
       broadcastManager->AddListener(this);
->>>>>>> upstream-releases
-    }
-
-<<<<<<< HEAD
-    if (aName == nsGkAtoms::tooltip || aName == nsGkAtoms::tooltiptext) {
-      if (!!aValue != !!aOldValue && IsInComposedDoc() &&
-          !NodeInfo()->Equals(nsGkAtoms::treechildren)) {
-        if (aValue) {
-          AddTooltipSupport();
-        } else {
-          RemoveTooltipSupport();
-        }
-      }
-    }
-    nsIDocument* doc = GetComposedDoc();
-    if (doc && doc->HasXULBroadcastManager()) {
-      RefPtr<XULBroadcastManager> broadcastManager =
-          doc->GetXULBroadcastManager();
-      broadcastManager->AttributeChanged(this, aNamespaceID, aName);
-    }
-    if (doc && XULBroadcastManager::MayNeedListener(*this)) {
-      if (!doc->HasXULBroadcastManager()) {
-        doc->InitializeXULBroadcastManager();
-      }
-      XULBroadcastManager* broadcastManager = doc->GetXULBroadcastManager();
-      broadcastManager->AddListener(this);
     }
 
     // XXX need to check if they're changing an event handler: if
@@ -1624,17 +938,6 @@ nsresult nsXULElement::AfterSetAttr(int32_t aNamespaceID, nsAtom* aName,
 
   return nsStyledElement::AfterSetAttr(aNamespaceID, aName, aValue, aOldValue,
                                        aSubjectPrincipal, aNotify);
-||||||| merged common ancestors
-    return nsStyledElement::AfterSetAttr(aNamespaceID, aName,
-                                         aValue, aOldValue, aSubjectPrincipal, aNotify);
-=======
-    // XXX need to check if they're changing an event handler: if
-    // so, then we need to unhook the old one.  Or something.
-  }
-
-  return nsStyledElement::AfterSetAttr(aNamespaceID, aName, aValue, aOldValue,
-                                       aSubjectPrincipal, aNotify);
->>>>>>> upstream-releases
 }
 
 void nsXULElement::AddTooltipSupport() {
@@ -1694,87 +997,6 @@ void nsXULElement::List(FILE* out, int32_t aIndent) const {
 }
 #endif
 
-<<<<<<< HEAD
-bool nsXULElement::IsEventStoppedFromAnonymousScrollbar(EventMessage aMessage) {
-  return (IsRootOfNativeAnonymousSubtree() &&
-          IsAnyOfXULElements(nsGkAtoms::scrollbar, nsGkAtoms::scrollcorner) &&
-          (aMessage == eMouseClick || aMessage == eMouseDoubleClick ||
-           aMessage == eXULCommand || aMessage == eContextMenu ||
-           aMessage == eDragStart || aMessage == eMouseAuxClick));
-}
-
-nsresult nsXULElement::DispatchXULCommand(const EventChainVisitor& aVisitor,
-                                          nsAutoString& aCommand) {
-  // XXX sXBL/XBL2 issue! Owner or current document?
-  nsCOMPtr<nsIDocument> doc = GetUncomposedDoc();
-  NS_ENSURE_STATE(doc);
-  RefPtr<Element> commandElt = doc->GetElementById(aCommand);
-  if (commandElt) {
-    // Create a new command event to dispatch to the element
-    // pointed to by the command attribute. The new event's
-    // sourceEvent will be the original command event that we're
-    // handling.
-    RefPtr<Event> event = aVisitor.mDOMEvent;
-    uint16_t inputSource = MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
-    while (event) {
-      NS_ENSURE_STATE(event->GetOriginalTarget() != commandElt);
-      RefPtr<XULCommandEvent> commandEvent = event->AsXULCommandEvent();
-      if (commandEvent) {
-        event = commandEvent->GetSourceEvent();
-        inputSource = commandEvent->InputSource();
-      } else {
-        event = nullptr;
-      }
-||||||| merged common ancestors
-bool
-nsXULElement::IsEventStoppedFromAnonymousScrollbar(EventMessage aMessage)
-{
-    return (IsRootOfNativeAnonymousSubtree() &&
-            IsAnyOfXULElements(nsGkAtoms::scrollbar, nsGkAtoms::scrollcorner) &&
-            (aMessage == eMouseClick || aMessage == eMouseDoubleClick ||
-             aMessage == eXULCommand || aMessage == eContextMenu ||
-             aMessage == eDragStart  || aMessage == eMouseAuxClick));
-}
-
-nsresult
-nsXULElement::DispatchXULCommand(const EventChainVisitor& aVisitor,
-                                 nsAutoString& aCommand)
-{
-    // XXX sXBL/XBL2 issue! Owner or current document?
-    nsCOMPtr<nsIDocument> doc = GetUncomposedDoc();
-    NS_ENSURE_STATE(doc);
-    RefPtr<Element> commandElt = doc->GetElementById(aCommand);
-    if (commandElt) {
-        // Create a new command event to dispatch to the element
-        // pointed to by the command attribute. The new event's
-        // sourceEvent will be the original command event that we're
-        // handling.
-        RefPtr<Event> event = aVisitor.mDOMEvent;
-        uint16_t inputSource = MouseEvent_Binding::MOZ_SOURCE_UNKNOWN;
-        while (event) {
-            NS_ENSURE_STATE(event->GetOriginalTarget() != commandElt);
-            RefPtr<XULCommandEvent> commandEvent = event->AsXULCommandEvent();
-            if (commandEvent) {
-                event = commandEvent->GetSourceEvent();
-                inputSource = commandEvent->InputSource();
-            } else {
-                event = nullptr;
-            }
-        }
-        WidgetInputEvent* orig = aVisitor.mEvent->AsInputEvent();
-        nsContentUtils::DispatchXULCommand(
-          commandElt,
-          orig->IsTrusted(),
-          aVisitor.mDOMEvent,
-          nullptr,
-          orig->IsControl(),
-          orig->IsAlt(),
-          orig->IsShift(),
-          orig->IsMeta(),
-          inputSource);
-    } else {
-        NS_WARNING("A XUL element is attached to a command that doesn't exist!\n");
-=======
 bool nsXULElement::IsEventStoppedFromAnonymousScrollbar(EventMessage aMessage) {
   return (IsRootOfNativeAnonymousSubtree() &&
           IsAnyOfXULElements(nsGkAtoms::scrollbar, nsGkAtoms::scrollcorner) &&
@@ -1805,21 +1027,7 @@ nsresult nsXULElement::DispatchXULCommand(const EventChainVisitor& aVisitor,
       } else {
         event = nullptr;
       }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    WidgetInputEvent* orig = aVisitor.mEvent->AsInputEvent();
-    nsContentUtils::DispatchXULCommand(
-        commandElt, orig->IsTrusted(), aVisitor.mDOMEvent, nullptr,
-        orig->IsControl(), orig->IsAlt(), orig->IsShift(), orig->IsMeta(),
-        inputSource);
-  } else {
-    NS_WARNING("A XUL element is attached to a command that doesn't exist!\n");
-  }
-  return NS_OK;
-||||||| merged common ancestors
-    return NS_OK;
-=======
     WidgetInputEvent* orig = aVisitor.mEvent->AsInputEvent();
     nsContentUtils::DispatchXULCommand(
         commandElt, orig->IsTrusted(), MOZ_KnownLive(aVisitor.mDOMEvent),
@@ -1829,7 +1037,6 @@ nsresult nsXULElement::DispatchXULCommand(const EventChainVisitor& aVisitor,
     NS_WARNING("A XUL element is attached to a command that doesn't exist!\n");
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 void nsXULElement::GetEventTargetParent(EventChainPreVisitor& aVisitor) {
@@ -1880,31 +1087,6 @@ nsresult nsXULElement::PreHandleEvent(EventChainVisitor& aVisitor) {
 //----------------------------------------------------------------------
 // Implementation methods
 
-<<<<<<< HEAD
-nsChangeHint nsXULElement::GetAttributeChangeHint(const nsAtom* aAttribute,
-                                                  int32_t aModType) const {
-  nsChangeHint retval(nsChangeHint(0));
-
-  if (aAttribute == nsGkAtoms::value &&
-      (aModType == MutationEvent_Binding::REMOVAL ||
-       aModType == MutationEvent_Binding::ADDITION)) {
-    if (IsAnyOfXULElements(nsGkAtoms::label, nsGkAtoms::description))
-      // Label and description dynamically morph between a normal
-      // block and a cropping single-line XUL text frame.  If the
-      // value attribute is being added or removed, then we need to
-      // return a hint of frame change.  (See bugzilla bug 95475 for
-      // details.)
-      retval = nsChangeHint_ReconstructFrame;
-  } else {
-    // if left or top changes we reflow. This will happen in xul
-    // containers that manage positioned children such as a stack.
-    if (nsGkAtoms::left == aAttribute || nsGkAtoms::top == aAttribute ||
-        nsGkAtoms::right == aAttribute || nsGkAtoms::bottom == aAttribute ||
-        nsGkAtoms::start == aAttribute || nsGkAtoms::end == aAttribute)
-      retval = NS_STYLE_HINT_REFLOW;
-  }
-||||||| merged common ancestors
-=======
 nsChangeHint nsXULElement::GetAttributeChangeHint(const nsAtom* aAttribute,
                                                   int32_t aModType) const {
   if (aAttribute == nsGkAtoms::value &&
@@ -1918,38 +1100,7 @@ nsChangeHint nsXULElement::GetAttributeChangeHint(const nsAtom* aAttribute,
     // details.)
     return nsChangeHint_ReconstructFrame;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return retval;
-||||||| merged common ancestors
-nsChangeHint
-nsXULElement::GetAttributeChangeHint(const nsAtom* aAttribute,
-                                     int32_t aModType) const
-{
-    nsChangeHint retval(nsChangeHint(0));
-
-    if (aAttribute == nsGkAtoms::value &&
-        (aModType == MutationEvent_Binding::REMOVAL ||
-         aModType == MutationEvent_Binding::ADDITION)) {
-      if (IsAnyOfXULElements(nsGkAtoms::label, nsGkAtoms::description))
-        // Label and description dynamically morph between a normal
-        // block and a cropping single-line XUL text frame.  If the
-        // value attribute is being added or removed, then we need to
-        // return a hint of frame change.  (See bugzilla bug 95475 for
-        // details.)
-        retval = nsChangeHint_ReconstructFrame;
-    } else {
-        // if left or top changes we reflow. This will happen in xul
-        // containers that manage positioned children such as a stack.
-        if (nsGkAtoms::left == aAttribute || nsGkAtoms::top == aAttribute ||
-            nsGkAtoms::right == aAttribute || nsGkAtoms::bottom == aAttribute ||
-            nsGkAtoms::start == aAttribute || nsGkAtoms::end == aAttribute)
-            retval = NS_STYLE_HINT_REFLOW;
-    }
-
-    return retval;
-=======
   if (aAttribute == nsGkAtoms::type &&
       IsAnyOfXULElements(nsGkAtoms::toolbarbutton, nsGkAtoms::button)) {
     // type=menu switches from a button frame to a menu frame.
@@ -1965,7 +1116,6 @@ nsXULElement::GetAttributeChangeHint(const nsAtom* aAttribute,
   }
 
   return nsChangeHint(0);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP_(bool)
@@ -1973,52 +1123,14 @@ nsXULElement::IsAttributeMapped(const nsAtom* aAttribute) const {
   return false;
 }
 
-<<<<<<< HEAD
 nsIControllers* nsXULElement::GetControllers(ErrorResult& rv) {
   if (!Controllers()) {
     nsExtendedDOMSlots* slots = ExtendedDOMSlots();
 
     slots->mControllers = new nsXULControllers();
   }
-||||||| merged common ancestors
-nsIControllers*
-nsXULElement::GetControllers(ErrorResult& rv)
-{
-    if (! Controllers()) {
-        nsExtendedDOMSlots* slots = ExtendedDOMSlots();
 
-        slots->mControllers = new nsXULControllers();
-    }
-=======
-nsIControllers* nsXULElement::GetControllers(ErrorResult& rv) {
-  if (!Controllers()) {
-    nsExtendedDOMSlots* slots = ExtendedDOMSlots();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   return Controllers();
-}
-||||||| merged common ancestors
-    return Controllers();
-}
-=======
-    slots->mControllers = new nsXULControllers();
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-already_AddRefed<BoxObject> nsXULElement::GetBoxObject(ErrorResult& rv) {
-  // XXX sXBL/XBL2 issue! Owner or current document?
-  return OwnerDoc()->GetBoxObjectFor(this, rv);
-||||||| merged common ancestors
-already_AddRefed<BoxObject>
-nsXULElement::GetBoxObject(ErrorResult& rv)
-{
-    // XXX sXBL/XBL2 issue! Owner or current document?
-    return OwnerDoc()->GetBoxObjectFor(this, rv);
-=======
-  return Controllers();
->>>>>>> upstream-releases
 }
 
 void nsXULElement::Click(CallerType aCallerType) {
@@ -2026,50 +1138,6 @@ void nsXULElement::Click(CallerType aCallerType) {
                        aCallerType == CallerType::System);
 }
 
-<<<<<<< HEAD
-void nsXULElement::ClickWithInputSource(uint16_t aInputSource,
-                                        bool aIsTrustedEvent) {
-  if (BoolAttrIsTrue(nsGkAtoms::disabled)) return;
-
-  nsCOMPtr<nsIDocument> doc = GetComposedDoc();  // Strong just in case
-  if (doc) {
-    RefPtr<nsPresContext> context = doc->GetPresContext();
-    if (context) {
-      // strong ref to PresContext so events don't destroy it
-
-      WidgetMouseEvent eventDown(aIsTrustedEvent, eMouseDown, nullptr,
-                                 WidgetMouseEvent::eReal);
-      WidgetMouseEvent eventUp(aIsTrustedEvent, eMouseUp, nullptr,
-                               WidgetMouseEvent::eReal);
-      WidgetMouseEvent eventClick(aIsTrustedEvent, eMouseClick, nullptr,
-                                  WidgetMouseEvent::eReal);
-      eventDown.inputSource = eventUp.inputSource = eventClick.inputSource =
-          aInputSource;
-
-      // send mouse down
-      nsEventStatus status = nsEventStatus_eIgnore;
-      EventDispatcher::Dispatch(static_cast<nsIContent*>(this), context,
-                                &eventDown, nullptr, &status);
-
-      // send mouse up
-      status = nsEventStatus_eIgnore;  // reset status
-      EventDispatcher::Dispatch(static_cast<nsIContent*>(this), context,
-                                &eventUp, nullptr, &status);
-
-      // send mouse click
-      status = nsEventStatus_eIgnore;  // reset status
-      EventDispatcher::Dispatch(static_cast<nsIContent*>(this), context,
-                                &eventClick, nullptr, &status);
-
-      // If the click has been prevented, lets skip the command call
-      // this is how a physical click works
-      if (status == nsEventStatus_eConsumeNoDefault) {
-||||||| merged common ancestors
-void
-nsXULElement::ClickWithInputSource(uint16_t aInputSource, bool aIsTrustedEvent)
-{
-    if (BoolAttrIsTrue(nsGkAtoms::disabled))
-=======
 void nsXULElement::ClickWithInputSource(uint16_t aInputSource,
                                         bool aIsTrustedEvent) {
   if (BoolAttrIsTrue(nsGkAtoms::disabled)) return;
@@ -2107,7 +1175,6 @@ void nsXULElement::ClickWithInputSource(uint16_t aInputSource,
       // If the click has been prevented, lets skip the command call
       // this is how a physical click works
       if (status == nsEventStatus_eConsumeNoDefault) {
->>>>>>> upstream-releases
         return;
       }
     }
@@ -2117,28 +1184,12 @@ void nsXULElement::ClickWithInputSource(uint16_t aInputSource,
   DoCommand();
 }
 
-<<<<<<< HEAD
-void nsXULElement::DoCommand() {
-  nsCOMPtr<nsIDocument> doc = GetComposedDoc();  // strong just in case
-  if (doc) {
-    nsContentUtils::DispatchXULCommand(this, true);
-  }
-||||||| merged common ancestors
-void
-nsXULElement::DoCommand()
-{
-    nsCOMPtr<nsIDocument> doc = GetComposedDoc(); // strong just in case
-    if (doc) {
-        nsContentUtils::DispatchXULCommand(this, true);
-    }
-=======
 void nsXULElement::DoCommand() {
   nsCOMPtr<Document> doc = GetComposedDoc();  // strong just in case
   if (doc) {
     RefPtr<nsXULElement> self = this;
     nsContentUtils::DispatchXULCommand(self, true);
   }
->>>>>>> upstream-releases
 }
 
 bool nsXULElement::IsNodeOfType(uint32_t aFlags) const { return false; }
@@ -2222,22 +1273,9 @@ nsresult nsXULElement::MakeHeavyweight(nsXULPrototypeElement* aPrototype) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsXULElement::HideWindowChrome(bool aShouldHide) {
-  nsIDocument* doc = GetUncomposedDoc();
-  if (!doc || doc->GetRootElement() != this) return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-nsresult
-nsXULElement::HideWindowChrome(bool aShouldHide)
-{
-    nsIDocument* doc = GetUncomposedDoc();
-    if (!doc || doc->GetRootElement() != this)
-      return NS_ERROR_UNEXPECTED;
-=======
 nsresult nsXULElement::HideWindowChrome(bool aShouldHide) {
   Document* doc = GetUncomposedDoc();
   if (!doc || doc->GetRootElement() != this) return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 
   // only top level chrome documents can hide the window chrome
   if (!doc->IsRootDisplayDocument()) return NS_OK;
@@ -2261,18 +1299,8 @@ nsresult nsXULElement::HideWindowChrome(bool aShouldHide) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsIWidget* nsXULElement::GetWindowWidget() {
-  nsIDocument* doc = GetComposedDoc();
-||||||| merged common ancestors
-nsIWidget*
-nsXULElement::GetWindowWidget()
-{
-    nsIDocument* doc = GetComposedDoc();
-=======
 nsIWidget* nsXULElement::GetWindowWidget() {
   Document* doc = GetComposedDoc();
->>>>>>> upstream-releases
 
   // only top level chrome documents can set the titlebar color
   if (doc && doc->IsRootDisplayDocument()) {
@@ -2324,34 +1352,6 @@ void nsXULElement::SetDrawsTitle(bool aState) {
   }
 }
 
-<<<<<<< HEAD
-void nsXULElement::UpdateBrightTitlebarForeground(nsIDocument* aDoc) {
-  nsIWidget* mainWidget = GetWindowWidget();
-  if (mainWidget) {
-    // We can do this synchronously because SetBrightTitlebarForeground doesn't
-    // have any synchronous effects apart from a harmless invalidation.
-    mainWidget->SetUseBrightTitlebarForeground(
-        aDoc->GetDocumentLWTheme() == nsIDocument::Doc_Theme_Bright ||
-        aDoc->GetRootElement()->AttrValueIs(
-            kNameSpaceID_None, nsGkAtoms::brighttitlebarforeground,
-            NS_LITERAL_STRING("true"), eCaseMatters));
-  }
-||||||| merged common ancestors
-void
-nsXULElement::UpdateBrightTitlebarForeground(nsIDocument* aDoc)
-{
-    nsIWidget* mainWidget = GetWindowWidget();
-    if (mainWidget) {
-        // We can do this synchronously because SetBrightTitlebarForeground doesn't have any
-        // synchronous effects apart from a harmless invalidation.
-        mainWidget->SetUseBrightTitlebarForeground(
-          aDoc->GetDocumentLWTheme() == nsIDocument::Doc_Theme_Bright ||
-          aDoc->GetRootElement()->AttrValueIs(kNameSpaceID_None,
-                                              nsGkAtoms::brighttitlebarforeground,
-                                              NS_LITERAL_STRING("true"),
-                                              eCaseMatters));
-    }
-=======
 void nsXULElement::UpdateBrightTitlebarForeground(Document* aDoc) {
   nsIWidget* mainWidget = GetWindowWidget();
   if (mainWidget) {
@@ -2363,7 +1363,6 @@ void nsXULElement::UpdateBrightTitlebarForeground(Document* aDoc) {
             kNameSpaceID_None, nsGkAtoms::brighttitlebarforeground,
             NS_LITERAL_STRING("true"), eCaseMatters));
   }
->>>>>>> upstream-releases
 }
 
 class MarginSetter : public Runnable {
@@ -2449,16 +1448,6 @@ bool nsXULElement::IsEventAttributeNameInternal(nsAtom* aName) {
   return nsContentUtils::IsEventAttributeName(aName, EventNameType_XUL);
 }
 
-<<<<<<< HEAD
-JSObject* nsXULElement::WrapNode(JSContext* aCx,
-                                 JS::Handle<JSObject*> aGivenProto) {
-  return dom::XULElement_Binding::Wrap(aCx, this, aGivenProto);
-||||||| merged common ancestors
-JSObject*
-nsXULElement::WrapNode(JSContext *aCx, JS::Handle<JSObject*> aGivenProto)
-{
-    return dom::XULElement_Binding::Wrap(aCx, this, aGivenProto);
-=======
 JSObject* nsXULElement::WrapNode(JSContext* aCx,
                                  JS::Handle<JSObject*> aGivenProto) {
   return dom::XULElement_Binding::Wrap(aCx, this, aGivenProto);
@@ -2467,7 +1456,6 @@ JSObject* nsXULElement::WrapNode(JSContext* aCx,
 bool nsXULElement::IsInteractiveHTMLContent(bool aIgnoreTabindex) const {
   return IsXULElement(nsGkAtoms::menupopup) ||
          Element::IsInteractiveHTMLContent(aIgnoreTabindex);
->>>>>>> upstream-releases
 }
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(nsXULPrototypeNode)
@@ -2522,19 +1510,6 @@ nsXULPrototypeAttribute::~nsXULPrototypeAttribute() {
 // nsXULPrototypeElement
 //
 
-<<<<<<< HEAD
-nsresult nsXULPrototypeElement::Serialize(
-    nsIObjectOutputStream* aStream, nsXULPrototypeDocument* aProtoDoc,
-    const nsTArray<RefPtr<mozilla::dom::NodeInfo>>* aNodeInfos) {
-  nsresult rv;
-||||||| merged common ancestors
-nsresult
-nsXULPrototypeElement::Serialize(nsIObjectOutputStream* aStream,
-                                 nsXULPrototypeDocument* aProtoDoc,
-                                 const nsTArray<RefPtr<mozilla::dom::NodeInfo>> *aNodeInfos)
-{
-    nsresult rv;
-=======
 nsresult nsXULPrototypeElement::Serialize(
     nsIObjectOutputStream* aStream, nsXULPrototypeDocument* aProtoDoc,
     const nsTArray<RefPtr<mozilla::dom::NodeInfo>>* aNodeInfos) {
@@ -2543,43 +1518,6 @@ nsresult nsXULPrototypeElement::Serialize(
   // Write basic prototype data
   rv = aStream->Write32(mType);
 
-  // Write Node Info
-  int32_t index = aNodeInfos->IndexOf(mNodeInfo);
-  NS_ASSERTION(index >= 0, "unknown mozilla::dom::NodeInfo index");
-  nsresult tmp = aStream->Write32(index);
-  if (NS_FAILED(tmp)) {
-    rv = tmp;
-  }
-
-  // Write Attributes
-  tmp = aStream->Write32(mNumAttributes);
-  if (NS_FAILED(tmp)) {
-    rv = tmp;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  // Write basic prototype data
-  rv = aStream->Write32(mType);
-||||||| merged common ancestors
-    // Write basic prototype data
-    rv = aStream->Write32(mType);
-=======
-  nsAutoString attributeValue;
-  uint32_t i;
-  for (i = 0; i < mNumAttributes; ++i) {
-    RefPtr<mozilla::dom::NodeInfo> ni;
-    if (mAttributes[i].mName.IsAtom()) {
-      ni = mNodeInfo->NodeInfoManager()->GetNodeInfo(
-          mAttributes[i].mName.Atom(), nullptr, kNameSpaceID_None,
-          nsINode::ATTRIBUTE_NODE);
-      NS_ASSERTION(ni, "the nodeinfo should already exist");
-    } else {
-      ni = mAttributes[i].mName.NodeInfo();
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   // Write Node Info
   int32_t index = aNodeInfos->IndexOf(mNodeInfo);
   NS_ASSERTION(index >= 0, "unknown mozilla::dom::NodeInfo index");
@@ -2608,12 +1546,6 @@ nsresult nsXULPrototypeElement::Serialize(
     }
 
     index = aNodeInfos->IndexOf(ni);
-||||||| merged common ancestors
-    // Write Node Info
-    int32_t index = aNodeInfos->IndexOf(mNodeInfo);
-=======
-    index = aNodeInfos->IndexOf(ni);
->>>>>>> upstream-releases
     NS_ASSERTION(index >= 0, "unknown mozilla::dom::NodeInfo index");
     tmp = aStream->Write32(index);
     if (NS_FAILED(tmp)) {
@@ -2809,7 +1741,6 @@ nsresult nsXULPrototypeElement::Deserialize(
   return rv;
 }
 
-<<<<<<< HEAD
 nsresult nsXULPrototypeElement::SetAttrAt(uint32_t aPos,
                                           const nsAString& aValue,
                                           nsIURI* aDocumentURI) {
@@ -2818,155 +1749,20 @@ nsresult nsXULPrototypeElement::SetAttrAt(uint32_t aPos,
   // WARNING!!
   // This code is largely duplicated in nsXULElement::SetAttr.
   // Any changes should be made to both functions.
-||||||| merged common ancestors
-nsresult
-nsXULPrototypeElement::SetAttrAt(uint32_t aPos, const nsAString& aValue,
-                                 nsIURI* aDocumentURI)
-{
-    MOZ_ASSERT(aPos < mNumAttributes, "out-of-bounds");
 
-    // WARNING!!
-    // This code is largely duplicated in nsXULElement::SetAttr.
-    // Any changes should be made to both functions.
-=======
-nsresult nsXULPrototypeElement::SetAttrAt(uint32_t aPos,
-                                          const nsAString& aValue,
-                                          nsIURI* aDocumentURI) {
-  MOZ_ASSERT(aPos < mNumAttributes, "out-of-bounds");
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!mNodeInfo->NamespaceEquals(kNameSpaceID_XUL)) {
-    mAttributes[aPos].mValue.ParseStringOrAtom(aValue);
-||||||| merged common ancestors
-    if (!mNodeInfo->NamespaceEquals(kNameSpaceID_XUL)) {
-        mAttributes[aPos].mValue.ParseStringOrAtom(aValue);
-=======
-  // WARNING!!
-  // This code is largely duplicated in nsXULElement::SetAttr.
-  // Any changes should be made to both functions.
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    return NS_OK;
-  }
-||||||| merged common ancestors
-        return NS_OK;
-    }
-=======
   if (!mNodeInfo->NamespaceEquals(kNameSpaceID_XUL)) {
     if (mNodeInfo->NamespaceEquals(kNameSpaceID_XHTML) &&
         mAttributes[aPos].mName.Equals(nsGkAtoms::is)) {
       // We still care about the is attribute set on HTML elements.
       mAttributes[aPos].mValue.ParseAtom(aValue);
       mIsAtom = mAttributes[aPos].mValue.GetAtomValue();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (mAttributes[aPos].mName.Equals(nsGkAtoms::id) && !aValue.IsEmpty()) {
-    mHasIdAttribute = true;
-    // Store id as atom.
-    // id="" means that the element has no id. Not that it has
-    // emptystring as id.
-    mAttributes[aPos].mValue.ParseAtom(aValue);
-||||||| merged common ancestors
-    if (mAttributes[aPos].mName.Equals(nsGkAtoms::id) &&
-        !aValue.IsEmpty()) {
-        mHasIdAttribute = true;
-        // Store id as atom.
-        // id="" means that the element has no id. Not that it has
-        // emptystring as id.
-        mAttributes[aPos].mValue.ParseAtom(aValue);
-
-        return NS_OK;
-    } else if (mAttributes[aPos].mName.Equals(nsGkAtoms::is)) {
-        // Store is as atom.
-        mAttributes[aPos].mValue.ParseAtom(aValue);
-        mIsAtom = mAttributes[aPos].mValue.GetAtomValue();
-
-        return NS_OK;
-    } else if (mAttributes[aPos].mName.Equals(nsGkAtoms::_class)) {
-        mHasClassAttribute = true;
-        // Compute the element's class list
-        mAttributes[aPos].mValue.ParseAtomArray(aValue);
-
-        return NS_OK;
-    } else if (mAttributes[aPos].mName.Equals(nsGkAtoms::style)) {
-        mHasStyleAttribute = true;
-        // Parse the element's 'style' attribute
-
-        // This is basically duplicating what nsINode::NodePrincipal() does
-        nsIPrincipal* principal =
-          mNodeInfo->NodeInfoManager()->DocumentPrincipal();
-        // XXX Get correct Base URI (need GetBaseURI on *prototype* element)
-        // TODO: If we implement Content Security Policy for chrome documents
-        // as has been discussed, the CSP should be checked here to see if
-        // inline styles are allowed to be applied.
-        // XXX No specific specs talk about xul and referrer policy, pass Unset
-        RefPtr<URLExtraData> data =
-          new URLExtraData(aDocumentURI, aDocumentURI, principal,
-                           mozilla::net::RP_Unset);
-        RefPtr<DeclarationBlock> declaration =
-          DeclarationBlock::FromCssText(
-            aValue, data, eCompatibility_FullStandards, nullptr);
-        if (declaration) {
-            mAttributes[aPos].mValue.SetTo(declaration.forget(), &aValue);
-
-            return NS_OK;
-        }
-        // Don't abort if parsing failed, it could just be malformed css.
-    }
-=======
-      return NS_OK;
-    }
->>>>>>> upstream-releases
-
-    return NS_OK;
-  } else if (mAttributes[aPos].mName.Equals(nsGkAtoms::is)) {
-    // Store is as atom.
-    mAttributes[aPos].mValue.ParseAtom(aValue);
-    mIsAtom = mAttributes[aPos].mValue.GetAtomValue();
-
-    return NS_OK;
-  } else if (mAttributes[aPos].mName.Equals(nsGkAtoms::_class)) {
-    mHasClassAttribute = true;
-    // Compute the element's class list
-    mAttributes[aPos].mValue.ParseAtomArray(aValue);
-
-    return NS_OK;
-  } else if (mAttributes[aPos].mName.Equals(nsGkAtoms::style)) {
-    mHasStyleAttribute = true;
-    // Parse the element's 'style' attribute
-
-    // This is basically duplicating what nsINode::NodePrincipal() does
-    nsIPrincipal* principal = mNodeInfo->NodeInfoManager()->DocumentPrincipal();
-    // XXX Get correct Base URI (need GetBaseURI on *prototype* element)
-    // TODO: If we implement Content Security Policy for chrome documents
-    // as has been discussed, the CSP should be checked here to see if
-    // inline styles are allowed to be applied.
-    // XXX No specific specs talk about xul and referrer policy, pass Unset
-    RefPtr<URLExtraData> data = new URLExtraData(
-        aDocumentURI, aDocumentURI, principal, mozilla::net::RP_Unset);
-    RefPtr<DeclarationBlock> declaration = DeclarationBlock::FromCssText(
-        aValue, data, eCompatibility_FullStandards, nullptr);
-    if (declaration) {
-      mAttributes[aPos].mValue.SetTo(declaration.forget(), &aValue);
 
       return NS_OK;
     }
-    // Don't abort if parsing failed, it could just be malformed css.
-  } else if (mAttributes[aPos].mName.Equals(nsGkAtoms::tabindex)) {
-    mAttributes[aPos].mValue.ParseIntValue(aValue);
+
+    mAttributes[aPos].mValue.ParseStringOrAtom(aValue);
 
     return NS_OK;
-<<<<<<< HEAD
-  }
-
-  mAttributes[aPos].mValue.ParseStringOrAtom(aValue);
-
-  return NS_OK;
-||||||| merged common ancestors
-=======
   }
 
   if (mAttributes[aPos].mName.Equals(nsGkAtoms::id) && !aValue.IsEmpty()) {
@@ -3019,7 +1815,6 @@ nsresult nsXULPrototypeElement::SetAttrAt(uint32_t aPos,
   mAttributes[aPos].mValue.ParseStringOrAtom(aValue);
 
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 void nsXULPrototypeElement::Unlink() {
@@ -3301,30 +2096,6 @@ static void OffThreadScriptReceiverCallback(JS::OffThreadToken* aToken,
   NS_DispatchToMainThread(notify);
 }
 
-<<<<<<< HEAD
-nsresult nsXULPrototypeScript::Compile(
-    const char16_t* aText, size_t aTextLength, JS::SourceOwnership aOwnership,
-    nsIURI* aURI, uint32_t aLineNo, nsIDocument* aDocument,
-    nsIOffThreadScriptReceiver* aOffThreadReceiver /* = nullptr */) {
-  // We'll compile the script in the compilation scope.
-  AutoJSAPI jsapi;
-  if (!jsapi.Init(xpc::CompilationScope())) {
-    if (aOwnership == JS::SourceOwnership::TakeOwnership) {
-      // In this early-exit case -- before the |srcBuf.init| call will
-      // own |aText| -- we must relinquish ownership manually.
-      js_free(const_cast<char16_t*>(aText));
-||||||| merged common ancestors
-nsresult
-nsXULPrototypeScript::Compile(JS::SourceBufferHolder& aSrcBuf,
-                              nsIURI* aURI, uint32_t aLineNo,
-                              nsIDocument* aDocument,
-                              nsIOffThreadScriptReceiver *aOffThreadReceiver /* = nullptr */)
-{
-    // We'll compile the script in the compilation scope.
-    AutoJSAPI jsapi;
-    if (!jsapi.Init(xpc::CompilationScope())) {
-        return NS_ERROR_UNEXPECTED;
-=======
 nsresult nsXULPrototypeScript::Compile(
     const char16_t* aText, size_t aTextLength, JS::SourceOwnership aOwnership,
     nsIURI* aURI, uint32_t aLineNo, Document* aDocument,
@@ -3336,7 +2107,6 @@ nsresult nsXULPrototypeScript::Compile(
       // In this early-exit case -- before the |srcBuf.init| call will
       // own |aText| -- we must relinquish ownership manually.
       js_free(const_cast<char16_t*>(aText));
->>>>>>> upstream-releases
     }
 
     return NS_ERROR_UNEXPECTED;
@@ -3348,57 +2118,6 @@ nsresult nsXULPrototypeScript::Compile(
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  nsAutoCString urlspec;
-  nsresult rv = aURI->GetSpec(urlspec);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  // Ok, compile it to create a prototype script object!
-  JS::CompileOptions options(cx);
-  options.setIntroductionType("scriptElement")
-      .setFileAndLine(urlspec.get(), aLineNo);
-  // If the script was inline, tell the JS parser to save source for
-  // Function.prototype.toSource(). If it's out of line, we retrieve the
-  // source from the files on demand.
-  options.setSourceIsLazy(mOutOfLine);
-  JS::Rooted<JSObject*> scope(cx, JS::CurrentGlobalOrNull(cx));
-  if (scope) {
-    JS::ExposeObjectToActiveJS(scope);
-  }
-
-  if (aOffThreadReceiver && JS::CanCompileOffThread(cx, options, aTextLength)) {
-    if (!JS::CompileOffThread(cx, options, srcBuf,
-                              OffThreadScriptReceiverCallback,
-                              static_cast<void*>(aOffThreadReceiver))) {
-      return NS_ERROR_OUT_OF_MEMORY;
-    }
-    NotifyOffThreadScriptCompletedRunnable::NoteReceiver(aOffThreadReceiver);
-  } else {
-    JS::Rooted<JSScript*> script(cx);
-    if (!JS::Compile(cx, options, srcBuf, &script))
-      return NS_ERROR_OUT_OF_MEMORY;
-    Set(script);
-  }
-  return NS_OK;
-||||||| merged common ancestors
-    if (aOffThreadReceiver && JS::CanCompileOffThread(cx, options, aSrcBuf.length())) {
-        if (!JS::CompileOffThread(cx, options,
-                                  aSrcBuf,
-                                  OffThreadScriptReceiverCallback,
-                                  static_cast<void*>(aOffThreadReceiver))) {
-            return NS_ERROR_OUT_OF_MEMORY;
-        }
-        NotifyOffThreadScriptCompletedRunnable::NoteReceiver(aOffThreadReceiver);
-    } else {
-        JS::Rooted<JSScript*> script(cx);
-        if (!JS::Compile(cx, options, aSrcBuf, &script))
-            return NS_ERROR_OUT_OF_MEMORY;
-        Set(script);
-    }
-    return NS_OK;
-=======
   nsAutoCString urlspec;
   nsresult rv = aURI->GetSpec(urlspec);
   if (NS_WARN_IF(NS_FAILED(rv))) {
@@ -3430,7 +2149,6 @@ nsresult nsXULPrototypeScript::Compile(
     Set(script);
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 void nsXULPrototypeScript::UnlinkJSObjects() {

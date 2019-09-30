@@ -14,32 +14,6 @@
 }
 
 .theme-dark {
-<<<<<<< HEAD
-  --console-input-icon-color: var(--grey-60);
-  --console-input-icon-focused: var(--blue-30);
-  --console-output-icon-medium-color: var(--grey-50);
-  --console-output-icon-strong-color: var(--grey-30);
-  --console-output-icon-error-color: var(--red-40);
-  --console-output-icon-warning-color: var(--yellow-60);
-  --console-output-indent-border-color: var(--theme-highlight-blue);
-  --error-color: var(--red-20);
-  --error-background-color: hsl(345, 23%, 24%);
-  --warning-color: hsl(43, 94%, 81%);
-  --warning-background-color: hsl(42, 37%, 19%);
-||||||| merged common ancestors
-  --console-arrow-color: hsl(210, 6%, 52%);
-  --console-input-icon-color: hsl(0, 0%, 50%, 0.5);
-  --console-input-icon-focused: hsl(210, 100%, 73%);
-  --console-output-icon-info: hsl(210, 6%, 52%);
-  --console-output-icon-input: hsl(210, 6%, 76%);
-  --console-output-icon-error: hsl(0, 100%, 65%);
-  --console-output-icon-warning: hsl(36, 100%, 60%);
-  --console-output-indent-border-color: var(--theme-highlight-blue);
-  --error-color: hsl(0, 100%, 79%);
-  --error-background-color: hsl(352, 79%, 62%, 0.17);
-  --warning-color: hsl(43, 94%, 81%);
-  --warning-background-color: hsl(42, 37%, 19%);
-=======
   --console-input-background: var(--theme-tab-toolbar-background);
   --console-message-background: var(--theme-body-background);
   --console-message-border: var(--theme-splitter-color);
@@ -58,29 +32,10 @@
   /* TODO in bug 1549195: colors used in shared components (e.g. Reps) should
      be renamed and/or moved to variables.css so they work everywhere */
   --error-color: var(--red-20);
->>>>>>> upstream-releases
   --console-output-color: white;
 }
 
 .theme-light {
-<<<<<<< HEAD
-  --console-input-icon-color: var(--grey-40);
-  --console-input-icon-focused: var(--blue-55);
-  --console-output-icon-medium-color: var(--grey-40);
-  --console-output-icon-strong-color: var(--grey-60);
-  --console-output-icon-error-color: var(--red-60);
-  --console-output-icon-warning-color: var(--yellow-65);
-  --console-output-indent-border-color: var(--theme-highlight-blue);
-||||||| merged common ancestors
-  --console-arrow-color: hsl(210, 6%, 67%);
-  --console-input-icon-color: hsl(210, 6%, 75%);
-  --console-input-icon-focused: hsl(210, 100%, 44%);
-  --console-output-icon-info: hsl(210, 6%, 67%);
-  --console-output-icon-input: hsl(210, 6%, 34%);
-  --console-output-icon-error: hsl(0, 90%, 45%);
-  --console-output-icon-warning: hsl(36, 100%, 45%);
-  --console-output-indent-border-color: var(--theme-highlight-blue);
-=======
   --console-input-background: var(--theme-body-background);
   --console-message-background: var(--theme-body-background);
   --console-message-border: #f2f2f4; /* between Grey 10 and Grey 20 */
@@ -98,7 +53,6 @@
 
   /* TODO in bug 1549195: colors used in shared components (e.g. Reps) should
      be renamed and/or moved to variables.css so they work everywhere */
->>>>>>> upstream-releases
   --error-color: var(--red-70);
   --console-output-color: var(--grey-90);
 }
@@ -234,50 +188,14 @@ a {
   border-top-color: var(--purple-50);
 }
 
-<<<<<<< HEAD
-.message.paused::before {
-  background: var(--purple-50);
-  opacity: 0.6;
-  width: 100vw;
-  height: 1px;
-  bottom: 0px;
-  left: -3px;
-  display: block;
-  content: "";
-  position: absolute;
-||||||| merged common ancestors
-.message.paused::before {
-  background: #d8461f;
-  opacity: 0.6;
-  width: 100vw;
-  height: 1px;
-  bottom: 0px;
-  left: -3px;
-  display: block;
-  content: "";
-  position: absolute;
-=======
 .message.paused:not(.paused-before) {
   border-bottom-color: var(--purple-50);
   /* always show the border, even for the last child */
   border-bottom-width: 1px;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-.message.paused.paused-before::before {
-  top: 0px;
-  bottom: inherit;
 }
 
 .message.paused ~ .message:not(.command):not(.result) .message-body-wrapper,
 .message.paused.paused-before .message-body-wrapper {
-||||||| merged common ancestors
-.message.paused ~ .message {
-=======
-.message.paused ~ .message:not(.command):not(.result) .message-body-wrapper,
-.message.paused.paused-before .message-body-wrapper {
->>>>>>> upstream-releases
   opacity: 0.5;
 }
 
@@ -352,106 +270,38 @@ a {
 }
 
 .message.command > .icon {
-<<<<<<< HEAD
-  color: var(--console-output-icon-strong-color);
-  background-image: url(chrome://devtools/skin/images/webconsole/input.svg);
-||||||| merged common ancestors
-  color: var(--console-output-icon-input);
-  background-image: var(--theme-console-input-image);
-=======
   color: var(--theme-icon-color);
   background-image: url(chrome://devtools/skin/images/webconsole/input.svg);
->>>>>>> upstream-releases
 }
 
 .message.result > .icon {
-<<<<<<< HEAD
-  color: var(--console-output-icon-medium-color);
-  background-image: url(chrome://devtools/skin/images/webconsole/return.svg);
-||||||| merged common ancestors
-  color: var(--console-output-icon-info);
-  background-image: var(--theme-console-return-image);
-=======
   color: var(--theme-icon-dimmed-color);
   background-image: url(chrome://devtools/skin/images/webconsole/return.svg);
->>>>>>> upstream-releases
 }
 
 .message.info > .icon {
-<<<<<<< HEAD
-  color: var(--console-output-icon-strong-color);
-  background-image: url(chrome://devtools/skin/images/webconsole/info.svg);
-||||||| merged common ancestors
-  color: var(--console-output-icon-info);
-  background-image: var(--theme-console-info-image);
-=======
   color: var(--theme-icon-color);
   background-image: url(chrome://devtools/skin/images/info-small.svg);
->>>>>>> upstream-releases
 }
 
 .message.error > .icon {
-<<<<<<< HEAD
-  color: var(--console-output-icon-error-color);
-  background-image: url(chrome://devtools/skin/images/webconsole/error.svg);
-||||||| merged common ancestors
-  color: var(--console-output-icon-error);
-  background-image: var(--theme-console-alert-image);
-=======
   color: var(--theme-icon-error-color);
   background-image: url(chrome://devtools/skin/images/error-small.svg);
->>>>>>> upstream-releases
 }
 
 .message.warn > .icon {
-<<<<<<< HEAD
-  color: var(--console-output-icon-warning-color);
-  background-image: url(chrome://devtools/skin/images/alert.svg);
-||||||| merged common ancestors
-  color: var(--console-output-icon-warning);
-  background-image: var(--theme-console-alert-image);
-=======
   color: var(--theme-icon-warning-color);
   background-image: url(chrome://devtools/skin/images/alert-small.svg);
->>>>>>> upstream-releases
 }
 
 .message.navigationMarker > .icon {
-<<<<<<< HEAD
-  color: var(--object-color);
-  background-image: url(chrome://devtools/skin/images/globe.svg);
-||||||| merged common ancestors
-  color: var(--object-color);
-  background-image: var(--theme-console-navigation-image);
-=======
   color: var(--console-navigation-color);
   background-image: url(chrome://devtools/skin/images/webconsole/navigation.svg);
->>>>>>> upstream-releases
 }
 
 .message:hover > .icon.rewindable {
-<<<<<<< HEAD
-  background-image: url(resource://devtools/client/debugger/new/images/next-circle.svg);
-||||||| merged common ancestors
-  background-image:var(--theme-console-jump-image);
-  background-size: 14px 14px;
-=======
   background-image: url(chrome://devtools/skin/images/next-circle.svg);
->>>>>>> upstream-releases
   cursor: pointer;
-<<<<<<< HEAD
-  transform: rotate(180deg);
-}
-
-/*
- * we flip the next.svg icon by default because when we're
- * not paused, we would jump back. We remove the transform here
- * because we want to jump forward.
- */
-.message.paused ~ .message:hover .icon.rewindable {
-  transform: none;
-||||||| merged common ancestors
-=======
   transform: rotate(180deg);
 }
 
@@ -467,7 +317,6 @@ a {
  */
 .message.paused ~ .message:hover .icon.rewindable {
   transform: none;
->>>>>>> upstream-releases
 }
 
 .message > .message-body-wrapper {
@@ -518,34 +367,7 @@ a {
   max-width: 40vw;
   flex-shrink: 0;
   color: var(--frame-link-source);
-<<<<<<< HEAD
-  margin-inline-start: 5px;
-  margin-inline-end: 10px;
-}
-
-.stack-trace {
-  /* The markup contains extra whitespace to improve formatting of clipboard text.
-     Make sure this whitespace doesn't affect the HTML rendering */
-  white-space: normal;
-}
-
-.message-location,
-.stack-trace .frame-link-source {
-||||||| merged common ancestors
-  margin-inline-start: 5px;
-}
-
-.stack-trace {
-  /* The markup contains extra whitespace to improve formatting of clipboard text.
-     Make sure this whitespace doesn't affect the HTML rendering */
-  white-space: normal;
-}
-
-.message-location,
-.stack-trace .frame-link-source {
-=======
   margin-left: 1ch;
->>>>>>> upstream-releases
   /* Makes the file name truncated (and ellipsis shown) on the left side */
   direction: rtl;
   white-space: nowrap;
@@ -940,19 +762,9 @@ a.learn-more-link.webconsole-learn-more-link {
 .theme-dark .message.warn .arrayRightBracket {
   color: var(--theme-body-color);
 }
-<<<<<<< HEAD
-.theme-dark .message.error .tree.object-inspector,
-.theme-dark .message.warn .tree.object-inspector {
-  --console-output-indent-border-color: var(--theme-body-color);
-||||||| merged common ancestors
-.theme-dark .webconsole-output-wrapper .message.error .tree.object-inspector,
-.theme-dark .webconsole-output-wrapper .message.warn .tree.object-inspector {
-  --console-output-indent-border-color: var(--theme-body-color);
-=======
 .theme-dark .message.error .tree.object-inspector,
 .theme-dark .message.warn .tree.object-inspector {
   --console-indent-border-color: var(--theme-body-color);
->>>>>>> upstream-releases
 }
 
 .webconsole-app .message-flex-body > .message-body {
@@ -1189,12 +1001,7 @@ body {
   margin-inline-start: -2px;
   padding: 3px;
   border: none;
-<<<<<<< HEAD
-  color: var(--theme-twisty-fill);
-||||||| merged common ancestors
-=======
   color: var(--theme-icon-dimmed-color);
->>>>>>> upstream-releases
   background: transparent;
 }
 
@@ -1229,25 +1036,6 @@ body {
 /* Center the collapse button in the left gutter (first-level only) */
 .message.network > .collapse-button,
 .message.startGroup > .indent[data-indent="0"] ~ .collapse-button,
-<<<<<<< HEAD
-.message.startGroupCollapsed > .indent[data-indent="0"] ~ .collapse-button {
-  width: 24px;
-  margin-inline-start: var(--console-icon-horizontal-offset);
-  margin-inline-end: calc(4px - var(--console-icon-horizontal-offset));
-}
-
-/* Use a bigger arrow that is visually similar to other icons (10px) */
-.message.network > .collapse-button::before,
-.message.startGroup > .indent[data-indent="0"] ~ .collapse-button::before,
-.message.startGroupCollapsed > .indent[data-indent="0"] ~ .collapse-button::before {
-  width: 100%;
-  background-image: url("chrome://devtools/skin/images/arrow-big.svg");
-  fill: var(--console-output-icon-medium-color);
-||||||| merged common ancestors
-.message.message.startGroupCollapsed > .indent[data-indent="0"] ~ .collapse-button {
-  margin-inline-start: calc(1px + var(--console-icon-horizontal-offset));
-  margin-inline-end: calc(5px - var(--console-icon-horizontal-offset));
-=======
 .message.startGroupCollapsed > .indent[data-indent="0"] ~ .collapse-button {
   width: 24px;
   margin-inline-start: var(--console-icon-horizontal-offset);
@@ -1261,7 +1049,6 @@ body {
   width: 100%;
   background-image: url("chrome://devtools/skin/images/arrow-big.svg");
   fill: var(--theme-icon-dimmed-color);
->>>>>>> upstream-releases
 }
 
 /* Apply a style similar to collapse-button for the object tree arrows */
@@ -1269,18 +1056,6 @@ body {
 .webconsole-app .object-inspector .tree-node .arrow {
   width: 10px;
   height: 10px;
-<<<<<<< HEAD
-  background: url("chrome://devtools/skin/images/arrow.svg") no-repeat center;
-  background-size: 10px;
-  /* Needed for alignment */
-  margin-top: -1px;
-  -moz-context-properties: fill;
-  fill: var(--theme-twisty-fill);
-||||||| merged common ancestors
-  vertical-align: 0px;
-  line-height: 1;
-  background-color: var(--console-arrow-color);
-=======
   background: url("chrome://devtools/skin/images/arrow.svg") no-repeat center;
   background-size: 10px;
   transform: rotate(-90deg);
@@ -1298,7 +1073,6 @@ body {
 .webconsole-app .tree.focused .arrow,
 .webconsole-app .object-inspector .tree-node.focused .arrow {
   fill: currentColor
->>>>>>> upstream-releases
 }
 
 /* Sidebar */

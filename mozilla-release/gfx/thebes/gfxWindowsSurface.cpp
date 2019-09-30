@@ -20,80 +20,16 @@ gfxWindowsSurface::gfxWindowsSurface(HDC dc, uint32_t flags)
   InitWithDC(flags);
 }
 
-<<<<<<< HEAD
-gfxWindowsSurface::gfxWindowsSurface(IDirect3DSurface9 *surface, uint32_t flags)
-    : mOwnsDC(false), mDC(0), mWnd(nullptr) {
-  cairo_surface_t *surf = cairo_win32_surface_create_with_d3dsurface9(surface);
-  Init(surf);
-||||||| merged common ancestors
-gfxWindowsSurface::gfxWindowsSurface(IDirect3DSurface9 *surface, uint32_t flags) :
-    mOwnsDC(false), mDC(0), mWnd(nullptr)
-{
-    cairo_surface_t *surf = cairo_win32_surface_create_with_d3dsurface9(surface);
-    Init(surf);
-=======
 gfxWindowsSurface::gfxWindowsSurface(IDirect3DSurface9* surface, uint32_t flags)
     : mOwnsDC(false), mDC(0), mWnd(nullptr) {
   cairo_surface_t* surf = cairo_win32_surface_create_with_d3dsurface9(surface);
   Init(surf);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void gfxWindowsSurface::MakeInvalid(mozilla::gfx::IntSize &size) {
-  size = mozilla::gfx::IntSize(-1, -1);
-||||||| merged common ancestors
-
-void
-gfxWindowsSurface::MakeInvalid(mozilla::gfx::IntSize& size)
-{
-    size = mozilla::gfx::IntSize(-1, -1);
-=======
 void gfxWindowsSurface::MakeInvalid(mozilla::gfx::IntSize& size) {
   size = mozilla::gfx::IntSize(-1, -1);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-gfxWindowsSurface::gfxWindowsSurface(const mozilla::gfx::IntSize &realSize,
-                                     gfxImageFormat imageFormat)
-    : mOwnsDC(false), mWnd(nullptr) {
-  mozilla::gfx::IntSize size(realSize);
-  if (!mozilla::gfx::Factory::CheckSurfaceSize(size)) MakeInvalid(size);
-
-  cairo_format_t cformat = GfxFormatToCairoFormat(imageFormat);
-  cairo_surface_t *surf =
-      cairo_win32_surface_create_with_dib(cformat, size.width, size.height);
-
-  Init(surf);
-
-  if (CairoStatus() == CAIRO_STATUS_SUCCESS) {
-    mDC = cairo_win32_surface_get_dc(CairoSurface());
-    RecordMemoryUsed(size.width * size.height * 4 + sizeof(gfxWindowsSurface));
-  } else {
-    mDC = nullptr;
-  }
-||||||| merged common ancestors
-gfxWindowsSurface::gfxWindowsSurface(const mozilla::gfx::IntSize& realSize, gfxImageFormat imageFormat) :
-    mOwnsDC(false), mWnd(nullptr)
-{
-    mozilla::gfx::IntSize size(realSize);
-    if (!mozilla::gfx::Factory::CheckSurfaceSize(size))
-        MakeInvalid(size);
-
-    cairo_format_t cformat = GfxFormatToCairoFormat(imageFormat);
-    cairo_surface_t *surf =
-        cairo_win32_surface_create_with_dib(cformat, size.width, size.height);
-
-    Init(surf);
-
-    if (CairoStatus() == CAIRO_STATUS_SUCCESS) {
-        mDC = cairo_win32_surface_get_dc(CairoSurface());
-        RecordMemoryUsed(size.width * size.height * 4 + sizeof(gfxWindowsSurface));
-    } else {
-        mDC = nullptr;
-    }
-=======
 gfxWindowsSurface::gfxWindowsSurface(const mozilla::gfx::IntSize& realSize,
                                      gfxImageFormat imageFormat)
     : mOwnsDC(false), mWnd(nullptr) {
@@ -112,32 +48,14 @@ gfxWindowsSurface::gfxWindowsSurface(const mozilla::gfx::IntSize& realSize,
   } else {
     mDC = nullptr;
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-gfxWindowsSurface::gfxWindowsSurface(cairo_surface_t *csurf)
-    : mOwnsDC(false), mWnd(nullptr) {
-  if (cairo_surface_status(csurf) == 0)
-    mDC = cairo_win32_surface_get_dc(csurf);
-  else
-    mDC = nullptr;
-||||||| merged common ancestors
-gfxWindowsSurface::gfxWindowsSurface(cairo_surface_t *csurf) :
-    mOwnsDC(false), mWnd(nullptr)
-{
-    if (cairo_surface_status(csurf) == 0)
-        mDC = cairo_win32_surface_get_dc(csurf);
-    else
-        mDC = nullptr;
-=======
 gfxWindowsSurface::gfxWindowsSurface(cairo_surface_t* csurf)
     : mOwnsDC(false), mWnd(nullptr) {
   if (cairo_surface_status(csurf) == 0)
     mDC = cairo_win32_surface_get_dc(csurf);
   else
     mDC = nullptr;
->>>>>>> upstream-releases
 
   MOZ_ASSERT(cairo_surface_get_type(csurf) !=
              CAIRO_SURFACE_TYPE_WIN32_PRINTING);
@@ -153,71 +71,6 @@ void gfxWindowsSurface::InitWithDC(uint32_t flags) {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<gfxASurface> gfxWindowsSurface::CreateSimilarSurface(
-    gfxContentType aContent, const mozilla::gfx::IntSize &aSize) {
-  if (!mSurface || !mSurfaceValid) {
-    return nullptr;
-  }
-
-  cairo_surface_t *surface;
-  if (GetContentType() == gfxContentType::COLOR_ALPHA) {
-    // When creating a similar surface to a transparent surface, ensure
-    // the new surface uses a DIB. cairo_surface_create_similar won't
-    // use  a DIB for a gfxContentType::COLOR surface if this surface doesn't
-    // have a DIB (e.g. if we're a transparent window surface). But
-    // we need a DIB to perform well if the new surface is composited into
-    // a surface that's the result of
-    // create_similar(gfxContentType::COLOR_ALPHA) (e.g. a backbuffer for the
-    // window) --- that new surface *would* have a DIB.
-    gfxImageFormat gformat =
-        gfxPlatform::GetPlatform()->OptimalFormatForContent(aContent);
-    cairo_format_t cformat = GfxFormatToCairoFormat(gformat);
-    surface =
-        cairo_win32_surface_create_with_dib(cformat, aSize.width, aSize.height);
-  } else {
-    surface = cairo_surface_create_similar(
-        mSurface, (cairo_content_t)(int)aContent, aSize.width, aSize.height);
-  }
-
-  if (cairo_surface_status(surface)) {
-||||||| merged common ancestors
-already_AddRefed<gfxASurface>
-gfxWindowsSurface::CreateSimilarSurface(gfxContentType aContent,
-                                        const mozilla::gfx::IntSize& aSize)
-{
-    if (!mSurface || !mSurfaceValid) {
-        return nullptr;
-    }
-
-    cairo_surface_t *surface;
-    if (GetContentType() == gfxContentType::COLOR_ALPHA) {
-        // When creating a similar surface to a transparent surface, ensure
-        // the new surface uses a DIB. cairo_surface_create_similar won't
-        // use  a DIB for a gfxContentType::COLOR surface if this surface doesn't
-        // have a DIB (e.g. if we're a transparent window surface). But
-        // we need a DIB to perform well if the new surface is composited into
-        // a surface that's the result of create_similar(gfxContentType::COLOR_ALPHA)
-        // (e.g. a backbuffer for the window) --- that new surface *would*
-        // have a DIB.
-        gfxImageFormat gformat =
-            gfxPlatform::GetPlatform()->OptimalFormatForContent(aContent);
-        cairo_format_t cformat = GfxFormatToCairoFormat(gformat);
-        surface = cairo_win32_surface_create_with_dib(cformat, aSize.width,
-                                                      aSize.height);
-    } else {
-        surface =
-          cairo_surface_create_similar(mSurface, (cairo_content_t)(int)aContent,
-                                       aSize.width, aSize.height);
-    }
-
-    if (cairo_surface_status(surface)) {
-        cairo_surface_destroy(surface);
-        return nullptr;
-    }
-
-    RefPtr<gfxASurface> result = Wrap(surface, aSize);
-=======
 already_AddRefed<gfxASurface> gfxWindowsSurface::CreateSimilarSurface(
     gfxContentType aContent, const mozilla::gfx::IntSize& aSize) {
   if (!mSurface || !mSurfaceValid) {
@@ -245,7 +98,6 @@ already_AddRefed<gfxASurface> gfxWindowsSurface::CreateSimilarSurface(
   }
 
   if (cairo_surface_status(surface)) {
->>>>>>> upstream-releases
     cairo_surface_destroy(surface);
     return nullptr;
   }
@@ -280,17 +132,8 @@ already_AddRefed<gfxImageSurface> gfxWindowsSurface::GetAsImageSurface() {
       CairoSurface() != nullptr,
       "CairoSurface() shouldn't be nullptr when mSurfaceValid is TRUE!");
 
-<<<<<<< HEAD
-  cairo_surface_t *isurf = cairo_win32_surface_get_image(CairoSurface());
-  if (!isurf) return nullptr;
-||||||| merged common ancestors
-    cairo_surface_t *isurf = cairo_win32_surface_get_image(CairoSurface());
-    if (!isurf)
-        return nullptr;
-=======
   cairo_surface_t* isurf = cairo_win32_surface_get_image(CairoSurface());
   if (!isurf) return nullptr;
->>>>>>> upstream-releases
 
   RefPtr<gfxImageSurface> result =
       gfxASurface::Wrap(isurf).downcast<gfxImageSurface>();

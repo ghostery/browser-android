@@ -31,76 +31,16 @@ ValueOperand CodeGeneratorMIPS64::ToTempValue(LInstruction* ins, size_t pos) {
   return ValueOperand(ToRegister(ins->getTemp(pos)));
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitBox(LBox* box) {
-  const LAllocation* in = box->getOperand(0);
-  const LDefinition* result = box->getDef(0);
-
-  if (IsFloatingPointType(box->type())) {
-    FloatRegister reg = ToFloatRegister(in);
-    if (box->type() == MIRType::Float32) {
-      masm.convertFloat32ToDouble(reg, ScratchDoubleReg);
-      reg = ScratchDoubleReg;
-    }
-    masm.moveFromDouble(reg, ToRegister(result));
-  } else {
-    masm.boxValue(ValueTypeFromMIRType(box->type()), ToRegister(in),
-                  ToRegister(result));
-  }
-||||||| merged common ancestors
-void
-CodeGenerator::visitBox(LBox* box)
-{
-    const LAllocation* in = box->getOperand(0);
-    const LDefinition* result = box->getDef(0);
-
-    if (IsFloatingPointType(box->type())) {
-        FloatRegister reg = ToFloatRegister(in);
-        if (box->type() == MIRType::Float32) {
-            masm.convertFloat32ToDouble(reg, ScratchDoubleReg);
-            reg = ScratchDoubleReg;
-        }
-        masm.moveFromDouble(reg, ToRegister(result));
-    } else {
-        masm.boxValue(ValueTypeFromMIRType(box->type()), ToRegister(in), ToRegister(result));
-    }
-=======
 void CodeGenerator::visitBox(LBox* box) {
   const LAllocation* in = box->getOperand(0);
   ValueOperand result = ToOutValue(box);
 
   masm.moveValue(TypedOrValueRegister(box->type(), ToAnyRegister(in)), result);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void CodeGenerator::visitUnbox(LUnbox* unbox) {
-  MUnbox* mir = unbox->mir();
-||||||| merged common ancestors
-void
-CodeGenerator::visitUnbox(LUnbox* unbox)
-{
-    MUnbox* mir = unbox->mir();
-
-    if (mir->fallible()) {
-        const ValueOperand value = ToValue(unbox, LUnbox::Input);
-        masm.splitTag(value, SecondScratchReg);
-        bailoutCmp32(Assembler::NotEqual, SecondScratchReg, Imm32(MIRTypeToTag(mir->type())),
-                     unbox->snapshot());
-    }
-=======
 void CodeGenerator::visitUnbox(LUnbox* unbox) {
   MUnbox* mir = unbox->mir();
 
-  if (mir->fallible()) {
-    const ValueOperand value = ToValue(unbox, LUnbox::Input);
-    masm.splitTag(value, SecondScratchReg);
-    bailoutCmp32(Assembler::NotEqual, SecondScratchReg,
-                 Imm32(MIRTypeToTag(mir->type())), unbox->snapshot());
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   if (mir->fallible()) {
     const ValueOperand value = ToValue(unbox, LUnbox::Input);
     masm.splitTag(value, SecondScratchReg);
@@ -112,40 +52,6 @@ void CodeGenerator::visitUnbox(LUnbox* unbox) {
   Register result = ToRegister(unbox->output());
   if (input->isRegister()) {
     Register inputReg = ToRegister(input);
-||||||| merged common ancestors
-    LAllocation* input = unbox->getOperand(LUnbox::Input);
-    Register result = ToRegister(unbox->output());
-    if (input->isRegister()) {
-        Register inputReg = ToRegister(input);
-        switch (mir->type()) {
-          case MIRType::Int32:
-            masm.unboxInt32(inputReg, result);
-            break;
-          case MIRType::Boolean:
-            masm.unboxBoolean(inputReg, result);
-            break;
-          case MIRType::Object:
-            masm.unboxObject(inputReg, result);
-            break;
-          case MIRType::String:
-            masm.unboxString(inputReg, result);
-            break;
-          case MIRType::Symbol:
-            masm.unboxSymbol(inputReg, result);
-            break;
-          default:
-            MOZ_CRASH("Given MIRType cannot be unboxed.");
-        }
-        return;
-    }
-
-    Address inputAddr = ToAddress(input);
-=======
-  LAllocation* input = unbox->getOperand(LUnbox::Input);
-  Register result = ToRegister(unbox->output());
-  if (input->isRegister()) {
-    Register inputReg = ToRegister(input);
->>>>>>> upstream-releases
     switch (mir->type()) {
       case MIRType::Int32:
         masm.unboxInt32(inputReg, result);
@@ -160,46 +66,14 @@ void CodeGenerator::visitUnbox(LUnbox* unbox) {
         masm.unboxString(inputReg, result);
         break;
       case MIRType::Symbol:
-<<<<<<< HEAD
-        masm.unboxSymbol(inputReg, result);
-||||||| merged common ancestors
-        masm.unboxSymbol(inputAddr, result);
-=======
         masm.unboxSymbol(inputReg, result);
         break;
       case MIRType::BigInt:
         masm.unboxBigInt(inputReg, result);
->>>>>>> upstream-releases
         break;
       default:
         MOZ_CRASH("Given MIRType cannot be unboxed.");
     }
-<<<<<<< HEAD
-    return;
-  }
-
-  Address inputAddr = ToAddress(input);
-  switch (mir->type()) {
-    case MIRType::Int32:
-      masm.unboxInt32(inputAddr, result);
-      break;
-    case MIRType::Boolean:
-      masm.unboxBoolean(inputAddr, result);
-      break;
-    case MIRType::Object:
-      masm.unboxObject(inputAddr, result);
-      break;
-    case MIRType::String:
-      masm.unboxString(inputAddr, result);
-      break;
-    case MIRType::Symbol:
-      masm.unboxSymbol(inputAddr, result);
-      break;
-    default:
-      MOZ_CRASH("Given MIRType cannot be unboxed.");
-  }
-||||||| merged common ancestors
-=======
     return;
   }
 
@@ -226,7 +100,6 @@ void CodeGenerator::visitUnbox(LUnbox* unbox) {
     default:
       MOZ_CRASH("Given MIRType cannot be unboxed.");
   }
->>>>>>> upstream-releases
 }
 
 void CodeGeneratorMIPS64::splitTagForTest(const ValueOperand& value,

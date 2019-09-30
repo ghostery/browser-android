@@ -159,15 +159,7 @@ static void LogFlags(uint32_t flags) {
  * @param buf the data to print
  * @param bufLen length of the data
  */
-<<<<<<< HEAD
-static void LogBuf(const char *tag, const uint8_t *buf, uint32_t bufLen) {
-||||||| merged common ancestors
-static void
-LogBuf(const char *tag, const uint8_t *buf, uint32_t bufLen)
-{
-=======
 static void LogBuf(const char* tag, const uint8_t* buf, uint32_t bufLen) {
->>>>>>> upstream-releases
   int i;
 
   if (!LOG_ENABLED()) return;
@@ -210,20 +202,12 @@ static void LogBuf(const char* tag, const uint8_t* buf, uint32_t bufLen) {
  * @param token The token to print
  * @param tokenLen length of the data in token
  */
-<<<<<<< HEAD
-static void LogToken(const char *name, const void *token, uint32_t tokenLen) {
-||||||| merged common ancestors
-static void
-LogToken(const char* name, const void* token, uint32_t tokenLen)
-{
-=======
 static void LogToken(const char* name, const void* token, uint32_t tokenLen) {
->>>>>>> upstream-releases
   if (!LOG_ENABLED()) {
     return;
   }
 
-  nsDependentCSubstring tokenString(static_cast<const char *>(token), tokenLen);
+  nsDependentCSubstring tokenString(static_cast<const char*>(token), tokenLen);
   nsAutoCString base64Token;
   nsresult rv = mozilla::Base64Encode(tokenString, base64Token);
   if (NS_FAILED(rv)) {
@@ -239,34 +223,12 @@ static void LogToken(const char* name, const void* token, uint32_t tokenLen) {
 #define SWAP16(x) ((((x)&0xff) << 8) | (((x) >> 8) & 0xff))
 #define SWAP32(x) ((SWAP16((x)&0xffff) << 16) | (SWAP16((x) >> 16)))
 
-<<<<<<< HEAD
-static void *WriteBytes(void *buf, const void *data, uint32_t dataLen) {
-||||||| merged common ancestors
-static void *
-WriteBytes(void *buf, const void *data, uint32_t dataLen)
-{
-=======
 static void* WriteBytes(void* buf, const void* data, uint32_t dataLen) {
->>>>>>> upstream-releases
   memcpy(buf, data, dataLen);
-<<<<<<< HEAD
-  return (uint8_t *)buf + dataLen;
-||||||| merged common ancestors
-  return (uint8_t *) buf + dataLen;
-=======
   return (uint8_t*)buf + dataLen;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static void *WriteDWORD(void *buf, uint32_t dword) {
-||||||| merged common ancestors
-static void *
-WriteDWORD(void *buf, uint32_t dword)
-{
-=======
 static void* WriteDWORD(void* buf, uint32_t dword) {
->>>>>>> upstream-releases
 #ifdef IS_BIG_ENDIAN
   // NTLM uses little endian on the wire
   dword = SWAP32(dword);
@@ -274,15 +236,7 @@ static void* WriteDWORD(void* buf, uint32_t dword) {
   return WriteBytes(buf, &dword, sizeof(dword));
 }
 
-<<<<<<< HEAD
-static void *WriteSecBuf(void *buf, uint16_t length, uint32_t offset) {
-||||||| merged common ancestors
-static void *
-WriteSecBuf(void *buf, uint16_t length, uint32_t offset)
-{
-=======
 static void* WriteSecBuf(void* buf, uint16_t length, uint32_t offset) {
->>>>>>> upstream-releases
 #ifdef IS_BIG_ENDIAN
   length = SWAP16(length);
   offset = SWAP32(offset);
@@ -301,28 +255,10 @@ static void* WriteSecBuf(void* buf, uint16_t length, uint32_t offset) {
  * to pass the same buffer as both input and output, which is a handy way to
  * convert the unicode buffer to little-endian on big-endian platforms.
  */
-<<<<<<< HEAD
-static void *WriteUnicodeLE(void *buf, const char16_t *str, uint32_t strLen) {
-||||||| merged common ancestors
-static void *
-WriteUnicodeLE(void *buf, const char16_t *str, uint32_t strLen)
-{
-=======
 static void* WriteUnicodeLE(void* buf, const char16_t* str, uint32_t strLen) {
->>>>>>> upstream-releases
   // convert input string from BE to LE
-<<<<<<< HEAD
-  uint8_t *cursor = (uint8_t *)buf, *input = (uint8_t *)str;
-  for (uint32_t i = 0; i < strLen; ++i, input += 2, cursor += 2) {
-||||||| merged common ancestors
-  uint8_t *cursor = (uint8_t *) buf,
-          *input  = (uint8_t *) str;
-  for (uint32_t i=0; i<strLen; ++i, input+=2, cursor+=2)
-  {
-=======
   uint8_t *cursor = (uint8_t*)buf, *input = (uint8_t*)str;
   for (uint32_t i = 0; i < strLen; ++i, input += 2, cursor += 2) {
->>>>>>> upstream-releases
     // allow for the case where |buf == str|
     uint8_t temp = input[0];
     cursor[0] = input[1];
@@ -332,68 +268,24 @@ static void* WriteUnicodeLE(void* buf, const char16_t* str, uint32_t strLen) {
 }
 #endif
 
-<<<<<<< HEAD
-static uint16_t ReadUint16(const uint8_t *&buf) {
-  uint16_t x = ((uint16_t)buf[0]) | ((uint16_t)buf[1] << 8);
-||||||| merged common ancestors
-static uint16_t
-ReadUint16(const uint8_t *&buf)
-{
-  uint16_t x = ((uint16_t) buf[0]) | ((uint16_t) buf[1] << 8);
-=======
 static uint16_t ReadUint16(const uint8_t*& buf) {
   uint16_t x = ((uint16_t)buf[0]) | ((uint16_t)buf[1] << 8);
->>>>>>> upstream-releases
   buf += sizeof(x);
   return x;
 }
 
-<<<<<<< HEAD
-static uint32_t ReadUint32(const uint8_t *&buf) {
-  uint32_t x = ((uint32_t)buf[0]) | (((uint32_t)buf[1]) << 8) |
-               (((uint32_t)buf[2]) << 16) | (((uint32_t)buf[3]) << 24);
-||||||| merged common ancestors
-static uint32_t
-ReadUint32(const uint8_t *&buf)
-{
-  uint32_t x = ( (uint32_t) buf[0])        |
-               (((uint32_t) buf[1]) << 8)  |
-               (((uint32_t) buf[2]) << 16) |
-               (((uint32_t) buf[3]) << 24);
-=======
 static uint32_t ReadUint32(const uint8_t*& buf) {
   uint32_t x = ((uint32_t)buf[0]) | (((uint32_t)buf[1]) << 8) |
                (((uint32_t)buf[2]) << 16) | (((uint32_t)buf[3]) << 24);
->>>>>>> upstream-releases
   buf += sizeof(x);
   return x;
 }
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-static void ZapBuf(void *buf, size_t bufLen) { memset(buf, 0, bufLen); }
-||||||| merged common ancestors
-static void
-ZapBuf(void *buf, size_t bufLen)
-{
-  memset(buf, 0, bufLen);
-}
-=======
 static void ZapBuf(void* buf, size_t bufLen) { memset(buf, 0, bufLen); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static void ZapString(nsString &s) { ZapBuf(s.BeginWriting(), s.Length() * 2); }
-||||||| merged common ancestors
-static void
-ZapString(nsString &s)
-{
-  ZapBuf(s.BeginWriting(), s.Length() * 2);
-}
-=======
 static void ZapString(nsString& s) { ZapBuf(s.BeginWriting(), s.Length() * 2); }
->>>>>>> upstream-releases
 
 /**
  * NTLM_Hash computes the NTLM hash of the given password.
@@ -403,35 +295,15 @@ static void ZapString(nsString& s) { ZapBuf(s.BeginWriting(), s.Length() * 2); }
  * @param hash
  *        16-byte result buffer
  */
-<<<<<<< HEAD
-static void NTLM_Hash(const nsString &password, unsigned char *hash) {
-||||||| merged common ancestors
-static void
-NTLM_Hash(const nsString &password, unsigned char *hash)
-{
-=======
 static void NTLM_Hash(const nsString& password, unsigned char* hash) {
->>>>>>> upstream-releases
   uint32_t len = password.Length();
   uint8_t* passbuf;
 
 #ifdef IS_BIG_ENDIAN
-<<<<<<< HEAD
-  passbuf = (uint8_t *)malloc(len * 2);
-||||||| merged common ancestors
-  passbuf = (uint8_t *) malloc(len * 2);
-=======
   passbuf = (uint8_t*)malloc(len * 2);
->>>>>>> upstream-releases
   WriteUnicodeLE(passbuf, password.get(), len);
 #else
-<<<<<<< HEAD
-  passbuf = (uint8_t *)password.get();
-||||||| merged common ancestors
-  passbuf = (uint8_t *) password.get();
-=======
   passbuf = (uint8_t*)password.get();
->>>>>>> upstream-releases
 #endif
 
   md4sum(passbuf, len * 2, hash);
@@ -455,17 +327,8 @@ static void NTLM_Hash(const nsString& password, unsigned char* hash) {
  * @param response
  *        24-byte buffer to contain the LM response upon return
  */
-<<<<<<< HEAD
-static void LM_Response(const uint8_t *hash, const uint8_t *challenge,
-                        uint8_t *response) {
-||||||| merged common ancestors
-static void
-LM_Response(const uint8_t *hash, const uint8_t *challenge, uint8_t *response)
-{
-=======
 static void LM_Response(const uint8_t* hash, const uint8_t* challenge,
                         uint8_t* response) {
->>>>>>> upstream-releases
   uint8_t keybytes[21], k1[8], k2[8], k3[8];
 
   memcpy(keybytes, hash, 16);
@@ -482,15 +345,7 @@ static void LM_Response(const uint8_t* hash, const uint8_t* challenge,
 
 //-----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-static nsresult GenerateType1Msg(void **outBuf, uint32_t *outLen) {
-||||||| merged common ancestors
-static nsresult
-GenerateType1Msg(void **outBuf, uint32_t *outLen)
-{
-=======
 static nsresult GenerateType1Msg(void** outBuf, uint32_t* outLen) {
->>>>>>> upstream-releases
   //
   // verify that bufLen is sufficient
   //
@@ -528,25 +383,6 @@ static nsresult GenerateType1Msg(void** outBuf, uint32_t* outLen) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-struct Type2Msg {
-  uint32_t flags;                    // NTLM_Xxx bitwise combination
-  uint8_t challenge[NTLM_CHAL_LEN];  // 8 byte challenge
-  const uint8_t *target;             // target string (type depends on flags)
-  uint32_t targetLen;                // target length in bytes
-  const uint8_t
-      *targetInfo;         // target Attribute-Value pairs (DNS domain, et al)
-  uint32_t targetInfoLen;  // target AV pairs length in bytes
-||||||| merged common ancestors
-struct Type2Msg
-{
-  uint32_t    flags;                    // NTLM_Xxx bitwise combination
-  uint8_t     challenge[NTLM_CHAL_LEN]; // 8 byte challenge
-  const uint8_t *target;                // target string (type depends on flags)
-  uint32_t    targetLen;                // target length in bytes
-  const uint8_t *targetInfo;            // target Attribute-Value pairs (DNS domain, et al)
-  uint32_t    targetInfoLen;            // target AV pairs length in bytes
-=======
 struct Type2Msg {
   uint32_t flags;                    // NTLM_Xxx bitwise combination
   uint8_t challenge[NTLM_CHAL_LEN];  // 8 byte challenge
@@ -555,20 +391,10 @@ struct Type2Msg {
   const uint8_t*
       targetInfo;          // target Attribute-Value pairs (DNS domain, et al)
   uint32_t targetInfoLen;  // target AV pairs length in bytes
->>>>>>> upstream-releases
 };
 
-<<<<<<< HEAD
-static nsresult ParseType2Msg(const void *inBuf, uint32_t inLen,
-                              Type2Msg *msg) {
-||||||| merged common ancestors
-static nsresult
-ParseType2Msg(const void *inBuf, uint32_t inLen, Type2Msg *msg)
-{
-=======
 static nsresult ParseType2Msg(const void* inBuf, uint32_t inLen,
                               Type2Msg* msg) {
->>>>>>> upstream-releases
   // make sure inBuf is long enough to contain a meaningful type2 msg.
   //
   // 0  NTLMSSP Signature
@@ -581,7 +407,7 @@ static nsresult ParseType2Msg(const void* inBuf, uint32_t inLen,
   //
   if (inLen < NTLM_TYPE2_HEADER_LEN) return NS_ERROR_UNEXPECTED;
 
-  auto cursor = static_cast<const uint8_t *>(inBuf);
+  auto cursor = static_cast<const uint8_t*>(inBuf);
 
   // verify NTLMSSP signature
   if (memcmp(cursor, NTLM_SIGNATURE, sizeof(NTLM_SIGNATURE)) != 0)
@@ -608,7 +434,7 @@ static nsresult ParseType2Msg(const void* inBuf, uint32_t inLen,
   // integer overflow checking.
   if (MOZ_LIKELY(targetEnd.isValid() && targetEnd.value() <= inLen)) {
     msg->targetLen = targetLen;
-    msg->target = static_cast<const uint8_t *>(inBuf) + offset;
+    msg->target = static_cast<const uint8_t*>(inBuf) + offset;
   } else {
     // Do not error out, for (conservative) backward compatibility.
     msg->targetLen = 0;
@@ -625,8 +451,7 @@ static nsresult ParseType2Msg(const void* inBuf, uint32_t inLen,
   LOG(("NTLM type 2 message:\n"));
   LogBuf("target", msg->target, msg->targetLen);
   LogBuf("flags",
-         mozilla::BitwiseCast<const uint8_t *, const uint32_t *>(&msg->flags),
-         4);
+         mozilla::BitwiseCast<const uint8_t*, const uint32_t*>(&msg->flags), 4);
   LogFlags(msg->flags);
   LogBuf("challenge", msg->challenge, sizeof(msg->challenge));
 
@@ -646,7 +471,7 @@ static nsresult ParseType2Msg(const void* inBuf, uint32_t inLen,
   // integer overflow checking.
   if (MOZ_LIKELY(targetInfoEnd.isValid() && targetInfoEnd.value() <= inLen)) {
     msg->targetInfoLen = targetInfoLen;
-    msg->targetInfo = static_cast<const uint8_t *>(inBuf) + offset;
+    msg->targetInfo = static_cast<const uint8_t*>(inBuf) + offset;
   } else {
     NS_ERROR("failed to get NTLMv2 target info");
     return NS_ERROR_UNEXPECTED;
@@ -655,29 +480,11 @@ static nsresult ParseType2Msg(const void* inBuf, uint32_t inLen,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-static nsresult GenerateType3Msg(const nsString &domain,
-                                 const nsString &username,
-                                 const nsString &password, const void *inBuf,
-                                 uint32_t inLen, void **outBuf,
-                                 uint32_t *outLen) {
-||||||| merged common ancestors
-static nsresult
-GenerateType3Msg(const nsString &domain,
-                 const nsString &username,
-                 const nsString &password,
-                 const void     *inBuf,
-                 uint32_t        inLen,
-                 void          **outBuf,
-                 uint32_t       *outLen)
-{
-=======
 static nsresult GenerateType3Msg(const nsString& domain,
                                  const nsString& username,
                                  const nsString& password, const void* inBuf,
                                  uint32_t inLen, void** outBuf,
                                  uint32_t* outLen) {
->>>>>>> upstream-releases
   // inBuf contains Type-2 msg (the challenge) from server
   MOZ_ASSERT(NS_IsMainThread());
   nsresult rv;
@@ -716,8 +523,8 @@ static nsresult GenerateType3Msg(const nsString& domain,
     ucsDomainBuf = domain;
     domainPtr = ucsDomainBuf.get();
     domainLen = ucsDomainBuf.Length() * 2;
-    WriteUnicodeLE(const_cast<void *>(domainPtr),
-                   static_cast<const char16_t *>(domainPtr),
+    WriteUnicodeLE(const_cast<void*>(domainPtr),
+                   static_cast<const char16_t*>(domainPtr),
                    ucsDomainBuf.Length());
 #else
     domainPtr = domain.get();
@@ -737,17 +544,8 @@ static nsresult GenerateType3Msg(const nsString& domain,
     ucsUserBuf = username;
     userPtr = ucsUserBuf.get();
     userLen = ucsUserBuf.Length() * 2;
-<<<<<<< HEAD
-    WriteUnicodeLE(const_cast<void *>(userPtr),
-                   static_cast<const char16_t *>(userPtr), ucsUserBuf.Length());
-||||||| merged common ancestors
-    WriteUnicodeLE(const_cast<void*>(userPtr),
-                   static_cast<const char16_t*>(userPtr),
-                   ucsUserBuf.Length());
-=======
     WriteUnicodeLE(const_cast<void*>(userPtr),
                    static_cast<const char16_t*>(userPtr), ucsUserBuf.Length());
->>>>>>> upstream-releases
 #else
     userPtr = username.get();
     userLen = username.Length() * 2;
@@ -773,17 +571,8 @@ static nsresult GenerateType3Msg(const nsString& domain,
     hostPtr = ucsHostBuf.get();
     hostLen = ucsHostBuf.Length() * 2;
 #ifdef IS_BIG_ENDIAN
-<<<<<<< HEAD
-    WriteUnicodeLE(const_cast<void *>(hostPtr),
-                   static_cast<const char16_t *>(hostPtr), ucsHostBuf.Length());
-||||||| merged common ancestors
-    WriteUnicodeLE(const_cast<void*>(hostPtr),
-                   static_cast<const char16_t*>(hostPtr),
-                   ucsHostBuf.Length());
-=======
     WriteUnicodeLE(const_cast<void*>(hostPtr),
                    static_cast<const char16_t*>(hostPtr), ucsHostBuf.Length());
->>>>>>> upstream-releases
 #endif
   } else {
     hostPtr = hostBuf.get();
@@ -826,30 +615,23 @@ static nsresult GenerateType3Msg(const nsString& domain,
     userUpperPtr = ucsUserUpperBuf.get();
     userUpperLen = ucsUserUpperBuf.Length() * 2;
 #ifdef IS_BIG_ENDIAN
-    WriteUnicodeLE(const_cast<void *>(userUpperPtr),
-                   static_cast<const char16_t *>(userUpperPtr),
+    WriteUnicodeLE(const_cast<void*>(userUpperPtr),
+                   static_cast<const char16_t*>(userUpperPtr),
                    ucsUserUpperBuf.Length());
 #endif
     ToUpperCase(domain, ucsDomainUpperBuf);
     domainUpperPtr = ucsDomainUpperBuf.get();
     domainUpperLen = ucsDomainUpperBuf.Length() * 2;
 #ifdef IS_BIG_ENDIAN
-    WriteUnicodeLE(const_cast<void *>(domainUpperPtr),
-                   static_cast<const char16_t *>(domainUpperPtr),
+    WriteUnicodeLE(const_cast<void*>(domainUpperPtr),
+                   static_cast<const char16_t*>(domainUpperPtr),
                    ucsDomainUpperBuf.Length());
 #endif
 
     NTLM_Hash(password, ntlmHash);
     ntlmHashStr = nsAutoCString(
-<<<<<<< HEAD
-        mozilla::BitwiseCast<const char *, const uint8_t *>(ntlmHash),
-        NTLM_HASH_LEN);
-||||||| merged common ancestors
-      mozilla::BitwiseCast<const char*, const uint8_t*>(ntlmHash), NTLM_HASH_LEN);
-=======
         mozilla::BitwiseCast<const char*, const uint8_t*>(ntlmHash),
         NTLM_HASH_LEN);
->>>>>>> upstream-releases
 
     nsCOMPtr<nsIKeyObjectFactory> keyFactory =
         do_CreateInstance(NS_KEYMODULEOBJECTFACTORY_CONTRACTID, &rv);
@@ -879,19 +661,12 @@ static nsresult GenerateType3Msg(const nsString& domain,
     if (NS_FAILED(rv)) {
       return rv;
     }
-<<<<<<< HEAD
-    rv = hasher->Update(static_cast<const uint8_t *>(userUpperPtr),
-                        userUpperLen);
-||||||| merged common ancestors
-    rv = hasher->Update(static_cast<const uint8_t*>(userUpperPtr), userUpperLen);
-=======
     rv =
         hasher->Update(static_cast<const uint8_t*>(userUpperPtr), userUpperLen);
->>>>>>> upstream-releases
     if (NS_FAILED(rv)) {
       return rv;
     }
-    rv = hasher->Update(static_cast<const uint8_t *>(domainUpperPtr),
+    rv = hasher->Update(static_cast<const uint8_t*>(domainUpperPtr),
                         domainUpperLen);
     if (NS_FAILED(rv)) {
       return rv;
@@ -1014,16 +789,8 @@ static nsresult GenerateType3Msg(const nsString& domain,
       return rv;
     }
 
-<<<<<<< HEAD
-    auto sessionHash = mozilla::BitwiseCast<const uint8_t *, const char *>(
-        sessionHashString.get());
-||||||| merged common ancestors
-    auto sessionHash = mozilla::BitwiseCast<const uint8_t*, const char*>(
-      sessionHashString.get());
-=======
     auto sessionHash = mozilla::BitwiseCast<const uint8_t*, const char*>(
         sessionHashString.get());
->>>>>>> upstream-releases
 
     LogBuf("NTLM2 effective key: ", sessionHash, 8);
 
@@ -1074,7 +841,7 @@ static nsresult GenerateType3Msg(const nsString& domain,
     return NS_ERROR_UNEXPECTED;
   }
   cursor = WriteSecBuf(cursor, LM_RESP_LEN, offset.value());
-  memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), lmResp, LM_RESP_LEN);
+  memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), lmResp, LM_RESP_LEN);
 
   // 20 : NTLM or NTLMv2 response sec buf
   offset += LM_RESP_LEN;
@@ -1084,31 +851,30 @@ static nsresult GenerateType3Msg(const nsString& domain,
   }
   cursor = WriteSecBuf(cursor, ntlmRespLen.value(), offset.value());
   if (ntlmv2) {
-    memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), ntlmv2Resp,
+    memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), ntlmv2Resp,
            NTLMv2_RESP_LEN);
     offset += NTLMv2_RESP_LEN;
     if (!offset.isValid()) {
       NS_ERROR("failed preparing to write NTLM response: integer overflow?!?");
       return NS_ERROR_UNEXPECTED;
     }
-    memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), ntlmv2_blob1,
+    memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), ntlmv2_blob1,
            NTLMv2_BLOB1_LEN);
     offset += NTLMv2_BLOB1_LEN;
     if (!offset.isValid()) {
       NS_ERROR("failed preparing to write NTLM response: integer overflow?!?");
       return NS_ERROR_UNEXPECTED;
     }
-    memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), msg.targetInfo,
+    memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), msg.targetInfo,
            msg.targetInfoLen);
   } else {
-    memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), ntlmResp,
+    memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), ntlmResp,
            NTLM_RESP_LEN);
   }
   // 28 : domain name sec buf
   offset = NTLM_TYPE3_HEADER_LEN;
   cursor = WriteSecBuf(cursor, domainLen, offset.value());
-  memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), domainPtr,
-         domainLen);
+  memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), domainPtr, domainLen);
 
   // 36 : user name sec buf
   offset += domainLen;
@@ -1117,7 +883,7 @@ static nsresult GenerateType3Msg(const nsString& domain,
     return NS_ERROR_UNEXPECTED;
   }
   cursor = WriteSecBuf(cursor, userLen, offset.value());
-  memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), userPtr, userLen);
+  memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), userPtr, userLen);
 
   // 44 : workstation (host) name sec buf
   offset += userLen;
@@ -1126,7 +892,7 @@ static nsresult GenerateType3Msg(const nsString& domain,
     return NS_ERROR_UNEXPECTED;
   }
   cursor = WriteSecBuf(cursor, hostLen, offset.value());
-  memcpy(static_cast<uint8_t *>(*outBuf) + offset.value(), hostPtr, hostLen);
+  memcpy(static_cast<uint8_t*>(*outBuf) + offset.value(), hostPtr, hostLen);
 
   // 52 : session key sec buf (not used)
   cursor = WriteSecBuf(cursor, 0, 0);
@@ -1156,20 +922,9 @@ nsresult nsNTLMAuthModule::InitTest() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNTLMAuthModule::Init(const char * /*serviceName*/, uint32_t serviceFlags,
-                       const char16_t *domain, const char16_t *username,
-                       const char16_t *password) {
-||||||| merged common ancestors
-nsNTLMAuthModule::Init(const char* /*serviceName*/, uint32_t serviceFlags,
-                       const char16_t* domain, const char16_t* username,
-                       const char16_t* password)
-{
-=======
 nsNTLMAuthModule::Init(const char* /*serviceName*/, uint32_t serviceFlags,
                        const char16_t* domain, const char16_t* username,
                        const char16_t* password) {
->>>>>>> upstream-releases
   MOZ_ASSERT((serviceFlags & ~nsIAuthModule::REQ_PROXY_AUTH) ==
                  nsIAuthModule::REQ_DEFAULT,
              "Unexpected service flags");
@@ -1192,19 +947,8 @@ nsNTLMAuthModule::Init(const char* /*serviceName*/, uint32_t serviceFlags,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNTLMAuthModule::GetNextToken(const void *inToken, uint32_t inTokenLen,
-                               void **outToken, uint32_t *outTokenLen) {
-||||||| merged common ancestors
-nsNTLMAuthModule::GetNextToken(const void *inToken,
-                               uint32_t    inTokenLen,
-                               void      **outToken,
-                               uint32_t   *outTokenLen)
-{
-=======
 nsNTLMAuthModule::GetNextToken(const void* inToken, uint32_t inTokenLen,
                                void** outToken, uint32_t* outTokenLen) {
->>>>>>> upstream-releases
   nsresult rv;
 
   // disable NTLM authentication when FIPS mode is enabled.
@@ -1244,39 +988,15 @@ nsNTLMAuthModule::GetNextToken(const void* inToken, uint32_t inTokenLen,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNTLMAuthModule::Unwrap(const void *inToken, uint32_t inTokenLen,
-                         void **outToken, uint32_t *outTokenLen) {
-||||||| merged common ancestors
-nsNTLMAuthModule::Unwrap(const void *inToken,
-                        uint32_t    inTokenLen,
-                        void      **outToken,
-                        uint32_t   *outTokenLen)
-{
-=======
 nsNTLMAuthModule::Unwrap(const void* inToken, uint32_t inTokenLen,
                          void** outToken, uint32_t* outTokenLen) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsNTLMAuthModule::Wrap(const void *inToken, uint32_t inTokenLen,
-                       bool confidential, void **outToken,
-                       uint32_t *outTokenLen) {
-||||||| merged common ancestors
-nsNTLMAuthModule::Wrap(const void *inToken,
-                       uint32_t    inTokenLen,
-                       bool        confidential,
-                       void      **outToken,
-                       uint32_t   *outTokenLen)
-{
-=======
 nsNTLMAuthModule::Wrap(const void* inToken, uint32_t inTokenLen,
                        bool confidential, void** outToken,
                        uint32_t* outTokenLen) {
->>>>>>> upstream-releases
   return NS_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -1295,15 +1015,7 @@ static uint8_t des_setkeyparity(uint8_t x) {
 }
 
 // build 64-bit des key from 56-bit raw key
-<<<<<<< HEAD
-static void des_makekey(const uint8_t *raw, uint8_t *key) {
-||||||| merged common ancestors
-static void
-des_makekey(const uint8_t *raw, uint8_t *key)
-{
-=======
 static void des_makekey(const uint8_t* raw, uint8_t* key) {
->>>>>>> upstream-releases
   key[0] = des_setkeyparity(raw[0]);
   key[1] = des_setkeyparity((raw[0] << 7) | (raw[1] >> 1));
   key[2] = des_setkeyparity((raw[1] << 6) | (raw[2] >> 2));
@@ -1315,15 +1027,7 @@ static void des_makekey(const uint8_t* raw, uint8_t* key) {
 }
 
 // run des encryption algorithm (using NSS)
-<<<<<<< HEAD
-static void des_encrypt(const uint8_t *key, const uint8_t *src, uint8_t *hash) {
-||||||| merged common ancestors
-static void
-des_encrypt(const uint8_t *key, const uint8_t *src, uint8_t *hash)
-{
-=======
 static void des_encrypt(const uint8_t* key, const uint8_t* src, uint8_t* hash) {
->>>>>>> upstream-releases
   CK_MECHANISM_TYPE cipherMech = CKM_DES_ECB;
   PK11SymKey* symkey = nullptr;
   PK11Context* ctxt = nullptr;
@@ -1338,7 +1042,7 @@ static void des_encrypt(const uint8_t* key, const uint8_t* src, uint8_t* hash) {
     goto done;
   }
 
-  keyItem.data = const_cast<uint8_t *>(key);
+  keyItem.data = const_cast<uint8_t*>(key);
   keyItem.len = 8;
   symkey = PK11_ImportSymKey(slot.get(), cipherMech, PK11_OriginUnwrap,
                              CKA_ENCRYPT, &keyItem, nullptr);
@@ -1361,13 +1065,7 @@ static void des_encrypt(const uint8_t* key, const uint8_t* src, uint8_t* hash) {
     goto done;
   }
 
-<<<<<<< HEAD
-  rv = PK11_CipherOp(ctxt, hash, (int *)&n, 8, (uint8_t *)src, 8);
-||||||| merged common ancestors
-  rv = PK11_CipherOp(ctxt, hash, (int *) &n, 8, (uint8_t *) src, 8);
-=======
   rv = PK11_CipherOp(ctxt, hash, (int*)&n, 8, (uint8_t*)src, 8);
->>>>>>> upstream-releases
   if (rv != SECSuccess) {
     NS_ERROR("des failure");
     goto done;

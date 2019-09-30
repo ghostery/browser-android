@@ -89,57 +89,6 @@ TypedObjectModuleObject& js::GlobalObject::getTypedObjectModule() const {
   return v.toObject().as<TypedObjectModuleObject>();
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::skipDeselectedConstructor(JSContext* cx,
-                                                          JSProtoKey key) {
-  switch (key) {
-    case JSProto_WebAssembly:
-      return !wasm::HasSupport(cx);
-
-    case JSProto_ReadableStream:
-    case JSProto_ReadableStreamDefaultReader:
-    case JSProto_ReadableStreamDefaultController:
-    case JSProto_ReadableByteStreamController:
-    case JSProto_ByteLengthQueuingStrategy:
-    case JSProto_CountQueuingStrategy:
-      return !cx->realm()->creationOptions().getStreamsEnabled();
-
-#ifdef ENABLE_BIGINT
-    case JSProto_BigInt:
-      return !cx->realm()->creationOptions().getBigIntEnabled();
-#endif
-
-    // Return true if the given constructor has been disabled at run-time.
-    case JSProto_Atomics:
-    case JSProto_SharedArrayBuffer:
-      return !cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled();
-    default:
-      return false;
-  }
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::skipDeselectedConstructor(JSContext* cx, JSProtoKey key)
-{
-    switch (key) {
-      case JSProto_WebAssembly:
-        return !wasm::HasSupport(cx);
-
-      case JSProto_ReadableStream:
-      case JSProto_ReadableStreamDefaultReader:
-      case JSProto_ReadableStreamDefaultController:
-      case JSProto_ReadableByteStreamController:
-      case JSProto_ByteLengthQueuingStrategy:
-      case JSProto_CountQueuingStrategy:
-        return !cx->realm()->creationOptions().getStreamsEnabled();
-
-      // Return true if the given constructor has been disabled at run-time.
-      case JSProto_Atomics:
-      case JSProto_SharedArrayBuffer:
-        return !cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled();
-      default:
-        return false;
-    }
-=======
 /* static */
 bool GlobalObject::skipDeselectedConstructor(JSContext* cx, JSProtoKey key) {
   switch (key) {
@@ -166,65 +115,8 @@ bool GlobalObject::skipDeselectedConstructor(JSContext* cx, JSProtoKey key) {
     default:
       return false;
   }
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static*/ bool GlobalObject::resolveConstructor(JSContext* cx,
-                                                  Handle<GlobalObject*> global,
-                                                  JSProtoKey key,
-                                                  IfClassIsDisabled mode) {
-  MOZ_ASSERT(key != JSProto_Null);
-  MOZ_ASSERT(!global->isStandardClassResolved(key));
-
-  if (global->zone()->createdForHelperThread()) {
-    return resolveOffThreadConstructor(cx, global, key);
-  }
-
-  MOZ_ASSERT(!cx->helperThread());
-
-  // Prohibit collection of allocation metadata. Metadata builders shouldn't
-  // need to observe lazily-constructed prototype objects coming into
-  // existence. And assertions start to fail when the builder itself attempts
-  // an allocation that re-entrantly tries to create the same prototype.
-  AutoSuppressAllocationMetadataBuilder suppressMetadata(cx);
-
-  // Constructor resolution may execute self-hosted scripts. These
-  // self-hosted scripts do not call out to user code by construction. Allow
-  // all scripts to execute, even in debuggee compartments that are paused.
-  AutoSuppressDebuggeeNoExecuteChecks suppressNX(cx);
-
-  // There are two different kinds of initialization hooks. One of them is
-  // the class js::InitFoo hook, defined in a JSProtoKey-keyed table at the
-  // top of this file. The other lives in the ClassSpec for classes that
-  // define it. Classes may use one or the other, but not both.
-  ClassInitializerOp init = protoTable[key].init;
-  if (init == InitViaClassSpec) {
-    init = nullptr;
-  }
-
-  // Some classes can be disabled at compile time, others at run time;
-  // if a feature is compile-time disabled, init and clasp are both null.
-  const Class* clasp = ProtoKeyToClass(key);
-  if ((!init && !clasp) || skipDeselectedConstructor(cx, key)) {
-    if (mode == IfClassIsDisabled::Throw) {
-      JS_ReportErrorNumberASCII(cx, GetErrorMessage, nullptr,
-                                JSMSG_CONSTRUCTOR_DISABLED,
-                                clasp ? clasp->name : "constructor");
-      return false;
-||||||| merged common ancestors
-/* static*/ bool
-GlobalObject::resolveConstructor(JSContext* cx,
-                                 Handle<GlobalObject*> global,
-                                 JSProtoKey key,
-                                 IfClassIsDisabled mode)
-{
-    MOZ_ASSERT(key != JSProto_Null);
-    MOZ_ASSERT(!global->isStandardClassResolved(key));
-
-    if (global->zone()->createdForHelperThread()) {
-        return resolveOffThreadConstructor(cx, global, key);
-=======
 /* static*/
 bool GlobalObject::resolveConstructor(JSContext* cx,
                                       Handle<GlobalObject*> global,
@@ -272,7 +164,6 @@ bool GlobalObject::resolveConstructor(JSContext* cx,
                                 JSMSG_CONSTRUCTOR_DISABLED,
                                 clasp ? clasp->name : "constructor");
       return false;
->>>>>>> upstream-releases
     }
     return true;
   }
@@ -372,7 +263,6 @@ bool GlobalObject::resolveConstructor(JSContext* cx,
         return false;
       }
     }
-<<<<<<< HEAD
     if (const JSFunctionSpec* funs = clasp->specConstructorFunctions()) {
       if (!JS_DefineFunctions(cx, ctor, funs)) {
         return false;
@@ -394,39 +284,7 @@ bool GlobalObject::resolveConstructor(JSContext* cx,
   if (FinishClassInitOp finishInit = clasp->specFinishInitHook()) {
     if (!finishInit(cx, ctor, proto)) {
       return false;
-||||||| merged common ancestors
-
-    // If we're operating on the self-hosting global, we don't want any
-    // functions and properties on the builtins and their prototypes.
-    if (!cx->runtime()->isSelfHostingGlobal(global)) {
-        if (const JSFunctionSpec* funs = clasp->specPrototypeFunctions()) {
-            if (!JS_DefineFunctions(cx, proto, funs)) {
-                return false;
-            }
-        }
-        if (const JSPropertySpec* props = clasp->specPrototypeProperties()) {
-            if (!JS_DefineProperties(cx, proto, props)) {
-                return false;
-            }
-        }
-        if (const JSFunctionSpec* funs = clasp->specConstructorFunctions()) {
-            if (!JS_DefineFunctions(cx, ctor, funs)) {
-                return false;
-            }
-        }
-        if (const JSPropertySpec* props = clasp->specConstructorProperties()) {
-            if (!JS_DefineProperties(cx, ctor, props)) {
-                return false;
-            }
-        }
-=======
-    if (const JSFunctionSpec* funs = clasp->specConstructorFunctions()) {
-      if (!JS_DefineFunctions(cx, ctor, funs)) {
-        return false;
-      }
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
   }
 
   if (!isObjectOrFunction) {
@@ -437,196 +295,20 @@ bool GlobalObject::resolveConstructor(JSContext* cx,
     if (clasp->specShouldDefineConstructor()) {
       RootedValue ctorValue(cx, ObjectValue(*ctor));
       if (!DefineDataProperty(cx, global, id, ctorValue, JSPROP_RESOLVING)) {
-||||||| merged common ancestors
-
-    // If the prototype exists, link it with the constructor.
-    if (proto && !LinkConstructorAndPrototype(cx, ctor, proto)) {
-=======
-    if (const JSPropertySpec* props = clasp->specConstructorProperties()) {
-      if (!JS_DefineProperties(cx, ctor, props)) {
->>>>>>> upstream-releases
         return false;
       }
     }
-  }
 
-<<<<<<< HEAD
     // Infallible operations that modify the global object.
     global->setConstructor(key, ObjectValue(*ctor));
     if (proto) {
       global->setPrototype(key, ObjectValue(*proto));
     }
   }
-||||||| merged common ancestors
-    // Call the post-initialization hook, if provided.
-    if (FinishClassInitOp finishInit = clasp->specFinishInitHook()) {
-        if (!finishInit(cx, ctor, proto)) {
-            return false;
-        }
-    }
-=======
-  // If the prototype exists, link it with the constructor.
-  if (proto && !LinkConstructorAndPrototype(cx, ctor, proto)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return true;
-}
-||||||| merged common ancestors
-    if (!isObjectOrFunction) {
-        // Any operations that modifies the global object should be placed
-        // after any other fallible operations.
-
-        // Fallible operation that modifies the global object.
-        if (clasp->specShouldDefineConstructor()) {
-            RootedValue ctorValue(cx, ObjectValue(*ctor));
-            if (!DefineDataProperty(cx, global, id, ctorValue, JSPROP_RESOLVING)) {
-                return false;
-            }
-        }
-
-        // Infallible operations that modify the global object.
-        global->setConstructor(key, ObjectValue(*ctor));
-        if (proto) {
-            global->setPrototype(key, ObjectValue(*proto));
-        }
-    }
-=======
-  // Call the post-initialization hook, if provided.
-  if (FinishClassInitOp finishInit = clasp->specFinishInitHook()) {
-    if (!finishInit(cx, ctor, proto)) {
-      return false;
-    }
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-// Resolve a "globalThis" self-referential property if necessary,
-// per a stage-3 proposal. https://github.com/tc39/ecma262/pull/702
-//
-// We could also do this in |FinishObjectClassInit| to trim the global
-// resolve hook.  Unfortunately, |ToWindowProxyIfWindow| doesn't work then:
-// the browser's |nsGlobalWindow::SetNewDocument| invokes Object init
-// *before* it sets the global's WindowProxy using |js::SetWindowProxy|.
-//
-// Refactoring global object creation code to support this approach is a
-// challenge for another day.
-/* static */ bool GlobalObject::maybeResolveGlobalThis(
-    JSContext* cx, Handle<GlobalObject*> global, bool* resolved) {
-  if (global->getSlot(GLOBAL_THIS_RESOLVED).isUndefined()) {
-    RootedValue v(cx, ObjectValue(*ToWindowProxyIfWindow(global)));
-    if (!DefineDataProperty(cx, global, cx->names().globalThis, v,
-                            JSPROP_RESOLVING)) {
-      return false;
-    }
-
-    *resolved = true;
-    global->setSlot(GLOBAL_THIS_RESOLVED, BooleanValue(true));
-  }
 
   return true;
 }
-||||||| merged common ancestors
-    return true;
-}
-=======
-  if (!isObjectOrFunction) {
-    // Any operations that modifies the global object should be placed
-    // after any other fallible operations.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ JSObject* GlobalObject::createObject(JSContext* cx,
-                                                  Handle<GlobalObject*> global,
-                                                  unsigned slot,
-                                                  ObjectInitOp init) {
-  if (global->zone()->createdForHelperThread()) {
-    return createOffThreadObject(cx, global, slot);
-  }
-||||||| merged common ancestors
-/* static */ JSObject*
-GlobalObject::createObject(JSContext* cx, Handle<GlobalObject*> global, unsigned slot, ObjectInitOp init)
-{
-    if (global->zone()->createdForHelperThread()) {
-        return createOffThreadObject(cx, global, slot);
-    }
-=======
-    // Fallible operation that modifies the global object.
-    if (clasp->specShouldDefineConstructor()) {
-      RootedValue ctorValue(cx, ObjectValue(*ctor));
-      if (!DefineDataProperty(cx, global, id, ctorValue, JSPROP_RESOLVING)) {
-        return false;
-      }
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  MOZ_ASSERT(!cx->helperThread());
-  if (!init(cx, global)) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-    MOZ_ASSERT(!cx->helperThread());
-    if (!init(cx, global)) {
-        return nullptr;
-    }
-=======
-    // Infallible operations that modify the global object.
-    global->setConstructor(key, ObjectValue(*ctor));
-    if (proto) {
-      global->setPrototype(key, ObjectValue(*proto));
-    }
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return &global->getSlot(slot).toObject();
-||||||| merged common ancestors
-    return &global->getSlot(slot).toObject();
-=======
-  return true;
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-const Class GlobalObject::OffThreadPlaceholderObject::class_ = {
-    "off-thread-prototype-placeholder",
-    JSCLASS_IS_ANONYMOUS | JSCLASS_HAS_RESERVED_SLOTS(1)};
-
-/* static */ GlobalObject::OffThreadPlaceholderObject*
-GlobalObject::OffThreadPlaceholderObject::New(JSContext* cx, unsigned slot) {
-  Rooted<OffThreadPlaceholderObject*> placeholder(cx);
-  placeholder = NewObjectWithGivenTaggedProto<OffThreadPlaceholderObject>(
-      cx, AsTaggedProto(nullptr));
-  if (!placeholder) {
-    return nullptr;
-  }
-
-  placeholder->setReservedSlot(SlotIndexSlot, Int32Value(slot));
-  return placeholder;
-}
-||||||| merged common ancestors
-const Class GlobalObject::OffThreadPlaceholderObject::class_ = {
-    "off-thread-prototype-placeholder",
-    JSCLASS_IS_ANONYMOUS | JSCLASS_HAS_RESERVED_SLOTS(1)
-};
-
-/* static */ GlobalObject::OffThreadPlaceholderObject*
-GlobalObject::OffThreadPlaceholderObject::New(JSContext* cx, unsigned slot)
-{
-    Rooted<OffThreadPlaceholderObject*> placeholder(cx);
-    placeholder =
-        NewObjectWithGivenTaggedProto<OffThreadPlaceholderObject>(cx, AsTaggedProto(nullptr));
-    if (!placeholder) {
-        return nullptr;
-    }
-
-    placeholder->setReservedSlot(SlotIndexSlot, Int32Value(slot));
-    return placeholder;
-}
-=======
 // Resolve a "globalThis" self-referential property if necessary,
 // per a stage-3 proposal. https://github.com/tc39/ecma262/pull/702
 //
@@ -651,51 +333,10 @@ bool GlobalObject::maybeResolveGlobalThis(JSContext* cx,
     *resolved = true;
     global->setSlot(GLOBAL_THIS_RESOLVED, BooleanValue(true));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-inline int32_t GlobalObject::OffThreadPlaceholderObject::getSlotIndex() const {
-  return getReservedSlot(SlotIndexSlot).toInt32();
-||||||| merged common ancestors
-inline int32_t
-GlobalObject::OffThreadPlaceholderObject::getSlotIndex() const
-{
-    return getReservedSlot(SlotIndexSlot).toInt32();
-=======
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::resolveOffThreadConstructor(
-    JSContext* cx, Handle<GlobalObject*> global, JSProtoKey key) {
-  // Don't resolve constructors for off-thread parse globals. Instead create a
-  // placeholder object for the prototype which we can use to find the real
-  // prototype when the off-thread compartment is merged back into the target
-  // compartment.
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::resolveOffThreadConstructor(JSContext* cx,
-                                          Handle<GlobalObject*> global,
-                                          JSProtoKey key)
-{
-    // Don't resolve constructors for off-thread parse globals. Instead create a
-    // placeholder object for the prototype which we can use to find the real
-    // prototype when the off-thread compartment is merged back into the target
-    // compartment.
-
-    MOZ_ASSERT(global->zone()->createdForHelperThread());
-    MOZ_ASSERT(key == JSProto_Object ||
-               key == JSProto_Function ||
-               key == JSProto_Array ||
-               key == JSProto_RegExp);
-
-    Rooted<OffThreadPlaceholderObject*> placeholder(cx);
-    placeholder = OffThreadPlaceholderObject::New(cx, prototypeSlot(key));
-    if (!placeholder) {
-        return false;
-    }
-=======
 /* static */
 JSObject* GlobalObject::createObject(JSContext* cx,
                                      Handle<GlobalObject*> global,
@@ -703,95 +344,18 @@ JSObject* GlobalObject::createObject(JSContext* cx,
   if (global->zone()->createdForHelperThread()) {
     return createOffThreadObject(cx, global, slot);
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  MOZ_ASSERT(global->zone()->createdForHelperThread());
-  MOZ_ASSERT(key == JSProto_Object || key == JSProto_Function ||
-             key == JSProto_Array || key == JSProto_RegExp);
-
-  Rooted<OffThreadPlaceholderObject*> placeholder(cx);
-  placeholder = OffThreadPlaceholderObject::New(cx, prototypeSlot(key));
-  if (!placeholder) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (key == JSProto_Object &&
-        !JSObject::setFlags(cx, placeholder, BaseShape::IMMUTABLE_PROTOTYPE))
-    {
-        return false;
-    }
-
-    if (key == JSProto_Object || key == JSProto_Function || key == JSProto_Array) {
-        ObjectGroupRealm& realm = ObjectGroupRealm::getForNewObject(cx);
-        if (!JSObject::setNewGroupUnknown(cx, realm, placeholder->getClass(), placeholder)) {
-            return false;
-        }
-    }
-=======
   MOZ_ASSERT(!cx->isHelperThreadContext());
   if (!init(cx, global)) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (key == JSProto_Object &&
-      !JSObject::setFlags(cx, placeholder, BaseShape::IMMUTABLE_PROTOTYPE)) {
-    return false;
-  }
-||||||| merged common ancestors
-    global->setPrototype(key, ObjectValue(*placeholder));
-    global->setConstructor(key, MagicValue(JS_OFF_THREAD_CONSTRUCTOR));
-    return true;
-}
-=======
   return &global->getSlot(slot).toObject();
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (key == JSProto_Object || key == JSProto_Function ||
-      key == JSProto_Array) {
-    ObjectGroupRealm& realm = ObjectGroupRealm::getForNewObject(cx);
-    if (!JSObject::setNewGroupUnknown(cx, realm, placeholder->getClass(),
-                                      placeholder)) {
-      return false;
-    }
-  }
-||||||| merged common ancestors
-/* static */ JSObject*
-GlobalObject::createOffThreadObject(JSContext* cx, Handle<GlobalObject*> global, unsigned slot)
-{
-    // Don't create prototype objects for off-thread parse globals. Instead
-    // create a placeholder object which we can use to find the real prototype
-    // when the off-thread compartment is merged back into the target
-    // compartment.
-
-    MOZ_ASSERT(global->zone()->createdForHelperThread());
-    MOZ_ASSERT(slot == GENERATOR_FUNCTION_PROTO ||
-               slot == MODULE_PROTO ||
-               slot == IMPORT_ENTRY_PROTO ||
-               slot == EXPORT_ENTRY_PROTO ||
-               slot == REQUESTED_MODULE_PROTO);
-
-    auto placeholder = OffThreadPlaceholderObject::New(cx, slot);
-    if (!placeholder) {
-        return nullptr;
-    }
-=======
 const Class GlobalObject::OffThreadPlaceholderObject::class_ = {
     "off-thread-prototype-placeholder", JSCLASS_HAS_RESERVED_SLOTS(1)};
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  global->setPrototype(key, ObjectValue(*placeholder));
-  global->setConstructor(key, MagicValue(JS_OFF_THREAD_CONSTRUCTOR));
-  return true;
-||||||| merged common ancestors
-    global->setSlot(slot, ObjectValue(*placeholder));
-    return placeholder;
-=======
 /* static */ GlobalObject::OffThreadPlaceholderObject*
 GlobalObject::OffThreadPlaceholderObject::New(JSContext* cx, unsigned slot) {
   Rooted<OffThreadPlaceholderObject*> placeholder(cx);
@@ -803,67 +367,12 @@ GlobalObject::OffThreadPlaceholderObject::New(JSContext* cx, unsigned slot) {
 
   placeholder->setReservedSlot(SlotIndexSlot, Int32Value(slot));
   return placeholder;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ JSObject* GlobalObject::createOffThreadObject(
-    JSContext* cx, Handle<GlobalObject*> global, unsigned slot) {
-  // Don't create prototype objects for off-thread parse globals. Instead
-  // create a placeholder object which we can use to find the real prototype
-  // when the off-thread compartment is merged back into the target
-  // compartment.
-
-  MOZ_ASSERT(global->zone()->createdForHelperThread());
-  MOZ_ASSERT(slot == GENERATOR_FUNCTION_PROTO || slot == MODULE_PROTO ||
-             slot == IMPORT_ENTRY_PROTO || slot == EXPORT_ENTRY_PROTO ||
-             slot == REQUESTED_MODULE_PROTO);
-
-  auto placeholder = OffThreadPlaceholderObject::New(cx, slot);
-  if (!placeholder) {
-    return nullptr;
-  }
-
-  global->setSlot(slot, ObjectValue(*placeholder));
-  return placeholder;
-||||||| merged common ancestors
-JSObject*
-GlobalObject::getPrototypeForOffThreadPlaceholder(JSObject* obj)
-{
-    auto placeholder = &obj->as<OffThreadPlaceholderObject>();
-    return &getSlot(placeholder->getSlotIndex()).toObject();
-=======
 inline int32_t GlobalObject::OffThreadPlaceholderObject::getSlotIndex() const {
   return getReservedSlot(SlotIndexSlot).toInt32();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-JSObject* GlobalObject::getPrototypeForOffThreadPlaceholder(JSObject* obj) {
-  auto placeholder = &obj->as<OffThreadPlaceholderObject>();
-  return &getSlot(placeholder->getSlotIndex()).toObject();
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::initBuiltinConstructor(JSContext* cx, Handle<GlobalObject*> global,
-                                     JSProtoKey key, HandleObject ctor, HandleObject proto)
-{
-    MOZ_ASSERT(!global->empty()); // reserved slots already allocated
-    MOZ_ASSERT(key != JSProto_Null);
-    MOZ_ASSERT(ctor);
-    MOZ_ASSERT(proto);
-
-    RootedId id(cx, NameToId(ClassName(key, cx)));
-    MOZ_ASSERT(!global->lookup(cx, id));
-
-    RootedValue ctorValue(cx, ObjectValue(*ctor));
-    if (!DefineDataProperty(cx, global, id, ctorValue, JSPROP_RESOLVING)) {
-        return false;
-    }
-
-    global->setConstructor(key, ObjectValue(*ctor));
-    global->setPrototype(key, ObjectValue(*proto));
-    return true;
-=======
 /* static */
 bool GlobalObject::resolveOffThreadConstructor(JSContext* cx,
                                                Handle<GlobalObject*> global,
@@ -900,84 +409,8 @@ bool GlobalObject::resolveOffThreadConstructor(JSContext* cx,
   global->setPrototype(key, ObjectValue(*placeholder));
   global->setConstructor(key, MagicValue(JS_OFF_THREAD_CONSTRUCTOR));
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::initBuiltinConstructor(
-    JSContext* cx, Handle<GlobalObject*> global, JSProtoKey key,
-    HandleObject ctor, HandleObject proto) {
-  MOZ_ASSERT(!global->empty());  // reserved slots already allocated
-  MOZ_ASSERT(key != JSProto_Null);
-  MOZ_ASSERT(ctor);
-  MOZ_ASSERT(proto);
-
-  RootedId id(cx, NameToId(ClassName(key, cx)));
-  MOZ_ASSERT(!global->lookup(cx, id));
-
-  RootedValue ctorValue(cx, ObjectValue(*ctor));
-  if (!DefineDataProperty(cx, global, id, ctorValue, JSPROP_RESOLVING)) {
-    return false;
-  }
-
-  global->setConstructor(key, ObjectValue(*ctor));
-  global->setPrototype(key, ObjectValue(*proto));
-  return true;
-||||||| merged common ancestors
-static bool
-ThrowTypeError(JSContext* cx, unsigned argc, Value* vp)
-{
-    ThrowTypeErrorBehavior(cx);
-    return false;
-}
-
-/* static */ JSObject*
-GlobalObject::getOrCreateThrowTypeError(JSContext* cx, Handle<GlobalObject*> global)
-{
-    Value v = global->getReservedSlot(THROWTYPEERROR);
-    if (v.isObject()) {
-        return &v.toObject();
-    }
-    MOZ_ASSERT(v.isUndefined());
-
-    // Construct the unique [[%ThrowTypeError%]] function object, used only for
-    // "callee" and "caller" accessors on strict mode arguments objects.  (The
-    // spec also uses this for "arguments" and "caller" on various functions,
-    // but we're experimenting with implementing them using accessors on
-    // |Function.prototype| right now.)
-
-    RootedFunction throwTypeError(cx, NewNativeFunction(cx, ThrowTypeError, 0, nullptr));
-    if (!throwTypeError || !PreventExtensions(cx, throwTypeError)) {
-        return nullptr;
-    }
-
-    // The "length" property of %ThrowTypeError% is non-configurable, adjust
-    // the default property attributes accordingly.
-    Rooted<PropertyDescriptor> nonConfigurableDesc(cx);
-    nonConfigurableDesc.setAttributes(JSPROP_PERMANENT | JSPROP_IGNORE_READONLY |
-                                      JSPROP_IGNORE_ENUMERATE | JSPROP_IGNORE_VALUE);
-
-    RootedId lengthId(cx, NameToId(cx->names().length));
-    ObjectOpResult lengthResult;
-    if (!NativeDefineProperty(cx, throwTypeError, lengthId, nonConfigurableDesc, lengthResult)) {
-        return nullptr;
-    }
-    MOZ_ASSERT(lengthResult);
-
-    // Non-standard: Also change "name" to non-configurable. ECMAScript defines
-    // %ThrowTypeError% as an anonymous function, i.e. it shouldn't actually
-    // get an own "name" property. To be consistent with other built-in,
-    // anonymous functions, we don't delete %ThrowTypeError%'s "name" property.
-    RootedId nameId(cx, NameToId(cx->names().name));
-    ObjectOpResult nameResult;
-    if (!NativeDefineProperty(cx, throwTypeError, nameId, nonConfigurableDesc, nameResult)) {
-        return nullptr;
-    }
-    MOZ_ASSERT(nameResult);
-
-    global->setReservedSlot(THROWTYPEERROR, ObjectValue(*throwTypeError));
-    return throwTypeError;
-=======
 /* static */
 JSObject* GlobalObject::createOffThreadObject(JSContext* cx,
                                               Handle<GlobalObject*> global,
@@ -1005,165 +438,8 @@ JSObject* GlobalObject::createOffThreadObject(JSContext* cx,
 JSObject* GlobalObject::getPrototypeForOffThreadPlaceholder(JSObject* obj) {
   auto placeholder = &obj->as<OffThreadPlaceholderObject>();
   return &getSlot(placeholder->getSlotIndex()).toObject();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool ThrowTypeError(JSContext* cx, unsigned argc, Value* vp) {
-  ThrowTypeErrorBehavior(cx);
-  return false;
-}
-
-/* static */ JSObject* GlobalObject::getOrCreateThrowTypeError(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  Value v = global->getReservedSlot(THROWTYPEERROR);
-  if (v.isObject()) {
-    return &v.toObject();
-  }
-  MOZ_ASSERT(v.isUndefined());
-
-  // Construct the unique [[%ThrowTypeError%]] function object, used only for
-  // "callee" and "caller" accessors on strict mode arguments objects.  (The
-  // spec also uses this for "arguments" and "caller" on various functions,
-  // but we're experimenting with implementing them using accessors on
-  // |Function.prototype| right now.)
-
-  RootedFunction throwTypeError(
-      cx, NewNativeFunction(cx, ThrowTypeError, 0, nullptr));
-  if (!throwTypeError || !PreventExtensions(cx, throwTypeError)) {
-    return nullptr;
-  }
-
-  // The "length" property of %ThrowTypeError% is non-configurable, adjust
-  // the default property attributes accordingly.
-  Rooted<PropertyDescriptor> nonConfigurableDesc(cx);
-  nonConfigurableDesc.setAttributes(JSPROP_PERMANENT | JSPROP_IGNORE_READONLY |
-                                    JSPROP_IGNORE_ENUMERATE |
-                                    JSPROP_IGNORE_VALUE);
-
-  RootedId lengthId(cx, NameToId(cx->names().length));
-  ObjectOpResult lengthResult;
-  if (!NativeDefineProperty(cx, throwTypeError, lengthId, nonConfigurableDesc,
-                            lengthResult)) {
-    return nullptr;
-  }
-  MOZ_ASSERT(lengthResult);
-
-  // Non-standard: Also change "name" to non-configurable. ECMAScript defines
-  // %ThrowTypeError% as an anonymous function, i.e. it shouldn't actually
-  // get an own "name" property. To be consistent with other built-in,
-  // anonymous functions, we don't delete %ThrowTypeError%'s "name" property.
-  RootedId nameId(cx, NameToId(cx->names().name));
-  ObjectOpResult nameResult;
-  if (!NativeDefineProperty(cx, throwTypeError, nameId, nonConfigurableDesc,
-                            nameResult)) {
-    return nullptr;
-  }
-  MOZ_ASSERT(nameResult);
-
-  global->setReservedSlot(THROWTYPEERROR, ObjectValue(*throwTypeError));
-  return throwTypeError;
-}
-
-GlobalObject* GlobalObject::createInternal(JSContext* cx, const Class* clasp) {
-  MOZ_ASSERT(clasp->flags & JSCLASS_IS_GLOBAL);
-  MOZ_ASSERT(clasp->isTrace(JS_GlobalObjectTraceHook));
-
-  JSObject* obj = NewObjectWithGivenProto(cx, clasp, nullptr, SingletonObject);
-  if (!obj) {
-    return nullptr;
-  }
-
-  Rooted<GlobalObject*> global(cx, &obj->as<GlobalObject>());
-  MOZ_ASSERT(global->isUnqualifiedVarObj());
-
-  // Initialize the private slot to null if present, as GC can call class
-  // hooks before the caller gets to set this to a non-garbage value.
-  if (clasp->flags & JSCLASS_HAS_PRIVATE) {
-    global->setPrivate(nullptr);
-  }
-
-  Rooted<LexicalEnvironmentObject*> lexical(
-      cx, LexicalEnvironmentObject::createGlobal(cx, global));
-  if (!lexical) {
-    return nullptr;
-  }
-  global->setReservedSlot(LEXICAL_ENVIRONMENT, ObjectValue(*lexical));
-
-  Rooted<GlobalScope*> emptyGlobalScope(
-      cx, GlobalScope::createEmpty(cx, ScopeKind::Global));
-  if (!emptyGlobalScope) {
-    return nullptr;
-  }
-  global->setReservedSlot(EMPTY_GLOBAL_SCOPE,
-                          PrivateGCThingValue(emptyGlobalScope));
-
-  cx->realm()->initGlobal(*global);
-
-  if (!JSObject::setQualifiedVarObj(cx, global)) {
-    return nullptr;
-  }
-  if (!JSObject::setDelegate(cx, global)) {
-    return nullptr;
-  }
-
-  return global;
-}
-
-/* static */ GlobalObject* GlobalObject::new_(
-    JSContext* cx, const Class* clasp, JSPrincipals* principals,
-    JS::OnNewGlobalHookOption hookOption, const JS::RealmOptions& options) {
-  MOZ_ASSERT(!cx->isExceptionPending());
-  MOZ_ASSERT_IF(cx->zone(), !cx->zone()->isAtomsZone());
-
-  Realm* realm = NewRealm(cx, principals, options);
-  if (!realm) {
-    return nullptr;
-  }
-
-  Rooted<GlobalObject*> global(cx);
-  {
-    AutoRealmUnchecked ar(cx, realm);
-    global = GlobalObject::createInternal(cx, clasp);
-    if (!global) {
-      return nullptr;
-    }
-||||||| merged common ancestors
-GlobalObject*
-GlobalObject::createInternal(JSContext* cx, const Class* clasp)
-{
-    MOZ_ASSERT(clasp->flags & JSCLASS_IS_GLOBAL);
-    MOZ_ASSERT(clasp->isTrace(JS_GlobalObjectTraceHook));
-
-    JSObject* obj = NewObjectWithGivenProto(cx, clasp, nullptr, SingletonObject);
-    if (!obj) {
-        return nullptr;
-    }
-
-    Rooted<GlobalObject*> global(cx, &obj->as<GlobalObject>());
-    MOZ_ASSERT(global->isUnqualifiedVarObj());
-
-    // Initialize the private slot to null if present, as GC can call class
-    // hooks before the caller gets to set this to a non-garbage value.
-    if (clasp->flags & JSCLASS_HAS_PRIVATE) {
-        global->setPrivate(nullptr);
-    }
-
-    Rooted<LexicalEnvironmentObject*> lexical(cx,
-        LexicalEnvironmentObject::createGlobal(cx, global));
-    if (!lexical) {
-        return nullptr;
-    }
-    global->setReservedSlot(LEXICAL_ENVIRONMENT, ObjectValue(*lexical));
-
-    Rooted<GlobalScope*> emptyGlobalScope(cx, GlobalScope::createEmpty(cx, ScopeKind::Global));
-    if (!emptyGlobalScope) {
-        return nullptr;
-    }
-    global->setReservedSlot(EMPTY_GLOBAL_SCOPE, PrivateGCThingValue(emptyGlobalScope));
-
-    cx->realm()->initGlobal(*global);
-=======
 /* static */
 bool GlobalObject::initBuiltinConstructor(JSContext* cx,
                                           Handle<GlobalObject*> global,
@@ -1181,72 +457,17 @@ bool GlobalObject::initBuiltinConstructor(JSContext* cx,
   if (!DefineDataProperty(cx, global, id, ctorValue, JSPROP_RESOLVING)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (hookOption == JS::FireOnNewGlobalHook) {
-      JS_FireOnNewGlobalObject(cx, global);
-    }
-  }
-||||||| merged common ancestors
-    if (!JSObject::setQualifiedVarObj(cx, global)) {
-        return nullptr;
-    }
-    if (!JSObject::setDelegate(cx, global)) {
-        return nullptr;
-    }
-=======
   global->setConstructor(key, ObjectValue(*ctor));
   global->setPrototype(key, ObjectValue(*proto));
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return global;
-||||||| merged common ancestors
-    return global;
-=======
 static bool ThrowTypeError(JSContext* cx, unsigned argc, Value* vp) {
   ThrowTypeErrorBehavior(cx);
   return false;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-LexicalEnvironmentObject& GlobalObject::lexicalEnvironment() const {
-  return getReservedSlot(LEXICAL_ENVIRONMENT)
-      .toObject()
-      .as<LexicalEnvironmentObject>();
-||||||| merged common ancestors
-/* static */ GlobalObject*
-GlobalObject::new_(JSContext* cx, const Class* clasp, JSPrincipals* principals,
-                   JS::OnNewGlobalHookOption hookOption,
-                   const JS::RealmOptions& options)
-{
-    MOZ_ASSERT(!cx->isExceptionPending());
-    MOZ_ASSERT_IF(cx->zone(), !cx->zone()->isAtomsZone());
-
-    Realm* realm = NewRealm(cx, principals, options);
-    if (!realm) {
-        return nullptr;
-    }
-
-    Rooted<GlobalObject*> global(cx);
-    {
-        AutoRealmUnchecked ar(cx, realm);
-        global = GlobalObject::createInternal(cx, clasp);
-        if (!global) {
-            return nullptr;
-        }
-
-        if (hookOption == JS::FireOnNewGlobalHook) {
-            JS_FireOnNewGlobalObject(cx, global);
-        }
-    }
-
-    return global;
-=======
 /* static */
 JSObject* GlobalObject::getOrCreateThrowTypeError(
     JSContext* cx, Handle<GlobalObject*> global) {
@@ -1381,66 +602,20 @@ GlobalObject* GlobalObject::new_(JSContext* cx, const Class* clasp,
   }
 
   return global;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-GlobalScope& GlobalObject::emptyGlobalScope() const {
-  const Value& v = getReservedSlot(EMPTY_GLOBAL_SCOPE);
-  MOZ_ASSERT(v.isPrivateGCThing() && v.traceKind() == JS::TraceKind::Scope);
-  return static_cast<Scope*>(v.toGCThing())->as<GlobalScope>();
-||||||| merged common ancestors
-LexicalEnvironmentObject&
-GlobalObject::lexicalEnvironment() const
-{
-    return getReservedSlot(LEXICAL_ENVIRONMENT).toObject().as<LexicalEnvironmentObject>();
-=======
 LexicalEnvironmentObject& GlobalObject::lexicalEnvironment() const {
   // The lexical environment is marked when marking the global, so we don't need
   // a read barrier here because we know the global is live.
   return *realm()->unbarrieredLexicalEnvironment();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::getOrCreateEval(JSContext* cx,
-                                                Handle<GlobalObject*> global,
-                                                MutableHandleObject eval) {
-  if (!getOrCreateObjectPrototype(cx, global)) {
-    return false;
-  }
-  eval.set(&global->getSlot(EVAL).toObject());
-  return true;
-||||||| merged common ancestors
-GlobalScope&
-GlobalObject::emptyGlobalScope() const
-{
-    const Value& v = getReservedSlot(EMPTY_GLOBAL_SCOPE);
-    MOZ_ASSERT(v.isPrivateGCThing() && v.traceKind() == JS::TraceKind::Scope);
-    return static_cast<Scope*>(v.toGCThing())->as<GlobalScope>();
-=======
 GlobalScope& GlobalObject::emptyGlobalScope() const {
   const Value& v = getReservedSlot(EMPTY_GLOBAL_SCOPE);
   MOZ_ASSERT(v.isPrivateGCThing() && v.traceKind() == JS::TraceKind::Scope);
   return static_cast<Scope*>(v.toGCThing())->as<GlobalScope>();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool GlobalObject::valueIsEval(const Value& val) {
-  Value eval = getSlot(EVAL);
-  return eval.isObject() && eval == val;
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::getOrCreateEval(JSContext* cx, Handle<GlobalObject*> global,
-                              MutableHandleObject eval)
-{
-    if (!getOrCreateObjectPrototype(cx, global)) {
-        return false;
-    }
-    eval.set(&global->getSlot(EVAL).toObject());
-    return true;
-=======
 /* static */
 bool GlobalObject::getOrCreateEval(JSContext* cx, Handle<GlobalObject*> global,
                                    MutableHandleObject eval) {
@@ -1449,49 +624,13 @@ bool GlobalObject::getOrCreateEval(JSContext* cx, Handle<GlobalObject*> global,
   }
   eval.set(&global->getSlot(EVAL).toObject());
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::initStandardClasses(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  /* Define a top-level property 'undefined' with the undefined value. */
-  if (!DefineDataProperty(
-          cx, global, cx->names().undefined, UndefinedHandleValue,
-          JSPROP_PERMANENT | JSPROP_READONLY | JSPROP_RESOLVING)) {
-    return false;
-  }
-||||||| merged common ancestors
-bool
-GlobalObject::valueIsEval(const Value& val)
-{
-    Value eval = getSlot(EVAL);
-    return eval.isObject() && eval == val;
-}
-=======
 bool GlobalObject::valueIsEval(const Value& val) {
   Value eval = getSlot(EVAL);
   return eval.isObject() && eval == val;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Resolve a "globalThis" self-referential property if necessary.
-  bool resolved;
-  if (!GlobalObject::maybeResolveGlobalThis(cx, global, &resolved)) {
-    return false;
-  }
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::initStandardClasses(JSContext* cx, Handle<GlobalObject*> global)
-{
-    /* Define a top-level property 'undefined' with the undefined value. */
-    if (!DefineDataProperty(cx, global, cx->names().undefined, UndefinedHandleValue,
-                            JSPROP_PERMANENT | JSPROP_READONLY | JSPROP_RESOLVING))
-    {
-        return false;
-    }
-=======
 /* static */
 bool GlobalObject::initStandardClasses(JSContext* cx,
                                        Handle<GlobalObject*> global) {
@@ -1501,27 +640,7 @@ bool GlobalObject::initStandardClasses(JSContext* cx,
           JSPROP_PERMANENT | JSPROP_READONLY | JSPROP_RESOLVING)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (size_t k = 0; k < JSProto_LIMIT; ++k) {
-    JSProtoKey key = static_cast<JSProtoKey>(k);
-    if (key != JSProto_Null && !global->isStandardClassResolved(key)) {
-      if (!resolveConstructor(cx, global, static_cast<JSProtoKey>(k),
-                              IfClassIsDisabled::DoNothing)) {
-        return false;
-      }
-||||||| merged common ancestors
-    for (size_t k = 0; k < JSProto_LIMIT; ++k) {
-        JSProtoKey key = static_cast<JSProtoKey>(k);
-        if (key != JSProto_Null && !global->isStandardClassResolved(key)) {
-            if (!resolveConstructor(cx, global, static_cast<JSProtoKey>(k),
-                                    IfClassIsDisabled::DoNothing))
-            {
-                return false;
-            }
-        }
-=======
   // Resolve a "globalThis" self-referential property if necessary.
   bool resolved;
   if (!GlobalObject::maybeResolveGlobalThis(cx, global, &resolved)) {
@@ -1535,7 +654,6 @@ bool GlobalObject::initStandardClasses(JSContext* cx,
                               IfClassIsDisabled::DoNothing)) {
         return false;
       }
->>>>>>> upstream-releases
     }
   }
   return true;
@@ -1572,153 +690,6 @@ static bool InitBareBuiltinCtor(JSContext* cx, Handle<GlobalObject*> global,
  * Even those are only created as bare constructors without any properties
  * or functions.
  */
-<<<<<<< HEAD
-/* static */ bool GlobalObject::initSelfHostingBuiltins(
-    JSContext* cx, Handle<GlobalObject*> global,
-    const JSFunctionSpec* builtins) {
-  // Define a top-level property 'undefined' with the undefined value.
-  if (!DefineDataProperty(cx, global, cx->names().undefined,
-                          UndefinedHandleValue,
-                          JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  RootedValue std_isConcatSpreadable(cx);
-  std_isConcatSpreadable.setSymbol(
-      cx->wellKnownSymbols().get(JS::SymbolCode::isConcatSpreadable));
-  if (!JS_DefineProperty(cx, global, "std_isConcatSpreadable",
-                         std_isConcatSpreadable,
-                         JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  // Define a top-level property 'std_iterator' with the name of the method
-  // used by for-of loops to create an iterator.
-  RootedValue std_iterator(cx);
-  std_iterator.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::iterator));
-  if (!JS_DefineProperty(cx, global, "std_iterator", std_iterator,
-                         JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  RootedValue std_match(cx);
-  std_match.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::match));
-  if (!JS_DefineProperty(cx, global, "std_match", std_match,
-                         JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  RootedValue std_replace(cx);
-  std_replace.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::replace));
-  if (!JS_DefineProperty(cx, global, "std_replace", std_replace,
-                         JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  RootedValue std_search(cx);
-  std_search.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::search));
-  if (!JS_DefineProperty(cx, global, "std_search", std_search,
-                         JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  RootedValue std_species(cx);
-  std_species.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::species));
-  if (!JS_DefineProperty(cx, global, "std_species", std_species,
-                         JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  RootedValue std_split(cx);
-  std_split.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::split));
-  if (!JS_DefineProperty(cx, global, "std_split", std_split,
-                         JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return false;
-  }
-
-  return InitBareBuiltinCtor(cx, global, JSProto_Array) &&
-         InitBareBuiltinCtor(cx, global, JSProto_TypedArray) &&
-         InitBareBuiltinCtor(cx, global, JSProto_Uint8Array) &&
-         InitBareBuiltinCtor(cx, global, JSProto_Int32Array) &&
-         InitBareSymbolCtor(cx, global) &&
-         DefineFunctions(cx, global, builtins, AsIntrinsic);
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::initSelfHostingBuiltins(JSContext* cx, Handle<GlobalObject*> global,
-                                      const JSFunctionSpec* builtins)
-{
-    // Define a top-level property 'undefined' with the undefined value.
-    if (!DefineDataProperty(cx, global, cx->names().undefined, UndefinedHandleValue,
-                            JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    RootedValue std_isConcatSpreadable(cx);
-    std_isConcatSpreadable.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::isConcatSpreadable));
-    if (!JS_DefineProperty(cx, global, "std_isConcatSpreadable", std_isConcatSpreadable,
-                           JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    // Define a top-level property 'std_iterator' with the name of the method
-    // used by for-of loops to create an iterator.
-    RootedValue std_iterator(cx);
-    std_iterator.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::iterator));
-    if (!JS_DefineProperty(cx, global, "std_iterator", std_iterator,
-                           JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    RootedValue std_match(cx);
-    std_match.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::match));
-    if (!JS_DefineProperty(cx, global, "std_match", std_match,
-                           JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    RootedValue std_replace(cx);
-    std_replace.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::replace));
-    if (!JS_DefineProperty(cx, global, "std_replace", std_replace,
-                           JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    RootedValue std_search(cx);
-    std_search.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::search));
-    if (!JS_DefineProperty(cx, global, "std_search", std_search,
-                           JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    RootedValue std_species(cx);
-    std_species.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::species));
-    if (!JS_DefineProperty(cx, global, "std_species", std_species,
-                           JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    RootedValue std_split(cx);
-    std_split.setSymbol(cx->wellKnownSymbols().get(JS::SymbolCode::split));
-    if (!JS_DefineProperty(cx, global, "std_split", std_split,
-                           JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return false;
-    }
-
-    return InitBareBuiltinCtor(cx, global, JSProto_Array) &&
-           InitBareBuiltinCtor(cx, global, JSProto_TypedArray) &&
-           InitBareBuiltinCtor(cx, global, JSProto_Uint8Array) &&
-           InitBareBuiltinCtor(cx, global, JSProto_Int32Array) &&
-           InitBareSymbolCtor(cx, global) &&
-           DefineFunctions(cx, global, builtins, AsIntrinsic);
-=======
 /* static */
 bool GlobalObject::initSelfHostingBuiltins(JSContext* cx,
                                            Handle<GlobalObject*> global,
@@ -1761,53 +732,8 @@ bool GlobalObject::initSelfHostingBuiltins(JSContext* cx,
          InitBareBuiltinCtor(cx, global, JSProto_Int32Array) &&
          InitBareSymbolCtor(cx, global) &&
          DefineFunctions(cx, global, builtins, AsIntrinsic);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::isRuntimeCodeGenEnabled(
-    JSContext* cx, HandleValue code, Handle<GlobalObject*> global) {
-  HeapSlot& v = global->getSlotRef(RUNTIME_CODEGEN_ENABLED);
-  if (v.isUndefined()) {
-    /*
-     * If there are callbacks, make sure that the CSP callback is installed
-     * and that it permits runtime code generation.
-     */
-    JSCSPEvalChecker allows =
-        cx->runtime()->securityCallbacks->contentSecurityPolicyAllows;
-    if (allows) {
-      return allows(cx, code);
-    }
-
-    // Let's cache the result only if the contentSecurityPolicyAllows callback
-    // is not set. In this way, contentSecurityPolicyAllows callback is executed
-    // each time, with the current HandleValue code.
-    v.set(global, HeapSlot::Slot, RUNTIME_CODEGEN_ENABLED, JS::TrueValue());
-  }
-  return !v.isFalse();
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::isRuntimeCodeGenEnabled(JSContext* cx, HandleValue code,
-                                      Handle<GlobalObject*> global)
-{
-    HeapSlot& v = global->getSlotRef(RUNTIME_CODEGEN_ENABLED);
-    if (v.isUndefined()) {
-        /*
-         * If there are callbacks, make sure that the CSP callback is installed
-         * and that it permits runtime code generation.
-         */
-        JSCSPEvalChecker allows = cx->runtime()->securityCallbacks->contentSecurityPolicyAllows;
-        if (allows) {
-          return allows(cx, code);
-        }
-
-        // Let's cache the result only if the contentSecurityPolicyAllows callback is not set. In
-        // this way, contentSecurityPolicyAllows callback is executed each time, with the current
-        // HandleValue code.
-        v.set(global, HeapSlot::Slot, RUNTIME_CODEGEN_ENABLED, JS::TrueValue());
-    }
-    return !v.isFalse();
-=======
 /* static */
 bool GlobalObject::isRuntimeCodeGenEnabled(JSContext* cx, HandleValue code,
                                            Handle<GlobalObject*> global) {
@@ -1829,41 +755,8 @@ bool GlobalObject::isRuntimeCodeGenEnabled(JSContext* cx, HandleValue code,
     v.set(global, HeapSlot::Slot, RUNTIME_CODEGEN_ENABLED, JS::TrueValue());
   }
   return !v.isFalse();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ JSFunction* GlobalObject::createConstructor(
-    JSContext* cx, Native ctor, JSAtom* nameArg, unsigned length,
-    gc::AllocKind kind, const JSJitInfo* jitInfo) {
-  RootedAtom name(cx, nameArg);
-  JSFunction* fun = NewNativeConstructor(cx, ctor, length, name, kind);
-  if (!fun) {
-    return nullptr;
-  }
-
-  if (jitInfo) {
-    fun->setJitInfo(jitInfo);
-  }
-
-  return fun;
-||||||| merged common ancestors
-/* static */ JSFunction*
-GlobalObject::createConstructor(JSContext* cx, Native ctor, JSAtom* nameArg, unsigned length,
-                                gc::AllocKind kind, const JSJitInfo* jitInfo)
-{
-    RootedAtom name(cx, nameArg);
-    JSFunction* fun = NewNativeConstructor(cx, ctor, length, name, kind);
-    if (!fun) {
-        return nullptr;
-    }
-
-    if (jitInfo) {
-        fun->setJitInfo(jitInfo);
-    }
-
-    return fun;
-=======
 /* static */
 JSFunction* GlobalObject::createConstructor(JSContext* cx, Native ctor,
                                             JSAtom* nameArg, unsigned length,
@@ -1880,7 +773,6 @@ JSFunction* GlobalObject::createConstructor(JSContext* cx, Native ctor,
   }
 
   return fun;
->>>>>>> upstream-releases
 }
 
 static NativeObject* CreateBlankProto(JSContext* cx, const Class* clasp,
@@ -1896,22 +788,6 @@ static NativeObject* CreateBlankProto(JSContext* cx, const Class* clasp,
   return blankProto;
 }
 
-<<<<<<< HEAD
-/* static */ NativeObject* GlobalObject::createBlankPrototype(
-    JSContext* cx, Handle<GlobalObject*> global, const Class* clasp) {
-  RootedObject objectProto(cx, getOrCreateObjectPrototype(cx, global));
-  if (!objectProto) {
-    return nullptr;
-  }
-||||||| merged common ancestors
-/* static */ NativeObject*
-GlobalObject::createBlankPrototype(JSContext* cx, Handle<GlobalObject*> global, const Class* clasp)
-{
-    RootedObject objectProto(cx, getOrCreateObjectPrototype(cx, global));
-    if (!objectProto) {
-        return nullptr;
-    }
-=======
 /* static */
 NativeObject* GlobalObject::createBlankPrototype(JSContext* cx,
                                                  Handle<GlobalObject*> global,
@@ -1920,28 +796,15 @@ NativeObject* GlobalObject::createBlankPrototype(JSContext* cx,
   if (!objectProto) {
     return nullptr;
   }
->>>>>>> upstream-releases
 
   return CreateBlankProto(cx, clasp, objectProto);
 }
 
-<<<<<<< HEAD
-/* static */ NativeObject* GlobalObject::createBlankPrototypeInheriting(
-    JSContext* cx, const Class* clasp, HandleObject proto) {
-  return CreateBlankProto(cx, clasp, proto);
-||||||| merged common ancestors
-/* static */ NativeObject*
-GlobalObject::createBlankPrototypeInheriting(JSContext* cx, const Class* clasp,
-                                             HandleObject proto)
-{
-    return CreateBlankProto(cx, clasp, proto);
-=======
 /* static */
 NativeObject* GlobalObject::createBlankPrototypeInheriting(JSContext* cx,
                                                            const Class* clasp,
                                                            HandleObject proto) {
   return CreateBlankProto(cx, clasp, proto);
->>>>>>> upstream-releases
 }
 
 bool js::LinkConstructorAndPrototype(JSContext* cx, JSObject* ctor_,
@@ -2026,35 +889,12 @@ GlobalObject::DebuggerVector* GlobalObject::getDebuggers() const {
   return debuggers;
 }
 
-<<<<<<< HEAD
-/* static */ NativeObject* GlobalObject::getOrCreateForOfPICObject(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  cx->check(global);
-  NativeObject* forOfPIC = global->getForOfPICObject();
-  if (forOfPIC) {
-||||||| merged common ancestors
-/* static */ NativeObject*
-GlobalObject::getOrCreateForOfPICObject(JSContext* cx, Handle<GlobalObject*> global)
-{
-    cx->check(global);
-    NativeObject* forOfPIC = global->getForOfPICObject();
-    if (forOfPIC) {
-        return forOfPIC;
-    }
-
-    forOfPIC = ForOfPIC::createForOfPICObject(cx, global);
-    if (!forOfPIC) {
-        return nullptr;
-    }
-    global->setReservedSlot(FOR_OF_PIC_CHAIN, ObjectValue(*forOfPIC));
-=======
 /* static */
 NativeObject* GlobalObject::getOrCreateForOfPICObject(
     JSContext* cx, Handle<GlobalObject*> global) {
   cx->check(global);
   NativeObject* forOfPIC = global->getForOfPICObject();
   if (forOfPIC) {
->>>>>>> upstream-releases
     return forOfPIC;
   }
 
@@ -2070,44 +910,6 @@ bool GlobalObject::hasRegExpStatics() const {
   return !getSlot(REGEXP_STATICS).isUndefined();
 }
 
-<<<<<<< HEAD
-/* static */ RegExpStatics* GlobalObject::getRegExpStatics(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  MOZ_ASSERT(cx);
-  RegExpStaticsObject* resObj = nullptr;
-  const Value& val = global->getSlot(REGEXP_STATICS);
-  if (!val.isObject()) {
-    MOZ_ASSERT(val.isUndefined());
-    resObj = RegExpStatics::create(cx);
-    if (!resObj) {
-      return nullptr;
-    }
-
-    global->initSlot(REGEXP_STATICS, ObjectValue(*resObj));
-  } else {
-    resObj = &val.toObject().as<RegExpStaticsObject>();
-  }
-  return static_cast<RegExpStatics*>(resObj->getPrivate(/* nfixed = */ 1));
-||||||| merged common ancestors
-/* static */ RegExpStatics*
-GlobalObject::getRegExpStatics(JSContext* cx, Handle<GlobalObject*> global)
-{
-    MOZ_ASSERT(cx);
-    RegExpStaticsObject* resObj = nullptr;
-    const Value& val = global->getSlot(REGEXP_STATICS);
-    if (!val.isObject()) {
-        MOZ_ASSERT(val.isUndefined());
-        resObj = RegExpStatics::create(cx);
-        if (!resObj) {
-            return nullptr;
-        }
-
-        global->initSlot(REGEXP_STATICS, ObjectValue(*resObj));
-    } else {
-        resObj = &val.toObject().as<RegExpStaticsObject>();
-    }
-    return static_cast<RegExpStatics*>(resObj->getPrivate(/* nfixed = */ 1));
-=======
 /* static */
 RegExpStatics* GlobalObject::getRegExpStatics(JSContext* cx,
                                               Handle<GlobalObject*> global) {
@@ -2126,7 +928,6 @@ RegExpStatics* GlobalObject::getRegExpStatics(JSContext* cx,
     resObj = &val.toObject().as<RegExpStaticsObject>();
   }
   return static_cast<RegExpStatics*>(resObj->getPrivate(/* nfixed = */ 1));
->>>>>>> upstream-releases
 }
 
 RegExpStatics* GlobalObject::getAlreadyCreatedRegExpStatics() const {
@@ -2136,72 +937,6 @@ RegExpStatics* GlobalObject::getAlreadyCreatedRegExpStatics() const {
       val.toObject().as<RegExpStaticsObject>().getPrivate(/* nfixed = */ 1));
 }
 
-<<<<<<< HEAD
-/* static */ NativeObject* GlobalObject::getIntrinsicsHolder(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  Value slot = global->getReservedSlot(INTRINSICS);
-  MOZ_ASSERT(slot.isUndefined() || slot.isObject());
-
-  if (slot.isObject()) {
-    return &slot.toObject().as<NativeObject>();
-  }
-
-  Rooted<NativeObject*> intrinsicsHolder(cx);
-  bool isSelfHostingGlobal = cx->runtime()->isSelfHostingGlobal(global);
-  if (isSelfHostingGlobal) {
-    intrinsicsHolder = global;
-  } else {
-    intrinsicsHolder =
-        NewObjectWithGivenProto<PlainObject>(cx, nullptr, TenuredObject);
-    if (!intrinsicsHolder) {
-      return nullptr;
-    }
-  }
-
-  /* Define a property 'global' with the current global as its value. */
-  RootedValue globalValue(cx, ObjectValue(*global));
-  if (!DefineDataProperty(cx, intrinsicsHolder, cx->names().global, globalValue,
-                          JSPROP_PERMANENT | JSPROP_READONLY)) {
-    return nullptr;
-  }
-
-  // Install the intrinsics holder in the intrinsics.
-  global->setReservedSlot(INTRINSICS, ObjectValue(*intrinsicsHolder));
-  return intrinsicsHolder;
-||||||| merged common ancestors
-/* static */ NativeObject*
-GlobalObject::getIntrinsicsHolder(JSContext* cx, Handle<GlobalObject*> global)
-{
-    Value slot = global->getReservedSlot(INTRINSICS);
-    MOZ_ASSERT(slot.isUndefined() || slot.isObject());
-
-    if (slot.isObject()) {
-        return &slot.toObject().as<NativeObject>();
-    }
-
-    Rooted<NativeObject*> intrinsicsHolder(cx);
-    bool isSelfHostingGlobal = cx->runtime()->isSelfHostingGlobal(global);
-    if (isSelfHostingGlobal) {
-        intrinsicsHolder = global;
-    } else {
-        intrinsicsHolder = NewObjectWithGivenProto<PlainObject>(cx, nullptr, TenuredObject);
-        if (!intrinsicsHolder) {
-            return nullptr;
-        }
-    }
-
-    /* Define a property 'global' with the current global as its value. */
-    RootedValue globalValue(cx, ObjectValue(*global));
-    if (!DefineDataProperty(cx, intrinsicsHolder, cx->names().global, globalValue,
-                            JSPROP_PERMANENT | JSPROP_READONLY))
-    {
-        return nullptr;
-    }
-
-    // Install the intrinsics holder in the intrinsics.
-    global->setReservedSlot(INTRINSICS, ObjectValue(*intrinsicsHolder));
-    return intrinsicsHolder;
-=======
 /* static */
 NativeObject* GlobalObject::getIntrinsicsHolder(JSContext* cx,
                                                 Handle<GlobalObject*> global) {
@@ -2234,85 +969,8 @@ NativeObject* GlobalObject::getIntrinsicsHolder(JSContext* cx,
   // Install the intrinsics holder in the intrinsics.
   global->setReservedSlot(INTRINSICS, ObjectValue(*intrinsicsHolder));
   return intrinsicsHolder;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::getSelfHostedFunction(
-    JSContext* cx, Handle<GlobalObject*> global,
-    HandlePropertyName selfHostedName, HandleAtom name, unsigned nargs,
-    MutableHandleValue funVal) {
-  bool exists = false;
-  if (!GlobalObject::maybeGetIntrinsicValue(cx, global, selfHostedName, funVal,
-                                            &exists)) {
-    return false;
-  }
-  if (exists) {
-    RootedFunction fun(cx, &funVal.toObject().as<JSFunction>());
-    if (fun->explicitName() == name) {
-      return true;
-    }
-
-    if (fun->explicitName() == selfHostedName) {
-      // This function was initially cloned because it was called by
-      // other self-hosted code, so the clone kept its self-hosted name,
-      // instead of getting the name it's intended to have in content
-      // compartments. This can happen when a lazy builtin is initialized
-      // after self-hosted code for another builtin used the same
-      // function. In that case, we need to change the function's name,
-      // which is ok because it can't have been exposed to content
-      // before.
-      fun->initAtom(name);
-      return true;
-    }
-
-    // The function might be installed multiple times on the same or
-    // different builtins, under different property names, so its name
-    // might be neither "selfHostedName" nor "name". In that case, its
-    // canonical name must've been set using the `_SetCanonicalName`
-    // intrinsic.
-    cx->runtime()->assertSelfHostedFunctionHasCanonicalName(cx, selfHostedName);
-    return true;
-  }
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::getSelfHostedFunction(JSContext* cx, Handle<GlobalObject*> global,
-                                    HandlePropertyName selfHostedName, HandleAtom name,
-                                    unsigned nargs, MutableHandleValue funVal)
-{
-    bool exists = false;
-    if (!GlobalObject::maybeGetIntrinsicValue(cx, global, selfHostedName, funVal, &exists)) {
-        return false;
-    }
-    if (exists) {
-        RootedFunction fun(cx, &funVal.toObject().as<JSFunction>());
-        if (fun->explicitName() == name) {
-            return true;
-        }
-
-        if (fun->explicitName() == selfHostedName) {
-            // This function was initially cloned because it was called by
-            // other self-hosted code, so the clone kept its self-hosted name,
-            // instead of getting the name it's intended to have in content
-            // compartments. This can happen when a lazy builtin is initialized
-            // after self-hosted code for another builtin used the same
-            // function. In that case, we need to change the function's name,
-            // which is ok because it can't have been exposed to content
-            // before.
-            fun->initAtom(name);
-            return true;
-        }
-
-
-        // The function might be installed multiple times on the same or
-        // different builtins, under different property names, so its name
-        // might be neither "selfHostedName" nor "name". In that case, its
-        // canonical name must've been set using the `_SetCanonicalName`
-        // intrinsic.
-        cx->runtime()->assertSelfHostedFunctionHasCanonicalName(cx, selfHostedName);
-        return true;
-    }
-=======
 /* static */
 bool GlobalObject::getSelfHostedFunction(JSContext* cx,
                                          Handle<GlobalObject*> global,
@@ -2351,7 +1009,6 @@ bool GlobalObject::getSelfHostedFunction(JSContext* cx,
     cx->runtime()->assertSelfHostedFunctionHasCanonicalName(cx, selfHostedName);
     return true;
   }
->>>>>>> upstream-releases
 
   RootedFunction fun(cx);
   if (!cx->runtime()->createLazySelfHostedFunctionClone(
@@ -2364,25 +1021,6 @@ bool GlobalObject::getSelfHostedFunction(JSContext* cx,
   return GlobalObject::addIntrinsicValue(cx, global, selfHostedName, funVal);
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::addIntrinsicValue(JSContext* cx,
-                                                  Handle<GlobalObject*> global,
-                                                  HandlePropertyName name,
-                                                  HandleValue value) {
-  RootedNativeObject holder(cx, GlobalObject::getIntrinsicsHolder(cx, global));
-  if (!holder) {
-    return false;
-  }
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::addIntrinsicValue(JSContext* cx, Handle<GlobalObject*> global,
-                                HandlePropertyName name, HandleValue value)
-{
-    RootedNativeObject holder(cx, GlobalObject::getIntrinsicsHolder(cx, global));
-    if (!holder) {
-        return false;
-    }
-=======
 /* static */
 bool GlobalObject::addIntrinsicValue(JSContext* cx,
                                      Handle<GlobalObject*> global,
@@ -2392,7 +1030,6 @@ bool GlobalObject::addIntrinsicValue(JSContext* cx,
   if (!holder) {
     return false;
   }
->>>>>>> upstream-releases
 
   uint32_t slot = holder->slotSpan();
   RootedShape last(cx, holder->lastProperty());
@@ -2413,22 +1050,6 @@ bool GlobalObject::addIntrinsicValue(JSContext* cx,
   return true;
 }
 
-<<<<<<< HEAD
-/* static */ bool GlobalObject::ensureModulePrototypesCreated(
-    JSContext* cx, Handle<GlobalObject*> global) {
-  return getOrCreateModulePrototype(cx, global) &&
-         getOrCreateImportEntryPrototype(cx, global) &&
-         getOrCreateExportEntryPrototype(cx, global) &&
-         getOrCreateRequestedModulePrototype(cx, global);
-||||||| merged common ancestors
-/* static */ bool
-GlobalObject::ensureModulePrototypesCreated(JSContext *cx, Handle<GlobalObject*> global)
-{
-    return getOrCreateModulePrototype(cx, global) &&
-           getOrCreateImportEntryPrototype(cx, global) &&
-           getOrCreateExportEntryPrototype(cx, global) &&
-           getOrCreateRequestedModulePrototype(cx, global);
-=======
 /* static */
 bool GlobalObject::ensureModulePrototypesCreated(JSContext* cx,
                                                  Handle<GlobalObject*> global) {
@@ -2436,5 +1057,4 @@ bool GlobalObject::ensureModulePrototypesCreated(JSContext* cx,
          getOrCreateImportEntryPrototype(cx, global) &&
          getOrCreateExportEntryPrototype(cx, global) &&
          getOrCreateRequestedModulePrototype(cx, global);
->>>>>>> upstream-releases
 }

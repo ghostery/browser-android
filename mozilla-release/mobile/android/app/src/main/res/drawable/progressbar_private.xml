@@ -11,9 +11,10 @@
             android:scaleHeight="100%"
             android:scaleWidth="100%">
             <shape>
-                <!-- Cliqz Start -->
-                <solid android:color="#154FAF" />
-                <!-- Cliqz End -->
+                <gradient
+                    android:centerColor="@color/photon_loading_indicator_dark_private"
+                    android:endColor="@color/photon_loading_indicator_light_private"
+                    android:startColor="@color/photon_loading_indicator_light_private" />
             </shape>
         </scale>
     </item>

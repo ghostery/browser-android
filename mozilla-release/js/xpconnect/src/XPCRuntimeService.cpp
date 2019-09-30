@@ -35,22 +35,6 @@ NS_IMPL_ISUPPORTS(BackstagePass, nsIXPCScriptable, nsIGlobalObject,
    XPC_SCRIPTABLE_DONT_REFLECT_INTERFACE_NAMES)
 #include "xpc_map_end.h" /* This will #undef the above */
 
-<<<<<<< HEAD
-JSObject* BackstagePass::GetGlobalJSObject() {
-  if (mWrapper) {
-    return mWrapper->GetFlatJSObject();
-  }
-  return nullptr;
-||||||| merged common ancestors
-
-JSObject*
-BackstagePass::GetGlobalJSObject()
-{
-    if (mWrapper) {
-        return mWrapper->GetFlatJSObject();
-    }
-    return nullptr;
-=======
 JSObject* BackstagePass::GetGlobalJSObject() {
   if (mWrapper) {
     return mWrapper->GetFlatJSObject();
@@ -63,7 +47,6 @@ JSObject* BackstagePass::GetGlobalJSObjectPreserveColor() const {
     return mWrapper->GetFlatJSObjectPreserveColor();
   }
   return nullptr;
->>>>>>> upstream-releases
 }
 
 void BackstagePass::SetGlobalObject(JSObject* global) {
@@ -84,22 +67,6 @@ BackstagePass::Resolve(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackstagePass::NewEnumerate(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
-                            JSObject* objArg, JS::AutoIdVector& properties,
-                            bool enumerableOnly, bool* _retval) {
-  JS::RootedObject obj(cx, objArg);
-  *_retval = WebIDLGlobalNameHash::NewEnumerateSystemGlobal(cx, obj, properties,
-                                                            enumerableOnly);
-  return *_retval ? NS_OK : NS_ERROR_FAILURE;
-||||||| merged common ancestors
-BackstagePass::Enumerate(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
-                         JSObject* objArg, bool* _retval)
-{
-    JS::RootedObject obj(cx, objArg);
-    *_retval = mozilla::dom::SystemGlobalEnumerate(cx, obj);
-    return *_retval ? NS_OK : NS_ERROR_FAILURE;
-=======
 BackstagePass::NewEnumerate(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
                             JSObject* objArg,
                             JS::MutableHandleIdVector properties,
@@ -108,36 +75,14 @@ BackstagePass::NewEnumerate(nsIXPConnectWrappedNative* wrapper, JSContext* cx,
   *_retval = WebIDLGlobalNameHash::NewEnumerateSystemGlobal(cx, obj, properties,
                                                             enumerableOnly);
   return *_retval ? NS_OK : NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 }
 
 /***************************************************************************/
 NS_IMETHODIMP
-<<<<<<< HEAD
-BackstagePass::GetInterfaces(uint32_t* aCount, nsIID*** aArray) {
-  *aCount = 2;
-  nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
-  *aArray = array;
-
-  array[0] = NS_GET_IID(nsIXPCScriptable).Clone();
-  array[1] = NS_GET_IID(nsIScriptObjectPrincipal).Clone();
-  return NS_OK;
-||||||| merged common ancestors
-BackstagePass::GetInterfaces(uint32_t* aCount, nsIID * **aArray)
-{
-    *aCount = 2;
-    nsIID** array = static_cast<nsIID**>(moz_xmalloc(2 * sizeof(nsIID*)));
-    *aArray = array;
-
-    array[0] = NS_GET_IID(nsIXPCScriptable).Clone();
-    array[1] = NS_GET_IID(nsIScriptObjectPrincipal).Clone();
-    return NS_OK;
-=======
 BackstagePass::GetInterfaces(nsTArray<nsIID>& aArray) {
   aArray = nsTArray<nsIID>{NS_GET_IID(nsIXPCScriptable),
                            NS_GET_IID(nsIScriptObjectPrincipal)};
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP

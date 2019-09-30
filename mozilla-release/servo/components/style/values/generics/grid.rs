@@ -5,36 +5,15 @@
 //! Generic types for the handling of
 //! [grids](https://drafts.csswg.org/css-grid/).
 
-<<<<<<< HEAD
-use crate::parser::{Parse, ParserContext};
-use crate::values::computed::{Context, ToComputedValue};
-use crate::values::specified;
-use crate::values::specified::grid::parse_line_names;
-use crate::values::{CSSFloat, CustomIdent};
-||||||| merged common ancestors
-=======
 use crate::parser::{Parse, ParserContext};
 use crate::values::specified;
 use crate::values::specified::grid::parse_line_names;
 use crate::values::{CSSFloat, CustomIdent};
 use crate::{Atom, Zero};
->>>>>>> upstream-releases
 use cssparser::Parser;
 use std::fmt::{self, Write};
-<<<<<<< HEAD
-use std::{mem, usize};
-||||||| merged common ancestors
-=======
 use std::{cmp, mem, usize};
->>>>>>> upstream-releases
 use style_traits::{CssWriter, ParseError, StyleParseErrorKind, ToCss};
-<<<<<<< HEAD
-||||||| merged common ancestors
-use values::{CSSFloat, CustomIdent};
-use values::computed::{Context, ToComputedValue};
-use values::specified;
-use values::specified::grid::parse_line_names;
-=======
 
 /// These are the limits that we choose to clamp grid line numbers to.
 /// http://drafts.csswg.org/css-grid/#overlarge-grids
@@ -42,7 +21,6 @@ use values::specified::grid::parse_line_names;
 pub const MIN_GRID_LINE: i32 = -10000;
 /// See above.
 pub const MAX_GRID_LINE: i32 = 10000;
->>>>>>> upstream-releases
 
 /// A `<grid-line>` type.
 ///
@@ -175,17 +153,9 @@ impl Parse for GridLine<specified::Integer> {
                 if val_before_span || grid_line.ident != atom!("") {
                     return Err(location.new_custom_error(StyleParseErrorKind::UnspecifiedError));
                 }
-<<<<<<< HEAD
-                // NOTE(emilio): `span` is consumed above, so we only need to
-                // reject `auto`.
-                grid_line.ident = Some(CustomIdent::from_ident(location, &name, &["auto"])?);
-||||||| merged common ancestors
-                grid_line.ident = Some(CustomIdent::from_ident(location, &name, &[])?);
-=======
                 // NOTE(emilio): `span` is consumed above, so we only need to
                 // reject `auto`.
                 grid_line.ident = CustomIdent::from_ident(location, &name, &["auto"])?.0;
->>>>>>> upstream-releases
             } else {
                 break;
             }

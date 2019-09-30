@@ -15,17 +15,8 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/*static*/ nsCString CDMStorageIdProvider::ComputeStorageId(
-    const nsCString& aOriginSalt) {
-||||||| merged common ancestors
-/*static*/ nsCString
-CDMStorageIdProvider::ComputeStorageId(const nsCString& aOriginSalt)
-{
-=======
 /*static*/
 nsCString CDMStorageIdProvider::ComputeStorageId(const nsCString& aOriginSalt) {
->>>>>>> upstream-releases
 #ifndef SUPPORT_STORAGE_ID
   return EmptyCString();
 #else

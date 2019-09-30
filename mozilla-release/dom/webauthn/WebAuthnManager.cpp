@@ -165,18 +165,8 @@ nsresult RelaxSameOrigin(nsPIDOMWindowInner* aParent,
  * WebAuthnManager Implementation
  **********************************************************************/
 
-<<<<<<< HEAD
-void WebAuthnManager::ClearTransaction() {
-  if (!NS_WARN_IF(mTransaction.isNothing())) {
-||||||| merged common ancestors
-void
-WebAuthnManager::ClearTransaction()
-{
-  if (!NS_WARN_IF(mTransaction.isNothing())) {
-=======
 void WebAuthnManager::ClearTransaction() {
   if (!mTransaction.isNothing()) {
->>>>>>> upstream-releases
     StopListeningForVisibilityEvents();
   }
 
@@ -200,12 +190,6 @@ void WebAuthnManager::CancelTransaction(const nsresult& aError) {
   RejectTransaction(aError);
 }
 
-<<<<<<< HEAD
-WebAuthnManager::~WebAuthnManager() {
-||||||| merged common ancestors
-WebAuthnManager::~WebAuthnManager()
-{
-=======
 void WebAuthnManager::HandleVisibilityChange() {
   if (mTransaction.isSome()) {
     mTransaction.ref().mVisibilityChanged = true;
@@ -213,7 +197,6 @@ void WebAuthnManager::HandleVisibilityChange() {
 }
 
 WebAuthnManager::~WebAuthnManager() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   if (mTransaction.isSome()) {
@@ -318,45 +301,12 @@ already_AddRefed<Promise> WebAuthnManager::MakeCredential(
     // If current.type does not contain a PublicKeyCredentialType
     // supported by this implementation, then stop processing current and move
     // on to the next element in mPubKeyCredParams.
-<<<<<<< HEAD
     if (aOptions.mPubKeyCredParams[a].mType !=
         PublicKeyCredentialType::Public_key) {
       continue;
     }
 
-    nsString algName;
-    if (NS_FAILED(CoseAlgorithmToWebCryptoId(aOptions.mPubKeyCredParams[a].mAlg,
-                                             algName))) {
-||||||| merged common ancestors
-    if (aOptions.mPubKeyCredParams[a].mType != PublicKeyCredentialType::Public_key) {
-      continue;
-    }
-
-    nsString algName;
-    if (NS_FAILED(CoseAlgorithmToWebCryptoId(aOptions.mPubKeyCredParams[a].mAlg,
-                                             algName))) {
-=======
-    if (aOptions.mPubKeyCredParams[a].mType !=
-        PublicKeyCredentialType::Public_key) {
->>>>>>> upstream-releases
-      continue;
-    }
-
-<<<<<<< HEAD
-    if (!acceptableParams.AppendElement(aOptions.mPubKeyCredParams[a],
-                                        mozilla::fallible)) {
-      promise->MaybeReject(NS_ERROR_OUT_OF_MEMORY);
-      return promise.forget();
-    }
-||||||| merged common ancestors
-    if (!acceptableParams.AppendElement(aOptions.mPubKeyCredParams[a],
-                                        mozilla::fallible)){
-      promise->MaybeReject(NS_ERROR_OUT_OF_MEMORY);
-      return promise.forget();
-    }
-=======
     coseAlgos.AppendElement(aOptions.mPubKeyCredParams[a].mAlg);
->>>>>>> upstream-releases
   }
 
   // If there are algorithms specified, but none are Public_key algorithms,
@@ -425,40 +375,11 @@ already_AddRefed<Promise> WebAuthnManager::MakeCredential(
   const auto& attachment = selection.mAuthenticatorAttachment;
   const AttestationConveyancePreference& attestation = aOptions.mAttestation;
 
-<<<<<<< HEAD
-  // Does the RP require attachment == "platform"?
-  bool requirePlatformAttachment =
-      attachment.WasPassed() &&
-      attachment.Value() == AuthenticatorAttachment::Platform;
-
-  // Does the RP require user verification?
-  bool requireUserVerification =
-      selection.mUserVerification == UserVerificationRequirement::Required;
-
-  // Does the RP desire direct attestation? Indirect attestation is not
-  // implemented, and thus is equivilent to None.
-  bool requestDirectAttestation =
-      attestation == AttestationConveyancePreference::Direct;
-||||||| merged common ancestors
-  // Does the RP require attachment == "platform"?
-  bool requirePlatformAttachment =
-    attachment.WasPassed() && attachment.Value() == AuthenticatorAttachment::Platform;
-
-  // Does the RP require user verification?
-  bool requireUserVerification =
-    selection.mUserVerification == UserVerificationRequirement::Required;
-
-  // Does the RP desire direct attestation? Indirect attestation is not
-  // implemented, and thus is equivilent to None.
-  bool requestDirectAttestation =
-    attestation == AttestationConveyancePreference::Direct;
-=======
   // Attachment
   Maybe<AuthenticatorAttachment> authenticatorAttachment;
   if (attachment.WasPassed()) {
     authenticatorAttachment.emplace(attachment.Value());
   }
->>>>>>> upstream-releases
 
   // Create and forward authenticator selection criteria.
   WebAuthnAuthenticatorSelection authSelection(selection.mRequireResidentKey,
@@ -477,34 +398,11 @@ already_AddRefed<Promise> WebAuthnManager::MakeCredential(
 
   WebAuthnMakeCredentialRpInfo rpInfo(aOptions.mRp.mName, rpIcon);
 
-<<<<<<< HEAD
-  WebAuthnMakeCredentialExtraInfo extra(extensions, authSelection,
-                                        requestDirectAttestation);
-||||||| merged common ancestors
-  WebAuthnMakeCredentialExtraInfo extra(extensions,
-                                        authSelection,
-                                        requestDirectAttestation);
-=======
   WebAuthnMakeCredentialUserInfo userInfo(
       userId, aOptions.mUser.mName, userIcon, aOptions.mUser.mDisplayName);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  WebAuthnMakeCredentialInfo info(origin, NS_ConvertUTF8toUTF16(rpId),
-                                  challenge, clientDataJSON, adjustedTimeout,
-                                  excludeList, extra);
-||||||| merged common ancestors
-  WebAuthnMakeCredentialInfo info(origin,
-                                  NS_ConvertUTF8toUTF16(rpId),
-                                  challenge,
-                                  clientDataJSON,
-                                  adjustedTimeout,
-                                  excludeList,
-                                  extra);
-=======
   WebAuthnMakeCredentialExtraInfo extra(rpInfo, userInfo, coseAlgos, extensions,
                                         authSelection, attestation);
->>>>>>> upstream-releases
 
   WebAuthnMakeCredentialInfo info(origin, NS_ConvertUTF8toUTF16(rpId),
                                   challenge, clientDataJSON, adjustedTimeout,
@@ -660,18 +558,6 @@ already_AddRefed<Promise> WebAuthnManager::GetAssertion(
     return promise.forget();
   }
 
-<<<<<<< HEAD
-  // Does the RP require user verification?
-  bool requireUserVerification =
-      aOptions.mUserVerification == UserVerificationRequirement::Required;
-
-||||||| merged common ancestors
-  // Does the RP require user verification?
-  bool requireUserVerification =
-    aOptions.mUserVerification == UserVerificationRequirement::Required;
-
-=======
->>>>>>> upstream-releases
   // If extensions were specified, process any extensions supported by this
   // client platform, to produce the extension data that needs to be sent to the
   // authenticator. If an error is encountered while processing an extension,
@@ -708,23 +594,9 @@ already_AddRefed<Promise> WebAuthnManager::GetAssertion(
 
   WebAuthnGetAssertionExtraInfo extra(extensions, aOptions.mUserVerification);
 
-<<<<<<< HEAD
-  WebAuthnGetAssertionInfo info(origin, NS_ConvertUTF8toUTF16(rpId), challenge,
-                                clientDataJSON, adjustedTimeout, allowList,
-                                extra);
-||||||| merged common ancestors
-  WebAuthnGetAssertionInfo info(origin,
-                                NS_ConvertUTF8toUTF16(rpId),
-                                challenge,
-                                clientDataJSON,
-                                adjustedTimeout,
-                                allowList,
-                                extra);
-=======
   WebAuthnGetAssertionInfo info(origin, NS_ConvertUTF8toUTF16(rpId), challenge,
                                 clientDataJSON, adjustedTimeout, allowList,
                                 Some(extra));
->>>>>>> upstream-releases
 
 #ifdef OS_WIN
   if (!WinWebAuthnManager::AreWebAuthNApisAvailable()) {

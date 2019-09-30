@@ -115,41 +115,6 @@ class AddonsPanel extends Component {
   }
 
   updateAddonsList() {
-<<<<<<< HEAD
-    this.props.client.mainRoot.listAddons()
-      .then(addons => {
-        const extensions = addons.filter(addon => addon.debuggable).map(addon => {
-          return {
-            addonTargetFront: addon,
-            addonID: addon.id,
-            icon: addon.iconURL || ExtensionIcon,
-            isSystem: addon.isSystem,
-            manifestURL: addon.manifestURL,
-            name: addon.name,
-            temporarilyInstalled: addon.temporarilyInstalled,
-            url: addon.url,
-            warnings: addon.warnings,
-          };
-        });
-||||||| merged common ancestors
-    this.props.client.listAddons()
-      .then(({addons}) => {
-        const extensions = addons.filter(addon => addon.debuggable).map(addon => {
-          return {
-            addonTargetActor: addon.actor,
-            addonID: addon.id,
-            // Forward the whole addon actor form for potential remote debugging.
-            form: addon,
-            icon: addon.iconURL || ExtensionIcon,
-            isSystem: addon.isSystem,
-            manifestURL: addon.manifestURL,
-            name: addon.name,
-            temporarilyInstalled: addon.temporarilyInstalled,
-            url: addon.url,
-            warnings: addon.warnings,
-          };
-        });
-=======
     this.props.client.mainRoot.listAddons().then(
       addons => {
         const extensions = addons
@@ -167,23 +132,13 @@ class AddonsPanel extends Component {
               warnings: addon.warnings,
             };
           });
->>>>>>> upstream-releases
 
         this.setState({ extensions });
-<<<<<<< HEAD
-
-        const { AboutDebugging } = window;
-        AboutDebugging.emit("addons-updated");
-      }, error => {
-||||||| merged common ancestors
-      }, error => {
-=======
 
         const { AboutDebugging } = window;
         AboutDebugging.emit("addons-updated");
       },
       error => {
->>>>>>> upstream-releases
         throw new Error("Client error while listing addons: " + error);
       }
     );

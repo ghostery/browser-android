@@ -15,21 +15,9 @@ struct HTMLElement {
 };
 
 #ifdef DEBUG
-<<<<<<< HEAD
-#define ELEM(tag, block, container) {eHTMLTag_##tag, block, container},
-||||||| merged common ancestors
-#define ELEM(tag, block, container) { eHTMLTag_##tag, block, container },
-=======
 #  define ELEM(tag, block, container) {eHTMLTag_##tag, block, container},
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define ELEM(tag, block, container) {block, container},
-||||||| merged common ancestors
-#define ELEM(tag, block, container) { block, container },
-=======
 #  define ELEM(tag, block, container) {block, container},
->>>>>>> upstream-releases
 #endif
 
 #define ____ false  // This makes the table easier to read.

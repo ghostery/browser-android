@@ -61,54 +61,21 @@ class GetUserMediaWindowListener;
 class MediaManager;
 class SourceListener;
 
-<<<<<<< HEAD
-LogModule* GetMediaManagerLog();
-
 class MediaDevice : public nsIMediaDevice {
  public:
-||||||| merged common ancestors
-LogModule* GetMediaManagerLog();
-
-class MediaDevice : public nsIMediaDevice
-{
-public:
-=======
-class MediaDevice : public nsIMediaDevice {
- public:
->>>>>>> upstream-releases
   NS_DECL_THREADSAFE_ISUPPORTS
   NS_DECL_NSIMEDIADEVICE
 
-<<<<<<< HEAD
-  explicit MediaDevice(const RefPtr<MediaEngineSource>& aSource,
-                       const nsString& aName, const nsString& aID,
-                       const nsString& aRawID);
-||||||| merged common ancestors
-  explicit MediaDevice(const RefPtr<MediaEngineSource>& aSource,
-                       const nsString& aName,
-                       const nsString& aID,
-                       const nsString& aRawID);
-=======
   MediaDevice(const RefPtr<MediaEngineSource>& aSource, const nsString& aName,
               const nsString& aID, const nsString& aGroupID,
               const nsString& aRawID);
->>>>>>> upstream-releases
 
   MediaDevice(const RefPtr<AudioDeviceInfo>& aAudioDeviceInfo,
               const nsString& aID, const nsString& aGroupID,
               const nsString& aRawID = NS_LITERAL_STRING(""));
 
-<<<<<<< HEAD
-  explicit MediaDevice(const RefPtr<MediaDevice>& aOther, const nsString& aID,
-                       const nsString& aRawID);
-||||||| merged common ancestors
-  explicit MediaDevice(const RefPtr<MediaDevice>& aOther,
-                       const nsString& aID,
-                       const nsString& aRawID);
-=======
   MediaDevice(const RefPtr<MediaDevice>& aOther, const nsString& aID,
               const nsString& aGroupID, const nsString& aRawID);
->>>>>>> upstream-releases
 
   uint32_t GetBestFitnessDistance(
       const nsTArray<const NormalizedConstraintSet*>& aConstraintSets,
@@ -147,24 +114,8 @@ class MediaDevice : public nsIMediaDevice {
  private:
   static bool StringsContain(const dom::OwningStringOrStringSequence& aStrings,
                              nsString aN);
-<<<<<<< HEAD
   static uint32_t FitnessDistance(
       nsString aN, const dom::ConstrainDOMStringParameters& aParams);
-
-  // Assigned on allocation on media thread, then read on the media thread and
-  // graph thread
-  RefPtr<AllocationHandle> mAllocationHandle;
-||||||| merged common ancestors
-  static uint32_t FitnessDistance(nsString aN,
-      const dom::ConstrainDOMStringParameters& aParams);
-
-  // Assigned on allocation on media thread, then read on the media thread and
-  // graph thread
-  RefPtr<AllocationHandle> mAllocationHandle;
-=======
-  static uint32_t FitnessDistance(
-      nsString aN, const dom::ConstrainDOMStringParameters& aParams);
->>>>>>> upstream-releases
 
  public:
   const RefPtr<MediaEngineSource> mSource;
@@ -232,63 +183,13 @@ class MediaManager final : public nsIMediaManagerService,
     MOZ_ASSERT(NS_IsMainThread());
     return mActiveWindows.GetWeak(aWindowId);
   }
-<<<<<<< HEAD
-  void AddWindowID(uint64_t aWindowId, GetUserMediaWindowListener* aListener);
-||||||| merged common ancestors
-  void AddWindowID(uint64_t aWindowId, GetUserMediaWindowListener *aListener);
-=======
   void AddWindowID(uint64_t aWindowId,
                    RefPtr<GetUserMediaWindowListener> aListener);
->>>>>>> upstream-releases
   void RemoveWindowID(uint64_t aWindowId);
   void SendPendingGUMRequest();
   bool IsWindowStillActive(uint64_t aWindowId) {
     return !!GetWindowListener(aWindowId);
   }
-<<<<<<< HEAD
-  bool IsWindowListenerStillActive(GetUserMediaWindowListener* aListener);
-  // Note: also calls aListener->Remove(), even if inactive
-  void RemoveFromWindowList(uint64_t aWindowID,
-                            GetUserMediaWindowListener* aListener);
-
-  typedef dom::CallbackObjectHolder<dom::NavigatorUserMediaSuccessCallback,
-                                    nsIDOMGetUserMediaSuccessCallback>
-      GetUserMediaSuccessCallback;
-  typedef dom::CallbackObjectHolder<dom::NavigatorUserMediaErrorCallback,
-                                    nsIDOMGetUserMediaErrorCallback>
-      GetUserMediaErrorCallback;
-
-  static void CallOnError(const GetUserMediaErrorCallback* aCallback,
-                          dom::MediaStreamError& aError);
-  static void CallOnSuccess(const GetUserMediaSuccessCallback* aCallback,
-                            DOMMediaStream& aStream);
-
-  typedef nsTArray<RefPtr<MediaDevice>> MediaDeviceSet;
-  typedef media::Refcountable<MediaDeviceSet> MediaDeviceSetRefCnt;
-||||||| merged common ancestors
-  bool IsWindowListenerStillActive(GetUserMediaWindowListener* aListener);
-  // Note: also calls aListener->Remove(), even if inactive
-  void RemoveFromWindowList(uint64_t aWindowID,
-    GetUserMediaWindowListener *aListener);
-
-  typedef dom::CallbackObjectHolder<dom::NavigatorUserMediaSuccessCallback,
-    nsIDOMGetUserMediaSuccessCallback> GetUserMediaSuccessCallback;
-  typedef dom::CallbackObjectHolder<dom::NavigatorUserMediaErrorCallback,
-    nsIDOMGetUserMediaErrorCallback> GetUserMediaErrorCallback;
-
-  nsresult GetUserMedia(
-    nsPIDOMWindowInner* aWindow,
-    const dom::MediaStreamConstraints& aConstraints,
-    GetUserMediaSuccessCallback&& onSuccess,
-    GetUserMediaErrorCallback&& onError,
-    dom::CallerType aCallerType);
-
-  nsresult GetUserMediaDevices(nsPIDOMWindowInner* aWindow,
-                               const dom::MediaStreamConstraints& aConstraints,
-                               dom::MozGetUserMediaDevicesSuccessCallback& aOnSuccess,
-                               uint64_t aInnerWindowID = 0,
-                               const nsAString& aCallID = nsString());
-=======
   bool IsWindowListenerStillActive(
       const RefPtr<GetUserMediaWindowListener>& aListener);
 
@@ -326,48 +227,14 @@ class MediaManager final : public nsIMediaManagerService,
       uint64_t aInnerWindowID = 0, const nsAString& aCallID = nsString());
   RefPtr<DevicesPromise> EnumerateDevices(nsPIDOMWindowInner* aWindow,
                                           dom::CallerType aCallerType);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  typedef MozPromise<RefPtr<DOMMediaStream>, RefPtr<MediaMgrError>, true>
-      StreamPromise;
-  typedef MozPromise<RefPtr<MediaDeviceSetRefCnt>, RefPtr<MediaMgrError>, true>
-      MediaDeviceSetPromise;
-  typedef MozPromise<const char*, nsresult, false> BadConstraintsPromise;
-
-  RefPtr<StreamPromise> GetUserMedia(
-      nsPIDOMWindowInner* aWindow,
-      const dom::MediaStreamConstraints& aConstraints,
-      dom::CallerType aCallerType);
-||||||| merged common ancestors
-  nsresult EnumerateDevices(nsPIDOMWindowInner* aWindow,
-                            nsIGetUserMediaDevicesSuccessCallback* aOnSuccess,
-                            nsIDOMGetUserMediaErrorCallback* aOnFailure,
-                            dom::CallerType aCallerType);
-=======
-  nsresult EnumerateDevices(nsPIDOMWindowInner* aWindow,
-                            dom::Promise& aPromise);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  nsresult GetUserMediaDevices(
-      nsPIDOMWindowInner* aWindow,
-      const dom::MediaStreamConstraints& aConstraints,
-      dom::MozGetUserMediaDevicesSuccessCallback& aOnSuccess,
-      uint64_t aInnerWindowID = 0, const nsAString& aCallID = nsString());
-  RefPtr<MediaDeviceSetPromise> EnumerateDevices(nsPIDOMWindowInner* aWindow,
-                                                 dom::CallerType aCallerType);
 
   nsresult EnumerateDevices(nsPIDOMWindowInner* aWindow,
                             dom::Promise& aPromise);
-||||||| merged common ancestors
-  nsresult EnumerateDevices(nsPIDOMWindowInner* aWindow, dom::Promise& aPromise);
-=======
+
   RefPtr<StreamPromise> GetDisplayMedia(
       nsPIDOMWindowInner* aWindow,
       const dom::DisplayMediaStreamConstraints& aConstraintsPassedIn,
       dom::CallerType aCallerType);
->>>>>>> upstream-releases
 
   // Get the sink that corresponds to the given device id.
   // It is resposible to check if an application is
@@ -399,27 +266,6 @@ class MediaManager final : public nsIMediaManagerService,
  private:
   static nsresult GenerateUUID(nsAString& aResult);
   static nsresult AnonymizeId(nsAString& aId, const nsACString& aOriginKey);
-<<<<<<< HEAD
-
- public:  // TODO: make private once we upgrade to GCC 4.8+ on linux.
-  static void AnonymizeDevices(MediaDeviceSet& aDevices,
-                               const nsACString& aOriginKey);
-  static already_AddRefed<nsIWritableVariant> ToJSArray(
-      MediaDeviceSet& aDevices);
-
- private:
-  enum class DeviceEnumerationType : uint8_t {
-    Normal,  // Enumeration should not return loopback or fake devices
-    Fake,    // Enumeration should return fake device(s)
-||||||| merged common ancestors
-public: // TODO: make private once we upgrade to GCC 4.8+ on linux.
-  static void AnonymizeDevices(MediaDeviceSet& aDevices, const nsACString& aOriginKey);
-  static already_AddRefed<nsIWritableVariant> ToJSArray(MediaDeviceSet& aDevices);
-private:
-  enum class DeviceEnumerationType :uint8_t {
-    Normal, // Enumeration should not return loopback or fake devices
-    Fake, // Enumeration should return fake device(s)
-=======
 
  public:  // TODO: make private once we upgrade to GCC 4.8+ on linux.
   static void AnonymizeDevices(MediaDeviceSet& aDevices,
@@ -433,52 +279,10 @@ private:
   enum class DeviceEnumerationType : uint8_t {
     Normal,  // Enumeration should not return loopback or fake devices
     Fake,    // Enumeration should return fake device(s)
->>>>>>> upstream-releases
     Loopback /* Enumeration should return loopback device(s) (possibly in
              addition to normal devices) */
   };
 
-<<<<<<< HEAD
-  RefPtr<MediaDeviceSetPromise> EnumerateRawDevices(
-      uint64_t aWindowId, dom::MediaSourceEnum aVideoInputType,
-      dom::MediaSourceEnum aAudioInputType, MediaSinkEnum aAudioOutputType,
-      DeviceEnumerationType aVideoInputEnumType = DeviceEnumerationType::Normal,
-      DeviceEnumerationType aAudioInputEnumType =
-          DeviceEnumerationType::Normal);
-
-  RefPtr<MediaDeviceSetPromise> EnumerateDevicesImpl(
-      uint64_t aWindowId, dom::MediaSourceEnum aVideoInputType,
-      dom::MediaSourceEnum aAudioInputType, MediaSinkEnum aAudioOutputType,
-      DeviceEnumerationType aVideoInputEnumType,
-      DeviceEnumerationType aAudioInputEnumType);
-
-  RefPtr<BadConstraintsPromise> SelectSettings(
-      const dom::MediaStreamConstraints& aConstraints, bool aIsChrome,
-||||||| merged common ancestors
-  typedef MozPromise<RefPtr<MediaDeviceSetRefCnt>, RefPtr<dom::MediaStreamError>, true> MediaDeviceSetPromise;
-  typedef MozPromise<const char*, nsresult, false> BadConstraintsPromise;
-
-  RefPtr<MediaDeviceSetPromise>
-  EnumerateRawDevices(uint64_t aWindowId,
-                      dom::MediaSourceEnum      aVideoInputType,
-                      dom::MediaSourceEnum      aAudioInputType,
-                      MediaSinkEnum             aAudioOutputType,
-                      DeviceEnumerationType     aVideoInputEnumType = DeviceEnumerationType::Normal,
-                      DeviceEnumerationType     aAudioInputEnumType = DeviceEnumerationType::Normal);
-
-  RefPtr<MediaDeviceSetPromise>
-  EnumerateDevicesImpl(uint64_t aWindowId,
-                       dom::MediaSourceEnum      aVideoInputType,
-                       dom::MediaSourceEnum      aAudioInputType,
-                       MediaSinkEnum             aAudioOutputType,
-                       DeviceEnumerationType     aVideoInputEnumType,
-                       DeviceEnumerationType     aAudioInputEnumType);
-
-  RefPtr<BadConstraintsPromise>
-  SelectSettings(
-      dom::MediaStreamConstraints& aConstraints,
-      bool aIsChrome,
-=======
   RefPtr<MgrPromise> EnumerateRawDevices(
       uint64_t aWindowId, dom::MediaSourceEnum aVideoInputType,
       dom::MediaSourceEnum aAudioInputType, MediaSinkEnum aAudioOutputType,
@@ -495,7 +299,6 @@ private:
 
   RefPtr<BadConstraintsPromise> SelectSettings(
       const dom::MediaStreamConstraints& aConstraints, bool aIsChrome,
->>>>>>> upstream-releases
       const RefPtr<MediaDeviceSetRefCnt>& aSources);
 
   void GetPref(nsIPrefBranch* aBranch, const char* aPref, const char* aData,

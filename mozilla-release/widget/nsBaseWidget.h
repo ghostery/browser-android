@@ -146,72 +146,6 @@ class nsBaseWidget : public nsIWidget, public nsSupportsWeakReference {
   NS_DECL_ISUPPORTS
 
   // nsIWidget interface
-<<<<<<< HEAD
-  virtual void CaptureMouse(bool aCapture) override {}
-  virtual void CaptureRollupEvents(nsIRollupListener* aListener,
-                                   bool aDoCapture) override {}
-  virtual nsIWidgetListener* GetWidgetListener() override;
-  virtual void SetWidgetListener(nsIWidgetListener* alistener) override;
-  virtual void Destroy() override;
-  virtual void SetParent(nsIWidget* aNewParent) override{};
-  virtual nsIWidget* GetParent(void) override;
-  virtual nsIWidget* GetTopLevelWidget() override;
-  virtual nsIWidget* GetSheetWindowParent(void) override;
-  virtual float GetDPI() override;
-  virtual void AddChild(nsIWidget* aChild) override;
-  virtual void RemoveChild(nsIWidget* aChild) override;
-
-  void SetZIndex(int32_t aZIndex) override;
-  virtual void PlaceBehind(nsTopLevelWidgetZPlacement aPlacement,
-                           nsIWidget* aWidget, bool aActivate) override {}
-
-  virtual void SetSizeMode(nsSizeMode aMode) override;
-  virtual nsSizeMode SizeMode() override { return mSizeMode; }
-
-  virtual bool IsFullyOccluded() const override { return mIsFullyOccluded; }
-
-  virtual void SetCursor(nsCursor aCursor) override;
-  virtual nsresult SetCursor(imgIContainer* aCursor, uint32_t aHotspotX,
-                             uint32_t aHotspotY) override;
-  virtual void ClearCachedCursor() override { mUpdateCursor = true; }
-  virtual void SetTransparencyMode(nsTransparencyMode aMode) override;
-||||||| merged common ancestors
-  virtual void            CaptureMouse(bool aCapture) override {}
-  virtual void            CaptureRollupEvents(nsIRollupListener* aListener,
-                                              bool aDoCapture) override {}
-  virtual nsIWidgetListener*  GetWidgetListener() override;
-  virtual void            SetWidgetListener(nsIWidgetListener* alistener) override;
-  virtual void            Destroy() override;
-  virtual void            SetParent(nsIWidget* aNewParent) override {};
-  virtual nsIWidget*      GetParent(void) override;
-  virtual nsIWidget*      GetTopLevelWidget() override;
-  virtual nsIWidget*      GetSheetWindowParent(void) override;
-  virtual float           GetDPI() override;
-  virtual void            AddChild(nsIWidget* aChild) override;
-  virtual void            RemoveChild(nsIWidget* aChild) override;
-
-  void                    SetZIndex(int32_t aZIndex) override;
-  virtual void            PlaceBehind(nsTopLevelWidgetZPlacement aPlacement,
-                                      nsIWidget *aWidget, bool aActivate)
-                                      override {}
-
-  virtual void            SetSizeMode(nsSizeMode aMode) override;
-  virtual nsSizeMode      SizeMode() override
-  {
-    return mSizeMode;
-  }
-
-  virtual bool            IsFullyOccluded() const override
-  {
-    return mIsFullyOccluded;
-  }
-
-  virtual void            SetCursor(nsCursor aCursor) override;
-  virtual nsresult        SetCursor(imgIContainer* aCursor,
-                                    uint32_t aHotspotX, uint32_t aHotspotY) override;
-  virtual void            ClearCachedCursor() override { mUpdateCursor = true; }
-  virtual void            SetTransparencyMode(nsTransparencyMode aMode) override;
-=======
   virtual void CaptureMouse(bool aCapture) override {}
   virtual void CaptureRollupEvents(nsIRollupListener* aListener,
                                    bool aDoCapture) override {}
@@ -239,7 +173,6 @@ class nsBaseWidget : public nsIWidget, public nsSupportsWeakReference {
                          uint32_t aHotspotX, uint32_t aHotspotY) override;
   virtual void ClearCachedCursor() override { mUpdateCursor = true; }
   virtual void SetTransparencyMode(nsTransparencyMode aMode) override;
->>>>>>> upstream-releases
   virtual nsTransparencyMode GetTransparencyMode() override;
   virtual void GetWindowClipRegion(
       nsTArray<LayoutDeviceIntRect>* aRects) override;
@@ -319,73 +252,7 @@ class nsBaseWidget : public nsIWidget, public nsSupportsWeakReference {
   virtual LayoutDeviceIntRect GetBounds() override;
   virtual LayoutDeviceIntRect GetClientBounds() override;
   virtual LayoutDeviceIntRect GetScreenBounds() override;
-<<<<<<< HEAD
   virtual MOZ_MUST_USE nsresult
-  GetRestoredBounds(LayoutDeviceIntRect& aRect) override;
-  virtual nsresult SetNonClientMargins(
-      LayoutDeviceIntMargin& aMargins) override;
-  virtual LayoutDeviceIntPoint GetClientOffset() override;
-  virtual void EnableDragDrop(bool aEnable) override{};
-  virtual nsresult AsyncEnableDragDrop(bool aEnable) override;
-  virtual MOZ_MUST_USE nsresult GetAttention(int32_t aCycleCount) override {
-    return NS_OK;
-  }
-  virtual bool HasPendingInputEvent() override;
-  virtual void SetIcon(const nsAString& aIconSpec) override {}
-  virtual void SetDrawsInTitlebar(bool aState) override {}
-  virtual bool ShowsResizeIndicator(LayoutDeviceIntRect* aResizerRect) override;
-  virtual void FreeNativeData(void* data, uint32_t aDataType) override {}
-  virtual MOZ_MUST_USE nsresult BeginResizeDrag(mozilla::WidgetGUIEvent* aEvent,
-                                                int32_t aHorizontal,
-                                                int32_t aVertical) override {
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-||||||| merged common ancestors
-  virtual MOZ_MUST_USE nsresult GetRestoredBounds(LayoutDeviceIntRect& aRect) override;
-  virtual nsresult        SetNonClientMargins(LayoutDeviceIntMargin& aMargins) override;
-  virtual LayoutDeviceIntPoint GetClientOffset() override;
-  virtual void            EnableDragDrop(bool aEnable) override {};
-  virtual nsresult        AsyncEnableDragDrop(bool aEnable) override;
-  virtual MOZ_MUST_USE nsresult
-                          GetAttention(int32_t aCycleCount) override
-                          { return NS_OK; }
-  virtual bool            HasPendingInputEvent() override;
-  virtual void            SetIcon(const nsAString &aIconSpec) override {}
-  virtual void            SetDrawsInTitlebar(bool aState) override {}
-  virtual bool            ShowsResizeIndicator(LayoutDeviceIntRect* aResizerRect) override;
-  virtual void            FreeNativeData(void * data, uint32_t aDataType) override {}
-=======
->>>>>>> upstream-releases
-  virtual MOZ_MUST_USE nsresult
-<<<<<<< HEAD
-  BeginMoveDrag(mozilla::WidgetMouseEvent* aEvent) override {
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  virtual nsresult ActivateNativeMenuItemAt(
-      const nsAString& indexString) override {
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  virtual nsresult ForceUpdateNativeMenuAt(
-      const nsAString& indexString) override {
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  nsresult NotifyIME(const IMENotification& aIMENotification) final;
-  virtual MOZ_MUST_USE nsresult StartPluginIME(
-      const mozilla::WidgetKeyboardEvent& aKeyboardEvent, int32_t aPanelX,
-      int32_t aPanelY, nsString& aCommitted) override {
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  virtual void SetPluginFocused(bool& aFocused) override {}
-  virtual void SetCandidateWindowForPlugin(
-      const mozilla::widget::CandidateWindowPosition& aPosition) override {}
-  virtual void DefaultProcOfPluginEvent(
-      const mozilla::WidgetPluginEvent& aEvent) override {}
-||||||| merged common ancestors
-                          BeginResizeDrag(mozilla::WidgetGUIEvent* aEvent,
-                                          int32_t aHorizontal,
-                                          int32_t aVertical) override
-                          { return NS_ERROR_NOT_IMPLEMENTED; }
-=======
   GetRestoredBounds(LayoutDeviceIntRect& aRect) override;
   virtual nsresult SetNonClientMargins(
       LayoutDeviceIntMargin& aMargins) override;
@@ -424,7 +291,6 @@ class nsBaseWidget : public nsIWidget, public nsSupportsWeakReference {
       const mozilla::widget::CandidateWindowPosition& aPosition) override {}
   virtual void DefaultProcOfPluginEvent(
       const mozilla::WidgetPluginEvent& aEvent) override {}
->>>>>>> upstream-releases
   virtual MOZ_MUST_USE nsresult
   AttachNativeKeyEvent(mozilla::WidgetKeyboardEvent& aEvent) override {
     return NS_ERROR_NOT_IMPLEMENTED;
@@ -456,18 +322,9 @@ class nsBaseWidget : public nsIWidget, public nsSupportsWeakReference {
   nsEventStatus DispatchInputEvent(mozilla::WidgetInputEvent* aEvent) override;
   void DispatchEventToAPZOnly(mozilla::WidgetInputEvent* aEvent) override;
 
-<<<<<<< HEAD
-  void SetConfirmedTargetAPZC(
-      uint64_t aInputBlockId,
-      const nsTArray<ScrollableLayerGuid>& aTargets) const override;
-||||||| merged common ancestors
-  void SetConfirmedTargetAPZC(uint64_t aInputBlockId,
-                              const nsTArray<ScrollableLayerGuid>& aTargets) const override;
-=======
   void SetConfirmedTargetAPZC(
       uint64_t aInputBlockId,
       const nsTArray<SLGuidAndRenderRoot>& aTargets) const override;
->>>>>>> upstream-releases
 
   void UpdateZoomConstraints(
       const uint32_t& aPresShellId, const ScrollableLayerGuid::ViewID& aViewId,
@@ -833,31 +690,6 @@ class nsBaseWidget : public nsIWidget, public nsSupportsWeakReference {
   LayoutDeviceIntRect* mOriginalBounds;
   // When this pointer is null, the widget is not clipped
   mozilla::UniquePtr<LayoutDeviceIntRect[]> mClipRects;
-<<<<<<< HEAD
-  uint32_t mClipRectCount;
-  nsSizeMode mSizeMode;
-  nsPopupLevel mPopupLevel;
-  nsPopupType mPopupType;
-  SizeConstraints mSizeConstraints;
-  bool mHasRemoteContent;
-
-  bool mUpdateCursor;
-  bool mUseAttachedEvents;
-  bool mIMEHasFocus;
-  bool mIsFullyOccluded;
-||||||| merged common ancestors
-  uint32_t          mClipRectCount;
-  nsSizeMode        mSizeMode;
-  nsPopupLevel      mPopupLevel;
-  nsPopupType       mPopupType;
-  SizeConstraints   mSizeConstraints;
-  bool              mHasRemoteContent;
-
-  bool              mUpdateCursor;
-  bool              mUseAttachedEvents;
-  bool              mIMEHasFocus;
-  bool              mIsFullyOccluded;
-=======
   uint32_t mClipRectCount;
   nsSizeMode mSizeMode;
   nsPopupLevel mPopupLevel;
@@ -870,7 +702,6 @@ class nsBaseWidget : public nsIWidget, public nsSupportsWeakReference {
   bool mIMEHasFocus;
   bool mIMEHasQuit;
   bool mIsFullyOccluded;
->>>>>>> upstream-releases
   static nsIRollupListener* gRollupListener;
 
   struct InitialZoomConstraints {

@@ -829,100 +829,6 @@ seq_impl!(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-#[cfg(any(feature = "std", feature = "alloc"))]
-impl<'de, T> Deserialize<'de> for Vec<T>
-where
-    T: Deserialize<'de>,
-{
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        struct VecVisitor<T> {
-            marker: PhantomData<T>,
-        }
-
-        impl<'de, T> Visitor<'de> for VecVisitor<T>
-        where
-            T: Deserialize<'de>,
-        {
-            type Value = Vec<T>;
-
-            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("a sequence")
-            }
-
-            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-            where
-                A: SeqAccess<'de>,
-            {
-                let mut values = Vec::with_capacity(size_hint::cautious(seq.size_hint()));
-
-                while let Some(value) = try!(seq.next_element()) {
-                    values.push(value);
-                }
-
-                Ok(values)
-            }
-        }
-
-        let visitor = VecVisitor { marker: PhantomData };
-        deserializer.deserialize_seq(visitor)
-    }
-
-    fn deserialize_in_place<D>(deserializer: D, place: &mut Self) -> Result<(), D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        struct VecInPlaceVisitor<'a, T: 'a>(&'a mut Vec<T>);
-
-        impl<'a, 'de, T> Visitor<'de> for VecInPlaceVisitor<'a, T>
-        where
-            T: Deserialize<'de>,
-        {
-            type Value = ();
-
-            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("a sequence")
-            }
-
-            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-            where
-                A: SeqAccess<'de>,
-            {
-                let hint = size_hint::cautious(seq.size_hint());
-                if let Some(additional) = hint.checked_sub(self.0.len()) {
-                    self.0.reserve(additional);
-                }
-
-                for i in 0..self.0.len() {
-                    let next = {
-                        let next_place = InPlaceSeed(&mut self.0[i]);
-                        try!(seq.next_element_seed(next_place))
-                    };
-                    if next.is_none() {
-                        self.0.truncate(i);
-                        return Ok(());
-                    }
-                }
-
-                while let Some(value) = try!(seq.next_element()) {
-                    self.0.push(value);
-                }
-
-                Ok(())
-            }
-        }
-
-        deserializer.deserialize_seq(VecInPlaceVisitor(place))
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-||||||| merged common ancestors
-=======
 #[cfg(any(feature = "std", feature = "alloc"))]
 impl<'de, T> Deserialize<'de> for Vec<T>
 where
@@ -1016,7 +922,6 @@ where
 
 ////////////////////////////////////////////////////////////////////////////////
 
->>>>>>> upstream-releases
 struct ArrayVisitor<A> {
     marker: PhantomData<A>,
 }
@@ -1849,11 +1754,7 @@ where
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#[cfg(all(
-    de_rc_dst,
-    feature = "rc",
-    any(feature = "std", feature = "alloc")
-))]
+#[cfg(all(de_rc_dst, feature = "rc", any(feature = "std", feature = "alloc")))]
 macro_rules! box_forwarded_impl {
     (
         $(#[doc = $doc:tt])*
@@ -1874,11 +1775,7 @@ macro_rules! box_forwarded_impl {
     };
 }
 
-#[cfg(all(
-    de_rc_dst,
-    feature = "rc",
-    any(feature = "std", feature = "alloc")
-))]
+#[cfg(all(de_rc_dst, feature = "rc", any(feature = "std", feature = "alloc")))]
 box_forwarded_impl! {
     /// This impl requires the [`"rc"`] Cargo feature of Serde.
     ///
@@ -1890,11 +1787,7 @@ box_forwarded_impl! {
     Rc
 }
 
-#[cfg(all(
-    de_rc_dst,
-    feature = "rc",
-    any(feature = "std", feature = "alloc")
-))]
+#[cfg(all(de_rc_dst, feature = "rc", any(feature = "std", feature = "alloc")))]
 box_forwarded_impl! {
     /// This impl requires the [`"rc"`] Cargo feature of Serde.
     ///
@@ -2212,28 +2105,6 @@ where
     where
         D: Deserializer<'de>,
     {
-<<<<<<< HEAD
-        let (start, end) = deserializer.deserialize_struct(
-            "Range",
-            range::FIELDS,
-            range::RangeVisitor {
-                expecting: "struct Range",
-                phantom: PhantomData,
-            },
-        )?;
-        Ok(start..end)
-    }
-}
-||||||| merged common ancestors
-        // If this were outside of the serde crate, it would just use:
-        //
-        //    #[derive(Deserialize)]
-        //    #[serde(field_identifier, rename_all = "lowercase")]
-        enum Field {
-            Start,
-            End,
-        };
-=======
         let (start, end) = deserializer.deserialize_struct(
             "Range",
             range::FIELDS,
@@ -2412,37 +2283,7 @@ where
             Included,
             Excluded,
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#[cfg(range_inclusive)]
-impl<'de, Idx> Deserialize<'de> for RangeInclusive<Idx>
-where
-    Idx: Deserialize<'de>,
-{
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let (start, end) = deserializer.deserialize_struct(
-            "RangeInclusive",
-            range::FIELDS,
-            range::RangeVisitor {
-                expecting: "struct RangeInclusive",
-                phantom: PhantomData,
-            },
-        )?;
-        Ok(RangeInclusive::new(start, end))
-    }
-}
-||||||| merged common ancestors
-        impl<'de> Deserialize<'de> for Field {
-            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-            where
-                D: Deserializer<'de>,
-            {
-                struct FieldVisitor;
-=======
         impl<'de> Deserialize<'de> for Field {
             #[inline]
             fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
@@ -2450,18 +2291,10 @@ where
                 D: Deserializer<'de>,
             {
                 struct FieldVisitor;
->>>>>>> upstream-releases
 
-mod range {
-    use lib::*;
+                impl<'de> Visitor<'de> for FieldVisitor {
+                    type Value = Field;
 
-<<<<<<< HEAD
-    use de::{Deserialize, Deserializer, Error, MapAccess, SeqAccess, Visitor};
-||||||| merged common ancestors
-                    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                        formatter.write_str("`start` or `end`")
-                    }
-=======
                     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
                         formatter.write_str("`Unbounded`, `Included` or `Excluded`")
                     }
@@ -2480,53 +2313,7 @@ mod range {
                             )),
                         }
                     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    pub const FIELDS: &'static [&'static str] = &["start", "end"];
-
-    // If this were outside of the serde crate, it would just use:
-    //
-    //    #[derive(Deserialize)]
-    //    #[serde(field_identifier, rename_all = "lowercase")]
-    enum Field {
-        Start,
-        End,
-    }
-
-    impl<'de> Deserialize<'de> for Field {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            struct FieldVisitor;
-
-            impl<'de> Visitor<'de> for FieldVisitor {
-                type Value = Field;
-
-                fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                    formatter.write_str("`start` or `end`")
-                }
-
-                fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
-                where
-                    E: Error,
-                {
-                    match value {
-                        "start" => Ok(Field::Start),
-                        "end" => Ok(Field::End),
-                        _ => Err(Error::unknown_field(value, FIELDS)),
-||||||| merged common ancestors
-                    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
-                    where
-                        E: Error,
-                    {
-                        match value {
-                            "start" => Ok(Field::Start),
-                            "end" => Ok(Field::End),
-                            _ => Err(Error::unknown_field(value, FIELDS)),
-                        }
-=======
                     fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
                     where
                         E: Error,
@@ -2537,34 +2324,8 @@ mod range {
                             "Excluded" => Ok(Field::Excluded),
                             _ => Err(Error::unknown_variant(value, VARIANTS)),
                         }
->>>>>>> upstream-releases
                     }
-                }
 
-<<<<<<< HEAD
-                fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E>
-                where
-                    E: Error,
-                {
-                    match value {
-                        b"start" => Ok(Field::Start),
-                        b"end" => Ok(Field::End),
-                        _ => {
-                            let value = ::export::from_utf8_lossy(value);
-                            Err(Error::unknown_field(&value, FIELDS))
-||||||| merged common ancestors
-                    fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E>
-                    where
-                        E: Error,
-                    {
-                        match value {
-                            b"start" => Ok(Field::Start),
-                            b"end" => Ok(Field::End),
-                            _ => {
-                                let value = String::from_utf8_lossy(value);
-                                Err(Error::unknown_field(&value, FIELDS))
-                            }
-=======
                     fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E>
                     where
                         E: Error,
@@ -2579,139 +2340,20 @@ mod range {
                                     Err(Error::invalid_value(Unexpected::Bytes(value), &self))
                                 }
                             },
->>>>>>> upstream-releases
                         }
                     }
                 }
+
+                deserializer.deserialize_identifier(FieldVisitor)
             }
-
-            deserializer.deserialize_identifier(FieldVisitor)
         }
-    }
 
-    pub struct RangeVisitor<Idx> {
-        pub expecting: &'static str,
-        pub phantom: PhantomData<Idx>,
-    }
-
-    impl<'de, Idx> Visitor<'de> for RangeVisitor<Idx>
-    where
-        Idx: Deserialize<'de>,
-    {
-        type Value = (Idx, Idx);
-
-<<<<<<< HEAD
-        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-            formatter.write_str(self.expecting)
-        }
-||||||| merged common ancestors
-        struct RangeVisitor<Idx> {
-            phantom: PhantomData<Idx>,
-        }
-=======
         struct BoundVisitor<T>(PhantomData<Bound<T>>);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-||||||| merged common ancestors
-        impl<'de, Idx> Visitor<'de> for RangeVisitor<Idx>
-=======
         impl<'de, T> Visitor<'de> for BoundVisitor<T>
->>>>>>> upstream-releases
         where
-<<<<<<< HEAD
-            A: SeqAccess<'de>,
-||||||| merged common ancestors
-            Idx: Deserialize<'de>,
-=======
             T: Deserialize<'de>,
->>>>>>> upstream-releases
         {
-<<<<<<< HEAD
-            let start: Idx = match try!(seq.next_element()) {
-                Some(value) => value,
-                None => {
-                    return Err(Error::invalid_length(0, &self));
-                }
-            };
-            let end: Idx = match try!(seq.next_element()) {
-                Some(value) => value,
-                None => {
-                    return Err(Error::invalid_length(1, &self));
-                }
-            };
-            Ok((start, end))
-        }
-
-        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
-        where
-            A: MapAccess<'de>,
-        {
-            let mut start: Option<Idx> = None;
-            let mut end: Option<Idx> = None;
-            while let Some(key) = try!(map.next_key()) {
-                match key {
-                    Field::Start => {
-                        if start.is_some() {
-                            return Err(<A::Error as Error>::duplicate_field("start"));
-                        }
-                        start = Some(try!(map.next_value()));
-                    }
-                    Field::End => {
-                        if end.is_some() {
-                            return Err(<A::Error as Error>::duplicate_field("end"));
-                        }
-                        end = Some(try!(map.next_value()));
-                    }
-||||||| merged common ancestors
-            type Value = ops::Range<Idx>;
-
-            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("struct Range")
-            }
-
-            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-            where
-                A: SeqAccess<'de>,
-            {
-                let start: Idx = match try!(seq.next_element()) {
-                    Some(value) => value,
-                    None => {
-                        return Err(Error::invalid_length(0, &self));
-                    }
-                };
-                let end: Idx = match try!(seq.next_element()) {
-                    Some(value) => value,
-                    None => {
-                        return Err(Error::invalid_length(1, &self));
-                    }
-                };
-                Ok(start..end)
-            }
-
-            fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
-            where
-                A: MapAccess<'de>,
-            {
-                let mut start: Option<Idx> = None;
-                let mut end: Option<Idx> = None;
-                while let Some(key) = try!(map.next_key()) {
-                    match key {
-                        Field::Start => {
-                            if start.is_some() {
-                                return Err(<A::Error as Error>::duplicate_field("start"));
-                            }
-                            start = Some(try!(map.next_value()));
-                        }
-                        Field::End => {
-                            if end.is_some() {
-                                return Err(<A::Error as Error>::duplicate_field("end"));
-                            }
-                            end = Some(try!(map.next_value()));
-                        }
-                    }
-=======
             type Value = Bound<T>;
 
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -2726,36 +2368,13 @@ mod range {
                     (Field::Unbounded, v) => v.unit_variant().map(|()| Bound::Unbounded),
                     (Field::Included, v) => v.newtype_variant().map(Bound::Included),
                     (Field::Excluded, v) => v.newtype_variant().map(Bound::Excluded),
->>>>>>> upstream-releases
                 }
             }
-            let start = match start {
-                Some(start) => start,
-                None => return Err(<A::Error as Error>::missing_field("start")),
-            };
-            let end = match end {
-                Some(end) => end,
-                None => return Err(<A::Error as Error>::missing_field("end")),
-            };
-            Ok((start, end))
         }
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-        const FIELDS: &'static [&'static str] = &["start", "end"];
-        deserializer.deserialize_struct(
-            "Range",
-            FIELDS,
-            RangeVisitor {
-                phantom: PhantomData,
-            },
-        )
-=======
 
         const VARIANTS: &'static [&'static str] = &["Unbounded", "Included", "Excluded"];
 
         deserializer.deserialize_enum("Bound", VARIANTS, BoundVisitor(PhantomData))
->>>>>>> upstream-releases
     }
 }
 

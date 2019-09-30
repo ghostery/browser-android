@@ -1,9 +1,4 @@
-<<<<<<< HEAD:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/usage/nested-arrow-assignment-expression-eval-script-code-host-resolves-module-code.js
-||||||| merged common ancestors
-// |reftest| skip -- dynamic-import is not supported
-=======
 // |reftest| skip-if(!xulRuntime.shell) -- dynamic-import is not enabled unconditionally
->>>>>>> upstream-releases:mozilla-release/js/src/tests/test262/language/expressions/dynamic-import/usage/nested-arrow-assignment-expression-eval-script-code-host-resolves-module-code.js
 // This file was procedurally generated from the following sources:
 // - src/dynamic-import/eval-script-code-host-resolves-module-code.case
 // - src/dynamic-import/default/nested-arrow-assign-expr.template

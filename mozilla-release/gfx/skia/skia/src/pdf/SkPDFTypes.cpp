@@ -11,13 +11,8 @@
 #include "SkDeflate.h"
 #include "SkExecutor.h"
 #include "SkMakeUnique.h"
-<<<<<<< HEAD
-||||||| merged common ancestors
-#include "SkPDFTypes.h"
-=======
 #include "SkPDFDocumentPriv.h"
 #include "SkPDFUnion.h"
->>>>>>> upstream-releases
 #include "SkPDFUtils.h"
 #include "SkStream.h"
 #include "SkStreamPriv.h"
@@ -122,59 +117,6 @@ static void write_name_escaped(SkWStream* o, const char* name) {
     }
 }
 
-<<<<<<< HEAD
-static void write_string(SkWStream* wStream, const char* cin, size_t len) {
-    SkDEBUGCODE(static const size_t kMaxLen = 65535;)
-    SkASSERT(len <= kMaxLen);
-
-    size_t extraCharacterCount = 0;
-    for (size_t i = 0; i < len; i++) {
-        if (cin[i] > '~' || cin[i] < ' ') {
-            extraCharacterCount += 3;
-        } else if (cin[i] == '\\' || cin[i] == '(' || cin[i] == ')') {
-            ++extraCharacterCount;
-        }
-    }
-    if (extraCharacterCount <= len) {
-        wStream->writeText("(");
-        for (size_t i = 0; i < len; i++) {
-            if (cin[i] > '~' || cin[i] < ' ') {
-                uint8_t c = static_cast<uint8_t>(cin[i]);
-                uint8_t octal[4] = { '\\',
-                                     (uint8_t)('0' | ( c >> 6        )),
-                                     (uint8_t)('0' | ((c >> 3) & 0x07)),
-                                     (uint8_t)('0' | ( c       & 0x07)) };
-                wStream->write(octal, 4);
-            } else {
-                if (cin[i] == '\\' || cin[i] == '(' || cin[i] == ')') {
-                    wStream->writeText("\\");
-                }
-                wStream->write(&cin[i], 1);
-            }
-        }
-        wStream->writeText(")");
-    } else {
-        wStream->writeText("<");
-        for (size_t i = 0; i < len; i++) {
-            uint8_t c = static_cast<uint8_t>(cin[i]);
-            char hexValue[2] = { SkHexadecimalDigits::gUpper[c >> 4],
-                                 SkHexadecimalDigits::gUpper[c & 0xF] };
-            wStream->write(hexValue, 2);
-        }
-        wStream->writeText(">");
-    }
-}
-
-void SkPDFWriteString(SkWStream* wStream, const char* cin, size_t len) {
-    write_string(wStream, cin, len);
-}
-
-void SkPDFUnion::emitObject(SkWStream* stream,
-                            const SkPDFObjNumMap& objNumMap) const {
-||||||| merged common ancestors
-void SkPDFUnion::emitObject(SkWStream* stream,
-                            const SkPDFObjNumMap& objNumMap) const {
-=======
 static void write_string(SkWStream* wStream, const char* cin, size_t len) {
     SkDEBUGCODE(static const size_t kMaxLen = 65535;)
     SkASSERT(len <= kMaxLen);
@@ -222,7 +164,6 @@ void SkPDFWriteString(SkWStream* wStream, const char* cin, size_t len) {
 }
 
 void SkPDFUnion::emitObject(SkWStream* stream) const {
->>>>>>> upstream-releases
     switch (fType) {
         case Type::kInt:
             stream->writeDecAsText(fIntValue);
@@ -253,22 +194,7 @@ void SkPDFUnion::emitObject(SkWStream* stream) const {
             write_name_escaped(stream, fSkString.get().c_str());
             return;
         case Type::kStringSkS:
-<<<<<<< HEAD
             write_string(stream, fSkString.get().c_str(), fSkString.get().size());
-            return;
-        case Type::kObjRef:
-            stream->writeDecAsText(objNumMap.getObjectNumber(fObject));
-            stream->writeText(" 0 R");  // Generation number is always 0.
-||||||| merged common ancestors
-            SkPDFUtils::WriteString(stream, pun(fSkString)->c_str(),
-                                    pun(fSkString)->size());
-            return;
-        case Type::kObjRef:
-            stream->writeDecAsText(objNumMap.getObjectNumber(fObject));
-            stream->writeText(" 0 R");  // Generation number is always 0.
-=======
-            write_string(stream, fSkString.get().c_str(), fSkString.get().size());
->>>>>>> upstream-releases
             return;
         case Type::kObject:
             fObject->emitObject(stream);
@@ -316,37 +242,9 @@ SkPDFUnion SkPDFUnion::String(const char* value) {
     return u;
 }
 
-<<<<<<< HEAD
-SkPDFUnion SkPDFUnion::Name(const SkString& s) {
-    SkPDFUnion u(Type::kNameSkS);
-    u.fSkString.init(s);
-    return u;
-}
-||||||| merged common ancestors
-SkPDFUnion SkPDFUnion::Name(const SkString& s) {
-    SkPDFUnion u(Type::kNameSkS);
-    new (pun(u.fSkString)) SkString(s);
-    return u;
-}
-=======
 SkPDFUnion SkPDFUnion::Name(SkString s) { return SkPDFUnion(Type::kNameSkS, std::move(s)); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-SkPDFUnion SkPDFUnion::String(const SkString& s) {
-    SkPDFUnion u(Type::kStringSkS);
-    u.fSkString.init(s);
-    return u;
-}
-||||||| merged common ancestors
-SkPDFUnion SkPDFUnion::String(const SkString& s) {
-    SkPDFUnion u(Type::kStringSkS);
-    new (pun(u.fSkString)) SkString(s);
-    return u;
-}
-=======
 SkPDFUnion SkPDFUnion::String(SkString s) { return SkPDFUnion(Type::kStringSkS, std::move(s)); }
->>>>>>> upstream-releases
 
 SkPDFUnion SkPDFUnion::Object(std::unique_ptr<SkPDFObject> objSp) {
     SkPDFUnion u(Type::kObject);
@@ -371,19 +269,7 @@ void SkPDFAtom::emitObject(SkWStream* stream) const {
 
 SkPDFArray::SkPDFArray() {}
 
-<<<<<<< HEAD
-void SkPDFArray::drop() {
-    fValues = std::vector<SkPDFUnion>();
-    SkDEBUGCODE(fDumped = true;)
-}
-||||||| merged common ancestors
-void SkPDFArray::drop() {
-    fValues.reset();
-    SkDEBUGCODE(fDumped = true;)
-}
-=======
 SkPDFArray::~SkPDFArray() {}
->>>>>>> upstream-releases
 
 size_t SkPDFArray::size() const { return fValues.size(); }
 
@@ -393,19 +279,9 @@ void SkPDFArray::reserve(int length) {
 
 void SkPDFArray::emitObject(SkWStream* stream) const {
     stream->writeText("[");
-<<<<<<< HEAD
-    for (size_t i = 0; i < fValues.size(); i++) {
-        fValues[i].emitObject(stream, objNumMap);
-        if (i + 1 < fValues.size()) {
-||||||| merged common ancestors
-    for (int i = 0; i < fValues.count(); i++) {
-        fValues[i].emitObject(stream, objNumMap);
-        if (i + 1 < fValues.count()) {
-=======
     for (size_t i = 0; i < fValues.size(); i++) {
         fValues[i].emitObject(stream);
         if (i + 1 < fValues.size()) {
->>>>>>> upstream-releases
             stream->writeText(" ");
         }
     }
@@ -458,23 +334,7 @@ void SkPDFArray::appendRef(SkPDFIndirectReference ref) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-SkPDFDict::~SkPDFDict() { this->drop(); }
-
-void SkPDFDict::drop() {
-    fRecords = std::vector<SkPDFDict::Record>();
-    SkDEBUGCODE(fDumped = true;)
-}
-||||||| merged common ancestors
-SkPDFDict::~SkPDFDict() { this->drop(); }
-
-void SkPDFDict::drop() {
-    fRecords.reset();
-    SkDEBUGCODE(fDumped = true;)
-}
-=======
 SkPDFDict::~SkPDFDict() {}
->>>>>>> upstream-releases
 
 SkPDFDict::SkPDFDict(const char type[]) {
     if (type) {
@@ -484,71 +344,19 @@ SkPDFDict::SkPDFDict(const char type[]) {
 
 void SkPDFDict::emitObject(SkWStream* stream) const {
     stream->writeText("<<");
-<<<<<<< HEAD
-    this->emitAll(stream, objNumMap);
-    stream->writeText(">>");
-}
-
-void SkPDFDict::emitAll(SkWStream* stream,
-                        const SkPDFObjNumMap& objNumMap) const {
-    SkASSERT(!fDumped);
-    for (size_t i = 0; i < fRecords.size(); i++) {
-        fRecords[i].fKey.emitObject(stream, objNumMap);
-||||||| merged common ancestors
-    this->emitAll(stream, objNumMap);
-    stream->writeText(">>");
-}
-
-void SkPDFDict::emitAll(SkWStream* stream,
-                        const SkPDFObjNumMap& objNumMap) const {
-    SkASSERT(!fDumped);
-    for (int i = 0; i < fRecords.count(); i++) {
-        fRecords[i].fKey.emitObject(stream, objNumMap);
-=======
     for (size_t i = 0; i < fRecords.size(); ++i) {
         const std::pair<SkPDFUnion, SkPDFUnion>& record = fRecords[i];
         record.first.emitObject(stream);
->>>>>>> upstream-releases
         stream->writeText(" ");
-<<<<<<< HEAD
-        fRecords[i].fValue.emitObject(stream, objNumMap);
-        if (i + 1 < fRecords.size()) {
-||||||| merged common ancestors
-        fRecords[i].fValue.emitObject(stream, objNumMap);
-        if (i + 1 < fRecords.count()) {
-=======
         record.second.emitObject(stream);
         if (i + 1 < fRecords.size()) {
->>>>>>> upstream-releases
             stream->writeText("\n");
         }
     }
     stream->writeText(">>");
 }
 
-<<<<<<< HEAD
-void SkPDFDict::addResources(SkPDFObjNumMap* catalog) const {
-    SkASSERT(!fDumped);
-    for (size_t i = 0; i < fRecords.size(); i++) {
-        fRecords[i].fKey.addResources(catalog);
-        fRecords[i].fValue.addResources(catalog);
-    }
-}
-
 size_t SkPDFDict::size() const { return fRecords.size(); }
-||||||| merged common ancestors
-void SkPDFDict::addResources(SkPDFObjNumMap* catalog) const {
-    SkASSERT(!fDumped);
-    for (int i = 0; i < fRecords.count(); i++) {
-        fRecords[i].fKey.addResources(catalog);
-        fRecords[i].fValue.addResources(catalog);
-    }
-}
-
-int SkPDFDict::size() const { return fRecords.count(); }
-=======
-size_t SkPDFDict::size() const { return fRecords.size(); }
->>>>>>> upstream-releases
 
 void SkPDFDict::reserve(int n) {
     fRecords.reserve(n);
@@ -673,78 +481,6 @@ SkPDFIndirectReference SkPDFStreamOut(std::unique_ptr<SkPDFDict> dict,
         });
         return ref;
     }
-<<<<<<< HEAD
-    fCompressedData = compressedData.detachAsStream();
-    fDict.insertName("Filter", "FlateDecode");
-    fDict.insertInt("Length", compressedLength);
-    #endif
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void SkPDFObjNumMap::addObjectRecursively(SkPDFObject* obj) {
-    if (obj && !fObjectNumbers.find(obj)) {
-        fObjectNumbers.set(obj, fObjectNumbers.count() + 1);
-        fObjects.emplace_back(sk_ref_sp(obj));
-        obj->addResources(this);
-    }
-}
-
-int32_t SkPDFObjNumMap::getObjectNumber(SkPDFObject* obj) const {
-    int32_t* objectNumberFound = fObjectNumbers.find(obj);
-    SkASSERT(objectNumberFound);
-    return *objectNumberFound;
-}
-
-#ifdef SK_PDF_IMAGE_STATS
-std::atomic<int> gDrawImageCalls(0);
-std::atomic<int> gJpegImageObjects(0);
-std::atomic<int> gRegularImageObjects(0);
-
-void SkPDFImageDumpStats() {
-    SkDebugf("\ntotal PDF drawImage/drawBitmap calls: %d\n"
-             "total PDF jpeg images: %d\n"
-             "total PDF regular images: %d\n",
-             gDrawImageCalls.load(),
-             gJpegImageObjects.load(),
-             gRegularImageObjects.load());
-||||||| merged common ancestors
-    fCompressedData = compressedData.detachAsStream();
-    fDict.insertName("Filter", "FlateDecode");
-    fDict.insertInt("Length", compressedLength);
-    #endif
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void SkPDFObjNumMap::addObjectRecursively(SkPDFObject* obj) {
-    if (obj && !fObjectNumbers.find(obj)) {
-        fObjectNumbers.set(obj, fObjectNumbers.count() + 1);
-        fObjects.emplace_back(sk_ref_sp(obj));
-        obj->addResources(this);
-    }
-}
-
-int32_t SkPDFObjNumMap::getObjectNumber(SkPDFObject* obj) const {
-    int32_t* objectNumberFound = fObjectNumbers.find(obj);
-    SkASSERT(objectNumberFound);
-    return *objectNumberFound;
-}
-
-#ifdef SK_PDF_IMAGE_STATS
-SkAtomic<int> gDrawImageCalls(0);
-SkAtomic<int> gJpegImageObjects(0);
-SkAtomic<int> gRegularImageObjects(0);
-
-void SkPDFImageDumpStats() {
-    SkDebugf("\ntotal PDF drawImage/drawBitmap calls: %d\n"
-             "total PDF jpeg images: %d\n"
-             "total PDF regular images: %d\n",
-             gDrawImageCalls.load(),
-             gJpegImageObjects.load(),
-             gRegularImageObjects.load());
-=======
     serialize_stream(dict.get(), content.get(), deflate, doc, ref);
     return ref;
->>>>>>> upstream-releases
 }

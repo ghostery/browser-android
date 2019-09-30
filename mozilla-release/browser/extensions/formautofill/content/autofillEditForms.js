@@ -194,14 +194,6 @@ class EditAddress extends EditAutofillForm {
     this.formatForm(record.country);
   }
 
-<<<<<<< HEAD
-  get hasMailingAddressFields() {
-    let {addressFields} = this._elements.form.dataset;
-    return !addressFields || addressFields.trim().split(/\s+/).includes("mailing-address");
-  }
-
-||||||| merged common ancestors
-=======
   get hasMailingAddressFields() {
     let { addressFields } = this._elements.form.dataset;
     return (
@@ -213,7 +205,6 @@ class EditAddress extends EditAutofillForm {
     );
   }
 
->>>>>>> upstream-releases
   /**
    * `mailing-address` is a special attribute token to indicate mailing fields + country.
    *
@@ -280,20 +271,6 @@ class EditAddress extends EditAutofillForm {
     this._elements.addressLevel1Label.dataset.localization = addressLevel1Label;
     this._elements.postalCodeLabel.dataset.localization = postalCodeLabel;
     let addressFields = this._elements.form.dataset.addressFields;
-<<<<<<< HEAD
-    let extraRequiredFields = this._elements.form.dataset.extraRequiredFields;
-    let fieldClasses = EditAddress.computeVisibleFields(mailingFieldsOrder, addressFields);
-    let requiredFields = new Set(countryRequiredFields);
-    if (extraRequiredFields) {
-      for (let extraRequiredField of extraRequiredFields.trim().split(/\s+/)) {
-        requiredFields.add(extraRequiredField);
-      }
-    }
-    this.arrangeFields(fieldClasses, requiredFields);
-||||||| merged common ancestors
-    let fieldClasses = EditAddress.computeVisibleFields(mailingFieldsOrder, addressFields);
-    this.arrangeFields(fieldClasses);
-=======
     let extraRequiredFields = this._elements.form.dataset.extraRequiredFields;
     let fieldClasses = EditAddress.computeVisibleFields(
       mailingFieldsOrder,
@@ -306,7 +283,6 @@ class EditAddress extends EditAutofillForm {
       }
     }
     this.arrangeFields(fieldClasses, requiredFields);
->>>>>>> upstream-releases
     this.updatePostalCodeValidation(postalCodePattern);
     this.populateAddressLevel1(addressLevel1Options, country);
   }
@@ -336,26 +312,6 @@ class EditAddress extends EditAutofillForm {
     ];
     let inputs = [];
     for (let i = 0; i < fieldsOrder.length; i++) {
-<<<<<<< HEAD
-      let {fieldId, newLine} = fieldsOrder[i];
-
-      let container = this._elements.form.querySelector(`#${fieldId}-container`);
-      let containerInputs = [...container.querySelectorAll("input, textarea, select")];
-      containerInputs.forEach(function(input) {
-        input.disabled = false;
-        // libaddressinput doesn't list 'country' or 'name' as required.
-        // The additional-name field should never get marked as required.
-        input.required = (fieldId == "country" ||
-                          fieldId == "name" ||
-                          requiredFields.has(fieldId)) &&
-                         input.id != "additional-name";
-      });
-||||||| merged common ancestors
-      let {fieldId, newLine} = fieldsOrder[i];
-      let container = this._elements.form.querySelector(`#${fieldId}-container`);
-      let containerInputs = [...container.querySelectorAll("input, textarea, select")];
-      containerInputs.forEach(function(input) { input.disabled = false; });
-=======
       let { fieldId, newLine } = fieldsOrder[i];
 
       let container = this._elements.form.querySelector(
@@ -374,7 +330,6 @@ class EditAddress extends EditAutofillForm {
             requiredFields.has(fieldId)) &&
           input.id != "additional-name";
       });
->>>>>>> upstream-releases
       inputs.push(...containerInputs);
       container.style.display = "flex";
       container.style.order = i;
@@ -582,28 +537,6 @@ class EditCreditCard extends EditAutofillForm {
     let dateFormat = new Intl.DateTimeFormat(navigator.language, {
       month: "long",
     }).format;
-    for (let i = 0; i < count; i++) {
-      let monthNumber = (i + 1).toString();
-      let monthName = dateFormat(new Date(1970, i));
-      let option = new Option();
-      option.value = monthNumber;
-      // XXX: Bug 1446164 - Localize this string.
-      option.textContent = `${monthNumber.padStart(2, "0")} - ${monthName}`;
-      this._elements.month.appendChild(option);
-    }
-  }
-
-  generateMonths() {
-    const count = 12;
-
-    // Clear the list
-    this._elements.month.textContent = "";
-
-    // Empty month option
-    this._elements.month.appendChild(new Option());
-
-    // Populate month list. Format: "month number - month name"
-    let dateFormat = new Intl.DateTimeFormat(navigator.language, {month: "long"}).format;
     for (let i = 0; i < count; i++) {
       let monthNumber = (i + 1).toString();
       let monthName = dateFormat(new Date(1970, i));

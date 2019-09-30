@@ -58,20 +58,8 @@ class nsProfiler final : public nsIProfiler, public nsIObserver {
   void FinishGathering();
   void ResetGathering();
 
-<<<<<<< HEAD
-  void ClearExpiredExitProfiles();
-
   RefPtr<SymbolTablePromise> GetSymbolTableMozPromise(
       const nsACString& aDebugPath, const nsACString& aBreakpadID);
-||||||| merged common ancestors
-  void ClearExpiredExitProfiles();
-
-  RefPtr<SymbolTablePromise> GetSymbolTableMozPromise(const nsACString& aDebugPath,
-                                                      const nsACString& aBreakpadID);
-=======
-  RefPtr<SymbolTablePromise> GetSymbolTableMozPromise(
-      const nsACString& aDebugPath, const nsACString& aBreakpadID);
->>>>>>> upstream-releases
 
   bool mLockedForPrivateBrowsing;
 

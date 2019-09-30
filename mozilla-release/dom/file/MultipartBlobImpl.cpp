@@ -22,23 +22,10 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MultipartBlobImpl> MultipartBlobImpl::Create(
-    nsTArray<RefPtr<BlobImpl>>&& aBlobImpls, const nsAString& aName,
-    const nsAString& aContentType, ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MultipartBlobImpl>
-MultipartBlobImpl::Create(nsTArray<RefPtr<BlobImpl>>&& aBlobImpls,
-                          const nsAString& aName,
-                          const nsAString& aContentType,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MultipartBlobImpl> MultipartBlobImpl::Create(
     nsTArray<RefPtr<BlobImpl>>&& aBlobImpls, const nsAString& aName,
     const nsAString& aContentType, ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<MultipartBlobImpl> blobImpl =
       new MultipartBlobImpl(std::move(aBlobImpls), aName, aContentType);
   blobImpl->SetLengthAndModifiedDate(aRv);
@@ -49,22 +36,10 @@ already_AddRefed<MultipartBlobImpl> MultipartBlobImpl::Create(
   return blobImpl.forget();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<MultipartBlobImpl> MultipartBlobImpl::Create(
-    nsTArray<RefPtr<BlobImpl>>&& aBlobImpls, const nsAString& aContentType,
-    ErrorResult& aRv) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<MultipartBlobImpl>
-MultipartBlobImpl::Create(nsTArray<RefPtr<BlobImpl>>&& aBlobImpls,
-                          const nsAString& aContentType,
-                          ErrorResult& aRv)
-{
-=======
 /* static */
 already_AddRefed<MultipartBlobImpl> MultipartBlobImpl::Create(
     nsTArray<RefPtr<BlobImpl>>&& aBlobImpls, const nsAString& aContentType,
     ErrorResult& aRv) {
->>>>>>> upstream-releases
   RefPtr<MultipartBlobImpl> blobImpl =
       new MultipartBlobImpl(std::move(aBlobImpls), aContentType);
   blobImpl->SetLengthAndModifiedDate(aRv);
@@ -293,48 +268,9 @@ void MultipartBlobImpl::SetLengthAndModifiedDate(ErrorResult& aRv) {
     //   x.getTime() < f.dateModified.getTime()
     // could fail.
     mLastModificationDate = nsRFPService::ReduceTimePrecisionAsUSecs(
-<<<<<<< HEAD
         lastModifiedSet ? lastModified * PR_USEC_PER_MSEC : JS_Now(), 0);
     // mLastModificationDate is an absolute timestamp so we supply a zero
     // context mix-in
-  }
-}
-
-void MultipartBlobImpl::GetMozFullPathInternal(nsAString& aFilename,
-                                               ErrorResult& aRv) const {
-  if (!mIsFromNsIFile || mBlobImpls.Length() == 0) {
-    BaseBlobImpl::GetMozFullPathInternal(aFilename, aRv);
-    return;
-  }
-
-  BlobImpl* blobImpl = mBlobImpls.ElementAt(0).get();
-  if (!blobImpl) {
-    BaseBlobImpl::GetMozFullPathInternal(aFilename, aRv);
-    return;
-||||||| merged common ancestors
-      lastModifiedSet ? lastModified * PR_USEC_PER_MSEC : JS_Now(), 0);
-    // mLastModificationDate is an absolute timestamp so we supply a zero context mix-in
-  }
-}
-
-void
-MultipartBlobImpl::GetMozFullPathInternal(nsAString& aFilename,
-                                          ErrorResult& aRv) const
-{
-  if (!mIsFromNsIFile || mBlobImpls.Length() == 0) {
-    BaseBlobImpl::GetMozFullPathInternal(aFilename, aRv);
-    return;
-  }
-
-  BlobImpl* blobImpl = mBlobImpls.ElementAt(0).get();
-  if (!blobImpl) {
-    BaseBlobImpl::GetMozFullPathInternal(aFilename, aRv);
-    return;
-=======
-        lastModifiedSet ? lastModified * PR_USEC_PER_MSEC : JS_Now(), 0);
-    // mLastModificationDate is an absolute timestamp so we supply a zero
-    // context mix-in
->>>>>>> upstream-releases
   }
 }
 
@@ -365,172 +301,7 @@ nsresult MultipartBlobImpl::SetMutable(bool aMutable) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult MultipartBlobImpl::InitializeChromeFile(
-    nsIFile* aFile, const nsAString& aType, const nsAString& aName,
-    bool aLastModifiedPassed, int64_t aLastModified, bool aIsFromNsIFile) {
-  MOZ_ASSERT(!mImmutable, "Something went wrong ...");
-  if (mImmutable) {
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  mName = aName;
-  mContentType = aType;
-  mIsFromNsIFile = aIsFromNsIFile;
-
-  bool exists;
-  nsresult rv = aFile->Exists(&exists);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  if (!exists) {
-    return NS_ERROR_FILE_NOT_FOUND;
-  }
-
-  bool isDir;
-  rv = aFile->IsDirectory(&isDir);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  if (isDir) {
-    return NS_ERROR_FILE_IS_DIRECTORY;
-  }
-
-  if (mName.IsEmpty()) {
-    aFile->GetLeafName(mName);
-  }
-
-  RefPtr<File> blob = File::CreateFromFile(nullptr, aFile);
-
-  // Pre-cache size.
-  ErrorResult error;
-  blob->GetSize(error);
-  if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
-  }
-
-  // Pre-cache modified date.
-  blob->GetLastModified(error);
-  if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
-  }
-
-  // XXXkhuey this is terrible
-  if (mContentType.IsEmpty()) {
-    blob->GetType(mContentType);
-  }
-
-  BlobSet blobSet;
-  rv = blobSet.AppendBlobImpl(static_cast<File*>(blob.get())->Impl());
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  mBlobImpls = blobSet.GetBlobImpls();
-
-  SetLengthAndModifiedDate(error);
-  if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
-  }
-
-  if (aLastModifiedPassed) {
-    SetLastModified(aLastModified);
-  }
-
-  return NS_OK;
-}
-
 bool MultipartBlobImpl::MayBeClonedToOtherThreads() const {
-||||||| merged common ancestors
-nsresult
-MultipartBlobImpl::InitializeChromeFile(nsIFile* aFile,
-                                        const nsAString& aType,
-                                        const nsAString& aName,
-                                        bool aLastModifiedPassed,
-                                        int64_t aLastModified,
-                                        bool aIsFromNsIFile)
-{
-  MOZ_ASSERT(!mImmutable, "Something went wrong ...");
-  if (mImmutable) {
-    return NS_ERROR_UNEXPECTED;
-  }
-
-  mName = aName;
-  mContentType = aType;
-  mIsFromNsIFile = aIsFromNsIFile;
-
-  bool exists;
-  nsresult rv= aFile->Exists(&exists);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  if (!exists) {
-    return NS_ERROR_FILE_NOT_FOUND;
-  }
-
-  bool isDir;
-  rv = aFile->IsDirectory(&isDir);
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  if (isDir) {
-    return NS_ERROR_FILE_IS_DIRECTORY;
-  }
-
-  if (mName.IsEmpty()) {
-    aFile->GetLeafName(mName);
-  }
-
-  RefPtr<File> blob = File::CreateFromFile(nullptr, aFile);
-
-  // Pre-cache size.
-  ErrorResult error;
-  blob->GetSize(error);
-  if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
-  }
-
-  // Pre-cache modified date.
-  blob->GetLastModified(error);
-  if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
-  }
-
-  // XXXkhuey this is terrible
-  if (mContentType.IsEmpty()) {
-    blob->GetType(mContentType);
-  }
-
-  BlobSet blobSet;
-  rv = blobSet.AppendBlobImpl(static_cast<File*>(blob.get())->Impl());
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-
-  mBlobImpls = blobSet.GetBlobImpls();
-
-  SetLengthAndModifiedDate(error);
-  if (NS_WARN_IF(error.Failed())) {
-    return error.StealNSResult();
-  }
-
-  if (aLastModifiedPassed) {
-    SetLastModified(aLastModified);
-  }
-
-  return NS_OK;
-}
-
-bool
-MultipartBlobImpl::MayBeClonedToOtherThreads() const
-{
-=======
-bool MultipartBlobImpl::MayBeClonedToOtherThreads() const {
->>>>>>> upstream-releases
   for (uint32_t i = 0; i < mBlobImpls.Length(); ++i) {
     if (!mBlobImpls[i]->MayBeClonedToOtherThreads()) {
       return false;

@@ -17,13 +17,8 @@
 #include "ast/SkSLASTFloatLiteral.h"
 #include "ast/SkSLASTIndexSuffix.h"
 #include "ast/SkSLASTIntLiteral.h"
-<<<<<<< HEAD
-#include "ir/SkSLAppendStage.h"
-||||||| merged common ancestors
-=======
 #include "ast/SkSLASTNullLiteral.h"
 #include "ir/SkSLAppendStage.h"
->>>>>>> upstream-releases
 #include "ir/SkSLBinaryExpression.h"
 #include "ir/SkSLBoolLiteral.h"
 #include "ir/SkSLBreakStatement.h"
@@ -700,29 +695,6 @@ void IRGenerator::convertFunction(const ASTFunction& f) {
         parameters.push_back(var);
     }
 
-<<<<<<< HEAD
-    if (f.fName == "main") {
-        if (fKind == Program::kPipelineStage_Kind) {
-            bool valid = parameters.size() == 3 &&
-                         parameters[0]->fType == *fContext.fInt_Type &&
-                         parameters[0]->fModifiers.fFlags == 0 &&
-                         parameters[1]->fType == *fContext.fInt_Type &&
-                         parameters[1]->fModifiers.fFlags == 0 &&
-                         parameters[2]->fType == *fContext.fHalf4_Type &&
-                         parameters[2]->fModifiers.fFlags == (Modifiers::kIn_Flag |
-                                                              Modifiers::kOut_Flag);
-            if (!valid) {
-                fErrors.error(f.fOffset, "pipeline stage 'main' must be declared main(int, "
-                                         "int, inout half4)");
-                return;
-            }
-        } else if (parameters.size()) {
-            fErrors.error(f.fOffset, "shader 'main' must have zero parameters");
-        }
-    }
-
-||||||| merged common ancestors
-=======
     if (f.fName == "main") {
         if (fKind == Program::kPipelineStage_Kind) {
             bool valid;
@@ -754,7 +726,6 @@ void IRGenerator::convertFunction(const ASTFunction& f) {
         }
     }
 
->>>>>>> upstream-releases
     // find existing declaration
     const FunctionDeclaration* decl = nullptr;
     auto entry = (*fSymbolTable)[f.fName];
@@ -825,14 +796,6 @@ void IRGenerator::convertFunction(const ASTFunction& f) {
         decl->fDefined = true;
         std::shared_ptr<SymbolTable> old = fSymbolTable;
         AutoSymbolTable table(this);
-<<<<<<< HEAD
-        if (f.fName == "main" && fKind == Program::kPipelineStage_Kind) {
-            parameters[0]->fModifiers.fLayout.fBuiltin = SK_MAIN_X_BUILTIN;
-            parameters[1]->fModifiers.fLayout.fBuiltin = SK_MAIN_Y_BUILTIN;
-            parameters[2]->fModifiers.fLayout.fBuiltin = SK_OUTCOLOR_BUILTIN;
-        }
-||||||| merged common ancestors
-=======
         if (f.fName == "main" && fKind == Program::kPipelineStage_Kind) {
             if (parameters.size() == 3) {
                 parameters[0]->fModifiers.fLayout.fBuiltin = SK_MAIN_X_BUILTIN;
@@ -843,7 +806,6 @@ void IRGenerator::convertFunction(const ASTFunction& f) {
                 parameters[0]->fModifiers.fLayout.fBuiltin = SK_OUTCOLOR_BUILTIN;
             }
         }
->>>>>>> upstream-releases
         for (size_t i = 0; i < parameters.size(); i++) {
             fSymbolTable->addWithoutOwnership(parameters[i]->fName, decl->fParameters[i]);
         }
@@ -1176,15 +1138,6 @@ std::unique_ptr<Expression> IRGenerator::coerce(std::unique_ptr<Expression> expr
     if (type.kind() == Type::kScalar_Kind) {
         std::vector<std::unique_ptr<Expression>> args;
         args.push_back(std::move(expr));
-<<<<<<< HEAD
-        ASTIdentifier id(-1, type.fName);
-        std::unique_ptr<Expression> ctor = this->convertIdentifier(id);
-        SkASSERT(ctor);
-||||||| merged common ancestors
-        ASTIdentifier id(-1, type.fName);
-        std::unique_ptr<Expression> ctor = this->convertIdentifier(id);
-        ASSERT(ctor);
-=======
         std::unique_ptr<Expression> ctor;
         if (type == *fContext.fFloatLiteral_Type) {
             ctor = this->convertIdentifier(ASTIdentifier(-1, "float"));
@@ -1197,7 +1150,6 @@ std::unique_ptr<Expression> IRGenerator::coerce(std::unique_ptr<Expression> expr
             printf("error, null identifier: %s\n", String(type.fName).c_str());
         }
         SkASSERT(ctor);
->>>>>>> upstream-releases
         return this->call(-1, std::move(ctor), std::move(args));
     }
     if (expr->fKind == Expression::kNullLiteral_Kind) {
@@ -1651,72 +1603,6 @@ std::unique_ptr<Expression> IRGenerator::convertTernaryExpression(
                                                              std::move(ifFalse)));
 }
 
-<<<<<<< HEAD
-// scales the texture coordinates by the texture size for sampling rectangle textures.
-// For float2coordinates, implements the transformation:
-//     texture(sampler, coord) -> texture(sampler, textureSize(sampler) * coord)
-// For float3coordinates, implements the transformation:
-//     texture(sampler, coord) -> texture(sampler, float3textureSize(sampler), 1.0) * coord))
-void IRGenerator::fixRectSampling(std::vector<std::unique_ptr<Expression>>& arguments) {
-    SkASSERT(arguments.size() == 2);
-    SkASSERT(arguments[0]->fType == *fContext.fSampler2DRect_Type);
-    SkASSERT(arguments[0]->fKind == Expression::kVariableReference_Kind);
-    const Variable& sampler = ((VariableReference&) *arguments[0]).fVariable;
-    const Symbol* textureSizeSymbol = (*fSymbolTable)["textureSize"];
-    SkASSERT(textureSizeSymbol->fKind == Symbol::kFunctionDeclaration_Kind);
-    const FunctionDeclaration& textureSize = (FunctionDeclaration&) *textureSizeSymbol;
-    std::vector<std::unique_ptr<Expression>> sizeArguments;
-    sizeArguments.emplace_back(new VariableReference(-1, sampler));
-    std::unique_ptr<Expression> float2ize = call(-1, textureSize, std::move(sizeArguments));
-    const Type& type = arguments[1]->fType;
-    std::unique_ptr<Expression> scale;
-    if (type == *fContext.fFloat2_Type) {
-        scale = std::move(float2ize);
-    } else {
-        SkASSERT(type == *fContext.fFloat3_Type);
-        std::vector<std::unique_ptr<Expression>> float3rguments;
-        float3rguments.push_back(std::move(float2ize));
-        float3rguments.emplace_back(new FloatLiteral(fContext, -1, 1.0));
-        scale.reset(new Constructor(-1, *fContext.fFloat3_Type, std::move(float3rguments)));
-    }
-    arguments[1].reset(new BinaryExpression(-1, std::move(scale), Token::STAR,
-                                            std::move(arguments[1]), type));
-}
-
-||||||| merged common ancestors
-// scales the texture coordinates by the texture size for sampling rectangle textures.
-// For float2coordinates, implements the transformation:
-//     texture(sampler, coord) -> texture(sampler, textureSize(sampler) * coord)
-// For float3coordinates, implements the transformation:
-//     texture(sampler, coord) -> texture(sampler, float3textureSize(sampler), 1.0) * coord))
-void IRGenerator::fixRectSampling(std::vector<std::unique_ptr<Expression>>& arguments) {
-    ASSERT(arguments.size() == 2);
-    ASSERT(arguments[0]->fType == *fContext.fSampler2DRect_Type);
-    ASSERT(arguments[0]->fKind == Expression::kVariableReference_Kind);
-    const Variable& sampler = ((VariableReference&) *arguments[0]).fVariable;
-    const Symbol* textureSizeSymbol = (*fSymbolTable)["textureSize"];
-    ASSERT(textureSizeSymbol->fKind == Symbol::kFunctionDeclaration_Kind);
-    const FunctionDeclaration& textureSize = (FunctionDeclaration&) *textureSizeSymbol;
-    std::vector<std::unique_ptr<Expression>> sizeArguments;
-    sizeArguments.emplace_back(new VariableReference(-1, sampler));
-    std::unique_ptr<Expression> float2ize = call(-1, textureSize, std::move(sizeArguments));
-    const Type& type = arguments[1]->fType;
-    std::unique_ptr<Expression> scale;
-    if (type == *fContext.fFloat2_Type) {
-        scale = std::move(float2ize);
-    } else {
-        ASSERT(type == *fContext.fFloat3_Type);
-        std::vector<std::unique_ptr<Expression>> float3rguments;
-        float3rguments.push_back(std::move(float2ize));
-        float3rguments.emplace_back(new FloatLiteral(fContext, -1, 1.0));
-        scale.reset(new Constructor(-1, *fContext.fFloat3_Type, std::move(float3rguments)));
-    }
-    arguments[1].reset(new BinaryExpression(-1, std::move(scale), Token::STAR,
-                                            std::move(arguments[1]), type));
-}
-
-=======
->>>>>>> upstream-releases
 std::unique_ptr<Expression> IRGenerator::call(int offset,
                                               const FunctionDeclaration& function,
                                               std::vector<std::unique_ptr<Expression>> arguments) {

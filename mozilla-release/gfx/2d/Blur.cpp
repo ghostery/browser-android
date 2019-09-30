@@ -660,28 +660,6 @@ void AlphaBoxBlur::Blur(uint8_t* aData) const {
                      integralImageStride);
       } else
 #endif
-<<<<<<< HEAD
-#ifdef BUILD_ARM_NEON
-          if (mozilla::supports_neon()) {
-        BoxBlur_NEON(aData, horizontalLobes[0][0], horizontalLobes[0][1],
-                     verticalLobes[0][0], verticalLobes[0][1], integralImage,
-                     integralImageStride);
-        BoxBlur_NEON(aData, horizontalLobes[1][0], horizontalLobes[1][1],
-                     verticalLobes[1][0], verticalLobes[1][1], integralImage,
-                     integralImageStride);
-        BoxBlur_NEON(aData, horizontalLobes[2][0], horizontalLobes[2][1],
-                     verticalLobes[2][0], verticalLobes[2][1], integralImage,
-                     integralImageStride);
-||||||| merged common ancestors
-#ifdef BUILD_ARM_NEON
-      if (mozilla::supports_neon()) {
-        BoxBlur_NEON(aData, horizontalLobes[0][0], horizontalLobes[0][1], verticalLobes[0][0],
-                     verticalLobes[0][1], integralImage, integralImageStride);
-        BoxBlur_NEON(aData, horizontalLobes[1][0], horizontalLobes[1][1], verticalLobes[1][0],
-                     verticalLobes[1][1], integralImage, integralImageStride);
-        BoxBlur_NEON(aData, horizontalLobes[2][0], horizontalLobes[2][1], verticalLobes[2][0],
-                     verticalLobes[2][1], integralImage, integralImageStride);
-=======
 #ifdef USE_NEON
           if (mozilla::supports_neon()) {
         BoxBlur_NEON(aData, horizontalLobes[0][0], horizontalLobes[0][1],
@@ -693,7 +671,6 @@ void AlphaBoxBlur::Blur(uint8_t* aData) const {
         BoxBlur_NEON(aData, horizontalLobes[2][0], horizontalLobes[2][1],
                      verticalLobes[2][0], verticalLobes[2][1], integralImage,
                      integralImageStride);
->>>>>>> upstream-releases
       } else
 #endif
       {

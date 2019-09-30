@@ -43,34 +43,6 @@ class TRRService : public nsIObserver,
   nsresult GetCredentials(nsCString& result);
   uint32_t GetRequestTimeout() { return mTRRTimeout; }
 
-<<<<<<< HEAD
-  LookupStatus CompleteLookup(nsHostRecord *, nsresult,
-                              mozilla::net::AddrInfo *, bool pb,
-                              const nsACString &aOriginSuffix) override;
-  LookupStatus CompleteLookupByType(nsHostRecord *, nsresult,
-                                    const nsTArray<nsCString> *, uint32_t,
-                                    bool pb) override;
-  void TRRBlacklist(const nsACString &host, const nsACString &originSuffix,
-                    bool privateBrowsing, bool aParentsToo);
-  bool IsTRRBlacklisted(const nsACString &aHost,
-                        const nsACString &aOriginSuffix, bool aPrivateBrowsing,
-                        bool aParentsToo);
-
-  bool MaybeBootstrap(const nsACString &possible, nsACString &result);
-  enum TrrOkay { OKAY_NORMAL = 0, OKAY_TIMEOUT = 1, OKAY_BAD = 2 };
-||||||| merged common ancestors
-  LookupStatus CompleteLookup(nsHostRecord *, nsresult, mozilla::net::AddrInfo *, bool pb) override;
-  LookupStatus CompleteLookupByType(nsHostRecord *, nsresult, const nsTArray<nsCString> *, uint32_t, bool pb) override;
-  void TRRBlacklist(const nsACString &host, bool privateBrowsing, bool aParentsToo);
-  bool IsTRRBlacklisted(const nsACString &host, bool privateBrowsing, bool fullhost);
-
-  bool MaybeBootstrap(const nsACString &possible, nsACString &result);
-  enum TrrOkay {
-    OKAY_NORMAL = 0,
-    OKAY_TIMEOUT = 1,
-    OKAY_BAD = 2
-  };
-=======
   LookupStatus CompleteLookup(nsHostRecord*, nsresult, mozilla::net::AddrInfo*,
                               bool pb,
                               const nsACString& aOriginSuffix) override;
@@ -86,25 +58,12 @@ class TRRService : public nsIObserver,
 
   bool MaybeBootstrap(const nsACString& possible, nsACString& result);
   enum TrrOkay { OKAY_NORMAL = 0, OKAY_TIMEOUT = 1, OKAY_BAD = 2 };
->>>>>>> upstream-releases
   void TRRIsOkay(enum TrrOkay aReason);
 
-<<<<<<< HEAD
- private:
-  virtual ~TRRService();
-  nsresult ReadPrefs(const char *name);
-  void GetPrefBranch(nsIPrefBranch **result);
-||||||| merged common ancestors
-private:
-  virtual  ~TRRService();
-  nsresult ReadPrefs(const char *name);
-  void GetPrefBranch(nsIPrefBranch **result);
-=======
  private:
   virtual ~TRRService();
   nsresult ReadPrefs(const char* name);
   void GetPrefBranch(nsIPrefBranch** result);
->>>>>>> upstream-releases
   void MaybeConfirm();
   void MaybeConfirm_locked();
 
@@ -113,46 +72,13 @@ private:
   Atomic<uint32_t, Relaxed> mTRRBlacklistExpireTime;
   Atomic<uint32_t, Relaxed> mTRRTimeout;
 
-<<<<<<< HEAD
-  Mutex mLock;             // protects mPrivate* string
-  nsCString mPrivateURI;   // main thread only
-  nsCString mPrivateCred;  // main thread only
-||||||| merged common ancestors
-  Mutex mLock; // protects mPrivate* string
-  nsCString mPrivateURI; // main thread only
-  nsCString mPrivateCred; // main thread only
-=======
   Mutex mLock;
 
   nsCString mPrivateURI;   // main thread only
   nsCString mPrivateCred;  // main thread only
->>>>>>> upstream-releases
   nsCString mConfirmationNS;
   nsCString mBootstrapAddr;
 
-<<<<<<< HEAD
-  Atomic<bool, Relaxed> mWaitForCaptive;  // wait for the captive portal to say
-                                          // OK before using TRR
-  Atomic<bool, Relaxed>
-      mRfc1918;  // okay with local IP addresses in DOH responses?
-  Atomic<bool, Relaxed>
-      mCaptiveIsPassed;           // set when captive portal check is passed
-  Atomic<bool, Relaxed> mUseGET;  // do DOH using GET requests (instead of POST)
-  Atomic<bool, Relaxed> mEarlyAAAA;  // allow use of AAAA results before A is in
-  Atomic<bool, Relaxed> mDisableIPv6;  // don't even try
-  Atomic<bool, Relaxed> mDisableECS;   // disable EDNS Client Subnet in requests
-  Atomic<uint32_t, Relaxed>
-      mDisableAfterFails;  // this many fails in a row means failed TRR service
-||||||| merged common ancestors
-  Atomic<bool, Relaxed> mWaitForCaptive; // wait for the captive portal to say OK before using TRR
-  Atomic<bool, Relaxed> mRfc1918; // okay with local IP addresses in DOH responses?
-  Atomic<bool, Relaxed> mCaptiveIsPassed; // set when captive portal check is passed
-  Atomic<bool, Relaxed> mUseGET; // do DOH using GET requests (instead of POST)
-  Atomic<bool, Relaxed> mEarlyAAAA; // allow use of AAAA results before A is in
-  Atomic<bool, Relaxed> mDisableIPv6; // don't even try
-  Atomic<bool, Relaxed> mDisableECS;  // disable EDNS Client Subnet in requests
-  Atomic<uint32_t, Relaxed> mDisableAfterFails;  // this many fails in a row means failed TRR service
-=======
   Atomic<bool, Relaxed> mWaitForCaptive;  // wait for the captive portal to say
                                           // OK before using TRR
   Atomic<bool, Relaxed>
@@ -167,7 +93,6 @@ private:
   Atomic<bool, Relaxed> mDisableECS;  // disable EDNS Client Subnet in requests
   Atomic<uint32_t, Relaxed>
       mDisableAfterFails;  // this many fails in a row means failed TRR service
->>>>>>> upstream-releases
 
   // TRR Blacklist storage
   // mTRRBLStorage is only modified on the main thread, but we query whether it

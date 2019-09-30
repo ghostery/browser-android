@@ -25,17 +25,8 @@ class AutoCopyListener final {
    * @param aReason             The reasons of the change.
    *                            See nsISelectionListener::*_REASON.
    */
-<<<<<<< HEAD
-  static void OnSelectionChange(nsIDocument* aDocument,
-                                dom::Selection& aSelection, int16_t aReason);
-||||||| merged common ancestors
-  static void OnSelectionChange(nsIDocument* aDocument,
-                                dom::Selection& aSelection,
-                                int16_t aReason);
-=======
   static void OnSelectionChange(dom::Document* aDocument,
                                 dom::Selection& aSelection, int16_t aReason);
->>>>>>> upstream-releases
 
   /**
    * Init() initializes all static members of this class.  Should be called

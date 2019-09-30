@@ -9,14 +9,8 @@
 #define GrMesh_DEFINED
 
 #include "GrBuffer.h"
-<<<<<<< HEAD
-#include "GrPendingIOResource.h"
-||||||| merged common ancestors
-#include "GrGpuResourceRef.h"
-=======
 #include "GrPendingIOResource.h"
 #include "GrGpuBuffer.h"
->>>>>>> upstream-releases
 
 class GrPrimitiveProcessor;
 
@@ -46,35 +40,16 @@ public:
 
     void setNonIndexedNonInstanced(int vertexCount);
 
-<<<<<<< HEAD
-    void setIndexed(const GrBuffer* indexBuffer, int indexCount, int baseIndex,
-                    uint16_t minIndexValue, uint16_t maxIndexValue, GrPrimitiveRestart);
-    void setIndexedPatterned(const GrBuffer* indexBuffer, int indexCount, int vertexCount,
-||||||| merged common ancestors
-    void setIndexed(const GrBuffer* indexBuffer, int indexCount, int baseIndex,
-                    uint16_t minIndexValue, uint16_t maxIndexValue);
-    void setIndexedPatterned(const GrBuffer* indexBuffer, int indexCount, int vertexCount,
-=======
     void setIndexed(sk_sp<const GrBuffer> indexBuffer, int indexCount, int baseIndex,
                     uint16_t minIndexValue, uint16_t maxIndexValue, GrPrimitiveRestart);
     void setIndexedPatterned(sk_sp<const GrBuffer> indexBuffer, int indexCount, int vertexCount,
->>>>>>> upstream-releases
                              int patternRepeatCount, int maxPatternRepetitionsInIndexBuffer);
 
     void setInstanced(sk_sp<const GrBuffer> instanceBuffer, int instanceCount, int baseInstance,
                       int vertexCount);
-<<<<<<< HEAD
-    void setIndexedInstanced(const GrBuffer* indexBuffer, int indexCount,
-                             const GrBuffer* instanceBuffer, int instanceCount, int baseInstance,
-                             GrPrimitiveRestart);
-||||||| merged common ancestors
-    void setIndexedInstanced(const GrBuffer* indexBuffer, int indexCount,
-                             const GrBuffer* instanceBuffer, int instanceCount, int baseInstance=0);
-=======
     void setIndexedInstanced(sk_sp<const GrBuffer> indexBuffer, int indexCount,
                              sk_sp<const GrBuffer> instanceBuffer, int instanceCount,
                              int baseInstance, GrPrimitiveRestart);
->>>>>>> upstream-releases
 
     void setVertexData(sk_sp<const GrBuffer> vertexBuffer, int baseVertex = 0);
 
@@ -116,27 +91,12 @@ private:
     GR_STATIC_ASSERT(Flags(GrPrimitiveRestart::kNo) == Flags::kNone);
     GR_STATIC_ASSERT(Flags(GrPrimitiveRestart::kYes) == Flags::kUsePrimitiveRestart);
 
-<<<<<<< HEAD
-    GrPrimitiveType fPrimitiveType;
-    PendingBuffer fIndexBuffer;
-    PendingBuffer fInstanceBuffer;
-    PendingBuffer fVertexBuffer;
-    int fBaseVertex;
-    GrPrimitiveRestart fPrimitiveRestart;
-||||||| merged common ancestors
-    GrPrimitiveType   fPrimitiveType;
-    PendingBuffer     fIndexBuffer;
-    PendingBuffer     fInstanceBuffer;
-    PendingBuffer     fVertexBuffer;
-    int               fBaseVertex;
-=======
     GrPrimitiveType fPrimitiveType;
     sk_sp<const GrBuffer> fIndexBuffer;
     sk_sp<const GrBuffer> fInstanceBuffer;
     sk_sp<const GrBuffer> fVertexBuffer;
     int fBaseVertex;
     Flags fFlags;
->>>>>>> upstream-releases
 
     union {
         struct { // When fIndexBuffer == nullptr and isInstanced() == false.
@@ -188,26 +148,12 @@ inline void GrMesh::setNonIndexedNonInstanced(int vertexCount) {
     fIndexBuffer.reset();
     fInstanceBuffer.reset();
     fNonIndexNonInstanceData.fVertexCount = vertexCount;
-<<<<<<< HEAD
-    fPrimitiveRestart = GrPrimitiveRestart::kNo;
-||||||| merged common ancestors
-=======
     fFlags = Flags::kNone;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void GrMesh::setIndexed(const GrBuffer* indexBuffer, int indexCount, int baseIndex,
-                               uint16_t minIndexValue, uint16_t maxIndexValue,
-                               GrPrimitiveRestart primitiveRestart) {
-||||||| merged common ancestors
-inline void GrMesh::setIndexed(const GrBuffer* indexBuffer, int indexCount, int baseIndex,
-                               uint16_t minIndexValue, uint16_t maxIndexValue) {
-=======
 inline void GrMesh::setIndexed(sk_sp<const GrBuffer> indexBuffer, int indexCount, int baseIndex,
                                uint16_t minIndexValue, uint16_t maxIndexValue,
                                GrPrimitiveRestart primitiveRestart) {
->>>>>>> upstream-releases
     SkASSERT(indexBuffer);
     SkASSERT(indexCount >= 1);
     SkASSERT(baseIndex >= 0);
@@ -219,12 +165,7 @@ inline void GrMesh::setIndexed(sk_sp<const GrBuffer> indexBuffer, int indexCount
     fNonPatternIndexData.fBaseIndex = baseIndex;
     fNonPatternIndexData.fMinIndexValue = minIndexValue;
     fNonPatternIndexData.fMaxIndexValue = maxIndexValue;
-<<<<<<< HEAD
-    fPrimitiveRestart = primitiveRestart;
-||||||| merged common ancestors
-=======
     fFlags = Flags(primitiveRestart);
->>>>>>> upstream-releases
 }
 
 inline void GrMesh::setIndexedPatterned(sk_sp<const GrBuffer> indexBuffer, int indexCount,
@@ -241,12 +182,7 @@ inline void GrMesh::setIndexedPatterned(sk_sp<const GrBuffer> indexBuffer, int i
     fIndexData.fPatternRepeatCount = patternRepeatCount;
     fPatternData.fVertexCount = vertexCount;
     fPatternData.fMaxPatternRepetitionsInIndexBuffer = maxPatternRepetitionsInIndexBuffer;
-<<<<<<< HEAD
-    fPrimitiveRestart = GrPrimitiveRestart::kNo;
-||||||| merged common ancestors
-=======
     fFlags = Flags::kNone;
->>>>>>> upstream-releases
 }
 
 inline void GrMesh::setInstanced(sk_sp<const GrBuffer> instanceBuffer, int instanceCount,
@@ -258,27 +194,12 @@ inline void GrMesh::setInstanced(sk_sp<const GrBuffer> instanceBuffer, int insta
     fInstanceData.fInstanceCount = instanceCount;
     fInstanceData.fBaseInstance = baseInstance;
     fInstanceNonIndexData.fVertexCount = vertexCount;
-<<<<<<< HEAD
-    fPrimitiveRestart = GrPrimitiveRestart::kNo;
-||||||| merged common ancestors
-=======
     fFlags = Flags::kIsInstanced;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-inline void GrMesh::setIndexedInstanced(const GrBuffer* indexBuffer, int indexCount,
-                                        const GrBuffer* instanceBuffer, int instanceCount,
-                                        int baseInstance, GrPrimitiveRestart primitiveRestart) {
-||||||| merged common ancestors
-inline void GrMesh::setIndexedInstanced(const GrBuffer* indexBuffer, int indexCount,
-                                        const GrBuffer* instanceBuffer, int instanceCount,
-                                        int baseInstance) {
-=======
 inline void GrMesh::setIndexedInstanced(sk_sp<const GrBuffer> indexBuffer, int indexCount,
                                         sk_sp<const GrBuffer> instanceBuffer, int instanceCount,
                                         int baseInstance, GrPrimitiveRestart primitiveRestart) {
->>>>>>> upstream-releases
     SkASSERT(indexBuffer);
     SkASSERT(indexCount >= 1);
     SkASSERT(instanceCount >= 1);
@@ -288,12 +209,7 @@ inline void GrMesh::setIndexedInstanced(sk_sp<const GrBuffer> indexBuffer, int i
     fInstanceData.fInstanceCount = instanceCount;
     fInstanceData.fBaseInstance = baseInstance;
     fInstanceIndexData.fIndexCount = indexCount;
-<<<<<<< HEAD
-    fPrimitiveRestart = primitiveRestart;
-||||||| merged common ancestors
-=======
     fFlags = Flags::kIsInstanced | Flags(primitiveRestart);
->>>>>>> upstream-releases
 }
 
 inline void GrMesh::setVertexData(sk_sp<const GrBuffer> vertexBuffer, int baseVertex) {
@@ -310,24 +226,11 @@ inline void GrMesh::sendToGpu(SendToGpuImpl* impl) const {
                                          fInstanceBuffer.get(), fInstanceData.fInstanceCount,
                                          fInstanceData.fBaseInstance);
         } else {
-<<<<<<< HEAD
-            impl->sendIndexedInstancedMeshToGpu(
-                    fPrimitiveType, fIndexBuffer.get(), fInstanceIndexData.fIndexCount, 0,
-                    fVertexBuffer.get(), fBaseVertex, fInstanceBuffer.get(),
-                    fInstanceData.fInstanceCount, fInstanceData.fBaseInstance, fPrimitiveRestart);
-||||||| merged common ancestors
-            impl->sendIndexedInstancedMeshToGpu(primProc, fPrimitiveType, fIndexBuffer.get(),
-                                                fInstanceIndexData.fIndexCount, 0,
-                                                fVertexBuffer.get(), fBaseVertex,
-                                                fInstanceBuffer.get(), fInstanceData.fInstanceCount,
-                                                fInstanceData.fBaseInstance);
-=======
             impl->sendIndexedInstancedMeshToGpu(
                     fPrimitiveType, fIndexBuffer.get(), fInstanceIndexData.fIndexCount, 0,
                     fVertexBuffer.get(), fBaseVertex, fInstanceBuffer.get(),
                     fInstanceData.fInstanceCount, fInstanceData.fBaseInstance,
                     this->primitiveRestart());
->>>>>>> upstream-releases
         }
         return;
     }
@@ -340,25 +243,11 @@ inline void GrMesh::sendToGpu(SendToGpuImpl* impl) const {
     }
 
     if (0 == fIndexData.fPatternRepeatCount) {
-<<<<<<< HEAD
-        impl->sendIndexedMeshToGpu(fPrimitiveType, fIndexBuffer.get(), fIndexData.fIndexCount,
-                                   fNonPatternIndexData.fBaseIndex,
-                                   fNonPatternIndexData.fMinIndexValue,
-                                   fNonPatternIndexData.fMaxIndexValue, fVertexBuffer.get(),
-                                   fBaseVertex, fPrimitiveRestart);
-||||||| merged common ancestors
-        impl->sendIndexedMeshToGpu(primProc, fPrimitiveType, fIndexBuffer.get(),
-                                   fIndexData.fIndexCount, fNonPatternIndexData.fBaseIndex,
-                                   fNonPatternIndexData.fMinIndexValue,
-                                   fNonPatternIndexData.fMaxIndexValue, fVertexBuffer.get(),
-                                   fBaseVertex);
-=======
         impl->sendIndexedMeshToGpu(
                 fPrimitiveType, fIndexBuffer.get(), fIndexData.fIndexCount,
                 fNonPatternIndexData.fBaseIndex, fNonPatternIndexData.fMinIndexValue,
                 fNonPatternIndexData.fMaxIndexValue, fVertexBuffer.get(), fBaseVertex,
                 this->primitiveRestart());
->>>>>>> upstream-releases
         return;
     }
 
@@ -370,24 +259,11 @@ inline void GrMesh::sendToGpu(SendToGpuImpl* impl) const {
         // A patterned index buffer must contain indices in the range [0..vertexCount].
         int minIndexValue = 0;
         int maxIndexValue = fPatternData.fVertexCount * repeatCount - 1;
-<<<<<<< HEAD
-        SkASSERT(fPrimitiveRestart == GrPrimitiveRestart::kNo);
-        impl->sendIndexedMeshToGpu(
-                fPrimitiveType, fIndexBuffer.get(), fIndexData.fIndexCount * repeatCount, 0,
-                minIndexValue, maxIndexValue, fVertexBuffer.get(),
-                fBaseVertex + fPatternData.fVertexCount * baseRepetition, GrPrimitiveRestart::kNo);
-||||||| merged common ancestors
-        impl->sendIndexedMeshToGpu(primProc, fPrimitiveType, fIndexBuffer.get(),
-                                   fIndexData.fIndexCount * repeatCount, 0, minIndexValue,
-                                   maxIndexValue, fVertexBuffer.get(),
-                                   fBaseVertex + fPatternData.fVertexCount * baseRepetition);
-=======
         SkASSERT(!(fFlags & Flags::kUsePrimitiveRestart));
         impl->sendIndexedMeshToGpu(
                 fPrimitiveType, fIndexBuffer.get(), fIndexData.fIndexCount * repeatCount, 0,
                 minIndexValue, maxIndexValue, fVertexBuffer.get(),
                 fBaseVertex + fPatternData.fVertexCount * baseRepetition, GrPrimitiveRestart::kNo);
->>>>>>> upstream-releases
         baseRepetition += repeatCount;
     } while (baseRepetition < fIndexData.fPatternRepeatCount);
 }

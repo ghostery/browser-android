@@ -6,15 +6,8 @@
  */
 
 #include "SkAnalyticEdge.h"
-
 #include "SkFDot6.h"
 #include "SkMathPriv.h"
-<<<<<<< HEAD
-#include "SkTo.h"
-
-#include <utility>
-||||||| merged common ancestors
-=======
 #include "SkTo.h"
 #include <utility>
 
@@ -283,7 +276,6 @@ bool SkAnalyticEdge::setLine(const SkPoint& p0, const SkPoint& p1) {
 
     return true;
 }
->>>>>>> upstream-releases
 
 // This will become a bottleneck for small ovals rendering if we call SkFixedDiv twice here.
 // Therefore, we'll let the outter function compute the slope once and send in the value.

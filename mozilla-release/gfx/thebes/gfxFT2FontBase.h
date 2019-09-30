@@ -22,28 +22,6 @@ class gfxFT2FontBase : public gfxFont {
       const gfxFontStyle* aFontStyle);
   virtual ~gfxFT2FontBase();
 
-<<<<<<< HEAD
-  uint32_t GetGlyph(uint32_t aCharCode);
-  void GetGlyphExtents(uint32_t aGlyph, cairo_text_extents_t* aExtents);
-  virtual uint32_t GetSpaceGlyph() override;
-  virtual bool ProvidesGetGlyph() const override { return true; }
-  virtual uint32_t GetGlyph(uint32_t unicode,
-                            uint32_t variation_selector) override;
-  virtual bool ProvidesGlyphWidths() const override { return true; }
-  virtual int32_t GetGlyphWidth(DrawTarget& aDrawTarget,
-                                uint16_t aGID) override;
-||||||| merged common ancestors
-    uint32_t GetGlyph(uint32_t aCharCode);
-    void GetGlyphExtents(uint32_t aGlyph,
-                         cairo_text_extents_t* aExtents);
-    virtual uint32_t GetSpaceGlyph() override;
-    virtual bool ProvidesGetGlyph() const override { return true; }
-    virtual uint32_t GetGlyph(uint32_t unicode,
-                              uint32_t variation_selector) override;
-    virtual bool ProvidesGlyphWidths() const override { return true; }
-    virtual int32_t GetGlyphWidth(DrawTarget& aDrawTarget,
-                                  uint16_t aGID) override;
-=======
   uint32_t GetGlyph(uint32_t aCharCode);
   void GetGlyphExtents(uint32_t aGlyph, cairo_text_extents_t* aExtents);
   uint32_t GetSpaceGlyph() override;
@@ -52,23 +30,10 @@ class gfxFT2FontBase : public gfxFont {
                             uint32_t variation_selector) override;
   bool ProvidesGlyphWidths() const override { return true; }
   int32_t GetGlyphWidth(uint16_t aGID) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool SetupCairoFont(DrawTarget* aDrawTarget) override;
-||||||| merged common ancestors
-    virtual bool SetupCairoFont(DrawTarget* aDrawTarget) override;
-=======
   bool SetupCairoFont(DrawTarget* aDrawTarget) override;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual FontType GetType() const override { return FONT_TYPE_FT2; }
-||||||| merged common ancestors
-    virtual FontType GetType() const override { return FONT_TYPE_FT2; }
-=======
   FontType GetType() const override { return FONT_TYPE_FT2; }
->>>>>>> upstream-releases
 
   static void SetupVarCoords(FT_MM_Var* aMMVar,
                              const nsTArray<gfxFontVariation>& aVariations,
@@ -85,16 +50,8 @@ class gfxFT2FontBase : public gfxFont {
 
   void InitMetrics();
 
-<<<<<<< HEAD
- protected:
-  virtual const Metrics& GetHorizontalMetrics() override;
-||||||| merged common ancestors
-protected:
-    virtual const Metrics& GetHorizontalMetrics() override;
-=======
  protected:
   const Metrics& GetHorizontalMetrics() override;
->>>>>>> upstream-releases
 
   uint32_t mSpaceGlyph;
   Metrics mMetrics;

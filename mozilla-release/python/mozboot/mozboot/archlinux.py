@@ -11,29 +11,16 @@ import subprocess
 import glob
 
 from mozboot.base import BaseBootstrapper
-<<<<<<< HEAD
-from mozboot.linux_common import NodeInstall, StyloInstall, ClangStaticAnalysisInstall
-||||||| merged common ancestors
-from mozboot.linux_common import NodeInstall, StyloInstall
-=======
 from mozboot.linux_common import (
     ClangStaticAnalysisInstall,
     NodeInstall,
     SccacheInstall,
     StyloInstall,
 )
->>>>>>> upstream-releases
 
 
-<<<<<<< HEAD
-class ArchlinuxBootstrapper(NodeInstall, StyloInstall,
-                            ClangStaticAnalysisInstall, BaseBootstrapper):
-||||||| merged common ancestors
-class ArchlinuxBootstrapper(NodeInstall, StyloInstall, BaseBootstrapper):
-=======
 class ArchlinuxBootstrapper(NodeInstall, StyloInstall, SccacheInstall,
                             ClangStaticAnalysisInstall, BaseBootstrapper):
->>>>>>> upstream-releases
     '''Archlinux experimental bootstrapper.'''
 
     SYSTEM_PACKAGES = [
@@ -56,18 +43,7 @@ class ArchlinuxBootstrapper(NodeInstall, StyloInstall, SccacheInstall,
         'libvpx',
         'libxt',
         'mime-types',
-<<<<<<< HEAD
-        'mozilla-common',
         'nasm',
-        'nss',
-        'sqlite',
-||||||| merged common ancestors
-        'mozilla-common',
-        'nss',
-        'sqlite',
-=======
-        'nasm',
->>>>>>> upstream-releases
         'startup-notification',
         'gst-plugins-base-libs',
         'libpulse',

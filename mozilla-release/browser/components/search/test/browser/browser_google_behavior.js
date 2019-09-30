@@ -26,30 +26,18 @@ let region = Services.prefs.getCharPref("browser.search.region");
 let code = "";
 switch (region) {
   case "US":
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
-    code = "firefox-b-1-d";
-||||||| merged common ancestors
-    code = "firefox-b-1";
-=======
     if (AppConstants.MOZ_APP_VERSION_DISPLAY.endsWith("esr")) {
       code = "firefox-b-1-e";
     } else {
       code = "firefox-b-1-d";
     }
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
     break;
   case "DE":
-<<<<<<< HEAD:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
-    code = "firefox-b-d";
-||||||| merged common ancestors
-    code = "firefox-b";
-=======
     if (AppConstants.MOZ_APP_VERSION_DISPLAY.endsWith("esr")) {
       code = "firefox-b-e";
     } else {
       code = "firefox-b-d";
     }
->>>>>>> upstream-releases:mozilla-release/browser/components/search/test/browser/browser_google_behavior.js
     break;
 }
 

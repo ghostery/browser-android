@@ -14,22 +14,9 @@ namespace mozilla {
 
 class HLSResourceCallbacksSupport;
 
-<<<<<<< HEAD
-class HLSDecoder final : public MediaDecoder {
- public:
-  // MediaDecoder interface.
-  explicit HLSDecoder(MediaDecoderInit& aInit);
-||||||| merged common ancestors
-class HLSDecoder final : public MediaDecoder
-{
-public:
-  // MediaDecoder interface.
-  explicit HLSDecoder(MediaDecoderInit& aInit);
-=======
 class HLSDecoder final : public MediaDecoder {
  public:
   static RefPtr<HLSDecoder> Create(MediaDecoderInit& aInit);
->>>>>>> upstream-releases
 
   // Returns true if the HLS backend is pref'ed on.
   static bool IsEnabled();

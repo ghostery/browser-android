@@ -12,7 +12,8 @@
 #include "nsIX509CertList.h"
 #include "nsServiceManagerUtils.h"
 
-TEST(psm_CertDB, Test) {
+TEST(psm_CertDB, Test)
+{
   {
     nsCOMPtr<nsIPrefBranch> prefs(do_GetService(NS_PREFSERVICE_CONTRACTID));
     ASSERT_TRUE(prefs)
@@ -43,28 +44,14 @@ TEST(psm_CertDB, Test) {
     while (NS_SUCCEEDED(enumerator->HasMoreElements(&hasMore)) && hasMore) {
       nsCOMPtr<nsISupports> supports;
       ASSERT_TRUE(NS_SUCCEEDED(enumerator->GetNext(getter_AddRefs(supports))))
-<<<<<<< HEAD
-          << "couldn't get next certificate";
-||||||| merged common ancestors
-        << "couldn't get next certificate";
-=======
       << "couldn't get next certificate";
->>>>>>> upstream-releases
 
       nsCOMPtr<nsIX509Cert> cert(do_QueryInterface(supports));
       ASSERT_TRUE(cert)
       << "couldn't QI to nsIX509Cert";
 
-<<<<<<< HEAD
-      ASSERT_TRUE(NS_SUCCEEDED(cert->GetIsBuiltInRoot(&foundBuiltIn)))
-          << "GetIsBuiltInRoot failed";
-||||||| merged common ancestors
-      ASSERT_TRUE(NS_SUCCEEDED(cert->GetIsBuiltInRoot(&foundBuiltIn))) <<
-        "GetIsBuiltInRoot failed";
-=======
       ASSERT_TRUE(NS_SUCCEEDED(cert->GetIsBuiltInRoot(&foundBuiltIn)))
       << "GetIsBuiltInRoot failed";
->>>>>>> upstream-releases
 
       if (foundBuiltIn) {
         break;

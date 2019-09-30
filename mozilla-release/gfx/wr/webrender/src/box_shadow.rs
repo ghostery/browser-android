@@ -2,32 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/box_shadow.rs
-use api::{BorderRadius, BoxShadowClipMode, ClipMode, ColorF, DeviceIntSize, LayoutPrimitiveInfo};
-use api::{LayoutRect, LayoutSize, LayoutVector2D, MAX_BLUR_RADIUS};
-use clip::ClipItemKey;
-use display_list_flattener::DisplayListFlattener;
-use gpu_cache::GpuCacheHandle;
-use gpu_types::BoxShadowStretchMode;
-use prim_store::{ScrollNodeAndClipChain, PrimitiveKeyKind};
-use render_task::RenderTaskCacheEntryHandle;
-use util::RectHelpers;
-
-#[derive(Debug, Clone)]
-||||||| merged common ancestors
-use api::{BorderRadius, BoxShadowClipMode, ClipMode, ColorF, DeviceIntSize, LayoutPrimitiveInfo};
-use api::{LayoutRect, LayoutSize, LayoutVector2D, MAX_BLUR_RADIUS};
-use clip::ClipItemKey;
-use display_list_flattener::DisplayListFlattener;
-use gpu_cache::GpuCacheHandle;
-use gpu_types::BoxShadowStretchMode;
-use prim_store::{BrushKind, BrushPrimitive, PrimitiveContainer};
-use prim_store::ScrollNodeAndClipChain;
-use render_task::RenderTaskCacheEntryHandle;
-use util::RectHelpers;
-
-#[derive(Debug, Clone)]
-=======
 use api::{BorderRadius, BoxShadowClipMode, ClipMode, ColorF, PrimitiveKeyKind};
 use api::MAX_BLUR_RADIUS;
 use api::units::*;
@@ -41,7 +15,6 @@ use crate::util::RectHelpers;
 use crate::internal_types::LayoutPrimitiveInfo;
 
 #[derive(Debug, Clone, MallocSizeOf)]
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/box_shadow.rs
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
 pub struct BoxShadowClipSource {

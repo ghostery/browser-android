@@ -6,15 +6,8 @@
 // shared objects.
 
 #ifdef nsWindowsRestart_cpp
-<<<<<<< HEAD
-#error \
-    "nsWindowsRestart.cpp is not a header file, and must only be included once."
-||||||| merged common ancestors
-#error "nsWindowsRestart.cpp is not a header file, and must only be included once."
-=======
 #  error \
       "nsWindowsRestart.cpp is not a header file, and must only be included once."
->>>>>>> upstream-releases
 #else
 #  define nsWindowsRestart_cpp
 #endif
@@ -34,53 +27,20 @@
  * Convert UTF8 to UTF16 without using the normal XPCOM goop, which we
  * can't link to updater.exe.
  */
-<<<<<<< HEAD
-static char16_t *AllocConvertUTF8toUTF16(const char *arg) {
-||||||| merged common ancestors
-static char16_t*
-AllocConvertUTF8toUTF16(const char *arg)
-{
-=======
 static char16_t* AllocConvertUTF8toUTF16(const char* arg) {
->>>>>>> upstream-releases
   // UTF16 can't be longer in units than UTF8
   size_t len = strlen(arg);
-<<<<<<< HEAD
-  char16_t *s = new char16_t[(len + 1) * sizeof(char16_t)];
-  if (!s) return nullptr;
-||||||| merged common ancestors
-  char16_t *s = new char16_t[(len + 1) * sizeof(char16_t)];
-  if (!s)
-    return nullptr;
-=======
   char16_t* s = new char16_t[(len + 1) * sizeof(char16_t)];
   if (!s) return nullptr;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  size_t dstLen = ::MultiByteToWideChar(CP_UTF8, 0, arg, len,
-                                        reinterpret_cast<wchar_t *>(s), len);
-||||||| merged common ancestors
-  size_t dstLen = ::MultiByteToWideChar(
-    CP_UTF8, 0, arg, len, reinterpret_cast<wchar_t*>(s), len);
-=======
   size_t dstLen = ::MultiByteToWideChar(CP_UTF8, 0, arg, len,
                                         reinterpret_cast<wchar_t*>(s), len);
->>>>>>> upstream-releases
   s[dstLen] = 0;
 
   return s;
 }
 
-<<<<<<< HEAD
-static void FreeAllocStrings(int argc, wchar_t **argv) {
-||||||| merged common ancestors
-static void
-FreeAllocStrings(int argc, wchar_t **argv)
-{
-=======
 static void FreeAllocStrings(int argc, wchar_t** argv) {
->>>>>>> upstream-releases
   while (argc) {
     --argc;
     delete[] argv[argc];
@@ -89,33 +49,13 @@ static void FreeAllocStrings(int argc, wchar_t** argv) {
   delete[] argv;
 }
 
-<<<<<<< HEAD
-static wchar_t **AllocConvertUTF8toUTF16Strings(int argc, char **argv) {
-  wchar_t **argvConverted = new wchar_t *[argc];
-  if (!argvConverted) return nullptr;
-||||||| merged common ancestors
-static wchar_t**
-AllocConvertUTF8toUTF16Strings(int argc, char **argv)
-{
-  wchar_t **argvConverted = new wchar_t*[argc];
-  if (!argvConverted)
-    return nullptr;
-=======
 static wchar_t** AllocConvertUTF8toUTF16Strings(int argc, char** argv) {
   wchar_t** argvConverted = new wchar_t*[argc];
   if (!argvConverted) return nullptr;
->>>>>>> upstream-releases
 
   for (int i = 0; i < argc; ++i) {
-<<<<<<< HEAD
-    argvConverted[i] =
-        reinterpret_cast<wchar_t *>(AllocConvertUTF8toUTF16(argv[i]));
-||||||| merged common ancestors
-    argvConverted[i] = reinterpret_cast<wchar_t*>(AllocConvertUTF8toUTF16(argv[i]));
-=======
     argvConverted[i] =
         reinterpret_cast<wchar_t*>(AllocConvertUTF8toUTF16(argv[i]));
->>>>>>> upstream-releases
     if (!argvConverted[i]) {
       FreeAllocStrings(i, argvConverted);
       return nullptr;
@@ -130,31 +70,6 @@ static wchar_t** AllocConvertUTF8toUTF16Strings(int argc, char** argv) {
  * @note The form of this function that takes char **argv expects UTF-8
  */
 
-<<<<<<< HEAD
-BOOL WinLaunchChild(const wchar_t *exePath, int argc, wchar_t **argv,
-                    HANDLE userToken = nullptr, HANDLE *hProcess = nullptr);
-
-BOOL WinLaunchChild(const wchar_t *exePath, int argc, char **argv,
-                    HANDLE userToken, HANDLE *hProcess) {
-  wchar_t **argvConverted = AllocConvertUTF8toUTF16Strings(argc, argv);
-  if (!argvConverted) return FALSE;
-||||||| merged common ancestors
-BOOL
-WinLaunchChild(const wchar_t *exePath,
-               int argc, wchar_t **argv,
-               HANDLE userToken = nullptr,
-               HANDLE *hProcess = nullptr);
-
-BOOL
-WinLaunchChild(const wchar_t *exePath,
-               int argc, char **argv,
-               HANDLE userToken,
-               HANDLE *hProcess)
-{
-  wchar_t **argvConverted = AllocConvertUTF8toUTF16Strings(argc, argv);
-  if (!argvConverted)
-    return FALSE;
-=======
 BOOL WinLaunchChild(const wchar_t* exePath, int argc, wchar_t** argv,
                     HANDLE userToken = nullptr, HANDLE* hProcess = nullptr);
 
@@ -162,28 +77,14 @@ BOOL WinLaunchChild(const wchar_t* exePath, int argc, char** argv,
                     HANDLE userToken, HANDLE* hProcess) {
   wchar_t** argvConverted = AllocConvertUTF8toUTF16Strings(argc, argv);
   if (!argvConverted) return FALSE;
->>>>>>> upstream-releases
 
   BOOL ok = WinLaunchChild(exePath, argc, argvConverted, userToken, hProcess);
   FreeAllocStrings(argc, argvConverted);
   return ok;
 }
 
-<<<<<<< HEAD
-BOOL WinLaunchChild(const wchar_t *exePath, int argc, wchar_t **argv,
-                    HANDLE userToken, HANDLE *hProcess) {
-||||||| merged common ancestors
-BOOL
-WinLaunchChild(const wchar_t *exePath,
-               int argc,
-               wchar_t **argv,
-               HANDLE userToken,
-               HANDLE *hProcess)
-{
-=======
 BOOL WinLaunchChild(const wchar_t* exePath, int argc, wchar_t** argv,
                     HANDLE userToken, HANDLE* hProcess) {
->>>>>>> upstream-releases
   BOOL ok;
 
   mozilla::UniquePtr<wchar_t[]> cl(mozilla::MakeCommandLine(argc, argv));
@@ -236,29 +137,6 @@ BOOL WinLaunchChild(const wchar_t* exePath, int argc, wchar_t** argv,
     CloseHandle(pi.hThread);
   } else {
     LPVOID lpMsgBuf = nullptr;
-<<<<<<< HEAD
-    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-                      FORMAT_MESSAGE_IGNORE_INSERTS,
-                  nullptr, GetLastError(),
-                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf,
-                  0, nullptr);
-    wprintf(L"Error restarting: %s\n",
-            lpMsgBuf ? static_cast<const wchar_t *>(lpMsgBuf) : L"(null)");
-    if (lpMsgBuf) LocalFree(lpMsgBuf);
-||||||| merged common ancestors
-    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                  FORMAT_MESSAGE_FROM_SYSTEM |
-                  FORMAT_MESSAGE_IGNORE_INSERTS,
-                  nullptr,
-                  GetLastError(),
-                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                  (LPTSTR) &lpMsgBuf,
-                  0,
-                  nullptr);
-    wprintf(L"Error restarting: %s\n", lpMsgBuf ? static_cast<const wchar_t*>(lpMsgBuf) : L"(null)");
-    if (lpMsgBuf)
-      LocalFree(lpMsgBuf);
-=======
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
                       FORMAT_MESSAGE_IGNORE_INSERTS,
                   nullptr, GetLastError(),
@@ -267,7 +145,6 @@ BOOL WinLaunchChild(const wchar_t* exePath, int argc, wchar_t** argv,
     wprintf(L"Error restarting: %s\n",
             lpMsgBuf ? static_cast<const wchar_t*>(lpMsgBuf) : L"(null)");
     if (lpMsgBuf) LocalFree(lpMsgBuf);
->>>>>>> upstream-releases
   }
 
   return ok;

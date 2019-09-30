@@ -231,52 +231,25 @@ class TextServicesDocument final : public nsIEditActionListener {
   void DidDeleteNode(nsINode* aChild);
   void DidJoinNodes(nsINode& aLeftNode, nsINode& aRightNode);
 
-<<<<<<< HEAD
-  static nsresult GetRangeEndPoints(nsRange* aRange, nsINode** aStartContainer,
-||||||| merged common ancestors
-  static nsresult GetRangeEndPoints(nsRange* aRange,
-                                    nsINode** aStartContainer,
-=======
   // TODO: We should get rid of this method since `aAbstractRange` has
   //       enough simple API to get them.
   static nsresult GetRangeEndPoints(const dom::AbstractRange* aAbstractRange,
                                     nsINode** aStartContainer,
->>>>>>> upstream-releases
                                     int32_t* aStartOffset,
                                     nsINode** aEndContainer,
                                     int32_t* aEndOffset);
 
-<<<<<<< HEAD
- private:
-  nsresult CreateContentIterator(nsRange* aRange,
-                                 nsIContentIterator** aIterator);
-||||||| merged common ancestors
-private:
-  nsresult CreateContentIterator(nsRange* aRange,
-                                 nsIContentIterator** aIterator);
-=======
  private:
   nsresult CreateFilteredContentIterator(
       const dom::AbstractRange* aAbstractRange,
       FilteredContentIterator** aFilteredIter);
->>>>>>> upstream-releases
 
   dom::Element* GetDocumentContentRootNode() const;
   already_AddRefed<nsRange> CreateDocumentContentRange();
   already_AddRefed<nsRange> CreateDocumentContentRootToNodeOffsetRange(
-<<<<<<< HEAD
-      nsINode* aParent, uint32_t aOffset, bool aToStart);
-  nsresult CreateDocumentContentIterator(nsIContentIterator** aIterator);
-||||||| merged common ancestors
-                              nsINode* aParent,
-                              uint32_t aOffset,
-                              bool aToStart);
-  nsresult CreateDocumentContentIterator(nsIContentIterator** aIterator);
-=======
       nsINode* aParent, uint32_t aOffset, bool aToStart);
   nsresult CreateDocumentContentIterator(
       FilteredContentIterator** aFilteredIter);
->>>>>>> upstream-releases
 
   nsresult AdjustContentIterator();
 
@@ -307,18 +280,10 @@ private:
   MOZ_CAN_RUN_SCRIPT
   nsresult SetSelectionInternal(int32_t aOffset, int32_t aLength,
                                 bool aDoUpdate);
-<<<<<<< HEAD
-  nsresult GetSelection(BlockSelectionStatus* aSelStatus, int32_t* aSelOffset,
-                        int32_t* aSelLength);
-||||||| merged common ancestors
-  nsresult GetSelection(BlockSelectionStatus* aSelStatus,
-                        int32_t* aSelOffset, int32_t* aSelLength);
-=======
   MOZ_CAN_RUN_SCRIPT
   nsresult GetSelection(BlockSelectionStatus* aSelStatus, int32_t* aSelOffset,
                         int32_t* aSelLength);
   MOZ_CAN_RUN_SCRIPT
->>>>>>> upstream-releases
   nsresult GetCollapsedSelection(BlockSelectionStatus* aSelStatus,
                                  int32_t* aSelOffset, int32_t* aSelLength);
   nsresult GetUncollapsedSelection(BlockSelectionStatus* aSelStatus,

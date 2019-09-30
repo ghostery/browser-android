@@ -34,17 +34,8 @@ class Selection;
  * and provides useful API for IME.
  */
 
-<<<<<<< HEAD
-class IMEStateManager {
-  typedef dom::TabParent TabParent;
-||||||| merged common ancestors
-class IMEStateManager
-{
-  typedef dom::TabParent TabParent;
-=======
 class IMEStateManager {
   typedef dom::BrowserParent BrowserParent;
->>>>>>> upstream-releases
   typedef widget::IMEMessage IMEMessage;
   typedef widget::IMENotification IMENotification;
   typedef widget::IMEState IMEState;
@@ -60,14 +51,7 @@ class IMEStateManager {
    * which is managed by the focused content (sContent).  If the focused content
    * isn't managing another process, this returns nullptr.
    */
-<<<<<<< HEAD
-  static TabParent* GetActiveTabParent() {
-||||||| merged common ancestors
-  static TabParent* GetActiveTabParent()
-  {
-=======
   static BrowserParent* GetActiveBrowserParent() {
->>>>>>> upstream-releases
     // If menu has pseudo focus, we should ignore active child process.
     if (sInstalledMenuKeyboardListener) {
       return nullptr;
@@ -83,21 +67,10 @@ class IMEStateManager {
    * firing composition events in different BrowserParent.  (Anyway, such case
    * shouldn't occur.)
    */
-<<<<<<< HEAD
-  static bool DoesTabParentHaveIMEFocus(const TabParent* aTabParent) {
-    MOZ_ASSERT(aTabParent);
-    return sFocusedIMETabParent == aTabParent;
-||||||| merged common ancestors
-  static bool DoesTabParentHaveIMEFocus(const TabParent* aTabParent)
-  {
-    MOZ_ASSERT(aTabParent);
-    return sFocusedIMETabParent == aTabParent;
-=======
   static bool DoesBrowserParentHaveIMEFocus(
       const BrowserParent* aBrowserParent) {
     MOZ_ASSERT(aBrowserParent);
     return sFocusedIMEBrowserParent == aBrowserParent;
->>>>>>> upstream-releases
   }
 
   /**
@@ -231,23 +204,10 @@ class IMEStateManager {
    * target is destroying, this removes the stored composition automatically.
    */
   static void DispatchCompositionEvent(
-<<<<<<< HEAD
-      nsINode* aEventTargetNode, nsPresContext* aPresContext,
-      WidgetCompositionEvent* aCompositionEvent, nsEventStatus* aStatus,
-      EventDispatchingCallback* aCallBack, bool aIsSynthesized = false);
-||||||| merged common ancestors
-                nsINode* aEventTargetNode,
-                nsPresContext* aPresContext,
-                WidgetCompositionEvent* aCompositionEvent,
-                nsEventStatus* aStatus,
-                EventDispatchingCallback* aCallBack,
-                bool aIsSynthesized = false);
-=======
       nsINode* aEventTargetNode, nsPresContext* aPresContext,
       BrowserParent* aBrowserParent, WidgetCompositionEvent* aCompositionEvent,
       nsEventStatus* aStatus, EventDispatchingCallback* aCallBack,
       bool aIsSynthesized = false);
->>>>>>> upstream-releases
 
   /**
    * All selection events must be handled via HandleSelectionEvent()
@@ -292,27 +252,11 @@ class IMEStateManager {
    */
   static nsresult NotifyIME(const IMENotification& aNotification,
                             nsIWidget* aWidget,
-<<<<<<< HEAD
-                            TabParent* aTabParent = nullptr);
-  static nsresult NotifyIME(IMEMessage aMessage, nsIWidget* aWidget,
-                            TabParent* aTabParent = nullptr);
-  static nsresult NotifyIME(IMEMessage aMessage, nsPresContext* aPresContext,
-                            TabParent* aTabParent = nullptr);
-||||||| merged common ancestors
-                            TabParent* aTabParent = nullptr);
-  static nsresult NotifyIME(IMEMessage aMessage,
-                            nsIWidget* aWidget,
-                            TabParent* aTabParent = nullptr);
-  static nsresult NotifyIME(IMEMessage aMessage,
-                            nsPresContext* aPresContext,
-                            TabParent* aTabParent = nullptr);
-=======
                             BrowserParent* aBrowserParent = nullptr);
   static nsresult NotifyIME(IMEMessage aMessage, nsIWidget* aWidget,
                             BrowserParent* aBrowserParent = nullptr);
   static nsresult NotifyIME(IMEMessage aMessage, nsPresContext* aPresContext,
                             BrowserParent* aBrowserParent = nullptr);
->>>>>>> upstream-releases
 
   static nsINode* GetRootEditableNode(nsPresContext* aPresContext,
                                       nsIContent* aContent);

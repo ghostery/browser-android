@@ -9,20 +9,10 @@ using namespace mozilla::safebrowsing;
 
 namespace mozilla {
 namespace safebrowsing {
-<<<<<<< HEAD
-class Classifier;
-}
-}  // namespace mozilla
-||||||| merged common ancestors
-    class Classifier;
-}
-}
-=======
 class Classifier;
 class LookupCacheV4;
 }  // namespace safebrowsing
 }  // namespace mozilla
->>>>>>> upstream-releases
 
 typedef nsCString _Fragment;
 typedef nsTArray<nsCString> _PrefixArray;

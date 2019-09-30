@@ -17,20 +17,9 @@ namespace mozilla {
 // SVGDataParser: a simple base class for parsing values
 // for path and transform values.
 //
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGDataParser.h
-class nsSVGDataParser {
- public:
-  explicit nsSVGDataParser(const nsAString& aValue);
-||||||| merged common ancestors
-class nsSVGDataParser
-{
-public:
-  explicit nsSVGDataParser(const nsAString& aValue);
-=======
 class SVGDataParser {
  public:
   explicit SVGDataParser(const nsAString& aValue);
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGDataParser.h
 
  protected:
   static bool IsAlpha(char16_t aCh) {
@@ -48,13 +37,6 @@ class SVGDataParser {
   const mozilla::RangedPtr<const char16_t> mEnd;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGDataParser.h
-#endif  // __NS_SVGDATAPARSER_H__
-||||||| merged common ancestors
-
-#endif // __NS_SVGDATAPARSER_H__
-=======
 }  // namespace mozilla
 
 #endif  // __NS_SVGDATAPARSER_H__
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGDataParser.h

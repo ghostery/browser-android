@@ -49,18 +49,6 @@ var SelectContentHelper = function(aElement, aOptions, aActor) {
   this.actor = aActor;
   this.closedWithClickOn = false;
   this.isOpenedViaTouch = aOptions.isOpenedViaTouch;
-<<<<<<< HEAD
-  this._selectBackgroundColor = null;
-  this._selectColor = null;
-||||||| merged common ancestors
-  this._selectBackgroundColor = null;
-  this._selectColor = null;
-  this._uaBackgroundColor = null;
-  this._uaColor = null;
-  this._uaSelectBackgroundColor = null;
-  this._uaSelectColor = null;
-=======
->>>>>>> upstream-releases
   this._closeAfterBlur = true;
   this._pseudoStylesSetup = false;
   this._lockedDescendants = null;
@@ -118,49 +106,17 @@ this.SelectContentHelper.prototype = {
     this._setupPseudoClassStyles();
     let rect = this._getBoundingContentRect();
     let computedStyles = getComputedStyles(this.element);
-<<<<<<< HEAD
-    this._selectBackgroundColor = computedStyles.backgroundColor;
-    this._selectColor = computedStyles.color;
-    this._selectTextShadow = computedStyles.textShadow;
-    let options = this._buildOptionList();
-    let defaultStyles = this.element.ownerGlobal.getDefaultComputedStyle(this.element);
-    this.global.sendAsyncMessage("Forms:ShowDropDown", {
-      direction: computedStyles.direction,
-||||||| merged common ancestors
-    this._selectBackgroundColor = computedStyles.backgroundColor;
-    this._selectColor = computedStyles.color;
-    this._selectTextShadow = computedStyles.textShadow;
-    this.global.sendAsyncMessage("Forms:ShowDropDown", {
-      direction: computedStyles.direction,
-=======
     let options = this._buildOptionList();
     let defaultStyles = this.element.ownerGlobal.getDefaultComputedStyle(
       this.element
     );
     this.actor.sendAsyncMessage("Forms:ShowDropDown", {
->>>>>>> upstream-releases
       isOpenedViaTouch: this.isOpenedViaTouch,
       options,
       rect,
       selectedIndex: this.element.selectedIndex,
-<<<<<<< HEAD
-      selectBackgroundColor: this._selectBackgroundColor,
-      selectColor: this._selectColor,
-      selectTextShadow: this._selectTextShadow,
-      uaSelectBackgroundColor: defaultStyles.backgroundColor,
-      uaSelectColor: defaultStyles.color,
-||||||| merged common ancestors
-      selectBackgroundColor: this._selectBackgroundColor,
-      selectColor: this._selectColor,
-      selectTextShadow: this._selectTextShadow,
-      uaBackgroundColor: this.uaBackgroundColor,
-      uaColor: this.uaColor,
-      uaSelectBackgroundColor: this.uaSelectBackgroundColor,
-      uaSelectColor: this.uaSelectColor,
-=======
       style: supportedStyles(computedStyles),
       defaultStyle: supportedStyles(defaultStyles),
->>>>>>> upstream-releases
     });
     this._clearPseudoClassStyles();
     gOpen = true;
@@ -222,44 +178,14 @@ this.SelectContentHelper.prototype = {
     // have :focus, though it is here for belt-and-suspenders.
     this._setupPseudoClassStyles();
     let computedStyles = getComputedStyles(this.element);
-<<<<<<< HEAD
-    this._selectBackgroundColor = computedStyles.backgroundColor;
-    this._selectColor = computedStyles.color;
-    this._selectTextShadow = computedStyles.textShadow;
-
-    let defaultStyles = this.element.ownerGlobal.getDefaultComputedStyle(this.element);
-    this.global.sendAsyncMessage("Forms:UpdateDropDown", {
-||||||| merged common ancestors
-    this._selectBackgroundColor = computedStyles.backgroundColor;
-    this._selectColor = computedStyles.color;
-    this._selectTextShadow = computedStyles.textShadow;
-    this.global.sendAsyncMessage("Forms:UpdateDropDown", {
-=======
     let defaultStyles = this.element.ownerGlobal.getDefaultComputedStyle(
       this.element
     );
     this.actor.sendAsyncMessage("Forms:UpdateDropDown", {
->>>>>>> upstream-releases
       options: this._buildOptionList(),
       selectedIndex: this.element.selectedIndex,
-<<<<<<< HEAD
-      selectBackgroundColor: this._selectBackgroundColor,
-      selectColor: this._selectColor,
-      selectTextShadow: this._selectTextShadow,
-      uaSelectBackgroundColor: defaultStyles.backgroundColor,
-      uaSelectColor: defaultStyles.color,
-||||||| merged common ancestors
-      selectBackgroundColor: this._selectBackgroundColor,
-      selectColor: this._selectColor,
-      selectTextShadow: this._selectTextShadow,
-      uaBackgroundColor: this.uaBackgroundColor,
-      uaColor: this.uaColor,
-      uaSelectBackgroundColor: this.uaSelectBackgroundColor,
-      uaSelectColor: this.uaSelectColor,
-=======
       style: supportedStyles(computedStyles),
       defaultStyle: supportedStyles(defaultStyles),
->>>>>>> upstream-releases
     });
     this._clearPseudoClassStyles();
   },
@@ -281,87 +207,9 @@ this.SelectContentHelper.prototype = {
         break;
 
       case "Forms:DismissedDropDown": {
-<<<<<<< HEAD
-          let win = this.element.ownerGlobal;
-          let selectedOption = this.element.item(this.element.selectedIndex);
-
-          // For ordering of events, we're using non-e10s as our guide here,
-          // since the spec isn't exactly clear. In non-e10s:
-          // - If the user clicks on an element in the dropdown, we fire
-          //   mousedown, mouseup, input, change, and click events.
-          // - If the user uses the keyboard to select an element in the
-          //   dropdown, we only fire input and change events.
-          // - If the user pressed ESC key or clicks outside the dropdown,
-          //   we fire nothing as the selected option is unchanged.
-          if (this.closedWithClickOn) {
-            this.dispatchMouseEvent(win, selectedOption, "mousedown");
-            this.dispatchMouseEvent(win, selectedOption, "mouseup");
-          }
-
-          // Clear active document no matter user selects via keyboard or mouse
-          InspectorUtils.removeContentState(this.element, kStateActive,
-                                            /* aClearActiveDocument */ true);
-
-          // Fire input and change events when selected option changes
-          if (this.initialSelection !== selectedOption) {
-            let inputEvent = new win.Event("input", {
-              bubbles: true,
-            });
-            this.element.dispatchEvent(inputEvent);
-
-            let changeEvent = new win.Event("change", {
-              bubbles: true,
-            });
-            this.element.dispatchEvent(changeEvent);
-          }
-
-          // Fire click event
-          if (this.closedWithClickOn) {
-            this.dispatchMouseEvent(win, selectedOption, "click");
-          }
-||||||| merged common ancestors
-          let win = this.element.ownerGlobal;
-          let selectedOption = this.element.item(this.element.selectedIndex);
-
-          // For ordering of events, we're using non-e10s as our guide here,
-          // since the spec isn't exactly clear. In non-e10s:
-          // - If the user clicks on an element in the dropdown, we fire
-          //   mousedown, mouseup, input, change, and click events.
-          // - If the user uses the keyboard to select an element in the
-          //   dropdown, we only fire input and change events.
-          // - If the user pressed ESC key or clicks outside the dropdown,
-          //   we fire nothing as the selected option is unchanged.
-          if (this.closedWithClickOn) {
-            this.dispatchMouseEvent(win, selectedOption, "mousedown");
-            this.dispatchMouseEvent(win, selectedOption, "mouseup");
-          }
-
-          // Clear active document no matter user selects via keyboard or mouse
-          InspectorUtils.removeContentState(this.element, kStateActive,
-                                            /* aClearActiveDocument */ true);
-
-          // Fire input and change events when selected option changes
-          if (this.initialSelection !== selectedOption) {
-            let inputEvent = new win.UIEvent("input", {
-              bubbles: true,
-            });
-            this.element.dispatchEvent(inputEvent);
-
-            let changeEvent = new win.Event("change", {
-              bubbles: true,
-            });
-            this.element.dispatchEvent(changeEvent);
-          }
-
-          // Fire click event
-          if (this.closedWithClickOn) {
-            this.dispatchMouseEvent(win, selectedOption, "click");
-          }
-=======
         if (!this.element) {
           return;
         }
->>>>>>> upstream-releases
 
         let win = this.element.ownerGlobal;
         let selectedOption = this.element.item(this.element.selectedIndex);

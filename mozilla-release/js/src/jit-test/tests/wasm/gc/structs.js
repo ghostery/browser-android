@@ -4,13 +4,7 @@ var conf = getBuildConfiguration();
 
 var bin = wasmTextToBinary(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
       (table 2 funcref)
       (elem (i32.const 0) $doit $doitagain)
@@ -232,13 +226,7 @@ assertEq(withfloats._4, 0x1337);
 
 var stress = wasmTextToBinary(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
       (type $node (struct (field i32) (field (ref $node))))
       (func (export "iota1") (param $n i32) (result anyref)
        (local $list (ref $node))
@@ -266,13 +254,7 @@ assertEq(the_list, null);
 {
     let txt =
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
           (type $big (struct
                       (field (mut i32))
@@ -332,13 +314,7 @@ assertEq(the_list, null);
 {
     let txt =
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
           (type $big (struct
                       (field (mut i32))
@@ -413,13 +389,7 @@ assertEq(the_list, null);
 
 var bin = wasmTextToBinary(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
       (type $cons (struct (field i32) (field (ref $cons))))
 
@@ -462,13 +432,7 @@ assertErrorMessage(() => ins.pop(),
 {
     var ins = wasmEvalText(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (type $Node (struct (field i32)))
           (func (export "mk") (result anyref)
            (struct.new $Node (i32.const 37)))
@@ -486,13 +450,7 @@ assertErrorMessage(() => ins.pop(),
 {
     let ins = new WebAssembly.Instance(new WebAssembly.Module(wasmTextToBinary(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
           (type $s (struct
                     (field $x i32)
@@ -520,13 +478,7 @@ assertErrorMessage(() => ins.pop(),
 
 assertErrorMessage(() => wasmTextToBinary(
     `(module
-<<<<<<< HEAD
-      (gc_feature_opt_in 2)
-||||||| merged common ancestors
-      (gc_feature_opt_in 1)
-=======
       (gc_feature_opt_in 3)
->>>>>>> upstream-releases
 
       (type $s (struct (field $x i32)))
       (type $t (struct (field $x i32)))
@@ -540,13 +492,7 @@ assertErrorMessage(() => wasmTextToBinary(
 
 assertErrorMessage(() => new WebAssembly.Module(wasmTextToBinary(`
 (module
-<<<<<<< HEAD
-  (gc_feature_opt_in 2)
-||||||| merged common ancestors
-  (gc_feature_opt_in 1)
-=======
   (gc_feature_opt_in 3)
->>>>>>> upstream-releases
   (type $r (struct (field i32)))
   (func $f (param f64) (result anyref)
     (struct.new $r (local.get 0)))
@@ -557,13 +503,7 @@ WebAssembly.CompileError, /type mismatch/);
 
 assertErrorMessage(() => new WebAssembly.Module(wasmTextToBinary(`
 (module
-<<<<<<< HEAD
-  (gc_feature_opt_in 2)
-||||||| merged common ancestors
-  (gc_feature_opt_in 1)
-=======
   (gc_feature_opt_in 3)
->>>>>>> upstream-releases
   (type $r (struct (field i32) (field i32)))
   (func $f (result anyref)
     (struct.new $r (i32.const 0)))
@@ -574,13 +514,7 @@ WebAssembly.CompileError, /popping value from empty stack/);
 
 assertErrorMessage(() => new WebAssembly.Module(wasmTextToBinary(`
 (module
-<<<<<<< HEAD
-  (gc_feature_opt_in 2)
-||||||| merged common ancestors
-  (gc_feature_opt_in 1)
-=======
   (gc_feature_opt_in 3)
->>>>>>> upstream-releases
   (type $r (struct (field i32) (field i32)))
   (func $f (result anyref)
     (i32.const 0)
@@ -594,13 +528,7 @@ WebAssembly.CompileError, /unused values/);
 
 assertErrorMessage(() => new WebAssembly.Module(wasmTextToBinary(`
 (module
-<<<<<<< HEAD
-  (gc_feature_opt_in 2)
-||||||| merged common ancestors
-  (gc_feature_opt_in 1)
-=======
   (gc_feature_opt_in 3)
->>>>>>> upstream-releases
   (type (func (param i32) (result i32)))
   (func $f (result anyref)
     (struct.new 0))
@@ -612,13 +540,7 @@ WebAssembly.CompileError, /not a struct type/);
 
 wasmEvalText(`
  (module
-<<<<<<< HEAD
-   (gc_feature_opt_in 2)
-||||||| merged common ancestors
-   (gc_feature_opt_in 1)
-=======
    (gc_feature_opt_in 3)
->>>>>>> upstream-releases
    (type $p (struct (field i32)))
    (type $q (struct (field i32)))
    (func $f (result (ref $p))
@@ -629,13 +551,7 @@ wasmEvalText(`
 
 wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (struct (field i32))))
 `)
 
@@ -643,13 +559,7 @@ wasmEvalText(`
 
 wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (struct)))
 `)
 
@@ -657,13 +567,7 @@ wasmEvalText(`
 
 assertErrorMessage(() => wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (struct (field $x i32)))
  (type $s (struct (field $y i32))))
 `),
@@ -673,65 +577,35 @@ SyntaxError, /duplicate type name/);
 
 assertErrorMessage(() => wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s))
 `),
 SyntaxError, /parsing wasm text/);
 
 assertErrorMessage(() => wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (field $x i32)))
 `),
 SyntaxError, /bad type definition/);
 
 assertErrorMessage(() => wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (struct (field $x i31))))
 `),
 SyntaxError, /parsing wasm text/);
 
 assertErrorMessage(() => wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (struct (fjeld $x i32))))
 `),
 SyntaxError, /parsing wasm text/);
 
 assertErrorMessage(() => wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (struct abracadabra)))
 `),
 SyntaxError, /parsing wasm text/);
@@ -740,13 +614,7 @@ SyntaxError, /parsing wasm text/);
 
 assertErrorMessage(() => wasmEvalText(`
 (module
-<<<<<<< HEAD
- (gc_feature_opt_in 2)
-||||||| merged common ancestors
- (gc_feature_opt_in 1)
-=======
  (gc_feature_opt_in 3)
->>>>>>> upstream-releases
  (type $s (struct))
  (type $f (func (param i32) (result i32)))
  (func (type 0) (param i32) (result i32) (unreachable)))
@@ -758,13 +626,7 @@ WebAssembly.CompileError, /signature index references non-signature/);
 {
     let ins = wasmEvalText(
         `(module
-<<<<<<< HEAD
-          (gc_feature_opt_in 2)
-||||||| merged common ancestors
-          (gc_feature_opt_in 1)
-=======
           (gc_feature_opt_in 3)
->>>>>>> upstream-releases
           (type $s (struct
                     (field i32)
                     (field (mut i64))))
@@ -789,13 +651,7 @@ var bad = new Uint8Array([0x00, 0x61, 0x73, 0x6d,
 
                           0x2a,                   // GcFeatureOptIn section
                           0x01,                   // Section size
-<<<<<<< HEAD
-                          0x02,                   // Version
-||||||| merged common ancestors
-                          0x01,                   // Version
-=======
                           0x03,                   // Version
->>>>>>> upstream-releases
 
                           0x01,                   // Type section
                           0x03,                   // Section size

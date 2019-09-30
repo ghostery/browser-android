@@ -209,13 +209,8 @@ Page custom preSummary leaveSummary
 !define MUI_FINISHPAGE_RUN_FUNCTION LaunchApp
 !define MUI_FINISHPAGE_RUN_TEXT $(LAUNCH_TEXT)
 !define MUI_PAGE_CUSTOMFUNCTION_PRE preFinish
-<<<<<<< HEAD
-!define MUI_PAGE_CUSTOMFUNCTION_LEAVE postFinish
-||||||| merged common ancestors
-=======
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW showFinish
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE postFinish
->>>>>>> upstream-releases
 !insertmacro MUI_PAGE_FINISH
 
 ; Use the default dialog for IDD_VERIFY for a simple Banner
@@ -1155,12 +1150,6 @@ Function preWelcome
     Delete "$PLUGINSDIR\modern-wizard.bmp"
     CopyFiles /SILENT "$EXEDIR\core\distribution\modern-wizard.bmp" "$PLUGINSDIR\modern-wizard.bmp"
   ${EndIf}
-<<<<<<< HEAD
-
-  System::Call "kernel32::GetTickCount()l .s"
-  Pop $IntroPhaseStart
-||||||| merged common ancestors
-=======
 
   ; We don't want the header bitmap showing on the welcome page.
   GetDlgItem $0 $HWNDPARENT 1046
@@ -1185,16 +1174,9 @@ Function leaveWelcome
   ; Bring back the header bitmap for the next pages.
   GetDlgItem $0 $HWNDPARENT 1046
   ShowWindow $0 ${SW_SHOW}
->>>>>>> upstream-releases
 FunctionEnd
 
 Function preOptions
-<<<<<<< HEAD
-  System::Call "kernel32::GetTickCount()l .s"
-  Pop $OptionsPhaseStart
-
-||||||| merged common ancestors
-=======
   System::Call "kernel32::GetTickCount()l .s"
   Pop $OptionsPhaseStart
 
@@ -1205,7 +1187,6 @@ Function preOptions
   GetDlgItem $0 $HWNDPARENT 1038
   SetCtlColors $0 SYSCLR:WINDOWTEXT SYSCLR:WINDOW
 
->>>>>>> upstream-releases
   StrCpy $PageName "Options"
   ${If} ${FileExists} "$EXEDIR\core\distribution\modern-header.bmp"
   ${AndIf} $hHeaderBitmap == ""
@@ -1575,11 +1556,6 @@ Function showFinish
   ReadINIStr $0 "$PLUGINSDIR\ioSpecial.ini" "Field 4" "HWND"
   System::Call 'uxtheme::SetWindowTheme(i $0, w " ", w " ")'
   SetCtlColors $0 SYSCLR:WINDOWTEXT SYSCLR:WINDOW
-FunctionEnd
-
-Function postFinish
-  System::Call "kernel32::GetTickCount()l .s"
-  Pop $FinishPhaseEnd
 FunctionEnd
 
 Function postFinish

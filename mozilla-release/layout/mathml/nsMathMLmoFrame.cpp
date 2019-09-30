@@ -22,18 +22,8 @@ using namespace mozilla;
 // additional ComputedStyle to be used by our MathMLChar.
 #define NS_MATHML_CHAR_STYLE_CONTEXT_INDEX 0
 
-<<<<<<< HEAD
-nsIFrame* NS_NewMathMLmoFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsMathMLmoFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewMathMLmoFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsMathMLmoFrame(aStyle);
-=======
 nsIFrame* NS_NewMathMLmoFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsMathMLmoFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsMathMLmoFrame)
@@ -979,16 +969,8 @@ nsresult nsMathMLmoFrame::Place(DrawTarget* aDrawTarget, bool aPlaceOrigin,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsMathMLmoFrame::MarkIntrinsicISizesDirty() {
-||||||| merged common ancestors
-/* virtual */ void
-nsMathMLmoFrame::MarkIntrinsicISizesDirty()
-{
-=======
 /* virtual */
 void nsMathMLmoFrame::MarkIntrinsicISizesDirty() {
->>>>>>> upstream-releases
   // if we get this, it may mean that something changed in the text
   // content. So blow away everything an re-build the automatic data
   // from the parent of our outermost embellished container (we ensure
@@ -1011,19 +993,9 @@ void nsMathMLmoFrame::MarkIntrinsicISizesDirty() {
   nsMathMLContainerFrame::MarkIntrinsicISizesDirty();
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsMathMLmoFrame::GetIntrinsicISizeMetrics(
-    gfxContext* aRenderingContext, ReflowOutput& aDesiredSize) {
-||||||| merged common ancestors
-/* virtual */ void
-nsMathMLmoFrame::GetIntrinsicISizeMetrics(gfxContext* aRenderingContext,
-                                          ReflowOutput& aDesiredSize)
-{
-=======
 /* virtual */
 void nsMathMLmoFrame::GetIntrinsicISizeMetrics(gfxContext* aRenderingContext,
                                                ReflowOutput& aDesiredSize) {
->>>>>>> upstream-releases
   ProcessOperatorData();
   if (UseMathMLChar()) {
     uint32_t stretchHint =

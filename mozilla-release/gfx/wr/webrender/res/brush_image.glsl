@@ -123,18 +123,9 @@ void brush_vs(
     vec2 f = (vi.local_pos - local_rect.p0) / local_rect.size;
 
 #ifdef WR_FEATURE_ALPHA_PASS
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/brush_image.glsl
-    int color_mode = user_data.x & 0xffff;
-    int blend_mode = user_data.x >> 16;
-    int raster_space = user_data.y;
-||||||| merged common ancestors
-    int color_mode = user_data.x;
-    int raster_space = user_data.y;
-=======
     int color_mode = prim_user_data.x & 0xffff;
     int blend_mode = prim_user_data.x >> 16;
     int raster_space = prim_user_data.y;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/brush_image.glsl
 
     if (color_mode == COLOR_MODE_FROM_PASS) {
         color_mode = uMode;
@@ -174,20 +165,6 @@ void brush_vs(
 #ifdef WR_FEATURE_ALPHA_PASS
     vTileRepeat = repeat.xy;
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/res/brush_image.glsl
-    float opacity = float(user_data.z) / 65535.0;
-    switch (blend_mode) {
-        case BLEND_MODE_ALPHA:
-            image_data.color.a *= opacity;
-            break;
-        case BLEND_MODE_PREMUL_ALPHA:
-        default:
-            image_data.color *= opacity;
-            break;
-    }
-
-||||||| merged common ancestors
-=======
     float opacity = float(prim_user_data.z) / 65535.0;
     switch (blend_mode) {
         case BLEND_MODE_ALPHA:
@@ -199,7 +176,6 @@ void brush_vs(
             break;
     }
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/res/brush_image.glsl
     switch (color_mode) {
         case COLOR_MODE_ALPHA:
         case COLOR_MODE_BITMAP:

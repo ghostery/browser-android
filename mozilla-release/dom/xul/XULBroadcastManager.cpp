@@ -9,16 +9,9 @@
 #include "nsContentUtils.h"
 #include "mozilla/EventDispatcher.h"
 #include "mozilla/Logging.h"
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-
-=======
 #include "mozilla/dom/DocumentInlines.h"
 #include "nsXULElement.h"
 
->>>>>>> upstream-releases
 struct BroadcastListener {
   nsWeakPtr mListener;
   RefPtr<nsAtom> mAttribute;
@@ -73,104 +66,6 @@ namespace dom {
 static LazyLogModule sXULBroadCastManager("XULBroadcastManager");
 
 /* static */
-<<<<<<< HEAD
-bool XULBroadcastManager::MayNeedListener(const Element& aElement) {
-  if (aElement.NodeInfo()->Equals(nsGkAtoms::observes, kNameSpaceID_XUL)) {
-    return true;
-  }
-  if (aElement.HasAttr(nsGkAtoms::observes)) {
-    return true;
-  }
-  if (aElement.HasAttr(nsGkAtoms::command) &&
-      !(aElement.NodeInfo()->Equals(nsGkAtoms::menuitem, kNameSpaceID_XUL) ||
-        aElement.NodeInfo()->Equals(nsGkAtoms::key, kNameSpaceID_XUL))) {
-    return true;
-  }
-  return false;
-}
-
-XULBroadcastManager::XULBroadcastManager(nsIDocument* aDocument)
-    : mDocument(aDocument),
-      mBroadcasterMap(nullptr),
-      mHandlingDelayedAttrChange(false),
-      mHandlingDelayedBroadcasters(false) {}
-
-XULBroadcastManager::~XULBroadcastManager() { delete mBroadcasterMap; }
-
-void XULBroadcastManager::DropDocumentReference(void) { mDocument = nullptr; }
-
-void XULBroadcastManager::SynchronizeBroadcastListener(Element* aBroadcaster,
-                                                       Element* aListener,
-                                                       const nsAString& aAttr) {
-  if (!nsContentUtils::IsSafeToRunScript()) {
-    nsDelayedBroadcastUpdate delayedUpdate(aBroadcaster, aListener, aAttr);
-    mDelayedBroadcasters.AppendElement(delayedUpdate);
-    MaybeBroadcast();
-    return;
-  }
-  bool notify = mHandlingDelayedBroadcasters;
-
-  if (aAttr.EqualsLiteral("*")) {
-    uint32_t count = aBroadcaster->GetAttrCount();
-    nsTArray<nsAttrNameInfo> attributes(count);
-    for (uint32_t i = 0; i < count; ++i) {
-      const nsAttrName* attrName = aBroadcaster->GetAttrNameAt(i);
-      int32_t nameSpaceID = attrName->NamespaceID();
-      nsAtom* name = attrName->LocalName();
-
-      // _Don't_ push the |id|, |ref|, or |persist| attribute's value!
-      if (!CanBroadcast(nameSpaceID, name)) continue;
-
-      attributes.AppendElement(
-          nsAttrNameInfo(nameSpaceID, name, attrName->GetPrefix()));
-||||||| merged common ancestors
-bool
-XULBroadcastManager::MayNeedListener(const Element& aElement) {
-    if (aElement.NodeInfo()->Equals(nsGkAtoms::observes, kNameSpaceID_XUL)) {
-        return true;
-    }
-    if (aElement.HasAttr(nsGkAtoms::observes)) {
-        return true;
-    }
-    if (aElement.HasAttr(nsGkAtoms::command) &&
-        !(aElement.NodeInfo()->Equals(nsGkAtoms::menuitem, kNameSpaceID_XUL) ||
-          aElement.NodeInfo()->Equals(nsGkAtoms::key, kNameSpaceID_XUL))) {
-        return true;
-    }
-    return false;
-}
-
-XULBroadcastManager::XULBroadcastManager(nsIDocument* aDocument)
-  : mDocument(aDocument),
-    mBroadcasterMap(nullptr),
-    mHandlingDelayedAttrChange(false),
-    mHandlingDelayedBroadcasters(false)
-{
-}
-
-XULBroadcastManager::~XULBroadcastManager()
-{
-  delete mBroadcasterMap;
-}
-
-void
-XULBroadcastManager::DropDocumentReference(void)
-{
-  mDocument = nullptr;
-}
-
-void
-XULBroadcastManager::SynchronizeBroadcastListener(Element *aBroadcaster,
-                                                  Element *aListener,
-                                                  const nsAString &aAttr)
-{
-    if (!nsContentUtils::IsSafeToRunScript()) {
-        nsDelayedBroadcastUpdate delayedUpdate(aBroadcaster, aListener,
-                                               aAttr);
-        mDelayedBroadcasters.AppendElement(delayedUpdate);
-        MaybeBroadcast();
-        return;
-=======
 bool XULBroadcastManager::MayNeedListener(const Element& aElement) {
   if (aElement.NodeInfo()->Equals(nsGkAtoms::observes, kNameSpaceID_XUL)) {
     return true;
@@ -220,9 +115,7 @@ void XULBroadcastManager::SynchronizeBroadcastListener(Element* aBroadcaster,
 
       attributes.AppendElement(
           nsAttrNameInfo(nameSpaceID, name, attrName->GetPrefix()));
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
 
     count = attributes.Length();
     while (count-- > 0) {
@@ -233,46 +126,6 @@ void XULBroadcastManager::SynchronizeBroadcastListener(Element* aBroadcaster,
         aListener->SetAttr(nameSpaceID, name, attributes[count].mPrefix, value,
                            notify);
       }
-||||||| merged common ancestors
-    bool notify = mHandlingDelayedBroadcasters;
-
-    if (aAttr.EqualsLiteral("*")) {
-        uint32_t count = aBroadcaster->GetAttrCount();
-        nsTArray<nsAttrNameInfo> attributes(count);
-        for (uint32_t i = 0; i < count; ++i) {
-            const nsAttrName* attrName = aBroadcaster->GetAttrNameAt(i);
-            int32_t nameSpaceID = attrName->NamespaceID();
-            nsAtom* name = attrName->LocalName();
-
-            // _Don't_ push the |id|, |ref|, or |persist| attribute's value!
-            if (! CanBroadcast(nameSpaceID, name))
-                continue;
-
-            attributes.AppendElement(nsAttrNameInfo(nameSpaceID, name,
-                                                    attrName->GetPrefix()));
-        }
-
-        count = attributes.Length();
-        while (count-- > 0) {
-            int32_t nameSpaceID = attributes[count].mNamespaceID;
-            nsAtom* name = attributes[count].mName;
-            nsAutoString value;
-            if (aBroadcaster->GetAttr(nameSpaceID, name, value)) {
-              aListener->SetAttr(nameSpaceID, name, attributes[count].mPrefix,
-                                 value, notify);
-            }
-=======
-
-    count = attributes.Length();
-    while (count-- > 0) {
-      int32_t nameSpaceID = attributes[count].mNamespaceID;
-      nsAtom* name = attributes[count].mName;
-      nsAutoString value;
-      if (aBroadcaster->GetAttr(nameSpaceID, name, value)) {
-        aListener->SetAttr(nameSpaceID, name, attributes[count].mPrefix, value,
-                           notify);
-      }
->>>>>>> upstream-releases
 
 #if 0
             // XXX we don't fire the |onbroadcast| handler during
@@ -371,32 +224,6 @@ void XULBroadcastManager::AddListenerFor(Element& aBroadcaster,
   SynchronizeBroadcastListener(&aBroadcaster, &aListener, aAttr);
 }
 
-<<<<<<< HEAD
-void XULBroadcastManager::RemoveListenerFor(Element& aBroadcaster,
-                                            Element& aListener,
-                                            const nsAString& aAttr) {
-  // If we haven't added any broadcast listeners, then there sure
-  // aren't any to remove.
-  if (!mBroadcasterMap) return;
-||||||| merged common ancestors
-void
-XULBroadcastManager::RemoveListenerFor(Element& aBroadcaster,
-                                       Element& aListener,
-                                       const nsAString& aAttr)
-{
-    // If we haven't added any broadcast listeners, then there sure
-    // aren't any to remove.
-    if (! mBroadcasterMap)
-        return;
-
-    auto entry = static_cast<BroadcasterMapEntry*>
-                            (mBroadcasterMap->Search(&aBroadcaster));
-    if (entry) {
-        RefPtr<nsAtom> attr = NS_Atomize(aAttr);
-        for (size_t i = entry->mListeners.Length() - 1; i != (size_t)-1; --i) {
-            BroadcastListener* bl = entry->mListeners[i];
-            nsCOMPtr<Element> blListener = do_QueryReferent(bl->mListener);
-=======
 void XULBroadcastManager::RemoveListenerFor(Element& aBroadcaster,
                                             Element& aListener,
                                             const nsAString& aAttr) {
@@ -411,50 +238,15 @@ void XULBroadcastManager::RemoveListenerFor(Element& aBroadcaster,
     for (size_t i = entry->mListeners.Length() - 1; i != (size_t)-1; --i) {
       BroadcastListener* bl = entry->mListeners[i];
       nsCOMPtr<Element> blListener = do_QueryReferent(bl->mListener);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  auto entry =
-      static_cast<BroadcasterMapEntry*>(mBroadcasterMap->Search(&aBroadcaster));
-  if (entry) {
-    RefPtr<nsAtom> attr = NS_Atomize(aAttr);
-    for (size_t i = entry->mListeners.Length() - 1; i != (size_t)-1; --i) {
-      BroadcastListener* bl = entry->mListeners[i];
-      nsCOMPtr<Element> blListener = do_QueryReferent(bl->mListener);
-||||||| merged common ancestors
-            if (blListener == &aListener && bl->mAttribute == attr) {
-                entry->mListeners.RemoveElementAt(i);
-                delete bl;
-=======
       if (blListener == &aListener && bl->mAttribute == attr) {
         entry->mListeners.RemoveElementAt(i);
         delete bl;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (blListener == &aListener && bl->mAttribute == attr) {
-        entry->mListeners.RemoveElementAt(i);
-        delete bl;
-||||||| merged common ancestors
-                if (entry->mListeners.IsEmpty())
-                    mBroadcasterMap->RemoveEntry(entry);
-=======
-        if (entry->mListeners.IsEmpty()) mBroadcasterMap->RemoveEntry(entry);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
         if (entry->mListeners.IsEmpty()) mBroadcasterMap->RemoveEntry(entry);
 
         break;
       }
-||||||| merged common ancestors
-                break;
-            }
-        }
-=======
-        break;
-      }
->>>>>>> upstream-releases
     }
   }
 }
@@ -681,25 +473,11 @@ nsresult XULBroadcastManager::FindBroadcaster(Element* aElement,
   // Make sure we got a valid listener.
   NS_ENSURE_TRUE(*aListener, NS_ERROR_UNEXPECTED);
 
-<<<<<<< HEAD
-  // Try to find the broadcaster element in the document.
-  nsIDocument* doc = aElement->GetComposedDoc();
-  if (doc) {
-    *aBroadcaster = doc->GetElementById(aBroadcasterID);
-  }
-||||||| merged common ancestors
-    // Try to find the broadcaster element in the document.
-    nsIDocument* doc = aElement->GetComposedDoc();
-    if (doc) {
-      *aBroadcaster = doc->GetElementById(aBroadcasterID);
-    }
-=======
   // Try to find the broadcaster element in the document.
   Document* doc = aElement->GetComposedDoc();
   if (doc) {
     *aBroadcaster = doc->GetElementById(aBroadcasterID);
   }
->>>>>>> upstream-releases
 
   // The broadcaster element is missing.
   if (!*aBroadcaster) {

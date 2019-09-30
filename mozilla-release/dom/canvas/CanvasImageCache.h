@@ -33,17 +33,8 @@ class CanvasImageCache {
    */
   static void NotifyDrawImage(dom::Element* aImage,
                               dom::HTMLCanvasElement* aCanvas,
-<<<<<<< HEAD
-                              SourceSurface* aSource, const gfx::IntSize& aSize,
-                              bool aIsAccelerated);
-||||||| merged common ancestors
-                              SourceSurface* aSource,
-                              const gfx::IntSize& aSize,
-                              bool aIsAccelerated);
-=======
                               SourceSurface* aSource,
                               const gfx::IntSize& aSize);
->>>>>>> upstream-releases
 
   /**
    * Check whether aImage has recently been drawn any canvas. If we return

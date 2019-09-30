@@ -46,14 +46,7 @@ class Service : public mozIStorageService,
    *         number.  If aStr1 > aStr2, returns a positive number.  If
    *         aStr1 == aStr2, returns 0.
    */
-<<<<<<< HEAD
-  int localeCompareStrings(const nsAString &aStr1, const nsAString &aStr2,
-||||||| merged common ancestors
-  int localeCompareStrings(const nsAString &aStr1,
-                           const nsAString &aStr2,
-=======
   int localeCompareStrings(const nsAString& aStr1, const nsAString& aStr2,
->>>>>>> upstream-releases
                            int32_t aComparisonStrength);
 
   static already_AddRefed<Service> getSingleton();
@@ -118,7 +111,7 @@ class Service : public mozIStorageService,
    *         it.
    * @return The open connections.
    */
-  void getConnections(nsTArray<RefPtr<Connection> > &aConnections);
+  void getConnections(nsTArray<RefPtr<Connection> >& aConnections);
 
  private:
   Service();

@@ -16,19 +16,9 @@ add_task(async function() {
 async function runTests() {
   const target = await TargetFactory.forTab(gBrowser.selectedTab);
   await target.attach();
-<<<<<<< HEAD:mozilla-release/devtools/client/sourceeditor/test/browser_editor_autocomplete_events.js
-  const inspector = await target.getInspector();
-  const walker = inspector.walker;
-  const {ed, win, edWin} = await setup(null, {
-||||||| merged common ancestors
-  const inspector = target.getFront("inspector");
-  const walker = await inspector.getWalker();
-  const {ed, win, edWin} = await setup(null, {
-=======
   const inspector = await target.getInspector();
   const walker = inspector.walker;
   const { ed, win, edWin } = await setup({
->>>>>>> upstream-releases:mozilla-release/devtools/client/shared/sourceeditor/test/browser_editor_autocomplete_events.js
     autocomplete: true,
     mode: Editor.modes.css,
     autocompleteOpts: {

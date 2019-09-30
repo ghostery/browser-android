@@ -122,71 +122,6 @@ public final class HardwareUtils {
         return getPreferredAbi();
     }
 
-<<<<<<< HEAD
-    private static final int ELF_MACHINE_UNKNOWN = 0;
-    private static final int ELF_MACHINE_X86 = 0x03;
-    private static final int ELF_MACHINE_X86_64 = 0x3e;
-    private static final int ELF_MACHINE_ARM = 0x28;
-    private static final int ELF_MACHINE_AARCH64 = 0xb7;
-
-    private static int readElfMachineType(final File file) {
-        try (final FileInputStream is = new FileInputStream(file)) {
-            final byte[] buf = new byte[19];
-            int count = 0;
-            while (count != buf.length) {
-                count += is.read(buf, count, buf.length - count);
-            }
-
-            int machineType = buf[18];
-            if (machineType < 0) {
-                machineType += 256;
-            }
-
-            return machineType;
-        } catch (FileNotFoundException e) {
-            Log.w(LOGTAG, String.format("Failed to open %s", file.getAbsolutePath()));
-            return ELF_MACHINE_UNKNOWN;
-        } catch (IOException e) {
-            Log.w(LOGTAG, "Failed to read library", e);
-            return ELF_MACHINE_UNKNOWN;
-        }
-    }
-
-    private static String machineTypeToString(int machineType) {
-        switch (machineType) {
-            case ELF_MACHINE_X86:
-                return "x86";
-            case ELF_MACHINE_X86_64:
-                return "x86_64";
-            case ELF_MACHINE_ARM:
-                return "arm";
-            case ELF_MACHINE_AARCH64:
-                return "aarch64";
-            case ELF_MACHINE_UNKNOWN:
-            default:
-                return String.format("unknown (0x%x)", machineType);
-        }
-    }
-
-    private static void initMachineType() {
-        if (sMachineType >= 0) {
-            return;
-        }
-
-        sMachineType = readElfMachineType(new File(sLibDir, System.mapLibraryName("mozglue")));
-    }
-
-    /**
-     * @return The ABI of the libraries installed for this app.
-     */
-    public static String getLibrariesABI() {
-        initMachineType();
-
-        return machineTypeToString(sMachineType);
-    }
-
-||||||| merged common ancestors
-=======
     private static final int ELF_MACHINE_UNKNOWN = 0;
     private static final int ELF_MACHINE_X86 = 0x03;
     private static final int ELF_MACHINE_X86_64 = 0x3e;
@@ -249,7 +184,6 @@ public final class HardwareUtils {
         return machineTypeToString(sMachineType);
     }
 
->>>>>>> upstream-releases
     /**
      * @return false if the current system is not supported (e.g. APK/system ABI mismatch).
      */

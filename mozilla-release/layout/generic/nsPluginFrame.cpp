@@ -82,16 +82,8 @@ using mozilla::DefaultXDisplay;
 
 #include "mozilla/dom/BrowserChild.h"
 
-<<<<<<< HEAD
-#ifdef CreateEvent  // Thank you MS.
-#undef CreateEvent
-||||||| merged common ancestors
-#ifdef CreateEvent // Thank you MS.
-#undef CreateEvent
-=======
 #ifdef CreateEvent  // Thank you MS.
 #  undef CreateEvent
->>>>>>> upstream-releases
 #endif
 
 static mozilla::LazyLogModule sPluginFrameLog("nsPluginFrame");
@@ -141,24 +133,6 @@ class PluginBackgroundSink : public ReadbackSink {
   nsPluginFrame* mFrame;
 };
 
-<<<<<<< HEAD
-nsPluginFrame::nsPluginFrame(ComputedStyle* aStyle)
-    : nsFrame(aStyle, kClassID),
-      mInstanceOwner(nullptr),
-      mOuterView(nullptr),
-      mInnerView(nullptr),
-      mBackgroundSink(nullptr),
-      mReflowCallbackPosted(false) {
-||||||| merged common ancestors
-nsPluginFrame::nsPluginFrame(ComputedStyle* aStyle)
-  : nsFrame(aStyle, kClassID)
-  , mInstanceOwner(nullptr)
-  , mOuterView(nullptr)
-  , mInnerView(nullptr)
-  , mBackgroundSink(nullptr)
-  , mReflowCallbackPosted(false)
-{
-=======
 nsPluginFrame::nsPluginFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
     : nsFrame(aStyle, aPresContext, kClassID),
       mInstanceOwner(nullptr),
@@ -166,7 +140,6 @@ nsPluginFrame::nsPluginFrame(ComputedStyle* aStyle, nsPresContext* aPresContext)
       mInnerView(nullptr),
       mBackgroundSink(nullptr),
       mReflowCallbackPosted(false) {
->>>>>>> upstream-releases
   MOZ_LOG(sPluginFrameLog, LogLevel::Debug,
           ("Created new nsPluginFrame %p\n", this));
 }
@@ -184,20 +157,9 @@ NS_QUERYFRAME_TAIL_INHERITING(nsFrame)
 #ifdef ACCESSIBILITY
 a11y::AccType nsPluginFrame::AccessibleType() { return a11y::ePluginType; }
 
-<<<<<<< HEAD
-#ifdef XP_WIN
-NS_IMETHODIMP nsPluginFrame::GetPluginPort(HWND* aPort) {
-  *aPort = (HWND)mInstanceOwner->GetPluginPort();
-||||||| merged common ancestors
-#ifdef XP_WIN
-NS_IMETHODIMP nsPluginFrame::GetPluginPort(HWND *aPort)
-{
-  *aPort = (HWND) mInstanceOwner->GetPluginPort();
-=======
 #  ifdef XP_WIN
 NS_IMETHODIMP nsPluginFrame::GetPluginPort(HWND* aPort) {
   *aPort = (HWND)mInstanceOwner->GetPluginPort();
->>>>>>> upstream-releases
   return NS_OK;
 }
 #  endif
@@ -240,17 +202,8 @@ void nsPluginFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
-<<<<<<< HEAD
-/* virtual */ void nsPluginFrame::DidSetComputedStyle(
-    ComputedStyle* aOldComputedStyle) {
-||||||| merged common ancestors
-/* virtual */ void
-nsPluginFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle)
-{
-=======
 /* virtual */
 void nsPluginFrame::DidSetComputedStyle(ComputedStyle* aOldComputedStyle) {
->>>>>>> upstream-releases
   if (HasView()) {
     nsView* view = GetView();
     nsViewManager* vm = view->GetViewManager();
@@ -399,17 +352,8 @@ nsresult nsPluginFrame::PrepForDrawing(nsIWidget* aWidget) {
 #define EMBED_DEF_WIDTH 240
 #define EMBED_DEF_HEIGHT 200
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsPluginFrame::GetMinISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsPluginFrame::GetMinISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsPluginFrame::GetMinISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   nscoord result = 0;
 
   if (!IsHidden(false)) {
@@ -424,17 +368,8 @@ nscoord nsPluginFrame::GetMinISize(gfxContext* aRenderingContext) {
   return result;
 }
 
-<<<<<<< HEAD
-/* virtual */ nscoord nsPluginFrame::GetPrefISize(
-    gfxContext* aRenderingContext) {
-||||||| merged common ancestors
-/* virtual */ nscoord
-nsPluginFrame::GetPrefISize(gfxContext *aRenderingContext)
-{
-=======
 /* virtual */
 nscoord nsPluginFrame::GetPrefISize(gfxContext* aRenderingContext) {
->>>>>>> upstream-releases
   return nsPluginFrame::GetMinISize(aRenderingContext);
 }
 
@@ -868,21 +803,9 @@ void nsPluginFrame::DidReflow(nsPresContext* aPresContext,
   }
 }
 
-<<<<<<< HEAD
-/* static */ void nsPluginFrame::PaintPrintPlugin(nsIFrame* aFrame,
-                                                  gfxContext* aCtx,
-                                                  const nsRect& aDirtyRect,
-                                                  nsPoint aPt) {
-||||||| merged common ancestors
-/* static */ void
-nsPluginFrame::PaintPrintPlugin(nsIFrame* aFrame, gfxContext* aCtx,
-                                const nsRect& aDirtyRect, nsPoint aPt)
-{
-=======
 /* static */
 void nsPluginFrame::PaintPrintPlugin(nsIFrame* aFrame, gfxContext* aCtx,
                                      const nsRect& aDirtyRect, nsPoint aPt) {
->>>>>>> upstream-releases
   // Translate the context:
   nsPoint pt = aPt + aFrame->GetContentRectRelativeToSelf().TopLeft();
   gfxPoint devPixelPt = nsLayoutUtils::PointToGfxPoint(
@@ -902,25 +825,10 @@ void nsPluginFrame::PaintPrintPlugin(nsIFrame* aFrame, gfxContext* aCtx,
  * the ReadbackLayer, which we then use as an opaque buffer for plugins to
  * asynchronously draw onto.
  */
-<<<<<<< HEAD
-class nsDisplayPluginReadback : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayPluginReadback : public nsDisplayItem {
-public:
-=======
 class nsDisplayPluginReadback : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayPluginReadback(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame)
-<<<<<<< HEAD
-      : nsDisplayItem(aBuilder, aFrame) {
-||||||| merged common ancestors
-    : nsDisplayItem(aBuilder, aFrame)
-  {
-=======
       : nsPaintedDisplayItem(aBuilder, aFrame) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayPluginReadback);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -940,23 +848,10 @@ class nsDisplayPluginReadback : public nsPaintedDisplayItem {
         aBuilder, aManager, this, aContainerParameters);
   }
 
-<<<<<<< HEAD
-  LayerState GetLayerState(
-      nsDisplayListBuilder* aBuilder, LayerManager* aManager,
-      const ContainerLayerParameters& aParameters) override {
-    return LAYER_ACTIVE;
-||||||| merged common ancestors
-  LayerState GetLayerState(nsDisplayListBuilder* aBuilder,
-                                   LayerManager* aManager,
-                                   const ContainerLayerParameters& aParameters) override
-  {
-    return LAYER_ACTIVE;
-=======
   LayerState GetLayerState(
       nsDisplayListBuilder* aBuilder, LayerManager* aManager,
       const ContainerLayerParameters& aParameters) override {
     return LayerState::LAYER_ACTIVE;
->>>>>>> upstream-releases
   }
 
   virtual nsDisplayItemGeometry* AllocateGeometry(
@@ -1081,30 +976,6 @@ nsRegion nsDisplayPlugin::GetOpaqueRegion(nsDisplayListBuilder* aBuilder,
   return result;
 }
 
-<<<<<<< HEAD
-bool nsDisplayPlugin::CreateWebRenderCommands(
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder) {
-  return static_cast<nsPluginFrame*>(mFrame)->CreateWebRenderCommands(
-      this, aBuilder, aResources, aSc, aManager, aDisplayListBuilder);
-||||||| merged common ancestors
-bool
-nsDisplayPlugin::CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                         mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                         const StackingContextHelper& aSc,
-                                         mozilla::layers::WebRenderLayerManager* aManager,
-                                         nsDisplayListBuilder* aDisplayListBuilder)
-{
-  return static_cast<nsPluginFrame*>(mFrame)->CreateWebRenderCommands(this,
-                                                                      aBuilder,
-                                                                      aResources,
-                                                                      aSc,
-                                                                      aManager,
-                                                                      aDisplayListBuilder);
-=======
 bool nsDisplayPlugin::CreateWebRenderCommands(
     mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
@@ -1113,7 +984,6 @@ bool nsDisplayPlugin::CreateWebRenderCommands(
     nsDisplayListBuilder* aDisplayListBuilder) {
   return static_cast<nsPluginFrame*>(mFrame)->CreateWebRenderCommands(
       this, aBuilder, aResources, aSc, aManager, aDisplayListBuilder);
->>>>>>> upstream-releases
 }
 
 nsresult nsPluginFrame::PluginEventNotifier::Run() {
@@ -1230,63 +1100,21 @@ void nsPluginFrame::BuildDisplayList(nsDisplayListBuilder* aBuilder,
 
   // determine if we are printing
   if (type == nsPresContext::eContext_Print) {
-<<<<<<< HEAD
-    aLists.Content()->AppendToTop(MakeDisplayItem<nsDisplayGeneric>(
-        aBuilder, this, PaintPrintPlugin, "PrintPlugin",
-        DisplayItemType::TYPE_PRINT_PLUGIN));
-||||||| merged common ancestors
-    aLists.Content()->AppendToTop(
-      MakeDisplayItem<nsDisplayGeneric>(aBuilder, this, PaintPrintPlugin, "PrintPlugin",
-                                        DisplayItemType::TYPE_PRINT_PLUGIN));
-=======
     aLists.Content()->AppendNewToTop<nsDisplayGeneric>(
         aBuilder, this, PaintPrintPlugin, "PrintPlugin",
         DisplayItemType::TYPE_PRINT_PLUGIN);
->>>>>>> upstream-releases
   } else {
     LayerState state = GetLayerState(aBuilder, nullptr);
-<<<<<<< HEAD
-    if (state == LAYER_INACTIVE && nsDisplayItem::ForceActiveLayers()) {
-      state = LAYER_ACTIVE;
-||||||| merged common ancestors
-    if (state == LAYER_INACTIVE &&
-        nsDisplayItem::ForceActiveLayers()) {
-      state = LAYER_ACTIVE;
-=======
     if (state == LayerState::LAYER_INACTIVE &&
         nsDisplayItem::ForceActiveLayers()) {
       state = LayerState::LAYER_ACTIVE;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (aBuilder->IsPaintingToWindow() && state == LAYER_ACTIVE &&
-||||||| merged common ancestors
-    if (aBuilder->IsPaintingToWindow() &&
-        state == LAYER_ACTIVE &&
-=======
     if (aBuilder->IsPaintingToWindow() && state == LayerState::LAYER_ACTIVE &&
->>>>>>> upstream-releases
         IsTransparentMode()) {
-<<<<<<< HEAD
-      aLists.Content()->AppendToTop(
-          MakeDisplayItem<nsDisplayPluginReadback>(aBuilder, this));
-||||||| merged common ancestors
-      aLists.Content()->AppendToTop(
-        MakeDisplayItem<nsDisplayPluginReadback>(aBuilder, this));
-=======
       aLists.Content()->AppendNewToTop<nsDisplayPluginReadback>(aBuilder, this);
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    aLists.Content()->AppendToTop(
-        MakeDisplayItem<nsDisplayPlugin>(aBuilder, this));
-||||||| merged common ancestors
-    aLists.Content()->AppendToTop(
-      MakeDisplayItem<nsDisplayPlugin>(aBuilder, this));
-=======
     aLists.Content()->AppendNewToTop<nsDisplayPlugin>(aBuilder, this);
->>>>>>> upstream-releases
   }
 }
 
@@ -1403,22 +1231,9 @@ nsRect nsPluginFrame::GetPaintedRect(const nsDisplayPlugin* aItem) const {
   return r;
 }
 
-<<<<<<< HEAD
-LayerState nsPluginFrame::GetLayerState(nsDisplayListBuilder* aBuilder,
-                                        LayerManager* aManager) {
-  if (!mInstanceOwner) return LAYER_NONE;
-||||||| merged common ancestors
-LayerState
-nsPluginFrame::GetLayerState(nsDisplayListBuilder* aBuilder,
-                             LayerManager* aManager)
-{
-  if (!mInstanceOwner)
-    return LAYER_NONE;
-=======
 LayerState nsPluginFrame::GetLayerState(nsDisplayListBuilder* aBuilder,
                                         LayerManager* aManager) {
   if (!mInstanceOwner) return LayerState::LAYER_NONE;
->>>>>>> upstream-releases
 
   if (mInstanceOwner->NeedsScrollImageLayer()) {
     return LayerState::LAYER_ACTIVE;
@@ -1484,30 +1299,12 @@ bool nsPluginFrame::GetBounds(nsDisplayItem* aItem, IntSize& aSize,
   return true;
 }
 
-<<<<<<< HEAD
-bool nsPluginFrame::CreateWebRenderCommands(
-    nsDisplayItem* aItem, mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const StackingContextHelper& aSc,
-    mozilla::layers::WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder) {
-||||||| merged common ancestors
-bool
-nsPluginFrame::CreateWebRenderCommands(nsDisplayItem* aItem,
-                                       mozilla::wr::DisplayListBuilder& aBuilder,
-                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                       const StackingContextHelper& aSc,
-                                       mozilla::layers::WebRenderLayerManager* aManager,
-                                       nsDisplayListBuilder* aDisplayListBuilder)
-{
-=======
 bool nsPluginFrame::CreateWebRenderCommands(
     nsDisplayItem* aItem, mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
     const StackingContextHelper& aSc,
     mozilla::layers::RenderRootStateManager* aManager,
     nsDisplayListBuilder* aDisplayListBuilder) {
->>>>>>> upstream-releases
   IntSize size;
   gfxRect r;
   if (!GetBounds(aItem, size, r)) {
@@ -1541,15 +1338,8 @@ bool nsPluginFrame::CreateWebRenderCommands(
   // failure will be due to resource constraints and fallback is unlikely to
   // help us. Hence we can ignore the return value from PushImage.
   LayoutDeviceRect dest(r.x, r.y, size.width, size.height);
-<<<<<<< HEAD
-  aManager->CommandBuilder().PushImage(aItem, container, aBuilder, aResources,
-                                       aSc, dest);
-||||||| merged common ancestors
-  aManager->CommandBuilder().PushImage(aItem, container, aBuilder, aResources, aSc, dest);
-=======
   aManager->CommandBuilder().PushImage(aItem, container, aBuilder, aResources,
                                        aSc, dest, dest);
->>>>>>> upstream-releases
   return true;
 }
 
@@ -1799,16 +1589,7 @@ nsNPAPIPluginInstance* nsPluginFrame::GetPluginInstance() {
   return mInstanceOwner->GetInstance();
 }
 
-<<<<<<< HEAD
-nsresult nsPluginFrame::GetCursor(const nsPoint& aPoint,
-                                  nsIFrame::Cursor& aCursor) {
-||||||| merged common ancestors
-nsresult
-nsPluginFrame::GetCursor(const nsPoint& aPoint, nsIFrame::Cursor& aCursor)
-{
-=======
 Maybe<nsIFrame::Cursor> nsPluginFrame::GetCursor(const nsPoint& aPoint) {
->>>>>>> upstream-releases
   if (!mInstanceOwner) {
     return Nothing();
   }
@@ -1851,17 +1632,8 @@ nsIObjectFrame* nsPluginFrame::GetNextObjectFrame(nsPresContext* aPresContext,
   return nullptr;
 }
 
-<<<<<<< HEAD
-/*static*/ void nsPluginFrame::BeginSwapDocShells(nsISupports* aSupports,
-                                                  void*) {
-||||||| merged common ancestors
-/*static*/ void
-nsPluginFrame::BeginSwapDocShells(nsISupports* aSupports, void*)
-{
-=======
 /*static*/
 void nsPluginFrame::BeginSwapDocShells(nsISupports* aSupports, void*) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aSupports, "null parameter");
   nsCOMPtr<nsIContent> content(do_QueryInterface(aSupports));
   if (!content) {
@@ -1879,16 +1651,8 @@ void nsPluginFrame::BeginSwapDocShells(nsISupports* aSupports, void*) {
   objectFrame->UnregisterPluginForGeometryUpdates();
 }
 
-<<<<<<< HEAD
-/*static*/ void nsPluginFrame::EndSwapDocShells(nsISupports* aSupports, void*) {
-||||||| merged common ancestors
-/*static*/ void
-nsPluginFrame::EndSwapDocShells(nsISupports* aSupports, void*)
-{
-=======
 /*static*/
 void nsPluginFrame::EndSwapDocShells(nsISupports* aSupports, void*) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aSupports, "null parameter");
   nsCOMPtr<nsIContent> content(do_QueryInterface(aSupports));
   if (!content) {
@@ -1920,18 +1684,8 @@ void nsPluginFrame::EndSwapDocShells(nsISupports* aSupports, void*) {
   }
 }
 
-<<<<<<< HEAD
-nsIFrame* NS_NewObjectFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsPluginFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewObjectFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsPluginFrame(aStyle);
-=======
 nsIFrame* NS_NewObjectFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsPluginFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 bool nsPluginFrame::IsPaintedByGecko() const {

@@ -25,16 +25,8 @@ pref(browser.link.open_newwindow,2) load 1429507_2.html # window.open() in tab d
 load 1453030.html
 load 1468451.html
 skip-if(Android) load 1490700.html # No screenshare on Android
-<<<<<<< HEAD
-load 1505957.html
-load 1511130.html
-load 1510848.html
-load 1516292.html
-||||||| merged common ancestors
-=======
 load 1505957.html
 load 1509442.html
 load 1511130.html
 load 1510848.html
 load 1516292.html
->>>>>>> upstream-releases

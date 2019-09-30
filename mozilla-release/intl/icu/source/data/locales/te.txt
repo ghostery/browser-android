@@ -25,9 +25,7 @@ te{
     NumberElements{
         latn{
             miscPatterns{
-                approximately{"~{0}"}
                 atLeast{"{0}+"}
-                atMost{"≤{0}"}
                 range{"{0}–{1}"}
             }
             patterns{
@@ -229,13 +227,7 @@ te{
             }
         }
     }
-<<<<<<< HEAD
-    Version{"2.1.43.50"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.48.17"}
->>>>>>> upstream-releases
     calendar{
         coptic{
             monthNames{

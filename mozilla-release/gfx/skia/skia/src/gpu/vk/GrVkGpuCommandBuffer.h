@@ -75,16 +75,6 @@ public:
     void copy(GrSurface* src, GrSurfaceOrigin srcOrigin, const SkIRect& srcRect,
               const SkIPoint& dstPoint) override;
 
-<<<<<<< HEAD
-    void set(GrRenderTarget*, GrSurfaceOrigin,
-             const GrGpuRTCommandBuffer::LoadAndStoreInfo&,
-             const GrGpuRTCommandBuffer::StencilLoadAndStoreInfo&);
-    void reset();
-
-    void submit();
-||||||| merged common ancestors
-    void submit() override;
-=======
     void executeDrawable(std::unique_ptr<SkDrawable::GpuDrawHandler>) override;
 
     void set(GrRenderTarget*, GrSurfaceOrigin,
@@ -93,7 +83,6 @@ public:
     void reset();
 
     void submit();
->>>>>>> upstream-releases
 
 private:
     void init();
@@ -107,38 +96,6 @@ private:
     GrGpu* gpu() override;
 
     // Bind vertex and index buffers
-<<<<<<< HEAD
-    void bindGeometry(const GrBuffer* indexBuffer,
-                      const GrBuffer* vertexBuffer,
-                      const GrBuffer* instanceBuffer);
-
-    GrVkPipelineState* prepareDrawState(const GrPrimitiveProcessor&,
-                                        const GrPipeline&,
-                                        const GrPipeline::FixedDynamicState*,
-                                        const GrPipeline::DynamicStateArrays*,
-                                        GrPrimitiveType);
-
-    void onDraw(const GrPrimitiveProcessor&,
-                const GrPipeline&,
-                const GrPipeline::FixedDynamicState*,
-                const GrPipeline::DynamicStateArrays*,
-                const GrMesh[],
-||||||| merged common ancestors
-    void bindGeometry(const GrPrimitiveProcessor&,
-                      const GrBuffer* indexBuffer,
-                      const GrBuffer* vertexBuffer,
-                      const GrBuffer* instanceBuffer);
-
-    GrVkPipelineState* prepareDrawState(const GrPipeline&,
-                                        const GrPrimitiveProcessor&,
-                                        GrPrimitiveType,
-                                        bool hasDynamicState);
-
-    void onDraw(const GrPipeline& pipeline,
-                const GrPrimitiveProcessor& primProc,
-                const GrMesh mesh[],
-                const GrPipeline::DynamicState[],
-=======
     void bindGeometry(const GrGpuBuffer* indexBuffer,
                       const GrGpuBuffer* vertexBuffer,
                       const GrGpuBuffer* instanceBuffer);
@@ -154,7 +111,6 @@ private:
                 const GrPipeline::FixedDynamicState*,
                 const GrPipeline::DynamicStateArrays*,
                 const GrMesh[],
->>>>>>> upstream-releases
                 int meshCount,
                 const SkRect& bounds) override;
 
@@ -202,17 +158,6 @@ private:
 
     struct CopyInfo {
         CopyInfo(GrSurface* src, GrSurfaceOrigin srcOrigin, const SkIRect& srcRect,
-<<<<<<< HEAD
-                 const SkIPoint& dstPoint, bool shouldDiscardDst)
-            : fSrc(src)
-            , fSrcOrigin(srcOrigin)
-            , fSrcRect(srcRect)
-            , fDstPoint(dstPoint)
-            , fShouldDiscardDst(shouldDiscardDst) {}
-||||||| merged common ancestors
-                 const SkIPoint& dstPoint)
-            : fSrc(src), fSrcOrigin(srcOrigin), fSrcRect(srcRect), fDstPoint(dstPoint) {}
-=======
                  const SkIPoint& dstPoint, bool shouldDiscardDst)
             : fSrc(sk_ref_sp(src))
             , fSrcOrigin(srcOrigin)
@@ -226,33 +171,12 @@ private:
         SkIPoint         fDstPoint;
         bool             fShouldDiscardDst;
     };
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-        GrSurface*      fSrc;
-        GrSurfaceOrigin fSrcOrigin;
-        SkIRect         fSrcRect;
-        SkIPoint        fDstPoint;
-        bool            fShouldDiscardDst;
-    };
 
     enum class LoadStoreState {
         kUnknown,
         kStartsWithClear,
         kStartsWithDiscard,
         kLoadAndStore,
-||||||| merged common ancestors
-        GrSurface*      fSrc;
-        GrSurfaceOrigin fSrcOrigin;
-        SkIRect         fSrcRect;
-        SkIPoint        fDstPoint;
-=======
-    enum class LoadStoreState {
-        kUnknown,
-        kStartsWithClear,
-        kStartsWithDiscard,
-        kLoadAndStore,
->>>>>>> upstream-releases
     };
 
     struct CommandBufferInfo {
@@ -266,18 +190,10 @@ private:
         // command buffer.
         SkTArray<InlineUploadInfo>             fPreDrawUploads;
         SkTArray<CopyInfo>                     fPreCopies;
-<<<<<<< HEAD
-        // Array of images that will be sampled and thus need to be transfered to sampled layout
-        // before submitting the secondary command buffers. This must happen after we do any predraw
-        // uploads or copies.
-        SkTArray<GrVkImage*>                   fSampledImages;
-||||||| merged common ancestors
-=======
         // Array of images that will be sampled and thus need to be transfered to sampled layout
         // before submitting the secondary command buffers. This must happen after we do any predraw
         // uploads or copies.
         SkTArray<sk_sp<GrVkTexture>>           fSampledTextures;
->>>>>>> upstream-releases
 
         GrVkSecondaryCommandBuffer* currentCmdBuf() {
             return fCommandBuffers.back();

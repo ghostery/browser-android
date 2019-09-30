@@ -54,32 +54,12 @@ let RPMAccessManager = {
     },
     "about:privatebrowsing": {
       // "sendAsyncMessage": handled within AboutPrivateBrowsingHandler.jsm
-<<<<<<< HEAD
-      // "setBoolPref": handled within AsyncPrefs.jsm and uses the pref
-      //                ["privacy.trackingprotection.pbmode.enabled"],
-      "getBoolPref": ["privacy.trackingprotection.pbmode.enabled"],
-      "getFormatURLPref": ["privacy.trackingprotection.introURL",
-                           "app.support.baseURL"],
-      "isWindowPrivate": ["yes"],
-||||||| merged common ancestors
-      // "setBoolPref": handled within AsyncPrefs.jsm and uses the prefs
-      //                ["browser.contentblocking.enabled",
-      //                 "privacy.trackingprotection.pbmode.enabled"],
-      "getBoolPref": ["browser.contentblocking.enabled",
-                      "browser.contentblocking.ui.enabled",
-                      "privacy.trackingprotection.enabled",
-                      "privacy.trackingprotection.pbmode.enabled"],
-      "getFormatURLPref": ["privacy.trackingprotection.introURL",
-                           "app.support.baseURL"],
-      "isWindowPrivate": ["yes"],
-=======
       getFormatURLPref: ["app.support.baseURL"],
       isWindowPrivate: ["yes"],
     },
     "about:newinstall": {
       getUpdateChannel: ["yes"],
       getFxAccountsEndpoint: ["yes"],
->>>>>>> upstream-releases
     },
   },
 

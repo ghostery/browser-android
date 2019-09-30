@@ -22,15 +22,8 @@ from mochitest_options import MochitestArgumentParser
 
 from manifestparser import TestManifest
 from manifestparser.filters import chunk_by_slice
-<<<<<<< HEAD
-from mozdevice import ADBAndroid, ADBTimeoutError
-from mozprofile.cli import parse_key_value, parse_preferences
-||||||| merged common ancestors
-from mozdevice import ADBAndroid, ADBTimeoutError
-=======
 from mozdevice import ADBDevice, ADBTimeoutError
 from mozprofile.cli import parse_key_value, parse_preferences
->>>>>>> upstream-releases
 import mozfile
 import mozinfo
 

@@ -48,24 +48,7 @@ class nsNavHistoryQuery final : public nsINavHistoryQuery {
   nsIURI* Uri() { return mUri; }  // NOT AddRef-ed!
   bool AnnotationIsNot() { return mAnnotationIsNot; }
   const nsCString& Annotation() { return mAnnotation; }
-<<<<<<< HEAD
-  const nsTArray<nsCString>& Parents() { return mParents; }
-  nsresult SetParents(const nsTArray<nsCString>& aParents) {
-    if (!mParents.ReplaceElementsAt(0, mParents.Length(), aParents))
-      return NS_ERROR_OUT_OF_MEMORY;
-    return NS_OK;
-  }
-||||||| merged common ancestors
-  const nsTArray<nsCString>& Parents() { return mParents; }
-  nsresult SetParents(const nsTArray<nsCString>& aParents)
-  {
-    if (!mParents.ReplaceElementsAt(0, mParents.Length(), aParents))
-      return NS_ERROR_OUT_OF_MEMORY;
-    return NS_OK;
-  }
-=======
   const nsTArray<nsCString>& Parents() const { return mParents; }
->>>>>>> upstream-releases
 
   const nsTArray<nsString>& Tags() const { return mTags; }
   nsresult SetTags(const nsTArray<nsString>& aTags) {
@@ -76,21 +59,6 @@ class nsNavHistoryQuery final : public nsINavHistoryQuery {
   bool TagsAreNot() { return mTagsAreNot; }
 
   const nsTArray<uint32_t>& Transitions() const { return mTransitions; }
-<<<<<<< HEAD
-  nsresult SetTransitions(const nsTArray<uint32_t>& aTransitions) {
-    if (!mTransitions.ReplaceElementsAt(0, mTransitions.Length(), aTransitions))
-      return NS_ERROR_OUT_OF_MEMORY;
-    return NS_OK;
-  }
-||||||| merged common ancestors
-  nsresult SetTransitions(const nsTArray<uint32_t>& aTransitions)
-  {
-    if (!mTransitions.ReplaceElementsAt(0, mTransitions.Length(), aTransitions))
-      return NS_ERROR_OUT_OF_MEMORY;
-    return NS_OK;
-  }
-=======
->>>>>>> upstream-releases
 
   nsresult Clone(nsNavHistoryQuery** _clone);
 

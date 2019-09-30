@@ -81,21 +81,10 @@ class TextOverflow final {
 
   // Edges to align the IStart and IEnd markers to.
   struct AlignmentEdges {
-<<<<<<< HEAD
-    AlignmentEdges() : mIStart(0), mIEnd(0), mAssigned(false) {}
-    void Accumulate(WritingMode aWM, const LogicalRect& aRect) {
-      if (MOZ_LIKELY(mAssigned)) {
-||||||| merged common ancestors
-    AlignmentEdges() : mIStart(0), mIEnd(0), mAssigned(false) {}
-    void Accumulate(WritingMode aWM, const LogicalRect& aRect)
-    {
-      if (MOZ_LIKELY(mAssigned)) {
-=======
     AlignmentEdges()
         : mIStart(0), mIEnd(0), mIEndOuter(0), mAssignedInner(false) {}
     void AccumulateInner(WritingMode aWM, const LogicalRect& aRect) {
       if (MOZ_LIKELY(mAssignedInner)) {
->>>>>>> upstream-releases
         mIStart = std::min(mIStart, aRect.IStart(aWM));
         mIEnd = std::max(mIEnd, aRect.IEnd(aWM));
       } else {
@@ -245,7 +234,6 @@ class TextOverflow final {
    * @param aContentArea is the area inside which we should add the markers;
    *   this is the block's content area narrowed by any floats on this line.
    */
-<<<<<<< HEAD
   void CreateMarkers(const nsLineBox* aLine, bool aCreateIStart,
                      bool aCreateIEnd, const LogicalRect& aInsideMarkersArea,
                      const LogicalRect& aContentArea, uint32_t aLineNumber);
@@ -259,49 +247,10 @@ class TextOverflow final {
   WritingMode mBlockWM;
   bool mCanHaveInlineAxisScrollbar;
   bool mAdjustForPixelSnapping;
-||||||| merged common ancestors
-  void CreateMarkers(const nsLineBox* aLine,
-                     bool aCreateIStart, bool aCreateIEnd,
-                     const LogicalRect& aInsideMarkersArea,
-                     const LogicalRect& aContentArea,
-                     uint32_t aLineNumber);
-
-  LogicalRect            mContentArea;
-  nsDisplayListBuilder*  mBuilder;
-  nsIFrame*              mBlock;
-  nsIScrollableFrame*    mScrollableFrame;
-  nsDisplayList          mMarkerList;
-  nsSize                 mBlockSize;
-  WritingMode            mBlockWM;
-  bool                   mCanHaveInlineAxisScrollbar;
-  bool                   mAdjustForPixelSnapping;
-=======
-  void CreateMarkers(const nsLineBox* aLine, bool aCreateIStart,
-                     bool aCreateIEnd, const LogicalRect& aInsideMarkersArea,
-                     const LogicalRect& aContentArea, uint32_t aLineNumber);
-
-  LogicalRect mContentArea;
-  nsDisplayListBuilder* mBuilder;
-  nsIFrame* mBlock;
-  nsIScrollableFrame* mScrollableFrame;
-  nsDisplayList mMarkerList;
-  nsSize mBlockSize;
-  WritingMode mBlockWM;
-  bool mCanHaveInlineAxisScrollbar;
-  bool mAdjustForPixelSnapping;
->>>>>>> upstream-releases
 
   class Marker {
-<<<<<<< HEAD
-   public:
-    void Init(const nsStyleTextOverflowSide& aStyle) {
-||||||| merged common ancestors
-  public:
-    void Init(const nsStyleTextOverflowSide& aStyle) {
-=======
    public:
     void Init(const StyleTextOverflowSide& aStyle) {
->>>>>>> upstream-releases
       mInitialized = false;
       mISize = 0;
       mStyle = &aStyle;
@@ -317,17 +266,6 @@ class TextOverflow final {
      */
     void SetupString(nsIFrame* aFrame);
 
-<<<<<<< HEAD
-    bool IsNeeded() const { return mHasOverflow; }
-    void Reset() { mHasOverflow = false; }
-||||||| merged common ancestors
-    bool IsNeeded() const {
-      return mHasOverflow;
-    }
-    void Reset() {
-      mHasOverflow = false;
-    }
-=======
     bool IsSuppressed() const { return !mHasBlockEllipsis && mStyle->IsClip(); }
     bool IsNeeded() const { return mHasOverflow || mHasBlockEllipsis; }
     void Reset() {
@@ -335,55 +273,26 @@ class TextOverflow final {
       mHasBlockEllipsis = false;
       mEdgeAligned = false;
     }
->>>>>>> upstream-releases
 
     // The current width of the marker, the range is [0 .. mIntrinsicISize].
     nscoord mISize;
     // The intrinsic width of the marker.
-<<<<<<< HEAD
-    nscoord mIntrinsicISize;
-    // The style for this side.
-    const nsStyleTextOverflowSide* mStyle;
-||||||| merged common ancestors
-    nscoord                        mIntrinsicISize;
-    // The style for this side.
-    const nsStyleTextOverflowSide* mStyle;
-=======
     nscoord mIntrinsicISize;
     // The text-overflow style for this side.  Ignored if we're rendering a
     // block ellipsis.
     const StyleTextOverflowSide* mStyle;
->>>>>>> upstream-releases
     // True if there is visible overflowing inline content on this side.
-<<<<<<< HEAD
-    bool mHasOverflow;
-    // True if mMarkerString and mWidth have been setup from style.
-    bool mInitialized;
-    // True if the style is text-overflow:clip on this side and the marker
-||||||| merged common ancestors
-    bool                           mHasOverflow;
-    // True if mMarkerString and mWidth have been setup from style.
-    bool                           mInitialized;
-    // True if the style is text-overflow:clip on this side and the marker
-=======
     bool mHasOverflow;
     // True if this side has a block ellipsis (from -webkit-line-clamp).
     bool mHasBlockEllipsis;
     // True if mISize and mIntrinsicISize have been setup from style.
     bool mInitialized;
     // True if the style is not text-overflow:clip on this side and the marker
->>>>>>> upstream-releases
     // won't cause the line to become empty.
-<<<<<<< HEAD
-    bool mActive;
-||||||| merged common ancestors
-    bool                           mActive;
-=======
     bool mActive;
     // True if this marker is aligned to the edge of the content box, so that
     // when scrolling the marker doesn't jump around.
     bool mEdgeAligned;
->>>>>>> upstream-releases
   };
 
   Marker mIStart;  // the inline start marker

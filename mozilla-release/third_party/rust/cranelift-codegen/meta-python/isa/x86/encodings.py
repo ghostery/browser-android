@@ -452,22 +452,10 @@ X86_64.enc(base.func_addr.i64, *r.got_fnaddr8.rex(0x8b, w=1),
 #
 
 # Non-PIC
-<<<<<<< HEAD
-X86_32.enc(base.symbol_value.i32, *r.gvaddr4(0xb8),
-           isap=Not(is_pic))
-X86_64.enc(base.symbol_value.i64, *r.gvaddr8.rex(0xb8, w=1),
-           isap=Not(is_pic))
-||||||| merged common ancestors
-X86_32.enc(base.globalsym_addr.i32, *r.gvaddr4(0xb8),
-           isap=Not(is_pic))
-X86_64.enc(base.globalsym_addr.i64, *r.gvaddr8.rex(0xb8, w=1),
-           isap=Not(is_pic))
-=======
 X86_32.enc(base.symbol_value.i32, *r.gvaddr4(0xb8),
            isap=not_is_pic)
 X86_64.enc(base.symbol_value.i64, *r.gvaddr8.rex(0xb8, w=1),
            isap=not_is_pic)
->>>>>>> upstream-releases
 
 # PIC, colocated
 X86_64.enc(base.symbol_value.i64, *r.pcrel_gvaddr8.rex(0x8d, w=1),
@@ -546,20 +534,6 @@ enc_both(base.brnz.b1, r.t8jccb_abcd, 0x75)
 enc_both(base.brnz.b1, r.t8jccd_abcd, 0x85)
 
 #
-<<<<<<< HEAD
-# Jump tables
-#
-X86_64.enc(base.jump_table_entry.i64.any.any, *r.jt_entry.rex(0x63, w=1))
-X86_32.enc(base.jump_table_entry.i32.any.any, *r.jt_entry(0x8b))
-
-X86_64.enc(base.jump_table_base.i64, *r.jt_base.rex(0x8d, w=1))
-X86_32.enc(base.jump_table_base.i32, *r.jt_base(0x8d))
-
-enc_x86_64(base.indirect_jump_table_br.i64, r.indirect_jmp, 0xff, rrr=4)
-X86_32.enc(base.indirect_jump_table_br.i32, *r.indirect_jmp(0xff, rrr=4))
-#
-||||||| merged common ancestors
-=======
 # Jump tables
 #
 X86_64.enc(base.jump_table_entry.i64.any.any, *r.jt_entry.rex(0x63, w=1))
@@ -572,7 +546,6 @@ enc_x86_64(base.indirect_jump_table_br.i64, r.indirect_jmp, 0xff, rrr=4)
 X86_32.enc(base.indirect_jump_table_br.i32, *r.indirect_jmp(0xff, rrr=4))
 
 #
->>>>>>> upstream-releases
 # Trap as ud2
 #
 X86_32.enc(base.trap, *r.trap(0x0f, 0x0b))

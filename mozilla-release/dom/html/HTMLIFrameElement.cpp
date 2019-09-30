@@ -56,41 +56,18 @@ HTMLIFrameElement::HTMLIFrameElement(
   // We always need a featurePolicy, even if not exposed.
   mFeaturePolicy = new FeaturePolicy(this);
 
-<<<<<<< HEAD
-HTMLIFrameElement::~HTMLIFrameElement() {}
-||||||| merged common ancestors
-HTMLIFrameElement::~HTMLIFrameElement()
-{
-}
-=======
   nsCOMPtr<nsIPrincipal> origin = GetFeaturePolicyDefaultOrigin();
   MOZ_ASSERT(origin);
   mFeaturePolicy->SetDefaultOrigin(origin);
 }
->>>>>>> upstream-releases
 
 HTMLIFrameElement::~HTMLIFrameElement() {}
 
 NS_IMPL_ELEMENT_CLONE(HTMLIFrameElement)
 
-<<<<<<< HEAD
-nsresult HTMLIFrameElement::BindToTree(nsIDocument* aDocument,
-                                       nsIContent* aParent,
-                                       nsIContent* aBindingParent) {
-  nsresult rv =
-      nsGenericHTMLFrameElement::BindToTree(aDocument, aParent, aBindingParent);
-||||||| merged common ancestors
-nsresult
-HTMLIFrameElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
-                              nsIContent* aBindingParent)
-{
-  nsresult rv = nsGenericHTMLFrameElement::BindToTree(aDocument, aParent,
-                                                      aBindingParent);
-=======
 nsresult HTMLIFrameElement::BindToTree(BindContext& aContext,
                                        nsINode& aParent) {
   nsresult rv = nsGenericHTMLFrameElement::BindToTree(aContext, aParent);
->>>>>>> upstream-releases
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }

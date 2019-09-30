@@ -84,11 +84,6 @@ class nsImageLoadingContent : public nsIImageLoadingContent {
    */
   void SetSyncDecodingHint(bool aHint);
 
-<<<<<<< HEAD
- protected:
-||||||| merged common ancestors
-protected:
-=======
   /**
    * Notify us that the document state has changed. Called by nsDocument so that
    * we may reject any promises which require the document to be active.
@@ -96,7 +91,6 @@ protected:
   void NotifyOwnerDocumentActivityChanged();
 
  protected:
->>>>>>> upstream-releases
   enum ImageLoadType {
     // Most normal image loads
     eImageLoadType_Normal,
@@ -239,13 +233,6 @@ protected:
   // want a non-const nsIContent.
   virtual nsIContent* AsContent() = 0;
 
-<<<<<<< HEAD
-  // Hooks for subclasses to call to get the intrinsic width and height.
-  uint32_t NaturalWidth();
-  uint32_t NaturalHeight();
-
-||||||| merged common ancestors
-=======
   // Hooks for subclasses to call to get the intrinsic width and height.
   uint32_t NaturalWidth();
   uint32_t NaturalHeight();
@@ -262,7 +249,6 @@ protected:
   already_AddRefed<mozilla::dom::Promise> QueueDecodeAsync(
       mozilla::ErrorResult& aRv);
 
->>>>>>> upstream-releases
   enum class ImageDecodingType : uint8_t {
     Auto,
     Async,
@@ -272,11 +258,6 @@ protected:
   static const nsAttrValue::EnumTable kDecodingTable[];
   static const nsAttrValue::EnumTable* kDecodingTableDefault;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
  private:
   /**
    * Enqueue and/or fulfill a promise created by QueueDecodeAsync.
@@ -310,7 +291,6 @@ private:
    */
   void MaybeDeregisterActivityObserver();
 
->>>>>>> upstream-releases
   /**
    * Struct used to manage the native image observers.
    */

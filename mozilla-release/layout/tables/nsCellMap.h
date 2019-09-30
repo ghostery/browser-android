@@ -283,99 +283,6 @@ class nsCellMap {
                               int32_t* aColumn) const;
 
   /** append the cellFrame at an empty or dead cell or finally at the end of
-<<<<<<< HEAD
-   * the row at aRowIndex and return a pointer to the celldata entry in the
-   * cellmap
-   *
-   * @param aMap               - reference to the table cell map
-   * @param aCellFrame         - a pointer to the cellframe which will be
-   * appended to the row
-   * @param aRowIndex          - to this row the celldata entry will be added
-   * @param aRebuildIfNecessay - if a cell spans into a row below it might be
-   *                             necesserary to rebuild the cellmap as this
-   * rowspan might overlap another cell.
-   * @param aDamageArea        - area in cellmap coordinates which have been
-   * updated.
-   * @param aColToBeginSearch  - if not null contains the column number where
-   *                             the search for a empty or dead cell in the
-   *                             row should start
-   * @return                   - a pointer to the celldata entry inserted into
-   *                             the cellmap
-   */
-  CellData* AppendCell(nsTableCellMap& aMap, nsTableCellFrame* aCellFrame,
-                       int32_t aRowIndex, bool aRebuildIfNecessary,
-                       int32_t aRgFirstRowIndex, TableArea& aDamageArea,
-                       int32_t* aBeginSearchAtCol = nullptr);
-
-  void InsertCells(nsTableCellMap& aMap,
-                   nsTArray<nsTableCellFrame*>& aCellFrames, int32_t aRowIndex,
-                   int32_t aColIndexBefore, int32_t aRgFirstRowIndex,
-                   TableArea& aDamageArea);
-
-  void RemoveCell(nsTableCellMap& aMap, nsTableCellFrame* aCellFrame,
-                  int32_t aRowIndex, int32_t aRgFirstRowIndex,
-                  TableArea& aDamageArea);
-
-  void InsertRows(nsTableCellMap& aMap, nsTArray<nsTableRowFrame*>& aRows,
-                  int32_t aFirstRowIndex, bool aConsiderSpans,
-                  int32_t aRgFirstRowIndex, TableArea& aDamageArea);
-
-  void RemoveRows(nsTableCellMap& aMap, int32_t aFirstRowIndex,
-                  int32_t aNumRowsToRemove, bool aConsiderSpans,
-                  int32_t aRgFirstRowIndex, TableArea& aDamageArea);
-||||||| merged common ancestors
-    * the row at aRowIndex and return a pointer to the celldata entry in the
-    * cellmap
-    *
-    * @param aMap               - reference to the table cell map
-    * @param aCellFrame         - a pointer to the cellframe which will be appended
-    *                             to the row
-    * @param aRowIndex          - to this row the celldata entry will be added
-    * @param aRebuildIfNecessay - if a cell spans into a row below it might be
-    *                             necesserary to rebuild the cellmap as this rowspan
-    *                             might overlap another cell.
-    * @param aDamageArea        - area in cellmap coordinates which have been updated.
-    * @param aColToBeginSearch  - if not null contains the column number where
-    *                             the search for a empty or dead cell in the
-    *                             row should start
-    * @return                   - a pointer to the celldata entry inserted into
-    *                             the cellmap
-    */
-  CellData* AppendCell(nsTableCellMap&   aMap,
-                       nsTableCellFrame* aCellFrame,
-                       int32_t           aRowIndex,
-                       bool              aRebuildIfNecessary,
-                       int32_t           aRgFirstRowIndex,
-                       TableArea&        aDamageArea,
-                       int32_t*          aBeginSearchAtCol = nullptr);
-
-  void InsertCells(nsTableCellMap&              aMap,
-                   nsTArray<nsTableCellFrame*>& aCellFrames,
-                   int32_t                      aRowIndex,
-                   int32_t                      aColIndexBefore,
-                   int32_t                      aRgFirstRowIndex,
-                   TableArea&                   aDamageArea);
-
-  void RemoveCell(nsTableCellMap&   aMap,
-                  nsTableCellFrame* aCellFrame,
-                  int32_t           aRowIndex,
-                  int32_t           aRgFirstRowIndex,
-                  TableArea&        aDamageArea);
-
-  void InsertRows(nsTableCellMap&             aMap,
-                  nsTArray<nsTableRowFrame*>& aRows,
-                  int32_t                     aFirstRowIndex,
-                  bool                        aConsiderSpans,
-                  int32_t                     aRgFirstRowIndex,
-                  TableArea&                  aDamageArea);
-
-  void RemoveRows(nsTableCellMap& aMap,
-                  int32_t         aFirstRowIndex,
-                  int32_t         aNumRowsToRemove,
-                  bool            aConsiderSpans,
-                  int32_t         aRgFirstRowIndex,
-                  TableArea&      aDamageArea);
-=======
    * the row at aRowIndex and return a pointer to the celldata entry in the
    * cellmap
    *
@@ -415,7 +322,6 @@ class nsCellMap {
   void RemoveRows(nsTableCellMap& aMap, int32_t aFirstRowIndex,
                   int32_t aNumRowsToRemove, bool aConsiderSpans,
                   int32_t aRgFirstRowIndex, TableArea& aDamageArea);
->>>>>>> upstream-releases
 
   int32_t GetNumCellsOriginatingInRow(int32_t aRowIndex) const;
   int32_t GetNumCellsOriginatingInCol(int32_t aColIndex) const;

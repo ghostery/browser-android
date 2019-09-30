@@ -14,15 +14,6 @@ const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const FluentReact = require("devtools/client/shared/vendor/fluent-react");
 const Localized = createFactory(FluentReact.Localized);
 
-<<<<<<< HEAD
-const { PAGE_TYPES, RUNTIMES } = require("../../constants");
-const Types = require("../../types/index");
-loader.lazyRequireGetter(this, "ADB_ADDON_STATES", "devtools/shared/adb/adb-addon", true);
-||||||| merged common ancestors
-const { PAGES, RUNTIMES } = require("../../constants");
-const Types = require("../../types");
-loader.lazyRequireGetter(this, "ADB_ADDON_STATES", "devtools/shared/adb/adb-addon", true);
-=======
 const { ICON_LABEL_LEVEL, PAGE_TYPES, RUNTIMES } = require("../../constants");
 const Types = require("../../types/index");
 loader.lazyRequireGetter(
@@ -31,29 +22,11 @@ loader.lazyRequireGetter(
   "devtools/shared/adb/adb-addon",
   true
 );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-const SidebarItem = createFactory(require("./SidebarItem"));
-||||||| merged common ancestors
-=======
 const IconLabel = createFactory(require("../shared/IconLabel"));
 const SidebarItem = createFactory(require("./SidebarItem"));
->>>>>>> upstream-releases
 const SidebarFixedItem = createFactory(require("./SidebarFixedItem"));
 const SidebarRuntimeItem = createFactory(require("./SidebarRuntimeItem"));
-<<<<<<< HEAD
-const RefreshDevicesButton = createFactory(require("./RefreshDevicesButton"));
-const FIREFOX_ICON = "chrome://devtools/skin/images/aboutdebugging-firefox-logo.svg";
-const CONNECT_ICON = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-const GLOBE_ICON = "chrome://devtools/skin/images/aboutdebugging-globe-icon.svg";
-const USB_ICON = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-||||||| merged common ancestors
-const FIREFOX_ICON = "chrome://devtools/skin/images/aboutdebugging-firefox-logo.svg";
-const CONNECT_ICON = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-const GLOBE_ICON = "chrome://devtools/skin/images/aboutdebugging-globe-icon.svg";
-const USB_ICON = "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
-=======
 const RefreshDevicesButton = createFactory(require("./RefreshDevicesButton"));
 const FIREFOX_ICON =
   "chrome://devtools/skin/images/aboutdebugging-firefox-logo.svg";
@@ -62,7 +35,6 @@ const GLOBE_ICON =
   "chrome://devtools/skin/images/aboutdebugging-globe-icon.svg";
 const USB_ICON =
   "chrome://devtools/skin/images/aboutdebugging-connect-icon.svg";
->>>>>>> upstream-releases
 
 class Sidebar extends PureComponent {
   static get propTypes() {
@@ -70,23 +42,11 @@ class Sidebar extends PureComponent {
       adbAddonStatus: Types.adbAddonStatus,
       className: PropTypes.string,
       dispatch: PropTypes.func.isRequired,
-<<<<<<< HEAD
-      isScanningUsb: PropTypes.bool.isRequired,
-||||||| merged common ancestors
-=======
       isAdbReady: PropTypes.bool.isRequired,
       isScanningUsb: PropTypes.bool.isRequired,
->>>>>>> upstream-releases
       networkRuntimes: PropTypes.arrayOf(Types.runtime).isRequired,
-<<<<<<< HEAD
-      selectedPage: PropTypes.string,
-      selectedRuntime: PropTypes.string,
-||||||| merged common ancestors
-      selectedPage: PropTypes.string,
-=======
       selectedPage: Types.page,
       selectedRuntimeId: PropTypes.string,
->>>>>>> upstream-releases
       usbRuntimes: PropTypes.arrayOf(Types.runtime).isRequired,
     };
   }
@@ -116,24 +76,10 @@ class Sidebar extends PureComponent {
     );
   }
 
-<<<<<<< HEAD
-  renderDevicesEmpty() {
-    return SidebarItem(
-      {
-        isSelected: false,
-      },
-      Localized(
-||||||| merged common ancestors
-  renderDevices() {
-    const { networkRuntimes, usbRuntimes } = this.props;
-    if (!networkRuntimes.length && !usbRuntimes.length) {
-      return Localized(
-=======
   renderDevicesEmpty() {
     return SidebarItem(
       {},
       Localized(
->>>>>>> upstream-releases
         {
           id: "about-debugging-sidebar-no-devices",
         },
@@ -143,30 +89,10 @@ class Sidebar extends PureComponent {
           },
           "No devices discovered"
         )
-<<<<<<< HEAD
       )
     );
   }
 
-  renderDevices() {
-    const { networkRuntimes, usbRuntimes } = this.props;
-||||||| merged common ancestors
-      );
-    }
-=======
-      )
-    );
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    // render a "no devices" messages when the lists are empty
-    if (!networkRuntimes.length && !usbRuntimes.length) {
-      return this.renderDevicesEmpty();
-    }
-    // render all devices otherwise
-||||||| merged common ancestors
-=======
   renderDevices() {
     const { networkRuntimes, usbRuntimes } = this.props;
 
@@ -175,34 +101,16 @@ class Sidebar extends PureComponent {
       return this.renderDevicesEmpty();
     }
     // render all devices otherwise
->>>>>>> upstream-releases
     return [
       ...this.renderRuntimeItems(GLOBE_ICON, networkRuntimes),
       ...this.renderRuntimeItems(USB_ICON, usbRuntimes),
     ];
   }
 
-<<<<<<< HEAD
-  renderSidebarItems(icon, runtimes) {
-    const { dispatch, selectedPage, selectedRuntime } = this.props;
-||||||| merged common ancestors
-  renderSidebarItems(icon, runtimes) {
-    const { dispatch, selectedPage } = this.props;
-=======
   renderRuntimeItems(icon, runtimes) {
     const { dispatch, selectedPage, selectedRuntimeId } = this.props;
->>>>>>> upstream-releases
 
     return runtimes.map(runtime => {
-<<<<<<< HEAD
-      const keyId = `${runtime.type}-${runtime.id}`;
-      const runtimeHasDetails = !!runtime.runtimeDetails;
-      const isSelected = selectedPage === PAGE_TYPES.RUNTIME &&
-        runtime.id === selectedRuntime;
-||||||| merged common ancestors
-      const pageId = runtime.type + "-" + runtime.id;
-      const runtimeHasConnection = !!runtime.connection;
-=======
       const keyId = `${runtime.type}-${runtime.id}`;
       const runtimeHasDetails = !!runtime.runtimeDetails;
       const isSelected =
@@ -213,23 +121,11 @@ class Sidebar extends PureComponent {
         // Update the name to be same to the runtime page.
         name = runtime.runtimeDetails.info.name;
       }
->>>>>>> upstream-releases
 
       return SidebarRuntimeItem({
         deviceName: runtime.extra.deviceName,
         dispatch,
         icon,
-<<<<<<< HEAD
-        key: keyId,
-        isConnected: runtimeHasDetails,
-        isSelected,
-        name: runtime.name,
-||||||| merged common ancestors
-        isConnected: runtimeHasConnection,
-        isSelected: selectedPage === pageId,
-        key: pageId,
-        name: runtime.name,
-=======
         key: keyId,
         isConnected: runtimeHasDetails,
         isConnecting: runtime.isConnecting,
@@ -240,7 +136,6 @@ class Sidebar extends PureComponent {
         isUnavailable: runtime.isUnavailable,
         isUnplugged: runtime.isUnplugged,
         name,
->>>>>>> upstream-releases
         runtimeId: runtime.id,
       });
     });
@@ -291,18 +186,12 @@ class Sidebar extends PureComponent {
   }
 
   render() {
-<<<<<<< HEAD
-    const { dispatch, selectedPage, selectedRuntime, isScanningUsb } = this.props;
-||||||| merged common ancestors
-    const { dispatch, selectedPage } = this.props;
-=======
     const {
       dispatch,
       selectedPage,
       selectedRuntimeId,
       isScanningUsb,
     } = this.props;
->>>>>>> upstream-releases
 
     return dom.aside(
       {
@@ -313,67 +202,17 @@ class Sidebar extends PureComponent {
         Localized(
           { id: "about-debugging-sidebar-setup", attrs: { name: true } },
           SidebarFixedItem({
-<<<<<<< HEAD
-            icon: FIREFOX_ICON,
-            isSelected: PAGE_TYPES.RUNTIME === selectedPage &&
-              selectedRuntime === RUNTIMES.THIS_FIREFOX,
-            key: RUNTIMES.THIS_FIREFOX,
-            name: "This Firefox",
-            to: `/runtime/${RUNTIMES.THIS_FIREFOX}`,
-||||||| merged common ancestors
-            id: PAGES.THIS_FIREFOX,
-            dispatch,
-            icon: FIREFOX_ICON,
-            isSelected: PAGES.THIS_FIREFOX === selectedPage,
-            name: "This Firefox",
-            runtimeId: RUNTIMES.THIS_FIREFOX,
-=======
             dispatch,
             icon: CONNECT_ICON,
             isSelected: PAGE_TYPES.CONNECT === selectedPage,
             key: PAGE_TYPES.CONNECT,
             name: "Setup",
             to: "/setup",
->>>>>>> upstream-releases
           })
         ),
         Localized(
           { id: "about-debugging-sidebar-this-firefox", attrs: { name: true } },
           SidebarFixedItem({
-<<<<<<< HEAD
-            dispatch,
-            icon: CONNECT_ICON,
-            isSelected: PAGE_TYPES.CONNECT === selectedPage,
-            key: PAGE_TYPES.CONNECT,
-            name: "Connect",
-            to: "/connect",
-          })
-        ),
-        SidebarItem(
-          {
-            isSelected: false,
-            key: "separator-0",
-          },
-          dom.hr({ className: "separator" }),
-          this.renderAdbAddonStatus(),
-        ),
-        this.renderDevices(),
-        SidebarItem(
-          {
-            className: "sidebar-item--breathe sidebar__refresh-usb",
-            isSelected: false,
-            key: "refresh-devices",
-          },
-          RefreshDevicesButton({
-            dispatch,
-            isScanning: isScanningUsb,
-||||||| merged common ancestors
-            id: PAGES.CONNECT,
-            dispatch,
-            icon: CONNECT_ICON,
-            isSelected: PAGES.CONNECT === selectedPage,
-            name: "Connect",
-=======
             icon: FIREFOX_ICON,
             isSelected:
               PAGE_TYPES.RUNTIME === selectedPage &&
@@ -381,17 +220,8 @@ class Sidebar extends PureComponent {
             key: RUNTIMES.THIS_FIREFOX,
             name: "This Firefox",
             to: `/runtime/${RUNTIMES.THIS_FIREFOX}`,
->>>>>>> upstream-releases
           })
         ),
-<<<<<<< HEAD
-      )
-||||||| merged common ancestors
-        dom.hr(),
-        this.renderAdbAddonStatus(),
-        this.renderDevices()
-      )
-=======
         SidebarItem(
           {
             className: "sidebar__adb-status",
@@ -412,7 +242,6 @@ class Sidebar extends PureComponent {
         )
       ),
       this.renderFooter()
->>>>>>> upstream-releases
     );
   }
 }

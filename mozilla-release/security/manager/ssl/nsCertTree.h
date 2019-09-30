@@ -42,13 +42,7 @@ struct CompareCacheHashEntry {
   enum { max_criterions = 3 };
   CompareCacheHashEntry();
 
-<<<<<<< HEAD
-  void *key;  // no ownership
-||||||| merged common ancestors
-  void *key; // no ownership
-=======
   void* key;  // no ownership
->>>>>>> upstream-releases
   bool mCritInit[max_criterions];
   nsString mCrit[max_criterions];
 };
@@ -138,66 +132,28 @@ class nsCertTree : public nsICertTree {
  private:
   static const uint32_t kInitialCacheLength = 64;
 
-<<<<<<< HEAD
-  nsTArray<RefPtr<nsCertTreeDispInfo> > mDispInfo;
-  nsCOMPtr<nsITreeBoxObject> mTree;
-  nsCOMPtr<nsITreeSelection> mSelection;
-  treeArrayEl *mTreeArray;
-  int32_t mNumOrgs;
-  int32_t mNumRows;
-||||||| merged common ancestors
-  nsTArray< RefPtr<nsCertTreeDispInfo> > mDispInfo;
-  nsCOMPtr<nsITreeBoxObject>  mTree;
-  nsCOMPtr<nsITreeSelection>  mSelection;
-  treeArrayEl                *mTreeArray;
-  int32_t                         mNumOrgs;
-  int32_t                         mNumRows;
-=======
   nsTArray<RefPtr<nsCertTreeDispInfo> > mDispInfo;
   RefPtr<mozilla::dom::XULTreeElement> mTree;
   nsCOMPtr<nsITreeSelection> mSelection;
   treeArrayEl* mTreeArray;
   int32_t mNumOrgs;
   int32_t mNumRows;
->>>>>>> upstream-releases
   PLDHashTable mCompareCache;
   nsCOMPtr<nsICertOverrideService> mOverrideService;
   RefPtr<nsCertOverrideService> mOriginalOverrideService;
 
-<<<<<<< HEAD
-  treeArrayEl *GetThreadDescAtIndex(int32_t _index);
-  already_AddRefed<nsIX509Cert> GetCertAtIndex(
-      int32_t _index, int32_t *outAbsoluteCertOffset = nullptr);
-  already_AddRefed<nsCertTreeDispInfo> GetDispInfoAtIndex(
-      int32_t index, int32_t *outAbsoluteCertOffset = nullptr);
-||||||| merged common ancestors
-  treeArrayEl *GetThreadDescAtIndex(int32_t _index);
-  already_AddRefed<nsIX509Cert>
-    GetCertAtIndex(int32_t _index, int32_t *outAbsoluteCertOffset = nullptr);
-  already_AddRefed<nsCertTreeDispInfo>
-    GetDispInfoAtIndex(int32_t index, int32_t *outAbsoluteCertOffset = nullptr);
-=======
   treeArrayEl* GetThreadDescAtIndex(int32_t _index);
   already_AddRefed<nsIX509Cert> GetCertAtIndex(
       int32_t _index, int32_t* outAbsoluteCertOffset = nullptr);
   already_AddRefed<nsCertTreeDispInfo> GetDispInfoAtIndex(
       int32_t index, int32_t* outAbsoluteCertOffset = nullptr);
->>>>>>> upstream-releases
   void FreeCertArray();
   nsresult UpdateUIContents();
 
-  nsresult GetCertsByTypeFromCertList(nsIX509CertList *aCertList,
+  nsresult GetCertsByTypeFromCertList(nsIX509CertList* aCertList,
                                       uint32_t aType,
-<<<<<<< HEAD
-                                      nsCertCompareFunc aCertCmpFn,
-                                      void *aCertCmpFnArg);
-||||||| merged common ancestors
-                                      nsCertCompareFunc  aCertCmpFn,
-                                      void              *aCertCmpFnArg);
-=======
                                       nsCertCompareFunc aCertCmpFn,
                                       void* aCertCmpFnArg);
->>>>>>> upstream-releases
 
   nsCOMPtr<nsIMutableArray> mCellText;
 

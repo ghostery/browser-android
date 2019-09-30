@@ -42,36 +42,12 @@ class nsChromeRegistry : public nsIToolkitChromeRegistry,
   NS_DECL_ISUPPORTS
 
   // nsIXULChromeRegistry methods:
-<<<<<<< HEAD
-  NS_IMETHOD RefreshSkins() override;
   NS_IMETHOD AllowScriptsForPackage(nsIURI* url, bool* _retval) override;
   NS_IMETHOD AllowContentToAccess(nsIURI* url, bool* _retval) override;
   NS_IMETHOD CanLoadURLRemotely(nsIURI* url, bool* _retval) override;
   NS_IMETHOD MustLoadURLRemotely(nsIURI* url, bool* _retval) override;
 
   NS_IMETHOD ConvertChromeURL(nsIURI* aChromeURI, nsIURI** aResult) override;
-||||||| merged common ancestors
-  NS_IMETHOD RefreshSkins() override;
-  NS_IMETHOD AllowScriptsForPackage(nsIURI* url,
-                                    bool* _retval) override;
-  NS_IMETHOD AllowContentToAccess(nsIURI* url,
-                                  bool* _retval) override;
-  NS_IMETHOD CanLoadURLRemotely(nsIURI* url,
-                                bool* _retval) override;
-  NS_IMETHOD MustLoadURLRemotely(nsIURI* url,
-                                 bool* _retval) override;
-
-  // nsIChromeRegistry methods:
-  NS_IMETHOD_(bool) WrappersEnabled(nsIURI *aURI) override;
-  NS_IMETHOD ConvertChromeURL(nsIURI* aChromeURI, nsIURI* *aResult) override;
-=======
-  NS_IMETHOD AllowScriptsForPackage(nsIURI* url, bool* _retval) override;
-  NS_IMETHOD AllowContentToAccess(nsIURI* url, bool* _retval) override;
-  NS_IMETHOD CanLoadURLRemotely(nsIURI* url, bool* _retval) override;
-  NS_IMETHOD MustLoadURLRemotely(nsIURI* url, bool* _retval) override;
-
-  NS_IMETHOD ConvertChromeURL(nsIURI* aChromeURI, nsIURI** aResult) override;
->>>>>>> upstream-releases
 
   // nsChromeRegistry methods:
   nsChromeRegistry() : mInitialized(false) {}

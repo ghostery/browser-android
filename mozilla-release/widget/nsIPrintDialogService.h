@@ -62,16 +62,8 @@ class nsIPrintDialogService : public nsISupports {
    * @return NS_OK if everything is OK.
    * @return a suitable error for failures to show the page setup dialog.
    */
-<<<<<<< HEAD
-  NS_IMETHOD ShowPageSetup(nsPIDOMWindowOuter *aParent,
-                           nsIPrintSettings *aSettings) = 0;
-||||||| merged common ancestors
-  NS_IMETHOD ShowPageSetup(nsPIDOMWindowOuter *aParent, nsIPrintSettings *aSettings) = 0;
-
-=======
   NS_IMETHOD ShowPageSetup(nsPIDOMWindowOuter* aParent,
                            nsIPrintSettings* aSettings) = 0;
->>>>>>> upstream-releases
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIPrintDialogService, NS_IPRINTDIALOGSERVICE_IID)

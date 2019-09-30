@@ -68,17 +68,6 @@ use crate::ir::{
     types, ArgumentLoc, Ebb, FuncRef, Function, GlobalValue, Inst, InstructionData, JumpTable,
     Opcode, SigRef, StackSlot, StackSlotKind, Type, Value, ValueDef, ValueList, ValueLoc,
 };
-<<<<<<< HEAD
-use isa::TargetIsa;
-use iterators::IteratorExtras;
-use settings::FlagsOrIsa;
-use std::cmp::Ordering;
-||||||| merged common ancestors
-use isa::TargetIsa;
-use iterators::IteratorExtras;
-use settings::{Flags, FlagsOrIsa};
-use std::cmp::Ordering;
-=======
 use crate::isa::TargetIsa;
 use crate::iterators::IteratorExtras;
 use crate::settings::FlagsOrIsa;
@@ -86,7 +75,6 @@ use crate::timing;
 use core::cmp::Ordering;
 use core::fmt::{self, Display, Formatter, Write};
 use failure_derive::Fail;
->>>>>>> upstream-releases
 use std::collections::BTreeSet;
 use std::string::String;
 use std::vec::Vec;
@@ -278,16 +266,9 @@ struct Verifier<'a> {
     func: &'a Function,
     expected_cfg: ControlFlowGraph,
     expected_domtree: DominatorTree,
-<<<<<<< HEAD
-    isa: Option<&'a TargetIsa>,
-||||||| merged common ancestors
-    flags: &'a Flags,
-    isa: Option<&'a TargetIsa>,
-=======
     isa: Option<&'a dyn TargetIsa>,
     // To be removed when #796 is completed.
     verify_encodable_as_bb: bool,
->>>>>>> upstream-releases
 }
 
 impl<'a> Verifier<'a> {
@@ -684,14 +665,6 @@ impl<'a> Verifier<'a> {
                 self.verify_ebb(inst, destination, errors)?;
                 self.verify_value_list(inst, args, errors)?;
             }
-<<<<<<< HEAD
-            BranchTable { table, .. }
-            | BranchTableBase { table, .. }
-            | BranchTableEntry { table, .. }
-            | IndirectJump { table, .. } => {
-||||||| merged common ancestors
-            BranchTable { table, .. } => {
-=======
             BranchTable {
                 table, destination, ..
             } => {
@@ -701,7 +674,6 @@ impl<'a> Verifier<'a> {
             BranchTableBase { table, .. }
             | BranchTableEntry { table, .. }
             | IndirectJump { table, .. } => {
->>>>>>> upstream-releases
                 self.verify_jump_table(inst, table, errors)?;
             }
             Call {
@@ -980,11 +952,11 @@ impl<'a> Verifier<'a> {
                     );
                 }
                 // The defining EBB dominates the instruction using this value.
-                if is_reachable && !self.expected_domtree.dominates(
-                    ebb,
-                    loc_inst,
-                    &self.func.layout,
-                ) {
+                if is_reachable
+                    && !self
+                        .expected_domtree
+                        .dominates(ebb, loc_inst, &self.func.layout)
+                {
                     return fatal!(
                         errors,
                         loc_inst,
@@ -1822,21 +1794,9 @@ impl<'a> Verifier<'a> {
                 self.verify_encoding(inst, errors)?;
                 self.immediate_constraints(inst, errors)?;
             }
-<<<<<<< HEAD
-        }
-
-||||||| merged common ancestors
-        }
-
-        if self.flags.return_at_end() {
-            self.verify_return_at_end(errors)?;
-        }
-
-=======
             self.encodable_as_bb(ebb, errors)?;
         }
 
->>>>>>> upstream-releases
         verify_flags(self.func, &self.expected_cfg, self.isa, errors)?;
 
         Ok(())

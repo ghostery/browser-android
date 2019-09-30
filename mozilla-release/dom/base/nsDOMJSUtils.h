@@ -19,15 +19,7 @@ class nsIJSArgArray;
 // Optionally, aArgv may be nullptr, in which case the array is allocated and
 // rooted, but all items remain nullptr.  This presumably means the caller
 // will then QI us for nsIJSArgArray, and set our array elements.
-<<<<<<< HEAD
-nsresult NS_CreateJSArgv(JSContext *aContext, uint32_t aArgc,
-                         const JS::Value *aArgv, nsIJSArgArray **aArray);
-||||||| merged common ancestors
-nsresult NS_CreateJSArgv(JSContext *aContext, uint32_t aArgc,
-                         const JS::Value* aArgv, nsIJSArgArray **aArray);
-=======
 nsresult NS_CreateJSArgv(JSContext* aContext, uint32_t aArgc,
                          const JS::Value* aArgv, nsIJSArgArray** aArray);
->>>>>>> upstream-releases
 
 #endif  // nsDOMJSUtils_h__

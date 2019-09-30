@@ -32,40 +32,6 @@ namespace mozilla {
 //----------------------------------------------------------------------
 // Static members
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsAttrValue::EnumTable nsSMILAnimationFunction::sAccumulateTable[] = {
-    {"none", false}, {"sum", true}, {nullptr, 0}};
-
-nsAttrValue::EnumTable nsSMILAnimationFunction::sAdditiveTable[] = {
-    {"replace", false}, {"sum", true}, {nullptr, 0}};
-
-nsAttrValue::EnumTable nsSMILAnimationFunction::sCalcModeTable[] = {
-    {"linear", CALC_LINEAR},
-    {"discrete", CALC_DISCRETE},
-    {"paced", CALC_PACED},
-    {"spline", CALC_SPLINE},
-    {nullptr, 0}};
-||||||| merged common ancestors
-nsAttrValue::EnumTable nsSMILAnimationFunction::sAccumulateTable[] = {
-      {"none", false},
-      {"sum", true},
-      {nullptr, 0}
-};
-
-nsAttrValue::EnumTable nsSMILAnimationFunction::sAdditiveTable[] = {
-      {"replace", false},
-      {"sum", true},
-      {nullptr, 0}
-};
-
-nsAttrValue::EnumTable nsSMILAnimationFunction::sCalcModeTable[] = {
-      {"linear", CALC_LINEAR},
-      {"discrete", CALC_DISCRETE},
-      {"paced", CALC_PACED},
-      {"spline", CALC_SPLINE},
-      {nullptr, 0}
-};
-=======
 nsAttrValue::EnumTable SMILAnimationFunction::sAccumulateTable[] = {
     {"none", false}, {"sum", true}, {nullptr, 0}};
 
@@ -78,7 +44,6 @@ nsAttrValue::EnumTable SMILAnimationFunction::sCalcModeTable[] = {
     {"paced", CALC_PACED},
     {"spline", CALC_SPLINE},
     {nullptr, 0}};
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
 
 // Any negative number should be fine as a sentinel here,
 // because valid distances are non-negative.
@@ -87,45 +52,6 @@ nsAttrValue::EnumTable SMILAnimationFunction::sCalcModeTable[] = {
 //----------------------------------------------------------------------
 // Constructors etc.
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsSMILAnimationFunction::nsSMILAnimationFunction()
-    : mSampleTime(-1),
-      mRepeatIteration(0),
-      mBeginTime(INT64_MIN),
-      mAnimationElement(nullptr),
-      mErrorFlags(0),
-      mIsActive(false),
-      mIsFrozen(false),
-      mLastValue(false),
-      mHasChanged(true),
-      mValueNeedsReparsingEverySample(false),
-      mPrevSampleWasSingleValueAnimation(false),
-      mWasSkippedInPrevSample(false) {}
-
-void nsSMILAnimationFunction::SetAnimationElement(
-    SVGAnimationElement* aAnimationElement) {
-||||||| merged common ancestors
-nsSMILAnimationFunction::nsSMILAnimationFunction()
-  : mSampleTime(-1),
-    mRepeatIteration(0),
-    mBeginTime(INT64_MIN),
-    mAnimationElement(nullptr),
-    mErrorFlags(0),
-    mIsActive(false),
-    mIsFrozen(false),
-    mLastValue(false),
-    mHasChanged(true),
-    mValueNeedsReparsingEverySample(false),
-    mPrevSampleWasSingleValueAnimation(false),
-    mWasSkippedInPrevSample(false)
-{
-}
-
-void
-nsSMILAnimationFunction::SetAnimationElement(
-    SVGAnimationElement* aAnimationElement)
-{
-=======
 SMILAnimationFunction::SMILAnimationFunction()
     : mSampleTime(-1),
       mRepeatIteration(0),
@@ -142,25 +68,12 @@ SMILAnimationFunction::SMILAnimationFunction()
 
 void SMILAnimationFunction::SetAnimationElement(
     SVGAnimationElement* aAnimationElement) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mAnimationElement = aAnimationElement;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::SetAttr(nsAtom* aAttribute,
-                                      const nsAString& aValue,
-                                      nsAttrValue& aResult,
-                                      nsresult* aParseResult) {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::SetAttr(nsAtom* aAttribute, const nsAString& aValue,
-                                 nsAttrValue& aResult, nsresult* aParseResult)
-{
-=======
 bool SMILAnimationFunction::SetAttr(nsAtom* aAttribute, const nsAString& aValue,
                                     nsAttrValue& aResult,
                                     nsresult* aParseResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   bool foundMatch = true;
   nsresult parseResult = NS_OK;
 
@@ -195,15 +108,7 @@ bool SMILAnimationFunction::SetAttr(nsAtom* aAttribute, const nsAString& aValue,
   return foundMatch;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::UnsetAttr(nsAtom* aAttribute) {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::UnsetAttr(nsAtom* aAttribute)
-{
-=======
 bool SMILAnimationFunction::UnsetAttr(nsAtom* aAttribute) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   bool foundMatch = true;
 
   if (aAttribute == nsGkAtoms::by || aAttribute == nsGkAtoms::from ||
@@ -226,21 +131,9 @@ bool SMILAnimationFunction::UnsetAttr(nsAtom* aAttribute) {
   return foundMatch;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::SampleAt(nsSMILTime aSampleTime,
-                                       const nsSMILTimeValue& aSimpleDuration,
-                                       uint32_t aRepeatIteration) {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::SampleAt(nsSMILTime aSampleTime,
-                                  const nsSMILTimeValue& aSimpleDuration,
-                                  uint32_t aRepeatIteration)
-{
-=======
 void SMILAnimationFunction::SampleAt(SMILTime aSampleTime,
                                      const SMILTimeValue& aSimpleDuration,
                                      uint32_t aRepeatIteration) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   // * Update mHasChanged ("Might this sample be different from prev one?")
   // Were we previously sampling a fill="freeze" final val? (We're not anymore.)
   mHasChanged |= mLastValue;
@@ -261,15 +154,7 @@ void SMILAnimationFunction::SampleAt(SMILTime aSampleTime,
   mLastValue = false;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::SampleLastValue(uint32_t aRepeatIteration) {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::SampleLastValue(uint32_t aRepeatIteration)
-{
-=======
 void SMILAnimationFunction::SampleLastValue(uint32_t aRepeatIteration) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   if (mHasChanged || !mLastValue || mRepeatIteration != aRepeatIteration) {
     mHasChanged = true;
   }
@@ -278,47 +163,21 @@ void SMILAnimationFunction::SampleLastValue(uint32_t aRepeatIteration) {
   mLastValue = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::Activate(nsSMILTime aBeginTime) {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::Activate(nsSMILTime aBeginTime)
-{
-=======
 void SMILAnimationFunction::Activate(SMILTime aBeginTime) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mBeginTime = aBeginTime;
   mIsActive = true;
   mIsFrozen = false;
   mHasChanged = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::Inactivate(bool aIsFrozen) {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::Inactivate(bool aIsFrozen)
-{
-=======
 void SMILAnimationFunction::Inactivate(bool aIsFrozen) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mIsActive = false;
   mIsFrozen = aIsFrozen;
   mHasChanged = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::ComposeResult(const nsISMILAttr& aSMILAttr,
-                                            nsSMILValue& aResult) {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::ComposeResult(const nsISMILAttr& aSMILAttr,
-                                       nsSMILValue& aResult)
-{
-=======
 void SMILAnimationFunction::ComposeResult(const SMILAttr& aSMILAttr,
                                           SMILValue& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mHasChanged = false;
   mPrevSampleWasSingleValueAnimation = false;
   mWasSkippedInPrevSample = false;
@@ -380,17 +239,8 @@ void SMILAnimationFunction::ComposeResult(const SMILAttr& aSMILAttr,
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-int8_t nsSMILAnimationFunction::CompareTo(
-    const nsSMILAnimationFunction* aOther) const {
-||||||| merged common ancestors
-int8_t
-nsSMILAnimationFunction::CompareTo(const nsSMILAnimationFunction* aOther) const
-{
-=======
 int8_t SMILAnimationFunction::CompareTo(
     const SMILAnimationFunction* aOther) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   NS_ENSURE_TRUE(aOther, 0);
 
   NS_ASSERTION(aOther != this, "Trying to compare to self");
@@ -406,29 +256,11 @@ int8_t SMILAnimationFunction::CompareTo(
 
   // Next sort based on syncbase dependencies: the dependent element sorts after
   // its syncbase
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-  const nsSMILTimedElement& thisTimedElement =
-      mAnimationElement->TimedElement();
-  const nsSMILTimedElement& otherTimedElement =
-      aOther->mAnimationElement->TimedElement();
-  if (thisTimedElement.IsTimeDependent(otherTimedElement)) return 1;
-  if (otherTimedElement.IsTimeDependent(thisTimedElement)) return -1;
-||||||| merged common ancestors
-  const nsSMILTimedElement& thisTimedElement =
-    mAnimationElement->TimedElement();
-  const nsSMILTimedElement& otherTimedElement =
-    aOther->mAnimationElement->TimedElement();
-  if (thisTimedElement.IsTimeDependent(otherTimedElement))
-    return 1;
-  if (otherTimedElement.IsTimeDependent(thisTimedElement))
-    return -1;
-=======
   const SMILTimedElement& thisTimedElement = mAnimationElement->TimedElement();
   const SMILTimedElement& otherTimedElement =
       aOther->mAnimationElement->TimedElement();
   if (thisTimedElement.IsTimeDependent(otherTimedElement)) return 1;
   if (otherTimedElement.IsTimeDependent(thisTimedElement)) return -1;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
 
   // Animations that appear later in the document sort after those earlier in
   // the document
@@ -441,15 +273,7 @@ int8_t SMILAnimationFunction::CompareTo(
              : 1;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::WillReplace() const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::WillReplace() const
-{
-=======
 bool SMILAnimationFunction::WillReplace() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   /*
    * In IsAdditive() we don't consider to-animation to be additive as it is
    * a special case that is dealt with differently in the compositing method.
@@ -459,30 +283,12 @@ bool SMILAnimationFunction::WillReplace() const {
   return !mErrorFlags && !(IsAdditive() || IsToAnimation());
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::HasChanged() const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::HasChanged() const
-{
-=======
 bool SMILAnimationFunction::HasChanged() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   return mHasChanged || mValueNeedsReparsingEverySample;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::UpdateCachedTarget(
-    const nsSMILTargetIdentifier& aNewTarget) {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::UpdateCachedTarget(
-  const nsSMILTargetIdentifier& aNewTarget)
-{
-=======
 bool SMILAnimationFunction::UpdateCachedTarget(
     const SMILTargetIdentifier& aNewTarget) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   if (!mLastTarget.Equals(aNewTarget)) {
     mLastTarget = aNewTarget;
     return true;
@@ -493,21 +299,9 @@ bool SMILAnimationFunction::UpdateCachedTarget(
 //----------------------------------------------------------------------
 // Implementation helpers
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::InterpolateResult(
-    const nsSMILValueArray& aValues, nsSMILValue& aResult,
-    nsSMILValue& aBaseValue) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::InterpolateResult(const nsSMILValueArray& aValues,
-                                           nsSMILValue& aResult,
-                                           nsSMILValue& aBaseValue)
-{
-=======
 nsresult SMILAnimationFunction::InterpolateResult(const SMILValueArray& aValues,
                                                   SMILValue& aResult,
                                                   SMILValue& aBaseValue) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   // Sanity check animation values
   if ((!IsToAnimation() && aValues.Length() < 2) ||
       (IsToAnimation() && aValues.Length() != 1)) {
@@ -548,16 +342,8 @@ nsresult SMILAnimationFunction::InterpolateResult(const SMILValueArray& aValues,
   // Force discrete calcMode for visibility since StyleAnimationValue will
   // try to interpolate it using the special clamping behavior defined for
   // CSS.
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-  if (nsSMILCSSValueType::PropertyFromValue(aValues[0]) ==
-      eCSSProperty_visibility) {
-||||||| merged common ancestors
-  if (nsSMILCSSValueType::PropertyFromValue(aValues[0])
-        == eCSSProperty_visibility) {
-=======
   if (SMILCSSValueType::PropertyFromValue(aValues[0]) ==
       eCSSProperty_visibility) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
     calcMode = CALC_DISCRETE;
   }
 
@@ -667,18 +453,8 @@ nsresult SMILAnimationFunction::InterpolateResult(const SMILValueArray& aValues,
   return rv;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::AccumulateResult(
-    const nsSMILValueArray& aValues, nsSMILValue& aResult) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::AccumulateResult(const nsSMILValueArray& aValues,
-                                          nsSMILValue& aResult)
-{
-=======
 nsresult SMILAnimationFunction::AccumulateResult(const SMILValueArray& aValues,
                                                  SMILValue& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   if (!IsToAnimation() && GetAccumulate() && mRepeatIteration) {
     const SMILValue& lastValue = aValues[aValues.Length() - 1];
 
@@ -700,24 +476,9 @@ nsresult SMILAnimationFunction::AccumulateResult(const SMILValueArray& aValues,
  * Returns NS_OK, or NS_ERROR_FAILURE if our values don't support distance
  * computation.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::ComputePacedPosition(
-    const nsSMILValueArray& aValues, double aSimpleProgress,
-    double& aIntervalProgress, const nsSMILValue*& aFrom,
-    const nsSMILValue*& aTo) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::ComputePacedPosition(const nsSMILValueArray& aValues,
-                                              double aSimpleProgress,
-                                              double& aIntervalProgress,
-                                              const nsSMILValue*& aFrom,
-                                              const nsSMILValue*& aTo)
-{
-=======
 nsresult SMILAnimationFunction::ComputePacedPosition(
     const SMILValueArray& aValues, double aSimpleProgress,
     double& aIntervalProgress, const SMILValue*& aFrom, const SMILValue*& aTo) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   NS_ASSERTION(0.0f <= aSimpleProgress && aSimpleProgress < 1.0f,
                "aSimpleProgress is out of bounds");
   NS_ASSERTION(GetCalcMode() == CALC_PACED,
@@ -763,20 +524,8 @@ nsresult SMILAnimationFunction::ComputePacedPosition(
 
     double curIntervalDist;
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-#ifdef DEBUG
-    nsresult rv =
-#endif
-        aValues[i].ComputeDistance(aValues[i + 1], curIntervalDist);
-||||||| merged common ancestors
-#ifdef DEBUG
-    nsresult rv =
-#endif
-      aValues[i].ComputeDistance(aValues[i+1], curIntervalDist);
-=======
     DebugOnly<nsresult> rv =
         aValues[i].ComputeDistance(aValues[i + 1], curIntervalDist);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
     MOZ_ASSERT(NS_SUCCEEDED(rv),
                "If we got through ComputePacedTotalDistance, we should "
                "be able to recompute each sub-distance without errors");
@@ -817,18 +566,8 @@ nsresult SMILAnimationFunction::ComputePacedPosition(
  * Returns the total distance, or returns COMPUTE_DISTANCE_ERROR if
  * our values don't support distance computation.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-double nsSMILAnimationFunction::ComputePacedTotalDistance(
-    const nsSMILValueArray& aValues) const {
-||||||| merged common ancestors
-double
-nsSMILAnimationFunction::ComputePacedTotalDistance(
-    const nsSMILValueArray& aValues) const
-{
-=======
 double SMILAnimationFunction::ComputePacedTotalDistance(
     const SMILValueArray& aValues) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   NS_ASSERTION(GetCalcMode() == CALC_PACED,
                "Calling paced-specific function, but not in paced mode");
 
@@ -851,22 +590,9 @@ double SMILAnimationFunction::ComputePacedTotalDistance(
   return totalDistance;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-double nsSMILAnimationFunction::ScaleSimpleProgress(double aProgress,
-                                                    nsSMILCalcMode aCalcMode) {
-  if (!HasAttr(nsGkAtoms::keyTimes)) return aProgress;
-||||||| merged common ancestors
-double
-nsSMILAnimationFunction::ScaleSimpleProgress(double aProgress,
-                                             nsSMILCalcMode aCalcMode)
-{
-  if (!HasAttr(nsGkAtoms::keyTimes))
-    return aProgress;
-=======
 double SMILAnimationFunction::ScaleSimpleProgress(double aProgress,
                                                   SMILCalcMode aCalcMode) {
   if (!HasAttr(nsGkAtoms::keyTimes)) return aProgress;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
 
   uint32_t numTimes = mKeyTimes.Length();
 
@@ -900,72 +626,28 @@ double SMILAnimationFunction::ScaleSimpleProgress(double aProgress,
          double(numTimes - 1);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-double nsSMILAnimationFunction::ScaleIntervalProgress(double aProgress,
-                                                      uint32_t aIntervalIndex) {
-  if (GetCalcMode() != CALC_SPLINE) return aProgress;
-||||||| merged common ancestors
-double
-nsSMILAnimationFunction::ScaleIntervalProgress(double aProgress,
-                                               uint32_t aIntervalIndex)
-{
-  if (GetCalcMode() != CALC_SPLINE)
-    return aProgress;
-=======
 double SMILAnimationFunction::ScaleIntervalProgress(double aProgress,
                                                     uint32_t aIntervalIndex) {
   if (GetCalcMode() != CALC_SPLINE) return aProgress;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
 
   if (!HasAttr(nsGkAtoms::keySplines)) return aProgress;
 
   MOZ_ASSERT(aIntervalIndex < mKeySplines.Length(), "Invalid interval index");
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-  nsSMILKeySpline const& spline = mKeySplines[aIntervalIndex];
-||||||| merged common ancestors
-  nsSMILKeySpline const &spline = mKeySplines[aIntervalIndex];
-=======
   SMILKeySpline const& spline = mKeySplines[aIntervalIndex];
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   return spline.GetSplineValue(aProgress);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::HasAttr(nsAtom* aAttName) const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::HasAttr(nsAtom* aAttName) const
-{
-=======
 bool SMILAnimationFunction::HasAttr(nsAtom* aAttName) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   return mAnimationElement->HasAttr(aAttName);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-const nsAttrValue* nsSMILAnimationFunction::GetAttr(nsAtom* aAttName) const {
-||||||| merged common ancestors
-const nsAttrValue*
-nsSMILAnimationFunction::GetAttr(nsAtom* aAttName) const
-{
-=======
 const nsAttrValue* SMILAnimationFunction::GetAttr(nsAtom* aAttName) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   return mAnimationElement->GetParsedAttr(aAttName);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::GetAttr(nsAtom* aAttName,
-                                      nsAString& aResult) const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::GetAttr(nsAtom* aAttName, nsAString& aResult) const
-{
-=======
 bool SMILAnimationFunction::GetAttr(nsAtom* aAttName,
                                     nsAString& aResult) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   return mAnimationElement->GetAttr(aAttName, aResult);
 }
 
@@ -985,24 +667,10 @@ bool SMILAnimationFunction::GetAttr(nsAtom* aAttName,
  *
  * Returns false if a parse error occurred, otherwise returns true.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::ParseAttr(nsAtom* aAttName,
-                                        const nsISMILAttr& aSMILAttr,
-                                        nsSMILValue& aResult,
-                                        bool& aPreventCachingOfSandwich) const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::ParseAttr(nsAtom* aAttName,
-                                   const nsISMILAttr& aSMILAttr,
-                                   nsSMILValue& aResult,
-                                   bool& aPreventCachingOfSandwich) const
-{
-=======
 bool SMILAnimationFunction::ParseAttr(nsAtom* aAttName,
                                       const SMILAttr& aSMILAttr,
                                       SMILValue& aResult,
                                       bool& aPreventCachingOfSandwich) const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   nsAutoString attValue;
   if (GetAttr(aAttName, attValue)) {
     bool preventCachingOfSandwich = false;
@@ -1031,22 +699,9 @@ bool SMILAnimationFunction::ParseAttr(nsAtom* aAttName,
  * This helper method applies these rules to fill in the values list and to set
  * some internal state.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::GetValues(const nsISMILAttr& aSMILAttr,
-                                            nsSMILValueArray& aResult) {
-  if (!mAnimationElement) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::GetValues(const nsISMILAttr& aSMILAttr,
-                                   nsSMILValueArray& aResult)
-{
-  if (!mAnimationElement)
-    return NS_ERROR_FAILURE;
-=======
 nsresult SMILAnimationFunction::GetValues(const SMILAttr& aSMILAttr,
                                           SMILValueArray& aResult) {
   if (!mAnimationElement) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
 
   mValueNeedsReparsingEverySample = false;
   SMILValueArray result;
@@ -1056,17 +711,8 @@ nsresult SMILAnimationFunction::GetValues(const SMILAttr& aSMILAttr,
     nsAutoString attValue;
     GetAttr(nsGkAtoms::values, attValue);
     bool preventCachingOfSandwich = false;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-    if (!nsSMILParserUtils::ParseValues(attValue, mAnimationElement, aSMILAttr,
-                                        result, preventCachingOfSandwich)) {
-||||||| merged common ancestors
-    if (!nsSMILParserUtils::ParseValues(attValue, mAnimationElement,
-                                        aSMILAttr, result,
-                                        preventCachingOfSandwich)) {
-=======
     if (!SMILParserUtils::ParseValues(attValue, mAnimationElement, aSMILAttr,
                                       result, preventCachingOfSandwich)) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
       return NS_ERROR_FAILURE;
     }
 
@@ -1077,23 +723,6 @@ nsresult SMILAnimationFunction::GetValues(const SMILAttr& aSMILAttr,
   } else {
     bool preventCachingOfSandwich = false;
     bool parseOk = true;
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-    nsSMILValue to, from, by;
-    parseOk &=
-        ParseAttr(nsGkAtoms::to, aSMILAttr, to, preventCachingOfSandwich);
-    parseOk &=
-        ParseAttr(nsGkAtoms::from, aSMILAttr, from, preventCachingOfSandwich);
-    parseOk &=
-        ParseAttr(nsGkAtoms::by, aSMILAttr, by, preventCachingOfSandwich);
-||||||| merged common ancestors
-    nsSMILValue to, from, by;
-    parseOk &= ParseAttr(nsGkAtoms::to,   aSMILAttr, to,
-                         preventCachingOfSandwich);
-    parseOk &= ParseAttr(nsGkAtoms::from, aSMILAttr, from,
-                         preventCachingOfSandwich);
-    parseOk &= ParseAttr(nsGkAtoms::by,   aSMILAttr, by,
-                         preventCachingOfSandwich);
-=======
     SMILValue to, from, by;
     parseOk &=
         ParseAttr(nsGkAtoms::to, aSMILAttr, to, preventCachingOfSandwich);
@@ -1101,7 +730,6 @@ nsresult SMILAnimationFunction::GetValues(const SMILAttr& aSMILAttr,
         ParseAttr(nsGkAtoms::from, aSMILAttr, from, preventCachingOfSandwich);
     parseOk &=
         ParseAttr(nsGkAtoms::by, aSMILAttr, by, preventCachingOfSandwich);
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
 
     if (preventCachingOfSandwich) {
       mValueNeedsReparsingEverySample = true;
@@ -1120,17 +748,8 @@ nsresult SMILAnimationFunction::GetValues(const SMILAttr& aSMILAttr,
         MOZ_ALWAYS_TRUE(result.AppendElement(to, fallible));
       }
     } else if (!by.IsNull()) {
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-      nsSMILValue effectiveFrom(by.mType);
-      if (!from.IsNull()) effectiveFrom = from;
-||||||| merged common ancestors
-      nsSMILValue effectiveFrom(by.mType);
-      if (!from.IsNull())
-        effectiveFrom = from;
-=======
       SMILValue effectiveFrom(by.mType);
       if (!from.IsNull()) effectiveFrom = from;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
       // Set values to 'from; from + by'
       MOZ_ALWAYS_TRUE(result.AppendElement(effectiveFrom, fallible));
       SMILValue effectiveTo(effectiveFrom);
@@ -1151,16 +770,7 @@ nsresult SMILAnimationFunction::GetValues(const SMILAttr& aSMILAttr,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::CheckValueListDependentAttrs(
-    uint32_t aNumValues) {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::CheckValueListDependentAttrs(uint32_t aNumValues)
-{
-=======
 void SMILAnimationFunction::CheckValueListDependentAttrs(uint32_t aNumValues) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   CheckKeyTimes(aNumValues);
   CheckKeySplines(aNumValues);
 }
@@ -1170,19 +780,8 @@ void SMILAnimationFunction::CheckValueListDependentAttrs(uint32_t aNumValues) {
  * which depend on other attributes and therefore needs to be updated as
  * dependent attributes are set.
  */
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::CheckKeyTimes(uint32_t aNumValues) {
-  if (!HasAttr(nsGkAtoms::keyTimes)) return;
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::CheckKeyTimes(uint32_t aNumValues)
-{
-  if (!HasAttr(nsGkAtoms::keyTimes))
-    return;
-=======
 void SMILAnimationFunction::CheckKeyTimes(uint32_t aNumValues) {
   if (!HasAttr(nsGkAtoms::keyTimes)) return;
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
 
   SMILCalcMode calcMode = GetCalcMode();
 
@@ -1223,15 +822,7 @@ void SMILAnimationFunction::CheckKeyTimes(uint32_t aNumValues) {
   SetKeyTimesErrorFlag(false);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::CheckKeySplines(uint32_t aNumValues) {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::CheckKeySplines(uint32_t aNumValues)
-{
-=======
 void SMILAnimationFunction::CheckKeySplines(uint32_t aNumValues) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   // attribute is ignored if calc mode is not spline
   if (GetCalcMode() != CALC_SPLINE) {
     SetKeySplinesErrorFlag(false);
@@ -1267,15 +858,7 @@ void SMILAnimationFunction::CheckKeySplines(uint32_t aNumValues) {
   SetKeySplinesErrorFlag(false);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::IsValueFixedForSimpleDuration() const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::IsValueFixedForSimpleDuration() const
-{
-=======
 bool SMILAnimationFunction::IsValueFixedForSimpleDuration() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   return mSimpleDuration.IsIndefinite() ||
          (!mHasChanged && mPrevSampleWasSingleValueAnimation);
 }
@@ -1283,46 +866,21 @@ bool SMILAnimationFunction::IsValueFixedForSimpleDuration() const {
 //----------------------------------------------------------------------
 // Property getters
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::GetAccumulate() const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::GetAccumulate() const
-{
-=======
 bool SMILAnimationFunction::GetAccumulate() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   const nsAttrValue* value = GetAttr(nsGkAtoms::accumulate);
   if (!value) return false;
 
   return value->GetEnumValue();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-bool nsSMILAnimationFunction::GetAdditive() const {
-||||||| merged common ancestors
-bool
-nsSMILAnimationFunction::GetAdditive() const
-{
-=======
 bool SMILAnimationFunction::GetAdditive() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   const nsAttrValue* value = GetAttr(nsGkAtoms::additive);
   if (!value) return false;
 
   return value->GetEnumValue();
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsSMILAnimationFunction::nsSMILCalcMode nsSMILAnimationFunction::GetCalcMode()
-    const {
-||||||| merged common ancestors
-nsSMILAnimationFunction::nsSMILCalcMode
-nsSMILAnimationFunction::GetCalcMode() const
-{
-=======
 SMILAnimationFunction::SMILCalcMode SMILAnimationFunction::GetCalcMode() const {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   const nsAttrValue* value = GetAttr(nsGkAtoms::calcMode);
   if (!value) return CALC_LINEAR;
 
@@ -1332,18 +890,8 @@ SMILAnimationFunction::SMILCalcMode SMILAnimationFunction::GetCalcMode() const {
 //----------------------------------------------------------------------
 // Property setters / un-setters:
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::SetAccumulate(const nsAString& aAccumulate,
-                                                nsAttrValue& aResult) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::SetAccumulate(const nsAString& aAccumulate,
-                                       nsAttrValue& aResult)
-{
-=======
 nsresult SMILAnimationFunction::SetAccumulate(const nsAString& aAccumulate,
                                               nsAttrValue& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mHasChanged = true;
   bool parseResult =
       aResult.ParseEnumValue(aAccumulate, sAccumulateTable, true);
@@ -1351,93 +899,39 @@ nsresult SMILAnimationFunction::SetAccumulate(const nsAString& aAccumulate,
   return parseResult ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::UnsetAccumulate() {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::UnsetAccumulate()
-{
-=======
 void SMILAnimationFunction::UnsetAccumulate() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   SetAccumulateErrorFlag(false);
   mHasChanged = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::SetAdditive(const nsAString& aAdditive,
-                                              nsAttrValue& aResult) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::SetAdditive(const nsAString& aAdditive,
-                                     nsAttrValue& aResult)
-{
-=======
 nsresult SMILAnimationFunction::SetAdditive(const nsAString& aAdditive,
                                             nsAttrValue& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mHasChanged = true;
   bool parseResult = aResult.ParseEnumValue(aAdditive, sAdditiveTable, true);
   SetAdditiveErrorFlag(!parseResult);
   return parseResult ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::UnsetAdditive() {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::UnsetAdditive()
-{
-=======
 void SMILAnimationFunction::UnsetAdditive() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   SetAdditiveErrorFlag(false);
   mHasChanged = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::SetCalcMode(const nsAString& aCalcMode,
-                                              nsAttrValue& aResult) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::SetCalcMode(const nsAString& aCalcMode,
-                                     nsAttrValue& aResult)
-{
-=======
 nsresult SMILAnimationFunction::SetCalcMode(const nsAString& aCalcMode,
                                             nsAttrValue& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mHasChanged = true;
   bool parseResult = aResult.ParseEnumValue(aCalcMode, sCalcModeTable, true);
   SetCalcModeErrorFlag(!parseResult);
   return parseResult ? NS_OK : NS_ERROR_FAILURE;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::UnsetCalcMode() {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::UnsetCalcMode()
-{
-=======
 void SMILAnimationFunction::UnsetCalcMode() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   SetCalcModeErrorFlag(false);
   mHasChanged = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::SetKeySplines(const nsAString& aKeySplines,
-                                                nsAttrValue& aResult) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::SetKeySplines(const nsAString& aKeySplines,
-                                       nsAttrValue& aResult)
-{
-=======
 nsresult SMILAnimationFunction::SetKeySplines(const nsAString& aKeySplines,
                                               nsAttrValue& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mKeySplines.Clear();
   aResult.SetTo(aKeySplines);
 
@@ -1451,32 +945,14 @@ nsresult SMILAnimationFunction::SetKeySplines(const nsAString& aKeySplines,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::UnsetKeySplines() {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::UnsetKeySplines()
-{
-=======
 void SMILAnimationFunction::UnsetKeySplines() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mKeySplines.Clear();
   SetKeySplinesErrorFlag(false);
   mHasChanged = true;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-nsresult nsSMILAnimationFunction::SetKeyTimes(const nsAString& aKeyTimes,
-                                              nsAttrValue& aResult) {
-||||||| merged common ancestors
-nsresult
-nsSMILAnimationFunction::SetKeyTimes(const nsAString& aKeyTimes,
-                                     nsAttrValue& aResult)
-{
-=======
 nsresult SMILAnimationFunction::SetKeyTimes(const nsAString& aKeyTimes,
                                             nsAttrValue& aResult) {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mKeyTimes.Clear();
   aResult.SetTo(aKeyTimes);
 
@@ -1491,15 +967,7 @@ nsresult SMILAnimationFunction::SetKeyTimes(const nsAString& aKeyTimes,
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/smil/nsSMILAnimationFunction.cpp
-void nsSMILAnimationFunction::UnsetKeyTimes() {
-||||||| merged common ancestors
-void
-nsSMILAnimationFunction::UnsetKeyTimes()
-{
-=======
 void SMILAnimationFunction::UnsetKeyTimes() {
->>>>>>> upstream-releases:mozilla-release/dom/smil/SMILAnimationFunction.cpp
   mKeyTimes.Clear();
   SetKeyTimesErrorFlag(false);
   mHasChanged = true;

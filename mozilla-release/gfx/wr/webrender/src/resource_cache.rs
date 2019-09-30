@@ -4,35 +4,13 @@
 
 use api::{AddFont, BlobImageResources, AsyncBlobImageRasterizer, ResourceUpdate};
 use api::{BlobImageDescriptor, BlobImageHandler, BlobImageRequest, RasterizedBlobImage};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-use api::{ClearCache, ColorF, DeviceIntPoint, DeviceIntRect, DeviceIntSize};
-use api::{DebugFlags, FontInstanceKey, FontKey, FontTemplate, GlyphIndex};
-||||||| merged common ancestors
-use api::{ClearCache, ColorF, DevicePoint, DeviceUintPoint, DeviceUintRect, DeviceUintSize};
-use api::{FontInstanceKey, FontKey, FontTemplate, GlyphIndex};
-=======
 use api::{ClearCache, DebugFlags, FontInstanceKey, FontKey, FontTemplate, GlyphIndex};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
 use api::{ExternalImageData, ExternalImageType, BlobImageResult, BlobImageParams};
 use api::{FontInstanceData, FontInstanceOptions, FontInstancePlatformOptions, FontVariation};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-use api::{GlyphDimensions, IdNamespace};
-use api::{ImageData, ImageDescriptor, ImageKey, ImageRendering, ImageDirtyRect, DirtyRect};
-use api::{BlobImageKey, BlobDirtyRect, MemoryReport, VoidPtrToSizeFn};
-use api::{TileOffset, TileSize, TileRange, BlobImageData, LayoutIntRect, LayoutIntSize};
-use app_units::Au;
-||||||| merged common ancestors
-use api::{GlyphDimensions, IdNamespace};
-use api::{ImageData, ImageDescriptor, ImageKey, ImageRendering};
-use api::{MemoryReport, VoidPtrToSizeFn};
-use api::{TileOffset, TileSize, TileRange, BlobImageData};
-use app_units::Au;
-=======
 use api::{DirtyRect, GlyphDimensions, IdNamespace};
 use api::{ImageData, ImageDescriptor, ImageKey, ImageRendering, TileSize};
 use api::{BlobImageData, BlobImageKey, MemoryReport, VoidPtrToSizeFn};
 use api::units::*;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
 #[cfg(feature = "capture")]
 use crate::capture::ExternalCaptureImage;
 #[cfg(feature = "replay")]
@@ -43,29 +21,6 @@ use crate::device::TextureFilter;
 use euclid::{point2, size2};
 use crate::glyph_cache::GlyphCache;
 #[cfg(not(feature = "pathfinder"))]
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-use glyph_cache::GlyphCacheEntry;
-use glyph_rasterizer::{FontInstance, GlyphFormat, GlyphKey, GlyphRasterizer};
-use gpu_cache::{GpuCache, GpuCacheAddress, GpuCacheHandle};
-use gpu_types::UvRectKind;
-use image::{compute_tile_range, for_each_tile_in_range};
-use internal_types::{FastHashMap, FastHashSet, TextureSource, TextureUpdateList};
-use profiler::{ResourceProfileCounters, TextureCacheProfileCounters};
-use render_backend::{FrameId, FrameStamp};
-use render_task::{RenderTaskCache, RenderTaskCacheKey, RenderTaskId};
-use render_task::{RenderTaskCacheEntry, RenderTaskCacheEntryHandle, RenderTaskTree};
-||||||| merged common ancestors
-use glyph_cache::GlyphCacheEntry;
-use glyph_rasterizer::{FontInstance, GlyphFormat, GlyphKey, GlyphRasterizer};
-use gpu_cache::{GpuCache, GpuCacheAddress, GpuCacheHandle};
-use gpu_types::UvRectKind;
-use image::{compute_tile_range, for_each_tile_in_range};
-use internal_types::{FastHashMap, FastHashSet, TextureSource, TextureUpdateList};
-use profiler::{ResourceProfileCounters, TextureCacheProfileCounters};
-use render_backend::FrameId;
-use render_task::{RenderTaskCache, RenderTaskCacheKey, RenderTaskId};
-use render_task::{RenderTaskCacheEntry, RenderTaskCacheEntryHandle, RenderTaskTree};
-=======
 use crate::glyph_cache::GlyphCacheEntry;
 use crate::glyph_rasterizer::{BaseFontInstance, FontInstance, GlyphFormat, GlyphKey, GlyphRasterizer};
 use crate::gpu_cache::{GpuCache, GpuCacheAddress, GpuCacheHandle};
@@ -76,18 +31,10 @@ use crate::profiler::{ResourceProfileCounters, TextureCacheProfileCounters};
 use crate::render_backend::{FrameId, FrameStamp};
 use crate::render_task::{RenderTaskCache, RenderTaskCacheKey, RenderTaskId};
 use crate::render_task::{RenderTaskCacheEntry, RenderTaskCacheEntryHandle, RenderTaskGraph};
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
 use smallvec::SmallVec;
 use std::collections::hash_map::Entry::{self, Occupied, Vacant};
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-use std::collections::hash_map::IterMut;
-use std::collections::VecDeque;
-||||||| merged common ancestors
-use std::collections::hash_map::IterMut;
-=======
 use std::collections::hash_map::{Iter, IterMut};
 use std::collections::VecDeque;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
 use std::{cmp, mem};
 use std::fmt::Debug;
 use std::hash::Hash;
@@ -494,9 +441,6 @@ pub struct AsyncBlobImageInfo {
     pub clear_requests: Vec<BlobImageClearParams>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct BlobImageRasterizerEpoch(usize);
-
 /// High-level container for resources managed by the `RenderBackend`.
 ///
 /// This includes a variety of things, including images, fonts, and glyphs,
@@ -522,42 +466,13 @@ pub struct ResourceCache {
     /// both blobs and regular images.
     pending_image_requests: FastHashSet<ImageRequest>,
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-    blob_image_handler: Option<Box<BlobImageHandler>>,
-    rasterized_blob_images: FastHashMap<BlobImageKey, RasterizedBlob>,
-    blob_image_templates: FastHashMap<BlobImageKey, BlobImageTemplate>,
-||||||| merged common ancestors
-    blob_image_handler: Option<Box<BlobImageHandler>>,
-    rasterized_blob_images: FastHashMap<ImageKey, RasterizedBlob>,
-    blob_image_templates: FastHashMap<ImageKey, BlobImageTemplate>,
-=======
     blob_image_handler: Option<Box<dyn BlobImageHandler>>,
     rasterized_blob_images: FastHashMap<BlobImageKey, RasterizedBlob>,
     blob_image_templates: FastHashMap<BlobImageKey, BlobImageTemplate>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
 
     /// If while building a frame we encounter blobs that we didn't already
     /// rasterize, add them to this list and rasterize them synchronously.
     missing_blob_images: Vec<BlobImageParams>,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-    /// The rasterizer associated with the current scene.
-    blob_image_rasterizer: Option<Box<AsyncBlobImageRasterizer>>,
-    /// An epoch of the stored blob image rasterizer, used to skip the ones
-    /// coming from low-priority scene builds if the current one is newer.
-    /// This is to be removed when we get rid of the whole "missed" blob
-    /// images concept.
-    /// The produced one gets bumped whenever we produce a rasteriezer,
-    /// which then travels through the scene building and eventually gets
-    /// consumed back by us, bumping the consumed epoch.
-    blob_image_rasterizer_produced_epoch: BlobImageRasterizerEpoch,
-    blob_image_rasterizer_consumed_epoch: BlobImageRasterizerEpoch,
-    /// A log of the last three frames worth of deleted image keys kept
-    /// for debugging purposes.
-    deleted_blob_keys: VecDeque<Vec<BlobImageKey>>
-||||||| merged common ancestors
-    // The rasterizer associated with the current scene.
-    blob_image_rasterizer: Option<Box<AsyncBlobImageRasterizer>>,
-=======
     /// The rasterizer associated with the current scene.
     blob_image_rasterizer: Option<Box<dyn AsyncBlobImageRasterizer>>,
     /// An epoch of the stored blob image rasterizer, used to skip the ones
@@ -576,7 +491,6 @@ pub struct ResourceCache {
     /// updates to the texture cache. Images in this category trigger
     /// invalidations for picture caching tiles.
     dirty_image_keys: FastHashSet<ImageKey>,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
 }
 
 impl ResourceCache {
@@ -602,19 +516,11 @@ impl ResourceCache {
             blob_image_templates: FastHashMap::default(),
             missing_blob_images: Vec::new(),
             blob_image_rasterizer: None,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-            blob_image_rasterizer_produced_epoch: BlobImageRasterizerEpoch(0),
-            blob_image_rasterizer_consumed_epoch: BlobImageRasterizerEpoch(0),
-            // We want to keep three frames worth of delete blob keys
-            deleted_blob_keys: vec![Vec::new(), Vec::new(), Vec::new()].into(),
-||||||| merged common ancestors
-=======
             blob_image_rasterizer_produced_epoch: BlobImageRasterizerEpoch(0),
             blob_image_rasterizer_consumed_epoch: BlobImageRasterizerEpoch(0),
             // We want to keep three frames worth of delete blob keys
             deleted_blob_keys: vec![Vec::new(), Vec::new(), Vec::new()].into(),
             dirty_image_keys: FastHashSet::default(),
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
         }
     }
 
@@ -646,16 +552,8 @@ impl ResourceCache {
         render_tasks: &mut RenderTaskGraph,
         user_data: Option<[f32; 3]>,
         is_opaque: bool,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-        f: F,
-    ) -> RenderTaskCacheEntryHandle where F: FnOnce(&mut RenderTaskTree) -> RenderTaskId {
-||||||| merged common ancestors
-        mut f: F,
-    ) -> RenderTaskCacheEntryHandle where F: FnMut(&mut RenderTaskTree) -> RenderTaskId {
-=======
         f: F,
     ) -> RenderTaskCacheEntryHandle where F: FnOnce(&mut RenderTaskGraph) -> RenderTaskId {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
         self.cached_render_tasks.request_render_task(
             key,
             &mut self.texture_cache,
@@ -797,16 +695,6 @@ impl ResourceCache {
         );
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-    pub fn set_blob_rasterizer(&mut self, rasterizer: Box<AsyncBlobImageRasterizer>, epoch: BlobImageRasterizerEpoch) {
-        if self.blob_image_rasterizer_consumed_epoch.0 < epoch.0 {
-            self.blob_image_rasterizer = Some(rasterizer);
-            self.blob_image_rasterizer_consumed_epoch = epoch;
-        }
-||||||| merged common ancestors
-    pub fn set_blob_rasterizer(&mut self, rasterizer: Box<AsyncBlobImageRasterizer>) {
-        self.blob_image_rasterizer = Some(rasterizer);
-=======
     pub fn set_blob_rasterizer(
         &mut self, rasterizer: Box<dyn AsyncBlobImageRasterizer>,
         supp: AsyncBlobImageInfo,
@@ -844,7 +732,6 @@ impl ResourceCache {
                 _ => {}
             }
         }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
     }
 
     pub fn add_rasterized_blob_images(&mut self, images: Vec<(BlobImageRequest, BlobImageResult)>) {
@@ -1003,32 +890,6 @@ impl ResourceCache {
             }
             Some(&mut ImageResult::Multi(ref mut entries)) => {
                 for (key, entry) in entries.iter_mut() {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                    // We want the dirty rect relative to the tile and not the whole image.
-                    let local_dirty_rect = match (tiling, key.tile) {
-                        (Some(tile_size), Some(tile)) => {
-                            dirty_rect.map(|mut rect|{
-                                let tile_offset = DeviceIntPoint::new(
-                                    tile.x as i32,
-                                    tile.y as i32,
-                                ) * tile_size as i32;
-                                rect.origin -= tile_offset.to_vector();
-
-                                rect
-                            })
-||||||| merged common ancestors
-                    let merged_rect = merge_dirty_rect(&entry.dirty_rect, &dirty_rect, &descriptor);
-
-                    entry.dirty_rect = match (key.tile, merged_rect) {
-                        (Some(tile), Some(rect)) => {
-                            let tile_size = image.tiling.unwrap();
-                            let clipped_tile_size = compute_tile_size(&descriptor, tile_size, tile);
-
-                            rect.intersection(&DeviceUintRect::new(
-                                DeviceUintPoint::new(tile.x as u32, tile.y as u32) * tile_size as u32,
-                                clipped_tile_size,
-                            ))
-=======
                     // We want the dirty rect relative to the tile and not the whole image.
                     let local_dirty_rect = match (tiling, key.tile) {
                         (Some(tile_size), Some(tile)) => {
@@ -1047,7 +908,6 @@ impl ResourceCache {
 
                                 rect.intersection(&tile_rect).unwrap_or(DeviceIntRect::zero())
                             })
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                         }
                         (None, Some(..)) => DirtyRect::All,
                         _ => *dirty_rect,
@@ -1139,35 +999,6 @@ impl ResourceCache {
         }
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-    /// Check if an image has changed since it was last requested.
-    pub fn is_image_dirty(
-        &self,
-        image_key: ImageKey,
-    ) -> bool {
-        match self.cached_images.try_get(&image_key) {
-            Some(ImageResult::UntiledAuto(ref info)) => {
-                !info.dirty_rect.is_empty()
-            }
-            Some(ImageResult::Multi(ref entries)) => {
-                for (_, entry) in &entries.resources {
-                    if !entry.dirty_rect.is_empty() {
-                        return true;
-                    }
-                }
-                false
-            }
-            Some(ImageResult::Err(..)) => {
-                false
-            }
-            None => {
-                true
-            }
-        }
-    }
-
-||||||| merged common ancestors
-=======
     /// Check if an image has changed since it was last requested.
     pub fn is_image_dirty(
         &self,
@@ -1176,7 +1007,6 @@ impl ResourceCache {
         self.dirty_image_keys.contains(&image_key)
     }
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
     pub fn request_image(
         &mut self,
         request: ImageRequest,
@@ -1293,42 +1123,6 @@ impl ResourceCache {
             // For some reason the blob image is missing. We'll fall back to
             // rasterizing it on the render backend thread.
             if missing {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                let descriptor = BlobImageDescriptor {
-                    rect: match template.tiling {
-                        Some(tile_size) => {
-                            let tile = request.tile.unwrap();
-                            LayoutIntRect {
-                                origin: point2(tile.x, tile.y) * tile_size as i32,
-                                size: blob_size(compute_tile_size(
-                                    &template.descriptor,
-                                    tile_size,
-                                    tile,
-                                )),
-                            }
-||||||| merged common ancestors
-                let descriptor = match template.tiling {
-                    Some(tile_size) => {
-                        let tile = request.tile.unwrap();
-                        BlobImageDescriptor {
-                            offset: DevicePoint::new(
-                                tile.x as f32 * tile_size as f32,
-                                tile.y as f32 * tile_size as f32,
-                            ),
-                            size: compute_tile_size(
-                                &template.descriptor,
-                                tile_size,
-                                tile,
-                            ),
-                            format: template.descriptor.format,
-                        }
-                    }
-                    None => {
-                        BlobImageDescriptor {
-                            offset: DevicePoint::origin(),
-                            size: template.descriptor.size,
-                            format: template.descriptor.format,
-=======
                 let descriptor = BlobImageDescriptor {
                     rect: match template.tiling {
                         Some(tile_size) => {
@@ -1341,7 +1135,6 @@ impl ResourceCache {
                                     tile,
                                 )),
                             }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                         }
                         None => blob_size(template.descriptor.size).into(),
                     },
@@ -1367,19 +1160,9 @@ impl ResourceCache {
 
     pub fn create_blob_scene_builder_requests(
         &mut self,
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-        keys: &[BlobImageKey]
-    ) -> (Option<(Box<AsyncBlobImageRasterizer>, BlobImageRasterizerEpoch)>, Vec<BlobImageParams>) {
-        if self.blob_image_handler.is_none() || keys.is_empty() {
-||||||| merged common ancestors
-        keys: &[ImageKey]
-    ) -> (Option<Box<AsyncBlobImageRasterizer>>, Vec<BlobImageParams>) {
-        if self.blob_image_handler.is_none() {
-=======
         keys: &[BlobImageKey]
     ) -> (Option<(Box<dyn AsyncBlobImageRasterizer>, AsyncBlobImageInfo)>, Vec<BlobImageParams>) {
         if self.blob_image_handler.is_none() || keys.is_empty() {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
             return (None, Vec::new());
         }
 
@@ -1428,13 +1211,6 @@ impl ResourceCache {
                 // This code tries to keep things sane if Gecko sends
                 // nonsensical blob image requests.
                 // Constant here definitely needs to be tweaked.
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                const MAX_TILES_PER_REQUEST: i32 = 64;
-                while tiles.size.width as i32 * tiles.size.height as i32 > MAX_TILES_PER_REQUEST {
-||||||| merged common ancestors
-                const MAX_TILES_PER_REQUEST: u32 = 64;
-                while tiles.size.width as u32 * tiles.size.height as u32 > MAX_TILES_PER_REQUEST {
-=======
                 const MAX_TILES_PER_REQUEST: i32 = 512;
                 // For truly nonsensical requests, we might run into overflow
                 // when computing width * height, so we first check each extent
@@ -1447,7 +1223,6 @@ impl ResourceCache {
                     let w = tiles.size.width.min(limit);
                     let h = tiles.size.height.min(limit);
                     let diff = w * h - MAX_TILES_PER_REQUEST;
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                     // Remove tiles in the largest dimension.
                     if tiles.size.width > tiles.size.height {
                         tiles.size.width -= diff / h + 1;
@@ -1458,11 +1233,6 @@ impl ResourceCache {
                     }
                 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                for_each_tile_in_range(&tiles, |tile| {
-||||||| merged common ancestors
-                for_each_tile_in_range(&tiles, &mut|tile| {
-=======
                 // When originally requested tile range exceeds MAX_TILES_PER_REQUEST,
                 // some tiles are not rasterized by AsyncBlobImageRasterizer.
                 // They need to be cleared.
@@ -1476,28 +1246,7 @@ impl ResourceCache {
                 }
 
                 for_each_tile_in_range(&tiles, |tile| {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                     let descriptor = BlobImageDescriptor {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                        rect: LayoutIntRect {
-                            origin: point2(tile.x, tile.y) * tile_size as i32,
-                            size: blob_size(compute_tile_size(
-                                &template.descriptor,
-                                tile_size,
-                                tile,
-                            )),
-                        },
-||||||| merged common ancestors
-                        offset: DevicePoint::new(
-                            tile.x as f32 * tile_size as f32,
-                            tile.y as f32 * tile_size as f32,
-                        ),
-                        size: compute_tile_size(
-                            &template.descriptor,
-                            tile_size,
-                            tile,
-                        ),
-=======
                         rect: LayoutIntRect {
                             origin: point2(tile.x, tile.y) * tile_size as i32,
                             size: blob_size(compute_tile_size(
@@ -1506,7 +1255,6 @@ impl ResourceCache {
                                 tile,
                             )),
                         },
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                         format: template.descriptor.format,
                     };
 
@@ -1576,26 +1324,14 @@ impl ResourceCache {
             }
             template.dirty_rect = DirtyRect::empty();
         }
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-        self.blob_image_rasterizer_produced_epoch.0 += 1;
-        let epoch = self.blob_image_rasterizer_produced_epoch;
-||||||| merged common ancestors
-=======
         self.blob_image_rasterizer_produced_epoch.0 += 1;
         let info = AsyncBlobImageInfo {
             epoch: self.blob_image_rasterizer_produced_epoch,
             clear_requests: blob_tiles_clear_requests,
         };
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
         let handler = self.blob_image_handler.as_mut().unwrap();
         handler.prepare_resources(&self.resources, &blob_request_params);
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-        (Some((handler.create_blob_rasterizer(), epoch)), blob_request_params)
-||||||| merged common ancestors
-        (Some(handler.create_blob_rasterizer()), blob_request_params)
-=======
         (Some((handler.create_blob_rasterizer(), info)), blob_request_params)
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
     }
 
     fn discard_tiles_outside_visible_area(
@@ -1626,23 +1362,6 @@ impl ResourceCache {
         );
 
         tiles.retain(|tile, _| { tile_range.contains(tile) });
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-
-        let texture_cache = &mut self.texture_cache;
-        match self.cached_images.try_get_mut(&key.as_image()) {
-            Some(&mut ImageResult::Multi(ref mut entries)) => {
-                entries.retain(|key, entry| {
-                    if key.tile.is_none() || tile_range.contains(&key.tile.unwrap()) {
-                        return true;
-                    }
-                    texture_cache.mark_unused(&entry.texture_cache_handle);
-                    return false;
-                });
-            }
-            _ => {}
-        }
-||||||| merged common ancestors
-=======
 
         let texture_cache = &mut self.texture_cache;
         match self.cached_images.try_get_mut(&key.as_image()) {
@@ -1657,7 +1376,6 @@ impl ResourceCache {
             }
             _ => {}
         }
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
     }
 
     pub fn request_glyphs(
@@ -1853,11 +1571,6 @@ impl ResourceCache {
         })
     }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-    pub fn begin_frame(&mut self, stamp: FrameStamp) {
-||||||| merged common ancestors
-    pub fn begin_frame(&mut self, frame_id: FrameId) {
-=======
     pub fn prepare_for_frames(&mut self, time: SystemTime) {
         self.texture_cache.prepare_for_frames(time);
     }
@@ -1871,16 +1584,8 @@ impl ResourceCache {
     }
 
     pub fn begin_frame(&mut self, stamp: FrameStamp) {
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
         debug_assert_eq!(self.state, State::Idle);
         self.state = State::AddResources;
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-        self.texture_cache.begin_frame(stamp);
-        self.cached_glyphs.begin_frame(&self.texture_cache, &self.cached_render_tasks, &mut self.glyph_rasterizer);
-||||||| merged common ancestors
-        self.texture_cache.begin_frame(frame_id);
-        self.cached_glyphs.begin_frame(&self.texture_cache, &self.cached_render_tasks, &mut self.glyph_rasterizer);
-=======
         self.texture_cache.begin_frame(stamp);
         self.cached_glyphs.begin_frame(
             stamp,
@@ -1888,7 +1593,6 @@ impl ResourceCache {
             &self.cached_render_tasks,
             &mut self.glyph_rasterizer,
         );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
         self.cached_render_tasks.begin_frame(&mut self.texture_cache);
         self.current_frame_id = stamp.frame_id();
 
@@ -2002,27 +1706,8 @@ impl ResourceCache {
 
                 if let Some(tile) = request.tile {
                     let tile_size = image_template.tiling.unwrap();
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                    let clipped_tile_size = compute_tile_size(&descriptor, tile_size, tile);
-
-||||||| merged common ancestors
-                    let clipped_tile_size = compute_tile_size(&descriptor, tile_size, tile);
-
-                    local_dirty_rect = if let Some(rect) = entry.dirty_rect.take() {
-                        // We should either have a dirty rect, or we are re-uploading where the dirty
-                        // rect is ignored anyway.
-                        let intersection = intersect_for_tile(rect, clipped_tile_size, tile_size, tile);
-                        debug_assert!(intersection.is_some() ||
-                                      self.texture_cache.needs_upload(&entry.texture_cache_handle));
-                        intersection
-                    } else {
-                        None
-                    };
-
-=======
                     let clipped_tile_size = compute_tile_size(&descriptor.size.into(), tile_size, tile);
 
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                     // The tiled image could be stored on the CPU as one large image or be
                     // already broken up into tiles. This affects the way we compute the stride
                     // and offset.
@@ -2101,10 +1786,6 @@ impl ResourceCache {
         self.state = State::Idle;
         self.texture_cache.end_frame(texture_cache_profile);
         self.dirty_image_keys.clear();
-    }
-
-    pub fn set_debug_flags(&mut self, flags: DebugFlags) {
-        self.texture_cache.set_debug_flags(flags);
     }
 
     pub fn set_debug_flags(&mut self, flags: DebugFlags) {
@@ -2237,62 +1918,6 @@ pub fn get_blob_tiling(
     tiling
 }
 
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-
-// Compute the width and height of a tile depending on its position in the image.
-pub fn compute_tile_size(
-    descriptor: &ImageDescriptor,
-    base_size: TileSize,
-    tile: TileOffset,
-) -> DeviceIntSize {
-    let base_size = base_size as i32;
-    // Most tiles are going to have base_size as width and height,
-    // except for tiles around the edges that are shrunk to fit the mage data
-    // (See decompose_tiled_image in frame.rs).
-    let actual_width = if (tile.x as i32) < descriptor.size.width / base_size {
-        base_size
-    } else {
-        descriptor.size.width % base_size
-    };
-
-    let actual_height = if (tile.y as i32) < descriptor.size.height / base_size {
-        base_size
-    } else {
-        descriptor.size.height % base_size
-    };
-
-    size2(actual_width, actual_height)
-}
-
-||||||| merged common ancestors
-
-// Compute the width and height of a tile depending on its position in the image.
-pub fn compute_tile_size(
-    descriptor: &ImageDescriptor,
-    base_size: TileSize,
-    tile: TileOffset,
-) -> DeviceUintSize {
-    let base_size = base_size as u32;
-    // Most tiles are going to have base_size as width and height,
-    // except for tiles around the edges that are shrunk to fit the mage data
-    // (See decompose_tiled_image in frame.rs).
-    let actual_width = if (tile.x as u32) < descriptor.size.width / base_size {
-        base_size
-    } else {
-        descriptor.size.width % base_size
-    };
-
-    let actual_height = if (tile.y as u32) < descriptor.size.height / base_size {
-        base_size
-    } else {
-        descriptor.size.height % base_size
-    };
-
-    size2(actual_width, actual_height)
-}
-
-=======
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
 #[cfg(any(feature = "capture", feature = "replay"))]
 #[cfg_attr(feature = "capture", derive(Serialize))]
 #[cfg_attr(feature = "replay", derive(Deserialize))]
@@ -2423,16 +2048,8 @@ impl ResourceCache {
                     #[cfg(feature = "png")]
                     CaptureConfig::save_png(
                         root.join(format!("images/{}.png", image_id)),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                        desc.size,
-                        ReadPixelsFormat::Standard(desc.format),
-||||||| merged common ancestors
-                        (desc.size.width, desc.size.height),
-                        ReadPixelsFormat::Standard(desc.format),
-=======
                         desc.size,
                         desc.format,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                         &arc,
                     );
                     let file_name = format!("{}.raw", image_id);
@@ -2486,16 +2103,8 @@ impl ResourceCache {
                     #[cfg(feature = "png")]
                     CaptureConfig::save_png(
                         root.join(format!("blobs/{}.png", num_blobs)),
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                        desc.size,
-                        ReadPixelsFormat::Standard(desc.format),
-||||||| merged common ancestors
-                        (desc.size.width, desc.size.height),
-                        ReadPixelsFormat::Standard(desc.format),
-=======
                         desc.size,
                         desc.format,
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
                         &result.data,
                     );
                     let file_name = format!("{}.raw", num_blobs);
@@ -2606,25 +2215,6 @@ impl ResourceCache {
                 self.texture_cache = cached.textures;
             }
             None => {
-<<<<<<< HEAD:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
-                self.current_frame_id = FrameId::INVALID;
-                self.cached_glyphs.clear();
-                self.cached_glyph_dimensions.clear();
-                self.cached_images.clear();
-                self.cached_render_tasks.clear();
-                self.texture_cache = TextureCache::new(
-                    self.texture_cache.max_texture_size(),
-                    self.texture_cache.max_texture_layers(),
-                );
-||||||| merged common ancestors
-                self.current_frame_id = FrameId(0);
-                self.cached_glyphs.clear();
-                self.cached_glyph_dimensions.clear();
-                self.cached_images.clear();
-                self.cached_render_tasks.clear();
-                let max_texture_size = self.texture_cache.max_texture_size();
-                self.texture_cache = TextureCache::new(max_texture_size);
-=======
                 self.current_frame_id = FrameId::INVALID;
                 self.texture_cache = TextureCache::new(
                     self.texture_cache.max_texture_size(),
@@ -2632,7 +2222,6 @@ impl ResourceCache {
                     &self.texture_cache.picture_tile_sizes(),
                     DeviceIntSize::zero(),
                 );
->>>>>>> upstream-releases:mozilla-release/gfx/wr/webrender/src/resource_cache.rs
             }
         }
 

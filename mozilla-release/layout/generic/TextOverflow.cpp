@@ -61,41 +61,18 @@ static gfxTextRun* GetEllipsisTextRun(nsIFrame* aFrame) {
       lazyRefDrawTargetGetter);
 }
 
-<<<<<<< HEAD
-static nsIFrame* GetSelfOrNearestBlock(nsIFrame* aFrame) {
-  return nsLayoutUtils::GetAsBlock(aFrame)
-             ? aFrame
-             : nsLayoutUtils::FindNearestBlockAncestor(aFrame);
-||||||| merged common ancestors
-static nsIFrame*
-GetSelfOrNearestBlock(nsIFrame* aFrame)
-{
-  return nsLayoutUtils::GetAsBlock(aFrame) ? aFrame :
-         nsLayoutUtils::FindNearestBlockAncestor(aFrame);
-=======
 static nsIFrame* GetSelfOrNearestBlock(nsIFrame* aFrame) {
   MOZ_ASSERT(aFrame);
   return aFrame->IsBlockFrameOrSubclass()
              ? aFrame
              : nsLayoutUtils::FindNearestBlockAncestor(aFrame);
->>>>>>> upstream-releases
 }
 
 // Return true if the frame is an atomic inline-level element.
 // It's not supposed to be called for block frames since we never
 // process block descendants for text-overflow.
-<<<<<<< HEAD
-static bool IsAtomicElement(nsIFrame* aFrame, LayoutFrameType aFrameType) {
-  MOZ_ASSERT(!nsLayoutUtils::GetAsBlock(aFrame) || !aFrame->IsBlockOutside(),
-||||||| merged common ancestors
-static bool
-IsAtomicElement(nsIFrame* aFrame, LayoutFrameType aFrameType)
-{
-  MOZ_ASSERT(!nsLayoutUtils::GetAsBlock(aFrame) || !aFrame->IsBlockOutside(),
-=======
 static bool IsAtomicElement(nsIFrame* aFrame, LayoutFrameType aFrameType) {
   MOZ_ASSERT(!aFrame->IsBlockFrameOrSubclass() || !aFrame->IsBlockOutside(),
->>>>>>> upstream-releases
              "unexpected block frame");
   MOZ_ASSERT(aFrameType != LayoutFrameType::Placeholder,
              "unexpected placeholder frame");
@@ -113,18 +90,8 @@ static bool IsFullyClipped(nsTextFrame* aFrame, nscoord aLeft, nscoord aRight,
                                          aSnappedRight);
 }
 
-<<<<<<< HEAD
-static bool IsInlineAxisOverflowVisible(nsIFrame* aFrame) {
-  MOZ_ASSERT(nsLayoutUtils::GetAsBlock(aFrame) != nullptr,
-||||||| merged common ancestors
-static bool
-IsInlineAxisOverflowVisible(nsIFrame* aFrame)
-{
-  MOZ_ASSERT(nsLayoutUtils::GetAsBlock(aFrame) != nullptr,
-=======
 static bool IsInlineAxisOverflowVisible(nsIFrame* aFrame) {
   MOZ_ASSERT(aFrame && aFrame->IsBlockFrameOrSubclass(),
->>>>>>> upstream-releases
              "expected a block frame");
 
   nsIFrame* f = aFrame;
@@ -134,21 +101,10 @@ static bool IsInlineAxisOverflowVisible(nsIFrame* aFrame) {
   if (!f) {
     return true;
   }
-<<<<<<< HEAD
-  auto overflow = aFrame->GetWritingMode().IsVertical()
-                      ? f->StyleDisplay()->mOverflowY
-                      : f->StyleDisplay()->mOverflowX;
-  return overflow == NS_STYLE_OVERFLOW_VISIBLE;
-||||||| merged common ancestors
-  auto overflow = aFrame->GetWritingMode().IsVertical() ?
-    f->StyleDisplay()->mOverflowY : f->StyleDisplay()->mOverflowX;
-  return overflow == NS_STYLE_OVERFLOW_VISIBLE;
-=======
   auto overflow = aFrame->GetWritingMode().IsVertical()
                       ? f->StyleDisplay()->mOverflowY
                       : f->StyleDisplay()->mOverflowX;
   return overflow == StyleOverflow::Visible;
->>>>>>> upstream-releases
 }
 
 static void ClipMarker(const nsRect& aContentArea, const nsRect& aMarkerRect,
@@ -192,34 +148,10 @@ static bool IsFrameDescendantOfAny(
   return false;
 }
 
-<<<<<<< HEAD
-class nsDisplayTextOverflowMarker final : public nsDisplayItem {
- public:
-||||||| merged common ancestors
-class nsDisplayTextOverflowMarker final : public nsDisplayItem
-{
-public:
-=======
 class nsDisplayTextOverflowMarker final : public nsPaintedDisplayItem {
  public:
->>>>>>> upstream-releases
   nsDisplayTextOverflowMarker(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                               const nsRect& aRect, nscoord aAscent,
-<<<<<<< HEAD
-                              const nsStyleTextOverflowSide* aStyle,
-                              uint32_t aLineNumber, uint32_t aIndex)
-      : nsDisplayItem(aBuilder, aFrame),
-        mRect(aRect),
-        mStyle(*aStyle),
-        mAscent(aAscent),
-        mIndex((aLineNumber << 1) + aIndex) {
-||||||| merged common ancestors
-                              const nsStyleTextOverflowSide* aStyle,
-                              uint32_t aLineNumber,
-                              uint32_t aIndex)
-    : nsDisplayItem(aBuilder, aFrame), mRect(aRect),
-      mStyle(*aStyle), mAscent(aAscent), mIndex((aLineNumber << 1) + aIndex) {
-=======
                               const StyleTextOverflowSide& aStyle,
                               uint32_t aLineNumber, uint16_t aIndex)
       : nsPaintedDisplayItem(aBuilder, aFrame),
@@ -227,7 +159,6 @@ class nsDisplayTextOverflowMarker final : public nsPaintedDisplayItem {
         mStyle(aStyle),
         mAscent(aAscent),
         mIndex((aLineNumber << 1) + aIndex) {
->>>>>>> upstream-releases
     MOZ_COUNT_CTOR(nsDisplayTextOverflowMarker);
   }
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -258,64 +189,23 @@ class nsDisplayTextOverflowMarker final : public nsPaintedDisplayItem {
 
   virtual void Paint(nsDisplayListBuilder* aBuilder, gfxContext* aCtx) override;
 
-<<<<<<< HEAD
-  virtual uint32_t GetPerFrameKey() const override {
-    return (mIndex << TYPE_BITS) | nsDisplayItem::GetPerFrameKey();
-  }
-  void PaintTextToContext(gfxContext* aCtx, nsPoint aOffsetFromRect);
-||||||| merged common ancestors
-  virtual uint32_t GetPerFrameKey() const override {
-    return (mIndex << TYPE_BITS) | nsDisplayItem::GetPerFrameKey();
-  }
-  void PaintTextToContext(gfxContext* aCtx,
-                          nsPoint aOffsetFromRect);
-=======
   virtual uint16_t CalculatePerFrameKey() const override { return mIndex; }
 
   void PaintTextToContext(gfxContext* aCtx, nsPoint aOffsetFromRect);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual bool CreateWebRenderCommands(
-      mozilla::wr::DisplayListBuilder& aBuilder,
-      mozilla::wr::IpcResourceUpdateQueue& aResources,
-      const StackingContextHelper& aSc, layers::WebRenderLayerManager* aManager,
-      nsDisplayListBuilder* aDisplayListBuilder) override;
-||||||| merged common ancestors
-  virtual bool CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                       mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                       const StackingContextHelper& aSc,
-                                       layers::WebRenderLayerManager* aManager,
-                                       nsDisplayListBuilder* aDisplayListBuilder) override;
-=======
   virtual bool CreateWebRenderCommands(
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const StackingContextHelper& aSc,
       layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder) override;
->>>>>>> upstream-releases
 
   NS_DISPLAY_DECL_NAME("TextOverflow", TYPE_TEXT_OVERFLOW)
-<<<<<<< HEAD
- private:
-  nsRect mRect;  // in reference frame coordinates
-  const nsStyleTextOverflowSide mStyle;
-  nscoord mAscent;  // baseline for the marker text in mRect
-  uint32_t mIndex;
-||||||| merged common ancestors
-private:
-  nsRect          mRect;   // in reference frame coordinates
-  const nsStyleTextOverflowSide mStyle;
-  nscoord         mAscent; // baseline for the marker text in mRect
-  uint32_t        mIndex;
-=======
  private:
   nsRect mRect;  // in reference frame coordinates
   const StyleTextOverflowSide mStyle;
   nscoord mAscent;  // baseline for the marker text in mRect
   uint16_t mIndex;
->>>>>>> upstream-releases
 };
 
 static void PaintTextShadowCallback(gfxContext* aCtx, nsPoint aShadowOffset,
@@ -369,44 +259,18 @@ void nsDisplayTextOverflowMarker::PaintTextToContext(gfxContext* aCtx,
     }
   } else {
     RefPtr<nsFontMetrics> fm =
-<<<<<<< HEAD
-        nsLayoutUtils::GetInflatedFontMetricsForFrame(mFrame);
-    nsLayoutUtils::DrawString(mFrame, *fm, aCtx, mStyle.mString.get(),
-                              mStyle.mString.Length(), pt);
-||||||| merged common ancestors
-      nsLayoutUtils::GetInflatedFontMetricsForFrame(mFrame);
-    nsLayoutUtils::DrawString(mFrame, *fm, aCtx, mStyle.mString.get(),
-                              mStyle.mString.Length(), pt);
-=======
         nsLayoutUtils::GetInflatedFontMetricsForFrame(mFrame);
     NS_ConvertUTF8toUTF16 str16{mStyle.AsString().AsString()};
     nsLayoutUtils::DrawString(mFrame, *fm, aCtx, str16.get(), str16.Length(),
                               pt);
->>>>>>> upstream-releases
   }
 }
 
-<<<<<<< HEAD
-bool nsDisplayTextOverflowMarker::CreateWebRenderCommands(
-    mozilla::wr::DisplayListBuilder& aBuilder,
-    mozilla::wr::IpcResourceUpdateQueue& aResources,
-    const StackingContextHelper& aSc, layers::WebRenderLayerManager* aManager,
-    nsDisplayListBuilder* aDisplayListBuilder) {
-||||||| merged common ancestors
-bool
-nsDisplayTextOverflowMarker::CreateWebRenderCommands(mozilla::wr::DisplayListBuilder& aBuilder,
-                                                     mozilla::wr::IpcResourceUpdateQueue& aResources,
-                                                     const StackingContextHelper& aSc,
-                                                     layers::WebRenderLayerManager* aManager,
-                                                     nsDisplayListBuilder* aDisplayListBuilder)
-{
-=======
 bool nsDisplayTextOverflowMarker::CreateWebRenderCommands(
     mozilla::wr::DisplayListBuilder& aBuilder,
     mozilla::wr::IpcResourceUpdateQueue& aResources,
     const StackingContextHelper& aSc, layers::RenderRootStateManager* aManager,
     nsDisplayListBuilder* aDisplayListBuilder) {
->>>>>>> upstream-releases
   bool snap;
   nsRect bounds = GetBounds(aDisplayListBuilder, &snap);
   if (bounds.IsEmpty()) {
@@ -450,22 +314,10 @@ TextOverflow::TextOverflow(nsDisplayListBuilder* aBuilder,
 #endif
   mCanHaveInlineAxisScrollbar = false;
   if (mScrollableFrame) {
-<<<<<<< HEAD
-    auto scrollbarStyle = mBlockWM.IsVertical()
-                              ? mScrollableFrame->GetScrollStyles().mVertical
-                              : mScrollableFrame->GetScrollStyles().mHorizontal;
-    mCanHaveInlineAxisScrollbar = scrollbarStyle != NS_STYLE_OVERFLOW_HIDDEN;
-||||||| merged common ancestors
-    auto scrollbarStyle = mBlockWM.IsVertical() ?
-      mScrollableFrame->GetScrollStyles().mVertical :
-      mScrollableFrame->GetScrollStyles().mHorizontal;
-    mCanHaveInlineAxisScrollbar = scrollbarStyle != NS_STYLE_OVERFLOW_HIDDEN;
-=======
     auto scrollbarStyle = mBlockWM.IsVertical()
                               ? mScrollableFrame->GetScrollStyles().mVertical
                               : mScrollableFrame->GetScrollStyles().mHorizontal;
     mCanHaveInlineAxisScrollbar = scrollbarStyle != StyleOverflow::Hidden;
->>>>>>> upstream-releases
     if (!mAdjustForPixelSnapping) {
       // Scrolling to the end position can leave some text still overflowing due
       // to pixel snapping behaviour in our scrolling code.
@@ -499,22 +351,6 @@ TextOverflow::TextOverflow(nsDisplayListBuilder* aBuilder,
   // has overflow on that side.
 }
 
-<<<<<<< HEAD
-/* static */ Maybe<TextOverflow> TextOverflow::WillProcessLines(
-    nsDisplayListBuilder* aBuilder, nsIFrame* aBlockFrame) {
-  // Ignore 'text-overflow' for event and frame visibility processing.
-  if (aBuilder->IsForEventDelivery() || aBuilder->IsForFrameVisibility() ||
-      !CanHaveTextOverflow(aBlockFrame)) {
-||||||| merged common ancestors
-/* static */ Maybe<TextOverflow>
-TextOverflow::WillProcessLines(nsDisplayListBuilder*   aBuilder,
-                               nsIFrame*               aBlockFrame)
-{
-  // Ignore 'text-overflow' for event and frame visibility processing.
-  if (aBuilder->IsForEventDelivery() ||
-      aBuilder->IsForFrameVisibility() ||
-      !CanHaveTextOverflow(aBlockFrame)) {
-=======
 /* static */
 Maybe<TextOverflow> TextOverflow::WillProcessLines(
     nsDisplayListBuilder* aBuilder, nsIFrame* aBlockFrame) {
@@ -522,7 +358,6 @@ Maybe<TextOverflow> TextOverflow::WillProcessLines(
   // processing.
   if (aBuilder->IsForEventDelivery() || aBuilder->IsForFrameVisibility() ||
       !CanHaveOverflowMarkers(aBlockFrame)) {
->>>>>>> upstream-releases
     return Nothing();
   }
   nsIScrollableFrame* scrollableFrame =
@@ -725,22 +560,6 @@ LogicalRect TextOverflow::ExamineLineFrames(nsLineBox* aLine,
 
   LogicalRect lineRect(mBlockWM, aLine->GetScrollableOverflowArea(),
                        mBlockSize);
-<<<<<<< HEAD
-  const bool istartOverflow =
-      !suppressIStart &&
-      lineRect.IStart(mBlockWM) < contentArea.IStart(mBlockWM);
-  const bool iendOverflow =
-      !suppressIEnd && lineRect.IEnd(mBlockWM) > contentArea.IEnd(mBlockWM);
-  if (!istartOverflow && !iendOverflow) {
-    // The line does not overflow on a side we should ellipsize.
-||||||| merged common ancestors
-  const bool istartOverflow =
-    !suppressIStart && lineRect.IStart(mBlockWM) < contentArea.IStart(mBlockWM);
-  const bool iendOverflow =
-    !suppressIEnd && lineRect.IEnd(mBlockWM) > contentArea.IEnd(mBlockWM);
-  if (!istartOverflow && !iendOverflow) {
-    // The line does not overflow on a side we should ellipsize.
-=======
   const bool istartWantsMarker =
       !suppressIStart &&
       lineRect.IStart(mBlockWM) < contentArea.IStart(mBlockWM);
@@ -752,7 +571,6 @@ LogicalRect TextOverflow::ExamineLineFrames(nsLineBox* aLine,
       iendWantsTextOverflowMarker || iendWantsBlockEllipsisMarker;
   if (!istartWantsMarker && !iendWantsMarker) {
     // We don't need any markers on this line.
->>>>>>> upstream-releases
     return nonSnappedContentArea;
   }
 
@@ -882,22 +700,6 @@ LogicalRect TextOverflow::ExamineLineFrames(nsLineBox* aLine,
   return nonSnappedContentArea;
 }
 
-<<<<<<< HEAD
-void TextOverflow::ProcessLine(const nsDisplayListSet& aLists, nsLineBox* aLine,
-                               uint32_t aLineNumber) {
-  NS_ASSERTION(mIStart.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP ||
-                   mIEnd.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP,
-               "TextOverflow with 'clip' for both sides");
-||||||| merged common ancestors
-void
-TextOverflow::ProcessLine(const nsDisplayListSet& aLists,
-                          nsLineBox*              aLine,
-                          uint32_t                aLineNumber)
-{
-  NS_ASSERTION(mIStart.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP ||
-               mIEnd.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP,
-               "TextOverflow with 'clip' for both sides");
-=======
 void TextOverflow::ProcessLine(const nsDisplayListSet& aLists, nsLineBox* aLine,
                                uint32_t aLineNumber) {
   if (mIStart.mStyle->IsClip() && mIEnd.mStyle->IsClip() &&
@@ -905,7 +707,6 @@ void TextOverflow::ProcessLine(const nsDisplayListSet& aLists, nsLineBox* aLine,
     return;
   }
 
->>>>>>> upstream-releases
   mIStart.Reset();
   mIStart.mActive = !mIStart.mStyle->IsClip();
   mIEnd.Reset();
@@ -921,23 +722,10 @@ void TextOverflow::ProcessLine(const nsDisplayListSet& aLists, nsLineBox* aLine,
   if (!needIStart && !needIEnd) {
     return;
   }
-<<<<<<< HEAD
-  NS_ASSERTION(
-      mIStart.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP || !needIStart,
-      "left marker for 'clip'");
-  NS_ASSERTION(mIEnd.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP || !needIEnd,
-               "right marker for 'clip'");
-||||||| merged common ancestors
-  NS_ASSERTION(mIStart.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP ||
-               !needIStart, "left marker for 'clip'");
-  NS_ASSERTION(mIEnd.mStyle->mType != NS_STYLE_TEXT_OVERFLOW_CLIP ||
-               !needIEnd, "right marker for 'clip'");
-=======
   NS_ASSERTION(!mIStart.IsSuppressed() || !needIStart,
                "left marker when not needed");
   NS_ASSERTION(!mIEnd.IsSuppressed() || !needIEnd,
                "right marker when not needed");
->>>>>>> upstream-releases
 
   // If there is insufficient space for both markers then keep the one on the
   // end side per the block's 'direction'.
@@ -1006,50 +794,24 @@ void TextOverflow::PruneDisplayListContents(
       }
     }
 
-<<<<<<< HEAD
-    nsCharClipDisplayItem* charClip =
-        itemFrame ? nsCharClipDisplayItem::CheckCast(item) : nullptr;
-    if (charClip && GetSelfOrNearestBlock(itemFrame) == mBlock) {
-||||||| merged common ancestors
-    nsCharClipDisplayItem* charClip = itemFrame ?
-      nsCharClipDisplayItem::CheckCast(item) : nullptr;
-    if (charClip && GetSelfOrNearestBlock(itemFrame) == mBlock) {
-=======
     nsDisplayText* textItem =
         itemFrame ? nsDisplayText::CheckCast(item) : nullptr;
     if (textItem && GetSelfOrNearestBlock(itemFrame) == mBlock) {
->>>>>>> upstream-releases
       LogicalRect rect =
           GetLogicalScrollableOverflowRectRelativeToBlock(itemFrame);
       if (mIStart.IsNeeded()) {
         nscoord istart =
             aInsideMarkersArea.IStart(mBlockWM) - rect.IStart(mBlockWM);
         if (istart > 0) {
-<<<<<<< HEAD
-          (mBlockWM.IsBidiLTR() ? charClip->mVisIStartEdge
-                                : charClip->mVisIEndEdge) = istart;
-||||||| merged common ancestors
-          (mBlockWM.IsBidiLTR() ?
-           charClip->mVisIStartEdge : charClip->mVisIEndEdge) = istart;
-=======
           (mBlockWM.IsBidiLTR() ? textItem->VisIStartEdge()
                                 : textItem->VisIEndEdge()) = istart;
->>>>>>> upstream-releases
         }
       }
       if (mIEnd.IsNeeded()) {
         nscoord iend = rect.IEnd(mBlockWM) - aInsideMarkersArea.IEnd(mBlockWM);
         if (iend > 0) {
-<<<<<<< HEAD
-          (mBlockWM.IsBidiLTR() ? charClip->mVisIEndEdge
-                                : charClip->mVisIStartEdge) = iend;
-||||||| merged common ancestors
-          (mBlockWM.IsBidiLTR() ?
-           charClip->mVisIEndEdge : charClip->mVisIStartEdge) = iend;
-=======
           (mBlockWM.IsBidiLTR() ? textItem->VisIEndEdge()
                                 : textItem->VisIStartEdge()) = iend;
->>>>>>> upstream-releases
         }
       }
     }
@@ -1059,16 +821,8 @@ void TextOverflow::PruneDisplayListContents(
   aList->AppendToTop(&saved);
 }
 
-<<<<<<< HEAD
-/* static */ bool TextOverflow::HasClippedOverflow(nsIFrame* aBlockFrame) {
-||||||| merged common ancestors
-/* static */ bool
-TextOverflow::HasClippedOverflow(nsIFrame* aBlockFrame)
-{
-=======
 /* static */
 bool TextOverflow::HasClippedTextOverflow(nsIFrame* aBlockFrame) {
->>>>>>> upstream-releases
   const nsStyleTextReset* style = aBlockFrame->StyleTextReset();
   return style->mTextOverflow.first.IsClip() &&
          style->mTextOverflow.second.IsClip();
@@ -1080,13 +834,6 @@ bool TextOverflow::HasBlockEllipsis(nsIFrame* aBlockFrame) {
   return f && f->HasAnyStateBits(NS_BLOCK_HAS_LINE_CLAMP_ELLIPSIS);
 }
 
-<<<<<<< HEAD
-/* static */ bool TextOverflow::CanHaveTextOverflow(nsIFrame* aBlockFrame) {
-||||||| merged common ancestors
-/* static */ bool
-TextOverflow::CanHaveTextOverflow(nsIFrame* aBlockFrame)
-{
-=======
 /* static */
 bool TextOverflow::CanHaveOverflowMarkers(nsIFrame* aBlockFrame) {
   // Treat a line with a -webkit-line-clamp ellipsis as a kind of text
@@ -1095,7 +842,6 @@ bool TextOverflow::CanHaveOverflowMarkers(nsIFrame* aBlockFrame) {
     return true;
   }
 
->>>>>>> upstream-releases
   // Nothing to do for text-overflow:clip or if 'overflow-x/y:visible'.
   if (HasClippedTextOverflow(aBlockFrame) ||
       IsInlineAxisOverflowVisible(aBlockFrame)) {
@@ -1140,22 +886,9 @@ void TextOverflow::CreateMarkers(const nsLineBox* aLine, bool aCreateIStart,
         markerLogicalRect.GetPhysicalRect(mBlockWM, mBlockSize) + offset;
     ClipMarker(aContentArea.GetPhysicalRect(mBlockWM, mBlockSize) + offset,
                markerRect, clipState);
-<<<<<<< HEAD
-    nsDisplayItem* marker = MakeDisplayItem<nsDisplayTextOverflowMarker>(
-        mBuilder, mBlock, markerRect, aLine->GetLogicalAscent(), mIStart.mStyle,
-        aLineNumber, 0);
-    mMarkerList.AppendToTop(marker);
-||||||| merged common ancestors
-    nsDisplayItem* marker =
-      MakeDisplayItem<nsDisplayTextOverflowMarker>(mBuilder, mBlock, markerRect,
-                                                   aLine->GetLogicalAscent(), mIStart.mStyle,
-                                                   aLineNumber, 0);
-    mMarkerList.AppendToTop(marker);
-=======
     mMarkerList.AppendNewToTop<nsDisplayTextOverflowMarker>(
         mBuilder, mBlock, markerRect, aLine->GetLogicalAscent(),
         *mIStart.mStyle, aLineNumber, 0);
->>>>>>> upstream-releases
   }
 
   if (aCreateIEnd) {
@@ -1169,24 +902,11 @@ void TextOverflow::CreateMarkers(const nsLineBox* aLine, bool aCreateIStart,
         markerLogicalRect.GetPhysicalRect(mBlockWM, mBlockSize) + offset;
     ClipMarker(aContentArea.GetPhysicalRect(mBlockWM, mBlockSize) + offset,
                markerRect, clipState);
-<<<<<<< HEAD
-    nsDisplayItem* marker = MakeDisplayItem<nsDisplayTextOverflowMarker>(
-        mBuilder, mBlock, markerRect, aLine->GetLogicalAscent(), mIEnd.mStyle,
-        aLineNumber, 1);
-    mMarkerList.AppendToTop(marker);
-||||||| merged common ancestors
-    nsDisplayItem* marker =
-      MakeDisplayItem<nsDisplayTextOverflowMarker>(mBuilder, mBlock, markerRect,
-                                                   aLine->GetLogicalAscent(), mIEnd.mStyle,
-                                                   aLineNumber, 1);
-    mMarkerList.AppendToTop(marker);
-=======
     mMarkerList.AppendNewToTop<nsDisplayTextOverflowMarker>(
         mBuilder, mBlock, markerRect, aLine->GetLogicalAscent(),
         mIEnd.mHasBlockEllipsis ? StyleTextOverflowSide::Ellipsis()
                                 : *mIEnd.mStyle,
         aLineNumber, 1);
->>>>>>> upstream-releases
   }
 }
 
@@ -1211,19 +931,9 @@ void TextOverflow::Marker::SetupString(nsIFrame* aFrame) {
     RefPtr<gfxContext> rc =
         aFrame->PresShell()->CreateReferenceRenderingContext();
     RefPtr<nsFontMetrics> fm =
-<<<<<<< HEAD
-        nsLayoutUtils::GetInflatedFontMetricsForFrame(aFrame);
-    mISize = nsLayoutUtils::AppUnitWidthOfStringBidi(mStyle->mString, aFrame,
-                                                     *fm, *rc);
-||||||| merged common ancestors
-      nsLayoutUtils::GetInflatedFontMetricsForFrame(aFrame);
-    mISize = nsLayoutUtils::AppUnitWidthOfStringBidi(mStyle->mString, aFrame,
-                                                     *fm, *rc);
-=======
         nsLayoutUtils::GetInflatedFontMetricsForFrame(aFrame);
     mISize = nsLayoutUtils::AppUnitWidthOfStringBidi(
         NS_ConvertUTF8toUTF16(mStyle->AsString().AsString()), aFrame, *fm, *rc);
->>>>>>> upstream-releases
   }
   mIntrinsicISize = mISize;
   mInitialized = true;

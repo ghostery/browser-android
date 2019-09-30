@@ -145,19 +145,9 @@ void nsFrameManager::CaptureFrameStateFor(nsIFrame* aFrame,
   // Exit early if we get empty key
   nsAutoCString stateKey;
   nsIContent* content = aFrame->GetContent();
-<<<<<<< HEAD
-  nsIDocument* doc = content ? content->GetUncomposedDoc() : nullptr;
-  nsresult rv = statefulFrame->GenerateStateKey(content, doc, stateKey);
-  if (NS_FAILED(rv) || stateKey.IsEmpty()) {
-||||||| merged common ancestors
-  nsIDocument* doc = content ? content->GetUncomposedDoc() : nullptr;
-  nsresult rv = statefulFrame->GenerateStateKey(content, doc, stateKey);
-  if(NS_FAILED(rv) || stateKey.IsEmpty()) {
-=======
   Document* doc = content ? content->GetUncomposedDoc() : nullptr;
   statefulFrame->GenerateStateKey(content, doc, stateKey);
   if (stateKey.IsEmpty()) {
->>>>>>> upstream-releases
     return;
   }
 

@@ -158,31 +158,6 @@ LMoveGroup* LBlock::getExitMoveGroup(TempAllocator& alloc) {
 }
 
 #ifdef JS_JITSPEW
-<<<<<<< HEAD
-void LBlock::dump(GenericPrinter& out) {
-  out.printf("block%u:\n", mir()->id());
-  for (size_t i = 0; i < numPhis(); ++i) {
-    getPhi(i)->dump(out);
-    out.printf("\n");
-  }
-  for (LInstructionIterator iter = begin(); iter != end(); iter++) {
-    iter->dump(out);
-    out.printf("\n");
-  }
-||||||| merged common ancestors
-void
-LBlock::dump(GenericPrinter& out)
-{
-    out.printf("block%u:\n", mir()->id());
-    for (size_t i = 0; i < numPhis(); ++i) {
-        getPhi(i)->dump(out);
-        out.printf("\n");
-    }
-    for (LInstructionIterator iter = begin(); iter != end(); iter++) {
-        iter->dump(out);
-        out.printf("\n");
-    }
-=======
 void LBlock::dump(GenericPrinter& out) {
   out.printf("block%u:\n", mir()->id());
   for (size_t i = 0; i < numPhis(); ++i) {
@@ -196,7 +171,6 @@ void LBlock::dump(GenericPrinter& out) {
     }
     out.printf("\n");
   }
->>>>>>> upstream-releases
 }
 
 void LBlock::dump() {
@@ -217,7 +191,6 @@ static size_t TotalOperandCount(LRecoverInfo* recoverInfo) {
 }
 
 LRecoverInfo::LRecoverInfo(TempAllocator& alloc)
-<<<<<<< HEAD
     : instructions_(alloc), recoverOffset_(INVALID_RECOVER_OFFSET) {}
 
 LRecoverInfo* LRecoverInfo::New(MIRGenerator* gen, MResumePoint* mir) {
@@ -225,46 +198,11 @@ LRecoverInfo* LRecoverInfo::New(MIRGenerator* gen, MResumePoint* mir) {
   if (!recoverInfo || !recoverInfo->init(mir)) {
     return nullptr;
   }
-||||||| merged common ancestors
-  : instructions_(alloc),
-    recoverOffset_(INVALID_RECOVER_OFFSET)
-{ }
 
-LRecoverInfo*
-LRecoverInfo::New(MIRGenerator* gen, MResumePoint* mir)
-{
-    LRecoverInfo* recoverInfo = new(gen->alloc()) LRecoverInfo(gen->alloc());
-    if (!recoverInfo || !recoverInfo->init(mir)) {
-        return nullptr;
-    }
-=======
-    : instructions_(alloc), recoverOffset_(INVALID_RECOVER_OFFSET) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  JitSpew(JitSpew_IonSnapshots, "Generating LIR recover info %p from MIR (%p)",
-          (void*)recoverInfo, (void*)mir);
-||||||| merged common ancestors
-    JitSpew(JitSpew_IonSnapshots, "Generating LIR recover info %p from MIR (%p)",
-            (void*)recoverInfo, (void*)mir);
-=======
-LRecoverInfo* LRecoverInfo::New(MIRGenerator* gen, MResumePoint* mir) {
-  LRecoverInfo* recoverInfo = new (gen->alloc()) LRecoverInfo(gen->alloc());
-  if (!recoverInfo || !recoverInfo->init(mir)) {
-    return nullptr;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return recoverInfo;
-||||||| merged common ancestors
-    return recoverInfo;
-=======
   JitSpew(JitSpew_IonSnapshots, "Generating LIR recover info %p from MIR (%p)",
           (void*)recoverInfo, (void*)mir);
 
   return recoverInfo;
->>>>>>> upstream-releases
 }
 
 // de-virtualise MResumePoint::getOperand calls.
@@ -350,7 +288,6 @@ bool LRecoverInfo::init(MResumePoint* rp) {
 }
 
 LSnapshot::LSnapshot(LRecoverInfo* recoverInfo, BailoutKind kind)
-<<<<<<< HEAD
     : numSlots_(TotalOperandCount(recoverInfo) * BOX_PIECES),
       slots_(nullptr),
       recoverInfo_(recoverInfo),
@@ -372,53 +309,10 @@ LSnapshot* LSnapshot::New(MIRGenerator* gen, LRecoverInfo* recover,
 
   JitSpew(JitSpew_IonSnapshots, "Generating LIR snapshot %p from recover (%p)",
           (void*)snapshot, (void*)recover);
-||||||| merged common ancestors
-  : numSlots_(TotalOperandCount(recoverInfo) * BOX_PIECES),
-    slots_(nullptr),
-    recoverInfo_(recoverInfo),
-    snapshotOffset_(INVALID_SNAPSHOT_OFFSET),
-    bailoutId_(INVALID_BAILOUT_ID),
-    bailoutKind_(kind)
-{ }
 
-bool
-LSnapshot::init(MIRGenerator* gen)
-{
-    slots_ = gen->allocate<LAllocation>(numSlots_);
-    return !!slots_;
-}
-
-LSnapshot*
-LSnapshot::New(MIRGenerator* gen, LRecoverInfo* recover, BailoutKind kind)
-{
-    LSnapshot* snapshot = new(gen->alloc()) LSnapshot(recover, kind);
-    if (!snapshot || !snapshot->init(gen)) {
-        return nullptr;
-    }
-
-    JitSpew(JitSpew_IonSnapshots, "Generating LIR snapshot %p from recover (%p)",
-            (void*)snapshot, (void*)recover);
-=======
-    : numSlots_(TotalOperandCount(recoverInfo) * BOX_PIECES),
-      slots_(nullptr),
-      recoverInfo_(recoverInfo),
-      snapshotOffset_(INVALID_SNAPSHOT_OFFSET),
-      bailoutId_(INVALID_BAILOUT_ID),
-      bailoutKind_(kind) {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
   return snapshot;
-||||||| merged common ancestors
-    return snapshot;
-=======
-bool LSnapshot::init(MIRGenerator* gen) {
-  slots_ = gen->allocate<LAllocation>(numSlots_);
-  return !!slots_;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
 void LSnapshot::rewriteRecoveredInput(LUse input) {
   // Mark any operands to this snapshot with the same value as input as being
   // equal to the instruction's result.
@@ -429,155 +323,8 @@ void LSnapshot::rewriteRecoveredInput(LUse input) {
     }
   }
 }
-||||||| merged common ancestors
-void
-LSnapshot::rewriteRecoveredInput(LUse input)
-{
-    // Mark any operands to this snapshot with the same value as input as being
-    // equal to the instruction's result.
-    for (size_t i = 0; i < numEntries(); i++) {
-        if (getEntry(i)->isUse() && getEntry(i)->toUse()->virtualRegister() == input.virtualRegister()) {
-            setEntry(i, LUse(input.virtualRegister(), LUse::RECOVERED_INPUT));
-        }
-    }
-}
-=======
-LSnapshot* LSnapshot::New(MIRGenerator* gen, LRecoverInfo* recover,
-                          BailoutKind kind) {
-  LSnapshot* snapshot = new (gen->alloc()) LSnapshot(recover, kind);
-  if (!snapshot || !snapshot->init(gen)) {
-    return nullptr;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-#ifdef JS_JITSPEW
-void LNode::printName(GenericPrinter& out, Opcode op) {
-  static const char* const names[] = {
-#define LIROP(x) #x,
-      LIR_OPCODE_LIST(LIROP)
-#undef LIROP
-  };
-  const char* name = names[uint32_t(op)];
-  size_t len = strlen(name);
-  for (size_t i = 0; i < len; i++) {
-    out.printf("%c", tolower(name[i]));
-  }
-}
-||||||| merged common ancestors
-#ifdef JS_JITSPEW
-void
-LNode::printName(GenericPrinter& out, Opcode op)
-{
-    static const char * const names[] =
-    {
-# define LIROP(x) #x,
-        LIR_OPCODE_LIST(LIROP)
-# undef LIROP
-    };
-    const char* name = names[uint32_t(op)];
-    size_t len = strlen(name);
-    for (size_t i = 0; i < len; i++) {
-        out.printf("%c", tolower(name[i]));
-    }
-}
-=======
-  JitSpew(JitSpew_IonSnapshots, "Generating LIR snapshot %p from recover (%p)",
-          (void*)snapshot, (void*)recover);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void LNode::printName(GenericPrinter& out) { printName(out, op()); }
-#endif
-||||||| merged common ancestors
-void
-LNode::printName(GenericPrinter& out)
-{
-    printName(out, op());
-}
-#endif
-=======
-  return snapshot;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-bool LAllocation::aliases(const LAllocation& other) const {
-  if (isFloatReg() && other.isFloatReg()) {
-    return toFloatReg()->reg().aliases(other.toFloatReg()->reg());
-  }
-  return *this == other;
-||||||| merged common ancestors
-bool
-LAllocation::aliases(const LAllocation& other) const
-{
-    if (isFloatReg() && other.isFloatReg()) {
-        return toFloatReg()->reg().aliases(other.toFloatReg()->reg());
-    }
-    return *this == other;
-=======
-void LSnapshot::rewriteRecoveredInput(LUse input) {
-  // Mark any operands to this snapshot with the same value as input as being
-  // equal to the instruction's result.
-  for (size_t i = 0; i < numEntries(); i++) {
-    if (getEntry(i)->isUse() &&
-        getEntry(i)->toUse()->virtualRegister() == input.virtualRegister()) {
-      setEntry(i, LUse(input.virtualRegister(), LUse::RECOVERED_INPUT));
-    }
-  }
->>>>>>> upstream-releases
-}
 
 #ifdef JS_JITSPEW
-<<<<<<< HEAD
-static const char* DefTypeName(LDefinition::Type type) {
-  switch (type) {
-    case LDefinition::GENERAL:
-      return "g";
-    case LDefinition::INT32:
-      return "i";
-    case LDefinition::OBJECT:
-      return "o";
-    case LDefinition::SLOTS:
-      return "s";
-    case LDefinition::FLOAT32:
-      return "f";
-    case LDefinition::DOUBLE:
-      return "d";
-    case LDefinition::SIMD128INT:
-      return "simd128int";
-    case LDefinition::SIMD128FLOAT:
-      return "simd128float";
-    case LDefinition::SINCOS:
-      return "sincos";
-#ifdef JS_NUNBOX32
-    case LDefinition::TYPE:
-      return "t";
-    case LDefinition::PAYLOAD:
-      return "p";
-#else
-    case LDefinition::BOX:
-      return "x";
-||||||| merged common ancestors
-static const char*
-DefTypeName(LDefinition::Type type)
-{
-    switch (type) {
-      case LDefinition::GENERAL: return "g";
-      case LDefinition::INT32: return "i";
-      case LDefinition::OBJECT: return "o";
-      case LDefinition::SLOTS: return "s";
-      case LDefinition::FLOAT32: return "f";
-      case LDefinition::DOUBLE: return "d";
-      case LDefinition::SIMD128INT: return "simd128int";
-      case LDefinition::SIMD128FLOAT: return "simd128float";
-      case LDefinition::SINCOS: return "sincos";
-#ifdef JS_NUNBOX32
-      case LDefinition::TYPE: return "t";
-      case LDefinition::PAYLOAD: return "p";
-#else
-      case LDefinition::BOX: return "x";
-=======
 void LNode::printName(GenericPrinter& out, Opcode op) {
   static const char* const names[] = {
 #  define LIROP(x) #  x,
@@ -592,169 +339,7 @@ void LNode::printName(GenericPrinter& out, Opcode op) {
 }
 
 void LNode::printName(GenericPrinter& out) { printName(out, op()); }
->>>>>>> upstream-releases
 #endif
-<<<<<<< HEAD
-  }
-  MOZ_CRASH("Invalid type");
-}
-
-UniqueChars LDefinition::toString() const {
-  AutoEnterOOMUnsafeRegion oomUnsafe;
-
-  UniqueChars buf;
-  if (isBogusTemp()) {
-    buf = JS_smprintf("bogus");
-  } else {
-    buf = JS_smprintf("v%u<%s>", virtualRegister(), DefTypeName(type()));
-    if (buf) {
-      if (policy() == LDefinition::FIXED) {
-        buf = JS_sprintf_append(std::move(buf), ":%s",
-                                output()->toString().get());
-      } else if (policy() == LDefinition::MUST_REUSE_INPUT) {
-        buf = JS_sprintf_append(std::move(buf), ":tied(%u)", getReusedInput());
-      }
-    }
-  }
-
-  if (!buf) {
-    oomUnsafe.crash("LDefinition::toString()");
-  }
-
-  return buf;
-}
-
-static UniqueChars PrintUse(const LUse* use) {
-  switch (use->policy()) {
-    case LUse::REGISTER:
-      return JS_smprintf("v%d:r", use->virtualRegister());
-    case LUse::FIXED:
-      return JS_smprintf("v%d:%s", use->virtualRegister(),
-                         AnyRegister::FromCode(use->registerCode()).name());
-    case LUse::ANY:
-      return JS_smprintf("v%d:r?", use->virtualRegister());
-    case LUse::KEEPALIVE:
-      return JS_smprintf("v%d:*", use->virtualRegister());
-    case LUse::RECOVERED_INPUT:
-      return JS_smprintf("v%d:**", use->virtualRegister());
-    default:
-      MOZ_CRASH("invalid use policy");
-  }
-}
-
-UniqueChars LAllocation::toString() const {
-  AutoEnterOOMUnsafeRegion oomUnsafe;
-
-  UniqueChars buf;
-  if (isBogus()) {
-    buf = JS_smprintf("bogus");
-  } else {
-    switch (kind()) {
-      case LAllocation::CONSTANT_VALUE:
-      case LAllocation::CONSTANT_INDEX:
-        buf = JS_smprintf("c");
-        break;
-      case LAllocation::GPR:
-        buf = JS_smprintf("%s", toGeneralReg()->reg().name());
-        break;
-      case LAllocation::FPU:
-        buf = JS_smprintf("%s", toFloatReg()->reg().name());
-        break;
-      case LAllocation::STACK_SLOT:
-        buf = JS_smprintf("stack:%d", toStackSlot()->slot());
-        break;
-      case LAllocation::ARGUMENT_SLOT:
-        buf = JS_smprintf("arg:%d", toArgument()->index());
-        break;
-      case LAllocation::USE:
-        buf = PrintUse(toUse());
-        break;
-      default:
-        MOZ_CRASH("what?");
-||||||| merged common ancestors
-    }
-    MOZ_CRASH("Invalid type");
-}
-
-UniqueChars
-LDefinition::toString() const
-{
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-
-    UniqueChars buf;
-    if (isBogusTemp()) {
-        buf = JS_smprintf("bogus");
-    } else {
-        buf = JS_smprintf("v%u<%s>", virtualRegister(), DefTypeName(type()));
-        if (buf) {
-            if (policy() == LDefinition::FIXED) {
-                buf = JS_sprintf_append(std::move(buf), ":%s", output()->toString().get());
-            } else if (policy() == LDefinition::MUST_REUSE_INPUT) {
-                buf = JS_sprintf_append(std::move(buf), ":tied(%u)", getReusedInput());
-            }
-        }
-    }
-
-    if (!buf) {
-        oomUnsafe.crash("LDefinition::toString()");
-    }
-
-    return buf;
-}
-
-static UniqueChars
-PrintUse(const LUse* use)
-{
-    switch (use->policy()) {
-      case LUse::REGISTER:
-        return JS_smprintf("v%d:r", use->virtualRegister());
-      case LUse::FIXED:
-        return JS_smprintf("v%d:%s", use->virtualRegister(),
-                           AnyRegister::FromCode(use->registerCode()).name());
-      case LUse::ANY:
-        return JS_smprintf("v%d:r?", use->virtualRegister());
-      case LUse::KEEPALIVE:
-        return JS_smprintf("v%d:*", use->virtualRegister());
-      case LUse::RECOVERED_INPUT:
-        return JS_smprintf("v%d:**", use->virtualRegister());
-      default:
-        MOZ_CRASH("invalid use policy");
-    }
-}
-
-UniqueChars
-LAllocation::toString() const
-{
-    AutoEnterOOMUnsafeRegion oomUnsafe;
-
-    UniqueChars buf;
-    if (isBogus()) {
-        buf = JS_smprintf("bogus");
-    } else {
-        switch (kind()) {
-          case LAllocation::CONSTANT_VALUE:
-          case LAllocation::CONSTANT_INDEX:
-            buf = JS_smprintf("c");
-            break;
-          case LAllocation::GPR:
-            buf = JS_smprintf("%s", toGeneralReg()->reg().name());
-            break;
-          case LAllocation::FPU:
-            buf = JS_smprintf("%s", toFloatReg()->reg().name());
-            break;
-          case LAllocation::STACK_SLOT:
-            buf = JS_smprintf("stack:%d", toStackSlot()->slot());
-            break;
-          case LAllocation::ARGUMENT_SLOT:
-            buf = JS_smprintf("arg:%d", toArgument()->index());
-            break;
-          case LAllocation::USE:
-            buf = PrintUse(toUse());
-            break;
-          default:
-            MOZ_CRASH("what?");
-        }
-=======
 
 bool LAllocation::aliases(const LAllocation& other) const {
   if (isFloatReg() && other.isFloatReg()) {
@@ -867,7 +452,6 @@ UniqueChars LAllocation::toString() const {
         break;
       default:
         MOZ_CRASH("what?");
->>>>>>> upstream-releases
     }
   }
 
@@ -928,39 +512,6 @@ void LInstruction::assignSnapshot(LSnapshot* snapshot) {
 static size_t NumSuccessorsHelper(const LNode* ins) { return 0; }
 
 template <size_t Succs, size_t Operands, size_t Temps>
-<<<<<<< HEAD
-static size_t NumSuccessorsHelper(
-    const LControlInstructionHelper<Succs, Operands, Temps>* ins) {
-  return Succs;
-}
-
-static size_t NumSuccessors(const LInstruction* ins) {
-  switch (ins->op()) {
-    default:
-      MOZ_CRASH("Unexpected LIR op");
-#define LIROP(x)         \
-  case LNode::Opcode::x: \
-    return NumSuccessorsHelper(ins->to##x());
-      LIR_OPCODE_LIST(LIROP)
-#undef LIROP
-  }
-||||||| merged common ancestors
-static size_t
-NumSuccessorsHelper(const LControlInstructionHelper<Succs, Operands, Temps>* ins)
-{
-    return Succs;
-}
-
-static size_t
-NumSuccessors(const LInstruction* ins)
-{
-    switch (ins->op()) {
-      default: MOZ_CRASH("Unexpected LIR op");
-# define LIROP(x) case LNode::Opcode::x: return NumSuccessorsHelper(ins->to##x());
-    LIR_OPCODE_LIST(LIROP)
-# undef LIROP
-    }
-=======
 static size_t NumSuccessorsHelper(
     const LControlInstructionHelper<Succs, Operands, Temps>* ins) {
   return Succs;
@@ -976,7 +527,6 @@ static size_t NumSuccessors(const LInstruction* ins) {
       LIR_OPCODE_LIST(LIROP)
 #  undef LIROP
   }
->>>>>>> upstream-releases
 }
 
 static MBasicBlock* GetSuccessorHelper(const LNode* ins, size_t i) {
@@ -984,7 +534,6 @@ static MBasicBlock* GetSuccessorHelper(const LNode* ins, size_t i) {
 }
 
 template <size_t Succs, size_t Operands, size_t Temps>
-<<<<<<< HEAD
 static MBasicBlock* GetSuccessorHelper(
     const LControlInstructionHelper<Succs, Operands, Temps>* ins, size_t i) {
   return ins->getSuccessor(i);
@@ -993,113 +542,6 @@ static MBasicBlock* GetSuccessorHelper(
 static MBasicBlock* GetSuccessor(const LInstruction* ins, size_t i) {
   MOZ_ASSERT(i < NumSuccessors(ins));
 
-  switch (ins->op()) {
-    default:
-      MOZ_CRASH("Unexpected LIR op");
-#define LIROP(x)         \
-  case LNode::Opcode::x: \
-    return GetSuccessorHelper(ins->to##x(), i);
-      LIR_OPCODE_LIST(LIROP)
-#undef LIROP
-  }
-||||||| merged common ancestors
-static MBasicBlock*
-GetSuccessorHelper(const LControlInstructionHelper<Succs, Operands, Temps>* ins, size_t i)
-{
-    return ins->getSuccessor(i);
-}
-
-static MBasicBlock*
-GetSuccessor(const LInstruction* ins, size_t i)
-{
-    MOZ_ASSERT(i < NumSuccessors(ins));
-
-    switch (ins->op()) {
-      default: MOZ_CRASH("Unexpected LIR op");
-# define LIROP(x) case LNode::Opcode::x: return GetSuccessorHelper(ins->to##x(), i);
-    LIR_OPCODE_LIST(LIROP)
-# undef LIROP
-    }
-=======
-static MBasicBlock* GetSuccessorHelper(
-    const LControlInstructionHelper<Succs, Operands, Temps>* ins, size_t i) {
-  return ins->getSuccessor(i);
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-#ifdef JS_JITSPEW
-void LNode::dump(GenericPrinter& out) {
-  if (numDefs() != 0) {
-    out.printf("{");
-    for (size_t i = 0; i < numDefs(); i++) {
-      const LDefinition* def =
-          isPhi() ? toPhi()->getDef(i) : toInstruction()->getDef(i);
-      out.printf("%s", def->toString().get());
-      if (i != numDefs() - 1) {
-        out.printf(", ");
-      }
-    }
-    out.printf("} <- ");
-  }
-
-  printName(out);
-  printOperands(out);
-
-  if (isInstruction()) {
-    LInstruction* ins = toInstruction();
-    size_t numTemps = ins->numTemps();
-    if (numTemps > 0) {
-      out.printf(" t=(");
-      for (size_t i = 0; i < numTemps; i++) {
-        out.printf("%s", ins->getTemp(i)->toString().get());
-        if (i != numTemps - 1) {
-          out.printf(", ");
-        }
-      }
-      out.printf(")");
-    }
-||||||| merged common ancestors
-#ifdef JS_JITSPEW
-void
-LNode::dump(GenericPrinter& out)
-{
-    if (numDefs() != 0) {
-        out.printf("{");
-        for (size_t i = 0; i < numDefs(); i++) {
-            const LDefinition* def = isPhi() ? toPhi()->getDef(i) : toInstruction()->getDef(i);
-            out.printf("%s", def->toString().get());
-            if (i != numDefs() - 1) {
-                out.printf(", ");
-            }
-        }
-        out.printf("} <- ");
-    }
-=======
-static MBasicBlock* GetSuccessor(const LInstruction* ins, size_t i) {
-  MOZ_ASSERT(i < NumSuccessors(ins));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-||||||| merged common ancestors
-    printName(out);
-    printOperands(out);
-
-    if (isInstruction()) {
-        LInstruction* ins = toInstruction();
-        size_t numTemps = ins->numTemps();
-        if (numTemps > 0) {
-            out.printf(" t=(");
-            for (size_t i = 0; i < numTemps; i++) {
-                out.printf("%s", ins->getTemp(i)->toString().get());
-                if (i != numTemps - 1) {
-                    out.printf(", ");
-                }
-            }
-            out.printf(")");
-        }
-
-=======
   switch (ins->op()) {
     default:
       MOZ_CRASH("Unexpected LIR op");
@@ -1112,30 +554,7 @@ static MBasicBlock* GetSuccessor(const LInstruction* ins, size_t i) {
 }
 #endif
 
->>>>>>> upstream-releases
 #ifdef JS_JITSPEW
-<<<<<<< HEAD
-    size_t numSuccessors = NumSuccessors(ins);
-    if (numSuccessors > 0) {
-      out.printf(" s=(");
-      for (size_t i = 0; i < numSuccessors; i++) {
-        MBasicBlock* succ = GetSuccessor(ins, i);
-        out.printf("block%u", succ->id());
-        if (i != numSuccessors - 1) {
-          out.printf(", ");
-||||||| merged common ancestors
-        size_t numSuccessors = NumSuccessors(ins);
-        if (numSuccessors > 0) {
-            out.printf(" s=(");
-            for (size_t i = 0; i < numSuccessors; i++) {
-                MBasicBlock* succ = GetSuccessor(ins, i);
-                out.printf("block%u", succ->id());
-                if (i != numSuccessors - 1) {
-                    out.printf(", ");
-                }
-            }
-            out.printf(")");
-=======
 void LNode::dump(GenericPrinter& out) {
   if (numDefs() != 0) {
     out.printf("{");
@@ -1162,14 +581,7 @@ void LNode::dump(GenericPrinter& out) {
         out.printf("%s", ins->getTemp(i)->toString().get());
         if (i != numTemps - 1) {
           out.printf(", ");
->>>>>>> upstream-releases
         }
-<<<<<<< HEAD
-      }
-      out.printf(")");
-||||||| merged common ancestors
-#endif
-=======
       }
       out.printf(")");
     }
@@ -1185,15 +597,8 @@ void LNode::dump(GenericPrinter& out) {
         }
       }
       out.printf(")");
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-#endif
   }
-||||||| merged common ancestors
-=======
-  }
->>>>>>> upstream-releases
 }
 
 void LNode::dump() {
@@ -1203,28 +608,6 @@ void LNode::dump() {
   out.finish();
 }
 
-<<<<<<< HEAD
-const char* LNode::getExtraName() const {
-  switch (op()) {
-    default:
-      MOZ_CRASH("Unexpected LIR op");
-#define LIROP(x)         \
-  case LNode::Opcode::x: \
-    return to##x()->extraName();
-      LIR_OPCODE_LIST(LIROP)
-#undef LIROP
-  }
-||||||| merged common ancestors
-const char*
-LNode::getExtraName() const
-{
-    switch (op()) {
-      default: MOZ_CRASH("Unexpected LIR op");
-# define LIROP(x) case LNode::Opcode::x: return to##x()->extraName();
-    LIR_OPCODE_LIST(LIROP)
-# undef LIROP
-    }
-=======
 const char* LNode::getExtraName() const {
   switch (op()) {
     default:
@@ -1235,7 +618,6 @@ const char* LNode::getExtraName() const {
       LIR_OPCODE_LIST(LIROP)
 #  undef LIROP
   }
->>>>>>> upstream-releases
 }
 #endif
 

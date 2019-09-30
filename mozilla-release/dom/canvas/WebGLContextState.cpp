@@ -137,53 +137,6 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
   // So here we just have to check that the extension is enabled.
   if (IsExtensionEnabled(WebGLExtensionID::WEBGL_debug_renderer_info)) {
     switch (pname) {
-<<<<<<< HEAD
-      case UNMASKED_VENDOR_WEBGL:
-      case UNMASKED_RENDERER_WEBGL: {
-        const char* overridePref = nullptr;
-        GLenum driverEnum = LOCAL_GL_NONE;
-||||||| merged common ancestors
-        //
-        // String params
-        //
-        case LOCAL_GL_VENDOR:
-        case LOCAL_GL_RENDERER:
-            return StringValue(cx, "Mozilla", rv);
-        case LOCAL_GL_VERSION:
-            return StringValue(cx, "WebGL 1.0", rv);
-        case LOCAL_GL_SHADING_LANGUAGE_VERSION:
-            return StringValue(cx, "WebGL GLSL ES 1.0", rv);
-
-        ////////////////////////////////
-        // Single-value params
-
-        // unsigned int
-        case LOCAL_GL_CULL_FACE_MODE:
-        case LOCAL_GL_FRONT_FACE:
-        case LOCAL_GL_ACTIVE_TEXTURE:
-        case LOCAL_GL_STENCIL_FUNC:
-        case LOCAL_GL_STENCIL_FAIL:
-        case LOCAL_GL_STENCIL_PASS_DEPTH_FAIL:
-        case LOCAL_GL_STENCIL_PASS_DEPTH_PASS:
-        case LOCAL_GL_STENCIL_BACK_FUNC:
-        case LOCAL_GL_STENCIL_BACK_FAIL:
-        case LOCAL_GL_STENCIL_BACK_PASS_DEPTH_FAIL:
-        case LOCAL_GL_STENCIL_BACK_PASS_DEPTH_PASS:
-        case LOCAL_GL_DEPTH_FUNC:
-        case LOCAL_GL_BLEND_SRC_RGB:
-        case LOCAL_GL_BLEND_SRC_ALPHA:
-        case LOCAL_GL_BLEND_DST_RGB:
-        case LOCAL_GL_BLEND_DST_ALPHA:
-        case LOCAL_GL_BLEND_EQUATION_RGB:
-        case LOCAL_GL_BLEND_EQUATION_ALPHA: {
-            GLint i = 0;
-            gl->fGetIntegerv(pname, &i);
-            return JS::NumberValue(uint32_t(i));
-        }
-
-        case LOCAL_GL_GENERATE_MIPMAP_HINT:
-            return JS::NumberValue(mGenerateMipmapHint);
-=======
       case UNMASKED_VENDOR_WEBGL:
       case UNMASKED_RENDERER_WEBGL: {
         const char* overridePref = nullptr;
@@ -201,81 +154,22 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
           default:
             MOZ_CRASH("GFX: bad `pname`");
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        switch (pname) {
-          case UNMASKED_RENDERER_WEBGL:
-            overridePref = "webgl.renderer-string-override";
-            driverEnum = LOCAL_GL_RENDERER;
-            break;
-          case UNMASKED_VENDOR_WEBGL:
-            overridePref = "webgl.vendor-string-override";
-            driverEnum = LOCAL_GL_VENDOR;
-            break;
-          default:
-            MOZ_CRASH("GFX: bad `pname`");
-        }
-||||||| merged common ancestors
-        case LOCAL_GL_IMPLEMENTATION_COLOR_READ_FORMAT:
-        case LOCAL_GL_IMPLEMENTATION_COLOR_READ_TYPE: {
-            const webgl::FormatUsageInfo* usage;
-            uint32_t width, height;
-            if (!BindCurFBForColorRead(&usage, &width, &height))
-                return JS::NullValue();
-=======
         bool hasRetVal = false;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        bool hasRetVal = false;
-||||||| merged common ancestors
-            const auto implPI = ValidImplementationColorReadPI(usage);
-=======
         nsAutoString ret;
         if (overridePref) {
           nsresult res = Preferences::GetString(overridePref, ret);
           if (NS_SUCCEEDED(res) && ret.Length() > 0) hasRetVal = true;
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        nsAutoString ret;
-        if (overridePref) {
-          nsresult res = Preferences::GetString(overridePref, ret);
-          if (NS_SUCCEEDED(res) && ret.Length() > 0) hasRetVal = true;
-||||||| merged common ancestors
-            GLenum ret;
-            if (pname == LOCAL_GL_IMPLEMENTATION_COLOR_READ_FORMAT) {
-                ret = implPI.format;
-            } else {
-                ret = implPI.type;
-            }
-            return JS::NumberValue(uint32_t(ret));
-=======
-        if (!hasRetVal) {
-          const char* chars =
-              reinterpret_cast<const char*>(gl->fGetString(driverEnum));
-          ret = NS_ConvertASCIItoUTF16(chars);
-          hasRetVal = true;
->>>>>>> upstream-releases
-        }
-
-<<<<<<< HEAD
         if (!hasRetVal) {
           const char* chars =
               reinterpret_cast<const char*>(gl->fGetString(driverEnum));
           ret = NS_ConvertASCIItoUTF16(chars);
           hasRetVal = true;
         }
-||||||| merged common ancestors
-        // int
-        case LOCAL_GL_STENCIL_REF:
-        case LOCAL_GL_STENCIL_BACK_REF: {
-            GLint stencilBits = 0;
-            if (!GetStencilBits(&stencilBits))
-                return JS::NullValue();
-=======
+
         return StringValue(cx, ret, rv);
       }
     }
@@ -289,26 +183,7 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
       return JS::Int32Value(i);
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        return StringValue(cx, ret, rv);
-      }
-    }
-  }
-
-  if (IsWebGL2() ||
-      IsExtensionEnabled(WebGLExtensionID::OES_standard_derivatives)) {
-    if (pname == LOCAL_GL_FRAGMENT_SHADER_DERIVATIVE_HINT) {
-      GLint i = 0;
-      gl->fGetIntegerv(pname, &i);
-      return JS::Int32Value(i);
-    }
-  }
-||||||| merged common ancestors
-            // Assuming stencils have 8 bits
-            const GLint stencilMask = (1 << stencilBits) - 1;
-=======
   if (IsExtensionEnabled(WebGLExtensionID::EXT_texture_filter_anisotropic)) {
     if (pname == LOCAL_GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT) {
       GLfloat f = 0.f;
@@ -355,70 +230,10 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
       gl->fGetIntegerv(pname, &i);
       return JS::NumberValue(uint32_t(i));
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (IsExtensionEnabled(WebGLExtensionID::EXT_texture_filter_anisotropic)) {
-    if (pname == LOCAL_GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT) {
-      GLfloat f = 0.f;
-      gl->fGetFloatv(pname, &f);
-      return JS::NumberValue(f);
-    }
-  }
-
-  switch (pname) {
-    //
-    // String params
-    //
-    case LOCAL_GL_VENDOR:
-    case LOCAL_GL_RENDERER:
-      return StringValue(cx, "Mozilla", rv);
-    case LOCAL_GL_VERSION:
-      return StringValue(cx, "WebGL 1.0", rv);
-    case LOCAL_GL_SHADING_LANGUAGE_VERSION:
-      return StringValue(cx, "WebGL GLSL ES 1.0", rv);
-
-    ////////////////////////////////
-    // Single-value params
-
-    // unsigned int
-    case LOCAL_GL_CULL_FACE_MODE:
-    case LOCAL_GL_FRONT_FACE:
-    case LOCAL_GL_ACTIVE_TEXTURE:
-    case LOCAL_GL_STENCIL_FUNC:
-    case LOCAL_GL_STENCIL_FAIL:
-    case LOCAL_GL_STENCIL_PASS_DEPTH_FAIL:
-    case LOCAL_GL_STENCIL_PASS_DEPTH_PASS:
-    case LOCAL_GL_STENCIL_BACK_FUNC:
-    case LOCAL_GL_STENCIL_BACK_FAIL:
-    case LOCAL_GL_STENCIL_BACK_PASS_DEPTH_FAIL:
-    case LOCAL_GL_STENCIL_BACK_PASS_DEPTH_PASS:
-    case LOCAL_GL_DEPTH_FUNC:
-    case LOCAL_GL_BLEND_SRC_RGB:
-    case LOCAL_GL_BLEND_SRC_ALPHA:
-    case LOCAL_GL_BLEND_DST_RGB:
-    case LOCAL_GL_BLEND_DST_ALPHA:
-    case LOCAL_GL_BLEND_EQUATION_RGB:
-    case LOCAL_GL_BLEND_EQUATION_ALPHA: {
-      GLint i = 0;
-      gl->fGetIntegerv(pname, &i);
-      return JS::NumberValue(uint32_t(i));
-    }
-||||||| merged common ancestors
-            GLint refValue = 0;
-            gl->fGetIntegerv(pname, &refValue);
-=======
     case LOCAL_GL_GENERATE_MIPMAP_HINT:
       return JS::NumberValue(mGenerateMipmapHint);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_GENERATE_MIPMAP_HINT:
-      return JS::NumberValue(mGenerateMipmapHint);
-||||||| merged common ancestors
-            return JS::Int32Value(refValue & stencilMask);
-        }
-=======
     case LOCAL_GL_IMPLEMENTATION_COLOR_READ_FORMAT:
     case LOCAL_GL_IMPLEMENTATION_COLOR_READ_TYPE: {
       const webgl::FormatUsageInfo* usage;
@@ -426,55 +241,9 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
       if (!BindCurFBForColorRead(&usage, &width, &height,
                                  LOCAL_GL_INVALID_OPERATION))
         return JS::NullValue();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_IMPLEMENTATION_COLOR_READ_FORMAT:
-    case LOCAL_GL_IMPLEMENTATION_COLOR_READ_TYPE: {
-      const webgl::FormatUsageInfo* usage;
-      uint32_t width, height;
-      if (!BindCurFBForColorRead(&usage, &width, &height))
-        return JS::NullValue();
-||||||| merged common ancestors
-        case LOCAL_GL_SAMPLE_BUFFERS:
-        case LOCAL_GL_SAMPLES: {
-            const auto& fb = mBoundDrawFramebuffer;
-            auto samples = [&]() -> Maybe<uint32_t> {
-                if (!fb) {
-                    if (!EnsureDefaultFB())
-                        return Nothing();
-                    return Some(mDefaultFB->mSamples);
-                }
-
-                if (!fb->IsCheckFramebufferStatusComplete())
-                    return Some(0);
-
-                DoBindFB(fb, LOCAL_GL_FRAMEBUFFER);
-                return Some(gl->GetIntAs<uint32_t>(LOCAL_GL_SAMPLES));
-            }();
-            if (samples && pname == LOCAL_GL_SAMPLE_BUFFERS) {
-                samples = Some(uint32_t(bool(samples.value())));
-            }
-            if (!samples)
-                return JS::NullValue();
-            return JS::NumberValue(samples.value());
-        }
-=======
       const auto implPI = ValidImplementationColorReadPI(usage);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      const auto implPI = ValidImplementationColorReadPI(usage);
-||||||| merged common ancestors
-        case LOCAL_GL_STENCIL_CLEAR_VALUE:
-        case LOCAL_GL_UNPACK_ALIGNMENT:
-        case LOCAL_GL_PACK_ALIGNMENT:
-        case LOCAL_GL_SUBPIXEL_BITS: {
-            GLint i = 0;
-            gl->fGetIntegerv(pname, &i);
-            return JS::Int32Value(i);
-        }
-=======
       GLenum ret;
       if (pname == LOCAL_GL_IMPLEMENTATION_COLOR_READ_FORMAT) {
         ret = implPI.format;
@@ -483,101 +252,7 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
       }
       return JS::NumberValue(uint32_t(ret));
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      GLenum ret;
-      if (pname == LOCAL_GL_IMPLEMENTATION_COLOR_READ_FORMAT) {
-        ret = implPI.format;
-      } else {
-        ret = implPI.type;
-      }
-      return JS::NumberValue(uint32_t(ret));
-    }
-||||||| merged common ancestors
-        case LOCAL_GL_RED_BITS:
-        case LOCAL_GL_GREEN_BITS:
-        case LOCAL_GL_BLUE_BITS:
-        case LOCAL_GL_ALPHA_BITS:
-        case LOCAL_GL_DEPTH_BITS:
-        case LOCAL_GL_STENCIL_BITS: {
-            const auto format = [&]() -> const webgl::FormatInfo* {
-                const auto& fb = mBoundDrawFramebuffer;
-                if (fb) {
-                    if (!fb->IsCheckFramebufferStatusComplete())
-                        return nullptr;
-
-                    const auto& attachment = [&]() -> const auto& {
-                        switch (pname) {
-                        case LOCAL_GL_DEPTH_BITS:
-                            if (fb->DepthStencilAttachment().HasAttachment())
-                                return fb->DepthStencilAttachment();
-                            return fb->DepthAttachment();
-
-                        case LOCAL_GL_STENCIL_BITS:
-                            if (fb->DepthStencilAttachment().HasAttachment())
-                                return fb->DepthStencilAttachment();
-                            return fb->StencilAttachment();
-
-                        default:
-                            return fb->ColorAttachment0();
-                        }
-                    }();
-
-                    const auto imageInfo = attachment.GetImageInfo();
-                    if (!imageInfo)
-                        return nullptr;
-                    return imageInfo->mFormat->format;
-                }
-
-                auto effFormat = webgl::EffectiveFormat::RGB8;
-                switch (pname) {
-                case LOCAL_GL_DEPTH_BITS:
-                    if (mOptions.depth) {
-                        effFormat = webgl::EffectiveFormat::DEPTH24_STENCIL8;
-                    }
-                    break;
-
-                case LOCAL_GL_STENCIL_BITS:
-                    if (mOptions.stencil) {
-                        effFormat = webgl::EffectiveFormat::DEPTH24_STENCIL8;
-                    }
-                    break;
-
-                default:
-                    if (mOptions.alpha) {
-                        effFormat = webgl::EffectiveFormat::RGBA8;
-                    }
-                    break;
-                }
-                return webgl::GetFormat(effFormat);
-            }();
-            int32_t ret = 0;
-            if (format) {
-                switch (pname) {
-                case LOCAL_GL_RED_BITS:
-                    ret = format->r;
-                    break;
-                case LOCAL_GL_GREEN_BITS:
-                    ret = format->g;
-                    break;
-                case LOCAL_GL_BLUE_BITS:
-                    ret = format->b;
-                    break;
-                case LOCAL_GL_ALPHA_BITS:
-                    ret = format->a;
-                    break;
-                case LOCAL_GL_DEPTH_BITS:
-                    ret = format->d;
-                    break;
-                case LOCAL_GL_STENCIL_BITS:
-                    ret = format->s;
-                    break;
-                }
-            }
-            return JS::Int32Value(ret);
-        }
-=======
     // int
     case LOCAL_GL_STENCIL_REF:
     case LOCAL_GL_STENCIL_BACK_REF: {
@@ -586,40 +261,13 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
 
       // Assuming stencils have 8 bits
       const GLint stencilMask = (1 << stencilBits) - 1;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // int
-    case LOCAL_GL_STENCIL_REF:
-    case LOCAL_GL_STENCIL_BACK_REF: {
-      GLint stencilBits = 0;
-      if (!GetStencilBits(&stencilBits)) return JS::NullValue();
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_TEXTURE_SIZE:
-            return JS::Int32Value(mGLMaxTextureSize);
-=======
       GLint refValue = 0;
       gl->fGetIntegerv(pname, &refValue);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      // Assuming stencils have 8 bits
-      const GLint stencilMask = (1 << stencilBits) - 1;
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_CUBE_MAP_TEXTURE_SIZE:
-            return JS::Int32Value(mGLMaxCubeMapTextureSize);
-=======
       return JS::Int32Value(refValue & stencilMask);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      GLint refValue = 0;
-      gl->fGetIntegerv(pname, &refValue);
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_RENDERBUFFER_SIZE:
-            return JS::Int32Value(mGLMaxRenderbufferSize);
-=======
     case LOCAL_GL_SAMPLE_BUFFERS:
     case LOCAL_GL_SAMPLES: {
       const auto& fb = mBoundDrawFramebuffer;
@@ -628,31 +276,9 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
           if (!EnsureDefaultFB()) return Nothing();
           return Some(mDefaultFB->mSamples);
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      return JS::Int32Value(refValue & stencilMask);
-    }
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:
-            return JS::Int32Value(mGLMaxVertexTextureImageUnits);
-=======
         if (!fb->IsCheckFramebufferStatusComplete()) return Some(0);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_SAMPLE_BUFFERS:
-    case LOCAL_GL_SAMPLES: {
-      const auto& fb = mBoundDrawFramebuffer;
-      auto samples = [&]() -> Maybe<uint32_t> {
-        if (!fb) {
-          if (!EnsureDefaultFB()) return Nothing();
-          return Some(mDefaultFB->mSamples);
-        }
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_TEXTURE_IMAGE_UNITS:
-            return JS::Int32Value(mGLMaxFragmentTextureImageUnits);
-=======
         DoBindFB(fb, LOCAL_GL_FRAMEBUFFER);
         return Some(gl->GetIntAs<uint32_t>(LOCAL_GL_SAMPLES));
       }();
@@ -662,14 +288,7 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
       if (!samples) return JS::NullValue();
       return JS::NumberValue(samples.value());
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        if (!fb->IsCheckFramebufferStatusComplete()) return Some(0);
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
-            return JS::Int32Value(mGLMaxCombinedTextureImageUnits);
-=======
     case LOCAL_GL_STENCIL_CLEAR_VALUE:
     case LOCAL_GL_UNPACK_ALIGNMENT:
     case LOCAL_GL_PACK_ALIGNMENT:
@@ -678,22 +297,7 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
       gl->fGetIntegerv(pname, &i);
       return JS::Int32Value(i);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        DoBindFB(fb, LOCAL_GL_FRAMEBUFFER);
-        return Some(gl->GetIntAs<uint32_t>(LOCAL_GL_SAMPLES));
-      }();
-      if (samples && pname == LOCAL_GL_SAMPLE_BUFFERS) {
-        samples = Some(uint32_t(bool(samples.value())));
-      }
-      if (!samples) return JS::NullValue();
-      return JS::NumberValue(samples.value());
-    }
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_VERTEX_ATTRIBS:
-            return JS::Int32Value(mGLMaxVertexAttribs);
-=======
     case LOCAL_GL_RED_BITS:
     case LOCAL_GL_GREEN_BITS:
     case LOCAL_GL_BLUE_BITS:
@@ -722,60 +326,12 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
             }
           }
           ();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_STENCIL_CLEAR_VALUE:
-    case LOCAL_GL_UNPACK_ALIGNMENT:
-    case LOCAL_GL_PACK_ALIGNMENT:
-    case LOCAL_GL_SUBPIXEL_BITS: {
-      GLint i = 0;
-      gl->fGetIntegerv(pname, &i);
-      return JS::Int32Value(i);
-    }
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_VERTEX_UNIFORM_VECTORS:
-            return JS::Int32Value(mGLMaxVertexUniformVectors);
-=======
           const auto imageInfo = attachment.GetImageInfo();
           if (!imageInfo) return nullptr;
           return imageInfo->mFormat->format;
         }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_RED_BITS:
-    case LOCAL_GL_GREEN_BITS:
-    case LOCAL_GL_BLUE_BITS:
-    case LOCAL_GL_ALPHA_BITS:
-    case LOCAL_GL_DEPTH_BITS:
-    case LOCAL_GL_STENCIL_BITS: {
-      const auto format = [&]() -> const webgl::FormatInfo* {
-        const auto& fb = mBoundDrawFramebuffer;
-        if (fb) {
-          if (!fb->IsCheckFramebufferStatusComplete()) return nullptr;
-
-          const auto& attachment = [&]() -> const auto& {
-            switch (pname) {
-              case LOCAL_GL_DEPTH_BITS:
-                if (fb->DepthStencilAttachment().HasAttachment())
-                  return fb->DepthStencilAttachment();
-                return fb->DepthAttachment();
-
-              case LOCAL_GL_STENCIL_BITS:
-                if (fb->DepthStencilAttachment().HasAttachment())
-                  return fb->DepthStencilAttachment();
-                return fb->StencilAttachment();
-
-              default:
-                return fb->ColorAttachment0();
-            }
-          }
-          ();
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_FRAGMENT_UNIFORM_VECTORS:
-            return JS::Int32Value(mGLMaxFragmentUniformVectors);
-=======
         auto effFormat = webgl::EffectiveFormat::RGB8;
         switch (pname) {
           case LOCAL_GL_DEPTH_BITS:
@@ -783,81 +339,7 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
               effFormat = webgl::EffectiveFormat::DEPTH24_STENCIL8;
             }
             break;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-          const auto imageInfo = attachment.GetImageInfo();
-          if (!imageInfo) return nullptr;
-          return imageInfo->mFormat->format;
-        }
-||||||| merged common ancestors
-        case LOCAL_GL_MAX_VARYING_VECTORS:
-            return JS::Int32Value(mGLMaxVaryingVectors);
-=======
-          case LOCAL_GL_STENCIL_BITS:
-            if (mOptions.stencil) {
-              effFormat = webgl::EffectiveFormat::DEPTH24_STENCIL8;
-            }
-            break;
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-        auto effFormat = webgl::EffectiveFormat::RGB8;
-        switch (pname) {
-          case LOCAL_GL_DEPTH_BITS:
-            if (mOptions.depth) {
-              effFormat = webgl::EffectiveFormat::DEPTH24_STENCIL8;
-||||||| merged common ancestors
-        case LOCAL_GL_COMPRESSED_TEXTURE_FORMATS: {
-            uint32_t length = mCompressedTextureFormats.Length();
-            JSObject* obj = dom::Uint32Array::Create(cx, this, length,
-                                                     mCompressedTextureFormats.Elements());
-            if (!obj) {
-                rv = NS_ERROR_OUT_OF_MEMORY;
-=======
-          default:
-            if (mOptions.alpha) {
-              effFormat = webgl::EffectiveFormat::RGBA8;
->>>>>>> upstream-releases
-            }
-<<<<<<< HEAD
-            break;
-||||||| merged common ancestors
-            return JS::ObjectOrNullValue(obj);
-        }
-=======
-            break;
-        }
-        return webgl::GetFormat(effFormat);
-      }();
-      int32_t ret = 0;
-      if (format) {
-        switch (pname) {
-          case LOCAL_GL_RED_BITS:
-            ret = format->r;
-            break;
-          case LOCAL_GL_GREEN_BITS:
-            ret = format->g;
-            break;
-          case LOCAL_GL_BLUE_BITS:
-            ret = format->b;
-            break;
-          case LOCAL_GL_ALPHA_BITS:
-            ret = format->a;
-            break;
-          case LOCAL_GL_DEPTH_BITS:
-            ret = format->d;
-            break;
-          case LOCAL_GL_STENCIL_BITS:
-            ret = format->s;
-            break;
-        }
-      }
-      return JS::Int32Value(ret);
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
           case LOCAL_GL_STENCIL_BITS:
             if (mOptions.stencil) {
               effFormat = webgl::EffectiveFormat::DEPTH24_STENCIL8;
@@ -897,191 +379,42 @@ JS::Value WebGLContext::GetParameter(JSContext* cx, GLenum pname,
       }
       return JS::Int32Value(ret);
     }
-||||||| merged common ancestors
-        // unsigned int. here we may have to return very large values like 2^32-1 that can't be represented as
-        // javascript integer values. We just return them as doubles and javascript doesn't care.
-        case LOCAL_GL_STENCIL_BACK_VALUE_MASK:
-            return JS::DoubleValue(mStencilValueMaskBack); // pass as FP value to allow large values such as 2^32-1.
 
-        case LOCAL_GL_STENCIL_BACK_WRITEMASK:
-            return JS::DoubleValue(mStencilWriteMaskBack);
-=======
     case LOCAL_GL_MAX_TEXTURE_SIZE:
       return JS::Int32Value(mGLMaxTextureSize);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_TEXTURE_SIZE:
-      return JS::Int32Value(mGLMaxTextureSize);
-||||||| merged common ancestors
-        case LOCAL_GL_STENCIL_VALUE_MASK:
-            return JS::DoubleValue(mStencilValueMaskFront);
-=======
     case LOCAL_GL_MAX_CUBE_MAP_TEXTURE_SIZE:
       return JS::Int32Value(mGLMaxCubeMapTextureSize);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_CUBE_MAP_TEXTURE_SIZE:
-      return JS::Int32Value(mGLMaxCubeMapTextureSize);
-||||||| merged common ancestors
-        case LOCAL_GL_STENCIL_WRITEMASK:
-            return JS::DoubleValue(mStencilWriteMaskFront);
-=======
     case LOCAL_GL_MAX_RENDERBUFFER_SIZE:
       return JS::Int32Value(mGLMaxRenderbufferSize);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_RENDERBUFFER_SIZE:
-      return JS::Int32Value(mGLMaxRenderbufferSize);
-||||||| merged common ancestors
-        // float
-        case LOCAL_GL_LINE_WIDTH:
-            return JS::DoubleValue(mLineWidth);
-=======
     case LOCAL_GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:
       return JS::Int32Value(mGLMaxVertexTextureImageUnits);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:
-      return JS::Int32Value(mGLMaxVertexTextureImageUnits);
-||||||| merged common ancestors
-        case LOCAL_GL_DEPTH_CLEAR_VALUE:
-        case LOCAL_GL_POLYGON_OFFSET_FACTOR:
-        case LOCAL_GL_POLYGON_OFFSET_UNITS:
-        case LOCAL_GL_SAMPLE_COVERAGE_VALUE: {
-            GLfloat f = 0.f;
-            gl->fGetFloatv(pname, &f);
-            return JS::DoubleValue(f);
-        }
-=======
     case LOCAL_GL_MAX_TEXTURE_IMAGE_UNITS:
       return JS::Int32Value(mGLMaxFragmentTextureImageUnits);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_TEXTURE_IMAGE_UNITS:
-      return JS::Int32Value(mGLMaxFragmentTextureImageUnits);
-||||||| merged common ancestors
-        // bool
-        case LOCAL_GL_DEPTH_TEST:
-            return JS::BooleanValue(mDepthTestEnabled);
-        case LOCAL_GL_STENCIL_TEST:
-            return JS::BooleanValue(mStencilTestEnabled);
-
-        case LOCAL_GL_BLEND:
-        case LOCAL_GL_CULL_FACE:
-        case LOCAL_GL_DITHER:
-        case LOCAL_GL_POLYGON_OFFSET_FILL:
-        case LOCAL_GL_SCISSOR_TEST:
-        case LOCAL_GL_SAMPLE_COVERAGE_INVERT:
-        case LOCAL_GL_SAMPLE_ALPHA_TO_COVERAGE:
-        case LOCAL_GL_SAMPLE_COVERAGE:
-        case LOCAL_GL_DEPTH_WRITEMASK: {
-            realGLboolean b = 0;
-            gl->fGetBooleanv(pname, &b);
-            return JS::BooleanValue(bool(b));
-        }
-=======
     case LOCAL_GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
       return JS::Int32Value(mGLMaxCombinedTextureImageUnits);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
-      return JS::Int32Value(mGLMaxCombinedTextureImageUnits);
-||||||| merged common ancestors
-        // bool, WebGL-specific
-        case UNPACK_FLIP_Y_WEBGL:
-            return JS::BooleanValue(mPixelStore_FlipY);
-        case UNPACK_PREMULTIPLY_ALPHA_WEBGL:
-            return JS::BooleanValue(mPixelStore_PremultiplyAlpha);
-=======
     case LOCAL_GL_MAX_VERTEX_ATTRIBS:
       return JS::Int32Value(mGLMaxVertexAttribs);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_VERTEX_ATTRIBS:
-      return JS::Int32Value(mGLMaxVertexAttribs);
-||||||| merged common ancestors
-        // uint, WebGL-specific
-        case UNPACK_COLORSPACE_CONVERSION_WEBGL:
-            return JS::NumberValue(uint32_t(mPixelStore_ColorspaceConversion));
-=======
     case LOCAL_GL_MAX_VERTEX_UNIFORM_VECTORS:
       return JS::Int32Value(mGLMaxVertexUniformVectors);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_VERTEX_UNIFORM_VECTORS:
-      return JS::Int32Value(mGLMaxVertexUniformVectors);
-||||||| merged common ancestors
-        ////////////////////////////////
-        // Complex values
-=======
     case LOCAL_GL_MAX_FRAGMENT_UNIFORM_VECTORS:
       return JS::Int32Value(mGLMaxFragmentUniformVectors);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_FRAGMENT_UNIFORM_VECTORS:
-      return JS::Int32Value(mGLMaxFragmentUniformVectors);
-||||||| merged common ancestors
-        // 2 floats
-        case LOCAL_GL_DEPTH_RANGE:
-        case LOCAL_GL_ALIASED_POINT_SIZE_RANGE:
-        case LOCAL_GL_ALIASED_LINE_WIDTH_RANGE: {
-            GLfloat fv[2] = { 0 };
-            switch (pname) {
-            case LOCAL_GL_ALIASED_POINT_SIZE_RANGE:
-                fv[0] = mGLAliasedPointSizeRange[0];
-                fv[1] = mGLAliasedPointSizeRange[1];
-                break;
-            case LOCAL_GL_ALIASED_LINE_WIDTH_RANGE:
-                fv[0] = mGLAliasedLineWidthRange[0];
-                fv[1] = mGLAliasedLineWidthRange[1];
-                break;
-            // case LOCAL_GL_DEPTH_RANGE:
-            default:
-                gl->fGetFloatv(pname, fv);
-                break;
-            }
-            JSObject* obj = dom::Float32Array::Create(cx, this, 2, fv);
-            if (!obj) {
-                rv = NS_ERROR_OUT_OF_MEMORY;
-            }
-            return JS::ObjectOrNullValue(obj);
-        }
-=======
     case LOCAL_GL_MAX_VARYING_VECTORS:
       return JS::Int32Value(mGLMaxFragmentInputVectors);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    case LOCAL_GL_MAX_VARYING_VECTORS:
-      return JS::Int32Value(mGLMaxVaryingVectors);
-||||||| merged common ancestors
-        // 4 floats
-        case LOCAL_GL_COLOR_CLEAR_VALUE:
-        case LOCAL_GL_BLEND_COLOR: {
-            GLfloat fv[4] = { 0 };
-            gl->fGetFloatv(pname, fv);
-            JSObject* obj = dom::Float32Array::Create(cx, this, 4, fv);
-            if (!obj) {
-                rv = NS_ERROR_OUT_OF_MEMORY;
-            }
-            return JS::ObjectOrNullValue(obj);
-        }
-=======
     case LOCAL_GL_MAX_VIEWS_OVR:
       if (IsExtensionEnabled(WebGLExtensionID::OVR_multiview2)) {
         return JS::NumberValue(mGLMaxMultiviewViews);
       }
       break;
->>>>>>> upstream-releases
 
     case LOCAL_GL_COMPRESSED_TEXTURE_FORMATS: {
       uint32_t length = mCompressedTextureFormats.Length();
@@ -1301,37 +634,6 @@ bool WebGLContext::ValidateCapabilityEnum(GLenum cap) {
   }
 }
 
-<<<<<<< HEAD
-realGLboolean* WebGLContext::GetStateTrackingSlot(GLenum cap) {
-  switch (cap) {
-    case LOCAL_GL_DEPTH_TEST:
-      return &mDepthTestEnabled;
-    case LOCAL_GL_DITHER:
-      return &mDitherEnabled;
-    case LOCAL_GL_RASTERIZER_DISCARD:
-      return &mRasterizerDiscardEnabled;
-    case LOCAL_GL_SCISSOR_TEST:
-      return &mScissorTestEnabled;
-    case LOCAL_GL_STENCIL_TEST:
-      return &mStencilTestEnabled;
-  }
-||||||| merged common ancestors
-realGLboolean*
-WebGLContext::GetStateTrackingSlot(GLenum cap)
-{
-    switch (cap) {
-        case LOCAL_GL_DEPTH_TEST:
-            return &mDepthTestEnabled;
-        case LOCAL_GL_DITHER:
-            return &mDitherEnabled;
-        case LOCAL_GL_RASTERIZER_DISCARD:
-            return &mRasterizerDiscardEnabled;
-        case LOCAL_GL_SCISSOR_TEST:
-            return &mScissorTestEnabled;
-        case LOCAL_GL_STENCIL_TEST:
-            return &mStencilTestEnabled;
-    }
-=======
 realGLboolean* WebGLContext::GetStateTrackingSlot(GLenum cap) {
   switch (cap) {
     case LOCAL_GL_DEPTH_TEST:
@@ -1347,7 +649,6 @@ realGLboolean* WebGLContext::GetStateTrackingSlot(GLenum cap) {
     case LOCAL_GL_BLEND:
       return &mBlendEnabled;
   }
->>>>>>> upstream-releases
 
   return nullptr;
 }

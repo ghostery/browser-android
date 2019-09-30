@@ -445,18 +445,8 @@ MessageManagerTunnel.prototype = {
     "PermitUnload",
     // Messages sent from browser.js
     "Browser:Reload",
-<<<<<<< HEAD
     "PageStyle:Disable",
     "PageStyle:Switch",
-    // Messages sent from SelectParentHelper.jsm
-    "Forms:DismissedDropDown",
-||||||| merged common ancestors
-    // Messages sent from SelectParentHelper.jsm
-    "Forms:DismissedDropDown",
-=======
-    "PageStyle:Disable",
-    "PageStyle:Switch",
->>>>>>> upstream-releases
     "Forms:MouseOut",
     "Forms:MouseOver",
     // Messages sent from SessionStore.jsm

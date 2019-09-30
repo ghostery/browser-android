@@ -14,24 +14,14 @@
 #include "nsThreadUtils.h"
 #include "nsGlobalWindowInner.h"
 
-<<<<<<< HEAD
-using mozilla::DOMEventTargetHelper;
-||||||| merged common ancestors
-=======
 using mozilla::AutoSlowOperation;
 using mozilla::CycleCollectedJSContext;
 using mozilla::DOMEventTargetHelper;
 using mozilla::ErrorResult;
 using mozilla::IgnoredErrorResult;
->>>>>>> upstream-releases
 using mozilla::MallocSizeOf;
 using mozilla::Maybe;
-<<<<<<< HEAD
-||||||| merged common ancestors
-using mozilla::DOMEventTargetHelper;
-=======
 using mozilla::MicroTaskRunnable;
->>>>>>> upstream-releases
 using mozilla::dom::BlobURLProtocolHandler;
 using mozilla::dom::ClientInfo;
 using mozilla::dom::ServiceWorker;
@@ -46,18 +36,6 @@ nsIGlobalObject::~nsIGlobalObject() {
   MOZ_DIAGNOSTIC_ASSERT(mEventTargetObjects.isEmpty());
 }
 
-<<<<<<< HEAD
-nsIPrincipal* nsIGlobalObject::PrincipalOrNull() {
-  JSObject* global = GetGlobalJSObject();
-  if (NS_WARN_IF(!global)) return nullptr;
-||||||| merged common ancestors
-nsIPrincipal*
-nsIGlobalObject::PrincipalOrNull()
-{
-  JSObject *global = GetGlobalJSObject();
-  if (NS_WARN_IF(!global))
-    return nullptr;
-=======
 nsIPrincipal* nsIGlobalObject::PrincipalOrNull() {
   if (!NS_IsMainThread()) {
     return nullptr;
@@ -65,7 +43,6 @@ nsIPrincipal* nsIGlobalObject::PrincipalOrNull() {
 
   JSObject* global = GetGlobalJSObjectPreserveColor();
   if (NS_WARN_IF(!global)) return nullptr;
->>>>>>> upstream-releases
 
   return nsContentUtils::ObjectPrincipal(global);
 }

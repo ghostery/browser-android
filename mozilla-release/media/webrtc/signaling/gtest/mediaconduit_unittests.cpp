@@ -465,20 +465,10 @@ class TransportConduitTest : public ::testing::Test {
          << endl;
     cerr << "   Setting payload 2 with name of zero length" << endl;
 
-<<<<<<< HEAD
-    mozilla::VideoCodecConfig cinst3(
-        124, "I4201234tttttthhhyyyy89087987y76t567r7756765rr6u6676",
-        constraints);
-    cinst3.mSimulcastEncodings.push_back(encoding);
-||||||| merged common ancestors
-    mozilla::VideoCodecConfig cinst3(124, "I4201234tttttthhhyyyy89087987y76t567r7756765rr6u6676", constraints);
-    cinst3.mSimulcastEncodings.push_back(encoding);
-=======
     mozilla::VideoCodecConfig cinst3(
         124, "I4201234tttttthhhyyyy89087987y76t567r7756765rr6u6676",
         constraints);
     cinst3.mEncodings.push_back(encoding);
->>>>>>> upstream-releases
     mozilla::VideoCodecConfig cinst4(124, "", constraints);
     cinst4.mEncodings.push_back(encoding);
 

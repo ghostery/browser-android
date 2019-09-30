@@ -25,23 +25,6 @@
 
   <xhtml:link rel="shortcut icon"
               href="chrome://mozapps/skin/extensions/extensionGeneric-16.svg"/>
-<<<<<<< HEAD
-  <linkset>
-    <link rel="localization" href="branding/brand.ftl"/>
-    <link rel="localization" href="toolkit/about/aboutAddons.ftl"/>
-  </linkset>
-
-  <script type="application/javascript"
-          src="chrome://mozapps/content/extensions/extensions.js"/>
-  <script type="application/javascript"
-          src="chrome://global/content/contentAreaUtils.js"/>
-||||||| merged common ancestors
-
-  <script type="application/javascript"
-          src="chrome://mozapps/content/extensions/extensions.js"/>
-  <script type="application/javascript"
-          src="chrome://global/content/contentAreaUtils.js"/>
-=======
   <linkset>
     <xhtml:link rel="localization" href="branding/brand.ftl"/>
     <xhtml:link rel="localization" href="toolkit/about/aboutAddons.ftl"/>
@@ -51,7 +34,6 @@
   <script src="chrome://mozapps/content/extensions/aboutaddonsCommon.js"/>
   <script src="chrome://mozapps/content/extensions/extensions.js"/>
   <script src="chrome://mozapps/content/extensions/abuse-report-frame.js"/>
->>>>>>> upstream-releases
 
   <popupset>
     <!-- menu for an addon item -->
@@ -161,52 +143,23 @@
       <richlistbox id="categories" flex="1">
         <richlistitem id="category-discover" value="addons://discover/"
                       class="category"
-<<<<<<< HEAD
-                      data-l10n-id="extensions-view-discover"
-                      data-l10n-attrs="name"
-                      priority="1000"/>
-||||||| merged common ancestors
-                      name="&view.discover.label;" priority="1000"
-                      tooltiptext="&view.discover.label;"/>
-=======
                       data-l10n-id="extensions-view-discopane"
                       data-l10n-attrs="name"
                       priority="1000"/>
->>>>>>> upstream-releases
         <richlistitem id="category-legacy" value="addons://legacy/"
                       class="category" priority="20000"
                       hidden="true"/>
         <richlistitem id="category-availableUpdates" value="addons://updates/available"
                       class="category"
-<<<<<<< HEAD
-                      data-l10n-id="extensions-view-available-updates"
-                      data-l10n-attrs="name"
-                      disabled="true"/>
-||||||| merged common ancestors
-                      name="&view.availableUpdates.label;" priority="100000"
-                      tooltiptext="&view.availableUpdates.label;"
-                      disabled="true"/>
-=======
                       data-l10n-id="extensions-view-available-updates"
                       data-l10n-attrs="name"
                       hidden="true"/>
->>>>>>> upstream-releases
         <richlistitem id="category-recentUpdates" value="addons://updates/recent"
                       class="category"
-<<<<<<< HEAD
-                      data-l10n-id="extensions-view-recent-updates"
-                      data-l10n-attrs="name"
-                      priority="101000"
-                      disabled="true"/>
-||||||| merged common ancestors
-                      name="&view.recentUpdates.label;" priority="101000"
-                      tooltiptext="&view.recentUpdates.label;" disabled="true"/>
-=======
                       data-l10n-id="extensions-view-recent-updates"
                       data-l10n-attrs="name"
                       priority="101000"
                       hidden="true"/>
->>>>>>> upstream-releases
       </richlistbox>
 
       <spacer flex="1"/>
@@ -277,19 +230,9 @@
                       class="warning" data-l10n-id="show-unsigned-extensions-button"
                       command="cmd_showUnsignedExtensions"/>
               <label id="search-label" control="header-search"/>
-<<<<<<< HEAD
-              <textbox id="header-search" type="search" searchbutton="true"
-                       data-l10n-id="search-header"
-                       data-l10n-attrs="searchbuttonlabel" maxlength="100"/>
-||||||| merged common ancestors
-              <textbox id="header-search" type="search" searchbutton="true"
-                       searchbuttonlabel="&search.buttonlabel;"
-                       placeholder="&search.placeholder3;" maxlength="100"/>
-=======
               <textbox id="header-search" is="search-textbox" searchbutton="true"
                        data-l10n-id="search-header"
                        data-l10n-attrs="searchbuttonlabel" maxlength="100"/>
->>>>>>> upstream-releases
             </hbox>
           </hbox>
 
@@ -320,15 +263,7 @@
                         command="cmd_restartApp"/>
               </hbox>
 
-<<<<<<< HEAD
-              <toolbarbutton id="header-utils-btn" type="menu"
-                        data-l10n-id="tools-menu">
-||||||| merged common ancestors
-              <toolbarbutton id="header-utils-btn" class="header-button" type="menu"
-                             tooltiptext="&toolsMenu.tooltip;">
-=======
               <button id="header-utils-btn" type="menu" data-l10n-id="tools-menu">
->>>>>>> upstream-releases
                 <menupopup id="utils-menu">
                   <menuitem id="utils-updateNow"
                             data-l10n-id="extensions-updates-check-for-updates"
@@ -367,48 +302,20 @@
             <!-- list view -->
             <vbox id="list-view" flex="1" class="view-pane" align="stretch">
               <!-- info UI for add-ons that have been disabled for being unsigned -->
-<<<<<<< HEAD
-              <vbox id="disabled-unsigned-addons-info" hidden="true">
-                <label id="disabled-unsigned-addons-heading" data-l10n-id="disabled-unsigned-heading"/>
-                <description data-l10n-id="disabled-unsigned-description">
-                  <label class="text-link plain" id="find-alternative-addons" data-l10n-name="find-addons"/>
-||||||| merged common ancestors
-              <vbox id="disabled-unsigned-addons-info" hidden="true">
-                <label id="disabled-unsigned-addons-heading" value="&disabledUnsigned.heading;"/>
-                <description>
-                  &disabledUnsigned.description.start;<label class="text-link plain" id="find-alternative-addons">&disabledUnsigned.description.findAddonsLink;</label>&disabledUnsigned.description.end;
-=======
               <vbox id="disabled-unsigned-addons-info" class="alert-container" hidden="true">
                 <label id="disabled-unsigned-addons-heading" data-l10n-id="disabled-unsigned-heading"/>
                 <description data-l10n-id="disabled-unsigned-description">
                   <label class="plain" id="find-alternative-addons" data-l10n-name="find-addons" is="text-link"/>
->>>>>>> upstream-releases
                 </description>
-<<<<<<< HEAD
-                <hbox pack="start"><label class="text-link" id="signing-learn-more" data-l10n-id="disabled-unsigned-learn-more"></label></hbox>
-                <description id="signing-dev-info" data-l10n-id="disabled-unsigned-devinfo">
-                  <label class="text-link plain" id="signing-dev-manual-link" data-l10n-name="learn-more"/>
-||||||| merged common ancestors
-                <hbox pack="start"><label class="text-link" id="signing-learn-more">&disabledUnsigned.learnMore;</label></hbox>
-                <description id="signing-dev-info">
-                  &disabledUnsigned.devInfo.start;<label class="text-link plain" id="signing-dev-manual-link">&disabledUnsigned.devInfo.linkToManual;</label>&disabledUnsigned.devInfo.end;
-=======
                 <hbox pack="start"><label id="signing-learn-more" data-l10n-id="disabled-unsigned-learn-more" is="text-link"></label></hbox>
                 <description id="signing-dev-info" data-l10n-id="disabled-unsigned-devinfo">
                   <label class="plain" id="signing-dev-manual-link" data-l10n-name="learn-more" is="text-link"/>
->>>>>>> upstream-releases
                 </description>
               </vbox>
               <vbox id="legacy-extensions-notice" class="alert-container" hidden="true">
                 <vbox class="alert">
                   <description id="legacy-extensions-description">
-<<<<<<< HEAD
-                    <label class="text-link plain" id="legacy-extensions-learnmore-link" data-l10n-id="legacy-warning-show-legacy"/>
-||||||| merged common ancestors
-                    <label class="text-link plain" id="legacy-extensions-learnmore-link">&legacyWarning.showLegacy;</label>
-=======
                     <label class="plain" id="legacy-extensions-learnmore-link" data-l10n-id="legacy-warning-show-legacy" is="text-link"/>
->>>>>>> upstream-releases
                   </description>
                 </vbox>
               </vbox>
@@ -425,17 +332,8 @@
               <vbox id="plugindeprecation-notice" class="list-view-notice" align="start">
                 <hbox class="message-bar">
                   <image class="message-bar-icon"/>
-<<<<<<< HEAD
-                  <description class="message-bar-description" data-l10n-id="plugin-deprecation-description">
-                    <label class="text-link plain" id="plugindeprecation-learnmore-link" data-l10n-name="learn-more"></label>
-||||||| merged common ancestors
-                  <description class="message-bar-description">
-                    &pluginDeprecation.description;
-                    <label class="text-link plain" id="plugindeprecation-learnmore-link">&pluginDeprecation.learnMore;</label>
-=======
                   <description class="message-bar-description" data-l10n-id="plugin-deprecation-description">
                     <label class="plain" id="plugindeprecation-learnmore-link" data-l10n-name="learn-more" is="text-link"></label>
->>>>>>> upstream-releases
                   </description>
                 </hbox>
               </vbox>
@@ -490,20 +388,9 @@
             <!-- legacy extensions view -->
             <vbox id="legacy-view" flex="1" class="view-pane" align="stretch">
               <vbox id="legacy-extensions-info">
-<<<<<<< HEAD
-                <label id="legacy-extensions-heading" data-l10n-id="legacy-extensions"/>
-                <description data-l10n-id="legacy-extensions-description">
-                  <label class="text-link plain" id="legacy-learnmore" data-l10n-name="legacy-learn-more"></label>
-||||||| merged common ancestors
-                <label id="legacy-extensions-heading" value="&legacyExtensions.title;"/>
-                <description>
-                  &legacyExtensions.description;
-                  <label class="text-link plain" id="legacy-learnmore">&legacyExtensions.learnMore;</label>
-=======
                 <label id="legacy-extensions-heading" data-l10n-id="legacy-extensions"/>
                 <description data-l10n-id="legacy-extensions-description">
                   <label class="plain" id="legacy-learnmore" data-l10n-name="legacy-learn-more" is="text-link"></label>
->>>>>>> upstream-releases
                 </description>
               </vbox>
               <richlistbox id="legacy-list" class="list" flex="1"/>
@@ -716,39 +603,15 @@
                                       command="cmd_findItemUpdates"/>
                             </hbox>
                           </row>
-<<<<<<< HEAD
-                          <row class="detail-row" id="detail-version" data-l10n-id="detail-version"/>
-                          <row class="detail-row" id="detail-dateUpdated" data-l10n-id="detail-last-updated"/>
-                          <row class="detail-row-complex" id="detail-homepage-row" data-l10n-id="detail-home">
-                            <label class="detail-row-label" data-l10n-id="detail-home-value"/>
-                            <label id="detail-homepage" class="detail-row-value text-link" crop="end"/>
-||||||| merged common ancestors
-                          <row class="detail-row" id="detail-version" label="&detail.version.label;"/>
-                          <row class="detail-row" id="detail-dateUpdated" label="&detail.lastupdated.label;"/>
-                          <row class="detail-row-complex" id="detail-homepage-row" label="&detail.home;">
-                            <label class="detail-row-label" value="&detail.home;"/>
-                            <label id="detail-homepage" class="detail-row-value text-link" crop="end"/>
-=======
                           <row class="detail-row" id="detail-version" data-l10n-id="detail-version"/>
                           <row class="detail-row" id="detail-dateUpdated" data-l10n-id="detail-last-updated"/>
                           <row class="detail-row-complex" id="detail-homepage-row" data-l10n-id="detail-home">
                             <label class="detail-row-label" data-l10n-id="detail-home-value"/>
                             <label id="detail-homepage" class="detail-row-value" crop="end" is="text-link"/>
->>>>>>> upstream-releases
                           </row>
-<<<<<<< HEAD
-                          <row class="detail-row-complex" id="detail-repository-row" data-l10n-id="detail-repository">
-                            <label class="detail-row-label" data-l10n-id="detail-repository-value"/>
-                            <label id="detail-repository" class="detail-row-value text-link"/>
-||||||| merged common ancestors
-                          <row class="detail-row-complex" id="detail-repository-row" label="&detail.repository;">
-                            <label class="detail-row-label" value="&detail.repository;"/>
-                            <label id="detail-repository" class="detail-row-value text-link"/>
-=======
                           <row class="detail-row-complex" id="detail-repository-row" data-l10n-id="detail-repository">
                             <label class="detail-row-label" data-l10n-id="detail-repository-value"/>
                             <label id="detail-repository" class="detail-row-value" is="text-link"/>
->>>>>>> upstream-releases
                           </row>
                           <row class="detail-row-complex" id="detail-rating-row">
                             <label class="detail-row-label" data-l10n-id="detail-rating"/>

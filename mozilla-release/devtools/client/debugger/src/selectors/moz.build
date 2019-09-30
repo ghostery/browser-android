@@ -7,13 +7,7 @@ DIRS += [
 
 ]
 
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/selectors/moz.build
-DebuggerModules(
-||||||| merged common ancestors
-DevToolsModules(
-=======
 CompiledModules(
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/selectors/moz.build
     'breakpointAtLocation.js',
     'breakpoints.js',
     'breakpointSources.js',
@@ -24,13 +18,5 @@ CompiledModules(
     'isSelectedFrameVisible.js',
     'pause.js',
     'visibleBreakpoints.js',
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/selectors/moz.build
     'visibleColumnBreakpoints.js',
-    'visiblePausePoints.js',
-    'visibleSelectedFrame.js',
-||||||| merged common ancestors
-    'visibleSelectedFrame.js',
-=======
-    'visibleColumnBreakpoints.js',
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/selectors/moz.build
 )

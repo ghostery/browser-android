@@ -170,16 +170,7 @@ struct DirtyPageSet {
   InfallibleVector<DirtyPage, 256, AllocPolicy<MemoryKind::DirtyPageSet>>
       mPages;
 
-<<<<<<< HEAD
-  explicit DirtyPageSet(const CheckpointId& aCheckpoint)
-      : mCheckpoint(aCheckpoint) {}
-||||||| merged common ancestors
-  explicit DirtyPageSet(const CheckpointId& aCheckpoint)
-    : mCheckpoint(aCheckpoint)
-  {}
-=======
   explicit DirtyPageSet(size_t aCheckpoint) : mCheckpoint(aCheckpoint) {}
->>>>>>> upstream-releases
 };
 
 // Worklist used by each snapshot thread.
@@ -358,22 +349,9 @@ struct MemoryInfo {
   void* mDirtyMemoryFaults[50];
 
   MemoryInfo()
-<<<<<<< HEAD
-      : mMemoryChangesAllowed(true),
-        mFreeUntrackedRegions(MemoryKind::FreeRegions),
-        mStartTime(CurrentTime()),
-        mIntentionalCrashesAllowed(true) {
-||||||| merged common ancestors
-    : mMemoryChangesAllowed(true)
-    , mFreeUntrackedRegions(MemoryKind::FreeRegions)
-    , mStartTime(CurrentTime())
-    , mIntentionalCrashesAllowed(true)
-  {
-=======
       : mMemoryChangesAllowed(true),
         mFreeUntrackedRegions(MemoryKind::FreeRegions),
         mStartTime(CurrentTime()) {
->>>>>>> upstream-releases
     // The singleton MemoryInfo is allocated with zeroed memory, so other
     // fields do not need explicit initialization.
   }
@@ -446,85 +424,6 @@ void DumpTimers() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-<<<<<<< HEAD
-// Directives
-///////////////////////////////////////////////////////////////////////////////
-
-void SetAllowIntentionalCrashes(bool aAllowed) {
-  gMemoryInfo->mIntentionalCrashesAllowed = aAllowed;
-}
-
-extern "C" {
-
-MOZ_EXPORT void RecordReplayInterface_InternalRecordReplayDirective(
-    long aDirective) {
-  switch ((Directive)aDirective) {
-    case Directive::CrashSoon:
-      gMemoryInfo->mCrashSoon = true;
-      break;
-    case Directive::MaybeCrash:
-      if (gMemoryInfo->mIntentionalCrashesAllowed && gMemoryInfo->mCrashSoon) {
-        PrintSpew("Intentionally Crashing!\n");
-        MOZ_CRASH("RecordReplayDirective intentional crash");
-      }
-      gMemoryInfo->mCrashSoon = false;
-      break;
-    case Directive::AlwaysSaveTemporaryCheckpoints:
-      navigation::AlwaysSaveTemporaryCheckpoints();
-      break;
-    case Directive::AlwaysMarkMajorCheckpoints:
-      child::NotifyAlwaysMarkMajorCheckpoints();
-      break;
-    default:
-      MOZ_CRASH("Unknown directive");
-  }
-}
-
-}  // extern "C"
-
-///////////////////////////////////////////////////////////////////////////////
-||||||| merged common ancestors
-// Directives
-///////////////////////////////////////////////////////////////////////////////
-
-void
-SetAllowIntentionalCrashes(bool aAllowed)
-{
-  gMemoryInfo->mIntentionalCrashesAllowed = aAllowed;
-}
-
-extern "C" {
-
-MOZ_EXPORT void
-RecordReplayInterface_InternalRecordReplayDirective(long aDirective)
-{
-  switch ((Directive) aDirective) {
-  case Directive::CrashSoon:
-    gMemoryInfo->mCrashSoon = true;
-    break;
-  case Directive::MaybeCrash:
-    if (gMemoryInfo->mIntentionalCrashesAllowed && gMemoryInfo->mCrashSoon) {
-      PrintSpew("Intentionally Crashing!\n");
-      MOZ_CRASH("RecordReplayDirective intentional crash");
-    }
-    gMemoryInfo->mCrashSoon = false;
-    break;
-  case Directive::AlwaysSaveTemporaryCheckpoints:
-    navigation::AlwaysSaveTemporaryCheckpoints();
-    break;
-  case Directive::AlwaysMarkMajorCheckpoints:
-    child::NotifyAlwaysMarkMajorCheckpoints();
-    break;
-  default:
-    MOZ_CRASH("Unknown directive");
-  }
-}
-
-} // extern "C"
-
-///////////////////////////////////////////////////////////////////////////////
-=======
->>>>>>> upstream-releases
 // Snapshot Thread Conditions
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -701,18 +600,8 @@ void UnrecoverableSnapshotFailure() {
 // Initial Memory Region Processing
 ///////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-void AddInitialUntrackedMemoryRegion(uint8_t* aBase, size_t aSize) {
-  MOZ_RELEASE_ASSERT(!HasSavedCheckpoint());
-||||||| merged common ancestors
-void
-AddInitialUntrackedMemoryRegion(uint8_t* aBase, size_t aSize)
-{
-  MOZ_RELEASE_ASSERT(!HasSavedCheckpoint());
-=======
 void AddInitialUntrackedMemoryRegion(uint8_t* aBase, size_t aSize) {
   MOZ_RELEASE_ASSERT(!HasSavedAnyCheckpoint());
->>>>>>> upstream-releases
 
   if (gInitializationFailureMessage) {
     return;
@@ -741,18 +630,8 @@ void AddInitialUntrackedMemoryRegion(uint8_t* aBase, size_t aSize) {
   MOZ_CRASH();
 }
 
-<<<<<<< HEAD
-static void RemoveInitialUntrackedRegion(uint8_t* aBase, size_t aSize) {
-  MOZ_RELEASE_ASSERT(!HasSavedCheckpoint());
-||||||| merged common ancestors
-static void
-RemoveInitialUntrackedRegion(uint8_t* aBase, size_t aSize)
-{
-  MOZ_RELEASE_ASSERT(!HasSavedCheckpoint());
-=======
 static void RemoveInitialUntrackedRegion(uint8_t* aBase, size_t aSize) {
   MOZ_RELEASE_ASSERT(!HasSavedAnyCheckpoint());
->>>>>>> upstream-releases
   AutoSpinLock lock(gMemoryInfo->mInitialUntrackedRegionsLock);
 
   for (AllocatedMemoryRegion& region : gMemoryInfo->mInitialUntrackedRegions) {
@@ -1247,20 +1126,9 @@ void DeallocateMemory(void* aAddress, size_t aSize, MemoryKind aKind) {
 
 // While on a snapshot thread, restore the contents of all pages belonging to
 // this thread which were modified since the last recorded diff snapshot.
-<<<<<<< HEAD
-static void SnapshotThreadRestoreLastDiffSnapshot(
-    SnapshotThreadWorklist* aWorklist) {
-  CheckpointId checkpoint = GetLastSavedCheckpoint();
-||||||| merged common ancestors
-static void
-SnapshotThreadRestoreLastDiffSnapshot(SnapshotThreadWorklist* aWorklist)
-{
-  CheckpointId checkpoint = GetLastSavedCheckpoint();
-=======
 static void SnapshotThreadRestoreLastDiffSnapshot(
     SnapshotThreadWorklist* aWorklist) {
   size_t checkpoint = GetLastSavedCheckpoint();
->>>>>>> upstream-releases
 
   DirtyPageSet& set = aWorklist->mSets.back();
   MOZ_RELEASE_ASSERT(set.mCheckpoint == checkpoint);

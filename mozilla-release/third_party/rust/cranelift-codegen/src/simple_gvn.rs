@@ -121,17 +121,8 @@ pub fn do_simple_gvn(func: &mut Function, domtree: &mut DominatorTree) {
                 ty: ctrl_typevar,
                 pos: &pos,
             };
-<<<<<<< HEAD
-            use scoped_hash_map::Entry::*;
-            match visible_values.entry(key) {
-||||||| merged common ancestors
-            let entry = visible_values.entry(key);
-            use scoped_hash_map::Entry::*;
-            match entry {
-=======
             use crate::scoped_hash_map::Entry::*;
             match visible_values.entry(key) {
->>>>>>> upstream-releases
                 Occupied(entry) => {
                     debug_assert!(domtree.dominates(*entry.get(), inst, &func.layout));
                     // If the redundant instruction is representing the current

@@ -46,85 +46,13 @@ void MediaEngineWebRTC::SetFakeDeviceChangeEvents() {
   camera::GetChildAndCall(&camera::CamerasChild::SetFakeDeviceChangeEvents);
 }
 
-<<<<<<< HEAD
-void MediaEngineWebRTC::EnumerateVideoDevices(
-    uint64_t aWindowId, dom::MediaSourceEnum aMediaSource,
-    nsTArray<RefPtr<MediaDevice>>* aDevices) {
-||||||| merged common ancestors
-void
-MediaEngineWebRTC::EnumerateVideoDevices(uint64_t aWindowId,
-                                         dom::MediaSourceEnum aMediaSource,
-                                         nsTArray<RefPtr<MediaDevice> >* aDevices)
-{
-=======
 void MediaEngineWebRTC::EnumerateVideoDevices(
     uint64_t aWindowId, camera::CaptureEngine aCapEngine,
     nsTArray<RefPtr<MediaDevice>>* aDevices) {
->>>>>>> upstream-releases
   mMutex.AssertCurrentThreadOwns();
-<<<<<<< HEAD
-
-  mozilla::camera::CaptureEngine capEngine = mozilla::camera::InvalidEngine;
-
-  bool scaryKind = false;  // flag sources with cross-origin exploit potential
-
-  switch (aMediaSource) {
-    case dom::MediaSourceEnum::Window:
-      capEngine = mozilla::camera::WinEngine;
-      break;
-    case dom::MediaSourceEnum::Application:
-      capEngine = mozilla::camera::AppEngine;
-      break;
-    case dom::MediaSourceEnum::Screen:
-      capEngine = mozilla::camera::ScreenEngine;
-      scaryKind = true;
-      break;
-    case dom::MediaSourceEnum::Browser:
-      capEngine = mozilla::camera::BrowserEngine;
-      scaryKind = true;
-      break;
-    case dom::MediaSourceEnum::Camera:
-      capEngine = mozilla::camera::CameraEngine;
-      break;
-    default:
-      MOZ_CRASH("No valid video engine");
-      break;
-  }
-
-||||||| merged common ancestors
-
-  mozilla::camera::CaptureEngine capEngine = mozilla::camera::InvalidEngine;
-
-  bool scaryKind = false; // flag sources with cross-origin exploit potential
-
-  switch (aMediaSource) {
-    case dom::MediaSourceEnum::Window:
-      capEngine = mozilla::camera::WinEngine;
-      break;
-    case dom::MediaSourceEnum::Application:
-      capEngine = mozilla::camera::AppEngine;
-      break;
-    case dom::MediaSourceEnum::Screen:
-      capEngine = mozilla::camera::ScreenEngine;
-      scaryKind = true;
-      break;
-    case dom::MediaSourceEnum::Browser:
-      capEngine = mozilla::camera::BrowserEngine;
-      scaryKind = true;
-      break;
-    case dom::MediaSourceEnum::Camera:
-      capEngine = mozilla::camera::CameraEngine;
-      break;
-    default:
-      MOZ_CRASH("No valid video engine");
-      break;
-  }
-
-=======
   // flag sources with cross-origin exploit potential
   bool scaryKind = (aCapEngine == camera::ScreenEngine ||
                     aCapEngine == camera::BrowserEngine);
->>>>>>> upstream-releases
   /*
    * We still enumerate every time, in case a new device was plugged in since
    * the last call. TODO: Verify that WebRTC actually does deal with hotplugging
@@ -153,14 +81,7 @@ void MediaEngineWebRTC::EnumerateVideoDevices(
   }
 #endif
   num = mozilla::camera::GetChildAndCall(
-<<<<<<< HEAD
-      &mozilla::camera::CamerasChild::NumberOfCaptureDevices, capEngine);
-||||||| merged common ancestors
-    &mozilla::camera::CamerasChild::NumberOfCaptureDevices,
-    capEngine);
-=======
       &mozilla::camera::CamerasChild::NumberOfCaptureDevices, aCapEngine);
->>>>>>> upstream-releases
 
   for (int i = 0; i < num; i++) {
     char deviceName[MediaEngineSource::kMaxDeviceNameLength];
@@ -172,25 +93,10 @@ void MediaEngineWebRTC::EnumerateVideoDevices(
     uniqueId[0] = '\0';
     int error;
 
-<<<<<<< HEAD
-    error = mozilla::camera::GetChildAndCall(
-        &mozilla::camera::CamerasChild::GetCaptureDevice, capEngine, i,
-        deviceName, sizeof(deviceName), uniqueId, sizeof(uniqueId),
-        &scarySource);
-||||||| merged common ancestors
-    error =  mozilla::camera::GetChildAndCall(
-      &mozilla::camera::CamerasChild::GetCaptureDevice,
-      capEngine,
-      i, deviceName,
-      sizeof(deviceName), uniqueId,
-      sizeof(uniqueId),
-      &scarySource);
-=======
     error = mozilla::camera::GetChildAndCall(
         &mozilla::camera::CamerasChild::GetCaptureDevice, aCapEngine, i,
         deviceName, sizeof(deviceName), uniqueId, sizeof(uniqueId),
         &scarySource);
->>>>>>> upstream-releases
     if (error) {
       LOG(("camera:GetCaptureDevice: Failed %d", error));
       continue;
@@ -200,35 +106,14 @@ void MediaEngineWebRTC::EnumerateVideoDevices(
 
     webrtc::CaptureCapability cap;
     int numCaps = mozilla::camera::GetChildAndCall(
-<<<<<<< HEAD
-        &mozilla::camera::CamerasChild::NumberOfCapabilities, capEngine,
-        uniqueId);
-||||||| merged common ancestors
-      &mozilla::camera::CamerasChild::NumberOfCapabilities,
-      capEngine,
-      uniqueId);
-=======
         &mozilla::camera::CamerasChild::NumberOfCapabilities, aCapEngine,
         uniqueId);
->>>>>>> upstream-releases
     LOG(("Number of Capabilities %d", numCaps));
     for (int j = 0; j < numCaps; j++) {
       if (mozilla::camera::GetChildAndCall(
-<<<<<<< HEAD
-              &mozilla::camera::CamerasChild::GetCaptureCapability, capEngine,
-              uniqueId, j, cap) != 0) {
-        break;
-||||||| merged common ancestors
-            &mozilla::camera::CamerasChild::GetCaptureCapability,
-            capEngine,
-            uniqueId,
-            j, cap) != 0) {
-       break;
-=======
               &mozilla::camera::CamerasChild::GetCaptureCapability, aCapEngine,
               uniqueId, j, cap) != 0) {
         break;
->>>>>>> upstream-releases
       }
       LOG(("type=%d width=%d height=%d maxFPS=%d",
            static_cast<int>(cap.videoType), cap.width, cap.height, cap.maxFPS));
@@ -244,68 +129,19 @@ void MediaEngineWebRTC::EnumerateVideoDevices(
     NS_ConvertUTF8toUTF16 uuid(uniqueId);
     RefPtr<MediaEngineSource> vSource;
 
-<<<<<<< HEAD
-    nsRefPtrHashtable<nsStringHashKey, MediaEngineSource>*
-        devicesForThisWindow = mVideoSources.LookupOrAdd(aWindowId);
-
-    if (devicesForThisWindow->Get(uuid, getter_AddRefs(vSource)) &&
-        vSource->RequiresSharing()) {
-      // We've already seen this shared device, just refresh and append.
-      static_cast<MediaEngineRemoteVideoSource*>(vSource.get())->Refresh(i);
-    } else {
-      vSource = new MediaEngineRemoteVideoSource(i, capEngine, aMediaSource,
-                                                 scaryKind || scarySource);
-      devicesForThisWindow->Put(uuid, vSource);
-    }
-||||||| merged common ancestors
-    nsRefPtrHashtable<nsStringHashKey, MediaEngineSource>*
-      devicesForThisWindow = mVideoSources.LookupOrAdd(aWindowId);
-
-    if (devicesForThisWindow->Get(uuid, getter_AddRefs(vSource)) &&
-        vSource->RequiresSharing()) {
-      // We've already seen this shared device, just refresh and append.
-      static_cast<MediaEngineRemoteVideoSource*>(vSource.get())->Refresh(i);
-    } else {
-      vSource = new MediaEngineRemoteVideoSource(i, capEngine, aMediaSource,
-                                                 scaryKind || scarySource);
-      devicesForThisWindow->Put(uuid, vSource);
-    }
-=======
     vSource = new MediaEngineRemoteVideoSource(i, aCapEngine,
                                                scaryKind || scarySource);
->>>>>>> upstream-releases
     aDevices->AppendElement(MakeRefPtr<MediaDevice>(
-<<<<<<< HEAD
-        vSource, vSource->GetName(), NS_ConvertUTF8toUTF16(vSource->GetUUID()),
-        NS_LITERAL_STRING("")));
-||||||| merged common ancestors
-                              vSource,
-                              vSource->GetName(),
-                              NS_ConvertUTF8toUTF16(vSource->GetUUID()),
-                              NS_LITERAL_STRING("")));
-=======
         vSource, vSource->GetName(), NS_ConvertUTF8toUTF16(vSource->GetUUID()),
         vSource->GetGroupId(), NS_LITERAL_STRING("")));
->>>>>>> upstream-releases
   }
 
   if (mHasTabVideoSource || aCapEngine == camera::BrowserEngine) {
     RefPtr<MediaEngineSource> tabVideoSource = new MediaEngineTabVideoSource();
     aDevices->AppendElement(MakeRefPtr<MediaDevice>(
-<<<<<<< HEAD
-        tabVideoSource, tabVideoSource->GetName(),
-        NS_ConvertUTF8toUTF16(tabVideoSource->GetUUID()),
-        NS_LITERAL_STRING("")));
-||||||| merged common ancestors
-                              tabVideoSource,
-                              tabVideoSource->GetName(),
-                              NS_ConvertUTF8toUTF16(tabVideoSource->GetUUID()),
-                              NS_LITERAL_STRING("")));
-=======
         tabVideoSource, tabVideoSource->GetName(),
         NS_ConvertUTF8toUTF16(tabVideoSource->GetUUID()),
         tabVideoSource->GetGroupId(), NS_LITERAL_STRING("")));
->>>>>>> upstream-releases
   }
 }
 
@@ -331,42 +167,14 @@ void MediaEngineWebRTC::EnumerateMicrophoneDevices(
 
     if (devices[i]->State() == CUBEB_DEVICE_STATE_ENABLED) {
       MOZ_ASSERT(devices[i]->Type() == CUBEB_DEVICE_TYPE_INPUT);
-<<<<<<< HEAD
-      RefPtr<MediaEngineSource> source = new MediaEngineWebRTCMicrophoneSource(
-          devices[i], devices[i]->Name(),
-          // Lie and provide the name as UUID
-          NS_ConvertUTF16toUTF8(devices[i]->Name()), devices[i]->MaxChannels(),
-          mDelayAgnostic, mExtendedFilter);
-||||||| merged common ancestors
-      RefPtr<MediaEngineSource> source =
-        new MediaEngineWebRTCMicrophoneSource(
-            devices[i],
-            devices[i]->Name(),
-            // Lie and provide the name as UUID
-            NS_ConvertUTF16toUTF8(devices[i]->Name()),
-            devices[i]->MaxChannels(),
-            mDelayAgnostic,
-            mExtendedFilter);
-=======
       RefPtr<MediaEngineSource> source = new MediaEngineWebRTCMicrophoneSource(
           devices[i], devices[i]->Name(),
           // Lie and provide the name as UUID
           NS_ConvertUTF16toUTF8(devices[i]->Name()), devices[i]->GroupID(),
           devices[i]->MaxChannels(), mDelayAgnostic, mExtendedFilter);
->>>>>>> upstream-releases
       RefPtr<MediaDevice> device = MakeRefPtr<MediaDevice>(
-<<<<<<< HEAD
-          source, source->GetName(), NS_ConvertUTF8toUTF16(source->GetUUID()),
-          NS_LITERAL_STRING(""));
-||||||| merged common ancestors
-                                     source,
-                                     source->GetName(),
-                                     NS_ConvertUTF8toUTF16(source->GetUUID()),
-                                     NS_LITERAL_STRING(""));
-=======
           source, source->GetName(), NS_ConvertUTF8toUTF16(source->GetUUID()),
           source->GetGroupId(), NS_LITERAL_STRING(""));
->>>>>>> upstream-releases
       if (devices[i]->Preferred()) {
 #ifdef DEBUG
         if (!foundPreferredDevice) {
@@ -377,17 +185,9 @@ void MediaEngineWebRTC::EnumerateMicrophoneDevices(
           // See https://bugzilla.mozilla.org/show_bug.cgi?id=1542739
 #  ifndef XP_WIN
           MOZ_ASSERT(!foundPreferredDevice,
-<<<<<<< HEAD
-                     "Found more than one preferred audio input device"
-                     "while enumerating");
-||||||| merged common ancestors
-              "Found more than one preferred audio input device"
-              "while enumerating");
-=======
                      "Found more than one preferred audio input device"
                      "while enumerating");
 #  endif
->>>>>>> upstream-releases
         }
 #endif
         aDevices->InsertElementAt(0, device);
@@ -404,16 +204,9 @@ void MediaEngineWebRTC::EnumerateSpeakerDevices(
     mEnumerator = CubebDeviceEnumerator::GetInstance();
   }
   nsTArray<RefPtr<AudioDeviceInfo>> devices;
-<<<<<<< HEAD
-  mEnumerator->EnumerateAudioOutputDevices(devices);
-
-||||||| merged common ancestors
-  CubebUtils::GetDeviceCollection(devices, CubebUtils::Output);
-=======
   mEnumerator->EnumerateAudioOutputDevices(devices);
 
   DebugOnly<bool> preferredDeviceFound = false;
->>>>>>> upstream-releases
   for (auto& device : devices) {
     if (device->State() == CUBEB_DEVICE_STATE_ENABLED) {
       MOZ_ASSERT(device->Type() == CUBEB_DEVICE_TYPE_OUTPUT);
@@ -442,13 +235,6 @@ void MediaEngineWebRTC::EnumerateDevices(
     MediaSinkEnum aMediaSink, nsTArray<RefPtr<MediaDevice>>* aDevices) {
   MOZ_ASSERT(aMediaSource != dom::MediaSourceEnum::Other ||
              aMediaSink != MediaSinkEnum::Other);
-<<<<<<< HEAD
-  // We spawn threads to handle gUM runnables, so we must protect the member
-  // vars
-||||||| merged common ancestors
-  // We spawn threads to handle gUM runnables, so we must protect the member vars
-=======
->>>>>>> upstream-releases
   MutexAutoLock lock(mMutex);
   if (MediaEngineSource::IsVideo(aMediaSource)) {
     switch (aMediaSource) {
@@ -477,20 +263,9 @@ void MediaEngineWebRTC::EnumerateDevices(
     RefPtr<MediaEngineWebRTCAudioCaptureSource> audioCaptureSource =
         new MediaEngineWebRTCAudioCaptureSource(nullptr);
     aDevices->AppendElement(MakeRefPtr<MediaDevice>(
-<<<<<<< HEAD
-        audioCaptureSource, audioCaptureSource->GetName(),
-        NS_ConvertUTF8toUTF16(audioCaptureSource->GetUUID()),
-        NS_LITERAL_STRING("")));
-||||||| merged common ancestors
-                              audioCaptureSource,
-                              audioCaptureSource->GetName(),
-                              NS_ConvertUTF8toUTF16(audioCaptureSource->GetUUID()),
-                              NS_LITERAL_STRING("")));
-=======
         audioCaptureSource, audioCaptureSource->GetName(),
         NS_ConvertUTF8toUTF16(audioCaptureSource->GetUUID()),
         audioCaptureSource->GetGroupId(), NS_LITERAL_STRING("")));
->>>>>>> upstream-releases
   } else if (aMediaSource == dom::MediaSourceEnum::Microphone) {
     MOZ_ASSERT(aMediaSource == dom::MediaSourceEnum::Microphone);
     EnumerateMicrophoneDevices(aWindowId, aDevices);
@@ -501,106 +276,7 @@ void MediaEngineWebRTC::EnumerateDevices(
   }
 }
 
-<<<<<<< HEAD
-void MediaEngineWebRTC::ReleaseResourcesForWindow(uint64_t aWindowId) {
-  {
-    nsRefPtrHashtable<nsStringHashKey, MediaEngineSource>*
-        audioDevicesForThisWindow = mAudioSources.Get(aWindowId);
-
-    if (audioDevicesForThisWindow) {
-      for (auto iter = audioDevicesForThisWindow->Iter(); !iter.Done();
-           iter.Next()) {
-        iter.UserData()->Shutdown();
-      }
-
-      // This makes audioDevicesForThisWindow invalid.
-      mAudioSources.Remove(aWindowId);
-    }
-  }
-
-  {
-    nsRefPtrHashtable<nsStringHashKey, MediaEngineSource>*
-        videoDevicesForThisWindow = mVideoSources.Get(aWindowId);
-    if (videoDevicesForThisWindow) {
-      for (auto iter = videoDevicesForThisWindow->Iter(); !iter.Done();
-           iter.Next()) {
-        iter.UserData()->Shutdown();
-      }
-
-      // This makes videoDevicesForThisWindow invalid.
-      mVideoSources.Remove(aWindowId);
-    }
-  }
-}
-
-namespace {
-template <typename T>
-void ShutdownSources(T& aHashTable) {
-  for (auto iter = aHashTable.Iter(); !iter.Done(); iter.Next()) {
-    for (auto iterInner = iter.UserData()->Iter(); !iterInner.Done();
-         iterInner.Next()) {
-      MediaEngineSource* source = iterInner.UserData();
-      source->Shutdown();
-    }
-  }
-}
-}  // namespace
-
 void MediaEngineWebRTC::Shutdown() {
-||||||| merged common ancestors
-void
-MediaEngineWebRTC::ReleaseResourcesForWindow(uint64_t aWindowId)
-{
-  {
-    nsRefPtrHashtable<nsStringHashKey, MediaEngineSource>*
-      audioDevicesForThisWindow = mAudioSources.Get(aWindowId);
-
-    if (audioDevicesForThisWindow) {
-      for (auto iter = audioDevicesForThisWindow->Iter(); !iter.Done();
-           iter.Next()) {
-        iter.UserData()->Shutdown();
-      }
-
-      // This makes audioDevicesForThisWindow invalid.
-      mAudioSources.Remove(aWindowId);
-    }
-  }
-
-  {
-    nsRefPtrHashtable<nsStringHashKey, MediaEngineSource>*
-      videoDevicesForThisWindow = mVideoSources.Get(aWindowId);
-    if (videoDevicesForThisWindow) {
-      for (auto iter = videoDevicesForThisWindow->Iter(); !iter.Done();
-           iter.Next()) {
-        iter.UserData()->Shutdown();
-      }
-
-      // This makes videoDevicesForThisWindow invalid.
-      mVideoSources.Remove(aWindowId);
-    }
-  }
-}
-
-namespace {
-template<typename T>
-void ShutdownSources(T& aHashTable)
-{
-  for (auto iter = aHashTable.Iter(); !iter.Done(); iter.Next()) {
-    for (auto iterInner = iter.UserData()->Iter(); !iterInner.Done();
-         iterInner.Next()) {
-      MediaEngineSource* source = iterInner.UserData();
-      source->Shutdown();
-    }
-  }
-}
-}
-
-void
-MediaEngineWebRTC::Shutdown()
-{
-=======
-void MediaEngineWebRTC::Shutdown() {
->>>>>>> upstream-releases
   // This is likely paranoia
   MutexAutoLock lock(mMutex);
 

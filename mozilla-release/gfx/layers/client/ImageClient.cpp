@@ -39,22 +39,10 @@ namespace layers {
 
 using namespace mozilla::gfx;
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ImageClient> ImageClient::CreateImageClient(
-    CompositableType aCompositableHostType, CompositableForwarder* aForwarder,
-    TextureFlags aFlags) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ImageClient>
-ImageClient::CreateImageClient(CompositableType aCompositableHostType,
-                               CompositableForwarder* aForwarder,
-                               TextureFlags aFlags)
-{
-=======
 /* static */
 already_AddRefed<ImageClient> ImageClient::CreateImageClient(
     CompositableType aCompositableHostType, CompositableForwarder* aForwarder,
     TextureFlags aFlags) {
->>>>>>> upstream-releases
   RefPtr<ImageClient> result = nullptr;
   switch (aCompositableHostType) {
     case CompositableType::IMAGE:
@@ -76,19 +64,9 @@ already_AddRefed<ImageClient> ImageClient::CreateImageClient(
   return result.forget();
 }
 
-<<<<<<< HEAD
-void ImageClient::RemoveTexture(TextureClient* aTexture) {
-  GetForwarder()->RemoveTextureFromCompositable(this, aTexture);
-||||||| merged common ancestors
-void
-ImageClient::RemoveTexture(TextureClient* aTexture)
-{
-  GetForwarder()->RemoveTextureFromCompositable(this, aTexture);
-=======
 void ImageClient::RemoveTexture(TextureClient* aTexture,
                                 const Maybe<wr::RenderRoot>& aRenderRoot) {
   GetForwarder()->RemoveTextureFromCompositable(this, aTexture, aRenderRoot);
->>>>>>> upstream-releases
 }
 
 ImageClientSingle::ImageClientSingle(CompositableForwarder* aFwd,
@@ -111,19 +89,9 @@ void ImageClientSingle::FlushAllImages() {
   mBuffers.Clear();
 }
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<TextureClient>
-ImageClient::CreateTextureClientForImage(Image* aImage,
-                                         KnowsCompositor* aForwarder) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<TextureClient>
-ImageClient::CreateTextureClientForImage(Image* aImage, KnowsCompositor* aForwarder)
-{
-=======
 /* static */
 already_AddRefed<TextureClient> ImageClient::CreateTextureClientForImage(
     Image* aImage, KnowsCompositor* aKnowsCompositor) {
->>>>>>> upstream-releases
   RefPtr<TextureClient> texture;
   if (aImage->GetFormat() == ImageFormat::PLANAR_YCBCR) {
     PlanarYCbCrImage* ycbcr = static_cast<PlanarYCbCrImage*>(aImage);
@@ -131,25 +99,10 @@ already_AddRefed<TextureClient> ImageClient::CreateTextureClientForImage(
     if (!data) {
       return nullptr;
     }
-<<<<<<< HEAD
-    texture = TextureClient::CreateForYCbCr(
-        aForwarder, data->mYSize, data->mYStride, data->mCbCrSize,
-        data->mCbCrStride, data->mStereoMode, data->mColorDepth,
-        data->mYUVColorSpace, TextureFlags::DEFAULT);
-||||||| merged common ancestors
-    texture = TextureClient::CreateForYCbCr(aForwarder,
-                                            data->mYSize, data->mYStride,
-                                            data->mCbCrSize, data->mCbCrStride,
-                                            data->mStereoMode,
-                                            data->mColorDepth,
-                                            data->mYUVColorSpace,
-                                            TextureFlags::DEFAULT);
-=======
     texture = TextureClient::CreateForYCbCr(
         aKnowsCompositor, data->mYSize, data->mYStride, data->mCbCrSize,
         data->mCbCrStride, data->mStereoMode, data->mColorDepth,
         data->mYUVColorSpace, TextureFlags::DEFAULT);
->>>>>>> upstream-releases
     if (!texture) {
       return nullptr;
     }
@@ -169,34 +122,16 @@ already_AddRefed<TextureClient> ImageClient::CreateTextureClientForImage(
     gfx::IntSize size = aImage->GetSize();
     SurfaceTextureImage* typedImage = aImage->AsSurfaceTextureImage();
     texture = AndroidSurfaceTextureData::CreateTextureClient(
-<<<<<<< HEAD
-        typedImage->GetHandle(), size, typedImage->GetContinuous(),
-        typedImage->GetOriginPos(), aForwarder->GetTextureForwarder(),
-        TextureFlags::DEFAULT);
-||||||| merged common ancestors
-      typedImage->GetHandle(), size, typedImage->GetContinuous(), typedImage->GetOriginPos(),
-      aForwarder->GetTextureForwarder(), TextureFlags::DEFAULT);
-=======
         typedImage->GetHandle(), size, typedImage->GetContinuous(),
         typedImage->GetOriginPos(), typedImage->GetHasAlpha(),
         aKnowsCompositor->GetTextureForwarder(), TextureFlags::DEFAULT);
->>>>>>> upstream-releases
 #endif
   } else {
     RefPtr<gfx::SourceSurface> surface = aImage->GetAsSourceSurface();
     MOZ_ASSERT(surface);
-<<<<<<< HEAD
-    texture = TextureClient::CreateForDrawing(
-        aForwarder, surface->GetFormat(), aImage->GetSize(),
-        BackendSelector::Content, TextureFlags::DEFAULT);
-||||||| merged common ancestors
-    texture = TextureClient::CreateForDrawing(aForwarder, surface->GetFormat(), aImage->GetSize(),
-                                              BackendSelector::Content, TextureFlags::DEFAULT);
-=======
     texture = TextureClient::CreateForDrawing(
         aKnowsCompositor, surface->GetFormat(), aImage->GetSize(),
         BackendSelector::Content, TextureFlags::DEFAULT);
->>>>>>> upstream-releases
     if (!texture) {
       return nullptr;
     }
@@ -226,21 +161,10 @@ already_AddRefed<TextureClient> ImageClient::CreateTextureClientForImage(
   return texture.forget();
 }
 
-<<<<<<< HEAD
-bool ImageClientSingle::UpdateImage(ImageContainer* aContainer,
-                                    uint32_t aContentFlags) {
-  AutoTArray<ImageContainer::OwningImage, 4> images;
-||||||| merged common ancestors
-bool
-ImageClientSingle::UpdateImage(ImageContainer* aContainer, uint32_t aContentFlags)
-{
-  AutoTArray<ImageContainer::OwningImage,4> images;
-=======
 bool ImageClientSingle::UpdateImage(ImageContainer* aContainer,
                                     uint32_t aContentFlags,
                                     const Maybe<wr::RenderRoot>& aRenderRoot) {
   AutoTArray<ImageContainer::OwningImage, 4> images;
->>>>>>> upstream-releases
   uint32_t generationCounter;
   aContainer->GetCurrentImages(&images, &generationCounter);
 
@@ -362,18 +286,9 @@ ImageClientBridge::ImageClientBridge(CompositableForwarder* aFwd,
                                      TextureFlags aFlags)
     : ImageClient(aFwd, aFlags, CompositableType::IMAGE_BRIDGE) {}
 
-<<<<<<< HEAD
-bool ImageClientBridge::UpdateImage(ImageContainer* aContainer,
-                                    uint32_t aContentFlags) {
-||||||| merged common ancestors
-bool
-ImageClientBridge::UpdateImage(ImageContainer* aContainer, uint32_t aContentFlags)
-{
-=======
 bool ImageClientBridge::UpdateImage(ImageContainer* aContainer,
                                     uint32_t aContentFlags,
                                     const Maybe<wr::RenderRoot>& aRenderRoot) {
->>>>>>> upstream-releases
   if (!GetForwarder() || !mLayer) {
     return false;
   }

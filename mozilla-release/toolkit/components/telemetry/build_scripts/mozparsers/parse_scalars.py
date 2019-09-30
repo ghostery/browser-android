@@ -120,13 +120,8 @@ class ScalarType:
             'notification_emails': basestring,
             'record_in_processes': basestring,
             'products': basestring,
-<<<<<<< HEAD
-            'record_into_store': basestring,
-||||||| merged common ancestors
-=======
             'operating_systems': basestring,
             'record_into_store': basestring,
->>>>>>> upstream-releases
         }
 
         # Concatenate the required and optional field definitions.
@@ -351,11 +346,6 @@ class ScalarType:
             return True
 
         return canonical_os in os
-
-    @property
-    def record_into_store(self):
-        """Get the list of stores this probe should be recorded into"""
-        return self._definition.get('record_into_store', ['main'])
 
     @property
     def record_into_store(self):

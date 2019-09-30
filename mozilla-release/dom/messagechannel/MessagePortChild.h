@@ -16,19 +16,10 @@ namespace dom {
 
 class MessagePort;
 
-<<<<<<< HEAD
-class MessagePortChild final : public PMessagePortChild {
- public:
-||||||| merged common ancestors
-class MessagePortChild final : public PMessagePortChild
-{
-public:
-=======
 class MessagePortChild final : public PMessagePortChild {
   friend class PMessagePortChild;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_REFCOUNTING(MessagePortChild)
 
   MessagePortChild();
@@ -38,27 +29,11 @@ class MessagePortChild final : public PMessagePortChild {
  private:
   ~MessagePortChild() { MOZ_ASSERT(!mPort); }
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvEntangled(
-      nsTArray<ClonedMessageData>&& aMessages) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvEntangled(nsTArray<ClonedMessageData>&& aMessages) override;
-=======
   mozilla::ipc::IPCResult RecvEntangled(
       nsTArray<ClonedMessageData>&& aMessages);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  virtual mozilla::ipc::IPCResult RecvReceiveData(
-      nsTArray<ClonedMessageData>&& aMessages) override;
-||||||| merged common ancestors
-  virtual mozilla::ipc::IPCResult
-  RecvReceiveData(nsTArray<ClonedMessageData>&& aMessages) override;
-=======
   mozilla::ipc::IPCResult RecvReceiveData(
       nsTArray<ClonedMessageData>&& aMessages);
->>>>>>> upstream-releases
 
   mozilla::ipc::IPCResult RecvStopSendingDataConfirmed();
 

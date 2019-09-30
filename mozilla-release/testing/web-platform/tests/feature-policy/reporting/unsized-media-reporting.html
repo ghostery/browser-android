@@ -11,16 +11,8 @@ var check_report_format = (reports, observer) => {
   let report = reports[0];
   assert_equals(report.type, "feature-policy-violation");
   assert_equals(report.url, document.location.href);
-<<<<<<< HEAD
-  assert_equals(report.body.featureId, "unsized-media");
-  assert_equals(typeof report.body.message, "string");
-||||||| merged common ancestors
-  assert_equals(report.body.feature, "unsized-media");
-  assert_equals(typeof report.body.message, "string");
-=======
   assert_equals(report.body.featureId, "unsized-media");
   assert_equals(report.body.disposition, "enforce");
->>>>>>> upstream-releases
 };
 
 async_test(t => {

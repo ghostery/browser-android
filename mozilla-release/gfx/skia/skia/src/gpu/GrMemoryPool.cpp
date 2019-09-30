@@ -11,7 +11,6 @@
 #ifdef SK_DEBUG
     #include <atomic>
 #endif
-#include "ops/GrOp.h"
 
 #ifdef SK_DEBUG
     #define VALIDATE this->validate()

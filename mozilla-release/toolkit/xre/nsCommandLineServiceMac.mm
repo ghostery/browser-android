@@ -19,19 +19,9 @@ static bool sBuildingCommandLine = false;
 void AddToCommandLine(const char* inArgText) {
   if (sArgsUsed >= sArgsAllocated - 1) {
     // realloc does not free the given pointer if allocation fails
-<<<<<<< HEAD:mozilla-release/toolkit/xre/nsCommandLineServiceMac.cpp
-    char** temp = static_cast<char**>(
-        realloc(sArgs, (sArgsAllocated + kArgsGrowSize) * sizeof(char*)));
-    if (!temp) return;
-||||||| merged common ancestors
-    char **temp = static_cast<char**>(realloc(sArgs, (sArgsAllocated + kArgsGrowSize) * sizeof(char*)));
-    if (!temp)
-      return;
-=======
     char** temp =
         static_cast<char**>(realloc(sArgs, (sArgsAllocated + kArgsGrowSize) * sizeof(char*)));
     if (!temp) return;
->>>>>>> upstream-releases:mozilla-release/toolkit/xre/nsCommandLineServiceMac.mm
     sArgs = temp;
     sArgsAllocated += kArgsGrowSize;
   }
@@ -45,23 +35,11 @@ void AddToCommandLine(const char* inArgText) {
   return;
 }
 
-<<<<<<< HEAD:mozilla-release/toolkit/xre/nsCommandLineServiceMac.cpp
-void SetupMacCommandLine(int& argc, char**& argv, bool forRestart) {
-  sArgs = static_cast<char**>(malloc(kArgsGrowSize * sizeof(char*)));
-  if (!sArgs) return;
-||||||| merged common ancestors
-void SetupMacCommandLine(int& argc, char**& argv, bool forRestart)
-{
-  sArgs = static_cast<char **>(malloc(kArgsGrowSize * sizeof(char*)));
-  if (!sArgs)
-    return;
-=======
 // Caller has ownership of argv and is responsible for freeing the allocated
 // memory.
 void SetupMacCommandLine(int& argc, char**& argv, bool forRestart) {
   sArgs = static_cast<char**>(malloc(kArgsGrowSize * sizeof(char*)));
   if (!sArgs) return;
->>>>>>> upstream-releases:mozilla-release/toolkit/xre/nsCommandLineServiceMac.mm
   sArgsAllocated = kArgsGrowSize;
   sArgs[0] = nullptr;
   sArgsUsed = 0;

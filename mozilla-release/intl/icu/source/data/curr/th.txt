@@ -1248,6 +1248,7 @@ th{
         SHP{"£"}
         SSP{"£"}
         SYP{"£"}
+        THB{"฿"}
         TOP{"T$"}
         TWD{"NT$"}
         UAH{"₴"}
@@ -1761,11 +1762,5 @@ th{
     CurrencyUnitPatterns{
         other{"{0} {1}"}
     }
-<<<<<<< HEAD
-    Version{"2.1.43.89"}
-||||||| merged common ancestors
-    Version{"2.1.41.97"}
-=======
     Version{"2.1.49.82"}
->>>>>>> upstream-releases
 }

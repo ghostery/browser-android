@@ -192,31 +192,14 @@ Request::Request(nsIPrincipal* aPrincipal) : RequestBase(aPrincipal) {
   MOZ_ASSERT(aPrincipal);
 }
 
-<<<<<<< HEAD
-Request::~Request() { AssertIsOnOwningThread(); }
-||||||| merged common ancestors
-Request::~Request()
-{
-  AssertIsOnOwningThread();
-}
-=======
 Request::Request(nsIQuotaCallback* aCallback) : mCallback(aCallback) {
   AssertIsOnOwningThread();
   MOZ_ASSERT(aCallback);
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-void Request::SetResult(nsIVariant* aResult) {
-||||||| merged common ancestors
-void
-Request::SetResult(nsIVariant* aResult)
-{
-=======
 Request::~Request() { AssertIsOnOwningThread(); }
 
 void Request::SetResult(nsIVariant* aResult) {
->>>>>>> upstream-releases
   AssertIsOnOwningThread();
   MOZ_ASSERT(aResult);
   MOZ_ASSERT(!mHaveResultOrErrorCode);

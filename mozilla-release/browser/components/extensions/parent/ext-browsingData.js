@@ -108,42 +108,11 @@ const clearIndexedDB = async function(options) {
   await new Promise((resolve, reject) => {
     quotaManagerService.getUsage(request => {
       if (request.resultCode != Cr.NS_OK) {
-<<<<<<< HEAD
-        reject({message: "Clear indexedDB failed"});
-||||||| merged common ancestors
-        // We are probably shutting down. We don't want to propagate the error,
-        // rejecting the promise.
-        resolve();
-=======
         reject({ message: "Clear indexedDB failed" });
->>>>>>> upstream-releases
         return;
       }
 
       for (let item of request.result) {
-<<<<<<< HEAD
-        let principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(item.origin);
-        let scheme = principal.URI.scheme;
-        if (scheme == "http" || scheme == "https" || scheme == "file") {
-          promises.push(new Promise((resolve, reject) => {
-            let clearRequest = quotaManagerService.clearStoragesForPrincipal(principal, null, "idb");
-            clearRequest.callback = () => {
-              if (clearRequest.resultCode == Cr.NS_OK) {
-                resolve();
-              } else {
-                reject({message: "Clear indexedDB failed"});
-              }
-            };
-          }));
-||||||| merged common ancestors
-        let principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(item.origin);
-        let uri = principal.URI;
-        if (uri.scheme == "http" || uri.scheme == "https" || uri.scheme == "file") {
-          promises.push(new Promise(r => {
-            let req = quotaManagerService.clearStoragesForPrincipal(principal, null, false);
-            req.callback = () => { r(); };
-          }));
-=======
         let principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(
           item.origin
         );
@@ -165,7 +134,6 @@ const clearIndexedDB = async function(options) {
               };
             })
           );
->>>>>>> upstream-releases
         }
       }
 
@@ -182,54 +150,10 @@ const clearLocalStorage = async function(options) {
       message: "Firefox does not support clearing localStorage with 'since'.",
     });
   }
-<<<<<<< HEAD
-
-  if (Services.lsm.nextGenLocalStorageEnabled) {
-    // Ideally we could reuse the logic in Sanitizer.jsm or nsIClearDataService,
-    // but this API exposes an ability to wipe data at a much finger granularity
-    // than those APIs.  So custom logic is used here to wipe only the QM
-    // localStorage client (when in use).
-
-    let promises = [];
-
-    await new Promise((resolve, reject) => {
-      quotaManagerService.getUsage(request => {
-        if (request.resultCode != Cr.NS_OK) {
-          reject({message: "Clear localStorage failed"});
-          return;
-        }
-
-        for (let item of request.result) {
-          let principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(item.origin);
-          let host = principal.URI.hostPort;
-          if (!options.hostnames || options.hostnames.includes(host)) {
-            promises.push(new Promise((resolve, reject) => {
-              let clearRequest = quotaManagerService.clearStoragesForPrincipal(principal, "default", "ls");
-              clearRequest.callback = () => {
-                if (clearRequest.resultCode == Cr.NS_OK) {
-                  resolve();
-                } else {
-                  reject({message: "Clear localStorage failed"});
-                }
-              };
-            }));
-          }
-        }
-
-        resolve();
-      });
-    });
-
-    return Promise.all(promises);
-  }
-
-||||||| merged common ancestors
-=======
 
   // The legacy LocalStorage implementation that will eventually be removed
   // depends on this observer notification.  Some other subsystems like
   // Reporting headers depend on this too.
->>>>>>> upstream-releases
   if (options.hostnames) {
     for (let hostname of options.hostnames) {
       Services.obs.notifyObservers(

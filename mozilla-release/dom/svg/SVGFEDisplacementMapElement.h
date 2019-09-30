@@ -16,41 +16,6 @@ nsresult NS_NewSVGFEDisplacementMapElement(
 namespace mozilla {
 namespace dom {
 
-<<<<<<< HEAD
-typedef nsSVGFE SVGFEDisplacementMapElementBase;
-
-class SVGFEDisplacementMapElement : public SVGFEDisplacementMapElementBase {
- protected:
-  friend nsresult(::NS_NewSVGFEDisplacementMapElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-  explicit SVGFEDisplacementMapElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-      : SVGFEDisplacementMapElementBase(std::move(aNodeInfo)) {}
-  virtual JSObject* WrapNode(JSContext* aCx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-
- public:
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
-                                         nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override {
-    return mStringAttributes[RESULT];
-||||||| merged common ancestors
-typedef nsSVGFE SVGFEDisplacementMapElementBase;
-
-class SVGFEDisplacementMapElement : public SVGFEDisplacementMapElementBase
-{
-protected:
-  friend nsresult (::NS_NewSVGFEDisplacementMapElement(nsIContent **aResult,
-                                                       already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-  explicit SVGFEDisplacementMapElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGFEDisplacementMapElementBase(std::move(aNodeInfo))
-  {
-=======
 typedef SVGFE SVGFEDisplacementMapElementBase;
 
 class SVGFEDisplacementMapElement : public SVGFEDisplacementMapElementBase {
@@ -73,27 +38,8 @@ class SVGFEDisplacementMapElement : public SVGFEDisplacementMapElementBase {
                                          nsAtom* aAttribute) const override;
   virtual SVGAnimatedString& GetResultImageName() override {
     return mStringAttributes[RESULT];
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  virtual void GetSourceImageNames(
-      nsTArray<nsSVGStringInfo>& aSources) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-public:
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(
-          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
-  virtual void GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources) override;
-=======
   virtual void GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) override;
->>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 

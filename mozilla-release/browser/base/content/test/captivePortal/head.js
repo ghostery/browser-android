@@ -119,18 +119,6 @@ function ensurePortalTab(win) {
 }
 
 function ensurePortalNotification(win) {
-<<<<<<< HEAD
-  let notification = win.gHighPriorityNotificationBox.getNotificationWithValue(
-                                                  PORTAL_NOTIFICATION_VALUE);
-  isnot(notification, null,
-    "There should be a captive portal notification in the window.");
-||||||| merged common ancestors
-  let notificationBox =
-    win.document.getElementById("high-priority-global-notificationbox");
-  let notification = notificationBox.getNotificationWithValue(PORTAL_NOTIFICATION_VALUE);
-  isnot(notification, null,
-    "There should be a captive portal notification in the window.");
-=======
   let notification = win.gHighPriorityNotificationBox.getNotificationWithValue(
     PORTAL_NOTIFICATION_VALUE
   );
@@ -139,7 +127,6 @@ function ensurePortalNotification(win) {
     null,
     "There should be a captive portal notification in the window."
   );
->>>>>>> upstream-releases
   return notification;
 }
 
@@ -167,16 +154,6 @@ function ensureNoPortalTab(win) {
 }
 
 function ensureNoPortalNotification(win) {
-<<<<<<< HEAD
-  is(win.gHighPriorityNotificationBox
-    .getNotificationWithValue(PORTAL_NOTIFICATION_VALUE), null,
-    "There should be no captive portal notification in the window.");
-||||||| merged common ancestors
-  let notificationBox =
-    win.document.getElementById("high-priority-global-notificationbox");
-  is(notificationBox.getNotificationWithValue(PORTAL_NOTIFICATION_VALUE), null,
-    "There should be no captive portal notification in the window.");
-=======
   is(
     win.gHighPriorityNotificationBox.getNotificationWithValue(
       PORTAL_NOTIFICATION_VALUE
@@ -184,7 +161,6 @@ function ensureNoPortalNotification(win) {
     null,
     "There should be no captive portal notification in the window."
   );
->>>>>>> upstream-releases
 }
 
 /**

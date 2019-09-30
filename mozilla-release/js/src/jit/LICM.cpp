@@ -61,38 +61,12 @@ static bool IsInLoop(MDefinition* ins) { return ins->block()->isMarked(); }
 
 // Test whether the given instruction is cheap and not worth hoisting unless
 // one of its users will be hoisted as well.
-<<<<<<< HEAD
-static bool RequiresHoistedUse(const MDefinition* ins, bool hasCalls) {
-  if (ins->isConstantElements()) {
-    return true;
-  }
-
-  if (ins->isBox()) {
-    MOZ_ASSERT(!ins->toBox()->input()->isBox(),
-               "Box of a box could lead to unbounded recursion");
-    return true;
-  }
-||||||| merged common ancestors
-static bool
-RequiresHoistedUse(const MDefinition* ins, bool hasCalls)
-{
-    if (ins->isConstantElements()) {
-        return true;
-    }
-
-    if (ins->isBox()) {
-        MOZ_ASSERT(!ins->toBox()->input()->isBox(),
-                "Box of a box could lead to unbounded recursion");
-        return true;
-    }
-=======
 static bool RequiresHoistedUse(const MDefinition* ins, bool hasCalls) {
   if (ins->isBox()) {
     MOZ_ASSERT(!ins->toBox()->input()->isBox(),
                "Box of a box could lead to unbounded recursion");
     return true;
   }
->>>>>>> upstream-releases
 
   // Integer constants are usually cheap and aren't worth hoisting on their
   // own, in general. Floating-point constants typically are worth hoisting,

@@ -435,22 +435,10 @@ Type SPIRVCodeGenerator::getActualType(const Type& type) {
     if (type.isFloat()) {
         return *fContext.fFloat_Type;
     }
-<<<<<<< HEAD
-    if (type == *fContext.fShort_Type || type == *fContext.fByte_Type) {
-||||||| merged common ancestors
-    if (type == *fContext.fShort_Type) {
-=======
     if (type.isSigned()) {
->>>>>>> upstream-releases
         return *fContext.fInt_Type;
     }
-<<<<<<< HEAD
-    if (type == *fContext.fUShort_Type || type == *fContext.fUByte_Type) {
-||||||| merged common ancestors
-    if (type == *fContext.fUShort_Type) {
-=======
     if (type.isUnsigned()) {
->>>>>>> upstream-releases
         return *fContext.fUInt_Type;
     }
     if (type.kind() == Type::kMatrix_Kind || type.kind() == Type::kVector_Kind) {
@@ -1771,16 +1759,8 @@ SpvId SPIRVCodeGenerator::writeVariableReference(const VariableReference& ref, O
             fRTHeightStructId = this->writeInterfaceBlock(intf);
             fRTHeightFieldIndex = 0;
         }
-<<<<<<< HEAD
-        SkASSERT(fRTHeightFieldIndex != (SpvId) -1);
-        // write float4(gl_FragCoord.x, u_skRTHeight - gl_FragCoord.y, 0.0, 1.0)
-||||||| merged common ancestors
-        ASSERT(fRTHeightFieldIndex != (SpvId) -1);
-        // write float4(gl_FragCoord.x, u_skRTHeight - gl_FragCoord.y, 0.0, 1.0)
-=======
         SkASSERT(fRTHeightFieldIndex != (SpvId) -1);
         // write float4(gl_FragCoord.x, u_skRTHeight - gl_FragCoord.y, 0.0, gl_FragCoord.w)
->>>>>>> upstream-releases
         SpvId xId = this->nextId();
         this->writeInstruction(SpvOpCompositeExtract, this->getType(*fContext.fFloat_Type), xId,
                                result, 0, out);
@@ -2116,7 +2096,6 @@ SpvId SPIRVCodeGenerator::writeBinaryExpression(const BinaryExpression& b, Outpu
         case Token::EQEQ: {
             if (operandType->kind() == Type::kMatrix_Kind) {
                 return this->writeMatrixComparison(*operandType, lhs, rhs, SpvOpFOrdEqual,
-<<<<<<< HEAD
                                                    SpvOpIEqual, SpvOpAll, SpvOpLogicalAnd, out);
             }
             SkASSERT(resultType == *fContext.fBool_Type);
@@ -2127,29 +2106,8 @@ SpvId SPIRVCodeGenerator::writeBinaryExpression(const BinaryExpression& b, Outpu
                                                            operandType->rows());
             } else {
                 tmpType = &resultType;
-||||||| merged common ancestors
-                                                   SpvOpIEqual, out);
-=======
-                                                   SpvOpIEqual, SpvOpAll, SpvOpLogicalAnd, out);
->>>>>>> upstream-releases
-            }
-<<<<<<< HEAD
-            return this->foldToBool(this->writeBinaryOperation(*tmpType, *operandType, lhs, rhs,
-||||||| merged common ancestors
-            ASSERT(resultType == *fContext.fBool_Type);
-            return this->foldToBool(this->writeBinaryOperation(resultType, *operandType, lhs, rhs,
-=======
-            SkASSERT(resultType == *fContext.fBool_Type);
-            const Type* tmpType;
-            if (operandType->kind() == Type::kVector_Kind) {
-                tmpType = &fContext.fBool_Type->toCompound(fContext,
-                                                           operandType->columns(),
-                                                           operandType->rows());
-            } else {
-                tmpType = &resultType;
             }
             return this->foldToBool(this->writeBinaryOperation(*tmpType, *operandType, lhs, rhs,
->>>>>>> upstream-releases
                                                                SpvOpFOrdEqual, SpvOpIEqual,
                                                                SpvOpIEqual, SpvOpLogicalEqual, out),
                                     *operandType, SpvOpAll, out);
@@ -2572,12 +2530,6 @@ SpvId SPIRVCodeGenerator::writeFloatLiteral(const FloatLiteral& f) {
         }
         return entry->second;
     } else {
-<<<<<<< HEAD
-        SkASSERT(f.fType == *fContext.fDouble_Type);
-||||||| merged common ancestors
-        ASSERT(f.fType == *fContext.fDouble_Type);
-=======
->>>>>>> upstream-releases
         auto entry = fDoubleConstants.find(f.fValue);
         if (entry == fDoubleConstants.end()) {
             SpvId result = this->nextId();

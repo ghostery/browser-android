@@ -66,13 +66,6 @@ It is augmented as it progresses through the system, with various information:
     searchString; // {string} The user typed string.
     userContextId; // {integer} The user context ID (containers feature).
 
-<<<<<<< HEAD
-    // Optional properties.
-    muxer; // Name of a registered muxer. Muxers can be registered through the
-           // UrlbarProvidersManager
-
-||||||| merged common ancestors
-=======
     // Optional properties.
     muxer; // {string} Name of a registered muxer. Muxers can be registered
            // through the UrlbarProvidersManager.
@@ -81,23 +74,13 @@ It is augmented as it progresses through the system, with various information:
     sources; // {array} If provided is the list of sources, as defined by
              // RESULT_SOURCE.*, that can be returned by the model.
 
->>>>>>> upstream-releases
     // Properties added by the Model.
     preselected; // {boolean} whether the first result should be preselected.
     results; // {array} list of UrlbarResult objects.
     tokens; // {array} tokens extracted from the searchString, each token is an
-<<<<<<< HEAD
-            // object in the form {type, value}.
-    results; // {array} list of UrlbarMatch objects.
-    preselected; // {boolean} whether the first match should be preselected.
-    autofill; // {boolean} whether the first match is an autofill match.
-||||||| merged common ancestors
-            // object in the form {type, value}.
-=======
             // object in the form {type, value, lowerCaseValue}.
     acceptableSources; // {array} list of UrlbarUtils.RESULT_SOURCE that the
                        // model will accept for this context.
->>>>>>> upstream-releases
   }
 
 
@@ -115,21 +98,10 @@ startup and can register/unregister providers on the fly.
 It can manage multiple concurrent queries, and tracks them internally as
 separate *Query* objects.
 
-<<<<<<< HEAD
-The *Controller* starts and stops queries through the *UrlbarProvidersManager*.
-It's possible to wait for the promise returned by *startQuery* to know when no
-more matches will be returned, it is not mandatory though.
-Queries can be canceled.
-||||||| merged common ancestors
-The *Controller* starts and stops queries through the *ProvidersManager*. It's
-possible to wait for the promise returned by *startQuery* to know when no more
-matches will be returned, it is not mandatory though. Queries can be canceled.
-=======
 The *Controller* starts and stops queries through the *UrlbarProvidersManager*.
 It's possible to wait for the promise returned by *startQuery* to know when no
 more results will be returned, it is not mandatory though.
 Queries can be canceled.
->>>>>>> upstream-releases
 
 .. note::
 
@@ -184,29 +156,6 @@ implementation details may vary deeply among different providers.
 .. highlight:: JavaScript
 .. code::
 
-<<<<<<< HEAD
-  UrlbarProvider {
-    name; // {string} A simple name to track the provider.
-    type; // {integer} One of UrlbarUtils.PROVIDER_TYPE.
-    sources; // {array} List of UrlbarUtils.MATCH_SOURCE, representing the
-             // data sources used by this provider.
-    // The returned promise should be resolved when the provider is done
-    // searching AND returning matches.
-    // Each new UrlbarMatch should be passed to the AddCallback function.
-    async startQuery(QueryContext, AddCallback);
-    // Any cleaning/resetting task should happen here.
-    cancelQuery(QueryContext);
-||||||| merged common ancestors
-  UrlbarProvider {
-    name; // {string} A simple name to track the provider.
-    type; // {integer} One of UrlbarUtils.PROVIDER_TYPE.
-    // The returned promise should be resolved when the provider is done
-    // searching AND returning matches.
-    // Each new UrlbarMatch should be passed to the AddCallback function.
-    async startQuery(QueryContext, AddCallback);
-    // Any cleaning/resetting task should happen here.
-    cancelQuery(QueryContext);
-=======
   class UrlbarProvider {
     /**
      * Unique name for the provider, used by the context to filter on providers.
@@ -266,42 +215,20 @@ implementation details may vary deeply among different providers.
     cancelQuery(queryContext) {
       throw new Error("Trying to access the base class, must be overridden");
     }
->>>>>>> upstream-releases
   }
 
 UrlbarMuxer
 -----------
 
-<<<<<<< HEAD
-The *Muxer* is responsible for sorting matches based on their importance and
-additional rules that depend on the QueryContext. The muxer to use is indicated
-by the QueryContext.muxer property.
-||||||| merged common ancestors
-The *Muxer* is responsible for sorting matches based on their importance and
-additional rules that depend on the QueryContext.
-=======
 The *Muxer* is responsible for sorting results based on their importance and
 additional rules that depend on the UrlbarQueryContext. The muxer to use is
 indicated by the UrlbarQueryContext.muxer property.
->>>>>>> upstream-releases
 
 .. caution::
 
   The Muxer is a replaceable component, as such what is described here is a
   reference for the default View, but may not be valid for other implementations.
 
-<<<<<<< HEAD
-.. highlight:: JavaScript
-.. code:
-
-  UrlbarMuxer {
-    name; // {string} A simple name to track the provider.
-    // Invoked by the ProvidersManager to sort matches.
-    sort(queryContext);
-  }
-||||||| merged common ancestors
-*Content to be written*
-=======
 .. highlight:: JavaScript
 .. code::
 
@@ -323,7 +250,6 @@ indicated by the UrlbarQueryContext.muxer property.
       throw new Error("Trying to access the base class, must be overridden");
     }
   }
->>>>>>> upstream-releases
 
 
 The Controller
@@ -433,13 +359,6 @@ Represents the base *View* implementation, communicates with the *Controller*.
     onQueryStarted(queryContext);
     // Invoked when new results are available.
     onQueryResults(queryContext);
-<<<<<<< HEAD
-    // Invoked when the query has been canceled.
-    onQueryCancelled(queryContext);
-    // Invoked when the query is done.
-    onQueryFinished(queryContext);
-||||||| merged common ancestors
-=======
     // Invoked when the query has been canceled.
     onQueryCancelled(queryContext);
     // Invoked when the query is done. This is invoked in any case, even if the
@@ -448,7 +367,6 @@ Represents the base *View* implementation, communicates with the *Controller*.
     // Invoked when the view context changed, so that cached information about
     // the latest search is no more relevant and can be dropped.
     onViewContextChanged();
->>>>>>> upstream-releases
   }
 
 
@@ -468,23 +386,6 @@ properties, supported by all of the results.
 .. highlight:: JavaScript
 .. code::
 
-<<<<<<< HEAD
-  UrlbarMatch {
-    constructor(matchType, payload);
-
-    type: {integer} One of UrlbarUtils.MATCH_TYPE.
-    source: {integer} One of UrlbarUtils.MATCH_SOURCE.
-    title: {string} A title that may be used as a label for this match.
-    icon: {string} Url of an icon for this match.
-    payload: {object} Object containing properties for the specific MATCH_TYPE.
-||||||| merged common ancestors
-  UrlbarMatch {
-    constructor(matchType, payload);
-
-    // Common properties:
-    url: {string} The url pointed by this match.
-    title: {string} A title that may be used as a label for this match.
-=======
   UrlbarResult {
     constructor(resultType, payload);
 
@@ -499,29 +400,8 @@ properties, supported by all of the results.
     autofill.selectionStart: {integer} The first index in the autofill
                              selection.
     autofill.selectionEnd: {integer} The last index in the autofill selection.
->>>>>>> upstream-releases
   }
 
-<<<<<<< HEAD
-The following MATCH_TYPEs are supported:
-
-.. highlight:: JavaScript
-.. code::
-
-    // Payload: { icon, url, userContextId }
-    TAB_SWITCH: 1,
-    // Payload: { icon, suggestion, keyword, query }
-    SEARCH: 2,
-    // Payload: { icon, url, title, tags }
-    URL: 3,
-    // Payload: { icon, url, keyword, postData }
-    KEYWORD: 4,
-    // Payload: { icon, keyword, title, content }
-    OMNIBOX: 5,
-    // Payload: { icon, url, device, title }
-    REMOTE_TAB: 6,
-||||||| merged common ancestors
-=======
 The following RESULT_TYPEs are supported:
 
 .. highlight:: JavaScript
@@ -540,7 +420,6 @@ The following RESULT_TYPEs are supported:
     // Payload: { icon, url, device, title }
     REMOTE_TAB: 6,
 
->>>>>>> upstream-releases
 
 Shared Modules
 ==============

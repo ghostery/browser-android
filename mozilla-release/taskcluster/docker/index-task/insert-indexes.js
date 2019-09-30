@@ -33,51 +33,6 @@ if (isNaN(rank)) {
 }
 
 // Fetch task definition to get expiration and then insert into index
-<<<<<<< HEAD
-queue.task(taskId).then(task => task.expires).then(expires => {
-  return Promise.all(namespaces.map(namespace => {
-    console.log("Inserting %s into index (rank %d) under: %s", taskId, rank, namespace);
-    return index.insertTask(namespace, {
-      taskId,
-      rank,
-      data: {},
-      expires,
-    });
-  }));
-}).then(() => {
-  console.log("indexing successfully completed.");
-  process.exit(0);
-}).catch(err => {
-  console.log("Error:\n%s", err);
-  if (err.stack) {
-    console.log("Stack:\n%s", err.stack);
-  }
-  console.log("Properties:\n%j", err);
-  throw err;
-}).catch(() => process.exit(1));
-||||||| merged common ancestors
-queue.task(taskId).then(task => task.expires).then(expires => {
-  return Promise.all(namespaces.map(namespace => {
-    console.log("Inserting %s into index under: %s", taskId, namespace);
-    return index.insertTask(namespace, {
-      taskId,
-      rank: 0,
-      data: {},
-      expires,
-    });
-  }));
-}).then(() => {
-  console.log("indexing successfully completed.");
-  process.exit(0);
-}).catch(err => {
-  console.log("Error:\n%s", err);
-  if (err.stack) {
-    console.log("Stack:\n%s", err.stack);
-  }
-  console.log("Properties:\n%j", err);
-  throw err;
-}).catch(() => process.exit(1));
-=======
 queue
   .task(taskId)
   .then(task => task.expires)
@@ -112,4 +67,3 @@ queue
     throw err;
   })
   .catch(() => process.exit(1));
->>>>>>> upstream-releases

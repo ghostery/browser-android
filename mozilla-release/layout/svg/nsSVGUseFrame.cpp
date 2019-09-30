@@ -17,18 +17,8 @@ using namespace mozilla::dom;
 //----------------------------------------------------------------------
 // Implementation
 
-<<<<<<< HEAD
-nsIFrame* NS_NewSVGUseFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle) {
-  return new (aPresShell) nsSVGUseFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewSVGUseFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsSVGUseFrame(aStyle);
-=======
 nsIFrame* NS_NewSVGUseFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell) nsSVGUseFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsSVGUseFrame)
@@ -63,17 +53,8 @@ nsresult nsSVGUseFrame::AttributeChanged(int32_t aNamespaceID,
 void nsSVGUseFrame::PositionAttributeChanged() {
   // make sure our cached transform matrix gets (lazily) updated
   mCanvasTM = nullptr;
-<<<<<<< HEAD
-  nsLayoutUtils::PostRestyleEvent(GetContent()->AsElement(), nsRestyleHint(0),
-                                  nsChangeHint_InvalidateRenderingObservers);
-||||||| merged common ancestors
-  nsLayoutUtils::PostRestyleEvent(
-    GetContent()->AsElement(), nsRestyleHint(0),
-    nsChangeHint_InvalidateRenderingObservers);
-=======
   nsLayoutUtils::PostRestyleEvent(GetContent()->AsElement(), RestyleHint{0},
                                   nsChangeHint_InvalidateRenderingObservers);
->>>>>>> upstream-releases
   nsSVGUtils::ScheduleReflowSVG(this);
   nsSVGUtils::NotifyChildrenOfSVGChange(this, TRANSFORM_CHANGED);
 }
@@ -87,37 +68,15 @@ void nsSVGUseFrame::DimensionAttributeChanged(bool aHadValidDimensions,
   }
 
   if (invalidate) {
-<<<<<<< HEAD
-    nsLayoutUtils::PostRestyleEvent(GetContent()->AsElement(), nsRestyleHint(0),
-                                    nsChangeHint_InvalidateRenderingObservers);
-||||||| merged common ancestors
-    nsLayoutUtils::PostRestyleEvent(
-      GetContent()->AsElement(), nsRestyleHint(0),
-      nsChangeHint_InvalidateRenderingObservers);
-=======
     nsLayoutUtils::PostRestyleEvent(GetContent()->AsElement(), RestyleHint{0},
                                     nsChangeHint_InvalidateRenderingObservers);
->>>>>>> upstream-releases
     nsSVGUtils::ScheduleReflowSVG(this);
   }
 }
 
-<<<<<<< HEAD
-void nsSVGUseFrame::HrefChanged() {
-  nsLayoutUtils::PostRestyleEvent(GetContent()->AsElement(), nsRestyleHint(0),
-                                  nsChangeHint_InvalidateRenderingObservers);
-||||||| merged common ancestors
-void
-nsSVGUseFrame::HrefChanged()
-{
-  nsLayoutUtils::PostRestyleEvent(
-    GetContent()->AsElement(), nsRestyleHint(0),
-    nsChangeHint_InvalidateRenderingObservers);
-=======
 void nsSVGUseFrame::HrefChanged() {
   nsLayoutUtils::PostRestyleEvent(GetContent()->AsElement(), RestyleHint{0},
                                   nsChangeHint_InvalidateRenderingObservers);
->>>>>>> upstream-releases
   nsSVGUtils::ScheduleReflowSVG(this);
 }
 

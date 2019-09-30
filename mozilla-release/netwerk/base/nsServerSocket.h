@@ -33,20 +33,14 @@ class nsServerSocket : public nsASocketHandler, public nsIServerSocket {
   virtual uint64_t ByteCountReceived() override { return 0; }
   nsServerSocket();
 
-  virtual void CreateClientTransport(PRFileDesc *clientFD,
-                                     const mozilla::net::NetAddr &clientAddr);
+  virtual void CreateClientTransport(PRFileDesc* clientFD,
+                                     const mozilla::net::NetAddr& clientAddr);
   virtual nsresult SetSocketDefaults() { return NS_OK; }
   virtual nsresult OnSocketListen() { return NS_OK; }
 
  protected:
   virtual ~nsServerSocket();
-<<<<<<< HEAD
-  PRFileDesc *mFD;
-||||||| merged common ancestors
-  PRFileDesc*                       mFD;
-=======
   PRFileDesc* mFD;
->>>>>>> upstream-releases
   nsCOMPtr<nsIServerSocketListener> mListener;
 
  private:

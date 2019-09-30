@@ -19,28 +19,12 @@
 // These constants are copied from <sys/prctl.h>, because the headers
 // used for building may not have them even though the running kernel
 // supports them.
-<<<<<<< HEAD
-#ifndef PR_SET_VMA
-#define PR_SET_VMA 0x53564d41
-#endif
-#ifndef PR_SET_VMA_ANON_NAME
-#define PR_SET_VMA_ANON_NAME 0
-#endif
-||||||| merged common ancestors
-#ifndef PR_SET_VMA
-#define PR_SET_VMA		0x53564d41
-#endif
-#ifndef PR_SET_VMA_ANON_NAME
-#define PR_SET_VMA_ANON_NAME		0
-#endif
-=======
 #  ifndef PR_SET_VMA
 #    define PR_SET_VMA 0x53564d41
 #  endif
 #  ifndef PR_SET_VMA_ANON_NAME
 #    define PR_SET_VMA_ANON_NAME 0
 #  endif
->>>>>>> upstream-releases
 
 namespace mozilla {
 

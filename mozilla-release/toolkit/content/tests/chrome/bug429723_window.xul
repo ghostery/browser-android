@@ -14,12 +14,7 @@
         title="429723 test">
 
   <script type="application/javascript"><![CDATA[
-<<<<<<< HEAD
-    ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
-||||||| merged common ancestors
-=======
     const {BrowserTestUtils} = ChromeUtils.import("resource://testing-common/BrowserTestUtils.jsm");
->>>>>>> upstream-releases
     var gFindBar = null;
     var gBrowser;
 

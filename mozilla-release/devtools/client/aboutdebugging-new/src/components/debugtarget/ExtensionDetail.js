@@ -14,13 +14,6 @@ const PropTypes = require("devtools/client/shared/vendor/react-prop-types");
 const FluentReact = require("devtools/client/shared/vendor/fluent-react");
 const Localized = createFactory(FluentReact.Localized);
 
-<<<<<<< HEAD
-const FieldPair = createFactory(require("./FieldPair"));
-
-const Types = require("../../types/index");
-
-||||||| merged common ancestors
-=======
 const DetailsLog = createFactory(require("../shared/DetailsLog"));
 const FieldPair = createFactory(require("./FieldPair"));
 const Message = createFactory(require("../shared/Message"));
@@ -28,7 +21,6 @@ const Message = createFactory(require("../shared/Message"));
 const { MESSAGE_LEVEL } = require("../../constants");
 const Types = require("../../types/index");
 
->>>>>>> upstream-releases
 /**
  * This component displays detail information for extension.
  */
@@ -42,47 +34,6 @@ class ExtensionDetail extends PureComponent {
     };
   }
 
-<<<<<<< HEAD
-  renderUUID() {
-    const { target } = this.props;
-    const { manifestURL, uuid } = target.details;
-
-    const value = [
-      uuid,
-      Localized(
-        {
-          id: "about-debugging-extension-manifest-link",
-          key: "manifest",
-        },
-        dom.a(
-||||||| merged common ancestors
-  renderField(key, name, value, title) {
-    return [
-      dom.dt({ key: `${ key }-dt` }, name),
-      dom.dd(
-        {
-          className: "ellipsis-text",
-          key: `${ key }-dd`,
-          title: title || value,
-        },
-        value,
-      ),
-    ];
-  }
-
-  renderUUID() {
-    const { target } = this.props;
-    const { manifestURL, uuid } = target.details;
-
-    const value = [
-      uuid,
-      Localized(
-        {
-          id: "about-debugging-extension-manifest-link",
-          key: "manifest",
-        },
-        dom.a(
-=======
   renderWarnings() {
     const { warnings } = this.props.target.details;
 
@@ -96,7 +47,6 @@ class ExtensionDetail extends PureComponent {
       },
       warnings.map((warning, index) => {
         return Message(
->>>>>>> upstream-releases
           {
             level: MESSAGE_LEVEL.WARNING,
             isCloseable: true,
@@ -118,42 +68,6 @@ class ExtensionDetail extends PureComponent {
     );
   }
 
-<<<<<<< HEAD
-    return Localized(
-      {
-        id: "about-debugging-extension-uuid",
-        attrs: { label: true },
-      },
-      FieldPair(
-        {
-          slug: "uuid",
-          label: "Internal UUID",
-          value,
-        }
-      )
-    );
-  }
-
-  renderLocation() {
-    const { location } = this.props.target.details;
-
-    return Localized(
-      {
-        id: "about-debugging-extension-location",
-        attrs: { label: true },
-      },
-      FieldPair(
-        {
-          slug: "location",
-          label: "Location",
-          value: location,
-        }
-      )
-    );
-||||||| merged common ancestors
-    const uuidName = this.props.getString("about-debugging-extension-uuid");
-    return this.renderField("uuid", uuidName, value, uuid);
-=======
   renderUUID() {
     const { uuid } = this.props.target.details;
     if (!uuid) {
@@ -170,7 +84,6 @@ class ExtensionDetail extends PureComponent {
         value: uuid,
       })
     );
->>>>>>> upstream-releases
   }
 
   renderExtensionId() {
@@ -212,14 +125,6 @@ class ExtensionDetail extends PureComponent {
       return null;
     }
 
-<<<<<<< HEAD
-    return dom.dl(
-||||||| merged common ancestors
-    const locationName = this.props.getString("about-debugging-extension-location");
-    const idName = this.props.getString("about-debugging-extension-id");
-
-    return dom.dl(
-=======
     const link = dom.a(
       {
         className: "qa-manifest-url",
@@ -243,31 +148,9 @@ class ExtensionDetail extends PureComponent {
 
   render() {
     return dom.section(
->>>>>>> upstream-releases
       {
         className: "debug-target-item__detail",
       },
-<<<<<<< HEAD
-      location ? this.renderLocation() : null,
-      Localized(
-        {
-          id: "about-debugging-extension-id",
-          attrs: { label: true },
-        },
-        FieldPair(
-          {
-            slug: "extension",
-            label: "Extension ID",
-            value: id,
-          }
-        )
-      ),
-      uuid ? this.renderUUID() : null,
-||||||| merged common ancestors
-      location ? this.renderField("location", locationName, location) : null,
-      this.renderField("extension", idName, id),
-      uuid ? this.renderUUID() : null,
-=======
       this.renderWarnings(),
       dom.dl(
         {},
@@ -277,7 +160,6 @@ class ExtensionDetail extends PureComponent {
         this.renderManifest(),
         this.props.children
       )
->>>>>>> upstream-releases
     );
   }
 }

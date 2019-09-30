@@ -311,32 +311,15 @@ add_task(async function() {
   // inbetween, so it's possible for the timeout to run before the
   // navbar has "settled"
   await waitForCondition(() => {
-<<<<<<< HEAD
-    return navbar.hasAttribute("overflowing") &&
-      CustomizableUI.getCustomizationTarget(navbar).lastElementChild.getAttribute("overflows") == "false";
-||||||| merged common ancestors
-    return navbar.hasAttribute("overflowing") &&
-      navbar.customizationTarget.lastElementChild.getAttribute("overflows") == "false";
-=======
     return (
       navbar.hasAttribute("overflowing") &&
       CustomizableUI.getCustomizationTarget(
         navbar
       ).lastElementChild.getAttribute("overflows") == "false"
     );
->>>>>>> upstream-releases
   });
 
   // Find last widget that doesn't allow overflowing
-<<<<<<< HEAD
-  let nonOverflowing = CustomizableUI.getCustomizationTarget(navbar).lastElementChild;
-  is(nonOverflowing.getAttribute("overflows"), "false", "Last child is expected to not allow overflowing");
-  isnot(nonOverflowing.getAttribute("skipintoolbarset"), "true", "Last child is expected to not be skipintoolbarset");
-||||||| merged common ancestors
-  let nonOverflowing = navbar.customizationTarget.lastElementChild;
-  is(nonOverflowing.getAttribute("overflows"), "false", "Last child is expected to not allow overflowing");
-  isnot(nonOverflowing.getAttribute("skipintoolbarset"), "true", "Last child is expected to not be skipintoolbarset");
-=======
   let nonOverflowing = CustomizableUI.getCustomizationTarget(navbar)
     .lastElementChild;
   is(
@@ -349,7 +332,6 @@ add_task(async function() {
     "true",
     "Last child is expected to not be skipintoolbarset"
   );
->>>>>>> upstream-releases
 
   let testWidgetId = kTestWidgetPrefix + 10;
   CustomizableUI.destroyWidget(testWidgetId);

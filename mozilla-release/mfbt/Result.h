@@ -46,16 +46,8 @@ template <typename V, typename E>
 class ResultImplementation<V, E, PackingStrategy::Variant> {
   mozilla::Variant<V, E> mStorage;
 
-<<<<<<< HEAD
- public:
-  explicit ResultImplementation(V aValue) : mStorage(aValue) {}
-||||||| merged common ancestors
-public:
-  explicit ResultImplementation(V aValue) : mStorage(aValue) {}
-=======
  public:
   explicit ResultImplementation(const V& aValue) : mStorage(aValue) {}
->>>>>>> upstream-releases
   explicit ResultImplementation(E aErrorValue) : mStorage(aErrorValue) {}
 
   bool isOk() const { return mStorage.template is<V>(); }
@@ -75,16 +67,8 @@ template <typename V, typename E>
 class ResultImplementation<V, E&, PackingStrategy::Variant> {
   mozilla::Variant<V, E*> mStorage;
 
-<<<<<<< HEAD
- public:
-  explicit ResultImplementation(V aValue) : mStorage(aValue) {}
-||||||| merged common ancestors
-public:
-  explicit ResultImplementation(V aValue) : mStorage(aValue) {}
-=======
  public:
   explicit ResultImplementation(const V& aValue) : mStorage(aValue) {}
->>>>>>> upstream-releases
   explicit ResultImplementation(E& aErrorValue) : mStorage(&aErrorValue) {}
 
   bool isOk() const { return mStorage.template is<V>(); }

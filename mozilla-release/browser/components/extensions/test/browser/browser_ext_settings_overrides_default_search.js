@@ -16,25 +16,13 @@ const { AddonTestUtils } = ChromeUtils.import(
 const EXTENSION1_ID = "extension1@mozilla.com";
 const EXTENSION2_ID = "extension2@mozilla.com";
 
-<<<<<<< HEAD
-let defaultEngineName = Services.search.defaultEngine.name;
-||||||| merged common ancestors
-let defaultEngineName = Services.search.currentEngine.name;
-=======
 AddonTestUtils.initMochitest(this);
 
 var defaultEngineName;
->>>>>>> upstream-releases
 
 async function restoreDefaultEngine() {
   let engine = Services.search.getEngineByName(defaultEngineName);
-<<<<<<< HEAD
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  Services.search.currentEngine = engine;
-=======
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 }
 
 add_task(async function setup() {
@@ -60,25 +48,14 @@ add_task(async function test_extension_setting_default_engine() {
   await ext1.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   await ext1.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-=======
   is(
     (await Services.search.getDefault()).name,
     defaultEngineName,
@@ -175,7 +152,6 @@ add_task(async function test_extension_setting_default_engine_external() {
   );
 
   await extension.unload();
->>>>>>> upstream-releases
 });
 
 /* This tests that uninstalling add-ons maintains the proper
@@ -210,60 +186,36 @@ add_task(async function test_extension_setting_multiple_default_engine() {
   await ext1.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   await ext2.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext2);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
 
   await ext2.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   await ext1.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-=======
   is(
     (await Services.search.getDefault()).name,
     defaultEngineName,
     `Default engine is ${defaultEngineName}`
   );
->>>>>>> upstream-releases
 });
 
 /* This tests that uninstalling add-ons in reverse order maintains the proper
@@ -299,56 +251,31 @@ add_task(
     await ext1.startup();
     await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
     is(
       (await Services.search.getDefault()).name,
       "DuckDuckGo",
       "Default engine is DuckDuckGo"
     );
->>>>>>> upstream-releases
 
     await ext2.startup();
     await AddonTestUtils.waitForSearchProviderStartup(ext2);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
     is(
       (await Services.search.getDefault()).name,
       "Twitter",
       "Default engine is Twitter"
     );
->>>>>>> upstream-releases
 
     await ext1.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
     is(
       (await Services.search.getDefault()).name,
       "Twitter",
       "Default engine is Twitter"
     );
->>>>>>> upstream-releases
 
     await ext2.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-});
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-});
-=======
     is(
       (await Services.search.getDefault()).name,
       defaultEngineName,
@@ -356,7 +283,6 @@ add_task(
     );
   }
 );
->>>>>>> upstream-releases
 
 /* This tests that when the user changes the search engine and the add-on
  * is unistalled, search stays with the user's choice. */
@@ -377,40 +303,22 @@ add_task(async function test_user_changing_default_engine() {
   await ext1.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   let engine = Services.search.getEngineByName("Twitter");
-<<<<<<< HEAD
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  Services.search.currentEngine = engine;
-=======
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 
   await ext1.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
   restoreDefaultEngine();
 });
 
@@ -438,71 +346,41 @@ add_task(async function test_user_change_with_disabling() {
   await ext1.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   let engine = Services.search.getEngineByName("Twitter");
-<<<<<<< HEAD
-  Services.search.defaultEngine = engine;
-||||||| merged common ancestors
-  Services.search.currentEngine = engine;
-=======
   await Services.search.setDefault(engine);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
 
   let disabledPromise = awaitEvent("shutdown", EXTENSION1_ID);
   let addon = await AddonManager.getAddonByID(EXTENSION1_ID);
   await addon.disable();
   await disabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
 
   let enabledPromise = awaitEvent("ready", EXTENSION1_ID);
   await addon.enable();
   await enabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
   await ext1.unload();
   await restoreDefaultEngine();
 });
@@ -550,91 +428,55 @@ add_task(async function test_two_addons_with_first_disabled_before_second() {
   await ext1.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   let disabledPromise = awaitEvent("shutdown", EXTENSION1_ID);
   let addon1 = await AddonManager.getAddonByID(EXTENSION1_ID);
   await addon1.disable();
   await disabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-=======
   is(
     (await Services.search.getDefault()).name,
     defaultEngineName,
     `Default engine is ${defaultEngineName}`
   );
->>>>>>> upstream-releases
 
   await ext2.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext2);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
 
   let enabledPromise = awaitEvent("ready", EXTENSION1_ID);
   await addon1.enable();
   await enabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
   await ext2.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
   await ext1.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-=======
   is(
     (await Services.search.getDefault()).name,
     defaultEngineName,
     `Default engine is ${defaultEngineName}`
   );
->>>>>>> upstream-releases
 });
 
 /* This tests that when two add-ons are installed that change default
@@ -680,91 +522,55 @@ add_task(async function test_two_addons_with_first_disabled() {
   await ext1.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   await ext2.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext2);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
 
   let disabledPromise = awaitEvent("shutdown", EXTENSION1_ID);
   let addon1 = await AddonManager.getAddonByID(EXTENSION1_ID);
   await addon1.disable();
   await disabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
 
   let enabledPromise = awaitEvent("ready", EXTENSION1_ID);
   await addon1.enable();
   await enabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
   await ext2.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
   await ext1.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-=======
   is(
     (await Services.search.getDefault()).name,
     defaultEngineName,
     `Default engine is ${defaultEngineName}`
   );
->>>>>>> upstream-releases
 });
 
 /* This tests that when two add-ons are installed that change default
@@ -810,89 +616,53 @@ add_task(async function test_two_addons_with_second_disabled() {
   await ext1.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext1);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   await ext2.startup();
   await AddonTestUtils.waitForSearchProviderStartup(ext2);
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
 
   let disabledPromise = awaitEvent("shutdown", EXTENSION2_ID);
   let addon2 = await AddonManager.getAddonByID(EXTENSION2_ID);
   await addon2.disable();
   await disabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
 
   let enabledPromise = awaitEvent("ready", EXTENSION2_ID);
   await addon2.enable();
   await enabledPromise;
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "Twitter", "Default engine is Twitter");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "Twitter", "Default engine is Twitter");
-=======
   is(
     (await Services.search.getDefault()).name,
     "Twitter",
     "Default engine is Twitter"
   );
->>>>>>> upstream-releases
   await ext2.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, "DuckDuckGo", "Default engine is DuckDuckGo");
-=======
   is(
     (await Services.search.getDefault()).name,
     "DuckDuckGo",
     "Default engine is DuckDuckGo"
   );
->>>>>>> upstream-releases
   await ext1.unload();
 
-<<<<<<< HEAD
-  is(Services.search.defaultEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-||||||| merged common ancestors
-  is(Services.search.currentEngine.name, defaultEngineName, `Default engine is ${defaultEngineName}`);
-=======
   is(
     (await Services.search.getDefault()).name,
     defaultEngineName,
     `Default engine is ${defaultEngineName}`
   );
->>>>>>> upstream-releases
 });

@@ -21,24 +21,7 @@ static inline GrResourceCache* get_resource_cache(GrGpu* gpu) {
     return gpu->getContext()->priv().getResourceCache();
 }
 
-<<<<<<< HEAD
-GrGpuResource::GrGpuResource(GrGpu* gpu)
-    : fGpu(gpu)
-    , fGpuMemorySize(kInvalidGpuMemorySize)
-    , fBudgeted(SkBudgeted::kNo)
-    , fRefsWrappedObjects(false)
-    , fUniqueID(CreateUniqueID()) {
-||||||| merged common ancestors
-GrGpuResource::GrGpuResource(GrGpu* gpu)
-    : fExternalFlushCntWhenBecamePurgeable(0)
-    , fGpu(gpu)
-    , fGpuMemorySize(kInvalidGpuMemorySize)
-    , fBudgeted(SkBudgeted::kNo)
-    , fRefsWrappedObjects(false)
-    , fUniqueID(CreateUniqueID()) {
-=======
 GrGpuResource::GrGpuResource(GrGpu* gpu) : fGpu(gpu), fUniqueID(CreateUniqueID()) {
->>>>>>> upstream-releases
     SkDEBUGCODE(fCacheArrayIndex = -1);
 }
 
@@ -84,35 +67,10 @@ void GrGpuResource::abandon() {
 }
 
 void GrGpuResource::dumpMemoryStatistics(SkTraceMemoryDump* traceMemoryDump) const {
-<<<<<<< HEAD
     if (this->fRefsWrappedObjects && !traceMemoryDump->shouldDumpWrappedObjects()) {
         return;
     }
 
-    this->dumpMemoryStatisticsPriv(traceMemoryDump, this->getResourceName(),
-                                   this->getResourceType(), this->gpuMemorySize());
-}
-||||||| merged common ancestors
-    // Dump resource as "skia/gpu_resources/resource_#".
-    SkString dumpName("skia/gpu_resources/resource_");
-    dumpName.appendU32(this->uniqueID().asUInt());
-=======
-    if (this->fRefsWrappedObjects && !traceMemoryDump->shouldDumpWrappedObjects()) {
-        return;
-    }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void GrGpuResource::dumpMemoryStatisticsPriv(SkTraceMemoryDump* traceMemoryDump,
-                                             const SkString& resourceName,
-                                             const char* type, size_t size) const {
-    const char* tag = "Scratch";
-    if (fUniqueKey.isValid()) {
-        tag = (fUniqueKey.tag() != nullptr) ? fUniqueKey.tag() : "Other";
-    }
-||||||| merged common ancestors
-    traceMemoryDump->dumpNumericValue(dumpName.c_str(), "size", "bytes", this->gpuMemorySize());
-=======
     this->dumpMemoryStatisticsPriv(traceMemoryDump, this->getResourceName(),
                                    this->getResourceType(), this->gpuMemorySize());
 }
@@ -124,7 +82,6 @@ void GrGpuResource::dumpMemoryStatisticsPriv(SkTraceMemoryDump* traceMemoryDump,
     if (fUniqueKey.isValid()) {
         tag = (fUniqueKey.tag() != nullptr) ? fUniqueKey.tag() : "Other";
     }
->>>>>>> upstream-releases
 
     traceMemoryDump->dumpNumericValue(resourceName.c_str(), "size", "bytes", size);
     traceMemoryDump->dumpStringValue(resourceName.c_str(), "type", type);
@@ -133,20 +90,6 @@ void GrGpuResource::dumpMemoryStatisticsPriv(SkTraceMemoryDump* traceMemoryDump,
         traceMemoryDump->dumpNumericValue(resourceName.c_str(), "purgeable_size", "bytes", size);
     }
 
-<<<<<<< HEAD
-    this->setMemoryBacking(traceMemoryDump, resourceName);
-}
-
-SkString GrGpuResource::getResourceName() const {
-    // Dump resource as "skia/gpu_resources/resource_#".
-    SkString resourceName("skia/gpu_resources/resource_");
-    resourceName.appendU32(this->uniqueID().asUInt());
-    return resourceName;
-||||||| merged common ancestors
-    // Call setMemoryBacking to allow sub-classes with implementation specific backings (such as GL
-    // objects) to provide additional information.
-    this->setMemoryBacking(traceMemoryDump, dumpName);
-=======
     this->setMemoryBacking(traceMemoryDump, resourceName);
 }
 
@@ -166,7 +109,6 @@ SkString GrGpuResource::getResourceName() const {
     SkString resourceName("skia/gpu_resources/resource_");
     resourceName.appendU32(this->uniqueID().asUInt());
     return resourceName;
->>>>>>> upstream-releases
 }
 
 const GrContext* GrGpuResource::getContext() const {

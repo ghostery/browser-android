@@ -65,18 +65,6 @@ permissions-capabilities-block =
 permissions-capabilities-prompt =
     .label = Always Ask
 
-<<<<<<< HEAD
-permissions-capabilities-listitem-allow =
-    .value = Allow
-permissions-capabilities-listitem-block =
-    .value = Block
-permissions-capabilities-listitem-allow-first-party =
-    .value = Allow first party only
-permissions-capabilities-listitem-allow-session =
-    .value = Allow for Session
-
-||||||| merged common ancestors
-=======
 permissions-capabilities-listitem-allow =
     .value = Allow
 permissions-capabilities-listitem-block =
@@ -84,7 +72,6 @@ permissions-capabilities-listitem-block =
 permissions-capabilities-listitem-allow-session =
     .value = Allow for Session
 
->>>>>>> upstream-releases
 ## Invalid Hostname Dialog
 
 permissions-invalid-uri-title = Invalid Hostname Entered

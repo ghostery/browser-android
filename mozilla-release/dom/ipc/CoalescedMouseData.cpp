@@ -62,17 +62,8 @@ bool CoalescedMouseData::CanCoalesce(const WidgetMouseEvent& aEvent,
          (mCoalescedInputEvent->mModifiers == aEvent.mModifiers &&
           mCoalescedInputEvent->mInputSource == aEvent.mInputSource &&
           mCoalescedInputEvent->pointerId == aEvent.pointerId &&
-<<<<<<< HEAD
-          mCoalescedInputEvent->button == aEvent.button &&
-          mCoalescedInputEvent->buttons == aEvent.buttons && mGuid == aGuid &&
-||||||| merged common ancestors
-          mCoalescedInputEvent->button == aEvent.button &&
-          mCoalescedInputEvent->buttons == aEvent.buttons &&
-          mGuid == aGuid &&
-=======
           mCoalescedInputEvent->mButton == aEvent.mButton &&
           mCoalescedInputEvent->mButtons == aEvent.mButtons && mGuid == aGuid &&
->>>>>>> upstream-releases
           mInputBlockId == aInputBlockId);
 }
 
@@ -103,18 +94,8 @@ void CoalescedMouseMoveFlusher::RemoveObserver() {
   }
 }
 
-<<<<<<< HEAD
-nsRefreshDriver* CoalescedMouseMoveFlusher::GetRefreshDriver() {
-  nsCOMPtr<nsIPresShell> presShell = mTabChild->GetPresShell();
-||||||| merged common ancestors
-nsRefreshDriver*
-CoalescedMouseMoveFlusher::GetRefreshDriver()
-{
-  nsCOMPtr<nsIPresShell> presShell = mTabChild->GetPresShell();
-=======
 nsRefreshDriver* CoalescedMouseMoveFlusher::GetRefreshDriver() {
   PresShell* presShell = mBrowserChild->GetTopLevelPresShell();
->>>>>>> upstream-releases
   if (!presShell || !presShell->GetPresContext() ||
       !presShell->GetPresContext()->RefreshDriver()) {
     return nullptr;

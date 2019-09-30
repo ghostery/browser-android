@@ -70,33 +70,6 @@ input[contenteditable="true"][type="file"] {
   -moz-user-focus: none !important;
 }
 
-<<<<<<< HEAD
-/* emulation of non-standard HTML <marquee> tag */
-
-@supports not -moz-bool-pref("dom.ua_widget.enabled") {
-
-  marquee:-moz-read-write {
-    -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-horizontal-editable');
-  }
-
-  marquee[direction="up"]:-moz-read-write, marquee[direction="down"]:-moz-read-write {
-    -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-vertical-editable');
-  }
-
-}
-
-||||||| merged common ancestors
-/* emulation of non-standard HTML <marquee> tag */
-marquee:-moz-read-write {
-  -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-horizontal-editable');
-}
-
-marquee[direction="up"]:-moz-read-write, marquee[direction="down"]:-moz-read-write {
-  -moz-binding: url('chrome://xbl-marquee/content/xbl-marquee.xml#marquee-vertical-editable');
-}
-
-=======
->>>>>>> upstream-releases
 *|*:-moz-read-write > input[type="hidden"],
 input[contenteditable="true"][type="hidden"] {
   border: 1px solid black !important;
@@ -104,13 +77,7 @@ input[contenteditable="true"][type="hidden"] {
 }
 
 label:-moz-read-write {
-<<<<<<< HEAD
-  -moz-user-select: all;
-||||||| merged common ancestors
-    -moz-user-select: all;
-=======
   user-select: all;
->>>>>>> upstream-releases
 }
 
 *|*::-moz-display-comboboxcontrol-frame {

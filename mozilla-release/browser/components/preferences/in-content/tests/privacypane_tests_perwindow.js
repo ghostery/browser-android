@@ -143,34 +143,18 @@ function test_dependent_elements(win) {
 }
 
 function test_dependent_cookie_elements(win) {
-<<<<<<< HEAD
-  let deleteOnCloseCheckbox = win.document.getElementById("deleteOnClose");
-||||||| merged common ancestors
-  let keepUntil = win.document.getElementById("keepUntil");
-  let keepCookiesUntil = win.document.getElementById("keepCookiesUntil");
-  let blockCookiesLabel = win.document.getElementById("blockCookiesLabel");
-=======
   let deleteOnCloseCheckbox = win.document.getElementById("deleteOnClose");
   let deleteOnCloseNote = win.document.getElementById("deleteOnCloseNote");
->>>>>>> upstream-releases
   let blockCookiesMenu = win.document.getElementById("blockCookiesMenu");
 
   let controls = [blockCookiesMenu, deleteOnCloseCheckbox];
   controls.forEach(function(control) {
     ok(control, "the dependent cookie controls should exist");
   });
-<<<<<<< HEAD
-  let blockCookiesCheckbox = win.document.getElementById("contentBlockingBlockCookiesCheckbox");
-  ok(blockCookiesCheckbox, "the block cookies checkbox should exist");
-||||||| merged common ancestors
-  let blockcookies = win.document.getElementById("blockCookies");
-  ok(blockcookies, "the block cookies checkbox should exist");
-=======
   let blockCookiesCheckbox = win.document.getElementById(
     "contentBlockingBlockCookiesCheckbox"
   );
   ok(blockCookiesCheckbox, "the block cookies checkbox should exist");
->>>>>>> upstream-releases
 
   function expect_disabled(disabled, c = controls) {
     c.forEach(function(control) {
@@ -189,17 +173,6 @@ function test_dependent_cookie_elements(win) {
   controlChanged(blockCookiesCheckbox);
   expect_disabled(false);
 
-<<<<<<< HEAD
-  blockCookiesCheckbox.checked = false;
-  controlChanged(blockCookiesCheckbox);
-  expect_disabled(true, [blockCookiesMenu]);
-  expect_disabled(false, [deleteOnCloseCheckbox]);
-||||||| merged common ancestors
-  blockcookies.value = "allow";
-  controlChanged(blockcookies);
-  expect_disabled(true, [blockCookiesLabel, blockCookiesMenu]);
-  expect_disabled(false, [keepUntil, keepCookiesUntil]);
-=======
   blockCookiesCheckbox.checked = false;
   controlChanged(blockCookiesCheckbox);
   expect_disabled(true, [blockCookiesMenu]);
@@ -208,24 +181,15 @@ function test_dependent_cookie_elements(win) {
     deleteOnCloseNote,
     "The notice for delete on close in permanent private browsing mode should be hidden."
   );
->>>>>>> upstream-releases
 
   blockCookiesMenu.value = "always";
   controlChanged(blockCookiesMenu);
-<<<<<<< HEAD
-  expect_disabled(true, [deleteOnCloseCheckbox]);
-  expect_disabled(false, [blockCookiesMenu]);
-||||||| merged common ancestors
-  expect_disabled(true, [keepUntil, keepCookiesUntil]);
-  expect_disabled(false, [blockCookiesLabel, blockCookiesMenu]);
-=======
   expect_disabled(true, [deleteOnCloseCheckbox]);
   expect_disabled(false, [blockCookiesMenu]);
   is_element_hidden(
     deleteOnCloseNote,
     "The notice for delete on close in permanent private browsing mode should be hidden."
   );
->>>>>>> upstream-releases
 
   if (win.contentBlockingCookiesAndSiteDataRejectTrackersEnabled) {
     blockCookiesMenu.value = "trackers";
@@ -241,20 +205,12 @@ function test_dependent_cookie_elements(win) {
   // disable the "keep cookies until..." menu.
   historymode.value = "dontremember";
   controlChanged(historymode);
-<<<<<<< HEAD
-  expect_disabled(true, [deleteOnCloseCheckbox]);
-  expect_disabled(false, [blockCookiesMenu]);
-||||||| merged common ancestors
-  expect_disabled(true, [keepUntil, keepCookiesUntil]);
-  expect_disabled(false, [blockCookiesLabel, blockCookiesMenu]);
-=======
   expect_disabled(true, [deleteOnCloseCheckbox]);
   is_element_visible(
     deleteOnCloseNote,
     "The notice for delete on close in permanent private browsing mode should be visible."
   );
   expect_disabled(false, [blockCookiesMenu]);
->>>>>>> upstream-releases
 
   historymode.value = "remember";
   controlChanged(historymode);

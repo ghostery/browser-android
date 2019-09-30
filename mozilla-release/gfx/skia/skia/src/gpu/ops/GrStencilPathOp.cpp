@@ -7,8 +7,6 @@
 
 #include "GrStencilPathOp.h"
 
-#include "GrContext.h"
-#include "GrContextPriv.h"
 #include "GrGpu.h"
 #include "GrMemoryPool.h"
 #include "GrOpFlushState.h"
@@ -16,24 +14,6 @@
 #include "GrRecordingContextPriv.h"
 #include "GrRenderTargetPriv.h"
 
-<<<<<<< HEAD
-std::unique_ptr<GrOp> GrStencilPathOp::Make(GrContext* context,
-                                            const SkMatrix& viewMatrix,
-                                            bool useHWAA,
-                                            GrPathRendering::FillType fillType,
-                                            bool hasStencilClip,
-                                            const GrScissorState& scissor,
-                                            const GrPath* path) {
-    GrOpMemoryPool* pool = context->contextPriv().opMemoryPool();
-
-    return pool->allocate<GrStencilPathOp>(viewMatrix, useHWAA, fillType,
-                                           hasStencilClip, scissor, path);
-}
-
-void GrStencilPathOp::onExecute(GrOpFlushState* state) {
-||||||| merged common ancestors
-void GrStencilPathOp::onExecute(GrOpFlushState* state) {
-=======
 std::unique_ptr<GrOp> GrStencilPathOp::Make(GrRecordingContext* context,
                                             const SkMatrix& viewMatrix,
                                             bool useHWAA,
@@ -48,7 +28,6 @@ std::unique_ptr<GrOp> GrStencilPathOp::Make(GrRecordingContext* context,
 }
 
 void GrStencilPathOp::onExecute(GrOpFlushState* state, const SkRect& chainBounds) {
->>>>>>> upstream-releases
     GrRenderTarget* rt = state->drawOpArgs().renderTarget();
     SkASSERT(rt);
 

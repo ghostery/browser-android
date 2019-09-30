@@ -28,19 +28,6 @@ using ::testing::Return;
 namespace mozilla {
 using dom::CaretChangedReason;
 
-<<<<<<< HEAD
-class AccessibleCaretManagerTester : public ::testing::Test {
- public:
-  class MockAccessibleCaret : public AccessibleCaret {
-   public:
-||||||| merged common ancestors
-class AccessibleCaretManagerTester : public ::testing::Test
-{
-public:
-  class MockAccessibleCaret : public AccessibleCaret
-  {
-  public:
-=======
 class MOZ_RAII AutoRestoreBoolPref final {
  public:
   AutoRestoreBoolPref(const char* aPref, bool aValue) : mPref(aPref) {
@@ -59,7 +46,6 @@ class AccessibleCaretManagerTester : public ::testing::Test {
  public:
   class MockAccessibleCaret : public AccessibleCaret {
    public:
->>>>>>> upstream-releases
     MockAccessibleCaret() : AccessibleCaret(nullptr) {}
 
     void SetAppearance(Appearance aAppearance) override {
@@ -152,17 +138,10 @@ class AccessibleCaretManagerTester : public ::testing::Test {
 };  // class AccessibleCaretManagerTester
 
 TEST_F(AccessibleCaretManagerTester, TestUpdatesInSelectionMode)
-<<<<<<< HEAD
-MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
-||||||| merged common ancestors
-MOZ_CAN_RUN_SCRIPT
-{
-=======
 MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
   // Set default preference.
   AutoRestoreBoolPref savedPref("layout.accessiblecaret.always_tilt", false);
 
->>>>>>> upstream-releases
   EXPECT_CALL(mManager, GetCaretMode())
       .WillRepeatedly(Return(CaretMode::Selection));
 
@@ -258,19 +237,12 @@ MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
 }
 
 TEST_F(AccessibleCaretManagerTester, TestSingleTapOnEmptyInput)
-<<<<<<< HEAD
-MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
-||||||| merged common ancestors
-MOZ_CAN_RUN_SCRIPT
-{
-=======
 MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
   // Set default preference.
   AutoRestoreBoolPref savedPref(
       "layout.accessiblecaret.caret_shown_when_long_tapping_on_empty_content",
       false);
 
->>>>>>> upstream-releases
   EXPECT_CALL(mManager, GetCaretMode())
       .WillRepeatedly(Return(CaretMode::Cursor));
 
@@ -388,17 +360,10 @@ MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
 }
 
 TEST_F(AccessibleCaretManagerTester, TestScrollInSelectionMode)
-<<<<<<< HEAD
-MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
-||||||| merged common ancestors
-MOZ_CAN_RUN_SCRIPT
-{
-=======
 MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
   // Set default preference.
   AutoRestoreBoolPref savedPref("layout.accessiblecaret.always_tilt", false);
 
->>>>>>> upstream-releases
   EXPECT_CALL(mManager, GetCaretMode())
       .WillRepeatedly(Return(CaretMode::Selection));
 
@@ -705,19 +670,12 @@ MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
 }
 
 TEST_F(AccessibleCaretManagerTester, TestScrollInCursorModeOnEmptyContent)
-<<<<<<< HEAD
-MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
-||||||| merged common ancestors
-MOZ_CAN_RUN_SCRIPT
-{
-=======
 MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
   // Set default preference.
   AutoRestoreBoolPref savedPref(
       "layout.accessiblecaret.caret_shown_when_long_tapping_on_empty_content",
       false);
 
->>>>>>> upstream-releases
   EXPECT_CALL(mManager, GetCaretMode())
       .WillRepeatedly(Return(CaretMode::Cursor));
 
@@ -790,20 +748,9 @@ TEST_F(AccessibleCaretManagerTester,
        TestScrollInCursorModeWithCaretShownWhenLongTappingOnEmptyContentPref)
 MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
   // Simulate Firefox Android preference.
-<<<<<<< HEAD
-  bool oldPref = StaticPrefs::
-      layout_accessiblecaret_caret_shown_when_long_tapping_on_empty_content();
-  Preferences::SetBool(
-      "layout.accessiblecaret.caret_shown_when_long_tapping_on_empty_content",
-      true);
-||||||| merged common ancestors
-  bool oldPref = StaticPrefs::layout_accessiblecaret_caret_shown_when_long_tapping_on_empty_content();
-  Preferences::SetBool("layout.accessiblecaret.caret_shown_when_long_tapping_on_empty_content", true);
-=======
   AutoRestoreBoolPref savedPref(
       "layout.accessiblecaret.caret_shown_when_long_tapping_on_empty_content",
       true);
->>>>>>> upstream-releases
 
   EXPECT_CALL(mManager, GetCaretMode())
       .WillRepeatedly(Return(CaretMode::Cursor));
@@ -889,16 +836,6 @@ MOZ_CAN_RUN_SCRIPT_FOR_DEFINITION {
   mManager.OnScrollEnd();
   EXPECT_EQ(FirstCaretAppearance(), Appearance::Normal);
   check.Call("longtap scrollend3");
-<<<<<<< HEAD
-
-  Preferences::SetBool(
-      "layout.accessiblecaret.caret_shown_when_long_tapping_on_empty_content",
-      oldPref);
-||||||| merged common ancestors
-
-  Preferences::SetBool("layout.accessiblecaret.caret_shown_when_long_tapping_on_empty_content", oldPref);
-=======
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

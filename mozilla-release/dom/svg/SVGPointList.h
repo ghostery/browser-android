@@ -36,20 +36,9 @@ class SVGPointList {
   friend class DOMSVGPointList;
   friend class DOMSVGPoint;
 
-<<<<<<< HEAD
- public:
-  SVGPointList() {}
-  ~SVGPointList() {}
-||||||| merged common ancestors
-public:
-
-  SVGPointList(){}
-  ~SVGPointList(){}
-=======
  public:
   SVGPointList() = default;
   ~SVGPointList() = default;
->>>>>>> upstream-releases
 
   // Only methods that don't make/permit modification to this list are public.
   // Only our friend classes can access methods that may change us.
@@ -151,33 +140,12 @@ public:
  * Holding a strong reference to the element here prevents the element from
  * disappearing out from under the SMIL code unexpectedly.
  */
-<<<<<<< HEAD
-class SVGPointListAndInfo : public SVGPointList {
- public:
-  explicit SVGPointListAndInfo(nsSVGElement* aElement = nullptr)
-      : mElement(do_GetWeakReference(static_cast<nsINode*>(aElement))) {}
-||||||| merged common ancestors
-class SVGPointListAndInfo : public SVGPointList
-{
-public:
-
-  explicit SVGPointListAndInfo(nsSVGElement *aElement = nullptr)
-    : mElement(do_GetWeakReference(static_cast<nsINode*>(aElement)))
-  {}
-=======
 class SVGPointListAndInfo : public SVGPointList {
  public:
   explicit SVGPointListAndInfo(dom::SVGElement* aElement = nullptr)
       : mElement(do_GetWeakReference(static_cast<nsINode*>(aElement))) {}
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  void SetInfo(nsSVGElement* aElement) {
-||||||| merged common ancestors
-  void SetInfo(nsSVGElement *aElement) {
-=======
   void SetInfo(dom::SVGElement* aElement) {
->>>>>>> upstream-releases
     mElement = do_GetWeakReference(static_cast<nsINode*>(aElement));
   }
 

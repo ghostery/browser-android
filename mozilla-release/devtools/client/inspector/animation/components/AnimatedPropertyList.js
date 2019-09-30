@@ -98,26 +98,10 @@ class AnimatedPropertyList extends Component {
       return a.isUnchanged ? 1 : -1;
     });
 
-<<<<<<< HEAD
-    this.setState(
-      {
-        animatedProperties,
-        isStateUpdating: false,
-      }
-    );
-||||||| merged common ancestors
-    this.setState(
-      {
-        animatedProperties,
-        isStateUpdating: false
-      }
-    );
-=======
     this.setState({
       animatedProperties,
       isStateUpdating: false,
     });
->>>>>>> upstream-releases
 
     emitEventForTest("animation-keyframes-rendered");
   }

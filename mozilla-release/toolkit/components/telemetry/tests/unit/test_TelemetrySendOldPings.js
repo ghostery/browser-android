@@ -578,17 +578,6 @@ add_task(async function test_pendingPingsQuota() {
   );
 
   // Make sure we're correctly updating the related histograms.
-<<<<<<< HEAD
-  h = Telemetry.getHistogramById("TELEMETRY_PING_SIZE_EXCEEDED_PENDING").snapshot();
-  Assert.equal(h.sum, 1, "Telemetry must report 1 oversized ping in the pending pings directory.");
-  h = Telemetry.getHistogramById("TELEMETRY_DISCARDED_PENDING_PINGS_SIZE_MB").snapshot();
-  Assert.equal(h.values[2], 1, "Telemetry must report a 2MB, oversized, ping.");
-||||||| merged common ancestors
-  h = Telemetry.getHistogramById("TELEMETRY_PING_SIZE_EXCEEDED_PENDING").snapshot();
-  Assert.equal(h.sum, 1, "Telemetry must report 1 oversized ping in the pending pings directory.");
-  h = Telemetry.getHistogramById("TELEMETRY_DISCARDED_PENDING_PINGS_SIZE_MB").snapshot();
-  Assert.equal(h.counts[2], 1, "Telemetry must report a 2MB, oversized, ping.");
-=======
   h = Telemetry.getHistogramById(
     "TELEMETRY_PING_SIZE_EXCEEDED_PENDING"
   ).snapshot();
@@ -601,7 +590,6 @@ add_task(async function test_pendingPingsQuota() {
     "TELEMETRY_DISCARDED_PENDING_PINGS_SIZE_MB"
   ).snapshot();
   Assert.equal(h.values[2], 1, "Telemetry must report a 2MB, oversized, ping.");
->>>>>>> upstream-releases
 
   // Save the ping again to check if it gets pruned when scanning the pings directory.
   await TelemetryStorage.savePendingPing(OVERSIZED_PING);
@@ -613,17 +601,6 @@ add_task(async function test_pendingPingsQuota() {
   await checkPendingPings();
 
   // Make sure we're correctly updating the related histograms.
-<<<<<<< HEAD
-  h = Telemetry.getHistogramById("TELEMETRY_PING_SIZE_EXCEEDED_PENDING").snapshot();
-  Assert.equal(h.sum, 2, "Telemetry must report 1 oversized ping in the pending pings directory.");
-  h = Telemetry.getHistogramById("TELEMETRY_DISCARDED_PENDING_PINGS_SIZE_MB").snapshot();
-  Assert.equal(h.values[2], 2, "Telemetry must report two 2MB, oversized, pings.");
-||||||| merged common ancestors
-  h = Telemetry.getHistogramById("TELEMETRY_PING_SIZE_EXCEEDED_PENDING").snapshot();
-  Assert.equal(h.sum, 2, "Telemetry must report 1 oversized ping in the pending pings directory.");
-  h = Telemetry.getHistogramById("TELEMETRY_DISCARDED_PENDING_PINGS_SIZE_MB").snapshot();
-  Assert.equal(h.counts[2], 2, "Telemetry must report two 2MB, oversized, pings.");
-=======
   h = Telemetry.getHistogramById(
     "TELEMETRY_PING_SIZE_EXCEEDED_PENDING"
   ).snapshot();
@@ -640,7 +617,6 @@ add_task(async function test_pendingPingsQuota() {
     2,
     "Telemetry must report two 2MB, oversized, pings."
   );
->>>>>>> upstream-releases
 
   Services.prefs.setBoolPref(TelemetryUtils.Preferences.FhrUploadEnabled, true);
 });

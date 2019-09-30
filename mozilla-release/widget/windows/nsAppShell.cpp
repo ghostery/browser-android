@@ -30,31 +30,9 @@
 #include "mozilla/Atomics.h"
 
 #if defined(ACCESSIBILITY)
-<<<<<<< HEAD
-#include "mozilla/a11y/Compatibility.h"
-#include "mozilla/a11y/Platform.h"
-#endif  // defined(ACCESSIBILITY)
-
-// These are two messages that the code in winspool.drv on Windows 7 explicitly
-// waits for while it is pumping other Windows messages, during display of the
-// Printer Properties dialog.
-#define MOZ_WM_PRINTER_PROPERTIES_COMPLETION 0x5b7a
-#define MOZ_WM_PRINTER_PROPERTIES_FAILURE 0x5b7f
-||||||| merged common ancestors
-#include "mozilla/a11y/Compatibility.h"
-#include "mozilla/a11y/Platform.h"
-#endif // defined(ACCESSIBILITY)
-
-// These are two messages that the code in winspool.drv on Windows 7 explicitly
-// waits for while it is pumping other Windows messages, during display of the
-// Printer Properties dialog.
-#define MOZ_WM_PRINTER_PROPERTIES_COMPLETION 0x5b7a
-#define MOZ_WM_PRINTER_PROPERTIES_FAILURE 0x5b7f
-=======
 #  include "mozilla/a11y/Compatibility.h"
 #  include "mozilla/a11y/Platform.h"
 #endif  // defined(ACCESSIBILITY)
->>>>>>> upstream-releases
 
 using namespace mozilla;
 using namespace mozilla::widget;
@@ -173,28 +151,11 @@ SingleNativeEventPump::AfterProcessNextEvent(nsIThreadInternal* aThread,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-namespace mozilla {
-namespace widget {
-// Native event callback message.
-UINT sAppShellGeckoMsgId = RegisterWindowMessageW(L"nsAppShell:EventID");
-}  // namespace widget
-}  // namespace mozilla
-
-||||||| merged common ancestors
-namespace mozilla {
-namespace widget {
-// Native event callback message.
-UINT sAppShellGeckoMsgId = RegisterWindowMessageW(L"nsAppShell:EventID");
-} }
-
-=======
 // RegisterWindowMessage values
 // Native event callback message
 const wchar_t* kAppShellGeckoEventId = L"nsAppShell:EventID";
 UINT sAppShellGeckoMsgId;
 // Taskbar button creation message
->>>>>>> upstream-releases
 const wchar_t* kTaskbarButtonEventId = L"TaskbarButtonCreated";
 UINT sTaskbarButtonCreatedMsg;
 
@@ -352,24 +313,11 @@ nsresult nsAppShell::Init() {
 
   hal::Init();
 
-<<<<<<< HEAD
-  mozilla::ipc::windows::InitUIThread();
-
-  sTaskbarButtonCreatedMsg = ::RegisterWindowMessageW(kTaskbarButtonEventId);
-  NS_ASSERTION(sTaskbarButtonCreatedMsg,
-               "Could not register taskbar button creation message");
-||||||| merged common ancestors
-  mozilla::ipc::windows::InitUIThread();
-
-  sTaskbarButtonCreatedMsg = ::RegisterWindowMessageW(kTaskbarButtonEventId);
-  NS_ASSERTION(sTaskbarButtonCreatedMsg, "Could not register taskbar button creation message");
-=======
   if (XRE_Win32kCallsAllowed()) {
     sTaskbarButtonCreatedMsg = ::RegisterWindowMessageW(kTaskbarButtonEventId);
     NS_ASSERTION(sTaskbarButtonCreatedMsg,
                  "Could not register taskbar button creation message");
   }
->>>>>>> upstream-releases
 
   // The hidden message window is used for interrupting the processing of native
   // events, so that we can process gecko events. Therefore, we only need it if

@@ -122,43 +122,9 @@
 #include "mozilla/layers/CanvasClient.h"
 #include "mozilla/layers/WebRenderUserData.h"
 #include "mozilla/layers/WebRenderCanvasRenderer.h"
-<<<<<<< HEAD
-#include "mozilla/ServoCSSParser.h"
 
 #undef free  // apparently defined by some windows header, clashing with a
              // free() method in SkTypes.h
-#include "SkiaGLGlue.h"
-#ifdef USE_SKIA
-#include "SurfaceTypes.h"
-#include "GLBlitHelper.h"
-#include "ScopedGLHelpers.h"
-#endif
-||||||| merged common ancestors
-#include "mozilla/ServoCSSParser.h"
-
-#undef free // apparently defined by some windows header, clashing with a free()
-            // method in SkTypes.h
-#include "SkiaGLGlue.h"
-#ifdef USE_SKIA
-#include "SurfaceTypes.h"
-#include "GLBlitHelper.h"
-#include "ScopedGLHelpers.h"
-#endif
-=======
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-using mozilla::gl::GLContext;
-using mozilla::gl::GLContextProvider;
-using mozilla::gl::SkiaGLGlue;
-||||||| merged common ancestors
-using mozilla::gl::GLContext;
-using mozilla::gl::SkiaGLGlue;
-using mozilla::gl::GLContextProvider;
-=======
-#undef free  // apparently defined by some windows header, clashing with a
-             // free() method in SkTypes.h
->>>>>>> upstream-releases
 
 #ifdef XP_WIN
 #  include "gfxWindowsPlatform.h"
@@ -257,17 +223,8 @@ class CanvasLinearGradient : public CanvasGradient {
   Point mEnd;
 };
 
-<<<<<<< HEAD
-bool CanvasRenderingContext2D::PatternIsOpaque(
-    CanvasRenderingContext2D::Style aStyle) const {
-||||||| merged common ancestors
-bool
-CanvasRenderingContext2D::PatternIsOpaque(CanvasRenderingContext2D::Style aStyle) const
-{
-=======
 bool CanvasRenderingContext2D::PatternIsOpaque(
     CanvasRenderingContext2D::Style aStyle, bool* aIsColor) const {
->>>>>>> upstream-releases
   const ContextState& state = CurrentState();
   bool opaque = false;
   bool color = false;
@@ -429,15 +386,6 @@ class AdjustedTargetForFilter {
       return nullptr;
     }
 
-<<<<<<< HEAD
-    RefPtr<DrawTarget> dt = mFinalTarget->CreateSimilarDrawTarget(
-        aRect.Size(), SurfaceFormat::B8G8R8A8);
-    if (!dt) {
-||||||| merged common ancestors
-    RefPtr<DrawTarget> dt =
-      mFinalTarget->CreateSimilarDrawTarget(aRect.Size(), SurfaceFormat::B8G8R8A8);
-    if (!dt) {
-=======
     RefPtr<DrawTarget> dt = mFinalTarget->CreateSimilarDrawTarget(
         aRect.Size(), SurfaceFormat::B8G8R8A8);
 
@@ -447,7 +395,6 @@ class AdjustedTargetForFilter {
     }
 
     if (!dt || !dt->IsValid()) {
->>>>>>> upstream-releases
       aRect.SetEmpty();
       return nullptr;
     }
@@ -819,215 +766,6 @@ CanvasShutdownObserver::Observe(nsISupports* aSubject, const char* aTopic,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-class CanvasDrawObserver {
- public:
-  explicit CanvasDrawObserver(CanvasRenderingContext2D* aCanvasContext);
-
-  // Only enumerate draw calls that could affect the heuristic
-  enum DrawCallType { PutImageData, GetImageData, DrawImage };
-
-  // This is the one that we call on relevant draw calls and count
-  // GPU vs. CPU preferrable calls...
-  void DidDrawCall(DrawCallType aType);
-
-  // When this returns true, the observer is done making the decisions.
-  // Right now, we expect to get rid of the observer after the FrameEnd
-  // returns true, though the decision could eventually change if the
-  // function calls shift.  If we change to monitor the functions called
-  // and make decisions to change more than once, we would probably want
-  // FrameEnd to reset the timer and counters as it returns true.
-  bool FrameEnd();
-
- private:
-  // These values will be picked up from preferences:
-  int32_t mMinFramesBeforeDecision;
-  float mMinSecondsBeforeDecision;
-  int32_t mMinCallsBeforeDecision;
-
-  CanvasRenderingContext2D* mCanvasContext;
-  int32_t mSoftwarePreferredCalls;
-  int32_t mGPUPreferredCalls;
-  int32_t mFramesRendered;
-  TimeStamp mCreationTime;
-};
-
-// We are not checking for the validity of the preference values.  For example,
-// negative values will have an effect of a quick exit, so no harm done.
-CanvasDrawObserver::CanvasDrawObserver(CanvasRenderingContext2D* aCanvasContext)
-    : mMinFramesBeforeDecision(gfxPrefs::CanvasAutoAccelerateMinFrames()),
-      mMinSecondsBeforeDecision(gfxPrefs::CanvasAutoAccelerateMinSeconds()),
-      mMinCallsBeforeDecision(gfxPrefs::CanvasAutoAccelerateMinCalls()),
-      mCanvasContext(aCanvasContext),
-      mSoftwarePreferredCalls(0),
-      mGPUPreferredCalls(0),
-      mFramesRendered(0),
-      mCreationTime(TimeStamp::NowLoRes()) {}
-
-void CanvasDrawObserver::DidDrawCall(DrawCallType aType) {
-  switch (aType) {
-    case PutImageData:
-    case GetImageData:
-      if (mGPUPreferredCalls == 0 && mSoftwarePreferredCalls == 0) {
-        mCreationTime = TimeStamp::NowLoRes();
-      }
-      mSoftwarePreferredCalls++;
-      break;
-    case DrawImage:
-      if (mGPUPreferredCalls == 0 && mSoftwarePreferredCalls == 0) {
-        mCreationTime = TimeStamp::NowLoRes();
-      }
-      mGPUPreferredCalls++;
-      break;
-  }
-}
-
-// If we return true, the observer is done making the decisions...
-bool CanvasDrawObserver::FrameEnd() {
-  mFramesRendered++;
-
-  // We log the first mMinFramesBeforeDecision frames of any
-  // canvas object then make a call to determine whether it should
-  // be GPU or CPU backed
-  if ((mFramesRendered >= mMinFramesBeforeDecision) ||
-      ((TimeStamp::NowLoRes() - mCreationTime).ToSeconds()) >
-          mMinSecondsBeforeDecision) {
-    // If we don't have enough data, don't bother changing...
-    if (mGPUPreferredCalls > mMinCallsBeforeDecision ||
-        mSoftwarePreferredCalls > mMinCallsBeforeDecision) {
-      CanvasRenderingContext2D::RenderingMode switchToMode;
-      if (mGPUPreferredCalls >= mSoftwarePreferredCalls) {
-        switchToMode =
-            CanvasRenderingContext2D::RenderingMode::OpenGLBackendMode;
-      } else {
-        switchToMode =
-            CanvasRenderingContext2D::RenderingMode::SoftwareBackendMode;
-      }
-      if (switchToMode != mCanvasContext->mRenderingMode) {
-        if (!mCanvasContext->SwitchRenderingMode(switchToMode)) {
-          gfxDebug() << "Canvas acceleration failed mode switch to "
-                     << switchToMode;
-        }
-      }
-    }
-
-    // If we ever redesign this class to constantly monitor the functions
-    // and keep making decisions, we would probably want to reset the counters
-    // and the timers here...
-    return true;
-  }
-  return false;
-}
-
-||||||| merged common ancestors
-class CanvasDrawObserver
-{
-public:
-  explicit CanvasDrawObserver(CanvasRenderingContext2D* aCanvasContext);
-
-  // Only enumerate draw calls that could affect the heuristic
-  enum DrawCallType {
-    PutImageData,
-    GetImageData,
-    DrawImage
-  };
-
-  // This is the one that we call on relevant draw calls and count
-  // GPU vs. CPU preferrable calls...
-  void DidDrawCall(DrawCallType aType);
-
-  // When this returns true, the observer is done making the decisions.
-  // Right now, we expect to get rid of the observer after the FrameEnd
-  // returns true, though the decision could eventually change if the
-  // function calls shift.  If we change to monitor the functions called
-  // and make decisions to change more than once, we would probably want
-  // FrameEnd to reset the timer and counters as it returns true.
-  bool FrameEnd();
-
-private:
-  // These values will be picked up from preferences:
-  int32_t mMinFramesBeforeDecision;
-  float mMinSecondsBeforeDecision;
-  int32_t mMinCallsBeforeDecision;
-
-  CanvasRenderingContext2D* mCanvasContext;
-  int32_t mSoftwarePreferredCalls;
-  int32_t mGPUPreferredCalls;
-  int32_t mFramesRendered;
-  TimeStamp mCreationTime;
-};
-
-// We are not checking for the validity of the preference values.  For example,
-// negative values will have an effect of a quick exit, so no harm done.
-CanvasDrawObserver::CanvasDrawObserver(CanvasRenderingContext2D* aCanvasContext)
- : mMinFramesBeforeDecision(gfxPrefs::CanvasAutoAccelerateMinFrames())
- , mMinSecondsBeforeDecision(gfxPrefs::CanvasAutoAccelerateMinSeconds())
- , mMinCallsBeforeDecision(gfxPrefs::CanvasAutoAccelerateMinCalls())
- , mCanvasContext(aCanvasContext)
- , mSoftwarePreferredCalls(0)
- , mGPUPreferredCalls(0)
- , mFramesRendered(0)
- , mCreationTime(TimeStamp::NowLoRes())
-{}
-
-void
-CanvasDrawObserver::DidDrawCall(DrawCallType aType)
-{
-  switch (aType) {
-    case PutImageData:
-    case GetImageData:
-      if (mGPUPreferredCalls == 0 && mSoftwarePreferredCalls == 0) {
-        mCreationTime = TimeStamp::NowLoRes();
-      }
-      mSoftwarePreferredCalls++;
-      break;
-    case DrawImage:
-      if (mGPUPreferredCalls == 0 && mSoftwarePreferredCalls == 0) {
-        mCreationTime = TimeStamp::NowLoRes();
-      }
-      mGPUPreferredCalls++;
-      break;
-  }
-}
-
-// If we return true, the observer is done making the decisions...
-bool
-CanvasDrawObserver::FrameEnd()
-{
-  mFramesRendered++;
-
-  // We log the first mMinFramesBeforeDecision frames of any
-  // canvas object then make a call to determine whether it should
-  // be GPU or CPU backed
-  if ((mFramesRendered >= mMinFramesBeforeDecision) ||
-      ((TimeStamp::NowLoRes() - mCreationTime).ToSeconds()) > mMinSecondsBeforeDecision) {
-
-    // If we don't have enough data, don't bother changing...
-    if (mGPUPreferredCalls > mMinCallsBeforeDecision ||
-        mSoftwarePreferredCalls > mMinCallsBeforeDecision) {
-      CanvasRenderingContext2D::RenderingMode switchToMode;
-      if (mGPUPreferredCalls >= mSoftwarePreferredCalls) {
-        switchToMode = CanvasRenderingContext2D::RenderingMode::OpenGLBackendMode;
-      } else {
-        switchToMode = CanvasRenderingContext2D::RenderingMode::SoftwareBackendMode;
-      }
-      if (switchToMode != mCanvasContext->mRenderingMode) {
-        if (!mCanvasContext->SwitchRenderingMode(switchToMode)) {
-          gfxDebug() << "Canvas acceleration failed mode switch to " << switchToMode;
-        }
-      }
-    }
-
-    // If we ever redesign this class to constantly monitor the functions
-    // and keep making decisions, we would probably want to reset the counters
-    // and the timers here...
-    return true;
-  }
-  return false;
-}
-
-=======
->>>>>>> upstream-releases
 class CanvasRenderingContext2DUserData : public LayerUserData {
  public:
   explicit CanvasRenderingContext2DUserData(CanvasRenderingContext2D* aContext)
@@ -1070,18 +808,8 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE(CanvasRenderingContext2D)
 NS_IMPL_CYCLE_COLLECTION_CLASS(CanvasRenderingContext2D)
 
 NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(CanvasRenderingContext2D)
-<<<<<<< HEAD
   // Make sure we remove ourselves from the list of demotable contexts (raw
   // pointers), since we're logically destructed at this point.
-  CanvasRenderingContext2D::RemoveDemotableContext(tmp);
-||||||| merged common ancestors
-  // Make sure we remove ourselves from the list of demotable contexts (raw pointers),
-  // since we're logically destructed at this point.
-  CanvasRenderingContext2D::RemoveDemotableContext(tmp);
-=======
-  // Make sure we remove ourselves from the list of demotable contexts (raw
-  // pointers), since we're logically destructed at this point.
->>>>>>> upstream-releases
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mCanvasElement)
   NS_IMPL_CYCLE_COLLECTION_UNLINK(mDocShell)
   for (uint32_t i = 0; i < tmp->mStyleStack.Length(); i++) {
@@ -1208,69 +936,6 @@ CanvasRenderingContext2D::ContextState::~ContextState() = default;
 // Initialize our static variables.
 uintptr_t CanvasRenderingContext2D::sNumLivingContexts = 0;
 DrawTarget* CanvasRenderingContext2D::sErrorTarget = nullptr;
-<<<<<<< HEAD
-static bool sMaxContextsInitialized = false;
-static int32_t sMaxContexts = 0;
-
-CanvasRenderingContext2D::CanvasRenderingContext2D(
-    layers::LayersBackend aCompositorBackend)
-    : mRenderingMode(RenderingMode::OpenGLBackendMode),
-      mCompositorBackend(aCompositorBackend)
-      // these are the default values from the Canvas spec
-      ,
-      mWidth(0),
-      mHeight(0),
-      mZero(false),
-      mOpaqueAttrValue(false),
-      mContextAttributesHasAlpha(true),
-      mOpaque(false),
-      mResetLayer(true),
-      mIPC(false),
-      mIsSkiaGL(false),
-      mHasPendingStableStateCallback(false),
-      mDrawObserver(nullptr),
-      mIsEntireFrameInvalid(false),
-      mPredictManyRedrawCalls(false),
-      mIsCapturedFrameInvalid(false),
-      mPathTransformWillUpdate(false),
-      mInvalidateCount(0),
-      mWriteOnly(false) {
-  if (!sMaxContextsInitialized) {
-    sMaxContexts = gfxPrefs::CanvasAzureAcceleratedLimit();
-    sMaxContextsInitialized = true;
-  }
-||||||| merged common ancestors
-static bool sMaxContextsInitialized = false;
-static int32_t sMaxContexts = 0;
-
-
-
-CanvasRenderingContext2D::CanvasRenderingContext2D(layers::LayersBackend aCompositorBackend)
-  : mRenderingMode(RenderingMode::OpenGLBackendMode)
-  , mCompositorBackend(aCompositorBackend)
-  // these are the default values from the Canvas spec
-  , mWidth(0), mHeight(0)
-  , mZero(false)
-  , mOpaqueAttrValue(false)
-  , mContextAttributesHasAlpha(true)
-  , mOpaque(false)
-  , mResetLayer(true)
-  , mIPC(false)
-  , mIsSkiaGL(false)
-  , mHasPendingStableStateCallback(false)
-  , mDrawObserver(nullptr)
-  , mIsEntireFrameInvalid(false)
-  , mPredictManyRedrawCalls(false)
-  , mIsCapturedFrameInvalid(false)
-  , mPathTransformWillUpdate(false)
-  , mInvalidateCount(0)
-{
-  if (!sMaxContextsInitialized) {
-    sMaxContexts = gfxPrefs::CanvasAzureAcceleratedLimit();
-    sMaxContextsInitialized = true;
-  }
-=======
->>>>>>> upstream-releases
 
 CanvasRenderingContext2D::CanvasRenderingContext2D(
     layers::LayersBackend aCompositorBackend)
@@ -1296,16 +961,7 @@ CanvasRenderingContext2D::CanvasRenderingContext2D(
   nsContentUtils::RegisterShutdownObserver(mShutdownObserver);
 }
 
-<<<<<<< HEAD
 CanvasRenderingContext2D::~CanvasRenderingContext2D() {
-  RemoveDrawObserver();
-||||||| merged common ancestors
-CanvasRenderingContext2D::~CanvasRenderingContext2D()
-{
-  RemoveDrawObserver();
-=======
-CanvasRenderingContext2D::~CanvasRenderingContext2D() {
->>>>>>> upstream-releases
   RemovePostRefreshObserver();
   RemoveShutdownObserver();
   Reset();
@@ -1324,21 +980,9 @@ JSObject* CanvasRenderingContext2D::WrapObject(
   return CanvasRenderingContext2D_Binding::Wrap(aCx, this, aGivenProto);
 }
 
-<<<<<<< HEAD
-bool CanvasRenderingContext2D::ParseColor(const nsAString& aString,
-                                          nscolor* aColor) {
-  nsIDocument* document = mCanvasElement ? mCanvasElement->OwnerDoc() : nullptr;
-||||||| merged common ancestors
-bool
-CanvasRenderingContext2D::ParseColor(const nsAString& aString,
-                                     nscolor* aColor)
-{
-  nsIDocument* document = mCanvasElement ? mCanvasElement->OwnerDoc() : nullptr;
-=======
 bool CanvasRenderingContext2D::ParseColor(const nsAString& aString,
                                           nscolor* aColor) {
   Document* document = mCanvasElement ? mCanvasElement->OwnerDoc() : nullptr;
->>>>>>> upstream-releases
   css::Loader* loader = document ? document->CSSLoader() : nullptr;
 
   PresShell* presShell = GetPresShell();
@@ -1498,41 +1142,9 @@ void CanvasRenderingContext2D::Redraw(const gfx::Rect& aR) {
   mCanvasElement->InvalidateCanvasContent(&aR);
 }
 
-<<<<<<< HEAD
-void CanvasRenderingContext2D::DidRefresh() {
-  if (IsTargetValid() && mIsSkiaGL) {
-    SkiaGLGlue* glue = gfxPlatform::GetPlatform()->GetSkiaGLGlue();
-    MOZ_ASSERT(glue);
-||||||| merged common ancestors
-void
-CanvasRenderingContext2D::DidRefresh()
-{
-  if (IsTargetValid() && mIsSkiaGL) {
-    SkiaGLGlue* glue = gfxPlatform::GetPlatform()->GetSkiaGLGlue();
-    MOZ_ASSERT(glue);
-=======
 void CanvasRenderingContext2D::DidRefresh() {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    auto gl = glue->GetGLContext();
-    gl->FlushIfHeavyGLCallsSinceLastFlush();
-  }
-}
 
 void CanvasRenderingContext2D::RedrawUser(const gfxRect& aR) {
-||||||| merged common ancestors
-    auto gl = glue->GetGLContext();
-    gl->FlushIfHeavyGLCallsSinceLastFlush();
-  }
-}
-
-void
-CanvasRenderingContext2D::RedrawUser(const gfxRect& aR)
-{
-=======
-void CanvasRenderingContext2D::RedrawUser(const gfxRect& aR) {
->>>>>>> upstream-releases
   mIsCapturedFrameInvalid = true;
 
   if (mIsEntireFrameInvalid) {
@@ -1544,143 +1156,8 @@ void CanvasRenderingContext2D::RedrawUser(const gfxRect& aR) {
   Redraw(newr);
 }
 
-<<<<<<< HEAD
-bool CanvasRenderingContext2D::AllowOpenGLCanvas() const {
-  // If we somehow didn't have the correct compositor in the constructor,
-  // we could do something like this to get it:
-  //
-  // HTMLCanvasElement* el = GetCanvas();
-  // if (el) {
-  //   mCompositorBackend = el->GetCompositorBackendType();
-  // }
-  //
-  // We could have LAYERS_NONE if there was no widget at the time of
-  // canvas creation, but in that case the
-  // HTMLCanvasElement::GetCompositorBackendType would return LAYERS_NONE
-  // as well, so it wouldn't help much.
-
-  return (mCompositorBackend == LayersBackend::LAYERS_OPENGL ||
-          mCompositorBackend == LayersBackend::LAYERS_WR) &&
-         gfxPlatform::GetPlatform()->AllowOpenGLCanvas();
-}
-
-bool CanvasRenderingContext2D::SwitchRenderingMode(
-    RenderingMode aRenderingMode) {
-  if (!(IsTargetValid() || mBufferProvider) ||
-      mRenderingMode == aRenderingMode) {
-    return false;
-  }
-
-  MOZ_ASSERT(mBufferProvider);
-
-#ifdef USE_SKIA_GPU
-  // Do not attempt to switch into GL mode if the platform doesn't allow it.
-  if ((aRenderingMode == RenderingMode::OpenGLBackendMode) &&
-      !AllowOpenGLCanvas()) {
-    return false;
-  }
-#endif
-
-  RefPtr<PersistentBufferProvider> oldBufferProvider = mBufferProvider;
-
-  // Return the old target to the buffer provider.
-  // We need to do this before calling EnsureTarget.
-  ReturnTarget();
-  mTarget = nullptr;
-  mBufferProvider = nullptr;
-  mResetLayer = true;
-
-  // Recreate mTarget using the new rendering mode
-  RenderingMode attemptedMode = EnsureTarget(nullptr, aRenderingMode);
-  if (!IsTargetValid()) {
-    return false;
-  }
-
-  if (oldBufferProvider && mTarget) {
-    CopyBufferProvider(*oldBufferProvider, *mTarget,
-                       IntRect(0, 0, mWidth, mHeight));
-  }
-
-  // We succeeded, so update mRenderingMode to reflect reality
-  mRenderingMode = attemptedMode;
-
-  return true;
-}
-
 bool CanvasRenderingContext2D::CopyBufferProvider(
     PersistentBufferProvider& aOld, DrawTarget& aTarget, IntRect aCopyRect) {
-||||||| merged common ancestors
-bool
-CanvasRenderingContext2D::AllowOpenGLCanvas() const
-{
-  // If we somehow didn't have the correct compositor in the constructor,
-  // we could do something like this to get it:
-  //
-  // HTMLCanvasElement* el = GetCanvas();
-  // if (el) {
-  //   mCompositorBackend = el->GetCompositorBackendType();
-  // }
-  //
-  // We could have LAYERS_NONE if there was no widget at the time of
-  // canvas creation, but in that case the
-  // HTMLCanvasElement::GetCompositorBackendType would return LAYERS_NONE
-  // as well, so it wouldn't help much.
-
-  return (mCompositorBackend == LayersBackend::LAYERS_OPENGL ||
-          mCompositorBackend == LayersBackend::LAYERS_WR) &&
-    gfxPlatform::GetPlatform()->AllowOpenGLCanvas();
-}
-
-bool CanvasRenderingContext2D::SwitchRenderingMode(RenderingMode aRenderingMode)
-{
-  if (!(IsTargetValid() || mBufferProvider) || mRenderingMode == aRenderingMode) {
-    return false;
-  }
-
-  MOZ_ASSERT(mBufferProvider);
-
-#ifdef USE_SKIA_GPU
-  // Do not attempt to switch into GL mode if the platform doesn't allow it.
-  if ((aRenderingMode == RenderingMode::OpenGLBackendMode) &&
-      !AllowOpenGLCanvas()) {
-      return false;
-  }
-#endif
-
-  RefPtr<PersistentBufferProvider> oldBufferProvider = mBufferProvider;
-
-  // Return the old target to the buffer provider.
-  // We need to do this before calling EnsureTarget.
-  ReturnTarget();
-  mTarget = nullptr;
-  mBufferProvider = nullptr;
-  mResetLayer = true;
-
-  // Recreate mTarget using the new rendering mode
-  RenderingMode attemptedMode = EnsureTarget(nullptr, aRenderingMode);
-  if (!IsTargetValid()) {
-    return false;
-  }
-
-  if (oldBufferProvider && mTarget) {
-    CopyBufferProvider(*oldBufferProvider, *mTarget, IntRect(0, 0, mWidth, mHeight));
-  }
-
-  // We succeeded, so update mRenderingMode to reflect reality
-  mRenderingMode = attemptedMode;
-
-  return true;
-}
-
-bool
-CanvasRenderingContext2D::CopyBufferProvider(PersistentBufferProvider& aOld,
-                                             DrawTarget& aTarget,
-                                             IntRect aCopyRect)
-{
-=======
-bool CanvasRenderingContext2D::CopyBufferProvider(
-    PersistentBufferProvider& aOld, DrawTarget& aTarget, IntRect aCopyRect) {
->>>>>>> upstream-releases
   // Borrowing the snapshot must be done after ReturnTarget.
   RefPtr<SourceSurface> snapshot = aOld.BorrowSnapshot();
 
@@ -1693,260 +1170,9 @@ bool CanvasRenderingContext2D::CopyBufferProvider(
   return true;
 }
 
-<<<<<<< HEAD
-void CanvasRenderingContext2D::Demote() {
-  if (SwitchRenderingMode(RenderingMode::SoftwareBackendMode)) {
-    RemoveDemotableContext(this);
-  }
-}
-
-std::vector<CanvasRenderingContext2D*>&
-CanvasRenderingContext2D::DemotableContexts() {
-  // This is a list of raw pointers to cycle-collected objects. We need to
-  // ensure that we remove elements from it during UNLINK (which can happen
-  // considerably before the actual destructor) since the object is logically
-  // destroyed at that point and will be in an inconsistant state.
-  static std::vector<CanvasRenderingContext2D*> contexts;
-  return contexts;
-}
-||||||| merged common ancestors
-void CanvasRenderingContext2D::Demote()
-{
-  if (SwitchRenderingMode(RenderingMode::SoftwareBackendMode)) {
-    RemoveDemotableContext(this);
-  }
-}
-
-std::vector<CanvasRenderingContext2D*>&
-CanvasRenderingContext2D::DemotableContexts()
-{
-  // This is a list of raw pointers to cycle-collected objects. We need to ensure
-  // that we remove elements from it during UNLINK (which can happen considerably before
-  // the actual destructor) since the object is logically destroyed at that point
-  // and will be in an inconsistant state.
-  static std::vector<CanvasRenderingContext2D*> contexts;
-  return contexts;
-}
-=======
 void CanvasRenderingContext2D::Demote() {}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void CanvasRenderingContext2D::DemoteOldestContextIfNecessary() {
-  MOZ_ASSERT(sMaxContextsInitialized);
-  if (sMaxContexts <= 0) {
-    return;
-  }
-
-  std::vector<CanvasRenderingContext2D*>& contexts = DemotableContexts();
-  if (contexts.size() < (size_t)sMaxContexts) return;
-
-  CanvasRenderingContext2D* oldest = contexts.front();
-  if (oldest->SwitchRenderingMode(RenderingMode::SoftwareBackendMode)) {
-    RemoveDemotableContext(oldest);
-  }
-}
-
-void CanvasRenderingContext2D::AddDemotableContext(
-    CanvasRenderingContext2D* aContext) {
-  MOZ_ASSERT(sMaxContextsInitialized);
-  if (sMaxContexts <= 0) return;
-
-  std::vector<CanvasRenderingContext2D*>::iterator iter = std::find(
-      DemotableContexts().begin(), DemotableContexts().end(), aContext);
-  if (iter != DemotableContexts().end()) return;
-
-  DemotableContexts().push_back(aContext);
-}
-
-void CanvasRenderingContext2D::RemoveDemotableContext(
-    CanvasRenderingContext2D* aContext) {
-  MOZ_ASSERT(sMaxContextsInitialized);
-  if (sMaxContexts <= 0) return;
-
-  std::vector<CanvasRenderingContext2D*>::iterator iter = std::find(
-      DemotableContexts().begin(), DemotableContexts().end(), aContext);
-  if (iter != DemotableContexts().end()) DemotableContexts().erase(iter);
-}
-
-#define MIN_SKIA_GL_DIMENSION 16
-
-bool CanvasRenderingContext2D::CheckSizeForSkiaGL(IntSize aSize) {
-  MOZ_ASSERT(NS_IsMainThread());
-
-  int minsize = Preferences::GetInt("gfx.canvas.min-size-for-skia-gl", 128);
-  if (aSize.width < MIN_SKIA_GL_DIMENSION ||
-      aSize.height < MIN_SKIA_GL_DIMENSION ||
-      (aSize.width * aSize.height < minsize * minsize)) {
-    return false;
-  }
-
-  // Maximum pref allows 3 different options:
-  //  0   means unlimited size
-  //  > 0 means use value as an absolute threshold
-  //  < 0 means use the number of screen pixels as a threshold
-  int maxsize = Preferences::GetInt("gfx.canvas.max-size-for-skia-gl", 0);
-
-  // unlimited max size
-  if (!maxsize) {
-    return true;
-  }
-
-  // absolute max size threshold
-  if (maxsize > 0) {
-    return aSize.width <= maxsize && aSize.height <= maxsize;
-  }
-
-  // Cache the number of pixels on the primary screen
-  static int32_t gScreenPixels = -1;
-  if (gScreenPixels < 0) {
-    // Default to historical mobile screen size of 980x480, like FishIEtank.
-    // In addition, allow skia use up to this size even if the screen is
-    // smaller. A lot content expects this size to work well. See Bug 999841
-    if (gfxPlatform::GetPlatform()->HasEnoughTotalSystemMemoryForSkiaGL()) {
-      gScreenPixels = 980 * 480;
-    }
-
-    nsCOMPtr<nsIScreenManager> screenManager =
-        do_GetService("@mozilla.org/gfx/screenmanager;1");
-    if (screenManager) {
-      nsCOMPtr<nsIScreen> primaryScreen;
-      screenManager->GetPrimaryScreen(getter_AddRefs(primaryScreen));
-      if (primaryScreen) {
-        int32_t x, y, width, height;
-        primaryScreen->GetRect(&x, &y, &width, &height);
-
-        gScreenPixels = std::max(gScreenPixels, width * height);
-      }
-    }
-  }
-
-  // Just always use a scale of 1.0. It can be changed if a lot of contents need
-  // it.
-  static double gDefaultScale = 1.0;
-
-  double scale = gDefaultScale > 0 ? gDefaultScale : 1.0;
-  int32_t threshold = ceil(scale * scale * gScreenPixels);
-
-  // screen size acts as max threshold
-  return threshold < 0 || (aSize.width * aSize.height) <= threshold;
-}
 
 void CanvasRenderingContext2D::ScheduleStableStateCallback() {
-||||||| merged common ancestors
-void
-CanvasRenderingContext2D::DemoteOldestContextIfNecessary()
-{
-  MOZ_ASSERT(sMaxContextsInitialized);
-  if (sMaxContexts <= 0) {
-    return;
-  }
-
-  std::vector<CanvasRenderingContext2D*>& contexts = DemotableContexts();
-  if (contexts.size() < (size_t)sMaxContexts)
-    return;
-
-  CanvasRenderingContext2D* oldest = contexts.front();
-  if (oldest->SwitchRenderingMode(RenderingMode::SoftwareBackendMode)) {
-    RemoveDemotableContext(oldest);
-  }
-}
-
-void
-CanvasRenderingContext2D::AddDemotableContext(CanvasRenderingContext2D* aContext)
-{
-  MOZ_ASSERT(sMaxContextsInitialized);
-  if (sMaxContexts <= 0)
-    return;
-
-  std::vector<CanvasRenderingContext2D*>::iterator iter = std::find(DemotableContexts().begin(), DemotableContexts().end(), aContext);
-  if (iter != DemotableContexts().end())
-    return;
-
-  DemotableContexts().push_back(aContext);
-}
-
-void
-CanvasRenderingContext2D::RemoveDemotableContext(CanvasRenderingContext2D* aContext)
-{
-  MOZ_ASSERT(sMaxContextsInitialized);
-  if (sMaxContexts <= 0)
-    return;
-
-  std::vector<CanvasRenderingContext2D*>::iterator iter = std::find(DemotableContexts().begin(), DemotableContexts().end(), aContext);
-  if (iter != DemotableContexts().end())
-    DemotableContexts().erase(iter);
-}
-
-#define MIN_SKIA_GL_DIMENSION 16
-
-bool
-CanvasRenderingContext2D::CheckSizeForSkiaGL(IntSize aSize) {
-  MOZ_ASSERT(NS_IsMainThread());
-
-  int minsize = Preferences::GetInt("gfx.canvas.min-size-for-skia-gl", 128);
-  if (aSize.width < MIN_SKIA_GL_DIMENSION || aSize.height < MIN_SKIA_GL_DIMENSION ||
-      (aSize.width * aSize.height < minsize * minsize)) {
-    return false;
-  }
-
-  // Maximum pref allows 3 different options:
-  //  0   means unlimited size
-  //  > 0 means use value as an absolute threshold
-  //  < 0 means use the number of screen pixels as a threshold
-  int maxsize = Preferences::GetInt("gfx.canvas.max-size-for-skia-gl", 0);
-
-  // unlimited max size
-  if (!maxsize) {
-    return true;
-  }
-
-  // absolute max size threshold
-  if (maxsize > 0) {
-    return aSize.width <= maxsize && aSize.height <= maxsize;
-  }
-
-  // Cache the number of pixels on the primary screen
-  static int32_t gScreenPixels = -1;
-  if (gScreenPixels < 0) {
-    // Default to historical mobile screen size of 980x480, like FishIEtank.
-    // In addition, allow skia use up to this size even if the screen is smaller.
-    // A lot content expects this size to work well.
-    // See Bug 999841
-    if (gfxPlatform::GetPlatform()->HasEnoughTotalSystemMemoryForSkiaGL()) {
-      gScreenPixels = 980 * 480;
-    }
-
-    nsCOMPtr<nsIScreenManager> screenManager =
-      do_GetService("@mozilla.org/gfx/screenmanager;1");
-    if (screenManager) {
-      nsCOMPtr<nsIScreen> primaryScreen;
-      screenManager->GetPrimaryScreen(getter_AddRefs(primaryScreen));
-      if (primaryScreen) {
-        int32_t x, y, width, height;
-        primaryScreen->GetRect(&x, &y, &width, &height);
-
-        gScreenPixels = std::max(gScreenPixels, width * height);
-      }
-    }
-  }
-
-  // Just always use a scale of 1.0. It can be changed if a lot of contents need it.
-  static double gDefaultScale = 1.0;
-
-  double scale = gDefaultScale > 0 ? gDefaultScale : 1.0;
-  int32_t threshold = ceil(scale * scale * gScreenPixels);
-
-  // screen size acts as max threshold
-  return threshold < 0 || (aSize.width * aSize.height) <= threshold;
-}
-
-void
-CanvasRenderingContext2D::ScheduleStableStateCallback()
-{
-=======
-void CanvasRenderingContext2D::ScheduleStableStateCallback() {
->>>>>>> upstream-releases
   if (mHasPendingStableStateCallback) {
     return;
   }
@@ -1992,62 +1218,22 @@ void CanvasRenderingContext2D::RestoreClipsAndTransformToTarget() {
   }
 }
 
-<<<<<<< HEAD
-CanvasRenderingContext2D::RenderingMode CanvasRenderingContext2D::EnsureTarget(
-    const gfx::Rect* aCoveredRect, RenderingMode aRenderingMode) {
-||||||| merged common ancestors
-CanvasRenderingContext2D::RenderingMode
-CanvasRenderingContext2D::EnsureTarget(const gfx::Rect* aCoveredRect,
-                                       RenderingMode aRenderingMode)
-{
-=======
 bool CanvasRenderingContext2D::EnsureTarget(const gfx::Rect* aCoveredRect,
                                             bool aWillClear) {
->>>>>>> upstream-releases
   if (AlreadyShutDown()) {
     gfxCriticalError() << "Attempt to render into a Canvas2d after shutdown.";
     SetErrorState();
     return false;
   }
 
-<<<<<<< HEAD
-  // This would make no sense, so make sure we don't get ourselves in a mess
-  MOZ_ASSERT(mRenderingMode != RenderingMode::DefaultBackendMode);
-
-  RenderingMode mode = (aRenderingMode == RenderingMode::DefaultBackendMode)
-                           ? mRenderingMode
-                           : aRenderingMode;
-
-  if (mTarget && mode == mRenderingMode) {
-    return mRenderingMode;
-||||||| merged common ancestors
-  // This would make no sense, so make sure we don't get ourselves in a mess
-  MOZ_ASSERT(mRenderingMode != RenderingMode::DefaultBackendMode);
-
-  RenderingMode mode = (aRenderingMode == RenderingMode::DefaultBackendMode) ? mRenderingMode : aRenderingMode;
-
-  if (mTarget && mode == mRenderingMode) {
-    return mRenderingMode;
-=======
   if (mTarget) {
     return mTarget != sErrorTarget;
->>>>>>> upstream-releases
   }
 
   // Check that the dimensions are sane
-<<<<<<< HEAD
-  if (mWidth > gfxPrefs::MaxCanvasSize() ||
-      mHeight > gfxPrefs::MaxCanvasSize() || mWidth < 0 || mHeight < 0) {
-||||||| merged common ancestors
-  if (mWidth > gfxPrefs::MaxCanvasSize() ||
-      mHeight > gfxPrefs::MaxCanvasSize() ||
-      mWidth < 0 || mHeight < 0) {
-
-=======
   if (mWidth > StaticPrefs::gfx_canvas_max_size() ||
       mHeight > StaticPrefs::gfx_canvas_max_size() || mWidth < 0 ||
       mHeight < 0) {
->>>>>>> upstream-releases
     SetErrorState();
     return false;
   }
@@ -2108,23 +1294,11 @@ bool CanvasRenderingContext2D::EnsureTarget(const gfx::Rect* aCoveredRect,
   MOZ_ASSERT(newProvider);
 
   bool needsClear = !canDiscardContent;
-<<<<<<< HEAD
-  if (newTarget->GetBackendType() == gfx::BackendType::SKIA) {
-    // Skia expects the unused X channel to contains 0xFF even for opaque
-    // operations so we can't skip clearing in that case, even if we are going
-    // to cover the entire canvas in the next drawing operation.
-||||||| merged common ancestors
-  if (newTarget->GetBackendType() == gfx::BackendType::SKIA) {
-    // Skia expects the unused X channel to contains 0xFF even for opaque operations
-    // so we can't skip clearing in that case, even if we are going to cover the
-    // entire canvas in the next drawing operation.
-=======
   if (newTarget->GetBackendType() == gfx::BackendType::SKIA &&
       (needsClear || !aWillClear)) {
     // Skia expects the unused X channel to contains 0xFF even for opaque
     // operations so we can't skip clearing in that case, even if we are going
     // to cover the entire canvas in the next drawing operation.
->>>>>>> upstream-releases
     newTarget->ClearRect(canvasRect);
     needsClear = false;
   }
@@ -2215,122 +1389,9 @@ static already_AddRefed<LayerManager> LayerManagerFromCanvasElement(
       aCanvasElement->OwnerDoc());
 }
 
-<<<<<<< HEAD
-bool CanvasRenderingContext2D::TrySkiaGLTarget(
-    RefPtr<gfx::DrawTarget>& aOutDT,
-    RefPtr<layers::PersistentBufferProvider>& aOutProvider) {
-  aOutDT = nullptr;
-  aOutProvider = nullptr;
-
-  mIsSkiaGL = false;
-
-  IntSize size(mWidth, mHeight);
-  if (!AllowOpenGLCanvas() || !CheckSizeForSkiaGL(size)) {
-    return false;
-  }
-
-  RefPtr<LayerManager> layerManager =
-      LayerManagerFromCanvasElement(mCanvasElement);
-
-  if (!layerManager) {
-    return false;
-  }
-
-  DemoteOldestContextIfNecessary();
-  mBufferProvider = nullptr;
-
-#ifdef USE_SKIA_GPU
-  SkiaGLGlue* glue = gfxPlatform::GetPlatform()->GetSkiaGLGlue();
-  if (!glue || !glue->GetGrContext() || !glue->GetGLContext()) {
-    return false;
-  }
-
-  SurfaceFormat format = GetSurfaceFormat();
-  aOutDT = Factory::CreateDrawTargetSkiaWithGrContext(glue->GetGrContext(),
-                                                      size, format);
-  if (!aOutDT) {
-    gfxCriticalNote
-        << "Failed to create a SkiaGL DrawTarget, falling back to software\n";
-    return false;
-  }
-
-  MOZ_ASSERT(aOutDT->GetType() == DrawTargetType::HARDWARE_RASTER);
-
-  AddDemotableContext(this);
-  aOutProvider = new PersistentBufferProviderBasic(aOutDT);
-  mIsSkiaGL = true;
-  // Drop a note in the debug builds if we ever use accelerated Skia canvas.
-  gfxWarningOnce() << "Using SkiaGL canvas.";
-#endif
-
-  // could still be null if USE_SKIA_GPU is not #defined.
-  return !!aOutDT;
-}
-
 bool CanvasRenderingContext2D::TrySharedTarget(
     RefPtr<gfx::DrawTarget>& aOutDT,
     RefPtr<layers::PersistentBufferProvider>& aOutProvider) {
-||||||| merged common ancestors
-bool
-CanvasRenderingContext2D::TrySkiaGLTarget(RefPtr<gfx::DrawTarget>& aOutDT,
-                                          RefPtr<layers::PersistentBufferProvider>& aOutProvider)
-{
-  aOutDT = nullptr;
-  aOutProvider = nullptr;
-
-  mIsSkiaGL = false;
-
-  IntSize size(mWidth, mHeight);
-  if (!AllowOpenGLCanvas() || !CheckSizeForSkiaGL(size)) {
-    return false;
-  }
-
-
-  RefPtr<LayerManager> layerManager = LayerManagerFromCanvasElement(mCanvasElement);
-
-  if (!layerManager) {
-    return false;
-  }
-
-  DemoteOldestContextIfNecessary();
-  mBufferProvider = nullptr;
-
-#ifdef USE_SKIA_GPU
-  SkiaGLGlue* glue = gfxPlatform::GetPlatform()->GetSkiaGLGlue();
-  if (!glue || !glue->GetGrContext() || !glue->GetGLContext()) {
-    return false;
-  }
-
-  SurfaceFormat format = GetSurfaceFormat();
-  aOutDT = Factory::CreateDrawTargetSkiaWithGrContext(glue->GetGrContext(),
-                                                      size, format);
-  if (!aOutDT) {
-    gfxCriticalNote << "Failed to create a SkiaGL DrawTarget, falling back to software\n";
-    return false;
-  }
-
-  MOZ_ASSERT(aOutDT->GetType() == DrawTargetType::HARDWARE_RASTER);
-
-  AddDemotableContext(this);
-  aOutProvider = new PersistentBufferProviderBasic(aOutDT);
-  mIsSkiaGL = true;
-  // Drop a note in the debug builds if we ever use accelerated Skia canvas.
-  gfxWarningOnce() << "Using SkiaGL canvas.";
-#endif
-
-  // could still be null if USE_SKIA_GPU is not #defined.
-  return !!aOutDT;
-}
-
-bool
-CanvasRenderingContext2D::TrySharedTarget(RefPtr<gfx::DrawTarget>& aOutDT,
-                                          RefPtr<layers::PersistentBufferProvider>& aOutProvider)
-{
-=======
-bool CanvasRenderingContext2D::TrySharedTarget(
-    RefPtr<gfx::DrawTarget>& aOutDT,
-    RefPtr<layers::PersistentBufferProvider>& aOutProvider) {
->>>>>>> upstream-releases
   aOutDT = nullptr;
   aOutProvider = nullptr;
 
@@ -2539,31 +1600,6 @@ CanvasRenderingContext2D::SetContextOptions(JSContext* aCx,
     return NS_ERROR_UNEXPECTED;
   }
 
-<<<<<<< HEAD
-  if (Preferences::GetBool("gfx.canvas.willReadFrequently.enable", false)) {
-    // Use software when there is going to be a lot of readback
-    if (attributes.mWillReadFrequently) {
-      // We want to lock into software, so remove the observer that
-      // may potentially change that...
-      RemoveDrawObserver();
-      mRenderingMode = RenderingMode::SoftwareBackendMode;
-    }
-  }
-
-||||||| merged common ancestors
-  if (Preferences::GetBool("gfx.canvas.willReadFrequently.enable", false)) {
-    // Use software when there is going to be a lot of readback
-    if (attributes.mWillReadFrequently) {
-
-      // We want to lock into software, so remove the observer that
-      // may potentially change that...
-      RemoveDrawObserver();
-      mRenderingMode = RenderingMode::SoftwareBackendMode;
-    }
-  }
-
-=======
->>>>>>> upstream-releases
   mContextAttributesHasAlpha = attributes.mAlpha;
   UpdateIsOpaque();
 
@@ -2609,17 +1645,8 @@ nsString CanvasRenderingContext2D::GetHitRegion(
 
 NS_IMETHODIMP
 CanvasRenderingContext2D::GetInputStream(const char* aMimeType,
-<<<<<<< HEAD
-                                         const char16_t* aEncoderOptions,
-                                         nsIInputStream** aStream) {
-||||||| merged common ancestors
-                                         const char16_t* aEncoderOptions,
-                                         nsIInputStream** aStream)
-{
-=======
                                          const nsAString& aEncoderOptions,
                                          nsIInputStream** aStream) {
->>>>>>> upstream-releases
   nsCString enccid("@mozilla.org/image/encoder;2?type=");
   enccid += aMimeType;
   nsCOMPtr<imgIEncoder> encoder = do_CreateInstance(enccid.get());
@@ -2638,13 +1665,6 @@ CanvasRenderingContext2D::GetInputStream(const char* aMimeType,
                                       aStream);
 }
 
-<<<<<<< HEAD
-SurfaceFormat CanvasRenderingContext2D::GetSurfaceFormat() const {
-||||||| merged common ancestors
-SurfaceFormat
-CanvasRenderingContext2D::GetSurfaceFormat() const
-{
-=======
 already_AddRefed<mozilla::gfx::SourceSurface>
 CanvasRenderingContext2D::GetSurfaceSnapshot(gfxAlphaType* aOutAlphaType) {
   if (aOutAlphaType) {
@@ -2670,7 +1690,6 @@ CanvasRenderingContext2D::GetSurfaceSnapshot(gfxAlphaType* aOutAlphaType) {
 }
 
 SurfaceFormat CanvasRenderingContext2D::GetSurfaceFormat() const {
->>>>>>> upstream-releases
   return mOpaque ? SurfaceFormat::B8G8R8X8 : SurfaceFormat::B8G8R8A8;
 }
 
@@ -3111,19 +2130,9 @@ already_AddRefed<CanvasPattern> CanvasRenderingContext2D::CreatePattern(
     return nullptr;
   }
 
-<<<<<<< HEAD
-  RefPtr<CanvasPattern> pat =
-      new CanvasPattern(this, res.GetSourceSurface(), repeatMode,
-                        res.mPrincipal, res.mIsWriteOnly, res.mCORSUsed);
-||||||| merged common ancestors
-  RefPtr<CanvasPattern> pat = new CanvasPattern(this, res.GetSourceSurface(), repeatMode,
-                                                res.mPrincipal, res.mIsWriteOnly,
-                                                res.mCORSUsed);
-=======
   RefPtr<CanvasPattern> pat =
       new CanvasPattern(this, surface, repeatMode, res.mPrincipal,
                         res.mIsWriteOnly, res.mCORSUsed);
->>>>>>> upstream-releases
   return pat.forget();
 }
 
@@ -3143,22 +2152,12 @@ void CanvasRenderingContext2D::SetShadowColor(const nsAString& aShadowColor) {
 // filters
 //
 
-<<<<<<< HEAD
-static already_AddRefed<RawServoDeclarationBlock> CreateDeclarationForServo(
-    nsCSSPropertyID aProperty, const nsAString& aPropertyValue,
-    nsIDocument* aDocument) {
-  RefPtr<URLExtraData> data = new URLExtraData(
-      aDocument->GetDocBaseURI(), aDocument->GetDocumentURI(),
-      aDocument->NodePrincipal(), aDocument->GetReferrerPolicy());
-||||||| merged common ancestors
-=======
 static already_AddRefed<RawServoDeclarationBlock> CreateDeclarationForServo(
     nsCSSPropertyID aProperty, const nsAString& aPropertyValue,
     Document* aDocument) {
   RefPtr<URLExtraData> data = new URLExtraData(
       aDocument->GetDocBaseURI(), aDocument->GetDocumentURI(),
       aDocument->NodePrincipal(), aDocument->GetReferrerPolicy());
->>>>>>> upstream-releases
 
   ServoCSSParser::ParsingEnvironment env(
       data, aDocument->GetCompatibilityMode(), aDocument->CSSLoader());
@@ -3183,37 +2182,14 @@ static already_AddRefed<RawServoDeclarationBlock> CreateDeclarationForServo(
   return servoDeclarations.forget();
 }
 
-<<<<<<< HEAD
-static already_AddRefed<RawServoDeclarationBlock> CreateFontDeclarationForServo(
-    const nsAString& aFont, nsIDocument* aDocument) {
-||||||| merged common ancestors
-static already_AddRefed<RawServoDeclarationBlock>
-CreateFontDeclarationForServo(const nsAString& aFont,
-                              nsIDocument* aDocument)
-{
-=======
 static already_AddRefed<RawServoDeclarationBlock> CreateFontDeclarationForServo(
     const nsAString& aFont, Document* aDocument) {
->>>>>>> upstream-releases
   return CreateDeclarationForServo(eCSSProperty_font, aFont, aDocument);
 }
 
-<<<<<<< HEAD
-static already_AddRefed<ComputedStyle> GetFontStyleForServo(
-    Element* aElement, const nsAString& aFont, nsIPresShell* aPresShell,
-    nsAString& aOutUsedFont, ErrorResult& aError) {
-||||||| merged common ancestors
-static already_AddRefed<ComputedStyle>
-GetFontStyleForServo(Element* aElement, const nsAString& aFont,
-                     nsIPresShell* aPresShell,
-                     nsAString& aOutUsedFont,
-                     ErrorResult& aError)
-{
-=======
 static already_AddRefed<ComputedStyle> GetFontStyleForServo(
     Element* aElement, const nsAString& aFont, PresShell* aPresShell,
     nsAString& aOutUsedFont, ErrorResult& aError) {
->>>>>>> upstream-releases
   RefPtr<RawServoDeclarationBlock> declarations =
       CreateFontDeclarationForServo(aFont, aPresShell->GetDocument());
   if (!declarations) {
@@ -3270,35 +2246,13 @@ static already_AddRefed<ComputedStyle> GetFontStyleForServo(
 }
 
 static already_AddRefed<RawServoDeclarationBlock>
-<<<<<<< HEAD
-CreateFilterDeclarationForServo(const nsAString& aFilter,
-                                nsIDocument* aDocument) {
-||||||| merged common ancestors
-CreateFilterDeclarationForServo(const nsAString& aFilter,
-                                nsIDocument* aDocument)
-{
-=======
 CreateFilterDeclarationForServo(const nsAString& aFilter, Document* aDocument) {
->>>>>>> upstream-releases
   return CreateDeclarationForServo(eCSSProperty_filter, aFilter, aDocument);
 }
 
-<<<<<<< HEAD
-static already_AddRefed<ComputedStyle> ResolveFilterStyleForServo(
-    const nsAString& aFilterString, const ComputedStyle* aParentStyle,
-    nsIPresShell* aPresShell, ErrorResult& aError) {
-||||||| merged common ancestors
-static already_AddRefed<ComputedStyle>
-ResolveFilterStyleForServo(const nsAString& aFilterString,
-                           const ComputedStyle* aParentStyle,
-                           nsIPresShell* aPresShell,
-                           ErrorResult& aError)
-{
-=======
 static already_AddRefed<ComputedStyle> ResolveFilterStyleForServo(
     const nsAString& aFilterString, const ComputedStyle* aParentStyle,
     PresShell* aPresShell, ErrorResult& aError) {
->>>>>>> upstream-releases
   RefPtr<RawServoDeclarationBlock> declarations =
       CreateFilterDeclarationForServo(aFilterString, aPresShell->GetDocument());
   if (!declarations) {
@@ -3320,21 +2274,9 @@ static already_AddRefed<ComputedStyle> ResolveFilterStyleForServo(
   return computedValues.forget();
 }
 
-<<<<<<< HEAD
-bool CanvasRenderingContext2D::ParseFilter(
-    const nsAString& aString, nsTArray<nsStyleFilter>& aFilterChain,
-    ErrorResult& aError) {
-||||||| merged common ancestors
-bool
-CanvasRenderingContext2D::ParseFilter(const nsAString& aString,
-                                      nsTArray<nsStyleFilter>& aFilterChain,
-                                      ErrorResult& aError)
-{
-=======
 bool CanvasRenderingContext2D::ParseFilter(
     const nsAString& aString, StyleOwnedSlice<StyleFilter>& aFilterChain,
     ErrorResult& aError) {
->>>>>>> upstream-releases
   if (!mCanvasElement && !mDocShell) {
     NS_WARNING(
         "Canvas element must be non-null or a docshell must be provided");
@@ -3348,13 +2290,7 @@ bool CanvasRenderingContext2D::ParseFilter(
     return false;
   }
 
-<<<<<<< HEAD
-  nsString usedFont;  // unused
-||||||| merged common ancestors
-  nsString usedFont; // unused
-=======
   nsAutoString usedFont;  // unused
->>>>>>> upstream-releases
 
   RefPtr<ComputedStyle> parentStyle = GetFontStyleForServo(
       mCanvasElement, GetFont(), presShell, usedFont, aError);
@@ -3362,69 +2298,26 @@ bool CanvasRenderingContext2D::ParseFilter(
     return false;
   }
 
-<<<<<<< HEAD
-  RefPtr<ComputedStyle> computedValues =
-      ResolveFilterStyleForServo(aString, parentStyle, presShell, aError);
-  if (!computedValues) {
-||||||| merged common ancestors
-  RefPtr<ComputedStyle> computedValues =
-    ResolveFilterStyleForServo(aString,
-                               parentStyle,
-                               presShell,
-                               aError);
-  if (!computedValues) {
-=======
   RefPtr<ComputedStyle> style =
       ResolveFilterStyleForServo(aString, parentStyle, presShell, aError);
   if (!style) {
->>>>>>> upstream-releases
     return false;
   }
 
-<<<<<<< HEAD
-  const nsStyleEffects* effects =
-      computedValues->ComputedData()->GetStyleEffects();
-  // XXX: This mFilters is a one shot object, we probably could avoid copying.
-  aFilterChain = effects->mFilters;
-||||||| merged common ancestors
-  const nsStyleEffects* effects = computedValues->ComputedData()->GetStyleEffects();
-  // XXX: This mFilters is a one shot object, we probably could avoid copying.
-  aFilterChain = effects->mFilters;
-=======
   aFilterChain = style->StyleEffects()->mFilters;
->>>>>>> upstream-releases
   return true;
 }
 
-<<<<<<< HEAD
-void CanvasRenderingContext2D::SetFilter(const nsAString& aFilter,
-                                         ErrorResult& aError) {
-  nsTArray<nsStyleFilter> filterChain;
-||||||| merged common ancestors
-void
-CanvasRenderingContext2D::SetFilter(const nsAString& aFilter, ErrorResult& aError)
-{
-  nsTArray<nsStyleFilter> filterChain;
-=======
 void CanvasRenderingContext2D::SetFilter(const nsAString& aFilter,
                                          ErrorResult& aError) {
   StyleOwnedSlice<StyleFilter> filterChain;
->>>>>>> upstream-releases
   if (ParseFilter(aFilter, filterChain, aError)) {
     CurrentState().filterString = aFilter;
     CurrentState().filterChain = std::move(filterChain);
     if (mCanvasElement) {
       CurrentState().autoSVGFiltersObserver =
-<<<<<<< HEAD
-          SVGObserverUtils::ObserveFiltersForCanvasContext(
-              this, mCanvasElement, CurrentState().filterChain);
-||||||| merged common ancestors
-        SVGObserverUtils::ObserveFiltersForCanvasContext(this, mCanvasElement,
-                                                   CurrentState().filterChain);
-=======
           SVGObserverUtils::ObserveFiltersForCanvasContext(
               this, mCanvasElement, CurrentState().filterChain.AsSpan());
->>>>>>> upstream-releases
       UpdateFilter();
     }
   }
@@ -3467,18 +2360,8 @@ class CanvasUserSpaceMetrics : public UserSpaceMetricsWithSize {
   nsPresContext* mPresContext;
 };
 
-<<<<<<< HEAD
-void CanvasRenderingContext2D::UpdateFilter() {
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-||||||| merged common ancestors
-void
-CanvasRenderingContext2D::UpdateFilter()
-{
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-=======
 void CanvasRenderingContext2D::UpdateFilter() {
   RefPtr<PresShell> presShell = GetPresShell();
->>>>>>> upstream-releases
   if (!presShell || presShell->IsDestroying()) {
     // Ensure we set an empty filter and update the state to
     // reflect the current "taint" status of the canvas
@@ -3498,30 +2381,6 @@ void CanvasRenderingContext2D::UpdateFilter() {
   }
 
   bool sourceGraphicIsTainted =
-<<<<<<< HEAD
-      (mCanvasElement && mCanvasElement->IsWriteOnly());
-
-  CurrentState().filter = nsFilterInstance::GetFilterDescription(
-      mCanvasElement, CurrentState().filterChain, sourceGraphicIsTainted,
-      CanvasUserSpaceMetrics(
-          GetSize(), CurrentState().fontFont, CurrentState().fontLanguage,
-          CurrentState().fontExplicitLanguage, presShell->GetPresContext()),
-      gfxRect(0, 0, mWidth, mHeight), CurrentState().filterAdditionalImages);
-||||||| merged common ancestors
-    (mCanvasElement && mCanvasElement->IsWriteOnly());
-
-  CurrentState().filter =
-    nsFilterInstance::GetFilterDescription(mCanvasElement,
-      CurrentState().filterChain,
-      sourceGraphicIsTainted,
-      CanvasUserSpaceMetrics(GetSize(),
-                             CurrentState().fontFont,
-                             CurrentState().fontLanguage,
-                             CurrentState().fontExplicitLanguage,
-                             presShell->GetPresContext()),
-      gfxRect(0, 0, mWidth, mHeight),
-      CurrentState().filterAdditionalImages);
-=======
       (mCanvasElement && mCanvasElement->IsWriteOnly());
 
   CurrentState().filter = nsFilterInstance::GetFilterDescription(
@@ -3531,7 +2390,6 @@ void CanvasRenderingContext2D::UpdateFilter() {
           GetSize(), CurrentState().fontFont, CurrentState().fontLanguage,
           CurrentState().fontExplicitLanguage, presShell->GetPresContext()),
       gfxRect(0, 0, mWidth, mHeight), CurrentState().filterAdditionalImages);
->>>>>>> upstream-releases
   CurrentState().filterSourceGraphicTainted = sourceGraphicIsTainted;
 }
 
@@ -3646,19 +2504,10 @@ void CanvasRenderingContext2D::FillRect(double aX, double aY, double aW,
   state = nullptr;
 
   CompositionOp op = UsedOperation();
-<<<<<<< HEAD
-  bool discardContent =
-      PatternIsOpaque(Style::FILL) &&
-      (op == CompositionOp::OP_OVER || op == CompositionOp::OP_SOURCE);
-||||||| merged common ancestors
-  bool discardContent = PatternIsOpaque(Style::FILL)
-    && (op == CompositionOp::OP_OVER || op == CompositionOp::OP_SOURCE);
-=======
   bool isColor;
   bool discardContent =
       PatternIsOpaque(Style::FILL, &isColor) &&
       (op == CompositionOp::OP_OVER || op == CompositionOp::OP_SOURCE);
->>>>>>> upstream-releases
   const gfx::Rect fillRect(aX, aY, aW, aH);
   EnsureTarget(discardContent ? &fillRect : nullptr, discardContent && isColor);
   if (!IsTargetValid()) {
@@ -4334,15 +3183,9 @@ bool CanvasRenderingContext2D::SetFontInternal(const nsAString& aFont,
   // pixels to CSS pixels, to adjust for the difference in expectations from
   // other nsFontMetrics clients.
   resizedFont.size =
-<<<<<<< HEAD
-      (fontStyle->mSize * c->AppUnitsPerDevPixel()) / AppUnitsPerCSSPixel();
-||||||| merged common ancestors
-    (fontStyle->mSize * c->AppUnitsPerDevPixel()) / AppUnitsPerCSSPixel();
-=======
       (fontStyle->mSize * c->AppUnitsPerDevPixel()) / AppUnitsPerCSSPixel();
 
   c->Document()->FlushUserFontSet();
->>>>>>> upstream-releases
 
   nsFontMetrics::Params params;
   params.language = fontStyle->mLanguage;
@@ -4832,19 +3675,10 @@ nsresult CanvasRenderingContext2D::DrawOrMeasureText(
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  if (!presShell) return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  if (!presShell)
-    return NS_ERROR_FAILURE;
-=======
   RefPtr<PresShell> presShell = GetPresShell();
   if (!presShell) {
     return NS_ERROR_FAILURE;
   }
->>>>>>> upstream-releases
 
   Document* document = presShell->GetDocument();
 
@@ -4978,14 +3812,8 @@ nsresult CanvasRenderingContext2D::DrawOrMeasureText(
   processor.mFontgrp
       ->UpdateUserFonts();  // ensure user font generation is current
   const gfxFont::Metrics& fontMetrics =
-<<<<<<< HEAD
-      processor.mFontgrp->GetFirstValidFont()->GetMetrics(gfxFont::eHorizontal);
-||||||| merged common ancestors
-    processor.mFontgrp->GetFirstValidFont()->GetMetrics(gfxFont::eHorizontal);
-=======
       processor.mFontgrp->GetFirstValidFont()->GetMetrics(
           nsFontMetrics::eHorizontal);
->>>>>>> upstream-releases
 
   gfxFloat baselineAnchor;
 
@@ -5097,20 +3925,9 @@ gfxFontGroup* CanvasRenderingContext2D::GetCurrentFontStyle() {
       int32_t perDevPixel, perCSSPixel;
       GetAppUnitsValues(&perDevPixel, &perCSSPixel);
       gfxFloat devToCssSize = gfxFloat(perDevPixel) / gfxFloat(perCSSPixel);
-<<<<<<< HEAD
-      CurrentState().fontGroup = gfxPlatform::GetPlatform()->CreateFontGroup(
-          FontFamilyList(eFamily_sans_serif), &style, tp, nullptr,
-          devToCssSize);
-||||||| merged common ancestors
-      CurrentState().fontGroup =
-        gfxPlatform::GetPlatform()->CreateFontGroup(FontFamilyList(eFamily_sans_serif),
-                                                    &style, tp,
-                                                    nullptr, devToCssSize);
-=======
       CurrentState().fontGroup = gfxPlatform::GetPlatform()->CreateFontGroup(
           FontFamilyList(StyleGenericFontFamily::SansSerif), &style, tp,
           nullptr, devToCssSize);
->>>>>>> upstream-releases
       if (CurrentState().fontGroup) {
         CurrentState().font = kDefaultFontStyle;
       } else {
@@ -5247,18 +4064,9 @@ bool CanvasRenderingContext2D::IsPointInPath(JSContext* aCx, double aX,
 
   // Check for site-specific permission and return false if no permission.
   if (mCanvasElement) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx,
-                                               aSubjectPrincipal)) {
-||||||| merged common ancestors
-    nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx, aSubjectPrincipal)) {
-=======
     nsCOMPtr<Document> ownerDoc = mCanvasElement->OwnerDoc();
     if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx,
                                                aSubjectPrincipal)) {
->>>>>>> upstream-releases
       return false;
     }
   }
@@ -5302,18 +4110,9 @@ bool CanvasRenderingContext2D::IsPointInStroke(
 
   // Check for site-specific permission and return false if no permission.
   if (mCanvasElement) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx,
-                                               aSubjectPrincipal)) {
-||||||| merged common ancestors
-    nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx, aSubjectPrincipal)) {
-=======
     nsCOMPtr<Document> ownerDoc = mCanvasElement->OwnerDoc();
     if (!CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx,
                                                aSubjectPrincipal)) {
->>>>>>> upstream-releases
       return false;
     }
   }
@@ -5376,13 +4175,6 @@ static already_AddRefed<SourceSurface> ExtractSubrect(SourceSurface* aSurface,
     return surface.forget();
   }
 
-<<<<<<< HEAD
-  RefPtr<DrawTarget> subrectDT = aTargetDT->CreateSimilarDrawTarget(
-      roundedOutSourceRectInt.Size(), SurfaceFormat::B8G8R8A8);
-||||||| merged common ancestors
-  RefPtr<DrawTarget> subrectDT =
-    aTargetDT->CreateSimilarDrawTarget(roundedOutSourceRectInt.Size(), SurfaceFormat::B8G8R8A8);
-=======
   RefPtr<DrawTarget> subrectDT = aTargetDT->CreateSimilarDrawTarget(
       roundedOutSourceRectInt.Size(), SurfaceFormat::B8G8R8A8);
 
@@ -5390,7 +4182,6 @@ static already_AddRefed<SourceSurface> ExtractSubrect(SourceSurface* aSurface,
     // See bug 1524554.
     subrectDT->ClearRect(gfx::Rect());
   }
->>>>>>> upstream-releases
 
   if (!subrectDT || !subrectDT->IsValid()) {
     RefPtr<SourceSurface> surface(aSurface);
@@ -5455,19 +4246,12 @@ CanvasRenderingContext2D::CachedSurfaceFromElement(Element* aElement) {
     return res;
   }
 
-<<<<<<< HEAD
-  res.mSourceSurface = CanvasImageCache::LookupAllCanvas(aElement, mIsSkiaGL);
-||||||| merged common ancestors
-  res.mSourceSurface =
-    CanvasImageCache::LookupAllCanvas(aElement, mIsSkiaGL);
-=======
   if (NS_FAILED(imgRequest->GetHadCrossOriginRedirects(
           &res.mHadCrossOriginRedirects))) {
     return res;
   }
 
   res.mSourceSurface = CanvasImageCache::LookupAllCanvas(aElement);
->>>>>>> upstream-releases
   if (!res.mSourceSurface) {
     return res;
   }
@@ -5501,38 +4285,12 @@ CanvasRenderingContext2D::CachedSurfaceFromElement(Element* aElement) {
 // other valid value for optional_argc is 6 if sx, sy, sw, sh, dx, dy, dw and dh
 // are all passed in.
 
-<<<<<<< HEAD
 void CanvasRenderingContext2D::DrawImage(const CanvasImageSource& aImage,
                                          double aSx, double aSy, double aSw,
                                          double aSh, double aDx, double aDy,
                                          double aDw, double aDh,
                                          uint8_t aOptional_argc,
                                          ErrorResult& aError) {
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::DrawImage);
-  }
-
-||||||| merged common ancestors
-void
-CanvasRenderingContext2D::DrawImage(const CanvasImageSource& aImage,
-                                    double aSx, double aSy, double aSw,
-                                    double aSh, double aDx, double aDy,
-                                    double aDw, double aDh,
-                                    uint8_t aOptional_argc,
-                                    ErrorResult& aError)
-{
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::DrawImage);
-  }
-
-=======
-void CanvasRenderingContext2D::DrawImage(const CanvasImageSource& aImage,
-                                         double aSx, double aSy, double aSw,
-                                         double aSh, double aDx, double aDy,
-                                         double aDw, double aDh,
-                                         uint8_t aOptional_argc,
-                                         ErrorResult& aError) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aOptional_argc == 0 || aOptional_argc == 2 || aOptional_argc == 6);
 
   if (!ValidateRect(aDx, aDy, aDw, aDh, true)) {
@@ -5593,15 +4351,7 @@ void CanvasRenderingContext2D::DrawImage(const CanvasImageSource& aImage,
       element = video;
     }
 
-<<<<<<< HEAD
-    srcSurf = CanvasImageCache::LookupCanvas(element, mCanvasElement, &imgSize,
-                                             mIsSkiaGL);
-||||||| merged common ancestors
-    srcSurf =
-     CanvasImageCache::LookupCanvas(element, mCanvasElement, &imgSize, mIsSkiaGL);
-=======
     srcSurf = CanvasImageCache::LookupCanvas(element, mCanvasElement, &imgSize);
->>>>>>> upstream-releases
   }
 
   nsLayoutUtils::DirectDrawInfo drawInfo;
@@ -5651,15 +4401,8 @@ void CanvasRenderingContext2D::DrawImage(const CanvasImageSource& aImage,
 
     if (res.mSourceSurface) {
       if (res.mImageRequest) {
-<<<<<<< HEAD
-        CanvasImageCache::NotifyDrawImage(
-            element, mCanvasElement, res.mSourceSurface, imgSize, mIsSkiaGL);
-||||||| merged common ancestors
-        CanvasImageCache::NotifyDrawImage(element, mCanvasElement, res.mSourceSurface, imgSize, mIsSkiaGL);
-=======
         CanvasImageCache::NotifyDrawImage(element, mCanvasElement,
                                           res.mSourceSurface, imgSize);
->>>>>>> upstream-releases
       }
       srcSurf = res.mSourceSurface;
     } else {
@@ -5965,18 +4708,9 @@ void CanvasRenderingContext2D::DrawWindow(nsGlobalWindowInner& aWindow,
   if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_USE_WIDGET_LAYERS) {
     renderDocFlags |= RenderDocumentFlags::UseWidgetLayers;
   }
-<<<<<<< HEAD
-  if (aFlags &
-      CanvasRenderingContext2D_Binding::DRAWWINDOW_ASYNC_DECODE_IMAGES) {
-    renderDocFlags |= nsIPresShell::RENDER_ASYNC_DECODE_IMAGES;
-||||||| merged common ancestors
-  if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_ASYNC_DECODE_IMAGES) {
-    renderDocFlags |= nsIPresShell::RENDER_ASYNC_DECODE_IMAGES;
-=======
   if (aFlags &
       CanvasRenderingContext2D_Binding::DRAWWINDOW_ASYNC_DECODE_IMAGES) {
     renderDocFlags |= RenderDocumentFlags::AsyncDecodeImages;
->>>>>>> upstream-releases
   }
   if (aFlags & CanvasRenderingContext2D_Binding::DRAWWINDOW_DO_NOT_FLUSH) {
     renderDocFlags |= RenderDocumentFlags::DrawWindowNotFlushing;
@@ -6042,20 +4776,10 @@ void CanvasRenderingContext2D::DrawWindow(nsGlobalWindowInner& aWindow,
 
   RefPtr<PresShell> presShell = presContext->PresShell();
 
-<<<<<<< HEAD
-  Unused << shell->RenderDocument(r, renderDocFlags, backgroundColor, thebes);
-  // If this canvas was contained in the drawn window, the pre-transaction
-  // callback may have returned its DT. If so, we must reacquire it here.
-||||||| merged common ancestors
-  Unused << shell->RenderDocument(r, renderDocFlags, backgroundColor, thebes);
-  // If this canvas was contained in the drawn window, the pre-transaction callback
-  // may have returned its DT. If so, we must reacquire it here.
-=======
   Unused << presShell->RenderDocument(r, renderDocFlags, backgroundColor,
                                       thebes);
   // If this canvas was contained in the drawn window, the pre-transaction
   // callback may have returned its DT. If so, we must reacquire it here.
->>>>>>> upstream-releases
   EnsureTarget(discardContent ? &drawRect : nullptr);
 
   if (drawDT) {
@@ -6110,30 +4834,9 @@ void CanvasRenderingContext2D::DrawWindow(nsGlobalWindowInner& aWindow,
 // device pixel getting/setting
 //
 
-<<<<<<< HEAD
 already_AddRefed<ImageData> CanvasRenderingContext2D::GetImageData(
     JSContext* aCx, double aSx, double aSy, double aSw, double aSh,
     nsIPrincipal& aSubjectPrincipal, ErrorResult& aError) {
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::GetImageData);
-  }
-
-||||||| merged common ancestors
-already_AddRefed<ImageData>
-CanvasRenderingContext2D::GetImageData(JSContext* aCx, double aSx,
-                                       double aSy, double aSw, double aSh,
-                                       nsIPrincipal& aSubjectPrincipal,
-                                       ErrorResult& aError)
-{
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::GetImageData);
-  }
-
-=======
-already_AddRefed<ImageData> CanvasRenderingContext2D::GetImageData(
-    JSContext* aCx, double aSx, double aSy, double aSw, double aSh,
-    nsIPrincipal& aSubjectPrincipal, ErrorResult& aError) {
->>>>>>> upstream-releases
   if (!mCanvasElement && !mDocShell) {
     NS_ERROR("No canvas element and no docshell in GetImageData!!!");
     aError.Throw(NS_ERROR_DOM_SECURITY_ERR);
@@ -6199,33 +4902,9 @@ already_AddRefed<ImageData> CanvasRenderingContext2D::GetImageData(
   return imageData.forget();
 }
 
-<<<<<<< HEAD
 nsresult CanvasRenderingContext2D::GetImageDataArray(
     JSContext* aCx, int32_t aX, int32_t aY, uint32_t aWidth, uint32_t aHeight,
     nsIPrincipal& aSubjectPrincipal, JSObject** aRetval) {
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::GetImageData);
-  }
-
-||||||| merged common ancestors
-nsresult
-CanvasRenderingContext2D::GetImageDataArray(JSContext* aCx,
-                                            int32_t aX,
-                                            int32_t aY,
-                                            uint32_t aWidth,
-                                            uint32_t aHeight,
-                                            nsIPrincipal& aSubjectPrincipal,
-                                            JSObject** aRetval)
-{
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::GetImageData);
-  }
-
-=======
-nsresult CanvasRenderingContext2D::GetImageDataArray(
-    JSContext* aCx, int32_t aX, int32_t aY, uint32_t aWidth, uint32_t aHeight,
-    nsIPrincipal& aSubjectPrincipal, JSObject** aRetval) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aWidth && aHeight);
 
   CheckedInt<uint32_t> len = CheckedInt<uint32_t>(aWidth) * aHeight * 4;
@@ -6285,18 +4964,9 @@ nsresult CanvasRenderingContext2D::GetImageDataArray(
   // internal uses).
   bool usePlaceholder = false;
   if (mCanvasElement) {
-<<<<<<< HEAD
-    nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    usePlaceholder = !CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx,
-                                                            aSubjectPrincipal);
-||||||| merged common ancestors
-    nsCOMPtr<nsIDocument> ownerDoc = mCanvasElement->OwnerDoc();
-    usePlaceholder = !CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx, aSubjectPrincipal);
-=======
     nsCOMPtr<Document> ownerDoc = mCanvasElement->OwnerDoc();
     usePlaceholder = !CanvasUtils::IsImageExtractionAllowed(ownerDoc, aCx,
                                                             aSubjectPrincipal);
->>>>>>> upstream-releases
   }
 
   do {
@@ -6374,7 +5044,6 @@ void CanvasRenderingContext2D::PutImageData(ImageData& aImageData, double aDx,
   MOZ_ASSERT(inited);
 
   aError = PutImageData_explicit(JS::ToInt32(aDx), JS::ToInt32(aDy),
-<<<<<<< HEAD
                                  aImageData.Width(), aImageData.Height(), &arr,
                                  true, JS::ToInt32(aDirtyX),
                                  JS::ToInt32(aDirtyY), JS::ToInt32(aDirtyWidth),
@@ -6385,41 +5054,6 @@ nsresult CanvasRenderingContext2D::PutImageData_explicit(
     int32_t aX, int32_t aY, uint32_t aW, uint32_t aH,
     dom::Uint8ClampedArray* aArray, bool aHasDirtyRect, int32_t aDirtyX,
     int32_t aDirtyY, int32_t aDirtyWidth, int32_t aDirtyHeight) {
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::PutImageData);
-  }
-
-||||||| merged common ancestors
-                                aImageData.Width(), aImageData.Height(),
-                                &arr, true,
-                                JS::ToInt32(aDirtyX),
-                                JS::ToInt32(aDirtyY),
-                                JS::ToInt32(aDirtyWidth),
-                                JS::ToInt32(aDirtyHeight));
-}
-
-nsresult
-CanvasRenderingContext2D::PutImageData_explicit(int32_t aX, int32_t aY, uint32_t aW, uint32_t aH,
-                                                dom::Uint8ClampedArray* aArray,
-                                                bool aHasDirtyRect, int32_t aDirtyX, int32_t aDirtyY,
-                                                int32_t aDirtyWidth, int32_t aDirtyHeight)
-{
-  if (mDrawObserver) {
-    mDrawObserver->DidDrawCall(CanvasDrawObserver::DrawCallType::PutImageData);
-  }
-
-=======
-                                 aImageData.Width(), aImageData.Height(), &arr,
-                                 true, JS::ToInt32(aDirtyX),
-                                 JS::ToInt32(aDirtyY), JS::ToInt32(aDirtyWidth),
-                                 JS::ToInt32(aDirtyHeight));
-}
-
-nsresult CanvasRenderingContext2D::PutImageData_explicit(
-    int32_t aX, int32_t aY, uint32_t aW, uint32_t aH,
-    dom::Uint8ClampedArray* aArray, bool aHasDirtyRect, int32_t aDirtyX,
-    int32_t aDirtyY, int32_t aDirtyWidth, int32_t aDirtyHeight) {
->>>>>>> upstream-releases
   if (aW == 0 || aH == 0) {
     return NS_ERROR_DOM_INVALID_STATE_ERR;
   }
@@ -6587,57 +5221,9 @@ already_AddRefed<ImageData> CanvasRenderingContext2D::CreateImageData(
 
 static uint8_t g2DContextLayerUserData;
 
-<<<<<<< HEAD
-uint32_t CanvasRenderingContext2D::SkiaGLTex() const {
-  if (!mTarget) {
-    return 0;
-  }
-  MOZ_ASSERT(IsTargetValid());
-  return (uint32_t)(uintptr_t)mTarget->GetNativeSurface(
-      NativeSurfaceType::OPENGL_TEXTURE);
-}
-
-void CanvasRenderingContext2D::RemoveDrawObserver() {
-  if (mDrawObserver) {
-    delete mDrawObserver;
-    mDrawObserver = nullptr;
-  }
-}
-
-already_AddRefed<Layer> CanvasRenderingContext2D::GetCanvasLayer(
-    nsDisplayListBuilder* aBuilder, Layer* aOldLayer, LayerManager* aManager) {
-  if (mOpaque || mIsSkiaGL) {
-||||||| merged common ancestors
-
-uint32_t
-CanvasRenderingContext2D::SkiaGLTex() const
-{
-  if (!mTarget) {
-    return 0;
-  }
-  MOZ_ASSERT(IsTargetValid());
-  return (uint32_t)(uintptr_t)mTarget->GetNativeSurface(NativeSurfaceType::OPENGL_TEXTURE);
-}
-
-void CanvasRenderingContext2D::RemoveDrawObserver()
-{
-  if (mDrawObserver) {
-    delete mDrawObserver;
-    mDrawObserver = nullptr;
-  }
-}
-
-already_AddRefed<Layer>
-CanvasRenderingContext2D::GetCanvasLayer(nsDisplayListBuilder* aBuilder,
-                                         Layer* aOldLayer,
-                                         LayerManager* aManager)
-{
-  if (mOpaque || mIsSkiaGL) {
-=======
 already_AddRefed<Layer> CanvasRenderingContext2D::GetCanvasLayer(
     nsDisplayListBuilder* aBuilder, Layer* aOldLayer, LayerManager* aManager) {
   if (mOpaque) {
->>>>>>> upstream-releases
     // If we're opaque then make sure we have a surface so we paint black
     // instead of transparent.
     EnsureTarget();
@@ -6704,21 +5290,9 @@ already_AddRefed<Layer> CanvasRenderingContext2D::GetCanvasLayer(
   return canvasLayer.forget();
 }
 
-<<<<<<< HEAD
-bool CanvasRenderingContext2D::UpdateWebRenderCanvasData(
-    nsDisplayListBuilder* aBuilder, WebRenderCanvasData* aCanvasData) {
-  if (mOpaque || mIsSkiaGL) {
-||||||| merged common ancestors
-bool
-CanvasRenderingContext2D::UpdateWebRenderCanvasData(nsDisplayListBuilder* aBuilder,
-                                                    WebRenderCanvasData* aCanvasData)
-{
-  if (mOpaque || mIsSkiaGL) {
-=======
 bool CanvasRenderingContext2D::UpdateWebRenderCanvasData(
     nsDisplayListBuilder* aBuilder, WebRenderCanvasData* aCanvasData) {
   if (mOpaque) {
->>>>>>> upstream-releases
     // If we're opaque then make sure we have a surface so we paint black
     // instead of transparent.
     EnsureTarget();
@@ -6783,30 +5357,6 @@ bool CanvasRenderingContext2D::InitializeCanvasRenderer(
     }
   }
 
-<<<<<<< HEAD
-  if (mIsSkiaGL) {
-    GLuint skiaGLTex = SkiaGLTex();
-    if (skiaGLTex) {
-      SkiaGLGlue* glue = gfxPlatform::GetPlatform()->GetSkiaGLGlue();
-      MOZ_ASSERT(glue);
-      data.mGLContext = glue->GetGLContext();
-      data.mFrontbufferGLTex = skiaGLTex;
-    }
-  }
-
-||||||| merged common ancestors
-  if (mIsSkiaGL) {
-      GLuint skiaGLTex = SkiaGLTex();
-      if (skiaGLTex) {
-        SkiaGLGlue* glue = gfxPlatform::GetPlatform()->GetSkiaGLGlue();
-        MOZ_ASSERT(glue);
-        data.mGLContext = glue->GetGLContext();
-        data.mFrontbufferGLTex = skiaGLTex;
-      }
-  }
-
-=======
->>>>>>> upstream-releases
   data.mBufferProvider = mBufferProvider;
 
   aRenderer->Initialize(data);
@@ -7113,15 +5663,6 @@ void CanvasPath::EnsurePathBuilder() const {
   mPath = nullptr;
 }
 
-<<<<<<< HEAD
-size_t BindingJSObjectMallocBytes(CanvasRenderingContext2D* aContext) {
-  return aContext->GetWidth() * aContext->GetHeight() * 4;
-||||||| merged common ancestors
-size_t
-BindingJSObjectMallocBytes(CanvasRenderingContext2D* aContext)
-{
-  return aContext->GetWidth() * aContext->GetHeight() * 4;
-=======
 size_t BindingJSObjectMallocBytes(CanvasRenderingContext2D* aContext) {
   int32_t width = aContext->GetWidth();
   int32_t height = aContext->GetHeight();
@@ -7136,7 +5677,6 @@ size_t BindingJSObjectMallocBytes(CanvasRenderingContext2D* aContext) {
   }
 
   return bytes.value();
->>>>>>> upstream-releases
 }
 
 }  // namespace dom

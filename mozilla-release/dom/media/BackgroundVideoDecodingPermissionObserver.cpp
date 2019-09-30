@@ -22,17 +22,8 @@ BackgroundVideoDecodingPermissionObserver::
 NS_IMETHODIMP
 BackgroundVideoDecodingPermissionObserver::Observe(nsISupports* aSubject,
                                                    const char* aTopic,
-<<<<<<< HEAD
-                                                   const char16_t* aData) {
-  if (!StaticPrefs::MediaResumeBkgndVideoOnTabhover()) {
-||||||| merged common ancestors
-                                                   const char16_t* aData)
-{
-  if (!StaticPrefs::MediaResumeBkgndVideoOnTabhover()) {
-=======
                                                    const char16_t* aData) {
   if (!StaticPrefs::media_resume_bkgnd_video_on_tabhover()) {
->>>>>>> upstream-releases
     return NS_OK;
   }
 
@@ -100,18 +91,8 @@ BackgroundVideoDecodingPermissionObserver::
   MOZ_ASSERT(!mIsRegisteredForEvent);
 }
 
-<<<<<<< HEAD
-void BackgroundVideoDecodingPermissionObserver::EnableEvent() const {
-  nsIDocument* doc = GetOwnerDoc();
-||||||| merged common ancestors
-void
-BackgroundVideoDecodingPermissionObserver::EnableEvent() const
-{
-  nsIDocument* doc = GetOwnerDoc();
-=======
 void BackgroundVideoDecodingPermissionObserver::EnableEvent() const {
   dom::Document* doc = GetOwnerDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return;
   }
@@ -127,18 +108,8 @@ void BackgroundVideoDecodingPermissionObserver::EnableEvent() const {
   asyncDispatcher->PostDOMEvent();
 }
 
-<<<<<<< HEAD
-void BackgroundVideoDecodingPermissionObserver::DisableEvent() const {
-  nsIDocument* doc = GetOwnerDoc();
-||||||| merged common ancestors
-void
-BackgroundVideoDecodingPermissionObserver::DisableEvent() const
-{
-  nsIDocument* doc = GetOwnerDoc();
-=======
 void BackgroundVideoDecodingPermissionObserver::DisableEvent() const {
   dom::Document* doc = GetOwnerDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return;
   }
@@ -155,17 +126,8 @@ void BackgroundVideoDecodingPermissionObserver::DisableEvent() const {
 }
 
 already_AddRefed<nsPIDOMWindowOuter>
-<<<<<<< HEAD
-BackgroundVideoDecodingPermissionObserver::GetOwnerWindow() const {
-  nsIDocument* doc = GetOwnerDoc();
-||||||| merged common ancestors
-BackgroundVideoDecodingPermissionObserver::GetOwnerWindow() const
-{
-  nsIDocument* doc = GetOwnerDoc();
-=======
 BackgroundVideoDecodingPermissionObserver::GetOwnerWindow() const {
   dom::Document* doc = GetOwnerDoc();
->>>>>>> upstream-releases
   if (!doc) {
     return nullptr;
   }
@@ -184,15 +146,7 @@ BackgroundVideoDecodingPermissionObserver::GetOwnerWindow() const {
   return topWin.forget();
 }
 
-<<<<<<< HEAD
-nsIDocument* BackgroundVideoDecodingPermissionObserver::GetOwnerDoc() const {
-||||||| merged common ancestors
-nsIDocument*
-BackgroundVideoDecodingPermissionObserver::GetOwnerDoc() const
-{
-=======
 dom::Document* BackgroundVideoDecodingPermissionObserver::GetOwnerDoc() const {
->>>>>>> upstream-releases
   if (!mDecoder->GetOwner()) {
     return nullptr;
   }

@@ -354,49 +354,17 @@ class TextAttrsMgr {
    * "text-underline-style" and "text-underline-color" text attributes.
    */
 
-<<<<<<< HEAD
-  class TextDecorValue {
-   public:
-    TextDecorValue()
-        : mColor{0},
-          mLine{NS_STYLE_TEXT_DECORATION_LINE_NONE},
-          mStyle{NS_STYLE_TEXT_DECORATION_STYLE_NONE} {}
-||||||| merged common ancestors
-  class TextDecorValue
-  {
-  public:
-    TextDecorValue() :
-      mColor{0}, mLine{NS_STYLE_TEXT_DECORATION_LINE_NONE},
-      mStyle{NS_STYLE_TEXT_DECORATION_STYLE_NONE} { }
-=======
   class TextDecorValue {
    public:
     TextDecorValue()
         : mColor{0},
           mLine{StyleTextDecorationLine_NONE},
           mStyle{NS_STYLE_TEXT_DECORATION_STYLE_NONE} {}
->>>>>>> upstream-releases
     explicit TextDecorValue(nsIFrame* aFrame);
 
     nscolor Color() const { return mColor; }
     uint8_t Style() const { return mStyle; }
 
-<<<<<<< HEAD
-    bool IsDefined() const { return IsUnderline() || IsLineThrough(); }
-    bool IsUnderline() const {
-      return mLine & NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE;
-    }
-    bool IsLineThrough() const {
-      return mLine & NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH;
-    }
-||||||| merged common ancestors
-    bool IsDefined() const
-      { return IsUnderline() || IsLineThrough(); }
-    bool IsUnderline() const
-      { return mLine & NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE; }
-    bool IsLineThrough() const
-      { return mLine & NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH; }
-=======
     bool IsDefined() const { return IsUnderline() || IsLineThrough(); }
     bool IsUnderline() const {
       return bool(mLine & mozilla::StyleTextDecorationLine_UNDERLINE);
@@ -404,7 +372,6 @@ class TextAttrsMgr {
     bool IsLineThrough() const {
       return bool(mLine & mozilla::StyleTextDecorationLine_LINE_THROUGH);
     }
->>>>>>> upstream-releases
 
     bool operator==(const TextDecorValue& aValue) {
       return mColor == aValue.mColor && mLine == aValue.mLine &&

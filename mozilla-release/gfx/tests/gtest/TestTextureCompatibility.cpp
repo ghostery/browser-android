@@ -68,15 +68,7 @@ static void GetPlatformBackends(nsTArray<LayersBackend>& aBackends) {
 /**
  * This function will return a BasicCompositor to caller.
  */
-<<<<<<< HEAD
-already_AddRefed<Compositor> CreateBasicCompositor() {
-||||||| merged common ancestors
-already_AddRefed<Compositor>
-CreateBasicCompositor()
-{
-=======
 static already_AddRefed<Compositor> CreateBasicCompositor() {
->>>>>>> upstream-releases
   RefPtr<Compositor> compositor;
   // Init the platform.
   if (gfxPlatform::GetPlatform()) {
@@ -93,18 +85,8 @@ static already_AddRefed<Compositor> CreateBasicCompositor() {
  * This function checks if the textures react correctly when setting them to
  * BasicCompositor.
  */
-<<<<<<< HEAD
-void CheckCompatibilityWithBasicCompositor(
-    LayersBackend aBackends, nsTArray<RefPtr<TextureHost>>& aTextures) {
-||||||| merged common ancestors
-void
-CheckCompatibilityWithBasicCompositor(LayersBackend aBackends,
-                                      nsTArray<RefPtr<TextureHost>>& aTextures)
-{
-=======
 static void CheckCompatibilityWithBasicCompositor(
     LayersBackend aBackends, nsTArray<RefPtr<TextureHost>>& aTextures) {
->>>>>>> upstream-releases
   RefPtr<Compositor> compositor = CreateBasicCompositor();
   for (uint32_t i = 0; i < aTextures.Length(); i++) {
     if (!aTextures[i]) {
@@ -126,7 +108,8 @@ static void CheckCompatibilityWithBasicCompositor(
   }
 }
 
-TEST(Gfx, TestTextureCompatibility) {
+TEST(Gfx, TestTextureCompatibility)
+{
   nsTArray<LayersBackend> backendHints;
   RefPtr<TestSurfaceAllocator> deallocator = new TestSurfaceAllocator();
 

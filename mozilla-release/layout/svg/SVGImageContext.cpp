@@ -16,45 +16,17 @@
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ void SVGImageContext::MaybeStoreContextPaint(
-    Maybe<SVGImageContext>& aContext, nsIFrame* aFromFrame,
-    imgIContainer* aImgContainer) {
-  return MaybeStoreContextPaint(aContext, aFromFrame->Style(), aImgContainer);
-||||||| merged common ancestors
-/* static */ void
-SVGImageContext::MaybeStoreContextPaint(Maybe<SVGImageContext>& aContext,
-                                        nsIFrame* aFromFrame,
-                                        imgIContainer* aImgContainer)
-{
-  return MaybeStoreContextPaint(aContext,
-                                aFromFrame->Style(),
-                                aImgContainer);
-=======
 /* static */
 void SVGImageContext::MaybeStoreContextPaint(Maybe<SVGImageContext>& aContext,
                                              nsIFrame* aFromFrame,
                                              imgIContainer* aImgContainer) {
   return MaybeStoreContextPaint(aContext, aFromFrame->Style(), aImgContainer);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* static */ void SVGImageContext::MaybeStoreContextPaint(
-    Maybe<SVGImageContext>& aContext, ComputedStyle* aFromComputedStyle,
-    imgIContainer* aImgContainer) {
-||||||| merged common ancestors
-/* static */ void
-SVGImageContext::MaybeStoreContextPaint(Maybe<SVGImageContext>& aContext,
-                                        ComputedStyle* aFromComputedStyle,
-                                        imgIContainer* aImgContainer)
-{
-=======
 /* static */
 void SVGImageContext::MaybeStoreContextPaint(Maybe<SVGImageContext>& aContext,
                                              ComputedStyle* aFromComputedStyle,
                                              imgIContainer* aImgContainer) {
->>>>>>> upstream-releases
   const nsStyleSVG* style = aFromComputedStyle->StyleSVG();
 
   if (!style->ExposesContextProperties()) {

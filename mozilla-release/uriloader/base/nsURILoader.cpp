@@ -39,13 +39,7 @@
 #include "nsError.h"
 
 #include "nsICategoryManager.h"
-<<<<<<< HEAD
-#include "nsCExternalHandlerService.h"  // contains contractids for the helper app service
-||||||| merged common ancestors
-#include "nsCExternalHandlerService.h" // contains contractids for the helper app service
-=======
 #include "nsCExternalHandlerService.h"
->>>>>>> upstream-releases
 
 #include "nsIMIMEHeaderParam.h"
 #include "nsNetCID.h"
@@ -204,15 +198,7 @@ nsresult nsDocumentOpenInfo::Prepare() {
   return rv;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDocumentOpenInfo::OnStartRequest(nsIRequest* request,
-                                                 nsISupports* aCtxt) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDocumentOpenInfo::OnStartRequest(nsIRequest *request, nsISupports * aCtxt)
-{
-=======
 NS_IMETHODIMP nsDocumentOpenInfo::OnStartRequest(nsIRequest* request) {
->>>>>>> upstream-releases
   LOG(("[0x%p] nsDocumentOpenInfo::OnStartRequest", this));
   MOZ_ASSERT(request);
   if (!request) {
@@ -347,49 +333,21 @@ nsDocumentOpenInfo::CheckListenerChain() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsDocumentOpenInfo::OnDataAvailable(nsIRequest* request, nsISupports* aCtxt,
-                                    nsIInputStream* inStr,
-                                    uint64_t sourceOffset, uint32_t count) {
-||||||| merged common ancestors
-nsDocumentOpenInfo::OnDataAvailable(nsIRequest *request, nsISupports * aCtxt,
-                                    nsIInputStream * inStr,
-                                    uint64_t sourceOffset, uint32_t count)
-{
-=======
 nsDocumentOpenInfo::OnDataAvailable(nsIRequest* request, nsIInputStream* inStr,
                                     uint64_t sourceOffset, uint32_t count) {
->>>>>>> upstream-releases
   // if we have retarged to the end stream listener, then forward the call....
   // otherwise, don't do anything
 
   nsresult rv = NS_OK;
 
   if (m_targetStreamListener)
-<<<<<<< HEAD
-    rv = m_targetStreamListener->OnDataAvailable(request, aCtxt, inStr,
-                                                 sourceOffset, count);
-||||||| merged common ancestors
-    rv = m_targetStreamListener->OnDataAvailable(request, aCtxt, inStr, sourceOffset, count);
-=======
     rv = m_targetStreamListener->OnDataAvailable(request, inStr, sourceOffset,
                                                  count);
->>>>>>> upstream-releases
   return rv;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsDocumentOpenInfo::OnStopRequest(nsIRequest* request,
-                                                nsISupports* aCtxt,
-                                                nsresult aStatus) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsDocumentOpenInfo::OnStopRequest(nsIRequest *request, nsISupports *aCtxt, 
-                                                nsresult aStatus)
-{
-=======
 NS_IMETHODIMP nsDocumentOpenInfo::OnStopRequest(nsIRequest* request,
                                                 nsresult aStatus) {
->>>>>>> upstream-releases
   LOG(("[0x%p] nsDocumentOpenInfo::OnStopRequest", this));
 
   if (m_targetStreamListener) {

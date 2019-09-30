@@ -8,103 +8,6 @@
  * Check that we can set breakpoints in columns, not just lines.
  */
 
-<<<<<<< HEAD
-add_task(threadClientTest(({ threadClient, debuggee, client }) => {
-  return new Promise(resolve => {
-    // Debugger statement
-    client.addOneTimeListener("paused", function(event, packet) {
-      const source = threadClient.source(packet.frame.where.source);
-      const location = {
-        line: debuggee.line0 + 1,
-        column: 55,
-      };
-      let timesBreakpointHit = 0;
-
-      source.setBreakpoint(location).then(function([response, bpClient]) {
-        threadClient.addListener("paused", function onPaused(event, packet) {
-          Assert.equal(packet.type, "paused");
-          Assert.equal(packet.why.type, "breakpoint");
-          Assert.equal(packet.why.actors[0], bpClient.actor);
-          Assert.equal(packet.frame.where.source.actor, source.actor);
-          Assert.equal(packet.frame.where.line, location.line);
-          Assert.equal(packet.frame.where.column, location.column);
-
-          Assert.equal(debuggee.acc, timesBreakpointHit);
-          Assert.equal(packet.frame.environment.bindings.variables.i.value,
-                       timesBreakpointHit);
-
-          if (++timesBreakpointHit === 3) {
-            threadClient.removeListener("paused", onPaused);
-            bpClient.remove(function(response) {
-              threadClient.resume(resolve);
-            });
-          } else {
-            threadClient.resume();
-          }
-        });
-
-        // Continue until the breakpoint is hit.
-        threadClient.resume();
-||||||| merged common ancestors
-var gDebuggee;
-var gClient;
-var gThreadClient;
-var gCallback;
-
-function run_test() {
-  run_test_with_server(DebuggerServer, function() {
-    run_test_with_server(WorkerDebuggerServer, do_test_finished);
-  });
-  do_test_pending();
-}
-
-function run_test_with_server(server, callback) {
-  gCallback = callback;
-  initTestDebuggerServer(server);
-  gDebuggee = addTestGlobal("test-breakpoints", server);
-  gClient = new DebuggerClient(server.connectPipe());
-  gClient.connect().then(function() {
-    attachTestTabAndResume(gClient,
-                           "test-breakpoints",
-                           function(response, targetFront, threadClient) {
-                             gThreadClient = threadClient;
-                             test_column_breakpoint();
-                           });
-  });
-}
-
-function test_column_breakpoint() {
-  // Debugger statement
-  gClient.addOneTimeListener("paused", function(event, packet) {
-    const source = gThreadClient.source(packet.frame.where.source);
-    const location = {
-      line: gDebuggee.line0 + 1,
-      column: 55,
-    };
-    let timesBreakpointHit = 0;
-
-    source.setBreakpoint(location).then(function([response, bpClient]) {
-      gThreadClient.addListener("paused", function onPaused(event, packet) {
-        Assert.equal(packet.type, "paused");
-        Assert.equal(packet.why.type, "breakpoint");
-        Assert.equal(packet.why.actors[0], bpClient.actor);
-        Assert.equal(packet.frame.where.source.actor, source.actor);
-        Assert.equal(packet.frame.where.line, location.line);
-        Assert.equal(packet.frame.where.column, location.column);
-
-        Assert.equal(gDebuggee.acc, timesBreakpointHit);
-        Assert.equal(packet.frame.environment.bindings.variables.i.value,
-                     timesBreakpointHit);
-
-        if (++timesBreakpointHit === 3) {
-          gThreadClient.removeListener("paused", onPaused);
-          bpClient.remove(function(response) {
-            gThreadClient.resume(() => gClient.close().then(gCallback));
-          });
-        } else {
-          gThreadClient.resume();
-        }
-=======
 add_task(
   threadClientTest(({ threadClient, debuggee, client }) => {
     return new Promise(resolve => {
@@ -146,14 +49,7 @@ add_task(
 
         // Continue until the breakpoint is hit.
         threadClient.resume();
->>>>>>> upstream-releases
       });
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-      // Continue until the breakpoint is hit.
-      gThreadClient.resume();
-=======
 
       /* eslint-disable */
     Cu.evalInSandbox(
@@ -162,31 +58,6 @@ add_task(
       debuggee
     );
     /* eslint-enable */
->>>>>>> upstream-releases
     });
-<<<<<<< HEAD
-
-    /* eslint-disable */
-    Cu.evalInSandbox(
-      "var line0 = Error().lineNumber;\n" +
-      "(function () { debugger; this.acc = 0; for (var i = 0; i < 3; i++) this.acc++; }());",
-      debuggee
-    );
-    /* eslint-enable */
-  });
-}));
-||||||| merged common ancestors
-  });
-
-  /* eslint-disable */
-  Cu.evalInSandbox(
-    "var line0 = Error().lineNumber;\n" +
-    "(function () { debugger; this.acc = 0; for (var i = 0; i < 3; i++) this.acc++; }());",
-    gDebuggee
-  );
-  /* eslint-enable */
-}
-=======
   })
 );
->>>>>>> upstream-releases

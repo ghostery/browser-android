@@ -174,59 +174,11 @@ bool WebrtcAudioConduit::GetRecvPacketTypeStats(
   return mRecvChannelProxy->GetRTCPPacketTypeCounters(*aPacketCounts);
 }
 
-<<<<<<< HEAD
-bool WebrtcAudioConduit::GetAVStats(int32_t* jitterBufferDelayMs,
-                                    int32_t* playoutBufferDelayMs,
-                                    int32_t* avSyncOffsetMs) {
-  // Called from GetAudioFrame and from STS thread
-  mRecvChannelProxy->GetDelayEstimates(jitterBufferDelayMs,
-                                       playoutBufferDelayMs, avSyncOffsetMs);
-  return true;
-}
-
-bool WebrtcAudioConduit::GetRTPStats(unsigned int* jitterMs,
-                                     unsigned int* cumulativeLost) {
-  ASSERT_ON_THREAD(mStsThread);
-||||||| merged common ancestors
-bool WebrtcAudioConduit::GetAVStats(int32_t* jitterBufferDelayMs,
-                                    int32_t* playoutBufferDelayMs,
-                                    int32_t* avSyncOffsetMs) {
-  return !mPtrVoEVideoSync->GetDelayEstimate(mChannel,
-                                             jitterBufferDelayMs,
-                                             playoutBufferDelayMs,
-                                             avSyncOffsetMs);
-}
-
-bool WebrtcAudioConduit::GetRTPStats(unsigned int* jitterMs,
-                                     unsigned int* cumulativeLost) {
-  unsigned int maxJitterMs = 0;
-  unsigned int discardedPackets;
-=======
 bool WebrtcAudioConduit::GetRTPReceiverStats(unsigned int* jitterMs,
                                              unsigned int* cumulativeLost) {
   ASSERT_ON_THREAD(mStsThread);
->>>>>>> upstream-releases
   *jitterMs = 0;
   *cumulativeLost = 0;
-<<<<<<< HEAD
-  return !mSendChannelProxy->GetRTPStatistics(*jitterMs, *cumulativeLost);
-}
-
-bool WebrtcAudioConduit::GetRTCPReceiverReport(uint32_t* jitterMs,
-||||||| merged common ancestors
-  return !mPtrRTP->GetRTPStatistics(mChannel, *jitterMs, maxJitterMs,
-                                    discardedPackets, *cumulativeLost);
-}
-
-DOMHighResTimeStamp
-NTPtoDOMHighResTimeStamp(uint32_t ntpHigh, uint32_t ntpLow) {
-  return (uint32_t(ntpHigh - webrtc::kNtpJan1970) +
-          double(ntpLow) / webrtc::kMagicNtpFractionalUnit) * 1000;
-}
-
-bool WebrtcAudioConduit::GetRTCPReceiverReport(DOMHighResTimeStamp* timestamp,
-                                               uint32_t* jitterMs,
-=======
   if (!mRecvStream) {
     return false;
   }
@@ -237,53 +189,9 @@ bool WebrtcAudioConduit::GetRTCPReceiverReport(DOMHighResTimeStamp* timestamp,
 }
 
 bool WebrtcAudioConduit::GetRTCPReceiverReport(uint32_t* jitterMs,
->>>>>>> upstream-releases
                                                uint32_t* packetsReceived,
                                                uint64_t* bytesReceived,
                                                uint32_t* cumulativeLost,
-<<<<<<< HEAD
-                                               int32_t* rttMs) {
-  ASSERT_ON_THREAD(mStsThread);
-  double fractionLost = 0.0;
-  int64_t timestampTmp = 0;
-  int64_t rttMsTmp = 0;
-  bool res = false;
-  if (mSendChannelProxy) {
-    res = mSendChannelProxy->GetRTCPReceiverStatistics(
-        &timestampTmp, jitterMs, cumulativeLost, packetsReceived, bytesReceived,
-        &fractionLost, &rttMsTmp);
-  }
-  auto stats = mCall->Call()->GetStats();
-  int64_t rtt = stats.rtt_ms;
-#ifdef DEBUG
-  if (rtt > INT32_MAX) {
-    CSFLogError(LOGTAG,
-                "%s for VideoConduit:%p RTT is larger than the"
-                " maximum size of an RTCP RTT.",
-                __FUNCTION__, this);
-  }
-#endif
-  if (rtt > 0) {
-    *rttMs = rtt;
-  } else {
-    *rttMs = 0;
-  }
-
-||||||| merged common ancestors
-                                               int32_t* rttMs) {
-  double fractionLost;
-  int64_t timestampTmp;
-  int64_t rttMsTmp;
-  bool res = mChannelProxy->GetRTCPReceiverStatistics(&timestampTmp,
-                                                      jitterMs,
-                                                      cumulativeLost,
-                                                      packetsReceived,
-                                                      bytesReceived,
-                                                      &fractionLost,
-                                                      &rttMsTmp);
-  *timestamp = static_cast<double>(timestampTmp);
-  *rttMs = static_cast<uint32_t>(rttMsTmp);
-=======
                                                Maybe<double>* aOutRttSec) {
   ASSERT_ON_THREAD(mStsThread);
   double fractionLost = 0.0;
@@ -319,7 +227,6 @@ bool WebrtcAudioConduit::GetRTCPReceiverReport(uint32_t* jitterMs,
     }
   }
   *aOutRttSec = mRttSec;
->>>>>>> upstream-releases
   return res;
 }
 
@@ -364,22 +271,10 @@ bool WebrtcAudioConduit::InsertDTMFTone(int channel, int eventCode,
   return result != -1;
 }
 
-<<<<<<< HEAD
-void WebrtcAudioConduit::OnRtpPacket(const webrtc::WebRtcRTPHeader* aHeader,
-                                     const int64_t aTimestamp,
-                                     const uint32_t aJitter) {
-  ASSERT_ON_THREAD(mStsThread);
-||||||| merged common ancestors
-void
-WebrtcAudioConduit::OnRtpPacket(const webrtc::WebRtcRTPHeader* aHeader,
-                                const int64_t aTimestamp,
-                                const uint32_t aJitter) {
-=======
 void WebrtcAudioConduit::OnRtpPacket(const webrtc::RTPHeader& aHeader,
                                      const int64_t aTimestamp,
                                      const uint32_t aJitter) {
   ASSERT_ON_THREAD(mStsThread);
->>>>>>> upstream-releases
   mRtpSourceObserver.OnRtpPacket(aHeader, aTimestamp, aJitter);
 }
 
@@ -413,43 +308,11 @@ void WebrtcAudioConduit::InsertAudioLevelForContributingSource(
 /*
  * WebRTCAudioConduit Implementation
  */
-<<<<<<< HEAD
 MediaConduitErrorCode WebrtcAudioConduit::Init() {
   CSFLogDebug(LOGTAG, "%s this=%p", __FUNCTION__, this);
   MOZ_ASSERT(NS_IsMainThread());
 
   if (!(mPtrVoEBase = webrtc::VoEBase::GetInterface(GetVoiceEngine()))) {
-||||||| merged common ancestors
-MediaConduitErrorCode WebrtcAudioConduit::Init()
-{
-  CSFLogDebug(LOGTAG,  "%s this=%p", __FUNCTION__, this);
-
-#ifdef MOZ_WIDGET_ANDROID
-  JavaVM* jvm = mozilla::jni::GetVM();
-  jobject context = mozilla::AndroidBridge::Bridge()->GetGlobalContextRef();
-
-  if (webrtc::VoiceEngine::SetAndroidObjects(jvm, (void*)context) != 0) {
-    CSFLogError(LOGTAG, "%s Unable to set Android objects", __FUNCTION__);
-    return kMediaConduitSessionNotInited;
-  }
-#endif
-
-  // Per WebRTC APIs below function calls return nullptr on failure
-  if(!(mVoiceEngine = webrtc::VoiceEngine::Create()))
-  {
-    CSFLogError(LOGTAG, "%s Unable to create voice engine", __FUNCTION__);
-    return kMediaConduitSessionNotInited;
-  }
-
-  if(!(mPtrVoEBase = VoEBase::GetInterface(mVoiceEngine)))
-  {
-=======
-MediaConduitErrorCode WebrtcAudioConduit::Init() {
-  CSFLogDebug(LOGTAG, "%s this=%p", __FUNCTION__, this);
-  MOZ_ASSERT(NS_IsMainThread());
-
-  if (!(mPtrVoEBase = webrtc::VoEBase::GetInterface(GetVoiceEngine()))) {
->>>>>>> upstream-releases
     CSFLogError(LOGTAG, "%s Unable to initialize VoEBase", __FUNCTION__);
     return kMediaConduitSessionNotInited;
   }
@@ -509,43 +372,6 @@ MediaConduitErrorCode WebrtcAudioConduit::ConfigureSendMediaCodec(
 
   mDtmfEnabled = codecConfig->mDtmfEnabled;
 
-<<<<<<< HEAD
-  // TEMPORARY - see bug 694814 comment 2
-  nsresult rv;
-  nsCOMPtr<nsIPrefService> prefs =
-      do_GetService("@mozilla.org/preferences-service;1", &rv);
-  if (NS_SUCCEEDED(rv)) {
-    nsCOMPtr<nsIPrefBranch> branch = do_QueryInterface(prefs);
-
-    if (branch) {
-      branch->GetIntPref("media.peerconnection.capture_delay", &mCaptureDelay);
-    }
-  }
-
-||||||| merged common ancestors
-  if (codecConfig->mName == "opus" && codecConfig->mMaxPlaybackRate) {
-    if (mPtrVoECodec->SetOpusMaxPlaybackRate(
-          mChannel,
-          codecConfig->mMaxPlaybackRate) == -1) {
-      CSFLogError(LOGTAG, "%s SetOpusMaxPlaybackRate Failed %d ", __FUNCTION__,
-                  mPtrVoEBase->LastError());
-      return kMediaConduitUnknownError;
-    }
-  }
-
-  // TEMPORARY - see bug 694814 comment 2
-  nsresult rv;
-  nsCOMPtr<nsIPrefService> prefs = do_GetService("@mozilla.org/preferences-service;1", &rv);
-  if (NS_SUCCEEDED(rv)) {
-    nsCOMPtr<nsIPrefBranch> branch = do_QueryInterface(prefs);
-
-    if (branch) {
-      branch->GetIntPref("media.peerconnection.capture_delay", &mCaptureDelay);
-    }
-  }
-
-=======
->>>>>>> upstream-releases
   condError = StartTransmitting();
   if (condError != kMediaConduitNoError) {
     return condError;
@@ -586,18 +412,6 @@ MediaConduitErrorCode WebrtcAudioConduit::ConfigureRecvMediaCodecs(
       return condError;
     }
 
-<<<<<<< HEAD
-    webrtc::SdpAudioFormat::Parameters parameters;
-    if (codec->mName == "opus") {
-      parameters = {{"stereo", "1"}};
-||||||| merged common ancestors
-    webrtc::CodecInst cinst;
-    if(!CodecConfigToWebRTCCodec(codec,cinst))
-    {
-      CSFLogError(LOGTAG,"%s CodecConfig to WebRTC Codec Failed ",__FUNCTION__);
-      continue;
-    }
-=======
     webrtc::SdpAudioFormat::Parameters parameters;
     if (codec->mName == "opus") {
       if (codec->mChannels == 2) {
@@ -612,45 +426,12 @@ MediaConduitErrorCode WebrtcAudioConduit::ConfigureRecvMediaCodecs(
         parameters["maxplaybackrate"] = o.str();
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (codec->mMaxPlaybackRate) {
-        std::ostringstream o;
-        o << codec->mMaxPlaybackRate;
-        parameters["maxplaybackrate"] = o.str();
-      }
-    }
-||||||| merged common ancestors
-    if(mPtrVoECodec->SetRecPayloadType(mChannel,cinst) == -1)
-    {
-      error = mPtrVoEBase->LastError();
-      CSFLogError(LOGTAG,  "%s SetRecvCodec Failed %d ",__FUNCTION__, error);
-      continue;
-    }
-    CSFLogDebug(LOGTAG, "%s Successfully Set RecvCodec %s", __FUNCTION__,
-                                        codec->mName.c_str());
-=======
-    webrtc::SdpAudioFormat format(codec->mName, codec->mFreq, codec->mChannels,
-                                  parameters);
-    mRecvStreamConfig.decoder_map.emplace(codec->mType, format);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
     webrtc::SdpAudioFormat format(codec->mName, codec->mFreq, codec->mChannels,
                                   parameters);
     mRecvStreamConfig.decoder_map.emplace(codec->mType, format);
 
     mRecvStreamConfig.voe_channel_id = mRecvChannel;
-||||||| merged common ancestors
-    //copy this to local database
-    if(!CopyCodecToDB(codec)) {
-        CSFLogError(LOGTAG,"%s Unable to updated Codec Database", __FUNCTION__);
-        return kMediaConduitUnknownError;
-    }
-=======
-    mRecvStreamConfig.voe_channel_id = mRecvChannel;
->>>>>>> upstream-releases
     success = true;
   }  // end for
 
@@ -786,13 +567,6 @@ MediaConduitErrorCode WebrtcAudioConduit::SendAudioFrame(
     return kMediaConduitSessionNotInited;
   }
 
-<<<<<<< HEAD
-  capture_delay = mCaptureDelay;
-||||||| merged common ancestors
-
-  capture_delay = mCaptureDelay;
-=======
->>>>>>> upstream-releases
   // Insert the samples
   mPtrVoEBase->audio_transport()->PushCaptureData(
       mSendChannel, audio_data,
@@ -843,64 +617,7 @@ MediaConduitErrorCode WebrtcAudioConduit::GetAudioFrame(int16_t speechData[],
   // XXX Annoying, have to copy to our buffers -- refactor?
   lengthSamples = mAudioFrame.samples_per_channel_ * mAudioFrame.num_channels_;
   MOZ_RELEASE_ASSERT(lengthSamples <= lengthSamplesAllowed);
-<<<<<<< HEAD
   PodCopy(speechData, mAudioFrame.data(), lengthSamples);
-
-  // Not #ifdef DEBUG or on a log module so we can use it for about:webrtc/etc
-  mSamples += lengthSamples;
-  if (mSamples >= mLastSyncLog + samplingFreqHz) {
-    int jitter_buffer_delay_ms;
-    int playout_buffer_delay_ms;
-    int avsync_offset_ms;
-    if (GetAVStats(&jitter_buffer_delay_ms, &playout_buffer_delay_ms,
-                   &avsync_offset_ms)) {
-      if (avsync_offset_ms < 0) {
-        Telemetry::Accumulate(Telemetry::WEBRTC_AVSYNC_WHEN_VIDEO_LAGS_AUDIO_MS,
-                              -avsync_offset_ms);
-      } else {
-        Telemetry::Accumulate(Telemetry::WEBRTC_AVSYNC_WHEN_AUDIO_LAGS_VIDEO_MS,
-                              avsync_offset_ms);
-      }
-      CSFLogDebug(LOGTAG,
-                  "A/V sync: sync delta: %dms, audio jitter delay %dms, "
-                  "playout delay %dms",
-                  avsync_offset_ms, jitter_buffer_delay_ms,
-                  playout_buffer_delay_ms);
-    } else {
-      CSFLogError(LOGTAG, "A/V sync: GetAVStats failed");
-    }
-    mLastSyncLog = mSamples;
-  }
-||||||| merged common ancestors
-  PodCopy(speechData, mAudioFrame.data_, lengthSamples);
-
-  // Not #ifdef DEBUG or on a log module so we can use it for about:webrtc/etc
-  mSamples += lengthSamples;
-  if (mSamples >= mLastSyncLog + samplingFreqHz) {
-    int jitter_buffer_delay_ms;
-    int playout_buffer_delay_ms;
-    int avsync_offset_ms;
-    if (GetAVStats(&jitter_buffer_delay_ms,
-                   &playout_buffer_delay_ms,
-                   &avsync_offset_ms)) {
-      if (avsync_offset_ms < 0) {
-        Telemetry::Accumulate(Telemetry::WEBRTC_AVSYNC_WHEN_VIDEO_LAGS_AUDIO_MS,
-                              -avsync_offset_ms);
-      } else {
-        Telemetry::Accumulate(Telemetry::WEBRTC_AVSYNC_WHEN_AUDIO_LAGS_VIDEO_MS,
-                              avsync_offset_ms);
-      }
-      CSFLogDebug(LOGTAG,
-                  "A/V sync: sync delta: %dms, audio jitter delay %dms, playout delay %dms",
-                  avsync_offset_ms, jitter_buffer_delay_ms, playout_buffer_delay_ms);
-    } else {
-      CSFLogError(LOGTAG, "A/V sync: GetAVStats failed");
-    }
-    mLastSyncLog = mSamples;
-  }
-=======
-  PodCopy(speechData, mAudioFrame.data(), lengthSamples);
->>>>>>> upstream-releases
 
   CSFLogDebug(LOGTAG, "%s GetAudioFrame:Got samples: length %d ", __FUNCTION__,
               lengthSamples);
@@ -1033,27 +750,6 @@ MediaConduitErrorCode WebrtcAudioConduit::StopTransmittingLocked() {
   return kMediaConduitNoError;
 }
 
-<<<<<<< HEAD
-MediaConduitErrorCode WebrtcAudioConduit::StartTransmittingLocked() {
-  MOZ_ASSERT(NS_IsMainThread());
-  mMutex.AssertCurrentThreadOwns();
-
-  if (mEngineTransmitting) {
-    return kMediaConduitNoError;
-||||||| merged common ancestors
-MediaConduitErrorCode
-WebrtcAudioConduit::StartTransmitting()
-{
-  if (!mEngineTransmitting) {
-    //Let's Send Transport State-machine on the Engine
-    if(mPtrVoEBase->StartSend(mChannel) == -1)
-    {
-      int error = mPtrVoEBase->LastError();
-      CSFLogError(LOGTAG, "%s StartSend failed %d", __FUNCTION__, error);
-      return kMediaConduitUnknownError;
-    }
-    mEngineTransmitting = true;
-=======
 MediaConduitErrorCode WebrtcAudioConduit::StartTransmittingLocked() {
   MOZ_ASSERT(NS_IsMainThread());
   mMutex.AssertCurrentThreadOwns();
@@ -1064,12 +760,6 @@ MediaConduitErrorCode WebrtcAudioConduit::StartTransmittingLocked() {
 
   if (!mSendStream) {
     CreateSendStream();
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  if (!mSendStream) {
-    CreateSendStream();
   }
 
   mCall->Call()->SignalChannelNetworkState(webrtc::MediaType::AUDIO,
@@ -1077,14 +767,6 @@ MediaConduitErrorCode WebrtcAudioConduit::StartTransmittingLocked() {
   mSendStream->Start();
   mEngineTransmitting = true;
 
-||||||| merged common ancestors
-=======
-  mCall->Call()->SignalChannelNetworkState(webrtc::MediaType::AUDIO,
-                                           webrtc::kNetworkUp);
-  mSendStream->Start();
-  mEngineTransmitting = true;
-
->>>>>>> upstream-releases
   return kMediaConduitNoError;
 }
 
@@ -1170,38 +852,6 @@ bool WebrtcAudioConduit::SendRtcp(const uint8_t* data, size_t len) {
  * Converts between CodecConfig to WebRTC Codec Structure.
  */
 
-<<<<<<< HEAD
-bool WebrtcAudioConduit::CodecConfigToWebRTCCodec(
-    const AudioCodecConfig* codecInfo,
-    webrtc::AudioSendStream::Config& config) {
-  config.encoder_factory = webrtc::CreateBuiltinAudioEncoderFactory();
-||||||| merged common ancestors
-bool
-WebrtcAudioConduit::CodecConfigToWebRTCCodec(const AudioCodecConfig* codecInfo,
-                                              webrtc::CodecInst& cinst)
-{
-  const unsigned int plNameLength = codecInfo->mName.length();
-  memset(&cinst, 0, sizeof(webrtc::CodecInst));
-  if(sizeof(cinst.plname) < plNameLength+1)
-  {
-    CSFLogError(LOGTAG, "%s Payload name buffer capacity mismatch ",
-                                                      __FUNCTION__);
-    return false;
-  }
-  memcpy(cinst.plname, codecInfo->mName.c_str(), plNameLength);
-  cinst.plname[plNameLength]='\0';
-  cinst.pltype   =  codecInfo->mType;
-  cinst.rate     =  codecInfo->mRate;
-  cinst.pacsize  =  codecInfo->mPacSize;
-  cinst.plfreq   =  codecInfo->mFreq;
-  if (codecInfo->mName == "G722") {
-    // Compensate for G.722 spec error in RFC 1890
-    cinst.plfreq = 16000;
-  }
-  cinst.channels =  codecInfo->mChannels;
-  return true;
-}
-=======
 bool WebrtcAudioConduit::CodecConfigToWebRTCCodec(
     const AudioCodecConfig* codecInfo,
     webrtc::AudioSendStream::Config& config) {
@@ -1229,49 +879,14 @@ bool WebrtcAudioConduit::CodecConfigToWebRTCCodec(
 
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  webrtc::SdpAudioFormat::Parameters parameters;
-  if (codecInfo->mFECEnabled) {
-    parameters["useinbandfec"] = "1";
-  }
-||||||| merged common ancestors
-/**
-  *  Supported Sampling Frequencies.
-  */
-bool
-WebrtcAudioConduit::IsSamplingFreqSupported(int freq) const
-{
-  return GetNum10msSamplesForFrequency(freq) != 0;
-}
-=======
 /**
  *  Supported Sampling Frequencies.
  */
 bool WebrtcAudioConduit::IsSamplingFreqSupported(int freq) const {
   return GetNum10msSamplesForFrequency(freq) != 0;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (codecInfo->mName == "opus" && codecInfo->mMaxPlaybackRate) {
-    std::ostringstream o;
-    o << codecInfo->mMaxPlaybackRate;
-    parameters["maxplaybackrate"] = o.str();
-||||||| merged common ancestors
-/* Return block-length of 10 ms audio frame in number of samples */
-unsigned int
-WebrtcAudioConduit::GetNum10msSamplesForFrequency(int samplingFreqHz) const
-{
-  switch (samplingFreqHz)
-  {
-    case 16000: return 160; //160 samples
-    case 32000: return 320; //320 samples
-    case 44100: return 441; //441 samples
-    case 48000: return 480; //480 samples
-    default:    return 0; // invalid or unsupported
-=======
 /* Return block-length of 10 ms audio frame in number of samples */
 unsigned int WebrtcAudioConduit::GetNum10msSamplesForFrequency(
     int samplingFreqHz) const {
@@ -1286,72 +901,13 @@ unsigned int WebrtcAudioConduit::GetNum10msSamplesForFrequency(
       return 480;  // 480 samples
     default:
       return 0;  // invalid or unsupported
->>>>>>> upstream-releases
   }
-
-<<<<<<< HEAD
-  webrtc::SdpAudioFormat format(codecInfo->mName, codecInfo->mFreq,
-                                codecInfo->mChannels, parameters);
-  webrtc::AudioSendStream::Config::SendCodecSpec spec(codecInfo->mType, format);
-  config.send_codec_spec = spec;
-
-  return true;
 }
 
-||||||| merged common ancestors
-//Copy the codec passed into Conduit's database
-bool
-WebrtcAudioConduit::CopyCodecToDB(const AudioCodecConfig* codecInfo)
-{
-
-  AudioCodecConfig* cdcConfig = new AudioCodecConfig(codecInfo->mType,
-                                                     codecInfo->mName,
-                                                     codecInfo->mFreq,
-                                                     codecInfo->mPacSize,
-                                                     codecInfo->mChannels,
-                                                     codecInfo->mRate,
-                                                     codecInfo->mFECEnabled);
-  mRecvCodecList.push_back(cdcConfig);
-  return true;
-}
-
-=======
->>>>>>> upstream-releases
 /**
-<<<<<<< HEAD
- *  Supported Sampling Frequencies.
-||||||| merged common ancestors
- * Checks if 2 codec structs are same
-=======
  * Perform validation on the codecConfig to be applied.
  * Verifies if the codec is already applied.
->>>>>>> upstream-releases
  */
-<<<<<<< HEAD
-bool WebrtcAudioConduit::IsSamplingFreqSupported(int freq) const {
-  return GetNum10msSamplesForFrequency(freq) != 0;
-||||||| merged common ancestors
-bool
-WebrtcAudioConduit::CheckCodecsForMatch(const AudioCodecConfig* curCodecConfig,
-                                         const AudioCodecConfig* codecInfo) const
-{
-  if(!curCodecConfig)
-  {
-    return false;
-  }
-
-  if(curCodecConfig->mType   == codecInfo->mType &&
-      (curCodecConfig->mName.compare(codecInfo->mName) == 0) &&
-      curCodecConfig->mFreq   == codecInfo->mFreq &&
-      curCodecConfig->mPacSize == codecInfo->mPacSize &&
-      curCodecConfig->mChannels == codecInfo->mChannels &&
-      curCodecConfig->mRate == codecInfo->mRate)
-  {
-    return true;
-  }
-
-  return false;
-=======
 MediaConduitErrorCode WebrtcAudioConduit::ValidateCodecConfig(
     const AudioCodecConfig* codecInfo, bool send) {
   if (!codecInfo) {
@@ -1372,40 +928,8 @@ MediaConduitErrorCode WebrtcAudioConduit::ValidateCodecConfig(
   }
 
   return kMediaConduitNoError;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/* Return block-length of 10 ms audio frame in number of samples */
-unsigned int WebrtcAudioConduit::GetNum10msSamplesForFrequency(
-    int samplingFreqHz) const {
-  switch (samplingFreqHz) {
-    case 16000:
-      return 160;  // 160 samples
-    case 32000:
-      return 320;  // 320 samples
-    case 44100:
-      return 441;  // 441 samples
-    case 48000:
-      return 480;  // 480 samples
-    default:
-      return 0;  // invalid or unsupported
-||||||| merged common ancestors
-/**
- * Checks if the codec is already in Conduit's database
- */
-bool
-WebrtcAudioConduit::CheckCodecForMatch(const AudioCodecConfig* codecInfo) const
-{
-  //the db should have atleast one codec
-  for(auto codec : mRecvCodecList)
-  {
-    if(CheckCodecsForMatch(codec,codecInfo))
-    {
-      //match
-      return true;
-    }
-=======
 void WebrtcAudioConduit::DeleteSendStream() {
   MOZ_ASSERT(NS_IsMainThread());
   mMutex.AssertCurrentThreadOwns();
@@ -1414,45 +938,11 @@ void WebrtcAudioConduit::DeleteSendStream() {
     mEngineTransmitting = false;
     mCall->Call()->DestroyAudioSendStream(mSendStream);
     mSendStream = nullptr;
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-||||||| merged common ancestors
-  //no match or empty local db
-  return false;
-=======
   // Destroying the stream unregisters the transport
   mSendChannelProxy->RegisterTransport(nullptr);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-/**
- * Perform validation on the codecConfig to be applied.
- * Verifies if the codec is already applied.
- */
-MediaConduitErrorCode WebrtcAudioConduit::ValidateCodecConfig(
-    const AudioCodecConfig* codecInfo, bool send) {
-  if (!codecInfo) {
-    CSFLogError(LOGTAG, "%s Null CodecConfig ", __FUNCTION__);
-    return kMediaConduitMalformedArgument;
-||||||| merged common ancestors
-
-/**
- * Perform validation on the codecConfig to be applied.
- * Verifies if the codec is already applied.
- */
-MediaConduitErrorCode
-WebrtcAudioConduit::ValidateCodecConfig(const AudioCodecConfig* codecInfo,
-                                        bool send)
-{
-  bool codecAppliedAlready = false;
-
-  if(!codecInfo)
-  {
-    CSFLogError(LOGTAG, "%s Null CodecConfig ", __FUNCTION__);
-    return kMediaConduitMalformedArgument;
-=======
 MediaConduitErrorCode WebrtcAudioConduit::CreateSendStream() {
   MOZ_ASSERT(NS_IsMainThread());
   mMutex.AssertCurrentThreadOwns();
@@ -1473,161 +963,13 @@ void WebrtcAudioConduit::DeleteRecvStream() {
     mEngineReceiving = false;
     mCall->Call()->DestroyAudioReceiveStream(mRecvStream);
     mRecvStream = nullptr;
->>>>>>> upstream-releases
   }
   // Destroying the stream unregisters the transport
   mRecvChannelProxy->RegisterTransport(nullptr);
 }
 
-<<<<<<< HEAD
-  if ((codecInfo->mName.empty()) ||
-      (codecInfo->mName.length() >= CODEC_PLNAME_SIZE)) {
-    CSFLogError(LOGTAG, "%s Invalid Payload Name Length ", __FUNCTION__);
-    return kMediaConduitMalformedArgument;
-||||||| merged common ancestors
-  if((codecInfo->mName.empty()) ||
-     (codecInfo->mName.length() >= CODEC_PLNAME_SIZE))
-  {
-    CSFLogError(LOGTAG, "%s Invalid Payload Name Length ", __FUNCTION__);
-    return kMediaConduitMalformedArgument;
-=======
 MediaConduitErrorCode WebrtcAudioConduit::CreateRecvStream() {
   MOZ_ASSERT(NS_IsMainThread());
-  mMutex.AssertCurrentThreadOwns();
-
-  mRecvStreamConfig.rtcp_send_transport = this;
-  mRecvStream = mCall->Call()->CreateAudioReceiveStream(mRecvStreamConfig);
-  if (!mRecvStream) {
-    return kMediaConduitUnknownError;
->>>>>>> upstream-releases
-  }
-
-<<<<<<< HEAD
-  // Only mono or stereo channels supported
-  if ((codecInfo->mChannels != 1) && (codecInfo->mChannels != 2)) {
-    CSFLogError(LOGTAG, "%s Channel Unsupported ", __FUNCTION__);
-    return kMediaConduitMalformedArgument;
-||||||| merged common ancestors
-  //Only mono or stereo channels supported
-  if( (codecInfo->mChannels != 1) && (codecInfo->mChannels != 2))
-  {
-    CSFLogError(LOGTAG, "%s Channel Unsupported ", __FUNCTION__);
-    return kMediaConduitMalformedArgument;
-=======
-  return kMediaConduitNoError;
-}
-
-bool WebrtcAudioConduit::RecreateSendStreamIfExists() {
-  MutexAutoLock lock(mMutex);
-  bool wasTransmitting = mEngineTransmitting;
-  bool hadSendStream = mSendStream;
-  DeleteSendStream();
-
-  if (wasTransmitting) {
-    if (StartTransmittingLocked() != kMediaConduitNoError) {
-      return false;
-    }
-  } else if (hadSendStream) {
-    if (CreateSendStream() != kMediaConduitNoError) {
-      return false;
-    }
->>>>>>> upstream-releases
-  }
-  return true;
-}
-
-<<<<<<< HEAD
-  return kMediaConduitNoError;
-}
-||||||| merged common ancestors
-  //check if we have the same codec already applied
-  if(send)
-  {
-    MutexAutoLock lock(mCodecMutex);
-=======
-bool WebrtcAudioConduit::RecreateRecvStreamIfExists() {
-  MutexAutoLock lock(mMutex);
-  bool wasReceiving = mEngineReceiving;
-  bool hadRecvStream = mRecvStream;
-  DeleteRecvStream();
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-void WebrtcAudioConduit::DeleteSendStream() {
-  mMutex.AssertCurrentThreadOwns();
-  if (mSendStream) {
-    mSendStream->Stop();
-    mEngineTransmitting = false;
-    mCall->Call()->DestroyAudioSendStream(mSendStream);
-    mSendStream = nullptr;
-||||||| merged common ancestors
-    codecAppliedAlready = CheckCodecsForMatch(mCurSendCodecConfig,codecInfo);
-  } else {
-    codecAppliedAlready = CheckCodecForMatch(codecInfo);
-=======
-  if (wasReceiving) {
-    if (StartReceivingLocked() != kMediaConduitNoError) {
-      return false;
-    }
-  } else if (hadRecvStream) {
-    if (CreateRecvStream() != kMediaConduitNoError) {
-      return false;
-    }
->>>>>>> upstream-releases
-  }
-<<<<<<< HEAD
-  // Destroying the stream unregisters the transport
-  mSendChannelProxy->RegisterTransport(nullptr);
-}
-||||||| merged common ancestors
-=======
-  return true;
-}
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-MediaConduitErrorCode WebrtcAudioConduit::CreateSendStream() {
-  mMutex.AssertCurrentThreadOwns();
-
-  mSendStream = mCall->Call()->CreateAudioSendStream(mSendStreamConfig);
-  if (!mSendStream) {
-    return kMediaConduitUnknownError;
-||||||| merged common ancestors
-  if(codecAppliedAlready)
-  {
-    CSFLogDebug(LOGTAG, "%s Codec %s Already Applied  ", __FUNCTION__, codecInfo->mName.c_str());
-=======
-MediaConduitErrorCode WebrtcAudioConduit::DeliverPacket(const void* data,
-                                                        int len) {
-  // Bug 1499796 - we need to get passed the time the packet was received
-  webrtc::PacketReceiver::DeliveryStatus status =
-      mCall->Call()->Receiver()->DeliverPacket(
-          webrtc::MediaType::AUDIO, static_cast<const uint8_t*>(data), len,
-          webrtc::PacketTime());
-
-  if (status != webrtc::PacketReceiver::DELIVERY_OK) {
-    CSFLogError(LOGTAG, "%s DeliverPacket Failed, %d", __FUNCTION__, status);
-    return kMediaConduitRTPProcessingFailed;
->>>>>>> upstream-releases
-  }
-
-  return kMediaConduitNoError;
-}
-
-<<<<<<< HEAD
-void WebrtcAudioConduit::DeleteRecvStream() {
-  mMutex.AssertCurrentThreadOwns();
-  if (mRecvStream) {
-    mRecvStream->Stop();
-    mEngineReceiving = false;
-    mCall->Call()->DestroyAudioReceiveStream(mRecvStream);
-    mRecvStream = nullptr;
-  }
-  // Destroying the stream unregisters the transport
-  mRecvChannelProxy->RegisterTransport(nullptr);
-}
-
-MediaConduitErrorCode WebrtcAudioConduit::CreateRecvStream() {
   mMutex.AssertCurrentThreadOwns();
 
   mRecvStreamConfig.rtcp_send_transport = this;
@@ -1732,78 +1074,6 @@ MediaConduitErrorCode WebrtcAudioConduit::CreateChannels() {
 
 void WebrtcAudioConduit::DeleteChannels() {
   MOZ_ASSERT(NS_IsMainThread());
-
-  if (mSendChannel != -1) {
-    mSendChannelProxy = nullptr;
-    mPtrVoEBase->DeleteChannel(mSendChannel);
-    mSendChannel = -1;
-  }
-
-  if (mRecvChannel != -1) {
-    mRecvChannelProxy = nullptr;
-    mPtrVoEBase->DeleteChannel(mRecvChannel);
-    mRecvChannel = -1;
-  }
-}
-
-}  // namespace mozilla
-||||||| merged common ancestors
-void
-WebrtcAudioConduit::DumpCodecDB() const
- {
-    for(auto& codec : mRecvCodecList)
-    {
-      CSFLogDebug(LOGTAG,"Payload Name: %s", codec->mName.c_str());
-      CSFLogDebug(LOGTAG,"Payload Type: %d", codec->mType);
-      CSFLogDebug(LOGTAG,"Payload Frequency: %d", codec->mFreq);
-      CSFLogDebug(LOGTAG,"Payload PacketSize: %d", codec->mPacSize);
-      CSFLogDebug(LOGTAG,"Payload Channels: %d", codec->mChannels);
-      CSFLogDebug(LOGTAG,"Payload Sampling Rate: %d", codec->mRate);
-    }
- }
-}// end namespace
-=======
-MediaConduitErrorCode WebrtcAudioConduit::CreateChannels() {
-  MOZ_ASSERT(NS_IsMainThread());
-
-  if ((mRecvChannel = mPtrVoEBase->CreateChannel()) == -1) {
-    CSFLogError(LOGTAG, "%s VoiceEngine Channel creation failed", __FUNCTION__);
-    return kMediaConduitChannelError;
-  }
-  mRecvStreamConfig.voe_channel_id = mRecvChannel;
-
-  if ((mSendChannel = mPtrVoEBase->CreateChannel()) == -1) {
-    CSFLogError(LOGTAG, "%s VoiceEngine Channel creation failed", __FUNCTION__);
-    return kMediaConduitChannelError;
-  }
-  mSendStreamConfig.voe_channel_id = mSendChannel;
-
-  webrtc::VoiceEngineImpl* vei;
-  vei = static_cast<webrtc::VoiceEngineImpl*>(GetVoiceEngine());
-  mRecvChannelProxy = vei->GetChannelProxy(mRecvChannel);
-  if (!mRecvChannelProxy) {
-    CSFLogError(LOGTAG, "%s VoiceEngine Send ChannelProxy creation failed",
-                __FUNCTION__);
-    return kMediaConduitChannelError;
-  }
-
-  mRecvChannelProxy->SetRtpPacketObserver(this);
-  mRecvChannelProxy->RegisterTransport(this);
-
-  mSendChannelProxy = vei->GetChannelProxy(mSendChannel);
-  if (!mSendChannelProxy) {
-    CSFLogError(LOGTAG, "%s VoiceEngine ChannelProxy creation failed",
-                __FUNCTION__);
-    return kMediaConduitChannelError;
-  }
-  mSendChannelProxy->SetRtpPacketObserver(this);
-  mSendChannelProxy->RegisterTransport(this);
-
-  return kMediaConduitNoError;
-}
-
-void WebrtcAudioConduit::DeleteChannels() {
-  MOZ_ASSERT(NS_IsMainThread());
   mMutex.AssertCurrentThreadOwns();
 
   if (mSendChannel != -1) {
@@ -1820,4 +1090,3 @@ void WebrtcAudioConduit::DeleteChannels() {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

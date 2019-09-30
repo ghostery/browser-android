@@ -543,12 +543,6 @@ def check_args(kwargs):
         kwargs['extra_prefs'] = [tuple(prefarg.split('=', 1)) for prefarg in
                                  kwargs['extra_prefs']]
 
-<<<<<<< HEAD
-    if kwargs["reftest_internal"] is None:
-        kwargs["reftest_internal"] = True
-
-||||||| merged common ancestors
-=======
     if kwargs["reftest_internal"] is None:
         kwargs["reftest_internal"] = True
 
@@ -558,7 +552,6 @@ def check_args(kwargs):
     if kwargs["reftest_screenshot"] is None:
         kwargs["reftest_screenshot"] = "unexpected"
 
->>>>>>> upstream-releases
     return kwargs
 
 

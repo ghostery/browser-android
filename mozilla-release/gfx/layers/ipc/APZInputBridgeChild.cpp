@@ -123,26 +123,10 @@ nsEventStatus APZInputBridgeChild::ReceiveInputEvent(
 }
 
 void APZInputBridgeChild::ProcessUnhandledEvent(
-<<<<<<< HEAD
-    LayoutDeviceIntPoint* aRefPoint, ScrollableLayerGuid* aOutTargetGuid,
-    uint64_t* aOutFocusSequenceNumber) {
-  SendProcessUnhandledEvent(*aRefPoint, aRefPoint, aOutTargetGuid,
-                            aOutFocusSequenceNumber);
-||||||| merged common ancestors
-    LayoutDeviceIntPoint* aRefPoint,
-    ScrollableLayerGuid*  aOutTargetGuid,
-    uint64_t*             aOutFocusSequenceNumber)
-{
-  SendProcessUnhandledEvent(*aRefPoint,
-                            aRefPoint,
-                            aOutTargetGuid,
-                            aOutFocusSequenceNumber);
-=======
     LayoutDeviceIntPoint* aRefPoint, ScrollableLayerGuid* aOutTargetGuid,
     uint64_t* aOutFocusSequenceNumber, LayersId* aOutLayersId) {
   SendProcessUnhandledEvent(*aRefPoint, aRefPoint, aOutTargetGuid,
                             aOutFocusSequenceNumber, aOutLayersId);
->>>>>>> upstream-releases
 }
 
 void APZInputBridgeChild::UpdateWheelTransaction(LayoutDeviceIntPoint aRefPoint,

@@ -144,17 +144,7 @@ impl PseudoElement {
 
     /// Construct a `PseudoStyleType` from a pseudo-element
     #[inline]
-<<<<<<< HEAD
-    fn pseudo_type(&self) -> CSSPseudoElementType {
-        use crate::gecko_bindings::structs::CSSPseudoElementType_InheritingAnonBox;
-
-||||||| merged common ancestors
-    fn pseudo_type(&self) -> CSSPseudoElementType {
-        use gecko_bindings::structs::CSSPseudoElementType_InheritingAnonBox;
-
-=======
     pub fn pseudo_type(&self) -> PseudoStyleType {
->>>>>>> upstream-releases
         match *self {
             % for pseudo in PSEUDOS:
             % if pseudo.is_tree_pseudo_element():

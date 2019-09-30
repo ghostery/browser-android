@@ -80,41 +80,6 @@ export default class BasicCardForm extends HandleEventMixin(
     });
   }
 
-<<<<<<< HEAD
-  _upgradeBillingAddressPicker() {
-    let addressRow = this.form.querySelector(".billingAddressRow");
-    let addressPicker = this.billingAddressPicker = new BillingAddressPicker();
-
-    // Wrap the existing <select> that the formHandler manages
-    if (addressPicker.dropdown.popupBox) {
-      addressPicker.dropdown.popupBox.remove();
-    }
-    addressPicker.dropdown.popupBox = this.form.querySelector("#billingAddressGUID");
-
-    // Hide the original label as the address picker provide its own,
-    // but we'll copy the localized textContent from it when rendering
-    addressRow.querySelector(".label-text").hidden = true;
-
-    addressPicker.dataset.addLinkLabel = this.dataset.addressAddLinkLabel;
-    addressPicker.dataset.editLinkLabel = this.dataset.addressEditLinkLabel;
-    addressPicker.dataset.fieldSeparator = this.dataset.addressFieldSeparator;
-    addressPicker.dataset.addAddressTitle = this.dataset.billingAddressTitleAdd;
-    addressPicker.dataset.editAddressTitle = this.dataset.billingAddressTitleEdit;
-    addressPicker.dataset.invalidLabel = this.dataset.invalidAddressLabel;
-    // break-after-nth-field, address-fields not needed here
-
-    // this state is only used to carry the selected guid between pages;
-    // the select#billingAddressGUID is the source of truth for the current value
-    addressPicker.setAttribute("selected-state-key", "basic-card-page|billingAddressGUID");
-
-    addressPicker.addLink.addEventListener("click", this);
-    addressPicker.editLink.addEventListener("click", this);
-
-    addressRow.appendChild(addressPicker);
-  }
-
-||||||| merged common ancestors
-=======
   _upgradeBillingAddressPicker() {
     let addressRow = this.form.querySelector(".billingAddressRow");
     let addressPicker = (this.billingAddressPicker = new BillingAddressPicker());
@@ -152,7 +117,6 @@ export default class BasicCardForm extends HandleEventMixin(
     addressRow.appendChild(addressPicker);
   }
 
->>>>>>> upstream-releases
   connectedCallback() {
     this.promiseReady.then(form => {
       this.body.appendChild(form);
@@ -233,19 +197,11 @@ export default class BasicCardForm extends HandleEventMixin(
     this.cscInput.frontTooltip = this.dataset.cscFrontInfoTooltip;
     this.cscInput.backTooltip = this.dataset.cscBackInfoTooltip;
 
-<<<<<<< HEAD
-    // The label text from the form isn't available until render() time.
-    let labelText = this.form.querySelector(".billingAddressRow .label-text").textContent;
-    this.billingAddressPicker.setAttribute("label", labelText);
-
-||||||| merged common ancestors
-=======
     // The label text from the form isn't available until render() time.
     let labelText = this.form.querySelector(".billingAddressRow .label-text")
       .textContent;
     this.billingAddressPicker.setAttribute("label", labelText);
 
->>>>>>> upstream-releases
     this.persistCheckbox.label = this.dataset.persistCheckboxLabel;
     this.persistCheckbox.infoTooltip = this.dataset.persistCheckboxInfoTooltip;
 
@@ -392,40 +348,19 @@ export default class BasicCardForm extends HandleEventMixin(
 
         if (page.onboardingWizard) {
           if (request.paymentOptions.requestShipping) {
-<<<<<<< HEAD
-            shippingAddressPage = Object.assign({}, shippingAddressPage,
-                                                {guid: selectedShippingAddress});
-            Object.assign(nextState, {
-              "shipping-address-page": shippingAddressPage,
-            });
-||||||| merged common ancestors
-            addressPageState = Object.assign({}, addressPage, {guid: selectedShippingAddress});
-=======
             shippingAddressPage = Object.assign({}, shippingAddressPage, {
               guid: selectedShippingAddress,
             });
             Object.assign(nextState, {
               "shipping-address-page": shippingAddressPage,
             });
->>>>>>> upstream-releases
           } else {
-<<<<<<< HEAD
-            billingAddressPage =
-              Object.assign({}, billingAddressPage, {guid: basicCardPage.billingAddressGUID});
-            Object.assign(nextState, {
-              "billing-address-page": billingAddressPage,
-            });
-||||||| merged common ancestors
-            addressPageState =
-              Object.assign({}, addressPage, {guid: basicCardPage.billingAddressGUID});
-=======
             billingAddressPage = Object.assign({}, billingAddressPage, {
               guid: basicCardPage.billingAddressGUID,
             });
             Object.assign(nextState, {
               "billing-address-page": billingAddressPage,
             });
->>>>>>> upstream-releases
           }
 
           let basicCardPageState = Object.assign({}, basicCardPage, {
@@ -482,20 +417,11 @@ export default class BasicCardForm extends HandleEventMixin(
   }
 
   updateSaveButtonState() {
-<<<<<<< HEAD
-    const INVALID_CLASS_NAME = "invalid-selected-option";
-    let isValid = this.form.checkValidity() &&
-                  !this.billingAddressPicker.classList.contains(INVALID_CLASS_NAME);
-    this.saveButton.disabled = !isValid;
-||||||| merged common ancestors
-    this.saveButton.disabled = !this.form.checkValidity();
-=======
     const INVALID_CLASS_NAME = "invalid-selected-option";
     let isValid =
       this.form.checkValidity() &&
       !this.billingAddressPicker.classList.contains(INVALID_CLASS_NAME);
     this.saveButton.disabled = !isValid;
->>>>>>> upstream-releases
   }
 
   updateRequiredState() {

@@ -176,27 +176,6 @@ webExtensionTargetPrototype._searchFallbackWindow = function() {
     return this.fallbackWindow;
   }
 
-<<<<<<< HEAD
-  // Set and initialized the fallbackWindow (which initially is a empty
-  // about:blank browser), this window is related to a XUL browser element
-  // specifically created for the devtools server and it is never used
-  // or navigated anywhere else.
-  this.fallbackWindow = this.chromeGlobal.content;
-  this.fallbackWindow.location = "data:text/html,<h1>" + FALLBACK_DOC_MESSAGE;
-
-  return this.fallbackWindow;
-||||||| merged common ancestors
-  // Create an empty hidden window as a fallback (e.g. the background page could be
-  // not defined for the target add-on or not yet when the actor instance has been
-  // created).
-  this.fallbackWebNav = Services.appShell.createWindowlessBrowser(true);
-
-  // Save the reference to the fallback DOMWindow.
-  this.fallbackWindow = this.fallbackWebNav.document.defaultView;
-
-  // Insert the fallback doc message.
-  this.fallbackWindow.document.body.innerText = FALLBACK_DOC_MESSAGE;
-=======
   // Set and initialize the fallbackWindow (which initially is a empty
   // about:blank browser), this window is related to a XUL browser element
   // specifically created for the devtools server and it is never used
@@ -205,7 +184,6 @@ webExtensionTargetPrototype._searchFallbackWindow = function() {
   this.fallbackWindow.document.location.href = FALLBACK_DOC_URL;
 
   return this.fallbackWindow;
->>>>>>> upstream-releases
 };
 
 webExtensionTargetPrototype._destroyFallbackWindow = function() {
@@ -259,29 +237,12 @@ webExtensionTargetPrototype._attach = function() {
   // ParentProcessTargetActor.onAttach, or the BrowsingContextTargetActor will not be
   // subscribed to the child doc shell updates.
 
-<<<<<<< HEAD
-  if (!this.window || this.window.document.nodePrincipal.addonId !== this.addonId) {
-    // Discovery an existent extension page (or fallback window) to attach.
-    this._setWindow(this._searchForExtensionWindow());
-||||||| merged common ancestors
-  if (!this.window || this.window.document.nodePrincipal.addonId !== this.addonId) {
-    // Discovery an existent extension page to attach.
-    const extensionWindow = this._searchForExtensionWindow();
-
-    if (!extensionWindow) {
-      this._createFallbackWindow();
-      this._setWindow(this.fallbackWindow);
-    } else {
-      this._setWindow(extensionWindow);
-    }
-=======
   if (
     !this.window ||
     this.window.document.nodePrincipal.addonId !== this.addonId
   ) {
     // Discovery an existent extension page (or fallback window) to attach.
     this._setWindow(this._searchForExtensionWindow());
->>>>>>> upstream-releases
   }
 
   // Call ParentProcessTargetActor's _attach to listen for any new/destroyed chrome

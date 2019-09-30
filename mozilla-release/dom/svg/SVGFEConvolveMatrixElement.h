@@ -23,46 +23,6 @@ nsresult NS_NewSVGFEConvolveMatrixElement(
 namespace mozilla {
 
 namespace dom {
-<<<<<<< HEAD
-class SVGAnimatedBoolean;
-
-typedef nsSVGFE SVGFEConvolveMatrixElementBase;
-
-class SVGFEConvolveMatrixElement : public SVGFEConvolveMatrixElementBase {
-  friend nsresult(::NS_NewSVGFEConvolveMatrixElement(
-      nsIContent** aResult,
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-
- protected:
-  explicit SVGFEConvolveMatrixElement(
-      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-      : SVGFEConvolveMatrixElementBase(std::move(aNodeInfo)) {}
-  virtual JSObject* WrapNode(JSContext* aCx,
-                             JS::Handle<JSObject*> aGivenProto) override;
-
- public:
-  virtual FilterPrimitiveDescription GetPrimitiveDescription(
-      nsSVGFilterInstance* aInstance, const IntRect& aFilterSubregion,
-      const nsTArray<bool>& aInputsAreTainted,
-      nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(int32_t aNameSpaceID,
-                                         nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override {
-    return mStringAttributes[RESULT];
-||||||| merged common ancestors
-class SVGAnimatedBoolean;
-
-typedef nsSVGFE SVGFEConvolveMatrixElementBase;
-
-class SVGFEConvolveMatrixElement : public SVGFEConvolveMatrixElementBase
-{
-  friend nsresult (::NS_NewSVGFEConvolveMatrixElement(nsIContent **aResult,
-                                                      already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo));
-protected:
-  explicit SVGFEConvolveMatrixElement(already_AddRefed<mozilla::dom::NodeInfo>&& aNodeInfo)
-    : SVGFEConvolveMatrixElementBase(std::move(aNodeInfo))
-  {
-=======
 class DOMSVGAnimatedNumberList;
 class DOMSVGAnimatedBoolean;
 
@@ -89,27 +49,8 @@ class SVGFEConvolveMatrixElement : public SVGFEConvolveMatrixElementBase {
                                          nsAtom* aAttribute) const override;
   virtual SVGAnimatedString& GetResultImageName() override {
     return mStringAttributes[RESULT];
->>>>>>> upstream-releases
   }
-<<<<<<< HEAD
-  virtual void GetSourceImageNames(
-      nsTArray<nsSVGStringInfo>& aSources) override;
-||||||| merged common ancestors
-  virtual JSObject* WrapNode(JSContext* aCx, JS::Handle<JSObject*> aGivenProto) override;
-
-public:
-  virtual FilterPrimitiveDescription
-    GetPrimitiveDescription(nsSVGFilterInstance* aInstance,
-                            const IntRect& aFilterSubregion,
-                            const nsTArray<bool>& aInputsAreTainted,
-                            nsTArray<RefPtr<SourceSurface>>& aInputImages) override;
-  virtual bool AttributeAffectsRendering(
-          int32_t aNameSpaceID, nsAtom* aAttribute) const override;
-  virtual nsSVGString& GetResultImageName() override { return mStringAttributes[RESULT]; }
-  virtual void GetSourceImageNames(nsTArray<nsSVGStringInfo>& aSources) override;
-=======
   virtual void GetSourceImageNames(nsTArray<SVGStringInfo>& aSources) override;
->>>>>>> upstream-releases
 
   virtual nsresult Clone(dom::NodeInfo*, nsINode** aResult) const override;
 
@@ -118,29 +59,6 @@ public:
   already_AddRefed<DOMSVGAnimatedInteger> OrderX();
   already_AddRefed<DOMSVGAnimatedInteger> OrderY();
   already_AddRefed<DOMSVGAnimatedNumberList> KernelMatrix();
-<<<<<<< HEAD
-  already_AddRefed<SVGAnimatedInteger> TargetX();
-  already_AddRefed<SVGAnimatedInteger> TargetY();
-  already_AddRefed<SVGAnimatedEnumeration> EdgeMode();
-  already_AddRefed<SVGAnimatedBoolean> PreserveAlpha();
-  already_AddRefed<SVGAnimatedNumber> Divisor();
-  already_AddRefed<SVGAnimatedNumber> Bias();
-  already_AddRefed<SVGAnimatedNumber> KernelUnitLengthX();
-  already_AddRefed<SVGAnimatedNumber> KernelUnitLengthY();
-
- protected:
-||||||| merged common ancestors
-  already_AddRefed<SVGAnimatedInteger> TargetX();
-  already_AddRefed<SVGAnimatedInteger> TargetY();
-  already_AddRefed<SVGAnimatedEnumeration> EdgeMode();
-  already_AddRefed<SVGAnimatedBoolean> PreserveAlpha();
-  already_AddRefed<SVGAnimatedNumber> Divisor();
-  already_AddRefed<SVGAnimatedNumber> Bias();
-  already_AddRefed<SVGAnimatedNumber> KernelUnitLengthX();
-  already_AddRefed<SVGAnimatedNumber> KernelUnitLengthY();
-
-protected:
-=======
   already_AddRefed<DOMSVGAnimatedInteger> TargetX();
   already_AddRefed<DOMSVGAnimatedInteger> TargetY();
   already_AddRefed<DOMSVGAnimatedEnumeration> EdgeMode();
@@ -151,7 +69,6 @@ protected:
   already_AddRefed<DOMSVGAnimatedNumber> KernelUnitLengthY();
 
  protected:
->>>>>>> upstream-releases
   virtual NumberAttributesInfo GetNumberInfo() override;
   virtual NumberPairAttributesInfo GetNumberPairInfo() override;
   virtual IntegerAttributesInfo GetIntegerInfo() override;

@@ -96,7 +96,7 @@ void ByteReader::SetAddressSize(uint8 size) {
   }
 }
 
-uint64 ByteReader::ReadInitialLength(const char *start, size_t *len) {
+uint64 ByteReader::ReadInitialLength(const char* start, size_t* len) {
   const uint64 initial_length = ReadFourBytes(start);
   start += 4;
 
@@ -308,13 +308,7 @@ class CallFrameInfo::Rule {
   // to report after a DW_CFA_restore_state instruction.
   virtual bool operator==(const Rule& rhs) const = 0;
 
-<<<<<<< HEAD
-  bool operator!=(const Rule &rhs) const { return !(*this == rhs); }
-||||||| merged common ancestors
-  bool operator!=(const Rule &rhs) const { return ! (*this == rhs); }
-=======
   bool operator!=(const Rule& rhs) const { return !(*this == rhs); }
->>>>>>> upstream-releases
 
   // Return a pointer to a copy of this rule.
   virtual Rule* Copy() const = 0;
@@ -444,15 +438,8 @@ class CallFrameInfo::RegisterRule : public CallFrameInfo::Rule {
     const RegisterRule* our_rhs = static_cast<const RegisterRule*>(&rhs);
     return (register_number_ == our_rhs->register_number_);
   }
-<<<<<<< HEAD
-  Rule *Copy() const override { return new RegisterRule(*this); }
-
-||||||| merged common ancestors
-  Rule *Copy() const override { return new RegisterRule(*this); }
-=======
   Rule* Copy() const override { return new RegisterRule(*this); }
 
->>>>>>> upstream-releases
  private:
   int register_number_;
 };
@@ -460,17 +447,8 @@ class CallFrameInfo::RegisterRule : public CallFrameInfo::Rule {
 // Rule: EXPRESSION evaluates to the address at which the register is saved.
 class CallFrameInfo::ExpressionRule : public CallFrameInfo::Rule {
  public:
-<<<<<<< HEAD
-  explicit ExpressionRule(const string &expression) : expression_(expression) {}
-  ~ExpressionRule() {}
-||||||| merged common ancestors
-  explicit ExpressionRule(const string &expression)
-      : expression_(expression) { }
-  ~ExpressionRule() { }
-=======
   explicit ExpressionRule(const string& expression) : expression_(expression) {}
   ~ExpressionRule() {}
->>>>>>> upstream-releases
   CFIRTag getTag() const override { return CFIR_EXPRESSION_RULE; }
   bool Handle(Handler* handler, uint64 address, int reg) const override {
     return handler->ExpressionRule(address, reg, expression_);
@@ -480,15 +458,8 @@ class CallFrameInfo::ExpressionRule : public CallFrameInfo::Rule {
     const ExpressionRule* our_rhs = static_cast<const ExpressionRule*>(&rhs);
     return (expression_ == our_rhs->expression_);
   }
-<<<<<<< HEAD
-  Rule *Copy() const override { return new ExpressionRule(*this); }
-
-||||||| merged common ancestors
-  Rule *Copy() const override { return new ExpressionRule(*this); }
-=======
   Rule* Copy() const override { return new ExpressionRule(*this); }
 
->>>>>>> upstream-releases
  private:
   string expression_;
 };
@@ -496,19 +467,9 @@ class CallFrameInfo::ExpressionRule : public CallFrameInfo::Rule {
 // Rule: EXPRESSION evaluates to the previous value of the register.
 class CallFrameInfo::ValExpressionRule : public CallFrameInfo::Rule {
  public:
-<<<<<<< HEAD
-  explicit ValExpressionRule(const string &expression)
-      : expression_(expression) {}
-  ~ValExpressionRule() {}
-||||||| merged common ancestors
-  explicit ValExpressionRule(const string &expression)
-      : expression_(expression) { }
-  ~ValExpressionRule() { }
-=======
   explicit ValExpressionRule(const string& expression)
       : expression_(expression) {}
   ~ValExpressionRule() {}
->>>>>>> upstream-releases
   CFIRTag getTag() const override { return CFIR_VAL_EXPRESSION_RULE; }
   bool Handle(Handler* handler, uint64 address, int reg) const override {
     return handler->ValExpressionRule(address, reg, expression_);
@@ -519,15 +480,8 @@ class CallFrameInfo::ValExpressionRule : public CallFrameInfo::Rule {
         static_cast<const ValExpressionRule*>(&rhs);
     return (expression_ == our_rhs->expression_);
   }
-<<<<<<< HEAD
-  Rule *Copy() const override { return new ValExpressionRule(*this); }
-
-||||||| merged common ancestors
-  Rule *Copy() const override { return new ValExpressionRule(*this); }
-=======
   Rule* Copy() const override { return new ValExpressionRule(*this); }
 
->>>>>>> upstream-releases
  private:
   string expression_;
 };
@@ -535,34 +489,17 @@ class CallFrameInfo::ValExpressionRule : public CallFrameInfo::Rule {
 // A map from register numbers to rules.
 class CallFrameInfo::RuleMap {
  public:
-<<<<<<< HEAD
-  RuleMap() : cfa_rule_(NULL) {}
-  RuleMap(const RuleMap &rhs) : cfa_rule_(NULL) { *this = rhs; }
-||||||| merged common ancestors
-  RuleMap() : cfa_rule_(NULL) { }
-  RuleMap(const RuleMap &rhs) : cfa_rule_(NULL) { *this = rhs; }
-=======
   RuleMap() : cfa_rule_(NULL) {}
   RuleMap(const RuleMap& rhs) : cfa_rule_(NULL) { *this = rhs; }
->>>>>>> upstream-releases
   ~RuleMap() { Clear(); }
 
   RuleMap& operator=(const RuleMap& rhs);
 
   // Set the rule for computing the CFA to RULE. Take ownership of RULE.
-<<<<<<< HEAD
-  void SetCFARule(Rule *rule) {
-    delete cfa_rule_;
-    cfa_rule_ = rule;
-  }
-||||||| merged common ancestors
-  void SetCFARule(Rule *rule) { delete cfa_rule_; cfa_rule_ = rule; }
-=======
   void SetCFARule(Rule* rule) {
     delete cfa_rule_;
     cfa_rule_ = rule;
   }
->>>>>>> upstream-releases
 
   // Return the current CFA rule. Unlike RegisterRule, this RuleMap retains
   // ownership of the rule. We use this for DW_CFA_def_cfa_offset and
@@ -628,15 +565,7 @@ void CallFrameInfo::RuleMap::SetRegisterRule(int reg, Rule* rule) {
 }
 
 bool CallFrameInfo::RuleMap::HandleTransitionTo(
-<<<<<<< HEAD
-    Handler *handler, uint64 address, const RuleMap &new_rules) const {
-||||||| merged common ancestors
-    Handler *handler,
-    uint64 address,
-    const RuleMap &new_rules) const {
-=======
     Handler* handler, uint64 address, const RuleMap& new_rules) const {
->>>>>>> upstream-releases
   // Transition from cfa_rule_ to new_rules.cfa_rule_.
   if (cfa_rule_ && new_rules.cfa_rule_) {
     if (*cfa_rule_ != *new_rules.cfa_rule_ &&
@@ -844,7 +773,7 @@ class CallFrameInfo::State {
 
   // A stack of saved states, for DW_CFA_remember_state and
   // DW_CFA_restore_state.
-  std::stack<RuleMap> *saved_rules_;
+  std::stack<RuleMap>* saved_rules_;
 };
 
 bool CallFrameInfo::State::InterpretCIE(const CIE& cie) {
@@ -1057,17 +986,8 @@ bool CallFrameInfo::State::DoInstruction() {
 
     // Specify an expression whose value is the CFA.
     case DW_CFA_def_cfa_expression: {
-<<<<<<< HEAD
-      if (!ParseOperands("e", &ops)) return false;
-      Rule *rule = new ValExpressionRule(ops.expression);
-||||||| merged common ancestors
-      if (!ParseOperands("e", &ops))
-        return false;
-      Rule *rule = new ValExpressionRule(ops.expression);
-=======
       if (!ParseOperands("e", &ops)) return false;
       Rule* rule = new ValExpressionRule(ops.expression);
->>>>>>> upstream-releases
       rules_.SetCFARule(rule);
       if (!rule->Handle(handler_, address_, Handler::kCFARegister))
         return false;
@@ -1389,20 +1309,9 @@ bool CallFrameInfo::ReadCIEFields(CIE* cie) {
   const char* augmentation_start = cursor;
   const void* augmentation_end =
       memchr(augmentation_start, '\0', cie->end - augmentation_start);
-<<<<<<< HEAD
-  if (!augmentation_end) return ReportIncomplete(cie);
-  cursor = static_cast<const char *>(augmentation_end);
-  cie->augmentation = string(augmentation_start, cursor - augmentation_start);
-||||||| merged common ancestors
-  if (! augmentation_end) return ReportIncomplete(cie);
-  cursor = static_cast<const char *>(augmentation_end);
-  cie->augmentation = string(augmentation_start,
-                                  cursor - augmentation_start);
-=======
   if (!augmentation_end) return ReportIncomplete(cie);
   cursor = static_cast<const char*>(augmentation_end);
   cie->augmentation = string(augmentation_start, cursor - augmentation_start);
->>>>>>> upstream-releases
   // Skip the terminating '\0'.
   cursor++;
 
@@ -1427,7 +1336,7 @@ bool CallFrameInfo::ReadCIEFields(CIE* cie) {
     }
     uint8_t address_size = reader_->ReadOneByte(cursor);
     cursor++;
-    if (address_size != sizeof(void *)) {
+    if (address_size != sizeof(void*)) {
       // This is not per-se invalid CFI.  But we can reasonably expect to
       // be running on a target of the same word size as the CFI is for,
       // so we reject this case.
@@ -1831,8 +1740,8 @@ void CallFrameInfo::Reporter::UnrecognizedAugmentation(uint64 offset,
 }
 
 void CallFrameInfo::Reporter::InvalidDwarf4Artefact(uint64 offset,
-                                                    const char *what) {
-  char *what_safe = strndup(what, 100);
+                                                    const char* what) {
+  char* what_safe = strndup(what, 100);
   char buf[300];
   SprintfLiteral(buf,
                  "%s: CFI frame description entry at offset 0x%llx in '%s':"
@@ -2014,24 +1923,10 @@ unsigned int DwarfCFIToModule::RegisterNames::MIPS() {
 }
 
 // See prototype for comments.
-<<<<<<< HEAD
-int32_t parseDwarfExpr(Summariser *summ, const ByteReader *reader, string expr,
-                       bool debug, bool pushCfaAtStart, bool derefAtEnd) {
-  const char *cursor = expr.c_str();
-  const char *end1 = cursor + expr.length();
-||||||| merged common ancestors
-int32_t parseDwarfExpr(Summariser* summ, const ByteReader* reader,
-                       string expr, bool debug,
-                       bool pushCfaAtStart, bool derefAtEnd)
-{
-  const char* cursor = expr.c_str();
-  const char* end1   = cursor + expr.length();
-=======
 int32_t parseDwarfExpr(Summariser* summ, const ByteReader* reader, string expr,
                        bool debug, bool pushCfaAtStart, bool derefAtEnd) {
   const char* cursor = expr.c_str();
   const char* end1 = cursor + expr.length();
->>>>>>> upstream-releases
 
   char buf[100];
   if (debug) {
@@ -2051,16 +1946,8 @@ int32_t parseDwarfExpr(Summariser* summ, const ByteReader* reader, string expr,
     uint8 opc = reader->ReadOneByte(cursor);
     cursor++;
 
-<<<<<<< HEAD
-    const char *nm = nullptr;
-    PfxExprOp pxop = PX_End;
-||||||| merged common ancestors
-    const char* nm   = nullptr;
-    PfxExprOp   pxop = PX_End;
-=======
     const char* nm = nullptr;
     PfxExprOp pxop = PX_End;
->>>>>>> upstream-releases
 
     switch (opc) {
       case DW_OP_lit0 ... DW_OP_lit31: {
@@ -2217,7 +2104,7 @@ bool DwarfCFIToModule::Entry(size_t offset, uint64 address, uint64 length,
   return true;
 }
 
-const UniqueString *DwarfCFIToModule::RegisterName(int i) {
+const UniqueString* DwarfCFIToModule::RegisterName(int i) {
   if (i < 0) {
     MOZ_ASSERT(i == kCFARegister);
     return usu_->ToUniqueString(".cfa");
@@ -2287,14 +2174,7 @@ bool DwarfCFIToModule::RegisterRule(uint64 address, int reg,
 }
 
 bool DwarfCFIToModule::ExpressionRule(uint64 address, int reg,
-<<<<<<< HEAD
-                                      const string &expression) {
-||||||| merged common ancestors
-                                      const string &expression)
-{
-=======
                                       const string& expression) {
->>>>>>> upstream-releases
   bool debug = !!DEBUG_DWARF;
   int32_t start_ix =
       parseDwarfExpr(summ_, reader_, expression, debug, true /*pushCfaAtStart*/,
@@ -2310,14 +2190,7 @@ bool DwarfCFIToModule::ExpressionRule(uint64 address, int reg,
 }
 
 bool DwarfCFIToModule::ValExpressionRule(uint64 address, int reg,
-<<<<<<< HEAD
-                                         const string &expression) {
-||||||| merged common ancestors
-                                         const string &expression)
-{
-=======
                                          const string& expression) {
->>>>>>> upstream-releases
   bool debug = !!DEBUG_DWARF;
   int32_t start_ix =
       parseDwarfExpr(summ_, reader_, expression, debug, true /*pushCfaAtStart*/,
@@ -2342,14 +2215,7 @@ bool DwarfCFIToModule::End() {
 }
 
 void DwarfCFIToModule::Reporter::UndefinedNotSupported(
-<<<<<<< HEAD
-    size_t offset, const UniqueString *reg) {
-||||||| merged common ancestors
-    size_t offset,
-    const UniqueString* reg) {
-=======
     size_t offset, const UniqueString* reg) {
->>>>>>> upstream-releases
   char buf[300];
   SprintfLiteral(buf, "DwarfCFIToModule::Reporter::UndefinedNotSupported()\n");
   log_(buf);
@@ -2371,17 +2237,8 @@ static bool is_power_of_2(uint64_t n) {
 }
 
 void DwarfCFIToModule::Reporter::ExpressionCouldNotBeSummarised(
-<<<<<<< HEAD
-    size_t offset, const UniqueString *reg) {
-  static uint64_t n_complaints = 0;  // This isn't threadsafe
-||||||| merged common ancestors
-    size_t offset,
-    const UniqueString* reg) {
-  static uint64_t n_complaints = 0; // This isn't threadsafe
-=======
     size_t offset, const UniqueString* reg) {
   static uint64_t n_complaints = 0;  // This isn't threadsafe
->>>>>>> upstream-releases
   n_complaints++;
   if (!is_power_of_2(n_complaints)) return;
   char buf[300];

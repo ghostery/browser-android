@@ -342,37 +342,6 @@ BoxModel.prototype = {
     });
     const initialValue = session.getProperty(property);
 
-<<<<<<< HEAD
-    const editor = new InplaceEditor({
-      element: element,
-      initial: initialValue,
-      contentType: InplaceEditor.CONTENT_TYPES.CSS_VALUE,
-      property: {
-        name: property,
-      },
-      start: self => {
-        self.elt.parentNode.classList.add("boxmodel-editing");
-      },
-      change: value => {
-        if (NUMERIC.test(value)) {
-          value += "px";
-        }
-||||||| merged common ancestors
-    const editor = new InplaceEditor({
-      element: element,
-      initial: initialValue,
-      contentType: InplaceEditor.CONTENT_TYPES.CSS_VALUE,
-      property: {
-        name: property
-      },
-      start: self => {
-        self.elt.parentNode.classList.add("boxmodel-editing");
-      },
-      change: value => {
-        if (NUMERIC.test(value)) {
-          value += "px";
-        }
-=======
     const editor = new InplaceEditor(
       {
         element: element,
@@ -388,19 +357,8 @@ BoxModel.prototype = {
           if (NUMERIC.test(value)) {
             value += "px";
           }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-        const properties = [
-          { name: property, value: value },
-        ];
-||||||| merged common ancestors
-        const properties = [
-          { name: property, value: value }
-        ];
-=======
           const properties = [{ name: property, value: value }];
->>>>>>> upstream-releases
 
           if (property.substring(0, 7) == "border-") {
             const bprop = property.substring(0, property.length - 5) + "style";

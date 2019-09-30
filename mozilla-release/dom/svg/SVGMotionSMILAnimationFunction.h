@@ -32,14 +32,7 @@ class SVGMPathElement;
 // Subclass of SMILAnimationFunction to support a few extra features offered
 // by the <animateMotion> element.
 //
-<<<<<<< HEAD
-class SVGMotionSMILAnimationFunction final : public nsSMILAnimationFunction {
-||||||| merged common ancestors
-class SVGMotionSMILAnimationFunction final : public nsSMILAnimationFunction
-{
-=======
 class SVGMotionSMILAnimationFunction final : public SMILAnimationFunction {
->>>>>>> upstream-releases
   typedef mozilla::gfx::Path Path;
 
  public:
@@ -82,26 +75,6 @@ class SVGMotionSMILAnimationFunction final : public SMILAnimationFunction {
   void UnsetRotate();
 
   // Helpers for GetValues
-<<<<<<< HEAD
-  void MarkStaleIfAttributeAffectsPath(nsAtom* aAttribute);
-  void RebuildPathAndVertices(const nsIContent* aContextElem);
-  void RebuildPathAndVerticesFromMpathElem(dom::SVGMPathElement* aMpathElem);
-  void RebuildPathAndVerticesFromPathAttr();
-  void RebuildPathAndVerticesFromBasicAttrs(const nsIContent* aContextElem);
-  bool GenerateValuesForPathAndPoints(Path* aPath, bool aIsKeyPoints,
-                                      FallibleTArray<double>& aPointDistances,
-                                      nsSMILValueArray& aResult);
-||||||| merged common ancestors
-  void     MarkStaleIfAttributeAffectsPath(nsAtom* aAttribute);
-  void     RebuildPathAndVertices(const nsIContent* aContextElem);
-  void     RebuildPathAndVerticesFromMpathElem(dom::SVGMPathElement* aMpathElem);
-  void     RebuildPathAndVerticesFromPathAttr();
-  void     RebuildPathAndVerticesFromBasicAttrs(const nsIContent* aContextElem);
-  bool     GenerateValuesForPathAndPoints(Path* aPath,
-                                          bool aIsKeyPoints,
-                                          FallibleTArray<double>& aPointDistances,
-                                          nsSMILValueArray& aResult);
-=======
   void MarkStaleIfAttributeAffectsPath(nsAtom* aAttribute);
   void RebuildPathAndVertices(const nsIContent* aTargetElement);
   void RebuildPathAndVerticesFromMpathElem(dom::SVGMPathElement* aMpathElem);
@@ -110,7 +83,6 @@ class SVGMotionSMILAnimationFunction final : public SMILAnimationFunction {
   bool GenerateValuesForPathAndPoints(Path* aPath, bool aIsKeyPoints,
                                       FallibleTArray<double>& aPointDistances,
                                       SMILValueArray& aResult);
->>>>>>> upstream-releases
 
   // Members
   // -------

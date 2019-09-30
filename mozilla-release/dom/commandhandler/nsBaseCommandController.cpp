@@ -21,54 +21,14 @@ NS_INTERFACE_MAP_BEGIN(nsBaseCommandController)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIControllerContext)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-nsBaseCommandController::nsBaseCommandController()
-    : mCommandContextRawPtr(nullptr) {}
-||||||| merged common ancestors
-nsBaseCommandController::nsBaseCommandController()
-  : mCommandContextRawPtr(nullptr)
-{
-}
-=======
 nsBaseCommandController::nsBaseCommandController(
     nsControllerCommandTable* aControllerCommandTable)
     : mCommandContextRawPtr(nullptr), mCommandTable(aControllerCommandTable) {}
->>>>>>> upstream-releases
 
 nsBaseCommandController::~nsBaseCommandController() {}
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseCommandController::Init(nsIControllerCommandTable* aCommandTable) {
-  if (aCommandTable) {
-    mCommandTable = aCommandTable;
-  } else {
-    mCommandTable = new nsControllerCommandTable();
-  }
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
 nsBaseCommandController::SetCommandContext(nsISupports* aCommandContext) {
-||||||| merged common ancestors
-nsBaseCommandController::Init(nsIControllerCommandTable* aCommandTable)
-{
-  if (aCommandTable) {
-    mCommandTable = aCommandTable;
-  } else {
-    mCommandTable = new nsControllerCommandTable();
-  }
-
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-nsBaseCommandController::SetCommandContext(nsISupports* aCommandContext)
-{
-=======
-nsBaseCommandController::SetCommandContext(nsISupports* aCommandContext) {
->>>>>>> upstream-releases
   mCommandContextWeakPtr = nullptr;
   mCommandContextRawPtr = nullptr;
 
@@ -191,36 +151,12 @@ nsBaseCommandController::OnEvent(const char* aEventName) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsBaseCommandController::GetSupportedCommands(uint32_t* aCount,
-                                              char*** aCommands) {
-||||||| merged common ancestors
-nsBaseCommandController::GetSupportedCommands(uint32_t* aCount,
-                                              char*** aCommands)
-{
-=======
 nsBaseCommandController::GetSupportedCommands(nsTArray<nsCString>& aCommands) {
->>>>>>> upstream-releases
   NS_ENSURE_STATE(mCommandTable);
   return mCommandTable->GetSupportedCommands(aCommands);
 }
 
-<<<<<<< HEAD
-typedef already_AddRefed<nsIControllerCommandTable> (*CommandTableCreatorFn)();
-
-static already_AddRefed<nsIController>
-CreateControllerWithSingletonCommandTable(CommandTableCreatorFn aCreatorFn) {
-  nsCOMPtr<nsIController> controller = new nsBaseCommandController();
-||||||| merged common ancestors
-typedef already_AddRefed<nsIControllerCommandTable> (*CommandTableCreatorFn)();
-
-static already_AddRefed<nsIController>
-CreateControllerWithSingletonCommandTable(CommandTableCreatorFn aCreatorFn)
-{
-  nsCOMPtr<nsIController> controller = new nsBaseCommandController();
-=======
 typedef already_AddRefed<nsControllerCommandTable> (*CommandTableCreatorFn)();
->>>>>>> upstream-releases
 
 static already_AddRefed<nsBaseCommandController>
 CreateControllerWithSingletonCommandTable(CommandTableCreatorFn aCreatorFn) {
@@ -232,103 +168,37 @@ CreateControllerWithSingletonCommandTable(CommandTableCreatorFn aCreatorFn) {
   // this is a singleton; make it immutable
   commandTable->MakeImmutable();
 
-<<<<<<< HEAD
-  nsresult rv;
-  nsCOMPtr<nsIControllerContext> controllerContext =
-      do_QueryInterface(controller, &rv);
-  if (NS_FAILED(rv)) return nullptr;
-
-  rv = controllerContext->Init(commandTable);
-  if (NS_FAILED(rv)) return nullptr;
-
-  return controller.forget();
-||||||| merged common ancestors
-  nsresult rv;
-  nsCOMPtr<nsIControllerContext> controllerContext = do_QueryInterface(controller, &rv);
-  if (NS_FAILED(rv)) return nullptr;
-
-  rv = controllerContext->Init(commandTable);
-  if (NS_FAILED(rv)) return nullptr;
-
-  return controller.forget();
-=======
   RefPtr<nsBaseCommandController> commandController =
       new nsBaseCommandController(commandTable);
   return commandController.forget();
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateWindowController() {
-||||||| merged common ancestors
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateWindowController()
-{
-=======
 already_AddRefed<nsBaseCommandController>
 nsBaseCommandController::CreateWindowController() {
->>>>>>> upstream-releases
   return CreateControllerWithSingletonCommandTable(
       nsControllerCommandTable::CreateWindowCommandTable);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateEditorController() {
-||||||| merged common ancestors
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateEditorController()
-{
-=======
 already_AddRefed<nsBaseCommandController>
 nsBaseCommandController::CreateEditorController() {
->>>>>>> upstream-releases
   return CreateControllerWithSingletonCommandTable(
       nsControllerCommandTable::CreateEditorCommandTable);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateEditingController() {
-||||||| merged common ancestors
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateEditingController()
-{
-=======
 already_AddRefed<nsBaseCommandController>
 nsBaseCommandController::CreateEditingController() {
->>>>>>> upstream-releases
   return CreateControllerWithSingletonCommandTable(
       nsControllerCommandTable::CreateEditingCommandTable);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateHTMLEditorController() {
-||||||| merged common ancestors
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateHTMLEditorController()
-{
-=======
 already_AddRefed<nsBaseCommandController>
 nsBaseCommandController::CreateHTMLEditorController() {
->>>>>>> upstream-releases
   return CreateControllerWithSingletonCommandTable(
       nsControllerCommandTable::CreateHTMLEditorCommandTable);
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateHTMLEditorDocStateController() {
-||||||| merged common ancestors
-already_AddRefed<nsIController>
-nsBaseCommandController::CreateHTMLEditorDocStateController()
-{
-=======
 already_AddRefed<nsBaseCommandController>
 nsBaseCommandController::CreateHTMLEditorDocStateController() {
->>>>>>> upstream-releases
   return CreateControllerWithSingletonCommandTable(
       nsControllerCommandTable::CreateHTMLEditorDocStateCommandTable);
 }

@@ -623,14 +623,6 @@ var SendScheduler = {
     // sending before (midnight + fuzzing delay), which is a random time between 0am-1am
     // (decided at startup).
 
-<<<<<<< HEAD
-    let disableFuzzingDelay = Services.prefs.getBoolPref(TelemetryUtils.Preferences.DisableFuzzingDelay, false);
-    if (disableFuzzingDelay) {
-      return now.getTime();
-    }
-
-||||||| merged common ancestors
-=======
     let disableFuzzingDelay = Services.prefs.getBoolPref(
       TelemetryUtils.Preferences.DisableFuzzingDelay,
       false
@@ -639,7 +631,6 @@ var SendScheduler = {
       return now.getTime();
     }
 
->>>>>>> upstream-releases
     const midnight = Utils.truncateToDays(now);
     // Don't delay pings if we are not within the fuzzing interval.
     if (now.getTime() - midnight.getTime() > MIDNIGHT_FUZZING_INTERVAL_MS) {
@@ -1437,16 +1428,9 @@ var TelemetrySendImpl = {
       return TelemetryStorage.removePendingPing(id);
     }
 
-<<<<<<< HEAD
-    Telemetry.getHistogramById("TELEMETRY_COMPRESS").add(Utils.monotonicNow() - startTime);
-||||||| merged common ancestors
-    const compressedPingSizeKB = Math.floor(payloadStream.data.length / 1024);
-    Telemetry.getHistogramById("TELEMETRY_COMPRESS").add(Utils.monotonicNow() - startTime);
-=======
     Telemetry.getHistogramById("TELEMETRY_COMPRESS").add(
       Utils.monotonicNow() - startTime
     );
->>>>>>> upstream-releases
     request.sendInputStream(payloadStream);
 
     this.payloadStream = payloadStream;

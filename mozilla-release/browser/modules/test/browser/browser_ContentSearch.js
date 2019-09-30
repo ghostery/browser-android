@@ -8,28 +8,14 @@ const TEST_CONTENT_SCRIPT_BASENAME = "contentSearch.js";
 
 /* import-globals-from ../../../components/search/test/browser/head.js */
 Services.scriptloader.loadSubScript(
-<<<<<<< HEAD
-  "chrome://mochitests/content/browser/browser/components/search/test/browser/head.js",
-  this);
-||||||| merged common ancestors
-  "chrome://mochitests/content/browser/browser/components/search/test/head.js",
-  this);
-=======
   "chrome://mochitests/content/browser/browser/components/search/test/browser/head.js",
   this
 );
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-let originalEngine = Services.search.defaultEngine;
-||||||| merged common ancestors
-let originalEngine = Services.search.currentEngine;
-=======
 var originalEngine;
 
 var arrayBufferIconTested = false;
 var plainURIIconTested = false;
->>>>>>> upstream-releases
 
 add_task(async function setup() {
   originalEngine = await Services.search.getDefault();
@@ -40,30 +26,16 @@ add_task(async function setup() {
 
   await promiseNewEngine("testEngine.xml", {
     setAsCurrent: true,
-<<<<<<< HEAD
-    testPath: "chrome://mochitests/content/browser/browser/components/search/test/browser/",
-||||||| merged common ancestors
-    testPath: "chrome://mochitests/content/browser/browser/components/search/test/",
-=======
     testPath:
       "chrome://mochitests/content/browser/browser/components/search/test/browser/",
   });
 
   await promiseNewEngine("testEngine_chromeicon.xml", {
     setAsCurrent: false,
->>>>>>> upstream-releases
   });
 
-<<<<<<< HEAD
-  registerCleanupFunction(() => {
-    Services.search.defaultEngine = originalEngine;
-||||||| merged common ancestors
-  registerCleanupFunction(() => {
-    Services.search.currentEngine = originalEngine;
-=======
   registerCleanupFunction(async () => {
     await Services.search.setDefault(originalEngine);
->>>>>>> upstream-releases
   });
 });
 
@@ -84,19 +56,9 @@ add_task(async function GetState() {
 
 add_task(async function SetDefaultEngine() {
   let { mm } = await addTab();
-<<<<<<< HEAD
-  let newCurrentEngine = null;
-  let oldCurrentEngine = Services.search.defaultEngine;
-  let engines = Services.search.getVisibleEngines();
-||||||| merged common ancestors
-  let newCurrentEngine = null;
-  let oldCurrentEngine = Services.search.currentEngine;
-  let engines = Services.search.getVisibleEngines();
-=======
   let newDefaultEngine = null;
   let oldDefaultEngine = await Services.search.getDefault();
   let engines = await Services.search.getVisibleEngines();
->>>>>>> upstream-releases
   for (let engine of engines) {
     if (engine != oldDefaultEngine) {
       newDefaultEngine = engine;
@@ -132,13 +94,7 @@ add_task(async function SetDefaultEngine() {
     data: await defaultEngineObj(newDefaultEngine),
   });
 
-<<<<<<< HEAD
-  Services.search.defaultEngine = oldCurrentEngine;
-||||||| merged common ancestors
-  Services.search.currentEngine = oldCurrentEngine;
-=======
   await Services.search.setDefault(oldDefaultEngine);
->>>>>>> upstream-releases
   msg = await waitForTestMsg(mm, "CurrentEngine");
   checkMsg(msg, {
     type: "CurrentEngine",
@@ -148,13 +104,7 @@ add_task(async function SetDefaultEngine() {
 
 add_task(async function modifyEngine() {
   let { mm } = await addTab();
-<<<<<<< HEAD
-  let engine = Services.search.defaultEngine;
-||||||| merged common ancestors
-  let engine = Services.search.currentEngine;
-=======
   let engine = await Services.search.getDefault();
->>>>>>> upstream-releases
   let oldAlias = engine.alias;
   engine.alias = "ContentSearchTest";
   let msg = await waitForTestMsg(mm, "CurrentState");
@@ -172,13 +122,7 @@ add_task(async function modifyEngine() {
 
 add_task(async function search() {
   let { browser } = await addTab();
-<<<<<<< HEAD
-  let engine = Services.search.defaultEngine;
-||||||| merged common ancestors
-  let engine = Services.search.currentEngine;
-=======
   let engine = await Services.search.getDefault();
->>>>>>> upstream-releases
   let data = {
     engineName: engine.name,
     searchString: "ContentSearchTest",
@@ -197,13 +141,7 @@ add_task(async function searchInBackgroundTab() {
   // search page should be loaded in the same tab that performed the search, in
   // the background tab.
   let { browser } = await addTab();
-<<<<<<< HEAD
-  let engine = Services.search.defaultEngine;
-||||||| merged common ancestors
-  let engine = Services.search.currentEngine;
-=======
   let engine = await Services.search.getDefault();
->>>>>>> upstream-releases
   let data = {
     engineName: engine.name,
     searchString: "ContentSearchTest",
@@ -466,16 +404,8 @@ var currentStateObj = async function() {
   return state;
 };
 
-<<<<<<< HEAD
-var currentEngineObj = async function() {
-  let engine = Services.search.defaultEngine;
-||||||| merged common ancestors
-var currentEngineObj = async function() {
-  let engine = Services.search.currentEngine;
-=======
 var defaultEngineObj = async function() {
   let engine = await Services.search.getDefault();
->>>>>>> upstream-releases
   let uriFavicon = engine.getIconURLBySize(16, 16);
   let bundle = Services.strings.createBundle(
     "chrome://global/locale/autocomplete.properties"

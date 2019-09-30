@@ -4,27 +4,6 @@
 
 #include "HitTestingTreeNode.h"
 
-<<<<<<< HEAD
-#include "AsyncPanZoomController.h"  // for AsyncPanZoomController
-#include "gfxPrefs.h"
-#include "LayersLogging.h"            // for Stringify
-#include "mozilla/gfx/Point.h"        // for Point4D
-#include "mozilla/layers/APZUtils.h"  // for CompleteAsyncTransform
-#include "mozilla/layers/AsyncCompositionManager.h"  // for ViewTransform::operator Matrix4x4()
-#include "mozilla/layers/AsyncDragMetrics.h"  // for AsyncDragMetrics
-#include "nsPrintfCString.h"                  // for nsPrintfCString
-#include "UnitTransforms.h"                   // for ViewAs
-||||||| merged common ancestors
-#include "AsyncPanZoomController.h"                     // for AsyncPanZoomController
-#include "gfxPrefs.h"
-#include "LayersLogging.h"                              // for Stringify
-#include "mozilla/gfx/Point.h"                          // for Point4D
-#include "mozilla/layers/APZUtils.h"                    // for CompleteAsyncTransform
-#include "mozilla/layers/AsyncCompositionManager.h"     // for ViewTransform::operator Matrix4x4()
-#include "mozilla/layers/AsyncDragMetrics.h"            // for AsyncDragMetrics
-#include "nsPrintfCString.h"                            // for nsPrintfCString
-#include "UnitTransforms.h"                             // for ViewAs
-=======
 #include "AsyncPanZoomController.h"  // for AsyncPanZoomController
 #include "LayersLogging.h"           // for Stringify
 #include "mozilla/StaticPrefs.h"
@@ -34,7 +13,6 @@
 #include "mozilla/layers/AsyncDragMetrics.h"  // for AsyncDragMetrics
 #include "nsPrintfCString.h"                  // for nsPrintfCString
 #include "UnitTransforms.h"                   // for ViewAs
->>>>>>> upstream-releases
 
 namespace mozilla {
 namespace layers {
@@ -47,26 +25,6 @@ using gfx::CompositorHitTestTouchActionMask;
 HitTestingTreeNode::HitTestingTreeNode(AsyncPanZoomController* aApzc,
                                        bool aIsPrimaryHolder,
                                        LayersId aLayersId)
-<<<<<<< HEAD
-    : mApzc(aApzc),
-      mIsPrimaryApzcHolder(aIsPrimaryHolder),
-      mLockCount(0),
-      mLayersId(aLayersId),
-      mScrollbarAnimationId(0),
-      mFixedPosTarget(ScrollableLayerGuid::NULL_SCROLL_ID),
-      mIsBackfaceHidden(false),
-      mOverride(EventRegionsOverride::NoOverride) {
-||||||| merged common ancestors
-  : mApzc(aApzc)
-  , mIsPrimaryApzcHolder(aIsPrimaryHolder)
-  , mLockCount(0)
-  , mLayersId(aLayersId)
-  , mScrollbarAnimationId(0)
-  , mFixedPosTarget(FrameMetrics::NULL_SCROLL_ID)
-  , mIsBackfaceHidden(false)
-  , mOverride(EventRegionsOverride::NoOverride)
-{
-=======
     : mApzc(aApzc),
       mIsPrimaryApzcHolder(aIsPrimaryHolder),
       mLockCount(0),
@@ -75,7 +33,6 @@ HitTestingTreeNode::HitTestingTreeNode(AsyncPanZoomController* aApzc,
       mIsBackfaceHidden(false),
       mIsAsyncZoomContainer(false),
       mOverride(EventRegionsOverride::NoOverride) {
->>>>>>> upstream-releases
   if (mIsPrimaryApzcHolder) {
     MOZ_ASSERT(mApzc);
   }
@@ -134,19 +91,9 @@ void HitTestingTreeNode::SetLastChild(HitTestingTreeNode* aChild) {
   }
 }
 
-<<<<<<< HEAD
-void HitTestingTreeNode::SetScrollbarData(const uint64_t& aScrollbarAnimationId,
-                                          const ScrollbarData& aScrollbarData) {
-||||||| merged common ancestors
-void
-HitTestingTreeNode::SetScrollbarData(const uint64_t& aScrollbarAnimationId,
-                                     const ScrollbarData& aScrollbarData)
-{
-=======
 void HitTestingTreeNode::SetScrollbarData(
     const Maybe<uint64_t>& aScrollbarAnimationId,
     const ScrollbarData& aScrollbarData) {
->>>>>>> upstream-releases
   mScrollbarAnimationId = aScrollbarAnimationId;
   mScrollbarData = aScrollbarData;
 }
@@ -177,15 +124,7 @@ ScrollableLayerGuid::ViewID HitTestingTreeNode::GetScrollTargetId() const {
   return mScrollbarData.mTargetViewId;
 }
 
-<<<<<<< HEAD
-const uint64_t& HitTestingTreeNode::GetScrollbarAnimationId() const {
-||||||| merged common ancestors
-const uint64_t&
-HitTestingTreeNode::GetScrollbarAnimationId() const
-{
-=======
 Maybe<uint64_t> HitTestingTreeNode::GetScrollbarAnimationId() const {
->>>>>>> upstream-releases
   return mScrollbarAnimationId;
 }
 
@@ -267,29 +206,12 @@ bool HitTestingTreeNode::IsPrimaryHolder() const {
 
 LayersId HitTestingTreeNode::GetLayersId() const { return mLayersId; }
 
-<<<<<<< HEAD
-void HitTestingTreeNode::SetHitTestData(
-    const EventRegions& aRegions, const LayerIntRegion& aVisibleRegion,
-    const CSSTransformMatrix& aTransform,
-    const Maybe<ParentLayerIntRegion>& aClipRegion,
-    const EventRegionsOverride& aOverride, bool aIsBackfaceHidden) {
-||||||| merged common ancestors
-void
-HitTestingTreeNode::SetHitTestData(const EventRegions& aRegions,
-                                   const LayerIntRegion& aVisibleRegion,
-                                   const CSSTransformMatrix& aTransform,
-                                   const Maybe<ParentLayerIntRegion>& aClipRegion,
-                                   const EventRegionsOverride& aOverride,
-                                   bool aIsBackfaceHidden)
-{
-=======
 void HitTestingTreeNode::SetHitTestData(
     const EventRegions& aRegions, const LayerIntRegion& aVisibleRegion,
     const CSSTransformMatrix& aTransform,
     const Maybe<ParentLayerIntRegion>& aClipRegion,
     const EventRegionsOverride& aOverride, bool aIsBackfaceHidden,
     bool aIsAsyncZoomContainer) {
->>>>>>> upstream-releases
   mEventRegions = aRegions;
   mVisibleRegion = aVisibleRegion;
   mTransform = aTransform;
@@ -338,16 +260,6 @@ CompositorHitTestInfo HitTestingTreeNode::HitTest(
 
   result = CompositorHitTestFlags::eVisibleToHitTest;
 
-<<<<<<< HEAD
-  if ((mOverride & EventRegionsOverride::ForceDispatchToContent) ||
-      mEventRegions.mDispatchToContentHitRegion.Contains(point.x, point.y)) {
-    result += CompositorHitTestFlags::eDispatchToContent;
-||||||| merged common ancestors
-  if ((mOverride & EventRegionsOverride::ForceDispatchToContent) ||
-      mEventRegions.mDispatchToContentHitRegion.Contains(point.x, point.y))
-  {
-    result += CompositorHitTestFlags::eDispatchToContent;
-=======
   if (mOverride & EventRegionsOverride::ForceDispatchToContent) {
     result += CompositorHitTestFlags::eApzAwareListeners;
   }
@@ -358,7 +270,6 @@ CompositorHitTestInfo HitTestingTreeNode::HitTest(
     // because that's the most conservative option (i.e. eIrregularArea makes
     // APZ rely on the main thread for everything).
     result += CompositorHitTestFlags::eIrregularArea;
->>>>>>> upstream-releases
     if (mEventRegions.mDTCRequiresTargetConfirmation) {
       result += CompositorHitTestFlags::eRequiresTargetConfirmation;
     }
@@ -406,13 +317,6 @@ const CSSTransformMatrix& HitTestingTreeNode::GetTransform() const {
   return mTransform;
 }
 
-<<<<<<< HEAD
-const LayerIntRegion& HitTestingTreeNode::GetVisibleRegion() const {
-||||||| merged common ancestors
-const LayerIntRegion&
-HitTestingTreeNode::GetVisibleRegion() const
-{
-=======
 LayerToScreenMatrix4x4 HitTestingTreeNode::GetTransformToGecko() const {
   if (mParent) {
     LayerToParentLayerMatrix4x4 thisToParent =
@@ -435,23 +339,14 @@ LayerToScreenMatrix4x4 HitTestingTreeNode::GetTransformToGecko() const {
 }
 
 const LayerIntRegion& HitTestingTreeNode::GetVisibleRegion() const {
->>>>>>> upstream-releases
   return mVisibleRegion;
 }
 
-<<<<<<< HEAD
-void HitTestingTreeNode::Dump(const char* aPrefix) const {
-||||||| merged common ancestors
-void
-HitTestingTreeNode::Dump(const char* aPrefix) const
-{
-=======
 bool HitTestingTreeNode::IsAsyncZoomContainer() const {
   return mIsAsyncZoomContainer;
 }
 
 void HitTestingTreeNode::Dump(const char* aPrefix) const {
->>>>>>> upstream-releases
   if (mPrevSibling) {
     mPrevSibling->Dump(aPrefix);
   }

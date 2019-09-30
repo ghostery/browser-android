@@ -57,16 +57,9 @@ async function checkEventsForNode(test, inspector, testActor) {
     await beforeTest(inspector, testActor);
   }
 
-<<<<<<< HEAD
-  const evHolder = container.elt.querySelector(
-    ".inspector-badge.interactive[data-event]");
-||||||| merged common ancestors
-  const evHolder = container.elt.querySelector(".markup-badge[data-event]");
-=======
   const evHolder = container.elt.querySelector(
     ".inspector-badge.interactive[data-event]"
   );
->>>>>>> upstream-releases
 
   if (expected.length === 0) {
     // If no event is expected, check that event bubble is hidden.

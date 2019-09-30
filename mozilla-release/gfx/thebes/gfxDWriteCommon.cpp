@@ -140,21 +140,6 @@ HRESULT STDMETHODCALLTYPE gfxDWriteFontFileLoader::CreateStreamFromKey(
     return E_POINTER;
   }
 
-<<<<<<< HEAD
-  uint64_t fontFileKey = *static_cast<const uint64_t*>(fontFileReferenceKey);
-  auto found = sFontFileStreams.find(fontFileKey);
-  if (found == sFontFileStreams.end()) {
-    *fontFileStream = nullptr;
-    return E_FAIL;
-  }
-||||||| merged common ancestors
-    uint64_t fontFileKey = *static_cast<const uint64_t*>(fontFileReferenceKey);
-    auto found = sFontFileStreams.find(fontFileKey);
-    if (found == sFontFileStreams.end()) {
-      *fontFileStream = nullptr;
-      return E_FAIL;
-    }
-=======
   mozilla::StaticMutexAutoLock lock(sFontFileStreamsMutex);
   uint64_t fontFileKey = *static_cast<const uint64_t*>(fontFileReferenceKey);
   auto found = sFontFileStreams.find(fontFileKey);
@@ -162,7 +147,6 @@ HRESULT STDMETHODCALLTYPE gfxDWriteFontFileLoader::CreateStreamFromKey(
     *fontFileStream = nullptr;
     return E_FAIL;
   }
->>>>>>> upstream-releases
 
   found->second->AddRef();
   *fontFileStream = found->second;

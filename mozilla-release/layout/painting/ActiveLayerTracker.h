@@ -89,17 +89,8 @@ class ActiveLayerTracker {
    * Return true if aFrame's property style in |aPropertySet| should be
    * considered as being animated for constructing active layers.
    */
-<<<<<<< HEAD
-  static bool IsStyleAnimated(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
-                              nsCSSPropertyID aProperty);
-||||||| merged common ancestors
-  static bool IsStyleAnimated(nsDisplayListBuilder* aBuilder,
-                              nsIFrame* aFrame,
-                              nsCSSPropertyID aProperty);
-=======
   static bool IsStyleAnimated(nsDisplayListBuilder* aBuilder, nsIFrame* aFrame,
                               const nsCSSPropertyIDSet& aPropertySet);
->>>>>>> upstream-releases
   /**
    * Return true if any of aFrame's offset property styles should be considered
    * as being animated for constructing active layers.

@@ -23,22 +23,10 @@
 
 // Uncomment the following to validate that we're predicting the number
 // of Vorbis samples in each packet correctly.
-<<<<<<< HEAD
-#define VALIDATE_VORBIS_SAMPLE_CALCULATION
-#ifdef VALIDATE_VORBIS_SAMPLE_CALCULATION
-#include <map>
-#endif
-||||||| merged common ancestors
-#define VALIDATE_VORBIS_SAMPLE_CALCULATION
-#ifdef  VALIDATE_VORBIS_SAMPLE_CALCULATION
-#include <map>
-#endif
-=======
 #  define VALIDATE_VORBIS_SAMPLE_CALCULATION
 #  ifdef VALIDATE_VORBIS_SAMPLE_CALCULATION
 #    include <map>
 #  endif
->>>>>>> upstream-releases
 
 struct OpusMSDecoder;
 
@@ -447,13 +435,7 @@ class OpusState : public OggCodecState {
 
 // Constructs a 32bit version number out of two 16 bit major,minor
 // version numbers.
-<<<<<<< HEAD
-#define SKELETON_VERSION(major, minor) (((major) << 16) | (minor))
-||||||| merged common ancestors
-#define SKELETON_VERSION(major, minor) (((major)<<16)|(minor))
-=======
 #  define SKELETON_VERSION(major, minor) (((major) << 16) | (minor))
->>>>>>> upstream-releases
 
 enum EMsgHeaderType {
   eContentType,

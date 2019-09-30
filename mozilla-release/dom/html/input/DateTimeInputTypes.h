@@ -26,26 +26,7 @@ class DateTimeInputTypeBase : public ::InputType {
 
  protected:
   explicit DateTimeInputTypeBase(mozilla::dom::HTMLInputElement* aInputElement)
-<<<<<<< HEAD
       : InputType(aInputElement) {}
-
-  /**
-   * Checks preference "dom.forms.datetime" to determine if input date and time
-   * should be supported.
-   */
-  static bool IsInputDateTimeEnabled();
-||||||| merged common ancestors
-    : InputType(aInputElement)
-  {}
-
-  /**
-   * Checks preference "dom.forms.datetime" to determine if input date and time
-   * should be supported.
-   */
-  static bool IsInputDateTimeEnabled();
-=======
-      : InputType(aInputElement) {}
->>>>>>> upstream-releases
 
   bool IsMutable() const override;
 

@@ -140,16 +140,9 @@ add_task(async function testSidebarSetObject() {
 });
 
 add_task(async function testSidebarSetObjectValueGrip() {
-<<<<<<< HEAD
-  const inspectedWindowFront =
-    await toolbox.target.getFront("webExtensionInspectedWindow");
-||||||| merged common ancestors
-  const inspectedWindowFront = toolbox.target.getFront("webExtensionInspectedWindow");
-=======
   const inspectedWindowFront = await toolbox.target.getFront(
     "webExtensionInspectedWindow"
   );
->>>>>>> upstream-releases
   const sidebar = inspector.getPanel(SIDEBAR_ID);
   const sidebarPanelContent = inspector.sidebar.getTabPanel(SIDEBAR_ID);
 
@@ -163,17 +156,6 @@ add_task(async function testSidebarSetObjectValueGrip() {
     obj;
   `;
 
-<<<<<<< HEAD
-  const evalResult = await inspectedWindowFront.eval(fakeExtCallerInfo, expression, {
-    evalResultAsGrip: true,
-    toolboxConsoleActorID: toolbox.target.form.consoleActor,
-  });
-||||||| merged common ancestors
-  const evalResult = await inspectedWindowFront.eval(fakeExtCallerInfo, expression, {
-    evalResultAsGrip: true,
-    toolboxConsoleActorID: toolbox.target.form.consoleActor
-  });
-=======
   const evalResult = await inspectedWindowFront.eval(
     fakeExtCallerInfo,
     expression,
@@ -182,7 +164,6 @@ add_task(async function testSidebarSetObjectValueGrip() {
       toolboxConsoleActorID: toolbox.target.activeConsole.actor,
     }
   );
->>>>>>> upstream-releases
 
   sidebar.setObjectValueGrip(evalResult.valueGrip, "Expected Root Title");
 
@@ -207,32 +188,14 @@ add_task(async function testSidebarSetObjectValueGrip() {
 });
 
 add_task(async function testSidebarDOMNodeHighlighting() {
-<<<<<<< HEAD
-  const inspectedWindowFront =
-    await toolbox.target.getFront("webExtensionInspectedWindow");
-||||||| merged common ancestors
-  const inspectedWindowFront = toolbox.target.getFront("webExtensionInspectedWindow");
-=======
   const inspectedWindowFront = await toolbox.target.getFront(
     "webExtensionInspectedWindow"
   );
->>>>>>> upstream-releases
   const sidebar = inspector.getPanel(SIDEBAR_ID);
   const sidebarPanelContent = inspector.sidebar.getTabPanel(SIDEBAR_ID);
 
   const expression = "({ body: document.body })";
 
-<<<<<<< HEAD
-  const evalResult = await inspectedWindowFront.eval(fakeExtCallerInfo, expression, {
-    evalResultAsGrip: true,
-    toolboxConsoleActorID: toolbox.target.form.consoleActor,
-  });
-||||||| merged common ancestors
-  const evalResult = await inspectedWindowFront.eval(fakeExtCallerInfo, expression, {
-    evalResultAsGrip: true,
-    toolboxConsoleActorID: toolbox.target.form.consoleActor
-  });
-=======
   const evalResult = await inspectedWindowFront.eval(
     fakeExtCallerInfo,
     expression,
@@ -241,7 +204,6 @@ add_task(async function testSidebarDOMNodeHighlighting() {
       toolboxConsoleActorID: toolbox.target.activeConsole.actor,
     }
   );
->>>>>>> upstream-releases
 
   sidebar.setObjectValueGrip(evalResult.valueGrip);
 
@@ -320,16 +282,9 @@ add_task(async function testSidebarDOMNodeOpenInspector() {
 });
 
 add_task(async function testSidebarSetExtensionPage() {
-<<<<<<< HEAD
-  const inspectedWindowFront =
-    await toolbox.target.getFront("webExtensionInspectedWindow");
-||||||| merged common ancestors
-  const inspectedWindowFront = toolbox.target.getFront("webExtensionInspectedWindow");
-=======
   const inspectedWindowFront = await toolbox.target.getFront(
     "webExtensionInspectedWindow"
   );
->>>>>>> upstream-releases
 
   const sidebar = inspector.getPanel(SIDEBAR_ID);
   const sidebarPanelContent = inspector.sidebar.getTabPanel(SIDEBAR_ID);

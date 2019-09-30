@@ -380,48 +380,7 @@ var SafeBrowsing = {
     loggingEnabled = Services.prefs.getBoolPref(PREF_DEBUG_ENABLED);
     log("reading prefs");
 
-<<<<<<< HEAD
-    this.phishingEnabled = Services.prefs.getBoolPref("browser.safebrowsing.phishing.enabled");
-    this.malwareEnabled = Services.prefs.getBoolPref("browser.safebrowsing.malware.enabled");
-    this.downloadsEnabled = Services.prefs.getBoolPref("browser.safebrowsing.downloads.enabled");
-    this.passwordsEnabled = Services.prefs.getBoolPref("browser.safebrowsing.passwords.enabled");
-    this.trackingEnabled = Services.prefs.getBoolPref("toolkit.telemetry.isGeckoViewMode", false) ||
-                           Services.prefs.getBoolPref("privacy.trackingprotection.enabled") ||
-                           Services.prefs.getBoolPref("privacy.trackingprotection.pbmode.enabled");
-    this.blockedEnabled = Services.prefs.getBoolPref("browser.safebrowsing.blockedURIs.enabled");
-    this.trackingAnnotations = Services.prefs.getBoolPref("privacy.trackingprotection.annotate_channels");
-    this.flashBlockEnabled = Services.prefs.getBoolPref("plugins.flashBlock.enabled");
-    this.flashInfobarListEnabled = Services.prefs.getBoolPref("plugins.show_infobar", false);
-
-    let flashAllowTable, flashAllowExceptTable, flashTable,
-        flashExceptTable, flashSubDocTable,
-        flashSubDocExceptTable;
-
-    let obsoleteLists;
-||||||| merged common ancestors
-    let contentBlockingEnabled = Services.prefs.getBoolPref("browser.contentblocking.enabled", true);
-
-    this.phishingEnabled = Services.prefs.getBoolPref("browser.safebrowsing.phishing.enabled");
-    this.malwareEnabled = Services.prefs.getBoolPref("browser.safebrowsing.malware.enabled");
-    this.downloadsEnabled = Services.prefs.getBoolPref("browser.safebrowsing.downloads.enabled");
-    this.passwordsEnabled = Services.prefs.getBoolPref("browser.safebrowsing.passwords.enabled");
-    this.trackingEnabled = contentBlockingEnabled &&
-                           (Services.prefs.getBoolPref("toolkit.telemetry.isGeckoViewMode", false) ||
-                            Services.prefs.getBoolPref("privacy.trackingprotection.enabled") ||
-                            Services.prefs.getBoolPref("privacy.trackingprotection.pbmode.enabled"));
-    this.blockedEnabled = Services.prefs.getBoolPref("browser.safebrowsing.blockedURIs.enabled");
-    this.trackingAnnotations = Services.prefs.getBoolPref("privacy.trackingprotection.annotate_channels");
-    this.flashBlockEnabled = Services.prefs.getBoolPref("plugins.flashBlock.enabled");
-    this.flashInfobarListEnabled = Services.prefs.getBoolPref("plugins.show_infobar", false);
-
-    let flashAllowTable, flashAllowExceptTable, flashTable,
-        flashExceptTable, flashSubDocTable,
-        flashSubDocExceptTable;
-
-    let obsoleteLists;
-=======
     let obsoleteLists = [];
->>>>>>> upstream-releases
     // Make a copy of the original lists before we re-read the prefs.
     if (this.initialized) {
       obsoleteLists = this.features.map(feature => {

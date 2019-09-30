@@ -79,26 +79,11 @@ class nsWebShellWindow final : public nsXULWindow,
   NS_DECL_ISUPPORTS_INHERITED
 
   // nsWebShellWindow methods...
-<<<<<<< HEAD
-  nsresult Initialize(nsIXULWindow* aParent, nsIXULWindow* aOpener,
-                      nsIURI* aUrl, int32_t aInitialWidth,
-                      int32_t aInitialHeight, bool aIsHiddenWindow,
-                      nsITabParent* aOpeningTab,
-                      mozIDOMWindowProxy* aOpenerWIndow,
-||||||| merged common ancestors
-  nsresult Initialize(nsIXULWindow * aParent, nsIXULWindow * aOpener,
-                      nsIURI* aUrl,
-                      int32_t aInitialWidth, int32_t aInitialHeight,
-                      bool aIsHiddenWindow,
-                      nsITabParent *aOpeningTab,
-                      mozIDOMWindowProxy *aOpenerWIndow,
-=======
   nsresult Initialize(nsIXULWindow* aParent, nsIXULWindow* aOpener,
                       nsIURI* aUrl, int32_t aInitialWidth,
                       int32_t aInitialHeight, bool aIsHiddenWindow,
                       nsIRemoteTab* aOpeningTab,
                       mozIDOMWindowProxy* aOpenerWIndow,
->>>>>>> upstream-releases
                       nsWidgetInitData& widgetInitData);
 
   nsresult Toolbar();

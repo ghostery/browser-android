@@ -210,16 +210,10 @@ async function test(window) {
     return;
   }
 
-<<<<<<< HEAD
-  ChromeUtils.import("resource://talos-powers/TalosParentProfiler.jsm", context);
-||||||| merged common ancestors
-  Services.scriptloader.loadSubScript("resource://talos-powers/TalosParentProfiler.js", context);
-=======
   ChromeUtils.import(
     "resource://talos-powers/TalosParentProfiler.jsm",
     context
   );
->>>>>>> upstream-releases
   TalosParentProfiler = context.TalosParentProfiler;
 
   let testURLs = [];

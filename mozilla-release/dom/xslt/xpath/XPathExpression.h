@@ -26,26 +26,11 @@ class XPathResult;
 /**
  * A class for evaluating an XPath expression string
  */
-<<<<<<< HEAD
-class XPathExpression final : public NonRefcountedDOMObject {
- public:
-  XPathExpression(nsAutoPtr<Expr>&& aExpression, txResultRecycler* aRecycler,
-                  nsIDocument* aDocument);
-  ~XPathExpression();
-||||||| merged common ancestors
-class XPathExpression final : public NonRefcountedDOMObject
-{
-public:
-    XPathExpression(nsAutoPtr<Expr>&& aExpression, txResultRecycler* aRecycler,
-                    nsIDocument *aDocument);
-    ~XPathExpression();
-=======
 class XPathExpression final : public NonRefcountedDOMObject {
  public:
   XPathExpression(nsAutoPtr<Expr>&& aExpression, txResultRecycler* aRecycler,
                   Document* aDocument);
   ~XPathExpression();
->>>>>>> upstream-releases
 
   bool WrapObject(JSContext* aCx, JS::Handle<JSObject*> aGivenProto,
                   JS::MutableHandle<JSObject*> aReflector) {

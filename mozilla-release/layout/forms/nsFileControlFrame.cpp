@@ -34,36 +34,16 @@
 using namespace mozilla;
 using namespace mozilla::dom;
 
-<<<<<<< HEAD
-nsIFrame* NS_NewFileControlFrame(nsIPresShell* aPresShell,
-                                 ComputedStyle* aStyle) {
-  return new (aPresShell) nsFileControlFrame(aStyle);
-||||||| merged common ancestors
-nsIFrame*
-NS_NewFileControlFrame(nsIPresShell* aPresShell, ComputedStyle* aStyle)
-{
-  return new (aPresShell) nsFileControlFrame(aStyle);
-=======
 nsIFrame* NS_NewFileControlFrame(PresShell* aPresShell, ComputedStyle* aStyle) {
   return new (aPresShell)
       nsFileControlFrame(aStyle, aPresShell->GetPresContext());
->>>>>>> upstream-releases
 }
 
 NS_IMPL_FRAMEARENA_HELPERS(nsFileControlFrame)
 
-<<<<<<< HEAD
-nsFileControlFrame::nsFileControlFrame(ComputedStyle* aStyle)
-    : nsBlockFrame(aStyle, kClassID) {
-||||||| merged common ancestors
-nsFileControlFrame::nsFileControlFrame(ComputedStyle* aStyle)
-  : nsBlockFrame(aStyle, kClassID)
-{
-=======
 nsFileControlFrame::nsFileControlFrame(ComputedStyle* aStyle,
                                        nsPresContext* aPresContext)
     : nsBlockFrame(aStyle, aPresContext, kClassID) {
->>>>>>> upstream-releases
   AddStateBits(NS_BLOCK_FLOAT_MGR);
 }
 
@@ -224,23 +204,10 @@ void nsFileControlFrame::DestroyFrom(nsIFrame* aDestructRoot,
   nsBlockFrame::DestroyFrom(aDestructRoot, aPostDestroyData);
 }
 
-<<<<<<< HEAD
-static already_AddRefed<Element> MakeAnonButton(nsIDocument* aDoc,
-                                                const char* labelKey,
-                                                HTMLInputElement* aInputElement,
-                                                const nsAString& aAccessKey) {
-||||||| merged common ancestors
-static already_AddRefed<Element>
-MakeAnonButton(nsIDocument* aDoc, const char* labelKey,
-               HTMLInputElement* aInputElement,
-               const nsAString& aAccessKey)
-{
-=======
 static already_AddRefed<Element> MakeAnonButton(Document* aDoc,
                                                 const char* labelKey,
                                                 HTMLInputElement* aInputElement,
                                                 const nsAString& aAccessKey) {
->>>>>>> upstream-releases
   RefPtr<Element> button = aDoc->CreateHTMLElement(nsGkAtoms::button);
   // NOTE: SetIsNativeAnonymousRoot() has to be called before setting any
   // attribute.
@@ -277,20 +244,9 @@ static already_AddRefed<Element> MakeAnonButton(Document* aDoc,
   return button.forget();
 }
 
-<<<<<<< HEAD
-nsresult nsFileControlFrame::CreateAnonymousContent(
-    nsTArray<ContentInfo>& aElements) {
-  nsCOMPtr<nsIDocument> doc = mContent->GetComposedDoc();
-||||||| merged common ancestors
-nsresult
-nsFileControlFrame::CreateAnonymousContent(nsTArray<ContentInfo>& aElements)
-{
-  nsCOMPtr<nsIDocument> doc = mContent->GetComposedDoc();
-=======
 nsresult nsFileControlFrame::CreateAnonymousContent(
     nsTArray<ContentInfo>& aElements) {
   nsCOMPtr<Document> doc = mContent->GetComposedDoc();
->>>>>>> upstream-releases
 
   RefPtr<HTMLInputElement> fileContent =
       HTMLInputElement::FromNodeOrNull(mContent);
@@ -439,18 +395,8 @@ nsFileControlFrame::DnDListener::HandleEvent(Event* aEvent) {
       inputElement->MozSetDndFilesAndDirectories(array);
     } else {
       bool blinkFileSystemEnabled =
-<<<<<<< HEAD
-          Preferences::GetBool("dom.webkitBlink.filesystem.enabled", false);
-      bool dirPickerEnabled =
-          Preferences::GetBool("dom.input.dirpicker", false);
-||||||| merged common ancestors
-        Preferences::GetBool("dom.webkitBlink.filesystem.enabled", false);
-      bool dirPickerEnabled =
-        Preferences::GetBool("dom.input.dirpicker", false);
-=======
           StaticPrefs::dom_webkitBlink_filesystem_enabled();
       bool dirPickerEnabled = StaticPrefs::dom_input_dirpicker();
->>>>>>> upstream-releases
       if (blinkFileSystemEnabled || dirPickerEnabled) {
         FileList* files = static_cast<FileList*>(fileList.get());
         if (files) {

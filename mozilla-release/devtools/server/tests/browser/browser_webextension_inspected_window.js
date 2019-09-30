@@ -28,25 +28,11 @@ async function setup(pageUrl) {
 
   await target.attach();
 
-<<<<<<< HEAD
-  const [, targetFront] = await client.attachTarget(form);
-
-  const [, consoleClient] = await client.attachConsole(form.consoleActor, []);
-
-  const inspectedWindowFront = await target.getFront("webExtensionInspectedWindow");
-||||||| merged common ancestors
-  const [, targetFront] = await client.attachTarget(form.actor);
-
-  const [, consoleClient] = await client.attachConsole(form.consoleActor, []);
-
-  const inspectedWindowFront = target.getFront("webExtensionInspectedWindow");
-=======
   const { client } = target;
   const consoleClient = target.activeConsole;
   const inspectedWindowFront = await target.getFront(
     "webExtensionInspectedWindow"
   );
->>>>>>> upstream-releases
 
   return {
     client,

@@ -229,27 +229,13 @@ TEST_F(TelemetryGeckoViewFixture, ClearPersistenceFiles) {
 
   bool fileExists = false;
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_FALSE(fileExists)
-      << "No persisted measurements must exist on the disk";
-||||||| merged common ancestors
-  ASSERT_FALSE(fileExists) << "No persisted measurements must exist on the disk";
-=======
   ASSERT_FALSE(fileExists)
   << "No persisted measurements must exist on the disk";
->>>>>>> upstream-releases
 
   WritePersistenceFile(nsDependentCString(kSampleData));
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_TRUE(fileExists)
-      << "We should have written the test persistence file to disk";
-||||||| merged common ancestors
-  ASSERT_TRUE(fileExists) << "We should have written the test persistence file to disk";
-=======
   ASSERT_TRUE(fileExists)
   << "We should have written the test persistence file to disk";
->>>>>>> upstream-releases
 
   // Init the persistence: this will trigger the measurements to be written
   // to disk off-the-main thread.
@@ -258,15 +244,8 @@ TEST_F(TelemetryGeckoViewFixture, ClearPersistenceFiles) {
   TelemetryGeckoViewPersistence::DeInitPersistence();
 
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_FALSE(fileExists)
-      << "ClearPersistenceData must remove the persistence file";
-||||||| merged common ancestors
-  ASSERT_FALSE(fileExists) << "ClearPersistenceData must remove the persistence file";
-=======
   ASSERT_FALSE(fileExists)
   << "ClearPersistenceData must remove the persistence file";
->>>>>>> upstream-releases
 }
 
 /**
@@ -277,15 +256,8 @@ TEST_F(TelemetryGeckoViewFixture, CheckDataLoadedTopic) {
 
   bool fileExists = false;
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_FALSE(fileExists)
-      << "No persisted measurements must exist on the disk";
-||||||| merged common ancestors
-  ASSERT_FALSE(fileExists) << "No persisted measurements must exist on the disk";
-=======
   ASSERT_FALSE(fileExists)
   << "No persisted measurements must exist on the disk";
->>>>>>> upstream-releases
 
   // Check that the data loaded topic is notified after attempting the load
   // if no measurement file exists.
@@ -297,15 +269,8 @@ TEST_F(TelemetryGeckoViewFixture, CheckDataLoadedTopic) {
   // Check that the topic is triggered when the measuements file exists.
   WritePersistenceFile(nsDependentCString(kSampleData));
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_TRUE(fileExists)
-      << "The persisted measurements must exist on the disk";
-||||||| merged common ancestors
-  ASSERT_TRUE(fileExists) << "The persisted measurements must exist on the disk";
-=======
   ASSERT_TRUE(fileExists)
   << "The persisted measurements must exist on the disk";
->>>>>>> upstream-releases
 
   // Check that the data loaded topic is triggered when the measurement file
   // exists.
@@ -328,15 +293,8 @@ TEST_F(TelemetryGeckoViewFixture, PersistScalars) {
 
   bool fileExists = false;
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_FALSE(fileExists)
-      << "No persisted measurements must exist on the disk";
-||||||| merged common ancestors
-  ASSERT_FALSE(fileExists) << "No persisted measurements must exist on the disk";
-=======
   ASSERT_FALSE(fileExists)
   << "No persisted measurements must exist on the disk";
->>>>>>> upstream-releases
 
   RefPtr<DataLoadedObserver> loadingFinished = new DataLoadedObserver();
 
@@ -362,15 +320,8 @@ TEST_F(TelemetryGeckoViewFixture, PersistScalars) {
   TelemetryGeckoViewPersistence::DeInitPersistence();
 
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_TRUE(fileExists)
-      << "The persisted measurements must exist on the disk";
-||||||| merged common ancestors
-  ASSERT_TRUE(fileExists) << "The persisted measurements must exist on the disk";
-=======
   ASSERT_TRUE(fileExists)
   << "The persisted measurements must exist on the disk";
->>>>>>> upstream-releases
 
   // Clear the in-memory scalars again. They will be restored from the disk.
   Unused << mTelemetry->ClearScalars();
@@ -412,15 +363,8 @@ TEST_F(TelemetryGeckoViewFixture, PersistHistograms) {
 
   bool fileExists = false;
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_FALSE(fileExists)
-      << "No persisted measurements must exist on the disk";
-||||||| merged common ancestors
-  ASSERT_FALSE(fileExists) << "No persisted measurements must exist on the disk";
-=======
   ASSERT_FALSE(fileExists)
   << "No persisted measurements must exist on the disk";
->>>>>>> upstream-releases
 
   RefPtr<DataLoadedObserver> loadingFinished = new DataLoadedObserver();
 
@@ -447,15 +391,8 @@ TEST_F(TelemetryGeckoViewFixture, PersistHistograms) {
   TelemetryGeckoViewPersistence::DeInitPersistence();
 
   CheckPersistenceFileExists(fileExists);
-<<<<<<< HEAD
-  ASSERT_TRUE(fileExists)
-      << "The persisted measurements must exist on the disk";
-||||||| merged common ancestors
-  ASSERT_TRUE(fileExists) << "The persisted measurements must exist on the disk";
-=======
   ASSERT_TRUE(fileExists)
   << "The persisted measurements must exist on the disk";
->>>>>>> upstream-releases
 
   // Clear the in-memory histograms again. They will be restored from the disk.
   GetAndClearHistogram(cx.GetJSContext(), mTelemetry,
@@ -501,16 +438,8 @@ TEST_F(TelemetryGeckoViewFixture, PersistHistograms) {
   JS::RootedValue expectedKeyData(cx.GetJSContext());
   GetProperty(cx.GetJSContext(), "gv_key", histogram, &expectedKeyData);
   ASSERT_FALSE(expectedKeyData.isUndefined())
-<<<<<<< HEAD
-      << "Cannot find the expected key in the keyed histogram data";
-  GetProperty(cx.GetJSContext(), "sum", expectedKeyData, &sum);
-||||||| merged common ancestors
-    << "Cannot find the expected key in the keyed histogram data";
-  GetProperty(cx.GetJSContext(), "sum", expectedKeyData,  &sum);
-=======
   << "Cannot find the expected key in the keyed histogram data";
   GetProperty(cx.GetJSContext(), "sum", expectedKeyData, &sum);
->>>>>>> upstream-releases
   JS::ToUint32(cx.GetJSContext(), sum, &uSum);
   ASSERT_EQ(uSum, kExpectedKeyedSum)
       << "The histogram is not returning the expected sum for 'gv_key'";
@@ -566,15 +495,8 @@ TEST_F(TelemetryGeckoViewFixture, EmptyPendingOperations) {
   JS::RootedValue scalarsSnapshot(cx.GetJSContext());
   GetScalarsSnapshot(false, cx.GetJSContext(), &scalarsSnapshot);
 
-<<<<<<< HEAD
-  ASSERT_TRUE(scalarsSnapshot.isUndefined())
-      << "Scalars snapshot should not contain any data.";
-||||||| merged common ancestors
-  ASSERT_TRUE(scalarsSnapshot.isUndefined()) << "Scalars snapshot should not contain any data.";
-=======
   ASSERT_TRUE(scalarsSnapshot.isUndefined())
   << "Scalars snapshot should not contain any data.";
->>>>>>> upstream-releases
 }
 
 TEST_F(TelemetryGeckoViewFixture, SimpleAppendOperation) {

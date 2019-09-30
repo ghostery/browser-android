@@ -1,28 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at <http://mozilla.org/MPL/2.0/>. */
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/get-expression.js
-
-// @flow
-
-import type { Position } from "../../types";
-
-type Token = {
-  startColumn: number,
-  endColumn: number,
-  type: string
-};
-
-export function tokenAtTextPosition(
-  cm: any,
-  { line, column }: Position
-): Token | null {
-||||||| merged common ancestors
-function tokenAtTextPosition(cm, {
-  line,
-  column
-}) {
-=======
 
 // @flow
 
@@ -38,7 +16,6 @@ export function tokenAtTextPosition(
   cm: any,
   { line, column }: Position
 ): Token | null {
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/get-expression.js
   if (line < 0 || line >= cm.lineCount()) {
     return null;
   }
@@ -83,26 +60,8 @@ export function getExpressionFromCoords(cm: any, coord: Position) {
   }
 
   const location = {
-<<<<<<< HEAD:mozilla-release/devtools/client/debugger/new/src/utils/editor/get-expression.js
-    start: { line: lineNumber, column: startHighlight },
-    end: { line: lineNumber, column: endHighlight }
-||||||| merged common ancestors
-    start: {
-      line: lineNumber,
-      column: startHighlight
-    },
-    end: {
-      line: lineNumber,
-      column: endHighlight
-    }
-  };
-  return {
-    expression,
-    location
-=======
     start: { line: lineNumber, column: startHighlight },
     end: { line: lineNumber, column: endHighlight },
->>>>>>> upstream-releases:mozilla-release/devtools/client/debugger/src/utils/editor/get-expression.js
   };
   return { expression, location };
 }

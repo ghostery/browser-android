@@ -42,14 +42,6 @@ const EDIT_CREDITCARD_KEYWORDS = [
   "cardExpiresYear",
   "cardNetwork",
 ];
-<<<<<<< HEAD
-const MANAGE_CREDITCARDS_KEYWORDS = ["manageCreditCardsTitle", "addNewCreditCardTitle"];
-const EDIT_CREDITCARD_KEYWORDS = ["cardNumber", "nameOnCard", "cardExpiresMonth", "cardExpiresYear", "cardNetwork"];
-||||||| merged common ancestors
-const MANAGE_CREDITCARDS_KEYWORDS = ["manageCreditCardsTitle", "addNewCreditCardTitle", "showCreditCardsBtnLabel"];
-const EDIT_CREDITCARD_KEYWORDS = ["cardNumber", "nameOnCard", "cardExpiresMonth", "cardExpiresYear", "cardNetwork"];
-=======
->>>>>>> upstream-releases
 const FIELD_STATES = {
   NORMAL: "NORMAL",
   AUTO_FILLED: "AUTO_FILLED",
@@ -602,26 +594,6 @@ this.FormAutofillUtils = {
   },
 
   /**
-<<<<<<< HEAD
-   * Parse a require string and outputs an array of fields.
-   * Spaces, commas, and other literals are ignored in this implementation.
-   * For example, a require string "ACS" should return:
-   * ["street-address", "address-level2", "address-level1"]
-   *
-   * @param   {string} requireString Country address require string
-   * @returns {array<string>} List of fields
-   */
-  parseRequireString(requireString) {
-    if (!requireString) {
-      throw new Error("requireString string is missing.");
-    }
-
-    return requireString.split("").map(fieldId => this.FIELDS_LOOKUP[fieldId]);
-  },
-
-  /**
-||||||| merged common ancestors
-=======
    * Used to populate dropdowns in the UI (e.g. FormAutofill preferences, Web Payments).
    * Use findAddressSelectOption for matching a value to a region.
    *
@@ -676,7 +648,6 @@ this.FormAutofillUtils = {
   },
 
   /**
->>>>>>> upstream-releases
    * Use alternative country name list to identify a country code from a
    * specified country name.
    * @param   {string} countryName A country name to be identified
@@ -1063,17 +1034,9 @@ this.FormAutofillUtils = {
       };
     }
     return {
-<<<<<<< HEAD
-      // When particular values are missing for a country, the
-      // data/ZZ value should be used instead.
-||||||| merged common ancestors
-      // Phillipines doesn't specify a sublocality_name_type but
-      // has one referenced in their fmt value.
-=======
       // When particular values are missing for a country, the
       // data/ZZ value should be used instead:
       // https://chromium-i18n.appspot.com/ssl-aggregate-address/data/ZZ
->>>>>>> upstream-releases
       addressLevel3Label: dataset.sublocality_name_type || "suburb",
       addressLevel2Label: dataset.locality_name_type || "city",
       addressLevel1Label: dataset.state_name_type || "province",
@@ -1086,14 +1049,7 @@ this.FormAutofillUtils = {
       countryRequiredFields: this.parseRequireString(dataset.require || "AC"),
       fieldsOrder: this.parseAddressFormat(dataset.fmt || "%N%n%O%n%A%n%C"),
       postalCodeLabel: dataset.zip_name_type || "postalCode",
-<<<<<<< HEAD
-      fieldsOrder: this.parseAddressFormat(dataset.fmt || "%N%n%O%n%A%n%C"),
-||||||| merged common ancestors
-      fieldsOrder: this.parseAddressFormat(dataset.fmt || "%N%n%O%n%A%n%C, %S %Z"),
-=======
->>>>>>> upstream-releases
       postalCodePattern: dataset.zip,
-      countryRequiredFields: this.parseRequireString(dataset.require || "AC"),
     };
   },
 

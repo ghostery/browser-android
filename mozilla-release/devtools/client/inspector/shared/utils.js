@@ -155,14 +155,8 @@ function getSelectorFromGrip(grip) {
     attributes,
     nodeName,
     isAfterPseudoElement,
-<<<<<<< HEAD
-    isBeforePseudoElement,
-||||||| merged common ancestors
-    isBeforePseudoElement
-=======
     isBeforePseudoElement,
     isMarkerPseudoElement,
->>>>>>> upstream-releases
   } = grip.preview;
 
   if (isAfterPseudoElement) {

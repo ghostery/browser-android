@@ -212,198 +212,6 @@ plurals:table(nofallback){
         zu{"set1"}
     }
     locales_ordinals{
-<<<<<<< HEAD
-        af{"set35"}
-        am{"set35"}
-        ar{"set35"}
-        as{"set54"}
-        az{"set52"}
-        be{"set40"}
-        bg{"set35"}
-        bn{"set54"}
-        bs{"set35"}
-        ca{"set49"}
-        ce{"set35"}
-        cs{"set35"}
-        cy{"set56"}
-        da{"set35"}
-        de{"set35"}
-        dsb{"set35"}
-        el{"set35"}
-        en{"set47"}
-        es{"set35"}
-        et{"set35"}
-        eu{"set35"}
-        fa{"set35"}
-        fi{"set35"}
-        fil{"set37"}
-        fr{"set37"}
-        fy{"set35"}
-        ga{"set37"}
-        gd{"set50"}
-        gl{"set35"}
-        gsw{"set35"}
-        gu{"set53"}
-        he{"set35"}
-        hi{"set53"}
-        hr{"set35"}
-        hsb{"set35"}
-        hu{"set38"}
-        hy{"set37"}
-        ia{"set35"}
-        id{"set35"}
-        in{"set35"}
-        is{"set35"}
-        it{"set44"}
-        iw{"set35"}
-        ja{"set35"}
-        ka{"set45"}
-        kk{"set43"}
-        km{"set35"}
-        kn{"set35"}
-        ko{"set35"}
-        ky{"set35"}
-        lo{"set37"}
-        lt{"set35"}
-        lv{"set35"}
-        mk{"set51"}
-        ml{"set35"}
-        mn{"set35"}
-        mo{"set37"}
-        mr{"set48"}
-        ms{"set37"}
-        my{"set35"}
-        nb{"set35"}
-        ne{"set39"}
-        nl{"set35"}
-        or{"set55"}
-        pa{"set35"}
-        pl{"set35"}
-        prg{"set35"}
-        ps{"set35"}
-        pt{"set35"}
-        ro{"set37"}
-        root{"set35"}
-        ru{"set35"}
-        sc{"set44"}
-        scn{"set44"}
-        sd{"set35"}
-        sh{"set35"}
-        si{"set35"}
-        sk{"set35"}
-        sl{"set35"}
-        sq{"set46"}
-        sr{"set35"}
-        sv{"set36"}
-        sw{"set35"}
-        ta{"set35"}
-        te{"set35"}
-        th{"set35"}
-        tk{"set42"}
-        tl{"set37"}
-        tr{"set35"}
-        uk{"set41"}
-        ur{"set35"}
-        uz{"set35"}
-        vi{"set37"}
-        yue{"set35"}
-        zh{"set35"}
-        zu{"set35"}
-||||||| merged common ancestors
-        af{"set35"}
-        am{"set35"}
-        ar{"set35"}
-        as{"set53"}
-        az{"set51"}
-        be{"set40"}
-        bg{"set35"}
-        bn{"set53"}
-        bs{"set35"}
-        ca{"set49"}
-        ce{"set35"}
-        cs{"set35"}
-        cy{"set55"}
-        da{"set35"}
-        de{"set35"}
-        dsb{"set35"}
-        el{"set35"}
-        en{"set47"}
-        es{"set35"}
-        et{"set35"}
-        eu{"set35"}
-        fa{"set35"}
-        fi{"set35"}
-        fil{"set37"}
-        fr{"set37"}
-        fy{"set35"}
-        ga{"set37"}
-        gl{"set35"}
-        gsw{"set35"}
-        gu{"set52"}
-        he{"set35"}
-        hi{"set52"}
-        hr{"set35"}
-        hsb{"set35"}
-        hu{"set38"}
-        hy{"set37"}
-        id{"set35"}
-        in{"set35"}
-        is{"set35"}
-        it{"set44"}
-        iw{"set35"}
-        ja{"set35"}
-        ka{"set45"}
-        kk{"set43"}
-        km{"set35"}
-        kn{"set35"}
-        ko{"set35"}
-        ky{"set35"}
-        lo{"set37"}
-        lt{"set35"}
-        lv{"set35"}
-        mk{"set50"}
-        ml{"set35"}
-        mn{"set35"}
-        mo{"set37"}
-        mr{"set48"}
-        ms{"set37"}
-        my{"set35"}
-        nb{"set35"}
-        ne{"set39"}
-        nl{"set35"}
-        or{"set54"}
-        pa{"set35"}
-        pl{"set35"}
-        prg{"set35"}
-        ps{"set35"}
-        pt{"set35"}
-        ro{"set37"}
-        root{"set35"}
-        ru{"set35"}
-        scn{"set44"}
-        sd{"set35"}
-        sh{"set35"}
-        si{"set35"}
-        sk{"set35"}
-        sl{"set35"}
-        sq{"set46"}
-        sr{"set35"}
-        sv{"set36"}
-        sw{"set35"}
-        ta{"set35"}
-        te{"set35"}
-        th{"set35"}
-        tk{"set42"}
-        tl{"set37"}
-        tr{"set35"}
-        uk{"set41"}
-        ur{"set35"}
-        uz{"set35"}
-        vi{"set37"}
-        yue{"set35"}
-        zh{"set35"}
-        zu{"set35"}
-=======
         af{"set36"}
         am{"set36"}
         ar{"set36"}
@@ -501,7 +309,6 @@ plurals:table(nofallback){
         yue{"set36"}
         zh{"set36"}
         zu{"set36"}
->>>>>>> upstream-releases
     }
     rules{
         set0{
@@ -1040,15 +847,6 @@ plurals:table(nofallback){
             }
         }
         set50{
-<<<<<<< HEAD
-            few{"n = 3,13 @integer 3, 13"}
-            one{"n = 1,11 @integer 1, 11"}
-            other{" @integer 0, 5~19, 100, 1000, 10000, 100000, 1000000, …"}
-            two{"n = 2,12 @integer 2, 12"}
-        }
-        set51{
-||||||| merged common ancestors
-=======
             few{"n = 4 @integer 4"}
             one{"n = 1 @integer 1"}
             other{" @integer 0, 5~19, 100, 1000, 10000, 100000, 1000000, …"}
@@ -1067,7 +865,6 @@ plurals:table(nofallback){
             two{"n = 2 @integer 2"}
         }
         set53{
->>>>>>> upstream-releases
             many{
                 "i % 10 = 7,8 and i % 100 != 17,18 @integer 7, 8, 27, 28, 37, 38, 47,"
                 " 48, 57, 58, 67, 68, 77, 78, 87, 88, 107, 1007, …"
@@ -1082,13 +879,7 @@ plurals:table(nofallback){
                 " 102, 1002, …"
             }
         }
-<<<<<<< HEAD
-        set52{
-||||||| merged common ancestors
-        set51{
-=======
         set54{
->>>>>>> upstream-releases
             few{
                 "i % 10 = 3,4 or i % 1000 = 100,200,300,400,500,600,700,800,900 @inte"
                 "ger 3, 4, 13, 14, 23, 24, 33, 34, 43, 44, 53, 54, 63, 64, 73, 74, 10"
@@ -1107,52 +898,28 @@ plurals:table(nofallback){
                 "00000, 1000000, …"
             }
         }
-<<<<<<< HEAD
-        set53{
-||||||| merged common ancestors
-        set52{
-=======
         set55{
->>>>>>> upstream-releases
             few{"n = 4 @integer 4"}
             many{"n = 6 @integer 6"}
             one{"n = 1 @integer 1"}
             other{" @integer 0, 5, 7~20, 100, 1000, 10000, 100000, 1000000, …"}
             two{"n = 2,3 @integer 2, 3"}
         }
-<<<<<<< HEAD
-        set54{
-||||||| merged common ancestors
-        set53{
-=======
         set56{
->>>>>>> upstream-releases
             few{"n = 4 @integer 4"}
             many{"n = 6 @integer 6"}
             one{"n = 1,5,7,8,9,10 @integer 1, 5, 7~10"}
             other{" @integer 0, 11~25, 100, 1000, 10000, 100000, 1000000, …"}
             two{"n = 2,3 @integer 2, 3"}
         }
-<<<<<<< HEAD
-        set55{
-||||||| merged common ancestors
-        set54{
-=======
         set57{
->>>>>>> upstream-releases
             few{"n = 4 @integer 4"}
             many{"n = 6 @integer 6"}
             one{"n = 1,5,7..9 @integer 1, 5, 7~9"}
             other{" @integer 0, 10~24, 100, 1000, 10000, 100000, 1000000, …"}
             two{"n = 2,3 @integer 2, 3"}
         }
-<<<<<<< HEAD
-        set56{
-||||||| merged common ancestors
-        set55{
-=======
         set58{
->>>>>>> upstream-releases
             few{"n = 3,4 @integer 3, 4"}
             many{"n = 5,6 @integer 5, 6"}
             one{"n = 1 @integer 1"}

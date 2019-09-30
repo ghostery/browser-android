@@ -14,103 +14,48 @@ namespace net {
 NS_IMPL_ISUPPORTS(nsProxyInfo, nsProxyInfo, nsIProxyInfo)
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetHost(nsACString &result) {
-||||||| merged common ancestors
-nsProxyInfo::GetHost(nsACString &result)
-{
-=======
 nsProxyInfo::GetHost(nsACString& result) {
->>>>>>> upstream-releases
   result = mHost;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetPort(int32_t *result) {
-||||||| merged common ancestors
-nsProxyInfo::GetPort(int32_t *result)
-{
-=======
 nsProxyInfo::GetPort(int32_t* result) {
->>>>>>> upstream-releases
   *result = mPort;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetType(nsACString &result) {
-||||||| merged common ancestors
-nsProxyInfo::GetType(nsACString &result)
-{
-=======
 nsProxyInfo::GetType(nsACString& result) {
->>>>>>> upstream-releases
   result = mType;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetFlags(uint32_t *result) {
-||||||| merged common ancestors
-nsProxyInfo::GetFlags(uint32_t *result)
-{
-=======
 nsProxyInfo::GetFlags(uint32_t* result) {
->>>>>>> upstream-releases
   *result = mFlags;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetResolveFlags(uint32_t *result) {
-||||||| merged common ancestors
-nsProxyInfo::GetResolveFlags(uint32_t *result)
-{
-=======
 nsProxyInfo::GetResolveFlags(uint32_t* result) {
->>>>>>> upstream-releases
   *result = mResolveFlags;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetUsername(nsACString &result) {
-||||||| merged common ancestors
-nsProxyInfo::GetUsername(nsACString &result)
-{
-=======
 nsProxyInfo::GetUsername(nsACString& result) {
->>>>>>> upstream-releases
   result = mUsername;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetPassword(nsACString &result) {
-||||||| merged common ancestors
-nsProxyInfo::GetPassword(nsACString &result)
-{
-=======
 nsProxyInfo::GetPassword(nsACString& result) {
->>>>>>> upstream-releases
   result = mPassword;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetFailoverTimeout(uint32_t *result) {
-||||||| merged common ancestors
-nsProxyInfo::GetFailoverTimeout(uint32_t *result)
-{
-=======
 nsProxyInfo::GetProxyAuthorizationHeader(nsACString& result) {
   result = mProxyAuthorizationHeader;
   return NS_OK;
@@ -124,33 +69,18 @@ nsProxyInfo::GetConnectionIsolationKey(nsACString& result) {
 
 NS_IMETHODIMP
 nsProxyInfo::GetFailoverTimeout(uint32_t* result) {
->>>>>>> upstream-releases
   *result = mTimeout;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::GetFailoverProxy(nsIProxyInfo **result) {
-||||||| merged common ancestors
-nsProxyInfo::GetFailoverProxy(nsIProxyInfo **result)
-{
-=======
 nsProxyInfo::GetFailoverProxy(nsIProxyInfo** result) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*result = mNext);
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsProxyInfo::SetFailoverProxy(nsIProxyInfo *proxy) {
-||||||| merged common ancestors
-nsProxyInfo::SetFailoverProxy(nsIProxyInfo *proxy)
-{
-=======
 nsProxyInfo::SetFailoverProxy(nsIProxyInfo* proxy) {
->>>>>>> upstream-releases
   nsCOMPtr<nsProxyInfo> pi = do_QueryInterface(proxy);
   NS_ENSURE_ARG(pi);
 

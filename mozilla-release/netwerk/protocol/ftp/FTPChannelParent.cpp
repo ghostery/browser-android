@@ -54,15 +54,8 @@ FTPChannelParent::FTPChannelParent(const PBrowserOrId& aIframeEmbedding,
   MOZ_ASSERT(handler, "no ftp handler");
 
   if (aIframeEmbedding.type() == PBrowserOrId::TPBrowserParent) {
-<<<<<<< HEAD
-    mTabParent =
-        static_cast<dom::TabParent*>(aIframeEmbedding.get_PBrowserParent());
-||||||| merged common ancestors
-    mTabParent = static_cast<dom::TabParent*>(aIframeEmbedding.get_PBrowserParent());
-=======
     mBrowserParent =
         static_cast<dom::BrowserParent*>(aIframeEmbedding.get_PBrowserParent());
->>>>>>> upstream-releases
   }
 
   mEventQ = new ChannelEventQueue(static_cast<nsIParentChannel*>(this));
@@ -109,30 +102,12 @@ bool FTPChannelParent::Init(const FTPChannelCreationArgs& aArgs) {
   }
 }
 
-<<<<<<< HEAD
-bool FTPChannelParent::DoAsyncOpen(const URIParams& aURI,
-                                   const uint64_t& aStartPos,
-                                   const nsCString& aEntityID,
-                                   const OptionalIPCStream& aUploadStream,
-                                   const OptionalLoadInfoArgs& aLoadInfoArgs,
-                                   const uint32_t& aLoadFlags) {
-||||||| merged common ancestors
-bool
-FTPChannelParent::DoAsyncOpen(const URIParams& aURI,
-                              const uint64_t& aStartPos,
-                              const nsCString& aEntityID,
-                              const OptionalIPCStream& aUploadStream,
-                              const OptionalLoadInfoArgs& aLoadInfoArgs,
-                              const uint32_t& aLoadFlags)
-{
-=======
 bool FTPChannelParent::DoAsyncOpen(const URIParams& aURI,
                                    const uint64_t& aStartPos,
                                    const nsCString& aEntityID,
                                    const Maybe<IPCStream>& aUploadStream,
                                    const Maybe<LoadInfoArgs>& aLoadInfoArgs,
                                    const uint32_t& aLoadFlags) {
->>>>>>> upstream-releases
   nsresult rv;
 
   nsCOMPtr<nsIURI> uri = DeserializeURI(aURI);
@@ -189,22 +164,7 @@ bool FTPChannelParent::DoAsyncOpen(const URIParams& aURI,
   rv = ftpChan->ResumeAt(aStartPos, aEntityID);
   if (NS_FAILED(rv)) return SendFailedAsyncOpen(rv);
 
-<<<<<<< HEAD
-  if (loadInfo && loadInfo->GetEnforceSecurity()) {
-    rv = ftpChan->AsyncOpen2(this);
-  } else {
-    rv = ftpChan->AsyncOpen(this, nullptr);
-  }
-||||||| merged common ancestors
-  if (loadInfo && loadInfo->GetEnforceSecurity()) {
-    rv = ftpChan->AsyncOpen2(this);
-  }
-  else {
-    rv = ftpChan->AsyncOpen(this, nullptr);
-  }
-=======
   rv = ftpChan->AsyncOpen(this);
->>>>>>> upstream-releases
 
   if (NS_FAILED(rv)) return SendFailedAsyncOpen(rv);
 
@@ -420,14 +380,7 @@ void FTPChannelParent::DivertComplete() {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelParent::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext) {
-||||||| merged common ancestors
-FTPChannelParent::OnStartRequest(nsIRequest* aRequest, nsISupports* aContext)
-{
-=======
 FTPChannelParent::OnStartRequest(nsIRequest* aRequest) {
->>>>>>> upstream-releases
   LOG(("FTPChannelParent::OnStartRequest [this=%p]\n", this));
 
   if (mDivertingFromChild) {
@@ -446,15 +399,8 @@ FTPChannelParent::OnStartRequest(nsIRequest* aRequest) {
     PContentParent* pcp = Manager()->Manager();
     MOZ_ASSERT(pcp, "We should have a manager if our IPC isn't closed");
     DebugOnly<nsresult> rv =
-<<<<<<< HEAD
-        static_cast<ContentParent*>(pcp)
-            ->AboutToLoadHttpFtpWyciwygDocumentForChild(chan);
-||||||| merged common ancestors
-      static_cast<ContentParent*>(pcp)->AboutToLoadHttpFtpWyciwygDocumentForChild(chan);
-=======
         static_cast<ContentParent*>(pcp)->AboutToLoadHttpFtpDocumentForChild(
             chan);
->>>>>>> upstream-releases
     MOZ_ASSERT(NS_SUCCEEDED(rv));
   }
 
@@ -495,23 +441,9 @@ FTPChannelParent::OnStartRequest(nsIRequest* aRequest) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelParent::OnStopRequest(nsIRequest* aRequest, nsISupports* aContext,
-                                nsresult aStatusCode) {
-  LOG(("FTPChannelParent::OnStopRequest: [this=%p status=%" PRIu32 "]\n", this,
-       static_cast<uint32_t>(aStatusCode)));
-||||||| merged common ancestors
-FTPChannelParent::OnStopRequest(nsIRequest* aRequest,
-                                nsISupports* aContext,
-                                nsresult aStatusCode)
-{
-  LOG(("FTPChannelParent::OnStopRequest: [this=%p status=%" PRIu32 "]\n",
-       this, static_cast<uint32_t>(aStatusCode)));
-=======
 FTPChannelParent::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
   LOG(("FTPChannelParent::OnStopRequest: [this=%p status=%" PRIu32 "]\n", this,
        static_cast<uint32_t>(aStatusCode)));
->>>>>>> upstream-releases
 
   if (mDivertingFromChild) {
     MOZ_RELEASE_ASSERT(mDivertToListener,
@@ -531,14 +463,7 @@ FTPChannelParent::OnStopRequest(nsIRequest* aRequest, nsresult aStatusCode) {
 //-----------------------------------------------------------------------------
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelParent::OnDataAvailable(nsIRequest* aRequest, nsISupports* aContext,
-||||||| merged common ancestors
 FTPChannelParent::OnDataAvailable(nsIRequest* aRequest,
-                                  nsISupports* aContext,
-=======
-FTPChannelParent::OnDataAvailable(nsIRequest* aRequest,
->>>>>>> upstream-releases
                                   nsIInputStream* aInputStream,
                                   uint64_t aOffset, uint32_t aCount) {
   LOG(("FTPChannelParent::OnDataAvailable [this=%p]\n", this));
@@ -571,12 +496,6 @@ FTPChannelParent::SetParentListener(HttpChannelParentListener* aListener) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelParent::NotifyTrackingProtectionDisabled() {
-||||||| merged common ancestors
-FTPChannelParent::NotifyTrackingProtectionDisabled()
-{
-=======
 FTPChannelParent::NotifyChannelClassifierProtectionDisabled(
     uint32_t aAcceptedReason) {
   // One day, this should probably be filled in.
@@ -591,41 +510,20 @@ FTPChannelParent::NotifyCookieAllowed() {
 
 NS_IMETHODIMP
 FTPChannelParent::NotifyCookieBlocked(uint32_t aRejectedReason) {
->>>>>>> upstream-releases
   // One day, this should probably be filled in.
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelParent::NotifyCookieAllowed() {
-||||||| merged common ancestors
-FTPChannelParent::NotifyTrackingCookieBlocked(uint32_t aRejectedReason)
-{
-=======
 FTPChannelParent::NotifyClassificationFlags(uint32_t aClassificationFlags,
                                             bool aIsThirdParty) {
->>>>>>> upstream-releases
   // One day, this should probably be filled in.
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelParent::NotifyTrackingCookieBlocked(uint32_t aRejectedReason) {
-  // One day, this should probably be filled in.
-  return NS_OK;
-}
-
-NS_IMETHODIMP
-FTPChannelParent::NotifyTrackingResource(bool aIsThirdParty) {
-||||||| merged common ancestors
-FTPChannelParent::NotifyTrackingResource(bool aIsThirdParty)
-{
-=======
 FTPChannelParent::NotifyFlashPluginStateChanged(
     nsIHttpChannel::FlashPluginState aState) {
->>>>>>> upstream-releases
   // One day, this should probably be filled in.
   return NS_OK;
 }
@@ -639,15 +537,6 @@ FTPChannelParent::SetClassifierMatchedInfo(const nsACString& aList,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-FTPChannelParent::Delete() {
-  if (mIPCClosed || !SendDeleteSelf()) return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-FTPChannelParent::Delete()
-{
-  if (mIPCClosed || !SendDeleteSelf())
-    return NS_ERROR_UNEXPECTED;
-=======
 FTPChannelParent::SetClassifierMatchedTrackingInfo(
     const nsACString& aLists, const nsACString& aFullHashes) {
   // One day, this should probably be filled in.
@@ -657,7 +546,6 @@ FTPChannelParent::SetClassifierMatchedTrackingInfo(
 NS_IMETHODIMP
 FTPChannelParent::Delete() {
   if (mIPCClosed || !SendDeleteSelf()) return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
 
   return NS_OK;
 }

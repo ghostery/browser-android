@@ -126,19 +126,9 @@ static const struct {
 };
 }  // namespace
 
-<<<<<<< HEAD
-sk_sp<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
-        const SkPDF::Metadata& metadata) {
-    auto dict = sk_make_sp<SkPDFDict>();
-||||||| merged common ancestors
-sk_sp<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
-        const SkDocument::PDFMetadata& metadata) {
-    auto dict = sk_make_sp<SkPDFDict>();
-=======
 std::unique_ptr<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
         const SkPDF::Metadata& metadata) {
     auto dict = SkPDFMakeDict();
->>>>>>> upstream-releases
     for (const auto keyValuePtr : gMetadataKeys) {
         const SkString& value = metadata.*(keyValuePtr.valuePtr);
         if (value.size() > 0) {
@@ -160,15 +150,7 @@ std::unique_ptr<SkPDFObject> SkPDFMetadata::MakeDocumentInformationDict(
     return std::move(dict);
 }
 
-<<<<<<< HEAD
-SkPDFMetadata::UUID SkPDFMetadata::CreateUUID(
-        const SkPDF::Metadata& metadata) {
-||||||| merged common ancestors
-SkPDFMetadata::UUID SkPDFMetadata::CreateUUID(
-        const SkDocument::PDFMetadata& metadata) {
-=======
 SkUUID SkPDFMetadata::CreateUUID(const SkPDF::Metadata& metadata) {
->>>>>>> upstream-releases
     // The main requirement is for the UUID to be unique; the exact
     // format of the data that will be hashed is not important.
     SkMD5 md5;
@@ -209,16 +191,8 @@ std::unique_ptr<SkPDFObject> SkPDFMetadata::MakePdfId(const SkUUID& doc,
     array->appendString(
             SkString(reinterpret_cast<const char*>(&doc), sizeof(SkUUID)));
     array->appendString(
-<<<<<<< HEAD
-            SkString(reinterpret_cast<const char*>(&instance), sizeof(UUID)));
-    return std::move(array);
-||||||| merged common ancestors
-            SkString(reinterpret_cast<const char*>(&instance), sizeof(UUID)));
-    return array;
-=======
             SkString(reinterpret_cast<const char*>(&instance), sizeof(SkUUID)));
     return std::move(array);
->>>>>>> upstream-releases
 }
 
 // Convert a block of memory to hexadecimal.  Input and output pointers will be
@@ -329,23 +303,11 @@ const SkString escape_xml(const SkString& input,
     return output;
 }
 
-<<<<<<< HEAD
-sk_sp<SkPDFObject> SkPDFMetadata::MakeXMPObject(
-        const SkPDF::Metadata& metadata,
-        const UUID& doc,
-        const UUID& instance) {
-||||||| merged common ancestors
-sk_sp<SkPDFObject> SkPDFMetadata::MakeXMPObject(
-        const SkDocument::PDFMetadata& metadata,
-        const UUID& doc,
-        const UUID& instance) {
-=======
 SkPDFIndirectReference SkPDFMetadata::MakeXMPObject(
         const SkPDF::Metadata& metadata,
         const SkUUID& doc,
         const SkUUID& instance,
         SkPDFDocument* docPtr) {
->>>>>>> upstream-releases
     static const char templateString[] =
             "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\"?>\n"
             "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\"\n"

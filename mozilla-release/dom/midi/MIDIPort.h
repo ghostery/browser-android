@@ -42,19 +42,6 @@ class MIDIPort : public DOMEventTargetHelper,
   MIDIPort(nsPIDOMWindowInner* aWindow, MIDIAccess* aMIDIAccessParent);
   bool Initialize(const MIDIPortInfo& aPortInfo, bool aSysexEnabled);
   virtual ~MIDIPort();
-<<<<<<< HEAD
-
- public:
-  nsPIDOMWindowInner* GetParentObject() const { return GetOwner(); }
-||||||| merged common ancestors
-public:
-  nsPIDOMWindowInner*
-  GetParentObject() const
-  {
-    return GetOwner();
-  }
-=======
->>>>>>> upstream-releases
 
  public:
   nsPIDOMWindowInner* GetParentObject() const { return GetOwner(); }

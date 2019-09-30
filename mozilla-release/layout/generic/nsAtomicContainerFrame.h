@@ -35,21 +35,10 @@ class nsAtomicContainerFrame : public nsContainerFrame {
     return nsFrame::PeekOffsetCharacter(aForward, aOffset, aOptions);
   }
 
-<<<<<<< HEAD
- protected:
-  nsAtomicContainerFrame(ComputedStyle* aStyle, ClassID aID)
-      : nsContainerFrame(aStyle, aID) {}
-||||||| merged common ancestors
-protected:
-  nsAtomicContainerFrame(ComputedStyle* aStyle, ClassID aID)
-    : nsContainerFrame(aStyle, aID)
-  {}
-=======
  protected:
   nsAtomicContainerFrame(ComputedStyle* aStyle, nsPresContext* aPresContext,
                          ClassID aID)
       : nsContainerFrame(aStyle, aPresContext, aID) {}
->>>>>>> upstream-releases
 };
 
 #endif  // nsAtomicContainerFrame_h___

@@ -49,18 +49,8 @@ class nsXMLContentSink : public nsContentSink,
  public:
   nsXMLContentSink();
 
-<<<<<<< HEAD
-  nsresult Init(nsIDocument* aDoc, nsIURI* aURL, nsISupports* aContainer,
-                nsIChannel* aChannel);
-||||||| merged common ancestors
-  nsresult Init(nsIDocument* aDoc,
-                nsIURI* aURL,
-                nsISupports* aContainer,
-                nsIChannel* aChannel);
-=======
   nsresult Init(mozilla::dom::Document* aDoc, nsIURI* aURL,
                 nsISupports* aContainer, nsIChannel* aChannel);
->>>>>>> upstream-releases
 
   // nsISupports
   NS_DECL_ISUPPORTS_INHERITED
@@ -85,19 +75,10 @@ class nsXMLContentSink : public nsContentSink,
   virtual void ContinueInterruptedParsingAsync() override;
 
   // nsITransformObserver
-<<<<<<< HEAD
-  NS_IMETHOD OnDocumentCreated(nsIDocument* aResultDocument) override;
-  NS_IMETHOD OnTransformDone(nsresult aResult,
-                             nsIDocument* aResultDocument) override;
-||||||| merged common ancestors
-  NS_IMETHOD OnDocumentCreated(nsIDocument *aResultDocument) override;
-  NS_IMETHOD OnTransformDone(nsresult aResult, nsIDocument *aResultDocument) override;
-=======
   NS_IMETHOD OnDocumentCreated(
       mozilla::dom::Document* aResultDocument) override;
   NS_IMETHOD OnTransformDone(nsresult aResult,
                              mozilla::dom::Document* aResultDocument) override;
->>>>>>> upstream-releases
 
   // nsICSSLoaderObserver
   NS_IMETHOD StyleSheetLoaded(mozilla::StyleSheet* aSheet, bool aWasAlternate,

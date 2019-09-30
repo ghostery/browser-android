@@ -4,27 +4,6 @@
 
 //! Computed values.
 
-<<<<<<< HEAD
-use self::transform::DirectionVector;
-use super::animated::ToAnimatedValue;
-use super::generics::grid::GridTemplateComponent as GenericGridTemplateComponent;
-use super::generics::grid::{GridLine as GenericGridLine, TrackBreadth as GenericTrackBreadth};
-use super::generics::grid::{TrackList as GenericTrackList, TrackSize as GenericTrackSize};
-use super::generics::transform::IsParallelTo;
-use super::generics::{GreaterThanOrEqualToOne, NonNegative};
-use super::specified;
-use super::{CSSFloat, CSSInteger};
-use crate::context::QuirksMode;
-use crate::font_metrics::{get_metrics_provider_for_product, FontMetricsProvider};
-use crate::media_queries::Device;
-#[cfg(feature = "gecko")]
-use crate::properties;
-use crate::properties::{ComputedValues, LonghandId, StyleBuilder};
-use crate::rule_cache::RuleCacheConditions;
-use crate::Atom;
-||||||| merged common ancestors
-use Atom;
-=======
 use self::transform::DirectionVector;
 use super::animated::ToAnimatedValue;
 use super::generics::grid::GridTemplateComponent as GenericGridTemplateComponent;
@@ -42,30 +21,12 @@ use crate::properties;
 use crate::properties::{ComputedValues, LonghandId, StyleBuilder};
 use crate::rule_cache::RuleCacheConditions;
 use crate::Atom;
->>>>>>> upstream-releases
 #[cfg(feature = "servo")]
 use crate::Prefix;
 use euclid::Size2D;
 use std::cell::RefCell;
 use std::cmp;
 use std::f32;
-<<<<<<< HEAD
-use std::fmt::{self, Write};
-use style_traits::cursor::CursorKind;
-use style_traits::{CssWriter, ToCss};
-||||||| merged common ancestors
-use std::fmt::{self, Write};
-use style_traits::{CssWriter, ToCss};
-use style_traits::cursor::CursorKind;
-use super::{CSSFloat, CSSInteger};
-use super::animated::ToAnimatedValue;
-use super::generics::{GreaterThanOrEqualToOne, NonNegative};
-use super::generics::grid::{GridLine as GenericGridLine, TrackBreadth as GenericTrackBreadth};
-use super::generics::grid::{TrackList as GenericTrackList, TrackSize as GenericTrackSize};
-use super::generics::grid::GridTemplateComponent as GenericGridTemplateComponent;
-use super::specified;
-=======
->>>>>>> upstream-releases
 
 #[cfg(feature = "gecko")]
 pub use self::align::{AlignContent, AlignItems, JustifyContent, JustifyItems, SelfAlignment};
@@ -75,70 +36,20 @@ pub use self::angle::Angle;
 pub use self::background::{BackgroundRepeat, BackgroundSize};
 pub use self::basic_shape::FillRule;
 pub use self::border::{BorderCornerRadius, BorderRadius, BorderSpacing};
-<<<<<<< HEAD
-pub use self::border::{BorderImageRepeat, BorderImageSideWidth};
-pub use self::border::{BorderImageSlice, BorderImageWidth};
-pub use self::box_::{AnimationIterationCount, AnimationName, Contain};
-pub use self::box_::{Appearance, BreakBetween, BreakWithin, Clear, Float};
-pub use self::box_::{Display, TransitionProperty};
-||||||| merged common ancestors
-pub use self::font::{FontSize, FontSizeAdjust, FontStretch, FontSynthesis, FontVariantAlternates, FontWeight};
-pub use self::font::{FontFamily, FontLanguageOverride, FontStyle, FontVariantEastAsian, FontVariationSettings};
-pub use self::font::{FontFeatureSettings, FontVariantLigatures, FontVariantNumeric};
-pub use self::font::{MozScriptLevel, MozScriptMinSize, MozScriptSizeMultiplier, XLang, XTextZoom};
-pub use self::box_::{AnimationIterationCount, AnimationName, Contain, Display, TransitionProperty};
-pub use self::box_::{Appearance, Clear, Float};
-=======
 pub use self::border::{BorderImageRepeat, BorderImageSideWidth};
 pub use self::border::{BorderImageSlice, BorderImageWidth};
 pub use self::box_::{AnimationIterationCount, AnimationName, Contain};
 pub use self::box_::{Appearance, BreakBetween, BreakWithin, Clear, Float};
 pub use self::box_::{Display, Overflow, OverflowAnchor, TransitionProperty};
->>>>>>> upstream-releases
 pub use self::box_::{OverflowClipBox, OverscrollBehavior, Perspective, Resize};
 pub use self::box_::{ScrollSnapAlign, ScrollSnapAxis, ScrollSnapStrictness, ScrollSnapType};
 pub use self::box_::{TouchAction, VerticalAlign, WillChange};
 pub use self::color::{Color, ColorOrAuto, ColorPropertyValue};
 pub use self::column::ColumnCount;
-<<<<<<< HEAD
-pub use self::counters::{Content, ContentItem, CounterIncrement, CounterReset};
-pub use self::easing::TimingFunction;
-||||||| merged common ancestors
-pub use self::counters::{Content, ContentItem, CounterIncrement, CounterReset};
-=======
 pub use self::counters::{Content, ContentItem, CounterIncrement, CounterSetOrReset};
 pub use self::easing::TimingFunction;
->>>>>>> upstream-releases
 pub use self::effects::{BoxShadow, Filter, SimpleShadow};
 pub use self::flex::FlexBasis;
-<<<<<<< HEAD
-pub use self::font::{FontFamily, FontLanguageOverride, FontStyle};
-pub use self::font::{FontFeatureSettings, FontVariantLigatures, FontVariantNumeric};
-pub use self::font::{FontSize, FontSizeAdjust, FontStretch, FontSynthesis};
-pub use self::font::{FontVariantAlternates, FontWeight};
-pub use self::font::{FontVariantEastAsian, FontVariationSettings};
-pub use self::font::{MozScriptLevel, MozScriptMinSize, MozScriptSizeMultiplier, XLang, XTextZoom};
-#[cfg(feature = "gecko")]
-pub use self::gecko::ScrollSnapPoint;
-pub use self::image::{Gradient, GradientItem, Image, ImageLayer, LineDirection, MozImageRect};
-pub use self::length::{CSSPixelLength, ExtremumLength, NonNegativeLength};
-pub use self::length::{CalcLengthOrPercentage, Length, LengthOrNumber, LengthOrPercentage};
-pub use self::length::{LengthOrPercentageOrAuto, LengthOrPercentageOrNone, MaxLength, MozLength};
-pub use self::length::{NonNegativeLengthOrPercentage, NonNegativeLengthOrPercentageOrAuto};
-||||||| merged common ancestors
-pub use self::image::{Gradient, GradientItem, Image, ImageLayer, LineDirection, MozImageRect};
-#[cfg(feature = "gecko")]
-pub use self::gecko::ScrollSnapPoint;
-pub use self::rect::LengthOrNumberRect;
-pub use self::resolution::Resolution;
-pub use super::{Auto, Either, None_};
-pub use super::specified::{BorderStyle, TextDecorationLine};
-pub use self::length::{CalcLengthOrPercentage, Length, LengthOrNumber, LengthOrPercentage};
-pub use self::length::{LengthOrPercentageOrAuto, LengthOrPercentageOrNone, MaxLength, MozLength};
-pub use self::length::{CSSPixelLength, ExtremumLength, NonNegativeLength};
-pub use self::length::{NonNegativeLengthOrPercentage, NonNegativeLengthOrPercentageOrAuto};
-pub use self::list::Quotes;
-=======
 pub use self::font::{FontFamily, FontLanguageOverride, FontStyle};
 pub use self::font::{FontFeatureSettings, FontVariantLigatures, FontVariantNumeric};
 pub use self::font::{FontSize, FontSizeAdjust, FontStretch, FontSynthesis};
@@ -150,66 +61,34 @@ pub use self::length::{CSSPixelLength, ExtremumLength, NonNegativeLength};
 pub use self::length::{Length, LengthOrNumber, LengthPercentage, NonNegativeLengthOrNumber};
 pub use self::length::{LengthOrAuto, LengthPercentageOrAuto, MaxSize, Size};
 pub use self::length::{NonNegativeLengthPercentage, NonNegativeLengthPercentageOrAuto};
->>>>>>> upstream-releases
 #[cfg(feature = "gecko")]
 pub use self::list::ListStyleType;
-<<<<<<< HEAD
-pub use self::list::{QuotePair, Quotes};
-pub use self::motion::OffsetPath;
-||||||| merged common ancestors
-pub use self::motion::OffsetPath;
-=======
 pub use self::list::MozListReversed;
 pub use self::list::{QuotePair, Quotes};
 pub use self::motion::{OffsetPath, OffsetRotate};
->>>>>>> upstream-releases
 pub use self::outline::OutlineStyle;
 pub use self::percentage::{NonNegativePercentage, Percentage};
 pub use self::position::{GridAutoFlow, GridTemplateAreas, Position, ZIndex};
-<<<<<<< HEAD
-pub use self::rect::LengthOrNumberRect;
-pub use self::resolution::Resolution;
-pub use self::svg::MozContextProperties;
-||||||| merged common ancestors
-=======
 pub use self::rect::NonNegativeLengthOrNumberRect;
 pub use self::resolution::Resolution;
 pub use self::svg::MozContextProperties;
->>>>>>> upstream-releases
 pub use self::svg::{SVGLength, SVGOpacity, SVGPaint, SVGPaintKind};
 pub use self::svg::{SVGPaintOrder, SVGStrokeDashArray, SVGWidth};
 pub use self::table::XSpan;
-<<<<<<< HEAD
-pub use self::text::{InitialLetter, LetterSpacing, LineHeight, MozTabSize};
-pub use self::text::{OverflowWrap, TextOverflow, WordSpacing};
-pub use self::text::{TextAlign, TextEmphasisPosition, TextEmphasisStyle};
-||||||| merged common ancestors
-pub use self::text::{InitialLetter, LetterSpacing, LineHeight, MozTabSize};
-pub use self::text::{TextAlign, TextEmphasisPosition, TextEmphasisStyle, TextOverflow, WordSpacing};
-=======
 pub use self::text::TextDecorationSkipInk;
 pub use self::text::{InitialLetter, LetterSpacing, LineBreak, LineHeight};
 pub use self::text::{OverflowWrap, TextOverflow, WordBreak, WordSpacing};
 pub use self::text::{TextAlign, TextEmphasisPosition, TextEmphasisStyle};
->>>>>>> upstream-releases
 pub use self::time::Time;
 pub use self::transform::{Rotate, Scale, Transform, TransformOperation};
 pub use self::transform::{TransformOrigin, TransformStyle, Translate};
 #[cfg(feature = "gecko")]
 pub use self::ui::CursorImage;
-<<<<<<< HEAD
-pub use self::ui::{ColorOrAuto, Cursor, MozForceBrokenImageIcon, UserSelect};
-pub use super::specified::{BorderStyle, TextDecorationLine};
-pub use super::{Auto, Either, None_};
-pub use app_units::Au;
-||||||| merged common ancestors
-=======
 pub use self::ui::{Cursor, MozForceBrokenImageIcon, UserSelect};
 pub use super::specified::TextTransform;
 pub use super::specified::{BorderStyle, TextDecorationLine};
 pub use super::{Auto, Either, None_};
 pub use app_units::Au;
->>>>>>> upstream-releases
 
 #[cfg(feature = "gecko")]
 pub mod align;

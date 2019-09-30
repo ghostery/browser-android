@@ -1,21 +1,9 @@
 _("Make sure Utils.deepEquals correctly finds items that are deeply equal");
-<<<<<<< HEAD
-ChromeUtils.import("resource://services-sync/util.js");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
 registerCleanupFunction(() => {
   Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
 });
-||||||| merged common ancestors
-ChromeUtils.import("resource://services-sync/util.js");
-=======
-
-Services.prefs.setBoolPref("security.allow_eval_with_system_principal", true);
-registerCleanupFunction(() => {
-  Services.prefs.clearUserPref("security.allow_eval_with_system_principal");
-});
->>>>>>> upstream-releases
 
 function run_test() {
   let data =

@@ -20,19 +20,10 @@ class GMPContentChild;
 
 class GMPVideoDecoderChild : public PGMPVideoDecoderChild,
                              public GMPVideoDecoderCallback,
-<<<<<<< HEAD
-                             public GMPSharedMemManager {
- public:
-||||||| merged common ancestors
-                             public GMPSharedMemManager
-{
-public:
-=======
                              public GMPSharedMemManager {
   friend class PGMPVideoDecoderChild;
 
  public:
->>>>>>> upstream-releases
   NS_INLINE_DECL_THREADSAFE_REFCOUNTING(GMPVideoDecoderChild);
 
   explicit GMPVideoDecoderChild(GMPContentChild* aPlugin);
@@ -50,49 +41,14 @@ public:
   void Error(GMPErr aError) override;
 
   // GMPSharedMemManager
-<<<<<<< HEAD
-  bool Alloc(size_t aSize, Shmem::SharedMemory::SharedMemoryType aType,
-             Shmem* aMem) override;
-  void Dealloc(Shmem& aMem) override;
-||||||| merged common ancestors
-  bool Alloc(size_t aSize, Shmem::SharedMemory::SharedMemoryType aType, Shmem* aMem) override;
-  void Dealloc(Shmem& aMem) override;
-=======
   bool Alloc(size_t aSize, Shmem::SharedMemory::SharedMemoryType aType,
              Shmem* aMem) override;
   void Dealloc(Shmem&& aMem) override;
->>>>>>> upstream-releases
 
  private:
   virtual ~GMPVideoDecoderChild();
 
   // PGMPVideoDecoderChild
-<<<<<<< HEAD
-  mozilla::ipc::IPCResult RecvInitDecode(
-      const GMPVideoCodec& aCodecSettings,
-      InfallibleTArray<uint8_t>&& aCodecSpecific,
-      const int32_t& aCoreCount) override;
-  mozilla::ipc::IPCResult RecvDecode(
-      const GMPVideoEncodedFrameData& aInputFrame, const bool& aMissingFrames,
-      InfallibleTArray<uint8_t>&& aCodecSpecificInfo,
-      const int64_t& aRenderTimeMs) override;
-  mozilla::ipc::IPCResult RecvChildShmemForPool(Shmem&& aFrameBuffer) override;
-  mozilla::ipc::IPCResult RecvReset() override;
-  mozilla::ipc::IPCResult RecvDrain() override;
-  mozilla::ipc::IPCResult RecvDecodingComplete() override;
-||||||| merged common ancestors
-  mozilla::ipc::IPCResult RecvInitDecode(const GMPVideoCodec& aCodecSettings,
-                                         InfallibleTArray<uint8_t>&& aCodecSpecific,
-                                         const int32_t& aCoreCount) override;
-  mozilla::ipc::IPCResult RecvDecode(const GMPVideoEncodedFrameData& aInputFrame,
-                                     const bool& aMissingFrames,
-                                     InfallibleTArray<uint8_t>&& aCodecSpecificInfo,
-                                     const int64_t& aRenderTimeMs) override;
-  mozilla::ipc::IPCResult RecvChildShmemForPool(Shmem&& aFrameBuffer) override;
-  mozilla::ipc::IPCResult RecvReset() override;
-  mozilla::ipc::IPCResult RecvDrain() override;
-  mozilla::ipc::IPCResult RecvDecodingComplete() override;
-=======
   mozilla::ipc::IPCResult RecvInitDecode(
       const GMPVideoCodec& aCodecSettings,
       InfallibleTArray<uint8_t>&& aCodecSpecific, const int32_t& aCoreCount);
@@ -104,7 +60,6 @@ public:
   mozilla::ipc::IPCResult RecvReset();
   mozilla::ipc::IPCResult RecvDrain();
   mozilla::ipc::IPCResult RecvDecodingComplete();
->>>>>>> upstream-releases
 
   GMPContentChild* mPlugin;
   GMPVideoDecoder* mVideoDecoder;

@@ -176,17 +176,8 @@ struct nsTreeRange {
     }
   }
 
-<<<<<<< HEAD
-  static void InvalidateRanges(nsITreeBoxObject* aTree,
-                               nsTArray<int32_t>& aRanges) {
-||||||| merged common ancestors
-  static void InvalidateRanges(nsITreeBoxObject* aTree,
-                               nsTArray<int32_t>& aRanges)
-  {
-=======
   static void InvalidateRanges(XULTreeElement* aTree,
                                nsTArray<int32_t>& aRanges) {
->>>>>>> upstream-releases
     if (aTree) {
       RefPtr<nsXULElement> tree = aTree;
       for (uint32_t i = 0; i < aRanges.Length(); i += 2) {
@@ -234,30 +225,12 @@ struct nsTreeRange {
   }
 };
 
-<<<<<<< HEAD
-nsTreeSelection::nsTreeSelection(nsITreeBoxObject* aTree)
-    : mTree(aTree),
-      mSuppressed(false),
-      mCurrentIndex(-1),
-      mShiftSelectPivot(-1),
-      mFirstRange(nullptr) {}
-||||||| merged common ancestors
-nsTreeSelection::nsTreeSelection(nsITreeBoxObject* aTree)
-  : mTree(aTree),
-    mSuppressed(false),
-    mCurrentIndex(-1),
-    mShiftSelectPivot(-1),
-    mFirstRange(nullptr)
-{
-}
-=======
 nsTreeSelection::nsTreeSelection(XULTreeElement* aTree)
     : mTree(aTree),
       mSuppressed(false),
       mCurrentIndex(-1),
       mShiftSelectPivot(-1),
       mFirstRange(nullptr) {}
->>>>>>> upstream-releases
 
 nsTreeSelection::~nsTreeSelection() {
   delete mFirstRange;
@@ -275,26 +248,12 @@ NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsTreeSelection)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsTreeSelection::GetTree(nsITreeBoxObject** aTree) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsTreeSelection::GetTree(nsITreeBoxObject * *aTree)
-{
-=======
 NS_IMETHODIMP nsTreeSelection::GetTree(XULTreeElement** aTree) {
->>>>>>> upstream-releases
   NS_IF_ADDREF(*aTree = mTree);
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsTreeSelection::SetTree(nsITreeBoxObject* aTree) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsTreeSelection::SetTree(nsITreeBoxObject * aTree)
-{
-=======
 NS_IMETHODIMP nsTreeSelection::SetTree(XULTreeElement* aTree) {
->>>>>>> upstream-releases
   if (mSelectTimer) {
     mSelectTimer->Cancel();
     mSelectTimer = nullptr;
@@ -304,39 +263,13 @@ NS_IMETHODIMP nsTreeSelection::SetTree(XULTreeElement* aTree) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsTreeSelection::GetSingle(bool* aSingle) {
-  nsCOMPtr<nsIContent> content = GetContent();
-  if (!content) {
-||||||| merged common ancestors
-NS_IMETHODIMP nsTreeSelection::GetSingle(bool* aSingle)
-{
-  static Element::AttrValuesArray strings[] =
-    {nsGkAtoms::single, nsGkAtoms::cell, nsGkAtoms::text, nullptr};
-
-  nsCOMPtr<nsIContent> content = GetContent();
-  if (!content) {
-=======
 NS_IMETHODIMP nsTreeSelection::GetSingle(bool* aSingle) {
   if (!mTree) {
->>>>>>> upstream-releases
     return NS_ERROR_NULL_POINTER;
   }
 
-<<<<<<< HEAD
-  *aSingle =
-      content->IsElement() && content->AsElement()->AttrValueIs(
-                                  kNameSpaceID_None, nsGkAtoms::seltype,
-                                  NS_LITERAL_STRING("single"), eCaseMatters);
-||||||| merged common ancestors
-  *aSingle = content->IsElement() &&
-    content->AsElement()->FindAttrValueIn(kNameSpaceID_None,
-                                          nsGkAtoms::seltype,
-                                          strings, eCaseMatters) >= 0;
-=======
   *aSingle = mTree->AttrValueIs(kNameSpaceID_None, nsGkAtoms::seltype,
                                 NS_LITERAL_STRING("single"), eCaseMatters);
->>>>>>> upstream-releases
 
   return NS_OK;
 }
@@ -362,31 +295,11 @@ NS_IMETHODIMP nsTreeSelection::TimedSelect(int32_t aIndex, int32_t aMsec) {
     if (!mSuppressed) {
       if (mSelectTimer) mSelectTimer->Cancel();
 
-<<<<<<< HEAD
-      nsIEventTarget* target = nullptr;
-      if (nsCOMPtr<nsIContent> content = GetContent()) {
-        target = content->OwnerDoc()->EventTargetFor(TaskCategory::Other);
-      }
-      NS_NewTimerWithFuncCallback(getter_AddRefs(mSelectTimer), SelectCallback,
-                                  this, aMsec, nsITimer::TYPE_ONE_SHOT,
-                                  "nsTreeSelection::SelectCallback", target);
-||||||| merged common ancestors
-      nsIEventTarget* target = nullptr;
-      if (nsCOMPtr<nsIContent> content = GetContent()) {
-        target = content->OwnerDoc()->EventTargetFor(TaskCategory::Other);
-      }
-      NS_NewTimerWithFuncCallback(getter_AddRefs(mSelectTimer),
-                                  SelectCallback, this, aMsec,
-                                  nsITimer::TYPE_ONE_SHOT,
-                                  "nsTreeSelection::SelectCallback",
-                                  target);
-=======
       nsIEventTarget* target =
           mTree->OwnerDoc()->EventTargetFor(TaskCategory::Other);
       NS_NewTimerWithFuncCallback(getter_AddRefs(mSelectTimer), SelectCallback,
                                   this, aMsec, nsITimer::TYPE_ONE_SHOT,
                                   "nsTreeSelection::SelectCallback", target);
->>>>>>> upstream-releases
     }
   }
 
@@ -552,19 +465,8 @@ NS_IMETHODIMP nsTreeSelection::InvertSelection() {
 NS_IMETHODIMP nsTreeSelection::SelectAll() {
   if (!mTree) return NS_OK;
 
-<<<<<<< HEAD
-  nsCOMPtr<nsITreeView> view;
-  mTree->GetView(getter_AddRefs(view));
-  if (!view) return NS_OK;
-||||||| merged common ancestors
-  nsCOMPtr<nsITreeView> view;
-  mTree->GetView(getter_AddRefs(view));
-  if (!view)
-    return NS_OK;
-=======
   nsCOMPtr<nsITreeView> view = mTree->GetView();
   if (!view) return NS_OK;
->>>>>>> upstream-releases
 
   int32_t rowCount;
   view->GetRowCount(&rowCount);
@@ -660,45 +562,14 @@ NS_IMETHODIMP nsTreeSelection::SetCurrentIndex(int32_t aIndex) {
   if (aIndex != -1) mTree->InvalidateRow(aIndex);
 
   // Fire DOMMenuItemActive or DOMMenuItemInactive event for tree.
-<<<<<<< HEAD
-  nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mTree);
-  NS_ASSERTION(boxObject, "no box object!");
-  if (!boxObject) return NS_ERROR_UNEXPECTED;
-  RefPtr<dom::Element> treeElt;
-  boxObject->GetElement(getter_AddRefs(treeElt));
-
-  NS_ENSURE_STATE(treeElt);
-||||||| merged common ancestors
-  nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mTree);
-  NS_ASSERTION(boxObject, "no box object!");
-  if (!boxObject)
-    return NS_ERROR_UNEXPECTED;
-  RefPtr<dom::Element> treeElt;
-  boxObject->GetElement(getter_AddRefs(treeElt));
-
-  NS_ENSURE_STATE(treeElt);
-=======
   NS_ENSURE_STATE(mTree);
->>>>>>> upstream-releases
 
   NS_NAMED_LITERAL_STRING(DOMMenuItemActive, "DOMMenuItemActive");
   NS_NAMED_LITERAL_STRING(DOMMenuItemInactive, "DOMMenuItemInactive");
 
-<<<<<<< HEAD
-  RefPtr<AsyncEventDispatcher> asyncDispatcher = new AsyncEventDispatcher(
-      treeElt, (aIndex != -1 ? DOMMenuItemActive : DOMMenuItemInactive),
-      CanBubble::eYes, ChromeOnlyDispatch::eNo);
-||||||| merged common ancestors
-  RefPtr<AsyncEventDispatcher> asyncDispatcher =
-    new AsyncEventDispatcher(treeElt,
-                             (aIndex != -1 ? DOMMenuItemActive :
-                                             DOMMenuItemInactive),
-                             CanBubble::eYes, ChromeOnlyDispatch::eNo);
-=======
   RefPtr<AsyncEventDispatcher> asyncDispatcher = new AsyncEventDispatcher(
       mTree, (aIndex != -1 ? DOMMenuItemActive : DOMMenuItemInactive),
       CanBubble::eYes, ChromeOnlyDispatch::eNo);
->>>>>>> upstream-releases
   return asyncDispatcher->PostDOMEvent();
 }
 
@@ -823,47 +694,12 @@ nsTreeSelection::GetShiftSelectPivot(int32_t* aIndex) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
 nsresult nsTreeSelection::FireOnSelectHandler() {
   if (mSuppressed || !mTree) return NS_OK;
-
-  nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mTree);
-  NS_ASSERTION(boxObject, "no box object!");
-  if (!boxObject) return NS_ERROR_UNEXPECTED;
-  RefPtr<dom::Element> elt;
-  boxObject->GetElement(getter_AddRefs(elt));
-  NS_ENSURE_STATE(elt);
-||||||| merged common ancestors
-
-nsresult
-nsTreeSelection::FireOnSelectHandler()
-{
-  if (mSuppressed || !mTree)
-    return NS_OK;
-
-  nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mTree);
-  NS_ASSERTION(boxObject, "no box object!");
-  if (!boxObject)
-     return NS_ERROR_UNEXPECTED;
-  RefPtr<dom::Element> elt;
-  boxObject->GetElement(getter_AddRefs(elt));
-  NS_ENSURE_STATE(elt);
-=======
-nsresult nsTreeSelection::FireOnSelectHandler() {
-  if (mSuppressed || !mTree) return NS_OK;
->>>>>>> upstream-releases
 
   RefPtr<AsyncEventDispatcher> asyncDispatcher =
-<<<<<<< HEAD
-      new AsyncEventDispatcher(elt, NS_LITERAL_STRING("select"),
-                               CanBubble::eYes, ChromeOnlyDispatch::eNo);
-||||||| merged common ancestors
-    new AsyncEventDispatcher(elt, NS_LITERAL_STRING("select"),
-                             CanBubble::eYes, ChromeOnlyDispatch::eNo);
-=======
       new AsyncEventDispatcher(mTree, NS_LITERAL_STRING("select"),
                                CanBubble::eYes, ChromeOnlyDispatch::eNo);
->>>>>>> upstream-releases
   asyncDispatcher->RunDOMEventWhenSafe();
   return NS_OK;
 }
@@ -877,49 +713,10 @@ void nsTreeSelection::SelectCallback(nsITimer* aTimer, void* aClosure) {
   }
 }
 
-<<<<<<< HEAD
-already_AddRefed<nsIContent> nsTreeSelection::GetContent() {
-  if (!mTree) {
-    return nullptr;
-  }
-
-  nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mTree);
-
-  RefPtr<dom::Element> element;
-  boxObject->GetElement(getter_AddRefs(element));
-  return element.forget();
-}
-
-||||||| merged common ancestors
-already_AddRefed<nsIContent>
-nsTreeSelection::GetContent()
-{
-  if (!mTree) {
-    return nullptr;
-  }
-
-  nsCOMPtr<nsIBoxObject> boxObject = do_QueryInterface(mTree);
-
-  RefPtr<dom::Element> element;
-  boxObject->GetElement(getter_AddRefs(element));
-  return element.forget();
-}
-
-=======
->>>>>>> upstream-releases
 ///////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-nsresult NS_NewTreeSelection(nsITreeBoxObject* aTree,
-                             nsITreeSelection** aResult) {
-||||||| merged common ancestors
-nsresult
-NS_NewTreeSelection(nsITreeBoxObject* aTree, nsITreeSelection** aResult)
-{
-=======
 nsresult NS_NewTreeSelection(XULTreeElement* aTree,
                              nsITreeSelection** aResult) {
->>>>>>> upstream-releases
   *aResult = new nsTreeSelection(aTree);
   if (!*aResult) return NS_ERROR_OUT_OF_MEMORY;
   NS_ADDREF(*aResult);

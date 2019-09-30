@@ -48,37 +48,7 @@ const TEST_DATA = [
         { x: 1250000, y: 75 },
         { x: 1500000, y: 100 },
         { x: 1500000, y: 0 },
-<<<<<<< HEAD
       ],
-    ],
-  },
-  {
-    targetClass: "delay-negative",
-    expectedIterationPathList: [
-      [
-        { x: 0, y: 0 },
-        { x: 0, y: 50 },
-        { x: 250000, y: 75 },
-        { x: 500000, y: 100 },
-        { x: 500000, y: 0 },
-      ],
-||||||| merged common ancestors
-      ]
-    ],
-  },
-  {
-    targetClass: "delay-negative",
-    expectedIterationPathList: [
-      [
-        { x: 0, y: 0 },
-        { x: 0, y: 50 },
-        { x: 250000, y: 75 },
-        { x: 500000, y: 100 },
-        { x: 500000, y: 0 },
-      ]
-=======
-      ],
->>>>>>> upstream-releases
     ],
   },
   {
@@ -103,21 +73,7 @@ const TEST_DATA = [
         { x: 750000, y: 75 },
         { x: 1000000, y: 100 },
         { x: 1000000, y: 0 },
-<<<<<<< HEAD
       ],
-    ],
-    expectedEndDelayPath: [
-      { x: 1000000, y: 0 },
-      { x: 1500000, y: 0 },
-||||||| merged common ancestors
-      ]
-    ],
-    expectedEndDelayPath: [
-      { x: 1000000, y: 0 },
-      { x: 1500000, y: 0 },
-=======
-      ],
->>>>>>> upstream-releases
     ],
     expectedEndDelayPath: [{ x: 1000000, y: 0 }, { x: 1500000, y: 0 }],
   },
@@ -163,27 +119,7 @@ const TEST_DATA = [
         { x: 1000000, y: 100 },
         { x: 1000000, y: 0 },
       ],
-<<<<<<< HEAD
-      [
-        { x: 1000000, y: 0 },
-        { x: 1250000, y: 25 },
-        { x: 1500000, y: 50 },
-        { x: 1750000, y: 75 },
-        { x: 2000000, y: 100 },
-        { x: 2000000, y: 0 },
-      ],
-||||||| merged common ancestors
-      [
-        { x: 1000000, y: 0 },
-        { x: 1250000, y: 25 },
-        { x: 1500000, y: 50 },
-        { x: 1750000, y: 75 },
-        { x: 2000000, y: 100 },
-        { x: 2000000, y: 0 },
-      ]
-=======
       [{ x: 1000000, y: 0 }, { x: 1250000, y: 25 }, { x: 1500000, y: 50 }],
->>>>>>> upstream-releases
     ],
     isInfinity: true,
   },
@@ -203,17 +139,7 @@ const TEST_DATA = [
         { x: 1000000, y: 100 },
         { x: 1250000, y: 75 },
         { x: 1500000, y: 50 },
-<<<<<<< HEAD
-        { x: 1750000, y: 25 },
-        { x: 2000000, y: 0 },
       ],
-||||||| merged common ancestors
-        { x: 1750000, y: 25 },
-        { x: 2000000, y: 0 },
-      ]
-=======
-      ],
->>>>>>> upstream-releases
     ],
     isInfinity: true,
   },
@@ -228,27 +154,7 @@ const TEST_DATA = [
         { x: 750000, y: 25 },
         { x: 1000000, y: 0 },
       ],
-<<<<<<< HEAD
-      [
-        { x: 1000000, y: 0 },
-        { x: 1250000, y: 25 },
-        { x: 1500000, y: 50 },
-        { x: 1750000, y: 75 },
-        { x: 2000000, y: 100 },
-        { x: 2000000, y: 0 },
-      ],
-||||||| merged common ancestors
-      [
-        { x: 1000000, y: 0 },
-        { x: 1250000, y: 25 },
-        { x: 1500000, y: 50 },
-        { x: 1750000, y: 75 },
-        { x: 2000000, y: 100 },
-        { x: 2000000, y: 0 },
-      ]
-=======
       [{ x: 1000000, y: 0 }, { x: 1250000, y: 25 }, { x: 1500000, y: 50 }],
->>>>>>> upstream-releases
     ],
     isInfinity: true,
   },
@@ -268,17 +174,7 @@ const TEST_DATA = [
         { x: 1000000, y: 100 },
         { x: 1250000, y: 75 },
         { x: 1500000, y: 50 },
-<<<<<<< HEAD
-        { x: 1750000, y: 25 },
-        { x: 2000000, y: 0 },
       ],
-||||||| merged common ancestors
-        { x: 1750000, y: 25 },
-        { x: 2000000, y: 0 },
-      ]
-=======
-      ],
->>>>>>> upstream-releases
     ],
     isInfinity: true,
   },
@@ -357,21 +253,7 @@ const TEST_DATA = [
         { x: 1250000, y: 25 },
         { x: 1500000, y: 50 },
         { x: 1500000, y: 0 },
-<<<<<<< HEAD
       ],
-    ],
-    expectedForwardsPath: [
-      { x: 1500000, y: 0 },
-      { x: 1500000, y: 50 },
-||||||| merged common ancestors
-      ]
-    ],
-    expectedForwardsPath: [
-      { x: 1500000, y: 0 },
-      { x: 1500000, y: 50 },
-=======
-      ],
->>>>>>> upstream-releases
     ],
     expectedForwardsPath: [{ x: 1500000, y: 0 }, { x: 1500000, y: 50 }],
   },

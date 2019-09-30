@@ -25,14 +25,7 @@ import android.os.Process;
 import android.support.annotation.AnyThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-<<<<<<< HEAD
 import android.support.annotation.UiThread;
-import android.text.TextUtils;
-||||||| merged common ancestors
-import android.text.TextUtils;
-=======
-import android.support.annotation.UiThread;
->>>>>>> upstream-releases
 import android.util.Log;
 
 import org.mozilla.gecko.EventDispatcher;
@@ -289,20 +282,7 @@ public final class GeckoRuntime implements Parcelable {
             }
         }
 
-<<<<<<< HEAD
-        final GeckoThread.InitInfo info = new GeckoThread.InitInfo();
-        info.args = settings.getArguments();
-        info.extras = settings.getExtras();
-        info.flags = flags;
-        info.prefs = settings.getPrefsMap();
-
         if (!GeckoThread.init(info)) {
-||||||| merged common ancestors
-        if (!GeckoThread.initMainProcess(/* profile */ null, settings.getArguments(),
-                                         settings.getExtras(), flags)) {
-=======
-        if (!GeckoThread.init(info)) {
->>>>>>> upstream-releases
             Log.w(LOGTAG, "init failed (could not initiate GeckoThread)");
             return false;
         }
@@ -328,18 +308,10 @@ public final class GeckoRuntime implements Parcelable {
         return true;
     }
 
-<<<<<<< HEAD
-    /* package */ void setDefaultPrefs(GeckoBundle prefs) {
-        EventDispatcher.getInstance().dispatch("GeckoView:SetDefaultPrefs", prefs);
-    }
-
-||||||| merged common ancestors
-=======
     /* package */ void setDefaultPrefs(final GeckoBundle prefs) {
         EventDispatcher.getInstance().dispatch("GeckoView:SetDefaultPrefs", prefs);
     }
 
->>>>>>> upstream-releases
     /**
      * Create a new runtime with default settings and attach it to the given
      * context.
@@ -537,15 +509,8 @@ public final class GeckoRuntime implements Parcelable {
      *
      * @return The telemetry object.
      */
-<<<<<<< HEAD
-    @UiThread
-    public RuntimeTelemetry getTelemetry() {
-||||||| merged common ancestors
-    public RuntimeTelemetry getTelemetry() {
-=======
     @UiThread
     public @NonNull RuntimeTelemetry getTelemetry() {
->>>>>>> upstream-releases
         ThreadUtils.assertOnUiThread();
 
         if (mTelemetry == null) {

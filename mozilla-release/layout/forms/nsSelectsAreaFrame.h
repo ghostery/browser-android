@@ -9,21 +9,12 @@
 #include "mozilla/Attributes.h"
 #include "nsBlockFrame.h"
 
-<<<<<<< HEAD
-class nsSelectsAreaFrame final : public nsBlockFrame {
- public:
-||||||| merged common ancestors
-class nsSelectsAreaFrame final : public nsBlockFrame
-{
-public:
-=======
 namespace mozilla {
 class PresShell;
 }  // namespace mozilla
 
 class nsSelectsAreaFrame final : public nsBlockFrame {
  public:
->>>>>>> upstream-releases
   NS_DECL_FRAMEARENA_HELPERS(nsSelectsAreaFrame)
 
   friend nsContainerFrame* NS_NewSelectsAreaFrame(mozilla::PresShell* aShell,
@@ -42,22 +33,6 @@ class nsSelectsAreaFrame final : public nsBlockFrame {
 
   nscoord BSizeOfARow() const { return mBSizeOfARow; }
 
-<<<<<<< HEAD
- protected:
-  explicit nsSelectsAreaFrame(ComputedStyle* aStyle)
-      : nsBlockFrame(aStyle, kClassID),
-        // initialize to wacky value so first call of
-        // nsSelectsAreaFrame::Reflow will always invalidate
-        mBSizeOfARow(nscoord_MIN) {}
-||||||| merged common ancestors
-protected:
-  explicit nsSelectsAreaFrame(ComputedStyle* aStyle) :
-    nsBlockFrame(aStyle, kClassID),
-    // initialize to wacky value so first call of
-    // nsSelectsAreaFrame::Reflow will always invalidate
-    mBSizeOfARow(nscoord_MIN)
-  {}
-=======
  protected:
   explicit nsSelectsAreaFrame(ComputedStyle* aStyle,
                               nsPresContext* aPresContext)
@@ -65,7 +40,6 @@ protected:
         // initialize to wacky value so first call of
         // nsSelectsAreaFrame::Reflow will always invalidate
         mBSizeOfARow(nscoord_MIN) {}
->>>>>>> upstream-releases
 
   // We cache the block size of a single row so that changes to the
   // "size" attribute, padding, etc. can all be handled with only one

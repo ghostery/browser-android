@@ -10,24 +10,12 @@ function Baguette(calories) {
 const { validate, CompileError } = WebAssembly;
 
 assertErrorMessage(() => wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (func (result anyref)
         i32.const 42
     )
 )`), CompileError, mismatchError('i32', 'anyref'));
 
 assertErrorMessage(() => wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (func (result anyref)
         i32.const 0
         ref.null
@@ -37,12 +25,6 @@ assertErrorMessage(() => wasmEvalText(`(module
 )`), CompileError, /select operand types/);
 
 assertErrorMessage(() => wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (func (result i32)
         ref.null
         if
@@ -55,29 +37,6 @@ assertErrorMessage(() => wasmEvalText(`(module
 // Basic compilation tests.
 
 let simpleTests = [
-<<<<<<< HEAD
-    "(module (gc_feature_opt_in 2) (func (drop (ref.null))))",
-    "(module (gc_feature_opt_in 2) (func $test (local anyref)))",
-    "(module (gc_feature_opt_in 2) (func $test (param anyref)))",
-    "(module (gc_feature_opt_in 2) (func $test (result anyref) (ref.null)))",
-    "(module (gc_feature_opt_in 2) (func $test (block anyref (unreachable)) unreachable))",
-    "(module (gc_feature_opt_in 2) (func $test (local anyref) (result i32) (ref.is_null (get_local 0))))",
-    `(module (gc_feature_opt_in 2) (import "a" "b" (param anyref)))`,
-    `(module (gc_feature_opt_in 2) (import "a" "b" (result anyref)))`,
-    `(module (gc_feature_opt_in 2) (global anyref (ref.null)))`,
-    `(module (gc_feature_opt_in 2) (global (mut anyref) (ref.null)))`,
-||||||| merged common ancestors
-    "(module (gc_feature_opt_in 1) (func (drop (ref.null anyref))))",
-    "(module (gc_feature_opt_in 1) (func $test (local anyref)))",
-    "(module (gc_feature_opt_in 1) (func $test (param anyref)))",
-    "(module (gc_feature_opt_in 1) (func $test (result anyref) (ref.null anyref)))",
-    "(module (gc_feature_opt_in 1) (func $test (block anyref (unreachable)) unreachable))",
-    "(module (gc_feature_opt_in 1) (func $test (local anyref) (result i32) (ref.is_null (get_local 0))))",
-    `(module (gc_feature_opt_in 1) (import "a" "b" (param anyref)))`,
-    `(module (gc_feature_opt_in 1) (import "a" "b" (result anyref)))`,
-    `(module (gc_feature_opt_in 1) (global anyref (ref.null anyref)))`,
-    `(module (gc_feature_opt_in 1) (global (mut anyref) (ref.null anyref)))`,
-=======
     "(module (func (drop (ref.null))))",
     "(module (func $test (local anyref)))",
     "(module (func $test (param anyref)))",
@@ -88,7 +47,6 @@ let simpleTests = [
     `(module (import "a" "b" (result anyref)))`,
     `(module (global anyref (ref.null)))`,
     `(module (global (mut anyref) (ref.null)))`,
->>>>>>> upstream-releases
 ];
 
 for (let src of simpleTests) {
@@ -99,12 +57,6 @@ for (let src of simpleTests) {
 // Basic behavioral tests.
 
 let { exports } = wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (func (export "is_null") (result i32)
         ref.null
         ref.is_null
@@ -125,16 +77,8 @@ let { exports } = wasmEvalText(`(module
     )
 
     (func (export "is_null_local") (result i32) (local anyref)
-<<<<<<< HEAD
-        ref.null
-        set_local 0
-||||||| merged common ancestors
-        ref.null anyref
-        set_local 0
-=======
         ref.null
         local.set 0
->>>>>>> upstream-releases
         i32.const 58
         call $sum
         drop
@@ -150,31 +94,15 @@ assertEq(exports.is_null_local(), 1);
 // Anyref param and result in wasm functions.
 
 exports = wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (func (export "is_null") (result i32) (param $ref anyref)
         local.get $ref
         ref.is_null
     )
 
     (func (export "ref_or_null") (result anyref) (param $ref anyref) (param $selector i32)
-<<<<<<< HEAD
-        get_local $ref
-        ref.null
-        get_local $selector
-||||||| merged common ancestors
-        get_local $ref
-        ref.null anyref
-        get_local $selector
-=======
         local.get $ref
         ref.null
         local.get $selector
->>>>>>> upstream-releases
         select
     )
 
@@ -223,12 +151,6 @@ assertEq(ref.calories, baguette.calories);
 // Make sure grow-memory isn't blocked by the lack of gc.
 (function() {
     assertEq(wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (memory 0 64)
     (func (export "f") (param anyref) (result i32)
         i32.const 10
@@ -244,12 +166,6 @@ assertEq(ref.calories, baguette.calories);
 function assertJoin(body) {
     let val = { i: -1 };
     assertEq(wasmEvalText(`(module
-<<<<<<< HEAD
-        (gc_feature_opt_in 2)
-||||||| merged common ancestors
-        (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
         (func (export "test") (param $ref anyref) (param $i i32) (result anyref)
             ${body}
         )
@@ -316,12 +232,6 @@ assertJoin(`(block $out anyref (block $unreachable anyref (loop $top
 
 let x = { i: 42 }, y = { f: 53 };
 exports = wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (func (export "test") (param $lhs anyref) (param $rhs anyref) (param $i i32) (result anyref)
         local.get $lhs
         local.get $rhs
@@ -376,12 +286,6 @@ let imports = {
 };
 
 exports = wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (import $ret "funcs" "ret" (result anyref))
     (import $param "funcs" "param" (param anyref))
 
@@ -410,12 +314,6 @@ assertEq(exports.ret(), imports.myBaguette);
 // Check lazy stubs generation.
 
 exports = wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (import $mirror "funcs" "mirror" (param anyref) (result anyref))
     (import $augment "funcs" "augment" (param anyref) (result anyref))
 
@@ -499,31 +397,11 @@ assertEq(exports.count_g(), 1);
 
 // Anyref globals in wasm modules.
 
-<<<<<<< HEAD
-assertErrorMessage(() => wasmEvalText(`(module (gc_feature_opt_in 2) (global (import "glob" "anyref") anyref))`, { glob: { anyref: 42 } }),
-    WebAssembly.LinkError,
-    /import object field 'anyref' is not a Object-or-null/);
-
-assertErrorMessage(() => wasmEvalText(`(module (gc_feature_opt_in 2) (global (import "glob" "anyref") anyref))`, { glob: { anyref: new WebAssembly.Global({ value: 'i32' }, 42) } }),
-||||||| merged common ancestors
-assertErrorMessage(() => wasmEvalText(`(module (gc_feature_opt_in 1) (global (import "glob" "anyref") anyref))`, { glob: { anyref: 42 } }),
-    WebAssembly.LinkError,
-    /import object field 'anyref' is not a Object-or-null/);
-
-assertErrorMessage(() => wasmEvalText(`(module (gc_feature_opt_in 1) (global (import "glob" "anyref") anyref))`, { glob: { anyref: new WebAssembly.Global({ value: 'i32' }, 42) } }),
-=======
 assertErrorMessage(() => wasmEvalText(`(module (global (import "glob" "anyref") anyref))`, { glob: { anyref: new WebAssembly.Global({ value: 'i32' }, 42) } }),
->>>>>>> upstream-releases
     WebAssembly.LinkError,
     /imported global type mismatch/);
 
-<<<<<<< HEAD
-assertErrorMessage(() => wasmEvalText(`(module (gc_feature_opt_in 2) (global (import "glob" "i32") i32))`, { glob: { i32: {} } }),
-||||||| merged common ancestors
-assertErrorMessage(() => wasmEvalText(`(module (gc_feature_opt_in 1) (global (import "glob" "i32") i32))`, { glob: { i32: {} } }),
-=======
 assertErrorMessage(() => wasmEvalText(`(module (global (import "glob" "i32") i32))`, { glob: { i32: {} } }),
->>>>>>> upstream-releases
     WebAssembly.LinkError,
     /import object field 'i32' is not a Number/);
 
@@ -537,31 +415,15 @@ imports = {
 };
 
 exports = wasmEvalText(`(module
-<<<<<<< HEAD
-    (gc_feature_opt_in 2)
-||||||| merged common ancestors
-    (gc_feature_opt_in 1)
-=======
->>>>>>> upstream-releases
     (global $g_imp_imm_null  (import "constants" "imm_null") anyref)
     (global $g_imp_imm_bread (import "constants" "imm_bread") anyref)
 
     (global $g_imp_mut_null   (import "constants" "mut_null") (mut anyref))
     (global $g_imp_mut_bread  (import "constants" "mut_bread") (mut anyref))
 
-<<<<<<< HEAD
-    (global $g_imm_null     anyref (ref.null))
-    (global $g_imm_getglob  anyref (get_global $g_imp_imm_bread))
-    (global $g_mut         (mut anyref) (ref.null))
-||||||| merged common ancestors
-    (global $g_imm_null     anyref (ref.null anyref))
-    (global $g_imm_getglob  anyref (get_global $g_imp_imm_bread))
-    (global $g_mut         (mut anyref) (ref.null anyref))
-=======
     (global $g_imm_null     anyref (ref.null))
     (global $g_imm_getglob  anyref (global.get $g_imp_imm_bread))
     (global $g_mut         (mut anyref) (ref.null))
->>>>>>> upstream-releases
 
     (func (export "imm_null")      (result anyref) global.get $g_imm_null)
     (func (export "imm_getglob")   (result anyref) global.get $g_imm_getglob)

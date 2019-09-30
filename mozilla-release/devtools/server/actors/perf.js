@@ -6,7 +6,6 @@
 const protocol = require("devtools/shared/protocol");
 const { ActorClassWithSpec, Actor } = protocol;
 const { perfSpec } = require("devtools/shared/specs/perf");
-const { DEFAULT_WINDOW_LENGTH } = require("devtools/shared/performance-new/common");
 const { Ci } = require("chrome");
 const Services = require("Services");
 
@@ -64,15 +63,9 @@ exports.PerfActor = ActorClassWithSpec(perfSpec, {
     // to be tweaked or made configurable as needed.
     const settings = {
       entries: options.entries || 1000000,
-<<<<<<< HEAD
-      duration: options.duration !== undefined
-        ? options.duration : DEFAULT_WINDOW_LENGTH,
-||||||| merged common ancestors
-=======
       // Window length should be Infinite if nothing's been passed.
       // options.duration is supported for `perfActorVersion > 0`.
       duration: options.duration || 0,
->>>>>>> upstream-releases
       interval: options.interval || 1,
       features: options.features || [
         "js",
@@ -91,14 +84,7 @@ exports.PerfActor = ActorClassWithSpec(perfSpec, {
         settings.interval,
         settings.features,
         settings.threads,
-<<<<<<< HEAD
-        settings.threads.length,
         settings.duration
-||||||| merged common ancestors
-        settings.threads.length
-=======
-        settings.duration
->>>>>>> upstream-releases
       );
     } catch (e) {
       // In case any errors get triggered, bailout with a false.
@@ -185,11 +171,6 @@ exports.PerfActor = ActorClassWithSpec(perfSpec, {
         break;
       case "profiler-started":
         const param = subject.QueryInterface(Ci.nsIProfilerStartParams);
-<<<<<<< HEAD
-        this.emit(topic, param.entries, param.interval, param.features, param.duration);
-||||||| merged common ancestors
-        this.emit(topic, param.entries, param.interval, param.features);
-=======
         this.emit(
           topic,
           param.entries,
@@ -197,7 +178,6 @@ exports.PerfActor = ActorClassWithSpec(perfSpec, {
           param.features,
           param.duration
         );
->>>>>>> upstream-releases
         break;
       case "profiler-stopped":
         this.emit(topic);

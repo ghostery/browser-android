@@ -537,23 +537,9 @@ void SinkContext::UpdateChildCounts() {
   mNotifyLevel = mStackPos - 1;
 }
 
-<<<<<<< HEAD
-nsresult NS_NewHTMLContentSink(nsIHTMLContentSink** aResult, nsIDocument* aDoc,
-                               nsIURI* aURI, nsISupports* aContainer,
-                               nsIChannel* aChannel) {
-||||||| merged common ancestors
-nsresult
-NS_NewHTMLContentSink(nsIHTMLContentSink** aResult,
-                      nsIDocument* aDoc,
-                      nsIURI* aURI,
-                      nsISupports* aContainer,
-                      nsIChannel* aChannel)
-{
-=======
 nsresult NS_NewHTMLContentSink(nsIHTMLContentSink** aResult, Document* aDoc,
                                nsIURI* aURI, nsISupports* aContainer,
                                nsIChannel* aChannel) {
->>>>>>> upstream-releases
   NS_ENSURE_ARG_POINTER(aResult);
 
   RefPtr<HTMLContentSink> it = new HTMLContentSink();
@@ -610,32 +596,6 @@ HTMLContentSink::~HTMLContentSink() {
 }
 
 NS_IMPL_CYCLE_COLLECTION_INHERITED(HTMLContentSink, nsContentSink,
-<<<<<<< HEAD
-                                   mHTMLDocument, mRoot, mBody, mHead)
-
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLContentSink, nsContentSink,
-                                             nsIContentSink, nsIHTMLContentSink)
-
-nsresult HTMLContentSink::Init(nsIDocument* aDoc, nsIURI* aURI,
-                               nsISupports* aContainer, nsIChannel* aChannel) {
-||||||| merged common ancestors
-                                   mHTMLDocument,
-                                   mRoot,
-                                   mBody,
-                                   mHead)
-
-NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLContentSink,
-                                             nsContentSink,
-                                             nsIContentSink,
-                                             nsIHTMLContentSink)
-
-nsresult
-HTMLContentSink::Init(nsIDocument* aDoc,
-                      nsIURI* aURI,
-                      nsISupports* aContainer,
-                      nsIChannel* aChannel)
-{
-=======
                                    mHTMLDocument, mRoot, mBody, mHead)
 
 NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLContentSink, nsContentSink,
@@ -643,7 +603,6 @@ NS_IMPL_ISUPPORTS_CYCLE_COLLECTION_INHERITED(HTMLContentSink, nsContentSink,
 
 nsresult HTMLContentSink::Init(Document* aDoc, nsIURI* aURI,
                                nsISupports* aContainer, nsIChannel* aChannel) {
->>>>>>> upstream-releases
   NS_ENSURE_TRUE(aContainer, NS_ERROR_NULL_POINTER);
 
   nsresult rv = nsContentSink::Init(aDoc, aURI, aContainer, aChannel);
@@ -904,47 +863,16 @@ void HTMLContentSink::CloseHeadContext() {
   }
 }
 
-<<<<<<< HEAD
 void HTMLContentSink::NotifyInsert(nsIContent* aContent,
                                    nsIContent* aChildContent) {
-  if (aContent && aContent->GetUncomposedDoc() != mDocument) {
-    // aContent is not actually in our document anymore.... Just bail out of
-    // here; notifying on our document for this insert would be wrong.
-    return;
-  }
-
-||||||| merged common ancestors
-void
-HTMLContentSink::NotifyInsert(nsIContent* aContent,
-                              nsIContent* aChildContent)
-{
-  if (aContent && aContent->GetUncomposedDoc() != mDocument) {
-    // aContent is not actually in our document anymore.... Just bail out of
-    // here; notifying on our document for this insert would be wrong.
-    return;
-  }
-
-=======
-void HTMLContentSink::NotifyInsert(nsIContent* aContent,
-                                   nsIContent* aChildContent) {
->>>>>>> upstream-releases
   mInNotification++;
 
   {
     // Scope so we call EndUpdate before we decrease mInNotification
-<<<<<<< HEAD
-    MOZ_AUTO_DOC_UPDATE(mDocument, !mBeganUpdate);
-    nsNodeUtils::ContentInserted(NODE_FROM(aContent, mDocument), aChildContent);
-||||||| merged common ancestors
-    MOZ_AUTO_DOC_UPDATE(mDocument, !mBeganUpdate);
-    nsNodeUtils::ContentInserted(NODE_FROM(aContent, mDocument),
-                                 aChildContent);
-=======
     // Note that aContent->OwnerDoc() may be different to mDocument already.
     MOZ_AUTO_DOC_UPDATE(aContent ? aContent->OwnerDoc() : mDocument.get(),
                         true);
     nsNodeUtils::ContentInserted(NODE_FROM(aContent, mDocument), aChildContent);
->>>>>>> upstream-releases
     mLastNotificationTime = PR_Now();
   }
 
@@ -1017,17 +945,7 @@ void HTMLContentSink::SetDocumentCharset(NotNull<const Encoding*> aEncoding) {
   MOZ_ASSERT_UNREACHABLE("<meta charset> case doesn't occur with about:blank");
 }
 
-<<<<<<< HEAD
-nsISupports* HTMLContentSink::GetTarget() { return mDocument; }
-||||||| merged common ancestors
-nsISupports *
-HTMLContentSink::GetTarget()
-{
-  return mDocument;
-}
-=======
 nsISupports* HTMLContentSink::GetTarget() { return ToSupports(mDocument); }
->>>>>>> upstream-releases
 
 bool HTMLContentSink::IsScriptExecuting() { return IsScriptExecutingImpl(); }
 

@@ -38,15 +38,6 @@ function promiseEvent(eventEmitter, event) {
   });
 }
 
-<<<<<<< HEAD
-add_task(async function() {
-  const DEFAULT_ICON_URL = "chrome://mozapps/skin/extensions/extensionGeneric.svg";
-||||||| merged common ancestors
-let cleanup;
-
-add_task(async function() {
-  const DEFAULT_ICON_URL = "chrome://mozapps/skin/extensions/extensionGeneric.svg";
-=======
 async function getAddonElement(managerWindow, addonId) {
   if (managerWindow.useHtmlViews) {
     // about:addons is using the new HTML page.
@@ -109,7 +100,6 @@ function clickEnableExtension(managerWindow, addonElement) {
 async function test_sideloading({ useHtmlViews }) {
   const DEFAULT_ICON_URL =
     "chrome://mozapps/skin/extensions/extensionGeneric.svg";
->>>>>>> upstream-releases
 
   await SpecialPowers.pushPrefEnv({
     set: [
@@ -183,11 +173,6 @@ async function test_sideloading({ useHtmlViews }) {
   await gCUITestUtils.openMainMenu();
 
   let addons = PanelUI.addonNotificationContainer;
-<<<<<<< HEAD
-  is(addons.children.length, 3, "Have 3 menu entries for sideloaded extensions");
-||||||| merged common ancestors
-  is(addons.children.length, 4, "Have 4 menu entries for sideloaded extensions");
-=======
   is(
     addons.children.length,
     3,
@@ -197,7 +182,6 @@ async function test_sideloading({ useHtmlViews }) {
   info(
     "Test disabling sideloaded addon 1 using the permission prompt secondary button"
   );
->>>>>>> upstream-releases
 
   // Click the first sideloaded extension
   let popupPromise = promisePopupNotificationShown("addon-webext-permissions");
@@ -236,17 +220,11 @@ async function test_sideloading({ useHtmlViews }) {
 
   panel.secondaryButton.click();
 
-<<<<<<< HEAD
-  let [addon1, addon2, addon3] = await AddonManager.getAddonsByIDs([ID1, ID2, ID3]);
-||||||| merged common ancestors
-  let [addon1, addon2, addon3, addon4] = await AddonManager.getAddonsByIDs([ID1, ID2, ID3, ID4]);
-=======
   let [addon1, addon2, addon3] = await AddonManager.getAddonsByIDs([
     ID1,
     ID2,
     ID3,
   ]);
->>>>>>> upstream-releases
   ok(addon1.seen, "Addon should be marked as seen");
   is(addon1.userDisabled, true, "Addon 1 should still be disabled");
   is(addon2.userDisabled, true, "Addon 2 should still be disabled");
@@ -269,35 +247,16 @@ async function test_sideloading({ useHtmlViews }) {
 
   win = await BrowserOpenAddonsMgr(VIEW);
 
-<<<<<<< HEAD
-  let list = win.document.getElementById("addon-list");
-  if (win.gViewController.isLoading) {
-    await new Promise(resolve => win.document.addEventListener("ViewChanged", resolve, {once: true}));
-  }
-||||||| merged common ancestors
-  let list = win.document.getElementById("addon-list");
-=======
   if (win.gViewController.isLoading) {
     await new Promise(resolve =>
       win.document.addEventListener("ViewChanged", resolve, { once: true })
     );
   }
->>>>>>> upstream-releases
 
   // XUL or HTML about:addons addon entry element.
   const addonElement = await getAddonElement(win, ID2);
 
-<<<<<<< HEAD
-  let item = Array.from(list.children).find(_item => _item.value == ID2);
-  ok(item, "Found entry for sideloaded extension in about:addons");
-  item.scrollIntoView({behavior: "instant"});
-||||||| merged common ancestors
-  let item = list.itemChildren.find(_item => _item.value == ID3);
-  ok(item, "Found entry for sideloaded extension in about:addons");
-  item.scrollIntoView({behavior: "instant"});
-=======
   assertDisabledSideloadedAddonElement(win, addonElement);
->>>>>>> upstream-releases
 
   info("Test enabling sideloaded addon 2 from about:addons enable button");
 
@@ -342,19 +301,11 @@ async function test_sideloading({ useHtmlViews }) {
   panel.button.click();
   await promiseEvent(ExtensionsUI, "change");
 
-<<<<<<< HEAD
-  addon2 = await AddonManager.getAddonByID(ID2);
-  is(addon2.userDisabled, false, "Addon 2 should be enabled");
-||||||| merged common ancestors
-  addon3 = await AddonManager.getAddonByID(ID3);
-  is(addon3.userDisabled, false, "Addon 3 should be enabled");
-=======
   addon2 = await AddonManager.getAddonByID(ID2);
   is(addon2.userDisabled, false, "Addon 2 should be enabled");
 
   // Test post install notification on addon 2.
   await testPostInstallIncognitoCheckbox(addon2);
->>>>>>> upstream-releases
 
   // Should still have 1 entry in the hamburger menu
   await gCUITestUtils.openMainMenu();
@@ -365,17 +316,9 @@ async function test_sideloading({ useHtmlViews }) {
   // Close the hamburger menu and go to the detail page for this addon
   await gCUITestUtils.hideMainMenu();
 
-<<<<<<< HEAD
-  win = await BrowserOpenAddonsMgr(`addons://detail/${encodeURIComponent(ID3)}`);
-  let button = win.document.getElementById("detail-enable-btn");
-||||||| merged common ancestors
-  win = await BrowserOpenAddonsMgr(`addons://detail/${encodeURIComponent(ID4)}`);
-  let button = win.document.getElementById("detail-enable-btn");
-=======
   win = await BrowserOpenAddonsMgr(
     `addons://detail/${encodeURIComponent(ID3)}`
   );
->>>>>>> upstream-releases
 
   info("Test enabling sideloaded addon 3 from app menu");
   // Trigger addon 3 install as triggered from the app menu, to be able to cover the
@@ -396,19 +339,11 @@ async function test_sideloading({ useHtmlViews }) {
   panel.button.click();
   await promiseEvent(ExtensionsUI, "change");
 
-<<<<<<< HEAD
-  addon3 = await AddonManager.getAddonByID(ID3);
-  is(addon3.userDisabled, false, "Addon 3 should be enabled");
-||||||| merged common ancestors
-  addon4 = await AddonManager.getAddonByID(ID4);
-  is(addon4.userDisabled, false, "Addon 4 should be enabled");
-=======
   addon3 = await AddonManager.getAddonByID(ID3);
   is(addon3.userDisabled, false, "Addon 3 should be enabled");
 
   // Test post install notification on addon 3.
   await testPostInstallIncognitoCheckbox(addon3);
->>>>>>> upstream-releases
 
   // We should have recorded 1 cancelled followed by 2 accepted sideloads.
   expectTelemetry(["sideloadRejected", "sideloadAccepted", "sideloadAccepted"]);
@@ -428,19 +363,6 @@ async function test_sideloading({ useHtmlViews }) {
   BrowserTestUtils.removeTab(gBrowser.selectedTab);
 
   // Assert that the expected AddonManager telemetry are being recorded.
-<<<<<<< HEAD
-  const expectedExtra = {source: "app-profile", method: "sideload"};
-
-  const baseEvent = {object: "extension", extra: expectedExtra};
-  const createBaseEventAddon = (n) => ({...baseEvent, value: `addon${n}@tests.mozilla.org`});
-  const getEventsForAddonId = (events, addonId) => events.filter(ev => ev.value === addonId);
-||||||| merged common ancestors
-  const expectedExtra = {source: "app-profile", method: "sideload"};
-  const noPermissionsExtra = {...expectedExtra, num_perms: "0", num_origins: "0"};
-  const baseEvent = {object: "extension", extra: expectedExtra};
-  const createBaseEventAddon = (n) => ({...baseEvent, value: `addon${n}@tests.mozilla.org`});
-  const getEventsForAddonId = (events, addonId) => events.filter(ev => ev.value === addonId);
-=======
   const expectedExtra = { source: "app-profile", method: "sideload" };
 
   const baseEvent = { object: "extension", extra: expectedExtra };
@@ -450,7 +372,6 @@ async function test_sideloading({ useHtmlViews }) {
   });
   const getEventsForAddonId = (events, addonId) =>
     events.filter(ev => ev.value === addonId);
->>>>>>> upstream-releases
 
   const amEvents = AddonTestUtils.getAMTelemetryEvents();
 
@@ -480,43 +401,18 @@ async function test_sideloading({ useHtmlViews }) {
     );
   }
 
-<<<<<<< HEAD
-  is(collectedEventsAddon1.length, expectedEventsAddon1.length,
-     "Got the expected number of telemetry events for addon1");
-
-||||||| merged common ancestors
-  is(collectedEventsAddon1.length, expectedEventsAddon1.length,
-     "Got the expected number of telemetry events for addon1");
-
-  // Test telemetry events for addon2 (no permissions).
-  info("Test telemetry events collected for addon2");
-
-=======
   is(
     collectedEventsAddon1.length,
     expectedEventsAddon1.length,
     "Got the expected number of telemetry events for addon1"
   );
 
->>>>>>> upstream-releases
   const baseEventAddon2 = createBaseEventAddon(2);
   const collectedEventsAddon2 = getEventsForAddonId(
     amEvents,
     baseEventAddon2.value
   );
   const expectedEventsAddon2 = [
-<<<<<<< HEAD
-    {
-      ...baseEventAddon2, method: "sideload_prompt",
-      extra: {...expectedExtra, num_perms: "0", num_origins: "1"},
-    },
-    {...baseEventAddon2, method: "enable"},
-    {...baseEventAddon2, method: "uninstall"},
-||||||| merged common ancestors
-    {...baseEventAddon2, method: "sideload_prompt", extra: {...noPermissionsExtra}},
-    {...baseEventAddon2, method: "enable"},
-    {...baseEventAddon2, method: "uninstall"},
-=======
     {
       ...baseEventAddon2,
       method: "sideload_prompt",
@@ -524,7 +420,6 @@ async function test_sideloading({ useHtmlViews }) {
     },
     { ...baseEventAddon2, method: "enable" },
     { ...baseEventAddon2, method: "uninstall" },
->>>>>>> upstream-releases
   ];
 
   i = 0;
@@ -536,36 +431,6 @@ async function test_sideloading({ useHtmlViews }) {
     );
   }
 
-<<<<<<< HEAD
-  is(collectedEventsAddon2.length, expectedEventsAddon2.length,
-     "Got the expected number of telemetry events for addon2");
-||||||| merged common ancestors
-  is(collectedEventsAddon2.length, expectedEventsAddon2.length,
-     "Got the expected number of telemetry events for addon2");
-
-  // Test telemetry events for addon3 (no permissions and 1 origin).
-  info("Test telemetry events collected for addon2");
-
-  const baseEventAddon3 = createBaseEventAddon(3);
-  const collectedEventsAddon3 = getEventsForAddonId(amEvents, baseEventAddon3.value);
-  const expectedEventsAddon3 = [
-    {
-      ...baseEventAddon3, method: "sideload_prompt",
-      extra: {...expectedExtra, num_perms: "0", num_origins: "1"},
-    },
-    {...baseEventAddon3, method: "enable"},
-    {...baseEventAddon3, method: "uninstall"},
-  ];
-
-  i = 0;
-  for (let event of collectedEventsAddon3) {
-    Assert.deepEqual(event, expectedEventsAddon3[i++],
-                     "Got the expected telemetry event");
-  }
-
-  is(collectedEventsAddon3.length, expectedEventsAddon3.length,
-     "Got the expected number of telemetry events for addon3");
-=======
   is(
     collectedEventsAddon2.length,
     expectedEventsAddon2.length,
@@ -579,5 +444,4 @@ add_task(async function test_xul_aboutaddons_sideloading() {
 
 add_task(async function test_html_aboutaddons_sideloading() {
   await test_sideloading({ useHtmlViews: true });
->>>>>>> upstream-releases
 });

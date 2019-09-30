@@ -38,13 +38,13 @@ static PRIOMethods* sNetActivityMonitorLayerMethodsPtr = nullptr;
 class ActivityMonitorSecret final {
  public:
   // constructor used for sockets
-  explicit ActivityMonitorSecret(PRFileDesc *aFd) {
+  explicit ActivityMonitorSecret(PRFileDesc* aFd) {
     mFd = aFd;
     mLocationSet = false;
   }
 
   // constructor used for files
-  explicit ActivityMonitorSecret(PRFileDesc *aFd, const char *aLocation) {
+  explicit ActivityMonitorSecret(PRFileDesc* aFd, const char* aLocation) {
     mFd = aFd;
     mLocation.AppendPrintf("file://%s", aLocation);
     mLocationSet = true;
@@ -66,7 +66,7 @@ class ActivityMonitorSecret final {
   // constructor.
   void LazySetLocation() {
     mLocationSet = true;
-    PRFileDesc *extract = mFd;
+    PRFileDesc* extract = mFd;
     while (PR_GetDescType(extract) == PR_DESC_LAYERED) {
       if (!extract->lower) {
         break;
@@ -118,36 +118,21 @@ class ActivityMonitorSecret final {
  private:
   nsCString mLocation;
   bool mLocationSet;
-  PRFileDesc *mFd;
+  PRFileDesc* mFd;
 };
 
 // FileDesc2Location converts a PRFileDesc into a "location" by
 // grabbing the ActivityMonitorSecret in layer->secret
-<<<<<<< HEAD
-static nsAutoCString FileDesc2Location(PRFileDesc *fd) {
-||||||| merged common ancestors
-static nsAutoCString
-FileDesc2Location(PRFileDesc *fd)
-{
-=======
 static nsAutoCString FileDesc2Location(PRFileDesc* fd) {
->>>>>>> upstream-releases
   nsAutoCString location;
-<<<<<<< HEAD
-  PRFileDesc *monitorLayer =
-      PR_GetIdentitiesLayer(fd, sNetActivityMonitorLayerIdentity);
-||||||| merged common ancestors
-  PRFileDesc *monitorLayer = PR_GetIdentitiesLayer(fd, sNetActivityMonitorLayerIdentity);
-=======
   PRFileDesc* monitorLayer =
       PR_GetIdentitiesLayer(fd, sNetActivityMonitorLayerIdentity);
->>>>>>> upstream-releases
   if (!monitorLayer) {
     location.AppendPrintf("unknown");
     return location;
   }
 
-  ActivityMonitorSecret *secret = (ActivityMonitorSecret *)monitorLayer->secret;
+  ActivityMonitorSecret* secret = (ActivityMonitorSecret*)monitorLayer->secret;
   location.AppendPrintf("%s", secret->getLocation().get());
   return location;
 }
@@ -155,49 +140,19 @@ static nsAutoCString FileDesc2Location(PRFileDesc* fd) {
 //
 // Wrappers around the socket APIS
 //
-<<<<<<< HEAD
-static PRStatus nsNetMon_Connect(PRFileDesc *fd, const PRNetAddr *addr,
-                                 PRIntervalTime timeout) {
-||||||| merged common ancestors
-static PRStatus
-nsNetMon_Connect(PRFileDesc *fd, const PRNetAddr *addr, PRIntervalTime timeout)
-{
-=======
 static PRStatus nsNetMon_Connect(PRFileDesc* fd, const PRNetAddr* addr,
                                  PRIntervalTime timeout) {
->>>>>>> upstream-releases
   return fd->lower->methods->connect(fd->lower, addr, timeout);
 }
 
-<<<<<<< HEAD
-static PRStatus nsNetMon_Close(PRFileDesc *fd) {
-||||||| merged common ancestors
-
-static PRStatus
-nsNetMon_Close(PRFileDesc *fd)
-{
-=======
 static PRStatus nsNetMon_Close(PRFileDesc* fd) {
->>>>>>> upstream-releases
   if (!fd) {
     return PR_FAILURE;
   }
-<<<<<<< HEAD
-  PRFileDesc *layer = PR_PopIOLayer(fd, PR_TOP_IO_LAYER);
-  MOZ_RELEASE_ASSERT(
-      layer && layer->identity == sNetActivityMonitorLayerIdentity,
-      "NetActivityMonitor Layer not on top of stack");
-||||||| merged common ancestors
-  PRFileDesc* layer = PR_PopIOLayer(fd, PR_TOP_IO_LAYER);
-  MOZ_RELEASE_ASSERT(layer &&
-                     layer->identity == sNetActivityMonitorLayerIdentity,
-                     "NetActivityMonitor Layer not on top of stack");
-=======
   PRFileDesc* layer = PR_PopIOLayer(fd, PR_TOP_IO_LAYER);
   MOZ_RELEASE_ASSERT(
       layer && layer->identity == sNetActivityMonitorLayerIdentity,
       "NetActivityMonitor Layer not on top of stack");
->>>>>>> upstream-releases
 
   if (layer->secret) {
     delete (ActivityMonitorSecret*)layer->secret;
@@ -207,16 +162,7 @@ static PRStatus nsNetMon_Close(PRFileDesc* fd) {
   return fd->methods->close(fd);
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_Read(PRFileDesc *fd, void *buf, int32_t len) {
-||||||| merged common ancestors
-
-static int32_t
-nsNetMon_Read(PRFileDesc *fd, void *buf, int32_t len)
-{
-=======
 static int32_t nsNetMon_Read(PRFileDesc* fd, void* buf, int32_t len) {
->>>>>>> upstream-releases
   int32_t ret = fd->lower->methods->read(fd->lower, buf, len);
   if (ret >= 0) {
     IOActivityMonitor::Read(fd, len);
@@ -224,15 +170,7 @@ static int32_t nsNetMon_Read(PRFileDesc* fd, void* buf, int32_t len) {
   return ret;
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_Write(PRFileDesc *fd, const void *buf, int32_t len) {
-||||||| merged common ancestors
-static int32_t
-nsNetMon_Write(PRFileDesc *fd, const void *buf, int32_t len)
-{
-=======
 static int32_t nsNetMon_Write(PRFileDesc* fd, const void* buf, int32_t len) {
->>>>>>> upstream-releases
   int32_t ret = fd->lower->methods->write(fd->lower, buf, len);
   if (ret > 0) {
     IOActivityMonitor::Write(fd, len);
@@ -240,20 +178,8 @@ static int32_t nsNetMon_Write(PRFileDesc* fd, const void* buf, int32_t len) {
   return ret;
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_Writev(PRFileDesc *fd, const PRIOVec *iov, int32_t size,
-                               PRIntervalTime timeout) {
-||||||| merged common ancestors
-static int32_t
-nsNetMon_Writev(PRFileDesc *fd,
-                const PRIOVec *iov,
-                int32_t size,
-                PRIntervalTime timeout)
-{
-=======
 static int32_t nsNetMon_Writev(PRFileDesc* fd, const PRIOVec* iov, int32_t size,
                                PRIntervalTime timeout) {
->>>>>>> upstream-releases
   int32_t ret = fd->lower->methods->writev(fd->lower, iov, size, timeout);
   if (ret > 0) {
     IOActivityMonitor::Write(fd, size);
@@ -261,76 +187,29 @@ static int32_t nsNetMon_Writev(PRFileDesc* fd, const PRIOVec* iov, int32_t size,
   return ret;
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_Recv(PRFileDesc *fd, void *buf, int32_t amount,
-                             int flags, PRIntervalTime timeout) {
-  int32_t ret =
-      fd->lower->methods->recv(fd->lower, buf, amount, flags, timeout);
-||||||| merged common ancestors
-static int32_t
-nsNetMon_Recv(PRFileDesc *fd,
-              void *buf,
-              int32_t amount,
-              int flags,
-              PRIntervalTime timeout)
-{
-  int32_t ret = fd->lower->methods->recv(fd->lower, buf, amount, flags, timeout);
-=======
 static int32_t nsNetMon_Recv(PRFileDesc* fd, void* buf, int32_t amount,
                              int flags, PRIntervalTime timeout) {
   int32_t ret =
       fd->lower->methods->recv(fd->lower, buf, amount, flags, timeout);
->>>>>>> upstream-releases
   if (ret > 0) {
     IOActivityMonitor::Read(fd, amount);
   }
   return ret;
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_Send(PRFileDesc *fd, const void *buf, int32_t amount,
-                             int flags, PRIntervalTime timeout) {
-  int32_t ret =
-      fd->lower->methods->send(fd->lower, buf, amount, flags, timeout);
-||||||| merged common ancestors
-static int32_t
-nsNetMon_Send(PRFileDesc *fd,
-              const void *buf,
-              int32_t amount,
-              int flags,
-              PRIntervalTime timeout)
-{
-  int32_t ret = fd->lower->methods->send(fd->lower, buf, amount, flags, timeout);
-=======
 static int32_t nsNetMon_Send(PRFileDesc* fd, const void* buf, int32_t amount,
                              int flags, PRIntervalTime timeout) {
   int32_t ret =
       fd->lower->methods->send(fd->lower, buf, amount, flags, timeout);
->>>>>>> upstream-releases
   if (ret > 0) {
     IOActivityMonitor::Write(fd, amount);
   }
   return ret;
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_RecvFrom(PRFileDesc *fd, void *buf, int32_t amount,
-                                 int flags, PRNetAddr *addr,
-                                 PRIntervalTime timeout) {
-||||||| merged common ancestors
-static int32_t
-nsNetMon_RecvFrom(PRFileDesc *fd,
-                  void *buf,
-                  int32_t amount,
-                  int flags,
-                  PRNetAddr *addr,
-                  PRIntervalTime timeout)
-{
-=======
 static int32_t nsNetMon_RecvFrom(PRFileDesc* fd, void* buf, int32_t amount,
                                  int flags, PRNetAddr* addr,
                                  PRIntervalTime timeout) {
->>>>>>> upstream-releases
   int32_t ret = fd->lower->methods->recvfrom(fd->lower, buf, amount, flags,
                                              addr, timeout);
   if (ret > 0) {
@@ -339,62 +218,23 @@ static int32_t nsNetMon_RecvFrom(PRFileDesc* fd, void* buf, int32_t amount,
   return ret;
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_SendTo(PRFileDesc *fd, const void *buf, int32_t amount,
-                               int flags, const PRNetAddr *addr,
-                               PRIntervalTime timeout) {
-  int32_t ret =
-      fd->lower->methods->sendto(fd->lower, buf, amount, flags, addr, timeout);
-||||||| merged common ancestors
-static int32_t
-nsNetMon_SendTo(PRFileDesc *fd,
-                const void *buf,
-                int32_t amount,
-                int flags,
-                const PRNetAddr *addr,
-                PRIntervalTime timeout)
-{
-  int32_t ret = fd->lower->methods->sendto(fd->lower, buf, amount, flags,
-                                           addr, timeout);
-=======
 static int32_t nsNetMon_SendTo(PRFileDesc* fd, const void* buf, int32_t amount,
                                int flags, const PRNetAddr* addr,
                                PRIntervalTime timeout) {
   int32_t ret =
       fd->lower->methods->sendto(fd->lower, buf, amount, flags, addr, timeout);
->>>>>>> upstream-releases
   if (ret > 0) {
     IOActivityMonitor::Write(fd, amount);
   }
   return ret;
 }
 
-<<<<<<< HEAD
-static int32_t nsNetMon_AcceptRead(PRFileDesc *listenSock,
-                                   PRFileDesc **acceptedSock,
-                                   PRNetAddr **peerAddr, void *buf,
-                                   int32_t amount, PRIntervalTime timeout) {
-  int32_t ret = listenSock->lower->methods->acceptread(
-      listenSock->lower, acceptedSock, peerAddr, buf, amount, timeout);
-||||||| merged common ancestors
-static int32_t
-nsNetMon_AcceptRead(PRFileDesc *listenSock,
-                    PRFileDesc **acceptedSock,
-                    PRNetAddr **peerAddr,
-                    void *buf,
-                    int32_t amount,
-                    PRIntervalTime timeout)
-{
-  int32_t ret = listenSock->lower->methods->acceptread(listenSock->lower, acceptedSock,
-                                                       peerAddr, buf, amount, timeout);
-=======
 static int32_t nsNetMon_AcceptRead(PRFileDesc* listenSock,
                                    PRFileDesc** acceptedSock,
                                    PRNetAddr** peerAddr, void* buf,
                                    int32_t amount, PRIntervalTime timeout) {
   int32_t ret = listenSock->lower->methods->acceptread(
       listenSock->lower, acceptedSock, peerAddr, buf, amount, timeout);
->>>>>>> upstream-releases
   if (ret > 0) {
     IOActivityMonitor::Read(listenSock, amount);
   }
@@ -412,15 +252,7 @@ IOActivityMonitor::IOActivityMonitor() : mLock("IOActivityMonitor::mLock") {
 }
 
 // static
-<<<<<<< HEAD
-void IOActivityMonitor::RequestActivities(dom::Promise *aPromise) {
-||||||| merged common ancestors
-void
-IOActivityMonitor::RequestActivities(dom::Promise* aPromise)
-{
-=======
 void IOActivityMonitor::RequestActivities(dom::Promise* aPromise) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aPromise);
   RefPtr<IOActivityMonitor> mon(gInstance);
   if (!IsActive()) {
@@ -430,15 +262,7 @@ void IOActivityMonitor::RequestActivities(dom::Promise* aPromise) {
   mon->RequestActivitiesInternal(aPromise);
 }
 
-<<<<<<< HEAD
-void IOActivityMonitor::RequestActivitiesInternal(dom::Promise *aPromise) {
-||||||| merged common ancestors
-void
-IOActivityMonitor::RequestActivitiesInternal(dom::Promise* aPromise)
-{
-=======
 void IOActivityMonitor::RequestActivitiesInternal(dom::Promise* aPromise) {
->>>>>>> upstream-releases
   nsresult result = NS_OK;
   FallibleTArray<dom::IOActivityDataDictionary> activities;
 
@@ -446,7 +270,7 @@ void IOActivityMonitor::RequestActivitiesInternal(dom::Promise* aPromise) {
     mozilla::MutexAutoLock lock(mLock);
     // Remove inactive activities
     for (auto iter = mActivities.Iter(); !iter.Done(); iter.Next()) {
-      dom::IOActivityDataDictionary *activity = &iter.Data();
+      dom::IOActivityDataDictionary* activity = &iter.Data();
       if (activity->mRx == 0 && activity->mTx == 0) {
         iter.Remove();
       } else {
@@ -467,14 +291,7 @@ void IOActivityMonitor::RequestActivitiesInternal(dom::Promise* aPromise) {
 
 // static
 NS_IMETHODIMP
-<<<<<<< HEAD
-IOActivityMonitor::GetName(nsACString &aName) {
-||||||| merged common ancestors
-IOActivityMonitor::GetName(nsACString& aName)
-{
-=======
 IOActivityMonitor::GetName(nsACString& aName) {
->>>>>>> upstream-releases
   aName.AssignLiteral("IOActivityMonitor");
   return NS_OK;
 }
@@ -530,20 +347,12 @@ nsresult IOActivityMonitor::ShutdownInternal() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::MonitorSocket(PRFileDesc *aFd) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::MonitorSocket(PRFileDesc *aFd)
-{
-=======
 nsresult IOActivityMonitor::MonitorSocket(PRFileDesc* aFd) {
->>>>>>> upstream-releases
   RefPtr<IOActivityMonitor> mon(gInstance);
   if (!IsActive()) {
     return NS_OK;
   }
-  PRFileDesc *layer;
+  PRFileDesc* layer;
   PRStatus status;
   layer = PR_CreateIOLayerStub(sNetActivityMonitorLayerIdentity,
                                sNetActivityMonitorLayerMethodsPtr);
@@ -551,16 +360,8 @@ nsresult IOActivityMonitor::MonitorSocket(PRFileDesc* aFd) {
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  ActivityMonitorSecret *secret = new ActivityMonitorSecret(aFd);
-  layer->secret = reinterpret_cast<PRFilePrivate *>(secret);
-||||||| merged common ancestors
-  ActivityMonitorSecret* secret = new ActivityMonitorSecret(aFd);
-  layer->secret = reinterpret_cast<PRFilePrivate *>(secret);
-=======
   ActivityMonitorSecret* secret = new ActivityMonitorSecret(aFd);
   layer->secret = reinterpret_cast<PRFilePrivate*>(secret);
->>>>>>> upstream-releases
   status = PR_PushIOLayer(aFd, PR_NSPR_IO_LAYER, layer);
 
   if (status == PR_FAILURE) {
@@ -571,20 +372,12 @@ nsresult IOActivityMonitor::MonitorSocket(PRFileDesc* aFd) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::MonitorFile(PRFileDesc *aFd, const char *aPath) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::MonitorFile(PRFileDesc *aFd, const char* aPath)
-{
-=======
 nsresult IOActivityMonitor::MonitorFile(PRFileDesc* aFd, const char* aPath) {
->>>>>>> upstream-releases
   RefPtr<IOActivityMonitor> mon(gInstance);
   if (!IsActive()) {
     return NS_OK;
   }
-  PRFileDesc *layer;
+  PRFileDesc* layer;
   PRStatus status;
   layer = PR_CreateIOLayerStub(sNetActivityMonitorLayerIdentity,
                                sNetActivityMonitorLayerMethodsPtr);
@@ -592,16 +385,8 @@ nsresult IOActivityMonitor::MonitorFile(PRFileDesc* aFd, const char* aPath) {
     return NS_ERROR_FAILURE;
   }
 
-<<<<<<< HEAD
-  ActivityMonitorSecret *secret = new ActivityMonitorSecret(aFd, aPath);
-  layer->secret = reinterpret_cast<PRFilePrivate *>(secret);
-||||||| merged common ancestors
-  ActivityMonitorSecret* secret = new ActivityMonitorSecret(aFd, aPath);
-  layer->secret = reinterpret_cast<PRFilePrivate *>(secret);
-=======
   ActivityMonitorSecret* secret = new ActivityMonitorSecret(aFd, aPath);
   layer->secret = reinterpret_cast<PRFilePrivate*>(secret);
->>>>>>> upstream-releases
 
   status = PR_PushIOLayer(aFd, PR_NSPR_IO_LAYER, layer);
   if (status == PR_FAILURE) {
@@ -613,17 +398,8 @@ nsresult IOActivityMonitor::MonitorFile(PRFileDesc* aFd, const char* aPath) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-bool IOActivityMonitor::IncrementActivity(const nsACString &aLocation,
-                                          uint32_t aRx, uint32_t aTx) {
-||||||| merged common ancestors
-bool
-IOActivityMonitor::IncrementActivity(const nsACString& aLocation, uint32_t aRx, uint32_t aTx)
-{
-=======
 bool IOActivityMonitor::IncrementActivity(const nsACString& aLocation,
                                           uint32_t aRx, uint32_t aTx) {
->>>>>>> upstream-releases
   mLock.AssertCurrentThreadOwns();
   if (auto entry = mActivities.Lookup(aLocation)) {
     // already registered
@@ -648,17 +424,8 @@ bool IOActivityMonitor::IncrementActivity(const nsACString& aLocation,
   return true;
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::Write(const nsACString &aLocation,
-                                  uint32_t aAmount) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::Write(const nsACString& aLocation, uint32_t aAmount)
-{
-=======
 nsresult IOActivityMonitor::Write(const nsACString& aLocation,
                                   uint32_t aAmount) {
->>>>>>> upstream-releases
   RefPtr<IOActivityMonitor> mon(gInstance);
   if (!mon) {
     return NS_ERROR_FAILURE;
@@ -666,15 +433,7 @@ nsresult IOActivityMonitor::Write(const nsACString& aLocation,
   return mon->WriteInternal(aLocation, aAmount);
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::Write(PRFileDesc *fd, uint32_t aAmount) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::Write(PRFileDesc *fd, uint32_t aAmount)
-{
-=======
 nsresult IOActivityMonitor::Write(PRFileDesc* fd, uint32_t aAmount) {
->>>>>>> upstream-releases
   RefPtr<IOActivityMonitor> mon(gInstance);
   if (!mon) {
     return NS_ERROR_FAILURE;
@@ -682,17 +441,8 @@ nsresult IOActivityMonitor::Write(PRFileDesc* fd, uint32_t aAmount) {
   return mon->Write(FileDesc2Location(fd), aAmount);
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::WriteInternal(const nsACString &aLocation,
-                                          uint32_t aAmount) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::WriteInternal(const nsACString& aLocation, uint32_t aAmount)
-{
-=======
 nsresult IOActivityMonitor::WriteInternal(const nsACString& aLocation,
                                           uint32_t aAmount) {
->>>>>>> upstream-releases
   mozilla::MutexAutoLock lock(mLock);
   if (!IncrementActivity(aLocation, aAmount, 0)) {
     return NS_ERROR_FAILURE;
@@ -700,15 +450,7 @@ nsresult IOActivityMonitor::WriteInternal(const nsACString& aLocation,
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::Read(PRFileDesc *fd, uint32_t aAmount) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::Read(PRFileDesc *fd, uint32_t aAmount)
-{
-=======
 nsresult IOActivityMonitor::Read(PRFileDesc* fd, uint32_t aAmount) {
->>>>>>> upstream-releases
   RefPtr<IOActivityMonitor> mon(gInstance);
   if (!mon) {
     return NS_ERROR_FAILURE;
@@ -716,17 +458,8 @@ nsresult IOActivityMonitor::Read(PRFileDesc* fd, uint32_t aAmount) {
   return mon->Read(FileDesc2Location(fd), aAmount);
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::Read(const nsACString &aLocation,
-                                 uint32_t aAmount) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::Read(const nsACString& aLocation, uint32_t aAmount)
-{
-=======
 nsresult IOActivityMonitor::Read(const nsACString& aLocation,
                                  uint32_t aAmount) {
->>>>>>> upstream-releases
   RefPtr<IOActivityMonitor> mon(gInstance);
   if (!mon) {
     return NS_ERROR_FAILURE;
@@ -734,17 +467,8 @@ nsresult IOActivityMonitor::Read(const nsACString& aLocation,
   return mon->ReadInternal(aLocation, aAmount);
 }
 
-<<<<<<< HEAD
-nsresult IOActivityMonitor::ReadInternal(const nsACString &aLocation,
-                                         uint32_t aAmount) {
-||||||| merged common ancestors
-nsresult
-IOActivityMonitor::ReadInternal(const nsACString& aLocation, uint32_t aAmount)
-{
-=======
 nsresult IOActivityMonitor::ReadInternal(const nsACString& aLocation,
                                          uint32_t aAmount) {
->>>>>>> upstream-releases
   mozilla::MutexAutoLock lock(mLock);
   if (!IncrementActivity(aLocation, 0, aAmount)) {
     return NS_ERROR_FAILURE;

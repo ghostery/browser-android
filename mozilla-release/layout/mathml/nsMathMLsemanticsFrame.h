@@ -25,20 +25,10 @@ class nsMathMLsemanticsFrame final : public nsMathMLSelectedFrame {
   friend nsIFrame* NS_NewMathMLsemanticsFrame(mozilla::PresShell* aPresShell,
                                               ComputedStyle* aStyle);
 
-<<<<<<< HEAD
- protected:
-  explicit nsMathMLsemanticsFrame(ComputedStyle* aStyle)
-      : nsMathMLSelectedFrame(aStyle, kClassID) {}
-||||||| merged common ancestors
-protected:
-  explicit nsMathMLsemanticsFrame(ComputedStyle* aStyle) :
-    nsMathMLSelectedFrame(aStyle, kClassID) {}
-=======
  protected:
   explicit nsMathMLsemanticsFrame(ComputedStyle* aStyle,
                                   nsPresContext* aPresContext)
       : nsMathMLSelectedFrame(aStyle, aPresContext, kClassID) {}
->>>>>>> upstream-releases
   virtual ~nsMathMLsemanticsFrame();
 
   nsIFrame* GetSelectedFrame() override;

@@ -121,14 +121,9 @@ BrowserToolboxProcess.prototype = {
     this.loader = new DevToolsLoader();
     this.loader.invisibleToDebugger = true;
     const { DebuggerServer } = this.loader.require("devtools/server/main");
-<<<<<<< HEAD
-    const { SocketListener } = this.loader.require("devtools/shared/security/socket");
-||||||| merged common ancestors
-=======
     const { SocketListener } = this.loader.require(
       "devtools/shared/security/socket"
     );
->>>>>>> upstream-releases
     this.debuggerServer = DebuggerServer;
     dumpn("Created a separate loader instance for the DebuggerServer.");
 
@@ -140,21 +135,6 @@ BrowserToolboxProcess.prototype = {
     this.debuggerServer.allowChromeProcess = true;
     dumpn("initialized and added the browser actors for the DebuggerServer.");
 
-<<<<<<< HEAD
-    const chromeDebuggingWebSocket =
-      Services.prefs.getBoolPref("devtools.debugger.chrome-debugging-websocket");
-    const socketOptions = {
-      portOrPath: -1,
-      webSocket: chromeDebuggingWebSocket,
-    };
-    const listener = new SocketListener(this.debuggerServer, socketOptions);
-||||||| merged common ancestors
-    const chromeDebuggingWebSocket =
-      Services.prefs.getBoolPref("devtools.debugger.chrome-debugging-websocket");
-    const listener = this.debuggerServer.createListener();
-    listener.portOrPath = -1;
-    listener.webSocket = chromeDebuggingWebSocket;
-=======
     const chromeDebuggingWebSocket = Services.prefs.getBoolPref(
       "devtools.debugger.chrome-debugging-websocket"
     );
@@ -163,7 +143,6 @@ BrowserToolboxProcess.prototype = {
       webSocket: chromeDebuggingWebSocket,
     };
     const listener = new SocketListener(this.debuggerServer, socketOptions);
->>>>>>> upstream-releases
     listener.open();
     this.listener = listener;
     this.port = listener.port;

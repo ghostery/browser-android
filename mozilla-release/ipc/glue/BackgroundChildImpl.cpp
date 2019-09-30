@@ -16,19 +16,11 @@
 #include "mozilla/Assertions.h"
 #include "mozilla/SchedulerGroup.h"
 #include "mozilla/dom/ClientManagerActors.h"
-<<<<<<< HEAD
-#include "mozilla/dom/PBackgroundLSDatabaseChild.h"
-#include "mozilla/dom/PBackgroundLSObserverChild.h"
-#include "mozilla/dom/PBackgroundLSRequestChild.h"
-#include "mozilla/dom/PBackgroundLSSimpleRequestChild.h"
-||||||| merged common ancestors
-=======
 #include "mozilla/dom/FileCreatorChild.h"
 #include "mozilla/dom/PBackgroundLSDatabaseChild.h"
 #include "mozilla/dom/PBackgroundLSObserverChild.h"
 #include "mozilla/dom/PBackgroundLSRequestChild.h"
 #include "mozilla/dom/PBackgroundLSSimpleRequestChild.h"
->>>>>>> upstream-releases
 #include "mozilla/dom/PBackgroundSDBConnectionChild.h"
 #include "mozilla/dom/PFileSystemRequestChild.h"
 #include "mozilla/dom/EndpointForReportChild.h"
@@ -98,17 +90,9 @@ using mozilla::dom::PServiceWorkerChild;
 using mozilla::dom::PServiceWorkerContainerChild;
 using mozilla::dom::PServiceWorkerRegistrationChild;
 using mozilla::dom::StorageDBChild;
-<<<<<<< HEAD
-using mozilla::dom::asmjscache::PAsmJSCacheEntryChild;
 using mozilla::dom::cache::PCacheChild;
 using mozilla::dom::cache::PCacheStorageChild;
 using mozilla::dom::cache::PCacheStreamControlChild;
-||||||| merged common ancestors
-=======
-using mozilla::dom::cache::PCacheChild;
-using mozilla::dom::cache::PCacheStorageChild;
-using mozilla::dom::cache::PCacheStreamControlChild;
->>>>>>> upstream-releases
 
 using mozilla::dom::WebAuthnTransactionChild;
 
@@ -205,7 +189,6 @@ bool BackgroundChildImpl::DeallocPBackgroundIDBFactoryChild(
 }
 
 BackgroundChildImpl::PBackgroundIndexedDBUtilsChild*
-<<<<<<< HEAD
 BackgroundChildImpl::AllocPBackgroundIndexedDBUtilsChild() {
   MOZ_CRASH(
       "PBackgroundIndexedDBUtilsChild actors should be manually "
@@ -269,90 +252,10 @@ BackgroundChildImpl::PBackgroundLSRequestChild*
 BackgroundChildImpl::AllocPBackgroundLSRequestChild(
     const LSRequestParams& aParams) {
   MOZ_CRASH("PBackgroundLSRequestChild actor should be manually constructed!");
-||||||| merged common ancestors
-BackgroundChildImpl::AllocPBackgroundIndexedDBUtilsChild()
-{
-  MOZ_CRASH("PBackgroundIndexedDBUtilsChild actors should be manually "
-            "constructed!");
-=======
-BackgroundChildImpl::AllocPBackgroundIndexedDBUtilsChild() {
-  MOZ_CRASH(
-      "PBackgroundIndexedDBUtilsChild actors should be manually "
-      "constructed!");
->>>>>>> upstream-releases
-}
-
-<<<<<<< HEAD
-bool BackgroundChildImpl::DeallocPBackgroundLSRequestChild(
-    PBackgroundLSRequestChild* aActor) {
-||||||| merged common ancestors
-bool
-BackgroundChildImpl::DeallocPBackgroundIndexedDBUtilsChild(
-                                         PBackgroundIndexedDBUtilsChild* aActor)
-{
-=======
-bool BackgroundChildImpl::DeallocPBackgroundIndexedDBUtilsChild(
-    PBackgroundIndexedDBUtilsChild* aActor) {
-  MOZ_ASSERT(aActor);
-
-  delete aActor;
-  return true;
-}
-
-BackgroundChildImpl::PBackgroundSDBConnectionChild*
-BackgroundChildImpl::AllocPBackgroundSDBConnectionChild(
-    const PrincipalInfo& aPrincipalInfo) {
-  MOZ_CRASH(
-      "PBackgroundSDBConnectionChild actor should be manually "
-      "constructed!");
-}
-
-bool BackgroundChildImpl::DeallocPBackgroundSDBConnectionChild(
-    PBackgroundSDBConnectionChild* aActor) {
-  MOZ_ASSERT(aActor);
-
-  delete aActor;
-  return true;
-}
-
-BackgroundChildImpl::PBackgroundLSDatabaseChild*
-BackgroundChildImpl::AllocPBackgroundLSDatabaseChild(
-    const PrincipalInfo& aPrincipalInfo, const uint32_t& aPrivateBrowsingId,
-    const uint64_t& aDatastoreId) {
-  MOZ_CRASH("PBackgroundLSDatabaseChild actor should be manually constructed!");
-}
-
-bool BackgroundChildImpl::DeallocPBackgroundLSDatabaseChild(
-    PBackgroundLSDatabaseChild* aActor) {
-  MOZ_ASSERT(aActor);
-
-  delete aActor;
-  return true;
-}
-
-BackgroundChildImpl::PBackgroundLSObserverChild*
-BackgroundChildImpl::AllocPBackgroundLSObserverChild(
-    const uint64_t& aObserverId) {
-  MOZ_CRASH("PBackgroundLSObserverChild actor should be manually constructed!");
-}
-
-bool BackgroundChildImpl::DeallocPBackgroundLSObserverChild(
-    PBackgroundLSObserverChild* aActor) {
-  MOZ_ASSERT(aActor);
-
-  delete aActor;
-  return true;
-}
-
-BackgroundChildImpl::PBackgroundLSRequestChild*
-BackgroundChildImpl::AllocPBackgroundLSRequestChild(
-    const LSRequestParams& aParams) {
-  MOZ_CRASH("PBackgroundLSRequestChild actor should be manually constructed!");
 }
 
 bool BackgroundChildImpl::DeallocPBackgroundLSRequestChild(
     PBackgroundLSRequestChild* aActor) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aActor);
 
   delete aActor;
@@ -407,92 +310,17 @@ bool BackgroundChildImpl::DeallocPBackgroundStorageChild(
   return true;
 }
 
-<<<<<<< HEAD
-PPendingIPCBlobChild* BackgroundChildImpl::AllocPPendingIPCBlobChild(
-    const IPCBlob& aBlob) {
-  return new mozilla::dom::PendingIPCBlobChild(aBlob);
-||||||| merged common ancestors
-PPendingIPCBlobChild*
-BackgroundChildImpl::AllocPPendingIPCBlobChild(const IPCBlob& aBlob)
-{
-  return new mozilla::dom::PendingIPCBlobChild(aBlob);
-=======
 dom::PPendingIPCBlobChild* BackgroundChildImpl::AllocPPendingIPCBlobChild(
     const IPCBlob& aBlob) {
   return new dom::PendingIPCBlobChild(aBlob);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool BackgroundChildImpl::DeallocPPendingIPCBlobChild(
-    PPendingIPCBlobChild* aActor) {
-||||||| merged common ancestors
-bool
-BackgroundChildImpl::DeallocPPendingIPCBlobChild(PPendingIPCBlobChild* aActor)
-{
-=======
 bool BackgroundChildImpl::DeallocPPendingIPCBlobChild(
     dom::PPendingIPCBlobChild* aActor) {
->>>>>>> upstream-releases
   delete aActor;
   return true;
 }
 
-<<<<<<< HEAD
-dom::PRemoteWorkerChild* BackgroundChildImpl::AllocPRemoteWorkerChild(
-    const RemoteWorkerData& aData) {
-  RefPtr<dom::RemoteWorkerChild> agent = new dom::RemoteWorkerChild();
-  return agent.forget().take();
-}
-
-IPCResult BackgroundChildImpl::RecvPRemoteWorkerConstructor(
-    PRemoteWorkerChild* aActor, const RemoteWorkerData& aData) {
-  dom::RemoteWorkerChild* actor = static_cast<dom::RemoteWorkerChild*>(aActor);
-  actor->ExecWorker(aData);
-  return IPC_OK();
-}
-
-bool BackgroundChildImpl::DeallocPRemoteWorkerChild(
-    dom::PRemoteWorkerChild* aActor) {
-  RefPtr<dom::RemoteWorkerChild> actor =
-      dont_AddRef(static_cast<dom::RemoteWorkerChild*>(aActor));
-  return true;
-}
-
-dom::PRemoteWorkerServiceChild*
-BackgroundChildImpl::AllocPRemoteWorkerServiceChild() {
-  RefPtr<dom::RemoteWorkerServiceChild> agent =
-      new dom::RemoteWorkerServiceChild();
-  return agent.forget().take();
-}
-
-bool BackgroundChildImpl::DeallocPRemoteWorkerServiceChild(
-    dom::PRemoteWorkerServiceChild* aActor) {
-  RefPtr<dom::RemoteWorkerServiceChild> actor =
-      dont_AddRef(static_cast<dom::RemoteWorkerServiceChild*>(aActor));
-  return true;
-}
-
-dom::PSharedWorkerChild* BackgroundChildImpl::AllocPSharedWorkerChild(
-    const dom::RemoteWorkerData& aData, const uint64_t& aWindowID,
-    const dom::MessagePortIdentifier& aPortIdentifier) {
-  RefPtr<dom::SharedWorkerChild> agent = new dom::SharedWorkerChild();
-  return agent.forget().take();
-}
-
-bool BackgroundChildImpl::DeallocPSharedWorkerChild(
-    dom::PSharedWorkerChild* aActor) {
-  RefPtr<dom::SharedWorkerChild> actor =
-      dont_AddRef(static_cast<dom::SharedWorkerChild*>(aActor));
-  return true;
-}
-
-PTemporaryIPCBlobChild* BackgroundChildImpl::AllocPTemporaryIPCBlobChild() {
-||||||| merged common ancestors
-PTemporaryIPCBlobChild*
-BackgroundChildImpl::AllocPTemporaryIPCBlobChild()
-{
-=======
 dom::PRemoteWorkerChild* BackgroundChildImpl::AllocPRemoteWorkerChild(
     const RemoteWorkerData& aData) {
   RefPtr<dom::RemoteWorkerChild> agent = new dom::RemoteWorkerChild();
@@ -543,40 +371,17 @@ bool BackgroundChildImpl::DeallocPSharedWorkerChild(
 
 dom::PTemporaryIPCBlobChild*
 BackgroundChildImpl::AllocPTemporaryIPCBlobChild() {
->>>>>>> upstream-releases
   MOZ_CRASH("This is not supposed to be called.");
   return nullptr;
 }
 
-<<<<<<< HEAD
-bool BackgroundChildImpl::DeallocPTemporaryIPCBlobChild(
-    PTemporaryIPCBlobChild* aActor) {
-  RefPtr<mozilla::dom::TemporaryIPCBlobChild> actor =
-      dont_AddRef(static_cast<mozilla::dom::TemporaryIPCBlobChild*>(aActor));
-||||||| merged common ancestors
-bool
-BackgroundChildImpl::DeallocPTemporaryIPCBlobChild(PTemporaryIPCBlobChild* aActor)
-{
-  RefPtr<mozilla::dom::TemporaryIPCBlobChild> actor =
-    dont_AddRef(static_cast<mozilla::dom::TemporaryIPCBlobChild*>(aActor));
-=======
 bool BackgroundChildImpl::DeallocPTemporaryIPCBlobChild(
     dom::PTemporaryIPCBlobChild* aActor) {
   RefPtr<dom::TemporaryIPCBlobChild> actor =
       dont_AddRef(static_cast<dom::TemporaryIPCBlobChild*>(aActor));
->>>>>>> upstream-releases
   return true;
 }
 
-<<<<<<< HEAD
-PIPCBlobInputStreamChild* BackgroundChildImpl::AllocPIPCBlobInputStreamChild(
-    const nsID& aID, const uint64_t& aSize) {
-||||||| merged common ancestors
-PIPCBlobInputStreamChild*
-BackgroundChildImpl::AllocPIPCBlobInputStreamChild(const nsID& aID,
-                                                   const uint64_t& aSize)
-{
-=======
 dom::PFileCreatorChild* BackgroundChildImpl::AllocPFileCreatorChild(
     const nsString& aFullPath, const nsString& aType, const nsString& aName,
     const Maybe<int64_t>& aLastModified, const bool& aExistenceCheck,
@@ -592,40 +397,18 @@ bool BackgroundChildImpl::DeallocPFileCreatorChild(PFileCreatorChild* aActor) {
 dom::PIPCBlobInputStreamChild*
 BackgroundChildImpl::AllocPIPCBlobInputStreamChild(const nsID& aID,
                                                    const uint64_t& aSize) {
->>>>>>> upstream-releases
   // IPCBlobInputStreamChild is refcounted. Here it's created and in
   // DeallocPIPCBlobInputStreamChild is released.
 
-<<<<<<< HEAD
-  RefPtr<mozilla::dom::IPCBlobInputStreamChild> actor =
-      new mozilla::dom::IPCBlobInputStreamChild(aID, aSize);
-||||||| merged common ancestors
-  RefPtr<mozilla::dom::IPCBlobInputStreamChild> actor =
-    new mozilla::dom::IPCBlobInputStreamChild(aID, aSize);
-=======
   RefPtr<dom::IPCBlobInputStreamChild> actor =
       new dom::IPCBlobInputStreamChild(aID, aSize);
->>>>>>> upstream-releases
   return actor.forget().take();
 }
 
-<<<<<<< HEAD
-bool BackgroundChildImpl::DeallocPIPCBlobInputStreamChild(
-    PIPCBlobInputStreamChild* aActor) {
-  RefPtr<mozilla::dom::IPCBlobInputStreamChild> actor =
-      dont_AddRef(static_cast<mozilla::dom::IPCBlobInputStreamChild*>(aActor));
-||||||| merged common ancestors
-bool
-BackgroundChildImpl::DeallocPIPCBlobInputStreamChild(PIPCBlobInputStreamChild* aActor)
-{
-  RefPtr<mozilla::dom::IPCBlobInputStreamChild> actor =
-    dont_AddRef(static_cast<mozilla::dom::IPCBlobInputStreamChild*>(aActor));
-=======
 bool BackgroundChildImpl::DeallocPIPCBlobInputStreamChild(
     dom::PIPCBlobInputStreamChild* aActor) {
   RefPtr<dom::IPCBlobInputStreamChild> actor =
       dont_AddRef(static_cast<dom::IPCBlobInputStreamChild*>(aActor));
->>>>>>> upstream-releases
   return true;
 }
 
@@ -658,18 +441,8 @@ bool BackgroundChildImpl::DeallocPVsyncChild(PVsyncChild* aActor) {
   return true;
 }
 
-<<<<<<< HEAD
-PUDPSocketChild* BackgroundChildImpl::AllocPUDPSocketChild(
-    const OptionalPrincipalInfo& aPrincipalInfo, const nsCString& aFilter) {
-||||||| merged common ancestors
-PUDPSocketChild*
-BackgroundChildImpl::AllocPUDPSocketChild(const OptionalPrincipalInfo& aPrincipalInfo,
-                                          const nsCString& aFilter)
-{
-=======
 PUDPSocketChild* BackgroundChildImpl::AllocPUDPSocketChild(
     const Maybe<PrincipalInfo>& aPrincipalInfo, const nsCString& aFilter) {
->>>>>>> upstream-releases
   MOZ_CRASH("AllocPUDPSocket should not be called");
   return nullptr;
 }
@@ -813,48 +586,7 @@ bool BackgroundChildImpl::DeallocPParentToChildStreamChild(
   return true;
 }
 
-<<<<<<< HEAD
-PAsmJSCacheEntryChild* BackgroundChildImpl::AllocPAsmJSCacheEntryChild(
-    const dom::asmjscache::OpenMode& aOpenMode,
-    const dom::asmjscache::WriteParams& aWriteParams,
-    const PrincipalInfo& aPrincipalInfo) {
-  MOZ_CRASH("PAsmJSCacheEntryChild actors should be manually constructed!");
-}
-
-bool BackgroundChildImpl::DeallocPAsmJSCacheEntryChild(
-    PAsmJSCacheEntryChild* aActor) {
-  MOZ_ASSERT(aActor);
-
-  dom::asmjscache::DeallocEntryChild(aActor);
-  return true;
-}
-
 BackgroundChildImpl::PQuotaChild* BackgroundChildImpl::AllocPQuotaChild() {
-||||||| merged common ancestors
-PAsmJSCacheEntryChild*
-BackgroundChildImpl::AllocPAsmJSCacheEntryChild(
-                               const dom::asmjscache::OpenMode& aOpenMode,
-                               const dom::asmjscache::WriteParams& aWriteParams,
-                               const PrincipalInfo& aPrincipalInfo)
-{
-  MOZ_CRASH("PAsmJSCacheEntryChild actors should be manually constructed!");
-}
-
-bool
-BackgroundChildImpl::DeallocPAsmJSCacheEntryChild(PAsmJSCacheEntryChild* aActor)
-{
-  MOZ_ASSERT(aActor);
-
-  dom::asmjscache::DeallocEntryChild(aActor);
-  return true;
-}
-
-BackgroundChildImpl::PQuotaChild*
-BackgroundChildImpl::AllocPQuotaChild()
-{
-=======
-BackgroundChildImpl::PQuotaChild* BackgroundChildImpl::AllocPQuotaChild() {
->>>>>>> upstream-releases
   MOZ_CRASH("PQuotaChild actor should be manually constructed!");
 }
 
@@ -1023,50 +755,6 @@ bool BackgroundChildImpl::DeallocPServiceWorkerRegistrationChild(
   return dom::DeallocServiceWorkerRegistrationChild(aActor);
 }
 
-<<<<<<< HEAD
-bool BackgroundChildImpl::GetMessageSchedulerGroups(
-    const Message& aMsg, SchedulerGroupSet& aGroups) {
-  if (aMsg.type() == layout::PVsync::MessageType::Msg_Notify__ID) {
-    MOZ_ASSERT(NS_IsMainThread());
-    aGroups.Clear();
-    if (dom::TabChild::HasVisibleTabs()) {
-      for (auto iter = dom::TabChild::GetVisibleTabs().ConstIter();
-           !iter.Done(); iter.Next()) {
-        aGroups.Put(iter.Get()->GetKey()->TabGroup());
-      }
-    }
-    return true;
-  }
-||||||| merged common ancestors
-bool
-BackgroundChildImpl::GetMessageSchedulerGroups(const Message& aMsg, SchedulerGroupSet& aGroups)
-{
-  if (aMsg.type() == layout::PVsync::MessageType::Msg_Notify__ID) {
-    MOZ_ASSERT(NS_IsMainThread());
-    aGroups.Clear();
-    if (dom::TabChild::HasVisibleTabs()) {
-      for (auto iter = dom::TabChild::GetVisibleTabs().ConstIter();
-           !iter.Done(); iter.Next()) {
-        aGroups.Put(iter.Get()->GetKey()->TabGroup());
-      }
-    }
-    return true;
-  }
-=======
-dom::PEndpointForReportChild* BackgroundChildImpl::AllocPEndpointForReportChild(
-    const nsString& aGroupName, const PrincipalInfo& aPrincipalInfo) {
-  return new dom::EndpointForReportChild();
-}
->>>>>>> upstream-releases
-
-bool BackgroundChildImpl::DeallocPEndpointForReportChild(
-    PEndpointForReportChild* aActor) {
-  MOZ_ASSERT(aActor);
-  delete static_cast<dom::EndpointForReportChild*>(aActor);
-  return true;
-}
-
-<<<<<<< HEAD
 dom::PEndpointForReportChild* BackgroundChildImpl::AllocPEndpointForReportChild(
     const nsString& aGroupName, const PrincipalInfo& aPrincipalInfo) {
   return new dom::EndpointForReportChild();
@@ -1081,13 +769,6 @@ bool BackgroundChildImpl::DeallocPEndpointForReportChild(
 
 }  // namespace ipc
 }  // namespace mozilla
-||||||| merged common ancestors
-} // namespace ipc
-} // namespace mozilla
-=======
-}  // namespace ipc
-}  // namespace mozilla
->>>>>>> upstream-releases
 
 mozilla::ipc::IPCResult TestChild::Recv__delete__(const nsCString& aTestArg) {
   MOZ_RELEASE_ASSERT(aTestArg == mTestArg,

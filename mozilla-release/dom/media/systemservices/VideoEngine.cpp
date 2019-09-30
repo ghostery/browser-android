@@ -95,24 +95,8 @@ void VideoEngine::CreateVideoCapture(int32_t& id,
                                  id, deviceUniqueIdUTF8, mCaptureDevInfo.type));
 #  endif
 #else
-<<<<<<< HEAD
-    entry = CaptureEntry(id, webrtc::DesktopCaptureImpl::Create(
-                                 id, deviceUniqueIdUTF8, mCaptureDevInfo.type));
-#endif
-#else
     MOZ_ASSERT("CreateVideoCapture NO DESKTOP CAPTURE IMPL ON ANDROID" ==
                nullptr);
-||||||| merged common ancestors
-    entry = CaptureEntry(
-	      id,
-	      webrtc::DesktopCaptureImpl::Create(id, deviceUniqueIdUTF8, mCaptureDevInfo.type));
-#endif
-#else
-    MOZ_ASSERT("CreateVideoCapture NO DESKTOP CAPTURE IMPL ON ANDROID" == nullptr);
-=======
-    MOZ_ASSERT("CreateVideoCapture NO DESKTOP CAPTURE IMPL ON ANDROID" ==
-               nullptr);
->>>>>>> upstream-releases
 #endif
   }
   mCaps.emplace(id, std::move(entry));

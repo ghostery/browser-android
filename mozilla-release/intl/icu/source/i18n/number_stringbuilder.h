@@ -108,16 +108,10 @@ class U_I18N_API NumberStringBuilder : public UMemory {
 
     void getAllFieldPositions(FieldPositionIteratorHandler& fpih, UErrorCode& status) const;
 
-<<<<<<< HEAD
-    bool containsField(Field field) const;
-
-||||||| merged common ancestors
-=======
     bool nextPosition(ConstrainedFieldPosition& cfpos, Field numericField, UErrorCode& status) const;
 
     bool containsField(Field field) const;
 
->>>>>>> upstream-releases
   private:
     bool fUsingHeap = false;
     ValueOrHeapArray<char16_t> fChars;

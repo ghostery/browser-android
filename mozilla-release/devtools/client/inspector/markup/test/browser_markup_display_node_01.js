@@ -33,8 +33,6 @@ const TEST_URI = `
 add_task(async function() {
   info("Enable subgrid in order to see the subgrid display type.");
   await pushPref("layout.css.grid-template-subgrid-value.enabled", true);
-  info("Enable the flexbox highlighter to get the interactive flex display badge.");
-  await pushPref("devtools.inspector.flexboxHighlighter.enabled", true);
 
   const { inspector } = await openInspectorForURL(
     "data:text/html;charset=utf-8," + encodeURIComponent(TEST_URI)
@@ -44,14 +42,8 @@ add_task(async function() {
   await selectNode("#grid", inspector);
   const gridContainer = await getContainerForSelector("#grid", inspector);
   const gridDisplayNode = gridContainer.elt.querySelector(
-<<<<<<< HEAD
-    ".inspector-badge.interactive[data-display]");
-||||||| merged common ancestors
-    ".markup-badge[data-display]");
-=======
     ".inspector-badge.interactive[data-display]"
   );
->>>>>>> upstream-releases
   ok(gridDisplayNode, "#grid display node is shown.");
   is(
     gridDisplayNode.textContent,
@@ -63,14 +55,8 @@ add_task(async function() {
   await selectNode("#subgrid", inspector);
   const subgridContainer = await getContainerForSelector("#subgrid", inspector);
   const subgridDisplayNode = subgridContainer.elt.querySelector(
-<<<<<<< HEAD
-    ".inspector-badge[data-display]");
-||||||| merged common ancestors
-    ".markup-badge[data-display]");
-=======
     ".inspector-badge[data-display]"
   );
->>>>>>> upstream-releases
   ok(subgridDisplayNode, "#subgrid display node is shown");
   is(
     subgridDisplayNode.textContent,
@@ -82,14 +68,8 @@ add_task(async function() {
   await selectNode("#flex", inspector);
   const flexContainer = await getContainerForSelector("#flex", inspector);
   const flexDisplayNode = flexContainer.elt.querySelector(
-<<<<<<< HEAD
-    ".inspector-badge.interactive[data-display]");
-||||||| merged common ancestors
-    ".markup-badge[data-display]");
-=======
     ".inspector-badge.interactive[data-display]"
   );
->>>>>>> upstream-releases
   ok(flexDisplayNode, "#flex display node is shown.");
   is(
     flexDisplayNode.textContent,
@@ -101,27 +81,15 @@ add_task(async function() {
   await selectNode("#block", inspector);
   const blockContainer = await getContainerForSelector("#block", inspector);
   const blockDisplayNode = blockContainer.elt.querySelector(
-<<<<<<< HEAD
-    ".inspector-badge.interactive[data-display]");
-||||||| merged common ancestors
-    ".markup-badge[data-display]");
-=======
     ".inspector-badge.interactive[data-display]"
   );
->>>>>>> upstream-releases
   ok(!blockDisplayNode, "#block display node is hidden.");
 
   info("Check the display node is hidden for span.");
   await selectNode("span", inspector);
   const spanContainer = await getContainerForSelector("span", inspector);
   const spanDisplayNode = spanContainer.elt.querySelector(
-<<<<<<< HEAD
-    ".inspector-badge.interactive[data-display]");
-||||||| merged common ancestors
-    ".markup-badge[data-display]");
-=======
     ".inspector-badge.interactive[data-display]"
   );
->>>>>>> upstream-releases
   ok(!spanDisplayNode, "span display node is hidden.");
 });

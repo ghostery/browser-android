@@ -2061,39 +2061,12 @@ function setHasData(aSectionID, aHasData) {
  */
 function setupServerOwnerBranding() {
   let serverOwner = Preferences.get(PREF_TELEMETRY_SERVER_OWNER, "Mozilla");
-<<<<<<< HEAD
-  let brandName = brandBundle.GetStringFromName("brandFullName");
-  let subtitleText = bundle.formatStringFromName(
-    "pageSubtitle", [serverOwner, brandName], 2);
-
-  let subtitleElement = document.getElementById("page-subtitle");
-  subtitleElement.appendChild(document.createTextNode(subtitleText));
-
-  let links = [
-    "https://docs.telemetry.mozilla.org/",
-    "https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/telemetry/index.html",
-    "https://telemetry.mozilla.org/",
-    "https://telemetry.mozilla.org/probe-dictionary/",
-||||||| merged common ancestors
-  let brandName = brandBundle.GetStringFromName("brandFullName");
-  let subtitleText = bundle.formatStringFromName(
-    "pageSubtitle", [serverOwner, brandName], 2);
-
-  let subtitleElement = document.getElementById("page-subtitle");
-  subtitleElement.appendChild(document.createTextNode(subtitleText));
-
-  let links = [
-    "https://docs.telemetry.mozilla.org/",
-    "https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/telemetry/index.html",
-    "https://telemetry.mozilla.org/",
-=======
   const elements = [
     [document.getElementById("page-subtitle"), "about-telemetry-page-subtitle"],
     [
       document.getElementById("origins-explanation"),
       "about-telemetry-origins-explanation",
     ],
->>>>>>> upstream-releases
   ];
   for (const [elt, l10nName] of elements) {
     document.l10n.setAttributes(elt, l10nName, {

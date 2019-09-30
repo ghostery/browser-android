@@ -236,11 +236,6 @@ class nsTextFragment final {
 
   size_t SizeOfExcludingThis(mozilla::MallocSizeOf aMallocSizeOf) const;
 
-<<<<<<< HEAD
- private:
-||||||| merged common ancestors
-private:
-=======
   /**
    * Check whether the text in this fragment is the same as the text in the
    * other fragment.
@@ -248,7 +243,6 @@ private:
   MOZ_MUST_USE bool TextEquals(const nsTextFragment& aOther) const;
 
  private:
->>>>>>> upstream-releases
   void ReleaseText();
 
   /**

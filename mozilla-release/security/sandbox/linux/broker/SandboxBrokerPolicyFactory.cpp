@@ -34,21 +34,11 @@
 #endif
 
 #ifdef MOZ_WIDGET_GTK
-<<<<<<< HEAD
-#include <glib.h>
-#ifdef MOZ_WAYLAND
-#include <gdk/gdk.h>
-#include <gdk/gdkx.h>
-#endif
-||||||| merged common ancestors
-#include <glib.h>
-=======
 #  include <glib.h>
 #  ifdef MOZ_WAYLAND
 #    include <gdk/gdk.h>
 #    include <gdk/gdkx.h>
 #  endif
->>>>>>> upstream-releases
 #endif
 
 #include <dirent.h>
@@ -67,15 +57,7 @@ static const int wronly = SandboxBroker::MAY_WRITE;
 static const int rdwr = rdonly | wronly;
 static const int rdwrcr = rdwr | SandboxBroker::MAY_CREATE;
 static const int access = SandboxBroker::MAY_ACCESS;
-<<<<<<< HEAD
 }  // namespace
-#endif
-||||||| merged common ancestors
-}
-#endif
-=======
-}  // namespace
->>>>>>> upstream-releases
 
 static void AddMesaSysfsPaths(SandboxBroker::Policy* aPolicy) {
   // Bug 1384178: Mesa driver loader
@@ -123,14 +105,6 @@ static void AddMesaSysfsPaths(SandboxBroker::Policy* aPolicy) {
   }
 }
 
-<<<<<<< HEAD
-static void AddPathsFromFile(SandboxBroker::Policy* aPolicy,
-                             nsACString& aPath) {
-||||||| merged common ancestors
-static void
-AddPathsFromFile(SandboxBroker::Policy* aPolicy, nsACString& aPath)
-{
-=======
 static void JoinPathIfRelative(const nsACString& aCwd, const nsACString& inPath,
                                nsACString& outPath) {
   if (inPath.Length() < 1) {
@@ -156,7 +130,6 @@ static void AddPathsFromFile(SandboxBroker::Policy* aPolicy,
 static void AddPathsFromFileInternal(SandboxBroker::Policy* aPolicy,
                                      const nsACString& aCwd,
                                      const nsACString& aPath) {
->>>>>>> upstream-releases
   nsresult rv;
   nsCOMPtr<nsIFile> ldconfig(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID, &rv));
   if (NS_FAILED(rv)) {
@@ -167,16 +140,8 @@ static void AddPathsFromFileInternal(SandboxBroker::Policy* aPolicy,
     return;
   }
   nsCOMPtr<nsIFileInputStream> fileStream(
-<<<<<<< HEAD
-      do_CreateInstance(NS_LOCALFILEINPUTSTREAM_CONTRACTID, &rv));
-  if (NS_FAILED(rv)) {
-||||||| merged common ancestors
-    do_CreateInstance(NS_LOCALFILEINPUTSTREAM_CONTRACTID, &rv));
-  if (NS_FAILED(rv)) {
-=======
       do_CreateInstance(NS_LOCALFILEINPUTSTREAM_CONTRACTID, &rv));
   if (NS_WARN_IF(NS_FAILED(rv))) {
->>>>>>> upstream-releases
     return;
   }
   rv = fileStream->Init(ldconfig, -1, -1, 0);
@@ -221,15 +186,8 @@ static void AddPathsFromFileInternal(SandboxBroker::Policy* aPolicy,
         nsAutoCString includeFile;
         JoinPathIfRelative(aCwd, includeGlob, includeFile);
         glob_t globbuf;
-<<<<<<< HEAD
-        if (!glob(PromiseFlatCString(includeGlob).get(), GLOB_NOSORT, nullptr,
-                  &globbuf)) {
-||||||| merged common ancestors
-        if (!glob(PromiseFlatCString(includeGlob).get(), GLOB_NOSORT, nullptr, &globbuf)) {
-=======
         if (!glob(PromiseFlatCString(includeFile).get(), GLOB_NOSORT, nullptr,
                   &globbuf)) {
->>>>>>> upstream-releases
           for (size_t fileIdx = 0; fileIdx < globbuf.gl_pathc; fileIdx++) {
             nsAutoCString filePath(globbuf.gl_pathv[fileIdx]);
             AddPathsFromFile(aPolicy, filePath);
@@ -252,17 +210,6 @@ static void AddPathsFromFileInternal(SandboxBroker::Policy* aPolicy,
   } while (more);
 }
 
-<<<<<<< HEAD
-static void AddLdconfigPaths(SandboxBroker::Policy* aPolicy) {
-  nsAutoCString ldconfigPath(NS_LITERAL_CSTRING("/etc/ld.so.conf"));
-  AddPathsFromFile(aPolicy, ldconfigPath);
-||||||| merged common ancestors
-static void
-AddLdconfigPaths(SandboxBroker::Policy* aPolicy)
-{
-  nsAutoCString ldconfigPath(NS_LITERAL_CSTRING("/etc/ld.so.conf"));
-  AddPathsFromFile(aPolicy, ldconfigPath);
-=======
 static void AddPathsFromFile(SandboxBroker::Policy* aPolicy,
                              const nsACString& aPath) {
   // Find the new base path where that file sits in.
@@ -297,15 +244,8 @@ static void AddPathsFromFile(SandboxBroker::Policy* aPolicy,
                       PromiseFlatCString(parentPath).get());
   }
   AddPathsFromFileInternal(aPolicy, parentPath, aPath);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-SandboxBrokerPolicyFactory::SandboxBrokerPolicyFactory() {
-||||||| merged common ancestors
-SandboxBrokerPolicyFactory::SandboxBrokerPolicyFactory()
-{
-=======
 static void AddLdconfigPaths(SandboxBroker::Policy* aPolicy) {
   nsAutoCString ldConfig(NS_LITERAL_CSTRING("/etc/ld.so.conf"));
   AddPathsFromFile(aPolicy, ldConfig);
@@ -319,7 +259,6 @@ static void AddSharedMemoryPaths(SandboxBroker::Policy* aPolicy, pid_t aPid) {
 }
 
 SandboxBrokerPolicyFactory::SandboxBrokerPolicyFactory() {
->>>>>>> upstream-releases
   // Policy entries that are the same in every process go here, and
   // are cached over the lifetime of the factory.
   SandboxBroker::Policy* policy = new SandboxBroker::Policy;
@@ -517,30 +456,14 @@ SandboxBrokerPolicyFactory::SandboxBrokerPolicyFactory() {
 
 #if defined(MOZ_WIDGET_GTK)
   // Allow local X11 connections, for Primus and VirtualGL to contact
-<<<<<<< HEAD
-  // the secondary X server. No exception for Wayland.
-#if defined(MOZ_WAYLAND)
-  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
-    policy->AddPrefix(SandboxBroker::MAY_CONNECT, "/tmp/.X11-unix/X");
-  }
-#else
-||||||| merged common ancestors
-  // the secondary X server.
-=======
   // the secondary X server. No exception for Wayland.
 #  if defined(MOZ_WAYLAND)
   if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
     policy->AddPrefix(SandboxBroker::MAY_CONNECT, "/tmp/.X11-unix/X");
   }
 #  else
->>>>>>> upstream-releases
   policy->AddPrefix(SandboxBroker::MAY_CONNECT, "/tmp/.X11-unix/X");
-<<<<<<< HEAD
-#endif
-||||||| merged common ancestors
-=======
 #  endif
->>>>>>> upstream-releases
   if (const auto xauth = PR_GetEnv("XAUTHORITY")) {
     policy->AddPath(rdonly, xauth);
   }
@@ -549,19 +472,8 @@ SandboxBrokerPolicyFactory::SandboxBrokerPolicyFactory() {
   mCommonContentPolicy.reset(policy);
 }
 
-<<<<<<< HEAD
-#ifdef MOZ_CONTENT_SANDBOX
 UniquePtr<SandboxBroker::Policy> SandboxBrokerPolicyFactory::GetContentPolicy(
     int aPid, bool aFileProcess) {
-||||||| merged common ancestors
-#ifdef MOZ_CONTENT_SANDBOX
-UniquePtr<SandboxBroker::Policy>
-SandboxBrokerPolicyFactory::GetContentPolicy(int aPid, bool aFileProcess)
-{
-=======
-UniquePtr<SandboxBroker::Policy> SandboxBrokerPolicyFactory::GetContentPolicy(
-    int aPid, bool aFileProcess) {
->>>>>>> upstream-releases
   // Policy entries that vary per-process (currently the only reason
   // that can happen is because they contain the pid) are added here,
   // as well as entries that depend on preferences or paths not available
@@ -728,13 +640,6 @@ void SandboxBrokerPolicyFactory::AddDynamicPathList(
   }
 }
 
-<<<<<<< HEAD
-#endif  // MOZ_CONTENT_SANDBOX
-}  // namespace mozilla
-||||||| merged common ancestors
-#endif // MOZ_CONTENT_SANDBOX
-} // namespace mozilla
-=======
 /* static */ UniquePtr<SandboxBroker::Policy>
 SandboxBrokerPolicyFactory::GetUtilityPolicy(int aPid) {
   auto policy = MakeUnique<SandboxBroker::Policy>();
@@ -748,4 +653,3 @@ SandboxBrokerPolicyFactory::GetUtilityPolicy(int aPid) {
 }
 
 }  // namespace mozilla
->>>>>>> upstream-releases

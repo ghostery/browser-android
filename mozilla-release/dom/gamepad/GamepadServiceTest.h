@@ -33,26 +33,10 @@ class GamepadServiceTest final : public DOMEventTargetHelper {
   GamepadHand LeftHand() const { return GamepadHand::Left; }
   GamepadHand RightHand() const { return GamepadHand::Right; }
 
-<<<<<<< HEAD
-  already_AddRefed<Promise> AddGamepad(const nsAString& aID,
-                                       GamepadMappingType aMapping,
-                                       GamepadHand aHand, uint32_t aNumButtons,
-                                       uint32_t aNumAxes, uint32_t aNumHaptics,
-                                       ErrorResult& aRv);
-||||||| merged common ancestors
-  already_AddRefed<Promise> AddGamepad(const nsAString& aID,
-                                       GamepadMappingType aMapping,
-                                       GamepadHand aHand,
-                                       uint32_t aNumButtons,
-                                       uint32_t aNumAxes,
-                                       uint32_t aNumHaptics,
-                                       ErrorResult& aRv);
-=======
   already_AddRefed<Promise> AddGamepad(
       const nsAString& aID, GamepadMappingType aMapping, GamepadHand aHand,
       uint32_t aNumButtons, uint32_t aNumAxes, uint32_t aNumHaptics,
       uint32_t aNumLightIndicator, uint32_t aNumTouchEvents, ErrorResult& aRv);
->>>>>>> upstream-releases
   void RemoveGamepad(uint32_t aIndex);
   void NewButtonEvent(uint32_t aIndex, uint32_t aButton, bool aPressed,
                       bool aTouched);

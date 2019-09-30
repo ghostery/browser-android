@@ -117,23 +117,8 @@ function testService() {
 
 SpecialPowers.pushPrefEnv(
   {"set": [["urlclassifier.malwareTable", "test-malware-simple,test-unwanted-simple,test-harmful-simple"],
-<<<<<<< HEAD
-           ["urlclassifier.phishTable", "test-phish-simple"],
-           ["urlclassifier.downloadBlockTable", "test-block-simple"],
-           ["urlclassifier.trackingTable", "test-track-simple"],
-           ["browser.safebrowsing.debug", true],
-           ["privacy.trackingprotection.annotate_channels", true]]},
-||||||| merged common ancestors
-           ["urlclassifier.phishTable", "test-phish-simple"],
-           ["urlclassifier.downloadBlockTable", "test-block-simple"],
-           ["urlclassifier.trackingTable", "test-track-simple"],
-           ["browser.safebrowsing.debug", true],
-           ["browser.fastblock.enabled", false],
-           ["privacy.trackingprotection.annotate_channels", true]]},
-=======
            ["urlclassifier.blockedTable", "test-block-simple"],
            ["browser.safebrowsing.debug", true]]},
->>>>>>> upstream-releases
   function() {
     classifierHelper.waitForInit()
       .then(() => classifierHelper.addUrlToDB(testData))

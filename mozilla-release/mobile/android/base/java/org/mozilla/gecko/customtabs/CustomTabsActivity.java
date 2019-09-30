@@ -62,13 +62,8 @@ import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoSession;
 import org.mozilla.geckoview.GeckoSessionSettings;
 import org.mozilla.geckoview.GeckoView;
-<<<<<<< HEAD
-import org.mozilla.geckoview.WebRequestError;
-||||||| merged common ancestors
-=======
 import org.mozilla.geckoview.GeckoViewBridge;
 import org.mozilla.geckoview.WebRequestError;
->>>>>>> upstream-releases
 
 import java.util.List;
 
@@ -638,22 +633,6 @@ public class CustomTabsActivity extends AppCompatActivity
         throw new IllegalStateException("Unexpected new session");
     }
 
-<<<<<<< HEAD
-    @Override
-    public GeckoResult<String> onLoadError(final GeckoSession session, final String urlStr,
-                                           final WebRequestError error) {
-        return null;
-    }
-
-||||||| merged common ancestors
-    @Override
-    public GeckoResult<String> onLoadError(final GeckoSession session, final String urlStr,
-                                           final int category, final int error) {
-        return null;
-    }
-
-=======
->>>>>>> upstream-releases
     /* GeckoSession.ProgressDelegate */
     @Override
     public void onPageStart(GeckoSession session, String url) {
@@ -728,34 +707,6 @@ public class CustomTabsActivity extends AppCompatActivity
         });
     }
 
-<<<<<<< HEAD
-    @Override
-    public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
-        // Won't happen, as we don't use the GeckoView download support in Fennec
-    }
-
-    @Override
-    public void onCrash(final GeckoSession session) {
-        // Won't happen, as we don't use e10s in Fennec
-    }
-
-    @Override
-    public void onFirstComposite(final GeckoSession session) {
-    }
-
-||||||| merged common ancestors
-    @Override
-    public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
-        // Won't happen, as we don't use the GeckoView download support in Fennec
-    }
-
-    @Override
-    public void onCrash(final GeckoSession session) {
-        // Won't happen, as we don't use e10s in Fennec
-    }
-
-=======
->>>>>>> upstream-releases
     @Override // ActionModePresenter
     public void startActionMode(final ActionMode.Callback callback) {
         endActionMode();

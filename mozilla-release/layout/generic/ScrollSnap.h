@@ -33,20 +33,8 @@ struct ScrollSnapUtils {
    */
   static mozilla::Maybe<nsPoint> GetSnapPointForDestination(
       const layers::ScrollSnapInfo& aSnapInfo,
-<<<<<<< HEAD
-      nsIScrollableFrame::ScrollUnit aUnit, const nsSize& aScrollPortSize,
-      const nsRect& aScrollRange, const nsPoint& aStartPos,
-      const nsPoint& aDestination);
-||||||| merged common ancestors
-      nsIScrollableFrame::ScrollUnit aUnit,
-      const nsSize& aScrollPortSize,
-      const nsRect& aScrollRange,
-      const nsPoint& aStartPos,
-      const nsPoint& aDestination);
-=======
       nsIScrollableFrame::ScrollUnit aUnit, const nsRect& aScrollRange,
       const nsPoint& aStartPos, const nsPoint& aDestination);
->>>>>>> upstream-releases
 };
 
 }  // namespace mozilla

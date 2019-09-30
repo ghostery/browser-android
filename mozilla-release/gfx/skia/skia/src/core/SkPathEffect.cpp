@@ -94,13 +94,6 @@ public:
         return sk_sp<SkPathEffect>(new SkComposePathEffect(outer, inner));
     }
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkComposePathEffect)
-
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    bool exposedInAndroidJavaAPI() const override { return true; }
-#endif
-
 protected:
     SkComposePathEffect(sk_sp<SkPathEffect> outer, sk_sp<SkPathEffect> inner)
         : INHERITED(outer, inner) {}
@@ -116,47 +109,6 @@ protected:
         return fPE0->filterPath(dst, *ptr, rec, cullRect);
     }
 
-||||||| merged common ancestors
-    bool filterPath(SkPath* dst, const SkPath& src, SkStrokeRec* rec,
-                    const SkRect* cullRect) const override {
-        SkPath          tmp;
-        const SkPath*   ptr = &src;
-
-        if (fPE1->filterPath(&tmp, src, rec, cullRect)) {
-            ptr = &tmp;
-        }
-        return fPE0->filterPath(dst, *ptr, rec, cullRect);
-    }
-
-
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkComposePathEffect)
-
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    bool exposedInAndroidJavaAPI() const override { return true; }
-#endif
-
-protected:
-    SkComposePathEffect(sk_sp<SkPathEffect> outer, sk_sp<SkPathEffect> inner)
-        : INHERITED(outer, inner) {}
-
-=======
-protected:
-    SkComposePathEffect(sk_sp<SkPathEffect> outer, sk_sp<SkPathEffect> inner)
-        : INHERITED(outer, inner) {}
-
-    bool onFilterPath(SkPath* dst, const SkPath& src, SkStrokeRec* rec,
-                      const SkRect* cullRect) const override {
-        SkPath          tmp;
-        const SkPath*   ptr = &src;
-
-        if (fPE1->filterPath(&tmp, src, rec, cullRect)) {
-            ptr = &tmp;
-        }
-        return fPE0->filterPath(dst, *ptr, rec, cullRect);
-    }
-
->>>>>>> upstream-releases
 private:
     SK_FLATTENABLE_HOOKS(SkComposePathEffect)
 
@@ -198,45 +150,6 @@ public:
         return sk_sp<SkPathEffect>(new SkSumPathEffect(first, second));
     }
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSumPathEffect)
-
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    bool exposedInAndroidJavaAPI() const override { return true; }
-#endif
-
-protected:
-    SkSumPathEffect(sk_sp<SkPathEffect> first, sk_sp<SkPathEffect> second)
-        : INHERITED(first, second) {}
-
-    bool onFilterPath(SkPath* dst, const SkPath& src, SkStrokeRec* rec,
-                      const SkRect* cullRect) const override {
-        // use bit-or so that we always call both, even if the first one succeeds
-        return fPE0->filterPath(dst, src, rec, cullRect) |
-               fPE1->filterPath(dst, src, rec, cullRect);
-    }
-
-||||||| merged common ancestors
-    bool filterPath(SkPath* dst, const SkPath& src, SkStrokeRec* rec,
-                    const SkRect* cullRect) const override {
-        // use bit-or so that we always call both, even if the first one succeeds
-        return fPE0->filterPath(dst, src, rec, cullRect) |
-               fPE1->filterPath(dst, src, rec, cullRect);
-    }
-
-
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkSumPathEffect)
-
-#ifdef SK_BUILD_FOR_ANDROID_FRAMEWORK
-    bool exposedInAndroidJavaAPI() const override { return true; }
-#endif
-
-protected:
-    SkSumPathEffect(sk_sp<SkPathEffect> first, sk_sp<SkPathEffect> second)
-    : INHERITED(first, second) {}
-
-=======
     SK_FLATTENABLE_HOOKS(SkSumPathEffect)
 
 protected:
@@ -250,7 +163,6 @@ protected:
                fPE1->filterPath(dst, src, rec, cullRect);
     }
 
->>>>>>> upstream-releases
 private:
     // illegal
     SkSumPathEffect(const SkSumPathEffect&);

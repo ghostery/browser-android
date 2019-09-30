@@ -1035,22 +1035,9 @@ var AddonDatabase = {
 
       if (!this._blockerAdded) {
         AsyncShutdown.profileBeforeChange.addBlocker(
-<<<<<<< HEAD
-          "Flush AddonRepository", () => this.flush());
-||||||| merged common ancestors
-          "Flush AddonRepository",
-          async () => {
-            if (!this._saveTask) {
-              return;
-            }
-            await this._saveTask.finalize();
-            this._saveTask = null;
-          });
-=======
           "Flush AddonRepository",
           () => this.flush()
         );
->>>>>>> upstream-releases
         this._blockerAdded = true;
       }
     }

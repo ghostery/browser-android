@@ -16,14 +16,7 @@
 #define BUFSIZE 2048  // What Xlib uses with XGetErrorDatabaseText
 
 extern "C" {
-<<<<<<< HEAD
-int X11Error(Display *display, XErrorEvent *event) {
-||||||| merged common ancestors
-int
-X11Error(Display *display, XErrorEvent *event) {
-=======
 int X11Error(Display* display, XErrorEvent* event) {
->>>>>>> upstream-releases
   // Get an indication of how long ago the request that caused the error was
   // made.
   unsigned long age = NextRequest(display) - event->serial;
@@ -45,7 +38,7 @@ int X11Error(Display* display, XErrorEvent* event) {
     Display* tmpDisplay = XOpenDisplay(nullptr);
     if (tmpDisplay) {
       int nExts;
-      char **extNames = XListExtensions(tmpDisplay, &nExts);
+      char** extNames = XListExtensions(tmpDisplay, &nExts);
       int first_error;
       if (extNames) {
         for (int i = 0; i < nExts; ++i) {

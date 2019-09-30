@@ -8,33 +8,6 @@
 
 #include "mozilla/Assertions.h"  // for MOZ_ASSERT, etc.
 #include "mozilla/AutoRestore.h"
-<<<<<<< HEAD
-#include "mozilla/ContentEvents.h"         // for InternalFocusEvent
-#include "mozilla/EditorBase.h"            // for EditorBase, etc.
-#include "mozilla/EventListenerManager.h"  // for EventListenerManager
-#include "mozilla/EventStateManager.h"     // for EventStateManager
-#include "mozilla/IMEStateManager.h"       // for IMEStateManager
-#include "mozilla/Preferences.h"           // for Preferences
-#include "mozilla/TextEditor.h"            // for TextEditor
-#include "mozilla/TextEvents.h"            // for WidgetCompositionEvent
-#include "mozilla/dom/Element.h"           // for Element
-#include "mozilla/dom/Event.h"             // for Event
-#include "mozilla/dom/EventTarget.h"       // for EventTarget
-#include "mozilla/dom/MouseEvent.h"        // for MouseEvent
-||||||| merged common ancestors
-#include "mozilla/ContentEvents.h"      // for InternalFocusEvent
-#include "mozilla/EditorBase.h"         // for EditorBase, etc.
-#include "mozilla/EventListenerManager.h" // for EventListenerManager
-#include "mozilla/EventStateManager.h"  // for EventStateManager
-#include "mozilla/IMEStateManager.h"    // for IMEStateManager
-#include "mozilla/Preferences.h"        // for Preferences
-#include "mozilla/TextEditor.h"         // for TextEditor
-#include "mozilla/TextEvents.h"         // for WidgetCompositionEvent
-#include "mozilla/dom/Element.h"        // for Element
-#include "mozilla/dom/Event.h"          // for Event
-#include "mozilla/dom/EventTarget.h"    // for EventTarget
-#include "mozilla/dom/MouseEvent.h"     // for MouseEvent
-=======
 #include "mozilla/ContentEvents.h"         // for InternalFocusEvent
 #include "mozilla/EditorBase.h"            // for EditorBase, etc.
 #include "mozilla/EventListenerManager.h"  // for EventListenerManager
@@ -48,7 +21,6 @@
 #include "mozilla/dom/Event.h"             // for Event
 #include "mozilla/dom/EventTarget.h"       // for EventTarget
 #include "mozilla/dom/MouseEvent.h"        // for MouseEvent
->>>>>>> upstream-releases
 #include "mozilla/dom/Selection.h"
 #include "nsAString.h"
 #include "nsCaret.h"         // for nsCaret
@@ -62,33 +34,6 @@
 #include "mozilla/dom/DOMStringList.h"
 #include "mozilla/dom/DataTransfer.h"
 #include "mozilla/dom/DragEvent.h"
-<<<<<<< HEAD
-#include "nsIDocument.h"             // for nsIDocument
-#include "nsIFocusManager.h"         // for nsIFocusManager
-#include "nsIFormControl.h"          // for nsIFormControl, etc.
-#include "nsINode.h"                 // for nsINode, ::NODE_IS_EDITABLE, etc.
-#include "nsIPlaintextEditor.h"      // for nsIPlaintextEditor, etc.
-#include "nsIPresShell.h"            // for nsIPresShell
-#include "nsISelectionController.h"  // for nsISelectionController, etc.
-#include "nsITransferable.h"         // for kFileMime, kHTMLMime, etc.
-#include "nsIWidget.h"               // for nsIWidget
-#include "nsLiteralString.h"         // for NS_LITERAL_STRING
-#include "nsPIWindowRoot.h"          // for nsPIWindowRoot
-#include "nsPrintfCString.h"         // for nsPrintfCString
-||||||| merged common ancestors
-#include "nsIDocument.h"                // for nsIDocument
-#include "nsIFocusManager.h"            // for nsIFocusManager
-#include "nsIFormControl.h"             // for nsIFormControl, etc.
-#include "nsINode.h"                    // for nsINode, ::NODE_IS_EDITABLE, etc.
-#include "nsIPlaintextEditor.h"         // for nsIPlaintextEditor, etc.
-#include "nsIPresShell.h"               // for nsIPresShell
-#include "nsISelectionController.h"     // for nsISelectionController, etc.
-#include "nsITransferable.h"            // for kFileMime, kHTMLMime, etc.
-#include "nsIWidget.h"                  // for nsIWidget
-#include "nsLiteralString.h"            // for NS_LITERAL_STRING
-#include "nsPIWindowRoot.h"             // for nsPIWindowRoot
-#include "nsPrintfCString.h"            // for nsPrintfCString
-=======
 #include "mozilla/dom/Document.h"    // for Document
 #include "nsIFocusManager.h"         // for nsIFocusManager
 #include "nsIFormControl.h"          // for nsIFormControl, etc.
@@ -100,22 +45,13 @@
 #include "nsLiteralString.h"         // for NS_LITERAL_STRING
 #include "nsPIWindowRoot.h"          // for nsPIWindowRoot
 #include "nsPrintfCString.h"         // for nsPrintfCString
->>>>>>> upstream-releases
 #include "nsRange.h"
 #include "nsServiceManagerUtils.h"  // for do_GetService
 #include "nsString.h"               // for nsAutoString
 #include "nsQueryObject.h"          // for do_QueryObject
 #ifdef HANDLE_NATIVE_TEXT_DIRECTION_SWITCH
-<<<<<<< HEAD
-#include "nsContentUtils.h"   // for nsContentUtils, etc.
-#include "nsIBidiKeyboard.h"  // for nsIBidiKeyboard
-||||||| merged common ancestors
-#include "nsContentUtils.h"             // for nsContentUtils, etc.
-#include "nsIBidiKeyboard.h"            // for nsIBidiKeyboard
-=======
 #  include "nsContentUtils.h"   // for nsContentUtils, etc.
 #  include "nsIBidiKeyboard.h"  // for nsIBidiKeyboard
->>>>>>> upstream-releases
 #endif
 
 #include "mozilla/dom/BrowserParent.h"
@@ -126,19 +62,9 @@ namespace mozilla {
 
 using namespace dom;
 
-<<<<<<< HEAD
-static void DoCommandCallback(Command aCommand, void* aData) {
-  nsIDocument* doc = static_cast<nsIDocument*>(aData);
-||||||| merged common ancestors
-static void
-DoCommandCallback(Command aCommand, void* aData)
-{
-  nsIDocument* doc = static_cast<nsIDocument*>(aData);
-=======
 MOZ_CAN_RUN_SCRIPT
 static void DoCommandCallback(Command aCommand, void* aData) {
   Document* doc = static_cast<Document*>(aData);
->>>>>>> upstream-releases
   nsPIDOMWindowOuter* win = doc->GetWindow();
   if (!win) {
     return;
@@ -238,59 +164,12 @@ nsresult EditorEventListener::InstallToEditor() {
   //     preventDefault() of click event at bubble phase.
   //     However, if we do so, all click handlers in any frames and frontend
   //     code need to check if it's editable.  It makes easier create new bugs.
-<<<<<<< HEAD
   elmP->AddEventListenerByType(this, NS_LITERAL_STRING("mousedown"),
                                TrustedEventsAtCapture());
   elmP->AddEventListenerByType(this, NS_LITERAL_STRING("mouseup"),
-||||||| merged common ancestors
-  elmP->AddEventListenerByType(this,
-                               NS_LITERAL_STRING("mousedown"),
                                TrustedEventsAtCapture());
-  elmP->AddEventListenerByType(this,
-                               NS_LITERAL_STRING("mouseup"),
-=======
-  elmP->AddEventListenerByType(this, NS_LITERAL_STRING("mousedown"),
->>>>>>> upstream-releases
-                               TrustedEventsAtCapture());
-<<<<<<< HEAD
   elmP->AddEventListenerByType(this, NS_LITERAL_STRING("click"),
-||||||| merged common ancestors
-  elmP->AddEventListenerByType(this,
-                               NS_LITERAL_STRING("click"),
-=======
-  elmP->AddEventListenerByType(this, NS_LITERAL_STRING("mouseup"),
->>>>>>> upstream-releases
                                TrustedEventsAtCapture());
-<<<<<<< HEAD
-  // Focus event doesn't bubble so adding the listener to capturing phase.
-  // XXX Should we listen focus/blur events of system group too? Or should
-  //     editor notified focus/blur of the element from nsFocusManager
-  //     directly?  Because if the event propagation is stopped by JS,
-  //     editor cannot initialize selection as expected.
-  elmP->AddEventListenerByType(this, NS_LITERAL_STRING("blur"),
-||||||| merged common ancestors
-  // Focus event doesn't bubble so adding the listener to capturing phase.
-  // XXX Should we listen focus/blur events of system group too? Or should
-  //     editor notified focus/blur of the element from nsFocusManager
-  //     directly?  Because if the event propagation is stopped by JS,
-  //     editor cannot initialize selection as expected.
-  elmP->AddEventListenerByType(this,
-                               NS_LITERAL_STRING("blur"),
-=======
-  elmP->AddEventListenerByType(this, NS_LITERAL_STRING("click"),
->>>>>>> upstream-releases
-                               TrustedEventsAtCapture());
-<<<<<<< HEAD
-  elmP->AddEventListenerByType(this, NS_LITERAL_STRING("focus"),
-                               TrustedEventsAtCapture());
-  elmP->AddEventListenerByType(this, NS_LITERAL_STRING("text"),
-||||||| merged common ancestors
-  elmP->AddEventListenerByType(this,
-                               NS_LITERAL_STRING("focus"),
-                               TrustedEventsAtCapture());
-  elmP->AddEventListenerByType(this,
-                               NS_LITERAL_STRING("text"),
-=======
   elmP->AddEventListenerByType(this, NS_LITERAL_STRING("auxclick"),
                                TrustedEventsAtSystemGroupCapture());
   // Focus event doesn't bubble so adding the listener to capturing phase as
@@ -300,7 +179,6 @@ nsresult EditorEventListener::InstallToEditor() {
   elmP->AddEventListenerByType(this, NS_LITERAL_STRING("focus"),
                                TrustedEventsAtSystemGroupCapture());
   elmP->AddEventListenerByType(this, NS_LITERAL_STRING("text"),
->>>>>>> upstream-releases
                                TrustedEventsAtSystemGroupBubble());
   elmP->AddEventListenerByType(this, NS_LITERAL_STRING("compositionstart"),
                                TrustedEventsAtSystemGroupBubble());
@@ -331,17 +209,9 @@ void EditorEventListener::Disconnect() {
   mEditorBase = nullptr;
 }
 
-<<<<<<< HEAD
-void EditorEventListener::UninstallFromEditor() {
-||||||| merged common ancestors
-void
-EditorEventListener::UninstallFromEditor()
-{
-=======
 void EditorEventListener::UninstallFromEditor() {
   CleanupDragDropCaret();
 
->>>>>>> upstream-releases
   nsCOMPtr<EventTarget> piTarget = mEditorBase->GetDOMEventTarget();
   if (!piTarget) {
     return;
@@ -368,49 +238,12 @@ void EditorEventListener::UninstallFromEditor() {
                                   TrustedEventsAtSystemGroupBubble());
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("drop"),
                                   TrustedEventsAtSystemGroupBubble());
-<<<<<<< HEAD
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("mousedown"),
                                   TrustedEventsAtCapture());
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("mouseup"),
-||||||| merged common ancestors
-  elmP->RemoveEventListenerByType(this,
-                                  NS_LITERAL_STRING("mousedown"),
                                   TrustedEventsAtCapture());
-  elmP->RemoveEventListenerByType(this,
-                                  NS_LITERAL_STRING("mouseup"),
-=======
-  elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("mousedown"),
->>>>>>> upstream-releases
-                                  TrustedEventsAtCapture());
-<<<<<<< HEAD
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("click"),
-||||||| merged common ancestors
-  elmP->RemoveEventListenerByType(this,
-                                  NS_LITERAL_STRING("click"),
-=======
-  elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("mouseup"),
->>>>>>> upstream-releases
                                   TrustedEventsAtCapture());
-<<<<<<< HEAD
-  elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("blur"),
-||||||| merged common ancestors
-  elmP->RemoveEventListenerByType(this,
-                                  NS_LITERAL_STRING("blur"),
-=======
-  elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("click"),
->>>>>>> upstream-releases
-                                  TrustedEventsAtCapture());
-<<<<<<< HEAD
-  elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("focus"),
-                                  TrustedEventsAtCapture());
-  elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("text"),
-||||||| merged common ancestors
-  elmP->RemoveEventListenerByType(this,
-                                  NS_LITERAL_STRING("focus"),
-                                  TrustedEventsAtCapture());
-  elmP->RemoveEventListenerByType(this,
-                                  NS_LITERAL_STRING("text"),
-=======
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("auxclick"),
                                   TrustedEventsAtSystemGroupCapture());
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("blur"),
@@ -418,7 +251,6 @@ void EditorEventListener::UninstallFromEditor() {
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("focus"),
                                   TrustedEventsAtSystemGroupCapture());
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("text"),
->>>>>>> upstream-releases
                                   TrustedEventsAtSystemGroupBubble());
   elmP->RemoveEventListenerByType(this, NS_LITERAL_STRING("compositionstart"),
                                   TrustedEventsAtSystemGroupBubble());
@@ -426,31 +258,13 @@ void EditorEventListener::UninstallFromEditor() {
                                   TrustedEventsAtSystemGroupBubble());
 }
 
-<<<<<<< HEAD
-nsIPresShell* EditorEventListener::GetPresShell() const {
-||||||| merged common ancestors
-nsIPresShell*
-EditorEventListener::GetPresShell() const
-{
-=======
 PresShell* EditorEventListener::GetPresShell() const {
->>>>>>> upstream-releases
   MOZ_ASSERT(!DetachedFromEditor());
   return mEditorBase->GetPresShell();
 }
 
-<<<<<<< HEAD
-nsPresContext* EditorEventListener::GetPresContext() const {
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-||||||| merged common ancestors
-nsPresContext*
-EditorEventListener::GetPresContext() const
-{
-  nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-=======
 nsPresContext* EditorEventListener::GetPresContext() const {
   PresShell* presShell = GetPresShell();
->>>>>>> upstream-releases
   return presShell ? presShell->GetPresContext() : nullptr;
 }
 
@@ -1010,26 +824,11 @@ nsresult EditorEventListener::Drop(DragEvent* aDragEvent) {
   aDragEvent->PreventDefault();
 
   RefPtr<TextEditor> textEditor = mEditorBase->AsTextEditor();
-<<<<<<< HEAD
-  nsresult rv = textEditor->OnDrop(aDragEvent);
-  if (rv == NS_ERROR_EDITOR_DESTROYED) {
-    // If the editor has been destroyed, it means that this is handled as
-    // expected by the web app.  So, return NS_OK.
-    return NS_OK;
-  }
-  if (NS_WARN_IF(NS_FAILED(rv))) {
-    return rv;
-  }
-  return NS_OK;
-||||||| merged common ancestors
-  return textEditor->OnDrop(aDragEvent);
-=======
   nsresult rv = textEditor->OnDrop(aDragEvent);
   if (NS_WARN_IF(NS_FAILED(rv))) {
     return rv;
   }
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 bool EditorEventListener::CanDrop(DragEvent* aEvent) {

@@ -38,15 +38,6 @@ public:
         return fProxyShader;
     }
 
-<<<<<<< HEAD
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkLocalMatrixShader)
-
-||||||| merged common ancestors
-    SK_TO_STRING_OVERRIDE()
-    SK_DECLARE_PUBLIC_FLATTENABLE_DESERIALIZATION_PROCS(SkLocalMatrixShader)
-
-=======
->>>>>>> upstream-releases
 protected:
     void flatten(SkWriteBuffer&) const override;
 
@@ -63,27 +54,6 @@ protected:
             this->getLocalMatrix());
     }
 
-<<<<<<< HEAD
-#ifdef SK_SUPPORT_LEGACY_SHADER_ISABITMAP
-    bool onIsABitmap(SkBitmap* bitmap, SkMatrix* matrix, TileMode* mode) const override {
-        return fProxyShader->isABitmap(bitmap, matrix, mode);
-    }
-#endif
-
-||||||| merged common ancestors
-#ifdef SK_SUPPORT_LEGACY_SHADER_ISABITMAP
-    bool onIsABitmap(SkBitmap* bitmap, SkMatrix* matrix, TileMode* mode) const override {
-        return fProxyShader->isABitmap(bitmap, matrix, mode);
-    }
-#endif
-
-    bool onIsRasterPipelineOnly(const SkMatrix& ctm) const override {
-        return as_SB(fProxyShader)->isRasterPipelineOnly(SkMatrix::Concat(ctm,
-                                                                          this->getLocalMatrix()));
-    }
-
-=======
->>>>>>> upstream-releases
 private:
     SK_FLATTENABLE_HOOKS(SkLocalMatrixShader)
 

@@ -32,17 +32,8 @@ EntryCallbackRunnable::EntryCallbackRunnable(FileSystemEntryCallback* aCallback,
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-EntryCallbackRunnable::Run() {
-  mCallback->HandleEvent(*mEntry);
-||||||| merged common ancestors
-EntryCallbackRunnable::Run()
-{
-  mCallback->HandleEvent(*mEntry);
-=======
 EntryCallbackRunnable::Run() {
   mCallback->Call(*mEntry);
->>>>>>> upstream-releases
   return NS_OK;
 }
 
@@ -195,20 +186,9 @@ void GetEntryHelper::CompleteOperation(JSObject* aObj) {
       return;
     }
 
-<<<<<<< HEAD
-    RefPtr<FileSystemFileEntry> entry = new FileSystemFileEntry(
-        mParentEntry->GetParentObject(), file, mParentEntry, mFileSystem);
-    mSuccessCallback->HandleEvent(*entry);
-||||||| merged common ancestors
-    RefPtr<FileSystemFileEntry> entry =
-      new FileSystemFileEntry(mParentEntry->GetParentObject(), file,
-                              mParentEntry, mFileSystem);
-    mSuccessCallback->HandleEvent(*entry);
-=======
     RefPtr<FileSystemFileEntry> entry = new FileSystemFileEntry(
         mParentEntry->GetParentObject(), file, mParentEntry, mFileSystem);
     mSuccessCallback->Call(*entry);
->>>>>>> upstream-releases
     return;
   }
 
@@ -220,20 +200,9 @@ void GetEntryHelper::CompleteOperation(JSObject* aObj) {
     return;
   }
 
-<<<<<<< HEAD
-  RefPtr<FileSystemDirectoryEntry> entry = new FileSystemDirectoryEntry(
-      mParentEntry->GetParentObject(), directory, mParentEntry, mFileSystem);
-  mSuccessCallback->HandleEvent(*entry);
-||||||| merged common ancestors
-  RefPtr<FileSystemDirectoryEntry> entry =
-    new FileSystemDirectoryEntry(mParentEntry->GetParentObject(), directory,
-                                 mParentEntry, mFileSystem);
-  mSuccessCallback->HandleEvent(*entry);
-=======
   RefPtr<FileSystemDirectoryEntry> entry = new FileSystemDirectoryEntry(
       mParentEntry->GetParentObject(), directory, mParentEntry, mFileSystem);
   mSuccessCallback->Call(*entry);
->>>>>>> upstream-releases
 }
 
 void GetEntryHelper::ContinueRunning(JSObject* aObj) {
@@ -274,24 +243,11 @@ void GetEntryHelper::Error(nsresult aError) {
 
 NS_IMPL_ISUPPORTS0(GetEntryHelper);
 
-<<<<<<< HEAD
-/* static */ void FileSystemEntryCallbackHelper::Call(
-    nsIGlobalObject* aGlobalObject,
-    const Optional<OwningNonNull<FileSystemEntryCallback>>& aEntryCallback,
-    FileSystemEntry* aEntry) {
-||||||| merged common ancestors
-/* static */ void
-FileSystemEntryCallbackHelper::Call(nsIGlobalObject* aGlobalObject,
-                                    const Optional<OwningNonNull<FileSystemEntryCallback>>& aEntryCallback,
-                                    FileSystemEntry* aEntry)
-{
-=======
 /* static */
 void FileSystemEntryCallbackHelper::Call(
     nsIGlobalObject* aGlobalObject,
     const Optional<OwningNonNull<FileSystemEntryCallback>>& aEntryCallback,
     FileSystemEntry* aEntry) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aGlobalObject);
   MOZ_ASSERT(aEntry);
 
@@ -303,24 +259,11 @@ void FileSystemEntryCallbackHelper::Call(
   }
 }
 
-<<<<<<< HEAD
-/* static */ void ErrorCallbackHelper::Call(
-    nsIGlobalObject* aGlobal,
-    const Optional<OwningNonNull<ErrorCallback>>& aErrorCallback,
-    nsresult aError) {
-||||||| merged common ancestors
-/* static */ void
-ErrorCallbackHelper::Call(nsIGlobalObject* aGlobal,
-                          const Optional<OwningNonNull<ErrorCallback>>& aErrorCallback,
-                          nsresult aError)
-{
-=======
 /* static */
 void ErrorCallbackHelper::Call(
     nsIGlobalObject* aGlobal,
     const Optional<OwningNonNull<ErrorCallback>>& aErrorCallback,
     nsresult aError) {
->>>>>>> upstream-releases
   MOZ_ASSERT(aGlobal);
   MOZ_ASSERT(NS_FAILED(aError));
 

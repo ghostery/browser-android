@@ -16,19 +16,11 @@ class ServoStyleSet;
 namespace dom {
 class FontFace;
 class FontFaceSet;
-<<<<<<< HEAD
-}  // namespace dom
-}  // namespace mozilla
-||||||| merged common ancestors
-} // namespace dom
-} // namespace mozilla
-=======
 }  // namespace dom
 namespace fontlist {
 struct Family;
 }  // namespace fontlist
 }  // namespace mozilla
->>>>>>> upstream-releases
 class gfxUserFontEntry;
 
 namespace mozilla {

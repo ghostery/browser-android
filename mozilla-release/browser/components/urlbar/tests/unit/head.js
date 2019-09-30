@@ -41,23 +41,9 @@ const { sinon } = ChromeUtils.import("resource://testing-common/Sinon.jsm");
  * @returns {UrlbarQueryContext} Creates a dummy query context with pre-filled
  *          required options.
  */
-<<<<<<< HEAD
-function createContext(searchString = "foo") {
-  return new QueryContext({
-    searchString,
-    lastKey: searchString ? searchString[searchString.length - 1] : "",
-    maxResults: UrlbarPrefs.get("maxRichResults"),
-||||||| merged common ancestors
-function createContext(searchString = "foo") {
-  return new QueryContext({
-    searchString,
-    lastKey: searchString ? searchString[searchString.length - 1] : "",
-    maxResults: Services.prefs.getIntPref("browser.urlbar.maxRichResults"),
-=======
 function createContext(searchString = "foo", properties = {}) {
   let context = new UrlbarQueryContext({
     allowAutofill: UrlbarPrefs.get("autoFill"),
->>>>>>> upstream-releases
     isPrivate: true,
     maxResults: UrlbarPrefs.get("maxRichResults"),
     searchString,
@@ -74,39 +60,6 @@ function createContext(searchString = "foo", properties = {}) {
  * @returns {Promise} A promise that is resolved with the arguments supplied to
  *   the notification.
  */
-<<<<<<< HEAD
-function promiseControllerNotification(controller, notification, expected = true) {
-  return new Promise((resolve, reject) => {
-    let proxifiedObserver = new Proxy({}, {
-      get: (target, name) => {
-        if (name == notification) {
-          return (...args) => {
-            controller.removeQueryListener(proxifiedObserver);
-            if (expected) {
-              resolve(args);
-            } else {
-              reject();
-            }
-          };
-        }
-        return () => false;
-      },
-    });
-||||||| merged common ancestors
-function promiseControllerNotification(controller, notification) {
-  return new Promise(resolve => {
-    let proxifiedObserver = new Proxy({}, {
-      get: (target, name) => {
-        if (name == notification) {
-          return (...args) => {
-            controller.removeQueryListener(proxifiedObserver);
-            resolve(args);
-          };
-        }
-        return () => false;
-      },
-    });
-=======
 function promiseControllerNotification(
   controller,
   notification,
@@ -131,15 +84,10 @@ function promiseControllerNotification(
         },
       }
     );
->>>>>>> upstream-releases
     controller.addQueryListener(proxifiedObserver);
   });
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-
-=======
 /**
  * A basic test provider, returning all the provided matches.
  */
@@ -188,7 +136,6 @@ class TestProvider extends UrlbarProvider {
   }
 }
 
->>>>>>> upstream-releases
 /**
  * Helper function to clear the existing providers and register a basic provider
  * that returns only the results given.
@@ -199,72 +146,6 @@ class TestProvider extends UrlbarProvider {
  * @param {UrlbarUtils.PROVIDER_TYPE} type The provider type.
  * @returns {string} name of the registered provider
  */
-<<<<<<< HEAD
-function registerBasicTestProvider(results, cancelCallback) {
-  // First unregister all the existing providers.
-  for (let providers of UrlbarProvidersManager.providers.values()) {
-    for (let provider of providers.values()) {
-      // While here check all providers have name and type.
-      Assert.ok(Object.values(UrlbarUtils.PROVIDER_TYPE).includes(provider.type),
-        `The provider "${provider.name}" should have a valid type`);
-      Assert.ok(provider.name, "All providers should have a name");
-      UrlbarProvidersManager.unregisterProvider(provider);
-    }
-  }
-  UrlbarProvidersManager.registerProvider({
-    get name() {
-      return "TestProvider";
-    },
-    get type() {
-      return UrlbarUtils.PROVIDER_TYPE.PROFILE;
-    },
-    get sources() {
-      return results.map(r => r.source);
-    },
-    async startQuery(context, add) {
-      Assert.ok(context, "context is passed-in");
-      Assert.equal(typeof add, "function", "add is a callback");
-      this._context = context;
-      for (const result of results) {
-        add(this, result);
-      }
-    },
-    cancelQuery(context) {
-      Assert.equal(this._context, context, "context is the same");
-      if (cancelCallback) {
-        cancelCallback();
-||||||| merged common ancestors
-function registerBasicTestProvider(results, cancelCallback) {
-  // First unregister all the existing providers.
-  for (let providers of UrlbarProvidersManager.providers.values()) {
-    for (let provider of providers.values()) {
-      // While here check all providers have name and type.
-      Assert.ok(Object.values(UrlbarUtils.PROVIDER_TYPE).includes(provider.type),
-        `The provider "${provider.name}" should have a valid type`);
-      Assert.ok(provider.name, "All providers should have a name");
-      UrlbarProvidersManager.unregisterProvider(provider);
-    }
-  }
-  UrlbarProvidersManager.registerProvider({
-    get name() {
-      return "TestProvider";
-    },
-    get type() {
-      return UrlbarUtils.PROVIDER_TYPE.PROFILE;
-    },
-    async startQuery(context, add) {
-      Assert.ok(context, "context is passed-in");
-      Assert.equal(typeof add, "function", "add is a callback");
-      this._context = context;
-      for (const result of results) {
-        add(this, result);
-      }
-    },
-    cancelQuery(context) {
-      Assert.equal(this._context, context, "context is the same");
-      if (cancelCallback) {
-        cancelCallback();
-=======
 function registerBasicTestProvider(matches = [], cancelCallback, type) {
   let provider = new TestProvider(matches, cancelCallback, type);
   UrlbarProvidersManager.registerProvider(provider);
@@ -300,7 +181,6 @@ async function addTestEngine(basename, httpServer = undefined) {
       info("Observed " + data + " for " + engine.name);
       if (data != "engine-added" || engine.name != basename) {
         return;
->>>>>>> upstream-releases
       }
 
       Services.obs.removeObserver(obs, "browser-search-engine-modified");

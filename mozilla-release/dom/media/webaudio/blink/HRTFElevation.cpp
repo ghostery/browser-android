@@ -115,36 +115,14 @@ nsReturnRef<HRTFKernel> HRTFElevation::calculateKernelForAzimuthElevation(
   // only works well if the floats are in the range +/-32767.  On such
   // platforms it's better to resample before converting to float anyway.
 #ifdef MOZ_SAMPLE_TYPE_S16
-<<<<<<< HEAD
-#define RESAMPLER_PROCESS speex_resampler_process_int
-  const int16_t* response = impulse_response_data;
-  const int16_t* resampledResponse;
-||||||| merged common ancestors
-#  define RESAMPLER_PROCESS speex_resampler_process_int
-    const int16_t* response = impulse_response_data;
-    const int16_t* resampledResponse;
-=======
 #  define RESAMPLER_PROCESS speex_resampler_process_int
   const int16_t* response = impulse_response_data;
   const int16_t* resampledResponse;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-#define RESAMPLER_PROCESS speex_resampler_process_float
-  float response[ResponseFrameSize];
-  ConvertAudioSamples(impulse_response_data, response, ResponseFrameSize);
-  float* resampledResponse;
-||||||| merged common ancestors
-#  define RESAMPLER_PROCESS speex_resampler_process_float
-    float response[ResponseFrameSize];
-    ConvertAudioSamples(impulse_response_data, response, ResponseFrameSize);
-    float* resampledResponse;
-=======
 #  define RESAMPLER_PROCESS speex_resampler_process_float
   float response[ResponseFrameSize];
   ConvertAudioSamples(impulse_response_data, response, ResponseFrameSize);
   float* resampledResponse;
->>>>>>> upstream-releases
 #endif
 
   // Note that depending on the fftSize returned by the panner, we may be

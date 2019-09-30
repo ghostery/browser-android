@@ -127,19 +127,9 @@ inline void mozilla::detail::MutexImpl::mutexLock() {
       "mozilla::detail::MutexImpl::mutexLock: pthread_mutex_lock failed");
 }
 
-<<<<<<< HEAD
-#ifdef XP_DARWIN
-inline bool mozilla::detail::MutexImpl::mutexTryLock() {
-||||||| merged common ancestors
-#ifdef XP_DARWIN
-inline bool
-mozilla::detail::MutexImpl::mutexTryLock()
-{
-=======
 bool mozilla::detail::MutexImpl::tryLock() { return mutexTryLock(); }
 
 bool mozilla::detail::MutexImpl::mutexTryLock() {
->>>>>>> upstream-releases
   int result = pthread_mutex_trylock(&platformData()->ptMutex);
   if (result == 0) {
     return true;

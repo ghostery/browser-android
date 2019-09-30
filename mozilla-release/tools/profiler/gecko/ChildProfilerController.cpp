@@ -14,19 +14,9 @@ using namespace mozilla::ipc;
 
 namespace mozilla {
 
-<<<<<<< HEAD
-/* static */ already_AddRefed<ChildProfilerController>
-ChildProfilerController::Create(
-    mozilla::ipc::Endpoint<PProfilerChild>&& aEndpoint) {
-||||||| merged common ancestors
-/* static */ already_AddRefed<ChildProfilerController>
-ChildProfilerController::Create(mozilla::ipc::Endpoint<PProfilerChild>&& aEndpoint)
-{
-=======
 /* static */
 already_AddRefed<ChildProfilerController> ChildProfilerController::Create(
     mozilla::ipc::Endpoint<PProfilerChild>&& aEndpoint) {
->>>>>>> upstream-releases
   MOZ_RELEASE_ASSERT(NS_IsMainThread());
   RefPtr<ChildProfilerController> cpc = new ChildProfilerController();
   cpc->Init(std::move(aEndpoint));

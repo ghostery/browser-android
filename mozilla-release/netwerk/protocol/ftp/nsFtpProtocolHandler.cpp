@@ -122,194 +122,30 @@ nsresult nsFtpProtocolHandler::Init() {
 // nsIProtocolHandler methods:
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFtpProtocolHandler::GetScheme(nsACString &result) {
-  result.AssignLiteral("ftp");
-  return NS_OK;
-||||||| merged common ancestors
-nsFtpProtocolHandler::GetScheme(nsACString &result)
-{
-    result.AssignLiteral("ftp");
-    return NS_OK;
-=======
 nsFtpProtocolHandler::GetScheme(nsACString& result) {
   result.AssignLiteral("ftp");
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFtpProtocolHandler::GetDefaultPort(int32_t *result) {
-  *result = 21;
-  return NS_OK;
-||||||| merged common ancestors
-nsFtpProtocolHandler::GetDefaultPort(int32_t *result)
-{
-    *result = 21;
-    return NS_OK;
-=======
 nsFtpProtocolHandler::GetDefaultPort(int32_t* result) {
   *result = 21;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFtpProtocolHandler::GetProtocolFlags(uint32_t *result) {
-  *result = URI_STD | ALLOWS_PROXY | ALLOWS_PROXY_HTTP | URI_LOADABLE_BY_ANYONE;
-  return NS_OK;
-||||||| merged common ancestors
-nsFtpProtocolHandler::GetProtocolFlags(uint32_t *result)
-{
-    *result = URI_STD | ALLOWS_PROXY | ALLOWS_PROXY_HTTP |
-        URI_LOADABLE_BY_ANYONE;
-    return NS_OK;
-=======
 nsFtpProtocolHandler::GetProtocolFlags(uint32_t* result) {
   *result = URI_STD | ALLOWS_PROXY | ALLOWS_PROXY_HTTP | URI_LOADABLE_BY_ANYONE;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFtpProtocolHandler::NewURI(const nsACString &aSpec, const char *aCharset,
-                             nsIURI *aBaseURI, nsIURI **result) {
-  if (!mEnabled) {
-    return NS_ERROR_UNKNOWN_PROTOCOL;
-  }
-  nsAutoCString spec(aSpec);
-  spec.Trim(" \t\n\r");  // Match NS_IsAsciiWhitespace instead of HTML5
-
-  char *fwdPtr = spec.BeginWriting();
-
-  // now unescape it... %xx reduced inline to resulting character
-
-  int32_t len = NS_UnescapeURL(fwdPtr);
-
-  // NS_UnescapeURL() modified spec's buffer, truncate to ensure
-  // spec knows its new length.
-  spec.Truncate(len);
-
-  // return an error if we find a NUL, CR, or LF in the path
-  if (spec.FindCharInSet(CRLF) >= 0 || spec.FindChar('\0') >= 0)
-    return NS_ERROR_MALFORMED_URI;
-
-  nsCOMPtr<nsIURI> base(aBaseURI);
-  return NS_MutateURI(NS_STANDARDURLMUTATOR_CONTRACTID)
-      .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                              nsIStandardURL::URLTYPE_AUTHORITY, 21,
-                              nsCString(aSpec), aCharset, base, nullptr))
-      .Finalize(result);
-||||||| merged common ancestors
-nsFtpProtocolHandler::NewURI(const nsACString &aSpec,
-                             const char *aCharset,
-                             nsIURI *aBaseURI,
-                             nsIURI **result)
-{
-    if (!mEnabled) {
-        return NS_ERROR_UNKNOWN_PROTOCOL;
-    }
-    nsAutoCString spec(aSpec);
-    spec.Trim(" \t\n\r"); // Match NS_IsAsciiWhitespace instead of HTML5
-
-    char *fwdPtr = spec.BeginWriting();
-
-    // now unescape it... %xx reduced inline to resulting character
-
-    int32_t len = NS_UnescapeURL(fwdPtr);
-
-    // NS_UnescapeURL() modified spec's buffer, truncate to ensure
-    // spec knows its new length.
-    spec.Truncate(len);
-
-    // return an error if we find a NUL, CR, or LF in the path
-    if (spec.FindCharInSet(CRLF) >= 0 || spec.FindChar('\0') >= 0)
-        return NS_ERROR_MALFORMED_URI;
-
-    nsCOMPtr<nsIURI> base(aBaseURI);
-    return NS_MutateURI(NS_STANDARDURLMUTATOR_CONTRACTID)
-      .Apply(NS_MutatorMethod(&nsIStandardURLMutator::Init,
-                              nsIStandardURL::URLTYPE_AUTHORITY,
-                              21, nsCString(aSpec), aCharset, base, nullptr))
-      .Finalize(result);
-=======
 nsFtpProtocolHandler::NewChannel(nsIURI* url, nsILoadInfo* aLoadInfo,
                                  nsIChannel** result) {
   return NewProxiedChannel(url, nullptr, 0, nullptr, aLoadInfo, result);
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFtpProtocolHandler::NewChannel2(nsIURI *url, nsILoadInfo *aLoadInfo,
-                                  nsIChannel **result) {
-  return NewProxiedChannel2(url, nullptr, 0, nullptr, aLoadInfo, result);
-}
-
-NS_IMETHODIMP
-nsFtpProtocolHandler::NewChannel(nsIURI *url, nsIChannel **result) {
-  return NewChannel2(url, nullptr, result);
-}
-
-NS_IMETHODIMP
-nsFtpProtocolHandler::NewProxiedChannel2(nsIURI *uri, nsIProxyInfo *proxyInfo,
-                                         uint32_t proxyResolveFlags,
-                                         nsIURI *proxyURI,
-                                         nsILoadInfo *aLoadInfo,
-                                         nsIChannel **result) {
-  NS_ENSURE_ARG_POINTER(uri);
-  RefPtr<nsBaseChannel> channel;
-  if (IsNeckoChild())
-    channel = new FTPChannelChild(uri);
-  else
-    channel = new nsFtpChannel(uri, proxyInfo);
-
-  nsresult rv = channel->Init();
-  if (NS_FAILED(rv)) {
-    return rv;
-  }
-||||||| merged common ancestors
-nsFtpProtocolHandler::NewChannel2(nsIURI* url,
-                                  nsILoadInfo* aLoadInfo,
-                                  nsIChannel** result)
-{
-    return NewProxiedChannel2(url, nullptr, 0, nullptr, aLoadInfo, result);
-}
-
-NS_IMETHODIMP
-nsFtpProtocolHandler::NewChannel(nsIURI* url, nsIChannel* *result)
-{
-    return NewChannel2(url, nullptr, result);
-}
-
-NS_IMETHODIMP
-nsFtpProtocolHandler::NewProxiedChannel2(nsIURI* uri, nsIProxyInfo* proxyInfo,
-                                         uint32_t proxyResolveFlags,
-                                         nsIURI *proxyURI,
-                                         nsILoadInfo* aLoadInfo,
-                                         nsIChannel* *result)
-{
-    NS_ENSURE_ARG_POINTER(uri);
-    RefPtr<nsBaseChannel> channel;
-    if (IsNeckoChild())
-        channel = new FTPChannelChild(uri);
-    else
-        channel = new nsFtpChannel(uri, proxyInfo);
-
-    nsresult rv = channel->Init();
-    if (NS_FAILED(rv)) {
-        return rv;
-    }
-
-    // set the loadInfo on the new channel
-    rv = channel->SetLoadInfo(aLoadInfo);
-    if (NS_FAILED(rv)) {
-        return rv;
-    }
-=======
 nsFtpProtocolHandler::NewProxiedChannel(nsIURI* uri, nsIProxyInfo* proxyInfo,
                                         uint32_t proxyResolveFlags,
                                         nsIURI* proxyURI,
@@ -330,80 +166,28 @@ nsFtpProtocolHandler::NewProxiedChannel(nsIURI* uri, nsIProxyInfo* proxyInfo,
   if (NS_FAILED(rv)) {
     return rv;
   }
->>>>>>> upstream-releases
 
   // set the loadInfo on the new channel
   rv = channel->SetLoadInfo(aLoadInfo);
   if (NS_FAILED(rv)) {
     return rv;
-<<<<<<< HEAD
   }
 
   channel.forget(result);
   return rv;
 }
-||||||| merged common ancestors
-}
-=======
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-NS_IMETHODIMP
-nsFtpProtocolHandler::NewProxiedChannel(nsIURI *uri, nsIProxyInfo *proxyInfo,
-                                        uint32_t proxyResolveFlags,
-                                        nsIURI *proxyURI, nsIChannel **result) {
-  return NewProxiedChannel2(uri, proxyInfo, proxyResolveFlags, proxyURI,
-                            nullptr /*loadinfo*/, result);
-||||||| merged common ancestors
-NS_IMETHODIMP
-nsFtpProtocolHandler::NewProxiedChannel(nsIURI* uri, nsIProxyInfo* proxyInfo,
-                                        uint32_t proxyResolveFlags,
-                                        nsIURI *proxyURI,
-                                        nsIChannel* *result)
-{
-  return NewProxiedChannel2(uri, proxyInfo, proxyResolveFlags,
-                            proxyURI, nullptr /*loadinfo*/,
-                            result);
-=======
-  channel.forget(result);
-  return rv;
->>>>>>> upstream-releases
-}
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFtpProtocolHandler::AllowPort(int32_t port, const char *scheme,
-                                bool *_retval) {
-  *_retval = (port == 21 || port == 22);
-  return NS_OK;
-||||||| merged common ancestors
-nsFtpProtocolHandler::AllowPort(int32_t port, const char *scheme, bool *_retval)
-{
-    *_retval = (port == 21 || port == 22);
-    return NS_OK;
-=======
 nsFtpProtocolHandler::AllowPort(int32_t port, const char* scheme,
                                 bool* _retval) {
   *_retval = (port == 21 || port == 22);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 // connection cache methods
 
-<<<<<<< HEAD
-void nsFtpProtocolHandler::Timeout(nsITimer *aTimer, void *aClosure) {
-  LOG(("FTP:timeout reached for %p\n", aClosure));
-||||||| merged common ancestors
-void
-nsFtpProtocolHandler::Timeout(nsITimer *aTimer, void *aClosure)
-{
-    LOG(("FTP:timeout reached for %p\n", aClosure));
-=======
 void nsFtpProtocolHandler::Timeout(nsITimer* aTimer, void* aClosure) {
   LOG(("FTP:timeout reached for %p\n", aClosure));
->>>>>>> upstream-releases
 
   bool found = gFtpHandler->mRootConnectionList.RemoveElement(aClosure);
   if (!found) {
@@ -411,35 +195,14 @@ void nsFtpProtocolHandler::Timeout(nsITimer* aTimer, void* aClosure) {
     return;
   }
 
-<<<<<<< HEAD
-  timerStruct *s = (timerStruct *)aClosure;
-  delete s;
-||||||| merged common ancestors
-    timerStruct* s = (timerStruct*)aClosure;
-    delete s;
-=======
   timerStruct* s = (timerStruct*)aClosure;
   delete s;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsFtpProtocolHandler::RemoveConnection(
-    nsIURI *aKey, nsFtpControlConnection **_retval) {
-  NS_ASSERTION(_retval, "null pointer");
-  NS_ASSERTION(aKey, "null pointer");
-||||||| merged common ancestors
-nsresult
-nsFtpProtocolHandler::RemoveConnection(nsIURI *aKey, nsFtpControlConnection* *_retval)
-{
-    NS_ASSERTION(_retval, "null pointer");
-    NS_ASSERTION(aKey, "null pointer");
-=======
 nsresult nsFtpProtocolHandler::RemoveConnection(
     nsIURI* aKey, nsFtpControlConnection** _retval) {
   NS_ASSERTION(_retval, "null pointer");
   NS_ASSERTION(aKey, "null pointer");
->>>>>>> upstream-releases
 
   *_retval = nullptr;
 
@@ -448,30 +211,6 @@ nsresult nsFtpProtocolHandler::RemoveConnection(
 
   LOG(("FTP:removing connection for %s\n", spec.get()));
 
-<<<<<<< HEAD
-  timerStruct *ts = nullptr;
-  uint32_t i;
-  bool found = false;
-
-  for (i = 0; i < mRootConnectionList.Length(); ++i) {
-    ts = mRootConnectionList[i];
-    if (strcmp(spec.get(), ts->key) == 0) {
-      found = true;
-      mRootConnectionList.RemoveElementAt(i);
-      break;
-||||||| merged common ancestors
-    timerStruct* ts = nullptr;
-    uint32_t i;
-    bool found = false;
-
-    for (i=0;i<mRootConnectionList.Length();++i) {
-        ts = mRootConnectionList[i];
-        if (strcmp(spec.get(), ts->key) == 0) {
-            found = true;
-            mRootConnectionList.RemoveElementAt(i);
-            break;
-        }
-=======
   timerStruct* ts = nullptr;
   uint32_t i;
   bool found = false;
@@ -482,7 +221,6 @@ nsresult nsFtpProtocolHandler::RemoveConnection(
       found = true;
       mRootConnectionList.RemoveElementAt(i);
       break;
->>>>>>> upstream-releases
     }
   }
 
@@ -495,120 +233,16 @@ nsresult nsFtpProtocolHandler::RemoveConnection(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsFtpProtocolHandler::InsertConnection(nsIURI *aKey,
-                                                nsFtpControlConnection *aConn) {
-  NS_ASSERTION(aConn, "null pointer");
-  NS_ASSERTION(aKey, "null pointer");
-||||||| merged common ancestors
-nsresult
-nsFtpProtocolHandler::InsertConnection(nsIURI *aKey, nsFtpControlConnection *aConn)
-{
-    NS_ASSERTION(aConn, "null pointer");
-    NS_ASSERTION(aKey, "null pointer");
-
-    if (aConn->mSessionId != mSessionId)
-        return NS_ERROR_FAILURE;
-
-    nsAutoCString spec;
-    aKey->GetPrePath(spec);
-
-    LOG(("FTP:inserting connection for %s\n", spec.get()));
-
-    timerStruct* ts = new timerStruct();
-    if (!ts)
-        return NS_ERROR_OUT_OF_MEMORY;
-
-    nsCOMPtr<nsITimer> timer;
-    nsresult rv = NS_NewTimerWithFuncCallback(getter_AddRefs(timer),
-                                              nsFtpProtocolHandler::Timeout,
-                                              ts,
-                                              mIdleTimeout * 1000,
-                                              nsITimer::TYPE_REPEATING_SLACK,
-                                              "nsFtpProtocolHandler::InsertConnection");
-    if (NS_FAILED(rv)) {
-        delete ts;
-        return rv;
-    }
-=======
 nsresult nsFtpProtocolHandler::InsertConnection(nsIURI* aKey,
                                                 nsFtpControlConnection* aConn) {
   NS_ASSERTION(aConn, "null pointer");
   NS_ASSERTION(aKey, "null pointer");
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   if (aConn->mSessionId != mSessionId) return NS_ERROR_FAILURE;
 
   nsAutoCString spec;
   aKey->GetPrePath(spec);
-||||||| merged common ancestors
-    ts->key = ToNewCString(spec);
-    if (!ts->key) {
-        delete ts;
-        return NS_ERROR_OUT_OF_MEMORY;
-    }
-=======
-  if (aConn->mSessionId != mSessionId) return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  LOG(("FTP:inserting connection for %s\n", spec.get()));
-
-  timerStruct *ts = new timerStruct();
-  if (!ts) return NS_ERROR_OUT_OF_MEMORY;
-
-  nsCOMPtr<nsITimer> timer;
-  nsresult rv = NS_NewTimerWithFuncCallback(
-      getter_AddRefs(timer), nsFtpProtocolHandler::Timeout, ts,
-      mIdleTimeout * 1000, nsITimer::TYPE_REPEATING_SLACK,
-      "nsFtpProtocolHandler::InsertConnection");
-  if (NS_FAILED(rv)) {
-    delete ts;
-    return rv;
-  }
-||||||| merged common ancestors
-    // ts->conn is a RefPtr
-    ts->conn = aConn;
-    ts->timer = timer;
-=======
-  nsAutoCString spec;
-  aKey->GetPrePath(spec);
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  ts->key = ToNewCString(spec);
-  if (!ts->key) {
-    delete ts;
-    return NS_ERROR_OUT_OF_MEMORY;
-  }
-
-  // ts->conn is a RefPtr
-  ts->conn = aConn;
-  ts->timer = timer;
-
-  //
-  // limit number of idle connections.  if limit is reached, then prune
-  // eldest connection with matching key.  if none matching, then prune
-  // eldest connection.
-  //
-  if (mRootConnectionList.Length() == IDLE_CONNECTION_LIMIT) {
-    uint32_t i;
-    for (i = 0; i < mRootConnectionList.Length(); ++i) {
-      timerStruct *candidate = mRootConnectionList[i];
-      if (strcmp(candidate->key, ts->key) == 0) {
-        mRootConnectionList.RemoveElementAt(i);
-        delete candidate;
-        break;
-      }
-    }
-||||||| merged common ancestors
-    //
-    // limit number of idle connections.  if limit is reached, then prune
-    // eldest connection with matching key.  if none matching, then prune
-    // eldest connection.
-    //
-=======
   LOG(("FTP:inserting connection for %s\n", spec.get()));
 
   timerStruct* ts = new timerStruct();
@@ -649,32 +283,10 @@ nsresult nsFtpProtocolHandler::InsertConnection(nsIURI* aKey,
         break;
       }
     }
->>>>>>> upstream-releases
     if (mRootConnectionList.Length() == IDLE_CONNECTION_LIMIT) {
-<<<<<<< HEAD
-      timerStruct *eldest = mRootConnectionList[0];
-      mRootConnectionList.RemoveElementAt(0);
-      delete eldest;
-||||||| merged common ancestors
-        uint32_t i;
-        for (i=0;i<mRootConnectionList.Length();++i) {
-            timerStruct *candidate = mRootConnectionList[i];
-            if (strcmp(candidate->key, ts->key) == 0) {
-                mRootConnectionList.RemoveElementAt(i);
-                delete candidate;
-                break;
-            }
-        }
-        if (mRootConnectionList.Length() == IDLE_CONNECTION_LIMIT) {
-            timerStruct *eldest = mRootConnectionList[0];
-            mRootConnectionList.RemoveElementAt(0);
-            delete eldest;
-        }
-=======
       timerStruct* eldest = mRootConnectionList[0];
       mRootConnectionList.RemoveElementAt(0);
       delete eldest;
->>>>>>> upstream-releases
     }
   }
 
@@ -686,53 +298,6 @@ nsresult nsFtpProtocolHandler::InsertConnection(nsIURI* aKey,
 // nsIObserver
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsFtpProtocolHandler::Observe(nsISupports *aSubject, const char *aTopic,
-                              const char16_t *aData) {
-  LOG(("FTP:observing [%s]\n", aTopic));
-
-  if (!strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID)) {
-    nsCOMPtr<nsIPrefBranch> branch = do_QueryInterface(aSubject);
-    if (!branch) {
-      NS_ERROR("no prefbranch");
-      return NS_ERROR_UNEXPECTED;
-||||||| merged common ancestors
-nsFtpProtocolHandler::Observe(nsISupports *aSubject,
-                              const char *aTopic,
-                              const char16_t *aData)
-{
-    LOG(("FTP:observing [%s]\n", aTopic));
-
-    if (!strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID)) {
-        nsCOMPtr<nsIPrefBranch> branch = do_QueryInterface(aSubject);
-        if (!branch) {
-            NS_ERROR("no prefbranch");
-            return NS_ERROR_UNEXPECTED;
-        }
-        int32_t val;
-        nsresult rv = branch->GetIntPref(IDLE_TIMEOUT_PREF, &val);
-        if (NS_SUCCEEDED(rv))
-            mIdleTimeout = val;
-        bool enabled;
-        rv = branch->GetBoolPref(ENABLED_PREF, &enabled);
-        if (NS_SUCCEEDED(rv))
-            mEnabled = enabled;
-
-	rv = branch->GetIntPref(QOS_DATA_PREF, &val);
-	if (NS_SUCCEEDED(rv))
-	    mDataQoSBits = (uint8_t) clamped(val, 0, 0xff);
-
-	rv = branch->GetIntPref(QOS_CONTROL_PREF, &val);
-	if (NS_SUCCEEDED(rv))
-	    mControlQoSBits = (uint8_t) clamped(val, 0, 0xff);
-    } else if (!strcmp(aTopic, "network:offline-about-to-go-offline")) {
-        ClearAllConnections();
-    } else if (!strcmp(aTopic, "net:clear-active-logins")) {
-        ClearAllConnections();
-        mSessionId++;
-    } else {
-        MOZ_ASSERT_UNREACHABLE("unexpected topic");
-=======
 nsFtpProtocolHandler::Observe(nsISupports* aSubject, const char* aTopic,
                               const char16_t* aData) {
   LOG(("FTP:observing [%s]\n", aTopic));
@@ -742,7 +307,6 @@ nsFtpProtocolHandler::Observe(nsISupports* aSubject, const char* aTopic,
     if (!branch) {
       NS_ERROR("no prefbranch");
       return NS_ERROR_UNEXPECTED;
->>>>>>> upstream-releases
     }
     int32_t val;
     nsresult rv = branch->GetIntPref(IDLE_TIMEOUT_PREF, &val);

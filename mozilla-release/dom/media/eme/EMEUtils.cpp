@@ -47,32 +47,12 @@ void CopyArrayBufferViewOrArrayBufferData(
   aOutData.AppendElements(data.mData, data.mLength);
 }
 
-<<<<<<< HEAD
-bool IsClearkeyKeySystem(const nsAString& aKeySystem) {
-  return !CompareUTF8toUTF16(kEMEKeySystemClearkey, aKeySystem);
-||||||| merged common ancestors
-bool
-IsClearkeyKeySystem(const nsAString& aKeySystem)
-{
-  return !CompareUTF8toUTF16(kEMEKeySystemClearkey, aKeySystem);
-=======
 bool IsClearkeyKeySystem(const nsAString& aKeySystem) {
   return aKeySystem.EqualsLiteral(EME_KEY_SYSTEM_CLEARKEY);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-bool IsWidevineKeySystem(const nsAString& aKeySystem) {
-  return !CompareUTF8toUTF16(kEMEKeySystemWidevine, aKeySystem);
-||||||| merged common ancestors
-bool
-IsWidevineKeySystem(const nsAString& aKeySystem)
-{
-  return !CompareUTF8toUTF16(kEMEKeySystemWidevine, aKeySystem);
-=======
 bool IsWidevineKeySystem(const nsAString& aKeySystem) {
   return aKeySystem.EqualsLiteral(EME_KEY_SYSTEM_WIDEVINE);
->>>>>>> upstream-releases
 }
 
 nsString KeySystemToGMPName(const nsAString& aKeySystem) {

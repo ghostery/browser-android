@@ -7,19 +7,11 @@
 //!
 //! [position]: https://drafts.csswg.org/css-backgrounds-3/#position
 
-<<<<<<< HEAD
-use crate::values::computed::{Integer, LengthOrPercentage, Percentage};
-use crate::values::generics::position::Position as GenericPosition;
-use crate::values::generics::position::ZIndex as GenericZIndex;
-pub use crate::values::specified::position::{GridAutoFlow, GridTemplateAreas};
-||||||| merged common ancestors
-=======
 use crate::values::computed::{Integer, LengthPercentage, Percentage};
 use crate::values::generics::position::Position as GenericPosition;
 use crate::values::generics::position::ZIndex as GenericZIndex;
 pub use crate::values::specified::position::{GridAutoFlow, GridTemplateAreas};
 use crate::Zero;
->>>>>>> upstream-releases
 use std::fmt::{self, Write};
 use style_traits::{CssWriter, ToCss};
 

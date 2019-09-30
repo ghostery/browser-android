@@ -56,44 +56,6 @@ function resetBlocklist() {
   Services.prefs.setCharPref("extensions.blocklist.url", _originalBlocklistURL);
 }
 
-<<<<<<< HEAD
-function getPluginUI(plugin, anonid) {
-  if (plugin.openOrClosedShadowRoot &&
-      plugin.openOrClosedShadowRoot.isUAWidget()) {
-    return plugin.openOrClosedShadowRoot.getElementById(anonid);
-  }
-  return plugin.ownerDocument.
-    getAnonymousElementByAttribute(plugin, "anonid", anonid);
-}
-
-add_task(async function() {
-  SpecialPowers.pushPrefEnv({"set": [
-    ["plugins.click_to_play", true],
-    ["extensions.blocklist.suppressUI", true],
-  ]});
-  registerCleanupFunction(async function() {
-    let pluginTag = getTestPluginTag();
-    pluginTag.enabledState = Ci.nsIPluginTag.STATE_ENABLED;
-    await new Promise(resolve => {
-      setAndUpdateBlocklist(gHttpTestRoot + "blockNoPlugins.xml", resolve);
-    });
-    resetBlocklist();
-  });
-||||||| merged common ancestors
-add_task(async function() {
-  SpecialPowers.pushPrefEnv({"set": [
-    ["plugins.click_to_play", true],
-    ["extensions.blocklist.suppressUI", true],
-  ]});
-  registerCleanupFunction(async function() {
-    let pluginTag = getTestPluginTag();
-    pluginTag.enabledState = Ci.nsIPluginTag.STATE_ENABLED;
-    await new Promise(resolve => {
-      setAndUpdateBlocklist(gHttpTestRoot + "blockNoPlugins.xml", resolve);
-    });
-    resetBlocklist();
-  });
-=======
 function getXULPluginUI(plugin, anonid) {
   if (
     plugin.openOrClosedShadowRoot &&
@@ -107,7 +69,6 @@ function getXULPluginUI(plugin, anonid) {
     anonid
   );
 }
->>>>>>> upstream-releases
 
 function assertPluginActiveState({
   managerWindow,
@@ -238,31 +199,6 @@ async function test_CTP_plugins(aboutAddonsType) {
   let testPluginId = testPluginAddon.id;
 
   let pluginEl = get_addon_element(managerWindow, testPluginId);
-<<<<<<< HEAD
-  pluginEl.parentNode.ensureElementIsVisible(pluginEl);
-  let enableButton = getPluginUI(pluginEl, "enable-btn");
-  is_element_hidden(enableButton, "part3: enable button should not be visible");
-  let disableButton = getPluginUI(pluginEl, "disable-btn");
-  is_element_hidden(disableButton, "part3: disable button should not be visible");
-  let menu = getPluginUI(pluginEl, "state-menulist");
-  is_element_visible(menu, "part3: state menu should be visible");
-  let askToActivateItem = getPluginUI(pluginEl, "ask-to-activate-menuitem");
-  is(menu.selectedItem, askToActivateItem, "part3: state menu should have 'Ask To Activate' selected");
-
-  let pluginTab = await BrowserTestUtils.openNewForegroundTab(gBrowser, gHttpTestRoot + "plugin_test.html");
-||||||| merged common ancestors
-  pluginEl.parentNode.ensureElementIsVisible(pluginEl);
-  let enableButton = managerWindow.document.getAnonymousElementByAttribute(pluginEl, "anonid", "enable-btn");
-  is_element_hidden(enableButton, "part3: enable button should not be visible");
-  let disableButton = managerWindow.document.getAnonymousElementByAttribute(pluginEl, "anonid", "disable-btn");
-  is_element_hidden(disableButton, "part3: disable button should not be visible");
-  let menu = managerWindow.document.getAnonymousElementByAttribute(pluginEl, "anonid", "state-menulist");
-  is_element_visible(menu, "part3: state menu should be visible");
-  let askToActivateItem = managerWindow.document.getAnonymousElementByAttribute(pluginEl, "anonid", "ask-to-activate-menuitem");
-  is(menu.selectedItem, askToActivateItem, "part3: state menu should have 'Ask To Activate' selected");
-
-  let pluginTab = await BrowserTestUtils.openNewForegroundTab(gBrowser, gHttpTestRoot + "plugin_test.html");
-=======
   ok(pluginEl, `Got the about:addon entry for "${testPluginId}"`);
 
   info("part3: test plugin add-on actions status");
@@ -276,7 +212,6 @@ async function test_CTP_plugins(aboutAddonsType) {
     gBrowser,
     gHttpTestRoot + "plugin_test.html"
   );
->>>>>>> upstream-releases
   let pluginBrowser = pluginTab.linkedBrowser;
 
   let condition = () =>
@@ -288,21 +223,11 @@ async function test_CTP_plugins(aboutAddonsType) {
 
   BrowserTestUtils.removeTab(pluginTab);
 
-<<<<<<< HEAD
-  let alwaysActivateItem = getPluginUI(pluginEl, "always-activate-menuitem");
-  menu.selectedItem = alwaysActivateItem;
-  alwaysActivateItem.doCommand();
-||||||| merged common ancestors
-  let alwaysActivateItem = managerWindow.document.getAnonymousElementByAttribute(pluginEl, "anonid", "always-activate-menuitem");
-  menu.selectedItem = alwaysActivateItem;
-  alwaysActivateItem.doCommand();
-=======
   setPluginActivateState({
     managerWindow,
     pluginId: testPluginId,
     activateState: "always-activate",
   });
->>>>>>> upstream-releases
 
   pluginTab = await BrowserTestUtils.openNewForegroundTab(
     gBrowser,
@@ -325,21 +250,11 @@ async function test_CTP_plugins(aboutAddonsType) {
 
   BrowserTestUtils.removeTab(pluginTab);
 
-<<<<<<< HEAD
-  let neverActivateItem = getPluginUI(pluginEl, "never-activate-menuitem");
-  menu.selectedItem = neverActivateItem;
-  neverActivateItem.doCommand();
-||||||| merged common ancestors
-  let neverActivateItem = managerWindow.document.getAnonymousElementByAttribute(pluginEl, "anonid", "never-activate-menuitem");
-  menu.selectedItem = neverActivateItem;
-  neverActivateItem.doCommand();
-=======
   setPluginActivateState({
     managerWindow,
     pluginId: testPluginId,
     activateState: "never-activate",
   });
->>>>>>> upstream-releases
 
   pluginTab = await BrowserTestUtils.openNewForegroundTab(
     gBrowser,
@@ -451,17 +366,6 @@ add_task(async function test_blocklisted_plugin_disabled() {
     ],
   });
 
-<<<<<<< HEAD
-  pluginEl = get_addon_element(managerWindow, testPluginId);
-  pluginEl.parentNode.ensureElementIsVisible(pluginEl);
-  menu = getPluginUI(pluginEl, "state-menulist");
-  is(menu.disabled, true, "part12: state menu should be disabled");
-||||||| merged common ancestors
-  pluginEl = get_addon_element(managerWindow, testPluginId);
-  pluginEl.parentNode.ensureElementIsVisible(pluginEl);
-  menu = managerWindow.document.getAnonymousElementByAttribute(pluginEl, "anonid", "state-menulist");
-  is(menu.disabled, true, "part12: state menu should be disabled");
-=======
   // Causes appDisabled to be set.
   await new Promise(async resolve => {
     // Ensure to reset the blocklist if this test exits earlier because
@@ -469,7 +373,6 @@ add_task(async function test_blocklisted_plugin_disabled() {
     registerCleanupFunction(ensurePluginEnabled);
     setAndUpdateBlocklist(gHttpTestRoot + "blockPluginHard.xml", resolve);
   });
->>>>>>> upstream-releases
 
   await checkPlugins();
 

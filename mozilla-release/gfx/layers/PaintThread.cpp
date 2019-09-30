@@ -49,16 +49,8 @@ void PaintThread::Release() {}
 
 void PaintThread::AddRef() {}
 
-<<<<<<< HEAD
-/* static */ int32_t PaintThread::CalculatePaintWorkerCount() {
-||||||| merged common ancestors
-/* static */ int32_t
-PaintThread::CalculatePaintWorkerCount()
-{
-=======
 /* static */
 int32_t PaintThread::CalculatePaintWorkerCount() {
->>>>>>> upstream-releases
   int32_t cpuCores = PR_GetNumberOfProcessors();
   int32_t workerCount = StaticPrefs::layers_omtp_paint_workers();
 
@@ -71,16 +63,8 @@ int32_t PaintThread::CalculatePaintWorkerCount() {
   return workerCount;
 }
 
-<<<<<<< HEAD
-/* static */ void PaintThread::Start() {
-||||||| merged common ancestors
-/* static */ void
-PaintThread::Start()
-{
-=======
 /* static */
 void PaintThread::Start() {
->>>>>>> upstream-releases
   PaintThread::sSingleton = new PaintThread();
 
   if (!PaintThread::sSingleton->Init()) {
@@ -89,13 +73,6 @@ void PaintThread::Start() {
   }
 }
 
-<<<<<<< HEAD
-bool PaintThread::Init() {
-||||||| merged common ancestors
-bool
-PaintThread::Init()
-{
-=======
 static uint32_t GetPaintThreadStackSize() {
 #ifndef XP_MACOSX
   return nsIThreadManager::DEFAULT_STACK_SIZE;
@@ -113,7 +90,6 @@ static uint32_t GetPaintThreadStackSize() {
 }
 
 bool PaintThread::Init() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   RefPtr<nsIThread> thread;
@@ -145,16 +121,9 @@ void PaintThread::InitPaintWorkers() {
   MOZ_ASSERT(NS_IsMainThread());
   int32_t count = PaintThread::CalculatePaintWorkerCount();
   if (count != 1) {
-<<<<<<< HEAD
-    mPaintWorkers =
-        SharedThreadPool::Get(NS_LITERAL_CSTRING("PaintWorker"), count);
-||||||| merged common ancestors
-    mPaintWorkers = SharedThreadPool::Get(NS_LITERAL_CSTRING("PaintWorker"), count);
-=======
     mPaintWorkers =
         SharedThreadPool::Get(NS_LITERAL_CSTRING("PaintWorker"), count);
     mPaintWorkers->SetThreadStackSize(GetPaintThreadStackSize());
->>>>>>> upstream-releases
   }
 }
 
@@ -163,16 +132,8 @@ void DestroyPaintThread(UniquePtr<PaintThread>&& pt) {
   pt->ShutdownOnPaintThread();
 }
 
-<<<<<<< HEAD
-/* static */ void PaintThread::Shutdown() {
-||||||| merged common ancestors
-/* static */ void
-PaintThread::Shutdown()
-{
-=======
 /* static */
 void PaintThread::Shutdown() {
->>>>>>> upstream-releases
   MOZ_ASSERT(NS_IsMainThread());
 
   UniquePtr<PaintThread> pt(sSingleton.forget());
@@ -188,31 +149,11 @@ void PaintThread::Shutdown() {
 
 void PaintThread::ShutdownOnPaintThread() { MOZ_ASSERT(IsOnPaintThread()); }
 
-<<<<<<< HEAD
-/* static */ PaintThread* PaintThread::Get() {
-  return PaintThread::sSingleton.get();
-}
-||||||| merged common ancestors
-/* static */ PaintThread*
-PaintThread::Get()
-{
-  return PaintThread::sSingleton.get();
-}
-=======
 /* static */
 PaintThread* PaintThread::Get() { return PaintThread::sSingleton.get(); }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-/* static */ bool PaintThread::IsOnPaintThread() {
-||||||| merged common ancestors
-/* static */ bool
-PaintThread::IsOnPaintThread()
-{
-=======
 /* static */
 bool PaintThread::IsOnPaintThread() {
->>>>>>> upstream-releases
   return sThreadId == PlatformThread::CurrentId();
 }
 
@@ -288,21 +229,6 @@ void PaintThread::AsyncPaintTask(CompositorBridgeChild* aBridge,
     target->Flush();
   }
 
-<<<<<<< HEAD
-  if (gfxPrefs::LayersOMTPReleaseCaptureOnMainThread()) {
-    // This should ensure the capture drawtarget, which may hold on to
-    // UnscaledFont objects, gets destroyed on the main thread (See bug
-    // 1404742). This assumes (unflushed) target DrawTargets do not themselves
-    // hold on to UnscaledFonts.
-    NS_ReleaseOnMainThreadSystemGroup("PaintTask::DrawTargetCapture",
-                                      aTask->mCapture.forget());
-||||||| merged common ancestors
-  if (gfxPrefs::LayersOMTPReleaseCaptureOnMainThread()) {
-    // This should ensure the capture drawtarget, which may hold on to UnscaledFont objects,
-    // gets destroyed on the main thread (See bug 1404742). This assumes (unflushed) target
-    // DrawTargets do not themselves hold on to UnscaledFonts.
-    NS_ReleaseOnMainThreadSystemGroup("PaintTask::DrawTargetCapture", aTask->mCapture.forget());
-=======
   if (StaticPrefs::layers_omtp_release_capture_on_main_thread()) {
     // This should ensure the capture drawtarget, which may hold on to
     // UnscaledFont objects, gets destroyed on the main thread (See bug
@@ -310,7 +236,6 @@ void PaintThread::AsyncPaintTask(CompositorBridgeChild* aBridge,
     // hold on to UnscaledFonts.
     NS_ReleaseOnMainThreadSystemGroup("PaintTask::DrawTargetCapture",
                                       aTask->mCapture.forget());
->>>>>>> upstream-releases
   }
 
   if (aBridge->NotifyFinishedAsyncWorkerPaint(aTask)) {

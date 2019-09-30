@@ -1,12 +1,6 @@
 [package]
 name = "cranelift-wasm"
-<<<<<<< HEAD
-version = "0.25.0"
-||||||| merged common ancestors
-version = "0.20.1"
-=======
 version = "0.32.0"
->>>>>>> upstream-releases
 authors = ["The Cranelift Project Developers"]
 description = "Translator from WebAssembly to Cranelift IR"
 repository = "https://github.com/CraneStation/cranelift"
@@ -14,91 +8,6 @@ license = "Apache-2.0 WITH LLVM-exception"
 categories = ["no-std", "wasm"]
 readme = "README.md"
 keywords = ["webassembly", "wasm"]
-<<<<<<< HEAD
-categories = ["no-std", "wasm"]
-license = "Apache-2.0 WITH LLVM-exception"
-repository = "https://github.com/CraneStation/cranelift"
-[dependencies.cranelift-codegen]
-version = "0.25.0"
-default-features = false
-
-[dependencies.cranelift-entity]
-version = "0.25.0"
-default-features = false
-
-[dependencies.cranelift-frontend]
-version = "0.25.0"
-default-features = false
-
-[dependencies.failure]
-version = "0.1.1"
-features = ["derive"]
-default-features = false
-
-[dependencies.failure_derive]
-version = "0.1.1"
-default-features = false
-
-[dependencies.hashmap_core]
-version = "0.1.9"
-optional = true
-
-[dependencies.log]
-version = "0.4.4"
-default-features = false
-
-[dependencies.wasmparser]
-version = "0.22.0"
-default-features = false
-[dev-dependencies.target-lexicon]
-version = "0.2.0"
-
-[dev-dependencies.wabt]
-version = "0.7.0"
-||||||| merged common ancestors
-categories = ["no-std", "wasm"]
-license = "Apache-2.0 WITH LLVM-exception"
-repository = "https://github.com/CraneStation/cranelift"
-[dependencies.cranelift-codegen]
-version = "0.20.0"
-default-features = false
-
-[dependencies.cranelift-entity]
-version = "0.20.0"
-default-features = false
-
-[dependencies.cranelift-frontend]
-version = "0.20.0"
-default-features = false
-
-[dependencies.failure]
-version = "0.1.1"
-features = ["derive"]
-default-features = false
-
-[dependencies.failure_derive]
-version = "0.1.1"
-default-features = false
-
-[dependencies.hashmap_core]
-version = "0.1.9"
-optional = true
-
-[dependencies.log]
-version = "0.4.4"
-features = ["release_max_level_warn"]
-default-features = false
-
-[dependencies.target-lexicon]
-version = "0.0.3"
-default-features = false
-
-[dependencies.wasmparser]
-version = "0.17.2"
-default-features = false
-[dev-dependencies.wabt]
-version = "0.5.0"
-=======
 edition = "2018"
 
 [dependencies]
@@ -114,22 +23,11 @@ log = { version = "0.4.6", default-features = false }
 [dev-dependencies]
 wabt = "0.7.0"
 target-lexicon = "0.4.0"
->>>>>>> upstream-releases
 
 [features]
 default = ["std"]
-<<<<<<< HEAD
-std = ["cranelift-codegen/std", "cranelift-frontend/std", "wasmparser/std"]
-[badges.maintenance]
-status = "experimental"
-||||||| merged common ancestors
-std = ["cranelift-codegen/std", "cranelift-frontend/std", "wasmparser/std", "target-lexicon/std"]
-[badges.maintenance]
-status = "experimental"
-=======
 std = ["cranelift-codegen/std", "cranelift-frontend/std", "wasmparser/std"]
 core = ["hashmap_core", "cranelift-codegen/core", "cranelift-frontend/core", "wasmparser/core"]
->>>>>>> upstream-releases
 
 [badges]
 maintenance = { status = "experimental" }

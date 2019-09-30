@@ -91,16 +91,10 @@ interface PeerConnectionImpl  {
    * into the SDP.
    */
   [Throws]
-<<<<<<< HEAD
-  void addIceCandidate(DOMString candidate, DOMString mid, unsigned short? level);
-||||||| merged common ancestors
-  void addIceCandidate(DOMString candidate, DOMString mid, unsigned short level);
-=======
   void addIceCandidate(DOMString candidate,
                        DOMString mid,
                        DOMString ufrag,
                        unsigned short? level);
->>>>>>> upstream-releases
 
   /* Shuts down threads, deletes state */
   [Throws]

@@ -89,13 +89,6 @@ var UI = {
     // toolbox session id.
     this._telemetry.toolOpened("webide", -1, this);
 
-<<<<<<< HEAD
-    this.notificationBox = new window.MozElements.NotificationBox(element => {
-      document.getElementById("containerbox")
-              .insertAdjacentElement("afterbegin", element);
-    });
-||||||| merged common ancestors
-=======
     function createNotificationBox() {
       return new window.MozElements.NotificationBox(element => {
         document
@@ -108,7 +101,6 @@ var UI = {
     this.notificationBox = createNotificationBox();
     this.deprecationBox = createNotificationBox();
 
->>>>>>> upstream-releases
     AppManager.init();
 
     this.appManagerUpdate = this.appManagerUpdate.bind(this);
@@ -141,14 +133,6 @@ var UI = {
       adbAddon.install("webide");
     }
 
-<<<<<<< HEAD
-    // Remove deprecated remote debugging extensions.
-    adbAddon.uninstallUnsupportedExtensions();
-
-    Services.prefs.setBoolPref("devtools.webide.autoinstallADBExtension", false);
-||||||| merged common ancestors
-    Services.prefs.setBoolPref("devtools.webide.autoinstallADBExtension", false);
-=======
     // Remove deprecated remote debugging extensions.
     adbAddon.uninstallUnsupportedExtensions();
 
@@ -156,7 +140,6 @@ var UI = {
       "devtools.webide.autoinstallADBExtension",
       false
     );
->>>>>>> upstream-releases
 
     this.setupDeck();
 
@@ -388,14 +371,6 @@ var UI = {
     );
   },
 
-<<<<<<< HEAD
-  dismissErrorNotification: function() {
-    this.notificationBox.removeAllNotifications(true);
-||||||| merged common ancestors
-  dismissErrorNotification: function() {
-    const nbox = document.querySelector("#notificationbox");
-    nbox.removeAllNotifications(true);
-=======
   showDeprecationMessage: function() {
     let text;
     try {
@@ -434,7 +409,6 @@ var UI = {
 
   dismissErrorNotification: function() {
     this.notificationBox.removeAllNotifications(true);
->>>>>>> upstream-releases
   },
 
   /** ******** COMMANDS **********/
@@ -1017,15 +991,9 @@ var UI = {
     const splitter = document.querySelector(".devtools-horizontal-splitter");
     splitter.removeAttribute("hidden");
 
-<<<<<<< HEAD
-    document.getElementById("containerbox").insertBefore(iframe, splitter.nextSibling);
-||||||| merged common ancestors
-    document.querySelector("notificationbox").insertBefore(iframe, splitter.nextSibling);
-=======
     document
       .getElementById("containerbox")
       .insertBefore(iframe, splitter.nextSibling);
->>>>>>> upstream-releases
     const host = Toolbox.HostType.CUSTOM;
     const options = { customIframe: iframe, zoom: false, uid: iframe.uid };
 
@@ -1087,18 +1055,6 @@ var Cmds = {
     UI.selectDeckPanel("performance");
     const iframe = document.getElementById("deck-panel-performance");
 
-<<<<<<< HEAD
-    iframe.addEventListener("DOMContentLoaded", () => {
-      const actorVersion = AppManager.connection.client.mainRoot.traits.perfActorVersion;
-      iframe.contentWindow.gInit(AppManager.perfFront,
-                                 AppManager.preferenceFront,
-                                 actorVersion);
-    }, { once: true });
-||||||| merged common ancestors
-    iframe.addEventListener("DOMContentLoaded", () => {
-      iframe.contentWindow.gInit(AppManager.perfFront, AppManager.preferenceFront);
-    }, { once: true });
-=======
     iframe.addEventListener(
       "DOMContentLoaded",
       () => {
@@ -1109,7 +1065,6 @@ var Cmds = {
       },
       { once: true }
     );
->>>>>>> upstream-releases
   },
 
   async play() {

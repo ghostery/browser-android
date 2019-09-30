@@ -22,13 +22,7 @@ const TEST_DATA = [
     desc: "Move the focus away from breadcrumbs to a next focusable element",
     focused: false,
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-||||||| merged common ancestors
-    options: { }
-=======
     options: {},
->>>>>>> upstream-releases
   },
   {
     desc: "Move the focus back to the breadcrumbs",
@@ -48,16 +42,8 @@ const TEST_DATA = [
     desc: "Move the focus back to the breadcrumbs",
     focused: true,
     key: "VK_TAB",
-<<<<<<< HEAD
-    options: { },
-  },
-||||||| merged common ancestors
-    options: { }
-  }
-=======
     options: {},
   },
->>>>>>> upstream-releases
 ];
 
 add_task(async function() {

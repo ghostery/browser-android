@@ -22,46 +22,9 @@
 #include "nsISupportsUtils.h"
 #include "nsRange.h"
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-using namespace mozilla;
-
-//------------------------------------------------------------
-nsFilteredContentIterator::nsFilteredContentIterator(
-    UniquePtr<nsComposeTxtSrvFilter> aFilter)
-    : mIterator(NS_NewContentIterator()),
-      mPreIterator(NS_NewPreContentIterator()),
-      mFilter(std::move(aFilter)),
-      mDidSkip(false),
-      mIsOutOfRange(false),
-      mDirection(eDirNotSet) {}
-||||||| merged common ancestors
-using namespace mozilla;
-
-//------------------------------------------------------------
-nsFilteredContentIterator::nsFilteredContentIterator(UniquePtr<nsComposeTxtSrvFilter> aFilter) :
-  mIterator(NS_NewContentIterator()),
-  mPreIterator(NS_NewPreContentIterator()),
-  mFilter(std::move(aFilter)),
-  mDidSkip(false),
-  mIsOutOfRange(false),
-  mDirection(eDirNotSet)
-{
-}
-=======
 namespace mozilla {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-//------------------------------------------------------------
-nsFilteredContentIterator::~nsFilteredContentIterator() {}
-||||||| merged common ancestors
-//------------------------------------------------------------
-nsFilteredContentIterator::~nsFilteredContentIterator()
-{
-}
-=======
 using namespace dom;
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
 
 FilteredContentIterator::FilteredContentIterator(
     UniquePtr<nsComposeTxtSrvFilter> aFilter)
@@ -73,52 +36,17 @@ FilteredContentIterator::FilteredContentIterator(
 
 FilteredContentIterator::~FilteredContentIterator() {}
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-NS_IMPL_CYCLE_COLLECTION(nsFilteredContentIterator, mCurrentIterator, mIterator,
-                         mPreIterator, mRange)
-||||||| merged common ancestors
-NS_IMPL_CYCLE_COLLECTION(nsFilteredContentIterator,
-                         mCurrentIterator,
-                         mIterator,
-                         mPreIterator,
-                         mRange)
-=======
 NS_IMPL_CYCLE_COLLECTION(FilteredContentIterator, mPostIterator, mPreIterator,
                          mRange)
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-//------------------------------------------------------------
-nsresult nsFilteredContentIterator::Init(nsINode* aRoot) {
-||||||| merged common ancestors
-//------------------------------------------------------------
-nsresult
-nsFilteredContentIterator::Init(nsINode* aRoot)
-{
-=======
 NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(FilteredContentIterator, AddRef)
 NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(FilteredContentIterator, Release)
 
 nsresult FilteredContentIterator::Init(nsINode* aRoot) {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   NS_ENSURE_ARG_POINTER(aRoot);
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-  NS_ENSURE_TRUE(mPreIterator, NS_ERROR_FAILURE);
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-  mIsOutOfRange = false;
-  mDirection = eForward;
-  mCurrentIterator = mPreIterator;
-||||||| merged common ancestors
-  NS_ENSURE_TRUE(mPreIterator, NS_ERROR_FAILURE);
-  NS_ENSURE_TRUE(mIterator, NS_ERROR_FAILURE);
-  mIsOutOfRange    = false;
-  mDirection       = eForward;
-  mCurrentIterator = mPreIterator;
-=======
   mIsOutOfRange = false;
   mDirection = eForward;
   mCurrentIterator = &mPreIterator;
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
 
   mRange = new nsRange(aRoot);
   mRange->SelectNode(*aRoot, IgnoreErrors());
@@ -128,20 +56,8 @@ nsresult FilteredContentIterator::Init(nsINode* aRoot) {
   return mPostIterator.Init(mRange);
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-//------------------------------------------------------------
-nsresult nsFilteredContentIterator::Init(nsRange* aRange) {
-  if (NS_WARN_IF(!aRange)) {
-||||||| merged common ancestors
-//------------------------------------------------------------
-nsresult
-nsFilteredContentIterator::Init(nsRange* aRange)
-{
-  if (NS_WARN_IF(!aRange)) {
-=======
 nsresult FilteredContentIterator::Init(const AbstractRange* aAbstractRange) {
   if (NS_WARN_IF(!aAbstractRange)) {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
     return NS_ERROR_INVALID_ARG;
   }
 
@@ -156,51 +72,19 @@ nsresult FilteredContentIterator::Init(const AbstractRange* aAbstractRange) {
   return InitWithRange();
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-//------------------------------------------------------------
-nsresult nsFilteredContentIterator::Init(nsINode* aStartContainer,
-                                         uint32_t aStartOffset,
-                                         nsINode* aEndContainer,
-                                         uint32_t aEndOffset) {
-||||||| merged common ancestors
-//------------------------------------------------------------
-nsresult
-nsFilteredContentIterator::Init(nsINode* aStartContainer, uint32_t aStartOffset,
-                                nsINode* aEndContainer, uint32_t aEndOffset)
-{
-=======
 nsresult FilteredContentIterator::Init(nsINode* aStartContainer,
                                        uint32_t aStartOffset,
                                        nsINode* aEndContainer,
                                        uint32_t aEndOffset) {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   return Init(RawRangeBoundary(aStartContainer, aStartOffset),
               RawRangeBoundary(aEndContainer, aEndOffset));
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-nsresult nsFilteredContentIterator::Init(const RawRangeBoundary& aStart,
-                                         const RawRangeBoundary& aEnd) {
-  RefPtr<nsRange> range;
-  nsresult rv = nsRange::CreateRange(aStart, aEnd, getter_AddRefs(range));
-  if (NS_WARN_IF(NS_FAILED(rv)) || NS_WARN_IF(!range) ||
-      NS_WARN_IF(!range->IsPositioned())) {
-||||||| merged common ancestors
-nsresult
-nsFilteredContentIterator::Init(const RawRangeBoundary& aStart,
-                                const RawRangeBoundary& aEnd)
-{
-  RefPtr<nsRange> range;
-  nsresult rv = nsRange::CreateRange(aStart, aEnd, getter_AddRefs(range));
-  if (NS_WARN_IF(NS_FAILED(rv)) || NS_WARN_IF(!range) ||
-      NS_WARN_IF(!range->IsPositioned())) {
-=======
 nsresult FilteredContentIterator::Init(const RawRangeBoundary& aStartBoundary,
                                        const RawRangeBoundary& aEndBoundary) {
   RefPtr<nsRange> range =
       nsRange::Create(aStartBoundary, aEndBoundary, IgnoreErrors());
   if (NS_WARN_IF(!range) || NS_WARN_IF(!range->IsPositioned())) {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
     return NS_ERROR_INVALID_ARG;
   }
 
@@ -212,15 +96,7 @@ nsresult FilteredContentIterator::Init(const RawRangeBoundary& aStartBoundary,
   return InitWithRange();
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-nsresult nsFilteredContentIterator::InitWithRange() {
-||||||| merged common ancestors
-nsresult
-nsFilteredContentIterator::InitWithRange()
-{
-=======
 nsresult FilteredContentIterator::InitWithRange() {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   MOZ_ASSERT(mRange);
   MOZ_ASSERT(mRange->IsPositioned());
 
@@ -235,43 +111,15 @@ nsresult FilteredContentIterator::InitWithRange() {
   return mPostIterator.Init(mRange);
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-//------------------------------------------------------------
-nsresult nsFilteredContentIterator::SwitchDirections(bool aChangeToForward) {
-  nsINode* node = mCurrentIterator->GetCurrentNode();
-||||||| merged common ancestors
-//------------------------------------------------------------
-nsresult
-nsFilteredContentIterator::SwitchDirections(bool aChangeToForward)
-{
-  nsINode *node = mCurrentIterator->GetCurrentNode();
-=======
 nsresult FilteredContentIterator::SwitchDirections(bool aChangeToForward) {
   nsINode* node = mCurrentIterator->GetCurrentNode();
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
 
   if (aChangeToForward) {
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-    mCurrentIterator = mPreIterator;
-    mDirection = eForward;
-||||||| merged common ancestors
-    mCurrentIterator = mPreIterator;
-    mDirection       = eForward;
-=======
     mCurrentIterator = &mPreIterator;
     mDirection = eForward;
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   } else {
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-    mCurrentIterator = mIterator;
-    mDirection = eBackward;
-||||||| merged common ancestors
-    mCurrentIterator = mIterator;
-    mDirection       = eBackward;
-=======
     mCurrentIterator = &mPostIterator;
     mDirection = eBackward;
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   }
 
   if (node) {
@@ -284,17 +132,7 @@ nsresult FilteredContentIterator::SwitchDirections(bool aChangeToForward) {
   return NS_OK;
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-//------------------------------------------------------------
-void nsFilteredContentIterator::First() {
-||||||| merged common ancestors
-//------------------------------------------------------------
-void
-nsFilteredContentIterator::First()
-{
-=======
 void FilteredContentIterator::First() {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   if (!mCurrentIterator) {
     NS_ERROR("Missing iterator!");
 
@@ -304,19 +142,9 @@ void FilteredContentIterator::First() {
   // If we are switching directions then
   // we need to switch how we process the nodes
   if (mDirection != eForward) {
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-    mCurrentIterator = mPreIterator;
-    mDirection = eForward;
-    mIsOutOfRange = false;
-||||||| merged common ancestors
-    mCurrentIterator = mPreIterator;
-    mDirection       = eForward;
-    mIsOutOfRange    = false;
-=======
     mCurrentIterator = &mPreIterator;
     mDirection = eForward;
     mIsOutOfRange = false;
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   }
 
   mCurrentIterator->First();
@@ -331,17 +159,7 @@ void FilteredContentIterator::First() {
   CheckAdvNode(currentNode, didCross, eForward);
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-//------------------------------------------------------------
-void nsFilteredContentIterator::Last() {
-||||||| merged common ancestors
-//------------------------------------------------------------
-void
-nsFilteredContentIterator::Last()
-{
-=======
 void FilteredContentIterator::Last() {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   if (!mCurrentIterator) {
     NS_ERROR("Missing iterator!");
 
@@ -351,19 +169,9 @@ void FilteredContentIterator::Last() {
   // If we are switching directions then
   // we need to switch how we process the nodes
   if (mDirection != eBackward) {
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-    mCurrentIterator = mIterator;
-    mDirection = eBackward;
-    mIsOutOfRange = false;
-||||||| merged common ancestors
-    mCurrentIterator = mIterator;
-    mDirection       = eBackward;
-    mIsOutOfRange    = false;
-=======
     mCurrentIterator = &mPostIterator;
     mDirection = eBackward;
     mIsOutOfRange = false;
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   }
 
   mCurrentIterator->Last();
@@ -437,19 +245,9 @@ static bool ContentIsInTraversalRange(nsRange* aRange, nsIContent* aNextContent,
 }
 
 // Helper function to advance to the next or previous node
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-nsresult nsFilteredContentIterator::AdvanceNode(nsINode* aNode,
-                                                nsINode*& aNewNode,
-                                                eDirectionType aDir) {
-||||||| merged common ancestors
-nsresult
-nsFilteredContentIterator::AdvanceNode(nsINode* aNode, nsINode*& aNewNode, eDirectionType aDir)
-{
-=======
 nsresult FilteredContentIterator::AdvanceNode(nsINode* aNode,
                                               nsINode*& aNewNode,
                                               eDirectionType aDir) {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   nsCOMPtr<nsIContent> nextNode;
   if (aDir == eForward) {
     nextNode = aNode->GetNextSibling();
@@ -494,20 +292,9 @@ nsresult FilteredContentIterator::AdvanceNode(nsINode* aNode,
 }
 
 // Helper function to see if the next/prev node should be skipped
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-void nsFilteredContentIterator::CheckAdvNode(nsINode* aNode, bool& aDidSkip,
-                                             eDirectionType aDir) {
-  aDidSkip = false;
-||||||| merged common ancestors
-void
-nsFilteredContentIterator::CheckAdvNode(nsINode* aNode, bool& aDidSkip, eDirectionType aDir)
-{
-  aDidSkip      = false;
-=======
 void FilteredContentIterator::CheckAdvNode(nsINode* aNode, bool& aDidSkip,
                                            eDirectionType aDir) {
   aDidSkip = false;
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   mIsOutOfRange = false;
 
   if (aNode && mFilter) {
@@ -535,15 +322,7 @@ void FilteredContentIterator::CheckAdvNode(nsINode* aNode, bool& aDidSkip,
   }
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-void nsFilteredContentIterator::Next() {
-||||||| merged common ancestors
-void
-nsFilteredContentIterator::Next()
-{
-=======
 void FilteredContentIterator::Next() {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   if (mIsOutOfRange || !mCurrentIterator) {
     NS_ASSERTION(mCurrentIterator, "Missing iterator!");
 
@@ -572,15 +351,7 @@ void FilteredContentIterator::Next() {
   CheckAdvNode(currentNode, mDidSkip, eForward);
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-void nsFilteredContentIterator::Prev() {
-||||||| merged common ancestors
-void
-nsFilteredContentIterator::Prev()
-{
-=======
 void FilteredContentIterator::Prev() {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   if (mIsOutOfRange || !mCurrentIterator) {
     NS_ASSERTION(mCurrentIterator, "Missing iterator!");
 
@@ -609,15 +380,7 @@ void FilteredContentIterator::Prev() {
   CheckAdvNode(currentNode, mDidSkip, eBackward);
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-nsINode* nsFilteredContentIterator::GetCurrentNode() {
-||||||| merged common ancestors
-nsINode *
-nsFilteredContentIterator::GetCurrentNode()
-{
-=======
 nsINode* FilteredContentIterator::GetCurrentNode() {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   if (mIsOutOfRange || !mCurrentIterator) {
     return nullptr;
   }
@@ -625,15 +388,7 @@ nsINode* FilteredContentIterator::GetCurrentNode() {
   return mCurrentIterator->GetCurrentNode();
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-bool nsFilteredContentIterator::IsDone() {
-||||||| merged common ancestors
-bool
-nsFilteredContentIterator::IsDone()
-{
-=======
 bool FilteredContentIterator::IsDone() {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   if (mIsOutOfRange || !mCurrentIterator) {
     return true;
   }
@@ -641,15 +396,7 @@ bool FilteredContentIterator::IsDone() {
   return mCurrentIterator->IsDone();
 }
 
-<<<<<<< HEAD:mozilla-release/editor/spellchecker/nsFilteredContentIterator.cpp
-nsresult nsFilteredContentIterator::PositionAt(nsINode* aCurNode) {
-||||||| merged common ancestors
-nsresult
-nsFilteredContentIterator::PositionAt(nsINode* aCurNode)
-{
-=======
 nsresult FilteredContentIterator::PositionAt(nsINode* aCurNode) {
->>>>>>> upstream-releases:mozilla-release/editor/spellchecker/FilteredContentIterator.cpp
   NS_ENSURE_TRUE(mCurrentIterator, NS_ERROR_FAILURE);
   mIsOutOfRange = false;
   return mCurrentIterator->PositionAt(aCurNode);

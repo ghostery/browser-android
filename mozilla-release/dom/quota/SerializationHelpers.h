@@ -32,37 +32,16 @@ template <>
 struct ParamTraits<mozilla::OriginAttributesPattern> {
   typedef mozilla::OriginAttributesPattern paramType;
 
-<<<<<<< HEAD
   static void Write(Message* aMsg, const paramType& aParam) {
-    WriteParam(aMsg, aParam.mAppId);
-||||||| merged common ancestors
-  static void Write(Message* aMsg, const paramType& aParam)
-  {
-    WriteParam(aMsg, aParam.mAppId);
-=======
-  static void Write(Message* aMsg, const paramType& aParam) {
->>>>>>> upstream-releases
     WriteParam(aMsg, aParam.mFirstPartyDomain);
     WriteParam(aMsg, aParam.mInIsolatedMozBrowser);
     WriteParam(aMsg, aParam.mPrivateBrowsingId);
     WriteParam(aMsg, aParam.mUserContextId);
   }
 
-<<<<<<< HEAD
-  static bool Read(const Message* aMsg, PickleIterator* aIter,
-                   paramType* aResult) {
-    return ReadParam(aMsg, aIter, &aResult->mAppId) &&
-           ReadParam(aMsg, aIter, &aResult->mFirstPartyDomain) &&
-||||||| merged common ancestors
-  static bool Read(const Message* aMsg, PickleIterator* aIter, paramType* aResult)
-  {
-    return ReadParam(aMsg, aIter, &aResult->mAppId) &&
-           ReadParam(aMsg, aIter, &aResult->mFirstPartyDomain) &&
-=======
   static bool Read(const Message* aMsg, PickleIterator* aIter,
                    paramType* aResult) {
     return ReadParam(aMsg, aIter, &aResult->mFirstPartyDomain) &&
->>>>>>> upstream-releases
            ReadParam(aMsg, aIter, &aResult->mInIsolatedMozBrowser) &&
            ReadParam(aMsg, aIter, &aResult->mPrivateBrowsingId) &&
            ReadParam(aMsg, aIter, &aResult->mUserContextId);

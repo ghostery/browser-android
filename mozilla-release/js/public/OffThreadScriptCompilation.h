@@ -11,17 +11,9 @@
 #ifndef js_OffThreadScriptCompilation_h
 #define js_OffThreadScriptCompilation_h
 
-<<<<<<< HEAD
-#include "mozilla/Range.h"   // mozilla::Range
-#include "mozilla/Vector.h"  // mozilla::Vector
-||||||| merged common ancestors
-#include "mozilla/Range.h" // mozilla::Range
-#include "mozilla/Vector.h" // mozilla::Vector
-=======
 #include "mozilla/Range.h"   // mozilla::Range
 #include "mozilla/Utf8.h"    // mozilla::Utf8Unit
 #include "mozilla/Vector.h"  // mozilla::Vector
->>>>>>> upstream-releases
 
 #include <stddef.h>  // size_t
 
@@ -71,106 +63,6 @@ extern JS_PUBLIC_API bool CanDecodeOffThread(
  * to FinishOffThreadScript.
  */
 
-<<<<<<< HEAD
-extern JS_PUBLIC_API bool CompileOffThread(
-    JSContext* cx, const ReadOnlyCompileOptions& options,
-    SourceText<char16_t>& srcBuf, OffThreadCompileCallback callback,
-    void* callbackData);
-
-extern JS_PUBLIC_API JSScript* FinishOffThreadScript(JSContext* cx,
-                                                     OffThreadToken* token);
-
-extern JS_PUBLIC_API void CancelOffThreadScript(JSContext* cx,
-                                                OffThreadToken* token);
-
-extern JS_PUBLIC_API bool CompileOffThreadModule(
-    JSContext* cx, const ReadOnlyCompileOptions& options,
-    SourceText<char16_t>& srcBuf, OffThreadCompileCallback callback,
-    void* callbackData);
-
-extern JS_PUBLIC_API JSObject* FinishOffThreadModule(JSContext* cx,
-                                                     OffThreadToken* token);
-
-extern JS_PUBLIC_API void CancelOffThreadModule(JSContext* cx,
-                                                OffThreadToken* token);
-
-extern JS_PUBLIC_API bool DecodeOffThreadScript(
-    JSContext* cx, const ReadOnlyCompileOptions& options,
-    mozilla::Vector<uint8_t>& buffer /* TranscodeBuffer& */, size_t cursor,
-    OffThreadCompileCallback callback, void* callbackData);
-
-extern JS_PUBLIC_API bool DecodeOffThreadScript(
-    JSContext* cx, const ReadOnlyCompileOptions& options,
-    const mozilla::Range<uint8_t>& range /* TranscodeRange& */,
-    OffThreadCompileCallback callback, void* callbackData);
-
-extern JS_PUBLIC_API JSScript* FinishOffThreadScriptDecoder(
-    JSContext* cx, OffThreadToken* token);
-
-extern JS_PUBLIC_API void CancelOffThreadScriptDecoder(JSContext* cx,
-                                                       OffThreadToken* token);
-
-extern JS_PUBLIC_API bool DecodeMultiOffThreadScripts(
-    JSContext* cx, const ReadOnlyCompileOptions& options,
-    mozilla::Vector<TranscodeSource>& sources,
-    OffThreadCompileCallback callback, void* callbackData);
-
-extern JS_PUBLIC_API bool FinishMultiOffThreadScriptsDecoder(
-    JSContext* cx, OffThreadToken* token,
-    MutableHandle<GCVector<JSScript*>> scripts);
-
-extern JS_PUBLIC_API void CancelMultiOffThreadScriptsDecoder(
-    JSContext* cx, OffThreadToken* token);
-||||||| merged common ancestors
-extern JS_PUBLIC_API(bool)
-CompileOffThread(JSContext* cx, const ReadOnlyCompileOptions& options, SourceBufferHolder& srcBuf,
-                 OffThreadCompileCallback callback, void* callbackData);
-
-extern JS_PUBLIC_API(JSScript*)
-FinishOffThreadScript(JSContext* cx, OffThreadToken* token);
-
-extern JS_PUBLIC_API(void)
-CancelOffThreadScript(JSContext* cx, OffThreadToken* token);
-
-extern JS_PUBLIC_API(bool)
-CompileOffThreadModule(JSContext* cx, const ReadOnlyCompileOptions& options,
-                       SourceBufferHolder& srcBuf, OffThreadCompileCallback callback,
-                       void* callbackData);
-
-extern JS_PUBLIC_API(JSObject*)
-FinishOffThreadModule(JSContext* cx, OffThreadToken* token);
-
-extern JS_PUBLIC_API(void)
-CancelOffThreadModule(JSContext* cx, OffThreadToken* token);
-
-extern JS_PUBLIC_API(bool)
-DecodeOffThreadScript(JSContext* cx, const ReadOnlyCompileOptions& options,
-                      mozilla::Vector<uint8_t>& buffer /* TranscodeBuffer& */, size_t cursor,
-                      OffThreadCompileCallback callback, void* callbackData);
-
-extern JS_PUBLIC_API(bool)
-DecodeOffThreadScript(JSContext* cx, const ReadOnlyCompileOptions& options,
-                      const mozilla::Range<uint8_t>& range /* TranscodeRange& */,
-                      OffThreadCompileCallback callback, void* callbackData);
-
-extern JS_PUBLIC_API(JSScript*)
-FinishOffThreadScriptDecoder(JSContext* cx, OffThreadToken* token);
-
-extern JS_PUBLIC_API(void)
-CancelOffThreadScriptDecoder(JSContext* cx, OffThreadToken* token);
-
-extern JS_PUBLIC_API(bool)
-DecodeMultiOffThreadScripts(JSContext* cx, const ReadOnlyCompileOptions& options,
-                            mozilla::Vector<TranscodeSource>& sources,
-                            OffThreadCompileCallback callback, void* callbackData);
-
-extern JS_PUBLIC_API(bool)
-FinishMultiOffThreadScriptsDecoder(JSContext* cx, OffThreadToken* token,
-                                   MutableHandle<GCVector<JSScript*>> scripts);
-
-extern JS_PUBLIC_API(void)
-CancelMultiOffThreadScriptsDecoder(JSContext* cx, OffThreadToken* token);
-=======
 extern JS_PUBLIC_API bool CompileOffThread(
     JSContext* cx, const ReadOnlyCompileOptions& options,
     SourceText<char16_t>& srcBuf, OffThreadCompileCallback callback,
@@ -238,7 +130,6 @@ extern JS_PUBLIC_API bool FinishMultiOffThreadScriptsDecoder(
 
 extern JS_PUBLIC_API void CancelMultiOffThreadScriptsDecoder(
     JSContext* cx, OffThreadToken* token);
->>>>>>> upstream-releases
 
 #if defined(JS_BUILD_BINAST)
 

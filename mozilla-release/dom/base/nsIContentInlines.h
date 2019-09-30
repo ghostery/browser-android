@@ -17,13 +17,6 @@
 #include "mozilla/dom/HTMLSlotElement.h"
 #include "mozilla/dom/ShadowRoot.h"
 
-<<<<<<< HEAD
-inline bool nsIContent::IsInHTMLDocument() const {
-||||||| merged common ancestors
-inline bool
-nsIContent::IsInHTMLDocument() const
-{
-=======
 inline bool nsINode::IsUAWidget() const {
   auto* shadow = mozilla::dom::ShadowRoot::FromNode(this);
   return shadow && shadow->IsUAWidget();
@@ -42,7 +35,6 @@ inline bool nsINode::IsRootOfChromeAccessOnlySubtree() const {
 }
 
 inline bool nsIContent::IsInHTMLDocument() const {
->>>>>>> upstream-releases
   return OwnerDoc()->IsHTMLDocument();
 }
 

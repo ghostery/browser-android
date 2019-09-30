@@ -122,64 +122,25 @@ GfxInfo::GfxInfo()
 
 GfxInfo::~GfxInfo() {}
 
-<<<<<<< HEAD
-/* GetD2DEnabled and GetDwriteEnabled shouldn't be called until after
- * gfxPlatform initialization has occurred because they depend on it for
- * information. (See bug 591561) */
-nsresult GfxInfo::GetD2DEnabled(bool* aEnabled) { return NS_ERROR_FAILURE; }
-||||||| merged common ancestors
-/* GetD2DEnabled and GetDwriteEnabled shouldn't be called until after gfxPlatform initialization
- * has occurred because they depend on it for information. (See bug 591561) */
-nsresult
-GfxInfo::GetD2DEnabled(bool *aEnabled)
-{
-  return NS_ERROR_FAILURE;
-}
-=======
 /* GetD2DEnabled and GetDwriteEnabled shouldn't be called until after
  * gfxPlatform initialization has occurred because they depend on it for
  * information. (See bug 591561) */
 nsresult GfxInfo::GetD2DEnabled(bool* aEnabled) { return NS_ERROR_FAILURE; }
 
 nsresult GfxInfo::GetDWriteEnabled(bool* aEnabled) { return NS_ERROR_FAILURE; }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-nsresult GfxInfo::GetDWriteEnabled(bool* aEnabled) { return NS_ERROR_FAILURE; }
-||||||| merged common ancestors
-nsresult
-GfxInfo::GetDWriteEnabled(bool *aEnabled)
-{
-  return NS_ERROR_FAILURE;
-}
-=======
 NS_IMETHODIMP
 GfxInfo::GetDWriteVersion(nsAString& aDwriteVersion) {
   return NS_ERROR_FAILURE;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-GfxInfo::GetDWriteVersion(nsAString& aDwriteVersion) {
-||||||| merged common ancestors
-GfxInfo::GetDWriteVersion(nsAString & aDwriteVersion)
-{
-=======
 GfxInfo::GetCleartypeParameters(nsAString& aCleartypeParams) {
->>>>>>> upstream-releases
   return NS_ERROR_FAILURE;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-GfxInfo::GetCleartypeParameters(nsAString& aCleartypeParams) {
-||||||| merged common ancestors
-GfxInfo::GetCleartypeParameters(nsAString & aCleartypeParams)
-{
-=======
 GfxInfo::GetWindowProtocol(nsAString& aWindowProtocol) {
->>>>>>> upstream-releases
   return NS_ERROR_FAILURE;
 }
 
@@ -282,12 +243,6 @@ GfxInfo::GetAdapterDriver(nsAString& aAdapterDriver) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-GfxInfo::GetAdapterDriver2(nsAString& aAdapterDriver) {
-||||||| merged common ancestors
-GfxInfo::GetAdapterDriver2(nsAString & aAdapterDriver)
-{
-=======
 GfxInfo::GetAdapterDriver2(nsAString& aAdapterDriver) {
   EnsureInitialized();
   return NS_ERROR_FAILURE;
@@ -302,7 +257,6 @@ GfxInfo::GetAdapterDriverVendor(nsAString& aAdapterDriverVendor) {
 
 NS_IMETHODIMP
 GfxInfo::GetAdapterDriverVendor2(nsAString& aAdapterDriverVendor) {
->>>>>>> upstream-releases
   EnsureInitialized();
   return NS_ERROR_FAILURE;
 }
@@ -388,20 +342,6 @@ void GfxInfo::AddCrashReportAnnotations() {
 
 const nsTArray<GfxDriverInfo>& GfxInfo::GetGfxDriverInfo() {
   if (sDriverInfo->IsEmpty()) {
-<<<<<<< HEAD
-    APPEND_TO_DRIVER_BLOCKLIST2(
-        OperatingSystem::Android,
-        (nsAString&)GfxDriverInfo::GetDeviceVendor(VendorAll),
-        GfxDriverInfo::allDevices, nsIGfxInfo::FEATURE_OPENGL_LAYERS,
-        nsIGfxInfo::FEATURE_STATUS_OK, DRIVER_COMPARISON_IGNORED,
-        GfxDriverInfo::allDriverVersions, "FEATURE_OK_FORCE_OPENGL");
-||||||| merged common ancestors
-    APPEND_TO_DRIVER_BLOCKLIST2(OperatingSystem::Android,
-      (nsAString&) GfxDriverInfo::GetDeviceVendor(VendorAll), GfxDriverInfo::allDevices,
-      nsIGfxInfo::FEATURE_OPENGL_LAYERS, nsIGfxInfo::FEATURE_STATUS_OK,
-      DRIVER_COMPARISON_IGNORED, GfxDriverInfo::allDriverVersions,
-      "FEATURE_OK_FORCE_OPENGL" );
-=======
     APPEND_TO_DRIVER_BLOCKLIST2(
         OperatingSystem::Android,
         (nsAString&)GfxDriverInfo::GetDeviceVendor(VendorAll),
@@ -409,7 +349,6 @@ const nsTArray<GfxDriverInfo>& GfxInfo::GetGfxDriverInfo() {
         GfxDriverInfo::allDevices, nsIGfxInfo::FEATURE_OPENGL_LAYERS,
         nsIGfxInfo::FEATURE_STATUS_OK, DRIVER_COMPARISON_IGNORED,
         GfxDriverInfo::allDriverVersions, "FEATURE_OK_FORCE_OPENGL");
->>>>>>> upstream-releases
   }
 
   return *sDriverInfo;
@@ -560,30 +499,14 @@ nsresult GfxInfo::GetFeatureStatusImpl(
 
     if (aFeature == FEATURE_WEBRTC_HW_ACCELERATION_ENCODE) {
       if (mozilla::AndroidBridge::Bridge()) {
-<<<<<<< HEAD
-        *aStatus = mozilla::AndroidBridge::Bridge()->GetHWEncoderCapability()
-                       ? nsIGfxInfo::FEATURE_STATUS_OK
-                       : nsIGfxInfo::FEATURE_BLOCKED_DEVICE;
-||||||| merged common ancestors
-        *aStatus = mozilla::AndroidBridge::Bridge()->GetHWEncoderCapability() ? nsIGfxInfo::FEATURE_STATUS_OK : nsIGfxInfo::FEATURE_BLOCKED_DEVICE;
-=======
         *aStatus = WebRtcHwEncodeSupported();
->>>>>>> upstream-releases
         aFailureId = "FEATURE_FAILURE_WEBRTC_ENCODE";
         return NS_OK;
       }
     }
     if (aFeature == FEATURE_WEBRTC_HW_ACCELERATION_DECODE) {
       if (mozilla::AndroidBridge::Bridge()) {
-<<<<<<< HEAD
-        *aStatus = mozilla::AndroidBridge::Bridge()->GetHWDecoderCapability()
-                       ? nsIGfxInfo::FEATURE_STATUS_OK
-                       : nsIGfxInfo::FEATURE_BLOCKED_DEVICE;
-||||||| merged common ancestors
-        *aStatus = mozilla::AndroidBridge::Bridge()->GetHWDecoderCapability() ? nsIGfxInfo::FEATURE_STATUS_OK : nsIGfxInfo::FEATURE_BLOCKED_DEVICE;
-=======
         *aStatus = WebRtcHwDecodeSupported();
->>>>>>> upstream-releases
         aFailureId = "FEATURE_FAILURE_WEBRTC_DECODE";
         return NS_OK;
       }

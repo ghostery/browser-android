@@ -59,23 +59,6 @@ this.search = class extends ExtensionAPI {
                 }
               }
 
-<<<<<<< HEAD
-            return {
-              name: engine.name,
-              isDefault: engine === Services.search.defaultEngine,
-              alias: engine.alias || undefined,
-              favIconUrl,
-            };
-          }));
-||||||| merged common ancestors
-            return {
-              name: engine.name,
-              isDefault: engine === Services.search.currentEngine,
-              alias: engine.alias || undefined,
-              favIconUrl,
-            };
-          }));
-=======
               return {
                 name: engine.name,
                 isDefault: engine.name === defaultEngine.name,
@@ -84,7 +67,6 @@ this.search = class extends ExtensionAPI {
               };
             })
           );
->>>>>>> upstream-releases
         },
 
         async search(searchProperties) {
@@ -98,13 +80,7 @@ this.search = class extends ExtensionAPI {
               );
             }
           } else {
-<<<<<<< HEAD
-            engine = Services.search.defaultEngine;
-||||||| merged common ancestors
-            engine = Services.search.currentEngine;
-=======
             engine = await Services.search.getDefault();
->>>>>>> upstream-releases
           }
           let submission = engine.getSubmission(
             searchProperties.query,

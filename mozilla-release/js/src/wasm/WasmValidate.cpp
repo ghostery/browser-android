@@ -394,85 +394,6 @@ bool wasm::EncodeLocalEntries(Encoder& e, const ValTypeVector& locals) {
   return true;
 }
 
-<<<<<<< HEAD
-static bool DecodeValType(Decoder& d, ModuleKind kind, uint32_t numTypes,
-                          HasGcTypes gcTypesEnabled, ValType* type) {
-  uint8_t uncheckedCode;
-  uint32_t uncheckedRefTypeIndex;
-  if (!d.readValType(&uncheckedCode, &uncheckedRefTypeIndex)) {
-    return false;
-  }
-
-  switch (uncheckedCode) {
-    case uint8_t(ValType::I32):
-    case uint8_t(ValType::F32):
-    case uint8_t(ValType::F64):
-    case uint8_t(ValType::I64):
-      *type = ValType(ValType::Code(uncheckedCode));
-      return true;
-    case uint8_t(ValType::AnyRef):
-      if (gcTypesEnabled == HasGcTypes::False) {
-        return d.fail("reference types not enabled");
-      }
-      *type = ValType(ValType::Code(uncheckedCode));
-      return true;
-    case uint8_t(ValType::Ref): {
-      if (gcTypesEnabled == HasGcTypes::False) {
-        return d.fail("reference types not enabled");
-      }
-      if (uncheckedRefTypeIndex >= numTypes) {
-        return d.fail("ref index out of range");
-      }
-      // We further validate ref types in the caller.
-      *type = ValType(ValType::Code(uncheckedCode), uncheckedRefTypeIndex);
-      return true;
-    }
-    default:
-      break;
-  }
-  return d.fail("bad type");
-}
-||||||| merged common ancestors
-static bool
-DecodeValType(Decoder& d, ModuleKind kind, uint32_t numTypes, HasGcTypes gcTypesEnabled,
-              ValType* type)
-{
-    uint8_t uncheckedCode;
-    uint32_t uncheckedRefTypeIndex;
-    if (!d.readValType(&uncheckedCode, &uncheckedRefTypeIndex)) {
-        return false;
-    }
-
-    switch (uncheckedCode) {
-      case uint8_t(ValType::I32):
-      case uint8_t(ValType::F32):
-      case uint8_t(ValType::F64):
-      case uint8_t(ValType::I64):
-        *type = ValType(ValType::Code(uncheckedCode));
-        return true;
-      case uint8_t(ValType::AnyRef):
-        if (gcTypesEnabled == HasGcTypes::False) {
-            return d.fail("reference types not enabled");
-        }
-        *type = ValType(ValType::Code(uncheckedCode));
-        return true;
-      case uint8_t(ValType::Ref): {
-        if (gcTypesEnabled == HasGcTypes::False) {
-            return d.fail("reference types not enabled");
-        }
-        if (uncheckedRefTypeIndex >= numTypes) {
-            return d.fail("ref index out of range");
-        }
-        // We further validate ref types in the caller.
-        *type = ValType(ValType::Code(uncheckedCode), uncheckedRefTypeIndex);
-        return true;
-      }
-      default:
-        break;
-    }
-    return d.fail("bad type");
-}
-=======
 bool wasm::DecodeLocalEntries(Decoder& d, const TypeDefVector& types,
                               bool gcTypesEnabled, ValTypeVector* locals) {
   uint32_t numLocalEntries;
@@ -485,159 +406,33 @@ bool wasm::DecodeLocalEntries(Decoder& d, const TypeDefVector& types,
     if (!d.readVarU32(&count)) {
       return d.fail("failed to read local entry count");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool ValidateRefType(Decoder& d, const TypeDefVector& types,
-                            ValType type) {
-  if (type.isRef() && !types[type.refTypeIndex()].isStructType()) {
-    return d.fail("ref does not reference a struct type");
-  }
-  return true;
-}
-||||||| merged common ancestors
-static bool
-ValidateRefType(Decoder& d, const TypeDefVector& types, ValType type)
-{
-    if (type.isRef() && !types[type.refTypeIndex()].isStructType()) {
-        return d.fail("ref does not reference a struct type");
-    }
-    return true;
-}
-=======
     if (MaxLocals - locals->length() < count) {
       return d.fail("too many locals");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool wasm::DecodeLocalEntries(Decoder& d, ModuleKind kind,
-                              const TypeDefVector& types,
-                              HasGcTypes gcTypesEnabled,
-                              ValTypeVector* locals) {
-  uint32_t numLocalEntries;
-  if (!d.readVarU32(&numLocalEntries)) {
-    return d.fail("failed to read number of local entries");
-  }
-||||||| merged common ancestors
-bool
-wasm::DecodeLocalEntries(Decoder& d, ModuleKind kind, const TypeDefVector& types,
-                         HasGcTypes gcTypesEnabled, ValTypeVector* locals)
-{
-    uint32_t numLocalEntries;
-    if (!d.readVarU32(&numLocalEntries)) {
-        return d.fail("failed to read number of local entries");
-    }
-=======
     ValType type;
     if (!d.readValType(types, gcTypesEnabled, &type)) {
       return false;
     }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < numLocalEntries; i++) {
-    uint32_t count;
-    if (!d.readVarU32(&count)) {
-      return d.fail("failed to read local entry count");
-    }
-
-    if (MaxLocals - locals->length() < count) {
-      return d.fail("too many locals");
-    }
-
-    ValType type;
-    if (!DecodeValType(d, kind, types.length(), gcTypesEnabled, &type)) {
-      return false;
-    }
-    if (!ValidateRefType(d, types, type)) {
-      return false;
-    }
 
     if (!locals->appendN(type, count)) {
       return false;
-||||||| merged common ancestors
-    for (uint32_t i = 0; i < numLocalEntries; i++) {
-        uint32_t count;
-        if (!d.readVarU32(&count)) {
-            return d.fail("failed to read local entry count");
-        }
-
-        if (MaxLocals - locals->length() < count) {
-            return d.fail("too many locals");
-        }
-
-        ValType type;
-        if (!DecodeValType(d, kind, types.length(), gcTypesEnabled, &type)) {
-            return false;
-        }
-        if (!ValidateRefType(d, types, type)) {
-            return false;
-        }
-
-        if (!locals->appendN(type, count)) {
-            return false;
-        }
-=======
-    if (!locals->appendN(type, count)) {
-      return false;
->>>>>>> upstream-releases
     }
   }
 
   return true;
 }
 
-<<<<<<< HEAD
 bool wasm::DecodeValidatedLocalEntries(Decoder& d, ValTypeVector* locals) {
   uint32_t numLocalEntries;
   MOZ_ALWAYS_TRUE(d.readVarU32(&numLocalEntries));
 
-  for (uint32_t i = 0; i < numLocalEntries; i++) {
-    uint32_t count;
-    MOZ_ALWAYS_TRUE(d.readVarU32(&count));
-    MOZ_ASSERT(MaxLocals - locals->length() >= count);
-||||||| merged common ancestors
-bool
-wasm::DecodeValidatedLocalEntries(Decoder& d, ValTypeVector* locals)
-{
-    uint32_t numLocalEntries;
-    MOZ_ALWAYS_TRUE(d.readVarU32(&numLocalEntries));
-
-    for (uint32_t i = 0; i < numLocalEntries; i++) {
-        uint32_t count;
-        MOZ_ALWAYS_TRUE(d.readVarU32(&count));
-        MOZ_ASSERT(MaxLocals - locals->length() >= count);
-=======
-bool wasm::DecodeValidatedLocalEntries(Decoder& d, ValTypeVector* locals) {
-  uint32_t numLocalEntries;
-  MOZ_ALWAYS_TRUE(d.readVarU32(&numLocalEntries));
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-    uint8_t uncheckedCode;
-    uint32_t uncheckedRefTypeIndex;
-    MOZ_ALWAYS_TRUE(d.readValType(&uncheckedCode, &uncheckedRefTypeIndex));
-
-    ValType type = ValType(ValType::Code(uncheckedCode), uncheckedRefTypeIndex);
-    if (!locals->appendN(type, count)) {
-      return false;
-||||||| merged common ancestors
-        uint8_t uncheckedCode;
-        uint32_t uncheckedRefTypeIndex;
-        MOZ_ALWAYS_TRUE(d.readValType(&uncheckedCode, &uncheckedRefTypeIndex));
-
-        ValType type = ValType(ValType::Code(uncheckedCode), uncheckedRefTypeIndex);
-        if (!locals->appendN(type, count)) {
-            return false;
-        }
-=======
   for (uint32_t i = 0; i < numLocalEntries; i++) {
     uint32_t count = d.uncheckedReadVarU32();
     MOZ_ASSERT(MaxLocals - locals->length() >= count);
     if (!locals->appendN(d.uncheckedReadValType(), count)) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
@@ -653,28 +448,11 @@ struct ValidatingPolicy {
 
 typedef OpIter<ValidatingPolicy> ValidatingOpIter;
 
-<<<<<<< HEAD
-static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
-                                    const FuncType& funcType,
-                                    const ValTypeVector& locals,
-                                    ExclusiveDeferredValidationState& dvs,
-                                    const uint8_t* bodyEnd, Decoder* d) {
-  ValidatingOpIter iter(env, *d, dvs);
-||||||| merged common ancestors
-static bool
-DecodeFunctionBodyExprs(const ModuleEnvironment& env, const FuncType& funcType,
-                        const ValTypeVector& locals,
-                        ExclusiveDeferredValidationState& dvs,
-                        const uint8_t* bodyEnd, Decoder* d)
-{
-    ValidatingOpIter iter(env, *d, dvs);
-=======
 static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
                                     const FuncType& funcType,
                                     const ValTypeVector& locals,
                                     const uint8_t* bodyEnd, Decoder* d) {
   ValidatingOpIter iter(env, *d);
->>>>>>> upstream-releases
 
   if (!iter.readFunctionStart(funcType.ret())) {
     return false;
@@ -692,377 +470,6 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
 
     Nothing nothing;
 
-<<<<<<< HEAD
-    switch (op.b0) {
-      case uint16_t(Op::End): {
-        LabelKind unusedKind;
-        ExprType unusedType;
-        if (!iter.readEnd(&unusedKind, &unusedType, &nothing)) {
-          return false;
-        }
-        iter.popEnd();
-        if (iter.controlStackEmpty()) {
-          return iter.readFunctionEnd(bodyEnd);
-        }
-        break;
-      }
-      case uint16_t(Op::Nop):
-        CHECK(iter.readNop());
-      case uint16_t(Op::Drop):
-        CHECK(iter.readDrop());
-      case uint16_t(Op::Call): {
-        uint32_t unusedIndex;
-        ValidatingOpIter::ValueVector unusedArgs;
-        CHECK(iter.readCall(&unusedIndex, &unusedArgs));
-      }
-      case uint16_t(Op::CallIndirect): {
-        uint32_t unusedIndex, unusedIndex2;
-        ValidatingOpIter::ValueVector unusedArgs;
-        CHECK(iter.readCallIndirect(&unusedIndex, &unusedIndex2, &nothing,
-                                    &unusedArgs));
-      }
-      case uint16_t(Op::I32Const): {
-        int32_t unused;
-        CHECK(iter.readI32Const(&unused));
-      }
-      case uint16_t(Op::I64Const): {
-        int64_t unused;
-        CHECK(iter.readI64Const(&unused));
-      }
-      case uint16_t(Op::F32Const): {
-        float unused;
-        CHECK(iter.readF32Const(&unused));
-      }
-      case uint16_t(Op::F64Const): {
-        double unused;
-        CHECK(iter.readF64Const(&unused));
-      }
-      case uint16_t(Op::GetLocal): {
-        uint32_t unused;
-        CHECK(iter.readGetLocal(locals, &unused));
-      }
-      case uint16_t(Op::SetLocal): {
-        uint32_t unused;
-        CHECK(iter.readSetLocal(locals, &unused, &nothing));
-      }
-      case uint16_t(Op::TeeLocal): {
-        uint32_t unused;
-        CHECK(iter.readTeeLocal(locals, &unused, &nothing));
-      }
-      case uint16_t(Op::GetGlobal): {
-        uint32_t unused;
-        CHECK(iter.readGetGlobal(&unused));
-      }
-      case uint16_t(Op::SetGlobal): {
-        uint32_t unused;
-        CHECK(iter.readSetGlobal(&unused, &nothing));
-      }
-      case uint16_t(Op::Select): {
-        StackType unused;
-        CHECK(iter.readSelect(&unused, &nothing, &nothing, &nothing));
-      }
-      case uint16_t(Op::Block):
-        CHECK(iter.readBlock());
-      case uint16_t(Op::Loop):
-        CHECK(iter.readLoop());
-      case uint16_t(Op::If):
-        CHECK(iter.readIf(&nothing));
-      case uint16_t(Op::Else): {
-        ExprType type;
-        CHECK(iter.readElse(&type, &nothing));
-      }
-      case uint16_t(Op::I32Clz):
-      case uint16_t(Op::I32Ctz):
-      case uint16_t(Op::I32Popcnt):
-        CHECK(iter.readUnary(ValType::I32, &nothing));
-      case uint16_t(Op::I64Clz):
-      case uint16_t(Op::I64Ctz):
-      case uint16_t(Op::I64Popcnt):
-        CHECK(iter.readUnary(ValType::I64, &nothing));
-      case uint16_t(Op::F32Abs):
-      case uint16_t(Op::F32Neg):
-      case uint16_t(Op::F32Ceil):
-      case uint16_t(Op::F32Floor):
-      case uint16_t(Op::F32Sqrt):
-      case uint16_t(Op::F32Trunc):
-      case uint16_t(Op::F32Nearest):
-        CHECK(iter.readUnary(ValType::F32, &nothing));
-      case uint16_t(Op::F64Abs):
-      case uint16_t(Op::F64Neg):
-      case uint16_t(Op::F64Ceil):
-      case uint16_t(Op::F64Floor):
-      case uint16_t(Op::F64Sqrt):
-      case uint16_t(Op::F64Trunc):
-      case uint16_t(Op::F64Nearest):
-        CHECK(iter.readUnary(ValType::F64, &nothing));
-      case uint16_t(Op::I32Add):
-      case uint16_t(Op::I32Sub):
-      case uint16_t(Op::I32Mul):
-      case uint16_t(Op::I32DivS):
-      case uint16_t(Op::I32DivU):
-      case uint16_t(Op::I32RemS):
-      case uint16_t(Op::I32RemU):
-      case uint16_t(Op::I32And):
-      case uint16_t(Op::I32Or):
-      case uint16_t(Op::I32Xor):
-      case uint16_t(Op::I32Shl):
-      case uint16_t(Op::I32ShrS):
-      case uint16_t(Op::I32ShrU):
-      case uint16_t(Op::I32Rotl):
-      case uint16_t(Op::I32Rotr):
-        CHECK(iter.readBinary(ValType::I32, &nothing, &nothing));
-      case uint16_t(Op::I64Add):
-      case uint16_t(Op::I64Sub):
-      case uint16_t(Op::I64Mul):
-      case uint16_t(Op::I64DivS):
-      case uint16_t(Op::I64DivU):
-      case uint16_t(Op::I64RemS):
-      case uint16_t(Op::I64RemU):
-      case uint16_t(Op::I64And):
-      case uint16_t(Op::I64Or):
-      case uint16_t(Op::I64Xor):
-      case uint16_t(Op::I64Shl):
-      case uint16_t(Op::I64ShrS):
-      case uint16_t(Op::I64ShrU):
-      case uint16_t(Op::I64Rotl):
-      case uint16_t(Op::I64Rotr):
-        CHECK(iter.readBinary(ValType::I64, &nothing, &nothing));
-      case uint16_t(Op::F32Add):
-      case uint16_t(Op::F32Sub):
-      case uint16_t(Op::F32Mul):
-      case uint16_t(Op::F32Div):
-      case uint16_t(Op::F32Min):
-      case uint16_t(Op::F32Max):
-      case uint16_t(Op::F32CopySign):
-        CHECK(iter.readBinary(ValType::F32, &nothing, &nothing));
-      case uint16_t(Op::F64Add):
-      case uint16_t(Op::F64Sub):
-      case uint16_t(Op::F64Mul):
-      case uint16_t(Op::F64Div):
-      case uint16_t(Op::F64Min):
-      case uint16_t(Op::F64Max):
-      case uint16_t(Op::F64CopySign):
-        CHECK(iter.readBinary(ValType::F64, &nothing, &nothing));
-      case uint16_t(Op::I32Eq):
-      case uint16_t(Op::I32Ne):
-      case uint16_t(Op::I32LtS):
-      case uint16_t(Op::I32LtU):
-      case uint16_t(Op::I32LeS):
-      case uint16_t(Op::I32LeU):
-      case uint16_t(Op::I32GtS):
-      case uint16_t(Op::I32GtU):
-      case uint16_t(Op::I32GeS):
-      case uint16_t(Op::I32GeU):
-        CHECK(iter.readComparison(ValType::I32, &nothing, &nothing));
-      case uint16_t(Op::I64Eq):
-      case uint16_t(Op::I64Ne):
-      case uint16_t(Op::I64LtS):
-      case uint16_t(Op::I64LtU):
-      case uint16_t(Op::I64LeS):
-      case uint16_t(Op::I64LeU):
-      case uint16_t(Op::I64GtS):
-      case uint16_t(Op::I64GtU):
-      case uint16_t(Op::I64GeS):
-      case uint16_t(Op::I64GeU):
-        CHECK(iter.readComparison(ValType::I64, &nothing, &nothing));
-      case uint16_t(Op::F32Eq):
-      case uint16_t(Op::F32Ne):
-      case uint16_t(Op::F32Lt):
-      case uint16_t(Op::F32Le):
-      case uint16_t(Op::F32Gt):
-      case uint16_t(Op::F32Ge):
-        CHECK(iter.readComparison(ValType::F32, &nothing, &nothing));
-      case uint16_t(Op::F64Eq):
-      case uint16_t(Op::F64Ne):
-      case uint16_t(Op::F64Lt):
-      case uint16_t(Op::F64Le):
-      case uint16_t(Op::F64Gt):
-      case uint16_t(Op::F64Ge):
-        CHECK(iter.readComparison(ValType::F64, &nothing, &nothing));
-      case uint16_t(Op::I32Eqz):
-        CHECK(iter.readConversion(ValType::I32, ValType::I32, &nothing));
-      case uint16_t(Op::I64Eqz):
-      case uint16_t(Op::I32WrapI64):
-        CHECK(iter.readConversion(ValType::I64, ValType::I32, &nothing));
-      case uint16_t(Op::I32TruncSF32):
-      case uint16_t(Op::I32TruncUF32):
-      case uint16_t(Op::I32ReinterpretF32):
-        CHECK(iter.readConversion(ValType::F32, ValType::I32, &nothing));
-      case uint16_t(Op::I32TruncSF64):
-      case uint16_t(Op::I32TruncUF64):
-        CHECK(iter.readConversion(ValType::F64, ValType::I32, &nothing));
-      case uint16_t(Op::I64ExtendSI32):
-      case uint16_t(Op::I64ExtendUI32):
-        CHECK(iter.readConversion(ValType::I32, ValType::I64, &nothing));
-      case uint16_t(Op::I64TruncSF32):
-      case uint16_t(Op::I64TruncUF32):
-        CHECK(iter.readConversion(ValType::F32, ValType::I64, &nothing));
-      case uint16_t(Op::I64TruncSF64):
-      case uint16_t(Op::I64TruncUF64):
-      case uint16_t(Op::I64ReinterpretF64):
-        CHECK(iter.readConversion(ValType::F64, ValType::I64, &nothing));
-      case uint16_t(Op::F32ConvertSI32):
-      case uint16_t(Op::F32ConvertUI32):
-      case uint16_t(Op::F32ReinterpretI32):
-        CHECK(iter.readConversion(ValType::I32, ValType::F32, &nothing));
-      case uint16_t(Op::F32ConvertSI64):
-      case uint16_t(Op::F32ConvertUI64):
-        CHECK(iter.readConversion(ValType::I64, ValType::F32, &nothing));
-      case uint16_t(Op::F32DemoteF64):
-        CHECK(iter.readConversion(ValType::F64, ValType::F32, &nothing));
-      case uint16_t(Op::F64ConvertSI32):
-      case uint16_t(Op::F64ConvertUI32):
-        CHECK(iter.readConversion(ValType::I32, ValType::F64, &nothing));
-      case uint16_t(Op::F64ConvertSI64):
-      case uint16_t(Op::F64ConvertUI64):
-      case uint16_t(Op::F64ReinterpretI64):
-        CHECK(iter.readConversion(ValType::I64, ValType::F64, &nothing));
-      case uint16_t(Op::F64PromoteF32):
-        CHECK(iter.readConversion(ValType::F32, ValType::F64, &nothing));
-      case uint16_t(Op::I32Extend8S):
-      case uint16_t(Op::I32Extend16S):
-        CHECK(iter.readConversion(ValType::I32, ValType::I32, &nothing));
-      case uint16_t(Op::I64Extend8S):
-      case uint16_t(Op::I64Extend16S):
-      case uint16_t(Op::I64Extend32S):
-        CHECK(iter.readConversion(ValType::I64, ValType::I64, &nothing));
-      case uint16_t(Op::I32Load8S):
-      case uint16_t(Op::I32Load8U): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::I32, 1, &addr));
-      }
-      case uint16_t(Op::I32Load16S):
-      case uint16_t(Op::I32Load16U): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::I32, 2, &addr));
-      }
-      case uint16_t(Op::I32Load): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::I32, 4, &addr));
-      }
-      case uint16_t(Op::I64Load8S):
-      case uint16_t(Op::I64Load8U): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::I64, 1, &addr));
-      }
-      case uint16_t(Op::I64Load16S):
-      case uint16_t(Op::I64Load16U): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::I64, 2, &addr));
-      }
-      case uint16_t(Op::I64Load32S):
-      case uint16_t(Op::I64Load32U): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::I64, 4, &addr));
-      }
-      case uint16_t(Op::I64Load): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::I64, 8, &addr));
-      }
-      case uint16_t(Op::F32Load): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::F32, 4, &addr));
-      }
-      case uint16_t(Op::F64Load): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readLoad(ValType::F64, 8, &addr));
-      }
-      case uint16_t(Op::I32Store8): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::I32, 1, &addr, &nothing));
-      }
-      case uint16_t(Op::I32Store16): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::I32, 2, &addr, &nothing));
-      }
-      case uint16_t(Op::I32Store): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::I32, 4, &addr, &nothing));
-      }
-      case uint16_t(Op::I64Store8): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::I64, 1, &addr, &nothing));
-      }
-      case uint16_t(Op::I64Store16): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::I64, 2, &addr, &nothing));
-      }
-      case uint16_t(Op::I64Store32): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::I64, 4, &addr, &nothing));
-      }
-      case uint16_t(Op::I64Store): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::I64, 8, &addr, &nothing));
-      }
-      case uint16_t(Op::F32Store): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::F32, 4, &addr, &nothing));
-      }
-      case uint16_t(Op::F64Store): {
-        LinearMemoryAddress<Nothing> addr;
-        CHECK(iter.readStore(ValType::F64, 8, &addr, &nothing));
-      }
-      case uint16_t(Op::GrowMemory):
-        CHECK(iter.readGrowMemory(&nothing));
-      case uint16_t(Op::CurrentMemory):
-        CHECK(iter.readCurrentMemory());
-      case uint16_t(Op::Br): {
-        uint32_t unusedDepth;
-        ExprType unusedType;
-        CHECK(iter.readBr(&unusedDepth, &unusedType, &nothing));
-      }
-      case uint16_t(Op::BrIf): {
-        uint32_t unusedDepth;
-        ExprType unusedType;
-        CHECK(iter.readBrIf(&unusedDepth, &unusedType, &nothing, &nothing));
-      }
-      case uint16_t(Op::BrTable): {
-        Uint32Vector unusedDepths;
-        uint32_t unusedDefault;
-        ExprType unusedType;
-        CHECK(iter.readBrTable(&unusedDepths, &unusedDefault, &unusedType,
-                               &nothing, &nothing));
-      }
-      case uint16_t(Op::Return):
-        CHECK(iter.readReturn(&nothing));
-      case uint16_t(Op::Unreachable):
-        CHECK(iter.readUnreachable());
-      case uint16_t(Op::MiscPrefix): {
-        switch (op.b1) {
-          case uint16_t(MiscOp::I32TruncSSatF32):
-          case uint16_t(MiscOp::I32TruncUSatF32):
-            CHECK(iter.readConversion(ValType::F32, ValType::I32, &nothing));
-          case uint16_t(MiscOp::I32TruncSSatF64):
-          case uint16_t(MiscOp::I32TruncUSatF64):
-            CHECK(iter.readConversion(ValType::F64, ValType::I32, &nothing));
-          case uint16_t(MiscOp::I64TruncSSatF32):
-          case uint16_t(MiscOp::I64TruncUSatF32):
-            CHECK(iter.readConversion(ValType::F32, ValType::I64, &nothing));
-          case uint16_t(MiscOp::I64TruncSSatF64):
-          case uint16_t(MiscOp::I64TruncUSatF64):
-            CHECK(iter.readConversion(ValType::F64, ValType::I64, &nothing));
-#ifdef ENABLE_WASM_BULKMEM_OPS
-          case uint16_t(MiscOp::MemCopy): {
-            uint32_t unusedDestMemIndex;
-            uint32_t unusedSrcMemIndex;
-            CHECK(iter.readMemOrTableCopy(/*isMem=*/true, &unusedDestMemIndex,
-                                          &nothing, &unusedSrcMemIndex,
-                                          &nothing, &nothing));
-||||||| merged common ancestors
-        switch (op.b0) {
-          case uint16_t(Op::End): {
-            LabelKind unusedKind;
-            ExprType unusedType;
-            if (!iter.readEnd(&unusedKind, &unusedType, &nothing)) {
-                return false;
-            }
-            iter.popEnd();
-            if (iter.controlStackEmpty()) {
-                return iter.readFunctionEnd(bodyEnd);
-            }
-            break;
-=======
     switch (op.b0) {
       case uint16_t(Op::End): {
         LabelKind unusedKind;
@@ -1444,22 +851,7 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
 #endif
             uint32_t unusedSegIndex;
             CHECK(iter.readDataOrElemDrop(/*isData=*/true, &unusedSegIndex));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::MemDrop): {
-            uint32_t unusedSegIndex;
-            CHECK(iter.readMemOrTableDrop(/*isMem=*/true, &unusedSegIndex));
-||||||| merged common ancestors
-          case uint16_t(Op::Nop):
-            CHECK(iter.readNop());
-          case uint16_t(Op::Drop):
-            CHECK(iter.readDrop());
-          case uint16_t(Op::Call): {
-            uint32_t unusedIndex;
-            ValidatingOpIter::ValueVector unusedArgs;
-            CHECK(iter.readCall(&unusedIndex, &unusedArgs));
-=======
           case uint32_t(MiscOp::MemFill):
 #ifndef ENABLE_WASM_BULKMEM_OPS
             // Bulk memory must be available if shared memory is enabled.
@@ -1480,23 +872,7 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
             CHECK(iter.readMemOrTableInit(/*isMem=*/true, &unusedSegIndex,
                                           &unusedTableIndex, &nothing, &nothing,
                                           &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::MemFill):
-            CHECK(iter.readMemFill(&nothing, &nothing, &nothing));
-          case uint16_t(MiscOp::MemInit): {
-            uint32_t unusedSegIndex;
-            uint32_t unusedTableIndex;
-            CHECK(iter.readMemOrTableInit(/*isMem=*/true, &unusedSegIndex,
-                                          &unusedTableIndex, &nothing, &nothing,
-                                          &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::CallIndirect): {
-            uint32_t unusedIndex;
-            ValidatingOpIter::ValueVector unusedArgs;
-            CHECK(iter.readCallIndirect(&unusedIndex, &nothing, &unusedArgs));
-=======
           case uint32_t(MiscOp::TableCopy): {
 #ifndef ENABLE_WASM_BULKMEM_OPS
             // Bulk memory must be available if shared memory is enabled.
@@ -1532,53 +908,17 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
             CHECK(iter.readMemOrTableInit(/*isMem=*/false, &unusedSegIndex,
                                           &unusedTableIndex, &nothing, &nothing,
                                           &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::TableCopy): {
-            uint32_t unusedDestTableIndex;
-            uint32_t unusedSrcTableIndex;
-            CHECK(iter.readMemOrTableCopy(
-                /*isMem=*/false, &unusedDestTableIndex, &nothing,
-                &unusedSrcTableIndex, &nothing, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::I32Const): {
-            int32_t unused;
-            CHECK(iter.readI32Const(&unused));
-=======
 #ifdef ENABLE_WASM_REFTYPES
           case uint32_t(MiscOp::TableFill): {
             uint32_t unusedTableIndex;
             CHECK(iter.readTableFill(&unusedTableIndex, &nothing, &nothing,
                                      &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::TableDrop): {
-            uint32_t unusedSegIndex;
-            CHECK(iter.readMemOrTableDrop(/*isMem=*/false, &unusedSegIndex));
-||||||| merged common ancestors
-          case uint16_t(Op::I64Const): {
-            int64_t unused;
-            CHECK(iter.readI64Const(&unused));
-=======
           case uint32_t(MiscOp::TableGrow): {
             uint32_t unusedTableIndex;
             CHECK(iter.readTableGrow(&unusedTableIndex, &nothing, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::TableInit): {
-            uint32_t unusedSegIndex;
-            uint32_t unusedTableIndex;
-            CHECK(iter.readMemOrTableInit(/*isMem=*/false, &unusedSegIndex,
-                                          &unusedTableIndex, &nothing, &nothing,
-                                          &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::F32Const): {
-            float unused;
-            CHECK(iter.readF32Const(&unused));
-=======
           case uint32_t(MiscOp::TableSize): {
             uint32_t unusedTableIndex;
             CHECK(iter.readTableSize(&unusedTableIndex));
@@ -1592,36 +932,14 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
             uint32_t unusedUint;
             ValidatingOpIter::ValueVector unusedArgs;
             CHECK(iter.readStructNew(&unusedUint, &unusedArgs));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-#endif
-#ifdef ENABLE_WASM_GENERALIZED_TABLES
-          case uint16_t(MiscOp::TableGet): {
-            uint32_t unusedTableIndex;
-            CHECK(iter.readTableGet(&unusedTableIndex, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::F64Const): {
-            double unused;
-            CHECK(iter.readF64Const(&unused));
-=======
           case uint32_t(MiscOp::StructGet): {
             if (!env.gcTypesEnabled()) {
               return iter.unrecognizedOpcode(&op);
             }
             uint32_t unusedUint1, unusedUint2;
             CHECK(iter.readStructGet(&unusedUint1, &unusedUint2, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::TableGrow): {
-            uint32_t unusedTableIndex;
-            CHECK(iter.readTableGrow(&unusedTableIndex, &nothing, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::GetLocal): {
-            uint32_t unused;
-            CHECK(iter.readGetLocal(locals, &unused));
-=======
           case uint32_t(MiscOp::StructSet): {
             if (!env.gcTypesEnabled()) {
               return iter.unrecognizedOpcode(&op);
@@ -1629,34 +947,14 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
             uint32_t unusedUint1, unusedUint2;
             CHECK(iter.readStructSet(&unusedUint1, &unusedUint2, &nothing,
                                      &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::TableSet): {
-            uint32_t unusedTableIndex;
-            CHECK(iter.readTableSet(&unusedTableIndex, &nothing, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::SetLocal): {
-            uint32_t unused;
-            CHECK(iter.readSetLocal(locals, &unused, &nothing));
-=======
           case uint32_t(MiscOp::StructNarrow): {
             if (!env.gcTypesEnabled()) {
               return iter.unrecognizedOpcode(&op);
             }
             ValType unusedTy, unusedTy2;
             CHECK(iter.readStructNarrow(&unusedTy, &unusedTy2, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::TableSize): {
-            uint32_t unusedTableIndex;
-            CHECK(iter.readTableSize(&unusedTableIndex));
-||||||| merged common ancestors
-          case uint16_t(Op::TeeLocal): {
-            uint32_t unused;
-            CHECK(iter.readTeeLocal(locals, &unused, &nothing));
-=======
 #endif
           default:
             return iter.unrecognizedOpcode(&op);
@@ -1687,619 +985,125 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
           case uint32_t(ThreadOp::Wake): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readWake(&addr, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-#endif
-#ifdef ENABLE_WASM_GC
-          case uint16_t(MiscOp::StructNew): {
-            if (env.gcTypesEnabled() == HasGcTypes::False) {
-              return iter.unrecognizedOpcode(&op);
-            }
-            uint32_t unusedUint;
-            ValidatingOpIter::ValueVector unusedArgs;
-            CHECK(iter.readStructNew(&unusedUint, &unusedArgs));
-||||||| merged common ancestors
-          case uint16_t(Op::GetGlobal): {
-            uint32_t unused;
-            CHECK(iter.readGetGlobal(&unused));
-=======
           case uint32_t(ThreadOp::I32Wait): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readWait(&addr, ValType::I32, 4, &nothing, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::StructGet): {
-            if (env.gcTypesEnabled() == HasGcTypes::False) {
-              return iter.unrecognizedOpcode(&op);
-            }
-            uint32_t unusedUint1, unusedUint2;
-            CHECK(iter.readStructGet(&unusedUint1, &unusedUint2, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::SetGlobal): {
-            uint32_t unused;
-            CHECK(iter.readSetGlobal(&unused, &nothing));
-=======
           case uint32_t(ThreadOp::I64Wait): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readWait(&addr, ValType::I64, 8, &nothing, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::StructSet): {
-            if (env.gcTypesEnabled() == HasGcTypes::False) {
-              return iter.unrecognizedOpcode(&op);
-            }
-            uint32_t unusedUint1, unusedUint2;
-            CHECK(iter.readStructSet(&unusedUint1, &unusedUint2, &nothing,
-                                     &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::Select): {
-            StackType unused;
-            CHECK(iter.readSelect(&unused, &nothing, &nothing, &nothing));
-=======
           case uint32_t(ThreadOp::I32AtomicLoad): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicLoad(&addr, ValType::I32, 4));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(MiscOp::StructNarrow): {
-            if (env.gcTypesEnabled() == HasGcTypes::False) {
-              return iter.unrecognizedOpcode(&op);
-            }
-            ValType unusedTy, unusedTy2;
-            CHECK(iter.readStructNarrow(&unusedTy, &unusedTy2, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::Block):
-            CHECK(iter.readBlock());
-          case uint16_t(Op::Loop):
-            CHECK(iter.readLoop());
-          case uint16_t(Op::If):
-            CHECK(iter.readIf(&nothing));
-          case uint16_t(Op::Else): {
-            ExprType type;
-            CHECK(iter.readElse(&type, &nothing));
-=======
           case uint32_t(ThreadOp::I64AtomicLoad): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicLoad(&addr, ValType::I64, 8));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-#endif
-          default:
-            return iter.unrecognizedOpcode(&op);
-        }
-        break;
-      }
-#ifdef ENABLE_WASM_GC
-      case uint16_t(Op::RefEq): {
-        if (env.gcTypesEnabled() == HasGcTypes::False) {
-          return iter.unrecognizedOpcode(&op);
-        }
-        CHECK(iter.readComparison(ValType::AnyRef, &nothing, &nothing));
-        break;
-      }
-      case uint16_t(Op::RefNull): {
-        if (env.gcTypesEnabled() == HasGcTypes::False) {
-          return iter.unrecognizedOpcode(&op);
-        }
-        CHECK(iter.readRefNull());
-        break;
-      }
-      case uint16_t(Op::RefIsNull): {
-        if (env.gcTypesEnabled() == HasGcTypes::False) {
-          return iter.unrecognizedOpcode(&op);
-        }
-        CHECK(iter.readConversion(ValType::AnyRef, ValType::I32, &nothing));
-        break;
-      }
-#endif
-      case uint16_t(Op::ThreadPrefix): {
-        switch (op.b1) {
-          case uint16_t(ThreadOp::Wake): {
-||||||| merged common ancestors
-          case uint16_t(Op::I32Clz):
-          case uint16_t(Op::I32Ctz):
-          case uint16_t(Op::I32Popcnt):
-            CHECK(iter.readUnary(ValType::I32, &nothing));
-          case uint16_t(Op::I64Clz):
-          case uint16_t(Op::I64Ctz):
-          case uint16_t(Op::I64Popcnt):
-            CHECK(iter.readUnary(ValType::I64, &nothing));
-          case uint16_t(Op::F32Abs):
-          case uint16_t(Op::F32Neg):
-          case uint16_t(Op::F32Ceil):
-          case uint16_t(Op::F32Floor):
-          case uint16_t(Op::F32Sqrt):
-          case uint16_t(Op::F32Trunc):
-          case uint16_t(Op::F32Nearest):
-            CHECK(iter.readUnary(ValType::F32, &nothing));
-          case uint16_t(Op::F64Abs):
-          case uint16_t(Op::F64Neg):
-          case uint16_t(Op::F64Ceil):
-          case uint16_t(Op::F64Floor):
-          case uint16_t(Op::F64Sqrt):
-          case uint16_t(Op::F64Trunc):
-          case uint16_t(Op::F64Nearest):
-            CHECK(iter.readUnary(ValType::F64, &nothing));
-          case uint16_t(Op::I32Add):
-          case uint16_t(Op::I32Sub):
-          case uint16_t(Op::I32Mul):
-          case uint16_t(Op::I32DivS):
-          case uint16_t(Op::I32DivU):
-          case uint16_t(Op::I32RemS):
-          case uint16_t(Op::I32RemU):
-          case uint16_t(Op::I32And):
-          case uint16_t(Op::I32Or):
-          case uint16_t(Op::I32Xor):
-          case uint16_t(Op::I32Shl):
-          case uint16_t(Op::I32ShrS):
-          case uint16_t(Op::I32ShrU):
-          case uint16_t(Op::I32Rotl):
-          case uint16_t(Op::I32Rotr):
-            CHECK(iter.readBinary(ValType::I32, &nothing, &nothing));
-          case uint16_t(Op::I64Add):
-          case uint16_t(Op::I64Sub):
-          case uint16_t(Op::I64Mul):
-          case uint16_t(Op::I64DivS):
-          case uint16_t(Op::I64DivU):
-          case uint16_t(Op::I64RemS):
-          case uint16_t(Op::I64RemU):
-          case uint16_t(Op::I64And):
-          case uint16_t(Op::I64Or):
-          case uint16_t(Op::I64Xor):
-          case uint16_t(Op::I64Shl):
-          case uint16_t(Op::I64ShrS):
-          case uint16_t(Op::I64ShrU):
-          case uint16_t(Op::I64Rotl):
-          case uint16_t(Op::I64Rotr):
-            CHECK(iter.readBinary(ValType::I64, &nothing, &nothing));
-          case uint16_t(Op::F32Add):
-          case uint16_t(Op::F32Sub):
-          case uint16_t(Op::F32Mul):
-          case uint16_t(Op::F32Div):
-          case uint16_t(Op::F32Min):
-          case uint16_t(Op::F32Max):
-          case uint16_t(Op::F32CopySign):
-            CHECK(iter.readBinary(ValType::F32, &nothing, &nothing));
-          case uint16_t(Op::F64Add):
-          case uint16_t(Op::F64Sub):
-          case uint16_t(Op::F64Mul):
-          case uint16_t(Op::F64Div):
-          case uint16_t(Op::F64Min):
-          case uint16_t(Op::F64Max):
-          case uint16_t(Op::F64CopySign):
-            CHECK(iter.readBinary(ValType::F64, &nothing, &nothing));
-          case uint16_t(Op::I32Eq):
-          case uint16_t(Op::I32Ne):
-          case uint16_t(Op::I32LtS):
-          case uint16_t(Op::I32LtU):
-          case uint16_t(Op::I32LeS):
-          case uint16_t(Op::I32LeU):
-          case uint16_t(Op::I32GtS):
-          case uint16_t(Op::I32GtU):
-          case uint16_t(Op::I32GeS):
-          case uint16_t(Op::I32GeU):
-            CHECK(iter.readComparison(ValType::I32, &nothing, &nothing));
-          case uint16_t(Op::I64Eq):
-          case uint16_t(Op::I64Ne):
-          case uint16_t(Op::I64LtS):
-          case uint16_t(Op::I64LtU):
-          case uint16_t(Op::I64LeS):
-          case uint16_t(Op::I64LeU):
-          case uint16_t(Op::I64GtS):
-          case uint16_t(Op::I64GtU):
-          case uint16_t(Op::I64GeS):
-          case uint16_t(Op::I64GeU):
-            CHECK(iter.readComparison(ValType::I64, &nothing, &nothing));
-          case uint16_t(Op::F32Eq):
-          case uint16_t(Op::F32Ne):
-          case uint16_t(Op::F32Lt):
-          case uint16_t(Op::F32Le):
-          case uint16_t(Op::F32Gt):
-          case uint16_t(Op::F32Ge):
-            CHECK(iter.readComparison(ValType::F32, &nothing, &nothing));
-          case uint16_t(Op::F64Eq):
-          case uint16_t(Op::F64Ne):
-          case uint16_t(Op::F64Lt):
-          case uint16_t(Op::F64Le):
-          case uint16_t(Op::F64Gt):
-          case uint16_t(Op::F64Ge):
-            CHECK(iter.readComparison(ValType::F64, &nothing, &nothing));
-          case uint16_t(Op::I32Eqz):
-            CHECK(iter.readConversion(ValType::I32, ValType::I32, &nothing));
-          case uint16_t(Op::I64Eqz):
-          case uint16_t(Op::I32WrapI64):
-            CHECK(iter.readConversion(ValType::I64, ValType::I32, &nothing));
-          case uint16_t(Op::I32TruncSF32):
-          case uint16_t(Op::I32TruncUF32):
-          case uint16_t(Op::I32ReinterpretF32):
-            CHECK(iter.readConversion(ValType::F32, ValType::I32, &nothing));
-          case uint16_t(Op::I32TruncSF64):
-          case uint16_t(Op::I32TruncUF64):
-            CHECK(iter.readConversion(ValType::F64, ValType::I32, &nothing));
-          case uint16_t(Op::I64ExtendSI32):
-          case uint16_t(Op::I64ExtendUI32):
-            CHECK(iter.readConversion(ValType::I32, ValType::I64, &nothing));
-          case uint16_t(Op::I64TruncSF32):
-          case uint16_t(Op::I64TruncUF32):
-            CHECK(iter.readConversion(ValType::F32, ValType::I64, &nothing));
-          case uint16_t(Op::I64TruncSF64):
-          case uint16_t(Op::I64TruncUF64):
-          case uint16_t(Op::I64ReinterpretF64):
-            CHECK(iter.readConversion(ValType::F64, ValType::I64, &nothing));
-          case uint16_t(Op::F32ConvertSI32):
-          case uint16_t(Op::F32ConvertUI32):
-          case uint16_t(Op::F32ReinterpretI32):
-            CHECK(iter.readConversion(ValType::I32, ValType::F32, &nothing));
-          case uint16_t(Op::F32ConvertSI64):
-          case uint16_t(Op::F32ConvertUI64):
-            CHECK(iter.readConversion(ValType::I64, ValType::F32, &nothing));
-          case uint16_t(Op::F32DemoteF64):
-            CHECK(iter.readConversion(ValType::F64, ValType::F32, &nothing));
-          case uint16_t(Op::F64ConvertSI32):
-          case uint16_t(Op::F64ConvertUI32):
-            CHECK(iter.readConversion(ValType::I32, ValType::F64, &nothing));
-          case uint16_t(Op::F64ConvertSI64):
-          case uint16_t(Op::F64ConvertUI64):
-          case uint16_t(Op::F64ReinterpretI64):
-            CHECK(iter.readConversion(ValType::I64, ValType::F64, &nothing));
-          case uint16_t(Op::F64PromoteF32):
-            CHECK(iter.readConversion(ValType::F32, ValType::F64, &nothing));
-          case uint16_t(Op::I32Extend8S):
-          case uint16_t(Op::I32Extend16S):
-            CHECK(iter.readConversion(ValType::I32, ValType::I32, &nothing));
-          case uint16_t(Op::I64Extend8S):
-          case uint16_t(Op::I64Extend16S):
-          case uint16_t(Op::I64Extend32S):
-            CHECK(iter.readConversion(ValType::I64, ValType::I64, &nothing));
-          case uint16_t(Op::I32Load8S):
-          case uint16_t(Op::I32Load8U): {
-=======
           case uint32_t(ThreadOp::I32AtomicLoad8U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readWake(&addr, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::I32, 1, &addr));
-=======
             CHECK(iter.readAtomicLoad(&addr, ValType::I32, 1));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32Wait): {
-||||||| merged common ancestors
-          case uint16_t(Op::I32Load16S):
-          case uint16_t(Op::I32Load16U): {
-=======
           case uint32_t(ThreadOp::I32AtomicLoad16U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readWait(&addr, ValType::I32, 4, &nothing, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::I32, 2, &addr));
-=======
             CHECK(iter.readAtomicLoad(&addr, ValType::I32, 2));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64Wait): {
-||||||| merged common ancestors
-          case uint16_t(Op::I32Load): {
-=======
           case uint32_t(ThreadOp::I64AtomicLoad8U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readWait(&addr, ValType::I64, 8, &nothing, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::I32, 4, &addr));
-=======
             CHECK(iter.readAtomicLoad(&addr, ValType::I64, 1));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicLoad): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Load8S):
-          case uint16_t(Op::I64Load8U): {
-=======
           case uint32_t(ThreadOp::I64AtomicLoad16U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicLoad(&addr, ValType::I32, 4));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::I64, 1, &addr));
-=======
             CHECK(iter.readAtomicLoad(&addr, ValType::I64, 2));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicLoad): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Load16S):
-          case uint16_t(Op::I64Load16U): {
-=======
           case uint32_t(ThreadOp::I64AtomicLoad32U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicLoad(&addr, ValType::I64, 8));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::I64, 2, &addr));
-=======
             CHECK(iter.readAtomicLoad(&addr, ValType::I64, 4));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicLoad8U): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Load32S):
-          case uint16_t(Op::I64Load32U): {
-=======
           case uint32_t(ThreadOp::I32AtomicStore): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicLoad(&addr, ValType::I32, 1));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::I64, 4, &addr));
-=======
             CHECK(iter.readAtomicStore(&addr, ValType::I32, 4, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicLoad16U): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Load): {
-=======
           case uint32_t(ThreadOp::I64AtomicStore): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicLoad(&addr, ValType::I32, 2));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::I64, 8, &addr));
-=======
             CHECK(iter.readAtomicStore(&addr, ValType::I64, 8, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicLoad8U): {
-||||||| merged common ancestors
-          case uint16_t(Op::F32Load): {
-=======
           case uint32_t(ThreadOp::I32AtomicStore8U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicLoad(&addr, ValType::I64, 1));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::F32, 4, &addr));
-=======
             CHECK(iter.readAtomicStore(&addr, ValType::I32, 1, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicLoad16U): {
-||||||| merged common ancestors
-          case uint16_t(Op::F64Load): {
-=======
           case uint32_t(ThreadOp::I32AtomicStore16U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicLoad(&addr, ValType::I64, 2));
-||||||| merged common ancestors
-            CHECK(iter.readLoad(ValType::F64, 8, &addr));
-=======
             CHECK(iter.readAtomicStore(&addr, ValType::I32, 2, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicLoad32U): {
-||||||| merged common ancestors
-          case uint16_t(Op::I32Store8): {
-=======
           case uint32_t(ThreadOp::I64AtomicStore8U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicLoad(&addr, ValType::I64, 4));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::I32, 1, &addr, &nothing));
-=======
             CHECK(iter.readAtomicStore(&addr, ValType::I64, 1, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicStore): {
-||||||| merged common ancestors
-          case uint16_t(Op::I32Store16): {
-=======
           case uint32_t(ThreadOp::I64AtomicStore16U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicStore(&addr, ValType::I32, 4, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::I32, 2, &addr, &nothing));
-=======
             CHECK(iter.readAtomicStore(&addr, ValType::I64, 2, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicStore): {
-||||||| merged common ancestors
-          case uint16_t(Op::I32Store): {
-=======
           case uint32_t(ThreadOp::I64AtomicStore32U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicStore(&addr, ValType::I64, 8, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::I32, 4, &addr, &nothing));
-=======
             CHECK(iter.readAtomicStore(&addr, ValType::I64, 4, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicStore8U): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Store8): {
-=======
           case uint32_t(ThreadOp::I32AtomicAdd):
           case uint32_t(ThreadOp::I32AtomicSub):
           case uint32_t(ThreadOp::I32AtomicAnd):
           case uint32_t(ThreadOp::I32AtomicOr):
           case uint32_t(ThreadOp::I32AtomicXor):
           case uint32_t(ThreadOp::I32AtomicXchg): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicStore(&addr, ValType::I32, 1, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::I64, 1, &addr, &nothing));
-=======
             CHECK(iter.readAtomicRMW(&addr, ValType::I32, 4, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicStore16U): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Store16): {
-=======
           case uint32_t(ThreadOp::I64AtomicAdd):
           case uint32_t(ThreadOp::I64AtomicSub):
           case uint32_t(ThreadOp::I64AtomicAnd):
           case uint32_t(ThreadOp::I64AtomicOr):
           case uint32_t(ThreadOp::I64AtomicXor):
           case uint32_t(ThreadOp::I64AtomicXchg): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicStore(&addr, ValType::I32, 2, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::I64, 2, &addr, &nothing));
-=======
             CHECK(iter.readAtomicRMW(&addr, ValType::I64, 8, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicStore8U): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Store32): {
-=======
           case uint32_t(ThreadOp::I32AtomicAdd8U):
           case uint32_t(ThreadOp::I32AtomicSub8U):
           case uint32_t(ThreadOp::I32AtomicAnd8U):
           case uint32_t(ThreadOp::I32AtomicOr8U):
           case uint32_t(ThreadOp::I32AtomicXor8U):
           case uint32_t(ThreadOp::I32AtomicXchg8U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicStore(&addr, ValType::I64, 1, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::I64, 4, &addr, &nothing));
-=======
             CHECK(iter.readAtomicRMW(&addr, ValType::I32, 1, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicStore16U): {
-||||||| merged common ancestors
-          case uint16_t(Op::I64Store): {
-=======
           case uint32_t(ThreadOp::I32AtomicAdd16U):
           case uint32_t(ThreadOp::I32AtomicSub16U):
           case uint32_t(ThreadOp::I32AtomicAnd16U):
           case uint32_t(ThreadOp::I32AtomicOr16U):
           case uint32_t(ThreadOp::I32AtomicXor16U):
           case uint32_t(ThreadOp::I32AtomicXchg16U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicStore(&addr, ValType::I64, 2, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::I64, 8, &addr, &nothing));
-=======
             CHECK(iter.readAtomicRMW(&addr, ValType::I32, 2, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicStore32U): {
-||||||| merged common ancestors
-          case uint16_t(Op::F32Store): {
-=======
           case uint32_t(ThreadOp::I64AtomicAdd8U):
           case uint32_t(ThreadOp::I64AtomicSub8U):
           case uint32_t(ThreadOp::I64AtomicAnd8U):
           case uint32_t(ThreadOp::I64AtomicOr8U):
           case uint32_t(ThreadOp::I64AtomicXor8U):
           case uint32_t(ThreadOp::I64AtomicXchg8U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicStore(&addr, ValType::I64, 4, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::F32, 4, &addr, &nothing));
-=======
             CHECK(iter.readAtomicRMW(&addr, ValType::I64, 1, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicAdd):
-          case uint16_t(ThreadOp::I32AtomicSub):
-          case uint16_t(ThreadOp::I32AtomicAnd):
-          case uint16_t(ThreadOp::I32AtomicOr):
-          case uint16_t(ThreadOp::I32AtomicXor):
-          case uint16_t(ThreadOp::I32AtomicXchg): {
-||||||| merged common ancestors
-          case uint16_t(Op::F64Store): {
-=======
           case uint32_t(ThreadOp::I64AtomicAdd16U):
           case uint32_t(ThreadOp::I64AtomicSub16U):
           case uint32_t(ThreadOp::I64AtomicAnd16U):
           case uint32_t(ThreadOp::I64AtomicOr16U):
           case uint32_t(ThreadOp::I64AtomicXor16U):
           case uint32_t(ThreadOp::I64AtomicXchg16U): {
->>>>>>> upstream-releases
             LinearMemoryAddress<Nothing> addr;
-<<<<<<< HEAD
-            CHECK(iter.readAtomicRMW(&addr, ValType::I32, 4, &nothing));
-||||||| merged common ancestors
-            CHECK(iter.readStore(ValType::F64, 8, &addr, &nothing));
-=======
             CHECK(iter.readAtomicRMW(&addr, ValType::I64, 2, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicAdd):
-          case uint16_t(ThreadOp::I64AtomicSub):
-          case uint16_t(ThreadOp::I64AtomicAnd):
-          case uint16_t(ThreadOp::I64AtomicOr):
-          case uint16_t(ThreadOp::I64AtomicXor):
-          case uint16_t(ThreadOp::I64AtomicXchg): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicRMW(&addr, ValType::I64, 8, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::GrowMemory):
-            CHECK(iter.readGrowMemory(&nothing));
-          case uint16_t(Op::CurrentMemory):
-            CHECK(iter.readCurrentMemory());
-          case uint16_t(Op::Br): {
-            uint32_t unusedDepth;
-            ExprType unusedType;
-            CHECK(iter.readBr(&unusedDepth, &unusedType, &nothing));
-=======
           case uint32_t(ThreadOp::I64AtomicAdd32U):
           case uint32_t(ThreadOp::I64AtomicSub32U):
           case uint32_t(ThreadOp::I64AtomicAnd32U):
@@ -2308,423 +1112,41 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
           case uint32_t(ThreadOp::I64AtomicXchg32U): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicRMW(&addr, ValType::I64, 4, &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicAdd8U):
-          case uint16_t(ThreadOp::I32AtomicSub8U):
-          case uint16_t(ThreadOp::I32AtomicAnd8U):
-          case uint16_t(ThreadOp::I32AtomicOr8U):
-          case uint16_t(ThreadOp::I32AtomicXor8U):
-          case uint16_t(ThreadOp::I32AtomicXchg8U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicRMW(&addr, ValType::I32, 1, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::BrIf): {
-            uint32_t unusedDepth;
-            ExprType unusedType;
-            CHECK(iter.readBrIf(&unusedDepth, &unusedType, &nothing, &nothing));
-=======
           case uint32_t(ThreadOp::I32AtomicCmpXchg): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 4, &nothing,
                                          &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicAdd16U):
-          case uint16_t(ThreadOp::I32AtomicSub16U):
-          case uint16_t(ThreadOp::I32AtomicAnd16U):
-          case uint16_t(ThreadOp::I32AtomicOr16U):
-          case uint16_t(ThreadOp::I32AtomicXor16U):
-          case uint16_t(ThreadOp::I32AtomicXchg16U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicRMW(&addr, ValType::I32, 2, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::BrTable): {
-            Uint32Vector unusedDepths;
-            uint32_t unusedDefault;
-            ExprType unusedType;
-            CHECK(iter.readBrTable(&unusedDepths, &unusedDefault, &unusedType, &nothing, &nothing));
-=======
           case uint32_t(ThreadOp::I64AtomicCmpXchg): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 8, &nothing,
                                          &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicAdd8U):
-          case uint16_t(ThreadOp::I64AtomicSub8U):
-          case uint16_t(ThreadOp::I64AtomicAnd8U):
-          case uint16_t(ThreadOp::I64AtomicOr8U):
-          case uint16_t(ThreadOp::I64AtomicXor8U):
-          case uint16_t(ThreadOp::I64AtomicXchg8U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicRMW(&addr, ValType::I64, 1, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::Return):
-            CHECK(iter.readReturn(&nothing));
-          case uint16_t(Op::Unreachable):
-            CHECK(iter.readUnreachable());
-          case uint16_t(Op::MiscPrefix): {
-            switch (op.b1) {
-              case uint16_t(MiscOp::I32TruncSSatF32):
-              case uint16_t(MiscOp::I32TruncUSatF32):
-                CHECK(iter.readConversion(ValType::F32, ValType::I32, &nothing));
-              case uint16_t(MiscOp::I32TruncSSatF64):
-              case uint16_t(MiscOp::I32TruncUSatF64):
-                CHECK(iter.readConversion(ValType::F64, ValType::I32, &nothing));
-              case uint16_t(MiscOp::I64TruncSSatF32):
-              case uint16_t(MiscOp::I64TruncUSatF32):
-                CHECK(iter.readConversion(ValType::F32, ValType::I64, &nothing));
-              case uint16_t(MiscOp::I64TruncSSatF64):
-              case uint16_t(MiscOp::I64TruncUSatF64):
-                CHECK(iter.readConversion(ValType::F64, ValType::I64, &nothing));
-#ifdef ENABLE_WASM_BULKMEM_OPS
-              case uint16_t(MiscOp::MemCopy):
-                  CHECK(iter.readMemOrTableCopy(/*isMem=*/true,
-                                                &nothing, &nothing, &nothing));
-              case uint16_t(MiscOp::MemDrop): {
-                uint32_t unusedSegIndex;
-                CHECK(iter.readMemOrTableDrop(/*isMem=*/true, &unusedSegIndex));
-              }
-              case uint16_t(MiscOp::MemFill):
-                CHECK(iter.readMemFill(&nothing, &nothing, &nothing));
-              case uint16_t(MiscOp::MemInit): {
-                uint32_t unusedSegIndex;
-                CHECK(iter.readMemOrTableInit(/*isMem=*/true,
-                                              &unusedSegIndex, &nothing, &nothing, &nothing));
-              }
-              case uint16_t(MiscOp::TableCopy):
-                CHECK(iter.readMemOrTableCopy(/*isMem=*/false,
-                                              &nothing, &nothing, &nothing));
-              case uint16_t(MiscOp::TableDrop): {
-                uint32_t unusedSegIndex;
-                CHECK(iter.readMemOrTableDrop(/*isMem=*/false, &unusedSegIndex));
-              }
-              case uint16_t(MiscOp::TableInit): {
-                uint32_t unusedSegIndex;
-                CHECK(iter.readMemOrTableInit(/*isMem=*/false,
-                                              &unusedSegIndex, &nothing, &nothing, &nothing));
-              }
-#endif
-#ifdef ENABLE_WASM_GC
-              case uint16_t(MiscOp::StructNew): {
-                if (env.gcTypesEnabled() == HasGcTypes::False) {
-                    return iter.unrecognizedOpcode(&op);
-                }
-                uint32_t unusedUint;
-                ValidatingOpIter::ValueVector unusedArgs;
-                CHECK(iter.readStructNew(&unusedUint, &unusedArgs));
-              }
-              case uint16_t(MiscOp::StructGet): {
-                if (env.gcTypesEnabled() == HasGcTypes::False) {
-                    return iter.unrecognizedOpcode(&op);
-                }
-                uint32_t unusedUint1, unusedUint2;
-                CHECK(iter.readStructGet(&unusedUint1, &unusedUint2, &nothing));
-              }
-              case uint16_t(MiscOp::StructSet): {
-                if (env.gcTypesEnabled() == HasGcTypes::False) {
-                    return iter.unrecognizedOpcode(&op);
-                }
-                uint32_t unusedUint1, unusedUint2;
-                CHECK(iter.readStructSet(&unusedUint1, &unusedUint2, &nothing, &nothing));
-              }
-              case uint16_t(MiscOp::StructNarrow): {
-                if (env.gcTypesEnabled() == HasGcTypes::False) {
-                    return iter.unrecognizedOpcode(&op);
-                }
-                ValType unusedTy, unusedTy2;
-                CHECK(iter.readStructNarrow(&unusedTy, &unusedTy2, &nothing));
-              }
-#endif
-              default:
-                return iter.unrecognizedOpcode(&op);
-            }
-            break;
-=======
           case uint32_t(ThreadOp::I32AtomicCmpXchg8U): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 1, &nothing,
                                          &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicAdd16U):
-          case uint16_t(ThreadOp::I64AtomicSub16U):
-          case uint16_t(ThreadOp::I64AtomicAnd16U):
-          case uint16_t(ThreadOp::I64AtomicOr16U):
-          case uint16_t(ThreadOp::I64AtomicXor16U):
-          case uint16_t(ThreadOp::I64AtomicXchg16U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicRMW(&addr, ValType::I64, 2, &nothing));
-||||||| merged common ancestors
-#ifdef ENABLE_WASM_GC
-          case uint16_t(Op::RefEq): {
-            if (env.gcTypesEnabled() == HasGcTypes::False) {
-                return iter.unrecognizedOpcode(&op);
-            }
-            CHECK(iter.readComparison(ValType::AnyRef, &nothing, &nothing));
-            break;
-=======
           case uint32_t(ThreadOp::I32AtomicCmpXchg16U): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 2, &nothing,
                                          &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicAdd32U):
-          case uint16_t(ThreadOp::I64AtomicSub32U):
-          case uint16_t(ThreadOp::I64AtomicAnd32U):
-          case uint16_t(ThreadOp::I64AtomicOr32U):
-          case uint16_t(ThreadOp::I64AtomicXor32U):
-          case uint16_t(ThreadOp::I64AtomicXchg32U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicRMW(&addr, ValType::I64, 4, &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::RefNull): {
-            if (env.gcTypesEnabled() == HasGcTypes::False) {
-                return iter.unrecognizedOpcode(&op);
-            }
-            ValType unusedType;
-            CHECK(iter.readRefNull(&unusedType));
-            break;
-=======
           case uint32_t(ThreadOp::I64AtomicCmpXchg8U): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 1, &nothing,
                                          &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I32AtomicCmpXchg): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 4, &nothing,
-                                         &nothing));
-||||||| merged common ancestors
-          case uint16_t(Op::RefIsNull): {
-            if (env.gcTypesEnabled() == HasGcTypes::False) {
-                return iter.unrecognizedOpcode(&op);
-            }
-            CHECK(iter.readConversion(ValType::AnyRef, ValType::I32, &nothing));
-            break;
-=======
           case uint32_t(ThreadOp::I64AtomicCmpXchg16U): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 2, &nothing,
                                          &nothing));
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-          case uint16_t(ThreadOp::I64AtomicCmpXchg): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 8, &nothing,
-                                         &nothing));
-          }
-          case uint16_t(ThreadOp::I32AtomicCmpXchg8U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 1, &nothing,
-                                         &nothing));
-          }
-          case uint16_t(ThreadOp::I32AtomicCmpXchg16U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 2, &nothing,
-                                         &nothing));
-          }
-          case uint16_t(ThreadOp::I64AtomicCmpXchg8U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 1, &nothing,
-                                         &nothing));
-          }
-          case uint16_t(ThreadOp::I64AtomicCmpXchg16U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 2, &nothing,
-                                         &nothing));
-          }
-          case uint16_t(ThreadOp::I64AtomicCmpXchg32U): {
-            LinearMemoryAddress<Nothing> addr;
-            CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 4, &nothing,
-                                         &nothing));
-||||||| merged common ancestors
-#endif
-          case uint16_t(Op::ThreadPrefix): {
-#ifdef ENABLE_WASM_THREAD_OPS
-            switch (op.b1) {
-              case uint16_t(ThreadOp::Wake): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readWake(&addr, &nothing));
-              }
-              case uint16_t(ThreadOp::I32Wait): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readWait(&addr, ValType::I32, 4, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I64Wait): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readWait(&addr, ValType::I64, 8, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicLoad): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readAtomicLoad(&addr, ValType::I32, 4));
-              }
-              case uint16_t(ThreadOp::I64AtomicLoad): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readAtomicLoad(&addr, ValType::I64, 8));
-              }
-              case uint16_t(ThreadOp::I32AtomicLoad8U): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readAtomicLoad(&addr, ValType::I32, 1));
-              }
-              case uint16_t(ThreadOp::I32AtomicLoad16U): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readAtomicLoad(&addr, ValType::I32, 2));
-              }
-              case uint16_t(ThreadOp::I64AtomicLoad8U): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readAtomicLoad(&addr, ValType::I64, 1));
-              }
-              case uint16_t(ThreadOp::I64AtomicLoad16U): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readAtomicLoad(&addr, ValType::I64, 2));
-              }
-              case uint16_t(ThreadOp::I64AtomicLoad32U): {
-                LinearMemoryAddress<Nothing> addr;
-                CHECK(iter.readAtomicLoad(&addr, ValType::I64, 4));
-              }
-              case uint16_t(ThreadOp::I32AtomicStore): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicStore(&addr, ValType::I32, 4, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicStore): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicStore(&addr, ValType::I64, 8, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicStore8U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicStore(&addr, ValType::I32, 1, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicStore16U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicStore(&addr, ValType::I32, 2, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicStore8U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicStore(&addr, ValType::I64, 1, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicStore16U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicStore(&addr, ValType::I64, 2, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicStore32U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicStore(&addr, ValType::I64, 4, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicAdd):
-              case uint16_t(ThreadOp::I32AtomicSub):
-              case uint16_t(ThreadOp::I32AtomicAnd):
-              case uint16_t(ThreadOp::I32AtomicOr):
-              case uint16_t(ThreadOp::I32AtomicXor):
-              case uint16_t(ThreadOp::I32AtomicXchg): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicRMW(&addr, ValType::I32, 4, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicAdd):
-              case uint16_t(ThreadOp::I64AtomicSub):
-              case uint16_t(ThreadOp::I64AtomicAnd):
-              case uint16_t(ThreadOp::I64AtomicOr):
-              case uint16_t(ThreadOp::I64AtomicXor):
-              case uint16_t(ThreadOp::I64AtomicXchg): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicRMW(&addr, ValType::I64, 8, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicAdd8U):
-              case uint16_t(ThreadOp::I32AtomicSub8U):
-              case uint16_t(ThreadOp::I32AtomicAnd8U):
-              case uint16_t(ThreadOp::I32AtomicOr8U):
-              case uint16_t(ThreadOp::I32AtomicXor8U):
-              case uint16_t(ThreadOp::I32AtomicXchg8U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicRMW(&addr, ValType::I32, 1, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicAdd16U):
-              case uint16_t(ThreadOp::I32AtomicSub16U):
-              case uint16_t(ThreadOp::I32AtomicAnd16U):
-              case uint16_t(ThreadOp::I32AtomicOr16U):
-              case uint16_t(ThreadOp::I32AtomicXor16U):
-              case uint16_t(ThreadOp::I32AtomicXchg16U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicRMW(&addr, ValType::I32, 2, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicAdd8U):
-              case uint16_t(ThreadOp::I64AtomicSub8U):
-              case uint16_t(ThreadOp::I64AtomicAnd8U):
-              case uint16_t(ThreadOp::I64AtomicOr8U):
-              case uint16_t(ThreadOp::I64AtomicXor8U):
-              case uint16_t(ThreadOp::I64AtomicXchg8U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicRMW(&addr, ValType::I64, 1, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicAdd16U):
-              case uint16_t(ThreadOp::I64AtomicSub16U):
-              case uint16_t(ThreadOp::I64AtomicAnd16U):
-              case uint16_t(ThreadOp::I64AtomicOr16U):
-              case uint16_t(ThreadOp::I64AtomicXor16U):
-              case uint16_t(ThreadOp::I64AtomicXchg16U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicRMW(&addr, ValType::I64, 2, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicAdd32U):
-              case uint16_t(ThreadOp::I64AtomicSub32U):
-              case uint16_t(ThreadOp::I64AtomicAnd32U):
-              case uint16_t(ThreadOp::I64AtomicOr32U):
-              case uint16_t(ThreadOp::I64AtomicXor32U):
-              case uint16_t(ThreadOp::I64AtomicXchg32U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicRMW(&addr, ValType::I64, 4, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicCmpXchg): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 4, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicCmpXchg): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 8, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicCmpXchg8U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 1, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I32AtomicCmpXchg16U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicCmpXchg(&addr, ValType::I32, 2, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicCmpXchg8U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 1, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicCmpXchg16U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 2, &nothing, &nothing));
-              }
-              case uint16_t(ThreadOp::I64AtomicCmpXchg32U): {
-                  LinearMemoryAddress<Nothing> addr;
-                  CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 4, &nothing, &nothing));
-              }
-              default:
-                return iter.unrecognizedOpcode(&op);
-            }
-            break;
-#else
-            return iter.unrecognizedOpcode(&op);
-#endif  // ENABLE_WASM_THREAD_OPS
-=======
           case uint32_t(ThreadOp::I64AtomicCmpXchg32U): {
             LinearMemoryAddress<Nothing> addr;
             CHECK(iter.readAtomicCmpXchg(&addr, ValType::I64, 4, &nothing,
                                          &nothing));
->>>>>>> upstream-releases
           }
           default:
             return iter.unrecognizedOpcode(&op);
@@ -2743,24 +1165,10 @@ static bool DecodeFunctionBodyExprs(const ModuleEnvironment& env,
 #undef CHECK
 }
 
-<<<<<<< HEAD
-bool wasm::ValidateFunctionBody(const ModuleEnvironment& env,
-                                uint32_t funcIndex, uint32_t bodySize,
-                                Decoder& d,
-                                ExclusiveDeferredValidationState& dvs) {
-  const FuncType& funcType = *env.funcTypes[funcIndex];
-||||||| merged common ancestors
-bool
-wasm::ValidateFunctionBody(const ModuleEnvironment& env, uint32_t funcIndex, uint32_t bodySize,
-                           Decoder& d, ExclusiveDeferredValidationState& dvs)
-{
-    const FuncType& funcType = *env.funcTypes[funcIndex];
-=======
 bool wasm::ValidateFunctionBody(const ModuleEnvironment& env,
                                 uint32_t funcIndex, uint32_t bodySize,
                                 Decoder& d) {
   const FuncType& funcType = *env.funcTypes[funcIndex];
->>>>>>> upstream-releases
 
   ValTypeVector locals;
   if (!locals.appendAll(funcType.args())) {
@@ -2769,36 +1177,14 @@ bool wasm::ValidateFunctionBody(const ModuleEnvironment& env,
 
   const uint8_t* bodyBegin = d.currentPosition();
 
-<<<<<<< HEAD
-  if (!DecodeLocalEntries(d, ModuleKind::Wasm, env.types, env.gcTypesEnabled(),
-                          &locals)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!DecodeLocalEntries(d, ModuleKind::Wasm, env.types, env.gcTypesEnabled(), &locals)) {
-        return false;
-    }
-=======
   if (!DecodeLocalEntries(d, env.types, env.gcTypesEnabled(), &locals)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!DecodeFunctionBodyExprs(env, funcType, locals, dvs, bodyBegin + bodySize,
-                               &d)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!DecodeFunctionBodyExprs(env, funcType, locals, dvs, bodyBegin + bodySize, &d)) {
-        return false;
-    }
-=======
   if (!DecodeFunctionBodyExprs(env, funcType, locals, bodyBegin + bodySize,
                                &d)) {
     return false;
   }
->>>>>>> upstream-releases
 
   return true;
 }
@@ -2828,34 +1214,9 @@ enum class TypeState { None, Struct, ForwardStruct, Func };
 
 typedef Vector<TypeState, 0, SystemAllocPolicy> TypeStateVector;
 
-<<<<<<< HEAD
-static bool ValidateRefType(Decoder& d, TypeStateVector* typeState,
-                            ValType type) {
-  if (!type.isRef()) {
-||||||| merged common ancestors
-static bool
-ValidateRefType(Decoder& d, TypeStateVector* typeState, ValType type)
-{
-    if (!type.isRef()) {
-        return true;
-    }
-
-    uint32_t refTypeIndex = type.refTypeIndex();
-    switch ((*typeState)[refTypeIndex]) {
-      case TypeState::None:
-        (*typeState)[refTypeIndex] = TypeState::ForwardStruct;
-        break;
-      case TypeState::Struct:
-      case TypeState::ForwardStruct:
-        break;
-      case TypeState::Func:
-        return d.fail("ref does not reference a struct type");
-    }
-=======
 static bool ValidateTypeState(Decoder& d, TypeStateVector* typeState,
                               ValType type) {
   if (!type.isRef()) {
->>>>>>> upstream-releases
     return true;
   }
 
@@ -2898,37 +1259,12 @@ static bool DecodeFuncType(Decoder& d, ModuleEnvironment* env,
     return false;
   }
 
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < numArgs; i++) {
-    if (!DecodeValType(d, ModuleKind::Wasm, env->types.length(),
-                       env->gcTypesEnabled(), &args[i])) {
-      return false;
-||||||| merged common ancestors
-    for (uint32_t i = 0; i < numArgs; i++) {
-        if (!DecodeValType(d, ModuleKind::Wasm, env->types.length(), env->gcTypesEnabled(), &args[i])) {
-            return false;
-        }
-        if (!ValidateRefType(d, typeState, args[i])) {
-            return false;
-        }
-=======
   for (uint32_t i = 0; i < numArgs; i++) {
     if (!d.readValType(env->types.length(), env->gcTypesEnabled(), &args[i])) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (!ValidateRefType(d, typeState, args[i])) {
-      return false;
-||||||| merged common ancestors
-
-    uint32_t numRets;
-    if (!d.readVarU32(&numRets)) {
-        return d.fail("bad number of function returns");
-=======
     if (!ValidateTypeState(d, typeState, args[i])) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
@@ -2943,32 +1279,13 @@ static bool DecodeFuncType(Decoder& d, ModuleEnvironment* env,
 
   ExprType result = ExprType::Void;
 
-<<<<<<< HEAD
-  if (numRets == 1) {
-    ValType type;
-    if (!DecodeValType(d, ModuleKind::Wasm, env->types.length(),
-                       env->gcTypesEnabled(), &type)) {
-      return false;
-||||||| merged common ancestors
-        result = ExprType(type);
-=======
   if (numRets == 1) {
     ValType type;
     if (!d.readValType(env->types.length(), env->gcTypesEnabled(), &type)) {
       return false;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    if (!ValidateRefType(d, typeState, type)) {
-      return false;
-||||||| merged common ancestors
-
-    if ((*typeState)[typeIndex] != TypeState::None) {
-        return d.fail("function type entry referenced as struct");
-=======
     if (!ValidateTypeState(d, typeState, type)) {
       return false;
->>>>>>> upstream-releases
     }
 
     result = ExprType(type);
@@ -2984,23 +1301,11 @@ static bool DecodeFuncType(Decoder& d, ModuleEnvironment* env,
   return true;
 }
 
-<<<<<<< HEAD
-static bool DecodeStructType(Decoder& d, ModuleEnvironment* env,
-                             TypeStateVector* typeState, uint32_t typeIndex) {
-  if (env->gcTypesEnabled() == HasGcTypes::False) {
-    return d.fail("Structure types not enabled");
-  }
-||||||| merged common ancestors
-    if (numFields > MaxStructFields) {
-        return d.fail("too many fields in structure");
-    }
-=======
 static bool DecodeStructType(Decoder& d, ModuleEnvironment* env,
                              TypeStateVector* typeState, uint32_t typeIndex) {
   if (!env->gcTypesEnabled()) {
     return d.fail("Structure types not enabled");
   }
->>>>>>> upstream-releases
 
   uint32_t numFields;
   if (!d.readVarU32(&numFields)) {
@@ -3025,22 +1330,6 @@ static bool DecodeStructType(Decoder& d, ModuleEnvironment* env,
     if ((flags & ~uint8_t(FieldFlags::AllowedMask)) != 0) {
       return d.fail("garbage flag bits");
     }
-<<<<<<< HEAD
-    fields[i].isMutable = flags & uint8_t(FieldFlags::Mutable);
-    if (!DecodeValType(d, ModuleKind::Wasm, env->types.length(),
-                       env->gcTypesEnabled(), &fields[i].type)) {
-      return false;
-    }
-    if (!ValidateRefType(d, typeState, fields[i].type)) {
-      return false;
-||||||| merged common ancestors
-
-    bool isInline = InlineTypedObject::canAccommodateSize(totalSize.value());
-    uint32_t offsetBy = isInline ? InlineTypedObject::offsetOfDataStart() : 0;
-
-    for (StructField& f : fields) {
-        f.offset += offsetBy;
-=======
     fields[i].isMutable = flags & uint8_t(FieldFlags::Mutable);
     if (!d.readValType(env->types.length(), env->gcTypesEnabled(),
                        &fields[i].type)) {
@@ -3048,37 +1337,8 @@ static bool DecodeStructType(Decoder& d, ModuleEnvironment* env,
     }
     if (!ValidateTypeState(d, typeState, fields[i].type)) {
       return false;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    CheckedInt32 offset;
-    switch (fields[i].type.code()) {
-      case ValType::I32:
-        offset = layout.addScalar(Scalar::Int32);
-        break;
-      case ValType::I64:
-        offset = layout.addScalar(Scalar::Int64);
-        break;
-      case ValType::F32:
-        offset = layout.addScalar(Scalar::Float32);
-        break;
-      case ValType::F64:
-        offset = layout.addScalar(Scalar::Float64);
-        break;
-      case ValType::Ref:
-      case ValType::AnyRef:
-        offset = layout.addReference(ReferenceType::TYPE_OBJECT);
-        break;
-      default:
-        MOZ_CRASH("Unknown type");
-    }
-    if (!offset.isValid()) {
-      return d.fail("Object too large");
-||||||| merged common ancestors
-    if ((*typeState)[typeIndex] != TypeState::None && (*typeState)[typeIndex] != TypeState::ForwardStruct) {
-        return d.fail("struct type entry referenced as function");
-=======
     CheckedInt32 offset;
     switch (fields[i].type.code()) {
       case ValType::I32:
@@ -3105,7 +1365,6 @@ static bool DecodeStructType(Decoder& d, ModuleEnvironment* env,
     }
     if (!offset.isValid()) {
       return d.fail("Object too large");
->>>>>>> upstream-releases
     }
 
     fields[i].offset = offset.value();
@@ -3133,51 +1392,6 @@ static bool DecodeStructType(Decoder& d, ModuleEnvironment* env,
   (*typeState)[typeIndex] = TypeState::Struct;
   env->numStructTypes++;
 
-<<<<<<< HEAD
-  return true;
-}
-
-#ifdef ENABLE_WASM_GC
-static bool DecodeGCFeatureOptInSection(Decoder& d, ModuleEnvironment* env) {
-  MaybeSectionRange range;
-  if (!d.startSection(SectionId::GcFeatureOptIn, env, &range, "type")) {
-    return false;
-  }
-  if (!range) {
-    return true;
-  }
-
-  uint32_t version;
-  if (!d.readVarU32(&version)) {
-    return d.fail("expected gc feature version");
-  }
-
-  // For documentation of what's in the various versions, see
-  // https://github.com/lars-t-hansen/moz-gc-experiments
-  //
-  // Version 1 is complete.
-  // Version 2 is in progress.
-
-  switch (version) {
-    case 1:
-      return d.fail(
-          "Wasm GC feature version 1 is no longer supported by this engine.\n"
-          "The current version is 2, which is not backward-compatible:\n"
-          " - The old encoding of ref.null is no longer accepted.");
-    case 2:
-      break;
-    default:
-      return d.fail(
-          "The specified Wasm GC feature version is unknown.\n"
-          "The current version is 2.");
-  }
-
-  env->gcFeatureOptIn = HasGcTypes::True;
-  return d.finishSection(*range, "gcfeatureoptin");
-||||||| merged common ancestors
-    env->gcFeatureOptIn = HasGcTypes::True;
-    return d.finishSection(*range, "gcfeatureoptin");
-=======
   return true;
 }
 
@@ -3227,7 +1441,6 @@ static bool DecodeGCFeatureOptInSection(Decoder& d, ModuleEnvironment* env) {
 
   env->gcFeatureOptIn = true;
   return d.finishSection(*range, "gcfeatureoptin");
->>>>>>> upstream-releases
 }
 #endif
 
@@ -3382,36 +1595,6 @@ static bool DecodeLimits(Decoder& d, Limits* limits,
   return true;
 }
 
-<<<<<<< HEAD
-static bool DecodeTableTypeAndLimits(Decoder& d, HasGcTypes gcTypesEnabled,
-                                     TableDescVector* tables) {
-  uint8_t elementType;
-  if (!d.readFixedU8(&elementType)) {
-    return d.fail("expected table element type");
-  }
-
-  TableKind tableKind;
-  if (elementType == uint8_t(TypeCode::AnyFunc)) {
-    tableKind = TableKind::AnyFunction;
-#ifdef ENABLE_WASM_GENERALIZED_TABLES
-  } else if (elementType == uint8_t(TypeCode::AnyRef)) {
-    if (gcTypesEnabled == HasGcTypes::False) {
-      return d.fail("reference types not enabled");
-    }
-    tableKind = TableKind::AnyRef;
-#endif
-  } else {
-#ifdef ENABLE_WASM_GENERALIZED_TABLES
-    return d.fail("expected 'anyfunc' or 'anyref' element type");
-#else
-    return d.fail("expected 'anyfunc' element type");
-#endif
-  }
-||||||| merged common ancestors
-    if (elementType != uint8_t(TypeCode::AnyFunc)) {
-        return d.fail("expected 'anyfunc' element type");
-    }
-=======
 static bool DecodeTableTypeAndLimits(Decoder& d, bool gcTypesEnabled,
                                      TableDescVector* tables) {
   uint8_t elementType;
@@ -3433,30 +1616,12 @@ static bool DecodeTableTypeAndLimits(Decoder& d, bool gcTypesEnabled,
     return d.fail("expected 'funcref' element type");
 #endif
   }
->>>>>>> upstream-releases
 
   Limits limits;
   if (!DecodeLimits(d, &limits)) {
     return false;
   }
 
-<<<<<<< HEAD
-  // If there's a maximum, check it is in range.  The check to exclude
-  // initial > maximum is carried out by the DecodeLimits call above, so
-  // we don't repeat it here.
-  if (limits.initial > MaxTableInitialLength ||
-      ((limits.maximum.isSome() &&
-        limits.maximum.value() > MaxTableMaximumLength)))
-    return d.fail("too many table elements");
-||||||| merged common ancestors
-    // If there's a maximum, check it is in range.  The check to exclude
-    // initial > maximum is carried out by the DecodeLimits call above, so
-    // we don't repeat it here.
-    if (limits.initial > MaxTableInitialLength ||
-        ((limits.maximum.isSome() &&
-          limits.maximum.value() > MaxTableMaximumLength)))
-        return d.fail("too many table elements");
-=======
   // If there's a maximum, check it is in range.  The check to exclude
   // initial > maximum is carried out by the DecodeLimits call above, so
   // we don't repeat it here.
@@ -3464,7 +1629,6 @@ static bool DecodeTableTypeAndLimits(Decoder& d, bool gcTypesEnabled,
       ((limits.maximum.isSome() && limits.maximum.value() > MaxTableLength))) {
     return d.fail("too many table elements");
   }
->>>>>>> upstream-releases
 
   if (tables->length() >= MaxTables) {
     return d.fail("too many tables");
@@ -3473,27 +1637,6 @@ static bool DecodeTableTypeAndLimits(Decoder& d, bool gcTypesEnabled,
   return tables->emplaceBack(tableKind, limits);
 }
 
-<<<<<<< HEAD
-static bool GlobalIsJSCompatible(Decoder& d, ValType type, bool isMutable) {
-  switch (type.code()) {
-    case ValType::I32:
-    case ValType::F32:
-    case ValType::F64:
-    case ValType::I64:
-    case ValType::AnyRef:
-      break;
-||||||| merged common ancestors
-static bool
-GlobalIsJSCompatible(Decoder& d, ValType type, bool isMutable)
-{
-    switch (type.code()) {
-      case ValType::I32:
-      case ValType::F32:
-      case ValType::F64:
-      case ValType::I64:
-      case ValType::AnyRef:
-        break;
-=======
 static bool GlobalIsJSCompatible(Decoder& d, ValType type, bool isMutable) {
   switch (type.code()) {
     case ValType::I32:
@@ -3503,7 +1646,6 @@ static bool GlobalIsJSCompatible(Decoder& d, ValType type, bool isMutable) {
     case ValType::FuncRef:
     case ValType::AnyRef:
       break;
->>>>>>> upstream-releases
 #ifdef WASM_PRIVATE_REFTYPES
     case ValType::Ref:
       return d.fail("cannot expose reference type");
@@ -3515,36 +1657,12 @@ static bool GlobalIsJSCompatible(Decoder& d, ValType type, bool isMutable) {
   return true;
 }
 
-<<<<<<< HEAD
-static bool DecodeGlobalType(Decoder& d, const TypeDefVector& types,
-                             HasGcTypes gcTypesEnabled, ValType* type,
-                             bool* isMutable) {
-  if (!DecodeValType(d, ModuleKind::Wasm, types.length(), gcTypesEnabled,
-                     type)) {
-    return false;
-  }
-  if (!ValidateRefType(d, types, *type)) {
-    return false;
-  }
-||||||| merged common ancestors
-static bool
-DecodeGlobalType(Decoder& d, const TypeDefVector& types, HasGcTypes gcTypesEnabled, ValType* type,
-                 bool* isMutable)
-{
-    if (!DecodeValType(d, ModuleKind::Wasm, types.length(), gcTypesEnabled, type)) {
-        return false;
-    }
-    if (!ValidateRefType(d, types, *type)) {
-        return false;
-    }
-=======
 static bool DecodeGlobalType(Decoder& d, const TypeDefVector& types,
                              bool gcTypesEnabled, ValType* type,
                              bool* isMutable) {
   if (!d.readValType(types, gcTypesEnabled, type)) {
     return false;
   }
->>>>>>> upstream-releases
 
   uint8_t flags;
   if (!d.readFixedU8(&flags)) {
@@ -3766,32 +1884,6 @@ static bool DecodeFunctionSection(Decoder& d, ModuleEnvironment* env) {
   return d.finishSection(*range, "function");
 }
 
-<<<<<<< HEAD
-static bool DecodeTableSection(Decoder& d, ModuleEnvironment* env) {
-  MaybeSectionRange range;
-  if (!d.startSection(SectionId::Table, env, &range, "table")) {
-    return false;
-  }
-  if (!range) {
-    return true;
-  }
-||||||| merged common ancestors
-static bool
-DecodeTableSection(Decoder& d, ModuleEnvironment* env)
-{
-    MaybeSectionRange range;
-    if (!d.startSection(SectionId::Table, env, &range, "table")) {
-        return false;
-    }
-    if (!range) {
-        return true;
-    }
-
-    uint32_t numTables;
-    if (!d.readVarU32(&numTables)) {
-        return d.fail("failed to read number of tables");
-    }
-=======
 static bool DecodeTableSection(Decoder& d, ModuleEnvironment* env) {
   MaybeSectionRange range;
   if (!d.startSection(SectionId::Table, env, &range, "table")) {
@@ -3805,35 +1897,13 @@ static bool DecodeTableSection(Decoder& d, ModuleEnvironment* env) {
   if (!d.readVarU32(&numTables)) {
     return d.fail("failed to read number of tables");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t numTables;
-  if (!d.readVarU32(&numTables)) {
-    return d.fail("failed to read number of tables");
-  }
-||||||| merged common ancestors
-    if (numTables > 1) {
-        return d.fail("the number of tables must be at most one");
-    }
-=======
   for (uint32_t i = 0; i < numTables; ++i) {
     if (!DecodeTableTypeAndLimits(d, env->gcTypesEnabled(), &env->tables)) {
       return false;
     }
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < numTables; ++i) {
-    if (!DecodeTableTypeAndLimits(d, env->gcTypesEnabled(), &env->tables)) {
-      return false;
-||||||| merged common ancestors
-    for (uint32_t i = 0; i < numTables; ++i) {
-        if (!DecodeTableLimits(d, &env->tables)) {
-            return false;
-        }
-=======
   return d.finishSection(*range, "table");
 }
 
@@ -3858,67 +1928,12 @@ static bool DecodeMemorySection(Decoder& d, ModuleEnvironment* env) {
   for (uint32_t i = 0; i < numMemories; ++i) {
     if (!DecodeMemoryLimits(d, env)) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  return d.finishSection(*range, "table");
-||||||| merged common ancestors
-    return d.finishSection(*range, "table");
-=======
   return d.finishSection(*range, "memory");
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool DecodeMemorySection(Decoder& d, ModuleEnvironment* env) {
-  MaybeSectionRange range;
-  if (!d.startSection(SectionId::Memory, env, &range, "memory")) {
-    return false;
-  }
-  if (!range) {
-    return true;
-  }
-
-  uint32_t numMemories;
-  if (!d.readVarU32(&numMemories)) {
-    return d.fail("failed to read number of memories");
-  }
-
-  if (numMemories > 1) {
-    return d.fail("the number of memories must be at most one");
-  }
-
-  for (uint32_t i = 0; i < numMemories; ++i) {
-    if (!DecodeMemoryLimits(d, env)) {
-      return false;
-||||||| merged common ancestors
-static bool
-DecodeMemorySection(Decoder& d, ModuleEnvironment* env)
-{
-    MaybeSectionRange range;
-    if (!d.startSection(SectionId::Memory, env, &range, "memory")) {
-        return false;
-    }
-    if (!range) {
-        return true;
-    }
-
-    uint32_t numMemories;
-    if (!d.readVarU32(&numMemories)) {
-        return d.fail("failed to read number of memories");
-    }
-
-    if (numMemories > 1) {
-        return d.fail("the number of memories must be at most one");
-    }
-
-    for (uint32_t i = 0; i < numMemories; ++i) {
-        if (!DecodeMemoryLimits(d, env)) {
-            return false;
-        }
-=======
 static bool DecodeInitializerExpression(Decoder& d, ModuleEnvironment* env,
                                         ValType expected, InitExpr* init) {
   OpBytes op;
@@ -3942,42 +1957,7 @@ static bool DecodeInitializerExpression(Decoder& d, ModuleEnvironment* env,
       }
       *init = InitExpr(LitVal(uint64_t(i64)));
       break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  return d.finishSection(*range, "memory");
-}
-
-static bool DecodeInitializerExpression(Decoder& d, ModuleEnvironment* env,
-                                        ValType expected, InitExpr* init) {
-  OpBytes op;
-  if (!d.readOp(&op)) {
-    return d.fail("failed to read initializer type");
-  }
-
-  switch (op.b0) {
-    case uint16_t(Op::I32Const): {
-      int32_t i32;
-      if (!d.readVarS32(&i32)) {
-        return d.fail("failed to read initializer i32 expression");
-      }
-      *init = InitExpr(LitVal(uint32_t(i32)));
-      break;
-||||||| merged common ancestors
-
-    return d.finishSection(*range, "memory");
-}
-
-static bool
-DecodeInitializerExpression(Decoder& d, HasGcTypes gcTypesEnabled, const GlobalDescVector& globals,
-                            ValType expected, uint32_t numTypes, InitExpr* init)
-{
-    OpBytes op;
-    if (!d.readOp(&op)) {
-        return d.fail("failed to read initializer type");
-=======
     case uint16_t(Op::F32Const): {
       float f32;
       if (!d.readFixedF32(&f32)) {
@@ -3985,47 +1965,12 @@ DecodeInitializerExpression(Decoder& d, HasGcTypes gcTypesEnabled, const GlobalD
       }
       *init = InitExpr(LitVal(f32));
       break;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    case uint16_t(Op::I64Const): {
-      int64_t i64;
-      if (!d.readVarS64(&i64)) {
-        return d.fail("failed to read initializer i64 expression");
-||||||| merged common ancestors
-
-    switch (op.b0) {
-      case uint16_t(Op::I32Const): {
-        int32_t i32;
-        if (!d.readVarS32(&i32)) {
-            return d.fail("failed to read initializer i32 expression");
-        }
-        *init = InitExpr(LitVal(uint32_t(i32)));
-        break;
-=======
     case uint16_t(Op::F64Const): {
       double f64;
       if (!d.readFixedF64(&f64)) {
         return d.fail("failed to read initializer f64 expression");
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-      *init = InitExpr(LitVal(uint64_t(i64)));
-      break;
-    }
-    case uint16_t(Op::F32Const): {
-      float f32;
-      if (!d.readFixedF32(&f32)) {
-        return d.fail("failed to read initializer f32 expression");
-||||||| merged common ancestors
-      case uint16_t(Op::I64Const): {
-        int64_t i64;
-        if (!d.readVarS64(&i64)) {
-            return d.fail("failed to read initializer i64 expression");
-        }
-        *init = InitExpr(LitVal(uint64_t(i64)));
-        break;
-=======
       *init = InitExpr(LitVal(f64));
       break;
     }
@@ -4033,25 +1978,7 @@ DecodeInitializerExpression(Decoder& d, HasGcTypes gcTypesEnabled, const GlobalD
       if (!expected.isReference()) {
         return d.fail(
             "type mismatch: initializer type and expected type don't match");
->>>>>>> upstream-releases
       }
-<<<<<<< HEAD
-      *init = InitExpr(LitVal(f32));
-      break;
-    }
-    case uint16_t(Op::F64Const): {
-      double f64;
-      if (!d.readFixedF64(&f64)) {
-        return d.fail("failed to read initializer f64 expression");
-||||||| merged common ancestors
-      case uint16_t(Op::F32Const): {
-        float f32;
-        if (!d.readFixedF32(&f32)) {
-            return d.fail("failed to read initializer f32 expression");
-        }
-        *init = InitExpr(LitVal(f32));
-        break;
-=======
       MOZ_ASSERT_IF(expected.isRef(), env->gcTypesEnabled());
       *init = InitExpr(LitVal(expected, AnyRef::null()));
       break;
@@ -4062,69 +1989,6 @@ DecodeInitializerExpression(Decoder& d, HasGcTypes gcTypesEnabled, const GlobalD
       if (!d.readVarU32(&i)) {
         return d.fail(
             "failed to read global.get index in initializer expression");
->>>>>>> upstream-releases
-      }
-<<<<<<< HEAD
-      *init = InitExpr(LitVal(f64));
-      break;
-    }
-    case uint16_t(Op::RefNull): {
-      if (env->gcTypesEnabled() == HasGcTypes::False) {
-        return d.fail("unexpected initializer expression");
-||||||| merged common ancestors
-      case uint16_t(Op::F64Const): {
-        double f64;
-        if (!d.readFixedF64(&f64)) {
-            return d.fail("failed to read initializer f64 expression");
-        }
-        *init = InitExpr(LitVal(f64));
-        break;
-=======
-      if (i >= globals.length()) {
-        return d.fail("global index out of range in initializer expression");
->>>>>>> upstream-releases
-      }
-<<<<<<< HEAD
-      if (!expected.isReference()) {
-        return d.fail(
-            "type mismatch: initializer type and expected type don't match");
-||||||| merged common ancestors
-      case uint16_t(Op::RefNull): {
-        if (gcTypesEnabled == HasGcTypes::False) {
-            return d.fail("unexpected initializer expression");
-        }
-        uint8_t valType;
-        uint32_t refTypeIndex;
-        if (!d.readValType(&valType, &refTypeIndex)) {
-            return false;
-        }
-        if (valType == uint8_t(ValType::AnyRef)) {
-            *init = InitExpr(LitVal(ValType::AnyRef, nullptr));
-        } else if (valType == uint8_t(ValType::Ref)) {
-            if (refTypeIndex >= numTypes) {
-                return d.fail("invalid reference type for ref.null");
-            }
-            *init = InitExpr(LitVal(ValType(ValType::Ref, refTypeIndex), nullptr));
-        } else {
-            return d.fail("expected anyref/ref as type for ref.null");
-        }
-        break;
-=======
-      if (!globals[i].isImport() || globals[i].isMutable()) {
-        return d.fail(
-            "initializer expression must reference a global immutable import");
->>>>>>> upstream-releases
-      }
-<<<<<<< HEAD
-      *init = InitExpr(LitVal(expected, nullptr));
-      break;
-    }
-    case uint16_t(Op::GetGlobal): {
-      uint32_t i;
-      const GlobalDescVector& globals = env->globals;
-      if (!d.readVarU32(&i)) {
-        return d.fail(
-            "failed to read get_global index in initializer expression");
       }
       if (i >= globals.length()) {
         return d.fail("global index out of range in initializer expression");
@@ -4133,34 +1997,6 @@ DecodeInitializerExpression(Decoder& d, HasGcTypes gcTypesEnabled, const GlobalD
         return d.fail(
             "initializer expression must reference a global immutable import");
       }
-      if (expected.isReference()) {
-        if (!(env->gcTypesEnabled() == HasGcTypes::True &&
-              globals[i].type().isReference() &&
-              env->isRefSubtypeOf(globals[i].type(), expected))) {
-          return d.fail(
-              "type mismatch: initializer type and expected type don't match");
-        }
-        *init = InitExpr(i, expected);
-      } else {
-        *init = InitExpr(i, globals[i].type());
-||||||| merged common ancestors
-      case uint16_t(Op::GetGlobal): {
-        uint32_t i;
-        if (!d.readVarU32(&i)) {
-            return d.fail("failed to read get_global index in initializer expression");
-        }
-        if (i >= globals.length()) {
-            return d.fail("global index out of range in initializer expression");
-        }
-        if (!globals[i].isImport() || globals[i].isMutable()) {
-            return d.fail("initializer expression must reference a global immutable import");
-        }
-        *init = InitExpr(i, globals[i].type());
-        break;
-      }
-      default: {
-        return d.fail("unexpected initializer expression");
-=======
       if (expected.isReference()) {
         bool fail = false;
         if ((expected.isRef() || globals[i].type().isRef()) &&
@@ -4177,82 +2013,9 @@ DecodeInitializerExpression(Decoder& d, HasGcTypes gcTypesEnabled, const GlobalD
         *init = InitExpr(i, expected);
       } else {
         *init = InitExpr(i, globals[i].type());
->>>>>>> upstream-releases
       }
       break;
     }
-<<<<<<< HEAD
-    default: { return d.fail("unexpected initializer expression"); }
-  }
-
-  if (expected != init->type()) {
-    return d.fail(
-        "type mismatch: initializer type and expected type don't match");
-  }
-
-  OpBytes end;
-  if (!d.readOp(&end) || end.b0 != uint16_t(Op::End)) {
-    return d.fail("failed to read end of initializer expression");
-  }
-
-  return true;
-}
-
-static bool DecodeGlobalSection(Decoder& d, ModuleEnvironment* env) {
-  MaybeSectionRange range;
-  if (!d.startSection(SectionId::Global, env, &range, "global")) {
-    return false;
-  }
-  if (!range) {
-    return true;
-  }
-||||||| merged common ancestors
-
-    if (expected != init->type()) {
-        return d.fail("type mismatch: initializer type and expected type don't match");
-    }
-
-    OpBytes end;
-    if (!d.readOp(&end) || end.b0 != uint16_t(Op::End)) {
-        return d.fail("failed to read end of initializer expression");
-    }
-
-    return true;
-}
-
-static bool
-DecodeGlobalSection(Decoder& d, ModuleEnvironment* env)
-{
-    MaybeSectionRange range;
-    if (!d.startSection(SectionId::Global, env, &range, "global")) {
-        return false;
-    }
-    if (!range) {
-        return true;
-    }
-
-    uint32_t numDefs;
-    if (!d.readVarU32(&numDefs)) {
-        return d.fail("expected number of globals");
-    }
-
-    CheckedInt<uint32_t> numGlobals = env->globals.length();
-    numGlobals += numDefs;
-    if (!numGlobals.isValid() || numGlobals.value() > MaxGlobals) {
-        return d.fail("too many globals");
-    }
-
-    if (!env->globals.reserve(numGlobals.value())) {
-        return false;
-    }
-
-    for (uint32_t i = 0; i < numDefs; i++) {
-        ValType type;
-        bool isMutable;
-        if (!DecodeGlobalType(d, env->types, env->gcTypesEnabled(), &type, &isMutable)) {
-            return false;
-        }
-=======
     default: {
       return d.fail("unexpected initializer expression");
     }
@@ -4270,21 +2033,7 @@ DecodeGlobalSection(Decoder& d, ModuleEnvironment* env)
 
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t numDefs;
-  if (!d.readVarU32(&numDefs)) {
-    return d.fail("expected number of globals");
-  }
-||||||| merged common ancestors
-        InitExpr initializer;
-        if (!DecodeInitializerExpression(d, env->gcTypesEnabled(), env->globals, type,
-                                         env->types.length(), &initializer))
-        {
-            return false;
-        }
-=======
 static bool DecodeGlobalSection(Decoder& d, ModuleEnvironment* env) {
   MaybeSectionRange range;
   if (!d.startSection(SectionId::Global, env, &range, "global")) {
@@ -4293,34 +2042,12 @@ static bool DecodeGlobalSection(Decoder& d, ModuleEnvironment* env) {
   if (!range) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  CheckedInt<uint32_t> numGlobals = env->globals.length();
-  numGlobals += numDefs;
-  if (!numGlobals.isValid() || numGlobals.value() > MaxGlobals) {
-    return d.fail("too many globals");
-  }
-||||||| merged common ancestors
-        env->globals.infallibleAppend(GlobalDesc(initializer, isMutable));
-    }
-=======
   uint32_t numDefs;
   if (!d.readVarU32(&numDefs)) {
     return d.fail("expected number of globals");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!env->globals.reserve(numGlobals.value())) {
-    return false;
-  }
-||||||| merged common ancestors
-    return d.finishSection(*range, "global");
-}
-
-typedef HashSet<const char*, mozilla::CStringHasher, SystemAllocPolicy> CStringSet;
-=======
   CheckedInt<uint32_t> numGlobals = env->globals.length();
   numGlobals += numDefs;
   if (!numGlobals.isValid() || numGlobals.value() > MaxGlobals) {
@@ -4330,7 +2057,6 @@ typedef HashSet<const char*, mozilla::CStringHasher, SystemAllocPolicy> CStringS
   if (!env->globals.reserve(numGlobals.value())) {
     return false;
   }
->>>>>>> upstream-releases
 
   for (uint32_t i = 0; i < numDefs; i++) {
     ValType type;
@@ -4518,27 +2244,6 @@ static bool DecodeStartSection(Decoder& d, ModuleEnvironment* env) {
   return d.finishSection(*range, "start");
 }
 
-<<<<<<< HEAD
-static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
-  MaybeSectionRange range;
-  if (!d.startSection(SectionId::Elem, env, &range, "elem")) {
-    return false;
-  }
-  if (!range) {
-    return true;
-  }
-||||||| merged common ancestors
-static bool
-DecodeElemSection(Decoder& d, ModuleEnvironment* env)
-{
-    MaybeSectionRange range;
-    if (!d.startSection(SectionId::Elem, env, &range, "elem")) {
-        return false;
-    }
-    if (!range) {
-        return true;
-    }
-=======
 static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
   MaybeSectionRange range;
   if (!d.startSection(SectionId::Elem, env, &range, "elem")) {
@@ -4574,51 +2279,19 @@ static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
       default:
         return d.fail("invalid elem initializer-kind field");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t numSegments;
-  if (!d.readVarU32(&numSegments)) {
-    return d.fail("failed to read number of elem segments");
-  }
-||||||| merged common ancestors
-    uint32_t numSegments;
-    if (!d.readVarU32(&numSegments)) {
-        return d.fail("failed to read number of elem segments");
-    }
-=======
     InitializerKind initializerKind = InitializerKind(initializerKindVal);
 
     if (initializerKind != InitializerKind::Passive &&
         env->tables.length() == 0) {
       return d.fail("active elem segment requires a table section");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (numSegments > MaxElemSegments) {
-    return d.fail("too many elem segments");
-  }
-||||||| merged common ancestors
-    if (numSegments > MaxElemSegments) {
-        return d.fail("too many elem segments");
-    }
-=======
     MutableElemSegment seg = js_new<ElemSegment>();
     if (!seg) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!env->elemSegments.reserve(numSegments)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!env->elemSegments.reserve(numSegments)) {
-        return false;
-    }
-=======
     uint32_t tableIndex = 0;
     if (initializerKind == InitializerKind::ActiveWithIndex) {
       if (!d.readVarU32(&tableIndex)) {
@@ -4637,37 +2310,7 @@ static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
     } else if (env->tables[tableIndex].kind != TableKind::FuncRef) {
       return d.fail("only tables of 'funcref' may have element segments");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  for (uint32_t i = 0; i < numSegments; i++) {
-    uint32_t initializerKindVal;
-    if (!d.readVarU32(&initializerKindVal)) {
-      return d.fail("expected elem initializer-kind field");
-    }
-    switch (initializerKindVal) {
-      case uint32_t(InitializerKind::Active):
-      case uint32_t(InitializerKind::Passive):
-      case uint32_t(InitializerKind::ActiveWithIndex):
-        break;
-      default:
-        return d.fail("invalid elem initializer-kind field");
-    }
-||||||| merged common ancestors
-    for (uint32_t i = 0; i < numSegments; i++) {
-        uint32_t initializerKindVal;
-        if (!d.readVarU32(&initializerKindVal)) {
-            return d.fail("expected elem initializer-kind field");
-        }
-        switch (initializerKindVal) {
-          case uint32_t(InitializerKind::Active):
-          case uint32_t(InitializerKind::Passive):
-          case uint32_t(InitializerKind::ActiveWithIndex):
-            break;
-          default:
-            return d.fail("invalid elem initializer-kind field");
-        }
-=======
     seg->tableIndex = tableIndex;
 
     switch (initializerKind) {
@@ -4692,79 +2335,20 @@ static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
         break;
       }
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    InitializerKind initializerKind = InitializerKind(initializerKindVal);
-||||||| merged common ancestors
-        InitializerKind initializerKind = InitializerKind(initializerKindVal);
-=======
     uint32_t numElems;
     if (!d.readVarU32(&numElems)) {
       return d.fail("expected segment size");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (env->tables.length() == 0) {
-      return d.fail("elem segment requires a table section");
-    }
-||||||| merged common ancestors
-        MOZ_ASSERT(env->tables.length() <= 1);
-        if (env->tables.length() == 0) {
-            return d.fail("elem segment requires a table section");
-        }
-=======
     if (numElems > MaxTableInitialLength) {
       return d.fail("too many table elements");
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MutableElemSegment seg = js_new<ElemSegment>();
-    if (!seg) {
-      return false;
-    }
-||||||| merged common ancestors
-        MutableElemSegment seg = js_new<ElemSegment>();
-        if (!seg) {
-            return false;
-        }
-=======
     if (!seg->elemFuncIndices.reserve(numElems)) {
       return false;
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    uint32_t tableIndex = 0;
-    if (initializerKind == InitializerKind::ActiveWithIndex) {
-      if (!d.readVarU32(&tableIndex)) {
-        return d.fail("expected table index");
-      }
-    }
-    if (tableIndex >= env->tables.length()) {
-      return d.fail("table index out of range for element segment");
-    }
-    if (initializerKind == InitializerKind::Passive) {
-      // Too many bugs result from keeping this value zero.  For passive
-      // segments, there really is no segment index, and we should never
-      // touch the field.
-      tableIndex = (uint32_t)-1;
-    } else if (env->tables[tableIndex].kind != TableKind::AnyFunction) {
-      return d.fail("only tables of 'anyfunc' may have element segments");
-    }
-||||||| merged common ancestors
-        uint32_t tableIndex = 0;
-        if (initializerKind == InitializerKind::ActiveWithIndex) {
-            if (!d.readVarU32(&tableIndex)) {
-                return d.fail("expected table index");
-            }
-            if (tableIndex > 0) {
-                return d.fail("table index must be zero");
-            }
-        }
-=======
 #ifdef WASM_PRIVATE_REFTYPES
     // We assume that passive segments may be applied to external tables.
     // We can do slightly better: if there are no external tables in the
@@ -4773,55 +2357,14 @@ static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
     bool exportedTable = initializerKind == InitializerKind::Passive ||
                          env->tables[tableIndex].importedOrExported;
 #endif
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    seg->tableIndex = tableIndex;
-||||||| merged common ancestors
-        seg->tableIndex = tableIndex;
-=======
     // For passive segments we should use DecodeInitializerExpression() but we
     // don't really want to generalize that function yet, so instead read the
     // required Ref.Func and End here.
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (initializerKind == InitializerKind::Active ||
-        initializerKind == InitializerKind::ActiveWithIndex) {
-      InitExpr offset;
-      if (!DecodeInitializerExpression(d, env, ValType::I32, &offset)) {
-        return false;
-      }
-      seg->offsetIfActive.emplace(offset);
-    }
-||||||| merged common ancestors
-        if (initializerKind == InitializerKind::Active ||
-            initializerKind == InitializerKind::ActiveWithIndex)
-        {
-            InitExpr offset;
-            if (!DecodeInitializerExpression(d, env->gcTypesEnabled(), env->globals, ValType::I32,
-                                             env->types.length(), &offset))
-            {
-                return false;
-            }
-            seg->offsetIfActive.emplace(offset);
-        }
-=======
     for (uint32_t i = 0; i < numElems; i++) {
       bool needIndex = true;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    uint32_t numElems;
-    if (!d.readVarU32(&numElems)) {
-      return d.fail("expected segment size");
-    }
-||||||| merged common ancestors
-        uint32_t numElems;
-        if (!d.readVarU32(&numElems)) {
-            return d.fail("expected segment size");
-        }
-=======
       if (initializerKind == InitializerKind::Passive) {
         OpBytes op;
         if (!d.readOp(&op)) {
@@ -4837,17 +2380,7 @@ static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
             return d.fail("failed to read initializer operation");
         }
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (numElems > MaxTableInitialLength) {
-      return d.fail("too many table elements");
-    }
-||||||| merged common ancestors
-        if (numElems > MaxTableInitialLength) {
-            return d.fail("too many table elements");
-        }
-=======
       uint32_t funcIndex = NullFuncIndex;
       if (needIndex) {
         if (!d.readVarU32(&funcIndex)) {
@@ -4863,90 +2396,23 @@ static bool DecodeElemSection(Decoder& d, ModuleEnvironment* env) {
         }
 #endif
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    if (!seg->elemFuncIndices.reserve(numElems)) {
-      return false;
-    }
-||||||| merged common ancestors
-        if (!seg->elemFuncIndices.reserve(numElems)) {
-            return false;
-        }
-=======
       if (initializerKind == InitializerKind::Passive) {
         OpBytes end;
         if (!d.readOp(&end) || end.b0 != uint16_t(Op::End)) {
           return d.fail("failed to read end of initializer expression");
         }
       }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef WASM_PRIVATE_REFTYPES
-    // We assume that passive segments may be applied to external tables.
-    // We can do slightly better: if there are no external tables in the
-    // module then we don't need to worry about passive segments either.
-    // But this is a temporary restriction.
-    bool exportedTable = initializerKind == InitializerKind::Passive ||
-                         env->tables[tableIndex].importedOrExported;
-#endif
-||||||| merged common ancestors
-        for (uint32_t i = 0; i < numElems; i++) {
-            uint32_t funcIndex;
-            if (!d.readVarU32(&funcIndex)) {
-                return d.fail("failed to read element function index");
-            }
-=======
       seg->elemFuncIndices.infallibleAppend(funcIndex);
     }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    for (uint32_t i = 0; i < numElems; i++) {
-      uint32_t funcIndex;
-      if (!d.readVarU32(&funcIndex)) {
-        return d.fail("failed to read element function index");
-      }
-||||||| merged common ancestors
-            if (funcIndex >= env->numFuncs()) {
-                return d.fail("table element out of range");
-            }
-=======
     env->elemSegments.infallibleAppend(std::move(seg));
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-      if (funcIndex >= env->numFuncs()) {
-        return d.fail("table element out of range");
-      }
-||||||| merged common ancestors
-            // If a table element function value is imported then the table can
-            // contain functions from multiple instances and must be marked
-            // external.
-            if (env->funcIsImport(funcIndex)) {
-                env->tables[0].external = true;
-            }
-=======
   return d.finishSection(*range, "elem");
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-#ifdef WASM_PRIVATE_REFTYPES
-      if (exportedTable &&
-          !FuncTypeIsJSCompatible(d, *env->funcTypes[funcIndex])) {
-        return false;
-      }
-||||||| merged common ancestors
-#ifdef WASM_PRIVATE_REFTYPES
-            if (env->tables[0].importedOrExported &&
-                !FuncTypeIsJSCompatible(d, *env->funcTypes[funcIndex]))
-            {
-                return false;
-            }
-=======
 static bool DecodeDataCountSection(Decoder& d, ModuleEnvironment* env) {
   MaybeSectionRange range;
   if (!d.startSection(SectionId::DataCount, env, &range, "datacount")) {
@@ -4961,37 +2427,16 @@ static bool DecodeDataCountSection(Decoder& d, ModuleEnvironment* env) {
   if (env->sharedMemoryEnabled == Shareable::False) {
     return d.fail("bulk memory ops disabled");
   }
->>>>>>> upstream-releases
 #endif
 
-<<<<<<< HEAD
-      seg->elemFuncIndices.infallibleAppend(funcIndex);
-    }
-||||||| merged common ancestors
-            seg->elemFuncIndices.infallibleAppend(funcIndex);
-        }
-
-        env->elemSegments.infallibleAppend(std::move(seg));
-    }
-=======
   uint32_t dataCount;
   if (!d.readVarU32(&dataCount)) {
     return d.fail("expected data segment count");
   }
 
   env->dataCount.emplace(dataCount);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    env->elemSegments.infallibleAppend(std::move(seg));
-  }
-
-  return d.finishSection(*range, "elem");
-||||||| merged common ancestors
-    return d.finishSection(*range, "elem");
-=======
   return d.finishSection(*range, "datacount");
->>>>>>> upstream-releases
 }
 
 bool wasm::StartsCodeSection(const uint8_t* begin, const uint8_t* end,
@@ -5029,30 +2474,12 @@ bool wasm::DecodeModuleEnvironment(Decoder& d, ModuleEnvironment* env) {
   }
 
 #ifdef ENABLE_WASM_GC
-<<<<<<< HEAD
-  if (!DecodeGCFeatureOptInSection(d, env)) {
-    return false;
-  }
-  HasGcTypes gcFeatureOptIn = env->gcFeatureOptIn;
-||||||| merged common ancestors
-    if (!DecodeGCFeatureOptInSection(d, env)) {
-        return false;
-    }
-    HasGcTypes gcFeatureOptIn = env->gcFeatureOptIn;
-=======
   if (!DecodeGCFeatureOptInSection(d, env)) {
     return false;
   }
   bool gcFeatureOptIn = env->gcFeatureOptIn;
->>>>>>> upstream-releases
 #else
-<<<<<<< HEAD
-  HasGcTypes gcFeatureOptIn = HasGcTypes::False;
-||||||| merged common ancestors
-    HasGcTypes gcFeatureOptIn = HasGcTypes::False;
-=======
   bool gcFeatureOptIn = false;
->>>>>>> upstream-releases
 #endif
 
   env->compilerEnv->computeParameters(d, gcFeatureOptIn);
@@ -5093,72 +2520,27 @@ bool wasm::DecodeModuleEnvironment(Decoder& d, ModuleEnvironment* env) {
     return false;
   }
 
-<<<<<<< HEAD
-  if (!d.startSection(SectionId::Code, env, &env->codeSection, "code")) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!d.startSection(SectionId::Code, env, &env->codeSection, "code")) {
-        return false;
-    }
-=======
   if (!DecodeDataCountSection(d, env)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (env->codeSection && env->codeSection->size > MaxCodeSectionBytes) {
-    return d.fail("code section too big");
-  }
-||||||| merged common ancestors
-    if (env->codeSection && env->codeSection->size > MaxCodeSectionBytes) {
-        return d.fail("code section too big");
-    }
-=======
   if (!d.startSection(SectionId::Code, env, &env->codeSection, "code")) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  return true;
-||||||| merged common ancestors
-    return true;
-=======
   if (env->codeSection && env->codeSection->size > MaxCodeSectionBytes) {
     return d.fail("code section too big");
   }
 
   return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-static bool DecodeFunctionBody(Decoder& d, const ModuleEnvironment& env,
-                               ExclusiveDeferredValidationState& dvs,
-                               uint32_t funcIndex) {
-  uint32_t bodySize;
-  if (!d.readVarU32(&bodySize)) {
-    return d.fail("expected number of function body bytes");
-  }
-||||||| merged common ancestors
-static bool
-DecodeFunctionBody(Decoder& d, const ModuleEnvironment& env,
-                   ExclusiveDeferredValidationState& dvs, uint32_t funcIndex)
-{
-    uint32_t bodySize;
-    if (!d.readVarU32(&bodySize)) {
-        return d.fail("expected number of function body bytes");
-    }
-=======
 static bool DecodeFunctionBody(Decoder& d, const ModuleEnvironment& env,
                                uint32_t funcIndex) {
   uint32_t bodySize;
   if (!d.readVarU32(&bodySize)) {
     return d.fail("expected number of function body bytes");
   }
->>>>>>> upstream-releases
 
   if (bodySize > MaxFunctionBytes) {
     return d.fail("function body too big");
@@ -5168,45 +2550,17 @@ static bool DecodeFunctionBody(Decoder& d, const ModuleEnvironment& env,
     return d.fail("function body length too big");
   }
 
-<<<<<<< HEAD
-  if (!ValidateFunctionBody(env, funcIndex, bodySize, d, dvs)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!ValidateFunctionBody(env, funcIndex, bodySize, d, dvs)) {
-        return false;
-    }
-=======
   if (!ValidateFunctionBody(env, funcIndex, bodySize, d)) {
     return false;
   }
->>>>>>> upstream-releases
 
   return true;
 }
 
-<<<<<<< HEAD
-static bool DecodeCodeSection(Decoder& d, ModuleEnvironment* env,
-                              ExclusiveDeferredValidationState& dvs) {
-  if (!env->codeSection) {
-    if (env->numFuncDefs() != 0) {
-      return d.fail("expected code section");
-||||||| merged common ancestors
-static bool
-DecodeCodeSection(Decoder& d, ModuleEnvironment* env,
-                  ExclusiveDeferredValidationState& dvs)
-{
-    if (!env->codeSection) {
-        if (env->numFuncDefs() != 0) {
-            return d.fail("expected code section");
-        }
-        return true;
-=======
 static bool DecodeCodeSection(Decoder& d, ModuleEnvironment* env) {
   if (!env->codeSection) {
     if (env->numFuncDefs() != 0) {
       return d.fail("expected code section");
->>>>>>> upstream-releases
     }
     return true;
   }
@@ -5221,88 +2575,15 @@ static bool DecodeCodeSection(Decoder& d, ModuleEnvironment* env) {
         "function body count does not match function signature count");
   }
 
-<<<<<<< HEAD
-  for (uint32_t funcDefIndex = 0; funcDefIndex < numFuncDefs; funcDefIndex++) {
-    if (!DecodeFunctionBody(d, *env, dvs,
-                            env->numFuncImports() + funcDefIndex)) {
-      return false;
-||||||| merged common ancestors
-    for (uint32_t funcDefIndex = 0; funcDefIndex < numFuncDefs; funcDefIndex++) {
-        if (!DecodeFunctionBody(d, *env, dvs, env->numFuncImports() + funcDefIndex)) {
-            return false;
-        }
-=======
   for (uint32_t funcDefIndex = 0; funcDefIndex < numFuncDefs; funcDefIndex++) {
     if (!DecodeFunctionBody(d, *env, env->numFuncImports() + funcDefIndex)) {
       return false;
->>>>>>> upstream-releases
     }
   }
 
   return d.finishSection(*env->codeSection, "code");
 }
 
-<<<<<<< HEAD
-static bool DecodeDataSection(Decoder& d, ModuleEnvironment* env) {
-  MaybeSectionRange range;
-  if (!d.startSection(SectionId::Data, env, &range, "data")) {
-    return false;
-  }
-  if (!range) {
-    return true;
-  }
-||||||| merged common ancestors
-static bool
-DecodeDataSection(Decoder& d, ModuleEnvironment* env)
-{
-    MaybeSectionRange range;
-    if (!d.startSection(SectionId::Data, env, &range, "data")) {
-        return false;
-    }
-    if (!range) {
-        return true;
-    }
-
-    uint32_t numSegments;
-    if (!d.readVarU32(&numSegments)) {
-        return d.fail("failed to read number of data segments");
-    }
-
-    if (numSegments > MaxDataSegments) {
-        return d.fail("too many data segments");
-    }
-
-    for (uint32_t i = 0; i < numSegments; i++) {
-        uint32_t initializerKindVal;
-        if (!d.readVarU32(&initializerKindVal)) {
-            return d.fail("expected data initializer-kind field");
-        }
-
-        switch (initializerKindVal) {
-          case uint32_t(InitializerKind::Active):
-          case uint32_t(InitializerKind::Passive):
-          case uint32_t(InitializerKind::ActiveWithIndex):
-            break;
-          default:
-            return d.fail("invalid data initializer-kind field");
-        }
-
-        InitializerKind initializerKind = InitializerKind(initializerKindVal);
-
-        if (!env->usesMemory()) {
-            return d.fail("data segment requires a memory section");
-        }
-
-        uint32_t memIndex = 0;
-        if (initializerKind == InitializerKind::ActiveWithIndex) {
-            if (!d.readVarU32(&memIndex)) {
-                return d.fail("expected memory index");
-            }
-            if (memIndex > 0) {
-                return d.fail("memory index must be zero");
-            }
-        }
-=======
 static bool DecodeDataSection(Decoder& d, ModuleEnvironment* env) {
   MaybeSectionRange range;
   if (!d.startSection(SectionId::Data, env, &range, "data")) {
@@ -5319,45 +2600,14 @@ static bool DecodeDataSection(Decoder& d, ModuleEnvironment* env) {
   if (!d.readVarU32(&numSegments)) {
     return d.fail("failed to read number of data segments");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  uint32_t numSegments;
-  if (!d.readVarU32(&numSegments)) {
-    return d.fail("failed to read number of data segments");
-  }
-||||||| merged common ancestors
-        DataSegmentEnv seg;
-        if (initializerKind == InitializerKind::Active ||
-            initializerKind == InitializerKind::ActiveWithIndex)
-        {
-            InitExpr segOffset;
-            if (!DecodeInitializerExpression(d, env->gcTypesEnabled(), env->globals, ValType::I32,
-                                             env->types.length(), &segOffset))
-            {
-                return false;
-            }
-            seg.offsetIfActive.emplace(segOffset);
-        }
-=======
   if (numSegments > MaxDataSegments) {
     return d.fail("too many data segments");
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (numSegments > MaxDataSegments) {
-    return d.fail("too many data segments");
-  }
-||||||| merged common ancestors
-        if (!d.readVarU32(&seg.length)) {
-            return d.fail("expected segment size");
-        }
-=======
   if (env->dataCount.isSome() && numSegments != *env->dataCount) {
     return d.fail("number of data segments does not match declared count");
   }
->>>>>>> upstream-releases
 
   for (uint32_t i = 0; i < numSegments; i++) {
     uint32_t initializerKindVal;
@@ -5376,17 +2626,8 @@ static bool DecodeDataSection(Decoder& d, ModuleEnvironment* env) {
 
     InitializerKind initializerKind = InitializerKind(initializerKindVal);
 
-<<<<<<< HEAD
-    if (!env->usesMemory()) {
-      return d.fail("data segment requires a memory section");
-||||||| merged common ancestors
-        if (!env->dataSegments.append(seg)) {
-            return false;
-        }
-=======
     if (initializerKind != InitializerKind::Passive && !env->usesMemory()) {
       return d.fail("active data segment requires a memory section");
->>>>>>> upstream-releases
     }
 
     uint32_t memIndex = 0;
@@ -5490,27 +2731,6 @@ static bool DecodeFunctionNameSubsection(Decoder& d,
       return d.fail("invalid function index");
     }
 
-<<<<<<< HEAD
-    Name funcName;
-    if (!d.readVarU32(&funcName.length) || funcName.length > MaxStringLength) {
-      return d.fail("unable to read function name length");
-||||||| merged common ancestors
-    // To encourage fully valid function names subsections; only save names if
-    // the entire subsection decoded correctly.
-    env->funcNames = std::move(funcNames);
-    return true;
-}
-
-static bool
-DecodeNameSection(Decoder& d, ModuleEnvironment* env)
-{
-    MaybeSectionRange range;
-    if (!d.startCustomSection(NameSectionName, env, &range)) {
-        return false;
-    }
-    if (!range) {
-        return true;
-=======
     Name funcName;
     if (!d.readVarU32(&funcName.length) || funcName.length > MaxStringLength) {
       return d.fail("unable to read function name length");
@@ -5518,21 +2738,8 @@ DecodeNameSection(Decoder& d, ModuleEnvironment* env)
 
     if (!funcName.length) {
       continue;
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (!funcName.length) {
-      continue;
-||||||| merged common ancestors
-    env->nameCustomSectionIndex = Some(env->customSections.length() - 1);
-    const CustomSectionEnv& nameSection = env->customSections.back();
-
-    // Once started, custom sections do not report validation errors.
-
-    if (!DecodeModuleNameSubsection(d, nameSection, env)) {
-        goto finish;
-=======
     if (!funcNames.resize(funcIndex + 1)) {
       return false;
     }
@@ -5543,75 +2750,21 @@ DecodeNameSection(Decoder& d, ModuleEnvironment* env)
 
     if (!d.readBytes(funcName.length)) {
       return d.fail("unable to read function name bytes");
->>>>>>> upstream-releases
     }
 
-<<<<<<< HEAD
-    if (!funcNames.resize(funcIndex + 1)) {
-      return false;
-    }
-||||||| merged common ancestors
-    if (!DecodeFunctionNameSubsection(d, nameSection, env)) {
-        goto finish;
-    }
-=======
     funcNames[funcIndex] = funcName;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    MOZ_ASSERT(d.currentOffset() >= nameSection.payloadOffset);
-    funcName.offsetInNamePayload =
-        d.currentOffset() - nameSection.payloadOffset;
-
-    if (!d.readBytes(funcName.length)) {
-      return d.fail("unable to read function name bytes");
-    }
-||||||| merged common ancestors
-    while (d.currentOffset() < range->end()) {
-        if (!d.skipNameSubsection()) {
-            goto finish;
-        }
-    }
-=======
   if (!d.finishNameSubsection(*endOffset)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    funcNames[funcIndex] = funcName;
-  }
-||||||| merged common ancestors
-  finish:
-    d.finishCustomSection(NameSectionName, *range);
-    return true;
-}
-=======
   // To encourage fully valid function names subsections; only save names if
   // the entire subsection decoded correctly.
   env->funcNames = std::move(funcNames);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!d.finishNameSubsection(*endOffset)) {
-    return false;
-  }
-||||||| merged common ancestors
-void
-DeferredValidationState::notifyDataSegmentIndex(uint32_t segIndex, size_t offsetInModule)
-{
-    // If |segIndex| is larger than any previously observed use, or this is
-    // the first index use to be notified, make a note of it and the module
-    // offset it appeared at.  That way, if we have to report it later as an
-    // error, we can at least report a correct offset.
-    if (!haveHighestDataSegIndex || segIndex > highestDataSegIndex) {
-        highestDataSegIndex = segIndex;
-        highestDataSegIndexOffset = offsetInModule;
-    }
-=======
 static bool DecodeNameSection(Decoder& d, ModuleEnvironment* env) {
   MaybeSectionRange range;
   if (!d.startCustomSection(NameSectionName, env, &range)) {
@@ -5620,48 +2773,10 @@ static bool DecodeNameSection(Decoder& d, ModuleEnvironment* env) {
   if (!range) {
     return true;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // To encourage fully valid function names subsections; only save names if
-  // the entire subsection decoded correctly.
-  env->funcNames = std::move(funcNames);
-  return true;
-}
-||||||| merged common ancestors
-    haveHighestDataSegIndex = true;
-}
-=======
   env->nameCustomSectionIndex = Some(env->customSections.length() - 1);
   const CustomSectionEnv& nameSection = env->customSections.back();
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-static bool DecodeNameSection(Decoder& d, ModuleEnvironment* env) {
-  MaybeSectionRange range;
-  if (!d.startCustomSection(NameSectionName, env, &range)) {
-    return false;
-  }
-  if (!range) {
-    return true;
-  }
-||||||| merged common ancestors
-bool
-DeferredValidationState::performDeferredValidation(const ModuleEnvironment& env,
-                                                   UniqueChars* error)
-{
-    if (haveHighestDataSegIndex &&
-        highestDataSegIndex >= env.dataSegments.length())
-    {
-        UniqueChars str(JS_smprintf("at offset %zu: memory.{drop,init} index out of range",
-                                    highestDataSegIndexOffset));
-        *error = std::move(str);
-        return false;
-    }
-
-    return true;
-}
-=======
   // Once started, custom sections do not report validation errors.
 
   if (!DecodeModuleNameSubsection(d, nameSection, env)) {
@@ -5682,59 +2797,16 @@ finish:
   d.finishCustomSection(NameSectionName, *range);
   return true;
 }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  env->nameCustomSectionIndex = Some(env->customSections.length() - 1);
-  const CustomSectionEnv& nameSection = env->customSections.back();
-||||||| merged common ancestors
-bool
-wasm::DecodeModuleTail(Decoder& d, ModuleEnvironment* env, ExclusiveDeferredValidationState& dvs)
-{
-    if (!DecodeDataSection(d, env)) {
-        return false;
-    }
-=======
 bool wasm::DecodeModuleTail(Decoder& d, ModuleEnvironment* env) {
   if (!DecodeDataSection(d, env)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  // Once started, custom sections do not report validation errors.
-||||||| merged common ancestors
-    if (!DecodeNameSection(d, env)) {
-        return false;
-    }
-=======
   if (!DecodeNameSection(d, env)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!DecodeModuleNameSubsection(d, nameSection, env)) {
-    goto finish;
-  }
-
-  if (!DecodeFunctionNameSubsection(d, nameSection, env)) {
-    goto finish;
-  }
-
-  while (d.currentOffset() < range->end()) {
-    if (!d.skipNameSubsection()) {
-      goto finish;
-||||||| merged common ancestors
-    while (!d.done()) {
-        if (!d.skipCustomSection(env)) {
-            if (d.resilientMode()) {
-                d.clearError();
-                return true;
-            }
-            return false;
-        }
-=======
   while (!d.done()) {
     if (!d.skipCustomSection(env)) {
       if (d.resilientMode()) {
@@ -5742,114 +2814,23 @@ bool wasm::DecodeModuleTail(Decoder& d, ModuleEnvironment* env) {
         return true;
       }
       return false;
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-finish:
-  d.finishCustomSection(NameSectionName, *range);
   return true;
-||||||| merged common ancestors
-    return dvs.lock()->performDeferredValidation(*env, d.error());
-=======
-  return true;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-void DeferredValidationState::notifyDataSegmentIndex(uint32_t segIndex,
-                                                     size_t offsetInModule) {
-  // If |segIndex| is larger than any previously observed use, or this is
-  // the first index use to be notified, make a note of it and the module
-  // offset it appeared at.  That way, if we have to report it later as an
-  // error, we can at least report a correct offset.
-  if (!haveHighestDataSegIndex || segIndex > highestDataSegIndex) {
-    highestDataSegIndex = segIndex;
-    highestDataSegIndexOffset = offsetInModule;
-  }
-
-  haveHighestDataSegIndex = true;
-}
-||||||| merged common ancestors
-// Validate algorithm.
-
-bool
-wasm::Validate(JSContext* cx, const ShareableBytes& bytecode, UniqueChars* error)
-{
-    Decoder d(bytecode.bytes, 0, error);
-=======
 // Validate algorithm.
 
 bool wasm::Validate(JSContext* cx, const ShareableBytes& bytecode,
                     UniqueChars* error) {
   Decoder d(bytecode.bytes, 0, error);
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-bool DeferredValidationState::performDeferredValidation(
-    const ModuleEnvironment& env, UniqueChars* error) {
-  if (haveHighestDataSegIndex &&
-      highestDataSegIndex >= env.dataSegments.length()) {
-    UniqueChars str(
-        JS_smprintf("at offset %zu: memory.{drop,init} index out of range",
-                    highestDataSegIndexOffset));
-    *error = std::move(str);
-    return false;
-  }
-||||||| merged common ancestors
-#ifdef ENABLE_WASM_GC
-    HasGcTypes gcTypesConfigured = cx->options().wasmGc() ? HasGcTypes::True : HasGcTypes::False;
-#else
-    HasGcTypes gcTypesConfigured = HasGcTypes::False;
-#endif
-=======
 #ifdef ENABLE_WASM_GC
   bool gcTypesConfigured = HasGcSupport(cx);
 #else
   bool gcTypesConfigured = false;
 #endif
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  return true;
-}
-
-bool wasm::DecodeModuleTail(Decoder& d, ModuleEnvironment* env,
-                            ExclusiveDeferredValidationState& dvs) {
-  if (!DecodeDataSection(d, env)) {
-    return false;
-  }
-
-  if (!DecodeNameSection(d, env)) {
-    return false;
-  }
-
-  while (!d.done()) {
-    if (!d.skipCustomSection(env)) {
-      if (d.resilientMode()) {
-        d.clearError();
-        return true;
-      }
-      return false;
-    }
-  }
-
-  return dvs.lock()->performDeferredValidation(*env, d.error());
-}
-
-// Validate algorithm.
-
-bool wasm::Validate(JSContext* cx, const ShareableBytes& bytecode,
-                    UniqueChars* error) {
-  Decoder d(bytecode.bytes, 0, error);
-
-#ifdef ENABLE_WASM_GC
-  HasGcTypes gcTypesConfigured =
-      cx->options().wasmGc() ? HasGcTypes::True : HasGcTypes::False;
-#else
-  HasGcTypes gcTypesConfigured = HasGcTypes::False;
-#endif
 
   CompilerEnvironment compilerEnv(CompileMode::Once, Tier::Optimized,
                                   OptimizedBackend::Ion, DebugEnabled::False,
@@ -5863,93 +2844,13 @@ bool wasm::Validate(JSContext* cx, const ShareableBytes& bytecode,
     return false;
   }
 
-  ExclusiveDeferredValidationState dvs(mutexid::WasmDeferredValidation);
-||||||| merged common ancestors
-    CompilerEnvironment compilerEnv(CompileMode::Once, Tier::Optimized, OptimizedBackend::Ion,
-                                    DebugEnabled::False, gcTypesConfigured);
-    ModuleEnvironment env(gcTypesConfigured,
-                          &compilerEnv,
-                          cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled()
-                          ? Shareable::True
-                          : Shareable::False);
-    if (!DecodeModuleEnvironment(d, &env)) {
-        return false;
-    }
-
-    ExclusiveDeferredValidationState dvs(mutexid::WasmDeferredValidation);
-
-    if (!DecodeCodeSection(d, &env, dvs)) {
-        return false;
-    }
-
-    if (!DecodeModuleTail(d, &env, dvs)) {
-        return false;
-    }
-
-    MOZ_ASSERT(!*error, "unreported error in decoding");
-    return true;
-}
-
-bool
-wasm::ValidateForCranelift(const ShareableBytes& bytecode, UniqueChars* error)
-{
-    Decoder d(bytecode.bytes, 0, error);
-
-    // Cranelift doesn't support GC yet.
-    HasGcTypes hasGcTypes = HasGcTypes::False;
-
-    // Cranelift doesn't support threads yet.
-    Shareable threadSupport = Shareable::False;
-
-    CompilerEnvironment compilerEnv(CompileMode::Once, Tier::Optimized,
-                                    OptimizedBackend::Cranelift, DebugEnabled::False, hasGcTypes);
-    ModuleEnvironment env(hasGcTypes, &compilerEnv, threadSupport);
-
-    if (!DecodeModuleEnvironment(d, &env)) {
-        return false;
-    }
-=======
-  CompilerEnvironment compilerEnv(CompileMode::Once, Tier::Optimized,
-                                  OptimizedBackend::Ion, DebugEnabled::False,
-                                  gcTypesConfigured);
-  ModuleEnvironment env(
-      gcTypesConfigured, &compilerEnv,
-      cx->realm()->creationOptions().getSharedMemoryAndAtomicsEnabled()
-          ? Shareable::True
-          : Shareable::False);
-  if (!DecodeModuleEnvironment(d, &env)) {
-    return false;
-  }
->>>>>>> upstream-releases
-
-<<<<<<< HEAD
-  if (!DecodeCodeSection(d, &env, dvs)) {
-    return false;
-  }
-||||||| merged common ancestors
-    ExclusiveDeferredValidationState dvs(mutexid::WasmDeferredValidation);
-=======
   if (!DecodeCodeSection(d, &env)) {
     return false;
   }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  if (!DecodeModuleTail(d, &env, dvs)) {
-    return false;
-  }
-||||||| merged common ancestors
-    if (!DecodeCodeSection(d, &env, dvs)) {
-        return false;
-    }
-    if (!DecodeModuleTail(d, &env, dvs)) {
-        return false;
-    }
-=======
   if (!DecodeModuleTail(d, &env)) {
     return false;
   }
->>>>>>> upstream-releases
 
   MOZ_ASSERT(!*error, "unreported error in decoding");
   return true;

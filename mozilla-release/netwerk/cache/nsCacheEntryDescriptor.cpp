@@ -24,30 +24,6 @@
  *****************************************************************************/
 
 class nsAsyncDoomEvent : public mozilla::Runnable {
-<<<<<<< HEAD
- public:
-  nsAsyncDoomEvent(nsCacheEntryDescriptor *descriptor,
-                   nsICacheListener *listener)
-      : mozilla::Runnable("nsAsyncDoomEvent") {
-    mDescriptor = descriptor;
-    mListener = listener;
-    mEventTarget = GetCurrentThreadEventTarget();
-    // We addref the listener here and release it in nsNotifyDoomListener
-    // on the callers thread. If posting of nsNotifyDoomListener event fails
-    // we leak the listener which is better than releasing it on a wrong
-    // thread.
-    NS_IF_ADDREF(mListener);
-  }
-
-  NS_IMETHOD Run() override {
-    nsresult status = NS_OK;
-
-||||||| merged common ancestors
-public:
-    nsAsyncDoomEvent(nsCacheEntryDescriptor *descriptor,
-                     nsICacheListener *listener)
-    : mozilla::Runnable("nsAsyncDoomEvent")
-=======
  public:
   nsAsyncDoomEvent(nsCacheEntryDescriptor* descriptor,
                    nsICacheListener* listener)
@@ -65,7 +41,6 @@ public:
   NS_IMETHOD Run() override {
     nsresult status = NS_OK;
 
->>>>>>> upstream-releases
     {
       nsCacheServiceAutoLock lock(LOCK_TELEM(NSASYNCDOOMEVENT_RUN));
 
@@ -87,31 +62,16 @@ public:
     return NS_OK;
   }
 
-<<<<<<< HEAD
- private:
-  RefPtr<nsCacheEntryDescriptor> mDescriptor;
-  nsICacheListener *mListener;
-  nsCOMPtr<nsIEventTarget> mEventTarget;
-};
-||||||| merged common ancestors
-=======
  private:
   RefPtr<nsCacheEntryDescriptor> mDescriptor;
   nsICacheListener* mListener;
   nsCOMPtr<nsIEventTarget> mEventTarget;
 };
->>>>>>> upstream-releases
 
 NS_IMPL_ISUPPORTS(nsCacheEntryDescriptor, nsICacheEntryDescriptor,
                   nsICacheEntryInfo)
 
-<<<<<<< HEAD
-nsCacheEntryDescriptor::nsCacheEntryDescriptor(nsCacheEntry *entry,
-||||||| merged common ancestors
-nsCacheEntryDescriptor::nsCacheEntryDescriptor(nsCacheEntry * entry,
-=======
 nsCacheEntryDescriptor::nsCacheEntryDescriptor(nsCacheEntry* entry,
->>>>>>> upstream-releases
                                                nsCacheAccessMode accessGranted)
     : mCacheEntry(entry),
       mAccessGranted(accessGranted),
@@ -119,23 +79,11 @@ nsCacheEntryDescriptor::nsCacheEntryDescriptor(nsCacheEntry* entry,
       mLock("nsCacheEntryDescriptor.mLock"),
       mAsyncDoomPending(false),
       mDoomedOnClose(false),
-<<<<<<< HEAD
-      mClosingDescriptor(false) {
-  PR_INIT_CLIST(this);
-  NS_ADDREF(nsCacheService::GlobalInstance());  // ensure it lives for the
-                                                // lifetime of the descriptor
-||||||| merged common ancestors
-      mClosingDescriptor(false)
-{
-    PR_INIT_CLIST(this);
-    NS_ADDREF(nsCacheService::GlobalInstance());  // ensure it lives for the lifetime of the descriptor
-=======
       mClosingDescriptor(false) {
   PR_INIT_CLIST(this);
   // We need to make sure the cache service lives for the entire lifetime
   // of the descriptor
   mCacheService = nsCacheService::GlobalInstance();
->>>>>>> upstream-releases
 }
 
 nsCacheEntryDescriptor::~nsCacheEntryDescriptor() {
@@ -146,204 +94,79 @@ nsCacheEntryDescriptor::~nsCacheEntryDescriptor() {
   // method during xpcom-shutdown, so we don't need to complain about it.
   if (mCacheEntry) Close();
 
-<<<<<<< HEAD
   NS_ASSERTION(mInputWrappers.IsEmpty(), "We have still some input wrapper!");
   NS_ASSERTION(!mOutputWrapper, "We have still an output wrapper!");
-
-  nsCacheService *service = nsCacheService::GlobalInstance();
-  NS_RELEASE(service);
-||||||| merged common ancestors
-nsCacheEntryDescriptor::~nsCacheEntryDescriptor()
-{
-    // No need to close if the cache entry has already been severed.  This
-    // helps avoid a shutdown assertion (bug 285519) that is caused when
-    // consumers end up holding onto these objects past xpcom-shutdown.  It's
-    // okay for them to do that because the cache service calls our Close
-    // method during xpcom-shutdown, so we don't need to complain about it.
-    if (mCacheEntry)
-        Close();
-
-    NS_ASSERTION(mInputWrappers.IsEmpty(),
-                 "We have still some input wrapper!");
-    NS_ASSERTION(!mOutputWrapper, "We have still an output wrapper!");
-
-    nsCacheService * service = nsCacheService::GlobalInstance();
-    NS_RELEASE(service);
-=======
-  NS_ASSERTION(mInputWrappers.IsEmpty(), "We have still some input wrapper!");
-  NS_ASSERTION(!mOutputWrapper, "We have still an output wrapper!");
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetClientID(nsACString &aClientID) {
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETCLIENTID));
-  if (!mCacheEntry) {
-    aClientID.Truncate();
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetClientID(nsACString& aClientID)
-{
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETCLIENTID));
-    if (!mCacheEntry) {
-        aClientID.Truncate();
-        return NS_ERROR_NOT_AVAILABLE;
-    }
-=======
 nsCacheEntryDescriptor::GetClientID(nsACString& aClientID) {
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETCLIENTID));
   if (!mCacheEntry) {
     aClientID.Truncate();
     return NS_ERROR_NOT_AVAILABLE;
   }
->>>>>>> upstream-releases
 
   return ClientIDFromCacheKey(*(mCacheEntry->Key()), aClientID);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetDeviceID(nsACString &aDeviceID) {
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETDEVICEID));
-  if (!mCacheEntry) {
-    aDeviceID.Truncate();
-    return NS_ERROR_NOT_AVAILABLE;
-  }
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetDeviceID(nsACString& aDeviceID)
-{
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETDEVICEID));
-    if (!mCacheEntry) {
-        aDeviceID.Truncate();
-        return NS_ERROR_NOT_AVAILABLE;
-    }
-=======
 nsCacheEntryDescriptor::GetDeviceID(nsACString& aDeviceID) {
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETDEVICEID));
   if (!mCacheEntry) {
     aDeviceID.Truncate();
     return NS_ERROR_NOT_AVAILABLE;
   }
->>>>>>> upstream-releases
 
   aDeviceID.Assign(mCacheEntry->GetDeviceID());
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetKey(nsACString &result) {
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETKEY));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetKey(nsACString &result)
-{
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETKEY));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::GetKey(nsACString& result) {
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETKEY));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   return ClientKeyFromCacheKey(*(mCacheEntry->Key()), result);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetFetchCount(int32_t *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETFETCHCOUNT));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetFetchCount(int32_t *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETFETCHCOUNT));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::GetFetchCount(int32_t* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETFETCHCOUNT));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->FetchCount();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetLastFetched(uint32_t *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETLASTFETCHED));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetLastFetched(uint32_t *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETLASTFETCHED));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::GetLastFetched(uint32_t* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETLASTFETCHED));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->LastFetched();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetLastModified(uint32_t *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETLASTMODIFIED));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetLastModified(uint32_t *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETLASTMODIFIED));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::GetLastModified(uint32_t* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETLASTMODIFIED));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->LastModified();
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetExpirationTime(uint32_t *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETEXPIRATIONTIME));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetExpirationTime(uint32_t *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETEXPIRATIONTIME));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::GetExpirationTime(uint32_t* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETEXPIRATIONTIME));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->ExpirationTime();
   return NS_OK;
@@ -360,42 +183,20 @@ nsCacheEntryDescriptor::SetExpirationTime(uint32_t expirationTime) {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::IsStreamBased(bool *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_ISSTREAMBASED));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::IsStreamBased(bool* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_ISSTREAMBASED));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->IsStreamData();
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::GetPredictedDataSize(int64_t *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETPREDICTEDDATASIZE));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::GetPredictedDataSize(int64_t *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETPREDICTEDDATASIZE));
-    if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::GetPredictedDataSize(int64_t* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETPREDICTEDDATASIZE));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->PredictedDataSize();
   return NS_OK;
@@ -411,84 +212,30 @@ NS_IMETHODIMP nsCacheEntryDescriptor::SetPredictedDataSize(
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::GetDataSize(uint32_t *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETDATASIZE));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::GetDataSize(uint32_t *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETDATASIZE));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::GetDataSize(uint32_t* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETDATASIZE));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-  const char *val = mCacheEntry->GetMetaDataElement("uncompressed-len");
-  if (!val) {
-    *result = mCacheEntry->DataSize();
-  } else {
-    *result = atol(val);
-  }
-||||||| merged common ancestors
-    const char* val = mCacheEntry->GetMetaDataElement("uncompressed-len");
-    if (!val) {
-        *result = mCacheEntry->DataSize();
-    } else {
-        *result = atol(val);
-    }
-=======
   const char* val = mCacheEntry->GetMetaDataElement("uncompressed-len");
   if (!val) {
     *result = mCacheEntry->DataSize();
   } else {
     *result = atol(val);
   }
->>>>>>> upstream-releases
 
   return NS_OK;
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::GetStorageDataSize(uint32_t *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSTORAGEDATASIZE));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::GetStorageDataSize(uint32_t* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSTORAGEDATASIZE));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
   *result = mCacheEntry->DataSize();
 
   return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::GetStorageDataSize(uint32_t *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSTORAGEDATASIZE));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-
-    *result = mCacheEntry->DataSize();
-
-    return NS_OK;
-=======
-  *result = mCacheEntry->DataSize();
-
-  return NS_OK;
->>>>>>> upstream-releases
 }
 
 nsresult nsCacheEntryDescriptor::RequestDataSizeChange(int32_t deltaSize) {
@@ -532,22 +279,6 @@ nsCacheEntryDescriptor::SetDataSize(uint32_t dataSize) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::OpenInputStream(uint32_t offset,
-                                        nsIInputStream **result) {
-  NS_ENSURE_ARG_POINTER(result);
-
-  nsInputStreamWrapper *cacheInput = nullptr;
-  {
-    nsCacheServiceAutoLock lock(
-        LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_OPENINPUTSTREAM));
-    if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-    if (!mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_NOT_STREAM;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::OpenInputStream(uint32_t offset, nsIInputStream ** result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-=======
 nsCacheEntryDescriptor::OpenInputStream(uint32_t offset,
                                         nsIInputStream** result) {
   NS_ENSURE_ARG_POINTER(result);
@@ -558,49 +289,7 @@ nsCacheEntryDescriptor::OpenInputStream(uint32_t offset,
         LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_OPENINPUTSTREAM));
     if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
     if (!mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_NOT_STREAM;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Don't open any new stream when closing descriptor or clearing entries
-    if (mClosingDescriptor || nsCacheService::GetClearingEntries())
-      return NS_ERROR_NOT_AVAILABLE;
-
-    // ensure valid permissions
-    if (!(mAccessGranted & nsICache::ACCESS_READ))
-      return NS_ERROR_CACHE_READ_ACCESS_DENIED;
-
-    const char *val;
-    val = mCacheEntry->GetMetaDataElement("uncompressed-len");
-    if (val) {
-      cacheInput = new nsDecompressInputStreamWrapper(this, offset);
-    } else {
-      cacheInput = new nsInputStreamWrapper(this, offset);
-||||||| merged common ancestors
-    nsInputStreamWrapper* cacheInput = nullptr;
-    {
-        nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_OPENINPUTSTREAM));
-        if (!mCacheEntry)                  return NS_ERROR_NOT_AVAILABLE;
-        if (!mCacheEntry->IsStreamData())  return NS_ERROR_CACHE_DATA_IS_NOT_STREAM;
-
-        // Don't open any new stream when closing descriptor or clearing entries
-        if (mClosingDescriptor || nsCacheService::GetClearingEntries())
-            return NS_ERROR_NOT_AVAILABLE;
-
-        // ensure valid permissions
-        if (!(mAccessGranted & nsICache::ACCESS_READ))
-            return NS_ERROR_CACHE_READ_ACCESS_DENIED;
-
-        const char *val;
-        val = mCacheEntry->GetMetaDataElement("uncompressed-len");
-        if (val) {
-            cacheInput = new nsDecompressInputStreamWrapper(this, offset);
-        } else {
-            cacheInput = new nsInputStreamWrapper(this, offset);
-        }
-        if (!cacheInput) return NS_ERROR_OUT_OF_MEMORY;
-
-        mInputWrappers.AppendElement(cacheInput);
-=======
     // Don't open any new stream when closing descriptor or clearing entries
     if (mClosingDescriptor || nsCacheService::GetClearingEntries())
       return NS_ERROR_NOT_AVAILABLE;
@@ -615,45 +304,17 @@ nsCacheEntryDescriptor::OpenInputStream(uint32_t offset,
       cacheInput = new nsDecompressInputStreamWrapper(this, offset);
     } else {
       cacheInput = new nsInputStreamWrapper(this, offset);
->>>>>>> upstream-releases
     }
     if (!cacheInput) return NS_ERROR_OUT_OF_MEMORY;
 
-<<<<<<< HEAD
-    mInputWrappers.AppendElement(cacheInput);
-  }
-
-  NS_ADDREF(*result = cacheInput);
-  return NS_OK;
-||||||| merged common ancestors
-    NS_ADDREF(*result = cacheInput);
-    return NS_OK;
-=======
     mInputWrappers.AppendElement(cacheInput);
   }
 
   cacheInput.forget(result);
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::OpenOutputStream(uint32_t offset,
-                                         nsIOutputStream **result) {
-  NS_ENSURE_ARG_POINTER(result);
-
-  nsOutputStreamWrapper *cacheOutput = nullptr;
-  {
-    nsCacheServiceAutoLock lock(
-        LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_OPENOUTPUTSTREAM));
-    if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-    if (!mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_NOT_STREAM;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::OpenOutputStream(uint32_t offset, nsIOutputStream ** result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-=======
 nsCacheEntryDescriptor::OpenOutputStream(uint32_t offset,
                                          nsIOutputStream** result) {
   NS_ENSURE_ARG_POINTER(result);
@@ -664,59 +325,7 @@ nsCacheEntryDescriptor::OpenOutputStream(uint32_t offset,
         LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_OPENOUTPUTSTREAM));
     if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
     if (!mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_NOT_STREAM;
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-    // Don't open any new stream when closing descriptor or clearing entries
-    if (mClosingDescriptor || nsCacheService::GetClearingEntries())
-      return NS_ERROR_NOT_AVAILABLE;
-
-    // ensure valid permissions
-    if (!(mAccessGranted & nsICache::ACCESS_WRITE))
-      return NS_ERROR_CACHE_WRITE_ACCESS_DENIED;
-
-    int32_t compressionLevel = nsCacheService::CacheCompressionLevel();
-    const char *val;
-    val = mCacheEntry->GetMetaDataElement("uncompressed-len");
-    if ((compressionLevel > 0) && val) {
-      cacheOutput = new nsCompressOutputStreamWrapper(this, offset);
-    } else {
-      // clear compression flag when compression disabled - see bug 715198
-      if (val) {
-        mCacheEntry->SetMetaDataElement("uncompressed-len", nullptr);
-      }
-      cacheOutput = new nsOutputStreamWrapper(this, offset);
-||||||| merged common ancestors
-    nsOutputStreamWrapper* cacheOutput = nullptr;
-    {
-        nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_OPENOUTPUTSTREAM));
-        if (!mCacheEntry)                  return NS_ERROR_NOT_AVAILABLE;
-        if (!mCacheEntry->IsStreamData())  return NS_ERROR_CACHE_DATA_IS_NOT_STREAM;
-
-        // Don't open any new stream when closing descriptor or clearing entries
-        if (mClosingDescriptor || nsCacheService::GetClearingEntries())
-            return NS_ERROR_NOT_AVAILABLE;
-
-        // ensure valid permissions
-        if (!(mAccessGranted & nsICache::ACCESS_WRITE))
-            return NS_ERROR_CACHE_WRITE_ACCESS_DENIED;
-
-        int32_t compressionLevel = nsCacheService::CacheCompressionLevel();
-        const char *val;
-        val = mCacheEntry->GetMetaDataElement("uncompressed-len");
-        if ((compressionLevel > 0) && val) {
-            cacheOutput = new nsCompressOutputStreamWrapper(this, offset);
-        } else {
-            // clear compression flag when compression disabled - see bug 715198
-            if (val) {
-                mCacheEntry->SetMetaDataElement("uncompressed-len", nullptr);
-            }
-            cacheOutput = new nsOutputStreamWrapper(this, offset);
-        }
-        if (!cacheOutput) return NS_ERROR_OUT_OF_MEMORY;
-
-        mOutputWrapper = cacheOutput;
-=======
     // Don't open any new stream when closing descriptor or clearing entries
     if (mClosingDescriptor || nsCacheService::GetClearingEntries())
       return NS_ERROR_NOT_AVAILABLE;
@@ -736,120 +345,51 @@ nsCacheEntryDescriptor::OpenOutputStream(uint32_t offset,
         mCacheEntry->SetMetaDataElement("uncompressed-len", nullptr);
       }
       cacheOutput = new nsOutputStreamWrapper(this, offset);
->>>>>>> upstream-releases
     }
     if (!cacheOutput) return NS_ERROR_OUT_OF_MEMORY;
 
     mOutputWrapper = cacheOutput;
   }
 
-<<<<<<< HEAD
-  NS_ADDREF(*result = cacheOutput);
-  return NS_OK;
-}
-||||||| merged common ancestors
-=======
   cacheOutput.forget(result);
   return NS_OK;
 }
->>>>>>> upstream-releases
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetCacheElement(nsISupports **result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETCACHEELEMENT));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-  if (mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_STREAM;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetCacheElement(nsISupports ** result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETCACHEELEMENT));
-    if (!mCacheEntry)                 return NS_ERROR_NOT_AVAILABLE;
-    if (mCacheEntry->IsStreamData())  return NS_ERROR_CACHE_DATA_IS_STREAM;
-
-    NS_IF_ADDREF(*result = mCacheEntry->Data());
-    return NS_OK;
-}
-=======
 nsCacheEntryDescriptor::GetCacheElement(nsISupports** result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETCACHEELEMENT));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
   if (mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_STREAM;
->>>>>>> upstream-releases
 
   NS_IF_ADDREF(*result = mCacheEntry->Data());
   return NS_OK;
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::SetCacheElement(nsISupports *cacheElement) {
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_SETCACHEELEMENT));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-  if (mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_STREAM;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::SetCacheElement(nsISupports * cacheElement)
-{
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_SETCACHEELEMENT));
-    if (!mCacheEntry)                 return NS_ERROR_NOT_AVAILABLE;
-    if (mCacheEntry->IsStreamData())  return NS_ERROR_CACHE_DATA_IS_STREAM;
-=======
 nsCacheEntryDescriptor::SetCacheElement(nsISupports* cacheElement) {
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_SETCACHEELEMENT));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
   if (mCacheEntry->IsStreamData()) return NS_ERROR_CACHE_DATA_IS_STREAM;
->>>>>>> upstream-releases
 
   return nsCacheService::SetCacheElement(mCacheEntry, cacheElement);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetAccessGranted(nsCacheAccessMode *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  *result = mAccessGranted;
-  return NS_OK;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetAccessGranted(nsCacheAccessMode *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    *result = mAccessGranted;
-    return NS_OK;
-=======
 nsCacheEntryDescriptor::GetAccessGranted(nsCacheAccessMode* result) {
   NS_ENSURE_ARG_POINTER(result);
   *result = mAccessGranted;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetStoragePolicy(nsCacheStoragePolicy *result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSTORAGEPOLICY));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetStoragePolicy(nsCacheStoragePolicy *result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSTORAGEPOLICY));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::GetStoragePolicy(nsCacheStoragePolicy* result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSTORAGEPOLICY));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->StoragePolicy();
   return NS_OK;
@@ -880,52 +420,20 @@ nsCacheEntryDescriptor::SetStoragePolicy(nsCacheStoragePolicy policy) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetFile(nsIFile **result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETFILE));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetFile(nsIFile ** result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETFILE));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::GetFile(nsIFile** result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETFILE));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   return nsCacheService::GetFileForEntry(mCacheEntry, result);
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetSecurityInfo(nsISupports **result) {
-  NS_ENSURE_ARG_POINTER(result);
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSECURITYINFO));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetSecurityInfo(nsISupports ** result)
-{
-    NS_ENSURE_ARG_POINTER(result);
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSECURITYINFO));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-
-    *result = mCacheEntry->SecurityInfo();
-    NS_IF_ADDREF(*result);
-    return NS_OK;
-}
-=======
 nsCacheEntryDescriptor::GetSecurityInfo(nsISupports** result) {
   NS_ENSURE_ARG_POINTER(result);
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETSECURITYINFO));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   *result = mCacheEntry->SecurityInfo();
   NS_IF_ADDREF(*result);
@@ -933,22 +441,10 @@ nsCacheEntryDescriptor::GetSecurityInfo(nsISupports** result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::SetSecurityInfo(nsISupports *securityInfo) {
-  nsCacheServiceAutoLock lock(
-      LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_SETSECURITYINFO));
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::SetSecurityInfo(nsISupports * securityInfo)
-{
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_SETSECURITYINFO));
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::SetSecurityInfo(nsISupports* securityInfo) {
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_SETSECURITYINFO));
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   mCacheEntry->SetSecurityInfo(securityInfo);
   mCacheEntry->MarkEntryDirty();
@@ -973,45 +469,6 @@ nsCacheEntryDescriptor::DoomAndFailPendingRequests(nsresult status) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::AsyncDoom(nsICacheListener *listener) {
-  bool asyncDoomPending;
-  {
-    mozilla::MutexAutoLock lock(mLock);
-    asyncDoomPending = mAsyncDoomPending;
-    mAsyncDoomPending = true;
-  }
-
-  if (asyncDoomPending) {
-    // AsyncDoom was already called. Notify listener if it is non-null,
-    // otherwise just return success.
-    if (listener) {
-      nsresult rv = NS_DispatchToCurrentThread(
-          new nsNotifyDoomListener(listener, NS_ERROR_NOT_AVAILABLE));
-      if (NS_SUCCEEDED(rv)) NS_IF_ADDREF(listener);
-      return rv;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::AsyncDoom(nsICacheListener *listener)
-{
-    bool asyncDoomPending;
-    {
-        mozilla::MutexAutoLock lock(mLock);
-        asyncDoomPending = mAsyncDoomPending;
-        mAsyncDoomPending = true;
-    }
-
-    if (asyncDoomPending) {
-        // AsyncDoom was already called. Notify listener if it is non-null,
-        // otherwise just return success.
-        if (listener) {
-            nsresult rv = NS_DispatchToCurrentThread(
-                new nsNotifyDoomListener(listener, NS_ERROR_NOT_AVAILABLE));
-            if (NS_SUCCEEDED(rv))
-                NS_IF_ADDREF(listener);
-            return rv;
-        }
-        return NS_OK;
-=======
 nsCacheEntryDescriptor::AsyncDoom(nsICacheListener* listener) {
   bool asyncDoomPending;
   {
@@ -1028,7 +485,6 @@ nsCacheEntryDescriptor::AsyncDoom(nsICacheListener* listener) {
           new nsNotifyDoomListener(listener, NS_ERROR_NOT_AVAILABLE));
       if (NS_SUCCEEDED(rv)) NS_IF_ADDREF(listener);
       return rv;
->>>>>>> upstream-releases
     }
     return NS_OK;
   }
@@ -1091,32 +547,15 @@ nsCacheEntryDescriptor::Close() {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::GetMetaDataElement(const char *key, char **result) {
-  NS_ENSURE_ARG_POINTER(key);
-  *result = nullptr;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::GetMetaDataElement(const char *key, char **result)
-{
-    NS_ENSURE_ARG_POINTER(key);
-    *result = nullptr;
-=======
 nsCacheEntryDescriptor::GetMetaDataElement(const char* key, char** result) {
   NS_ENSURE_ARG_POINTER(key);
   *result = nullptr;
->>>>>>> upstream-releases
 
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_GETMETADATAELEMENT));
   NS_ENSURE_TRUE(mCacheEntry, NS_ERROR_NOT_AVAILABLE);
 
-<<<<<<< HEAD
-  const char *value;
-||||||| merged common ancestors
-    const char *value;
-=======
   const char* value;
->>>>>>> upstream-releases
 
   value = mCacheEntry->GetMetaDataElement(key);
   if (!value) return NS_ERROR_NOT_AVAILABLE;
@@ -1127,17 +566,8 @@ nsCacheEntryDescriptor::GetMetaDataElement(const char* key, char** result) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::SetMetaDataElement(const char *key, const char *value) {
-  NS_ENSURE_ARG_POINTER(key);
-||||||| merged common ancestors
-nsCacheEntryDescriptor::SetMetaDataElement(const char *key, const char *value)
-{
-    NS_ENSURE_ARG_POINTER(key);
-=======
 nsCacheEntryDescriptor::SetMetaDataElement(const char* key, const char* value) {
   NS_ENSURE_ARG_POINTER(key);
->>>>>>> upstream-releases
 
   nsCacheServiceAutoLock lock(
       LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_SETMETADATAELEMENT));
@@ -1151,26 +581,11 @@ nsCacheEntryDescriptor::SetMetaDataElement(const char* key, const char* value) {
 }
 
 NS_IMETHODIMP
-<<<<<<< HEAD
-nsCacheEntryDescriptor::VisitMetaData(nsICacheMetaDataVisitor *visitor) {
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_VISITMETADATA));
-  // XXX check callers, we're calling out of module
-  NS_ENSURE_ARG_POINTER(visitor);
-  if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-nsCacheEntryDescriptor::VisitMetaData(nsICacheMetaDataVisitor * visitor)
-{
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_VISITMETADATA));
-    // XXX check callers, we're calling out of module
-    NS_ENSURE_ARG_POINTER(visitor);
-    if (!mCacheEntry)  return NS_ERROR_NOT_AVAILABLE;
-=======
 nsCacheEntryDescriptor::VisitMetaData(nsICacheMetaDataVisitor* visitor) {
   nsCacheServiceAutoLock lock(LOCK_TELEM(NSCACHEENTRYDESCRIPTOR_VISITMETADATA));
   // XXX check callers, we're calling out of module
   NS_ENSURE_ARG_POINTER(visitor);
   if (!mCacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   return mCacheEntry->VisitMetaDataElements(visitor);
 }
@@ -1237,16 +652,8 @@ nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::LazyInit() {
 
   NS_ENSURE_TRUE(mode & nsICache::ACCESS_READ, NS_ERROR_UNEXPECTED);
 
-<<<<<<< HEAD
-  nsCacheEntry *cacheEntry = mDescriptor->CacheEntry();
-  if (!cacheEntry) return NS_ERROR_NOT_AVAILABLE;
-||||||| merged common ancestors
-    nsCacheEntry* cacheEntry = mDescriptor->CacheEntry();
-    if (!cacheEntry) return NS_ERROR_NOT_AVAILABLE;
-=======
   nsCacheEntry* cacheEntry = mDescriptor->CacheEntry();
   if (!cacheEntry) return NS_ERROR_NOT_AVAILABLE;
->>>>>>> upstream-releases
 
   rv = nsCacheService::OpenInputStreamForEntry(cacheEntry, mode, mStartOffset,
                                                getter_AddRefs(mInput));
@@ -1310,20 +717,9 @@ nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Close_Locked() {
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Available(
-    uint64_t *avail) {
-  mozilla::MutexAutoLock lock(mLock);
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsInputStreamWrapper::Available(uint64_t *avail)
-{
-    mozilla::MutexAutoLock lock(mLock);
-=======
 nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Available(
     uint64_t* avail) {
   mozilla::MutexAutoLock lock(mLock);
->>>>>>> upstream-releases
 
   nsresult rv = EnsureInit();
   if (NS_FAILED(rv)) return rv;
@@ -1331,42 +727,17 @@ nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Available(
   return mInput->Available(avail);
 }
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Read(
-    char *buf, uint32_t count, uint32_t *countRead) {
-  mozilla::MutexAutoLock lock(mLock);
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsInputStreamWrapper::Read(char *buf, uint32_t count, uint32_t *countRead)
-{
-    mozilla::MutexAutoLock lock(mLock);
-=======
 nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Read(
     char* buf, uint32_t count, uint32_t* countRead) {
   mozilla::MutexAutoLock lock(mLock);
->>>>>>> upstream-releases
 
   return Read_Locked(buf, count, countRead);
 }
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Read_Locked(
-    char *buf, uint32_t count, uint32_t *countRead) {
-  nsresult rv = EnsureInit();
-  if (NS_SUCCEEDED(rv)) rv = mInput->Read(buf, count, countRead);
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsInputStreamWrapper::Read_Locked(char *buf, uint32_t count, uint32_t *countRead)
-{
-    nsresult rv = EnsureInit();
-    if (NS_SUCCEEDED(rv))
-        rv = mInput->Read(buf, count, countRead);
-=======
 nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Read_Locked(
     char* buf, uint32_t count, uint32_t* countRead) {
   nsresult rv = EnsureInit();
   if (NS_SUCCEEDED(rv)) rv = mInput->Read(buf, count, countRead);
->>>>>>> upstream-releases
 
   CACHE_LOG_DEBUG(
       ("nsInputStreamWrapper::Read "
@@ -1376,48 +747,18 @@ nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::Read_Locked(
   return rv;
 }
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::ReadSegments(
-    nsWriteSegmentFun writer, void *closure, uint32_t count,
-    uint32_t *countRead) {
-  // cache stream not buffered
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsInputStreamWrapper::ReadSegments(nsWriteSegmentFun writer, void *closure,
-                                   uint32_t count, uint32_t *countRead)
-{
-    // cache stream not buffered
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::ReadSegments(
     nsWriteSegmentFun writer, void* closure, uint32_t count,
     uint32_t* countRead) {
   // cache stream not buffered
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::IsNonBlocking(
-    bool *result) {
-  // cache streams will never return NS_BASE_STREAM_WOULD_BLOCK
-  *result = false;
-  return NS_OK;
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsInputStreamWrapper::IsNonBlocking(bool *result)
-{
-    // cache streams will never return NS_BASE_STREAM_WOULD_BLOCK
-    *result = false;
-    return NS_OK;
-=======
 nsresult nsCacheEntryDescriptor::nsInputStreamWrapper::IsNonBlocking(
     bool* result) {
   // cache streams will never return NS_BASE_STREAM_WOULD_BLOCK
   *result = false;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 /******************************************************************************
@@ -1470,32 +811,9 @@ NS_INTERFACE_MAP_BEGIN(nsCacheEntryDescriptor::nsDecompressInputStreamWrapper)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::nsDecompressInputStreamWrapper::Read(
-    char *buf, uint32_t count, uint32_t *countRead) {
-  mozilla::MutexAutoLock lock(mLock);
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::
-nsDecompressInputStreamWrapper::Read(char *    buf,
-                                     uint32_t  count,
-                                     uint32_t *countRead)
-{
-    mozilla::MutexAutoLock lock(mLock);
-
-    int zerr = Z_OK;
-    nsresult rv = NS_OK;
-
-    if (!mStreamInitialized) {
-        rv = InitZstream();
-        if (NS_FAILED(rv)) {
-            return rv;
-        }
-    }
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::nsDecompressInputStreamWrapper::Read(
     char* buf, uint32_t count, uint32_t* countRead) {
   mozilla::MutexAutoLock lock(mLock);
->>>>>>> upstream-releases
 
   int zerr = Z_OK;
   nsresult rv = NS_OK;
@@ -1505,42 +823,6 @@ NS_IMETHODIMP nsCacheEntryDescriptor::nsDecompressInputStreamWrapper::Read(
     if (NS_FAILED(rv)) {
       return rv;
     }
-<<<<<<< HEAD
-  }
-
-  mZstream.next_out = (Bytef *)buf;
-  mZstream.avail_out = count;
-
-  if (mReadBufferLen < count) {
-    // Allocate a buffer for reading from the input stream. This will
-    // determine the max number of compressed bytes read from the
-    // input stream at one time. Making the buffer size proportional
-    // to the request size is not necessary, but helps minimize the
-    // number of read requests to the input stream.
-    uint32_t newBufLen = std::max(count, (uint32_t)kMinDecompressReadBufLen);
-    mReadBuffer = (unsigned char *)moz_xrealloc(mReadBuffer, newBufLen);
-    mReadBufferLen = newBufLen;
-    if (!mReadBuffer) {
-      mReadBufferLen = 0;
-      return NS_ERROR_OUT_OF_MEMORY;
-||||||| merged common ancestors
-    return rv;
-}
-
-nsresult nsCacheEntryDescriptor::
-nsDecompressInputStreamWrapper::Close()
-{
-    mozilla::MutexAutoLock lock(mLock);
-
-    if (!mDescriptor)
-        return NS_ERROR_NOT_AVAILABLE;
-
-    EndZstream();
-    if (mReadBuffer) {
-        free(mReadBuffer);
-        mReadBuffer = nullptr;
-        mReadBufferLen = 0;
-=======
   }
 
   mZstream.next_out = (Bytef*)buf;
@@ -1558,46 +840,7 @@ nsDecompressInputStreamWrapper::Close()
     if (!mReadBuffer) {
       mReadBufferLen = 0;
       return NS_ERROR_OUT_OF_MEMORY;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-  }
-
-  // read and inflate data until the output buffer is full, or
-  // there is no more data to read
-  while (NS_SUCCEEDED(rv) && zerr == Z_OK && mZstream.avail_out > 0 &&
-         count > 0) {
-    if (mZstream.avail_in == 0) {
-      rv = nsInputStreamWrapper::Read_Locked(
-          (char *)mReadBuffer, mReadBufferLen, &mZstream.avail_in);
-      if (NS_FAILED(rv) || !mZstream.avail_in) {
-        break;
-      }
-      mZstream.next_in = mReadBuffer;
-||||||| merged common ancestors
-    return nsInputStreamWrapper::Close_Locked();
-}
-
-nsresult nsCacheEntryDescriptor::
-nsDecompressInputStreamWrapper::InitZstream()
-{
-    if (!mDescriptor)
-        return NS_ERROR_NOT_AVAILABLE;
-
-    if (mStreamEnded)
-        return NS_ERROR_FAILURE;
-
-    // Initialize zlib inflate stream
-    mZstream.zalloc = Z_NULL;
-    mZstream.zfree = Z_NULL;
-    mZstream.opaque = Z_NULL;
-    mZstream.next_out = Z_NULL;
-    mZstream.avail_out = 0;
-    mZstream.next_in = Z_NULL;
-    mZstream.avail_in = 0;
-    if (inflateInit(&mZstream) != Z_OK) {
-        return NS_ERROR_FAILURE;
-=======
   }
 
   // read and inflate data until the output buffer is full, or
@@ -1611,40 +854,7 @@ nsDecompressInputStreamWrapper::InitZstream()
         break;
       }
       mZstream.next_in = mReadBuffer;
->>>>>>> upstream-releases
     }
-<<<<<<< HEAD
-    zerr = inflate(&mZstream, Z_NO_FLUSH);
-    if (zerr == Z_STREAM_END) {
-      // The compressed data may have been stored in multiple
-      // chunks/streams. To allow for this case, re-initialize
-      // the inflate stream and continue decompressing from
-      // the next byte.
-      Bytef *saveNextIn = mZstream.next_in;
-      unsigned int saveAvailIn = mZstream.avail_in;
-      Bytef *saveNextOut = mZstream.next_out;
-      unsigned int saveAvailOut = mZstream.avail_out;
-      inflateReset(&mZstream);
-      mZstream.next_in = saveNextIn;
-      mZstream.avail_in = saveAvailIn;
-      mZstream.next_out = saveNextOut;
-      mZstream.avail_out = saveAvailOut;
-      zerr = Z_OK;
-    } else if (zerr != Z_OK) {
-      rv = NS_ERROR_INVALID_CONTENT_ENCODING;
-||||||| merged common ancestors
-    mStreamInitialized = true;
-    return NS_OK;
-}
-
-nsresult nsCacheEntryDescriptor::
-nsDecompressInputStreamWrapper::EndZstream()
-{
-    if (mStreamInitialized && !mStreamEnded) {
-        inflateEnd(&mZstream);
-        mStreamInitialized = false;
-        mStreamEnded = true;
-=======
     zerr = inflate(&mZstream, Z_NO_FLUSH);
     if (zerr == Z_STREAM_END) {
       // The compressed data may have been stored in multiple
@@ -1663,7 +873,6 @@ nsDecompressInputStreamWrapper::EndZstream()
       zerr = Z_OK;
     } else if (zerr != Z_OK) {
       rv = NS_ERROR_INVALID_CONTENT_ENCODING;
->>>>>>> upstream-releases
     }
   }
   if (NS_SUCCEEDED(rv)) {
@@ -1761,100 +970,6 @@ NS_INTERFACE_MAP_BEGIN(nsCacheEntryDescriptor::nsOutputStreamWrapper)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsOutputStreamWrapper::LazyInit() {
-  // Check if we have the descriptor. If not we can't even grab the cache
-  // lock since it is not ensured that the cache service still exists.
-  if (!mDescriptor) return NS_ERROR_NOT_AVAILABLE;
-
-  nsCacheServiceAutoLock lock(LOCK_TELEM(NSOUTPUTSTREAMWRAPPER_LAZYINIT));
-
-  nsCacheAccessMode mode;
-  nsresult rv = mDescriptor->GetAccessGranted(&mode);
-  if (NS_FAILED(rv)) return rv;
-
-  NS_ENSURE_TRUE(mode & nsICache::ACCESS_WRITE, NS_ERROR_UNEXPECTED);
-
-  nsCacheEntry *cacheEntry = mDescriptor->CacheEntry();
-  if (!cacheEntry) return NS_ERROR_NOT_AVAILABLE;
-
-  NS_ASSERTION(mOutput == nullptr, "mOutput set in LazyInit");
-
-  nsCOMPtr<nsIOutputStream> stream;
-  rv = nsCacheService::OpenOutputStreamForEntry(cacheEntry, mode, mStartOffset,
-                                                getter_AddRefs(stream));
-  if (NS_FAILED(rv)) return rv;
-
-  nsCacheDevice *device = cacheEntry->CacheDevice();
-  if (device) {
-    // the entry has been truncated to mStartOffset bytes, inform device
-    int32_t size = cacheEntry->DataSize();
-    rv = device->OnDataSizeChange(cacheEntry, mStartOffset - size);
-    if (NS_SUCCEEDED(rv)) cacheEntry->SetDataSize(mStartOffset);
-  } else {
-    rv = NS_ERROR_NOT_AVAILABLE;
-  }
-
-  // If anything above failed, clean up internal state and get out of here
-  // (see bug #654926)...
-  if (NS_FAILED(rv)) {
-    nsCacheService::ReleaseObject_Locked(stream.forget().take());
-    mDescriptor->mOutputWrapper = nullptr;
-    nsCacheService::ReleaseObject_Locked(mDescriptor);
-    mDescriptor = nullptr;
-    mInitialized = false;
-    return rv;
-  }
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsOutputStreamWrapper::LazyInit()
-{
-    // Check if we have the descriptor. If not we can't even grab the cache
-    // lock since it is not ensured that the cache service still exists.
-    if (!mDescriptor)
-        return NS_ERROR_NOT_AVAILABLE;
-
-    nsCacheServiceAutoLock lock(LOCK_TELEM(NSOUTPUTSTREAMWRAPPER_LAZYINIT));
-
-    nsCacheAccessMode mode;
-    nsresult rv = mDescriptor->GetAccessGranted(&mode);
-    if (NS_FAILED(rv)) return rv;
-
-    NS_ENSURE_TRUE(mode & nsICache::ACCESS_WRITE, NS_ERROR_UNEXPECTED);
-
-    nsCacheEntry* cacheEntry = mDescriptor->CacheEntry();
-    if (!cacheEntry) return NS_ERROR_NOT_AVAILABLE;
-
-    NS_ASSERTION(mOutput == nullptr, "mOutput set in LazyInit");
-
-    nsCOMPtr<nsIOutputStream> stream;
-    rv = nsCacheService::OpenOutputStreamForEntry(cacheEntry, mode, mStartOffset,
-                                                  getter_AddRefs(stream));
-    if (NS_FAILED(rv))
-        return rv;
-
-    nsCacheDevice* device = cacheEntry->CacheDevice();
-    if (device) {
-        // the entry has been truncated to mStartOffset bytes, inform device
-        int32_t size = cacheEntry->DataSize();
-        rv = device->OnDataSizeChange(cacheEntry, mStartOffset - size);
-        if (NS_SUCCEEDED(rv))
-            cacheEntry->SetDataSize(mStartOffset);
-    } else {
-        rv = NS_ERROR_NOT_AVAILABLE;
-    }
-
-    // If anything above failed, clean up internal state and get out of here
-    // (see bug #654926)...
-    if (NS_FAILED(rv)) {
-        nsCacheService::ReleaseObject_Locked(stream.forget().take());
-        mDescriptor->mOutputWrapper = nullptr;
-        nsCacheService::ReleaseObject_Locked(mDescriptor);
-        mDescriptor = nullptr;
-        mInitialized = false;
-        return rv;
-    }
-=======
 nsresult nsCacheEntryDescriptor::nsOutputStreamWrapper::LazyInit() {
   // Check if we have the descriptor. If not we can't even grab the cache
   // lock since it is not ensured that the cache service still exists.
@@ -1898,7 +1013,6 @@ nsresult nsCacheEntryDescriptor::nsOutputStreamWrapper::LazyInit() {
     mInitialized = false;
     return rv;
   }
->>>>>>> upstream-releases
 
   mOutput = stream;
   mInitialized = true;
@@ -1968,46 +1082,16 @@ NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::Flush() {
   return mOutput->Flush();
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::Write(
-    const char *buf, uint32_t count, uint32_t *result) {
-  mozilla::MutexAutoLock lock(mLock);
-  return Write_Locked(buf, count, result);
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::
-nsOutputStreamWrapper::Write(const char * buf,
-                             uint32_t     count,
-                             uint32_t *   result)
-{
-    mozilla::MutexAutoLock lock(mLock);
-    return Write_Locked(buf, count, result);
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::Write(
     const char* buf, uint32_t count, uint32_t* result) {
   mozilla::MutexAutoLock lock(mLock);
   return Write_Locked(buf, count, result);
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsOutputStreamWrapper::Write_Locked(
-    const char *buf, uint32_t count, uint32_t *result) {
-  nsresult rv = EnsureInit();
-  if (NS_FAILED(rv)) return rv;
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsOutputStreamWrapper::Write_Locked(const char * buf,
-                                    uint32_t count,
-                                    uint32_t * result)
-{
-    nsresult rv = EnsureInit();
-    if (NS_FAILED(rv)) return rv;
-=======
 nsresult nsCacheEntryDescriptor::nsOutputStreamWrapper::Write_Locked(
     const char* buf, uint32_t count, uint32_t* result) {
   nsresult rv = EnsureInit();
   if (NS_FAILED(rv)) return rv;
->>>>>>> upstream-releases
 
   rv = OnWrite(count);
   if (NS_FAILED(rv)) return rv;
@@ -2015,63 +1099,21 @@ nsresult nsCacheEntryDescriptor::nsOutputStreamWrapper::Write_Locked(
   return mOutput->Write(buf, count, result);
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::WriteFrom(
-    nsIInputStream *inStr, uint32_t count, uint32_t *result) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::
-nsOutputStreamWrapper::WriteFrom(nsIInputStream * inStr,
-                                 uint32_t         count,
-                                 uint32_t *       result)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::WriteFrom(
     nsIInputStream* inStr, uint32_t count, uint32_t* result) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::WriteSegments(
-    nsReadSegmentFun reader, void *closure, uint32_t count, uint32_t *result) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::
-nsOutputStreamWrapper::WriteSegments(nsReadSegmentFun  reader,
-                                     void *            closure,
-                                     uint32_t          count,
-                                     uint32_t *        result)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::WriteSegments(
     nsReadSegmentFun reader, void* closure, uint32_t count, uint32_t* result) {
   return NS_ERROR_NOT_IMPLEMENTED;
->>>>>>> upstream-releases
 }
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::IsNonBlocking(
-    bool *result) {
-  // cache streams will never return NS_BASE_STREAM_WOULD_BLOCK
-  *result = false;
-  return NS_OK;
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::
-nsOutputStreamWrapper::IsNonBlocking(bool *result)
-{
-    // cache streams will never return NS_BASE_STREAM_WOULD_BLOCK
-    *result = false;
-    return NS_OK;
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::nsOutputStreamWrapper::IsNonBlocking(
     bool* result) {
   // cache streams will never return NS_BASE_STREAM_WOULD_BLOCK
   *result = false;
   return NS_OK;
->>>>>>> upstream-releases
 }
 
 /******************************************************************************
@@ -2121,22 +1163,9 @@ NS_INTERFACE_MAP_BEGIN(nsCacheEntryDescriptor::nsCompressOutputStreamWrapper)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
 NS_INTERFACE_MAP_END
 
-<<<<<<< HEAD
-NS_IMETHODIMP nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::Write(
-    const char *buf, uint32_t count, uint32_t *result) {
-  mozilla::MutexAutoLock lock(mLock);
-||||||| merged common ancestors
-NS_IMETHODIMP nsCacheEntryDescriptor::
-nsCompressOutputStreamWrapper::Write(const char * buf,
-                                     uint32_t     count,
-                                     uint32_t *   result)
-{
-    mozilla::MutexAutoLock lock(mLock);
-=======
 NS_IMETHODIMP nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::Write(
     const char* buf, uint32_t count, uint32_t* result) {
   mozilla::MutexAutoLock lock(mLock);
->>>>>>> upstream-releases
 
   int zerr = Z_OK;
   nsresult rv = NS_OK;
@@ -2146,58 +1175,6 @@ NS_IMETHODIMP nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::Write(
     if (NS_FAILED(rv)) {
       return rv;
     }
-<<<<<<< HEAD
-  }
-
-  if (!mWriteBuffer) {
-    // Once allocated, this buffer is referenced by the zlib stream and
-    // cannot be grown. We use 2x(initial write request) to approximate
-    // a stream buffer size proportional to request buffers.
-    mWriteBufferLen = std::max(count * 2, (uint32_t)kMinCompressWriteBufLen);
-    mWriteBuffer = (unsigned char *)moz_xmalloc(mWriteBufferLen);
-    mZstream.next_out = mWriteBuffer;
-    mZstream.avail_out = mWriteBufferLen;
-  }
-
-  // Compress (deflate) the requested buffer. Keep going
-  // until the entire buffer has been deflated.
-  mZstream.avail_in = count;
-  mZstream.next_in = (Bytef *)buf;
-  while (mZstream.avail_in > 0) {
-    zerr = deflate(&mZstream, Z_NO_FLUSH);
-    if (zerr == Z_STREAM_ERROR) {
-      deflateEnd(&mZstream);
-      mStreamEnded = true;
-      mStreamInitialized = false;
-      return NS_ERROR_FAILURE;
-||||||| merged common ancestors
-
-    // Compress (deflate) the requested buffer. Keep going
-    // until the entire buffer has been deflated.
-    mZstream.avail_in = count;
-    mZstream.next_in = (Bytef*)buf;
-    while (mZstream.avail_in > 0) {
-        zerr = deflate(&mZstream, Z_NO_FLUSH);
-        if (zerr == Z_STREAM_ERROR) {
-            deflateEnd(&mZstream);
-            mStreamEnded = true;
-            mStreamInitialized = false;
-            return NS_ERROR_FAILURE;
-        }
-        // Note: Z_BUF_ERROR is non-fatal and sometimes expected here.
-
-        // If the compression stream output buffer is filled, write
-        // it out to the underlying stream wrapper.
-        if (mZstream.avail_out == 0) {
-            rv = WriteBuffer();
-            if (NS_FAILED(rv)) {
-                deflateEnd(&mZstream);
-                mStreamEnded = true;
-                mStreamInitialized = false;
-                return rv;
-            }
-        }
-=======
   }
 
   if (!mWriteBuffer) {
@@ -2221,7 +1198,6 @@ NS_IMETHODIMP nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::Write(
       mStreamEnded = true;
       mStreamInitialized = false;
       return NS_ERROR_FAILURE;
->>>>>>> upstream-releases
     }
     // Note: Z_BUF_ERROR is non-fatal and sometimes expected here.
 
@@ -2320,27 +1296,6 @@ nsresult nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::InitZstream() {
   return NS_OK;
 }
 
-<<<<<<< HEAD
-nsresult nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::WriteBuffer() {
-  uint32_t bytesToWrite = mWriteBufferLen - mZstream.avail_out;
-  uint32_t result = 0;
-  nsresult rv = nsCacheEntryDescriptor::nsOutputStreamWrapper::Write_Locked(
-      (const char *)mWriteBuffer, bytesToWrite, &result);
-  mZstream.next_out = mWriteBuffer;
-  mZstream.avail_out = mWriteBufferLen;
-  return rv;
-||||||| merged common ancestors
-nsresult nsCacheEntryDescriptor::
-nsCompressOutputStreamWrapper::WriteBuffer()
-{
-    uint32_t bytesToWrite = mWriteBufferLen - mZstream.avail_out;
-    uint32_t result = 0;
-    nsresult rv = nsCacheEntryDescriptor::nsOutputStreamWrapper::Write_Locked(
-        (const char *)mWriteBuffer, bytesToWrite, &result);
-    mZstream.next_out = mWriteBuffer;
-    mZstream.avail_out = mWriteBufferLen;
-    return rv;
-=======
 nsresult nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::WriteBuffer() {
   uint32_t bytesToWrite = mWriteBufferLen - mZstream.avail_out;
   uint32_t result = 0;
@@ -2349,5 +1304,4 @@ nsresult nsCacheEntryDescriptor::nsCompressOutputStreamWrapper::WriteBuffer() {
   mZstream.next_out = mWriteBuffer;
   mZstream.avail_out = mWriteBufferLen;
   return rv;
->>>>>>> upstream-releases
 }

@@ -94,19 +94,6 @@ void AddVarCacheFunc(float* aVar, const nsCString& aPrefName) {
   ASSERT_TRUE(NS_SUCCEEDED(rv));
 }
 
-<<<<<<< HEAD
-template <typename T, typename U = T>
-void RunTest(const nsCString& aPrefName1, const nsCString& aPrefName2,
-             T aValue1, T aValue2) {
-||||||| merged common ancestors
-template<typename T, typename U = T>
-void
-RunTest(const nsCString& aPrefName1,
-        const nsCString& aPrefName2,
-        T aValue1,
-        T aValue2)
-{
-=======
 void AddVarCacheFunc(std::atomic<float>* aVar, const nsCString& aPrefName) {
   nsresult rv = Preferences::AddAtomicFloatVarCache(aVar, aPrefName);
   ASSERT_TRUE(NS_SUCCEEDED(rv));
@@ -115,7 +102,6 @@ void AddVarCacheFunc(std::atomic<float>* aVar, const nsCString& aPrefName) {
 template <typename T, typename U = T>
 void RunTest(const nsCString& aPrefName1, const nsCString& aPrefName2,
              T aValue1, T aValue2) {
->>>>>>> upstream-releases
   static U var1, var2;
   static Closure<T, U> closure1, closure2;
   nsresult rv;
@@ -156,60 +142,62 @@ void RunTest(const nsCString& aPrefName1, const nsCString& aPrefName2,
   ASSERT_TRUE(closure2.mCalled);
 }
 
-TEST(CallbackAndVarCacheOrder, Bool) {
+TEST(CallbackAndVarCacheOrder, Bool)
+{
   RunTest<bool>(NS_LITERAL_CSTRING("test_pref.bool.1"),
                 NS_LITERAL_CSTRING("test_pref.bool.2"), false, true);
 }
 
-TEST(CallbackAndVarCacheOrder, AtomicBoolRelaxed) {
+TEST(CallbackAndVarCacheOrder, AtomicBoolRelaxed)
+{
   RunTest<bool, Atomic<bool, Relaxed>>(
       NS_LITERAL_CSTRING("test_pref.atomic_bool.1"),
       NS_LITERAL_CSTRING("test_pref.atomic_bool.2"), false, true);
 }
 
-TEST(CallbackAndVarCacheOrder, AtomicBoolReleaseAcquire) {
+TEST(CallbackAndVarCacheOrder, AtomicBoolReleaseAcquire)
+{
   RunTest<bool, Atomic<bool, ReleaseAcquire>>(
       NS_LITERAL_CSTRING("test_pref.atomic_bool.3"),
       NS_LITERAL_CSTRING("test_pref.atomic_bool.4"), false, true);
 }
 
-TEST(CallbackAndVarCacheOrder, Int) {
+TEST(CallbackAndVarCacheOrder, Int)
+{
   RunTest<int32_t>(NS_LITERAL_CSTRING("test_pref.int.1"),
                    NS_LITERAL_CSTRING("test_pref.int.2"), -2, 3);
 }
 
-TEST(CallbackAndVarCacheOrder, AtomicInt) {
+TEST(CallbackAndVarCacheOrder, AtomicInt)
+{
   RunTest<int32_t, Atomic<int32_t, Relaxed>>(
       NS_LITERAL_CSTRING("test_pref.atomic_int.1"),
       NS_LITERAL_CSTRING("test_pref.atomic_int.2"), -3, 4);
 }
 
-TEST(CallbackAndVarCacheOrder, Uint) {
+TEST(CallbackAndVarCacheOrder, Uint)
+{
   RunTest<uint32_t>(NS_LITERAL_CSTRING("test_pref.uint.1"),
                     NS_LITERAL_CSTRING("test_pref.uint.2"), 4u, 5u);
 }
 
-TEST(CallbackAndVarCacheOrder, AtomicUintRelaxed) {
+TEST(CallbackAndVarCacheOrder, AtomicUintRelaxed)
+{
   RunTest<uint32_t, Atomic<uint32_t, Relaxed>>(
       NS_LITERAL_CSTRING("test_pref.atomic_uint.1"),
       NS_LITERAL_CSTRING("test_pref.atomic_uint.2"), 6u, 7u);
 }
 
-TEST(CallbackAndVarCacheOrder, AtomicUintReleaseAcquire) {
+TEST(CallbackAndVarCacheOrder, AtomicUintReleaseAcquire)
+{
   RunTest<uint32_t, Atomic<uint32_t, ReleaseAcquire>>(
       NS_LITERAL_CSTRING("test_pref.atomic_uint.3"),
       NS_LITERAL_CSTRING("test_pref.atomic_uint.4"), 8u, 9u);
 }
 
-TEST(CallbackAndVarCacheOrder, Float) {
+TEST(CallbackAndVarCacheOrder, Float)
+{
   RunTest<float>(NS_LITERAL_CSTRING("test_pref.float.1"),
-<<<<<<< HEAD
-                 NS_LITERAL_CSTRING("test_pref.float.2"), -10.0f, 11.0f);
-||||||| merged common ancestors
-                 NS_LITERAL_CSTRING("test_pref.float.2"),
-                 -10.0f,
-                 11.0f);
-=======
                  NS_LITERAL_CSTRING("test_pref.float.2"), -10.0f, 11.0f);
 }
 
@@ -218,7 +206,6 @@ TEST(CallbackAndVarCacheOrder, AtomicFloat)
   RunTest<float, std::atomic<float>>(
       NS_LITERAL_CSTRING("test_pref.atomic_float.1"),
       NS_LITERAL_CSTRING("test_pref.atomic_float.2"), -12.0f, 13.0f);
->>>>>>> upstream-releases
 }
 
 }  // namespace mozilla

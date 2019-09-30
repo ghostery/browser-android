@@ -163,13 +163,6 @@ void ChannelEventQueue::ResumeInternal() {
     target = mEventQueue[0]->GetEventTarget();
     MOZ_ASSERT(target);
 
-<<<<<<< HEAD
-    Unused << NS_WARN_IF(
-        NS_FAILED(target->Dispatch(event.forget(), NS_DISPATCH_NORMAL)));
-||||||| merged common ancestors
-    Unused << NS_WARN_IF(NS_FAILED(target->Dispatch(event.forget(),
-                                                    NS_DISPATCH_NORMAL)));
-=======
     Unused << NS_WARN_IF(
         NS_FAILED(target->Dispatch(event.forget(), NS_DISPATCH_NORMAL)));
   }
@@ -186,7 +179,6 @@ bool ChannelEventQueue::MaybeSuspendIfEventsAreSuppressed() {
   // content scripts to run.
   if (mHasCheckedForXMLHttpRequest && !mForXMLHttpRequest) {
     return false;
->>>>>>> upstream-releases
   }
 
   nsCOMPtr<nsIChannel> channel(do_QueryInterface(mOwner));

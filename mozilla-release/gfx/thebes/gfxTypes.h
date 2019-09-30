@@ -13,13 +13,7 @@
 typedef struct _cairo_surface cairo_surface_t;
 typedef struct _cairo_user_data_key cairo_user_data_key_t;
 
-<<<<<<< HEAD
-typedef void (*thebes_destroy_func_t)(void *data);
-||||||| merged common ancestors
-typedef void (*thebes_destroy_func_t) (void *data);
-=======
 typedef void (*thebes_destroy_func_t)(void* data);
->>>>>>> upstream-releases
 
 /**
  * Currently needs to be 'double' for Cairo compatibility. Could

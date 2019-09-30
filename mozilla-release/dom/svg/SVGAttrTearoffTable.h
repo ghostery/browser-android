@@ -21,29 +21,11 @@ namespace mozilla {
  * We don't keep an owning reference to the tear-off objects so they are
  * responsible for removing themselves from this table when they die.
  */
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGAttrTearoffTable.h
-template <class SimpleType, class TearoffType>
-class nsSVGAttrTearoffTable {
- public:
-||||||| merged common ancestors
-template<class SimpleType, class TearoffType>
-class nsSVGAttrTearoffTable
-{
-public:
-=======
 template <class SimpleType, class TearoffType>
 class SVGAttrTearoffTable {
  public:
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAttrTearoffTable.h
 #ifdef DEBUG
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGAttrTearoffTable.h
-  ~nsSVGAttrTearoffTable() {
-||||||| merged common ancestors
-  ~nsSVGAttrTearoffTable()
-  {
-=======
   ~SVGAttrTearoffTable() {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAttrTearoffTable.h
     MOZ_ASSERT(!mTable, "Tear-off objects remain in hashtable at shutdown.");
   }
 #endif
@@ -61,24 +43,10 @@ class SVGAttrTearoffTable {
   TearoffTable* mTable;
 };
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGAttrTearoffTable.h
-template <class SimpleType, class TearoffType>
-TearoffType* nsSVGAttrTearoffTable<SimpleType, TearoffType>::GetTearoff(
-    SimpleType* aSimple) {
-  if (!mTable) return nullptr;
-||||||| merged common ancestors
-template<class SimpleType, class TearoffType>
-TearoffType*
-nsSVGAttrTearoffTable<SimpleType, TearoffType>::GetTearoff(SimpleType* aSimple)
-{
-  if (!mTable)
-    return nullptr;
-=======
 template <class SimpleType, class TearoffType>
 TearoffType* SVGAttrTearoffTable<SimpleType, TearoffType>::GetTearoff(
     SimpleType* aSimple) {
   if (!mTable) return nullptr;
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAttrTearoffTable.h
 
   TearoffType* tearoff = nullptr;
 
@@ -92,21 +60,9 @@ TearoffType* SVGAttrTearoffTable<SimpleType, TearoffType>::GetTearoff(
   return tearoff;
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGAttrTearoffTable.h
-template <class SimpleType, class TearoffType>
-void nsSVGAttrTearoffTable<SimpleType, TearoffType>::AddTearoff(
-    SimpleType* aSimple, TearoffType* aTearoff) {
-||||||| merged common ancestors
-template<class SimpleType, class TearoffType>
-void
-nsSVGAttrTearoffTable<SimpleType, TearoffType>::AddTearoff(SimpleType* aSimple,
-                                                          TearoffType* aTearoff)
-{
-=======
 template <class SimpleType, class TearoffType>
 void SVGAttrTearoffTable<SimpleType, TearoffType>::AddTearoff(
     SimpleType* aSimple, TearoffType* aTearoff) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAttrTearoffTable.h
   if (!mTable) {
     mTable = new TearoffTable;
   }
@@ -121,21 +77,9 @@ void SVGAttrTearoffTable<SimpleType, TearoffType>::AddTearoff(
   mTable->Put(aSimple, aTearoff);
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGAttrTearoffTable.h
-template <class SimpleType, class TearoffType>
-void nsSVGAttrTearoffTable<SimpleType, TearoffType>::RemoveTearoff(
-    SimpleType* aSimple) {
-||||||| merged common ancestors
-template<class SimpleType, class TearoffType>
-void
-nsSVGAttrTearoffTable<SimpleType, TearoffType>::RemoveTearoff(
-    SimpleType* aSimple)
-{
-=======
 template <class SimpleType, class TearoffType>
 void SVGAttrTearoffTable<SimpleType, TearoffType>::RemoveTearoff(
     SimpleType* aSimple) {
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAttrTearoffTable.h
   if (!mTable) {
     // Perhaps something happened in between creating the SimpleType object and
     // registering it
@@ -149,12 +93,6 @@ void SVGAttrTearoffTable<SimpleType, TearoffType>::RemoveTearoff(
   }
 }
 
-<<<<<<< HEAD:mozilla-release/dom/svg/nsSVGAttrTearoffTable.h
-#endif  // NS_SVGATTRTEAROFFTABLE_H_
-||||||| merged common ancestors
-#endif // NS_SVGATTRTEAROFFTABLE_H_
-=======
 }  // namespace mozilla
 
 #endif  // NS_SVGATTRTEAROFFTABLE_H_
->>>>>>> upstream-releases:mozilla-release/dom/svg/SVGAttrTearoffTable.h

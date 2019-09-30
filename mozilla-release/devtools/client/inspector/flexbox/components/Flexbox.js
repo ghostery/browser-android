@@ -63,24 +63,7 @@ class Flexbox extends PureComponent {
   }
 
   renderFlexItemSizing() {
-<<<<<<< HEAD
-    const {
-      flexItems,
-      flexItemShown,
-      properties,
-    } = this.props.flexContainer;
-||||||| merged common ancestors
-    const {
-      color,
-    } = this.props.flexbox;
-    const {
-      flexItems,
-      flexItemShown,
-      properties,
-    } = this.props.flexContainer;
-=======
     const { flexItems, flexItemShown, properties } = this.props.flexContainer;
->>>>>>> upstream-releases
 
     const flexItem = flexItems.find(
       item => item.nodeFront.actorID === flexItemShown
@@ -121,47 +104,6 @@ class Flexbox extends PureComponent {
       );
     }
 
-<<<<<<< HEAD
-    const {
-      flexItemShown,
-    } = flexContainer;
-
-    return (
-      dom.div({ className: "layout-flexbox-wrapper" },
-        Header({
-          flexContainer,
-          getSwatchColorPickerTooltip,
-          onHideBoxModelHighlighter,
-          onSetFlexboxOverlayColor,
-          onShowBoxModelHighlighterForNode,
-          onToggleFlexboxHighlighter,
-          setSelectedNode,
-        }),
-        !flexItemShown ? this.renderFlexItemList() : null,
-        flexItemShown ? this.renderFlexItemSizing() : null,
-      )
-||||||| merged common ancestors
-    const {
-      flexItems,
-      flexItemShown,
-    } = flexContainer;
-
-    return (
-      dom.div({ id: "layout-flexbox-container" },
-        Header({
-          flexContainer,
-          getSwatchColorPickerTooltip,
-          onHideBoxModelHighlighter,
-          onSetFlexboxOverlayColor,
-          onShowBoxModelHighlighterForNode,
-          onToggleFlexboxHighlighter,
-          setSelectedNode,
-        }),
-        !flexItemShown && flexItems.length > 0 ? this.renderFlexItemList() : null,
-        flexItemShown ? this.renderFlexItemSizing() : null,
-        !flexItemShown ? this.renderFlexContainerProperties() : null
-      )
-=======
     const { flexItemShown } = flexContainer;
 
     return dom.div(
@@ -177,7 +119,6 @@ class Flexbox extends PureComponent {
       }),
       !flexItemShown ? this.renderFlexItemList() : null,
       flexItemShown ? this.renderFlexItemSizing() : null
->>>>>>> upstream-releases
     );
   }
 }

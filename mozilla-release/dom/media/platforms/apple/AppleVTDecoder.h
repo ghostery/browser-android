@@ -7,32 +7,16 @@
 #ifndef mozilla_AppleVTDecoder_h
 #define mozilla_AppleVTDecoder_h
 
-<<<<<<< HEAD
 #include <CoreFoundation/CFDictionary.h>  // For CFDictionaryRef
 #include <CoreMedia/CoreMedia.h>          // For CMVideoFormatDescriptionRef
 #include <VideoToolbox/VideoToolbox.h>    // For VTDecompressionSessionRef
-
-||||||| merged common ancestors
-=======
-#include <CoreFoundation/CFDictionary.h>  // For CFDictionaryRef
-#include <CoreMedia/CoreMedia.h>          // For CMVideoFormatDescriptionRef
-#include <VideoToolbox/VideoToolbox.h>    // For VTDecompressionSessionRef
->>>>>>> upstream-releases
 #include "PlatformDecoderModule.h"
 #include "ReorderQueue.h"
 #include "TimeUnits.h"
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-#include "VideoToolbox/VideoToolbox.h"
-
-=======
 #include "mozilla/Atomics.h"
 #include "mozilla/gfx/Types.h"
 #include "nsIThread.h"
 
->>>>>>> upstream-releases
 namespace mozilla {
 
 DDLoggedTypeDeclNameAndBase(AppleVTDecoder, MediaDataDecoder);
