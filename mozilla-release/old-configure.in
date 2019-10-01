@@ -63,13 +63,7 @@ GDK_VERSION_MAX_ALLOWED=GDK_VERSION_3_4
 W32API_VERSION=3.14
 STARTUP_NOTIFICATION_VERSION=0.8
 DBUS_VERSION=0.60
-<<<<<<< HEAD
-SQLITE_VERSION=3.25.3
-||||||| merged common ancestors
-SQLITE_VERSION=3.25.1
-=======
 SQLITE_VERSION=3.28.0
->>>>>>> upstream-releases
 
 dnl Set various checks
 dnl ========================================================
@@ -546,26 +540,6 @@ case "$host" in
     ;;
 esac
 
-<<<<<<< HEAD
-MOZ_DOING_LTO(lto_is_enabled)
-
-||||||| merged common ancestors
-dnl Get version of various core apps from the version files.
-FIREFOX_VERSION=`cat $_topsrcdir/browser/config/version.txt`
-FIREFOX_VERSION_DISPLAY=`cat $_topsrcdir/browser/config/version_display.txt`
-
-if test -z "$FIREFOX_VERSION"; then
-    AC_MSG_ERROR([FIREFOX_VERSION is unexpectedly blank.])
-fi
-
-if test -z "$FIREFOX_VERSION_DISPLAY"; then
-    AC_MSG_ERROR([FIREFOX_VERSION_DISPLAY is unexpectedly blank.])
-fi
-
-MOZ_DOING_LTO(lto_is_enabled)
-
-=======
->>>>>>> upstream-releases
 dnl ========================================================
 dnl System overrides of the defaults for target
 dnl ========================================================
@@ -633,16 +607,6 @@ case "$target" in
         # From https://github.com/android-ndk/ndk/issues/133#issuecomment-308549264
         # -Oz is smaller than -Os on clang.
         MOZ_OPTIMIZE_FLAGS="-Oz"
-<<<<<<< HEAD
-        # Disable the outliner, which causes performance regressions, and is
-        # enabled on some platforms at -Oz.
-        DISABLE_OUTLINER="-mno-outline"
-        _SAVE_CFLAGS=$CFLAGS
-        CFLAGS="$CFLAGS $DISABLE_OUTLINER"
-        AC_TRY_COMPILE(,,[MOZ_OPTIMIZE_FLAGS="$MOZ_OPTIMIZE_FLAGS $DISABLE_OUTLINER"])
-        CFLAGS="$_SAVE_CFLAGS"
-||||||| merged common ancestors
-=======
         # Disable the outliner, which causes performance regressions, and is
         # enabled on some platforms at -Oz.
         if test -z "$MOZ_LTO"; then
@@ -658,7 +622,6 @@ case "$target" in
             AC_TRY_LINK(,,[MOZ_OPTIMIZE_LDFLAGS="$MOZ_OPTIMIZE_LDFLAGS $DISABLE_OUTLINER"])
             LDFLAGS="$_SAVE_LDFLAGS"
         fi
->>>>>>> upstream-releases
     fi
     ;;
 
@@ -1575,13 +1538,7 @@ MOZ_ARG_WITH_BOOL(system-nss,
     _USE_SYSTEM_NSS=1 )
 
 if test -n "$_USE_SYSTEM_NSS"; then
-<<<<<<< HEAD
-    AM_PATH_NSS(3.41, [MOZ_SYSTEM_NSS=1], [AC_MSG_ERROR([you don't have NSS installed or your version is too old])])
-||||||| merged common ancestors
-    AM_PATH_NSS(3.40.1, [MOZ_SYSTEM_NSS=1], [AC_MSG_ERROR([you don't have NSS installed or your version is too old])])
-=======
     AM_PATH_NSS(3.45, [MOZ_SYSTEM_NSS=1], [AC_MSG_ERROR([you don't have NSS installed or your version is too old])])
->>>>>>> upstream-releases
 fi
 
 NSS_CFLAGS="$NSS_CFLAGS -I${DIST}/include/nss"
@@ -3177,7 +3134,6 @@ AC_SUBST(MOZ_SOURCE_REPO)
 AC_SUBST(MOZ_SOURCE_CHANGESET)
 AC_SUBST(MOZ_INCLUDE_SOURCE_INFO)
 
-<<<<<<< HEAD
 dnl Cliq start
 dnl We simplify this process using just a single flag
 dnl if test "$MOZ_TELEMETRY_REPORTING"; then
@@ -3194,19 +3150,6 @@ if test "$CLIQZ_TELEMETRY_REPORTING"; then
 fi
 dnl Cliq end
 
-
-||||||| merged common ancestors
-if test "$MOZ_TELEMETRY_REPORTING"; then
-    AC_DEFINE(MOZ_TELEMETRY_REPORTING)
-
-    # Enable Telemetry by default for nightly and aurora channels
-    if test -z "$RELEASE_OR_BETA"; then
-      AC_DEFINE(MOZ_TELEMETRY_ON_BY_DEFAULT)
-    fi
-fi
-
-=======
->>>>>>> upstream-releases
 dnl If we have any service that uploads data (and requires data submission
 dnl policy alert), set MOZ_DATA_REPORTING.
 dnl We need SUBST for build system and DEFINE for xul preprocessor.

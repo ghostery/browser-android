@@ -28,13 +28,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.AnyThread;
 import android.support.annotation.NonNull;
-<<<<<<< HEAD
-import android.support.annotation.UiThread;
-||||||| merged common ancestors
-=======
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
->>>>>>> upstream-releases
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -298,14 +293,6 @@ public class GeckoView extends FrameLayout {
         }
     }
 
-<<<<<<< HEAD
-    @UiThread
-    public GeckoSession releaseSession() {
-        ThreadUtils.assertOnUiThread();
-
-||||||| merged common ancestors
-    public GeckoSession releaseSession() {
-=======
     /**
      * Unsets the current session from this instance and returns it, if any. You must call
      * this before {@link #setSession(GeckoSession)} if there is already an open session
@@ -320,7 +307,6 @@ public class GeckoView extends FrameLayout {
     public @Nullable GeckoSession releaseSession() {
         ThreadUtils.assertOnUiThread();
 
->>>>>>> upstream-releases
         if (mSession == null) {
             return null;
         }
@@ -465,29 +451,13 @@ public class GeckoView extends FrameLayout {
         return mSession.getEventDispatcher();
     }
 
-<<<<<<< HEAD
-    @UiThread
-    public PanZoomController getPanZoomController() {
-        ThreadUtils.assertOnUiThread();
-||||||| merged common ancestors
-    public PanZoomController getPanZoomController() {
-=======
     public @NonNull PanZoomController getPanZoomController() {
         ThreadUtils.assertOnUiThread();
->>>>>>> upstream-releases
         return mSession.getPanZoomController();
     }
 
-<<<<<<< HEAD
-    @UiThread
-    public DynamicToolbarAnimator getDynamicToolbarAnimator() {
-        ThreadUtils.assertOnUiThread();
-||||||| merged common ancestors
-    public DynamicToolbarAnimator getDynamicToolbarAnimator() {
-=======
     public @NonNull DynamicToolbarAnimator getDynamicToolbarAnimator() {
         ThreadUtils.assertOnUiThread();
->>>>>>> upstream-releases
         return mSession.getDynamicToolbarAnimator();
     }
 
@@ -798,15 +768,6 @@ public class GeckoView extends FrameLayout {
         }
         mSession.getTextInput().autofill(strValues);
     }
-<<<<<<< HEAD
-
-    /* Cliqz Start */
-    public void setSearchPanelVisibilty(boolean isVisible) {
-        mIsSearchPanelVisible = isVisible;
-    }
-    /* Cliqz End */
-||||||| merged common ancestors
-=======
 
     /**
      * Request a {@link Bitmap} of the visible portion of the web page currently being
@@ -821,5 +782,10 @@ public class GeckoView extends FrameLayout {
     public @NonNull GeckoResult<Bitmap> capturePixels() {
         return mDisplay.capturePixels();
     }
->>>>>>> upstream-releases
+
+    /* Cliqz Start */
+    public void setSearchPanelVisibilty(boolean isVisible) {
+        mIsSearchPanelVisible = isVisible;
+    }
+    /* Cliqz End */
 }

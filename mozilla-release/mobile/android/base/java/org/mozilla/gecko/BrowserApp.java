@@ -90,15 +90,11 @@ import org.mozilla.gecko.activitystream.ActivityStreamTelemetry;
 import org.mozilla.gecko.adjust.AdjustBrowserAppDelegate;
 import org.mozilla.gecko.animation.PropertyAnimator;
 import org.mozilla.gecko.annotation.RobocopTarget;
-<<<<<<< HEAD
 import org.mozilla.gecko.anolysis.ControlCenterMetrics;
 import org.mozilla.gecko.antiphishing.AntiPhishing;
 import org.mozilla.gecko.antiphishing.AntiPhishingDialog;
 import org.mozilla.gecko.antiphishing.AntiPhishingUtils;
-||||||| merged common ancestors
-=======
 import org.mozilla.gecko.bookmarks.EditBookmarkCallback;
->>>>>>> upstream-releases
 import org.mozilla.gecko.bookmarks.BookmarkEditFragment;
 import org.mozilla.gecko.bookmarks.BookmarkUtils;
 import org.mozilla.gecko.bookmarks.EditBookmarkTask;
@@ -119,13 +115,6 @@ import org.mozilla.gecko.dlc.DlcStudyService;
 import org.mozilla.gecko.dlc.DlcSyncService;
 import org.mozilla.gecko.extensions.ExtensionPermissionsHelper;
 import org.mozilla.gecko.firstrun.OnboardingHelper;
-<<<<<<< HEAD
-import org.mozilla.geckoview.DynamicToolbarAnimator.PinReason;
-||||||| merged common ancestors
-import org.mozilla.gecko.gfx.DynamicToolbarAnimator;
-import org.mozilla.gecko.gfx.DynamicToolbarAnimator.PinReason;
-=======
->>>>>>> upstream-releases
 import org.mozilla.gecko.home.BrowserSearch;
 import org.mozilla.gecko.home.HomeBanner;
 import org.mozilla.gecko.home.HomeConfig;
@@ -206,14 +195,8 @@ import org.mozilla.gecko.widget.AnchoredPopup;
 import org.mozilla.gecko.widget.AnimatedProgressBar;
 import org.mozilla.gecko.widget.GeckoActionProvider;
 import org.mozilla.gecko.widget.SplashScreen;
-<<<<<<< HEAD
-import org.mozilla.gecko.widget.themed.ThemedTabLayout;
-import org.mozilla.geckoview.DynamicToolbarAnimator;
-||||||| merged common ancestors
-=======
 import org.mozilla.geckoview.DynamicToolbarAnimator;
 import org.mozilla.geckoview.DynamicToolbarAnimator.PinReason;
->>>>>>> upstream-releases
 import org.mozilla.geckoview.GeckoSession;
 
 /* Cliqz start */
@@ -255,7 +238,6 @@ public class BrowserApp extends GeckoApp
                                    PropertyAnimator.PropertyAnimationListener,
                                    TabsPanel.TabsLayoutChangeListener,
                                    View.OnKeyListener,
-<<<<<<< HEAD
                                    /* Cliqz Start */
                                    DefaultHardwareBackBtnHandler,
                                    BaseControlCenterPagerAdapter.ControlCenterCallbacks,
@@ -263,12 +245,8 @@ public class BrowserApp extends GeckoApp
                                    AntiPhishingDialog.AntiPhishingDialogActionListener,
                                    OnboardingHelper.OnboardingListener {
                                    /* Cliqz End */
-||||||| merged common ancestors
-                                   OnboardingHelper.OnboardingListener {
-=======
                                    OnboardingHelper.OnboardingListener,
                                    EditBookmarkCallback {
->>>>>>> upstream-releases
     private static final String LOGTAG = "GeckoBrowserApp";
 
     private static final int TABS_ANIMATION_DURATION = 450;
@@ -1377,14 +1355,7 @@ public class BrowserApp extends GeckoApp
         dismissTabHistoryFragment();
 
         super.onPause();
-<<<<<<< HEAD
-
-        if (mIsAbortingAppLaunch) {
-||||||| merged common ancestors
-        if (mIsAbortingAppLaunch) {
-=======
         if (isShutDownOrAbort()) {
->>>>>>> upstream-releases
             return;
         }
 
@@ -3727,7 +3698,6 @@ public class BrowserApp extends GeckoApp
         // (We check the pref last to save the pref read.)
         // In ICS+, it's easy to kill an app through the task switcher.
         final SharedPreferences prefs = GeckoSharedPrefs.forProfile(this);
-<<<<<<< HEAD
         /* Cliqz Start */
         //Always show the quit button
         final MenuItem quitMenuItem = aMenu.findItem(R.id.quit);
@@ -3735,22 +3705,6 @@ public class BrowserApp extends GeckoApp
             quitMenuItem.setVisible(true);
         }
         /* Cliqz End */
-||||||| merged common ancestors
-        final boolean visible = HardwareUtils.isTelevision() ||
-                                prefs.getBoolean(GeckoPreferences.PREFS_SHOW_QUIT_MENU, false) ||
-                                !PrefUtils.getStringSet(prefs,
-                                                        ClearOnShutdownPref.PREF,
-                                                        new HashSet<String>()).isEmpty();
-        aMenu.findItem(R.id.quit).setVisible(visible);
-=======
-        final boolean visible = HardwareUtils.isTelevision() ||
-                                mDumpProfileOnShutdown ||
-                                prefs.getBoolean(GeckoPreferences.PREFS_SHOW_QUIT_MENU, false) ||
-                                !PrefUtils.getStringSet(prefs,
-                                                        ClearOnShutdownPref.PREF,
-                                                        new HashSet<String>()).isEmpty();
-        aMenu.findItem(R.id.quit).setVisible(visible);
->>>>>>> upstream-releases
 
         // If tab data is unavailable we disable most of the context menu and related items and
         // return early.
@@ -3943,28 +3897,14 @@ public class BrowserApp extends GeckoApp
 
         charEncoding.setVisible(GeckoPreferences.getCharEncodingState());
 
-<<<<<<< HEAD
-        // if (getProfile().inGuestMode()) {
-            // exitGuestMode.setVisible(true);
-        // } else {
-            // enterGuestMode.setVisible(true);
-        // }
-        /* Cliqz End */
-||||||| merged common ancestors
-        if (getProfile().inGuestMode()) {
-            exitGuestMode.setVisible(true);
-        } else {
-            enterGuestMode.setVisible(true);
-        }
-=======
         // Bug - 1536866. We are hiding the enter guest mode option but we need to leave the exit option available
         // for users that are currently using it.
-        if (getProfile().inGuestMode()) {
-            exitGuestMode.setVisible(true);
-        } else {
-            enterGuestMode.setVisible(false);
-        }
->>>>>>> upstream-releases
+        // if (getProfile().inGuestMode()) {
+        //     exitGuestMode.setVisible(true);
+        // } else {
+        //     enterGuestMode.setVisible(false);
+        // }
+        /* Cliqz End */
 
         if (!Restrictions.isAllowed(this, Restrictable.GUEST_BROWSING)) {
             MenuUtils.safeSetVisible(aMenu, R.id.new_guest_session, false);
@@ -4811,7 +4751,6 @@ public class BrowserApp extends GeckoApp
             frag.dismiss();
         }
     }
-<<<<<<< HEAD
 
     /* Cliqz start */
     // add isPrivate parameter
@@ -5023,8 +4962,6 @@ public class BrowserApp extends GeckoApp
         }
     }
     /* Cliqz end */
-||||||| merged common ancestors
-=======
 
     private boolean isShutDownOrAbort() {
         return mIsAbortingAppLaunch || mShutdownOnDestroy;
@@ -5039,5 +4976,4 @@ public class BrowserApp extends GeckoApp
     public void onUndoRemoveBookmark(HomeContextMenuInfo info, int position) {
         new UndoRemoveBookmarkTask(this, info, position).execute();
     }
->>>>>>> upstream-releases
 }

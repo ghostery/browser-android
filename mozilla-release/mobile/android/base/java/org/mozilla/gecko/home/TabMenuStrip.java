@@ -5,31 +5,17 @@
 
 package org.mozilla.gecko.home;
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-import android.support.v4.content.ContextCompat;
-import org.mozilla.gecko.R;
-
-=======
 import android.content.res.Configuration;
 import android.support.v4.content.ContextCompat;
 import org.mozilla.gecko.R;
 
->>>>>>> upstream-releases
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.DrawableRes;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-<<<<<<< HEAD
-||||||| merged common ancestors
-import android.view.LayoutInflater;
-=======
 import android.view.Gravity;
-import android.view.LayoutInflater;
->>>>>>> upstream-releases
 import android.view.View;
 import android.widget.HorizontalScrollView;
 
@@ -143,17 +129,13 @@ public class TabMenuStrip extends HorizontalScrollView
     public void setOnTitleClickListener(OnTitleClickListener onTitleClickListener) {
         layout.setOnTitleClickListener(onTitleClickListener);
     }
-<<<<<<< HEAD
 
     public void setLightTheme(boolean isLightTheme) {
         layout.setLightTheme(isLightTheme);
     }
-||||||| merged common ancestors
-=======
 
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         layout.onPageSelected(stripPosition);
     }
->>>>>>> upstream-releases
 }

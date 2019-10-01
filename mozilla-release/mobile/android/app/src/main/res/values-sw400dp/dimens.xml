@@ -8,4 +8,10 @@
     <dimen name="tab_panel_item_width_autofit">176dip</dimen>
     <dimen name="tab_thumbnail_width">137dip</dimen>
     <dimen name="context_menu_item_horizontal_padding">10dp</dimen>
+
+    <!-- Cliqz start -->
+    <dimen name="cliqz_intro_title_size">20sp</dimen>
+    <dimen name="cliqz_intro_content_size">15sp</dimen>
+    <dimen name="cliqz_intro_radio_button_height">50dp</dimen>
+    <!-- Cliqz end -->
 </resources>

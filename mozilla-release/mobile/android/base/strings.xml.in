@@ -32,18 +32,12 @@
   <string name="firstrun_panel_title_welcome">&firstrun_panel_title_welcome;</string>
 
   <string name="firstrun_urlbar_message">&firstrun_urlbar_message2;</string>
-<<<<<<< HEAD
+  <string name="newfirstrun_urlbar_message">&newfirstrun_urlbar_message;</string>
   <!-- Cliqz start -->
   <!-- <string name="firstrun_urlbar_subtext">&firstrun_urlbar_subtext2;</string> -->
   <string name="firstrun_urlbar_subtext">&firstrun_urlbar_subtext3;</string>
   <!-- Cliqz end -->
-||||||| merged common ancestors
-  <string name="firstrun_urlbar_subtext">&firstrun_urlbar_subtext2;</string>
-=======
-  <string name="newfirstrun_urlbar_message">&newfirstrun_urlbar_message;</string>
-  <string name="firstrun_urlbar_subtext">&firstrun_urlbar_subtext2;</string>
   <string name="newfirstrun_urlbar_subtext">&newfirstrun_urlbar_subtext;</string>
->>>>>>> upstream-releases
   <string name="firstrun_panel_title_privacy">&firstrun_panel_title_privacy;</string>
   <string name="firstrun_privacy_message">&firstrun_privacy_message;</string>
   <string name="firstrun_privacy_subtext">&firstrun_privacy_subtext;</string>
@@ -726,14 +720,6 @@
   <string name="pip_pause_button_title">&pip_pause_button_title;</string>
   <string name="pip_pause_button_description">&pip_pause_button_description;</string>
 
-<<<<<<< HEAD
-  <string name="default_notification_channel2">&default_notification_channel2;</string>
-||||||| merged common ancestors
-  <string name="default_notification_channel">&default_notification_channel;</string>
-=======
-  <string name="pref_notification_settings_link">&pref_notification_settings_link;</string>
-  <string name="default_notification_channel2">&default_notification_channel2;</string>
->>>>>>> upstream-releases
   <string name="mls_notification_channel">&mls_notification_channel;</string>
   <string name="media_notification_channel2">&media_notification_channel2;</string>
   <string name="download_notification_channel">&download_notification_channel;</string>
@@ -741,7 +727,6 @@
   <string name="updater_notification_channel">&updater_notification_channel;</string>
   <string name="synced_tabs_notification_channel">&synced_tabs_notification_channel;</string>
   <string name="site_notifications_channel">&site_notifications_channel;</string>
-<<<<<<< HEAD
 
   <!-- Cliqz start -->
   <!-- General -->

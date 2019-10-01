@@ -71,52 +71,7 @@ public class GeckoPreferenceFragment extends PreferenceFragment {
 
         // Write prefs to our custom GeckoSharedPrefs file.
         getPreferenceManager().setSharedPreferencesName(GeckoSharedPrefs.APP_PREFS_NAME);
-<<<<<<< HEAD
-
-        int res = getResource();
-        if (res == R.xml.preferences) {
-            Telemetry.startUISession(TelemetryContract.Session.SETTINGS);
-        } else {
-            final String resourceName = getArguments().getString("resource");
-            Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, Method.SETTINGS, resourceName);
-        }
-
-        // Display a menu for Search preferences.
-        if (res == R.xml.preferences_search) {
-            setHasOptionsMenu(true);
-        }
-
-        addPreferencesFromResource(res);
-
-        PreferenceScreen screen = getPreferenceScreen();
-        setPreferenceScreen(screen);
-
-        mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
-        syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
-||||||| merged common ancestors
-
-        int res = getResource();
-        if (res == R.xml.preferences) {
-            Telemetry.startUISession(TelemetryContract.Session.SETTINGS);
-        } else {
-            final String resourceName = getArguments().getString("resource");
-            Telemetry.sendUIEvent(TelemetryContract.Event.ACTION, Method.SETTINGS, resourceName);
-        }
-
-        // Display a menu for Search preferences.
-        if (res == R.xml.preferences_search) {
-            setHasOptionsMenu(true);
-        }
-
-        addPreferencesFromResource(res);
-
-        PreferenceScreen screen = getPreferenceScreen();
-        setPreferenceScreen(screen);
-        mPrefsRequest = ((GeckoPreferences)getActivity()).setupPreferences(screen);
-        syncPreference = (SyncPreference) findPreference(GeckoPreferences.PREFS_SYNC);
-=======
         loadPreferences();
->>>>>>> upstream-releases
     }
 
     /**

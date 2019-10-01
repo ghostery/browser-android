@@ -428,20 +428,14 @@ shown from Android O while a tab is being queued.-->
 <!ENTITY pref_private_data_downloadFiles2 "Downloads">
 <!ENTITY pref_private_data_syncedTabs "Synced tabs">
 
-<<<<<<< HEAD
 <!ENTITY pref_default_browser "Make default browser">
 <!-- Cliqz start -->
 <!ENTITY pref_default_browser_mozilla_support_tablet "Visit &brandShortName; Support">
-||||||| merged common ancestors
-<!ENTITY pref_default_browser "Make default browser">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Visit Mozilla Support">
-=======
 <!ENTITY pref_default_browser2 "Make &brandShortName; your default browser">
 <!-- LOCALIZATION NOTE (default_browser_system_settings_toast):
     Message of an Android Toast that appears after our app opens "Android System Settings -> Apps -> Default apps"
     and instruct users to tap on the "Browser app" option on that settings screen to choose a default browser app. -->
 <!ENTITY default_browser_system_settings_toast "Tap Browser app &amp; select &brandShortName;">
->>>>>>> upstream-releases
 <!ENTITY pref_about_firefox "About &brandShortName;">
 <!-- Cliqz end -->
 <!ENTITY pref_vendor_faqs "FAQs">

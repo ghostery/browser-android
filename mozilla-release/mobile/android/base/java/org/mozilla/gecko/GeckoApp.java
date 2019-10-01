@@ -926,46 +926,6 @@ public abstract class GeckoApp extends GeckoActivity
         ActivityUtils.setFullScreen(this, fullScreen);
     }
 
-<<<<<<< HEAD
-    @Override
-    public void onContextMenu(final GeckoSession session,
-                              final int screenX, final int screenY,
-                              final GeckoSession.ContentDelegate.ContextElement element) {
-    }
-
-    @Override
-    public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
-        // Won't happen, as we don't use the GeckoView download support in Fennec
-    }
-
-    @Override
-    public void onCrash(final GeckoSession session) {
-        // Won't happen, as we don't use e10s in Fennec
-    }
-
-    @Override
-    public void onFirstComposite(final GeckoSession session) {
-    }
-
-||||||| merged common ancestors
-    @Override
-    public void onContextMenu(final GeckoSession session, final int screenX,
-                              final int screenY, final String uri,
-                              int elementType, final String elementSrc) {
-    }
-
-    @Override
-    public void onExternalResponse(final GeckoSession session, final GeckoSession.WebResponseInfo request) {
-        // Won't happen, as we don't use the GeckoView download support in Fennec
-    }
-
-    @Override
-    public void onCrash(final GeckoSession session) {
-        // Won't happen, as we don't use e10s in Fennec
-    }
-
-=======
->>>>>>> upstream-releases
     protected void setFullScreen(final boolean fullscreen) {
         ThreadUtils.postToUiThread(new Runnable() {
             @Override
@@ -1145,20 +1105,6 @@ public abstract class GeckoApp extends GeckoActivity
         mGeckoLayout = (RelativeLayout) findViewById(R.id.gecko_layout);
         mMainLayout = (RelativeLayout) findViewById(R.id.main_layout);
         mLayerView = (GeckoView) findViewById(R.id.layer_view);
-<<<<<<< HEAD
-        // Disable automatic state staving - we require some special handling that we need to do
-        // ourselves.
-        mLayerView.setSaveFromParentEnabled(false);
-
-        final GeckoSession session = new GeckoSession();
-        session.getSettings().setString(GeckoSessionSettings.CHROME_URI,
-                                        "chrome://browser/content/browser.xul");
-||||||| merged common ancestors
-
-        final GeckoSession session = new GeckoSession();
-        session.getSettings().setString(GeckoSessionSettings.CHROME_URI,
-                                        "chrome://browser/content/browser.xul");
-=======
         // Disable automatic state staving - we require some special handling that we need to do
         // ourselves.
         mLayerView.setSaveFromParentEnabled(false);
@@ -1167,7 +1113,6 @@ public abstract class GeckoApp extends GeckoActivity
                 new GeckoSessionSettings.Builder()
                         .chromeUri("chrome://browser/content/browser.xul")
                         .build());
->>>>>>> upstream-releases
         session.setContentDelegate(this);
 
         // If the view already has a session, we need to ensure it is closed.

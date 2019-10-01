@@ -412,7 +412,6 @@ pref("dom.ipc.plugins.enabled", false);
 /* Cliqz start */
 // product URLs
 // The breakpad report server to link to in about:crashes
-<<<<<<< HEAD
 #if APP_NAME == ghostery
 pref("breakpad.reportURL", "https://reports.ghostery.net/report/index/");
 #elif APP_NAME == cliqz
@@ -420,11 +419,6 @@ pref("breakpad.reportURL", "https://reports.cliqz.com/report/index/");
 #else
 pref("breakpad.reportURL", "https://crash-stats.mozilla.com/report/index/");
 #endif
-||||||| merged common ancestors
-pref("breakpad.reportURL", "https://crash-stats.mozilla.com/report/index/");
-=======
-pref("breakpad.reportURL", "https://crash-stats.mozilla.org/report/index/");
->>>>>>> upstream-releases
 
 #if APP_NAME == ghostery
 pref("app.support.baseURL", "https://www.ghostery.com/faqs/");
@@ -596,25 +590,7 @@ pref("media.mediadrm-widevinecdm.visible", true);
 // Switch block autoplay logic to v2.
 pref("media.autoplay.enabled.user-gestures-needed", true);
 // Set Fennec to block autoplay by default.
-<<<<<<< HEAD
-pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 2=Prompt
-#else
-/* Cliqz start - disable autoplay by defaul */
-pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 2=Prompt
-/* Cliqz end */
-pref("media.autoplay.enabled.user-gestures-needed", false);
-pref("media.autoplay.ask-permission", false);
-#endif
-||||||| merged common ancestors
-pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 2=Prompt
-#else
-pref("media.autoplay.default", 0); // 0=Allowed, 1=Blocked, 2=Prompt
-pref("media.autoplay.enabled.user-gestures-needed", false);
-pref("media.autoplay.ask-permission", false);
-#endif
-=======
 pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked
->>>>>>> upstream-releases
 
 // Enable WebSpeech speech synthesis
 pref("media.webspeech.synth.enabled", true);
@@ -774,52 +750,6 @@ pref("browser.ui.linkify.phone", false);
 // Enables/disables Spatial Navigation
 pref("snav.enabled", true);
 
-<<<<<<< HEAD
-// This url, if changed, MUST continue to point to an https url. Pulling arbitrary content to inject into
-// this page over http opens us up to a man-in-the-middle attack that we'd rather not face. If you are a downstream
-// repackager of this code using an alternate snippet url, please keep your users safe
-pref("browser.snippets.updateUrl", "https://snippets.cdn.mozilla.net/json/%SNIPPETS_VERSION%/%NAME%/%VERSION%/%APPBUILDID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/");
-
-// How frequently we check for new snippets, in seconds (1 day)
-pref("browser.snippets.updateInterval", 86400);
-
-// URL used to check for user's country code. Please do not directly use this code or Snippets key.
-// Contact MLS team for your own credentials. https://location.services.mozilla.com/contact
-pref("browser.snippets.geoUrl", "https://location.services.mozilla.com/v1/country?key=fff72d56-b040-4205-9a11-82feda9d83a3");
-
-// URL used to ping metrics with stats about which snippets have been shown
-pref("browser.snippets.statsUrl", "https://snippets-stats.mozilla.org/mobile");
-
-// These prefs require a restart to take effect.
-/* Cliqz start */
-pref("browser.snippets.enabled", false);
-/* Cliqz end */
-pref("browser.snippets.syncPromo.enabled", true);
-pref("browser.snippets.firstrunHomepage.enabled", true);
-
-||||||| merged common ancestors
-// This url, if changed, MUST continue to point to an https url. Pulling arbitrary content to inject into
-// this page over http opens us up to a man-in-the-middle attack that we'd rather not face. If you are a downstream
-// repackager of this code using an alternate snippet url, please keep your users safe
-pref("browser.snippets.updateUrl", "https://snippets.cdn.mozilla.net/json/%SNIPPETS_VERSION%/%NAME%/%VERSION%/%APPBUILDID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/");
-
-// How frequently we check for new snippets, in seconds (1 day)
-pref("browser.snippets.updateInterval", 86400);
-
-// URL used to check for user's country code. Please do not directly use this code or Snippets key.
-// Contact MLS team for your own credentials. https://location.services.mozilla.com/contact
-pref("browser.snippets.geoUrl", "https://location.services.mozilla.com/v1/country?key=fff72d56-b040-4205-9a11-82feda9d83a3");
-
-// URL used to ping metrics with stats about which snippets have been shown
-pref("browser.snippets.statsUrl", "https://snippets-stats.mozilla.org/mobile");
-
-// These prefs require a restart to take effect.
-pref("browser.snippets.enabled", true);
-pref("browser.snippets.syncPromo.enabled", true);
-pref("browser.snippets.firstrunHomepage.enabled", true);
-
-=======
->>>>>>> upstream-releases
 // The mode of home provider syncing.
 // 0: Sync always
 // 1: Sync only when on wifi
@@ -929,7 +859,6 @@ pref("dom.keyboardevent.dispatch_during_composition", true);
 // Ask for permission when enumerating WebRTC devices.
 pref("media.navigator.permission.device", true);
 
-<<<<<<< HEAD
 /* Cliqz start */
 // Do not allow system add-on updates
 pref("extensions.systemAddon.update.url", "");
@@ -949,21 +878,8 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 pref("browser.tabs.remote.separateFileUriProcess", false);
 pref("browser.tabs.remote.allowLinkedWebInFileUriProcess", true);
 pref("browser.tabs.remote.separatePrivilegedContentProcess", false);
-||||||| merged common ancestors
-// Allow system add-on updates
-pref("extensions.systemAddon.update.url", "https://aus5.mozilla.org/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
-=======
-// Allow system add-on updates
-pref("extensions.systemAddon.update.url", "https://aus5.mozilla.org/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
-pref("extensions.systemAddon.update.enabled", true);
-
-// E10s stuff. We don't support 'file' or 'priveleged' process types.
-pref("browser.tabs.remote.separateFileUriProcess", false);
-pref("browser.tabs.remote.allowLinkedWebInFileUriProcess", true);
-pref("browser.tabs.remote.separatePrivilegedContentProcess", false);
 pref("browser.tabs.remote.enforceRemoteTypeRestrictions", false);
 
 // Allow Web Authentication
 pref("security.webauth.webauthn_enable_android_fido2", true);
 pref("browser.tabs.remote.separatePrivilegedMozillaWebContentProcess", false);
->>>>>>> upstream-releases

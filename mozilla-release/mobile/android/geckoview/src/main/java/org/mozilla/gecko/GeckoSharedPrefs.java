@@ -95,19 +95,13 @@ public final class GeckoSharedPrefs {
         DISABLE_MIGRATIONS
     }
 
-<<<<<<< HEAD
     /* Cliqz Start */
     public static SharedPreferences forABTests(Context context) {
         return context.getSharedPreferences(ABTEST_PREFS_NAME, 0);
     }
     /* Cliqz End */
 
-    public static SharedPreferences forApp(Context context) {
-||||||| merged common ancestors
-    public static SharedPreferences forApp(Context context) {
-=======
     public static SharedPreferences forApp(final Context context) {
->>>>>>> upstream-releases
         return forApp(context, EnumSet.noneOf(Flags.class));
     }
 

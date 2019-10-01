@@ -68,17 +68,9 @@ android {
         testApplicationId 'org.mozilla.roboexample.test'
         testInstrumentationRunner 'org.mozilla.gecko.FennecInstrumentationTestRunner'
         // Used by Robolectric based tests; see TestRunner.
-<<<<<<< HEAD
-        buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
-||||||| merged common ancestors
-        buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
-
-        vectorDrawables.useSupportLibrary = true
-=======
         buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\"".tr(File.separator, "/")
 
         vectorDrawables.useSupportLibrary = true
->>>>>>> upstream-releases
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -153,25 +145,8 @@ android {
                 signingConfig signingConfigs.release
             }
         }
-<<<<<<< HEAD
-
-    }
-||||||| merged common ancestors
     }
 
-    // The "audience" flavour dimension distinguishes between _local_ builds (intended for
-    // development) and _official_ builds (intended for testing in automation and to ship in one of
-    // the Fennec distribution channels).
-    //
-    // The "skin" flavor dimension distinguishes between different user interfaces.  We sometimes
-    // want to develop significant new user interface pieces in-tree that don't ship (even in the
-    // Nightly channel) while under development.  A new "skin" flavour allows us to develop such
-    // pieces in Gradle without changing the mainline configuration.
-
-=======
-    }
-
->>>>>>> upstream-releases
     project.configureProductFlavors.delegate = it
     project.configureProductFlavors()
 
@@ -458,22 +433,10 @@ android.applicationVariants.all { variant ->
     // this, the Gradle build calls out to the moz.build system, which can be
     // re-entrant.  Official builds are driven by the moz.build system and
     // should never be re-entrant in this way.
-<<<<<<< HEAD
-    if (!mozconfig.substs.MOZILLA_OFFICIAL) {
-        syncPreprocessedJava.dependsOn rootProject.generateCodeAndResources
-        syncPreprocessedRes.dependsOn rootProject.generateCodeAndResources
-        rewriteManifestPackage.dependsOn rootProject.generateCodeAndResources
-||||||| merged common ancestors
-    if (!((variant.productFlavors*.name).contains('official'))) {
-        syncPreprocessedJava.dependsOn rootProject.generateCodeAndResources
-        syncPreprocessedRes.dependsOn rootProject.generateCodeAndResources
-        rewriteManifestPackage.dependsOn rootProject.generateCodeAndResources
-=======
     if (!mozconfig.substs.MOZILLA_OFFICIAL) {
         syncPreprocessedJava.dependsOn rootProject.machBuildGeneratedAndroidCodeAndResources
         syncPreprocessedRes.dependsOn rootProject.machBuildGeneratedAndroidCodeAndResources
         rewriteManifestPackage.dependsOn rootProject.machBuildGeneratedAndroidCodeAndResources
->>>>>>> upstream-releases
     }
 
     // When driven from moz.build via |mach build|, Gradle does not require or
@@ -578,25 +541,19 @@ import groovy.xml.XmlUtil
 configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
-<<<<<<< HEAD
 
             /* Cliqz start */
             if (details.requested.name == 'android-jsc') {
                 details.useTarget group: details.requested.group, name: 'android-jsc-intl', version: 'r236355'
             }
-            if (details.requested.name in ['support-v4', 'appcompat-v7']) {
-                details.useVersion "$support_library_version"
-            }
+            // if (details.requested.name in ['support-v4', 'appcompat-v7']) {
+            //     details.useVersion "$support_library_version"
+            // }
             /* Cliqz end */
 
-            if (details.requested.group == 'com.google.android.gms') {
-||||||| merged common ancestors
-            if (details.requested.group == 'com.google.android.gms') {
-=======
             if (details.requested.group == 'com.google.android.gms'
                     && details.requested.name != 'play-services-cast'
                     && details.requested.name != 'play-services-fido') {
->>>>>>> upstream-releases
                 details.useVersion "$google_play_services_version"
             }
         }

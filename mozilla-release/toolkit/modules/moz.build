@@ -222,13 +222,6 @@ EXTRA_JS_MODULES += [
     'ResponsivenessMonitor.jsm',
     'ServiceRequest.jsm',
     'Services.jsm',
-<<<<<<< HEAD
-    'sessionstore/FormData.jsm',
-||||||| merged common ancestors
-    'sessionstore/FormData.jsm',
-    'sessionstore/ScrollPosition.jsm',
-=======
->>>>>>> upstream-releases
     'ShortcutUtils.jsm',
     'Sqlite.jsm',
     'Timer.jsm',
@@ -296,19 +289,13 @@ for var in ('ANDROID_PACKAGE_NAME',
             'MOZ_WIDGET_TOOLKIT',
             'DLL_PREFIX',
             'DLL_SUFFIX',
-<<<<<<< HEAD
-            # Cliqz start #
             'DEBUG_JS_MODULES',
+            # Cliqz start #
+            'OMNIJAR_NAME',
             'CLIQZ_CHANNEL',
             'CLIQZ_SEARCH_DEFAULT_ENGINE',
             'MOZ_APP_DISPLAYNAME'):
             # Cliqz end #
-||||||| merged common ancestors
-            'DEBUG_JS_MODULES'):
-=======
-            'DEBUG_JS_MODULES',
-            'OMNIJAR_NAME'):
->>>>>>> upstream-releases
             DEFINES[var] = CONFIG[var]
 
 for var in ('MOZ_SYSTEM_NSS',

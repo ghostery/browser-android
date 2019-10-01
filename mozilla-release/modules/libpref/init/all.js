@@ -146,107 +146,6 @@ pref("dom.serviceWorkers.update_delay", 1000);
 // Enable test for 24 hours update, service workers will always treat last update check time is over 24 hours
 pref("dom.serviceWorkers.testUpdateOverOneDay", false);
 
-<<<<<<< HEAD
-// Whether nonzero values can be returned from performance.timing.*
-pref("dom.enable_performance", true);
-
-// Whether resource timing will be gathered and returned by performance.GetEntries*
-pref("dom.enable_resource_timing", true);
-
-// Whether performance.GetEntries* will contain an entry for the active document
-pref("dom.enable_performance_navigation_timing", true);
-
-// Enable notification of performance timing
-pref("dom.performance.enable_notify_performance_timing", false);
-
-// Enable collecting of docgroup activity in the scheduler
-pref("dom.performance.enable_scheduler_timing", true);
-
-// Enable Permission API's .revoke() method
-pref("dom.permissions.revoke.enable", false);
-
-// Enable exposing timeToNonBlankPaint
-pref("dom.performance.time_to_non_blank_paint.enabled", false);
-
-// Enable exposing timeToContentfulPaint
-pref("dom.performance.time_to_contentful_paint.enabled", false);
-
-// Enable exposing timeToDOMContentFlushed
-pref("dom.performance.time_to_dom_content_flushed.enabled", false);
-
-// Enable exposing timeToFirstInteractive
-pref("dom.performance.time_to_first_interactive.enabled", false);
-
-// Enable requestIdleCallback API
-pref("dom.requestIdleCallback.enabled", true);
-
-// Enable Pointer Lock API
-// This is added for accessibility purpose. When user has no way to exit
-// pointer lock (e.g. no keyboard available), they can use this pref to
-// disable the Pointer Lock API altogether.
-pref("dom.pointer-lock.enabled", true);
-
-// Whether the Gamepad API is enabled
-pref("dom.gamepad.enabled", true);
-pref("dom.gamepad.test.enabled", false);
-#ifdef RELEASE_OR_BETA
-pref("dom.gamepad.non_standard_events.enabled", false);
-#else
-pref("dom.gamepad.non_standard_events.enabled", true);
-#endif
-pref("dom.gamepad.extensions.enabled", true);
-pref("dom.gamepad.haptic_feedback.enabled", true);
-
-||||||| merged common ancestors
-// Whether nonzero values can be returned from performance.timing.*
-pref("dom.enable_performance", true);
-
-// Whether resource timing will be gathered and returned by performance.GetEntries*
-pref("dom.enable_resource_timing", true);
-
-// Whether performance.GetEntries* will contain an entry for the active document
-pref("dom.enable_performance_navigation_timing", true);
-
-// Enable notification of performance timing
-pref("dom.performance.enable_notify_performance_timing", false);
-
-// Enable collecting of docgroup activity in the scheduler
-pref("dom.performance.enable_scheduler_timing", true);
-
-// Enable Permission API's .revoke() method
-pref("dom.permissions.revoke.enable", false);
-
-// Enable exposing timeToNonBlankPaint
-pref("dom.performance.time_to_non_blank_paint.enabled", false);
-
-// Enable exposing timeToDOMContentFlushed
-pref("dom.performance.time_to_dom_content_flushed.enabled", false);
-
-// Enable exposing timeToFirstInteractive
-pref("dom.performance.time_to_first_interactive.enabled", false);
-
-// Enable requestIdleCallback API
-pref("dom.requestIdleCallback.enabled", true);
-
-// Enable Pointer Lock API
-// This is added for accessibility purpose. When user has no way to exit
-// pointer lock (e.g. no keyboard available), they can use this pref to
-// disable the Pointer Lock API altogether.
-pref("dom.pointer-lock.enabled", true);
-
-// Whether the Gamepad API is enabled
-pref("dom.gamepad.enabled", true);
-pref("dom.gamepad.test.enabled", false);
-#ifdef RELEASE_OR_BETA
-pref("dom.gamepad.non_standard_events.enabled", false);
-#else
-pref("dom.gamepad.non_standard_events.enabled", true);
-#endif
-pref("dom.gamepad.extensions.enabled", true);
-pref("dom.gamepad.haptic_feedback.enabled", true);
-
-=======
->>>>>>> upstream-releases
 // If this is true, TextEventDispatcher dispatches keydown and keyup events
 // even during composition (keypress events are never fired during composition
 // even if this is true).
@@ -263,74 +162,6 @@ pref("dom.keyboardevent.keypress.dispatch_non_printable_keys_only_system_group_i
 // can limit the path.  E.g., "example.com/foo" means "example.com/foo*".  So,
 // if you need to limit under a directory, the path should end with "/" like
 // "example.com/foo/".  Note that this cannot limit port number for now.
-<<<<<<< HEAD
-pref("dom.keyboardevent.keypress.hack.dispatch_non_printable_keys", "");
-
-// Blacklist of domains of web apps which handle keyCode and charCode of
-// keypress events with a path only for Firefox (i.e., broken if we set
-// non-zero keyCode or charCode value to the other).  The format is exactly
-// same as "dom.keyboardevent.keypress.hack.dispatch_non_printable_keys". So,
-// check its explanation for the detail.
-pref("dom.keyboardevent.keypress.hack.use_legacy_keycode_and_charcode", "");
-
-// Whether the WebMIDI API is enabled
-pref("dom.webmidi.enabled", false);
-
-// Whether to enable the JavaScript start-up cache. This causes one of the first
-// execution to record the bytecode of the JavaScript function used, and save it
-// in the existing cache entry. On the following loads of the same script, the
-// bytecode would be loaded from the cache instead of being generated once more.
-pref("dom.script_loader.bytecode_cache.enabled", true);
-
-// Ignore the heuristics of the bytecode cache, and always record on the first
-// visit. (used for testing purposes).
-
-// Choose one strategy to use to decide when the bytecode should be encoded and
-// saved. The following strategies are available right now:
-//   * -2 : (reader mode) The bytecode cache would be read, but it would never
-//          be saved.
-//   * -1 : (eager mode) The bytecode would be saved as soon as the script is
-//          seen for the first time, independently of the size or last access
-//          time.
-//   *  0 : (default) The bytecode would be saved in order to minimize the
-//          page-load time.
-//
-// Other values might lead to experimental strategies. For more details, have a
-// look at: ScriptLoader::ShouldCacheBytecode function.
-pref("dom.script_loader.bytecode_cache.strategy", 0);
-||||||| merged common ancestors
-pref("dom.keyboardevent.keypress.hack.dispatch_non_printable_keys",
-     "medium.com/p/");
-#else
-pref("dom.keyboardevent.keypress.dispatch_non_printable_keys_only_system_group_in_content", false);
-#endif
-
-// Whether the WebMIDI API is enabled
-pref("dom.webmidi.enabled", false);
-
-// Whether to enable the JavaScript start-up cache. This causes one of the first
-// execution to record the bytecode of the JavaScript function used, and save it
-// in the existing cache entry. On the following loads of the same script, the
-// bytecode would be loaded from the cache instead of being generated once more.
-pref("dom.script_loader.bytecode_cache.enabled", true);
-
-// Ignore the heuristics of the bytecode cache, and always record on the first
-// visit. (used for testing purposes).
-
-// Choose one strategy to use to decide when the bytecode should be encoded and
-// saved. The following strategies are available right now:
-//   * -2 : (reader mode) The bytecode cache would be read, but it would never
-//          be saved.
-//   * -1 : (eager mode) The bytecode would be saved as soon as the script is
-//          seen for the first time, independently of the size or last access
-//          time.
-//   *  0 : (default) The bytecode would be saved in order to minimize the
-//          page-load time.
-//
-// Other values might lead to experimental strategies. For more details, have a
-// look at: ScriptLoader::ShouldCacheBytecode function.
-pref("dom.script_loader.bytecode_cache.strategy", 0);
-=======
 pref("dom.keyboardevent.keypress.hack.dispatch_non_printable_keys", "www.icloud.com");
 // Pref for end-users and policy to add additional values.
 pref("dom.keyboardevent.keypress.hack.dispatch_non_printable_keys.addl", "");
@@ -352,29 +183,16 @@ pref("dom.mouseevent.click.hack.use_legacy_non-primary_dispatch", "");
 
 // Whether InputEvent.dataTransfer is enabled.
 pref("dom.inputevent.datatransfer.enabled", true);
->>>>>>> upstream-releases
 
 #ifdef JS_BUILD_BINAST
 pref("dom.script_loader.binast_encoding.enabled", false);
 
-<<<<<<< HEAD
-// Whether window.event is enabled
-pref("dom.window.event.enabled", false);
-||||||| merged common ancestors
-// Whether window.event is enabled
-#ifdef NIGHTLY_BUILD
-pref("dom.window.event.enabled", true);
-#else
-pref("dom.window.event.enabled", false);
-#endif
-=======
 // Until we're satisfied that it works nicely, we're restricting
 // BinAST to a few partner sites:
 // - A subset of Facebook
 // - A subset of Cloudflare
 pref("dom.script_loader.binast_encoding.domain.restrict.list", "*.facebook.com,static.xx.fbcdn.net,*.cloudflare.com,*.cloudflarestream.com,unpkg.com");
 #endif
->>>>>>> upstream-releases
 
 // Fastback caching - if this pref is negative, then we calculate the number
 // of content viewers to cache based on the amount of available memory.
@@ -558,21 +376,6 @@ pref("media.navigator.video.max_fr", 60);
 pref("media.navigator.video.h264.level", 31); // 0x42E01f - level 3.1
 pref("media.navigator.video.h264.max_br", 0);
 pref("media.navigator.video.h264.max_mbps", 0);
-<<<<<<< HEAD
-#if defined(NIGHTLY_BUILD) && !defined(ANDROID)
-pref("media.navigator.mediadatadecoder_vpx_enabled", true);
-#else
-pref("media.navigator.mediadatadecoder_vpx_enabled", false);
-#endif
-#if defined(ANDROID)
-pref("media.navigator.mediadatadecoder_h264_enabled", false); // bug 1509316
-#else
-pref("media.navigator.mediadatadecoder_h264_enabled", true);
-#endif
-||||||| merged common ancestors
-pref("media.navigator.mediadatadecoder_enabled", false);
-pref("media.navigator.mediadatadecoder_h264_enabled", false);
-=======
 #if defined(NIGHTLY_BUILD) && !defined(ANDROID)
 pref("media.navigator.mediadatadecoder_vpx_enabled", true);
 #else
@@ -585,7 +388,6 @@ pref("media.navigator.mediadatadecoder_h264_enabled", false);
 #else
 pref("media.navigator.mediadatadecoder_h264_enabled", true);
 #endif
->>>>>>> upstream-releases
 pref("media.peerconnection.video.vp9_enabled", true);
 pref("media.peerconnection.video.vp9_preferred", false);
 pref("media.getusermedia.browser.enabled", false);
@@ -624,16 +426,6 @@ pref("media.peerconnection.ice.trickle_grace_period", 5000);
 pref("media.peerconnection.ice.no_host", false);
 pref("media.peerconnection.ice.default_address_only", false);
 pref("media.peerconnection.ice.proxy_only", false);
-<<<<<<< HEAD
-pref("media.peerconnection.rtpsourcesapi.enabled", true);
-||||||| merged common ancestors
-pref("media.peerconnection.rtpsourcesapi.enabled", true);
-
-// These values (aec, agc, and noise) are from media/webrtc/trunk/webrtc/common_types.h
-// kXxxUnchanged = 0, kXxxDefault = 1, and higher values are specific to each
-// setting (for Xxx = Ec, Agc, or Ns).  Defaults are all set to kXxxDefault here.
-=======
->>>>>>> upstream-releases
 pref("media.peerconnection.turn.disable", false);
 
 // These values (aec, agc, and noise) are from:
@@ -650,17 +442,7 @@ pref("media.getusermedia.aec", 1); // kModerateSuppression
 pref("media.getusermedia.aec_extended_filter", true);
 pref("media.getusermedia.noise", 1); // kModerate
 pref("media.getusermedia.agc_enabled", true);
-<<<<<<< HEAD
 pref("media.getusermedia.agc", 1); // kAdaptiveDigital
-// capture_delay: Adjustments for OS-specific input delay (lower bound)
-// playout_delay: Adjustments for OS-specific AudioStream+cubeb+output delay (lower bound)
-||||||| merged common ancestors
-pref("media.getusermedia.agc", 3); // kAgcAdaptiveDigital
-// capture_delay: Adjustments for OS-specific input delay (lower bound)
-// playout_delay: Adjustments for OS-specific AudioStream+cubeb+output delay (lower bound)
-=======
-pref("media.getusermedia.agc", 1); // kAdaptiveDigital
->>>>>>> upstream-releases
 // full_duplex: enable cubeb full-duplex capture/playback
 pref("media.navigator.audio.full_duplex", true);
 #endif
@@ -757,12 +539,6 @@ pref("media.cubeb.sandbox", false);
 pref("media.audiograph.single_thread.enabled", false);
 
 #ifdef MOZ_AV1
-<<<<<<< HEAD
-#if defined(XP_WIN)
-pref("media.av1.enabled", true);
-#else
-||||||| merged common ancestors
-=======
 #if defined(XP_WIN) && !defined(_ARM64_) && !defined(__MINGW32__)
 pref("media.av1.enabled", true);
 pref("media.av1.use-dav1d", true);
@@ -773,42 +549,10 @@ pref("media.av1.use-dav1d", true);
 pref("media.av1.enabled", true);
 pref("media.av1.use-dav1d", true);
 #else
->>>>>>> upstream-releases
 pref("media.av1.enabled", false);
 pref("media.av1.use-dav1d", false);
 #endif
 #endif
-<<<<<<< HEAD
-// Use libdav1d instead of libaom
-pref("media.av1.use-dav1d", false);
-#endif
-
-pref("media.webaudio.audiocontextoptions-samplerate.enabled", true);
-
-// setSinkId expected to be unconditionally enabled in 63. Till then the
-// implementation will remain hidden behind this pref (Bug 1152401, Bug 934425).
-pref("media.setsinkid.enabled", false);
-
-// Weather we allow AMD switchable graphics
-pref("layers.amd-switchable-gfx.enabled", true);
-
-// Whether to use async panning and zooming
-pref("layers.async-pan-zoom.enabled", true);
-||||||| merged common ancestors
-
-pref("media.webaudio.audiocontextoptions-samplerate.enabled", true);
-
-// setSinkId expected to be unconditionally enabled in 63. Till then the
-// implementation will remain hidden behind this pref (Bug 1152401, Bug 934425).
-pref("media.setsinkid.enabled", false);
-
-// Weather we allow AMD switchable graphics
-pref("layers.amd-switchable-gfx.enabled", true);
-
-// Whether to use async panning and zooming
-pref("layers.async-pan-zoom.enabled", true);
-=======
->>>>>>> upstream-releases
 
 // Whether to enable arbitrary layer geometry for OpenGL compositor
 pref("layers.geometry.opengl.enabled", true);
@@ -1036,17 +780,10 @@ pref("gfx.ycbcr.accurate-conversion", false);
 #ifdef XP_WIN
 pref("gfx.webrender.force-angle", true);
 pref("gfx.webrender.dcomp-win.enabled", true);
-<<<<<<< HEAD
-pref("gfx.webrender.dcomp-win-triple-buffering.enabled", true);
-pref("gfx.webrender.program-binary", true);
-||||||| merged common ancestors
-pref("gfx.webrender.program-binary", true);
-=======
 pref("gfx.webrender.dcomp-win-triple-buffering.enabled", true);
 #endif
 
 #if defined(XP_WIN) || defined(MOZ_WIDGET_ANDROID)
->>>>>>> upstream-releases
 pref("gfx.webrender.program-binary-disk", true);
 #endif
 
@@ -1074,28 +811,18 @@ pref("gfx.webrender.debug.echo-driver-messages", false);
 pref("gfx.webrender.debug.new-frame-indicator", false);
 pref("gfx.webrender.debug.new-scene-indicator", false);
 pref("gfx.webrender.debug.show-overdraw", false);
-<<<<<<< HEAD
-pref("gfx.webrender.debug.slow-frame-indicator", false);
-||||||| merged common ancestors
-=======
 pref("gfx.webrender.debug.slow-frame-indicator", false);
 pref("gfx.webrender.debug.picture-caching", false);
 pref("gfx.webrender.debug.primitives", false);
 pref("gfx.webrender.debug.small-screen", false);
->>>>>>> upstream-releases
 pref("gfx.webrender.dl.dump-parent", false);
 pref("gfx.webrender.dl.dump-content", false);
-<<<<<<< HEAD
-pref("gfx.webrender.picture-caching", false);
-||||||| merged common ancestors
-=======
 pref("gfx.webrender.picture-caching", true);
 #ifdef NIGHTLY_BUILD
 // Keep this pref hidden on non-nightly builds to avoid people accidentally
 // turning it on
 pref("gfx.webrender.start-debug-server", false);
 #endif
->>>>>>> upstream-releases
 
 pref("accessibility.browsewithcaret", false);
 pref("accessibility.warn_on_browsewithcaret", true);
@@ -1122,27 +849,6 @@ pref("accessibility.tabfocus_applies_to_xul", true);
 pref("ui.scrollToClick", 0);
 #endif
 
-<<<<<<< HEAD
-// provide ability to turn on support for canvas focus rings
-pref("canvas.focusring.enabled", true);
-pref("canvas.hitregions.enabled", false);
-pref("canvas.filters.enabled", true);
-// Add support for canvas path objects
-pref("canvas.path.enabled", true);
-pref("canvas.capturestream.enabled", true);
-
-||||||| merged common ancestors
-// provide ability to turn on support for canvas focus rings
-pref("canvas.focusring.enabled", true);
-pref("canvas.customfocusring.enabled", false);
-pref("canvas.hitregions.enabled", false);
-pref("canvas.filters.enabled", true);
-// Add support for canvas path objects
-pref("canvas.path.enabled", true);
-pref("canvas.capturestream.enabled", true);
-
-=======
->>>>>>> upstream-releases
 // We want the ability to forcibly disable platform a11y, because
 // some non-a11y-related components attempt to bring it up.  See bug
 // 538530 for details about Windows; we have a pref here that allows it
@@ -1227,7 +933,7 @@ pref("toolkit.tabbox.switchByScrolling", false);
 
 // Telemetry settings.
 // Server to submit telemetry pings to.
-pref("toolkit.telemetry.server", "http://reports.ghostery.net");
+pref("toolkit.telemetry.server", "https://incoming.telemetry.mozilla.org");
 // Telemetry server owner. Please change if you set toolkit.telemetry.server to a different server
 pref("toolkit.telemetry.server_owner", "Mozilla");
 // Determines whether full SQL strings are returned when they might contain sensitive info
@@ -1272,15 +978,8 @@ pref("devtools.recordreplay.enableRewinding", true);
 #endif
 
 pref("devtools.recordreplay.mvp.enabled", false);
-<<<<<<< HEAD
-pref("devtools.recordreplay.timeline.enabled", false);
 pref("devtools.recordreplay.allowRepaintFailures", true);
 pref("devtools.recordreplay.includeSystemScripts", false);
-||||||| merged common ancestors
-=======
-pref("devtools.recordreplay.allowRepaintFailures", true);
-pref("devtools.recordreplay.includeSystemScripts", false);
->>>>>>> upstream-releases
 
 // view source
 pref("view_source.syntax_highlight", true);
@@ -1432,38 +1131,18 @@ pref("dom.disable_open_click_delay", 1000);
 pref("dom.serviceWorkers.disable_open_click_delay", 1000);
 
 pref("dom.storage.enabled", true);
-<<<<<<< HEAD
-// Whether or not LSNG (Next Generation Local Storage) is enabled.
-// See bug 1510410 for enabling this on Nightly.
-#ifdef NIGHTLY_BUILD
-pref("dom.storage.next_gen", false);
-#else
-pref("dom.storage.next_gen", false);
-#endif
-||||||| merged common ancestors
-=======
 // Whether or not LSNG (Next Generation Local Storage) is enabled.
 // See bug 1517090 for enabling this on Nightly.
 // See bug 1534736 for changing it to EARLY_BETA_OR_EARLIER.
 // See bug 1539835 for enabling this unconditionally.
 // See bug 1570644 for disabling this in 69.
 pref("dom.storage.next_gen", false);
->>>>>>> upstream-releases
 pref("dom.storage.default_quota",      5120);
-<<<<<<< HEAD
-pref("dom.storage.shadow_writes", true);
-pref("dom.storage.snapshot_prefill", 16384);
-pref("dom.storage.snapshot_reusing", true);
-pref("dom.storage.testing", false);
-||||||| merged common ancestors
-pref("dom.storage.testing", false);
-=======
 pref("dom.storage.shadow_writes", true);
 pref("dom.storage.snapshot_prefill", 16384);
 pref("dom.storage.snapshot_gradual_prefill", 4096);
 pref("dom.storage.snapshot_reusing", true);
 pref("dom.storage.client_validation", true);
->>>>>>> upstream-releases
 
 pref("dom.send_after_paint_to_content", false);
 
@@ -1541,36 +1220,6 @@ pref("content.sink.pending_event_mode", 0);
 //   3 = openAbused
 pref("privacy.popups.disable_from_plugins", 3);
 
-<<<<<<< HEAD
-// Enable Paritioned LocalStorage for a list of hosts.
-pref("privacy.restrict3rdpartystorage.partitionedHosts", "accounts.google.com/o/oauth2/");
-
-// If a host is contained in this pref list, user-interaction is required
-// before granting the storage access permission.
-pref("privacy.restrict3rdpartystorage.userInteractionRequiredForHosts", "");
-
-// Excessive reporting of blocked popups can be a DOS vector,
-// by overloading the main process as popups get blocked and when
-// users try to restore all popups, which is the most visible
-// option in our UI at the time of writing.
-// We will invisibly drop any popups from a page that has already
-// opened more than this number of popups.
-pref("privacy.popups.maxReported", 100);
-
-// send "do not track" HTTP header, disabled by default
-pref("privacy.donottrackheader.enabled",    false);
-// If true, close button will be shown on permission prompts
-// and for all PopupNotifications, the secondary action of
-// the popup will be called when the popup is dismissed.
-pref("privacy.permissionPrompts.showCloseButton", false);
-||||||| merged common ancestors
-// send "do not track" HTTP header, disabled by default
-pref("privacy.donottrackheader.enabled",    false);
-// If true, close button will be shown on permission prompts
-// and for all PopupNotifications, the secondary action of
-// the popup will be called when the popup is dismissed.
-pref("privacy.permissionPrompts.showCloseButton", false);
-=======
 // Enable Paritioned LocalStorage for a list of hosts when detected as trackers
 // (See nsICookieService::BEHAVIOR_REJECT_TRACKER cookie behavior)
 pref("privacy.restrict3rdpartystorage.partitionedHosts", "accounts.google.com/o/oauth2/");
@@ -1591,7 +1240,6 @@ pref("privacy.restrict3rdpartystorage.url_decorations", "");
 // opened more than this number of popups.
 pref("privacy.popups.maxReported", 100);
 
->>>>>>> upstream-releases
 // Enforce tracking protection in all modes
 pref("privacy.trackingprotection.enabled",  false);
 // Enforce tracking protection in Private Browsing mode
@@ -1627,21 +1275,6 @@ pref("privacy.resistFingerprinting.reduceTimerPrecision.jitter", true);
 pref("dom.event.contextmenu.enabled",       true);
 pref("dom.event.coalesce_mouse_move",       true);
 
-<<<<<<< HEAD
-pref("dom.ua_widget.enabled", true);
-
-||||||| merged common ancestors
-#if defined(NIGHTLY_BUILD)
-pref("dom.ua_widget.enabled", true);
-#else
-pref("dom.ua_widget.enabled", false);
-#endif
-
-pref("dom.webcomponents.shadowdom.enabled", true);
-pref("dom.webcomponents.customelements.enabled", true);
-
-=======
->>>>>>> upstream-releases
 pref("javascript.enabled",                  true);
 pref("javascript.options.strict",           false);
 #ifdef DEBUG
@@ -1785,19 +1418,10 @@ pref("javascript.options.spectre.jit_to_C++_calls", true);
 #endif
 
 // Streams API
-<<<<<<< HEAD
-pref("javascript.options.streams", true);
-
-// BigInt API
-pref("javascript.options.bigint", false);
-||||||| merged common ancestors
-pref("javascript.options.streams", false);
-=======
 pref("javascript.options.streams", true);
 
 // Dynamic module import.
 pref("javascript.options.dynamicImport", true);
->>>>>>> upstream-releases
 
 // advanced prefs
 pref("advanced.mailftp",                    false);
@@ -1952,16 +1576,6 @@ pref("network.http.request.max-start-delay", 10);
 // If a connection is reset, we will retry it max-attempts times.
 pref("network.http.request.max-attempts", 10);
 
-<<<<<<< HEAD
-// Headers
-pref("network.http.accept.default", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-
-||||||| merged common ancestors
-// Headers
-pref("network.http.accept.default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-
-=======
->>>>>>> upstream-releases
 // Prefs allowing granular control of referers
 // 0=don't send any, 1=send only on clicks, 2=send on image requests as well
 pref("network.http.sendRefererHeader",      2);
@@ -2139,20 +1753,10 @@ pref("network.http.rcwn.max_wait_before_racing_ms", 500);
 // all available active connections.
 pref("network.http.focused_window_transaction_ratio", "0.9");
 
-// XXX Disable for intranet downloading issue.
 // This is the size of the flow control window (KB) (i.e., the amount of data
-<<<<<<< HEAD
-// that the parent can send to the child before getting an ack). 0 for disable
-// the flow control.
-pref("network.http.send_window_size", 0);
-||||||| merged common ancestors
-// that the parent can send to the child before getting an ack)
-pref("network.http.send_window_size", 1024);
-=======
 // that the parent can send to the child before getting an ack). 0 for disable
 // the flow control.
 pref("network.http.send_window_size", 1024);
->>>>>>> upstream-releases
 
 // Whether or not we give more priority to active tab.
 // Note that this requires restart for changes to take effect.
@@ -3299,71 +2903,6 @@ pref("layout.css.scroll-snap.prediction-max-velocity", 2000);
 // gestures.
 pref("layout.css.scroll-snap.prediction-sensitivity", "0.750");
 
-<<<<<<< HEAD
-// Is support for DOMPoint enabled?
-pref("layout.css.DOMPoint.enabled", true);
-
-// Is support for DOMQuad enabled?
-pref("layout.css.DOMQuad.enabled", true);
-
-// Is support for DOMMatrix enabled?
-pref("layout.css.DOMMatrix.enabled", true);
-
-// Is support for GeometryUtils.getBoxQuads enabled?
-#ifdef RELEASE_OR_BETA
-pref("layout.css.getBoxQuads.enabled", false);
-#else
-pref("layout.css.getBoxQuads.enabled", true);
-#endif
-
-// Is support for GeometryUtils.convert*FromNode enabled?
-#ifdef RELEASE_OR_BETA
-pref("layout.css.convertFromNode.enabled", false);
-#else
-pref("layout.css.convertFromNode.enabled", true);
-#endif
-
-// Is support for CSS text-justify property enabled?
-pref("layout.css.text-justify.enabled", true);
-
-// Is support for the CSS image-orientation property enabled?
-pref("layout.css.image-orientation.enabled", true);
-
-||||||| merged common ancestors
-// Is support for DOMPoint enabled?
-pref("layout.css.DOMPoint.enabled", true);
-
-// Is support for DOMQuad enabled?
-pref("layout.css.DOMQuad.enabled", true);
-
-// Is support for DOMMatrix enabled?
-pref("layout.css.DOMMatrix.enabled", true);
-
-// Is support for GeometryUtils.getBoxQuads enabled?
-#ifdef RELEASE_OR_BETA
-pref("layout.css.getBoxQuads.enabled", false);
-#else
-pref("layout.css.getBoxQuads.enabled", true);
-#endif
-
-// Is support for GeometryUtils.convert*FromNode enabled?
-#ifdef RELEASE_OR_BETA
-pref("layout.css.convertFromNode.enabled", false);
-#else
-pref("layout.css.convertFromNode.enabled", true);
-#endif
-
-// Is support for CSS "text-align: unsafe X" enabled?
-pref("layout.css.text-align-unsafe-value.enabled", false);
-
-// Is support for CSS text-justify property enabled?
-pref("layout.css.text-justify.enabled", true);
-
-// Is support for the CSS image-orientation property enabled?
-pref("layout.css.image-orientation.enabled", true);
-
-=======
->>>>>>> upstream-releases
 // Is the paint-order property supported for HTML text?
 // (It is always supported for SVG.)
 pref("layout.css.paint-order.enabled", true);
@@ -3390,25 +2929,6 @@ pref("layout.css.scroll-behavior.spring-constant", "250.0");
 // at the greatest speed without overshooting.
 pref("layout.css.scroll-behavior.damping-ratio", "1.0");
 
-<<<<<<< HEAD
-// Is support for scroll-snap enabled?
-pref("layout.css.scroll-snap.enabled", true);
-
-// Is support for document.fonts enabled?
-pref("layout.css.font-loading-api.enabled", true);
-
-||||||| merged common ancestors
-// Is support for scroll-snap enabled?
-pref("layout.css.scroll-snap.enabled", true);
-
-// Is support for CSS shape-outside enabled?
-pref("layout.css.shape-outside.enabled", true);
-
-// Is support for document.fonts enabled?
-pref("layout.css.font-loading-api.enabled", true);
-
-=======
->>>>>>> upstream-releases
 // Are inter-character ruby annotations enabled?
 pref("layout.css.ruby.intercharacter.enabled", false);
 
@@ -5046,23 +4566,6 @@ pref("image.animated.decode-on-demand.threshold-kb", 20480);
 // animation's currently displayed frame.
 pref("image.animated.decode-on-demand.batch-size", 6);
 
-<<<<<<< HEAD
-// Whether we should recycle already displayed frames instead of discarding
-// them. This saves on the allocation itself, and may be able to reuse the
-// contents as well. Only applies if generating full frames.
-pref("image.animated.decode-on-demand.recycle", true);
-
-// Whether we should generate full frames at decode time or partial frames which
-// are combined at display time (historical behavior and default).
-pref("image.animated.generate-full-frames", true);
-
-||||||| merged common ancestors
-// Whether we should generate full frames at decode time or partial frames which
-// are combined at display time (historical behavior and default).
-pref("image.animated.generate-full-frames", false);
-
-=======
->>>>>>> upstream-releases
 // Resume an animated image from the last displayed frame rather than
 // advancing when out of view.
 pref("image.animated.resume-from-last-displayed", true);
@@ -5131,9 +4634,6 @@ pref("image.mem.volatile.min_threshold_kb", 100);
 #else
 pref("image.mem.volatile.min_threshold_kb", -1);
 #endif
-
-// Whether we attempt to decode WebP images or not.
-pref("image.webp.enabled", true);
 
 // Whether we attempt to decode WebP images or not.
 pref("image.webp.enabled", true);
@@ -5222,19 +4722,7 @@ pref("network.tcp.keepalive.retry_interval", 1); // seconds
 pref("network.tcp.keepalive.probe_count", 4);
 #endif
 
-<<<<<<< HEAD
 pref("network.tcp.tcp_fastopen_enable", false);
-||||||| merged common ancestors
-#if !defined(EARLY_BETA_OR_EARLIER)
-pref("network.tcp.tcp_fastopen_enable", false);
-#elif  defined(XP_WIN) || defined(XP_MACOSX)
-pref("network.tcp.tcp_fastopen_enable", true);
-#else
-pref("network.tcp.tcp_fastopen_enable", false);
-#endif
-=======
-pref("network.tcp.tcp_fastopen_enable", false);
->>>>>>> upstream-releases
 
 pref("network.tcp.tcp_fastopen_consecutive_failure_limit", 5);
 // We are trying to detect stalled tcp connections that use TFO and TLS
@@ -5555,34 +5043,6 @@ pref("io.activity.enabled", false);
 // to take effect.
 pref("jsloader.shareGlobal", true);
 
-<<<<<<< HEAD
-// Whether we should show the placeholder when the element is focused but empty.
-pref("dom.placeholder.show_on_focus", true);
-
-// WebVR is enabled by default in beta and release for Windows and for all
-// platforms in nightly and aurora.
-#if defined(XP_WIN) || defined(XP_MACOSX) || !defined(RELEASE_OR_BETA)
-pref("dom.vr.enabled", true);
-#else
-pref("dom.vr.enabled", false);
-#endif
-||||||| merged common ancestors
-// When we're asked to take a screenshot, don't wait more than 2000ms for the
-// event loop to become idle before actually taking the screenshot.
-pref("dom.browserElement.maxScreenshotDelayMS", 2000);
-
-// Whether we should show the placeholder when the element is focused but empty.
-pref("dom.placeholder.show_on_focus", true);
-
-// WebVR is enabled by default in beta and release for Windows and for all
-// platforms in nightly and aurora.
-#if defined(XP_WIN) || defined(XP_MACOSX) || !defined(RELEASE_OR_BETA)
-pref("dom.vr.enabled", true);
-#else
-pref("dom.vr.enabled", false);
-#endif
-=======
->>>>>>> upstream-releases
 // It is often desirable to automatically start vr presentation when
 // a user puts on the VR headset.  This is done by emitting the
 // Window.vrdisplayactivate event when the headset's sensors detect it
@@ -5647,16 +5107,6 @@ pref("dom.vr.poseprediction.enabled", true);
 // this requirement to be disabled for special cases such as during automated
 // tests or in a headless kiosk system.
 pref("dom.vr.require-gesture", true);
-<<<<<<< HEAD
-// Enable a separate process for VR module.
-#if defined(XP_WIN)
-pref("dom.vr.process.enabled", false);
-#endif
-||||||| merged common ancestors
-// Enable a separate process for VR module.
-pref("dom.vr.process.enabled", false);
-=======
->>>>>>> upstream-releases
 // Puppet device, used for simulating VR hardware within tests and dev tools
 pref("dom.vr.puppet.enabled", false);
 // path to OSVR DLLs
@@ -5786,16 +5236,10 @@ pref("urlclassifier.features.cryptomining.blacklistTables", "base-cryptomining-t
 pref("urlclassifier.features.cryptomining.whitelistTables", "mozstd-trackwhite-digest256");
 
 // These tables will never trigger a gethash call.
-<<<<<<< HEAD
-pref("urlclassifier.disallow_completions", "test-malware-simple,test-harmful-simple,test-phish-simple,test-unwanted-simple,test-track-simple,test-trackwhite-simple,test-block-simple,goog-downloadwhite-digest256,base-track-digest256,mozstd-trackwhite-digest256,content-track-digest256,mozplugin-block-digest256,mozplugin2-block-digest256,block-flash-digest256,except-flash-digest256,allow-flashallow-digest256,except-flashallow-digest256,block-flashsubdoc-digest256,except-flashsubdoc-digest256,except-flashinfobar-digest256,goog-passwordwhite-proto,ads-track-digest256,social-track-digest256,analytics-track-digest256");
-||||||| merged common ancestors
-pref("urlclassifier.disallow_completions", "test-malware-simple,test-harmful-simple,test-phish-simple,test-unwanted-simple,test-track-simple,test-trackwhite-simple,test-block-simple,goog-downloadwhite-digest256,base-track-digest256,mozstd-trackwhite-digest256,content-track-digest256,mozplugin-block-digest256,mozplugin2-block-digest256,block-flash-digest256,except-flash-digest256,allow-flashallow-digest256,except-flashallow-digest256,block-flashsubdoc-digest256,except-flashsubdoc-digest256,except-flashinfobar-digest256,goog-passwordwhite-proto,ads-track-digest256,social-track-digest256,analytics-track-digest256,fastblock1-track-digest256,fastblock1-trackwhite-digest256,fastblock2-track-digest256,fastblock2-trackwhite-digest256,fastblock3-track-digest256");
-=======
 pref("urlclassifier.disallow_completions", "goog-downloadwhite-digest256,base-track-digest256,mozstd-trackwhite-digest256,content-track-digest256,mozplugin-block-digest256,mozplugin2-block-digest256,block-flash-digest256,except-flash-digest256,allow-flashallow-digest256,except-flashallow-digest256,block-flashsubdoc-digest256,except-flashsubdoc-digest256,goog-passwordwhite-proto,ads-track-digest256,social-track-digest256,analytics-track-digest256,base-fingerprinting-track-digest256,content-fingerprinting-track-digest256,base-cryptomining-track-digest256,content-cryptomining-track-digest256,fanboyannoyance-ads-digest256,fanboysocial-ads-digest256,easylist-ads-digest256,easyprivacy-ads-digest256,adguard-ads-digest256");
 
 // Workaround for Google Recaptcha
 pref("urlclassifier.trackingAnnotationSkipURLs", "google.com/recaptcha/,*.google.com/recaptcha/");
->>>>>>> upstream-releases
 
 // Number of random entries to send with a gethash request
 pref("urlclassifier.gethashnoise", 4);
@@ -5862,13 +5306,7 @@ pref("browser.safebrowsing.reportPhishURL", "https://%LOCALE%.phish-report.mozil
 
 // Mozilla Safe Browsing provider (for tracking protection and plugin blocking)
 pref("browser.safebrowsing.provider.mozilla.pver", "2.2");
-<<<<<<< HEAD
-pref("browser.safebrowsing.provider.mozilla.lists", "base-track-digest256,mozstd-trackwhite-digest256,content-track-digest256,mozplugin-block-digest256,mozplugin2-block-digest256,block-flash-digest256,except-flash-digest256,allow-flashallow-digest256,except-flashallow-digest256,block-flashsubdoc-digest256,except-flashsubdoc-digest256,except-flashinfobar-digest256,ads-track-digest256,social-track-digest256,analytics-track-digest256");
-||||||| merged common ancestors
-pref("browser.safebrowsing.provider.mozilla.lists", "base-track-digest256,mozstd-trackwhite-digest256,content-track-digest256,mozplugin-block-digest256,mozplugin2-block-digest256,block-flash-digest256,except-flash-digest256,allow-flashallow-digest256,except-flashallow-digest256,block-flashsubdoc-digest256,except-flashsubdoc-digest256,except-flashinfobar-digest256,ads-track-digest256,social-track-digest256,analytics-track-digest256,fastblock1-track-digest256,fastblock1-trackwhite-digest256,fastblock2-track-digest256,fastblock2-trackwhite-digest256,fastblock3-track-digest256");
-=======
 pref("browser.safebrowsing.provider.mozilla.lists", "base-track-digest256,mozstd-trackwhite-digest256,content-track-digest256,mozplugin-block-digest256,mozplugin2-block-digest256,block-flash-digest256,except-flash-digest256,allow-flashallow-digest256,except-flashallow-digest256,block-flashsubdoc-digest256,except-flashsubdoc-digest256,ads-track-digest256,social-track-digest256,analytics-track-digest256,base-fingerprinting-track-digest256,content-fingerprinting-track-digest256,base-cryptomining-track-digest256,content-cryptomining-track-digest256,fanboyannoyance-ads-digest256,fanboysocial-ads-digest256,easylist-ads-digest256,easyprivacy-ads-digest256,adguard-ads-digest256");
->>>>>>> upstream-releases
 pref("browser.safebrowsing.provider.mozilla.updateURL", "https://shavar.services.mozilla.com/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2");
 pref("browser.safebrowsing.provider.mozilla.gethashURL", "https://shavar.services.mozilla.com/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2");
 // Set to a date in the past to force immediate download in new profiles.
@@ -6169,25 +5607,6 @@ pref("general.document_open_conversion_depth_limit", 20);
 // documentElement and document.body are passive by default.
 pref("dom.event.default_to_passive_touch_listeners", true);
 
-<<<<<<< HEAD
-// Enable clipboard readText() and writeText() by default
-pref("dom.events.asyncClipboard", true);
-// Disable clipboard read() and write() by default
-pref("dom.events.asyncClipboard.dataTransfer", false);
-||||||| merged common ancestors
-// The amount of time (ms) since navigation start after which all
-// tracker connections will be cancelled.
-pref("browser.fastblock.timeout", 5000);
-// The amount of time (ms) since navigation start after which
-// we'll stop blocking tracker connections (0 = no limit).
-pref("browser.fastblock.limit", 20000);
-
-// Enable clipboard readText() and writeText() by default
-pref("dom.events.asyncClipboard", true);
-// Disable clipboard read() and write() by default
-pref("dom.events.asyncClipboard.dataTransfer", false);
-=======
->>>>>>> upstream-releases
 // Should only be enabled in tests
 pref("dom.events.testing.asyncClipboard", false);
 
@@ -6202,20 +5621,6 @@ pref("dom.datatransfer.mozAtAPIs", true);
 // Should be turned back on to resolve bug 1551993.
 pref("fission.rebuild_frameloaders_on_remoteness_change", false);
 
-<<<<<<< HEAD
-#ifdef NIGHTLY_BUILD
-pref("dom.sidebar.enabled", false);
-#else
-pref("dom.sidebar.enabled", true);
-#endif
-||||||| merged common ancestors
-#ifdef NIGHTLY_BUILD
-// Bug 1499552; add a dummy pref to verify that collection of preferences
-// via telemetry is working as expected.
-pref("app.normandy.test.with_true_default", true);
-pref("app.normandy.test.with_false_default", false);
-#endif
-=======
 // If true, preserve browsing contexts between process swaps. Should be set to
 // true in bug 1550571.
 pref("fission.preserve_browsing_contexts", false);
@@ -6225,4 +5630,3 @@ pref("fission.preserve_browsing_contexts", false);
 //  * userContent.css
 //  * userChrome.css
 pref("toolkit.legacyUserProfileCustomizations.stylesheets", false);
->>>>>>> upstream-releases

@@ -4,26 +4,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 "use strict";
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/DelayedInit.jsm");
-ChromeUtils.import("resource://gre/modules/L10nRegistry.jsm");
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/TelemetryController.jsm");
-const { UUIDMap } = ChromeUtils.import("resource://gre/modules/Extension.jsm", {});
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
-ChromeUtils.import("resource://gre/modules/AppConstants.jsm");
-ChromeUtils.import("resource://gre/modules/DelayedInit.jsm");
-ChromeUtils.import("resource://gre/modules/L10nRegistry.jsm");
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/TelemetryController.jsm");
-=======
 var { AddonManager } = ChromeUtils.import(
   "resource://gre/modules/AddonManager.jsm"
 );
@@ -43,7 +23,6 @@ var { XPCOMUtils } = ChromeUtils.import(
 var { TelemetryController } = ChromeUtils.import(
   "resource://gre/modules/TelemetryController.jsm"
 );
->>>>>>> upstream-releases
 
 if (AppConstants.ACCESSIBILITY) {
   ChromeUtils.defineModuleGetter(
@@ -155,71 +134,6 @@ if (AppConstants.MOZ_ENABLE_PROFILER_SPS) {
   );
 }
 
-<<<<<<< HEAD
-ChromeUtils.defineModuleGetter(this, "SimpleServiceDiscovery",
-                               "resource://gre/modules/SimpleServiceDiscovery.jsm");
-
-ChromeUtils.defineModuleGetter(this, "CharsetMenu",
-                               "resource://gre/modules/CharsetMenu.jsm");
-
-ChromeUtils.defineModuleGetter(this, "NetErrorHelper",
-                               "resource://gre/modules/NetErrorHelper.jsm");
-
-ChromeUtils.defineModuleGetter(this, "PermissionsUtils",
-                               "resource://gre/modules/PermissionsUtils.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Preferences",
-                               "resource://gre/modules/Preferences.jsm");
-
-ChromeUtils.defineModuleGetter(this, "SharedPreferences",
-                               "resource://gre/modules/SharedPreferences.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Notifications",
-                               "resource://gre/modules/Notifications.jsm");
-
-ChromeUtils.defineModuleGetter(this, "ReaderMode", "resource://gre/modules/ReaderMode.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Snackbars", "resource://gre/modules/Snackbars.jsm");
-
-ChromeUtils.defineModuleGetter(this, "RuntimePermissions", "resource://gre/modules/RuntimePermissions.jsm");
-
-ChromeUtils.defineModuleGetter(this, "WebsiteMetadata", "resource://gre/modules/WebsiteMetadata.jsm");
-
-XPCOMUtils.defineLazyServiceGetter(this, "FontEnumerator",
-||||||| merged common ancestors
-ChromeUtils.defineModuleGetter(this, "SimpleServiceDiscovery",
-                               "resource://gre/modules/SimpleServiceDiscovery.jsm");
-
-ChromeUtils.defineModuleGetter(this, "CharsetMenu",
-                               "resource://gre/modules/CharsetMenu.jsm");
-
-ChromeUtils.defineModuleGetter(this, "NetErrorHelper",
-                               "resource://gre/modules/NetErrorHelper.jsm");
-
-ChromeUtils.defineModuleGetter(this, "PermissionsUtils",
-                               "resource://gre/modules/PermissionsUtils.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Preferences",
-                               "resource://gre/modules/Preferences.jsm");
-
-ChromeUtils.defineModuleGetter(this, "SharedPreferences",
-                               "resource://gre/modules/SharedPreferences.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Notifications",
-                               "resource://gre/modules/Notifications.jsm");
-
-ChromeUtils.defineModuleGetter(this, "ReaderMode", "resource://gre/modules/ReaderMode.jsm");
-
-ChromeUtils.defineModuleGetter(this, "Snackbars", "resource://gre/modules/Snackbars.jsm");
-
-ChromeUtils.defineModuleGetter(this, "RuntimePermissions", "resource://gre/modules/RuntimePermissions.jsm");
-
-ChromeUtils.defineModuleGetter(this, "WebsiteMetadata", "resource://gre/modules/WebsiteMetadata.jsm");
-
-ChromeUtils.defineModuleGetter(this, "TelemetryStopwatch", "resource://gre/modules/TelemetryStopwatch.jsm");
-
-XPCOMUtils.defineLazyServiceGetter(this, "FontEnumerator",
-=======
 ChromeUtils.defineModuleGetter(
   this,
   "SimpleServiceDiscovery",
@@ -289,7 +203,6 @@ ChromeUtils.defineModuleGetter(
 XPCOMUtils.defineLazyServiceGetter(
   this,
   "FontEnumerator",
->>>>>>> upstream-releases
   "@mozilla.org/gfx/fontenumerator;1",
   "nsIFontEnumerator"
 );
@@ -864,7 +777,6 @@ var BrowserApp = {
     // Notify Java that Gecko has loaded.
     GlobalEventDispatcher.sendRequest({ type: "Gecko:Ready" });
 
-<<<<<<< HEAD
     /* Cliqz start */
     InitLater(async () => {
       let version = "missing";
@@ -878,17 +790,10 @@ var BrowserApp = {
     });
     /* Cliqz end */
 
-    this.deck.addEventListener("DOMContentLoaded", function() {
-      ChromeUtils.import("resource://gre/modules/NotificationDB.jsm");
-||||||| merged common ancestors
-    this.deck.addEventListener("DOMContentLoaded", function() {
-      ChromeUtils.import("resource://gre/modules/NotificationDB.jsm");
-=======
     this.deck.addEventListener(
       "DOMContentLoaded",
       function() {
         ChromeUtils.import("resource://gre/modules/NotificationDB.jsm");
->>>>>>> upstream-releases
 
         InitLater(() =>
           Services.obs.notifyObservers(
@@ -903,23 +808,6 @@ var BrowserApp = {
         // AsyncPrefs is needed for reader mode.
         InitLater(() => AsyncPrefs.init());
 
-<<<<<<< HEAD
-      // Collect telemetry data.
-      // We do this at startup because we want to move away from "gather-telemetry" (bug 1127907)
-      InitLater(() => {
-        Telemetry.addData("FENNEC_TRACKING_PROTECTION_STATE", parseInt(BrowserApp.getTrackingProtectionState()));
-      });
-||||||| merged common ancestors
-      if (!["release", "esr"].includes(AppConstants.MOZ_UPDATE_CHANNEL)) {
-        InitLater(() => WebcompatReporter.init());
-      }
-
-      // Collect telemetry data.
-      // We do this at startup because we want to move away from "gather-telemetry" (bug 1127907)
-      InitLater(() => {
-        Telemetry.addData("FENNEC_TRACKING_PROTECTION_STATE", parseInt(BrowserApp.getTrackingProtectionState()));
-      });
-=======
         // Collect telemetry data.
         // We do this at startup because we want to move away from "gather-telemetry" (bug 1127907)
         InitLater(() => {
@@ -931,7 +819,6 @@ var BrowserApp = {
 
         InitLater(() => LightWeightThemeStuff.init());
         InitLater(() => CastingApps.init(), window, "CastingApps");
->>>>>>> upstream-releases
 
         // Bug 778855 - Perf regression if we do this here. To be addressed in bug 779008.
         InitLater(() => SafeBrowsing.init(), window, "SafeBrowsing");
@@ -1386,22 +1273,12 @@ var BrowserApp = {
       stringGetter("contextmenu.viewImage"),
       NativeWindow.contextmenus.imageLocationCopyableContext,
       function(aTarget) {
-<<<<<<< HEAD
-        let url = aTarget.currentSrc || aTarget.src;
-        ContentAreaUtils.urlSecurityCheck(url, aTarget.ownerDocument.nodePrincipal,
-                                          Ci.nsIScriptSecurityManager.DISALLOW_SCRIPT);
-||||||| merged common ancestors
-        let url = aTarget.src;
-        ContentAreaUtils.urlSecurityCheck(url, aTarget.ownerDocument.nodePrincipal,
-                                          Ci.nsIScriptSecurityManager.DISALLOW_SCRIPT);
-=======
         let url = aTarget.currentSrc || aTarget.src;
         ContentAreaUtils.urlSecurityCheck(
           url,
           aTarget.ownerDocument.nodePrincipal,
           Ci.nsIScriptSecurityManager.DISALLOW_SCRIPT
         );
->>>>>>> upstream-releases
 
         UITelemetry.addEvent("action.1", "contextmenu", null, "web_view_image");
         UITelemetry.addEvent("loadurl.1", "contextmenu", null);
@@ -2133,7 +2010,6 @@ var BrowserApp = {
       // a fullscreen transition.
       return;
     }
-
     this.selectedTab = aTab;
 
     let evt = document.createEvent("UIEvents");
@@ -2683,7 +2559,6 @@ var BrowserApp = {
             let specificBrowser = this.getTabForId(data.tabId).browser;
             if (specificBrowser) {
               browser = specificBrowser;
-            }
           }
           /* Cliqz start */
           if (data.ghostSearchQuery) {
@@ -4087,18 +3962,6 @@ var NativeWindow = {
     _stripScheme: function(aString) {
       let index = aString.indexOf(":");
       return aString.slice(index + 1);
-<<<<<<< HEAD
-    },
-
-    _stripViewSource: function(aString) {
-      // If we're in a view source tab, remove the view-source: prefix
-      return aString.replace(/^view-source:/, "");
-    }
-  }
-||||||| merged common ancestors
-    }
-  }
-=======
     },
 
     _stripViewSource: function(aString) {
@@ -4106,7 +3969,6 @@ var NativeWindow = {
       return aString.replace(/^view-source:/, "");
     },
   },
->>>>>>> upstream-releases
 };
 
 ChromeUtils.defineModuleGetter(
@@ -4780,19 +4642,11 @@ Tab.prototype = {
       // We were redirected; reload the original URL
       url = this.originalURI.spec;
     }
-<<<<<<< HEAD
-
-    this.browser.docShell.loadURI(url, flags, null, null, null, this.browser.contentPrincipal);
-||||||| merged common ancestors
-
-    this.browser.docShell.loadURI(url, flags, null, null, null);
-=======
     let loadURIOptions = {
       triggeringPrincipal: this.browser.contentPrincipal,
       loadFlags,
     };
     this.browser.docShell.loadURI(url, loadURIOptions);
->>>>>>> upstream-releases
   },
 
   destroy: function() {
@@ -6150,18 +6004,6 @@ var ErrorPageEventHandler = {
               Ci.nsIWebNavigation
             );
             let location = BrowserApp.selectedBrowser.contentWindow.location;
-<<<<<<< HEAD
-            let attrs = {};
-            let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(BrowserApp.selectedBrowser);
-            if (isPrivate) {
-              attrs["privateBrowsingId"] = 1;
-            }
-
-            let triggeringPrincipal = nullServices.scriptSecurityManager.createNullPrincipal(attrs);
-            webNav.loadURI(location, Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CLASSIFIER, null, null, triggeringPrincipal);
-||||||| merged common ancestors
-            webNav.loadURI(location, Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CLASSIFIER, null, null, null);
-=======
             let attrs = {};
             let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(
               BrowserApp.selectedBrowser
@@ -6177,7 +6019,6 @@ var ErrorPageEventHandler = {
               loadFlags: Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_CLASSIFIER,
             };
             webNav.loadURI(location, loadURIOptions);
->>>>>>> upstream-releases
 
             // ....but add a notify bar as a reminder, so that they don't lose
             // track after, e.g., tab switching.
@@ -6358,23 +6199,6 @@ var XPInstallObserver = {
     }
   },
 
-<<<<<<< HEAD
-  _monitorReportSiteIssueEnabledPref: function() {
-    const PREF = "extensions.webcompat-reporter.enabled";
-    const ID = "webcompat-reporter@mozilla.org";
-    Services.prefs.addObserver(PREF, async () => {
-      let addon = await AddonManager.getAddonByID(ID);
-      let enabled = Services.prefs.getBoolPref(PREF, false);
-      if (enabled && !addon.isActive) {
-        await addon.enable({allowSystemAddons: true});
-      } else if (!enabled && addon.isActive) {
-        await addon.disable({allowSystemAddons: true});
-      }
-    });
-  },
-
-||||||| merged common ancestors
-=======
   _monitorReportSiteIssueEnabledPref: function() {
     const PREF = "extensions.webcompat-reporter.enabled";
     const ID = "webcompat-reporter@mozilla.org";
@@ -6389,7 +6213,6 @@ var XPInstallObserver = {
     });
   },
 
->>>>>>> upstream-releases
   _notifyUnsignedAddonsDisabled: function() {
     new Prompt({
       window: window,
@@ -7881,6 +7704,7 @@ var ExternalApps = {
   },
 };
 
+/* Cliqz start */
 var Cliqz = {
   init: function () {
     console.debug('Cliqz.init()');
@@ -8104,6 +7928,7 @@ var Cliqz = {
 };
 
 Cliqz.init();
+/* Cliqz end */
 
 var Distribution = {
   // File used to store campaign data

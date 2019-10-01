@@ -283,7 +283,9 @@
     <color name="dtp_header_text_inactive">#B2B2B2</color>
     <color name="dtp_selection">#FFFFFF</color>
 
-<<<<<<< HEAD:mozilla-release/mobile/android/app/src/main/res/values/colors.xml
+    <!-- FindInPageBar -->
+    <color name="fip_text_error_background">#FF6666</color>
+
     <!-- Cliqz start -->
     <!-- General -->
     <color name="general_blue_color">#00aef0</color>
@@ -372,10 +374,4 @@
     <color name="light_theme_url_bar_text_highlight">@color/url_bar_dark_blue_color</color>
     <!-- Cliqz end -->
 
-||||||| merged common ancestors
-=======
-    <!-- FindInPageBar -->
-    <color name="fip_text_error_background">#FF6666</color>
-
->>>>>>> upstream-releases:mozilla-release/mobile/android/app/src/main/res/values/colors.xml
 </resources>

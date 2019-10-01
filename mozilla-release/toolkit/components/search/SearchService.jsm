@@ -872,8 +872,11 @@ SearchService.prototype = {
   // Get the original Engine object that is the default for this region,
   // ignoring changes the user may have subsequently made.
   get originalDefaultEngine() {
-    let defaultEngineName = this.getVerifiedGlobalAttr("searchDefault");
-    if (!defaultEngineName) {
+    /* Cliqz start */
+    // let defaultEngine = this.getVerifiedGlobalAttr("searchDefault");
+    let defaultEngine = AppConstants.CLIQZ_SEARCH_DEFAULT_ENGINE;
+    /* Cliqz end */
+    if (!defaultEngine) {
       // We only allow the old defaultenginename pref for distributions
       // We can't use isPartnerBuild because we need to allow reading
       // of the defaultengine name pref for funnelcakes.

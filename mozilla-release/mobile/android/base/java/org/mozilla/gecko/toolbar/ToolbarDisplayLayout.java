@@ -467,20 +467,6 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         final boolean shouldShowThrobber = tab.getState() == Tab.STATE_LOADING;
 
         updateUiMode(shouldShowThrobber ? UIMode.PROGRESS : UIMode.DISPLAY);
-<<<<<<< HEAD:mozilla-release/mobile/android/base/java/org/mozilla/gecko/toolbar/ToolbarDisplayLayout.java
-
-        /* Cliqz Start o/
-        if (Tab.STATE_SUCCESS == tab.getState() && mTrackingProtectionEnabled) {
-            mActivity.showTrackingProtectionPromptIfApplicable();
-        }
-        o/ Cliqz End */
-||||||| merged common ancestors
-
-        if (Tab.STATE_SUCCESS == tab.getState() && mTrackingProtectionEnabled) {
-            mActivity.showTrackingProtectionPromptIfApplicable();
-        }
-=======
->>>>>>> upstream-releases:mozilla-release/mobile/android/base/java/org/mozilla/gecko/toolbar/ToolbarDisplayLayout.java
     }
 
     private void updateUiMode(UIMode uiMode) {

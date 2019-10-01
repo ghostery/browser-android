@@ -9,12 +9,8 @@ import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.CustomEditText;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.InputMethods;
-<<<<<<< HEAD
 import org.mozilla.gecko.preferences.PreferenceManager;
-||||||| merged common ancestors
-=======
 import org.mozilla.gecko.toolbar.BrowserToolbar.CommitEventSource;
->>>>>>> upstream-releases
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnCommitListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnDismissListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnFilterListener;

@@ -161,13 +161,8 @@ lextab.py
 .vscode/
 !.vscode/extensions.json
 !.vscode/tasks.json
-<<<<<<< HEAD
 
 **/index.android.bundle
 # Ignore temp files created by patch command.
 *.orig
 *.rej
-||||||| merged common ancestors
-=======
-
->>>>>>> upstream-releases

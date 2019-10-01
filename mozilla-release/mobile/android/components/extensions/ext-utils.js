@@ -271,18 +271,12 @@ class TabTracker extends TabTrackerBase {
     // Register a listener for the Tab:Selected global event,
     // so that we can close the popup when a popup tab has been
     // unselected.
-<<<<<<< HEAD
+    /* Cliqz start */
     GlobalEventDispatcher.registerListener(this, [
       "Tab:Selected",
       "Privacy:GetInfo",
     ]);
-||||||| merged common ancestors
-    GlobalEventDispatcher.registerListener(this, [
-      "Tab:Selected",
-    ]);
-=======
-    GlobalEventDispatcher.registerListener(this, ["Tab:Selected"]);
->>>>>>> upstream-releases
+    /* Cliqz end */
   }
 
   /**

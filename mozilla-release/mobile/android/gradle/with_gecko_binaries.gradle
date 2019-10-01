@@ -29,55 +29,48 @@ ext.configureVariantWithGeckoBinaries = { variant ->
         into("${project.buildDir}/moz.build/src/${variant.name}/assets/features")
         from("${distDir}/features")
     }
-    /* Cliqz end */
+/* Cliqz end */
 
-    def syncOmnijarFromDistDir = task("syncOmnijarFromDistDirFor${variant.name.capitalize()}", type: Sync) {
-        onlyIf {
-            if (source.empty) {
-                throw new StopExecutionException("Required omnijar not found in ${omnijarDir}/{omni.ja,assets/omni.ja}.  Have you built and packaged?")
-            }
-            return true
+def syncOmnijarFromDistDir = task("syncOmnijarFromDistDirFor${variant.name.capitalize()}", type: Sync) {
+    onlyIf {
+        if (source.empty) {
+            throw new StopExecutionException("Required omnijar not found in ${omnijarDir}/{omni.ja,assets/omni.ja}.  Have you built and packaged?")
         }
-
-        into("${project.buildDir}/moz.build/src/${variant.name}/omnijar")
-        from("${omnijarDir}/omni.ja",
-             "${omnijarDir}/assets/omni.ja") {
-            // Throw an exception if we find multiple, potentially conflicting omni.ja files.
-            duplicatesStrategy 'fail'
-        }
+        return true
     }
 
-    def syncLibsFromDistDir = task("syncLibsFromDistDirFor${variant.name.capitalize()}", type: Sync) {
-        onlyIf {
-            if (source.empty) {
-                throw new StopExecutionException("Required JNI libraries not found in ${distDir}/lib.  Have you built and packaged?")
-            }
-            return true
-        }
+    into("${project.buildDir}/moz.build/src/${variant.name}/omnijar")
+    from("${omnijarDir}/omni.ja",
+         "${omnijarDir}/assets/omni.ja") {
+        // Throw an exception if we find multiple, potentially conflicting omni.ja files.
+        duplicatesStrategy 'fail'
+    }
+}
 
-        into("${project.buildDir}/moz.build/src/${variant.name}/jniLibs")
-        from("${distDir}/lib")
+def syncLibsFromDistDir = task("syncLibsFromDistDirFor${variant.name.capitalize()}", type: Sync) {
+    onlyIf {
+        if (source.empty) {
+            throw new StopExecutionException("Required JNI libraries not found in ${distDir}/lib.  Have you built and packaged?")
+        }
+        return true
     }
 
-    def syncAssetsFromDistDir = task("syncAssetsFromDistDirFor${variant.name.capitalize()}", type: Sync) {
-        into("${project.buildDir}/moz.build/src/${variant.name}/assets")
-        from("${distDir}/assets") {
-            exclude 'omni.ja'
-        }
-    }
+    into("${project.buildDir}/moz.build/src/${variant.name}/jniLibs")
+    from("${distDir}/lib")
+}
 
-    // Local (read, not 'official') builds want to reflect developer changes to
-    // the omnijar sources, and (when compiling) to reflect developer changes to
-    // the native binaries.  To do this, the Gradle build calls out to the
-    // moz.build system, which can be re-entrant.  Official builds are driven by
-    // the moz.build system and should never be re-entrant in this way.
-<<<<<<< HEAD
-    if (!mozconfig.substs.MOZILLA_OFFICIAL) {
-        syncOmnijarFromDistDir.dependsOn buildOmnijars
-||||||| merged common ancestors
-    if (!((variant.productFlavors*.name).contains('official'))) {
-        syncOmnijarFromDistDir.dependsOn buildOmnijars
-=======
+def syncAssetsFromDistDir = task("syncAssetsFromDistDirFor${variant.name.capitalize()}", type: Sync) {
+    into("${project.buildDir}/moz.build/src/${variant.name}/assets")
+    from("${distDir}/assets") {
+        exclude 'omni.ja'
+    }
+}
+
+// Local (read, not 'official') builds want to reflect developer changes to
+// the omnijar sources, and (when compiling) to reflect developer changes to
+// the native binaries.  To do this, the Gradle build calls out to the
+// moz.build system, which can be re-entrant.  Official builds are driven by
+// the moz.build system and should never be re-entrant in this way.
     if (!mozconfig.substs.MOZILLA_OFFICIAL) {
         if ("app".equals(project.name)) {
             syncOmnijarFromDistDir.dependsOn rootProject.machStagePackageForFennec
@@ -88,7 +81,6 @@ ext.configureVariantWithGeckoBinaries = { variant ->
             syncLibsFromDistDir.dependsOn rootProject.machStagePackageForGeckoview
             syncAssetsFromDistDir.dependsOn rootProject.machStagePackageForGeckoview
         }
->>>>>>> upstream-releases
     }
 
     def assetGenTask = tasks.findByName("generate${variant.name.capitalize()}Assets")
@@ -122,13 +114,7 @@ ext.configureLibraryVariantWithJNIWrappers = { variant, module ->
     // JNI wrappers is the moz.build system, which always builds geckoview to
     // consume from Fennec, so that dependency likely adds less to the build time.
     def jarTask = tasks["transformClassesAndResourcesWithPrepareIntermediateJarsFor${variant.name.capitalize()}"]
-<<<<<<< HEAD
-    def bundleJar = jarTask.outputs.files.find({ it.absolutePath.contains('/classes.jar') })
-||||||| merged common ancestors
-    def output = jarTask.outputs.files.find({ it.absolutePath.contains('/classes.jar') })
-=======
     def bundleJar = jarTask.outputs.files.find({ it.name == 'classes.jar' })
->>>>>>> upstream-releases
 
     def annotationProcessorsJarTask = project(':annotations').jar
 
@@ -177,13 +163,7 @@ ext.configureLibraryVariantWithJNIWrappers = { variant, module ->
 
 ext.configureApplicationVariantWithJNIWrappers = { variant, module ->
     def jarTask = tasks["bundleAppClasses${variant.name.capitalize()}"]
-<<<<<<< HEAD
-    def bundleJar = jarTask.outputs.files.find({ it.absolutePath.contains('/classes.jar') })
-||||||| merged common ancestors
-    def output = jarTask.outputs.files.find({ it.absolutePath.contains('/classes.jar') })
-=======
     def bundleJar = jarTask.outputs.files.find({ it.name == 'classes.jar' })
->>>>>>> upstream-releases
 
     def annotationProcessorsJarTask = project(':annotations').jar
 

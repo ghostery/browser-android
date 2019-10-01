@@ -25,20 +25,6 @@ var EXPORTED_SYMBOLS = [
 
 /* globals DownloadAddonInstall, LocalAddonInstall */
 
-<<<<<<< HEAD
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
-ChromeUtils.import("resource://gre/modules/Messaging.jsm");
-
-XPCOMUtils.defineLazyGlobalGetters(this, ["TextDecoder", "TextEncoder", "fetch"]);
-||||||| merged common ancestors
-ChromeUtils.import("resource://gre/modules/Services.jsm");
-ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
-
-XPCOMUtils.defineLazyGlobalGetters(this, ["TextDecoder", "TextEncoder", "fetch"]);
-=======
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
@@ -52,7 +38,6 @@ XPCOMUtils.defineLazyGlobalGetters(this, [
   "TextEncoder",
   "fetch",
 ]);
->>>>>>> upstream-releases
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   AddonRepository: "resource://gre/modules/addons/AddonRepository.jsm",
@@ -121,25 +106,6 @@ XPCOMUtils.defineLazyServiceGetters(this, {
   gCertDB: ["@mozilla.org/security/x509certdb;1", "nsIX509CertDB"],
 });
 
-<<<<<<< HEAD
-const PREF_INSTALL_REQUIRESECUREORIGIN = "extensions.install.requireSecureOrigin";
-const PREF_PENDING_OPERATIONS         = "extensions.pendingOperations";
-const PREF_SYSTEM_ADDON_UPDATE_URL    = "extensions.systemAddon.update.url";
-const PREF_XPI_ENABLED                = "xpinstall.enabled";
-const PREF_XPI_DIRECT_WHITELISTED     = "xpinstall.whitelist.directRequest";
-const PREF_XPI_FILE_WHITELISTED       = "xpinstall.whitelist.fileRequest";
-const PREF_XPI_WHITELIST_REQUIRED     = "xpinstall.whitelist.required";
-||||||| merged common ancestors
-const hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
-
-const PREF_INSTALL_REQUIRESECUREORIGIN = "extensions.install.requireSecureOrigin";
-const PREF_PENDING_OPERATIONS         = "extensions.pendingOperations";
-const PREF_SYSTEM_ADDON_UPDATE_URL    = "extensions.systemAddon.update.url";
-const PREF_XPI_ENABLED                = "xpinstall.enabled";
-const PREF_XPI_DIRECT_WHITELISTED     = "xpinstall.whitelist.directRequest";
-const PREF_XPI_FILE_WHITELISTED       = "xpinstall.whitelist.fileRequest";
-const PREF_XPI_WHITELIST_REQUIRED     = "xpinstall.whitelist.required";
-=======
 const PREF_INSTALL_REQUIRESECUREORIGIN =
   "extensions.install.requireSecureOrigin";
 const PREF_PENDING_OPERATIONS = "extensions.pendingOperations";
@@ -150,17 +116,10 @@ const PREF_XPI_FILE_WHITELISTED = "xpinstall.whitelist.fileRequest";
 const PREF_XPI_WHITELIST_REQUIRED = "xpinstall.whitelist.required";
 
 const PREF_SELECTED_LWT = "lightweightThemes.selectedThemeID";
->>>>>>> upstream-releases
 
 const TOOLKIT_ID = "toolkit@mozilla.org";
 
-<<<<<<< HEAD
-/* globals BOOTSTRAP_REASONS, KEY_APP_SYSTEM_ADDONS, KEY_APP_SYSTEM_DEFAULTS, PREF_BRANCH_INSTALLED_ADDON, PREF_SYSTEM_ADDON_SET, TEMPORARY_ADDON_SUFFIX, XPI_PERMISSION, XPIStates, iterDirectory */
-||||||| merged common ancestors
-/* globals BOOTSTRAP_REASONS, KEY_APP_SYSTEM_ADDONS, KEY_APP_SYSTEM_DEFAULTS, PREF_BRANCH_INSTALLED_ADDON, PREF_SYSTEM_ADDON_SET, TEMPORARY_ADDON_SUFFIX, XPI_PERMISSION, XPIStates, isWebExtension, iterDirectory */
-=======
 /* globals BOOTSTRAP_REASONS, KEY_APP_SYSTEM_ADDONS, KEY_APP_SYSTEM_DEFAULTS, PREF_BRANCH_INSTALLED_ADDON, PREF_SYSTEM_ADDON_SET, TEMPORARY_ADDON_SUFFIX, XPI_PERMISSION, XPIStates, getURIForResourceInFile, iterDirectory */
->>>>>>> upstream-releases
 const XPI_INTERNAL_SYMBOLS = [
   "BOOTSTRAP_REASONS",
   "KEY_APP_SYSTEM_ADDONS",
@@ -170,12 +129,7 @@ const XPI_INTERNAL_SYMBOLS = [
   "TEMPORARY_ADDON_SUFFIX",
   "XPI_PERMISSION",
   "XPIStates",
-<<<<<<< HEAD
-||||||| merged common ancestors
-  "isWebExtension",
-=======
   "getURIForResourceInFile",
->>>>>>> upstream-releases
   "iterDirectory",
 ];
 
@@ -223,60 +177,6 @@ function flushJarCache(aJarFile) {
   Services.mm.broadcastAsyncMessage(MSG_JAR_FLUSH, aJarFile.path);
 }
 
-<<<<<<< HEAD
-const PREF_EM_UPDATE_BACKGROUND_URL   = "extensions.update.background.url";
-const PREF_EM_UPDATE_URL              = "extensions.update.url";
-const PREF_XPI_SIGNATURES_DEV_ROOT    = "xpinstall.signatures.dev-root";
-const PREF_INSTALL_REQUIREBUILTINCERTS = "extensions.install.requireBuiltInCerts";
-
-const KEY_PROFILEDIR                  = "ProfD";
-const KEY_TEMPDIR                     = "TmpD";
-
-const KEY_APP_PROFILE                 = "app-profile";
-
-const DIR_STAGE                       = "staged";
-const DIR_TRASH                       = "trash";
-
-||||||| merged common ancestors
-const PREF_EM_UPDATE_BACKGROUND_URL   = "extensions.update.background.url";
-const PREF_EM_UPDATE_URL              = "extensions.update.url";
-const PREF_XPI_SIGNATURES_DEV_ROOT    = "xpinstall.signatures.dev-root";
-const PREF_INSTALL_REQUIREBUILTINCERTS = "extensions.install.requireBuiltInCerts";
-
-const KEY_PROFILEDIR                  = "ProfD";
-const KEY_TEMPDIR                     = "TmpD";
-
-const KEY_APP_PROFILE                 = "app-profile";
-
-const DIR_STAGE                       = "staged";
-const DIR_TRASH                       = "trash";
-
-// Properties that exist in the install manifest
-const PROP_METADATA      = ["id", "version", "type", "internalName", "updateURL",
-                            "optionsURL", "optionsType", "aboutURL",
-                            "iconURL", "icon64URL"];
-const PROP_LOCALE_SINGLE = ["name", "description", "creator", "homepageURL"];
-const PROP_LOCALE_MULTI  = ["developers", "translators", "contributors"];
-
-// Map new string type identifiers to old style nsIUpdateItem types.
-// Retired values:
-// 32 = multipackage xpi file
-// 8 = locale
-// 256 = apiextension
-// 128 = experiment
-// theme = 4
-const TYPES = {
-  extension: 2,
-  dictionary: 64,
-};
-
-const COMPATIBLE_BY_DEFAULT_TYPES = {
-  extension: true,
-  dictionary: true,
-  "webextension-dictionary": true,
-};
-
-=======
 const PREF_EM_UPDATE_BACKGROUND_URL = "extensions.update.background.url";
 const PREF_EM_UPDATE_URL = "extensions.update.url";
 const PREF_XPI_SIGNATURES_DEV_ROOT = "xpinstall.signatures.dev-root";
@@ -291,7 +191,6 @@ const KEY_APP_PROFILE = "app-profile";
 const DIR_STAGE = "staged";
 const DIR_TRASH = "trash";
 
->>>>>>> upstream-releases
 // This is a random number array that can be used as "salt" when generating
 // an automatic ID based on the directory path of an add-on. It will prevent
 // someone from creating an ID for a permanent add-on that could be replaced
@@ -364,25 +263,12 @@ class Package {
     const rootCliqz = Ci.nsIX509CertDB.CliqzAddonsRoot;
     let rootFirefox = Ci.nsIX509CertDB.AddonsPublicRoot;
 
-<<<<<<< HEAD
-    if (!AppConstants.MOZ_REQUIRE_SIGNING &&
-        Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)) {
-      rootFirefox = Ci.nsIX509CertDB.AddonsStageRoot;
-||||||| merged common ancestors
-    let root = Ci.nsIX509CertDB.AddonsPublicRoot;
-    if (!AppConstants.MOZ_REQUIRE_SIGNING &&
-        Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)) {
-      root = Ci.nsIX509CertDB.AddonsStageRoot;
-=======
-    let root = Ci.nsIX509CertDB.AddonsPublicRoot;
     if (
       !AppConstants.MOZ_REQUIRE_SIGNING &&
       Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)
     ) {
       root = Ci.nsIX509CertDB.AddonsStageRoot;
->>>>>>> upstream-releases
     }
-
 
     return Promise.all([
       this.verifySignedStateForRoot(addon, rootCliqz),
@@ -624,13 +510,7 @@ async function loadManifestFromWebManifest(aPackage) {
   addon.hidden = manifest.hidden;
   addon.incognito = manifest.incognito;
 
-<<<<<<< HEAD
-  if (addon.type === "theme" && await aPackage.hasResource("preview.png")) {
-||||||| merged common ancestors
-  if (isTheme(addon.type) && await aPackage.hasResource("preview.png")) {
-=======
   if (addon.type === "theme" && (await aPackage.hasResource("preview.png"))) {
->>>>>>> upstream-releases
     addon.previewImage = "preview.png";
   }
 
@@ -710,217 +590,6 @@ async function loadManifestFromWebManifest(aPackage) {
   return addon;
 }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-/**
- * Reads an AddonInternal object from an RDF stream.
- *
- * @param {nsIURI} aUri
- *        The URI that the manifest is being read from
- * @param {string} aData
- *        The manifest text
- * @param {InstallPackage} aPackage
- *        An install package instance for the extension.
- * @returns {AddonInternal}
- * @throws if the install manifest in the RDF stream is corrupt or could not
- *         be read
- */
-async function loadManifestFromRDF(aUri, aData, aPackage) {
-  /**
-   * Reads locale properties from either the main install manifest root or
-   * an em:localized section in the install manifest.
-   *
-   * @param {Object} aSource
-   *        The resource to read the properties from.
-   * @param {boolean} isDefault
-   *        True if the locale is to be read from the main install manifest
-   *        root
-   * @param {string[]} aSeenLocales
-   *        An array of locale names already seen for this install manifest.
-   *        Any locale names seen as a part of this function will be added to
-   *        this array
-   * @returns {Object}
-   *        an object containing the locale properties
-   */
-  function readLocale(aSource, isDefault, aSeenLocales) {
-    let locale = {};
-    if (!isDefault) {
-      locale.locales = [];
-      for (let localeName of aSource.locales || []) {
-        if (!localeName) {
-          logger.warn("Ignoring empty locale in localized properties");
-          continue;
-        }
-        if (aSeenLocales.includes(localeName)) {
-          logger.warn("Ignoring duplicate locale in localized properties");
-          continue;
-        }
-        aSeenLocales.push(localeName);
-        locale.locales.push(localeName);
-      }
-
-      if (locale.locales.length == 0) {
-        logger.warn("Ignoring localized properties with no listed locales");
-        return null;
-      }
-    }
-
-    for (let prop of [...PROP_LOCALE_SINGLE, ...PROP_LOCALE_MULTI]) {
-      if (hasOwnProperty(aSource, prop)) {
-        locale[prop] = aSource[prop];
-      }
-    }
-
-    return locale;
-  }
-
-  let manifest = InstallRDF.loadFromString(aData).decode();
-
-  let addon = new AddonInternal();
-  for (let prop of PROP_METADATA) {
-    if (hasOwnProperty(manifest, prop)) {
-      addon[prop] = manifest[prop];
-    }
-  }
-
-  if (!addon.type) {
-    addon.type = "extension";
-  } else {
-    let type = addon.type;
-    addon.type = null;
-    for (let name in TYPES) {
-      if (TYPES[name] == type) {
-        addon.type = name;
-        break;
-      }
-    }
-  }
-
-  if (!(addon.type in TYPES))
-    throw new Error("Install manifest specifies unknown type: " + addon.type);
-
-  if (!addon.id)
-    throw new Error("No ID in install manifest");
-  if (!gIDTest.test(addon.id))
-    throw new Error("Illegal add-on ID " + addon.id);
-  if (!addon.version)
-    throw new Error("No version in install manifest");
-
-  addon.strictCompatibility = (!(addon.type in COMPATIBLE_BY_DEFAULT_TYPES) ||
-                               manifest.strictCompatibility == "true");
-
-  // Only read these properties for extensions.
-  if (addon.type == "extension") {
-    if (manifest.bootstrap != "true") {
-      throw new Error("Non-restartless extensions no longer supported");
-    }
-
-    addon.hasEmbeddedWebExtension = manifest.hasEmbeddedWebExtension == "true";
-
-    if (addon.optionsType &&
-        addon.optionsType != AddonManager.OPTIONS_TYPE_INLINE_BROWSER &&
-        addon.optionsType != AddonManager.OPTIONS_TYPE_TAB) {
-      throw new Error("Install manifest specifies unknown optionsType: " + addon.optionsType);
-    }
-
-    if (addon.hasEmbeddedWebExtension) {
-      let uri = Services.io.newURI("webextension/manifest.json", null, aUri);
-      let embeddedAddon = await loadManifestFromWebManifest(uri, aPackage);
-      if (embeddedAddon.optionsURL) {
-        if (addon.optionsType || addon.optionsURL)
-          logger.warn(`Addon ${addon.id} specifies optionsType or optionsURL ` +
-                      `in both install.rdf and manifest.json`);
-
-        addon.optionsURL = embeddedAddon.optionsURL;
-        addon.optionsType = embeddedAddon.optionsType;
-      }
-    }
-  } else {
-    // Convert legacy dictionaries into a format the WebExtension
-    // dictionary loader can process.
-    if (addon.type === "dictionary") {
-      addon.type = "webextension-dictionary";
-      let dictionaries = {};
-      await aPackage.iterFiles(({path}) => {
-        let match = /^dictionaries\/([^\/]+)\.dic$/.exec(path);
-        if (match) {
-          let lang = match[1].replace(/_/g, "-");
-          dictionaries[lang] = match[0];
-        }
-      });
-      addon.startupData = {dictionaries};
-    }
-
-    // Only extensions are allowed to provide an optionsURL, optionsType,
-    // optionsBrowserStyle, or aboutURL. For all other types they are silently ignored
-    addon.aboutURL = null;
-    addon.optionsBrowserStyle = null;
-    addon.optionsType = null;
-    addon.optionsURL = null;
-  }
-
-  addon.defaultLocale = readLocale(manifest, true);
-
-  let seenLocales = [];
-  addon.locales = [];
-  for (let localeData of manifest.localized || []) {
-    let locale = readLocale(localeData, false, seenLocales);
-    if (locale)
-      addon.locales.push(locale);
-  }
-
-  let dependencies = new Set(manifest.dependencies);
-  addon.dependencies = Object.freeze(Array.from(dependencies));
-
-  let seenApplications = [];
-  addon.targetApplications = [];
-  for (let targetApp of manifest.targetApplications || []) {
-    if (!targetApp.id || !targetApp.minVersion ||
-        !targetApp.maxVersion) {
-      logger.warn("Ignoring invalid targetApplication entry in install manifest");
-      continue;
-    }
-    if (seenApplications.includes(targetApp.id)) {
-      logger.warn("Ignoring duplicate targetApplication entry for " + targetApp.id +
-           " in install manifest");
-      continue;
-    }
-    seenApplications.push(targetApp.id);
-    addon.targetApplications.push(targetApp);
-  }
-
-  // Note that we don't need to check for duplicate targetPlatform entries since
-  // the RDF service coalesces them for us.
-  addon.targetPlatforms = [];
-  for (let targetPlatform of manifest.targetPlatforms || []) {
-    let platform = {
-      os: null,
-      abi: null,
-    };
-
-    let pos = targetPlatform.indexOf("_");
-    if (pos != -1) {
-      platform.os = targetPlatform.substring(0, pos);
-      platform.abi = targetPlatform.substring(pos + 1);
-    } else {
-      platform.os = targetPlatform;
-    }
-
-    addon.targetPlatforms.push(platform);
-  }
-
-  addon.userDisabled = false;
-  addon.softDisabled = addon.blocklistState == nsIBlocklistService.STATE_SOFTBLOCKED;
-  addon.applyBackgroundUpdates = AddonManager.AUTOUPDATE_DEFAULT;
-
-  // icons will be filled by the calling function
-  addon.icons = {};
-  addon.userPermissions = null;
-
-  return addon;
-}
-
-=======
 async function readRecommendationStates(aPackage, aAddonID) {
   let recommendationData;
   try {
@@ -962,7 +631,6 @@ async function readRecommendationStates(aPackage, aAddonID) {
   return null;
 }
 
->>>>>>> upstream-releases
 function defineSyncGUID(aAddon) {
   // Define .syncGUID as a lazy property which is also settable
   Object.defineProperty(aAddon, "syncGUID", {
@@ -993,30 +661,6 @@ function generateTemporaryInstallID(aFile) {
 }
 
 var loadManifest = async function(aPackage, aLocation, aOldAddon) {
-<<<<<<< HEAD
-  let addon;
-  if (await aPackage.hasResource("manifest.json")) {
-    addon = await loadManifestFromWebManifest(aPackage.rootURI, aPackage);
-  } else {
-    for (let loader of AddonManagerPrivate.externalExtensionLoaders.values()) {
-      if (await aPackage.hasResource(loader.manifestFile)) {
-        addon = await loader.loadManifest(aPackage);
-        addon.loader = loader.name;
-        break;
-      }
-||||||| merged common ancestors
-  async function loadFromRDF(aUri) {
-    let manifest = await aPackage.readString("install.rdf");
-    let addon = await loadManifestFromRDF(aUri, manifest, aPackage);
-
-    if (await aPackage.hasResource("icon.png")) {
-      addon.icons[32] = "icon.png";
-      addon.icons[48] = "icon.png";
-    }
-
-    if (await aPackage.hasResource("icon64.png")) {
-      addon.icons[64] = "icon64.png";
-=======
   let addon;
   if (await aPackage.hasResource("manifest.json")) {
     addon = await loadManifestFromWebManifest(aPackage);
@@ -1027,23 +671,13 @@ var loadManifest = async function(aPackage, aLocation, aOldAddon) {
         addon.loader = loader.name;
         break;
       }
->>>>>>> upstream-releases
     }
   }
 
-<<<<<<< HEAD
-  if (!addon) {
-    throw new Error(`File ${aPackage.filePath} does not contain a valid manifest`);
-||||||| merged common ancestors
-  let entry = await aPackage.getManifestFile();
-  if (!entry) {
-    throw new Error(`File ${aPackage.filePath} does not contain a valid manifest`);
-=======
   if (!addon) {
     throw new Error(
       `File ${aPackage.filePath} does not contain a valid manifest`
     );
->>>>>>> upstream-releases
   }
 
   addon._sourceBundle = aPackage.file;
@@ -1187,14 +821,14 @@ function getSignedStatus(aRv, aCert, aAddonID) {
         return AddonManager.SIGNEDSTATE_BROKEN;
       }
 
-      if (aCert.organizationalUnit == "Cliqz Frontend") {
+      if (aCert.organizationalUnit == "Mozilla Components") {
         return AddonManager.SIGNEDSTATE_SYSTEM;
       }
-/*
+
       if (aCert.organizationalUnit == "Mozilla Extensions") {
         return AddonManager.SIGNEDSTATE_PRIVILEGED;
       }
-*/
+
       return /preliminary/i.test(aCert.organizationalUnit)
         ? AddonManager.SIGNEDSTATE_PRELIMINARY
         : AddonManager.SIGNEDSTATE_SIGNED;
@@ -1917,21 +1551,11 @@ class AddonInstall {
           ]);
         }
 
-<<<<<<< HEAD
-        if (this.existingAddon.isWebExtension && !this.addon.isWebExtension) {
-          return Promise.reject([AddonManager.ERROR_UNEXPECTED_ADDON_TYPE,
-                                 "WebExtensions may not be updated to other extension types"]);
-||||||| merged common ancestors
-        if (isWebExtension(this.existingAddon.type) && !isWebExtension(this.addon.type)) {
-          return Promise.reject([AddonManager.ERROR_UNEXPECTED_ADDON_TYPE,
-                                 "WebExtensions may not be updated to other extension types"]);
-=======
         if (this.existingAddon.isWebExtension && !this.addon.isWebExtension) {
           return Promise.reject([
             AddonManager.ERROR_UNEXPECTED_ADDON_TYPE,
             "WebExtensions may not be updated to other extension types",
           ]);
->>>>>>> upstream-releases
         }
       }
 
@@ -1940,41 +1564,19 @@ class AddonInstall {
           // This add-on isn't properly signed by a signature that chains to the
           // trusted root.
           let state = this.addon.signedState;
-          const manifest = this.addon;
           this.addon = null;
 
-<<<<<<< HEAD
-          if (state == AddonManager.SIGNEDSTATE_MISSING ||
-              state == AddonManager.SIGNEDSTATE_UNKNOWN)
-            return Promise.reject([AddonManager.ERROR_SIGNEDSTATE_REQUIRED,
-                                   "signature is required but missing",
-                                   manifest]);
-||||||| merged common ancestors
-          if (state == AddonManager.SIGNEDSTATE_MISSING)
-            return Promise.reject([AddonManager.ERROR_SIGNEDSTATE_REQUIRED,
-                                   "signature is required but missing"]);
-=======
           if (state == AddonManager.SIGNEDSTATE_MISSING) {
             return Promise.reject([
               AddonManager.ERROR_SIGNEDSTATE_REQUIRED,
               "signature is required but missing",
             ]);
           }
->>>>>>> upstream-releases
 
-<<<<<<< HEAD
-          return Promise.reject([AddonManager.ERROR_CORRUPT_FILE,
-                                 "signature verification failed",
-                                 manifest]);
-||||||| merged common ancestors
-          return Promise.reject([AddonManager.ERROR_CORRUPT_FILE,
-                                 "signature verification failed"]);
-=======
           return Promise.reject([
             AddonManager.ERROR_CORRUPT_FILE,
             "signature verification failed",
           ]);
->>>>>>> upstream-releases
         }
       }
     } finally {
@@ -2215,20 +1817,12 @@ class AddonInstall {
         XPIDatabase.recordAddonTelemetry(this.addon);
 
         // Notify providers that a new theme has been enabled.
-<<<<<<< HEAD
-        if (this.addon.type === "theme" && this.addon.active)
-          AddonManagerPrivate.notifyAddonChanged(this.addon.id, this.addon.type);
-||||||| merged common ancestors
-        if (isTheme(this.addon.type) && this.addon.active)
-          AddonManagerPrivate.notifyAddonChanged(this.addon.id, this.addon.type);
-=======
         if (this.addon.type === "theme" && this.addon.active) {
           AddonManagerPrivate.notifyAddonChanged(
             this.addon.id,
             this.addon.type
           );
         }
->>>>>>> upstream-releases
       };
 
       this._startupPromise = (async () => {
@@ -2828,8 +2422,7 @@ var DownloadAddonInstall = class extends AddonInstall {
       return;
     }
 
-    logger.debug("Download of " + this.sourceURI.spec +
-            " completed with satatus " + aStatus);
+    logger.debug("Download of " + this.sourceURI.spec + " completed.");
 
     if (Components.isSuccessCode(aStatus)) {
       if (
@@ -2866,37 +2459,16 @@ var DownloadAddonInstall = class extends AddonInstall {
           return;
         }
 
-<<<<<<< HEAD
-        this.loadManifest(this.file).then(() => {
-          /* Cliqz start */
-          if(this.addon.id === "cliqz@cliqz.com" || this.addon.id === "firefox@ghostery.com"){
-              this._callInstallListeners("onInstallCancelled");
-              EventDispatcher.instance.sendRequest({type: "Addons:PreventGhosteryCliqz", data:
-              this.addon._repositoryAddon.creator.name});
-          }
-          /* Cliqz end */
-          else if (this.addon.isCompatible) {
-            this.downloadCompleted();
-          } else {
-            // TODO Should we send some event here (bug 557716)?
-            this.state = AddonManager.STATE_CHECKING;
-            new UpdateChecker(this.addon, {
-              onUpdateFinished: aAddon => this.downloadCompleted(),
-            }, AddonManager.UPDATE_WHEN_ADDON_INSTALLED);
-||||||| merged common ancestors
-        this.loadManifest(this.file).then(() => {
-          if (this.addon.isCompatible) {
-            this.downloadCompleted();
-          } else {
-            // TODO Should we send some event here (bug 557716)?
-            this.state = AddonManager.STATE_CHECKING;
-            new UpdateChecker(this.addon, {
-              onUpdateFinished: aAddon => this.downloadCompleted(),
-            }, AddonManager.UPDATE_WHEN_ADDON_INSTALLED);
-=======
         this.loadManifest(this.file).then(
           () => {
-            if (this.addon.isCompatible) {
+            /* Cliqz start */
+            if(this.addon.id === "cliqz@cliqz.com" || this.addon.id === "firefox@ghostery.com"){
+                this._callInstallListeners("onInstallCancelled");
+                EventDispatcher.instance.sendRequest({type: "Addons:PreventGhosteryCliqz", data:
+                this.addon._repositoryAddon.creator.name});
+            }
+            /* Cliqz end */
+            else if (this.addon.isCompatible) {
               this.downloadCompleted();
             } else {
               // TODO Should we send some event here (bug 557716)?
@@ -2913,24 +2485,8 @@ var DownloadAddonInstall = class extends AddonInstall {
           ([error, message]) => {
             this.removeTemporaryFile();
             this.downloadFailed(error, message);
->>>>>>> upstream-releases
           }
-<<<<<<< HEAD
-        }, ([error, message, manifest]) => {
-          manifest = manifest || this.addon;
-          XPIDatabase.reportAddonInstallationAttempt(manifest.id, manifest.type,
-              "download");
-          this.removeTemporaryFile();
-          this.downloadFailed(error, message);
-        });
-||||||| merged common ancestors
-        }, ([error, message]) => {
-          this.removeTemporaryFile();
-          this.downloadFailed(error, message);
-        });
-=======
         );
->>>>>>> upstream-releases
       } else if (aRequest instanceof Ci.nsIHttpChannel) {
         this.downloadFailed(
           AddonManager.ERROR_NETWORK_FAILURE,
@@ -3285,29 +2841,14 @@ UpdateChecker.prototype = {
     let AUC = AddonUpdateChecker;
     let ignoreMaxVersion = false;
     // Ignore strict compatibility for dictionaries by default.
-<<<<<<< HEAD
-    let ignoreStrictCompat = (this.addon.type == "dictionary");
-||||||| merged common ancestors
-    let ignoreStrictCompat = (this.addon.type == "webextension-dictionary");
-=======
     let ignoreStrictCompat = this.addon.type == "dictionary";
->>>>>>> upstream-releases
     if (!AddonManager.checkCompatibility) {
       ignoreMaxVersion = true;
       ignoreStrictCompat = true;
-<<<<<<< HEAD
-    } else if (!AddonManager.strictCompatibility &&
-               !this.addon.strictCompatibility) {
-||||||| merged common ancestors
-    } else if (this.addon.type in COMPATIBLE_BY_DEFAULT_TYPES &&
-               !AddonManager.strictCompatibility &&
-               !this.addon.strictCompatibility) {
-=======
     } else if (
       !AddonManager.strictCompatibility &&
       !this.addon.strictCompatibility
     ) {
->>>>>>> upstream-releases
       ignoreMaxVersion = true;
     }
 
@@ -4855,13 +4396,7 @@ var XPIInstall = {
     AddonManagerPrivate.callAddonListeners("onInstalled", addon.wrapper);
 
     // Notify providers that a new theme has been enabled.
-<<<<<<< HEAD
-    if (addon.type === "theme")
-||||||| merged common ancestors
-    if (isTheme(addon.type))
-=======
     if (addon.type === "theme" && !addon.userDisabled) {
->>>>>>> upstream-releases
       AddonManagerPrivate.notifyAddonChanged(addon.id, addon.type, false);
     }
   },
@@ -5005,14 +4540,8 @@ var XPIInstall = {
     }
 
     // Notify any other providers that a new theme has been enabled
-<<<<<<< HEAD
-    if (aAddon.type === "theme" && aAddon.active)
-||||||| merged common ancestors
-    if (isTheme(aAddon.type) && aAddon.active)
-=======
     // (when the active theme is uninstalled, the default theme is enabled).
     if (aAddon.type === "theme" && wasActive) {
->>>>>>> upstream-releases
       AddonManagerPrivate.notifyAddonChanged(null, aAddon.type);
     }
   },
@@ -5059,13 +4588,7 @@ var XPIInstall = {
     AddonManagerPrivate.callAddonListeners("onOperationCancelled", wrapper);
 
     // Notify any other providers that this theme is now enabled again.
-<<<<<<< HEAD
-    if (aAddon.type === "theme" && aAddon.active)
-||||||| merged common ancestors
-    if (isTheme(aAddon.type) && aAddon.active)
-=======
     if (aAddon.type === "theme" && aAddon.active) {
->>>>>>> upstream-releases
       AddonManagerPrivate.notifyAddonChanged(aAddon.id, aAddon.type, false);
     }
   },

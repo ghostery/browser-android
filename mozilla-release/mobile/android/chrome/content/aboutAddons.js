@@ -420,17 +420,13 @@ var Addons = {
       // Don't create item for system add-ons.
       if (aAddons[i].isSystem) {
         continue;
-<<<<<<< HEAD
+      }
       /* Cliqz start */
       // add check for should hidden addons
       if(this._shouldBeHidden(aAddons[i].id)) {
         continue;
       }
       /* Cliqz end */
-||||||| merged common ancestors
-=======
-      }
->>>>>>> upstream-releases
 
       let item = this._createItemForAddon(aAddons[i]);
       list.appendChild(item);
@@ -656,24 +652,6 @@ var Addons = {
       return addon.enable();
     }
 
-<<<<<<< HEAD
-    function updateOtherThemeStateInUI(item) {
-      if (aValue) {
-        // Mark the previously enabled theme as disabled.
-        if (item.addon.isActive) {
-          item.setAttribute("isDisabled", true);
-          return true;
-        }
-      // The current theme is being disabled - enable the default theme.
-      } else if (item.addon.id == "default-theme@mozilla.org") {
-        item.removeAttribute("isDisabled");
-        return true;
-      }
-      return false;
-    }
-
-||||||| merged common ancestors
-=======
     function updateOtherThemeStateInUI(item) {
       if (aValue) {
         // Mark the previously enabled theme as disabled.
@@ -689,31 +667,8 @@ var Addons = {
       return false;
     }
 
->>>>>>> upstream-releases
     let opType;
     if (addon.type == "theme") {
-<<<<<<< HEAD
-      // Themes take care of themselves to make sure only one is active at the
-      // same time, but we need to fix up the state of other themes in the UI.
-      let list = document.getElementById("addons-list");
-      let item = list.firstElementChild;
-      while (item) {
-        if (item.addon && (item.addon.type == "theme") &&
-            updateOtherThemeStateInUI(item)) {
-          break;
-||||||| merged common ancestors
-      if (aValue) {
-        // We can have only one theme enabled, so disable the current one if any
-        let list = document.getElementById("addons-list");
-        let item = list.firstElementChild;
-        while (item) {
-          if (item.addon && (item.addon.type == "theme") && (item.addon.isActive)) {
-            item.addon.disable();
-            item.setAttribute("isDisabled", true);
-            break;
-          }
-          item = item.nextSibling;
-=======
       // Themes take care of themselves to make sure only one is active at the
       // same time, but we need to fix up the state of other themes in the UI.
       let list = document.getElementById("addons-list");
@@ -725,7 +680,6 @@ var Addons = {
           updateOtherThemeStateInUI(item)
         ) {
           break;
->>>>>>> upstream-releases
         }
         item = item.nextSibling;
       }

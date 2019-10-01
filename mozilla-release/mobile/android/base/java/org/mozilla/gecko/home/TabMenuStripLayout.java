@@ -138,7 +138,6 @@ class TabMenuStripLayout extends ThemedLinearLayout
     /*Cliqz End*/
 
     void onPageSelected(final int position) {
-<<<<<<< HEAD
         /*Cliqz Start*/
         selectedView = (ImageView) getChildAt(position);
 
@@ -151,21 +150,6 @@ class TabMenuStripLayout extends ThemedLinearLayout
         selectedView.setSelected(false);
         /*Cliqz End*/
 
-||||||| merged common ancestors
-        if (selectedView != null) {
-            selectedView.setTextColor(inactiveTextColor);
-        }
-
-        selectedView = (TextView) getChildAt(position);
-        selectedView.setTextColor(activeTextColor);
-
-=======
-        if (selectedView != null) {
-            selectedView.setTextColor(inactiveTextColor);
-        }
-        selectedView = (TextView) getChildAt(position);
-        selectedView.setTextColor(activeTextColor);
->>>>>>> upstream-releases
         // Callback to measure and draw the strip after the view is visible.
         ViewTreeObserver vto = getViewTreeObserver();
         if (vto.isAlive()) {

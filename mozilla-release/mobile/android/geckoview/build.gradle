@@ -16,19 +16,15 @@ def getAppVersionWithoutMilestone() {
     return mozconfig.substs.MOZ_APP_VERSION.replaceFirst(/a[0-9]/, "")
 }
 
+/* Cliqz start o/
 // This converts MOZ_APP_VERSION into an integer
 // version code.
 //
 // We take something like 58.1.2a1 and come out with 5800102
 // This gives us 3 digits for the major number, and 2 digits
 // each for the minor and build number. Beta and Release
-<<<<<<< HEAD
-/* Cliqz start o/
-||||||| merged common ancestors
-=======
 //
 // This must be synchronized with _compute_gecko_version(...) in /taskcluster/taskgraph/transforms/task.py
->>>>>>> upstream-releases
 def computeVersionCode() {
     String appVersion = getAppVersionWithoutMilestone()
 
@@ -102,22 +98,10 @@ android {
         buildConfigField 'String', "MOZILLA_VERSION", "\"${mozconfig.substs.MOZILLA_VERSION}\"";
         buildConfigField 'String', "OMNIJAR_NAME", "\"${mozconfig.substs.OMNIJAR_NAME}\"";
 
-<<<<<<< HEAD
-        buildConfigField 'String', "USER_AGENT_GECKOVIEW_MOBILE", "\"Mozilla/5.0 (Android \" + android.os.Build.VERSION.RELEASE + \"; Mobile; rv: ${mozconfig.substs.MOZ_APP_VERSION}) Gecko/${mozconfig.substs.MOZ_APP_VERSION} GeckoView/${mozconfig.substs.MOZ_APP_VERSION}\"";
-        buildConfigField 'String', "USER_AGENT_GECKOVIEW_TABLET", "\"Mozilla/5.0 (Android \" + android.os.Build.VERSION.RELEASE + \"; Tablet; rv: ${mozconfig.substs.MOZ_APP_VERSION}) Gecko/${mozconfig.substs.MOZ_APP_VERSION} GeckoView/${mozconfig.substs.MOZ_APP_VERSION}\"";
-
-||||||| merged common ancestors
-        buildConfigField 'String', "USER_AGENT_GECKOVIEW_MOBILE", "\"Mozilla/5.0 (Android \" + android.os.Build.VERSION.RELEASE + \"; Mobile; rv: ${mozconfig.substs.MOZ_APP_VERSION}) Gecko/${mozconfig.substs.MOZ_APP_VERSION} GeckoView/${mozconfig.substs.MOZ_APP_VERSION}\"";
-        buildConfigField 'String', "USER_AGENT_GECKOVIEW_TABLET", "\"Mozilla/5.0 (Android \" + android.os.Build.VERSION.RELEASE + \"; Tablet; rv: ${mozconfig.substs.MOZ_APP_VERSION}) Gecko/${mozconfig.substs.MOZ_APP_VERSION} GeckoView/${mozconfig.substs.MOZ_APP_VERSION}\"";
-
-        buildConfigField 'String', "ANDROID_CPU_ARCH", "\"${mozconfig.substs.ANDROID_CPU_ARCH}\"";
-
-=======
         // Keep in sync with actual user agent in nsHttpHandler::BuildUserAgent
         buildConfigField 'String', "USER_AGENT_GECKOVIEW_MOBILE", "\"Mozilla/5.0 (Android \" + android.os.Build.VERSION.RELEASE + \"; Mobile; rv:\" + ${mozconfig.defines.MOZILLA_UAVERSION} + \") Gecko/\" + ${mozconfig.defines.MOZILLA_UAVERSION} + \" Firefox/\" + ${mozconfig.defines.MOZILLA_UAVERSION}";
         buildConfigField 'String', "USER_AGENT_GECKOVIEW_TABLET", "\"Mozilla/5.0 (Android \" + android.os.Build.VERSION.RELEASE + \"; Tablet; rv:\" + ${mozconfig.defines.MOZILLA_UAVERSION} + \") Gecko/\" + ${mozconfig.defines.MOZILLA_UAVERSION} + \" Firefox/\" + ${mozconfig.defines.MOZILLA_UAVERSION}";
 
->>>>>>> upstream-releases
         buildConfigField 'int', 'MIN_SDK_VERSION', mozconfig.substs.MOZ_ANDROID_MIN_SDK_VERSION;
 
         // Is the underlying compiled C/C++ code compiled with --enable-debug?
@@ -342,72 +326,6 @@ android.libraryVariants.all { variant ->
     }
 }
 
-<<<<<<< HEAD
-apply plugin: 'maven-publish'
-
-version = computeVersionNumber()
-
-publishing {
-    publications {
-        android.libraryVariants.all { variant ->
-            "${variant.name}"(MavenPublication) {
-                pom {
-                    groupId = 'org.mozilla.geckoview'
-
-                    if (mozconfig.substs.MOZ_UPDATE_CHANNEL == 'release') {
-                        // release artifacts don't specify the channel, for the sake of simplicity
-                        artifactId = "geckoview-${mozconfig.substs.ANDROID_CPU_ARCH}"
-                    } else {
-                        artifactId = "geckoview-${mozconfig.substs.MOZ_UPDATE_CHANNEL}-${mozconfig.substs.ANDROID_CPU_ARCH}"
-                    }
-
-                    url = 'https://wiki.mozilla.org/Mobile/GeckoView'
-
-                    licenses {
-                        license {
-                            name = 'The Mozilla Public License, v. 2.0'
-                            url = 'http://mozilla.org/MPL/2.0/'
-                            distribution = 'repo'
-                        }
-                    }
-
-                    scm {
-                        connection = 'scm::hg::https://hg.mozilla.org/mozilla-central/'
-                        url = 'https://hg.mozilla.org/mozilla-central/'
-                    }
-
-                    // Unfortunately Gradle does not provide a way to expose dependencies for custom
-                    // project types like Android plugins. So we need to add them manually to the POM
-                    // XML here, or use a plugin that achieves the same (like
-                    // https://github.com/wupdigital/android-maven-publish). We elect to do this
-                    // manually since our dependencies are simple and plugins increase our complexity
-                    // surface. This workaround can be removed after this issue is fixed:
-                    // https://github.com/gradle/gradle/issues/1842
-                    withXml {
-                        def dependenciesNode = asNode().appendNode('dependencies')
-
-                        configurations.getByName("implementation").dependencies.each {
-                            def dependencyNode = dependenciesNode.appendNode('dependency')
-                            dependencyNode.appendNode('groupId', it.group)
-                            dependencyNode.appendNode('artifactId', it.name)
-                            dependencyNode.appendNode('version', it.version)
-                        }
-                    }
-                }
-||||||| merged common ancestors
-apply plugin: 'maven'
-
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.groupId = 'org.mozilla.geckoview'
-
-        if (mozconfig.substs.MOZ_UPDATE_CHANNEL == 'release') {
-            // release artifacts don't specify the channel, for the sake of simplicity
-            pom.artifactId = "geckoview-${mozconfig.substs.ANDROID_CPU_ARCH}"
-        } else {
-            pom.artifactId = "geckoview-${mozconfig.substs.MOZ_UPDATE_CHANNEL}-${mozconfig.substs.ANDROID_CPU_ARCH}"
-        }
-=======
 apply plugin: 'maven-publish'
 
 version = computeVersionNumber()
@@ -469,7 +387,6 @@ publishing {
                         }
                     }
                 }
->>>>>>> upstream-releases
 
                 artifact tasks["bundle${variant.name.capitalize()}"]
 

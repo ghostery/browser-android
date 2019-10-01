@@ -592,105 +592,6 @@ class WinArtifactJob(ArtifactJob):
                              'matched an archive path.'.format(
                                  patterns=self.artifact_patterns))
 
-<<<<<<< HEAD
-# Keep the keys of this map in sync with the |mach artifact| --job
-# options.  The keys of this map correspond to entries at
-# https://tools.taskcluster.net/index/artifacts/#gecko.v2.mozilla-central.latest/gecko.v2.mozilla-central.latest
-# The values correpsond to a pair of (<package regex>, <test archive regex>).
-JOB_DETAILS = {
-    'android-api-16-opt': (AndroidArtifactJob, (r'(public/build/fennec-(.*)\.android-arm.apk|public/build/target\.apk)',
-                                                r'public/build/fennec-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                                r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-api-16-debug': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                                  r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-x86-opt': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                             r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-x86_64-opt': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                                r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-x86_64-debug': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                                  r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-aarch64-opt': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                                 r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-aarch64-debug': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                                   r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux-opt': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                     r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux-debug': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                       r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux64-opt': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                       r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux64-debug': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                         r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'macosx64-opt': (MacArtifactJob, (r'public/build/firefox-(.*)\.mac\.dmg|public/build/target\.dmg',
-                                      r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                      r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'macosx64-debug': (MacArtifactJob, (r'public/build/firefox-(.*)\.mac\.dmg|public/build/target\.dmg',
-                                        r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                        r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win32-opt': (WinArtifactJob, (r'public/build/firefox-(.*)\.win32\.(zip|tar\.gz)|'
-                                   r'public/build/target\.(zip|tar\.gz)',
-                                   r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                   r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win32-debug': (WinArtifactJob, (r'public/build/firefox-(.*)\.win32\.(zip|tar\.gz)|'
-                                     r'public/build/target\.(zip|tar\.gz)',
-                                     r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                     r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win64-opt': (WinArtifactJob, (r'public/build/firefox-(.*)\.win64\.(zip|tar\.gz)|'
-                                   r'public/build/target\.(zip|tar\.gz)',
-                                   r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                   r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win64-debug': (WinArtifactJob, (r'public/build/firefox-(.*)\.win64\.(zip|tar\.gz)|public/build/target\.(zip|tar\.gz)',
-                                     r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                     r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-}
-||||||| merged common ancestors
-# Keep the keys of this map in sync with the |mach artifact| --job
-# options.  The keys of this map correspond to entries at
-# https://tools.taskcluster.net/index/artifacts/#gecko.v2.mozilla-central.latest/gecko.v2.mozilla-central.latest
-# The values correpsond to a pair of (<package regex>, <test archive regex>).
-JOB_DETAILS = {
-    'android-api-16-opt': (AndroidArtifactJob, (r'(public/build/fennec-(.*)\.android-arm.apk|public/build/target\.apk)',
-                                                r'public/build/fennec-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                                r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-api-16-debug': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                                  r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-x86-opt': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                             r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'android-x86_64-opt': (AndroidArtifactJob, (r'public/build/target\.apk',
-                                                r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux-opt': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                     r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux-debug': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                       r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux64-opt': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                       r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'linux64-debug': (LinuxArtifactJob, (r'public/build/target\.tar\.bz2',
-                                         r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'macosx64-opt': (MacArtifactJob, (r'public/build/firefox-(.*)\.mac\.dmg|public/build/target\.dmg',
-                                      r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                      r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'macosx64-debug': (MacArtifactJob, (r'public/build/firefox-(.*)\.mac\.dmg|public/build/target\.dmg',
-                                        r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                        r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win32-opt': (WinArtifactJob, (r'public/build/firefox-(.*)\.win32\.(zip|tar\.gz)|'
-                                   r'public/build/target\.(zip|tar\.gz)',
-                                   r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                   r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win32-debug': (WinArtifactJob, (r'public/build/firefox-(.*)\.win32\.(zip|tar\.gz)|'
-                                     r'public/build/target\.(zip|tar\.gz)',
-                                     r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                     r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win64-opt': (WinArtifactJob, (r'public/build/firefox-(.*)\.win64\.(zip|tar\.gz)|'
-                                   r'public/build/target\.(zip|tar\.gz)',
-                                   r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                   r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-    'win64-debug': (WinArtifactJob, (r'public/build/firefox-(.*)\.win64\.(zip|tar\.gz)|public/build/target\.(zip|tar\.gz)',
-                                     r'public/build/firefox-(.*)\.common\.tests\.(zip|tar\.gz)|'
-                                     r'public/build/target\.common\.tests\.(zip|tar\.gz)')),
-}
-=======
->>>>>>> upstream-releases
-
 class ThunderbirdMixin(object):
     trust_domain = 'comm'
     product = 'thunderbird'
@@ -1290,49 +1191,6 @@ see https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Source_Code
         return self._install_from_hg_pushheads(hg_pushheads, distdir)
 
     def install_from_revset(self, revset, distdir):
-<<<<<<< HEAD
-        revision = None
-        try:
-            if self._hg:
-                revision = subprocess.check_output([self._hg, 'log', '--template', '{node}\n',
-                                                  '-r', revset], cwd=self._topsrcdir).strip()
-            elif self._git:
-                revset = subprocess.check_output([
-                    self._git, 'rev-parse', '%s^{commit}' % revset],
-                    stderr=open(os.devnull, 'w'), cwd=self._topsrcdir).strip()
-            else:
-                # Fallback to the exception handling case from both hg and git
-                raise subprocess.CalledProcessError()
-        except subprocess.CalledProcessError:
-            # If the mercurial of git commands above failed, it means the given
-            # revset is not known locally to the VCS. But if the revset looks
-            # like a complete sha1, assume it is a mercurial sha1 that hasn't
-            # been pulled, and use that.
-            if re.match(r'^[A-Fa-f0-9]{40}$', revset):
-                revision = revset
-
-        if revision is None and self._git:
-            revision = subprocess.check_output(
-                [self._git, 'cinnabar', 'git2hg', revset], cwd=self._topsrcdir).strip()
-
-        if revision == "0" * 40 or revision is None:
-            raise ValueError('revision specification must resolve to a commit known to hg')
-        if len(revision.split('\n')) != 1:
-            raise ValueError('revision specification must resolve to exactly one commit')
-||||||| merged common ancestors
-        if self._hg:
-            revision = subprocess.check_output([self._hg, 'log', '--template', '{node}\n',
-                                                '-r', revset], cwd=self._topsrcdir).strip()
-            if len(revision.split('\n')) != 1:
-                raise ValueError('hg revision specification must resolve to exactly one commit')
-        else:
-            revision = subprocess.check_output([self._git, 'rev-parse', revset], cwd=self._topsrcdir).strip()
-            revision = subprocess.check_output([self._git, 'cinnabar', 'git2hg', revision], cwd=self._topsrcdir).strip()
-            if len(revision.split('\n')) != 1:
-                raise ValueError('hg revision specification must resolve to exactly one commit')
-            if revision == "0" * 40:
-                raise ValueError('git revision specification must resolve to a commit known to hg')
-=======
         revision = None
         try:
             if self._hg:
@@ -1361,7 +1219,6 @@ see https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Source_Code
             raise ValueError('revision specification must resolve to a commit known to hg')
         if len(revision.split('\n')) != 1:
             raise ValueError('revision specification must resolve to exactly one commit')
->>>>>>> upstream-releases
 
         self.log(logging.INFO, 'artifact',
                  {'revset': revset,

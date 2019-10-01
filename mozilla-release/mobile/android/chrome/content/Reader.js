@@ -210,20 +210,14 @@ var Reader = {
 
     let browser = tab.browser;
     if (browser.currentURI.spec.startsWith("about:reader")) {
-<<<<<<< HEAD
       /* Cliqz Start */
       // change the icon
-      showPageAction("drawable://ic_readermode", Strings.reader.GetStringFromName("readerView.close"), false);
-      /* Cliqz end */
-||||||| merged common ancestors
-      showPageAction("drawable://ic_readermode_on", Strings.reader.GetStringFromName("readerView.close"), false);
-=======
       showPageAction(
-        "drawable://ic_readermode_on",
+        "drawable://ic_readermode",
         Strings.reader.GetStringFromName("readerView.close"),
         false
       );
->>>>>>> upstream-releases
+      /* Cliqz end */
       // Only start a reader session if the viewer is in the foreground. We do
       // not track background reader viewers.
       UITelemetry.startSession("reader.1", null);

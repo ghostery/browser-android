@@ -184,14 +184,8 @@ public class GeckoPreferences
     private static final String PREFS_FAQ_LINK = NON_PREF_PREFIX + "faq.link";
     private static final String PREFS_FEEDBACK_LINK = NON_PREF_PREFIX + "feedback.link";
     private static final String PREFS_SCREEN_NOTIFICATIONS = NON_PREF_PREFIX + "notifications_screen";
-<<<<<<< HEAD
-    /* Cliqz start o/    public static final String PREFS_NOTIFICATIONS_WHATS_NEW = NON_PREF_PREFIX + "notifications.whats_new"; /o Cliqz end */
-||||||| merged common ancestors
-    public static final String PREFS_NOTIFICATIONS_WHATS_NEW = NON_PREF_PREFIX + "notifications.whats_new";
-=======
     private static final String PREFS_NOTIFICATIONS_SETTINGS_LINK = NON_PREF_PREFIX + "notifications.settings_link";
-    public static final String PREFS_NOTIFICATIONS_WHATS_NEW = NON_PREF_PREFIX + "notifications.whats_new";
->>>>>>> upstream-releases
+    /* Cliqz start o/    public static final String PREFS_NOTIFICATIONS_WHATS_NEW = NON_PREF_PREFIX + "notifications.whats_new"; /o Cliqz end */
     public static final String PREFS_NOTIFICATIONS_FEATURES_TIPS = NON_PREF_PREFIX + "notifications.features.tips";
     public static final String PREFS_APP_UPDATE_LAST_BUILD_ID = "app.update.last_build_id";
     public static final String PREFS_READ_PARTNER_CUSTOMIZATIONS_PROVIDER = NON_PREF_PREFIX + "distribution.read_partner_customizations_provider";
@@ -1941,18 +1935,13 @@ public class GeckoPreferences
         return GeckoPreferences.getBooleanPref(context, PREFS_HEALTHREPORT_UPLOAD_ENABLED, true);
     }
 
-<<<<<<< HEAD
-    /* Cliqz start */
-||||||| merged common ancestors
-=======
     private static boolean showNotificationSettingsLink() {
         // Notification channels are available starting from Oreo.
         return AppConstants.Versions.feature26Plus;
     }
 
->>>>>>> upstream-releases
+    /* Cliqz start */
     private static boolean haveNotificationsPreferences(@NonNull Context context) {
-<<<<<<< HEAD
         /* return SwitchBoard.isInExperiment(context, Experiments.WHATSNEW_NOTIFICATION) ||
                 MmaDelegate.isMmaExperimentEnabled(context); */
         return false;
@@ -2034,14 +2023,6 @@ public class GeckoPreferences
                 pref.setEnabled(false);
             });
         }
-||||||| merged common ancestors
-        return SwitchBoard.isInExperiment(context, Experiments.WHATSNEW_NOTIFICATION) ||
-                MmaDelegate.isMmaExperimentEnabled(context);
-=======
-        return showNotificationSettingsLink() ||
-                SwitchBoard.isInExperiment(context, Experiments.WHATSNEW_NOTIFICATION) ||
-                MmaDelegate.isMmaExperimentEnabled(context);
->>>>>>> upstream-releases
     }
     /* Cliqz end */
 }

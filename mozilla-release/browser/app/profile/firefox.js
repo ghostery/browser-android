@@ -142,22 +142,7 @@ pref("app.update.elevation.promptMaxAttempts", 2);
 // getAppUpdateAutoEnabled from UpdateUtils.jsm should be used.
 #ifndef XP_WIN
 pref("app.update.auto", true);
-<<<<<<< HEAD
 #endif
-
-// If set to true, the Update Service will present no UI for any event.
-pref("app.update.silent", false);
-
-// app.update.badgeWaitTime is in branding section
-||||||| merged common ancestors
-
-// If set to true, the Update Service will present no UI for any event.
-pref("app.update.silent", false);
-
-// app.update.badgeWaitTime is in branding section
-=======
-#endif
->>>>>>> upstream-releases
 
 // If set to true, the Update Service will apply updates in the background
 // when it finishes downloading them.
@@ -340,16 +325,6 @@ pref("browser.urlbar.switchTabs.adoptIntoActiveWindow", false);
 // should be opened in new tabs by default.
 pref("browser.urlbar.openintab", false);
 
-<<<<<<< HEAD
-// This is disabled until Bug 1340663 figures out the remaining requirements.
-pref("browser.urlbar.usepreloadedtopurls.enabled", false);
-pref("browser.urlbar.usepreloadedtopurls.expire_days", 14);
-
-// Toggle the new work in progress Address Bar code.
-pref("browser.urlbar.quantumbar", false);
-||||||| merged common ancestors
-pref("browser.urlbar.quantumbar", false);
-=======
 // This is disabled until Bug 1340663 figures out the remaining requirements.
 pref("browser.urlbar.usepreloadedtopurls.enabled", false);
 pref("browser.urlbar.usepreloadedtopurls.expire_days", 14);
@@ -359,7 +334,6 @@ pref("browser.urlbar.quantumbar", true);
 
 pref("browser.urlbar.openViewOnFocus", false);
 pref("browser.urlbar.eventTelemetry.enabled", false);
->>>>>>> upstream-releases
 
 pref("browser.altClickSave", false);
 
@@ -509,14 +483,6 @@ pref("browser.tabs.showAudioPlayingIcon", true);
 // This should match Chromium's audio indicator delay.
 pref("browser.tabs.delayHidingAudioPlayingIconMS", 3000);
 
-<<<<<<< HEAD
-// Pref to control whether we use separate privileged content processes.
-#if defined(NIGHTLY_BUILD) && !defined(MOZ_ASAN)
-pref("browser.tabs.remote.separatePrivilegedContentProcess", true);
-#endif
-
-||||||| merged common ancestors
-=======
 #if defined(NIGHTLY_BUILD) && !defined(MOZ_ASAN)
 // Pref to control whether we use a separate privileged content process
 // for about: pages. This pref name did not age well: we will have multiple
@@ -543,7 +509,6 @@ pref("browser.tabs.remote.useHTTPResponseProcessSelection", false);
 // Unload tabs when available memory is running low
 pref("browser.tabs.unloadOnLowMemory", false);
 
->>>>>>> upstream-releases
 pref("browser.ctrlTab.recentlyUsedOrder", true);
 
 // By default, do not export HTML at shutdown.
@@ -1019,27 +984,7 @@ pref("app.productInfo.baseURL", "https://www.mozilla.org/firefox/features/");
 // Name of alternate about: page for certificate errors (when undefined, defaults to about:neterror)
 pref("security.alternate_certificate_error_page", "certerror");
 
-<<<<<<< HEAD
-// Enable the new certificate error pages.
-#ifdef EARLY_BETA_OR_EARLIER
-pref("browser.security.newcerterrorpage.enabled", true);
 pref("browser.security.newcerterrorpage.mitm.enabled", true);
-#else
-pref("browser.security.newcerterrorpage.enabled", false);
-pref("browser.security.newcerterrorpage.mitm.enabled", false);
-#endif
-
-||||||| merged common ancestors
-// Enable the new certificate error page only for Nightly
-#if defined(NIGHTLY_BUILD)
-pref("browser.security.newcerterrorpage.enabled", true);
-#else
-pref("browser.security.newcerterrorpage.enabled", false);
-#endif
-
-=======
-pref("browser.security.newcerterrorpage.mitm.enabled", true);
->>>>>>> upstream-releases
 pref("security.certerrors.recordEventTelemetry", true);
 pref("security.certerrors.permanentOverride", true);
 pref("security.certerrors.mitm.priming.enabled", true);
@@ -1121,17 +1066,6 @@ pref("security.sandbox.rdd.win32k-disable", true);
 pref("security.sandbox.gmp.win32k-disable", false);
 #endif
 
-<<<<<<< HEAD
-#if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
-// Start the Mac sandbox early during child process startup instead
-// of when messaged by the parent after the message loop is running.
-pref("security.sandbox.content.mac.earlyinit", true);
-#endif
-
-#if defined(XP_MACOSX) && defined(MOZ_SANDBOX) && defined(MOZ_CONTENT_SANDBOX)
-||||||| merged common ancestors
-#if defined(XP_MACOSX) && defined(MOZ_SANDBOX) && defined(MOZ_CONTENT_SANDBOX)
-=======
 #if defined(XP_MACOSX) && defined(MOZ_SANDBOX)
 // Start the Mac sandbox early during child process startup instead
 // of when messaged by the parent after the message loop is running.
@@ -1141,7 +1075,6 @@ pref("security.sandbox.rdd.mac.earlyinit", true);
 // Remove this pref once GMP early init is stable on Release.
 pref("security.sandbox.gmp.mac.earlyinit", true);
 
->>>>>>> upstream-releases
 // This pref is discussed in bug 1083344, the naming is inspired from its
 // Windows counterpart, but on Mac it's an integer which means:
 // 0 -> "no sandbox" (nightly only)
@@ -1253,15 +1186,10 @@ pref("services.sync.prefs.sync.app.shield.optoutstudies.enabled", true);
 // could weaken the pref locally, install an add-on from an untrusted
 // source, and this would propagate automatically to other,
 // uncompromised Sync-connected devices.
-<<<<<<< HEAD
-||||||| merged common ancestors
-pref("services.sync.prefs.sync.browser.contentblocking.enabled", true);
-=======
 pref("services.sync.prefs.sync.browser.contentblocking.category", true);
 pref("services.sync.prefs.sync.browser.contentblocking.features.strict", true);
 pref("services.sync.prefs.sync.browser.contentblocking.introCount", true);
 pref("services.sync.prefs.sync.browser.crashReports.unsubmittedCheck.autoSubmit2", true);
->>>>>>> upstream-releases
 pref("services.sync.prefs.sync.browser.ctrlTab.recentlyUsedOrder", true);
 pref("services.sync.prefs.sync.browser.discovery.enabled", true);
 pref("services.sync.prefs.sync.browser.download.useDownloadDir", true);
@@ -1290,12 +1218,7 @@ pref("services.sync.prefs.sync.browser.startup.page", true);
 pref("services.sync.prefs.sync.browser.tabs.loadInBackground", true);
 pref("services.sync.prefs.sync.browser.tabs.warnOnClose", true);
 pref("services.sync.prefs.sync.browser.tabs.warnOnOpen", true);
-<<<<<<< HEAD
-||||||| merged common ancestors
-pref("services.sync.prefs.sync.browser.urlbar.autocomplete.enabled", true);
-=======
 pref("services.sync.prefs.sync.browser.taskbar.previews.enable", true);
->>>>>>> upstream-releases
 pref("services.sync.prefs.sync.browser.urlbar.matchBuckets", true);
 pref("services.sync.prefs.sync.browser.urlbar.maxRichResults", true);
 pref("services.sync.prefs.sync.browser.urlbar.suggest.bookmark", true);
@@ -1384,18 +1307,6 @@ pref("browser.newtabpage.activity-stream.fxaccounts.endpoint", "https://accounts
 pref("browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts", true);
 
 // ASRouter provider configuration
-<<<<<<< HEAD
-pref("browser.newtabpage.activity-stream.asrouter.providers.cfr", "{\"id\":\"cfr\",\"enabled\":true,\"type\":\"local\",\"localProvider\":\"CFRMessageProvider\",\"frequency\":{\"custom\":[{\"period\":\"daily\",\"cap\":1}]}}");
-pref("browser.newtabpage.activity-stream.asrouter.providers.snippets", "{\"id\":\"snippets\",\"enabled\":true,\"type\":\"remote\",\"url\":\"https://snippets.cdn.mozilla.net/%STARTPAGE_VERSION%/%NAME%/%VERSION%/%APPBUILDID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/\",\"updateCycleInMs\":14400000}");
-||||||| merged common ancestors
-#if defined(NIGHTLY_BUILD)
-pref("browser.newtabpage.activity-stream.asrouter.providers.snippets", "{\"id\":\"snippets\",\"enabled\":true,\"type\":\"remote\",\"url\":\"https://snippets.cdn.mozilla.net/%STARTPAGE_VERSION%/%NAME%/%VERSION%/%APPBUILDID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/\",\"updateCycleInMs\":14400000}");
-pref("browser.newtabpage.activity-stream.asrouter.providers.cfr", "{\"id\":\"cfr\",\"enabled\":true,\"type\":\"local\",\"localProvider\":\"CFRMessageProvider\",\"frequency\":{\"custom\":[{\"period\":\"daily\",\"cap\":1}]}}");
-#else
-pref("browser.newtabpage.activity-stream.asrouter.providers.snippets", "{\"id\":\"snippets\",\"enabled\":false,\"type\":\"remote\",\"url\":\"https://snippets.cdn.mozilla.net/%STARTPAGE_VERSION%/%NAME%/%VERSION%/%APPBUILDID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/\",\"updateCycleInMs\":14400000}");
-pref("browser.newtabpage.activity-stream.asrouter.providers.cfr", "{\"id\":\"cfr\",\"enabled\":false,\"type\":\"local\",\"localProvider\":\"CFRMessageProvider\",\"frequency\":{\"custom\":[{\"period\":\"daily\",\"cap\":1}]}}");
-#endif
-=======
 pref("browser.newtabpage.activity-stream.asrouter.providers.cfr", "{\"id\":\"cfr\",\"enabled\":true,\"type\":\"remote-settings\",\"bucket\":\"cfr\",\"frequency\":{\"custom\":[{\"period\":\"daily\",\"cap\":1}]},\"categories\":[\"cfrAddons\",\"cfrFeatures\"],\"updateCycleInMs\":3600000}");
 // This url, if changed, MUST continue to point to an https url. Pulling arbitrary content to inject into
 // this page over http opens us up to a man-in-the-middle attack that we'd rather not face. If you are a downstream
@@ -1410,7 +1321,6 @@ pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
 #endif
 pref("browser.newtabpage.activity-stream.discoverystream.hardcoded-basic-layout", false);
 pref("browser.newtabpage.activity-stream.discoverystream.spocs-endpoint", "");
->>>>>>> upstream-releases
 
 // The pref controls if search hand-off is enabled for Activity Stream.
 #ifdef NIGHTLY_BUILD
@@ -1490,42 +1400,12 @@ pref("dom.debug.propagate_gesture_events_through_content", false);
 
 // All the Geolocation preferences are here.
 //
-<<<<<<< HEAD
-pref("geo.wifi.uri", "https://www.googleapis.com/geolocation/v1/geolocate?key=%GOOGLE_API_KEY%");
-// MLS URL:
-// pref("geo.wifi.uri", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
-||||||| merged common ancestors
-
-// Geolocation preferences for the RELEASE and "later" Beta channels.
-// Some of these prefs are specified even though they are redundant; they are
-// here for clarity and end-user experiments.
-#ifndef EARLY_BETA_OR_EARLIER
-pref("geo.wifi.uri", "https://www.googleapis.com/geolocation/v1/geolocate?key=%GOOGLE_API_KEY%");
-
-#ifdef XP_MACOSX
-pref("geo.provider.use_corelocation", false);
-#endif
-
-#ifdef XP_WIN
-pref("geo.provider.ms-windows-location", false);
-#endif
-
-#ifdef MOZ_WIDGET_GTK
-pref("geo.provider.use_gpsd", false);
-#endif
-
-#else
-
-// Geolocation preferences for Nightly/Aurora/Beta.
-pref("geo.wifi.uri", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
-=======
 #ifndef EARLY_BETA_OR_EARLIER
 pref("geo.wifi.uri", "https://www.googleapis.com/geolocation/v1/geolocate?key=%GOOGLE_LOCATION_SERVICE_API_KEY%");
 #else
 // Use MLS on Nightly and early Beta.
 pref("geo.wifi.uri", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
 #endif
->>>>>>> upstream-releases
 
 #ifdef XP_MACOSX
 pref("geo.provider.use_corelocation", true);
@@ -1623,26 +1503,12 @@ pref("media.gmp-gmpopenh264.enabled", true);
 
 // Switch block autoplay logic to v2, and enable UI.
 pref("media.autoplay.enabled.user-gestures-needed", true);
-<<<<<<< HEAD
-// Allow asking for permission to autoplay to appear in UI.
-pref("media.autoplay.ask-permission", false);
-||||||| merged common ancestors
-// Allow asking for permission to autoplay to appear in UI.
-pref("media.autoplay.ask-permission", true);
-=======
->>>>>>> upstream-releases
 // Set Firefox to block autoplay, asking for permission by default.
-<<<<<<< HEAD
-pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 2=Prompt
-||||||| merged common ancestors
-pref("media.autoplay.default", 2); // 0=Allowed, 1=Blocked, 2=Prompt
-=======
 pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 5=All Blocked
 
 #ifdef NIGHTLY_BUILD
 // Block WebAudio from playing automatically.
 pref("media.autoplay.block-webaudio", true);
->>>>>>> upstream-releases
 #else
 pref("media.autoplay.block-webaudio", false);
 #endif
@@ -1701,17 +1567,7 @@ pref("browser.ping-centre.production.endpoint", "");
 // Enable GMP support in the addon manager.
 pref("media.gmp-provider.enabled", true);
 
-<<<<<<< HEAD
-// Enable blocking access to storage from tracking resources only in nightly
-// and early beta. By default the value is 0: BEHAVIOR_ACCEPT
-#ifdef EARLY_BETA_OR_EARLIER
-||||||| merged common ancestors
-// Enable blocking access to storage from tracking resources by default on
-// Nightly and Beta
-#ifdef EARLY_BETA_OR_EARLIER
-=======
 // Enable blocking access to storage from tracking resources by default.
->>>>>>> upstream-releases
 pref("network.cookie.cookieBehavior", 4 /* BEHAVIOR_REJECT_TRACKER */);
 #ifdef EARLY_BETA_OR_EARLIER
 // Enable fingerprinting blocking by default only in nightly and early beta.
@@ -1721,20 +1577,8 @@ pref("privacy.trackingprotection.fingerprinting.enabled", true);
 // Enable cryptomining blocking by default for all channels, only on desktop.
 pref("privacy.trackingprotection.cryptomining.enabled", true);
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-#ifdef NIGHTLY_BUILD
-pref("browser.contentblocking.global-toggle.enabled", true);
-#else
-pref("browser.contentblocking.global-toggle.enabled", false);
-#endif
-
-#ifdef NIGHTLY_BUILD
-// Enable the Storage Access API in Nightly
-=======
 pref("browser.contentblocking.database.enabled", true);
 
->>>>>>> upstream-releases
 pref("dom.storage_access.enabled", true);
 
 pref("dom.storage_access.auto_grants", true);
@@ -1742,18 +1586,6 @@ pref("dom.storage_access.max_concurrent_auto_grants", 5);
 
 // Define a set of default features for the Content Blocking UI.
 pref("browser.contentblocking.trackingprotection.control-center.ui.enabled", true);
-<<<<<<< HEAD
-pref("browser.contentblocking.rejecttrackers.control-center.ui.enabled", true);
-
-pref("browser.contentblocking.control-center.ui.showBlockedLabels", true);
-pref("browser.contentblocking.control-center.ui.showAllowedLabels", false);
-||||||| merged common ancestors
-pref("browser.contentblocking.rejecttrackers.ui.enabled", true);
-pref("browser.contentblocking.rejecttrackers.ui.recommended", true);
-pref("browser.contentblocking.rejecttrackers.control-center.ui.enabled", true);
-pref("browser.contentblocking.cookies-site-data.ui.reject-trackers.recommended", true);
-pref("browser.contentblocking.cookies-site-data.ui.reject-trackers.enabled", true);
-=======
 
 pref("browser.contentblocking.control-center.ui.showBlockedLabels", true);
 pref("browser.contentblocking.control-center.ui.showAllowedLabels", false);
@@ -1783,7 +1615,6 @@ pref("browser.contentblocking.fingerprinting.preferences.ui.enabled", true);
 //     "cookieBehavior5": cookie behaviour BEHAVIOR_REJECT_TRACKER_AND_PARTITION_FOREIGN
 // One value from each section must be included in the browser.contentblocking.features.strict pref.
 pref("browser.contentblocking.features.strict", "tp,tpPrivate,cookieBehavior4,cm,fp");
->>>>>>> upstream-releases
 
 // Enable the Report Breakage UI on Nightly and Beta but not on Release yet.
 #ifdef EARLY_BETA_OR_EARLIER
@@ -1798,15 +1629,6 @@ pref("browser.contentblocking.reportBreakage.url", "https://tracking-protection-
 
 pref("browser.contentblocking.introCount", 0);
 
-<<<<<<< HEAD
-pref("privacy.trackingprotection.introURL", "https://www.mozilla.org/%LOCALE%/firefox/%VERSION%/content-blocking/start/");
-
-// Workaround for Google Recaptcha
-pref("urlclassifier.trackingAnnotationSkipURLs", "google.com/recaptcha/,*.google.com/recaptcha/");
-||||||| merged common ancestors
-pref("privacy.trackingprotection.introCount", 0);
-pref("privacy.trackingprotection.introURL", "https://www.mozilla.org/%LOCALE%/firefox/%VERSION%/tracking-protection/start/");
-=======
 pref("browser.contentblocking.maxIntroCount", 0);
 // 1800 = 30 min in seconds
 pref("browser.contentblocking.introDelaySeconds", 1800);
@@ -1817,7 +1639,6 @@ pref("browser.protections_panel.enabled", true);
 #endif
 
 pref("privacy.trackingprotection.introURL", "https://www.mozilla.org/%LOCALE%/firefox/%VERSION%/content-blocking/start/");
->>>>>>> upstream-releases
 
 // Always enable newtab segregation using containers
 pref("privacy.usercontext.about_newtab_segregation.enabled", true);
@@ -2031,17 +1852,8 @@ pref("app.shield.optoutstudies.enabled", false);
 #endif
 
 // Multi-lingual preferences
-<<<<<<< HEAD
-#ifdef RELEASE_OR_BETA
-pref("intl.multilingual.enabled", true);
-||||||| merged common ancestors
-pref("intl.multilingual.enabled", false);
-// AMO only serves language packs for release and beta versions.
-#ifdef RELEASE_OR_BETA
-=======
 #if defined(RELEASE_OR_BETA) && !defined(MOZ_DEV_EDITION)
 pref("intl.multilingual.enabled", true);
->>>>>>> upstream-releases
 pref("intl.multilingual.downloadEnabled", true);
 #else
 pref("intl.multilingual.enabled", false);

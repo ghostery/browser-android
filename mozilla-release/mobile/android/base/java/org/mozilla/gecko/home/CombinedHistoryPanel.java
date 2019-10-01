@@ -14,12 +14,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
-<<<<<<< HEAD
 import android.support.design.widget.FloatingActionButton;
-||||||| merged common ancestors
-=======
 import android.support.v4.app.FragmentActivity;
->>>>>>> upstream-releases
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
