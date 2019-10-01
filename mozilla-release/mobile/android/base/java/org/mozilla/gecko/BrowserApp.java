@@ -195,6 +195,7 @@ import org.mozilla.gecko.widget.AnchoredPopup;
 import org.mozilla.gecko.widget.AnimatedProgressBar;
 import org.mozilla.gecko.widget.GeckoActionProvider;
 import org.mozilla.gecko.widget.SplashScreen;
+import org.mozilla.gecko.widget.themed.ThemedTabLayout;
 import org.mozilla.geckoview.DynamicToolbarAnimator;
 import org.mozilla.geckoview.DynamicToolbarAnimator.PinReason;
 import org.mozilla.geckoview.GeckoSession;
@@ -243,7 +244,6 @@ public class BrowserApp extends GeckoApp
                                    BaseControlCenterPagerAdapter.ControlCenterCallbacks,
                                    AntiPhishing.AntiPhishingCallback,
                                    AntiPhishingDialog.AntiPhishingDialogActionListener,
-                                   OnboardingHelper.OnboardingListener {
                                    /* Cliqz End */
                                    OnboardingHelper.OnboardingListener,
                                    EditBookmarkCallback {

@@ -60,6 +60,13 @@ public class AboutPages {
         return StringUtils.getQueryParameter(aboutHomeUrl, PANEL_PARAM);
     }
 
+    /* Cliqz start */
+    public static final String getGhostSearchFromAboutHomeUrl(String aboutHomeUrl) {
+        // "ghostSearch" key corresponds to browser.js
+        return StringUtils.getQueryParameter(aboutHomeUrl, "ghostSearch");
+    }
+    /* Cliqz end */
+
     public static boolean isAboutReader(final String url) {
         return isAboutPage(READER, url);
     }
@@ -87,7 +94,6 @@ public class AboutPages {
             ADDONS,
             CONFIG,
             DOWNLOADS,
-            LOGINS,
             FIREFOX
     ));
 

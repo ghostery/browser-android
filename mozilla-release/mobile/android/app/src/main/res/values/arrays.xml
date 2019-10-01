@@ -68,7 +68,6 @@
         <!--<item>@string/pref_private_data_offlineApps</item>-->
         <item>@string/pref_private_data_siteSettings</item>
         <!--<item>@string/pref_private_data_syncedTabs</item>-->
-        <item>@string/pref_private_data_passwords</item>
     </string-array>
     <string-array name="pref_private_data_defaults">
         <item>true</item>

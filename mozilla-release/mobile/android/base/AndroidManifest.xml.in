@@ -230,6 +230,7 @@
           </intent-filter>
         </receiver>
 
+        <!-- Cliqz start -+>
          <receiver android:name="org.mozilla.gecko.search.SearchWidgetProvider">
              <intent-filter>
                  <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -246,6 +247,7 @@
                  <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
              </intent-filter>
          </activity>
+         <!+- Cliqz end -->
 
         <!-- Masquerade as the Resolver so that we can be opened from the Marketplace. -->
         <activity-alias
