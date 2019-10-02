@@ -1,4 +1,4 @@
-FROM spacifici/fennec:65.0
+FROM spacifici/fennec:69.0.1
 MAINTAINER Sharath G Pai <sharath@cliqz.com>
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -33,10 +33,11 @@ ARG UID
 ARG GID
 ARG USER
 ENV SHELL=/bin/bash
-ENV NPM_CONFIG_PREFIX=/home/jenkins/.npm-global
-ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${NPM_CONFIG_PREFIX}/bin:${PATH}
+ENV NPM_CONFIG_PREFIX=/home/$USER/.npm-global
+ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${NPM_CONFIG_PREFIX}/bin:${PATH}
 RUN getent group $GID || groupadd $USER --gid $GID && \
     useradd --create-home --shell /bin/bash $USER --uid $UID --gid $GID
+RUN sdkmanager 'platforms;android-28'
 
 # Add extra dependencies to the maven cache
 RUN mvn dependency:get \
@@ -65,7 +66,7 @@ USER $USER
 SHELL ["/bin/bash", "-l", "-c"]
 
 #Installation of 'appium' & 'wd' for Integration Tests
-RUN npm install --global appium wd npm@6.5.0
+RUN npm install --global appium wd npm
 
 #Install Ruby and Fastlane
 RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
