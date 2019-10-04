@@ -2559,6 +2559,7 @@ var BrowserApp = {
             let specificBrowser = this.getTabForId(data.tabId).browser;
             if (specificBrowser) {
               browser = specificBrowser;
+            }
           }
           /* Cliqz start */
           if (data.ghostSearchQuery) {
