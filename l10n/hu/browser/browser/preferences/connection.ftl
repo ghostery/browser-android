@@ -12,7 +12,7 @@ connection-window =
 connection-close-key =
     .key = w
 connection-disable-extension =
-    .label = Kiterjesztés letiltása
+    .label = Kiegészítő letiltása
 connection-proxy-configure = Proxy beállítása az internet eléréséhez
 connection-proxy-option-no =
     .label = Nincs proxy
@@ -54,6 +54,8 @@ connection-proxy-socks5 =
 connection-proxy-noproxy = Nincs proxy a következőhöz
     .accesskey = v
 connection-proxy-noproxy-desc = Példa: .mozilla.org, .net.nz, 192.168.1.0/24
+# Do not translate localhost, 127.0.0.1 and ::1.
+connection-proxy-noproxy-localhost-desc = A localhost, a 127.0.0.1 és a ::1 sosem kerül proxyzásra.
 connection-proxy-autotype =
     .label = Automatikus proxybeállítás URL
     .accesskey = A
@@ -70,16 +72,15 @@ connection-proxy-socks-remote-dns =
 connection-dns-over-https =
     .label = HTTPS-en keresztüli DNS engedélyezése
     .accesskey = H
-connection-dns-over-https-url = URL
-    .accesskey = U
-    .tooltiptext = URL a HTTPS-en keresztüli DNS feloldásához
+connection-dns-over-https-url-resolver = Szolgáltató használata
+    .accesskey = o
 # Variables:
-#   $url (String) - URL for the DNS over HTTPS provider
-connection-dns-over-https-url-default =
-    .label = Alapértelmezett használata ({ $url })
-    .accesskey = A
+#   $name (String) - Display name or URL for the DNS over HTTPS provider
+connection-dns-over-https-url-item-default =
+    .label = { $name } (alapértelmezett)
     .tooltiptext = Az alapértelmezett URL használata a HTTPS feletti DNS feloldáshoz
 connection-dns-over-https-url-custom =
     .label = Egyéni
     .accesskey = E
     .tooltiptext = Adja meg az előnyben részesített URL-t a HTTPS feletti DNS feloldáshoz
+connection-dns-over-https-custom-label = Egyéni

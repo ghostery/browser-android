@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 sanitize-prefs =
-    .title = Configurações para limpeza do histórico
+    .title = Configurações de limpeza do histórico
     .style = width: 34em
 sanitize-prefs-style =
     .style = width: 17em
@@ -53,7 +53,7 @@ item-cookies =
     .accesskey = o
 item-active-logins =
     .label = Contas de acesso ativas
-    .accesskey = C
+    .accesskey = n
 item-cache =
     .label = Cache
     .accesskey = a

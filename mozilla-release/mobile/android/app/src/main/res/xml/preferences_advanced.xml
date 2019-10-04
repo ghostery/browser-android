@@ -63,14 +63,6 @@
 
     <PreferenceCategory android:title="@string/pref_category_developer_tools">
 
-        <!-- Cliqz start -->
-        <EditTextPreference android:key="pref.splash_screen.timeout"
-            android:inputType="number"
-            android:maxLength="2"
-            android:defaultValue="4"
-            android:title="@string/pref_splash_screen_timeout" />
-        <!-- Cliqz end -->
-
         <SwitchPreference android:key="devtools.remote.usb.enabled"
                           android:title="@string/pref_developer_remotedebugging_usb" />
 

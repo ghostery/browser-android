@@ -37,3 +37,6 @@
 <!ENTITY dntTrackingNotOkay.accesskey "n">
 <!ENTITY doNotTrackInfo.label "了解 Do Not Track 功能">
 
+<!ENTITY doNotTrackCheck.label "傳送「Do Not Track」訊號，告訴網站您不想被追蹤">
+<!ENTITY doNotTrackCheck.accesskey "n">
+<!ENTITY doNotTrackLearnMore.label "了解更多">

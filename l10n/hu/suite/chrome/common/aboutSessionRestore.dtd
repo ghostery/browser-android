@@ -8,7 +8,7 @@
                         you may translate "crash" instead (even though it's IT-speak) -->
 <!ENTITY restorepage.issueDesc      "Az előző &brandShortName; munkamenet váratlanul megszakadt. Elnézést kérünk a kellemetlenségért. Helyreállíthatja az előző munkamenet lapjait és ablakait, vagy új munkamenetet indíthat, ha nincs szüksége a korábbi ablakokra és lapokra.">
 <!ENTITY restorepage.remedies       "Ha a &brandShortName; ismételten bezáródik:">
-<!ENTITY restorepage.dueToChrome    "Próbálja meg letiltani a közelmúltban hozzáadott kiterjesztéseket a Kiterjesztéskezelőben.">
+<!ENTITY restorepage.dueToChrome    "Próbálja meg letiltani a közelmúltban hozzáadott kiegészítőket a Kiegészítőkezelőben.">
 <!ENTITY restorepage.dueToContent   "Próbálja meg helyreállítani a munkamenetet a valószínűsíthetően problémát okozó weboldalak nélkül:">
 
 <!ENTITY restorepage.restoreButton  "Előző munkamenet helyreállítása">

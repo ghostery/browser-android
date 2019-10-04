@@ -11,17 +11,17 @@
 <!-- General Settings -->
 <!ENTITY enableGlodaSearch.label       "Ativar pesquisa global e indexação">
 <!ENTITY enableGlodaSearch.accesskey   "A">
-<!ENTITY dateTimeFormatting.label      "Formatação de Data e Hora">
+<!ENTITY dateTimeFormatting.label      "Formatação de data e hora">
 <!ENTITY languageSelector.label        "Idioma">
 <!ENTITY allowHWAccel.label            "Usar aceleração de hardware quando disponível">
 <!ENTITY allowHWAccel.accesskey        "h">
-<!ENTITY storeType.label               "Tipo de armazenamento de mensagem para contas novas:">
+<!ENTITY storeType.label               "Tipo de armazenamento de mensagens de contas novas:">
 <!ENTITY storeType.accesskey           "T">
 <!ENTITY mboxStore2.label              "Um arquivo por pasta (mbox)">
 <!ENTITY maildirStore.label            "Um arquivo por mensagem (maildir)">
 
 <!ENTITY scrolling.label               "Navegação">
-<!ENTITY useAutoScroll.label           "Autorrolagem">
+<!ENTITY useAutoScroll.label           "Rolagem automática">
 <!ENTITY useAutoScroll.accesskey       "t">
 <!ENTITY useSmoothScrolling.label      "Rolagem suave">
 <!ENTITY useSmoothScrolling.accesskey  "R">
@@ -34,7 +34,7 @@
 <!ENTITY checkDefaultsNow.label        "Verificar agora…">
 <!ENTITY checkDefaultsNow.accesskey    "V">
 <!ENTITY configEditDesc.label          "Configuração avançada">
-<!ENTITY configEdit.label              "Editor de config…">
+<!ENTITY configEdit.label              "Editor de configurações…">
 <!ENTITY configEdit.accesskey          "E">
 <!ENTITY returnReceiptsInfo.label      "Determine como o &brandShortName; trata as confirmações de leitura.">
 <!ENTITY showReturnReceipts.label      "Confirmações de leitura…">
@@ -67,32 +67,33 @@
  -->
 <!ENTITY updateApp.version.pre           "Versão ">
 <!ENTITY updateApp.version.post          "">
+<!ENTITY updateAppAllow.description      "Permitir ao &brandShortName;">
 <!ENTITY updateAuto.label                "Instalar atualizações automaticamente (recomendado: melhoria da segurança)">
 <!ENTITY updateAuto.accesskey            "a">
 <!ENTITY updateCheck.label               "Verificar atualizações, mas permitir que eu escolha quando instalá-las">
 <!ENTITY updateCheck.accesskey           "c">
-<!ENTITY updateManual.label              "Nunca verificar se há atualizações (não recomendado: risco de segurança)">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "Exibir histórico de atualizações">
 <!ENTITY updateHistory.accesskey         "l">
 
 <!ENTITY useService.label                "Usar um serviço em segundo plano para instalar atualizações">
 <!ENTITY useService.accesskey            "s">
 
+<!ENTITY updateCrossUserSettingWarning.description "Esta configuração se aplicará a todas as contas do Windows e perfis do &brandShortName; que usam esta instalação do &brandShortName;.">
+
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "Configurar conexão…">
 <!ENTITY showSettings.accesskey        "C">
 <!ENTITY proxiesConfigure.label        "Determine como o &brandShortName; conecta-se à internet.">
 <!ENTITY connectionsInfo.caption       "Conexão">
-<!ENTITY offlineInfo.caption           "Off-line">
-<!ENTITY offlineInfo.label             "Configure o modo off-line.">
-<!ENTITY showOffline.label             "Configurar modo off-line…">
+<!ENTITY offlineInfo.caption           "Desconectado">
+<!ENTITY offlineInfo.label             "Configurar o modo desconectado">
+<!ENTITY showOffline.label             "Desconectado…">
 <!ENTITY showOffline.accesskey         "o">
 
 <!ENTITY Diskspace                       "Espaço em disco">
 <!ENTITY offlineCompactFolders.label     "Condensar todas as pastas se puder liberar pelo menos">
 <!ENTITY offlineCompactFolders.accesskey "n">
-<!ENTITY offlineCompactFoldersMB.label   "MB">
+<!ENTITY offlineCompactFoldersMB.label   "MB no total">
 
 <!-- LOCALIZATION NOTE:
   The entities useCacheBefore.label and useCacheAfter.label appear on a single
@@ -104,7 +105,7 @@
 <!ENTITY useCacheBefore.accesskey        "s">
 <!ENTITY useCacheAfter.label             "MB de espaço para o cache">
 <!ENTITY overrideSmartCacheSize.label    "Substituir o gerenciamento automático do cache">
-<!ENTITY overrideSmartCacheSize.accesskey "v">
+<!ENTITY overrideSmartCacheSize.accesskey "u">
 <!ENTITY clearCacheNow.label             "Limpar cache agora">
 <!ENTITY clearCacheNow.accesskey         "L">
 
@@ -121,3 +122,8 @@
 <!ENTITY manageCertificates.accesskey "G">
 <!ENTITY viewSecurityDevices.label "Dispositivos de segurança">
 <!ENTITY viewSecurityDevices.accesskey "D">
+
+<!ENTITY manageCertificates2.label "Gerenciar certificados…">
+<!ENTITY manageCertificates2.accesskey "G">
+<!ENTITY viewSecurityDevices2.label "Dispositivos de segurança…">
+<!ENTITY viewSecurityDevices2.accesskey "D">

@@ -29,6 +29,10 @@
 
 <!ENTITY fillLoginMenu.label          "로그인 입력">
 <!ENTITY fillLoginMenu.accesskey      "F">
+<!ENTITY fillSuggestedPassword.label  "추천 암호 사용">
+<!ENTITY fillSuggestedPassword.accesskey "S">
+<!ENTITY fillGeneratedPassword.label  "안전하게 생성된 비밀번호 사용">
+<!ENTITY fillGeneratedPassword.accesskey "S">
 <!ENTITY fillPasswordMenu.label       "비밀번호 입력">
 <!ENTITY fillPasswordMenu.accesskey   "F">
 <!ENTITY fillUsernameMenu.label       "사용자 이름 입력">

@@ -6,8 +6,13 @@ profiles-title = Sobre os perfis
 profiles-subtitle = Esta página ajuda a gerenciar seus perfis. Cada perfil é um mundo separado que contém histórico, favoritos, configurações e extensões separados.
 profiles-create = Criar um novo perfil
 profiles-restart-title = Reiniciar
-profiles-restart-in-safe-mode = Reiniciar com as extensões desabilitadas…
+profiles-restart-in-safe-mode = Reiniciar com extensões desativadas…
 profiles-restart-normal = Reiniciar normalmente…
+profiles-conflict = Outra cópia do { -brand-product-name } fez mudanças em perfis. Você deve reiniciar o { -brand-short-name } antes de fazer mais alterações.
+profiles-flush-fail-title = As alterações não foram salvas
+profiles-flush-conflict = { profiles-conflict }
+profiles-flush-failed = Um erro inesperado impediu que suas alterações fossem salvas.
+profiles-flush-restart-button = Reiniciar o { -brand-short-name }
 # Variables:
 #   $name (String) - Name of the profile
 profiles-name = Perfil: { $name }
@@ -26,6 +31,8 @@ profiles-rename = Renomear
 profiles-remove = Remover
 profiles-set-as-default = Definir como perfil padrão
 profiles-launch-profile = Iniciar o perfil em um novo navegador
+profiles-cannot-set-as-default-title = Não foi possível definir padrão
+profiles-cannot-set-as-default-message = O perfil padrão não pode ser alterado no { -brand-short-name }.
 profiles-yes = sim
 profiles-no = não
 profiles-rename-profile-title = Renomear perfil
@@ -42,7 +49,7 @@ profiles-delete-profile-title = Excluir perfil
 profiles-delete-profile-confirm =
     A exclusão de um perfil removerá o perfil na lista de perfis disponíveis e não poderá ser desfeito.
     Você também pode optar por excluir os arquivos de dados do perfil, incluindo suas configurações, certificados e outros dados relacionados ao usuário. Esta opção excluirá a pasta “{ $dir }” e não poderá ser desfeita.
-    Você gostaria de excluir os arquivos de dados do perfil?
+    Quer excluir os arquivos de dados do perfil?
 profiles-delete-files = Excluir arquivos
 profiles-dont-delete-files = Não excluir arquivos
 profiles-delete-profile-failed-title = Erro

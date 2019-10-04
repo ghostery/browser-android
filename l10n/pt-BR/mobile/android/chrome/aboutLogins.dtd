@@ -6,5 +6,5 @@
    %brandDTD;
 <!ENTITY aboutLogins.title                       "Contas de acesso">
 <!ENTITY aboutLogins.update                      "Atualizar">
-<!ENTITY aboutLogins.emptyLoginText              "Manter suas contas de acesso seguras">
+<!ENTITY aboutLogins.emptyLoginText              "Mantenha suas contas de acesso protegidas">
 <!ENTITY aboutLogins.emptyLoginHint              "As contas de acesso e credenciais salvas no &brandShortName; aparecerão aqui.">

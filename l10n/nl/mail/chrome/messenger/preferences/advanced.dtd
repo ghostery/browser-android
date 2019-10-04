@@ -67,6 +67,7 @@
  -->
 <!ENTITY updateApp.version.pre           "Versie ">
 <!ENTITY updateApp.version.post          "">
+<!ENTITY updateAppAllow.description      "&brandShortName; mag">
 <!ENTITY updateAuto.label                "Updates automatisch installeren (aanbevolen: verbeterde beveiliging)">
 <!ENTITY updateAuto.accesskey            "U">
 <!ENTITY updateCheck.label               "Controleren op updates, maar mij laten kiezen of ik deze wil installeren">
@@ -76,6 +77,8 @@
 
 <!ENTITY useService.label                "Een achtergrondservice gebruiken om updates te installeren">
 <!ENTITY useService.accesskey            "a">
+
+<!ENTITY updateCrossUserSettingWarning.description "Deze instelling is van toepassing op alle Windows-accounts en &brandShortName;-profielen die deze installatie van &brandShortName; gebruiken.">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "Instellingen…">
@@ -119,3 +122,7 @@
 <!ENTITY manageCertificates.accesskey   "C">
 <!ENTITY viewSecurityDevices.label      "Beveiligingsapparaten">
 <!ENTITY viewSecurityDevices.accesskey  "B">
+<!ENTITY manageCertificates2.label "Certificaten beheren…">
+<!ENTITY manageCertificates2.accesskey "C">
+<!ENTITY viewSecurityDevices2.label "Beveiligingsapparaten…">
+<!ENTITY viewSecurityDevices2.accesskey "B">

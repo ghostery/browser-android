@@ -8,6 +8,11 @@ profiles-create = Créer un nouveau profil
 profiles-restart-title = Redémarrer
 profiles-restart-in-safe-mode = Redémarrer avec les modules désactivés…
 profiles-restart-normal = Redémarrer normalement…
+profiles-conflict = Une autre copie de { -brand-product-name } a apporté des modifications aux profils. Vous devez redémarrer { -brand-short-name } avant de procéder à d’autres changements.
+profiles-flush-fail-title = Modifications non enregistrées
+profiles-flush-conflict = { profiles-conflict }
+profiles-flush-failed = Une erreur inattendue a empêché l’enregistrement de vos modifications.
+profiles-flush-restart-button = Redémarrer { -brand-short-name }
 # Variables:
 #   $name (String) - Name of the profile
 profiles-name = Profil : { $name }
@@ -26,6 +31,8 @@ profiles-rename = Renommer
 profiles-remove = Supprimer
 profiles-set-as-default = Définir comme profil par défaut
 profiles-launch-profile = Lancer le profil dans un nouveau navigateur
+profiles-cannot-set-as-default-title = Impossible de définir comme profil par défaut
+profiles-cannot-set-as-default-message = Le profil par défaut ne peut pas être changé pour { -brand-short-name }.
 profiles-yes = oui
 profiles-no = non
 profiles-rename-profile-title = Renommer un profil
@@ -49,7 +56,7 @@ profiles-delete-profile-failed-title = Erreur
 profiles-delete-profile-failed-message = Une erreur s’est produite lors de la tentative de suppression de ce profil.
 profiles-opendir =
     { PLATFORM() ->
-        [macos] Ouvrir dans le Finder
+        [macos] Afficher dans le Finder
         [windows] Ouvrir le dossier
        *[other] Ouvrir le répertoire
     }

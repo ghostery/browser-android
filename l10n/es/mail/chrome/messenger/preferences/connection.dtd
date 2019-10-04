@@ -37,6 +37,7 @@
 <!ENTITY noproxy.label "No usar proxy para:">
 <!ENTITY noproxy.accesskey "n">
 <!ENTITY noproxyExplain.label "Ejemplo: .mozilla.org, .net.nz, 192.168.1.0/24">
+<!ENTITY noproxyLocalhostDesc.label "Las conexiones a localhost, 127.0.0.1 y ::1 nunca se tratan por el proxy.">
 <!ENTITY shareproxy.label "Usar el mismo proxy para todo">
 <!ENTITY shareproxy.accesskey "x">
 <!ENTITY autologinproxy.label "No solicitar identificación si la contraseña está guardada">
@@ -46,12 +47,4 @@
 <!ENTITY socksRemoteDNS.accesskey "5">
 <!ENTITY dnsOverHttps.label "Activar DNS sobre HTTPS">
 <!ENTITY dnsOverHttps.accesskey "v">
-<!ENTITY dnsOverHttpsUrl.label "URL">
-<!ENTITY dnsOverHttpsUrl.accesskey "R">
-<!ENTITY dnsOverHttpsUrl.tooltip "URL para resolver DNS sobre HTTPS">
-<!ENTITY dnsOverHttpsUrlDefault.label "Usar valor preterminado">
-<!ENTITY dnsOverHttpsUrlDefault.accesskey "U">
 <!ENTITY dnsOverHttpsUrlDefault.tooltip "Usar la URL predeterminada para la resolución DNS sobre HTTPS">
-<!ENTITY dnsOverHttpsUrlCustom.label "Personalizado">
-<!ENTITY dnsOverHttpsUrlCustom.accesskey "P">
-<!ENTITY dnsOverHttpsUrlCustom.tooltip "Introduzca su URL preferida para la resolución DNS sobre HTTPS">

@@ -8,6 +8,7 @@
   -->
 
 <!ENTITY pref.calendar.view.allview.caption "Általános">
+
 <!ENTITY pref.calendar.view.dayandweekviews.caption "Napi és heti nézetek">
 <!ENTITY pref.calendar.view.multiweekview.caption "Többheti nézet">
 <!ENTITY pref.calendar.view.workweek.caption "Munkahét">
@@ -17,6 +18,8 @@
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Hétszám megjelenítése a nézetekben és a mini hónapban">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "H">
 <!ENTITY pref.daysoff.label "A munkahét napjai:">
+
+<!ENTITY pref.workweekDays.label "Munkahét napjai:">
 
 <!ENTITY pref.calendar.view.daystart.label "A nap kezdete:">
 <!ENTITY pref.calendar.view.daystart.accesskey "k">

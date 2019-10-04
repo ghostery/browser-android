@@ -12,13 +12,14 @@
 <!ENTITY pref.calendar.alarms.playsound.accessKey "s">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "기본 소리 사용">
 <!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "다음 소리 파일 사용">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "U">
 <!ENTITY pref.calendar.alarms.sound.browse.label "찾아보기…">
 <!ENTITY pref.calendar.alarms.sound.browse.accessKey "B">
 <!ENTITY pref.calendar.alarms.sound.play.label "재생">
 <!ENTITY pref.calendar.alarms.sound.play.accessKey "P">
 <!ENTITY pref.showalarmbox "알람 상자 보이기">
 <!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "x">
-<!ENTITY pref.missedalarms "경과된 알람 보이기">
 <!ENTITY pref.missedalarms2 "수정 가능한 캘린더의 경과된 알람 보이기">
 <!ENTITY pref.calendar.alarms.missedAlarms.accessKey "m">
 <!ENTITY pref.calendar.alarms.defaults.label "알람 기본 설정">

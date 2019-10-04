@@ -3,31 +3,51 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY autoconfigWizard2.title         "Настройка имеющейся у вас учётной записи электронной почты">
+
+<!ENTITY emailWizard.title               "Настройка имеющейся у вас учётной записи электронной почты">
+<!ENTITY emailWizard.caption             "Использовать ваш текущий адрес электронной почты">
 <!ENTITY name.label                      "Ваше имя:">
 <!ENTITY name.accesskey                  "ш">
 <!ENTITY name.placeholder                "Имя Фамилия">
+<!ENTITY fullname.placeholder            "Ваше полное имя">
 <!ENTITY name.text                       "Ваше имя, как оно отображается у других">
+<!ENTITY name.error                      "Пожалуйста, введите своё имя">
 <!ENTITY email.label                     "Адрес эл. почты:">
 <!ENTITY email.accesskey                 "д">
 <!-- LOCALIZATION NOTE(email.placeholder): Domain @example.com must stay in English -->
 <!ENTITY email2.placeholder              "email@test.ru">
+<!ENTITY email3.placeholder              "Ваш адрес эл. почты">
 <!ENTITY email.text                      "Имеющаяся у вас учётная запись электронной почты">
+<!ENTITY email.error                     "Некорректный адрес эл. почты">
 <!ENTITY password.label                  "Пароль:">
 <!ENTITY password.accesskey              "р">
 <!ENTITY password.placeholder            "Пароль">
 <!ENTITY password.text                   "Необязательно, будет использоваться только для проверки имени пользователя">
+<!ENTITY password.toggle                 "Показать/Скрыть пароль">
 <!ENTITY rememberPassword.label          "Запомнить пароль">
 <!ENTITY rememberPassword.accesskey      "н">
+<!ENTITY usernameEx.label                "Ваше имя пользователя:">
+<!ENTITY usernameEx.accesskey            "о">
+<!-- LOCALIZATION NOTE(usernameEx.placeholder): YOURDOMAIN refers to the Windows domain in ActiveDirectory. yourusername refers to the user's account name in Windows. -->
+<!ENTITY usernameEx.placeholder          "ВАШ ДОМЕН\ваше имя пользователя">
+<!-- LOCALIZATION NOTE(usernameEx.text): Domain refers to the Windows domain in ActiveDirectory. We mean the user's login in Windows at the local corporate network. -->
+<!ENTITY usernameEx.text                 "Имя пользователя в домене">
 
+<!ENTITY protocol.label                  "Протокол:">
 <!ENTITY imapLong.label                  "IMAP (удалённый доступ к папкам)">
 <!ENTITY pop3Long.label                  "POP3 (хранить почту на вашем компьютере)">
 
 <!ENTITY incoming.label                  "Входящая:">
+<!ENTITY incomingColumn.label            "Входящий">
 <!ENTITY outgoing.label                  "Исходящая:">
+<!ENTITY outgoingColumn.label            "Исходящий">
 <!ENTITY username.label                  "Имя пользователя:">
 <!ENTITY hostname.label                  "Имя сервера">
 <!ENTITY port.label                      "Порт">
 <!ENTITY ssl.label                       "SSL">
+<!ENTITY serverRow.label                 "Сервер:">
+<!ENTITY portRow.label                   "Порт:">
+<!ENTITY sslRow.label                    "SSL:">
 <!ENTITY auth.label                      "Аутентификация">
 <!ENTITY imap.label                      "IMAP">
 <!ENTITY pop3.label                      "POP3">
@@ -53,15 +73,21 @@
 <!ENTITY stop.label                      "Стоп">
 <!ENTITY stop.accesskey                  "п">
 <!-- LOCALIZATION NOTE (half-manual-test.label): This is the text that is
-     displayed on the button in manual edit mode which will re-guess
+     displayed on the button in manual config mode which will re-guess
      the account configuration, taking into account the settings that
      the user has manually changed. -->
 <!ENTITY half-manual-test.label          "Перетестировать">
 <!ENTITY half-manual-test.accesskey      "е">
 <!ENTITY manual-edit.label               "Настройка вручную">
 <!ENTITY manual-edit.accesskey           "а">
+<!ENTITY manual-config.label             "Настроить вручную…">
+<!ENTITY manual-config.accesskey         "а">
 <!ENTITY open-provisioner.label          "Получить новый адрес электронной почты…">
 <!ENTITY open-provisioner.accesskey      "ч">
+
+
+<!ENTITY get-help.label                  "Получить помощь">
+<!ENTITY get-help.accesskey              "ь">
 
 
 <!ENTITY warning.label                   "Предупреждение!">

@@ -4,6 +4,7 @@
 
 history-title = Updategeschiedenis
 history-intro = De volgende updates zijn geïnstalleerd
+
 close-button-label =
     .buttonlabelcancel = Sluiten
     .title = Updategeschiedenis
@@ -19,5 +20,8 @@ state-header = Staat
 # Variables:
 #   $name (String): name of the update
 #   $buildID (String): build identifier from the local updates.xml
-update-full-name =
-    .name = { $name } ({ $buildID })
+update-full-build-name = { $name } ({ $buildID })
+
+update-details = Details
+update-installed-on = Geïnstalleerd op: { $date }
+update-status = Status: { $status }

@@ -29,7 +29,7 @@
 <!ENTITY links.label "Comportamento do link">
 <!ENTITY download.label "Downloads">
 
-<!ENTITY security.label "Privacidade &amp; Segurança">
+<!ENTITY security.label "Privacidade e Segurança">
 <!ENTITY privatedata.label "Dados pessoais">
 <!ENTITY cookies.label "Cookies">
 <!ENTITY images.label "Imagens">
@@ -42,7 +42,7 @@
 <!ENTITY sync.label "Sync">
 
 <!ENTITY advance.label "Avançado">
-<!ENTITY scriptsAndWindows.label "Scripts &amp; Plugins">
+<!ENTITY scriptsAndWindows.label "Scripts e Plugins">
 <!ENTITY keynav.label "Teclado">
 <!ENTITY findAsYouType.label "Localizar texto ao digitar">
 <!ENTITY cache.label "Cache">

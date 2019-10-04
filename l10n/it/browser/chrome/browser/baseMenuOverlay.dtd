@@ -18,7 +18,7 @@
 <!ENTITY helpMac.commandkey "?">
 <!ENTITY helpKeyboardShortcuts.label "Scorciatoie da tastiera">
 <!ENTITY helpKeyboardShortcuts.accesskey "S">
-<!ENTITY helpSafeMode.label "Riavvia disattivando i componenti aggiuntivi">
+<!ENTITY helpSafeMode.label "Riavvia disattivando i componenti aggiuntivi…">
 <!ENTITY helpSafeMode.accesskey "d">
 <!ENTITY helpSafeMode.stop.label "Riavvia attivando i componenti aggiuntivi">
 <!ENTITY helpSafeMode.stop.accesskey "R">
@@ -36,3 +36,4 @@
 <!ENTITY hideOtherAppsCmdMac.label "Nascondi altre">
 <!ENTITY hideOtherAppsCmdMac.commandkey "H">
 <!ENTITY showAllAppsCmdMac.label "Mostra tutte">
+<!ENTITY touchBarCmdMac.label "Personalizza Touch Bar…">

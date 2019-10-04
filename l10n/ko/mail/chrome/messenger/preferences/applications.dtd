@@ -34,5 +34,7 @@
 <!ENTITY authRequired.button.label        "허가">
 <!ENTITY authRequired.button.accesskey    "U">
 
+<!ENTITY findCloudFileProviders.label     "다른 제공 업체 찾기…">
+
 <!ENTITY enableCloudFileAccountOffer.label "다음 크기보다 큰 파일의 첨부시에 링크 공유:">
 <!ENTITY enableCloudFileAccountOffer.mb "MB">

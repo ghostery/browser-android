@@ -17,13 +17,13 @@
 <!ENTITY newContact.label "Contato de catálogo de endereços…">
 <!ENTITY newContact.accesskey "C">
 <!ENTITY attachMenu.label "Anexar">
-<!ENTITY attachMenu.accesskey "x">
+<!ENTITY attachMenu.accesskey "n">
 <!ENTITY attachFileCmd.label "Arquivos…">
 <!ENTITY attachFileCmd.accesskey "A">
 <!ENTITY attachFileCmd.key "a">
 <!ENTITY attachCloudCmd.label "Anexo on-line">
 <!ENTITY attachCloudCmd.accesskey "l">
-<!ENTITY attachPageCmd.label "Página da web…">
+<!ENTITY attachPageCmd.label "Página web…">
 <!ENTITY attachPageCmd.accesskey "w">
 <!--LOCALIZATION NOTE attachVCardCmd.label Don't translate the term 'vCard' -->
 <!ENTITY attachVCardCmd.label "vCard">
@@ -118,11 +118,11 @@
 
 <!-- Reorder Attachment Panel -->
 <!ENTITY reorderAttachmentsPanel.label "Reordenar anexos">
-<!ENTITY moveAttachmentTopPanelBtn.label "Mover para o topo">
+<!ENTITY moveAttachmentTopPanelBtn.label "Mover para o início">
 <!ENTITY moveAttachmentUpPanelBtn.label "Mover para cima">
 <!ENTITY moveAttachmentBundleUpPanelBtn.label "Mover junto">
 <!ENTITY moveAttachmentDownPanelBtn.label "Mover para baixo">
-<!ENTITY moveAttachmentBottomPanelBtn.label "Mover para o fundo">
+<!ENTITY moveAttachmentBottomPanelBtn.label "Mover para o final">
 
 <!-- LOCALIZATION NOTE (sortAttachmentsPanelBtn.Sort.AZ.label):
      Please ensure that this translation matches
@@ -141,9 +141,9 @@
 <!ENTITY viewMenu.accesskey "x">
 <!ENTITY viewToolbarsMenuNew.label "Barras de ferramentas">
 <!ENTITY viewToolbarsMenuNew.accesskey "B">
-<!ENTITY menubarCmd.label "Barra de menus">
+<!ENTITY menubarCmd.label "Barra de menu">
 <!ENTITY menubarCmd.accesskey "m">
-<!ENTITY showCompositionToolbarCmd.label "Barra de ferramentas de composição">
+<!ENTITY showCompositionToolbarCmd.label "Barra de redação">
 <!ENTITY showCompositionToolbarCmd.accesskey "a">
 <!ENTITY showFormattingBarCmd.label "Barra de formatação">
 <!ENTITY showFormattingBarCmd.accesskey "f">
@@ -211,7 +211,7 @@
 <!-- Tools Menu -->
 <!ENTITY tasksMenu.label "Ferramentas">
 <!ENTITY tasksMenu.accesskey "F">
-<!ENTITY messengerCmd.label "Mensagens">
+<!ENTITY messengerCmd.label "E-mail e grupos de notícias">
 <!ENTITY messengerCmd.accesskey "M">
 <!ENTITY messengerCmd.commandkey "1">
 <!ENTITY addressBookCmd.label "Catálogo de endereços">
@@ -263,7 +263,7 @@
 <!ENTITY toAddr.label "Para:">
 <!ENTITY ccAddr.label "Cc:">
 <!ENTITY bccAddr.label "Cco:">
-<!ENTITY replyAddr.label "Responder a:">
+<!ENTITY replyAddr.label "Responder:">
 <!ENTITY newsgroupsAddr.label "Newsgroup:">
 <!ENTITY followupAddr.label "Followup-To:">
 <!ENTITY subject.label "Assunto:">
@@ -339,7 +339,7 @@
 <!ENTITY cancelUpload.accesskey "n">
 <!ENTITY convertRegularAttachment.label "Anexo normal">
 <!ENTITY convertRegularAttachment.accesskey "A">
-<!ENTITY attachPage.label "Anexar página da web…">
+<!ENTITY attachPage.label "Anexar página web…">
 <!ENTITY attachPage.accesskey "w">
 
 <!-- Attachment Pane Header Bar Context Menu -->

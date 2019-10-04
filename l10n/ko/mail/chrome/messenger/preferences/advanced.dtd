@@ -67,17 +67,18 @@
  -->
 <!ENTITY updateApp.version.pre           " ">
 <!ENTITY updateApp.version.post          " 버전">
+<!ENTITY updateAppAllow.description      "&brandShortName;가 다음을 하도록 허용">
 <!ENTITY updateAuto.label                "자동으로 업데이트 설치하기 (추천방식: 보안이 강화됨)">
 <!ENTITY updateAuto.accesskey            "A">
 <!ENTITY updateCheck.label               "새 업데이트를 체크하고 설치여부 묻기">
 <!ENTITY updateCheck.accesskey           "C">
-<!ENTITY updateManual.label              "새 업데이트 체크하지 않기(추천하지 않음: 보안 위험)">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "업데이트 기록 보기">
 <!ENTITY updateHistory.accesskey         "p">
 
 <!ENTITY useService.label                "업데이트 설치를 위해 백그라운드 서비스를 이용">
 <!ENTITY useService.accesskey            "b">
+
+<!ENTITY updateCrossUserSettingWarning.description "이 설정은 모든 Windows 계정과 &brandShortName; 프로필을 사용하는 이 &brandShortName; 설치본에 적용됩니다.">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "연결 설정…">

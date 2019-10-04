@@ -27,6 +27,14 @@ serviceworker-worker-debug = 디버그
 # Text for the start link displayed for a registered but not running Service Worker.
 # Clicking on the link will attempt to start the service worker.
 serviceworker-worker-start = 시작
+# Text for the debug link displayed for an already started Service Worker, when we
+# are in multi e10s mode, which effectively disables this link.
+serviceworker-worker-debug-forbidden = 디버그
+    .title = 다중 e10s가 비활성화 된 경우에만 서비스 워커를 디버깅 할 수 있습니다.
+# Text for the start link displayed for a registered but not running Service Worker.
+# Clicking on the link will attempt to start the service worker.
+serviceworker-worker-start2 = 시작
+    .title = 다중 e10s가 비활성화 된 경우에만 서비스 워커를 시작할 수 있습니다.
 # Text displayed for the updated time of the service worker. The <time> element will
 # display the last update time of the service worker script.
 serviceworker-worker-updated = <time>{ DATETIME($date, month: "long", year: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric") }</time>에 업데이트됨
@@ -61,3 +69,5 @@ serviceworker-empty-suggestions-debugger = 서비스 워커 등록과정을 살�
 # Suggestion to go to about:debugging in order to see Service Workers for all domains.
 # Clicking on the link will open about:debugging in a new tab.
 serviceworker-empty-suggestions-aboutdebugging = 다른 도메인의 서비스 워커를 조사해 보세요. <a>about:debugging 열기</a>
+# Text displayed when no manifest was found for the current page.
+manifest-empty-intro = 검사할 매니페스트가 없습니다.

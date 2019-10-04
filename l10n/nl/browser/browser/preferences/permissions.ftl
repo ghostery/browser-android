@@ -5,63 +5,54 @@
 permissions-window =
     .title = Uitzonderingen
     .style = width: 45em
-
 permissions-close-key =
     .key = w
-
 permissions-address = Adres van website
     .accesskey = d
-
 permissions-block =
     .label = Blokkeren
     .accesskey = B
-
 permissions-session =
     .label = Toestaan voor sessie
     .accesskey = o
-
 permissions-allow =
     .label = Toestaan
     .accesskey = T
-
 permissions-site-name =
     .label = Website
-
 permissions-status =
     .label = Status
-
 permissions-remove =
     .label = Website verwijderen
     .accesskey = v
-
 permissions-remove-all =
     .label = Alle websites verwijderen
     .accesskey = A
-
 permissions-button-cancel =
     .label = Annuleren
     .accesskey = n
-
 permissions-button-ok =
     .label = Wijzigingen opslaan
     .accesskey = s
-
+permissions-autoplay-menu = Standaard voor alle websites:
 permissions-searchbox =
     .placeholder = Website doorzoeken
-
+permissions-capabilities-autoplay-allow =
+    .label = Audio en video toestaan
+permissions-capabilities-autoplay-block =
+    .label = Audio blokkeren
+permissions-capabilities-autoplay-blockall =
+    .label = Audio en video blokkeren
 permissions-capabilities-allow =
     .label = Toestaan
 permissions-capabilities-block =
     .label = Blokkeren
 permissions-capabilities-prompt =
     .label = Altijd vragen
-
 permissions-capabilities-listitem-allow =
     .value = Toestaan
 permissions-capabilities-listitem-block =
     .value = Blokkeren
-permissions-capabilities-listitem-allow-first-party =
-    .value = Van derden blokkeren
 permissions-capabilities-listitem-allow-session =
     .value = Toestaan voor sessie
 
@@ -76,6 +67,10 @@ permissions-exceptions-content-blocking-window =
     .title = Uitzonderingen - Inhoudsblokkering
     .style = { permissions-window.style }
 permissions-exceptions-content-blocking-desc = U hebt inhoudsblokkering uitgeschakeld op deze websites.
+permissions-exceptions-etp-window =
+    .title = Uitzonderingen voor Verbeterde bescherming tegen volgen
+    .style = { permissions-window.style }
+permissions-exceptions-etp-desc = U hebt beschermingen voor deze websites uitgeschakeld.
 
 ## Exceptions - Cookies
 
@@ -111,6 +106,13 @@ permissions-exceptions-autoplay-media-window2 =
     .title = Uitzonderingen - Automatisch afspelen
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = U kunt opgeven welke websites altijd of nooit toestemming hebben om automatisch media met geluid af te spelen. Typ het adres van de website die u wilt beheren en klik vervolgens op Blokkeren of Toestaan.
+
+## Site Permissions - Autoplay
+
+permissions-site-autoplay-window =
+    .title = Instellingen - Automatisch afspelen
+    .style = { permissions-window.style }
+permissions-site-autoplay-desc = U kunt hier de websites beheren die uw standaardinstellingen voor automatisch afspelen niet volgen.
 
 ## Site Permissions - Notifications
 

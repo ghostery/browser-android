@@ -11,11 +11,11 @@
 <!ENTITY fccReplyFollowsParent.label "Colocar respostas na pasta da mensagem sendo respondida">
 <!ENTITY fccReplyFollowsParent.accesskey "C">
 <!-- LOCALIZATION NOTE (ccAddress.label): do not translate "Cc" in below line -->
-<!ENTITY ccAddress.label "Cc para estes endereços:">
+<!ENTITY ccAddress.label "Cc para esses endereços:">
 <!ENTITY ccAddress.accesskey "d">
 <!ENTITY ccAddressList.placeholder "Separe endereços com vírgulas">
 <!-- LOCALIZATION NOTE (bccAddress.label): do not translate "Bcc" in below line -->
-<!ENTITY bccAddress.label "Cco para estes endereços:">
+<!ENTITY bccAddress.label "Cco para esses endereços:">
 <!ENTITY bccAddress.accesskey "C">
 <!ENTITY bccAddressList.placeholder "Separe endereços com vírgulas">
 <!ENTITY saveMessageDlg.label "Mostrar caixa de diálogo de confirmação quando salvar mensagens">

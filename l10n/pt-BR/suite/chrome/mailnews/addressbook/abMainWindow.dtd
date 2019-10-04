@@ -1,22 +1,22 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- Title -->
-
 <!ENTITY addressbookWindow.title                        "Catálogo de Endereços">
+
 <!-- Menus:  the . means that the menu item isn't implemented yet -->
+
 <!-- File Menu -->
-
-
 <!ENTITY newContact.label                               "Contato…">
 <!-- LOCALIZATION NOTE (newContact.accesskey) : DONT_TRANSLATE -->
 <!ENTITY newContact.accesskey                           "C">
-<!ENTITY newListCmd.label                               "&amp;Lista de emails...">
-<!-- LOCALIZATION NOTE (newListCmd.accesskey) : DONT_TRANSLATE -->  
+<!ENTITY newListCmd.label                               "Lista de emails…">
+<!-- LOCALIZATION NOTE (newListCmd.accesskey) : DONT_TRANSLATE -->
 <!ENTITY newListCmd.accesskey                           "L">  
 <!ENTITY newAddressBookCmd.label                        "Catálogo..."> 
 <!ENTITY newAddressBookCmd.accesskey                    "a">  
-<!ENTITY newLDAPDirectoryCmd.label                      "&amp;Diretório LDAP...">
+<!ENTITY newLDAPDirectoryCmd.label                      "Diretório LDAP…">
 <!-- LOCALIZATION NOTE (newLDAPDirectoryCmd.accesskey) : DONT_TRANSLATE -->
 <!ENTITY newLDAPDirectoryCmd.accesskey                  "D">
 <!ENTITY newIM.label                                    "Msg instantânea">
@@ -29,8 +29,8 @@
 <!ENTITY printAddressBook.accesskey                     "m"> 
 <!ENTITY printPreviewAddressBook.label                  "Visualizar impressão do catálogo"> 
 <!ENTITY printPreviewAddressBook.accesskey              "V">
-<!-- Edit Menu -->
 
+<!-- Edit Menu -->
 <!ENTITY deleteAbCmd.label                              "Excluir catálogo">  
 <!ENTITY deleteContactCmd.label                         "Excluir contato">
 <!ENTITY deleteContactsCmd.label                        "Excluir contatos selecionados">
@@ -39,12 +39,12 @@
 <!ENTITY deleteItemsCmd.label                           "Excluir itens selecionados">
 <!ENTITY swapFirstNameLastNameCmd.label                 "Trocar primeiro e último nome">
 <!ENTITY swapFirstNameLastNameCmd.accesskey             "t">  
-<!ENTITY propertiesCmd.label                            "Propr&amp;iedades">
-<!-- LOCALIZATION NOTE (propertiesCmd.accesskey) : DONT_TRANSLATE -->  
+<!ENTITY propertiesCmd.label                            "Propriedades…">
+<!-- LOCALIZATION NOTE (propertiesCmd.accesskey) : DONT_TRANSLATE -->
 <!ENTITY propertiesCmd.accesskey                        "i">  
 <!ENTITY propertiesCmd.key                              "i">  
-<!-- View Menu -->
 
+<!-- View Menu -->
 <!ENTITY showAbToolbarCmd.label                         "Padrão"> 
 <!ENTITY showAbToolbarCmd.accesskey                     "a">  
 <!ENTITY layoutMenu.label                               "Layout">
@@ -61,14 +61,14 @@
 <!ENTITY lastFirstCmd.accesskey                         "r"> 
 <!ENTITY displayNameCmd.label                           "Apresentar como">  
 <!ENTITY displayNameCmd.accesskey                       "m"> 
-<!-- Tasks Menu -->
 
+<!-- Tasks Menu -->
 <!ENTITY importCmd.label                                "Importar...">
 <!ENTITY importCmd.accesskey                            "I">
 <!ENTITY exportCmd.label                                "Exportar...">
 <!ENTITY exportCmd.accesskey                            "x">
-<!-- Toolbar and Popup items -->  
 
+<!-- Toolbar and Popup items -->
 <!ENTITY newContactButton.label                         "Novo contato">
 <!ENTITY newContactButton.accesskey                     "c">
 <!ENTITY newlistButton.label                            "Nova lista">  
@@ -83,8 +83,8 @@
 <!ENTITY newimButton.accesskey                          "s">  
 <!ENTITY searchNameAndEmail.placeholder                 "Pesquisa por nome e e-mail">
 <!ENTITY searchBox.title                                "Pesquisar">
-<!-- Tooltips -->
 
+<!-- Tooltips -->
 <!ENTITY addressbookToolbar.tooltip                     "Barra de ferramentas (clique para exibir)">
 <!ENTITY newContactButton.tooltip                       "Criar um novo contato do catálogo de endereços">
 <!ENTITY newlistButton.tooltip                          "Criar uma nova lista"> 
@@ -94,12 +94,12 @@
 <!ENTITY deleteItemButton.tooltip                       "Excluir item selecionado">
 <!ENTITY throbber.tooltip                               "Abrir o site do &vendorShortName; ">
 <!ENTITY advancedButton.tooltip                         "Mais opções de pesquisa">
-<!-- Dir Tree header -->
 
+<!-- Dir Tree header -->
 <!ENTITY dirTreeHeader.label                            "Catálogo de endereços">
+
 <!-- Card Summary Pane -->
 <!-- Box Headings -->
-
 <!ENTITY contact.heading                                "Contato">
 <!ENTITY home.heading                                   "Página Inicial">
 <!ENTITY other.heading                                  "Outros">
@@ -111,10 +111,10 @@
 <!-- For Map It! -->
 <!ENTITY mapItButton.label                              "Obter Mapa">
 <!ENTITY mapIt.tooltip                                  "Mostrar um mapa desse endereço a partir da Web">
-<!-- Status Bar -->  
 
+<!-- Status Bar -->
 <!ENTITY statusText.label                               "">
+
 <!-- LOCALIZATION NOTE (hideSwapFnLnUI) : DONT_TRANSLATE -->
 <!-- Swap FN/LN UI  Set to "false" to show swap fn/ln UI -->
-
 <!ENTITY  hideSwapFnLnUI                                "true">

@@ -5,6 +5,12 @@
 <!ENTITY msgComposeWindow.title "Redacción: (sin asunto)">
 <!ENTITY fromAddr.label "De:">
 <!ENTITY fromAddr.accesskey "D">
+<!ENTITY toAddr.label "Para:">
+<!ENTITY ccAddr.label "Cc:">
+<!ENTITY bccAddr.label "Bcc:">
+<!ENTITY replyAddr.label "Responder-a:">
+<!ENTITY newsgroupsAddr.label "Grupo de noticias:">
+<!ENTITY followupAddr.label "Followup-To:">
 <!ENTITY subject.label "Asunto:">
 <!ENTITY subject.accesskey "S">
 <!ENTITY attachments.label "Adjuntos:">

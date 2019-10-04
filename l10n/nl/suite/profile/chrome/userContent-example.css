@@ -14,7 +14,7 @@
  */
 
 /*
- * voorbeeld: het knipperen van "blink"-elementen uitzetten
+ * voorbeeld: het knipperen van ‘blink’-elementen uitzetten
  *
  * blink { text-decoration: none ! important; }
  *
@@ -22,12 +22,12 @@
 
 /*
  * voorbeeld: alle tabellen van een 2px rand voorzien
- * 
+ *
  * table { border: 2px solid; }
  */
 
 /*
- * voorbeeld: het "marquee"-element uitzetten
+ * voorbeeld: het ‘marquee’-element uitzetten
  *
  * marquee { -moz-binding: none; }
  *
@@ -41,7 +41,7 @@
  * }
  */
 
-/* 
+/*
  * Voor meer voorbeelden, zie http://www.mozilla.org/unix/customizing.html
  */
 

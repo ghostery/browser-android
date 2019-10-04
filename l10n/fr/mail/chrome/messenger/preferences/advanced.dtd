@@ -67,17 +67,18 @@
  -->
 <!ENTITY updateApp.version.pre           "Version ">
 <!ENTITY updateApp.version.post          "">
+<!ENTITY updateAppAllow.description      "Autoriser &brandShortName; à">
 <!ENTITY updateAuto.label                "Installer automatiquement les mises à jour (recommandé pour votre sécurité)">
 <!ENTITY updateAuto.accesskey            "A">
 <!ENTITY updateCheck.label               "Vérifier l’existence de mises à jour mais me laisser décider de leur installation">
 <!ENTITY updateCheck.accesskey           "C">
-<!ENTITY updateManual.label              "Ne jamais vérifier les mises à jour (déconseillé, cela représente un risque de sécurité)">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "Afficher l’historique des mises à jour">
 <!ENTITY updateHistory.accesskey         "h">
 
 <!ENTITY useService.label                "Utiliser un service en arrière-plan pour installer les mises à jour">
 <!ENTITY useService.accesskey            "s">
+
+<!ENTITY updateCrossUserSettingWarning.description "Ce paramètre s’appliquera à tous les comptes Windows et aux profils &brandShortName; utilisant cette installation de &brandShortName;.">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "Paramètres…">

@@ -34,8 +34,15 @@ permissions-button-cancel =
 permissions-button-ok =
     .label = 儲存變更
     .accesskey = S
+permissions-autoplay-menu = 對所有網站的預設行為:
 permissions-searchbox =
     .placeholder = 搜尋網站
+permissions-capabilities-autoplay-allow =
+    .label = 允許播放影音
+permissions-capabilities-autoplay-block =
+    .label = 封鎖音訊
+permissions-capabilities-autoplay-blockall =
+    .label = 封鎖影音內容
 permissions-capabilities-allow =
     .label = 允許
 permissions-capabilities-block =
@@ -46,8 +53,6 @@ permissions-capabilities-listitem-allow =
     .value = 允許
 permissions-capabilities-listitem-block =
     .value = 阻擋
-permissions-capabilities-listitem-allow-first-party =
-    .value = 僅允許第一方
 permissions-capabilities-listitem-allow-session =
     .value = 此次瀏覽階段允許
 
@@ -58,14 +63,14 @@ permissions-invalid-uri-label = 請輸入正確的主機名稱
 
 ## Exceptions - Tracking Protection
 
-permissions-exceptions-tracking-protection-window =
-    .title = 追蹤保護例外
-    .style = { permissions-window.style }
-permissions-exceptions-tracking-protection-desc = 您已對下列網站停用追蹤保護功能。
 permissions-exceptions-content-blocking-window =
     .title = 例外 - 內容封鎖
     .style = { permissions-window.style }
 permissions-exceptions-content-blocking-desc = 您已針對這些網站停用內容封鎖功能。
+permissions-exceptions-etp-window =
+    .title = 加強型追蹤保護的例外
+    .style = { permissions-window.style }
+permissions-exceptions-etp-desc = 您已針對下列網站關閉保護。
 
 ## Exceptions - Cookies
 
@@ -101,6 +106,13 @@ permissions-exceptions-autoplay-media-window2 =
     .title = 例外 - 自動播放
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = 您可以指定允許哪些網站是否可自動播放有聲音的媒體內容。請輸入您要指定的網站網址後按「封鎖」或「允許」。
+
+## Site Permissions - Autoplay
+
+permissions-site-autoplay-window =
+    .title = 設定 - 自動播放
+    .style = { permissions-window.style }
+permissions-site-autoplay-desc = 您可以在此處管理不遵守預設自動播放設定的網站。
 
 ## Site Permissions - Notifications
 

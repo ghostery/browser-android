@@ -4,10 +4,13 @@
 
 <!ENTITY firstrun_panel_title_welcome "Welkom">
 <!ENTITY firstrun_urlbar_message2 "Bedankt voor het kiezen van &brandShortName;">
+<!ENTITY newfirstrun_urlbar_message "Welkom bij &brandShortName;">
 <!ENTITY firstrun_urlbar_subtext2 "Een moderne mobiele browser van Mozilla, de non-profitorganisatie met toewijding aan een vrij en open web.">
+<!ENTITY newfirstrun_urlbar_subtext "Snel, privé en aan uw zijde.">
 <!ENTITY firstrun_panel_title_privacy "Privacy">
 <!ENTITY firstrun_privacy_message "Surf alsof niemand meekijkt">
 <!ENTITY firstrun_privacy_subtext "Privénavigatie met Bescherming tegen volgen blokkeert trackers terwijl u surft en onthoudt geen geschiedenis zodra u hiermee stopt.">
+<!ENTITY newfirstrun_privacy_subtext "Privénavigatie blokkeert advertentietrackers die u online volgen.">
 <!ENTITY firstrun_panel_title_customize "Aanpassen">
 <!ENTITY firstrun_customize_message "Maak &brandShortName; van uzelf.">
 <!ENTITY firstrun_customize_subtext "Pas &brandShortName; aan met add-ons. Blokkeer advertenties, voeg functies toe, of kies een nieuw thema om uw persoonlijkheid te weerspiegelen.">
@@ -18,10 +21,15 @@
 <!ENTITY firstrun_data_message "Minder gegevens, meer besparen">
 <!ENTITY firstrun_data_subtext2 "Zet afbeeldingen uit voor minder gegevensverkeer bij elke bezochte website.">
 <!ENTITY firstrun_sync_title "Sync">
+<!ENTITY updatednewfirstrun_sync_title "Account">
 <!ENTITY firstrun_sync_message2 "Ga verder waar u was gebleven.">
 <!ENTITY firstrun_sync_subtext2 "Gebruik Sync om de bladwijzers, wachtwoorden en andere dingen die u in &brandShortName; op al uw apparaten opslaat te vinden.">
+<!ENTITY newfirstrun_sync_subtext "Synchroniseer de dingen die u op mobiel opslaat naar Firefox voor desktop, privé en veilig.">
+<!ENTITY updatednewfirstrun_sync_subtext "Meld u aan bij uw account om het meeste uit &brandShortName; te halen">
 <!ENTITY firstrun_signin_message "Maak verbinding en begin">
 <!ENTITY firstrun_signin_button "Aanmelden bij Sync">
+<!ENTITY newfirstrun_signin_button "Sync inschakelen">
+<!ENTITY updatednewfirstrun_signin_button "Aanmelden bij &brandShortName;">
 <!ENTITY  onboard_start_button_browser "Beginnen met browsen">
 <!ENTITY firstrun_button_notnow "Niet nu">
 <!ENTITY firstrun_button_next "Volgende">
@@ -61,8 +69,19 @@
 <!ENTITY  sending_crash_report "Crashrapport verzenden\u2026">
 <!ENTITY  crash_close_label "Sluiten">
 <!ENTITY  crash_restart_label "&brandShortName; herstarten">
+<!-- Localization note (crash_notification_title, crash_notification_message, crash_notification_negative_button_text)
+     Text displayed in a system notification to allow starting the Crash Reporter (Android Q and later).-->
+<!ENTITY  crash_notification_title "&brandShortName; is gecrasht">
+<!ENTITY  crash_notification_message "Tik om dit aan &vendorShortName; te melden">
+<!ENTITY  crash_notification_negative_button_text "Negeren">
 
 <!ENTITY url_bar_default_text2 "Voer zoekterm of adres in">
+
+<!-- Localization note: this text will be displayed in the Search Widget -->
+<!ENTITY search_widget_default_text "Zoeken op het web">
+<!ENTITY search_widget_default_cropped_text "Zoeken">
+<!ENTITY search_widget_logo_description "Zoeken op het web met &brandShortName;">
+
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -97,6 +116,9 @@
 <!ENTITY bookmark_folder_updated "Map bijgewerkt">
 <!ENTITY bookmark_parent_folder "Bovenliggende map">
 <!ENTITY bookmark_add_folder "Nieuwe map toevoegen">
+<!-- Localization note (bookmark_default_folder_title): Default title is used if user doesn't specify
+     one when he is creating a bookmark folder -->
+<!ENTITY bookmark_default_folder_title "(geen titel)">
 
 <!ENTITY reader_saved_offline "Offline opgeslagen">
 <!-- Localization note (reader_switch_to_bookmarks) : This
@@ -256,6 +278,7 @@
 <!ENTITY pref_cookies_menu "Cookies">
 <!ENTITY pref_cookies_accept_all "Ingeschakeld">
 <!ENTITY pref_cookies_not_accept_foreign "Ingeschakeld, behalve van derden">
+<!ENTITY pref_cookies_not_accept_trackers "Ingeschakeld, exclusief trackingcookies">
 <!ENTITY pref_cookies_disabled "Uitgeschakeld">
 
 <!-- Localization note (pref_category_data_saver): “data saver” in this
@@ -290,11 +313,6 @@
 <!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "Meer info over het gebruik van &brandShortName; en andere &vendorShortName;-producten">
-<!-- Localization note (pref_feature_tips_notification_enabling_hint):
-     Describe the action the user should do to enable this preference
-     Will be used in the context "<Turn on> ... to enable this feature" -->
-<!ENTITY pref_feature_tips_notification_enabling_hint "Schakel deze functie in via">
-
 <!-- Localization note (pref_feature_tips_notification_enabling_path):
      Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
 <!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
@@ -322,11 +340,6 @@
 <!ENTITY pref_pwa "Progressieve webapps">
 <!ENTITY pref_pwa_summary "Toestaan dat webapps aan het startscherm worden toegevoegd">
 
-<!ENTITY tracking_protection_prompt_title "Nu met Bescherming tegen volgen">
-<!ENTITY tracking_protection_prompt_text "Blokkeer actief tracking-elementen, zodat u zich geen zorgen hoeft te maken.">
-<!ENTITY tracking_protection_prompt_tip_text "Bezoek Privacyinstellingen voor meer info">
-<!ENTITY tracking_protection_prompt_action_button "Begrepen!">
-
 <!ENTITY tab_queue_toast_message3 "Tabblad opgeslagen in &brandShortName;">
 <!ENTITY tab_queue_toast_action "Nu openen">
 <!ENTITY tab_queue_prompt_title "Meerdere koppelingen openen?">
@@ -340,6 +353,9 @@
 <!-- Localization note (tab_queue_prompt_settings_button): This button is shown if the user needs to
      enable a permission in Android's setting in order to enable tab queues. -->
 <!ENTITY tab_queue_prompt_settings_button "Naar Instellingen">
+<!-- Localization note (tab_queue_notification_prompt): This is the text of the default notification
+shown from Android O while a tab is being queued.-->
+<!ENTITY tab_queue_notification_prompt "Nieuw tabblad aan wachtrij toevoegen&#8230;">
 <!ENTITY tab_queue_notification_title "&brandShortName;">
 <!-- Localization note (tab_queue_notification_text_plural2) : The
      formatD is replaced with the number of tabs queued.  The
@@ -398,15 +414,17 @@
 <!ENTITY pref_private_data_searchHistory "Zoekgeschiedenis">
 <!ENTITY pref_private_data_formdata2 "Formuliergeschiedenis">
 <!ENTITY pref_private_data_cookies2 "Cookies &amp; actieve aanmeldingen">
-<!ENTITY pref_private_data_passwords2 "Opgeslagen aanmeldingen">
 <!ENTITY pref_private_data_cache "Buffer">
 <!ENTITY pref_private_data_offlineApps "Offlinewebsitegegevens">
 <!ENTITY pref_private_data_siteSettings2 "Website-instellingen">
 <!ENTITY pref_private_data_downloadFiles2 "Downloads">
 <!ENTITY pref_private_data_syncedTabs "Gesynchroniseerde tabbladen">
 
-<!ENTITY pref_default_browser "Standaardbrowser maken">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Mozilla Support bezoeken">
+<!ENTITY pref_default_browser2 "&brandShortName; uw standaardbrowser maken">
+<!-- LOCALIZATION NOTE (default_browser_system_settings_toast):
+    Message of an Android Toast that appears after our app opens "Android System Settings -> Apps -> Default apps"
+    and instruct users to tap on the "Browser app" option on that settings screen to choose a default browser app. -->
+<!ENTITY default_browser_system_settings_toast "Tik op de Browser-app &amp; selecteer &brandShortName;">
 <!ENTITY pref_about_firefox "Over &brandShortName;">
 <!ENTITY pref_vendor_faqs "FAQ’s">
 <!ENTITY pref_vendor_feedback "Feedback geven">
@@ -501,6 +519,10 @@
 <!ENTITY find_next "Volgende">
 <!ENTITY find_close "Sluiten">
 
+<!-- Localization note (find_error) : Error message shown when there is no result for the
+     searched for text in this webpage -->
+<!ENTITY find_error "Tekst niet gevonden">
+
 <!-- Localization note (media_sending_to, media_play, media_pause, media_stop) : These strings are used
      as alternate text for accessibility. They are not visible in the UI. -->
 <!ENTITY media_sending_to "Verzenden naar apparaat">
@@ -573,6 +595,8 @@
 <!ENTITY bookmark_edit_location "Locatie">
 <!ENTITY bookmark_edit_keyword "Sleutelwoord">
 <!ENTITY bookmark_select_folder "Map selecteren">
+
+<!ENTITY bookmark_edit_undo "Ongedaan maken">
 
 <!-- Localization note (site_settings_*) : These strings are used in the "Site Settings"
      dialog that appears after selecting the "Edit Site Settings" context menu item. -->
@@ -661,6 +685,7 @@
 <!ENTITY filepicker_audio_title "Een geluid kiezen of opnemen">
 <!ENTITY filepicker_image_title "Een foto kiezen of maken">
 <!ENTITY filepicker_video_title "Een video kiezen of opnemen">
+<!ENTITY filepicker_permission_denied "Vereiste machtigingen niet verleend, er wordt teruggevallen op de bestandszoeker van het systeem.">
 
 <!-- Site identity popup -->
 <!ENTITY identity_connected_to "U bent verbonden met">
@@ -725,7 +750,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 
 <!ENTITY searchable_description "Bladwijzers en geschiedenis">
 
-<!-- Updater notifications -->
+ <!-- Updater notifications -->
 <!ENTITY updater_start_title2 "Update voor &brandShortName; beschikbaar">
 <!ENTITY updater_start_select2 "Raak aan om te downloaden">
 
@@ -869,7 +894,7 @@ Stream list for highlights sourced from th user's bookmarks. -->
 Stream list for highlights sourced from th user's bookmarks. -->
 <!ENTITY activity_stream_highlight_label_visited "Bezocht">
 <!-- LOCALIZATION NOTE (activity_stream_highlight_label_trending): This label is shown in the Activity Stream list for highlights sourced from a recommendations engine. -->
-<!ENTITY activity_stream_highlight_label_trending "Populair">
+<!ENTITY activity_stream_highlight_label_trending "Trending">
 <!-- LOCALIZATION NOTE (activity_stream_highlights_empty): This text is shown when we could not find highlights for this user. This is also shown on first run. -->
 <!ENTITY activity_stream_highlights_empty "Begin met surfen, en we tonen hier een aantal geweldige artikelen, video’s en andere pagina’s die u onlangs hebt bezocht of waarvoor u een bladwijzer hebt gemaakt.">
 
@@ -903,16 +928,11 @@ Picture-in-picture mini window -->
 <!ENTITY pip_pause_button_title "Pauzeren">
 <!ENTITY pip_pause_button_description "Afspelen pauzeren">
 
-<!-- Notification channels names -->
-<!ENTITY default_notification_channel "&brandShortName;">
-
+<!ENTITY pref_notification_settings_link "Notificatie-instellingen beheren">
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel2 "Browser">
 <!ENTITY mls_notification_channel "&vendorShortName;-locatieservice">
 <!ENTITY download_notification_channel "Downloads">
-<!ENTITY media_notification_channel "Media afspelen">
-<!-- These push notifications come without a specific channel and/or name from Leanplum -->
-<!ENTITY leanplum_default_notifications_channel "&brandShortName;-pushnotificaties">
 <!ENTITY media_notification_channel2 "Geluid en video">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel2 "&vendorShortName;-tips en -trucs">
@@ -921,3 +941,4 @@ Picture-in-picture mini window -->
 <!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
 web sites through the HTML Notifications API. -->
 <!ENTITY site_notifications_channel "Websitenotificaties">
+<!ENTITY crash_handler_notifications_channel "&brandShortName; Crash Reporter">

@@ -118,12 +118,6 @@
 
 <!-- Runtime Details -->
 <!ENTITY runtimedetails_title "Runtime-info">
-<!ENTITY runtimedetails_adbIsRoot "ADB is root: ">
-<!ENTITY runtimedetails_summonADBRoot "rootapparaat">
-<!ENTITY runtimedetails_ADBRootWarning "(vereist niet-vergrendelde bootloader)">
-<!ENTITY runtimedetails_unrestrictedPrivileges "Onbeperkte DevTools-bevoegdheden: ">
-<!ENTITY runtimedetails_requestPrivileges "hogere bevoegdheden vragen">
-<!ENTITY runtimedetails_privilegesWarning "(Zal apparaat herstarten. Vereist root-toegang.)">
 
 <!-- Device Preferences and Settings -->
 <!ENTITY device_typeboolean "Boolean">
@@ -153,7 +147,7 @@
 <!ENTITY wifi_auth_header "Client-identificatie">
 <!-- LOCALIZATION NOTE (wifi_auth_scan_request): Instructions requesting the
      user to transfer authentication info by scanning a QR code. -->
-<!ENTITY wifi_auth_scan_request "Het eindpunt waarmee u verbinding maakt heeft meer informatie nodig om deze verbinding te authenticeren. Scan de onderstaande QR-code via de prompt op uw andere apparaat.">
+<!ENTITY wifi_auth_scan_request "Het eindpunt waarmee u verbinding maakt, heeft meer informatie nodig om deze verbinding te authenticeren. Scan de onderstaande QR-code via de prompt op uw andere apparaat.">
 <!-- LOCALIZATION NOTE (wifi_auth_no_scanner): Link text to assist users with
      devices that can't scan a QR code. -->
 <!ENTITY wifi_auth_no_scanner "Geen QR-scannerprompt?">

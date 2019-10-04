@@ -9,7 +9,6 @@ about-performance-title = Taakbeheerder
 column-name = Naam
 column-type = Type
 column-energy-impact = Energie-impact
-
 column-memory = Geheugen
 
 ## Special values for the Name column

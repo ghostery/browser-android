@@ -28,6 +28,8 @@
 <!ENTITY contextArchive.label "Ao arquivar">
 <!ENTITY contextArchive.accesskey "a">
 
+<!ENTITY contextPeriodic.accesskey "e">
+
 <!ENTITY filterActionDesc.label "Executar estas ações:">
 <!ENTITY filterActionDesc.accesskey "E">
 

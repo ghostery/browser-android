@@ -2,9 +2,8 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY filterEditorDialog.dimensions "width: 100ch;">
-
 <!ENTITY window.title "Edycja filtru">
+<!ENTITY filterEditorDialog.dimensions "width: 100ch;">
 <!ENTITY filterName.label "Nazwa filtru:">
 <!ENTITY filterName.accesskey "N">
 
@@ -20,16 +19,18 @@
 <!ENTITY contextDesc.label "Stosuj filtr podczas:">
 <!ENTITY contextIncomingMail.label "pobierania poczty">
 <!ENTITY contextIncomingMail.accesskey "a">
+<!ENTITY contextManual.label "ręcznego uruchamiania">
+<!ENTITY contextManual.accesskey "r">
 <!ENTITY contextBeforeCls.label "(przed filtrowaniem niechcianych)">
 <!ENTITY contextAfterCls.label "(po filtrowaniu niechcianych)">
 <!ENTITY contextOutgoing.label "Po wysłaniu">
 <!ENTITY contextOutgoing.accesskey "w">
-<!ENTITY contextManual.label "ręcznego uruchamiania">
-<!ENTITY contextManual.accesskey "r">
 <!ENTITY contextArchive.label "Archiwizowania">
 <!ENTITY contextArchive.accesskey "c">
 
-<!ENTITY filterActionDesc.label "…i wykonuj następujące czynności:">
+<!ENTITY contextPeriodic.accesskey "o">
+
+<!ENTITY filterActionDesc.label "…i wykonuj następujące czynności:">
 <!ENTITY filterActionDesc.accesskey "k">
 
 <!ENTITY filterActionOrderWarning.label "Filtrowanie odbędzie się w innej niż wyświetlana kolejności.">
@@ -45,7 +46,7 @@
 <!ENTITY markMessageStarred.label "Oznacz gwiazdką">
 <!ENTITY setPriority.label "Ustaw priorytet na">
 <!ENTITY addTag.label "Oznacz etykietą">
-<!ENTITY setJunkScore.label "Ustaw status niechcianej poczty na">
+<!ENTITY setJunkScore.label "Ustaw stan niechcianej poczty na">
 <!ENTITY deleteMessage.label "Usuń wiadomość">
 <!ENTITY deleteFromPOP.label "Usuń z serwera POP">
 <!ENTITY fetchFromPOP.label "Pobierz treść z serwera POP">
@@ -57,5 +58,11 @@
 <!ENTITY addAction.tooltip "Dodaj nową czynność">
 <!ENTITY removeAction.tooltip "Usuń tę czynność">
 
+<!-- LOCALIZATION NOTE
+     The values below are used to control the widths of the filter action widgets.
+     Change the values only when the localized strings in the popup menus
+     are truncated in the widgets.
+  -->
+<!-- Flex Attribute: https://developer.mozilla.org/docs/XUL/Attribute/flex -->
 <!ENTITY filterActionTypeFlexValue "1">
 <!ENTITY filterActionTargetFlexValue "4">

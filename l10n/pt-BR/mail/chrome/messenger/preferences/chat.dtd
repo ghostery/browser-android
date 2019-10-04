@@ -6,7 +6,7 @@
 
 <!ENTITY  startupAction.label         "Ao iniciar o &brandShortName;:">
 <!ENTITY  startupAction.accesskey     "o">
-<!ENTITY  startupOffline.label        "Ficar off-line nas minhas contas de bate-papo">
+<!ENTITY  startupOffline.label        "Manter minhas contas de bate-papo desconectadas">
 <!ENTITY  startupConnectAuto.label    "Conectar-se às minhas contas de bate-papo">
 
 <!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then

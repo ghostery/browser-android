@@ -4,10 +4,6 @@
 
 do-not-track-description = 傳送 “Do Not Track” 訊號，告訴網站您不想被追蹤
 do-not-track-learn-more = 了解更多
-do-not-track-option-default =
-    .label = 只在使用追蹤保護功能時
-do-not-track-option-default-content-blocking =
-    .label = 僅在 { -brand-short-name } 設定封鎖偵測到的追蹤器時
 do-not-track-option-default-content-blocking-known =
     .label = 僅在 { -brand-short-name } 設定為封鎖已知追蹤器時
 do-not-track-option-always =
@@ -33,11 +29,7 @@ search-input-box =
             [windows] 在選項中尋找
            *[other] 在偏好設定中尋找
         }
-policies-notice =
-    { PLATFORM() ->
-        [windows] 您的組織已鎖定某些選項。
-       *[other] 您的組織已鎖定某些偏好設定。
-    }
+managed-notice = 您的瀏覽器受到組織管理。
 pane-general-title = 一般
 category-general =
     .tooltiptext = { pane-general-title }
@@ -50,10 +42,9 @@ category-search =
 pane-privacy-title = 隱私權與安全性
 category-privacy =
     .tooltiptext = { pane-privacy-title }
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Firefox 帳號
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 help-button-label = { -brand-short-name } 技術支援
 addons-button-label = 擴充套件與佈景主題
 focus-search =
@@ -95,9 +86,6 @@ extension-controlled-default-search = 擴充套件「<img data-l10n-name="icon"/
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
 extension-controlled-privacy-containers = 擴充套件「<img data-l10n-name="icon"/> { $name }」需要開啟容器分頁功能才能使用。
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = 擴充套件「<img data-l10n-name="icon"/> { $name }」正在控制您的追蹤保護設定。
 # This string is shown to notify the user that their content blocking "All Detected Trackers"
 # preferences are being controlled by an extension.
 extension-controlled-websites-content-blocking-all-trackers = 擴充套件<img data-l10n-name="icon"/> { $name } 正在控制此設定。
@@ -260,7 +248,7 @@ play-drm-content =
 play-drm-content-learn-more = 了解更多
 update-application-title = { -brand-short-name } 更新
 update-application-description = 保持更新 { -brand-short-name }，獲得最佳效能、穩定度以及安全性。
-update-application-version = { $version }版 <a data-l10n-name="learn-more">有什麼新鮮事</a>
+update-application-version = { $version } 版 <a data-l10n-name="learn-more">有什麼新鮮事</a>
 update-history =
     .label = 顯示更新紀錄…
     .accesskey = p
@@ -274,6 +262,7 @@ update-application-check-choose =
 update-application-manual =
     .label = 不要檢查更新（不建議，可能會有安全性風險）
     .accesskey = N
+update-application-warning-cross-user-setting = 此設定將套用到本電腦上的所有 Windows 帳號及此份 { -brand-short-name } 的所有 { -brand-short-name } 設定檔。
 update-application-use-service =
     .label = 在背景服務當中安裝更新
     .accesskey = b
@@ -284,6 +273,21 @@ update-pref-write-failure-title = 寫入失敗
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = 無法儲存偏好設定。無法寫入檔案: { $path }
+update-setting-write-failure-title = 儲存更新偏好設定時發生錯誤
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    { -brand-short-name } 遇到錯誤，並未儲存此變更。請注意: 調整此更新偏好設定，需要能夠寫入下列檔案的權限。您或您的系統管理員可以透過授予使用者此檔案的完整控制權，來解決本問題。
+    
+    無法寫入下列檔案: { $path }
+update-in-progress-title = 更新中
+update-in-progress-message = 您希望 { -brand-short-name } 繼續此更新嗎？
+update-in-progress-ok-button = 捨棄 (&D)
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = 繼續 (&C)
 
 ## General Section - Performance
 
@@ -326,6 +330,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = 隨您上網推薦擴充套件
     .accesskey = R
+browsing-cfr-features =
+    .label = 隨您上網時推薦新功能
+    .accesskey = f
 browsing-cfr-recommendations-learn-more = 了解更多
 
 ## General Section - Proxy
@@ -373,6 +380,45 @@ use-current-pages =
 choose-bookmark =
     .label = 使用書籤…
     .accesskey = B
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Firefox 首頁內容
+home-prefs-content-description = 選擇要在您的 Firefox 首頁顯示哪些內容。
+home-prefs-content-discovery-description = Firefox Home 的內容探索功能可隨您上網，為您尋找高品質而與您有關的文章。
+home-prefs-search-header =
+    .label = 網頁搜尋
+home-prefs-topsites-header =
+    .label = 熱門網站
+home-prefs-topsites-description = 最常造訪的網站
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = { $provider } 推薦
+home-prefs-recommended-by-description = 網路上的各種超棒內容，為您量身打造
+home-prefs-recommended-by-learn-more = 原理是什麼
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = 贊助內容
+home-prefs-highlights-header =
+    .label = 精選網站
+home-prefs-highlights-description = 您儲存或造訪過的網站精選
+home-prefs-highlights-option-visited-pages =
+    .label = 造訪過的頁面
+home-prefs-highlights-options-bookmarks =
+    .label = 書籤
+home-prefs-highlights-option-most-recent-download =
+    .label = 最新下載
+home-prefs-highlights-option-saved-to-pocket =
+    .label = 儲存至 { -pocket-brand-name } 的頁面
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = 隻字片語
+home-prefs-snippets-description = 來自 { -vendor-short-name } 及 { -brand-product-name } 的大小事
+home-prefs-sections-rows-option =
+    .label = { $num } 行
 
 ## Search Section
 
@@ -516,8 +562,9 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = 儲存
     .accesskey = v
-sync-mobilepromo-single = 連結其他裝置
-sync-mobilepromo-multi = 管理裝置
+sync-connect-another-device = 連結其他裝置
+sync-manage-devices = 管理裝置
+sync-fxa-begin-pairing = 與裝置配對
 sync-tos-link = 服務條款
 sync-fxa-privacy-notice = 隱私權公告
 
@@ -534,6 +581,12 @@ forms-ask-to-save-logins =
 forms-exceptions =
     .label = 例外網站…
     .accesskey = x
+forms-generate-passwords =
+    .label = 產生強密碼
+    .accesskey = u
+forms-fill-logins-and-passwords =
+    .label = 自動填寫登入資訊與密碼
+    .accesskey = i
 forms-saved-logins =
     .label = 已存登入資訊…
     .accesskey = L
@@ -594,15 +647,10 @@ sitedata-total-size-calculating = 正在計算網站資料與快取大小…
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = 您儲存的 Cookie、網站資料與快取目前使用了 { $value } { $unit } 磁碟空間
 sitedata-learn-more = 了解更多
-sitedata-keep-until = 保留 Cookie 直到
-    .accesskey = u
-sitedata-keep-until-expire =
-    .label = Cookie 過期
-sitedata-keep-until-closed =
-    .label = 關閉 { -brand-short-name }
 sitedata-delete-on-close =
     .label = 關閉 { -brand-short-name } 時清除 Cookie 與網站資料
     .accesskey = C
+sitedata-delete-on-close-private-browsing = 在永久隱私瀏覽模式下，每次關閉 { -brand-short-name } 時就會清除 Cookie 與網站資料。
 sitedata-allow-cookies-option =
     .label = 允許網站設定 Cookie 與網站資料
     .accesskey = A
@@ -613,18 +661,12 @@ sitedata-disallow-cookies-option =
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = 要封鎖的類型
     .accesskey = T
-sitedata-block-trackers-option-recommended =
-    .label = 第三方追蹤器（推薦）
-sitedata-block-trackers-option =
-    .label = 第三方追蹤器
-sitedata-block-unvisited-option =
-    .label = 來自未造訪過網站的 Cookie
-sitedata-block-all-third-party-option =
-    .label = 所有第三方 Cookie（可能造成某些網站不正常）
-sitedata-block-all-option =
-    .label = 所有 Cookie（會造成網站不正常）
 sitedata-option-block-trackers =
     .label = 第三方追蹤器
+sitedata-option-block-cross-site-trackers =
+    .label = 跨網站追蹤器
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = 跨網站與社交媒體追蹤器
 sitedata-option-block-unvisited =
     .label = 來自未造訪過網站的 Cookie
 sitedata-option-block-all-third-party =
@@ -637,13 +679,6 @@ sitedata-clear =
 sitedata-settings =
     .label = 管理資料…
     .accesskey = M
-sitedata-cookies-exceptions =
-    .label = 例外網站…
-    .accesskey = E
-# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
-# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
-# Cookies and Site Data section.
-sitedata-warning-your-settings-prevent-changes = 您的內容封鎖設定不允許調整 Cookie 與網站資料設定。
 sitedata-cookies-permissions =
     .label = 管理權限…
     .accesskey = P
@@ -666,41 +701,9 @@ addressbar-suggestions-settings = 修改搜尋建議偏好設定
 ## Privacy Section - Content Blocking
 
 content-blocking-header = 內容封鎖
-content-blocking-desc = 封鎖會拖慢您上網速度並追蹤您的廣告或程式碼等第三方網頁內容。可調整相關設定以在保護與效能間取得最佳平衡。
-content-blocking-description = 封鎖會在網路上追蹤您的第三方內容。控制您要讓不同網站儲存並分享多少線上行為。
+content-blocking-enhanced-tracking-protection = 加強型追蹤保護
+content-blocking-section-description = 在上網時保護您的隱私。封鎖會在不同網站間追蹤您上網，並對使用者進行分類的隱藏內容。封鎖這類內容也可能讓網頁更快載入。
 content-blocking-learn-more = 了解更多
-content-blocking-restore-defaults =
-    .label = 回復為預設值
-    .accesskey = R
-content-blocking-toggle-on =
-    .tooltiptext = 關閉內容封鎖
-content-blocking-toggle-off =
-    .tooltiptext = 開啟內容封鎖
-content-blocking-toggle-label-on = 開啟
-    .accesskey = O
-content-blocking-toggle-label-off = 關閉
-    .accesskey = O
-content-blocking-category-label = 選擇要封鎖的內容
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-    .label = 慢速載入的追蹤器
-    .accesskey = S
-content-blocking-fastblock-new-description = 只封鎖會影響頁面載入速度的追蹤器。
-content-blocking-tracking-protection-trackers-label =
-    .label = 追蹤器
-    .accesskey = T
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = 所有偵測到的追蹤器
-    .accesskey = T
-content-blocking-tracking-protection-new-description = 封鎖所有已知的追蹤器（可能會影響某些頁面載入。）
-content-blocking-tracking-protection-option-always =
-    .label = 總是
-    .accesskey = A
-content-blocking-tracking-protection-option-private =
-    .label = 僅在隱私瀏覽視窗
-    .accesskey = p
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
 content-blocking-setting-standard =
@@ -712,19 +715,38 @@ content-blocking-setting-strict =
 content-blocking-setting-custom =
     .label = 自訂
     .accesskey = C
-content-blocking-standard-description = 只在隱私視窗中，封鎖已知的追蹤器。
-content-blocking-standard-desc = 在保護與效能間取得平衡。允許某些追蹤器以確保網站運作正常。
-content-blocking-strict-desc = 封鎖所有 { -brand-short-name } 偵測到的追蹤器。可能造成某些網站故障。
+content-blocking-standard-desc = 兼顧保護與效能。放行某些追蹤器以確保網站運作正常。
+content-blocking-strict-description = 保護更強，可能造成某些網站無法正常運作。
 content-blocking-custom-desc = 選擇要封鎖哪些內容。
 content-blocking-private-trackers = 僅在隱私視窗中封鎖已知的追蹤器
 content-blocking-third-party-cookies = 第三方追蹤 Cookie
+content-blocking-etp-standard-desc = 兼顧保護與效能。網站可正常運作。
+content-blocking-etp-strict-desc = 保護更強大，但可能會導致某些網站或內容故障。
+content-blocking-etp-custom-desc = 選擇要封鎖哪些追蹤器與指令碼。
+content-blocking-private-windows = 隱私視窗中的追蹤內容
+content-blocking-cross-site-tracking-cookies = 跨網站追蹤 Cookie
+content-blocking-social-media-trackers = 社交媒體追蹤器
+content-blocking-all-cookies = 所有 Cookie
+content-blocking-unvisited-cookies = 來自未造訪過網站的 Cookie
 content-blocking-all-windows-trackers = 在所有視窗封鎖已知的追蹤器
+content-blocking-all-windows-tracking-content = 所有視窗中的追蹤內容
 content-blocking-all-third-party-cookies = 所有第三方 Cookie
+content-blocking-cryptominers = 加密貨幣採礦程式
+content-blocking-fingerprinters = 數位指紋追蹤程式
 content-blocking-warning-title = 注意！
-content-blocking-warning-desc = 封鎖 Cookie 與追蹤器可能會造成某些網站故障。很簡單就能為您信任的網站關閉封鎖。
+content-blocking-warning-description = 封鎖內容後可能造成某些網站無法正常運作。很簡單就能為您信任的網站關閉封鎖功能。
 content-blocking-learn-how = 了解要怎麼做
+content-blocking-etp-warning-description = 封鎖追蹤器可能會造成某些網站運作不正常。重新載入含有追蹤器的頁面即可載入所有內容。
+content-blocking-warning-learn-how = 了解要怎麼做
+content-blocking-reload-description = 需要重新載入分頁才能套用變更。
+content-blocking-reload-tabs-button =
+    .label = 重新載入所有分頁
+    .accesskey = R
 content-blocking-trackers-label =
     .label = 追蹤器
+    .accesskey = T
+content-blocking-tracking-content-label =
+    .label = 追蹤用內容
     .accesskey = T
 content-blocking-tracking-protection-option-all-windows =
     .label = 所有視窗
@@ -733,51 +755,23 @@ content-blocking-option-private =
     .label = 僅在隱私瀏覽視窗
     .accesskey = p
 content-blocking-tracking-protection-change-block-list = 變更封鎖清單
-content-blocking-third-party-cookies-label =
-    .label = 第三方 Cookie
-    .accesskey = C
-content-blocking-reject-trackers-description = 封鎖所有第三方 Cookie，或只封鎖追蹤器設定的 Cookie
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = 您的 Cookie 與網站資料設定不允許調整第三方 Cookie 的設定。
-content-blocking-change-cookie-settings =
-    .label = 變更 Cookie 設定
-    .accesskey = S
-content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = 追蹤器（建議）
-    .accesskey = k
-content-blocking-reject-trackers-block-trackers-option =
-    .label = 追蹤器
-    .accesskey = k
-content-blocking-reject-trackers-all-third-parties-option =
-    .label = 所有第三方 Cookie（可能造成某些網站不正常）
-    .accesskey = A
 content-blocking-cookies-label =
     .label = Cookie
     .accesskey = C
+content-blocking-expand-section =
+    .tooltiptext = 更多資訊
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+    .label = 加密貨幣採礦程式
+    .accesskey = y
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+    .label = 數位指紋追蹤程式
+    .accesskey = F
 
 ## Privacy Section - Tracking
 
-tracking-header = 追蹤保護
-tracking-desc = 追蹤保護功能會封鎖在不同網站間收集您的瀏覽資料的網路追蹤器。 <a data-l10n-name="learn-more">了解有關追蹤保護功能，以及您的隱私權的更多資訊</a>
-tracking-mode-label = 使用追蹤保護功能，封鎖已知的追蹤器
-tracking-mode-always =
-    .label = 總是
-    .accesskey = y
-tracking-mode-private =
-    .label = 僅在隱私瀏覽視窗
-    .accesskey = l
-tracking-mode-never =
-    .label = 永不
-    .accesskey = n
-tracking-exceptions =
-    .label = 例外網站…
-    .accesskey = x
-tracking-change-block-list =
-    .label = 變更封鎖清單…
-    .accesskey = C
 tracking-manage-exceptions =
     .label = 管理例外網站…
     .accesskey = x
@@ -805,20 +799,16 @@ permissions-notification-link = 了解更多
 permissions-notification-pause =
     .label = 暫停通知到 { -brand-short-name } 重新啟動後
     .accesskey = n
-permissions-block-autoplay-media =
-    .label = 防止網站自動播放有聲音的媒體內容
+permissions-block-autoplay-media2 =
+    .label = 防止網站自動播放聲音
     .accesskey = B
-permissions-block-autoplay-media-menu = 針對會自動播放音效的網站
 permissions-block-autoplay-media-exceptions =
     .label = 例外網站…
     .accesskey = E
-autoplay-option-ask =
-    .label = 總是詢問
-autoplay-option-allow =
-    .label = 允許自動播放
-autoplay-option-dont =
-    .label = 不要自動播放
-permissions-autoplay-link = 了解更多
+permissions-autoplay = 自動播放
+permissions-autoplay-settings =
+    .label = 設定…
+    .accesskey = t
 permissions-block-popups =
     .label = 封鎖彈出型視窗
     .accesskey = B
@@ -854,10 +844,6 @@ addon-recommendations-link = 了解更多
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = 進行編譯設定時，已停用了資料回報功能
-collection-browser-errors =
-    .label = 允許 { -brand-short-name } 向 { -vendor-short-name } 發送瀏覽器錯誤報告（包括錯誤訊息）
-    .accesskey = b
-collection-browser-errors-link = 了解更多
 collection-backlogged-crash-reports =
     .label = 允許 { -brand-short-name } 為您傳送先前紀錄下的錯誤報告
     .accesskey = c

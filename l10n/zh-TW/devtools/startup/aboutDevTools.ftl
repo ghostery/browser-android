@@ -35,7 +35,7 @@ features-debugger-desc = 超強大的 JavaScript 除錯器，完整支援您的�
 features-network-title = 網路
 features-network-desc = 監控有哪些拖慢網站速度的網路請求。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
 features-storage-title = 儲存空間
-features-storage-desc = 新增、修改或移除快取、Cookie、資料庫及 Session 資料。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
+features-storage-desc = 新增、修改或清除快取、Cookie、資料庫及 Session 資料。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
 features-responsive-title = 適應性設計模式
 features-responsive-desc = 在瀏覽器中以不同裝置的畫面大小來測試網站。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
 features-visual-editing-title = 視覺化編輯

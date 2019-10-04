@@ -28,17 +28,14 @@
 <!ENTITY helpSafeMode.stop.label       "Перезапустить с дополнениями">
 <!ENTITY helpSafeMode.stop.accesskey   "е">
 
-<!ENTITY healthReport2.label      "Отчёт о работоспособности &brandShorterName;">
-<!ENTITY healthReport2.accesskey  "б">
-
 <!ENTITY helpTroubleshootingInfo.label      "Информация для решения проблем">
 <!ENTITY helpTroubleshootingInfo.accesskey  "а">
 
 <!ENTITY helpFeedbackPage.label      "Отправить отзыв…">
 <!ENTITY helpFeedbackPage.accesskey  "т">
 
-<!ENTITY helpShowTour2.label            "Тур по &brandShorterName;">
-<!ENTITY helpShowTour2.accesskey        "п">
+<!ENTITY helpShowTour2.label            "Знакомство с &brandShorterName;">
+<!ENTITY helpShowTour2.accesskey        "м">
 
 <!ENTITY preferencesCmdMac.label        "Настройки…">
 <!ENTITY preferencesCmdMac.commandkey   ",">
@@ -52,3 +49,5 @@
 <!ENTITY hideOtherAppsCmdMac.commandkey "H">
 
 <!ENTITY showAllAppsCmdMac.label        "Показать все">
+
+<!ENTITY touchBarCmdMac.label           "Настроить сенсорную панель…">

@@ -45,7 +45,7 @@
 <!ENTITY helpus.getInvolvedLink     "出力參與！">
 <!ENTITY helpus.end                 "">
 
-<!ENTITY releaseNotes.link          "新鮮事">
+<!ENTITY releaseNotes.link          "發行公告">
 
 <!-- LOCALIZATION NOTE (bottomLinks.license): This is a link title that links to about:license. -->
 <!ENTITY bottomLinks.license        "授權資訊">
@@ -101,7 +101,6 @@
 <!ENTITY update.downloading.end     "">
 
 <!ENTITY update.applying            "正在套用更新…">
-
 <!ENTITY update.restarting          "重新啟動中…">
 
 <!-- LOCALIZATION NOTE (channel.description.start,channel.description.end): channel.description.start and

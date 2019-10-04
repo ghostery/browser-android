@@ -9,6 +9,8 @@
                        for the help button in the menubar but Gnome does not.   -->
 <!ENTITY helpMenuWin.label "說明">
 <!ENTITY helpMenuWin.accesskey "H">
+<!ENTITY aboutProduct2.label "關於 &brandShorterName;">
+<!ENTITY aboutProduct2.accesskey "A">
 <!ENTITY helpTroubleshootingInfo.label     "疑難排解資訊">
 <!ENTITY helpTroubleshootingInfo.accesskey "T">
 <!ENTITY helpSafeMode.label     "重新啟動但停用附加元件…">
@@ -20,13 +22,31 @@
 <!ENTITY openHelp.label "使用說明">
 <!ENTITY openHelp.accesskey "H">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "&brandShortName; 說明">
 <!ENTITY openHelpMac2.label "&brandFullName; 說明">
 <!ENTITY openHelpMac2.commandkey   "?">
 <!ENTITY openHelpMac2.modifiers    "accel">
 
-<!ENTITY aboutMenuCmd.label "關於 &brandShortName;">
-<!ENTITY aboutMenuCmd.accesskey "a">
-
 <!ENTITY aboutMenuCmd2.label "關於 &brandFullName;">
 <!ENTITY aboutMenuCmd2.accesskey "A">
+<!ENTITY helpSafeMode.stop.label     "重新啟動並啟用附加元件">
+<!ENTITY helpSafeMode.stop.accesskey "R">
+<!ENTITY productHelp.label "&brandShortName; 使用說明">
+<!ENTITY productHelp.accesskey "H">
+<!ENTITY productHelp.commandkey "VK_F1">
+<!ENTITY productHelpMac.commandkey "?">
+<!ENTITY productHelpMac.modifiers "accel">
+
+<!ENTITY helpKeyboardShortcuts.label "快速鍵">
+<!ENTITY helpKeyboardShortcuts.accesskey "K">
+
+<!ENTITY helpFeedbackPage.label "送出意見回饋…">
+<!ENTITY helpFeedbackPage.accesskey "S">
+
+<!ENTITY helpShowTour2.label "&brandShorterName; 使用導覽">
+<!ENTITY helpShowTour2.accesskey "o">
+
+<!ENTITY helpGetInvolvedPage.label "參與我們">
+<!ENTITY helpGetInvolvedPage.accesskey "I">
+
+<!ENTITY helpDonationsPage.label "捐款給我們">
+<!ENTITY helpDonationsPage.accesskey "M">

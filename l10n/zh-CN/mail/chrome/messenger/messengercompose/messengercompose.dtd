@@ -88,7 +88,7 @@
 <!ENTITY reorderAttachmentsCmd.label "重新排列附件…">
 <!ENTITY reorderAttachmentsCmd.accesskey "s">
 <!ENTITY reorderAttachmentsCmd.key "x">
-<!ENTITY toggleAttachmentPaneCmd.label "附件面板">
+<!ENTITY toggleAttachmentPaneCmd.label "附件窗格">
 <!-- LOCALIZATION NOTE (toggleAttachmentPaneCmd.accesskey):
      For better mnemonics, toggleAttachmentPaneCmd.accesskey should be the same
      as attachments.accesskey. -->
@@ -246,7 +246,7 @@
 <!ENTITY sendlaterButton.tooltip "以后发送此消息">
 <!ENTITY quoteButton.tooltip "引用上一条消息">
 <!ENTITY addressButton.tooltip "从通讯录中选择一个收件人">
-<!ENTITY attachButton.tooltip2 "新增附件">
+<!ENTITY attachButton.tooltip2 "添加附件">
 <!ENTITY spellingButton.tooltip "检查选定的或整个消息的拼写">
 <!ENTITY saveButton.tooltip "保存此消息">
 <!ENTITY cutButton.tooltip              "剪切">
@@ -275,8 +275,8 @@
      buttons, or labels (message headers, contacts side bar, attachment reminder
      bar). -->
 <!ENTITY attachments.accesskey "c">
-<!ENTITY attachmentBucketHeader.tooltip "附件面板">
-<!ENTITY attachmentBucketCloseButton.tooltip "隐藏附件面板">
+<!ENTITY attachmentBucketHeader.tooltip "附件窗格">
+<!ENTITY attachmentBucketCloseButton.tooltip "隐藏附件窗格">
 
 <!-- Format Toolbar, imported from editorAppShell.xul -->
 <!ENTITY SmileButton.tooltip "插入一个笑脸">
@@ -346,7 +346,7 @@
 <!-- LOCALIZATION NOTE (initiallyShowAttachmentPane.label):
      Should use the same wording as startExpandedCmd.label
      in msgHdrViewOverlay.dtd. -->
-<!ENTITY initiallyShowAttachmentPane.label "启动时显示附件面板">
+<!ENTITY initiallyShowAttachmentPane.label "启动时显示附件窗格">
 <!ENTITY initiallyShowAttachmentPane.accesskey "S">
 
 <!-- Spell checker context menu items -->

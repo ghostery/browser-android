@@ -12,6 +12,8 @@
 <!ENTITY pref.calendar.alarms.playsound.accessKey "T">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "Usar som padrão">
 <!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "U">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "Usar o seguinte arquivo de som">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "U">
 <!ENTITY pref.calendar.alarms.sound.browse.label "Procurar…">
 <!ENTITY pref.calendar.alarms.sound.browse.accessKey "P">
 <!ENTITY pref.calendar.alarms.sound.play.label "Reproduzir">

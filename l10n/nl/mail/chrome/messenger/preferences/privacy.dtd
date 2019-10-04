@@ -36,3 +36,6 @@
 <!ENTITY dntTrackingNotOkay.label2 "Websites laten weten dat ik niet gevolgd wil worden">
 <!ENTITY dntTrackingNotOkay.accesskey "n">
 <!ENTITY doNotTrackInfo.label "Meer info over Niet volgen">
+<!ENTITY doNotTrackCheck.label "Websites een ‘Niet volgen’-signaal sturen om te laten weten dat u niet gevolgd wilt worden">
+<!ENTITY doNotTrackCheck.accesskey "N">
+<!ENTITY doNotTrackLearnMore.label "Meer info">

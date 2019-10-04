@@ -9,6 +9,8 @@
                        for the help button in the menubar but Gnome does not.   -->
 <!ENTITY helpMenuWin.label "도움말">
 <!ENTITY helpMenuWin.accesskey "H">
+<!ENTITY aboutProduct2.label "&brandShorterName; 정보">
+<!ENTITY aboutProduct2.accesskey "A">
 <!ENTITY helpTroubleshootingInfo.label     "문제 해결 정보">
 <!ENTITY helpTroubleshootingInfo.accesskey "T">
 <!ENTITY helpSafeMode.label     "안전 모드로 다시 시작…">
@@ -20,13 +22,31 @@
 <!ENTITY openHelp.label "도움말">
 <!ENTITY openHelp.accesskey "H">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "&brandShortName; 도움말">
 <!ENTITY openHelpMac2.label "&brandFullName; 도움말">
 <!ENTITY openHelpMac2.commandkey   "?">
 <!ENTITY openHelpMac2.modifiers    "accel">
 
-<!ENTITY aboutMenuCmd.label "&brandShortName; 정보">
-<!ENTITY aboutMenuCmd.accesskey "A">
-
 <!ENTITY aboutMenuCmd2.label "&brandFullName; 정보">
 <!ENTITY aboutMenuCmd2.accesskey "A">
+<!ENTITY helpSafeMode.stop.label     "부가 기능이 켜진 채로 다시 시작">
+<!ENTITY helpSafeMode.stop.accesskey "R">
+<!ENTITY productHelp.label "&brandShortName; 도움말">
+<!ENTITY productHelp.accesskey "H">
+<!ENTITY productHelp.commandkey "VK_F1">
+<!ENTITY productHelpMac.commandkey "?">
+<!ENTITY productHelpMac.modifiers "accel">
+
+<!ENTITY helpKeyboardShortcuts.label "키보드 단축키">
+<!ENTITY helpKeyboardShortcuts.accesskey "K">
+
+<!ENTITY helpFeedbackPage.label "의견 보내기…">
+<!ENTITY helpFeedbackPage.accesskey "S">
+
+<!ENTITY helpShowTour2.label "&brandShorterName; 둘러보기">
+<!ENTITY helpShowTour2.accesskey "o">
+
+<!ENTITY helpGetInvolvedPage.label "참여하기">
+<!ENTITY helpGetInvolvedPage.accesskey "I">
+
+<!ENTITY helpDonationsPage.label "기부 하기">
+<!ENTITY helpDonationsPage.accesskey "M">

@@ -29,6 +29,10 @@
 
 <!ENTITY fillLoginMenu.label          "Aanmelding invullen">
 <!ENTITY fillLoginMenu.accesskey      "u">
+<!ENTITY fillSuggestedPassword.label  "Een voorgesteld wachtwoord gebruiken">
+<!ENTITY fillSuggestedPassword.accesskey "E">
+<!ENTITY fillGeneratedPassword.label  "Een veilig aangemaakt wachtwoord gebruiken">
+<!ENTITY fillGeneratedPassword.accesskey "W">
 <!ENTITY fillPasswordMenu.label       "Wachtwoord invullen">
 <!ENTITY fillPasswordMenu.accesskey   "u">
 <!ENTITY fillUsernameMenu.label       "Gebruikersnaam invullen">

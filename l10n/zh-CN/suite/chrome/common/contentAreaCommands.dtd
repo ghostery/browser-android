@@ -53,6 +53,8 @@
 <!ENTITY reloadImageCmd.accesskey     "R">
 <!ENTITY viewImageCmd.label           "查看图像">
 <!ENTITY viewImageCmd.accesskey       "I">
+<!ENTITY viewImageInfoCmd.label       "查看图像信息">
+<!ENTITY viewImageInfoCmd.accesskey   "f">
 <!ENTITY viewVideoCmd.label           "查看视频">
 <!ENTITY viewVideoCmd.accesskey       "i">
 <!ENTITY viewBGImageCmd.label         "查看背景图像">

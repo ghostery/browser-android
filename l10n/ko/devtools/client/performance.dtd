@@ -15,11 +15,6 @@
   -  is displayed as the tooltip for the buffer capacity during a recording. -->
 <!ENTITY performanceUI.bufferStatusTooltip "프로파일러는 샘플을 순환 버퍼에 저장합니다. 버퍼가 꽉차게 되면 새 샘플은 오래된 샘플을 덮어 씁니다.">
 
-<!-- LOCALIZATION NOTE (performanceUI.disabledRealTime.nonE10SBuild): This string
-  -  is displayed as a message for why the real time overview graph is disabled
-  -  when running on a non-multiprocess build. -->
-<!ENTITY performanceUI.disabledRealTime.nonE10SBuild "다중 프로세스가 아닌 Firefox에서는 실시간 기록 데이터가 비활성화됩니다.">
-
 <!-- LOCALIZATION NOTE (performanceUI.disabledRealTime.disabledE10S): This string
   -  is displayed as a message for why the real time overview graph is disabled
   -  when running on a build that can run multiprocess Firefox, but just is not enabled. -->
@@ -29,10 +24,10 @@
   -  is displayed when the profiler's circular buffer has started to overlap. -->
 <!ENTITY performanceUI.bufferStatusFull "버퍼가 꽉 찼습니다. 오래된 샘플이 덮어 써집니다.">
 
-<!-- LOCALIZATION NOTE (performanceUI.loadingNotice): This is the label shown
+<!-- LOCALIZATION NOTE (performanceUI.unavailableNoticePB): This is the label shown
   -  in the details view while the profiler is unavailable, for example, while
   -  in Private Browsing mode. -->
-<!ENTITY performanceUI.unavailableNoticePB "프로파일 기록을 현재 이용할 수 없습니다. 모든 개인정보 보호 창을 닫고 다시 시도해 주세요.">
+<!ENTITY performanceUI.unavailableNoticePB "프로필 기록을 현재 이용할 수 없습니다. 모든 개인정보 보호 창을 닫고 다시 시도해 주세요.">
 
 <!-- LOCALIZATION NOTE (performanceUI.loadingNotice): This is the label shown
   -  in the details view while loading a profile. -->

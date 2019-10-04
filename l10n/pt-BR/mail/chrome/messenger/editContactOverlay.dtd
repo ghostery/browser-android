@@ -14,10 +14,7 @@
 <!ENTITY editContactAddressBook.label "Catálogo:">
 <!ENTITY editContactAddressBook.accesskey "t">
 
-<!ENTITY editContactPanelCancel.label "Cancelar">
-<!ENTITY editContactPanelCancel.accesskey "a">
-
-<!ENTITY editContactPanelDone.label "Concluir">
+<!ENTITY editContactPanelDone.label "Concluído">
 <!ENTITY editContactPanelDone.accesskey "C">
 
 <!ENTITY contactMoveDisabledWarning.description "Você não pode modificar o catálogo de endereços porque o contato está em uma lista de e-mails.">

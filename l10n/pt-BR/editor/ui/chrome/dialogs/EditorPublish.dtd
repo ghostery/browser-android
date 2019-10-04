@@ -17,7 +17,7 @@
 <!ENTITY newSiteButton.accesskey      "o">
 <!ENTITY docDirList.label             "Subdiretório do site para esta página:">
 <!ENTITY docDirList.accesskey         "o">
-<!ENTITY docDirList.tooltip           "Escolha ou insira o nome do subdiretório remoto para esta página">
+<!ENTITY docDirList.tooltip           "Escolha ou insira o nome do subdiretório remoto desta página">
 <!ENTITY publishImgCheckbox.label     "Incluir imagens e outros arquivos">
 <!ENTITY publishImgCheckbox.accesskey "o">
 <!ENTITY publishImgCheckbox.tooltip   "Publicar imagens e outros arquivos referenciados por esta página">

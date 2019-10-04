@@ -4,8 +4,8 @@
 
 <!ENTITY blocklist.title             "Extensões podem estar causando problemas">
 <!ENTITY blocklist.style             "width: 45em; height: 30em">
-<!ENTITY blocklist.summary           "O &brandShortName; identificou estas extensões como causas de problemas de segurança ou estabilidade:">
-<!ENTITY blocklist.softblocked       "Para sua proteção, é altamente recomendado que reinicie com estes complementos desabilitados.">
+<!ENTITY blocklist.summary           "O &brandShortName; constatou que essas extensões são conhecidas por causar problemas de estabilidade ou segurança:">
+<!ENTITY blocklist.softblocked       "Para sua proteção, é altamente recomendado que reinicie com essas extensões desativadas.">
 <!ENTITY blocklist.hardblocked       "Estas extensões representam riscos elevados para a segurança ou estabilidade e foram bloqueados, mas será necessário reiniciar para desabilitá-las completamente.">
 <!ENTITY blocklist.softandhard       "As extensões que representam riscos elevados para a segurança ou estabilidade foram bloqueadas. As demais são de menor risco, mas é altamente recomendado desabilitá-las e reiniciar.">
 <!ENTITY blocklist.moreinfo          "Mais informações">

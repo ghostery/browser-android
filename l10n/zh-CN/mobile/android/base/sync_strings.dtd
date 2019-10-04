@@ -46,7 +46,7 @@
      Firefox. -->
 <!ENTITY fxaccount_back_to_browsing '返回浏览状态'>
 
-<!ENTITY fxaccount_getting_started_welcome_to_sync '欢迎使用 &syncBrand.shortName.label;'>
+<!ENTITY fxaccount_getting_started_welcome_to_sync '欢迎使用&syncBrand.shortName.label;'>
 <!ENTITY fxaccount_getting_started_description2 '登录以同步您的标签页、书签、登录信息等。'>
 <!ENTITY fxaccount_getting_started_get_started '开始使用'>
 <!ENTITY fxaccount_getting_started_old_firefox '使用旧版本的 &syncBrand.shortName.label;？'>

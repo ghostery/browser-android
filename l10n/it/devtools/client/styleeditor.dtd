@@ -21,7 +21,3 @@
 <!ENTITY openLinkNewTab.label "Apri link in nuova scheda">
 <!ENTITY copyUrl.label "Copia URL">
 <!ENTITY optionsButton.tooltip "Opzioni Editor stili">
-<!ENTITY showOriginalSources.label "Visualizza sorgenti originali">
-<!ENTITY showOriginalSources.accesskey "o">
-<!ENTITY showMediaSidebar.label "Visualizza barra laterale @media">
-<!ENTITY showMediaSidebar.accesskey "V">

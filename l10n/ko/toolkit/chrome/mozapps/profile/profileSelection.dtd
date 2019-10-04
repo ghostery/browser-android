@@ -27,5 +27,5 @@
 <!ENTITY            offlineState.label    "오프라인으로 작업">
 <!ENTITY            offlineState.accesskey "o">
 
-<!ENTITY            useSelected.label       "시작할 때 묻지 않고 선택된 프로파일을 사용">
+<!ENTITY            useSelected.label       "시작할 때 묻지 않고 선택된 프로필을 사용">
 <!ENTITY            useSelected.accesskey   "s">

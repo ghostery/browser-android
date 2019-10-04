@@ -29,6 +29,10 @@
 
 <!ENTITY fillLoginMenu.label          "Preencher conta de acesso">
 <!ENTITY fillLoginMenu.accesskey      "P">
+<!ENTITY fillSuggestedPassword.label  "Usar uma senha sugerida">
+<!ENTITY fillSuggestedPassword.accesskey "s">
+<!ENTITY fillGeneratedPassword.label  "Usar uma senha gerada com segurança">
+<!ENTITY fillGeneratedPassword.accesskey "s">
 <!ENTITY fillPasswordMenu.label       "Preencher senha">
 <!ENTITY fillPasswordMenu.accesskey   "P">
 <!ENTITY fillUsernameMenu.label       "Preencher nome de usuário">

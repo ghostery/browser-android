@@ -6,7 +6,7 @@
 <!ENTITY  offlineGoOfflineCmd.label                 "離線模式">
 <!ENTITY  offlineGoOfflineCmd.accesskey             "k">
 
-<!-- LOCALIZATION NOTE : FILE This file contains the global menu items --> 
+<!-- LOCALIZATION NOTE : FILE This file contains the global menu items -->
 
 <!ENTITY fileMenu.label                   "檔案">
 <!ENTITY fileMenu.accesskey               "F">
@@ -62,13 +62,13 @@
 <!ENTITY selectAllCmd.label               "全選">
 <!ENTITY selectAllCmd.key                 "A">
 <!ENTITY selectAllCmd.accesskey           "A">
-<!ENTITY clearHistoryCmd.label				"清除搜尋記錄">  
-<!ENTITY clearHistoryCmd.accesskey			"h"> 
-<!ENTITY showSuggestionsCmd.label			"顯示搜尋建議">  
-<!ENTITY showSuggestionsCmd.accesskey		"S"> 
-<!ENTITY preferencesCmd.label				"偏好設定…">
-<!ENTITY preferencesCmd.key					"E">  
-<!ENTITY preferencesCmd.accesskey			"e"> 
+<!ENTITY clearHistoryCmd.label            "清除搜尋記錄">
+<!ENTITY clearHistoryCmd.accesskey        "h">
+<!ENTITY showSuggestionsCmd.label         "顯示搜尋建議">
+<!ENTITY showSuggestionsCmd.accesskey     "S">
+<!ENTITY preferencesCmd.label             "偏好設定…">
+<!ENTITY preferencesCmd.key               "E">
+<!ENTITY preferencesCmd.accesskey         "e">
 <!ENTITY findBarCmd.key "F">
 <!-- LOCALIZATION NOTE (findBarCmd.accesskey): This accesskey should be within
      findBarCmd.label found in editorOverlay.dtd, findCmd.label in messenger.dtd
@@ -88,42 +88,42 @@
 <!ENTITY findTypeLinksCmd.label "對鏈結隨打即找">
 <!ENTITY findTypeLinksCmd.accesskey "k">
 
-<!ENTITY viewMenu.label					"檢視"> 
+<!ENTITY viewMenu.label                   "檢視">
 <!ENTITY viewMenu.accesskey               "V">
-<!ENTITY viewToolbarsMenu.label				"顯示／隱藏"> 
-<!ENTITY viewToolbarsMenu.accesskey			"w"> 
-<!ENTITY showTaskbarCmd.label					"狀態列">  
-<!ENTITY showTaskbarCmd.accesskey				"S"> 
+<!ENTITY viewToolbarsMenu.label           "顯示／隱藏">
+<!ENTITY viewToolbarsMenu.accesskey       "w">
+<!ENTITY showTaskbarCmd.label             "狀態列">
+<!ENTITY showTaskbarCmd.accesskey         "S">
 
-<!ENTITY helpMenu.label					"說明"> 
-<!ENTITY helpMenu.accesskey				"H"> 
+<!ENTITY helpMenu.label                   "說明">
+<!ENTITY helpMenu.accesskey               "H">
 
 <!ENTITY helpTroubleshootingInfo.label      "疑難排解資訊">
 <!ENTITY helpTroubleshootingInfo.accesskey  "T">
-<!ENTITY releaseCmd.label                   "版本資訊">
+<!ENTITY releaseCmd.label                   "發行公告">
 <!ENTITY releaseCmd.accesskey               "N">
 <!ENTITY helpSafeMode.label                 "重新啟動，但停用附加元件">
 <!ENTITY helpSafeMode.accesskey             "R">
 <!ENTITY updateCmd.label                    "檢查更新…">
 <!ENTITY updateCmd.accesskey                "C">
-<!ENTITY aboutCmd.label					"關於 &brandShortName;">
-<!ENTITY aboutCmd.accesskey				"A">
-<!ENTITY aboutCommPluginsCmd.label			"關於外掛程式">
-<!ENTITY aboutCommPluginsCmd.accesskey			"P">
+<!ENTITY aboutCmd.label                     "關於 &brandShortName;">
+<!ENTITY aboutCmd.accesskey                 "A">
+<!ENTITY aboutCommPluginsCmd.label          "關於外掛程式">
+<!ENTITY aboutCommPluginsCmd.accesskey      "P">
 
-<!ENTITY direct.label                                   "連線（Proxy: 無）">
-<!ENTITY direct.accesskey                               "n">
-<!ENTITY manual.label                                   "連線（Proxy: 手動）">
-<!ENTITY manual.accesskey                               "M">
-<!ENTITY pac.label                                      "連線（Proxy: 自動設定）">
-<!ENTITY pac.accesskey                                  "A">
-<!ENTITY wpad.label                                     "連線（Proxy: 自動搜尋）">
-<!ENTITY wpad.accesskey                                 "D">
-<!ENTITY system.label                                   "連線（Proxy: 系統 Proxy）">
-<!ENTITY system.accesskey                               "S">
+<!ENTITY direct.label                             "連線（Proxy: 無）">
+<!ENTITY direct.accesskey                         "n">
+<!ENTITY manual.label                             "連線（Proxy: 手動）">
+<!ENTITY manual.accesskey                         "M">
+<!ENTITY pac.label                                "連線（Proxy: 自動設定）">
+<!ENTITY pac.accesskey                            "A">
+<!ENTITY wpad.label                               "連線（Proxy: 自動搜尋）">
+<!ENTITY wpad.accesskey                           "D">
+<!ENTITY system.label                             "連線（Proxy: 系統 Proxy）">
+<!ENTITY system.accesskey                         "S">
 
-<!ENTITY proxy.label                                    "設定 Proxy …">
-<!ENTITY proxy.accesskey                                "C">
+<!ENTITY proxy.label                              "設定 Proxy …">
+<!ENTITY proxy.accesskey                          "C">
 
 <!ENTITY bidiSwitchTextDirectionItem.label        "改變文字方向">
 <!ENTITY bidiSwitchTextDirectionItem.accesskey    "w">

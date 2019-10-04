@@ -4,8 +4,8 @@
 
 <!-- extracted from am-addressing.xul -->
 
-<!ENTITY addressing.label          "Editar e endereçar">
-<!ENTITY addressingGroupTitle.label "Endereçar">
+<!ENTITY addressing.label          "Redação e endereçamento">
+<!ENTITY addressingGroupTitle.label "Endereçamento">
 <!ENTITY addressingText.label      "Ao procurar endereços:">
 <!-- LOCALIZATION NOTE (override.label) : do not translate "LDAP" in below line -->
 <!ENTITY useGlobal.label           "Usar as preferências do meu servidor LDAP global para esta conta">
@@ -19,7 +19,7 @@
 
 <!-- am-addressing.xul -->
 
-<!ENTITY compositionGroupTitle.label          "Editar">
+<!ENTITY compositionGroupTitle.label          "Redação">
 <!-- LOCALIZATION NOTE (useHtml.label) : do not translate "html" in below line -->
 <!ENTITY useHtml.label                        "Usar formatação (HTML)">
 <!ENTITY useHtml.accesskey                    "H">

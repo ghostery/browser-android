@@ -9,16 +9,17 @@
 
 <!ENTITY pref.alarmgoesoff.label "При наступлении времени оповещения:">
 <!ENTITY pref.playasound "Проигрывать звук">
-<!ENTITY pref.calendar.alarms.playsound.accessKey "П">
+<!ENTITY pref.calendar.alarms.playsound.accessKey "з">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "По умолчанию">
-<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "у">
+<!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "м">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "Использовать следующий звуковой файл">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "й">
 <!ENTITY pref.calendar.alarms.sound.browse.label "Обзор…">
-<!ENTITY pref.calendar.alarms.sound.browse.accessKey "О">
+<!ENTITY pref.calendar.alarms.sound.browse.accessKey "б">
 <!ENTITY pref.calendar.alarms.sound.play.label "Воспроизвести">
 <!ENTITY pref.calendar.alarms.sound.play.accessKey "и">
 <!ENTITY pref.showalarmbox "Показать окно оповещения">
 <!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "к">
-<!ENTITY pref.missedalarms "Показывать пропущенные оповещения">
 <!ENTITY pref.missedalarms2 "Показывать пропущенные оповещения для доступных для записи календарей">
 <!ENTITY pref.calendar.alarms.missedAlarms.accessKey "а">
 <!ENTITY pref.calendar.alarms.defaults.label "Параметры по умолчанию для оповещений">

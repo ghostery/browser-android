@@ -10,15 +10,6 @@
 <!ENTITY toggleToolboxF12.keycode          "VK_F12">
 <!ENTITY toggleToolboxF12.keytext          "F12">
 
-<!-- LOCALIZATION NOTE (browserToolboxErrorMessage): This is the label
-  -  shown next to error details when the Browser Toolbox is unable to open. -->
-<!ENTITY browserToolboxErrorMessage          "開啟瀏覽器工具箱時發生錯誤:">
-
-<!-- LOCALIZATION NOTE (browserToolboxStatusMessage): This is the label
-  -  shown next to status details when the Browser Toolbox fails to connect or
-  -  appears to be taking a while to do so. -->
-<!ENTITY browserToolboxStatusMessage "瀏覽器工具箱連線狀態:">
-
 <!-- LOCALIZATION NOTE (options.context.advancedSettings): This is the label for
   -  the heading of the advanced settings group in the options panel. -->
 <!ENTITY options.context.advancedSettings "進階設定">
@@ -144,6 +135,11 @@
    - label for the checkbox that toggles timestamps in the Web Console -->
 <!ENTITY options.timestampMessages.label      "開啟時間戳記">
 <!ENTITY options.timestampMessages.tooltip    "若您啟用設定，網頁主控台的輸出內容將包含時間戳記">
+
+<!-- LOCALIZATION NOTE (options.warningGroups.label): This is the
+   - label for the checkbox that toggles the warningGroups feature in the Web Console -->
+<!ENTITY options.warningGroups.label      "將類似訊息組成一組">
+<!ENTITY options.warningGroups.tooltip    "啟用後，類似的訊息將組合成一組">
 
 <!-- LOCALIZATION NOTE (options.debugger.label): This is the label for the
   -  heading of the group of Debugger preferences in the options panel. -->

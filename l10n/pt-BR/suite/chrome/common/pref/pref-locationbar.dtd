@@ -36,7 +36,7 @@
 <!ENTITY highlightSecure.accesskey             "c">
 
 <!ENTITY unknownLocations.label                "Endereços desconhecidos">
-<!ENTITY domainGuessing.label                  "Se a página não for localizada, adicionar &quot;www.&quot; e &quot;.com&quot; ao endereço">
+<!ENTITY domainGuessing.label                  "Se a página não for encontrada, adicionar &quot;www.&quot; e &quot;.com&quot; ao endereço">
 <!ENTITY domainGuessing.accesskey              "S">
 <!ENTITY keywords.label                        "Realizar uma busca na web quando o texto fornecido não for um endereço válido">
 <!ENTITY keywords.accesskey                    "R">

@@ -37,7 +37,7 @@
      so if your locale needs a space between words, add it at the end of this
      entity. -->
 <!ENTITY about.relnotes.beforeTheLink "閱讀此版本的">
-<!ENTITY about.relnotes.linkTitle     "新鮮事">
+<!ENTITY about.relnotes.linkTitle     "發行公告">
 <!-- LOCALIZATION NOTE (about.relnotes.afterTheLink): note that there is no
      space between the linked about.relnotes.linkTitle phrase and this phrase,
      so if your locale needs a space between words, add it at the start of

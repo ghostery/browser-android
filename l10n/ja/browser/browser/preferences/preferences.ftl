@@ -4,10 +4,6 @@
 
 do-not-track-description = ウェブサイトに “Do Not Track” 信号を送り、追跡されたくないことを知らせます
 do-not-track-learn-more = 詳細情報
-do-not-track-option-default =
-    .label = トラッキング防止の使用時のみ
-do-not-track-option-default-content-blocking =
-    .label = 検出されたトラッカーをブロックする設定時のみ
 do-not-track-option-default-content-blocking-known =
     .label = 既知のトラッカーをブロックする設定時のみ
 do-not-track-option-always =
@@ -36,11 +32,7 @@ search-input-box =
            *[other] 設定を検索
         }
 
-policies-notice =
-    { PLATFORM() ->
-        [windows] あなたの所属組織が一部のオプションの変更を制限しています。
-       *[other] あなたの所属組織が一部の設定の変更を制限しています。
-    }
+managed-notice = ご使用のブラウザーはあなたの所属組織に管理されています。
 
 pane-general-title = 一般
 category-general =
@@ -58,10 +50,9 @@ pane-privacy-title = プライバシーとセキュリティ
 category-privacy =
     .tooltiptext = { pane-privacy-title }
 
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Firefox アカウント
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 
 help-button-label = { -brand-short-name } サポート
 addons-button-label = 拡張機能とテーマ
@@ -101,7 +92,7 @@ extension-controlled-new-tab-url = 拡張機能 <img data-l10n-name="icon"/> { $
 
 # This string is shown to notify the user that their notifications permission
 # is being controlled by an extension.
-extension-controlled-web-notifications= 拡張機能 <img data-l10n-name="icon"/> { $name } により、この設定が変更されています。
+extension-controlled-web-notifications = 拡張機能 <img data-l10n-name="icon"/> { $name } により、この設定が変更されています。
 
 # This string is shown to notify the user that the default search engine
 # is being controlled by an extension.
@@ -110,10 +101,6 @@ extension-controlled-default-search = 拡張機能 <img data-l10n-name="icon"/> 
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
 extension-controlled-privacy-containers = 拡張機能 <img data-l10n-name="icon"/> { $name } がコンテナータブを必要としています。
-
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = 拡張機能 <img data-l10n-name="icon"/> { $name } がトラッキング防止の設定を変更しています。
 
 # This string is shown to notify the user that their content blocking "All Detected Trackers"
 # preferences are being controlled by an extension.
@@ -351,6 +338,8 @@ update-application-manual =
     .label = 更新の確認は行わない (非推奨)
     .accesskey = N
 
+update-application-warning-cross-user-setting = この設定はこの端末のすべての Windows アカウントと、この { -brand-short-name } のインストール先を使用するすべての { -brand-short-name } プロファイルに適用されます。
+
 update-application-use-service =
     .label = 更新のインストールにバックグラウンドサービスを使用する
     .accesskey = b
@@ -364,6 +353,26 @@ update-pref-write-failure-title = 書き込み失敗
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = 設定を保存できません。ファイルに書き込みできません: { $path }
+
+update-setting-write-failure-title = 変更した設定の保存エラー
+
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    { -brand-short-name } がエラーに遭遇したため変更を保存できませんでした。この設定変更を保存するには、以下のファイルの書き込み権限が必要なことに注意してください。あなたかシステム管理者が、このファイルにユーザーグループのフルコントロール権限を与えると、エラーを解決できる可能性があります。
+
+    ファイルに書き込みできません: { $path }
+
+update-in-progress-title = 更新中
+
+update-in-progress-message = この更新を続行しますか？
+
+update-in-progress-ok-button = 破棄(&D)
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = 続行(&C)
 
 ## General Section - Performance
 
@@ -419,6 +428,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = おすすめの拡張機能を紹介する
     .accesskey = R
+browsing-cfr-features =
+    .label = おすすめの機能を紹介する
+    .accesskey = f
 
 browsing-cfr-recommendations-learn-more = 詳細
 
@@ -479,6 +491,49 @@ use-current-pages =
 choose-bookmark =
     .label = ブックマークを使う...
     .accesskey = B
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Firefox Home コンテンツ
+home-prefs-content-description = Firefox Home に表示するコンテンツを選びましょう。
+home-prefs-content-discovery-description = Firefox Home のコンテンツディスカバリーは関連性の高い優れた記事をウェブ上から発見できます。
+
+home-prefs-search-header =
+    .label = ウェブ検索
+home-prefs-topsites-header =
+    .label = トップサイト
+home-prefs-topsites-description = よく訪れるサイト
+
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = { $provider } のおすすめ
+home-prefs-recommended-by-description = ウェブ上の様々な場所から集められた、あなたにピッタリの優れたコンテンツ
+home-prefs-recommended-by-learn-more = 使い方
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = 広告記事
+
+home-prefs-highlights-header =
+    .label = ハイライト
+home-prefs-highlights-description = 保存したり訪れたりしたサイトうち主なもの
+home-prefs-highlights-option-visited-pages =
+    .label = 訪れたページ
+home-prefs-highlights-options-bookmarks =
+    .label = ブックマーク
+home-prefs-highlights-option-most-recent-download =
+    .label = 最近のダウンロード
+home-prefs-highlights-option-saved-to-pocket =
+    .label = { -pocket-brand-name } に保存されたページ
+
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = スニペット
+home-prefs-snippets-description = { -vendor-short-name } と { -brand-product-name } に関する最新情報
+home-prefs-sections-rows-option =
+    .label = { $num } 行
 
 ## Search Section
 
@@ -658,9 +713,11 @@ sync-device-name-save =
     .label = 保存
     .accesskey = v
 
-sync-mobilepromo-single = 別の端末を接続
+sync-connect-another-device = 別の端末を接続
 
-sync-mobilepromo-multi = 端末を管理
+sync-manage-devices = 端末を管理
+
+sync-fxa-begin-pairing = 端末をペアリング
 
 sync-tos-link = 利用規約
 
@@ -679,6 +736,12 @@ forms-ask-to-save-logins =
 forms-exceptions =
     .label = 例外サイト...
     .accesskey = x
+forms-generate-passwords =
+    .label = 強固なパスワードを生成、提案する
+    .accesskey = u
+forms-fill-logins-and-passwords =
+    .label = ログイン情報とパスワードを自動入力する
+    .accesskey = i
 forms-saved-logins =
     .label = 保存されているログイン情報...
     .accesskey = L
@@ -752,17 +815,11 @@ sitedata-total-size = 保存された Cookie とサイトデータとキャッ�
 
 sitedata-learn-more = 詳細情報
 
-sitedata-keep-until = Cookie を保存する期間
-    .accesskey = u
-
-sitedata-keep-until-expire =
-    .label = サイトが指定した期限まで
-sitedata-keep-until-closed =
-    .label = { -brand-short-name } を終了するまで
-
 sitedata-delete-on-close =
     .label = { -brand-short-name } を閉じたときに Cookie とサイトデータを削除する
     .accesskey = c
+
+sitedata-delete-on-close-private-browsing = 永続プライベートブラウジングモードでは、Cookie とサイトデータは { -brand-short-name } の終了時に必ず消去されます。
 
 sitedata-allow-cookies-option =
     .label = Cookie とサイトデータを保存する
@@ -777,19 +834,13 @@ sitedata-disallow-cookies-option =
 sitedata-block-desc = ブロックの種類
     .accesskey = T
 
-sitedata-block-trackers-option-recommended =
-    .label = サードパーティトラッカー (推奨)
-sitedata-block-trackers-option =
-    .label = サードパーティトラッカー
-sitedata-block-unvisited-option =
-    .label = 未訪問のウェブサイトの Cookie
-sitedata-block-all-third-party-option =
-    .label = すべてのサードパーティトラッカー (ウェブサイトが動作しない可能性があります)
-sitedata-block-all-option =
-    .label = すべての Cookie (ウェブサイトが動作しない可能性があります)
-
 sitedata-option-block-trackers =
     .label = サードパーティトラッカー
+
+sitedata-option-block-cross-site-trackers =
+    .label = クロスサイトトラッカー
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = クロスサイトトラッカーとソーシャルメディアトラッカー
 sitedata-option-block-unvisited =
     .label = 未訪問のウェブサイトの Cookie
 sitedata-option-block-all-third-party =
@@ -804,15 +855,6 @@ sitedata-clear =
 sitedata-settings =
     .label = データを管理...
     .accesskey = M
-
-sitedata-cookies-exceptions =
-    .label = 例外サイト...
-    .accesskey = E
-
-# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
-# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
-# Cookies and Site Data section.
-sitedata-warning-your-settings-prevent-changes = 現在のコンテンツブロッキングの設定内容は、Cookie とサイトデータの設定の変更を妨げます。
 
 sitedata-cookies-permissions =
     .label = サイトの設定を管理...
@@ -840,47 +882,11 @@ addressbar-suggestions-settings = 検索エンジンの検索候補の設定を�
 
 content-blocking-header = コンテンツブロッキング
 
-content-blocking-desc = ブラウザを遅くしたりウェブ上の行動を追跡したりする広告やコードなどのサードパーティコンテンツをブロックします。保護と性能の最適なバランスの設定にカスタマイズできます。
+content-blocking-enhanced-tracking-protection = 強化型トラッキング防止機能
 
-content-blocking-description = ウェブ上の行動を追跡するサードパーティコンテンツをブロックします。ウェブサイト間で蓄積、共有されるあなたのオンラインアクティビティをコントロールします。
+content-blocking-section-description = ブラウジング中のあなたのプライバシーを保護します。あなたが訪問したサイトを追跡して訪問者の情報を収集する目に見えないコンテンツをブロックします。このようなコンテンツをブロックすると、ページの読み込みが速くなる可能性があります。
 
 content-blocking-learn-more = 詳細
-content-blocking-restore-defaults =
-  .label = 既定値に戻す
-  .accesskey = R
-
-content-blocking-toggle-on =
-  .tooltiptext = コンテンツブロッキングをオフにします
-content-blocking-toggle-off =
-  .tooltiptext = コンテンツブロッキングをオンにします
-
-content-blocking-toggle-label-on = オン
-  .accesskey = O
-content-blocking-toggle-label-off = オフ
-  .accesskey = O
-
-content-blocking-category-label = ブロック対象を選択
-
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-  .label = 読み込みを遅くするトラッカー
-  .accesskey = S
-content-blocking-fastblock-new-description = ページの読み込みを遅くするトラッカーのみブロックします。
-content-blocking-tracking-protection-trackers-label =
-  .label = トラッカー
-  .accesskey = T
-content-blocking-tracking-protection-all-detected-trackers-label =
-  .label = すべての検出済みトラッカー
-  .accesskey = T
-content-blocking-tracking-protection-new-description = 既知のトラッカーをすべてブロックします。(一部のページが読み込まれない可能性があります。)
-content-blocking-tracking-protection-option-always =
-  .label = 常にブロック
-  .accesskey = A
-content-blocking-tracking-protection-option-private =
-  .label = プライベートウィンドウのみ
-  .accesskey = p
 
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
@@ -894,22 +900,46 @@ content-blocking-setting-custom =
   .label = カスタム
   .accesskey = C
 
-content-blocking-standard-description = プライベートウィンドウのみ既知のトラッカーをブロックします。
 content-blocking-standard-desc = 保護と性能をバランスよく。ウェブサイトが正しく機能するようトラッカーを一部許可します。
-content-blocking-strict-desc = { -brand-short-name } が検出したトラッカーをすべてブロックします。一部のサイトが機能しなくなる可能性があります。
+content-blocking-strict-description = より強固な保護です。一部のサイトが機能しなくなる可能性があります。
 content-blocking-custom-desc = ブロックする項目を選択します。
 
 content-blocking-private-trackers = 既知のトラッカー (プライベートウィンドウのみ)
 content-blocking-third-party-cookies = サードパーティのトラッカー Cookie
+
+content-blocking-etp-standard-desc = 保護と性能をバランスよく。ページが正しく機能するように読み込みます。
+content-blocking-etp-strict-desc = より強固な保護ですが、一部のサイトやコンテンツが機能しなくなる可能性があります。
+content-blocking-etp-custom-desc = ブロックするトラッカーとスクリプトを選択します。
+
+content-blocking-private-windows = トラッキングコンテンツ (プライベートウィンドウのみ)
+content-blocking-cross-site-tracking-cookies = クロスサイトトラッキング Cookie
+content-blocking-social-media-trackers = ソーシャルメディアトラッカー
+content-blocking-all-cookies = すべての Cookie
+content-blocking-unvisited-cookies = 未訪問のサイトの Cookie
 content-blocking-all-windows-trackers = 既知のトラッカー (すべてのウィンドウ)
+content-blocking-all-windows-tracking-content = トラッキングコンテンツ (すべてのウィンドウ)
 content-blocking-all-third-party-cookies = サードパーティ Cookie すべて
+content-blocking-cryptominers = 暗号通貨マイニング
+content-blocking-fingerprinters = フィンガープリント採取
 
 content-blocking-warning-title = 注意！
-content-blocking-warning-desc = Cookie とトラッカーをブロックすると、一部のウェブサイトが機能しなくなる可能性があります。信頼するサイトはブロッキングを無効にできます。
+content-blocking-warning-description = コンテンツをブロックすると、一部のウェブサイトが機能しなくなる可能性があります。信頼するサイトはブロッキングを無効にできます。
 content-blocking-learn-how = 詳細
+
+content-blocking-etp-warning-description = トラッカーをブロックすると、一部のサイトの機能に影響がある可能性があります。すべてのコンテンツを読み込むには、トラッカーを許容してページを再読み込みします。
+content-blocking-warning-learn-how = 詳細
+
+content-blocking-reload-description = これらの変更を適用するには、タブを再読み込みする必要があります。
+content-blocking-reload-tabs-button =
+  .label = すべてのタブを再読み込み
+  .accesskey = R
 
 content-blocking-trackers-label =
   .label = トラッカー
+  .accesskey = T
+
+content-blocking-tracking-content-label =
+  .label = トラッキングコンテンツ
   .accesskey = T
 content-blocking-tracking-protection-option-all-windows =
   .label = すべてのウィンドウ
@@ -919,57 +949,25 @@ content-blocking-option-private =
   .accesskey = p
 content-blocking-tracking-protection-change-block-list = ブロックリストを変更
 
-content-blocking-third-party-cookies-label =
-  .label = サードパーティ Cookie
-  .accesskey = C
-content-blocking-reject-trackers-description = すべてのサードパーティ Cookie、またはトラッカーの Cookie のみをブロックします。
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = 現在の Cookie とサイトデータの設定内容は、サードパーティ Cookie の設定の変更を妨げます。
-content-blocking-change-cookie-settings =
-  .label = Cookie の設定を変更
-  .accesskey = S
-content-blocking-reject-trackers-block-trackers-option-recommended =
-  .label = トラッカー (推奨)
-  .accesskey = k
-content-blocking-reject-trackers-block-trackers-option =
-  .label = トラッカー
-  .accesskey = k
-content-blocking-reject-trackers-all-third-parties-option =
-  .label = すべてのサードパーティ Cookie (ウェブサイトが動作しない可能性があります)
-  .accesskey = A
-
 content-blocking-cookies-label =
   .label = Cookie
   .accesskey = C
 
+content-blocking-expand-section =
+  .tooltiptext = 詳細情報
+
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+  .label = 暗号通貨マイニング
+  .accesskey = y
+
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+  .label = フィンガープリント採取
+  .accesskey = F
+
 ## Privacy Section - Tracking
-
-tracking-header = トラッキング防止
-
-tracking-desc = トラッキング防止は、複数のウェブサイトにまたがるユーザーのブラウジングデータを収集するオンライントラッカーをブロックします。 <a data-l10n-name="learn-more">トラッキング防止とプライバシーの詳細情報</a>
-
-tracking-mode-label = トラッキング防止を使用して既知のトラッカーをブロックする
-
-tracking-mode-always =
-    .label = 常にブロック
-    .accesskey = y
-tracking-mode-private =
-    .label = プライベートウィンドウのみ
-    .accesskey = l
-tracking-mode-never =
-    .label = ブロックしない
-    .accesskey = N
-
-tracking-exceptions =
-    .label = 例外...
-    .accesskey = x
-
-tracking-change-block-list =
-    .label = ブロックリストを変更...
-    .accesskey = C
 
 tracking-manage-exceptions =
     .label = 例外を管理...
@@ -1004,24 +1002,19 @@ permissions-notification-pause =
     .label = { -brand-short-name } を再起動するまで通知を一時停止
     .accesskey = n
 
-permissions-block-autoplay-media =
-    .label = 音声付きメディアを自動再生するウェブサイトをブロックする
+permissions-block-autoplay-media2 =
+    .label = 音声を自動再生するウェブサイトをブロックする
     .accesskey = B
-
-permissions-block-autoplay-media-menu = 音声を自動再生するウェブサイト
 
 permissions-block-autoplay-media-exceptions =
     .label = 許可サイト...
     .accesskey = E
 
-autoplay-option-ask =
-    .label = 毎回確認する
-autoplay-option-allow =
-    .label = 自動再生を許可
-autoplay-option-dont =
-    .label = 自動再生しない
+permissions-autoplay = 自動再生
 
-permissions-autoplay-link = 詳細
+permissions-autoplay-settings =
+    .label = 設定...
+    .accesskey = t
 
 permissions-block-popups =
     .label = ポップアップウィンドウをブロックする
@@ -1068,11 +1061,6 @@ addon-recommendations-link = 詳細情報
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = このビルド設定ではヘルスレポートが無効化されています
-
-collection-browser-errors =
-    .label = { -brand-short-name } がブラウザーエラーレポート (エラーメッセージ含む) を { -vendor-short-name } へ送信することを許可する
-    .accesskey = b
-collection-browser-errors-link = 詳細情報
 
 collection-backlogged-crash-reports =
     .label = { -brand-short-name } があなたに代わって未送信のクラッシュレポートを送信することを許可する

@@ -5,7 +5,7 @@
 clear-site-data-window =
     .title = Czyszczenie danych
     .style = width: 35em
-clear-site-data-description = Wyczyszczenie wszystkich ciasteczek i danych stron przechowywanych przez przeglądarkę może spowodować wylogowanie ze stron i usunąć treści offline. Czyszczenie danych pamięci podręcznej nie wpłynie na zachowane dane logowania.
+clear-site-data-description = Wyczyszczenie wszystkich ciasteczek i danych stron przechowywanych przez przeglądarkę { -brand-short-name } może spowodować wylogowanie ze stron i usunąć treści offline. Czyszczenie danych pamięci podręcznej nie wpłynie na zachowane dane logowania.
 clear-site-data-close-key =
     .key = w
 # The parameters in parentheses in this string describe disk usage

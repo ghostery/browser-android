@@ -21,12 +21,12 @@
 <!ENTITY quotedTextColor.accesskey        "z">
 <!ENTITY displayWidth.label               "Normál szöveges levelek">
 <!ENTITY displayText.label                "A következő beállítások használata idézett szöveges levelek esetén:">
-<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
 
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
 <!ENTITY convertEmoticons.label        "Hangulatjelek megjelenítése grafikaként">
 <!ENTITY convertEmoticons.accesskey    "H">
-<!-- labels -->
 
+<!-- labels -->
 <!ENTITY displayTagsText.label     "A címkék az üzenetek kategorizálására és priorálására használhatók.">
 <!ENTITY newTagButton.label        "Új…">
 <!ENTITY newTagButton.accesskey    "j">
@@ -34,8 +34,8 @@
 <!ENTITY editTagButton1.accesskey  "z">
 <!ENTITY removeTagButton.label     "Törlés">
 <!ENTITY removeTagButton.accesskey "T">
-<!-- Fonts and Colors -->
 
+<!-- Fonts and Colors -->
 <!ENTITY fontsAndColors1.label   "Betűk és színek">
 <!ENTITY defaultFont.label       "Alapértelmezett betű:">
 <!ENTITY defaultFont.accesskey   "b">
@@ -45,10 +45,11 @@
 <!ENTITY fontOptions.label       "Speciális…">
 <!ENTITY colorButton.label       "Színek…">
 <!ENTITY colorButton.accesskey   "n">
-<!-- Advanced -->
 
+<!-- Advanced -->
 <!ENTITY reading.caption                  "Olvasás">
 <!ENTITY display.caption                  "Megjelenítés">
+<!ENTITY displayName.label                "Megjelenítendő név:">
 <!ENTITY showCondensedAddresses.label     "Csak a név megjelenítése a címjegyzékben szereplő személyeknél">
 <!ENTITY showCondensedAddresses.accesskey "C">
 

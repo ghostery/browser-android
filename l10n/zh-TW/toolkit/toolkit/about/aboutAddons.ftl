@@ -66,7 +66,7 @@ cmd-install-addon =
     .label = 安裝
     .accesskey = I
 cmd-contribute =
-    .label = 捐助
+    .label = 贊助
     .accesskey = C
     .tooltiptext = 贊助這個元件的開發
 discover-title = 什麼是附加元件？
@@ -81,6 +81,9 @@ detail-version =
 detail-last-updated =
     .label = 最近更新時間
 detail-contributions-description = 這個元件的開發者希望您透過小小的捐獻協助其後續開發。
+detail-contributions-button = 贊助
+    .title = 贊助這個元件的開發
+    .accesskey = C
 detail-update-type =
     .value = 自動更新
 detail-update-default =
@@ -92,6 +95,22 @@ detail-update-automatic =
 detail-update-manual =
     .label = 關閉
     .tooltiptext = 不要自動安裝更新
+# Used as a description for the option to allow or block an add-on in private windows.
+detail-private-browsing-label = 於隱私視窗中執行
+detail-private-browsing-description2 = 若允許執行，擴充套件可在隱私瀏覽模式中取得您的線上行為。<label data-l10n-name="detail-private-browsing-learn-more">了解更多資訊</label>
+# Some add-ons may elect to not run in private windows by setting incognito: not_allowed in the manifest.  This
+# cannot be overridden by the user.
+detail-private-disallowed-label = 不允許於隱私視窗使用
+detail-private-disallowed-description = 此擴充套件無法於隱私瀏覽模式中運作。<label data-l10n-name="detail-private-browsing-learn-more">了解更多資訊</label>
+# Some special add-ons are privileged, run in private windows automatically, and this permission can't be revoked
+detail-private-required-label = 自動於隱私瀏覽視窗運作
+detail-private-required-description = 此擴充套件可存取您在隱私瀏覽模式當中的線上行為。<label data-l10n-name="detail-private-browsing-learn-more">了解更多資訊</label>
+detail-private-browsing-on =
+    .label = 允許
+    .tooltiptext = 在隱私瀏覽模式中啟用
+detail-private-browsing-off =
+    .label = 不允許
+    .tooltiptext = 在隱私瀏覽模式中停用
 detail-home =
     .label = 網站首頁
 detail-home-value =
@@ -134,9 +153,10 @@ legacy-warning-show-legacy = 顯示傳統擴充套件
 legacy-extensions =
     .value = 傳統擴充套件
 legacy-extensions-description = 這些擴充套件不符合 { -brand-short-name } 目前的標準，已被停用。 <label data-l10n-name="legacy-learn-more">了解附加元件有什麼變動</label>
-extensions-view-discover =
-    .name = 安裝附加元件
-    .tooltiptext = { extensions-view-discover.name }
+private-browsing-description2 = { -brand-short-name } 將調整擴充套件於隱私瀏覽模式中運作的方式。預設情況下，任何新安裝至 { -brand-short-name } 的擴充套件都無法在隱私瀏覽視窗中執行。我們這樣做是為了確保您的隱私瀏覽過程更加私密；除非您在設定中允許，否則擴充套件將無法在隱私瀏覽模式中運作，也無法在該模式中存取您的線上行為。<label data-l10n-name="private-browsing-learn-more">了解如何管理擴充套件設定。</label>
+extensions-view-discopane =
+    .name = 推薦項目
+    .tooltiptext = { extensions-view-discopane.name }
 extensions-view-recent-updates =
     .name = 最近的更新
     .tooltiptext = { extensions-view-recent-updates.name }
@@ -211,3 +231,149 @@ extensions-updates-manual-updates-found =
 extensions-updates-update-selected =
     .label = 安裝更新
     .tooltiptext = 安裝此清單中可用的更新
+
+## Extension shortcut management
+
+manage-extensions-shortcuts =
+    .label = 管理擴充套件快速鍵
+    .accesskey = S
+shortcuts-no-addons = 您並未啟用任何擴充套件。
+shortcuts-no-commands = 下列擴充套件沒有快速鍵:
+shortcuts-input =
+    .placeholder = 輸入快速鍵
+shortcuts-browserAction = 啟用快速鍵
+shortcuts-pageAction = 啟用頁面操作
+shortcuts-sidebarAction = 切換側邊欄
+shortcuts-modifier-mac = 包含 Ctrl、Alt 或 ⌘
+shortcuts-modifier-other = 包含 Ctrl 或 Alt
+shortcuts-invalid = 無效的快速鍵
+shortcuts-letter = 按下一個字母
+shortcuts-system = 無法蓋過 { -brand-short-name } 的快速鍵
+# String displayed in warning label when there is a duplicate shortcut
+shortcuts-duplicate = 快速鍵重複
+# String displayed when a keyboard shortcut is already assigned to more than one add-on
+# Variables:
+#   $shortcut (string) - Shortcut string for the add-on
+shortcuts-duplicate-warning-message = 有超過一種情況使用 { $shortcut } 作為快捷鍵，重複的快速鍵可能會有無法預期的行為。
+# String displayed when a keyboard shortcut is already used by another add-on
+# Variables:
+#   $addon (string) - Name of the add-on
+shortcuts-exists = 已由 { $addon } 使用
+shortcuts-card-expand-button =
+    { $numberToShow ->
+       *[other] 顯示另外 { $numberToShow } 個
+    }
+shortcuts-card-collapse-button = 顯示更少
+go-back-button =
+    .tooltiptext = 回上一頁
+
+## Recommended add-ons page
+
+# Explanatory introduction to the list of recommended add-ons. The action word
+# ("recommends") in the final sentence is a link to external documentation.
+discopane-intro = 擴充套件與佈景主題就是可以在瀏覽器中使用的應用程式，讓您獲得保護登入資訊、下載影片、比價、調整瀏覽器的外觀等等新增功能。這些小程式通常都不是由 Mozilla 開發的。以下是一些 { -brand-product-name } 所 <a data-l10n-name="learn-more-trigger">推薦</a>，在安全性、效能、功能等方便都表現傑出的精選項目。
+# Notice to make user aware that the recommendations are personalized.
+discopane-notice-recommendations = 某些項目是根據您安裝的其他擴充套件、偏好設定、使用統計推導而出的個人化建議。
+discopane-notice-learn-more = 了解更多
+privacy-policy = 隱私權保護政策
+# Refers to the author of an add-on, shown below the name of the add-on.
+# Variables:
+#   $author (string) - The name of the add-on developer.
+created-by-author = 作者: <a data-l10n-name="author">{ $author }</a>
+# Shows the number of daily users of the add-on.
+# Variables:
+#   $dailyUsers (number) - The number of daily users.
+user-count = 使用者數: { $dailyUsers }
+install-extension-button = 安裝到 { -brand-product-name }
+install-theme-button = 安裝佈景主題
+# The label of the button that appears after installing an add-on. Upon click,
+# the detailed add-on view is opened, from where the add-on can be managed.
+manage-addon-button = 管理
+find-more-addons = 看更多附加元件！
+
+## Add-on actions
+
+report-addon-button = 回報
+remove-addon-button = 移除
+disable-addon-button = 停用
+enable-addon-button = 啟用
+expand-addon-button = 更多選項
+preferences-addon-button =
+    { PLATFORM() ->
+        [windows] 選項
+       *[other] 偏好設定
+    }
+details-addon-button = 詳細資訊
+release-notes-addon-button = 發行公告
+permissions-addon-button = 權限
+addons-enabled-heading = 已啟用
+addons-disabled-heading = 已停用
+extension-enabled-heading = 啟用
+extension-disabled-heading = 停用
+theme-enabled-heading = 啟用
+theme-disabled-heading = 停用
+plugin-enabled-heading = 啟用
+plugin-disabled-heading = 停用
+dictionary-enabled-heading = 啟用
+dictionary-disabled-heading = 停用
+locale-enabled-heading = 啟用
+locale-disabled-heading = 停用
+ask-to-activate-button = 啟用時詢問
+always-activate-button = 總是啟用
+never-activate-button = 永不啟用
+addon-detail-author-label = 作者
+addon-detail-version-label = 版本
+addon-detail-last-updated-label = 最近更新時間
+addon-detail-homepage-label = 首頁
+addon-detail-rating-label = 評分
+# The average rating that the add-on has received.
+# Variables:
+#   $rating (number) - A number between 0 and 5. The translation should show at most one digit after the comma.
+five-star-rating =
+    .title = 評分: { NUMBER($rating, maximumFractionDigits: 1) }，滿分 5 分
+# This string is used to show that an add-on is disabled.
+# Variables:
+#   $name (string) - The name of the add-on
+addon-name-disabled = { $name }（已停用）
+# The number of reviews that an add-on has received on AMO.
+# Variables:
+#   $numberOfReviews (number) - The number of reviews received
+addon-detail-reviews-link =
+    { $numberOfReviews ->
+       *[other] { $numberOfReviews } 筆評論
+    }
+
+## Pending uninstall message bar
+
+# Variables:
+#   $addon (string) - Name of the add-on
+pending-uninstall-description = 已移除 <span data-l10n-name="addon-name">{ $addon }</span>。
+pending-uninstall-undo-button = 還原
+addon-detail-updates-label = 允許自動更新
+addon-detail-updates-radio-default = 預設
+addon-detail-updates-radio-on = 開啟
+addon-detail-updates-radio-off = 關閉
+addon-detail-update-check-label = 檢查更新
+install-update-button = 更新
+# This is the tooltip text for the private browsing badge in about:addons. The
+# badge is the private browsing icon included next to the extension's name.
+addon-badge-private-browsing-allowed =
+    .title = 允許於隱私瀏覽視窗運作
+addon-detail-private-browsing-help = 允許後，您在隱私瀏覽模式上網時，擴充套件將可得知您的線上行為。<a data-l10n-name="learn-more">了解更多</a>
+addon-detail-private-browsing-allow = 允許
+addon-detail-private-browsing-disallow = 不允許
+# This is the tooltip text for the recommended badge for an extension in about:addons. The
+# badge is a small icon displayed next to an extension when it is recommended on AMO.
+addon-badge-recommended =
+    .title = 推薦
+    .alt = 推薦
+available-updates-heading = 可用的更新
+recent-updates-heading = 最近的更新
+release-notes-loading = 載入中…
+release-notes-error = 抱歉，載入發行公告時發生錯誤。
+addon-permissions-empty = 此擴充套件並未要求任何權限
+recommended-extensions-heading = 推薦的擴充套件
+recommended-themes-heading = 推薦的佈景主題
+# A recommendation for the Firefox Color theme shown at the bottom of the theme
+# list view. The "Firefox Color" name itself should not be translated.
+recommended-theme-1 = 突然有個靈感嗎？<a data-l10n-name="link">使用 Firefox Color 來打造自己的佈景主題。</a>

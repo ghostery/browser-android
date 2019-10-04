@@ -38,7 +38,7 @@
 
 <!ENTITY status.available          "Disponível">
 <!ENTITY status.unavailable        "Ocupado">
-<!ENTITY status.offline            "Off-line">
+<!ENTITY status.offline            "Desconectado">
 
 <!ENTITY openLinkCmd.label            "Abrir link…">
 <!ENTITY openLinkCmd.accesskey        "A">

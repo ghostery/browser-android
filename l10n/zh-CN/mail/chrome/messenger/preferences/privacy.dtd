@@ -20,7 +20,7 @@
 <!ENTITY acceptCookies.accesskey "A">
 <!ENTITY acceptThirdParty.pre.label "接受第三方 Cookie：">
 <!ENTITY acceptThirdParty.pre.accesskey "C">
-<!ENTITY acceptThirdParty.always.label "总是">
+<!ENTITY acceptThirdParty.always.label "一律">
 <!ENTITY acceptThirdParty.never.label "总不">
 <!ENTITY acceptThirdParty.visited.label "仅访问过的域">
 <!ENTITY keepUntil.label "保存直至：">
@@ -36,3 +36,7 @@
 <!ENTITY dntTrackingNotOkay.label2 "告诉网站我不想被跟踪">
 <!ENTITY dntTrackingNotOkay.accesskey "n">
 <!ENTITY doNotTrackInfo.label "详细了解有关请勿跟踪">
+
+<!ENTITY doNotTrackCheck.label "向网站发出“请勿跟踪”信号，示明您不想被跟踪">
+<!ENTITY doNotTrackCheck.accesskey "n">
+<!ENTITY doNotTrackLearnMore.label "详细了解">

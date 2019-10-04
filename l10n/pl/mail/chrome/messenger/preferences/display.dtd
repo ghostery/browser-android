@@ -2,64 +2,73 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY itemFormatting.label "Formatowanie">
-<!ENTITY itemTags.label "Etykiety">
-<!ENTITY itemAdvanced.label "Zaawansowane">
+<!ENTITY itemFormatting.label             "Formatowanie">
+<!ENTITY itemTags.label                   "Etykiety">
+<!ENTITY itemAdvanced.label               "Zaawansowane">
 
-<!ENTITY style.label "Styl:">
-<!ENTITY style.accesskey "S">
-<!ENTITY regularStyle.label "Normalny">
-<!ENTITY bold.label "Pogrubiony">
-<!ENTITY italic.label "Kursywa">
-<!ENTITY boldItalic.label "Pogrubiona kursywa">
-<!ENTITY size.label "Rozmiar:">
-<!ENTITY size.accesskey "o">
-<!ENTITY regularSize.label "Normalny">
-<!ENTITY bigger.label "Większy">
-<!ENTITY smaller.label "Mniejszy">
-<!ENTITY quotedTextColor.label "Kolor:">
-<!ENTITY quotedTextColor.accesskey "o">
-<!ENTITY displayWidth.label "Wiadomości tekstowe">
-<!ENTITY displayText.label "Ustawienia wyświetlania cytatów w wiadomościach tekstowych:">
+<!ENTITY style.label                      "Styl:">
+<!ENTITY style.accesskey                  "S">
+<!ENTITY regularStyle.label               "Normalny">
+<!ENTITY bold.label                       "Pogrubiony">
+<!ENTITY italic.label                     "Kursywa">
+<!ENTITY boldItalic.label                 "Pogrubiona kursywa">
+<!ENTITY size.label                       "Rozmiar:">
+<!ENTITY size.accesskey                   "o">
+<!ENTITY regularSize.label                "Normalny">
+<!ENTITY bigger.label                     "Większy">
+<!ENTITY smaller.label                    "Mniejszy">
+<!ENTITY quotedTextColor.label            "Kolor:">
+<!ENTITY quotedTextColor.accesskey        "o">
+<!ENTITY displayWidth.label               "Wiadomości tekstowe">
+<!ENTITY displayText.label                "Ustawienia wyświetlania cytatów w wiadomościach tekstowych:">
 
-<!ENTITY convertEmoticons.label "Wyświetlaj emotikony jako grafikę">
-<!ENTITY convertEmoticons.accesskey "W">
+<!-- LOCALIZATION NOTE : (emoticonsAndStructs.label) 'Emoticons' are also known as 'Smileys', e.g. :-)   -->
+<!ENTITY convertEmoticons.label        "Wyświetlaj emotikony jako grafikę">
+<!ENTITY convertEmoticons.accesskey    "W">
 
-<!ENTITY displayTagsText.label "Etykiety mogą być używane do klasyfikowania wiadomości oraz nadawania im priorytetów.">
-<!ENTITY newTagButton.label "Nowa…">
-<!ENTITY newTagButton.accesskey "N">
-<!ENTITY editTagButton1.label "Edytuj…">
-<!ENTITY editTagButton1.accesskey "E">
-<!ENTITY removeTagButton.label "Usuń">
+<!-- labels -->
+<!ENTITY displayTagsText.label     "Etykiety mogą być używane do klasyfikowania wiadomości oraz nadawania im priorytetów.">
+<!ENTITY newTagButton.label        "Nowa…">
+<!ENTITY newTagButton.accesskey    "N">
+<!ENTITY editTagButton1.label      "Edytuj…">
+<!ENTITY editTagButton1.accesskey  "E">
+<!ENTITY removeTagButton.label     "Usuń">
 <!ENTITY removeTagButton.accesskey "U">
 
-<!ENTITY fontsAndColors1.label "Czcionki i kolory">
-<!ENTITY defaultFont.label "Domyślna czcionka:">
-<!ENTITY defaultFont.accesskey "D">
-<!ENTITY defaultSize.label "Rozmiar:">
-<!ENTITY defaultSize.accesskey "R">
-<!ENTITY fontOptions.label "Zaawansowane…">
-<!ENTITY fontOptions.accesskey "Z">
-<!ENTITY colorButton.label "Kolory…">
-<!ENTITY colorButton.accesskey "K">
+<!-- Fonts and Colors -->
+<!ENTITY fontsAndColors1.label   "Czcionki i kolory">
+<!ENTITY defaultFont.label       "Domyślna czcionka:">
+<!ENTITY defaultFont.accesskey   "D">
+<!ENTITY defaultSize.label       "Rozmiar:">
+<!ENTITY defaultSize.accesskey   "R">
+<!ENTITY fontOptions.accesskey   "Z">
+<!ENTITY fontOptions.label       "Zaawansowane…">
+<!ENTITY colorButton.label       "Kolory…">
+<!ENTITY colorButton.accesskey   "K">
 
-<!ENTITY reading.caption "Czytanie">
-<!ENTITY display.caption "Wyświetlanie">
-<!ENTITY showCondensedAddresses.label "Pokazywanie tylko nazw kontaktów dla nadawców z książki adresowej">
+<!-- Advanced -->
+<!ENTITY reading.caption                  "Czytanie">
+<!ENTITY display.caption                  "Wyświetlanie">
+<!ENTITY displayName.label                "Wyświetlana nazwa:">
+<!ENTITY showCondensedAddresses.label     "Pokazywanie tylko nazw kontaktów dla nadawców z książki adresowej">
 <!ENTITY showCondensedAddresses.accesskey "P">
-<!ENTITY autoMarkAsRead.label "Automatyczne oznaczanie wiadomości jako przeczytanych:">
-<!ENTITY autoMarkAsRead.accesskey "A">
-<!ENTITY markAsReadNoDelay.label "natychmiast po wyświetleniu">
-<!ENTITY markAsReadNoDelay.accesskey "n">
-<!ENTITY markAsReadDelay.label "po wyświetlaniu przez">
-<!ENTITY markAsReadDelay.accesskey "w">
-<!ENTITY secondsLabel.label "sekund">
-<!ENTITY openMsgIn.label "Otwieranie wiadomości w:">
-<!ENTITY openMsgInNewTab.label "nowych kartach">
-<!ENTITY openMsgInNewTab.accesskey "k">
-<!ENTITY reuseExpRadio0.label "nowych oknach wiadomości">
-<!ENTITY reuseExpRadio0.accesskey "h">
-<!ENTITY reuseExpRadio1.label "istniejącym oknie wiadomości">
-<!ENTITY reuseExpRadio1.accesskey "m">
-<!ENTITY closeMsgOnMoveOrDelete.label "Zamykanie okna/karty wiadomości przy przenoszeniu lub usuwaniu">
+
+<!ENTITY autoMarkAsRead.label             "Automatyczne oznaczanie wiadomości jako przeczytanych:">
+<!ENTITY autoMarkAsRead.accesskey         "A">
+<!ENTITY markAsReadNoDelay.label          "natychmiast po wyświetleniu">
+<!ENTITY markAsReadNoDelay.accesskey      "n">
+<!-- LOCALIZATION NOTE (markAsReadDelay.label): This will concatenate to
+     "After displaying for [___] seconds",
+     using (markAsReadDelay.label) and a number (secondsLabel.label). -->
+<!ENTITY markAsReadDelay.label            "po wyświetlaniu przez">
+<!ENTITY markAsReadDelay.accesskey        "w">
+<!ENTITY secondsLabel.label               "sekund">
+<!ENTITY openMsgIn.label                  "Otwieranie wiadomości w:">
+<!ENTITY openMsgInNewTab.label            "nowych kartach">
+<!ENTITY openMsgInNewTab.accesskey        "k">
+<!ENTITY reuseExpRadio0.label             "nowych oknach wiadomości">
+<!ENTITY reuseExpRadio0.accesskey         "h">
+<!ENTITY reuseExpRadio1.label             "istniejącym oknie wiadomości">
+<!ENTITY reuseExpRadio1.accesskey         "m">
+<!ENTITY closeMsgOnMoveOrDelete.label     "Zamykanie okna/karty wiadomości przy przenoszeniu lub usuwaniu">
 <!ENTITY closeMsgOnMoveOrDelete.accesskey "Z">

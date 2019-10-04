@@ -5,7 +5,7 @@
 clear-site-data-window =
     .title = Limpar dados
     .style = width: 35em
-clear-site-data-description = Limpar todos os cookies e dados de sites armazenados pelo { -brand-short-name } pode desconectar você de sites e remover conteúdos off-line. Limpar os dados em cache não irá afetar seus acessos.
+clear-site-data-description = Limpar todos os cookies e dados de sites armazenados pelo { -brand-short-name } pode desconectar você de contas em sites e remover conteúdo armazenado localmente. Limpar dados em cache não irá afetar seus acessos em contas.
 clear-site-data-close-key =
     .key = w
 # The parameters in parentheses in this string describe disk usage
@@ -14,7 +14,7 @@ clear-site-data-close-key =
 #   $amount (Number) - Amount of site data currently stored on disk
 #   $unit (String) - Abbreviation of the unit that $amount is in, e.g. "MB"
 clear-site-data-cookies-with-data =
-    .label = Cookies e Dados de sites ({ $amount } { $unit })
+    .label = Cookies e dados de sites ({ $amount } { $unit })
     .accesskey = s
 # This string is a placeholder for while the data used to fill
 # clear-site-data-cookies-with-data is loading. This placeholder is usually
@@ -22,7 +22,7 @@ clear-site-data-cookies-with-data =
 # or the same as clear-site-data-cookies-with-data (except the amount and unit),
 # to avoid flickering.
 clear-site-data-cookies-empty =
-    .label = Cookies e Dados de sites
+    .label = Cookies e dados de sites
     .accesskey = s
 clear-site-data-cookies-info = Você pode ser desconectado de sites se limpar
 # The parameters in parentheses in this string describe disk usage
@@ -31,7 +31,7 @@ clear-site-data-cookies-info = Você pode ser desconectado de sites se limpar
 #   $amount (Number) - Amount of cache currently stored on disk
 #   $unit (String) - Abbreviation of the unit that $amount is in, e.g. "MB"
 clear-site-data-cache-with-data =
-    .label = Conteúdo armazenado de sites ({ $amount } { $unit })
+    .label = Conteúdo armazenado em cache ({ $amount } { $unit })
     .accesskey = a
 # This string is a placeholder for while the data used to fill
 # clear-site-data-cache-with-data is loading. This placeholder is usually
@@ -39,7 +39,7 @@ clear-site-data-cache-with-data =
 # or the same as clear-site-data-cache-with-data (except the amount and unit),
 # to avoid flickering.
 clear-site-data-cache-empty =
-    .label = Conteúdo armazenado de sites
+    .label = Conteúdo armazenado em cache
     .accesskey = a
 clear-site-data-cache-info = Fará com que sites precisem recarregar imagens e dados
 clear-site-data-cancel =

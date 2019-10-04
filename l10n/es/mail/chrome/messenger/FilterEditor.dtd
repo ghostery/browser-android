@@ -24,6 +24,7 @@
 <!ENTITY contextOutgoing.accesskey "T">
 <!ENTITY contextArchive.label "Archivado">
 <!ENTITY contextArchive.accesskey "c">
+<!ENTITY contextPeriodic.accesskey "e">
 <!ENTITY filterActionDesc.label "Realizar estas acciones:">
 <!ENTITY filterActionDesc.accesskey "R">
 <!ENTITY filterActionOrderWarning.label "Nota: las acciones del filtro se ejecutarán en un orden diferente.">

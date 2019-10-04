@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 language-name-aa = 阿法尔语
-language-name-ab = 阿布哈西亚
+language-name-ab = 阿布哈兹语
 language-name-ach = 阿乔利语
 language-name-ae = 阿维斯陀语
 language-name-af = 南非语
@@ -30,7 +30,7 @@ language-name-ca = 加泰隆语
 language-name-cak = 喀克其奎语
 language-name-ce = 车臣语
 language-name-ch = 查莫罗语
-language-name-co = 科西嘉方言
+language-name-co = 科西嘉语
 language-name-cr = 克里语
 language-name-crh = 克里米亚鞑靼语
 language-name-cs = 捷克语
@@ -79,7 +79,7 @@ language-name-hz = 赫雷罗语
 language-name-ia = 国际语
 language-name-id = 印度尼西亚语
 language-name-ie = 国际语E
-language-name-ig = 伊博人语
+language-name-ig = 伊博语
 language-name-ii = 四川彝语
 language-name-ik = 因纽佩特语
 language-name-io = 伊多语
@@ -178,7 +178,7 @@ language-name-sv = 瑞典语
 language-name-sw = 斯瓦希里语
 language-name-ta = 泰米尔语
 language-name-te = 泰卢固语
-language-name-tg = 艾马拉语
+language-name-tg = 塔吉克语
 language-name-th = 泰语
 language-name-ti = 提格里尼亚语
 language-name-tig = 提格雷语

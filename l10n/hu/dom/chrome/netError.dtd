@@ -7,7 +7,7 @@
 
 <!-- Specific error messages -->
 
-<!ENTITY connectionFailure.title "Sikertelen csatlakozás">
+<!ENTITY connectionFailure.title "A kapcsolódás sikertelen">
 <!ENTITY connectionFailure.longDesc "<p>Bár a webhely érvényesnek tűnik, a böngésző képtelen volt kapcsolatot létesíteni vele.</p><ul><li>Lehet, hogy a webhely ideiglenesen üzemen kívül van? Próbálja újra később.</li><li>Más webhelyeket sem képes elérni? Ellenőrizze a számítógép hálózati kapcsolatát.</li><li>Lehetséges, hogy tűzfal vagy proxy mögött van a számítógépe vagy a helyi hálózata? A helytelen beállítások zavarhatják a webböngészést.</li></ul>">
 
 <!ENTITY deniedPortAccess.title "A port biztonsági okok miatt tiltva van">

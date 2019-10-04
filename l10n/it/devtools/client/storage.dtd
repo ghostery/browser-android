@@ -5,3 +5,4 @@
 <!ENTITY searchBox.placeholder "Filtra elementi">
 <!ENTITY storage.popupMenu.deleteAllLabel "Elimina tutto">
 <!ENTITY storage.popupMenu.deleteAllSessionCookiesLabel "Elimina tutti i cookie di sessione">
+<!ENTITY storage.popupMenu.copyLabel "Copia">

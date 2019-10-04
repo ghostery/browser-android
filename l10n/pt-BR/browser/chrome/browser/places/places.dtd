@@ -42,7 +42,7 @@
 <!ENTITY cmd.restoreFromFile.accesskey  "S">
 
 <!ENTITY cmd.deleteDomainData.label     "Esquecer este site">
-<!ENTITY cmd.deleteDomainData.accesskey "L">
+<!ENTITY cmd.deleteDomainData.accesskey "E">
 
 <!ENTITY cmd.open.label                  "Abrir">
 <!ENTITY cmd.open.accesskey              "r">
@@ -69,9 +69,6 @@
 <!ENTITY cmd.context_new_folder.accesskey  "v">
 <!ENTITY cmd.new_separator.label           "Novo separador">
 <!ENTITY cmd.new_separator.accesskey       "e">
-
-<!ENTITY cmd.reloadLivebookmark.label      "Recarregar RSS">
-<!ENTITY cmd.reloadLivebookmark.accesskey  "R">
 
 <!ENTITY col.name.label          "Nome">
 <!ENTITY col.tags.label          "Etiquetas">
@@ -101,10 +98,10 @@
 <!ENTITY byDate.label             "Por data">
 <!ENTITY byDate.accesskey         "d">
 <!ENTITY bySite.label             "Por site">
-<!ENTITY bySite.accesskey         "P">
+<!ENTITY bySite.accesskey         "s">
 <!ENTITY byMostVisited.label      "Por número de visitas">
-<!ENTITY byMostVisited.accesskey  "o">
+<!ENTITY byMostVisited.accesskey  "n">
 <!ENTITY byLastVisited.label      "Por último visitado">
-<!ENTITY byLastVisited.accesskey  "e">
+<!ENTITY byLastVisited.accesskey  "v">
 <!ENTITY byDayAndSite.label       "Por data e site">
-<!ENTITY byDayAndSite.accesskey   "a">
+<!ENTITY byDayAndSite.accesskey   "e">

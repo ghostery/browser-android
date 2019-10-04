@@ -49,6 +49,7 @@
 <!-- Advanced -->
 <!ENTITY reading.caption                  "阅读">
 <!ENTITY display.caption                  "显示">
+<!ENTITY displayName.label                "显示名称">
 <!ENTITY showCondensedAddresses.label     "只显示我的通讯录中的显示名称">
 <!ENTITY showCondensedAddresses.accesskey "S">
 

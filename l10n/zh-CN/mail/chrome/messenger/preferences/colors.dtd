@@ -9,7 +9,7 @@
 <!ENTITY  overridePageColors.label        "使用我在上面选择的颜色覆盖内容指定的颜色：">
 <!ENTITY  overridePageColors.accesskey    "O">
 
-<!ENTITY  overridePageColors.always.label "总是">
+<!ENTITY  overridePageColors.always.label "一律">
 <!ENTITY  overridePageColors.auto.label   "仅在使用高对比度主题时">
 <!ENTITY  overridePageColors.never.label  "总不">
 

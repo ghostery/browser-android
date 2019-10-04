@@ -19,6 +19,13 @@
 <!ENTITY rememberPassword.label          "암호 저장">
 <!ENTITY rememberPassword.accesskey      "m">
 
+<!ENTITY usernameEx.label                "사용자 로그인:">
+<!ENTITY usernameEx.accesskey            "l">
+<!-- LOCALIZATION NOTE(usernameEx.placeholder): YOURDOMAIN refers to the Windows domain in ActiveDirectory. yourusername refers to the user's account name in Windows. -->
+<!ENTITY usernameEx.placeholder          "YOURDOMAIN\yourusername">
+<!-- LOCALIZATION NOTE(usernameEx.text): Domain refers to the Windows domain in ActiveDirectory. We mean the user's login in Windows at the local corporate network. -->
+<!ENTITY usernameEx.text                 "도메인 로그인">
+
 <!ENTITY imapLong.label                  "IMAP (원격)">
 <!ENTITY pop3Long.label                  "POP3 (메일을 컴퓨터에 저장)">
 

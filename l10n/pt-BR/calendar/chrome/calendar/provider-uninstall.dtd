@@ -5,7 +5,7 @@
 <!ENTITY providerUninstall.title                           "Desinstalar provedor">
 <!ENTITY providerUninstall.accept.label                    "Cancelar inscrição no provedor selecionado">
 <!ENTITY providerUninstall.accept.accesskey                "C">
-<!ENTITY providerUninstall.cancel.label                    "Manter complemento">
+<!ENTITY providerUninstall.cancel.label                    "Manter extensão">
 <!ENTITY providerUninstall.cancel.accesskey                "M">
 <!ENTITY providerUninstall.preName.label                   "Você solicitou desinstalar ou desabilitar:">
 <!ENTITY providerUninstall.postName.label                  "Isto fará com que as agendas abaixo sejam desativadas.">

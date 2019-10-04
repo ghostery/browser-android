@@ -18,7 +18,7 @@
 <!ENTITY profilePrompt.label            "Введите имя нового профиля:">
 <!ENTITY profilePrompt.accesskey        "и">
 <!ENTITY profileDirectoryExplanation.text   "Ваши настройки, параметры и другие пользовательские данные будут храниться в: ">
-<!ENTITY profileDefaultName             "Default User">
+<!ENTITY profileDefaultName             "Пользователь по умолчанию">
 <!ENTITY button.choosefolder.label      "Выбрать папку…">
 <!ENTITY button.choosefolder.accesskey  "п">
 <!ENTITY button.usedefault.label        "Использовать папку по умолчанию">

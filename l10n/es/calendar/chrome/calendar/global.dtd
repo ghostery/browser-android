@@ -39,6 +39,8 @@
 <!ENTITY month.12.name "Diciembre">
 <!ENTITY onemonthbackward.tooltip "Un mes hacia atrás">
 <!ENTITY onemonthforward.tooltip "Un mes hacia delante">
+<!ENTITY oneyearbackward.tooltip "Un año hacia atrás">
+<!ENTITY oneyearforward.tooltip "Un año hacia delante">
 <!ENTITY showToday.tooltip "Ir a hoy">
 <!ENTITY onedayforward.tooltip "Un día hacia delante">
 <!ENTITY onedaybackward.tooltip "Un día hacia atrás">

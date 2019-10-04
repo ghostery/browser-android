@@ -12,13 +12,14 @@
 <!ENTITY pref.calendar.alarms.playsound.accessKey "s">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "使用默认声音">
 <!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "使用下列声音文件">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "U">
 <!ENTITY pref.calendar.alarms.sound.browse.label "浏览…">
 <!ENTITY pref.calendar.alarms.sound.browse.accessKey "B">
 <!ENTITY pref.calendar.alarms.sound.play.label "播放">
 <!ENTITY pref.calendar.alarms.sound.play.accessKey "P">
 <!ENTITY pref.showalarmbox "显示提醒框">
 <!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "x">
-<!ENTITY pref.missedalarms "显示过期的提醒">
 <!ENTITY pref.missedalarms2 "显示可修改日历的已过期提醒">
 <!ENTITY pref.calendar.alarms.missedAlarms.accessKey "m">
 <!ENTITY pref.calendar.alarms.defaults.label "默认提醒设置">

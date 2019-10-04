@@ -85,7 +85,7 @@
 <!ENTITY  permTab               "权限">
 <!ENTITY  permTab.accesskey     "P">
 <!ENTITY  permUseDefault        "使用默认设置">
-<!ENTITY  permAskAlways         "总是询问">
+<!ENTITY  permAskAlways         "每次都问我">
 <!ENTITY  permAllow             "是">
 <!ENTITY  permAllowSession      "在当前会话中允许">
 <!ENTITY  permBlock             "阻止">

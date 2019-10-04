@@ -10,7 +10,6 @@
 <!ENTITY returnToPreviousPage.label "Terug">
 <!ENTITY returnToPreviousPage1.label "Teruggaan (Aanbevolen)">
 <!ENTITY advanced.label "Geavanceerd">
-<!ENTITY continue2.label "Meer…">
 <!ENTITY advanced2.label "Geavanceerd…">
 <!ENTITY moreInformation.label "Meer informatie">
 <!ENTITY viewCertificate.label "Certificaat bekijken">
@@ -151,12 +150,16 @@
 ">
 
 <!ENTITY certerror.longpagetitle1 "Uw verbinding is niet beveiligd">
+
 <!ENTITY certerror.longpagetitle2 "Waarschuwing: mogelijk beveiligingsrisico">
 <!ENTITY certerror.sts.longpagetitle  "Geen verbinding gemaakt: mogelijk beveiligingsprobleem">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "De eigenaar van <span class='hostname'/> heeft zijn of haar website niet juist geconfigureerd. Om uw gegevens tegen diefstal te beschermen, heeft &brandShortName; geen verbinding met deze website gemaakt.">
+<!-- Localization note (certerror.introPara2) - The text content of the span tag
+will be replaced at runtime with the name of the server to which the user
+was trying to connect. -->
 <!ENTITY certerror.introPara2 "&brandShortName; heeft een mogelijk beveiligingsrisico gedetecteerd en is niet doorgegaan naar <span class='hostname'/>. Als u deze website bezoekt, zouden aanvallers gegevens kunnen proberen te stelen, zoals uw wachtwoorden, e-mailadressen of creditcardgegevens.">
 <!ENTITY certerror.sts.introPara "&brandShortName; heeft een mogelijk beveiligingsrisico gedetecteerd en is niet doorgegaan naar <span class='hostname'/>, omdat deze website een beveiligde verbinding vereist.">
 
@@ -199,6 +202,7 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Uitzondering toevoegen…">
+
 <!ENTITY securityOverride.exceptionButton1Label "Het risico aanvaarden en doorgaan">
 
 <!ENTITY errorReporting.automatic2 "Fouten als deze rapporteren om Mozilla te helpen kwaadwillende websites te herkennen en te blokkeren">
@@ -219,6 +223,7 @@ was trying to connect. -->
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>&brandShortName; heeft geen verbinding met <span id='wrongSystemTimeWithoutReference_URL'/> gemaakt, omdat de klok van uw computer de verkeerde tijd lijkt aan te geven, en dit voorkomt een beveiligde verbinding.</p> <p>Uw computer is ingesteld op <span id='wrongSystemTimeWithoutReference_systemDate'/>. Wijzig uw datum- en tijdinstellingen naar de juiste tijd om dit probleem te verhelpen.</p>">
 
 <!ENTITY certerror.pagetitle1  "Niet-beveiligde verbinding">
+
 <!ENTITY certerror.pagetitle2  "Waarschuwing: mogelijk beveiligingsrisico">
 <!ENTITY certerror.sts.pagetitle  "Geen verbinding gemaakt: mogelijk beveiligingsprobleem">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Deze website maakt gebruik
@@ -249,4 +254,4 @@ uitzondering voor dit certificaat toe te voegen.">
 <!ENTITY prefReset.label "Standaardinstellingen herstellen">
 
 <!ENTITY networkProtocolError.title "Netwerkprotocolfout">
-<!ENTITY networkProtocolError.longDesc "<p>De pagina die u wilt bekijken kan niet worden weergegeven, omdat een fout in het netwerkprotocol is gedetecteerd.</p><ul><li>Neem contact op met de website-eigenaars om ze over dit probleem te informeren.</li></ul>">
+<!ENTITY networkProtocolError.longDesc "<p>De pagina die u wilt bekijken kan niet worden weergegeven, omdat er een fout in het netwerkprotocol is gedetecteerd.</p><ul><li>Neem contact op met de website-eigenaars om ze over dit probleem te informeren.</li></ul>">

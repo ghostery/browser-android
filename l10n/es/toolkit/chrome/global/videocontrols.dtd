@@ -14,6 +14,10 @@
      accessibility software to clarify what the slider is for. -->
 <!ENTITY volumeScrubber.label "Control de volumen">
 
+<!-- LOCALIZATION NOTE (pictureInPicture.label): This string is used as part of
+the Picture-in-Picture video toggle button when the mouse is hovering it. -->
+<!ENTITY pictureInPicture.label "Picture-in-Picture">
+
 <!ENTITY stats.media "Medios">
 <!ENTITY stats.size "Tamaño">
 <!ENTITY stats.activity "Actividad">
@@ -33,6 +37,8 @@
 <!ENTITY error.srcNotSupported "El formato o tipo MIME del vídeo no se admite.">
 <!ENTITY error.noSource2 "No se ha encontrado ningún vídeo que tenga un formato y tipo MIME compatibles.">
 <!ENTITY error.generic "La reproducción del vídeo se ha interrumpido por un error desconocido.">
+
+<!ENTITY status.pictureInPicture "Este vídeo se está reproduciendo en el modo Picture-in-Picture.">
 
 <!-- LOCALIZATION NOTE (scrubberScale.nameFormat): the #1 string is the current
 media position, and the #2 string is the total duration. For example, when at

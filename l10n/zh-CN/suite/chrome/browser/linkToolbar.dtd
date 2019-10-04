@@ -1,21 +1,21 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Link Toolbar Title -->
 
+<!-- Link Toolbar Title -->
 <!ENTITY linkToolbar.label "网站导航栏">
 <!ENTITY linkToolbar.accesskey "a">
 <!ENTITY linkToolbar.tooltip "网站导航栏">
-<!-- Link Toolbar visibility options -->
 
-<!ENTITY linkToolbarAlways.label "总是显示">
+<!-- Link Toolbar visibility options -->
+<!ENTITY linkToolbarAlways.label "一直显示">
 <!ENTITY linkToolbarAlways.accesskey "S">
 <!ENTITY linkToolbarAsNeeded.label "仅需要时显示">
 <!ENTITY linkToolbarAsNeeded.accesskey "O">
-<!ENTITY linkToolbarNever.label "始终隐藏">
+<!ENTITY linkToolbarNever.label "一律隐藏">
 <!ENTITY linkToolbarNever.accesskey "H">
-<!-- Toolbar buttons, menus, and menuitems -->
 
+<!-- Toolbar buttons, menus, and menuitems -->
 <!ENTITY topButton.label "根站点">
 <!ENTITY upButton.label "向上">
 <!ENTITY firstButton.label "首个">

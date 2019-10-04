@@ -19,7 +19,7 @@
 <!ENTITY openFrameCmd.accesskey       "A">
 <!ENTITY openFrameCmdInTab.label      "Apri riquadro in nuova scheda">
 <!ENTITY openFrameCmdInTab.accesskey  "h">
-<!ENTITY keywordfield.label           "Aggiungi una parola chiave per questa ricerca...">
+<!ENTITY keywordfield.label           "Aggiungi una parola chiave per questa ricerca…">
 <!ENTITY keywordfield.accesskey       "h">
 <!ENTITY showOnlyThisFrameCmd.label     "Visualizza solo questo riquadro">
 <!ENTITY showOnlyThisFrameCmd.accesskey "V">

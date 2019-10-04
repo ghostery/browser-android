@@ -5,7 +5,7 @@
 <!ENTITY rights.locale-direction "ltr">
 <!ENTITY rights.title            "Sobre os seus direitos">
 <!ENTITY rights.intro-header     "Sobre os seus direitos">
-<!ENTITY rights.intro "O &brandFullName; é um software livre e de código aberto, construído por uma comunidade de milhares ao redor do mundo. Há algumas coisas que você deveria saber:">
+<!ENTITY rights.intro "O &brandFullName; é um software livre e de código aberto, criado por uma comunidade de milhares de pessoas ao redor do mundo. Há algumas coisas que você deve saber:">
 
 <!-- Note on pointa / pointb / pointc form:
      These points each have an embedded link in the HTML, so each point is

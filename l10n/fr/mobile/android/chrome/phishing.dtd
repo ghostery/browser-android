@@ -21,7 +21,7 @@
 <!ENTITY safeb.blocked.unwantedPage.title "Page comportant des logiciels indésirables !">
 <!-- Localization note (safeb.blocked.unwanted.shortDesc) - Please don't translate the contents of the <span id="unwanted_sitename"/> tag.  It will be replaced at runtime with a domain name (e.g. www.badsite.com) -->
 <!ENTITY safeb.blocked.unwantedPage.shortDesc "La page web sur <span id='unwanted_sitename'/> a été signalée comme étant une page comportant des logiciels indésirables et a été bloquée sur la base de vos préférences de sécurité.">
-<!ENTITY safeb.blocked.unwantedPage.longDesc "<p>Les pages comportant des logiciels indésirables tentent d’installer des logiciels qui peuvent être trompeurs et nuire à votre système de manière inattendue.</p>">
+<!ENTITY safeb.blocked.unwantedPage.longDesc "Les pages comportant des logiciels indésirables tentent d’installer des logiciels qui peuvent être trompeurs et nuire à votre système de manière inattendue.">
 
 <!ENTITY safeb.blocked.harmfulPage.title "Ce site peut contenir des logiciels malveillants">
 <!ENTITY safeb.blocked.harmfulPage.shortDesc "&brandShortName; a bloqué cette page, car elle pourrait tenter d’installer des logiciels dangereux capables de dérober ou supprimer vos données (par exemple vos photos, mots de passe, messages ou cartes bancaires).">

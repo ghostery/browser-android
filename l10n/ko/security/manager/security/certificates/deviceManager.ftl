@@ -21,7 +21,7 @@ devmgr-button-logout =
     .label = 로그아웃
     .accesskey = O
 devmgr-button-changepw =
-    .label = 암호 변경
+    .label = 비밀번호 변경
     .accesskey = P
 devmgr-button-load =
     .label = 장착하기
@@ -86,7 +86,7 @@ devinfo-label =
     .label = 레이블
 devinfo-serialnum =
     .label = 일련 번호
-fips-nonempty-password-required = FIPS 모드는 각 보안 장치에 적용할 하나로 통합된 기본 암호 설정이 필요합니다. FIPS 모드를 사용하기 전에 먼저 기본 암호를 설정하십시오.
+fips-nonempty-password-required = FIPS 모드는 각 보안 장치에 적용할 하나로 통합된 기본 비밀번호 설정이 필요합니다. FIPS 모드를 사용하기 전에 먼저 기본 비밀번호를 설정하십시오.
 unable-to-toggle-fips = 보안 장치에 대해 FIPS 모드를 변경할 수 없습니다. 애플리케이션을 닫고 다시 시작해 보시기 바랍니다.
 load-pk11-module-file-picker-title = 로드 할 PKCS#11 장치 드라이버 선택
 # Load Module Dialog

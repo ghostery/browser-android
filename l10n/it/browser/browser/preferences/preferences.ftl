@@ -4,10 +4,6 @@
 
 do-not-track-description = Invia ai siti web un segnale “Do Not Track” per chiedere di non effettuare alcun tracciamento
 do-not-track-learn-more = Ulteriori informazioni
-do-not-track-option-default =
-    .label = Solo quando è attiva la protezione antitracciamento
-do-not-track-option-default-content-blocking =
-    .label = Solo quando { -brand-short-name } è impostato per bloccare gli elementi traccianti rilevati
 do-not-track-option-default-content-blocking-known =
     .label = Solo quando { -brand-short-name } è impostato per bloccare gli elementi traccianti conosciuti
 do-not-track-option-always =
@@ -33,11 +29,7 @@ search-input-box =
             [windows] Cerca nelle opzioni
            *[other] Cerca nelle preferenze
         }
-policies-notice =
-    { PLATFORM() ->
-        [windows] La possibilità di modificare alcune opzioni è stata disattivata dalla propria azienda.
-       *[other] La possibilità di modificare alcune preferenze è stata disattivata dalla propria azienda.
-    }
+managed-notice = Il browser è gestito dalla propria azienda.
 pane-general-title = Generale
 category-general =
     .tooltiptext = { pane-general-title }
@@ -51,10 +43,10 @@ pane-privacy-title = Privacy e sicurezza
 category-privacy =
     .tooltiptext = { pane-privacy-title }
 # The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Account Firefox
-category-sync =
-    .tooltiptext = { pane-sync-title }
-help-button-label = Supporto a { -brand-short-name }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
+help-button-label = Supporto per { -brand-short-name }
 addons-button-label = Estensioni e temi
 focus-search =
     .key = f
@@ -95,13 +87,10 @@ extension-controlled-default-search = Il motore di ricerca predefinito è attual
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
 extension-controlled-privacy-containers = Le schede contenitore sono necessarie per il funzionamento di un’estensione (<img data-l10n-name="icon"/> { $name }).
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = La protezione antitracciamento è attualmente gestita da un’estensione (<img data-l10n-name="icon"/> { $name }).
 extension-controlled-websites-content-blocking-all-trackers = Questa impostazione è attualmente gestita da un’estensione (<img data-l10n-name="icon"/> { $name }).
 # This string is shown to notify the user that their proxy configuration preferences
 # are being controlled by an extension.
-extension-controlled-proxy-config = Le impostazioni di <img data-l10n-name="icon"/> { $name } relative alla connessione a Internet sono attualmente gestite da un’estensione ({ -brand-short-name }).
+extension-controlled-proxy-config = Le impostazioni di { -brand-short-name } relative alla connessione a Internet sono attualmente gestite da un’estensione (<img data-l10n-name="icon"/> { $name }).
 # This string is shown after the user disables an extension to notify the user
 # how to enable an extension that they disabled.
 #
@@ -284,6 +273,7 @@ update-application-check-choose =
 update-application-manual =
     .label = Non controllare mai la disponibilità di aggiornamenti (non consigliato)
     .accesskey = N
+update-application-warning-cross-user-setting = Questa impostazione verrà applicata a tutti gli account di Windows e ai profili di { -brand-short-name } utilizzati da questa installazione del browser.
 update-application-use-service =
     .label = Utilizza un servizio di sistema per installare gli aggiornamenti
     .accesskey = U
@@ -294,6 +284,15 @@ update-pref-write-failure-title = Errore di scrittura
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = Errore durante il salvataggio della preferenza. Impossibile scrivere il file: { $path }
+update-setting-write-failure-title = Errore durante il salvataggio delle preferenze
+update-setting-write-failure-message =
+    Si è verificato un errore e questa modifica non è stata salvata. Per aggiornare le preferenze è necessario avere i permessi di scrittura sul file indicato in seguito. Dovrebbe essere possibile correggere il problema assegnando al gruppo Utenti il pieno controllo di questo file.
+
+    Impossibile scrivere il file: { $path }
+update-in-progress-title = Aggiornamento in corso
+update-in-progress-message = Consentire a { -brand-short-name } di completare l’aggiornamento?
+update-in-progress-ok-button = I&nterrompi
+update-in-progress-cancel-button = &Continua
 
 ## General Section - Performance
 
@@ -333,9 +332,16 @@ browsing-use-cursor-navigation =
 browsing-search-on-start-typing =
     .label = Cerca nel testo quando si digita qualcosa
     .accesskey = e
+browsing-picture-in-picture-toggle-enabled =
+    .label = Attiva controlli picture-in-picture
+    .accesskey = A
+browsing-picture-in-picture-learn-more = Ulteriori informazioni
 browsing-cfr-recommendations =
-    .label = Suggerisci estensioni durante la navigazione
-    .accesskey = S
+    .label = Consiglia estensioni durante la navigazione
+    .accesskey = C
+browsing-cfr-features =
+    .label = Consiglia funzioni durante la navigazione
+    .accesskey = f
 browsing-cfr-recommendations-learn-more = Ulteriori informazioni
 
 ## General Section - Proxy
@@ -383,6 +389,49 @@ use-current-pages =
 choose-bookmark =
     .label = Usa un segnalibro…
     .accesskey = b
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Pagina iniziale di Firefox
+home-prefs-content-description = Scegli i contenuti da visualizzare nella pagina iniziale di Firefox.
+home-prefs-content-discovery-description = La ricerca di nuovi contenuti nella pagina iniziale di Firefox permette di scoprire letture rilevanti e di alta qualità da tutto il Web.
+home-prefs-search-header =
+    .label = Ricerca sul Web
+home-prefs-topsites-header =
+    .label = Siti principali
+home-prefs-topsites-description = I siti più visitati
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = Consigliati da { $provider }
+home-prefs-recommended-by-description = Contenuti interessanti da tutto il Web, personalizzati per te.
+home-prefs-recommended-by-learn-more = Come funziona
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = Articoli sponsorizzati
+home-prefs-highlights-header =
+    .label = In evidenza
+home-prefs-highlights-description = Una selezione di siti che hai salvato o visitato in precedenza
+home-prefs-highlights-option-visited-pages =
+    .label = Pagine visitate
+home-prefs-highlights-options-bookmarks =
+    .label = Segnalibri
+home-prefs-highlights-option-most-recent-download =
+    .label = Download più recenti
+home-prefs-highlights-option-saved-to-pocket =
+    .label = Pagine salvate in { -pocket-brand-name }
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = Snippet
+home-prefs-snippets-description = Aggiornamenti da { -vendor-short-name } e { -brand-product-name }
+home-prefs-sections-rows-option =
+    .label =
+        { $num ->
+            [one] { $num } riga
+           *[other] { $num } righe
+        }
 
 ## Search Section
 
@@ -493,7 +542,7 @@ sync-engine-tabs =
     .tooltiptext = Elementi aperti nei dispositivi sincronizzati
     .accesskey = h
 sync-engine-logins =
-    .label = Accessi
+    .label = Credenziali
     .tooltiptext = Nomi utente e password salvati
     .accesskey = i
 sync-engine-addresses =
@@ -526,8 +575,9 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = Salva
     .accesskey = S
-sync-mobilepromo-single = Connetti un altro dispositivo
-sync-mobilepromo-multi = Gestisci dispositivi
+sync-connect-another-device = Connetti un altro dispositivo
+sync-manage-devices = Gestisci dispositivi
+sync-fxa-begin-pairing = Associa un dispositivo
 sync-tos-link = Condizioni di utilizzo del servizio
 sync-fxa-privacy-notice = Informativa sulla privacy
 
@@ -537,15 +587,21 @@ privacy-header = Privacy del browser
 
 ## Privacy Section - Forms
 
-logins-header = Accessi e password
+logins-header = Credenziali e password
 forms-ask-to-save-logins =
     .label = Chiedi se salvare le credenziali di accesso ai siti web
     .accesskey = C
 forms-exceptions =
     .label = Eccezioni…
     .accesskey = z
+forms-generate-passwords =
+    .label = Suggerisci e genera password complesse
+    .accesskey = u
+forms-fill-logins-and-passwords =
+    .label = Compila automaticamente credenziali di accesso
+    .accesskey = i
 forms-saved-logins =
-    .label = Accessi salvati…
+    .label = Credenziali salvate…
     .accesskey = s
 forms-master-pw-use =
     .label = Utilizza una password principale
@@ -604,18 +660,10 @@ sitedata-total-size-calculating = Calcolo dimensioni…
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = I cookie, i dati salvati dai siti web e la cache stanno utilizzando { $value } { $unit } di spazio su disco
 sitedata-learn-more = Ulteriori informazioni
-sitedata-keep-until = Conservali fino
-    .accesskey = v
-sitedata-keep-until-expire =
-    .label = alla loro scadenza
-sitedata-keep-until-closed =
-    .label = alla chiusura di { -brand-short-name }
 sitedata-delete-on-close =
     .label = Elimina cookie e dati dei siti web alla chiusura di { -brand-short-name }
     .accesskey = c
-
 sitedata-delete-on-close-private-browsing = Se la modalità Navigazione anonima è sempre attiva, i cookie e i dati dei siti web verranno eliminati alla chiusura di { -brand-short-name }.
-
 sitedata-allow-cookies-option =
     .label = Accetta cookie e dati dei siti web
     .accesskey = A
@@ -626,18 +674,12 @@ sitedata-disallow-cookies-option =
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = Contenuti bloccati:
     .accesskey = C
-sitedata-block-trackers-option-recommended =
-    .label = elementi traccianti di terze parti (consigliato)
-sitedata-block-trackers-option =
-    .label = Elementi traccianti di terze parti
-sitedata-block-unvisited-option =
-    .label = Cookie da siti web non visitati
-sitedata-block-all-third-party-option =
-    .label = Tutti i cookie di terze parti (alcuni siti potrebbero non funzionare correttamente)
-sitedata-block-all-option =
-    .label = Tutti i cookie (alcuni siti non funzioneranno correttamente)
 sitedata-option-block-trackers =
-    .label = Elementi traccianti di terze parti
+    .label = Traccianti di terze parti
+sitedata-option-block-cross-site-trackers =
+    .label = Traccianti intersito
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = Traccianti intersito e dei social media
 sitedata-option-block-unvisited =
     .label = Cookie da siti web non visitati
 sitedata-option-block-all-third-party =
@@ -650,13 +692,9 @@ sitedata-clear =
 sitedata-settings =
     .label = Gestisci dati…
     .accesskey = d
-sitedata-cookies-exceptions =
-    .label = Eccezioni…
-    .accesskey = z
 sitedata-cookies-permissions =
     .label = Gestisci permessi…
     .accesskey = G
-sitedata-warning-your-settings-prevent-changes = Le impostazioni in blocco contenuti impediscono modifiche alla sezione Cookie e dati dei siti web.
 
 ## Privacy Section - Address Bar
 
@@ -676,12 +714,9 @@ addressbar-suggestions-settings = Modifica le impostazioni relative ai suggerime
 ## Privacy Section - Content Blocking
 
 content-blocking-header = Blocco contenuti
-content-blocking-desc = Blocca contenuti di terze parti, come pubblicità o codice, in grado di rallentare la navigazione e tracciare i tuoi spostamenti sul Web. Personalizza le impostazioni per ottenere il perfetto equilibrio tra protezione e velocità.
-content-blocking-description = Blocca i contenuti di terze parti che ti seguono attraverso il Web. Controlla quanto della tua attività online viene archiviato e condiviso tra siti web.
+content-blocking-enhanced-tracking-protection = Protezione antitracciamento avanzata
+content-blocking-section-description = Proteggi la tua privacy durante la navigazione. Blocca contenuti invisibili in grado di tracciare i siti che visiti e creare un profilo con le tue informazioni. Il blocco di alcuni di questi contenuti potrebbe velocizzare il caricamento delle pagine.
 content-blocking-learn-more = Ulteriori informazioni
-content-blocking-restore-defaults =
-    .label = Ripristina predefiniti
-    .accesskey = R
 content-blocking-setting-standard =
     .label = Normale
     .accesskey = N
@@ -691,101 +726,64 @@ content-blocking-setting-strict =
 content-blocking-setting-custom =
     .label = Personalizzato
     .accesskey = P
-content-blocking-toggle-on =
-    .tooltiptext = Disattiva il blocco contenuti
-content-blocking-toggle-off =
-    .tooltiptext = Attiva il blocco contenuti
-content-blocking-toggle-label-on = ATTIVO
-    .accesskey = A
-content-blocking-toggle-label-off = DISATTIVATO
-    .accesskey = D
-
-content-blocking-category-label = Scegli che cosa bloccare
-content-blocking-standard-description = Blocca solo elementi traccianti conosciuti in finestre anonime.
 content-blocking-standard-desc = Il perfetto equilibrio tra protezione e prestazioni. Consenti alcuni elementi traccianti in modo da garantire il corretto funzionamento dei siti.
-content-blocking-strict-desc = Blocca tutti gli elementi traccianti rilevati da { -brand-short-name }. Alcuni siti potrebbero non funzionare correttamente.
+content-blocking-strict-description = Maggiore protezione, alcuni siti potrebbero non funzionare correttamente.
 content-blocking-custom-desc = Scegli che cosa bloccare.
 content-blocking-private-trackers = Elementi traccianti conosciuti in finestre anonime
 content-blocking-third-party-cookies = Cookie traccianti di terze parti
+content-blocking-etp-standard-desc = Equilibrio tra protezione e prestazioni. Le pagine si caricheranno normalmente.
+content-blocking-etp-strict-desc = Maggiore protezione, ma alcuni siti o contenuti potrebbero non funzionare correttamente.
+content-blocking-etp-custom-desc = Scegli quali traccianti e script bloccare.
+content-blocking-private-windows = Contenuti traccianti in finestre anonime
+content-blocking-cross-site-tracking-cookies = Cookie traccianti intersito
+content-blocking-social-media-trackers = Traccianti dei social media
+content-blocking-all-cookies = Tutti i cookie
+content-blocking-unvisited-cookies = Cookie da siti web non visitati
 content-blocking-all-windows-trackers = Elementi traccianti conosciuti in qualunque finestra
+content-blocking-all-windows-tracking-content = Contenuti traccianti in qualunque finestra
 content-blocking-all-third-party-cookies = Tutti i cookie di terze parti
+content-blocking-cryptominers = Cryptominer
+content-blocking-fingerprinters = Fingerprinter
 content-blocking-warning-title = Attenzione
-content-blocking-warning-desc = Il blocco di cookie ed elementi traccianti potrebbe impedire il corretto funzionamento di alcuni siti. È semplice disattivare il blocco per i siti che ritieni affidabili.
+content-blocking-warning-description = Il blocco di contenuti potrebbe impedire il corretto funzionamento di alcuni siti. È semplice disattivare il blocco per i siti che ritieni affidabili.
+content-blocking-etp-warning-description = Il blocco degli elementi traccianti può impedire il corretto funzionamento di alcuni siti. Ricaricare la pagina con gli elementi traccianti per visualizzare tutti i contenuti.
+content-blocking-warning-learn-how = Scopri come
+
 content-blocking-learn-how = Scopri come
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-    .label = Elementi traccianti lenti a caricarsi
-    .accesskey = m
-content-blocking-fastblock-new-description = Blocca solo gli elementi traccianti che impediscono alla pagina di caricarsi velocemente.
-content-blocking-tracking-protection-trackers-label =
-    .label = Elementi traccianti
-    .accesskey = E
+content-blocking-reload-description = È necessario ricaricare le schede per applicare le modifiche.
+content-blocking-reload-tabs-button =
+    .label = Ricarica tutte le schede
+    .accesskey = R
 content-blocking-trackers-label =
     .label = Elementi traccianti
     .accesskey = E
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = Tutti gli elementi traccianti rilevati
-    .accesskey = T
-content-blocking-tracking-protection-new-description = Blocca tutti gli elementi traccianti conosciuti (alcune pagine web potrebbero non caricarsi correttamente).
-content-blocking-tracking-protection-option-always =
-    .label = Sempre
-    .accesskey = S
+content-blocking-tracking-content-label =
+    .label = Contenuti traccianti
+    .accesskey = C
 content-blocking-tracking-protection-option-all-windows =
     .label = In tutte le finestre
     .accesskey = u
 content-blocking-option-private =
     .label = Solo in finestre anonime
     .accesskey = a
-content-blocking-tracking-protection-option-private =
-    .label = Solo in finestre anonime
-    .accesskey = a
 content-blocking-tracking-protection-change-block-list = Cambia elenco per blocco contenuti
-content-blocking-third-party-cookies-label =
-    .label = Cookie di terze parti
-    .accesskey = C
 content-blocking-cookies-label =
     .label = Cookie
     .accesskey = C
-content-blocking-reject-trackers-description = Blocca tutti i cookie di terze parti o solo quelli impostati da elementi traccianti.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = Le impostazioni in Cookie e dati dei siti web impediscono modifiche alla sezione Cookie di terze parti.
-content-blocking-change-cookie-settings =
-    .label = Cambia impostazioni per i cookie
-    .accesskey = m
-content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = Elementi traccianti (consigliato)
-    .accesskey = E
-content-blocking-reject-trackers-block-trackers-option =
-    .label = Elementi traccianti
-    .accesskey = E
-content-blocking-reject-trackers-all-third-parties-option =
-    .label = Tutti i cookie di terze parti (alcuni siti potrebbero non funzionare correttamente)
-    .accesskey = z
+content-blocking-expand-section =
+    .tooltiptext = Ulteriori informazioni
+content-blocking-cryptominers-label =
+    .label = Cryptominer
+    .accesskey = y
+content-blocking-fingerprinters-label =
+    .label = Fingerprinter
+    .accesskey = F
 
 ## Privacy Section - Tracking
 
-tracking-header = Protezione antitracciamento
-tracking-desc = La protezione antitracciamento blocca elementi utilizzati per raccogliere dati sulla navigazione attraverso siti diversi. <a data-l10n-name="learn-more">Ulteriori informazioni sulla protezione antitracciamento e la privacy</a>
-tracking-mode-label = Utilizza la protezione antitracciamento per bloccare i tracciatori conosciuti
-tracking-mode-always =
-    .label = Sempre
-    .accesskey = p
-tracking-mode-private =
-    .label = Solo in finestre anonime
-    .accesskey = m
-tracking-mode-never =
-    .label = Mai
-    .accesskey = a
-tracking-exceptions =
-    .label = Eccezioni…
-    .accesskey = E
 tracking-manage-exceptions =
     .label = Gestisci eccezioni…
     .accesskey = G
-tracking-change-block-list =
-    .label = Seleziona elenco…
-    .accesskey = l
 
 ## Privacy Section - Permissions
 
@@ -810,20 +808,16 @@ permissions-notification-link = Ulteriori informazioni
 permissions-notification-pause =
     .label = Sospendi notifiche fino al riavvio di { -brand-short-name }
     .accesskey = n
-permissions-block-autoplay-media =
-    .label = Impedisci ai siti web di riprodurre automaticamente contenuti sonori
+permissions-block-autoplay-media2 =
+    .label = Impedisci ai siti web di riprodurre automaticamente audio
     .accesskey = m
-permissions-block-autoplay-media-menu = Per i siti web che cercano di riprodurre automaticamente contenuti sonori:
 permissions-block-autoplay-media-exceptions =
     .label = Eccezioni…
     .accesskey = E
-autoplay-option-ask =
-    .label = chiedi sempre
-autoplay-option-allow =
-    .label = consenti riproduzione
-autoplay-option-dont =
-    .label = non riprodurre
-permissions-autoplay-link = Ulteriori informazioni
+permissions-autoplay = Riproduzione automatica
+permissions-autoplay-settings =
+    .label = Impostazioni…
+    .accesskey = t
 permissions-block-popups =
     .label = Blocca le finestre pop-up
     .accesskey = B
@@ -853,18 +847,12 @@ collection-health-report-link = Ulteriori informazioni
 collection-studies =
     .label = Consenti a { -brand-short-name } di installare e condurre studi
 collection-studies-link = Visualizza studi di { -brand-short-name }
-
 addon-recommendations =
-    .label = Consenti a { -brand-short-name } di visualizzare consigli personalizzati relativi alle estensioni
+    .label = Consenti a { -brand-short-name } di visualizzare suggerimenti personalizzati relativi alle estensioni
 addon-recommendations-link = Ulteriori informazioni
-
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = L’invio dei dati è stato disattivato nella configurazione utilizzata per questa build
-collection-browser-errors =
-    .label = Consenti a { -brand-short-name } di inviare a { -vendor-short-name } le segnalazioni di errori nel browser (inclusi i messaggi di errore)
-    .accesskey = b
-collection-browser-errors-link = Ulteriori informazioni
 collection-backlogged-crash-reports =
     .label = Consenti a { -brand-short-name } di inviare segnalazioni di arresto anomalo in sospeso
     .accesskey = C

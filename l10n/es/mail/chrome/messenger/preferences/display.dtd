@@ -40,6 +40,7 @@
 <!ENTITY colorButton.accesskey "C">
 <!ENTITY reading.caption "Lectura">
 <!ENTITY display.caption "Visualización">
+<!ENTITY displayName.label "Nombre mostrado:">
 <!ENTITY showCondensedAddresses.label "Mostrar sólo el atributo 'nombre mostrado' para las personas de mi libreta de direcciones">
 <!ENTITY showCondensedAddresses.accesskey "b">
 <!ENTITY autoMarkAsRead.label "Marcar automáticamente mensajes como leídos">

@@ -606,6 +606,8 @@
 <!ENTITY compactButton.tooltip "Retirer les messages supprimés du dossier sélectionné">
 <!ENTITY appmenuButton1.tooltip "Afficher le menu de &brandShortName;">
 
+<!ENTITY addonsButton.tooltip "Gérer les modules complémentaires">
+
 <!-- Toolbar Button Popup -->
 <!ENTITY buttonMenuForwardAsInline.label "Transférer au format intégré">
 <!ENTITY buttonMenuForwardAsAttachment.label "Transférer au format pièce jointe">
@@ -629,7 +631,7 @@
 <!-- AppMenu Popup -->
 <!ENTITY appmenuNewMsgCmd.label "Nouveau message">
 <!ENTITY appmenuNewContactCmd.label "Contact du carnet d’adresses…">
-<!ENTITY appmenuEditMenu.label "Éditer">
+<!ENTITY appmenuEditMenu.label "Édition">
 <!ENTITY appmenuToolbarLayout.label "Personnaliser les barres d’outils…">
 <!ENTITY appmenuSelectThread.label "Sélectionner la discussion">
 <!ENTITY appmenuSelectFlagged.label "Sélectionner les messages suivis">
@@ -813,12 +815,6 @@
 <!ENTITY contextPrintPreview.label "Aperçu avant impression">
 <!ENTITY contextPrintPreview.accesskey "o">
 
-<!-- Thread Pane Column Picker -->
-<!-- LOCALIZATION NOTE (columnPicker.resetToInbox.label):
-     This option in the thread pane column picker causes us to reset the
-     customizations for the thread pane columns in this folder to their default.
-  -->
-<!ENTITY columnPicker.resetToInbox.label "Réinitialiser">
 <!-- LOCALIZATION NOTE (columnPicker.applyTo.label):
      This option in the thread pane column picker pops up a sub-menu containing
      the "columnPicker.applyToFolder.label" and
@@ -858,7 +854,6 @@
      "File here" option for the move to/copy to widget.
   -->
 <!ENTITY columnPicker.thisFolder.label "Ce dossier">
-
 
 <!-- Media (video/audio) controls -->
 <!ENTITY contextPlay.label "Lire">

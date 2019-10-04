@@ -26,10 +26,10 @@
 <!ENTITY selectAllCmd.accesskey    "S">
 <!ENTITY findCmd.label             "Procurar">
 <!ENTITY findCmd.key               "F">
-<!ENTITY findCmd.accesskey         "z">
-<!ENTITY findAgainCmd.label        "Procurar próxima">
+<!ENTITY findCmd.accesskey         "P">
+<!ENTITY findAgainCmd.label        "Procurar próximo">
 <!ENTITY findAgainCmd.key          "G">
 <!ENTITY findAgainCmd.key2         "VK_F3">
-<!ENTITY findAgainCmd.accesskey    "L">
+<!ENTITY findAgainCmd.accesskey    "x">
 <!ENTITY findPreviousCmd.label     "Procurar anterior">
 <!ENTITY findPreviousCmd.accesskey "a">

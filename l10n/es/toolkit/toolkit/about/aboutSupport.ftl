@@ -24,13 +24,23 @@ features-title = Características de { -brand-short-name }
 features-name = Nombre
 features-version = Versión
 features-id = ID
+processes-title = Procesos remotos
+processes-type = Tipo
+processes-count = Número
 app-basics-title = Configuración básica de la aplicación
 app-basics-name = Nombre
 app-basics-version = Versión
 app-basics-build-id = ID de compilación
 app-basics-update-channel = Canal de actualización
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] Actualizar directorio
+       *[other] Actualizar carpeta
+    }
 app-basics-update-history = Historial de actualizaciones
 app-basics-show-update-history = Mostrar el historial de actualizaciones
+# Represents the path to the binary used to start the application.
+app-basics-binary = Binario de la aplicación
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] Directorio de perfil
@@ -44,10 +54,13 @@ app-basics-memory-use = Uso de memoria
 app-basics-performance = Rendimiento
 app-basics-service-workers = Service Workers registrados
 app-basics-profiles = Perfiles
+app-basics-launcher-process-status = Proceso lanzador
 app-basics-multi-process-support = Ventanas multiproceso
 app-basics-process-count = Procesos de contenido web
+app-basics-remote-processes-count = Procesos remotos
 app-basics-enterprise-policies = Políticas empresariales
-app-basics-key-google = Clave de Google
+app-basics-location-service-key-google = Clave del servicio de localización de Google
+app-basics-safebrowsing-key-google = Clave del servicio Google Safebrowsing
 app-basics-key-mozilla = Clave del servicio de ubicación de Mozilla
 app-basics-safe-mode = Modo seguro
 show-dir-label =
@@ -73,6 +86,8 @@ graphics-gpu2-title = GPU #2
 graphics-decision-log-title = Registro de decisiones
 graphics-crash-guards-title = Características desactivadas de Crash Guard
 graphics-workarounds-title = Alternativas
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = Protocolo de ventana
 place-database-title = Base de datos de sitios
 place-database-integrity = Integridad
 place-database-verify-integrity = Verificar integridad
@@ -182,12 +197,15 @@ virtual-monitor-disp = Pantalla de monitor virtual
 
 found = Encontrado
 missing = Ausente
+gpu-process-pid = GPUProcessPid
+gpu-process = GPUProcess
 gpu-description = Descripción
 gpu-vendor-id = ID del fabricante
 gpu-device-id = ID del dispositivo
 gpu-subsys-id = ID del subsistema
 gpu-drivers = Controladores
 gpu-ram = RAM
+gpu-driver-vendor = Fabricante del driver
 gpu-driver-version = Versión del controlador
 gpu-driver-date = Fecha del controlador
 gpu-active = Activa
@@ -220,6 +238,8 @@ uses-tiling = Usa mosaicos
 content-uses-tiling = Usa mosaicos (contenido)
 off-main-thread-paint-enabled = Dibujado fuera del hilo principal de ejecución activado
 off-main-thread-paint-worker-count = Contador de workers de dibujado ajenos al hilo principal de ejecución
+low-end-machine = Se ha detectado una máquina de bajo rendimiento
+target-frame-rate = Frecuencia de imágenes objetivo
 audio-backend = Sistema de audio
 max-audio-channels = Canales máximos
 channel-layout = Disposición de canales preferida
@@ -237,6 +257,11 @@ effective-content-sandbox-level = Nivel efectivo de aislamiento (sandboxing) par
 sandbox-proc-type-content = contenido
 sandbox-proc-type-file = contenido del archivo
 sandbox-proc-type-media-plugin = plugin de medios
+sandbox-proc-type-data-decoder = decodificador de datos
+launcher-process-status-0 = Activado
+launcher-process-status-1 = Desactivado por fallo
+launcher-process-status-2 = Desactivado forzosamente
+launcher-process-status-unknown = Estado desconocido
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows

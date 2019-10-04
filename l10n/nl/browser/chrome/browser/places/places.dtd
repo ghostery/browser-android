@@ -70,9 +70,6 @@
 <!ENTITY cmd.new_separator.label           "Nieuw scheidingsteken">
 <!ENTITY cmd.new_separator.accesskey       "c">
 
-<!ENTITY cmd.reloadLivebookmark.label      "Livebladwijzer opnieuw laden">
-<!ENTITY cmd.reloadLivebookmark.accesskey  "L">
-
 <!ENTITY col.name.label          "Naam">
 <!ENTITY col.tags.label          "Labels">
 <!ENTITY col.url.label           "Locatie">

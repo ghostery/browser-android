@@ -27,6 +27,14 @@ serviceworker-worker-debug = Hibakeresés
 # Text for the start link displayed for a registered but not running Service Worker.
 # Clicking on the link will attempt to start the service worker.
 serviceworker-worker-start = Indítás
+# Text for the debug link displayed for an already started Service Worker, when we
+# are in multi e10s mode, which effectively disables this link.
+serviceworker-worker-debug-forbidden = Hibakeresés
+    .title = A service workerekben csak akkor lehet hibát keresni, ha a többszálas e10s ki van kapcsolva
+# Text for the start link displayed for a registered but not running Service Worker.
+# Clicking on the link will attempt to start the service worker.
+serviceworker-worker-start2 = Indítás
+    .title = A service workerek csak akkor indíthatóak el, ha a többszálas e10s ki van kapcsolva
 # Text displayed for the updated time of the service worker. The <time> element will
 # display the last update time of the service worker script.
 serviceworker-worker-updated = Frissítve: <time>{ DATETIME($date, month: "long", year: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric") }</time>
@@ -61,3 +69,11 @@ serviceworker-empty-suggestions-debugger = Lépjen végig a Service Worker regis
 # Suggestion to go to about:debugging in order to see Service Workers for all domains.
 # Clicking on the link will open about:debugging in a new tab.
 serviceworker-empty-suggestions-aboutdebugging = Vizsgálja meg a más tartományokból származó Service Workereket. <a>Nyissa meg az about:debugging oldalt</a>
+# Text displayed while we are loading the manifest file
+manifest-loading = Leírófájl betöltése…
+# Text displayed when the manifest has been successfully loaded
+manifest-loaded-ok = Leírófájl betöltve.
+# Text displayed when there has been an error while trying to load the manifest
+manifest-loaded-error = Hiba történt a leírófájl betöltésekor:
+# Text displayed when the page has no manifest available
+manifest-non-existing = Nem található vizsgálható leírófájl.

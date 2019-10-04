@@ -27,13 +27,23 @@ features-title = Fonctionnalités de { -brand-short-name }
 features-name = Nom
 features-version = Version
 features-id = ID
+processes-title = Processus distants
+processes-type = Type
+processes-count = Nombre
 app-basics-title = Paramètres de base de l’application
 app-basics-name = Nom
 app-basics-version = Version
 app-basics-build-id = Identifiant de compilation
 app-basics-update-channel = Canal de mise à jour
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] Répertoire pour les mises à jour
+       *[other] Dossier pour les mises à jour
+    }
 app-basics-update-history = Historique des mises à jour
 app-basics-show-update-history = Afficher l’historique des mises à jour
+# Represents the path to the binary used to start the application.
+app-basics-binary = Binaire de l’application
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] Répertoire de profil
@@ -47,10 +57,13 @@ app-basics-memory-use = Utilisation mémoire
 app-basics-performance = Performances
 app-basics-service-workers = Service workers inscrits
 app-basics-profiles = Profils
+app-basics-launcher-process-status = Processus de lancement
 app-basics-multi-process-support = Fenêtres multiprocessus
 app-basics-process-count = Processus de contenu web
+app-basics-remote-processes-count = Processus distants
 app-basics-enterprise-policies = Stratégies d’entreprise
-app-basics-key-google = Clé Google
+app-basics-location-service-key-google = Clé du service de localisation de Google
+app-basics-safebrowsing-key-google = Clé de Google Safebrowsing
 app-basics-key-mozilla = Clé du service de localisation de Mozilla
 app-basics-safe-mode = Mode sans échec
 show-dir-label =
@@ -76,6 +89,8 @@ graphics-gpu2-title = GPU 2
 graphics-decision-log-title = Journal des décisions
 graphics-crash-guards-title = Fonctionnalités désactivées par la protection contre les plantages
 graphics-workarounds-title = Solutions de contournement
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = Protocole de fenêtrage
 place-database-title = Base de données « Places »
 place-database-integrity = Intégrité
 place-database-verify-integrity = Vérifier l’intégrité
@@ -177,6 +192,7 @@ main-thread-no-omtc = Fil d’exécution principal, pas d’OMTC
 yes = Oui
 no = Non
 unknown = Inconnu
+virtual-monitor-disp = Affichage virtuel
 
 ## The following strings indicate if an API key has been found.
 ## In some development versions, it's expected for some API keys that they are
@@ -192,6 +208,7 @@ gpu-device-id = ID du périphérique
 gpu-subsys-id = ID du sous-système
 gpu-drivers = Pilotes
 gpu-ram = RAM
+gpu-driver-vendor = Éditeur du pilote
 gpu-driver-version = Version du pilote
 gpu-driver-date = Date du pilote
 gpu-active = Actif
@@ -218,11 +235,13 @@ d3d9video-crash-buard = Décodeur vidéo D3D9
 glcontext-crash-guard = OpenGL
 reset-on-next-restart = Réinitialisé au prochain démarrage
 gpu-process-kill-button = Arrêter le processus GPU
+gpu-device-reset = Réinitialisation de l’appareil
 gpu-device-reset-button = Déclencher la réinitialisation de l’appareil
 uses-tiling = Utilise le pavage
 content-uses-tiling = Utilise le pavage (contenu)
 off-main-thread-paint-enabled = Painting en dehors du fil d’exécution principal activé
 off-main-thread-paint-worker-count = Nombre de workers participant au painting en dehors du fil d’exécution principal
+low-end-machine = Machine peu performante détectée
 target-frame-rate = Fréquence d’images cible
 audio-backend = Backend audio
 max-audio-channels = Nombre maximum de canaux
@@ -241,6 +260,11 @@ effective-content-sandbox-level = Niveau effectif du bac à sable pour les proce
 sandbox-proc-type-content = contenu
 sandbox-proc-type-file = contenu du fichier
 sandbox-proc-type-media-plugin = plugin multimédia
+sandbox-proc-type-data-decoder = décodeur de données
+launcher-process-status-0 = Activé
+launcher-process-status-1 = Désactivé en raison d’une défaillance
+launcher-process-status-2 = Désactivé de force
+launcher-process-status-unknown = État inconnu
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows

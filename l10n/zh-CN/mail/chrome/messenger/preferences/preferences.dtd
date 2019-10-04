@@ -19,6 +19,7 @@
 <!ENTITY paneAttachments.title    "附件">
 <!ENTITY panePrivacy.title        "隐私">
 <!ENTITY paneSecurity.title       "安全">
+<!ENTITY panePrivacySecurity.title "隐私与安全">
 <!ENTITY paneLightning.title      "日历">
 <!ENTITY paneAdvanced.title       "高级">
 <!ENTITY paneAccount.title        "账户">

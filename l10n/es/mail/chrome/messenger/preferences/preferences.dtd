@@ -17,9 +17,10 @@
 <!ENTITY paneAttachments.title "Adjuntos">
 <!ENTITY panePrivacy.title "Privacidad">
 <!ENTITY paneSecurity.title "Seguridad">
+<!ENTITY panePrivacySecurity.title "Privacidad y seguridad">
 <!ENTITY paneLightning.title "Calendario">
 <!ENTITY paneAdvanced.title "Avanzado">
 <!ENTITY paneAccount.title "Cuentas">
-<!ENTITY addonsButton.label "Extensions &amp; Themes">
+<!ENTITY addonsButton.label "Extensiones y temas">
 <!ENTITY okButton.title "Aceptar">
 <!ENTITY okButton.accesskey "A">

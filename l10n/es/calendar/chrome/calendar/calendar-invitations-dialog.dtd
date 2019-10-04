@@ -8,9 +8,3 @@
 <!ENTITY calendar.invitations.dialog.statusmessage.noinvitations.text "No se han encontrado invitaciones sin confirmar.">
 <!ENTITY calendar.invitations.list.accept.button.label "Aceptar">
 <!ENTITY calendar.invitations.list.decline.button.label "Rechazar">
-<!ENTITY calendar.invitations.list.recurrentevent.text "Evento repetitivo">
-<!ENTITY calendar.invitations.list.alldayevent.text "Evento de día completo">
-<!ENTITY calendar.invitations.list.location.text "Lugar: ">
-<!ENTITY calendar.invitations.list.organizer.text "Organizador: ">
-<!ENTITY calendar.invitations.list.attendee.text "Asistente: ">
-<!ENTITY calendar.invitations.list.none.text "Ninguno">

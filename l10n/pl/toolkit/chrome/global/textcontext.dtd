@@ -2,18 +2,18 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY cutCmd.label "Wytnij" >
-<!ENTITY cutCmd.accesskey "t" >
-<!ENTITY copyCmd.label "Kopiuj" >
-<!ENTITY copyCmd.accesskey "K" >
-<!ENTITY pasteCmd.label "Wklej" >
-<!ENTITY pasteCmd.accesskey "e" >
-<!ENTITY undoCmd.label "Cofnij" >
-<!ENTITY undoCmd.accesskey "C" >
-<!ENTITY selectAllCmd.label "Zaznacz wszystko" >
-<!ENTITY selectAllCmd.accesskey "a" >
-<!ENTITY deleteCmd.label "Usuń" >
-<!ENTITY deleteCmd.accesskey "U" >
+<!ENTITY cutCmd.label "Wytnij">
+<!ENTITY cutCmd.accesskey "t">
+<!ENTITY copyCmd.label "Kopiuj">
+<!ENTITY copyCmd.accesskey "K">
+<!ENTITY pasteCmd.label "Wklej">
+<!ENTITY pasteCmd.accesskey "e">
+<!ENTITY undoCmd.label "Cofnij">
+<!ENTITY undoCmd.accesskey "C">
+<!ENTITY selectAllCmd.label "Zaznacz wszystko">
+<!ENTITY selectAllCmd.accesskey "a">
+<!ENTITY deleteCmd.label "Usuń">
+<!ENTITY deleteCmd.accesskey "U">
 
 <!ENTITY spellAddToDictionary.label "Dodaj do słownika">
 <!ENTITY spellAddToDictionary.accesskey "D">
@@ -27,11 +27,15 @@
 
 <!ENTITY searchTextBox.clear.label "Wyczyść">
 
-<!ENTITY fillLoginMenu.label "Uzupełnij dane logowania">
-<!ENTITY fillLoginMenu.accesskey "z">
-<!ENTITY fillPasswordMenu.label "Uzupełnij hasło">
-<!ENTITY fillPasswordMenu.accesskey "h">
-<!ENTITY fillUsernameMenu.label "Uzupełnij nazwę użytkownika">
-<!ENTITY fillUsernameMenu.accesskey "n">
-<!ENTITY noLoginSuggestions.label "(brak sugestii)">
-<!ENTITY viewSavedLogins.label "Wyświetl zachowane dane logowania">
+<!ENTITY fillLoginMenu.label          "Uzupełnij dane logowania">
+<!ENTITY fillLoginMenu.accesskey      "z">
+<!ENTITY fillSuggestedPassword.label  "Użyj zaproponowanego hasła">
+<!ENTITY fillSuggestedPassword.accesskey "w">
+<!ENTITY fillGeneratedPassword.label  "Użyj bezpiecznie wygenerowanego hasła">
+<!ENTITY fillGeneratedPassword.accesskey "b">
+<!ENTITY fillPasswordMenu.label       "Uzupełnij hasło">
+<!ENTITY fillPasswordMenu.accesskey   "h">
+<!ENTITY fillUsernameMenu.label       "Uzupełnij nazwę użytkownika">
+<!ENTITY fillUsernameMenu.accesskey   "n">
+<!ENTITY noLoginSuggestions.label     "(brak sugestii)">
+<!ENTITY viewSavedLogins.label        "Wyświetl zachowane dane logowania">

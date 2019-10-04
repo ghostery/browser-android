@@ -8,7 +8,7 @@
 
 <!ENTITY FormName.label "Nome do formulário:">
 <!ENTITY FormName.accesskey "N">
-<!ENTITY FormAction.label "Ação do URL:">
+<!ENTITY FormAction.label "URL da ação:">
 <!ENTITY FormAction.accesskey "A">
 <!ENTITY FormMethod.label "Método:">
 <!ENTITY FormMethod.accesskey "M">

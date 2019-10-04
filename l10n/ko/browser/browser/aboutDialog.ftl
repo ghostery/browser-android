@@ -16,7 +16,7 @@ update-downloading = <img data-l10n-name="icon"/>업데이트 다운로드 중 �
 update-applying = 업데이트 적용 중…
 update-failed = 업데이트를 실패했습니다. <label data-l10n-name="failed-link">최신 버전 다운로드</label>
 update-failed-main = 업데이트를 실패했습니다. <a data-l10n-name="failed-link-main">최신 버전 다운로드</a>
-update-adminDisabled = 시스템 관리자가 업데이트 사용 불가
+update-adminDisabled = 시스템 관리자가 업데이트를 비활성화하였음
 update-noUpdatesFound = { -brand-short-name }가 최신 버전입니다.
 update-otherInstanceHandlingUpdates = 다른 { -brand-short-name }에서 이미 업데이트를 하고 있음
 update-manual = 업데이트 위치 <label data-l10n-name="manual-link"/>
@@ -30,5 +30,14 @@ helpus = 돕고 싶으십니까? <label data-l10n-name="helpus-donateLink">기�
 bottomLinks-license = 라이선스 정보
 bottomLinks-rights = 사용자 권리
 bottomLinks-privacy = 개인 정보 정책
-aboutDialog-architecture-sixtyFourBit = 64비트
-aboutDialog-architecture-thirtyTwoBit = 32비트
+# Example of resulting string: 66.0.1 (64-bit)
+# Variables:
+#   $version (String): version of Firefox, e.g. 66.0.1
+#   $bits (Number): bits of the architecture (32 or 64)
+aboutDialog-version = { $version } ({ $bits }-비트)
+# Example of resulting string: 66.0a1 (2019-01-16) (64-bit)
+# Variables:
+#   $version (String): version of Firefox for Nightly builds, e.g. 66.0a1
+#   $isodate (String): date in ISO format, e.g. 2019-01-16
+#   $bits (Number): bits of the architecture (32 or 64)
+aboutDialog-version-nightly = { $version } ({ $isodate }) ({ $bits }-비트)

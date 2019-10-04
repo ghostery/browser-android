@@ -1,56 +1,139 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this file,
-   - You can obtain one at http://mozilla.org/MPL/2.0/. -->
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
 
-<!ENTITY downloads.title "Pobierane pliki">
-<!ENTITY downloadDetails.width "50ch">
-<!ENTITY downloadsSummary.minWidth2 "30ch">
-<!ENTITY downloads.width "60ch">
+<!-- LOCALIZATION NOTE (downloads.title):
+     Used by screen readers to describe the Downloads Panel.
+     -->
+<!ENTITY downloads.title                  "Pobierane pliki">
+
+<!-- LOCALIZATION NOTE (downloads.width):
+     Width of the Downloads Panel expressed using a CSS unit. The longest labels
+     that should fit are usually those of in-progress and blocked downloads.
+     -->
+<!ENTITY downloads.width                  "60ch">
+
 <!ENTITY cmd.pause.label                  "Wstrzymaj">
 <!ENTITY cmd.pause.accesskey              "W">
 <!ENTITY cmd.resume.label                 "Wznów">
 <!ENTITY cmd.resume.accesskey             "z">
 <!ENTITY cmd.cancel.label                 "Anuluj">
-<!ENTITY cmd.show.label "Otwórz folder nadrzędny">
-<!ENTITY cmd.show.accesskey "f">
-<!ENTITY cmd.showMac.label "Pokaż w Finderze">
-<!ENTITY cmd.showMac.accesskey "F">
-<!ENTITY cmd.showDownloads.label "Pokaż folder z pobranymi">
+<!-- LOCALIZATION NOTE (cmd.show.label, cmd.show.accesskey, cmd.showMac.label,
+     cmd.showMac.accesskey):
+     The show and showMac commands are never shown together, thus they can share
+     the same access key (though the two access keys can also be different).
+     -->
+<!ENTITY cmd.show.label                   "Otwórz folder nadrzędny">
+<!ENTITY cmd.show.accesskey               "f">
+<!ENTITY cmd.showMac.label                "Pokaż w Finderze">
+<!ENTITY cmd.showMac.accesskey            "F">
+<!ENTITY cmd.showDownloads.label          "Pokaż folder z pobranymi">
 <!ENTITY cmd.retry.label                  "Spróbuj ponownie">
 <!ENTITY cmd.goToDownloadPage.label       "Przejdź do strony pobierania">
 <!ENTITY cmd.goToDownloadPage.accesskey   "P">
 <!ENTITY cmd.copyDownloadLink.label       "Kopiuj adres pobierania">
 <!ENTITY cmd.copyDownloadLink.accesskey   "K">
-<!ENTITY cmd.removeFromHistory.label "Usuń z historii">
-<!ENTITY cmd.removeFromHistory.accesskey "U">
-<!ENTITY cmd.clearList2.label "Wyczyść listę">
-<!ENTITY cmd.clearList2.accesskey "c">
-<!ENTITY cmd.clearDownloads.label "Wyczyść listę">
-<!ENTITY cmd.clearDownloads.accesskey "c">
-<!ENTITY cmd.unblock2.label "Pozwól pobrać">
-<!ENTITY cmd.unblock2.accesskey "P">
-<!ENTITY cmd.removeFile.label "Usuń plik">
-<!ENTITY cmd.chooseUnblock.label "Usuń plik lub pozwól go pobrać">
-<!ENTITY cmd.chooseOpen.label "Otwórz lub usuń plik">
+<!ENTITY cmd.removeFromHistory.label      "Usuń z historii">
+<!ENTITY cmd.removeFromHistory.accesskey  "U">
+<!ENTITY cmd.clearList2.label             "Wyczyść listę">
+<!ENTITY cmd.clearList2.accesskey         "c">
+<!ENTITY cmd.clearDownloads.label         "Wyczyść listę">
+<!ENTITY cmd.clearDownloads.accesskey     "c">
+<!-- LOCALIZATION NOTE (cmd.unblock2.label):
+     This command is shown in the context menu when downloads are blocked.
+     -->
+<!ENTITY cmd.unblock2.label               "Pozwól pobrać">
+<!ENTITY cmd.unblock2.accesskey           "P">
+<!-- LOCALIZATION NOTE (cmd.removeFile.label):
+     This is the tooltip of the action button shown when malware is blocked.
+     -->
+<!ENTITY cmd.removeFile.label             "Usuń plik">
+<!-- LOCALIZATION NOTE (cmd.chooseUnblock.label):
+     This is the tooltip of the action button shown when potentially unwanted
+     downloads are blocked. This opens a dialog where the user can choose
+     whether to unblock or remove the download. Removing is the default option.
+     -->
+<!ENTITY cmd.chooseUnblock.label          "Usuń plik lub pozwól go pobrać">
+<!-- LOCALIZATION NOTE (cmd.chooseOpen.label):
+     This is the tooltip of the action button shown when uncommon downloads are
+     blocked.This opens a dialog where the user can choose whether to open the
+     file or remove the download. Opening is the default option.
+     -->
+<!ENTITY cmd.chooseOpen.label             "Otwórz lub usuń plik">
 
-<!ENTITY showMoreInformation.label "Wyświetl więcej informacji">
-<!ENTITY openFile.label "Otwórz plik">
-<!ENTITY retryDownload.label "Pobierz ponownie">
-<!ENTITY cancelDownload.label "Anuluj pobieranie">
+<!-- LOCALIZATION NOTE (showMoreInformation.label):
+     Displayed when hovering a blocked download, indicates that it's possible to
+     show more information for user to take the next action.
+     -->
+<!ENTITY showMoreInformation.label        "Wyświetl więcej informacji">
 
-<!ENTITY blocked.label "Zablokowano">
-<!ENTITY learnMore.label "więcej informacji">
+<!-- LOCALIZATION NOTE (openFile.label):
+     Displayed when hovering a complete download, indicates that it's possible to
+     open the file using an app available in the system.
+     -->
+<!ENTITY openFile.label                   "Otwórz plik">
 
-<!ENTITY downloadsHistory.label "Wyświetl wszystkie">
-<!ENTITY downloadsHistory.accesskey "W">
+<!-- LOCALIZATION NOTE (retryDownload.label):
+     Displayed when hovering a download which is able to be retried by users,
+     indicates that it's possible to download this file again.
+     -->
+<!ENTITY retryDownload.label              "Pobierz ponownie">
 
-<!ENTITY downloadDetails.label "Szczegóły pobieranego pliku">
+<!-- LOCALIZATION NOTE (cancelDownload.label):
+     Displayed when hovering a download which is able to be cancelled by users,
+     indicates that it's possible to cancel and stop the download.
+     -->
+<!ENTITY cancelDownload.label             "Anuluj pobieranie">
 
-<!ENTITY openDownloadsFolder.label "Otwórz folder z pobranymi plikami">
+<!-- LOCALIZATION NOTE (blocked.label):
+     Shown as a tag before the file name for some types of blocked downloads.
+     Note: This string doesn't exist in the UI yet.  See bug 1053890.
+     -->
+<!ENTITY blocked.label                    "Zablokowano">
 
-<!ENTITY clearDownloadsButton.label "Wyczyść listę">
-<!ENTITY clearDownloadsButton.tooltip "Zakończone, anulowane i nieudane pobierania zostaną usunięte">
+<!-- LOCALIZATION NOTE (learnMore.label):
+     Shown as a text link for some types of blocked downloads, for example
+     malware, when there is an associated explanation page on the Mozilla site.
+     Note: This string doesn't exist in the UI yet.  See bug 1053890.
+     -->
+<!ENTITY learnMore.label                  "więcej informacji">
 
-<!ENTITY downloadsListEmpty.label "Brak pobranych plików">
-<!ENTITY downloadsPanelEmpty.label "Brak pobranych podczas tej sesji.">
-<!ENTITY downloadsListNoMatch.label "Nie znaleziono żadnych pasujących">
+<!-- LOCALIZATION NOTE (downloadsHistory.label, downloadsHistory.accesskey):
+     This string is shown at the bottom of the Downloads Panel when all the
+     downloads fit in the available space, or when there are no downloads in
+     the panel at all.
+     -->
+<!ENTITY downloadsHistory.label           "Wyświetl wszystkie">
+<!ENTITY downloadsHistory.accesskey       "W">
+
+<!-- LOCALIZATION NOTE (downloadDetails.label):
+     This string is shown at the top of the Download Details Panel, to indicate
+     that we are showing the details of a single download.
+     -->
+<!ENTITY downloadDetails.label            "Szczegóły pobieranego pliku">
+
+<!-- LOCALIZATION NOTE (openDownloadsFolder.label):
+     This command is not currently available in the user interface, but the
+     string was preserved by bug 1362207 to be used in a future version.
+     -->
+<!ENTITY openDownloadsFolder.label        "Otwórz folder z pobranymi plikami">
+
+<!ENTITY clearDownloadsButton.label       "Wyczyść listę">
+<!ENTITY clearDownloadsButton.tooltip     "Ukończone, anulowane i nieudane pobierania zostaną usunięte">
+
+<!-- LOCALIZATION NOTE (downloadsListEmpty.label):
+     This string is shown when there are no items in the Downloads view, when it
+     is displayed inside a browser tab.
+     -->
+<!ENTITY downloadsListEmpty.label         "Brak pobranych plików">
+
+<!-- LOCALIZATION NOTE (downloadsPanelEmpty.label):
+     This string is shown when there are no items in the Downloads Panel.
+     -->
+<!ENTITY downloadsPanelEmpty.label        "Brak pobranych podczas tej sesji.">
+
+<!-- LOCALIZATION NOTE (downloadsListNoMatch.label):
+     This string is shown when some search terms are specified, but there are no
+     results in the Downloads view.
+     -->
+<!ENTITY downloadsListNoMatch.label       "Nie znaleziono żadnych pasujących">

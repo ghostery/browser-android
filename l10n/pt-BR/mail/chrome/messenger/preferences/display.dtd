@@ -49,6 +49,7 @@
 <!-- Advanced -->
 <!ENTITY reading.caption                  "Leitura">
 <!ENTITY display.caption                  "Exibição">
+<!ENTITY displayName.label                "Nome de exibição:">
 <!ENTITY showCondensedAddresses.label     "Para pessoas em meus contatos, exibir somente o nome">
 <!ENTITY showCondensedAddresses.accesskey "P">
 

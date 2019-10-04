@@ -22,12 +22,12 @@
 <!ENTITY newIM.label                                    "IM">
 <!ENTITY printContactViewCmd.label                      "Contact afdrukken…">
 <!ENTITY printContactViewCmd.accesskey                  "d">
-<!ENTITY printPreviewContactViewCmd.label               "Afdrukvoorbeeld contact">
+<!ENTITY printPreviewContactViewCmd.label               "Afdrukvoorbeeld van contact">
 <!ENTITY printPreviewContactViewCmd.accesskey           "v">
 <!ENTITY printContactViewCmd.key                        "P">
 <!ENTITY printAddressBook.label                         "Adresboek afdrukken…">
 <!ENTITY printAddressBook.accesskey                     "f">
-<!ENTITY printPreviewAddressBook.label                  "Afdrukvoorbeeld adresboek">
+<!ENTITY printPreviewAddressBook.label                  "Afdrukvoorbeeld van adresboek">
 <!ENTITY printPreviewAddressBook.accesskey              "b">
 
 <!-- Edit Menu -->

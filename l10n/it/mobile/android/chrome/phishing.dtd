@@ -14,6 +14,6 @@
 <!ENTITY safeb.blocked.phishingPage.longDesc3 "<p>I siti web ingannevoli cercano di raggirare l’utente e convincerlo a eseguire operazioni a rischio, come installare software o rivelare informazioni personali quali password, numeri di telefono o carta di credito.</p><p>L’inserimento di informazioni personali in questa pagina può dare origine a furti d’identità o altre frodi.</p>">
 <!ENTITY safeb.blocked.unwantedPage.title "Segnalato sito contenente software indesiderato">
 <!ENTITY safeb.blocked.unwantedPage.shortDesc "Il sito web <span id='unwanted_sitename'/> è stato segnalato come sito contenente software indesiderato ed è stato bloccato sulla base delle impostazioni di sicurezza correnti.">
-<!ENTITY safeb.blocked.unwantedPage.longDesc "<p>Questo tipo di siti cerca di installare programmi che possono risultare ingannevoli e avere conseguenze inaspettate sul sistema.</p>">
+<!ENTITY safeb.blocked.unwantedPage.longDesc "Questo tipo di siti cerca di installare programmi che possono risultare ingannevoli e avere conseguenze inaspettate sul sistema.">
 <!ENTITY safeb.blocked.harmfulPage.title "Questo sito potrebbe contenere malware">
 <!ENTITY safeb.blocked.harmfulPage.shortDesc "Questa pagina è stata bloccata da &brandShortName; in quanto potrebbe cercare di installare app dannose, in grado di rubare o eliminare informazioni personali come foto, password, messaggi e numeri di carte di credito.">

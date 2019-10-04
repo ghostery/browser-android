@@ -12,6 +12,8 @@
 <!ENTITY pref.calendar.alarms.playsound.accessKey "u">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "Standaardgeluid gebruiken">
 <!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "S">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "Het volgende geluidsbestand gebruiken">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "v">
 <!ENTITY pref.calendar.alarms.sound.browse.label "Bladeren…">
 <!ENTITY pref.calendar.alarms.sound.browse.accessKey "B">
 <!ENTITY pref.calendar.alarms.sound.play.label "Afspelen">

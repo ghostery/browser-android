@@ -24,13 +24,23 @@ features-title = Возможности { -brand-short-name }
 features-name = Имя
 features-version = Версия
 features-id = ID
+processes-title = Удалённые процессы
+processes-type = Тип
+processes-count = Количество
 app-basics-title = Сведения о приложении
 app-basics-name = Имя
 app-basics-version = Версия
 app-basics-build-id = ID сборки
 app-basics-update-channel = Канал обновления
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] Каталог обновления
+       *[other] Папка обновления
+    }
 app-basics-update-history = Журнал обновлений
 app-basics-show-update-history = Показать журнал обновлений
+# Represents the path to the binary used to start the application.
+app-basics-binary = Бинарный файл приложения
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] Каталог профиля
@@ -44,10 +54,13 @@ app-basics-memory-use = Использование памяти
 app-basics-performance = Производительность
 app-basics-service-workers = Зарегистрированные Service Workers
 app-basics-profiles = Профили
+app-basics-launcher-process-status = Запускающий процесс
 app-basics-multi-process-support = Многопроцессные окна
 app-basics-process-count = Процессы веб-контента
+app-basics-remote-processes-count = Удалённые процессы
 app-basics-enterprise-policies = Корпоративные политики
-app-basics-key-google = Ключ Google
+app-basics-location-service-key-google = Ключ Службы определения местоположения от Google
+app-basics-safebrowsing-key-google = Ключ Google Safebrowsing
 app-basics-key-mozilla = Ключ Службы определения местоположения от Mozilla
 app-basics-safe-mode = Безопасный Режим
 show-dir-label =
@@ -73,6 +86,8 @@ graphics-gpu2-title = Видеокарта №2
 graphics-decision-log-title = Лог решения
 graphics-crash-guards-title = Возможности, отключённые защитой от падения
 graphics-workarounds-title = Способы обхода
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = Протокол управления окнами
 place-database-title = База данных Places
 place-database-integrity = Целостность
 place-database-verify-integrity = Проверить целостность
@@ -195,6 +210,7 @@ gpu-device-id = Код устройства
 gpu-subsys-id = Код подсистемы
 gpu-drivers = Драйвера
 gpu-ram = Видеопамять
+gpu-driver-vendor = Поставщик драйвера
 gpu-driver-version = Версия драйвера
 gpu-driver-date = Дата разработки драйвера
 gpu-active = Активна
@@ -227,6 +243,8 @@ uses-tiling = Использует тайлинг
 content-uses-tiling = Использует тайлинг (контент)
 off-main-thread-paint-enabled = Прорисовка вне основного потока активирована
 off-main-thread-paint-worker-count = Число воркеров отрисовки вне основного потока
+low-end-machine = Обнаружена менее производительная машина
+target-frame-rate = Целевая частота кадров
 audio-backend = Звуковая подсистема
 max-audio-channels = Максимальное число каналов
 channel-layout = Предпочтительный формат каналов
@@ -244,6 +262,11 @@ effective-content-sandbox-level = Эффективная степень изол
 sandbox-proc-type-content = контент
 sandbox-proc-type-file = содержимое файла
 sandbox-proc-type-media-plugin = медиаплагин
+sandbox-proc-type-data-decoder = декодер данных
+launcher-process-status-0 = Включён
+launcher-process-status-1 = Отключён из-за сбоя
+launcher-process-status-2 = Принудительно отключён
+launcher-process-status-unknown = Статус неизвестен
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows

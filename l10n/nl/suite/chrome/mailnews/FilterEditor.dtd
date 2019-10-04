@@ -29,6 +29,7 @@
 <!ENTITY contextOutgoing.accesskey "N">
 <!ENTITY contextArchive.label "Archiveren">
 <!ENTITY contextArchive.accesskey "r">
+<!ENTITY contextPeriodic.accesskey "P">
 
 <!ENTITY filterActionDesc.label "Deze acties uitvoeren:">
 <!ENTITY filterActionDesc.accesskey "v">

@@ -15,13 +15,13 @@
 -->
 
 <!-- LOCALIZATION NOTE (NameField1.id) : DONT_TRANSLATE -->
-<!ENTITY NameField1.id                  "이름">
+<!ENTITY NameField1.id                  "FirstName">
 <!-- LOCALIZATION NOTE (NameField2.id) : DONT_TRANSLATE -->
-<!ENTITY NameField2.id                  "성">
+<!ENTITY NameField2.id                  "LastName">
 <!-- LOCALIZATION NOTE (PhoneticField1.id) : DONT_TRANSLATE -->
-<!ENTITY PhoneticField1.id              "이름 발음">
+<!ENTITY PhoneticField1.id              "PhoneticFirstName">
 <!-- LOCALIZATION NOTE (PhoneticField2.id) : DONT_TRANSLATE -->
-<!ENTITY PhoneticField2.id              "성 발음">
+<!ENTITY PhoneticField2.id              "PhoneticLastName">
 
 <!ENTITY NameField1.label               "이름:">
 <!ENTITY NameField1.accesskey           "F">
@@ -77,8 +77,11 @@
 <!ENTITY Birthday.label                 "생일:">
 <!ENTITY Birthday.accesskey             "B">
 <!ENTITY In.label                       "">
+<!ENTITY Month.placeholder              "월">
+<!ENTITY Day.placeholder                "일">
 <!ENTITY Year.placeholder               "년">
 <!ENTITY Or.value                       "또는">
+<!ENTITY Age.label                      "나이:">
 <!ENTITY Age.placeholder                "나이">
 <!ENTITY YearsOld.label                 "">
 
@@ -141,7 +144,6 @@
 
 <!ENTITY Photo.tab                      "사진">
 <!ENTITY Photo.accesskey                "o">
-<!ENTITY PhotoDesc.label                "다음 중의 하나를 선택:">
 <!ENTITY GenericPhoto.label             "일반 사진">
 <!ENTITY GenericPhoto.accesskey         "G">
 <!ENTITY DefaultPhoto.label             "기본">

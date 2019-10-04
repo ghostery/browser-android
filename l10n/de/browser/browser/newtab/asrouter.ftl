@@ -3,12 +3,17 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 cfr-doorhanger-extension-heading = Empfohlene Erweiterung
+
+cfr-doorhanger-pintab-heading = Probieren Sie es aus: Tab anheften
+
 cfr-doorhanger-extension-sumo-link =
     .tooltiptext = Warum wird das angezeigt?
 cfr-doorhanger-extension-cancel-button = Nicht jetzt
     .accesskey = N
 cfr-doorhanger-extension-ok-button = Jetzt hinzufügen
     .accesskey = h
+cfr-doorhanger-pintab-ok-button = Diesen Tab anheften
+  .accesskey = a
 cfr-doorhanger-extension-manage-settings-button = Einstellungen für Empfehlungen verwalten
     .accesskey = E
 cfr-doorhanger-extension-never-show-recommendation = Diese Empfehlung nicht anzeigen
@@ -41,3 +46,29 @@ cfr-doorhanger-extension-total-users =
         [one] { $total } Benutzer
        *[other] { $total } Benutzer
     }
+
+cfr-doorhanger-pintab-description = Schneller Zugriff auf die meistverwendeten Seiten. Seiten bleiben geöffnet, selbst nach einem Neustart.
+
+## These messages are steps on how to use the feature and are shown together.
+cfr-doorhanger-pintab-step1 = Klicken Sie mit der <b>rechten Maustaste</b> auf den anzuheftenden Tab.
+cfr-doorhanger-pintab-step2 = Wählen Sie <b>Tab anheften</b> aus dem Menü.
+cfr-doorhanger-pintab-step3 = Falls die Seite auf eine Aktualisierung aufmerksam machen will, wird ein blauer Punkt auf dem angehefteten Tab angezeigt.
+
+cfr-doorhanger-pintab-animation-pause = Anhalten
+cfr-doorhanger-pintab-animation-resume = Fortfahren
+
+## Firefox Accounts Message
+cfr-doorhanger-bookmark-fxa-header = Synchronisieren Sie Ihre Lesezeichen, um sie überall verfügbar zu haben.
+cfr-doorhanger-bookmark-fxa-body = Jederzeit Zugriff auf dieses Lesezeichen - auch auf mobilen Geräten. Nutzen Sie dafür ein { -fxaccount-brand-name }.
+cfr-doorhanger-bookmark-fxa-link-text = Lesezeichen jetzt synchronisieren…
+cfr-doorhanger-bookmark-fxa-close-btn-tooltip =
+  .aria-label = Schließen-Schaltfläche
+  .title = Schließen
+
+## What's New toolbar button and panel
+
+cfr-whatsnew-button =
+  .label = Neue Funktionen und Änderungen
+  .tooltiptext = Neue Funktionen und Änderungen
+
+cfr-whatsnew-panel-header = Neue Funktionen und Änderungen

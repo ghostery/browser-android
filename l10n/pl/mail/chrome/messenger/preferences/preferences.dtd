@@ -2,28 +2,29 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY windowClose.key "w">
-<!ENTITY preferencesDefaultTitleMac.title "Preferencje">
-<!ENTITY preferencesDefaultTitleWin.title "Opcje">
-<!ENTITY preferencesCloseButton.label "Zamknij">
-<!ENTITY preferencesCloseButton.accesskey "k">
+<!ENTITY  windowClose.key                  "w">
+<!ENTITY  preferencesDefaultTitleMac.title "Preferencje">
+<!ENTITY  preferencesDefaultTitleWin.title "Opcje">
+<!ENTITY  preferencesCloseButton.label     "Zamknij">
+<!ENTITY  preferencesCloseButton.accesskey "k">
 
-<!ENTITY prefWindow.titleWin "Opcje">
-<!ENTITY prefWindow.titleGNOME "Preferencje programu &brandShortName;">
-<!ENTITY prefWindow.titleMAC "Preferencje">
+<!ENTITY  prefWindow.titleWin     "Opcje">
+<!ENTITY  prefWindow.titleGNOME   "Preferencje programu &brandShortName;">
+<!ENTITY  prefWindow.titleMAC     "Preferencje">
 
-<!ENTITY paneGeneral.title "Ogólne">
-<!ENTITY paneDisplay.title "Wyświetlanie">
-<!ENTITY paneComposition.title "Tworzenie">
-<!ENTITY paneChat.title "Komunikator">
-<!ENTITY paneAttachments.title "Załączniki">
-<!ENTITY panePrivacy.title "Prywatność">
-<!ENTITY paneSecurity.title "Bezpieczeństwo">
-<!ENTITY paneLightning.title "Kalendarz">
-<!ENTITY paneAdvanced.title "Zaawansowane">
-<!ENTITY paneAccount.title "Konta">
+<!ENTITY paneGeneral.title        "Ogólne">
+<!ENTITY paneDisplay.title        "Wyświetlanie">
+<!ENTITY paneComposition.title    "Tworzenie">
+<!ENTITY paneChat.title           "Komunikator">
+<!ENTITY paneAttachments.title    "Załączniki">
+<!ENTITY panePrivacy.title        "Prywatność">
+<!ENTITY paneSecurity.title       "Bezpieczeństwo">
+<!ENTITY panePrivacySecurity.title "Prywatność i bezpieczeństwo">
+<!ENTITY paneLightning.title      "Kalendarz">
+<!ENTITY paneAdvanced.title       "Zaawansowane">
+<!ENTITY paneAccount.title        "Konta">
 
-<!ENTITY addonsButton.label "Rozszerzenia i motywy">
+<!ENTITY addonsButton.label       "Rozszerzenia i motywy">
 
-<!ENTITY okButton.title "OK">
-<!ENTITY okButton.accesskey "O">
+<!ENTITY okButton.title           "OK">
+<!ENTITY okButton.accesskey       "O">

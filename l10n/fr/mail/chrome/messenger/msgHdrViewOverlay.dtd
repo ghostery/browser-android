@@ -95,6 +95,11 @@
 
 <!ENTITY openAttachment.tooltip "Ouvrir la pièce jointe">
 
+<!ENTITY detachedAttachmentFolder.show.label        "Ouvrir le dossier contenant le fichier">
+<!ENTITY detachedAttachmentFolder.show.accesskey    "d">
+<!ENTITY detachedAttachmentFolder.showMac.label     "Afficher dans le Finder">
+<!ENTITY detachedAttachmentFolder.showMac.accesskey "F">
+
 <!-- Attachment toolbar items -->
 <!ENTITY saveAttachmentButton1.label       "Enregistrer">
 <!ENTITY saveAttachmentButton1.tooltip     "Enregistrer la pièce jointe">

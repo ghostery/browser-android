@@ -58,7 +58,7 @@
 <!ENTITY CellularNumber.label           "Celular:">
 <!ENTITY CellularNumber.accesskey       "l">
 
-<!ENTITY Home.tab                       "Privado">
+<!ENTITY Home.tab                       "Privativo">
 <!ENTITY Home.accesskey                 "P">
 <!ENTITY HomeAddress.label              "Endereço:">
 <!ENTITY HomeAddress.accesskey          "d">
@@ -77,8 +77,11 @@
 <!ENTITY Birthday.label                 "Data de nascimento:">
 <!ENTITY Birthday.accesskey             "n">
 <!ENTITY In.label                       "">
+<!ENTITY Month.placeholder              "Mês">
+<!ENTITY Day.placeholder                "Dia">
 <!ENTITY Year.placeholder               "Ano">
 <!ENTITY Or.value                       "ou">
+<!ENTITY Age.label                      "Idade:">
 <!ENTITY Age.placeholder                "Idade">
 <!ENTITY YearsOld.label                 "">
 

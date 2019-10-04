@@ -8,6 +8,7 @@
   -->
 
 <!ENTITY pref.calendar.view.allview.caption "常规">
+
 <!ENTITY pref.calendar.view.dayandweekviews.caption "日周视图">
 <!ENTITY pref.calendar.view.multiweekview.caption "多周视图">
 <!ENTITY pref.calendar.view.workweek.caption "工作周">
@@ -17,6 +18,8 @@
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.label "在视图和小月历中显示周数">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "w">
 <!ENTITY pref.daysoff.label "工作周包括：">
+
+<!ENTITY pref.workweekDays.label "每周工作日：">
 
 <!ENTITY pref.calendar.view.daystart.label "每日开始于：">
 <!ENTITY pref.calendar.view.daystart.accesskey "D">

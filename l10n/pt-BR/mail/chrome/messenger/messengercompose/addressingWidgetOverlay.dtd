@@ -7,6 +7,6 @@
 <!ENTITY toAddr.label   "Para:">
 <!ENTITY ccAddr.label   "Cc:">
 <!ENTITY bccAddr.label  "Cco:">
-<!ENTITY replyAddr.label   "Responder a:">
+<!ENTITY replyAddr.label   "Responder:">
 <!ENTITY newsgroupsAddr.label   "Grupo de notícias:">
 <!ENTITY followupAddr.label   "Acompanhar a:">

@@ -46,6 +46,8 @@
 
 <!ENTITY onemonthbackward.tooltip "Poprzedni miesiąc" >
 <!ENTITY onemonthforward.tooltip "Następny miesiąc" >
+<!ENTITY oneyearbackward.tooltip "Poprzedni rok" >
+<!ENTITY oneyearforward.tooltip "Następny rok" >
 <!ENTITY showToday.tooltip "Przejdź do dnia dzisiejszego">
 <!ENTITY onedayforward.tooltip "Następny dzień">
 <!ENTITY onedaybackward.tooltip "Poprzedni dzień">

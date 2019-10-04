@@ -4,10 +4,6 @@
 
 do-not-track-description = „Do Not Track” jelzés küldése a webhelyeknek, jelezve, hogy nem szeretné, hogy kövessék
 do-not-track-learn-more = További információk
-do-not-track-option-default =
-    .label = Csak, ha követésvédelmet használ
-do-not-track-option-default-content-blocking =
-    .label = Csak a { -brand-short-name } az észlelt követők blokkolására van beállítva
 do-not-track-option-default-content-blocking-known =
     .label = Csak akkor, ha a { -brand-short-name } az ismert követők blokkolására van állítva
 do-not-track-option-always =
@@ -33,11 +29,7 @@ search-input-box =
             [windows] Keresés a beállításokban
            *[other] Keresés a beállításokban
         }
-policies-notice =
-    { PLATFORM() ->
-        [windows] A szervezete letiltotta egyes beállítások módosítását.
-       *[other] A szervezete letiltotta egyes beállítások módosítását.
-    }
+managed-notice = A böngészőjét a szervezete kezeli.
 pane-general-title = Általános
 category-general =
     .tooltiptext = { pane-general-title }
@@ -50,10 +42,9 @@ category-search =
 pane-privacy-title = Adatvédelem és biztonság
 category-privacy =
     .tooltiptext = { pane-privacy-title }
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Firefox fiók
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 help-button-label = { -brand-short-name } támogatás
 addons-button-label = Kiegészítők és témák
 focus-search =
@@ -82,10 +73,10 @@ restart-later = Újraindítás később
 
 # This string is shown to notify the user that their home page
 # is being controlled by an extension.
-extension-controlled-homepage-override = Egy kiterjesztés, a(z) <img data-l10n-name="icon"/> { $name }, vezérli a kezdőoldalt.
+extension-controlled-homepage-override = Egy kiegészítő, a(z) <img data-l10n-name="icon"/> { $name }, vezérli a kezdőoldalt.
 # This string is shown to notify the user that their new tab page
 # is being controlled by an extension.
-extension-controlled-new-tab-url = Egy kiterjesztés, a(z) <img data-l10n-name="icon"/> { $name }, vezérli az Új lap oldalt.
+extension-controlled-new-tab-url = Egy kiegészítő, a(z) <img data-l10n-name="icon"/> { $name }, vezérli az Új lap oldalt.
 # This string is shown to notify the user that their notifications permission
 # is being controlled by an extension.
 extension-controlled-web-notifications = Egy kiegészítő, a(z) <img data-l10n-name="icon"/> { $name } vezérli ezt a beállítást.
@@ -95,9 +86,6 @@ extension-controlled-default-search = Egy kiegészítő, a(z) <img data-l10n-nam
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
 extension-controlled-privacy-containers = A(z) <img data-l10n-name="icon"/> { $name } kiterjesztéshez szükségesek a konténerlapok.
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = A(z) <img data-l10n-name="icon"/> { $name } kiegészítő vezérli a követés elleni védelmet.
 # This string is shown to notify the user that their content blocking "All Detected Trackers"
 # preferences are being controlled by an extension.
 extension-controlled-websites-content-blocking-all-trackers = Egy kiegészítő, a(z) <img data-l10n-name="icon"/>{ $name }, vezérli ezt a beállítást.
@@ -154,9 +142,6 @@ ctrl-tab-recently-used-order =
 open-new-link-as-tabs =
     .label = Hivatkozások megnyitása új lapon, az új ablak helyett
     .accesskey = l
-warn-on-quit-close-multiple-tabs =
-    .label = Figyelmeztetés kilépéskor és több lap bezárása előtt
-    .accesskey = t
 warn-on-close-multiple-tabs =
     .label = Figyelmeztetés több lap bezárása előtt
     .accesskey = t
@@ -289,6 +274,7 @@ update-application-check-choose =
 update-application-manual =
     .label = Ne legyen frissítve (nem ajánlott)
     .accesskey = N
+update-application-warning-cross-user-setting = Ez a beállítás érvényes az összes Windows fiókra és { -brand-short-name } profilra, amely ezt a { -brand-short-name } telepítést használja.
 update-application-use-service =
     .label = Háttérben futó szolgáltatás intézze a frissítést
     .accesskey = H
@@ -299,6 +285,21 @@ update-pref-write-failure-title = Írási hiba
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = Nem lehet menteni a beállításokat. Nem lehet a fájlba írni: { $path }
+update-setting-write-failure-title = Hiba történt a Frissítési beállításainak mentésekor
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    A { -brand-short-name } hibát észlelt, és nem mentette ezt a változtatást. Ne feledje, hogy ezen frissítési beállítás megadásához írási engedély szükségesen a lenti fájlon. Ön vagy a rendszergazdája megoldhatja a hibát azzal, hogy a Felhasználók csoportnak teljes jogosultságot ad a fájlhoz.
+    
+    Nem sikerült a fájlba írni: { $path }
+update-in-progress-title = Frissítés folyamatban
+update-in-progress-message = Szeretné, hogy a { -brand-short-name } folytassa ezt a frissítést?
+update-in-progress-ok-button = &Elvetés
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = &Folytatás
 
 ## General Section - Performance
 
@@ -341,6 +342,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = Kiegészítők ajánlása böngészés közben
     .accesskey = K
+browsing-cfr-features =
+    .label = Funkciójavaslatok böngészés közben
+    .accesskey = F
 browsing-cfr-recommendations-learn-more = További tudnivalók
 
 ## General Section - Proxy
@@ -388,6 +392,49 @@ use-current-pages =
 choose-bookmark =
     .label = Könyvjelző használata…
     .accesskey = n
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Firefox kezdőlap tartalma
+home-prefs-content-description = Válassza ki milyen tartalmat szeretne a Firefox kezdőlapon.
+home-prefs-content-discovery-description = A Firefox kezdőlapon lévő tartalomfelfedezéssel kiváló minőségű, releváns cikkeket találhat szerte a weben.
+home-prefs-search-header =
+    .label = Webes keresés
+home-prefs-topsites-header =
+    .label = Népszerű oldalak
+home-prefs-topsites-description = A leggyakrabban látogatott oldalak
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = A(z) { $provider } ajánlásával
+home-prefs-recommended-by-description = Nagyszerű tartalom szerte a webről, személyre szabva
+home-prefs-recommended-by-learn-more = Hogyan működik
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = Szponzorált történetek
+home-prefs-highlights-header =
+    .label = Kiemelések
+home-prefs-highlights-description = Válogatás azon oldalakból, amelyeket elmentett vagy felkeresett
+home-prefs-highlights-option-visited-pages =
+    .label = Látogatott oldalak
+home-prefs-highlights-options-bookmarks =
+    .label = Könyvjelzők
+home-prefs-highlights-option-most-recent-download =
+    .label = Legutóbbi letöltés
+home-prefs-highlights-option-saved-to-pocket =
+    .label = { -pocket-brand-name }be mentett lapok
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = Töredékek
+home-prefs-snippets-description = Hírek a { -vendor-short-name } és a { -brand-product-name } felől
+home-prefs-sections-rows-option =
+    .label =
+        { $num ->
+            [one] { $num } sor
+           *[other] { $num } sor
+        }
 
 ## Search Section
 
@@ -511,7 +558,7 @@ sync-engine-creditcards =
     .accesskey = B
 sync-engine-addons =
     .label = Kiegészítők
-    .tooltiptext = Kiterjesztések és témák az asztali Firefoxhoz
+    .tooltiptext = Kiegészítők és témák az asztali Firefoxhoz
     .accesskey = K
 sync-engine-prefs =
     .label =
@@ -531,8 +578,9 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = Mentés
     .accesskey = M
-sync-mobilepromo-single = Másik eszköz csatlakoztatása
-sync-mobilepromo-multi = Eszközök kezelése
+sync-connect-another-device = Másik eszköz csatlakoztatása
+sync-manage-devices = Eszközök kezelése
+sync-fxa-begin-pairing = Eszköz párosítása
 sync-tos-link = A szolgáltatás feltételei
 sync-fxa-privacy-notice = Adatvédelmi megjegyzés
 
@@ -549,6 +597,12 @@ forms-ask-to-save-logins =
 forms-exceptions =
     .label = Kivételek…
     .accesskey = v
+forms-generate-passwords =
+    .label = Erős jelszavak javaslata az előállítása
+    .accesskey = j
+forms-fill-logins-and-passwords =
+    .label = Bejelentkezések és jelszavak automatikus kitöltése
+    .accesskey = i
 forms-saved-logins =
     .label = Mentett bejelentkezések…
     .accesskey = t
@@ -609,15 +663,10 @@ sitedata-total-size-calculating = Az oldaladatok és a gyorsítótár méreténe
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = A tárolt sütik, oldaladatok és a gyorsítótár jelenleg { $value } { $unit } területet foglalnak el a lemezen.
 sitedata-learn-more = További tudnivalók
-sitedata-keep-until = Sütik megtartása
-    .accesskey = m
-sitedata-keep-until-expire =
-    .label = Amíg le nem járnak
-sitedata-keep-until-closed =
-    .label = A { -brand-short-name } bezárásáig
 sitedata-delete-on-close =
     .label = Sütik és oldaladatok törlése a { -brand-short-name } bezárásakor
     .accesskey = S
+sitedata-delete-on-close-private-browsing = Állandó privát böngészési módban a sütik és a webhelyadatok mindig törölve lesznek a { -brand-short-name } bezárásakor.
 sitedata-allow-cookies-option =
     .label = Sütik és oldaladatok elfogadása
     .accesskey = e
@@ -628,37 +677,24 @@ sitedata-disallow-cookies-option =
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = Blokkolt típus
     .accesskey = B
-sitedata-block-trackers-option-recommended =
-    .label = Harmadik féltől származó követők (ajánlott)
-sitedata-block-trackers-option =
-    .label = Harmadik féltől származó követők
-sitedata-block-unvisited-option =
-    .label = Nem megtekintett oldalak sütijei
-sitedata-block-all-third-party-option =
-    .label = Összes harmadik féltől származó süti (egyes weboldalak eltörhetnek)
-sitedata-block-all-option =
-    .label = Összes süti (egyes weboldalak el fognak törni)
 sitedata-option-block-trackers =
     .label = Harmadik féltől származó követők
+sitedata-option-block-cross-site-trackers =
+    .label = Weboldalak közti nyomkövetők
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = Webhelyek közötti és közösségi média követők
 sitedata-option-block-unvisited =
     .label = Nem látogatott webhelyekről származó sütik
 sitedata-option-block-all-third-party =
-    .label = Minden harmadik féltől származó süti (egyes weboldalak eltörhetnek)
+    .label = Minden harmadik féltől származó süti (egyes weboldalak működésképtelenné válhatnak)
 sitedata-option-block-all =
-    .label = Minden süti (egyes weboldalak el fognak törni)
+    .label = Minden süti (egyes weboldalak működésképtelenné fognak válni)
 sitedata-clear =
     .label = Adatok törlése…
     .accesskey = t
 sitedata-settings =
     .label = Adatok kezelése…
     .accesskey = A
-sitedata-cookies-exceptions =
-    .label = Kivételek…
-    .accesskey = K
-# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
-# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
-# Cookies and Site Data section.
-sitedata-warning-your-settings-prevent-changes = A Tartalomblokkolási beállítások megakadályozzák, hogy módosítson a Sütik és oldaladatok beállításain.
 sitedata-cookies-permissions =
     .label = Engedélyek kezelése…
     .accesskey = E
@@ -681,41 +717,9 @@ addressbar-suggestions-settings = Keresőszolgáltatás-javaslatok beállítása
 ## Privacy Section - Content Blocking
 
 content-blocking-header = Tartalomblokkolás
-content-blocking-desc = Az olyan harmadik féltől származó tartalom blokkolása, mint a hirdetések vagy kódok, melyek lelassíthatják a böngészését, és követketik a weben. Szabja testre a beállításait a védelem és a teljesítmény közti legjobb egyensúly érdekében.
-content-blocking-description = A harmadik féltől származó tartalmak blokkolása, melyek követik a weben. Irányítsa, hogy az online tevékenysége mekkora része legyen tárolva és megosztva a webhelyek közt.
+content-blocking-enhanced-tracking-protection = Továbbfejlesztett követés elleni védelem
+content-blocking-section-description = Védje meg a magánszféráját böngészés közben. Blokkolja a láthatatlan tartalmakat, melyek követik, hogy mely oldalakat látogat, és profilt építenek Önről. Egyes tartalmak blokkolása a weboldalak gyorsabb betöltését is eredményezheti.
 content-blocking-learn-more = További tudnivalók
-content-blocking-restore-defaults =
-    .label = Alapértelmezések visszaállítása
-    .accesskey = v
-content-blocking-toggle-on =
-    .tooltiptext = Tartalomblokkolás kikapcsolása
-content-blocking-toggle-off =
-    .tooltiptext = Tartalomblokkolás bekapcsolása
-content-blocking-toggle-label-on = BE
-    .accesskey = B
-content-blocking-toggle-label-off = KI
-    .accesskey = K
-content-blocking-category-label = Válassza ki, mit szeretne blokkolni
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-    .label = Lassan betöltő követők
-    .accesskey = L
-content-blocking-fastblock-new-description = Csak azon követők blokkolása, melyek megakadályozzák az oldalak gyors betöltését.
-content-blocking-tracking-protection-trackers-label =
-    .label = Követők
-    .accesskey = K
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = Összes észlelt követő
-    .accesskey = k
-content-blocking-tracking-protection-new-description = Összes ismert követő blokkolása. (Megakadályozhatja néhány oldal betöltését.)
-content-blocking-tracking-protection-option-always =
-    .label = Mindig
-    .accesskey = M
-content-blocking-tracking-protection-option-private =
-    .label = Csak privát ablakokban
-    .accesskey = p
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
 content-blocking-setting-standard =
@@ -727,20 +731,39 @@ content-blocking-setting-strict =
 content-blocking-setting-custom =
     .label = Egyéni
     .accesskey = E
-content-blocking-standard-description = Csak az ismert követők blokkolása a privát ablakokban.
 content-blocking-standard-desc = Kiegyensúlyozott védelem és teljesítmény. Engedélyez néhány követőt, hogy a webhelyek megfelelően működjenek.
-content-blocking-strict-desc = A { -brand-short-name } blokkolja az összes észlelt követőt. Egyes webhelyek lehet, hogy nem fognak megfelelően működni.
+content-blocking-strict-description = Erősebb védelem, emiatt egyes weboldalak nem fognak megfelelően működni.
 content-blocking-custom-desc = Válassza ki, mit akar blokkolni.
 content-blocking-private-trackers = Ismert követők csak privát ablakokban
 content-blocking-third-party-cookies = Harmadik féltől származó követő sütik
+content-blocking-etp-standard-desc = Kiegyensúlyozott védelem és teljesítmény. Az oldalak normálisan fognak betölteni.
+content-blocking-etp-strict-desc = Erősebb védelem, de egyes webhelyek és tartalmak hibásan működhetnek.
+content-blocking-etp-custom-desc = Válassza ki a blokkolni kívánt nyomkövetőket és parancsfájlokat.
+content-blocking-private-windows = Követés elleni védelem a privát ablakokban
+content-blocking-cross-site-tracking-cookies = Webhelyek közötti nyomkövető sütik
+content-blocking-social-media-trackers = Közösségimédia-követők
+content-blocking-all-cookies = Minden süti
+content-blocking-unvisited-cookies = Sütik a nem látogatott oldalakról
 content-blocking-all-windows-trackers = Ismert követők minden ablakban
+content-blocking-all-windows-tracking-content = Tartalomkövetés az összes ablakban
 content-blocking-all-third-party-cookies = Összes harmadik féltől származó süti
+content-blocking-cryptominers = Kriptobányászok
+content-blocking-fingerprinters = Ujjlenyomat-készítők
 content-blocking-warning-title = Figyelem!
-content-blocking-warning-desc = A sütik és követők blokkolása egyes webhelyek nem megfelelő működését okozhatják. Könnyű letiltani a blokkolása azokon az oldalakon, melyekben megbízik.
+content-blocking-warning-description = A tartalomblokkolás egyes webhelyek hibás működését okozhatja. A blokkolás könnyen letiltható azokon az oldalakon, melyekben megbízik.
 content-blocking-learn-how = Tudja meg, hogyan
+content-blocking-etp-warning-description = A nyomkövetők blokkolása befolyásolhatja az egyes webhelyek működését. Töltse újra az oldalt a nyomkövetőkkel, hogy betöltse az összes tartalmat.
+content-blocking-warning-learn-how = Tudja meg, hogyan
+content-blocking-reload-description = A módosítások alkalmazásához frissítenie kell a lapokat.
+content-blocking-reload-tabs-button =
+    .label = Összes lap frissítése
+    .accesskey = R
 content-blocking-trackers-label =
     .label = Követők
     .accesskey = K
+content-blocking-tracking-content-label =
+    .label = Nyomkövető tartalom
+    .accesskey = k
 content-blocking-tracking-protection-option-all-windows =
     .label = Minden ablakban
     .accesskey = M
@@ -748,51 +771,23 @@ content-blocking-option-private =
     .label = Csak privát ablakokban
     .accesskey = p
 content-blocking-tracking-protection-change-block-list = Blokkolási lista módosítása
-content-blocking-third-party-cookies-label =
-    .label = Harmadik féltől származó sütik
-    .accesskey = s
-content-blocking-reject-trackers-description = Összes harmadik féltől származó süti, vagy csak a követők által beállítottak blokkolása.
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = A Sütik és oldaladatok beállításai megakadályozzák, hogy módosítsa a Harmadik féltől származó sütik beállításait.
-content-blocking-change-cookie-settings =
-    .label = Sütibeállítások módosítása
-    .accesskey = S
-content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = Követők (ajánlott)
-    .accesskey = K
-content-blocking-reject-trackers-block-trackers-option =
-    .label = Követők
-    .accesskey = K
-content-blocking-reject-trackers-all-third-parties-option =
-    .label = Összes harmadik féltől származó süti (egyes weboldalak eltörhetnek)
-    .accesskey = e
 content-blocking-cookies-label =
     .label = Sütik
     .accesskey = S
+content-blocking-expand-section =
+    .tooltiptext = További információk
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+    .label = Kriptobányászok
+    .accesskey = i
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+    .label = Ujjlenyomat-készítők
+    .accesskey = U
 
 ## Privacy Section - Tracking
 
-tracking-header = Követés elleni védelem
-tracking-desc = A követés elleni védelem blokkolja az online nyomkövetőket, melyek a webhelyek közti böngészési adatait gyűjtik. <a data-l10n-name="learn-more">Tudjon meg többet a követés elleni védelemről és az adatvédelemről</a>
-tracking-mode-label = Követés elleni védelem használata az ismert követők blokkolására
-tracking-mode-always =
-    .label = Mindig
-    .accesskey = d
-tracking-mode-private =
-    .label = Csak privát ablakokban
-    .accesskey = C
-tracking-mode-never =
-    .label = Soha
-    .accesskey = o
-tracking-exceptions =
-    .label = Kivételek…
-    .accesskey = K
-tracking-change-block-list =
-    .label = Blokkolási lista módosítása…
-    .accesskey = m
 tracking-manage-exceptions =
     .label = Kivételek kezelése…
     .accesskey = K
@@ -820,20 +815,16 @@ permissions-notification-link = További tudnivalók
 permissions-notification-pause =
     .label = Értesítések kikapcsolása a { -brand-short-name } újraindulásáig
     .accesskey = e
-permissions-block-autoplay-media =
-    .label = Webhelyek blokkolása, hogy automatikusan ne játszhassanak le médiát hanggal.
+permissions-block-autoplay-media2 =
+    .label = A weboldalak automatikus hanglejátszásának blokkolása
     .accesskey = b
-permissions-block-autoplay-media-menu = Automatikus hanglejátszás a weboldalakon
 permissions-block-autoplay-media-exceptions =
     .label = Kivételek…
     .accesskey = K
-autoplay-option-ask =
-    .label = Rákérdezés mindig
-autoplay-option-allow =
-    .label = Automatikus lejátszás engedélyezése
-autoplay-option-dont =
-    .label = Automatikus lejátszás letiltása
-permissions-autoplay-link = További tudnivalók
+permissions-autoplay = Automatikus lejátszás
+permissions-autoplay-settings =
+    .label = Beállítások…
+    .accesskey = B
 permissions-block-popups =
     .label = Felugró ablakok tiltása
     .accesskey = F
@@ -861,7 +852,7 @@ collection-health-report =
     .accesskey = E
 collection-health-report-link = További tudnivalók
 collection-studies =
-    .label = Engedélyezés, hogy a { -brand-short-name } tanulmányokat telepítsen és futasson
+    .label = Engedélyezés, hogy a { -brand-short-name } tanulmányokat telepítsen és futtasson
 collection-studies-link = { -brand-short-name } tanulmányok megtekintése
 addon-recommendations =
     .label = Engedélyezés, hogy a { -brand-short-name } személyre szabott kiegészítő ajánlásokat tegyen
@@ -869,10 +860,6 @@ addon-recommendations-link = További tudnivalók
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = Az adatjelentést letiltották ehhez a binárishoz
-collection-browser-errors =
-    .label = Engedélyezi a { -brand-short-name } számára, hogy böngésző hibajelentéseket (köztük hibaüzeneteket) küldjön a { -vendor-short-name } számára
-    .accesskey = b
-collection-browser-errors-link = További tudnivalók
 collection-backlogged-crash-reports =
     .label = A { -brand-short-name } a háttérben küldhet összeomlási jelentéseket az Ön nevében
     .accesskey = j

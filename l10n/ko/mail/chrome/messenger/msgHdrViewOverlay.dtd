@@ -95,6 +95,11 @@
 
 <!ENTITY openAttachment.tooltip "첨부 파일 열기">
 
+<!ENTITY detachedAttachmentFolder.show.label        "저장 폴더 열기">
+<!ENTITY detachedAttachmentFolder.show.accesskey    "F">
+<!ENTITY detachedAttachmentFolder.showMac.label     "Finder에서 보기">
+<!ENTITY detachedAttachmentFolder.showMac.accesskey "F">
+
 <!-- Attachment toolbar items -->
 <!ENTITY saveAttachmentButton1.label       "저장">
 <!ENTITY saveAttachmentButton1.tooltip     "첨부 파일을 저장합니다">

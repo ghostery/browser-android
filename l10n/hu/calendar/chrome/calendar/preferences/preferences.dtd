@@ -6,3 +6,6 @@
 <!ENTITY  paneAlarms.title        "Emlékeztetők">
 <!ENTITY  paneCategories.title    "Kategóriák">
 <!ENTITY  paneViews.title         "Nézetek">
+<!ENTITY  panelHeader.title       "Naptár">
+<!ENTITY  panelReminder.title     "Emlékeztetők">
+<!ENTITY  panelCatecory.title     "Kategóriák">

@@ -10,7 +10,7 @@
      only used in Preferences > Views > Workweek groupbox -->
 <!ENTITY day.1.Ddd "Вс" >
 <!ENTITY day.1.Ddd.accesskey "В">
-<!ENTITY day.2.Ddd "Пн">
+<!ENTITY day.2.Ddd "Пн" >
 <!ENTITY day.2.Ddd.accesskey "н">
 <!ENTITY day.3.Ddd "Вт" >
 <!ENTITY day.3.Ddd.accesskey "т">
@@ -45,8 +45,10 @@
 <!ENTITY month.12.name "Декабря" >
 
 <!ENTITY onemonthbackward.tooltip "Один месяц назад" >
-<!ENTITY onemonthforward.tooltip "Один месяц вперед" >
-<!ENTITY showToday.tooltip "Перейти на сегодня" >
-<!ENTITY onedayforward.tooltip "Один день вперед" >
-<!ENTITY onedaybackward.tooltip "Один день назад" >
-<!ENTITY showselectedday.tooltip "Показать события на выбранный день" >
+<!ENTITY onemonthforward.tooltip "Один месяц вперёд" >
+<!ENTITY oneyearbackward.tooltip "Один год назад" >
+<!ENTITY oneyearforward.tooltip "Один год вперёд" >
+<!ENTITY showToday.tooltip "Перейти на сегодня">
+<!ENTITY onedayforward.tooltip "Один день вперёд">
+<!ENTITY onedaybackward.tooltip "Один день назад">
+<!ENTITY showselectedday.tooltip "Показать события на выбранный день">

@@ -72,13 +72,13 @@
 <!ENTITY compactFolders.accesskey "o">
 <!ENTITY emptyTrashCmd.label "Esvaziar lixeira">
 <!ENTITY emptyTrashCmd.accesskey "x">
-<!ENTITY offlineMenu.label "Off-line">
-<!ENTITY offlineMenu.accesskey "l">
-<!ENTITY offlineGoOfflineCmd.label "Modo off-line">
-<!ENTITY offlineGoOfflineCmd.accesskey "M">
+<!ENTITY offlineMenu.label "Desconectar">
+<!ENTITY offlineMenu.accesskey "c">
+<!ENTITY offlineGoOfflineCmd.label "Trabalhar desconectado">
+<!ENTITY offlineGoOfflineCmd.accesskey "t">
 <!ENTITY synchronizeOfflineCmd.label "Receber/sincronizar agora…">
 <!ENTITY synchronizeOfflineCmd.accesskey "b">
-<!ENTITY settingsOfflineCmd2.label "Configurar modo off-line">
+<!ENTITY settingsOfflineCmd2.label "Configurações do modo desconectado">
 <!ENTITY settingsOfflineCmd2.accesskey "e">
 <!ENTITY downloadSelectedCmd.label "Receber mensagens selecionadas">
 <!ENTITY downloadSelectedCmd.accesskey "R">
@@ -134,9 +134,9 @@
 <!ENTITY redoDefaultCmd.accesskey "R">
 
 <!-- View Menu -->
-<!ENTITY menubarCmd.label "Barra de menus">
+<!ENTITY menubarCmd.label "Barra de menu">
 <!ENTITY menubarCmd.accesskey "m">
-<!ENTITY showMessengerToolbarCmd.label "Barra de ferramentas de correio">
+<!ENTITY showMessengerToolbarCmd.label "Barra de ferramentas de e-mai">
 <!ENTITY showMessengerToolbarCmd.accesskey "a">
 <!ENTITY customizeToolbar.label "Personalizar…">
 <!ENTITY customizeToolbar.accesskey "P">
@@ -172,7 +172,6 @@
 <!ENTITY compactVersion.accesskey "c">
 <!ENTITY folderPaneBar.label "Barra de Ferramentas do Painel de Pastas">
 <!ENTITY folderPaneBar.accesskey "F">
-<!ENTITY folderModeSelector.label "Visualização de pastas">
 
 <!-- Sort Menu -->
 <!ENTITY sortMenu.label "Ordenar por">
@@ -467,9 +466,9 @@
 <!ENTITY addressBookCmd.key "b">
 <!ENTITY addons.label "Extensões">
 <!ENTITY addons.accesskey "C">
-<!ENTITY addonPrefs.label "Opções da extensão">
+<!ENTITY addonPrefs.label "Opções de extensões">
 <!ENTITY addonPrefs.accesskey "O">
-<!ENTITY addonPrefsUnix.label "Preferências da extensão">
+<!ENTITY addonPrefsUnix.label "Preferências de extensões">
 <!ENTITY addonPrefsUnix.accesskey "P">
 <!ENTITY addonNoPrefs.label "Nenhuma extensão configurada.">
 <!ENTITY activitymanager.label "Gerenciador de atividade">
@@ -478,7 +477,7 @@
 <!ENTITY imAccountsStatus.accesskey "b">
 <!ENTITY imStatus.available          "Disponível">
 <!ENTITY imStatus.unavailable        "Ocupado">
-<!ENTITY imStatus.offline            "Off-line">
+<!ENTITY imStatus.offline            "Desconectado">
 <!ENTITY imStatus.showAccounts       "Mostrar contas…">
 <!ENTITY joinChatCmd.label "Entrar em uma sala de bate-papo…">
 <!ENTITY joinChatCmd.accesskey "E">
@@ -568,7 +567,7 @@
 <!ENTITY searchItem.title "Campo de pesquisa">
 <!ENTITY mailViewsToolbarItem.title "Modos de visualização">
 <!ENTITY folderLocationToolbarItem.title "Endereço da pasta">
-<!ENTITY tagButton.label "Tags">
+<!ENTITY tagButton.label "Etiquetas">
 <!ENTITY compactButton.label "Condensar">
 <!ENTITY appmenuButton.label "AppMenu">
 
@@ -587,6 +586,7 @@
 <!ENTITY fileButton.tooltip "Mover mensagem selecionada para outra pasta">
 <!ENTITY archiveButton.tooltip "Arquivar mensagens selecionadas">
 <!ENTITY openConversationButton.tooltip "Mostrar a conversa das mensagens selecionadas">
+<!ENTITY openMsgConversationButton.tooltip "Mostrar conversa da mensagem selecionada">
 <!ENTITY nextButton.tooltip "Mover para próxima mensagem não lida">
 <!ENTITY nextMsgButton.tooltip "Mover para próxima mensagem">
 <!ENTITY previousButton.tooltip "Mover para mensagem anterior não lida">
@@ -604,7 +604,8 @@
 <!ENTITY chatButton.tooltip "Mostrar a aba de bate-papo">
 <!ENTITY tagButton.tooltip "Aplicar etiquetas em mensagens">
 <!ENTITY compactButton.tooltip "Remover as mensagens excluídas da pasta selecionada">
-<!ENTITY appmenuButton1.tooltip "Exibir o menu &brandShortName;">
+<!ENTITY appmenuButton1.tooltip "Exibir o menu do &brandShortName;">
+<!ENTITY addonsButton.tooltip "Gerenciar suas extensões">
 
 <!-- Toolbar Button Popup -->
 <!ENTITY buttonMenuForwardAsInline.label "Reencaminhar como texto">
@@ -705,6 +706,7 @@
 <!ENTITY saveAsVirtualFolderMenu.label "Salvar como pasta…">
 
 <!-- Thread Pane -->
+<!ENTITY selectColumn.label "Selecionar mensagens">
 <!ENTITY threadColumn.label "Tópico">
 <!ENTITY fromColumn.label "De">
 <!ENTITY recipientColumn.label "Destinatário">
@@ -728,6 +730,7 @@
 
 <!-- Thread Pane Tooltips -->
 <!ENTITY columnChooser2.tooltip "Selecionar colunas a serem exibidas">
+<!ENTITY selectColumn.tooltip "Alternar seleção de todas as mensagens">
 <!ENTITY threadColumn2.tooltip "Exibir tópicos de mensagens">
 <!ENTITY fromColumn2.tooltip "Ordenar por remetente">
 <!ENTITY recipientColumn2.tooltip "Ordenar por destinatário">
@@ -757,7 +760,7 @@
      cutCmd.accessKey which is defined in textcontext.dtd from toolkit. Right
      now, both menu items can't be visible at the same time, but should someone
      enable copy/paste of message, this key would probably need to be changed. -->
-<!ENTITY contextOpenNewTab.label "Abrir em nova aba">
+<!ENTITY contextOpenNewTab.label "Abrir mensagem em nova aba">
 <!ENTITY contextOpenNewTab.accesskey "b">
 <!ENTITY contextOpenConversation.label "Abrir mensagem como conversa">
 <!ENTITY contextOpenConversation.accesskey "r">
@@ -813,12 +816,6 @@
 <!ENTITY contextPrintPreview.label "Visualizar impressão">
 <!ENTITY contextPrintPreview.accesskey "V">
 
-<!-- Thread Pane Column Picker -->
-<!-- LOCALIZATION NOTE (columnPicker.resetToInbox.label):
-     This option in the thread pane column picker causes us to reset the
-     customizations for the thread pane columns in this folder to their default.
-  -->
-<!ENTITY columnPicker.resetToInbox.label "Restaurar colunas padrão">
 <!-- LOCALIZATION NOTE (columnPicker.applyTo.label):
      This option in the thread pane column picker pops up a sub-menu containing
      the "columnPicker.applyToFolder.label" and
@@ -845,7 +842,7 @@
      of its descendents. The user selects the folder using the same widget as the
      move to/copy to mechanism (via a series of popups).
   -->
-<!ENTITY columnPicker.applyToFolderAndChildren.label "Pasta e subpastas">
+<!ENTITY columnPicker.applyToFolderAndChildren.label "Pasta e subpastas…">
 <!-- LOCALIZATION NOTE (columnPicker.thisFolder.label):
      This is used in the folder selection widget for the
      "columnPicker.applyToFolder.label" and
@@ -859,16 +856,15 @@
   -->
 <!ENTITY columnPicker.thisFolder.label "Esta pasta">
 
-
 <!-- Media (video/audio) controls -->
 <!ENTITY contextPlay.label "Executar">
 <!ENTITY contextPlay.accesskey "x">
 <!ENTITY contextPause.label "Pausa">
 <!ENTITY contextPause.accesskey "P">
-<!ENTITY contextMute.label "Desativar som">
-<!ENTITY contextMute.accesskey "a">
+<!ENTITY contextMute.label "Silenciar">
+<!ENTITY contextMute.accesskey "S">
 <!ENTITY contextUnmute.label "Ativar som">
-<!ENTITY contextUnmute.accesskey "A">
+<!ENTITY contextUnmute.accesskey "s">
 
 <!-- Quick Search Bar -->
 <!-- LOCALIZATION NOTE (quickSearchCmd.key):

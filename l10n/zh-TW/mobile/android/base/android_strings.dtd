@@ -4,10 +4,13 @@
 
 <!ENTITY firstrun_panel_title_welcome "歡迎">
 <!ENTITY firstrun_urlbar_message2 "感謝選用 &brandShortName;">
+<!ENTITY newfirstrun_urlbar_message "歡迎使用 &brandShortName;">
 <!ENTITY firstrun_urlbar_subtext2 "來自 Mozilla 的現代行動瀏覽器。Mozilla 是一個致力於自由與開放 Web 的非營利組織。">
+<!ENTITY newfirstrun_urlbar_subtext "快速上網，確保隱私，永遠挺你。">
 <!ENTITY firstrun_panel_title_privacy "隱私權">
 <!ENTITY firstrun_privacy_message "隱私瀏覽不留痕跡">
 <!ENTITY firstrun_privacy_subtext "打開隱私分頁，不僅可阻擋追蹤廣告，也不會留下瀏覽紀錄，上網好安心。">
+<!ENTITY newfirstrun_privacy_subtext "隱私瀏覽模式，可封鎖會在網路上偷偷跟蹤您的廣告追蹤器。">
 <!ENTITY firstrun_panel_title_customize "自訂">
 <!ENTITY firstrun_customize_message "讓 &brandShortName; 有您的風格。">
 <!ENTITY firstrun_customize_subtext "使用附加元件自訂 &brandShortName;。您可封鎖廣告、新增功能，或選擇一套新的佈景主題來展現您的個性。">
@@ -18,10 +21,15 @@
 <!ENTITY firstrun_data_message "網路用得更少，幫您省得更多">
 <!ENTITY firstrun_data_subtext2 "關閉圖片載入，開啟網站時花費更少流量。">
 <!ENTITY firstrun_sync_title "Sync">
+<!ENTITY updatednewfirstrun_sync_title "帳號">
 <!ENTITY firstrun_sync_message2 "從結束的地方繼續。">
 <!ENTITY firstrun_sync_subtext2 "使用 Sync 來尋找您在任何裝置中，儲存到 &brandShortName; 的書籤、密碼，還有更多東西。">
+<!ENTITY newfirstrun_sync_subtext "將您在行動裝置存下的東西私密而安全地同步到 Firefox 桌面版。">
+<!ENTITY updatednewfirstrun_sync_subtext "請登入您的帳號，發揮 &brandShortName; 的最大威力">
 <!ENTITY firstrun_signin_message "開始連線使用">
 <!ENTITY firstrun_signin_button "登入至 Sync">
+<!ENTITY newfirstrun_signin_button "開啟同步">
+<!ENTITY updatednewfirstrun_signin_button "登入 &brandShortName;">
 <!ENTITY  onboard_start_button_browser "開始瀏覽">
 <!ENTITY firstrun_button_notnow "現在不要">
 <!ENTITY firstrun_button_next "下一步">
@@ -61,8 +69,19 @@
 <!ENTITY  sending_crash_report "正在傳送錯誤報告\u2026">
 <!ENTITY  crash_close_label "關閉">
 <!ENTITY  crash_restart_label "重開 &brandShortName;">
+<!-- Localization note (crash_notification_title, crash_notification_message, crash_notification_negative_button_text)
+     Text displayed in a system notification to allow starting the Crash Reporter (Android Q and later).-->
+<!ENTITY  crash_notification_title "&brandShortName; 發生錯誤">
+<!ENTITY  crash_notification_message "點擊此處回報給 &vendorShortName;">
+<!ENTITY  crash_notification_negative_button_text "忽略">
 
 <!ENTITY url_bar_default_text2 "搜尋或輸入網址">
+
+<!-- Localization note: this text will be displayed in the Search Widget -->
+<!ENTITY search_widget_default_text "搜尋 Web">
+<!ENTITY search_widget_default_cropped_text "搜尋">
+<!ENTITY search_widget_logo_description "使用 &brandShortName; 搜尋 Web">
+
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -97,6 +116,9 @@
 <!ENTITY bookmark_folder_updated "已更新資料夾">
 <!ENTITY bookmark_parent_folder "上層資料夾">
 <!ENTITY bookmark_add_folder "新增資料夾">
+<!-- Localization note (bookmark_default_folder_title): Default title is used if user doesn't specify
+     one when he is creating a bookmark folder -->
+<!ENTITY bookmark_default_folder_title "（無標題）">
 
 <!ENTITY reader_saved_offline "已儲存離線閱讀">
 <!-- Localization note (reader_switch_to_bookmarks) : This
@@ -256,6 +278,7 @@
 <!ENTITY pref_cookies_menu "Cookie">
 <!ENTITY pref_cookies_accept_all "啟用">
 <!ENTITY pref_cookies_not_accept_foreign "啟用，第三方 Cookie 除外">
+<!ENTITY pref_cookies_not_accept_trackers "啟用，追蹤 Cookie 除外">
 <!ENTITY pref_cookies_disabled "停用">
 
 <!-- Localization note (pref_category_data_saver): “data saver” in this
@@ -290,11 +313,6 @@
 <!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "了解 &brandShortName; 與其他 &vendorShortName; 產品的更多資訊">
-<!-- Localization note (pref_feature_tips_notification_enabling_hint):
-     Describe the action the user should do to enable this preference
-     Will be used in the context "<Turn on> ... to enable this feature" -->
-<!ENTITY pref_feature_tips_notification_enabling_hint "打開">
-
 <!-- Localization note (pref_feature_tips_notification_enabling_path):
      Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
 <!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
@@ -322,11 +340,6 @@
 <!ENTITY pref_pwa "Progressive Web Apps">
 <!ENTITY pref_pwa_summary "允許將 Web App 新增至裝置主畫面">
 
-<!ENTITY tracking_protection_prompt_title "現在開始提供追蹤保護功能">
-<!ENTITY tracking_protection_prompt_text "主動封鎖網頁中的追蹤元素，這樣您就不用再擔心了。">
-<!ENTITY tracking_protection_prompt_tip_text "前往隱私設定了解更多資訊">
-<!ENTITY tracking_protection_prompt_action_button "知道了！">
-
 <!ENTITY tab_queue_toast_message3 "已將分頁儲存於 &brandShortName;">
 <!ENTITY tab_queue_toast_action "立刻開啟">
 <!ENTITY tab_queue_prompt_title "開啟多個鏈結？">
@@ -340,6 +353,9 @@
 <!-- Localization note (tab_queue_prompt_settings_button): This button is shown if the user needs to
      enable a permission in Android's setting in order to enable tab queues. -->
 <!ENTITY tab_queue_prompt_settings_button "開啟設定">
+<!-- Localization note (tab_queue_notification_prompt): This is the text of the default notification
+shown from Android O while a tab is being queued.-->
+<!ENTITY tab_queue_notification_prompt "已新增分頁至佇列&#8230;">
 <!ENTITY tab_queue_notification_title "&brandShortName;">
 <!-- Localization note (tab_queue_notification_text_plural2) : The
      formatD is replaced with the number of tabs queued.  The
@@ -398,15 +414,17 @@
 <!ENTITY pref_private_data_searchHistory "搜尋紀錄">
 <!ENTITY pref_private_data_formdata2 "表單填寫紀錄">
 <!ENTITY pref_private_data_cookies2 "Cookie 與目前的網站登入狀態">
-<!ENTITY pref_private_data_passwords2 "儲存的登入資訊">
 <!ENTITY pref_private_data_cache "快取">
 <!ENTITY pref_private_data_offlineApps "網站離線資料">
 <!ENTITY pref_private_data_siteSettings2 "網站設定">
 <!ENTITY pref_private_data_downloadFiles2 "下載項目">
 <!ENTITY pref_private_data_syncedTabs "同步的分頁">
 
-<!ENTITY pref_default_browser "設為預設瀏覽器">
-<!ENTITY pref_default_browser_mozilla_support_tablet "前往 Mozilla 技術支援站">
+<!ENTITY pref_default_browser2 "將 &brandShortName; 設為您的預設瀏覽器">
+<!-- LOCALIZATION NOTE (default_browser_system_settings_toast):
+    Message of an Android Toast that appears after our app opens "Android System Settings -> Apps -> Default apps"
+    and instruct users to tap on the "Browser app" option on that settings screen to choose a default browser app. -->
+<!ENTITY default_browser_system_settings_toast "點擊「瀏覽器應用程式」並選擇 &brandShortName;">
 <!ENTITY pref_about_firefox "關於 &brandShortName;">
 <!ENTITY pref_vendor_faqs "常見問題">
 <!ENTITY pref_vendor_feedback "提供意見回饋">
@@ -501,6 +519,10 @@
 <!ENTITY find_next "下一個">
 <!ENTITY find_close "關閉">
 
+<!-- Localization note (find_error) : Error message shown when there is no result for the
+     searched for text in this webpage -->
+<!ENTITY find_error "找不到指定文字">
+
 <!-- Localization note (media_sending_to, media_play, media_pause, media_stop) : These strings are used
      as alternate text for accessibility. They are not visible in the UI. -->
 <!ENTITY media_sending_to "正在傳送至裝置">
@@ -573,6 +595,8 @@
 <!ENTITY bookmark_edit_location "網址">
 <!ENTITY bookmark_edit_keyword "關鍵字">
 <!ENTITY bookmark_select_folder "選擇資料夾">
+
+<!ENTITY bookmark_edit_undo "復原">
 
 <!-- Localization note (site_settings_*) : These strings are used in the "Site Settings"
      dialog that appears after selecting the "Edit Site Settings" context menu item. -->
@@ -661,6 +685,7 @@
 <!ENTITY filepicker_audio_title "選擇或錄製一段聲音檔">
 <!ENTITY filepicker_image_title "選擇或拍攝一張照片">
 <!ENTITY filepicker_video_title "選擇或錄製一段影片">
+<!ENTITY filepicker_permission_denied "未取得必需權限，改用系統檔案選擇器。">
 
 <!-- Site identity popup -->
 <!ENTITY identity_connected_to "您已連線到">
@@ -900,16 +925,11 @@ Picture-in-picture mini window -->
 <!ENTITY pip_pause_button_title "暫停">
 <!ENTITY pip_pause_button_description "暫停播放">
 
-<!-- Notification channels names -->
-<!ENTITY default_notification_channel "&brandShortName;">
-
+<!ENTITY pref_notification_settings_link "管理通知設定">
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel2 "網頁瀏覽器">
 <!ENTITY mls_notification_channel "&vendorShortName; Location Service">
 <!ENTITY download_notification_channel "下載項目">
-<!ENTITY media_notification_channel "媒體播放">
-<!-- These push notifications come without a specific channel and/or name from Leanplum -->
-<!ENTITY leanplum_default_notifications_channel "&brandShortName; 推送通知">
 <!ENTITY media_notification_channel2 "聲音與影片">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel2 "&vendorShortName; 使用秘訣">
@@ -918,3 +938,4 @@ Picture-in-picture mini window -->
 <!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
 web sites through the HTML Notifications API. -->
 <!ENTITY site_notifications_channel "網站通知">
+<!ENTITY crash_handler_notifications_channel "&brandShortName; 錯誤回報員">

@@ -22,18 +22,9 @@
 <!ENTITY alwaysAsk.label                "Mij altijd vragen waar bestanden moeten worden opgeslagen">
 <!ENTITY alwaysAsk.accesskey            "v">
 
-<!ENTITY downloadHistory.label          "Downloadgeschiedenis">
-<!ENTITY removeEntries.label            "Downloadvermeldingen verwijderen">
-<!ENTITY removeEntries.accesskey        "v">
-<!ENTITY whenCompleted.label            "Als ze zijn voltooid">
-<!ENTITY whenQuittingApp.label          "Bij het afsluiten van &brandShortName;">
-<!ENTITY neverRemove.label              "Nooit">
-
 <!ENTITY finishedBehavior.label         "Wanneer het downloaden van een bestand is voltooid">
 <!ENTITY playSound.label                "Een geluid afspelen">
 <!ENTITY playSound.accesskey            "u">
-<!ENTITY showAlert.label                "Een waarschuwing tonen">
-<!ENTITY showAlert.accesskey            "w">
 <!ENTITY browse.label                   "Bladeren…">
 <!ENTITY browse.accesskey               "B">
 <!ENTITY playButton.label               "Afspelen">

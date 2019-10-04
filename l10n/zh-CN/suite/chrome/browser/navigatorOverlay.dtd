@@ -98,7 +98,7 @@
 <!ENTITY cookieDisplayCookiesCmd.accesskey "M">
 <!ENTITY cookieAllowCookiesCmd.label "允许来自此站点的 Cookie">
 <!ENTITY cookieAllowCookiesCmd.accesskey "A">
-<!ENTITY cookieAllowCookiesMsg.label "总是允许来自此站点的 Cookie。">
+<!ENTITY cookieAllowCookiesMsg.label "一律允许来自此站点的 Cookie。">
 <!ENTITY cookieAllowSessionCookiesCmd.label "允许来自此站点会话中的 Cookie">
 <!ENTITY cookieAllowSessionCookiesCmd.accesskey "S">
 <!ENTITY cookieAllowSessionCookiesMsg.label "允许此站点设置 Cookie（仅当前会话）。">
@@ -107,14 +107,14 @@
 <!ENTITY cookieCookiesDefaultMsg.label "来自此站点的 Cookie 将依据默认设置接受或阻止。">
 <!ENTITY cookieBlockCookiesCmd.label "阻止来自此站点的 Cookie">
 <!ENTITY cookieBlockCookiesCmd.accesskey "B">
-<!ENTITY cookieBlockCookiesMsg.label "总是阻止来自此站点的 Cookie。">
+<!ENTITY cookieBlockCookiesMsg.label "一律阻止来自此站点的 Cookie。">
 
 <!ENTITY cookieImageMessageTitle.label "图像权限已变更">
 <!ENTITY cookieDisplayImagesCmd.label "管理图像权限">
 <!ENTITY cookieDisplayImagesCmd.accesskey "M">
 <!ENTITY cookieAllowImagesCmd.label "允许来自此网站的图片">
 <!ENTITY cookieAllowImagesCmd.accesskey "A">
-<!ENTITY cookieAllowImagesMsg.label "总是允许来自此网站的图像。">
+<!ENTITY cookieAllowImagesMsg.label "一律允许来自此网站的图像。">
 <!ENTITY cookieImagesDefaultCmd.label "使用默认的图像权限">
 <!ENTITY cookieImagesDefaultCmd.accesskey "U">
 <!ENTITY cookieImagesDefaultMsg.label "来此此网站的图像将基于默认设置被下载。">

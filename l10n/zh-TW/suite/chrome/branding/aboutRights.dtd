@@ -16,7 +16,7 @@
 
      Also note the leading/trailing whitespace in strings here, which is
      deliberate for formatting around the embedded links. -->
-<!ENTITY rights.intro-point1a "&brandShortName; 是基於 ">
+<!ENTITY rights.intro-point1a "&brandShortName; 是依照 ">
 <!ENTITY rights.intro-point1b "Mozilla 公眾授權條款">
 <!ENTITY rights.intro-point1c " 中的條件所提供給您的。這表示您可以使用、複製，或散布 &brandShortName; 給其他人。歡迎您自行修改 &brandShortName; 的原始碼以滿足您的需求；Mozilla 公眾授權條款也同時賦予您散佈修改版本的權利。">
 

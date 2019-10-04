@@ -34,20 +34,25 @@ permissions-button-cancel =
 permissions-button-ok =
     .label = 保存更改
     .accesskey = S
+permissions-autoplay-menu = 所有网站的默认值：
 permissions-searchbox =
     .placeholder = 搜索网站
+permissions-capabilities-autoplay-allow =
+    .label = 允许音频和视频
+permissions-capabilities-autoplay-block =
+    .label = 阻止音频
+permissions-capabilities-autoplay-blockall =
+    .label = 阻止音频和视频
 permissions-capabilities-allow =
     .label = 允许
 permissions-capabilities-block =
     .label = 阻止
 permissions-capabilities-prompt =
-    .label = 总是询问
+    .label = 每次都问我
 permissions-capabilities-listitem-allow =
     .value = 允许
 permissions-capabilities-listitem-block =
     .value = 阻止
-permissions-capabilities-listitem-allow-first-party =
-    .value = 只允许第一方
 permissions-capabilities-listitem-allow-session =
     .value = 在这次浏览期间允许
 
@@ -62,13 +67,17 @@ permissions-exceptions-content-blocking-window =
     .title = 例外 - 内容拦截
     .style = { permissions-window.style }
 permissions-exceptions-content-blocking-desc = 您在这些网站上已禁用内容拦截。
+permissions-exceptions-etp-window =
+    .title = 例外 - 增强型跟踪保护
+    .style = { permissions-window.style }
+permissions-exceptions-etp-desc = 你已关闭对下列网站的保护。
 
 ## Exceptions - Cookies
 
 permissions-exceptions-cookie-window =
     .title = 例外 - Cookie 和网站数据
     .style = { permissions-window.style }
-permissions-exceptions-cookie-desc = 您可以指定始终允许或不允许哪些网站使用 Cookie 和网站数据。请输入所要指定的完整网址，选择“阻止”、“在这次浏览期间允许”或“允许”。
+permissions-exceptions-cookie-desc = 您可以指定一律允许或不允许哪些网站使用 Cookie 和网站数据。请输入所要指定的完整网址，然后点击“阻止”、“在这次浏览期间允许”或“允许”。
 
 ## Exceptions - Pop-ups
 
@@ -96,7 +105,14 @@ permissions-exceptions-addons-desc = 您可以指定哪些网站可以安装附�
 permissions-exceptions-autoplay-media-window2 =
     .title = 例外 - 自动播放
     .style = { permissions-window.style }
-permissions-exceptions-autoplay-media-desc2 = 您可以指定允许与不允许哪些网站自动播放有声媒体内容。输入网站地址，然后单击“阻止”或者“允许”。
+permissions-exceptions-autoplay-media-desc2 = 您可以指定一律允许或不允许哪些网站自动播放有声媒体内容。请输入所要指定的完整网址，然后点击“阻止”或者“允许”。
+
+## Site Permissions - Autoplay
+
+permissions-site-autoplay-window =
+    .title = 设置 - 自动播放
+    .style = { permissions-window.style }
+permissions-site-autoplay-desc = 您可以在此处管理不遵从默认自动播放设置的网站。
 
 ## Site Permissions - Notifications
 

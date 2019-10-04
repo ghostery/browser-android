@@ -14,6 +14,10 @@
      accessibility software to clarify what the slider is for. -->
 <!ENTITY volumeScrubber.label "Регулятор громкости">
 
+<!-- LOCALIZATION NOTE (pictureInPicture.label): This string is used as part of
+the Picture-in-Picture video toggle button when the mouse is hovering it. -->
+<!ENTITY pictureInPicture.label "Картинка в картинке">
+
 <!ENTITY stats.media "Медиа">
 <!ENTITY stats.size "Разрешение">
 <!ENTITY stats.activity "Состояние">
@@ -33,6 +37,8 @@
 <!ENTITY error.srcNotSupported "Формат видео или MIME-тип не поддерживается.">
 <!ENTITY error.noSource2 "Видео в поддерживаемом формате и MIME-типе не найдено.">
 <!ENTITY error.generic "Воспроизведение видео прервано из-за неизвестной ошибки.">
+
+<!ENTITY status.pictureInPicture "Это видео воспроизводится в режиме «Картинка в картинке».">
 
 <!-- LOCALIZATION NOTE (scrubberScale.nameFormat): the #1 string is the current
 media position, and the #2 string is the total duration. For example, when at

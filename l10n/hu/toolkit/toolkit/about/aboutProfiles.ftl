@@ -8,6 +8,11 @@ profiles-create = Új profil létrehozása
 profiles-restart-title = Újraindítás
 profiles-restart-in-safe-mode = Újraindítás letiltott kiegészítőkkel…
 profiles-restart-normal = Normál újraindítás…
+profiles-conflict = A { -brand-product-name } másik példánya módosította a profilokat. A további változtatások előtt újra kell indítania a { -brand-short-name }ot.
+profiles-flush-fail-title = A módosítások nincsenek mentve
+profiles-flush-conflict = { profiles-conflict }
+profiles-flush-failed = Egy váratlan hiba megakadályozta a módosítások mentését.
+profiles-flush-restart-button = A { -brand-short-name } újraindítása
 # Variables:
 #   $name (String) - Name of the profile
 profiles-name = Profil: { $name }
@@ -26,6 +31,8 @@ profiles-rename = Átnevezés
 profiles-remove = Eltávolítás
 profiles-set-as-default = Alapértelmezett profil beállítása
 profiles-launch-profile = Profilozás indítása új böngészőben
+profiles-cannot-set-as-default-title = Az alapértelmezett nem állítható be
+profiles-cannot-set-as-default-message = Az alapértelmezett profil nem módosítható a { -brand-short-name }nál.
 profiles-yes = igen
 profiles-no = nem
 profiles-rename-profile-title = Profil átnevezése

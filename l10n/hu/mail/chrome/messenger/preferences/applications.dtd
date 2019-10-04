@@ -34,5 +34,7 @@
 <!ENTITY authRequired.button.label        "Engedélyezés">
 <!ENTITY authRequired.button.accesskey    "E">
 
+<!ENTITY findCloudFileProviders.label     "További szolgáltatók keresése…">
+
 <!ENTITY enableCloudFileAccountOffer.label "Fájlmegosztás ajánlása, ha a fájl nagyobb, mint">
 <!ENTITY enableCloudFileAccountOffer.mb "MB">

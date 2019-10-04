@@ -27,6 +27,14 @@ serviceworker-worker-debug = 调试
 # Text for the start link displayed for a registered but not running Service Worker.
 # Clicking on the link will attempt to start the service worker.
 serviceworker-worker-start = 开始
+# Text for the debug link displayed for an already started Service Worker, when we
+# are in multi e10s mode, which effectively disables this link.
+serviceworker-worker-debug-forbidden = 调试
+    .title = 只能在禁用多进程模式的情况下调试 Service Worker
+# Text for the start link displayed for a registered but not running Service Worker.
+# Clicking on the link will attempt to start the service worker.
+serviceworker-worker-start2 = 启动
+    .title = 只能在禁用多进程模式的情况下启动 Service Worker
 # Text displayed for the updated time of the service worker. The <time> element will
 # display the last update time of the service worker script.
 serviceworker-worker-updated = 更新于 <time>{ DATETIME($date, month: "long", year: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric") }</time>
@@ -61,3 +69,11 @@ serviceworker-empty-suggestions-debugger = 逐步注册您的 Service Worker，�
 # Suggestion to go to about:debugging in order to see Service Workers for all domains.
 # Clicking on the link will open about:debugging in a new tab.
 serviceworker-empty-suggestions-aboutdebugging = 查看其他域名的 Service Worker。<a>打开 about:debugging</a>
+# Text displayed while we are loading the manifest file
+manifest-loading = 正在载入清单文件…
+# Text displayed when the manifest has been successfully loaded
+manifest-loaded-ok = 清单文件加载完毕。
+# Text displayed when there has been an error while trying to load the manifest
+manifest-loaded-error = 载入清单文件时发生错误：
+# Text displayed when the page has no manifest available
+manifest-non-existing = 未发现要查看的清单文件。

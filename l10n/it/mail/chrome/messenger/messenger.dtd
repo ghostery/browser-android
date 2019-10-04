@@ -172,7 +172,6 @@
 <!ENTITY compactVersion.accesskey "V">
 <!ENTITY folderPaneBar.label "Barra degli strumenti del pannello delle cartelle">
 <!ENTITY folderPaneBar.accesskey "B">
-<!ENTITY folderModeSelector.label "Vista cartella">
 
 <!-- Sort Menu -->
 <!ENTITY sortMenu.label "Ordina per">
@@ -440,9 +439,6 @@
 <!ENTITY openMessageWindowCmd.label "Apri messaggio">
 <!ENTITY openMessageWindowCmd.accesskey "A">
 <!ENTITY openMessageWindowCmd.key "o">
-<!ENTITY openConversationCmd.label "Apri nella conversazione">
-<!ENTITY openConversationCmd.accesskey "z">
-<!ENTITY openConversationCmd.key "o">
 <!ENTITY openInConversationCmd.label "Apri nella conversazione">
 <!ENTITY openInConversationCmd.accesskey "s">
 <!ENTITY openInConversationCmd.key "o">
@@ -590,6 +586,7 @@
 <!ENTITY fileButton.tooltip "Sposta il messaggio selezionato">
 <!ENTITY archiveButton.tooltip "Archivia i messaggi selezionati">
 <!ENTITY openConversationButton.tooltip "Visualizza conversazione di questo messaggio">
+<!ENTITY openMsgConversationButton.tooltip "Mostra conversazione di questo messaggio">
 <!ENTITY nextButton.tooltip "Vai al messaggio successivo non letto">
 <!ENTITY nextMsgButton.tooltip "Passa al messaggio successivo">
 <!ENTITY previousButton.tooltip "Vai al precedente messaggio non letto ">
@@ -608,6 +605,7 @@
 <!ENTITY tagButton.tooltip "Applica un'etichetta ai messaggi">
 <!ENTITY compactButton.tooltip "Compatta le cartelle">
 <!ENTITY appmenuButton1.tooltip "Mostra il menu di &brandShortName;">
+<!ENTITY addonsButton.tooltip "Gestisci i tuoi componenti aggiuntivi">
 
 <!-- Toolbar Button Popup -->
 <!ENTITY buttonMenuForwardAsInline.label "Inoltra nel messaggio">
@@ -795,6 +793,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "p">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Recenti">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "r">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Preferiti">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "P">
 <!ENTITY contextCopyMsgMenu.label "Copia in">
 <!ENTITY contextCopyMsgMenu.accesskey "n">
 <!ENTITY contextKillThreadMenu.label "Ignora la discussione">
@@ -814,12 +814,6 @@
 <!ENTITY contextPrintPreview.label "Anteprima di stampa">
 <!ENTITY contextPrintPreview.accesskey "A">
 
-<!-- Thread Pane Column Picker -->
-<!-- LOCALIZATION NOTE (columnPicker.resetToInbox.label):
-     This option in the thread pane column picker causes us to reset the
-     customizations for the thread pane columns in this folder to their default.
-  -->
-<!ENTITY columnPicker.resetToInbox.label "Ripristina le colonne predefinite">
 <!-- LOCALIZATION NOTE (columnPicker.applyTo.label):
      This option in the thread pane column picker pops up a sub-menu containing
      the "columnPicker.applyToFolder.label" and
@@ -859,7 +853,6 @@
      "File here" option for the move to/copy to widget.
   -->
 <!ENTITY columnPicker.thisFolder.label "questa cartella">
-
 
 <!-- Media (video/audio) controls -->
 <!ENTITY contextPlay.label "Riproduci">

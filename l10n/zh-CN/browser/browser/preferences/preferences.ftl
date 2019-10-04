@@ -4,14 +4,10 @@
 
 do-not-track-description = 向网站发出“请勿跟踪”信号，示明您不想被跟踪
 do-not-track-learn-more = 详细了解
-do-not-track-option-default =
-    .label = 仅限使用跟踪保护时
-do-not-track-option-default-content-blocking =
-    .label = 仅当 { -brand-short-name } 设为拦截检测到的跟踪器
 do-not-track-option-default-content-blocking-known =
     .label = 仅当 { -brand-short-name } 设置为拦截已知跟踪器时
 do-not-track-option-always =
-    .label = 始终
+    .label = 一律发送
 pref-page =
     .title =
         { PLATFORM() ->
@@ -33,11 +29,7 @@ search-input-box =
             [windows] 在选项中查找
            *[other] 在首选项中查找
         }
-policies-notice =
-    { PLATFORM() ->
-        [windows] 您的组织已禁用某些选项。
-       *[other] 您的组织已禁用某些首选项。
-    }
+managed-notice = 您的浏览器正由组织管理。
 pane-general-title = 常规
 category-general =
     .tooltiptext = { pane-general-title }
@@ -50,10 +42,9 @@ category-search =
 pane-privacy-title = 隐私与安全
 category-privacy =
     .tooltiptext = { pane-privacy-title }
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Firefox 账户
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 help-button-label = { -brand-short-name } 帮助
 addons-button-label = 扩展和主题
 focus-search =
@@ -94,10 +85,7 @@ extension-controlled-web-notifications = 扩展 <img data-l10n-name="icon"/> { $
 extension-controlled-default-search = 您的默认搜索引擎由扩展 <img data-l10n-name="icon"/> { $name } 设置。
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
-extension-controlled-privacy-containers = 扩展 <img data-l10n-name="icon"/> { $name } 需要启用身份标签页功能才能使用。
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = 跟踪保护功能由扩展 <img data-l10n-name="icon"/> { $name } 控制。
+extension-controlled-privacy-containers = 扩展 <img data-l10n-name="icon"/> { $name } 要求启用身份标签页功能。
 # This string is shown to notify the user that their content blocking "All Detected Trackers"
 # preferences are being controlled by an extension.
 extension-controlled-websites-content-blocking-all-trackers = 扩展 <img data-l10n-name="icon"/> { $name } 正在控制此设置。
@@ -130,10 +118,10 @@ startup-header = 启动
 separate-profile-mode =
     .label = 允许 { -brand-short-name } 和 Firefox 同时运行
 use-firefox-sync = 提示：这将使用单独的配置文件，可使用“{ -sync-brand-short-name }”在两套浏览器间共享数据。
-get-started-not-logged-in = 登录到{ -sync-brand-short-name }…
+get-started-not-logged-in = 登录至{ -sync-brand-short-name }…
 get-started-configured = 打开{ -sync-brand-short-name }服务首选项
 always-check-default =
-    .label = 始终检查 { -brand-short-name } 是否是您的默认浏览器
+    .label = 总是检查 { -brand-short-name } 是否是您的默认浏览器
     .accesskey = w
 is-default = { -brand-short-name } 目前是您的默认浏览器
 is-not-default = { -brand-short-name } 目前不是您的默认浏览器
@@ -152,16 +140,13 @@ ctrl-tab-recently-used-order =
     .label = 按下 Ctrl+Tab 时，依照最近使用顺序循环切换标签页
     .accesskey = T
 open-new-link-as-tabs =
-    .label = 在新标签页中打开链接而不是新窗口
+    .label = 打开链接在新标签页而非新窗口
     .accesskey = w
-warn-on-quit-close-multiple-tabs =
-    .label = 退出浏览器或关闭多个标签页时警告您
-    .accesskey = m
 warn-on-close-multiple-tabs =
     .label = 关闭多个标签页时警告您
     .accesskey = m
 warn-on-open-many-tabs =
-    .label = 打开多个标签页可能致使 { -brand-short-name } 缓慢时警告
+    .label = 打开多个标签页可能拖慢 { -brand-short-name } 前提醒我
     .accesskey = d
 switch-links-to-new-tabs =
     .label = 在新标签页中打开链接时，立即切换过去
@@ -252,7 +237,7 @@ download-choose-folder =
            *[other] o
         }
 download-always-ask-where =
-    .label = 总是询问您保存文件的位置
+    .label = 每次都问您要存到哪
     .accesskey = A
 applications-header = 应用程序
 applications-description = 选择 { -brand-short-name } 如何处理这些文件。
@@ -285,6 +270,7 @@ update-application-check-choose =
 update-application-manual =
     .label = 不检查更新（不推荐）
     .accesskey = N
+update-application-warning-cross-user-setting = 此设置将影响使用这份 { -brand-short-name } 程序的所有 Windows 账户及 { -brand-short-name } 配置文件。
 update-application-use-service =
     .label = 使用一项系统服务以静默安装更新
     .accesskey = b
@@ -295,6 +281,21 @@ update-pref-write-failure-title = 写入失败
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = 无法保存首选项。未能写入文件：{ $path }
+update-setting-write-failure-title = 保存“更新”首选项时出错
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    { -brand-short-name } 遇到错误，未能保存此更改。请注意，设置此更新首选项需要写入下列文件的权限。您或系统管理员可以通过授予用户组对此文件的完全控制权来解决此错误。
+    
+    无法写入文件：{ $path }
+update-in-progress-title = 正在更新
+update-in-progress-message = 您要继续 { -brand-short-name } 的此次更新吗？
+update-in-progress-ok-button = 放弃
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = 继续
 
 ## General Section - Performance
 
@@ -309,7 +310,7 @@ performance-allow-hw-accel =
     .accesskey = r
 performance-limit-content-process-option = 内容进程限制
     .accesskey = L
-performance-limit-content-process-enabled-desc = 更多内容进程可以改善使用多个标签页时的性能，但也将消耗更多内存。
+performance-limit-content-process-enabled-desc = 调高内容进程数量可以改善使用多个标签页时的性能，但也将消耗更多内存。
 performance-limit-content-process-blocked-desc = 仅在多进程 { -brand-short-name } 时可修改进程数量。 <a data-l10n-name="learn-more">了解如何检查多进程的启用状况</a>
 # Variables:
 #   $num - default value of the `dom.ipc.processCount` pref.
@@ -329,7 +330,7 @@ browsing-use-onscreen-keyboard =
     .label = 在需要时显示触摸键盘
     .accesskey = k
 browsing-use-cursor-navigation =
-    .label = 始终使用方向键在页面内导航
+    .label = 一律使用键盘方向键浏览网页（键盘浏览模式）
     .accesskey = c
 browsing-search-on-start-typing =
     .label = 若在文本框外输入，则在页面中查找文本
@@ -337,6 +338,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = 在您浏览时推荐扩展
     .accesskey = R
+browsing-cfr-features =
+    .label = 在您浏览时推荐新功能
+    .accesskey = f
 browsing-cfr-recommendations-learn-more = 详细了解
 
 ## General Section - Proxy
@@ -384,6 +388,45 @@ use-current-pages =
 choose-bookmark =
     .label = 使用书签…
     .accesskey = B
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Firefox 主页内容
+home-prefs-content-description = 选择要在您的 Firefox 主页上显示的版块。
+home-prefs-content-discovery-description = Firefox 主页中的“内容发现”可助您发现网络上的高品质、有价值的文章。
+home-prefs-search-header =
+    .label = 网络搜索
+home-prefs-topsites-header =
+    .label = 常用网站
+home-prefs-topsites-description = 您经常访问的网站
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = { $provider } 推荐
+home-prefs-recommended-by-description = 来自网络的精彩内容，为您量身打造
+home-prefs-recommended-by-learn-more = 使用方法
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = 赞助内容
+home-prefs-highlights-header =
+    .label = 集锦
+home-prefs-highlights-description = 您访问过或保存过的网站精选
+home-prefs-highlights-option-visited-pages =
+    .label = 访问过的页面
+home-prefs-highlights-options-bookmarks =
+    .label = 书签
+home-prefs-highlights-option-most-recent-download =
+    .label = 最近下载
+home-prefs-highlights-option-saved-to-pocket =
+    .label = 保存在 { -pocket-brand-name } 的页面
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = 只言片语
+home-prefs-snippets-description = 来自 { -vendor-short-name } 和 { -brand-product-name } 的快讯
+home-prefs-sections-rows-option =
+    .label = { $num } 行
 
 ## Search Section
 
@@ -498,7 +541,7 @@ sync-engine-logins =
     .tooltiptext = 您已保存的用户名和密码
     .accesskey = L
 sync-engine-addresses =
-    .label = 地址
+    .label = 邮政地址
     .tooltiptext = 您已保存的邮政地址（仅限桌面版）
     .accesskey = e
 sync-engine-creditcards =
@@ -527,8 +570,9 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = 保存
     .accesskey = v
-sync-mobilepromo-single = 连接其他设备
-sync-mobilepromo-multi = 管理设备
+sync-connect-another-device = 连接其他设备
+sync-manage-devices = 管理设备
+sync-fxa-begin-pairing = 配对设备
 sync-tos-link = 服务条款
 sync-fxa-privacy-notice = 隐私声明
 
@@ -540,11 +584,17 @@ privacy-header = 浏览器隐私
 
 logins-header = 登录信息与密码
 forms-ask-to-save-logins =
-    .label = 向您询问是否要记住网站的登录账号和密码
+    .label = 向您询问是否保存网站的登录名和密码
     .accesskey = r
 forms-exceptions =
     .label = 例外…
     .accesskey = x
+forms-generate-passwords =
+    .label = 建议并生成高强度密码
+    .accesskey = u
+forms-fill-logins-and-passwords =
+    .label = 自动填写登录名和密码
+    .accesskey = i
 forms-saved-logins =
     .label = 已保存的登录信息…
     .accesskey = L
@@ -578,7 +628,7 @@ history-remember-option-custom =
 history-remember-description = { -brand-short-name } 将记住您的浏览、下载、表单和搜索记录。
 history-dontremember-description = { -brand-short-name } 将采用与“隐私浏览模式”相同的设置，不会记录您浏览网络的历史。
 history-private-browsing-permanent =
-    .label = 始终使用隐私浏览模式
+    .label = 一律使用隐私浏览模式
     .accesskey = p
 history-remember-browser-option =
     .label = 记住浏览和下载历史
@@ -605,15 +655,10 @@ sitedata-total-size-calculating = 正在计算网站数据和缓存的大小…
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = 您已存储的 Cookie、网站数据和缓存目前使用了 { $value } { $unit } 磁盘空间。
 sitedata-learn-more = 详细了解
-sitedata-keep-until = 保存，直到
-    .accesskey = u
-sitedata-keep-until-expire =
-    .label = 它们过期
-sitedata-keep-until-closed =
-    .label = { -brand-short-name } 关闭
 sitedata-delete-on-close =
     .label = 关闭 { -brand-short-name } 时删除 Cookie 与网站数据
     .accesskey = C
+sitedata-delete-on-close-private-browsing = 永久启用隐私浏览模式后，每次关闭 { -brand-short-name } 时都会清除 Cookie 和网站数据。
 sitedata-allow-cookies-option =
     .label = 接受 Cookie 和网站数据
     .accesskey = A
@@ -624,18 +669,12 @@ sitedata-disallow-cookies-option =
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = 阻止类型
     .accesskey = T
-sitedata-block-trackers-option-recommended =
-    .label = 第三方跟踪器（推荐）
-sitedata-block-trackers-option =
-    .label = 第三方跟踪器
-sitedata-block-unvisited-option =
-    .label = 未访问网站的 Cookie
-sitedata-block-all-third-party-option =
-    .label = 所有第三方 Cookie（可能导致网站异常）
-sitedata-block-all-option =
-    .label = 所有 Cookie（将会导致网站异常）
 sitedata-option-block-trackers =
     .label = 第三方跟踪器
+sitedata-option-block-cross-site-trackers =
+    .label = 跨网站跟踪器
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = 跨网站和社交媒体跟踪器
 sitedata-option-block-unvisited =
     .label = 未访问网站的 Cookie
 sitedata-option-block-all-third-party =
@@ -648,13 +687,6 @@ sitedata-clear =
 sitedata-settings =
     .label = 管理数据…
     .accesskey = M
-sitedata-cookies-exceptions =
-    .label = 例外…
-    .accesskey = E
-# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
-# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
-# Cookies and Site Data section.
-sitedata-warning-your-settings-prevent-changes = 您的内容拦截设置不允许更改 Cookie 和网站数据的设置。
 sitedata-cookies-permissions =
     .label = 管理权限…
     .accesskey = P
@@ -677,41 +709,9 @@ addressbar-suggestions-settings = 更改搜索引擎建议的首选项
 ## Privacy Section - Content Blocking
 
 content-blocking-header = 内容拦截
-content-blocking-desc = 拦截可能减慢您浏览速度且在网络上跟踪您的广告、代码等第三方内容。您可自行设置以在保护与性能之间达到最佳平衡。
-content-blocking-description = 拦截会在网络上跟踪您的第三方内容。控制您要让不同网站存储并共享多少在线行为。
+content-blocking-enhanced-tracking-protection = 增强型跟踪保护
+content-blocking-section-description = 在浏览时保护您的隐私。拦截会跟踪您访问活动，并分析用户特征的隐藏内容。拦截此类内容也可能使页面加载更快。
 content-blocking-learn-more = 详细了解
-content-blocking-restore-defaults =
-    .label = 恢复默认设置
-    .accesskey = R
-content-blocking-toggle-on =
-    .tooltiptext = 关闭内容拦截
-content-blocking-toggle-off =
-    .tooltiptext = 开启内容拦截
-content-blocking-toggle-label-on = 开
-    .accesskey = O
-content-blocking-toggle-label-off = 关
-    .accesskey = O
-content-blocking-category-label = 选择要拦截的内容
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-    .label = 减慢加载的跟踪器
-    .accesskey = S
-content-blocking-fastblock-new-description = 拦截减慢页面加载速度的跟踪器。
-content-blocking-tracking-protection-trackers-label =
-    .label = 跟踪器
-    .accesskey = T
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = 检测到的所有跟踪器
-    .accesskey = T
-content-blocking-tracking-protection-new-description = 拦截已知的所有跟踪器。（可能影响某些页面的加载。）
-content-blocking-tracking-protection-option-always =
-    .label = 始终
-    .accesskey = A
-content-blocking-tracking-protection-option-private =
-    .label = 仅在隐私窗口中
-    .accesskey = P
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
 content-blocking-setting-standard =
@@ -723,19 +723,38 @@ content-blocking-setting-strict =
 content-blocking-setting-custom =
     .label = 自定义
     .accesskey = C
-content-blocking-standard-description = 仅在隐私窗口中拦截已知的跟踪器
 content-blocking-standard-desc = 平衡保护与性能。允许部分跟踪器以确保网站运行正常。
-content-blocking-strict-desc = 拦截 { -brand-short-name } 检测到的所有跟踪器。可能导致某些网站异常。
+content-blocking-strict-description = 更强的保护，可能导致某些网站异常。
 content-blocking-custom-desc = 选择要拦截的内容。
 content-blocking-private-trackers = 仅在隐私窗口中拦截已知的跟踪器
-content-blocking-third-party-cookies = 第三方跟踪 Cookie
+content-blocking-third-party-cookies = 第三方跟踪型 Cookie
+content-blocking-etp-standard-desc = 平衡保护和性能。页面将正常加载。
+content-blocking-etp-strict-desc = 更强大的保护，但可能导致某些网站异常。
+content-blocking-etp-custom-desc = 选择要拦截的跟踪器和脚本。
+content-blocking-private-windows = 隐私窗口中的跟踪性内容
+content-blocking-cross-site-tracking-cookies = 跨网站跟踪型 Cookie
+content-blocking-social-media-trackers = 社交媒体跟踪器
+content-blocking-all-cookies = 所有 Cookie
+content-blocking-unvisited-cookies = 未访问网站的 Cookie
 content-blocking-all-windows-trackers = 在所有窗口拦截已知的跟踪器
+content-blocking-all-windows-tracking-content = 所有窗口中的跟踪性内容
 content-blocking-all-third-party-cookies = 所有第三方 Cookie
+content-blocking-cryptominers = 加密货币挖矿程序
+content-blocking-fingerprinters = 数字指纹跟踪程序
 content-blocking-warning-title = 注意！
-content-blocking-warning-desc = 拦截 Cookie 与跟踪器可能导致某些网站异常。但对您信任的网站禁用拦截非常简单。
+content-blocking-warning-description = 拦截内容后可能导致某些网站异常。但对您信任的网站禁用拦截非常简单。
 content-blocking-learn-how = 了解方法
+content-blocking-etp-warning-description = 拦截跟踪器可能会影响某些网站的功能。放行跟踪器，重载页面即可加载所有内容。
+content-blocking-warning-learn-how = 了解要如何做
+content-blocking-reload-description = 需要重新载入标签页才能应用变更。
+content-blocking-reload-tabs-button =
+    .label = 重新载入所有标签页
+    .accesskey = R
 content-blocking-trackers-label =
     .label = 跟踪器
+    .accesskey = T
+content-blocking-tracking-content-label =
+    .label = 跟踪性内容
     .accesskey = T
 content-blocking-tracking-protection-option-all-windows =
     .label = 所有窗口
@@ -744,51 +763,23 @@ content-blocking-option-private =
     .label = 仅在隐私窗口中
     .accesskey = p
 content-blocking-tracking-protection-change-block-list = 更换拦截列表
-content-blocking-third-party-cookies-label =
-    .label = 第三方 Cookie
-    .accesskey = C
-content-blocking-reject-trackers-description = 拦截所有第三方 Cookie，或只拦截跟踪器设置的 Cookie。
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = 您的 Cookie 和网站数据设置不允许更改第三方 Cookie 的设置。
-content-blocking-change-cookie-settings =
-    .label = 更改 Cookie 设置
-    .accesskey = S
-content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = 跟踪器（推荐）
-    .accesskey = k
-content-blocking-reject-trackers-block-trackers-option =
-    .label = 跟踪器
-    .accesskey = k
-content-blocking-reject-trackers-all-third-parties-option =
-    .label = 所有第三方 Cookie（可能导致网站故障）
-    .accesskey = A
 content-blocking-cookies-label =
     .label = Cookie
     .accesskey = C
+content-blocking-expand-section =
+    .tooltiptext = 详细信息
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+    .label = 加密货币挖矿程序
+    .accesskey = y
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+    .label = 数字指纹跟踪程序
+    .accesskey = F
 
 ## Privacy Section - Tracking
 
-tracking-header = 跟踪保护
-tracking-desc = 跟踪保护功能可阻止跟踪者在不同网站间收集您的浏览数据。 <a data-l10n-name="learn-more">详细了解跟踪保护和您的隐私</a>
-tracking-mode-label = 使用跟踪保护功能拦截已知的跟踪器
-tracking-mode-always =
-    .label = 始终
-    .accesskey = y
-tracking-mode-private =
-    .label = 只在隐私窗口中
-    .accesskey = l
-tracking-mode-never =
-    .label = 永不
-    .accesskey = n
-tracking-exceptions =
-    .label = 例外…
-    .accesskey = x
-tracking-change-block-list =
-    .label = 更换拦截列表…
-    .accesskey = C
 tracking-manage-exceptions =
     .label = 管理例外…
     .accesskey = x
@@ -816,20 +807,16 @@ permissions-notification-link = 详细了解
 permissions-notification-pause =
     .label = 暂停通知直至下次打开 { -brand-short-name }
     .accesskey = n
-permissions-block-autoplay-media =
-    .label = 阻止网站自动播放有声媒体内容
+permissions-block-autoplay-media2 =
+    .label = 阻止网站自动播放声音
     .accesskey = B
-permissions-block-autoplay-media-menu = 自动播放声音的网站
 permissions-block-autoplay-media-exceptions =
     .label = 例外…
     .accesskey = E
-autoplay-option-ask =
-    .label = 始终询问
-autoplay-option-allow =
-    .label = 允许自动播放
-autoplay-option-dont =
-    .label = 不要自动播放
-permissions-autoplay-link = 详细了解
+permissions-autoplay = 自动播放
+permissions-autoplay-settings =
+    .label = 设置…
+    .accesskey = t
 permissions-block-popups =
     .label = 拦截弹出式窗口
     .accesskey = B
@@ -865,10 +852,6 @@ addon-recommendations-link = 详细了解
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = 在此构建配置下数据反馈被禁用
-collection-browser-errors =
-    .label = 允许 { -brand-short-name } 发送浏览器错误报告（包含错误信息）到 { -vendor-short-name }
-    .accesskey = b
-collection-browser-errors-link = 详细了解
 collection-backlogged-crash-reports =
     .label = 允许 { -brand-short-name } 代您发送积压的崩溃报告
     .accesskey = c

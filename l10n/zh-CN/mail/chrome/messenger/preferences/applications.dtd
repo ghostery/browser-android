@@ -15,7 +15,7 @@
 
 <!ENTITY saveTo.label                 "保存文件至">
 <!ENTITY saveTo.accesskey             "S">
-<!ENTITY alwaysAsk.label              "总是询问保存文件的位置">
+<!ENTITY alwaysAsk.label              "每次都询问保存文件的位置">
 <!ENTITY alwaysAsk.accesskey          "A">
 <!ENTITY chooseFolderWin.label        "浏览…">
 <!ENTITY chooseFolderWin.accesskey    "B">
@@ -33,6 +33,8 @@
 <!ENTITY authRequired.description         "您需要授权才能看到此存储服务的设置。">
 <!ENTITY authRequired.button.label        "授权">
 <!ENTITY authRequired.button.accesskey    "u">
+
+<!ENTITY findCloudFileProviders.label     "寻找更多提供商...">
 
 <!ENTITY enableCloudFileAccountOffer.label "大于此数值的文件提议分享：">
 <!ENTITY enableCloudFileAccountOffer.mb "MB">

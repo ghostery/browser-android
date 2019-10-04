@@ -50,25 +50,25 @@
 <!ENTITY pasteCmd.label                   "Colar">
 <!ENTITY pasteCmd.key                     "V">
 <!ENTITY pasteCmd.accesskey               "o">
-<!ENTITY pasteGoCmd.label                 "Colar &amp; Ir">
+<!ENTITY pasteGoCmd.label                 "Colar e Ir">
 <!ENTITY pasteGoCmd.accesskey             "C">
 
 <!-- LOCALIZATION NOTE (pasteSearchCmd): "Search" is a verb, this is the
      search bar equivalent to the url bar's "Paste & Go"  -->
-<!ENTITY pasteSearchCmd.label             "Colar &amp; Pesquisar">
+<!ENTITY pasteSearchCmd.label             "Colar e pesquisar">
 <!ENTITY pasteSearchCmd.accesskey         "P">
 <!ENTITY deleteCmd.label                  "Excluir">
 <!ENTITY deleteCmd.accesskey              "x">
 <!ENTITY selectAllCmd.label               "Selecionar tudo">
 <!ENTITY selectAllCmd.key                 "A">
 <!ENTITY selectAllCmd.accesskey           "S">
-<!ENTITY clearHistoryCmd.label				"Limpar histórico de pesquisa">  
-<!ENTITY clearHistoryCmd.accesskey			"h"> 
-<!ENTITY showSuggestionsCmd.label			"Mostrar sugestões">  
-<!ENTITY showSuggestionsCmd.accesskey		"s"> 
-<!ENTITY preferencesCmd.label				"Preferências">
-<!ENTITY preferencesCmd.key					"E">  
-<!ENTITY preferencesCmd.accesskey			"P"> 
+<!ENTITY clearHistoryCmd.label            "Limpar histórico de pesquisa">  
+<!ENTITY clearHistoryCmd.accesskey        "h"> 
+<!ENTITY showSuggestionsCmd.label         "Mostrar sugestões">  
+<!ENTITY showSuggestionsCmd.accesskey     "s"> 
+<!ENTITY preferencesCmd.label             "Preferências">
+<!ENTITY preferencesCmd.key               "E">  
+<!ENTITY preferencesCmd.accesskey         "P"> 
 <!ENTITY findBarCmd.key "F">
 <!-- LOCALIZATION NOTE (findBarCmd.accesskey): This accesskey should be within
      findBarCmd.label found in editorOverlay.dtd, findCmd.label in messenger.dtd
@@ -88,15 +88,15 @@
 <!ENTITY findTypeLinksCmd.label "Localizar links ao digitar">
 <!ENTITY findTypeLinksCmd.accesskey "k">
 
-<!ENTITY viewMenu.label					"Exibir"> 
+<!ENTITY viewMenu.label                   "Exibir"> 
 <!ENTITY viewMenu.accesskey               "x">
-<!ENTITY viewToolbarsMenu.label				"Barra de ferramentas"> 
-<!ENTITY viewToolbarsMenu.accesskey			"B"> 
-<!ENTITY showTaskbarCmd.label					"Barra de status">  
-<!ENTITY showTaskbarCmd.accesskey				"s"> 
+<!ENTITY viewToolbarsMenu.label           "Barra de ferramentas"> 
+<!ENTITY viewToolbarsMenu.accesskey       "B"> 
+<!ENTITY showTaskbarCmd.label             "Barra de status">  
+<!ENTITY showTaskbarCmd.accesskey         "s"> 
 
-<!ENTITY helpMenu.label					"Ajuda"> 
-<!ENTITY helpMenu.accesskey				"u"> 
+<!ENTITY helpMenu.label                   "Ajuda"> 
+<!ENTITY helpMenu.accesskey               "u"> 
 
 <!ENTITY helpTroubleshootingInfo.label      "Dados para suporte">
 <!ENTITY helpTroubleshootingInfo.accesskey  "t">
@@ -106,24 +106,24 @@
 <!ENTITY helpSafeMode.accesskey             "R">
 <!ENTITY updateCmd.label                    "Buscar por atualizações…">
 <!ENTITY updateCmd.accesskey                "B">
-<!ENTITY aboutCmd.label					"Sobre o &brandShortName;">
-<!ENTITY aboutCmd.accesskey				"S">
-<!ENTITY aboutCommPluginsCmd.label			"Sobre os plugins">
-<!ENTITY aboutCommPluginsCmd.accesskey			"l">
+<!ENTITY aboutCmd.label                     "Sobre o &brandShortName;">
+<!ENTITY aboutCmd.accesskey                 "S">
+<!ENTITY aboutCommPluginsCmd.label          "Sobre os plugins">
+<!ENTITY aboutCommPluginsCmd.accesskey      "l">
 
-<!ENTITY direct.label                                   "Conectado (Proxy: nenhum)">
-<!ENTITY direct.accesskey                               "C">
-<!ENTITY manual.label                                   "Conectado (Proxy: manual)">
-<!ENTITY manual.accesskey                               "m">
-<!ENTITY pac.label                                      "Conectado (Proxy: URL automática)">
-<!ENTITY pac.accesskey                                  "a">
-<!ENTITY wpad.label                                     "Conectado (Proxy: detectar automaticamente)">
-<!ENTITY wpad.accesskey                                 "d">
-<!ENTITY system.label                                   "Conectado (Proxy: proxy do sistema)">
-<!ENTITY system.accesskey                               "s">
+<!ENTITY direct.label                             "Conectado (Proxy: nenhum)">
+<!ENTITY direct.accesskey                         "C">
+<!ENTITY manual.label                             "Conectado (Proxy: manual)">
+<!ENTITY manual.accesskey                         "m">
+<!ENTITY pac.label                                "Conectado (Proxy: URL automática)">
+<!ENTITY pac.accesskey                            "a">
+<!ENTITY wpad.label                               "Conectado (Proxy: detectar automaticamente)">
+<!ENTITY wpad.accesskey                           "d">
+<!ENTITY system.label                             "Conectado (Proxy: proxy do sistema)">
+<!ENTITY system.accesskey                         "s">
 
-<!ENTITY proxy.label                                    "Configurações de proxy...">
-<!ENTITY proxy.accesskey                                "C">
+<!ENTITY proxy.label                              "Configurações de proxy...">
+<!ENTITY proxy.accesskey                          "C">
 
 <!ENTITY bidiSwitchTextDirectionItem.label        "Alternar a direção do texto">
 <!ENTITY bidiSwitchTextDirectionItem.accesskey    "t">

@@ -3,13 +3,19 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY position.label             "Pozycja:">
-<!ENTITY tile.label                 "Sąsiadująco">
-<!ENTITY center.label               "Wyśrodkowana">
+<!ENTITY tile.label                 "Kafelek">
+<!ENTITY center.label               "Na środku">
 <!ENTITY stretch.label              "Rozciągnij">
 <!ENTITY fill.label                 "Wypełnij">
 <!ENTITY fit.label                  "Dopasuj">
-<!ENTITY preview.label              "Podgląd">
+<!-- LOCALIZATION NOTE (span.label): This refers to the wallpaper "spanning"
+                       multiple monitors when the user has more than one. Only
+                       some of the entire image will be on each monitor.
+                       This should ideally match the wording in Windows' own
+                       Desktop Background settings page. -->
+<!ENTITY span.label                 "Rozszerz">
 <!ENTITY color.label                "Kolor:">
 <!ENTITY setDesktopBackground.title "Ustaw tapetę">
-<!ENTITY openDesktopPrefs.label "Otwórz preferencje biurka"><!-- OS X -->
+<!ENTITY openDesktopPrefs.label     "Otwórz preferencje biurka">
 <!ENTITY closeWindow.key            "w">
+<!ENTITY previewUnavailable         "Podgląd jest niedostępny">

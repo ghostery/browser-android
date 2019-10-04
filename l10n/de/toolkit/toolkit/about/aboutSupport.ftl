@@ -27,6 +27,9 @@ features-title = { -brand-short-name }-Funktionen
 features-name = Name
 features-version = Version
 features-id = ID
+processes-title = Externe Prozesse
+processes-type = Typ
+processes-count = Anzahl
 app-basics-title = Allgemeine Informationen
 app-basics-name = Name
 app-basics-version = Version
@@ -34,6 +37,12 @@ app-basics-build-id = Build-ID
 app-basics-update-channel = Update-Kanal
 app-basics-update-history = Update-Chronik
 app-basics-show-update-history = Update-Chronik anzeigen
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] Update-Verzeichnis
+       *[other] Update-Ordner
+    }
+app-basics-binary = Anwendungsprogrammdatei
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] Profilverzeichnis
@@ -47,9 +56,13 @@ app-basics-memory-use = Speicherverwendung
 app-basics-performance = Leistung
 app-basics-service-workers = Angemeldete Service-Worker
 app-basics-profiles = Profile
+app-basics-launcher-process-status = Starter-Prozess
 app-basics-multi-process-support = Fenster mit mehreren Prozessen
 app-basics-process-count = Web-Inhaltsprozesse
+app-basics-remote-processes-count = Externe Prozesse
 app-basics-enterprise-policies = Unternehmensrichtlinien
+app-basics-location-service-key-google = Google-Location-Service-Schlüssel
+app-basics-safebrowsing-key-google = Google-Safebrowsing-Schlüssel
 app-basics-key-google = Google-Schlüssel
 app-basics-key-mozilla = Mozilla-Location-Service-Schlüssel
 app-basics-safe-mode = Abgesicherter Modus
@@ -76,6 +89,8 @@ graphics-gpu2-title = GPU 2
 graphics-decision-log-title = Entscheidungsprotokoll
 graphics-crash-guards-title = Absturzverhinderer hat Funktionen deaktiviert
 graphics-workarounds-title = Lösungen
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = Window-Protokoll
 place-database-title = Chronik- und Lesezeichendatenbank
 place-database-integrity = Integrität
 place-database-verify-integrity = Integrität überprüfen
@@ -176,6 +191,8 @@ hardware-h264 = H264-Dekodierung durch Hardware
 main-thread-no-omtc = Haupt-Thread, kein OMTC
 yes = Ja
 no = Nein
+unknown = Unbekannt
+virtual-monitor-disp = Virtueller Bildschirm
 
 ## The following strings indicate if an API key has been found.
 ## In some development versions, it's expected for some API keys that they are
@@ -183,12 +200,16 @@ no = Nein
 
 found = Gefunden
 missing = Fehlt
+
+gpu-process-pid = GPUProcessPid
+gpu-process = GPUProcess
 gpu-description = Beschreibung
 gpu-vendor-id = Herstellerkennung
 gpu-device-id = Gerätekennung
 gpu-subsys-id = Subsys-ID
 gpu-drivers = Treiber
 gpu-ram = RAM
+gpu-driver-vendor = Treiber-Hersteller
 gpu-driver-version = Treiber-Version
 gpu-driver-date = Treiber-Datum
 gpu-active = Aktiv
@@ -215,11 +236,15 @@ d3d9video-crash-buard = D3D9-Videodekoder
 glcontext-crash-guard = OpenGL
 reset-on-next-restart = Bei nächstem Neustart zurücksetzen
 gpu-process-kill-button = GPU-Prozess beenden
+gpu-device-reset = Gerät zurücksetzen
 gpu-device-reset-button = Gerät zurücksetzen
 uses-tiling = Verwendet Kacheln
 content-uses-tiling = Verwendent Kacheln für Inhalt
 off-main-thread-paint-enabled = Zeichnen auf Nebenthread aktiviert
 off-main-thread-paint-worker-count = Anzahl Worker für Zeichnen auf Nebenthread
+low-end-machine = Leistungsschwaches Gerät erkannt
+target-frame-rate = Anvisierte Bildwiederholfrequenz (Framerate)
+
 audio-backend = Audio-Backend
 max-audio-channels = Max. Kanäle
 channel-layout = Bevorzugtes Kanallayout
@@ -237,6 +262,14 @@ effective-content-sandbox-level = Effektive Ebene der isolierten Umgebung
 sandbox-proc-type-content = Inhalt
 sandbox-proc-type-file = Dateiinhalt
 sandbox-proc-type-media-plugin = Medienplugin
+
+sandbox-proc-type-data-decoder = Datendekoder
+
+launcher-process-status-0 = Aktiviert
+launcher-process-status-1 = Deaktiviert nach Fehler
+launcher-process-status-2 = Deaktivierung erzwungen
+launcher-process-status-unknown = Unbekannter Status
+
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows

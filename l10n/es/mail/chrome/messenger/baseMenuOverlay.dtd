@@ -6,19 +6,26 @@
 <!ENTITY helpMenu.accesskey "u">
 <!ENTITY helpMenuWin.label "Ayuda">
 <!ENTITY helpMenuWin.accesskey "u">
+<!ENTITY aboutProduct2.label "Acerca de &brandShorterName;">
+<!ENTITY aboutProduct2.accesskey "A">
 <!ENTITY helpTroubleshootingInfo.label "Información sobre resolución de problemas">
 <!ENTITY helpTroubleshootingInfo.accesskey "I">
 <!ENTITY helpSafeMode.label "Reiniciar con los complementos desactivados…">
 <!ENTITY helpSafeMode.accesskey "R">
-<!ENTITY releaseCmd2.label "Notas de esta versión">
-<!ENTITY releaseCmd2.accesskey "N">
-<!ENTITY whatsNewCmd.label "Qué hay de nuevo">
-<!ENTITY whatsNewCmd.accesskey "Q">
-<!ENTITY openHelp.label "Contenidos de la ayuda">
-<!ENTITY openHelp.accesskey "u">
-<!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac2.label "Ayuda de &brandFullName;">
-<!ENTITY openHelpMac2.commandkey "?">
-<!ENTITY openHelpMac2.modifiers "accel">
-<!ENTITY aboutMenuCmd2.label "Acerca de &brandFullName;">
-<!ENTITY aboutMenuCmd2.accesskey "A">
+<!ENTITY helpSafeMode.stop.label "Reiniciar con los complementos activados">
+<!ENTITY helpSafeMode.stop.accesskey "R">
+<!ENTITY productHelp.label "Ayuda de &brandShortName;">
+<!ENTITY productHelp.accesskey "b">
+<!ENTITY productHelp.commandkey "VK_F1">
+<!ENTITY productHelpMac.commandkey "?">
+<!ENTITY productHelpMac.modifiers "accel">
+<!ENTITY helpKeyboardShortcuts.label "Atajos de teclado">
+<!ENTITY helpKeyboardShortcuts.accesskey "d">
+<!ENTITY helpFeedbackPage.label "Enviar opinión…">
+<!ENTITY helpFeedbackPage.accesskey "E">
+<!ENTITY helpShowTour2.label "Paseo por &brandShorterName;">
+<!ENTITY helpShowTour2.accesskey "P">
+<!ENTITY helpGetInvolvedPage.label "Involucrarse">
+<!ENTITY helpGetInvolvedPage.accesskey "c">
+<!ENTITY helpDonationsPage.label "Hacer una donación">
+<!ENTITY helpDonationsPage.accesskey "H">

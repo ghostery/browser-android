@@ -18,7 +18,7 @@
 <!ENTITY pasteAsQuotationCmd.key "o">
 <!ENTITY findBarCmd.label "Zoeken…">
 <!ENTITY findReplaceCmd.label "Zoeken en vervangen…">
-<!ENTITY enableInlineSpellChecker.label "Spelling controleren tijdens typen">
+<!ENTITY enableInlineSpellChecker.label "Spelling controleren tijdens het typen">
 <!ENTITY enableInlineSpellChecker.accesskey "d">
 <!ENTITY checkSpellingCmd2.label "Spelling controleren…">
 <!ENTITY checkSpellingCmd2.accesskey "S">

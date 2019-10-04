@@ -11,7 +11,7 @@
      -->
 <!ENTITY cmd.show.label                            "Ouvrir le dossier contenant le fichier">
 <!ENTITY cmd.show.accesskey                        "r">
-<!ENTITY cmd.showMac.label                         "Ouvrir dans le Finder">
+<!ENTITY cmd.showMac.label                         "Afficher dans le Finder">
 <!ENTITY cmd.showMac.accesskey                     "F">
 <!ENTITY cmd.open.label                            "Ouvrir">
 <!ENTITY cmd.open.accesskey                        "O">

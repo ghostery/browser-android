@@ -4,10 +4,6 @@
 
 do-not-track-description = Envoyer aux sites web un signal « Ne pas me pister » indiquant que vous ne souhaitez pas être pisté
 do-not-track-learn-more = En savoir plus
-do-not-track-option-default =
-    .label = Seulement lorsque la protection contre le pistage est utilisée
-do-not-track-option-default-content-blocking =
-    .label = Uniquement quand { -brand-short-name } est réglé pour bloquer les traqueurs détectés
 do-not-track-option-default-content-blocking-known =
     .label = Seulement quand { -brand-short-name } est paramétré pour bloquer les traqueurs connus
 do-not-track-option-always =
@@ -33,11 +29,7 @@ search-input-box =
             [windows] Rechercher dans les options
            *[other] Rechercher dans les préférences
         }
-policies-notice =
-    { PLATFORM() ->
-        [windows] Votre organisation a désactivé la possibilité de changer certaines options.
-       *[other] Votre organisation a désactivé la possibilité de changer certaines préférences.
-    }
+managed-notice = Votre navigateur est géré par votre organisation.
 pane-general-title = Général
 category-general =
     .tooltiptext = { pane-general-title }
@@ -50,10 +42,9 @@ category-search =
 pane-privacy-title = Vie privée et sécurité
 category-privacy =
     .tooltiptext = { pane-privacy-title }
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Compte Firefox
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 help-button-label = Assistance de { -brand-short-name }
 addons-button-label = Extensions et thèmes
 focus-search =
@@ -95,9 +86,6 @@ extension-controlled-default-search = Une extension, <img data-l10n-name="icon"/
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
 extension-controlled-privacy-containers = Une extension, <img data-l10n-name="icon"/> { $name }, a besoin des onglets contextuels.
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = Une extension, <img data-l10n-name="icon"/> { $name }, contrôle la protection contre le pistage.
 # This string is shown to notify the user that their content blocking "All Detected Trackers"
 # preferences are being controlled by an extension.
 extension-controlled-websites-content-blocking-all-trackers = Une extension, <img data-l10n-name="icon"/> { $name }, contrôle ce paramètre.
@@ -286,6 +274,7 @@ update-application-check-choose =
 update-application-manual =
     .label = Ne jamais vérifier les mises à jour (déconseillé)
     .accesskey = N
+update-application-warning-cross-user-setting = Ce paramètre s’appliquera à tous les comptes Windows et profils { -brand-short-name } utilisant cette installation de { -brand-short-name }.
 update-application-use-service =
     .label = Utiliser un service en arrière-plan pour installer les mises à jour
     .accesskey = s
@@ -296,6 +285,21 @@ update-pref-write-failure-title = Échec d’écriture
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = Impossible d’enregistrer les préférences. Impossible d’écrire dans le fichier : { $path }
+update-setting-write-failure-title = Erreur lors de l’enregistrement des préférences de mise à jour
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    { -brand-short-name } a rencontré une erreur et n’a pas enregistré cette modification. Notez que modifier cette préférence de mise à jour nécessite la permission d’écriture pour le fichier ci-dessous. Vous, ou un administrateur système, pouvez peut-être corriger l’erreur en accordant au groupe Users l’accès complet à ce fichier.
+    
+    Écriture impossible dans le fichier : { $path }
+update-in-progress-title = Mise à jour en cours
+update-in-progress-message = Voulez-vous que { -brand-short-name } continue cette mise à jour ?
+update-in-progress-ok-button = &Abandonner
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = &Continuer
 
 ## General Section - Performance
 
@@ -338,6 +342,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = Recommander des extensions en cours de navigation
     .accesskey = R
+browsing-cfr-features =
+    .label = Recommander des fonctionnalités en cours de navigation
+    .accesskey = f
 browsing-cfr-recommendations-learn-more = En savoir plus
 
 ## General Section - Proxy
@@ -385,6 +392,49 @@ use-current-pages =
 choose-bookmark =
     .label = Marque-page…
     .accesskey = m
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Contenu de la page d’accueil de Firefox
+home-prefs-content-description = Choisissez le contenu que vous souhaitez pour la page d’accueil de Firefox.
+home-prefs-content-discovery-description = La découverte de contenu dans l’accueil de Firefox vous propose des articles pertinents et de bonne qualité en provenance des quatre coins du Web.
+home-prefs-search-header =
+    .label = Recherche web
+home-prefs-topsites-header =
+    .label = Sites les plus visités
+home-prefs-topsites-description = Les sites que vous visitez le plus
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = Recommandations par { $provider }
+home-prefs-recommended-by-description = Du contenu intéressant en provenance du Web, personnalisé pour vous
+home-prefs-recommended-by-learn-more = Mode d’emploi
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = Articles sponsorisés
+home-prefs-highlights-header =
+    .label = Éléments-clés
+home-prefs-highlights-description = Une sélection de sites que vous avez sauvegardés ou visités
+home-prefs-highlights-option-visited-pages =
+    .label = Pages visitées
+home-prefs-highlights-options-bookmarks =
+    .label = Marque-pages
+home-prefs-highlights-option-most-recent-download =
+    .label = Dernier téléchargement
+home-prefs-highlights-option-saved-to-pocket =
+    .label = Pages enregistrées dans { -pocket-brand-name }
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = Brèves
+home-prefs-snippets-description = Actualité de { -vendor-short-name } et { -brand-product-name }
+home-prefs-sections-rows-option =
+    .label =
+        { $num ->
+            [one] { $num } ligne
+           *[other] { $num } lignes
+        }
 
 ## Search Section
 
@@ -446,7 +496,7 @@ containers-remove-button =
 
 sync-signedout-caption = Emportez votre Web partout avec vous
 sync-signedout-description = Synchronisez marque-pages, historique, onglets, mots de passe, modules complémentaires et préférences entre tous vos appareils.
-sync-signedout-account-title = Se connecter avec un { -fxaccount-brand-name[lowercase] }
+sync-signedout-account-title = Se connecter avec un { -fxaccount-brand-name }
 sync-signedout-account-create = Vous n’avez pas de compte ? Inscrivez-vous
     .accesskey = V
 sync-signedout-account-signin =
@@ -528,8 +578,9 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = Enregistrer
     .accesskey = E
-sync-mobilepromo-single = Connecter un autre appareil
-sync-mobilepromo-multi = Gérer les appareils
+sync-connect-another-device = Connecter un autre appareil
+sync-manage-devices = Gérer les appareils
+sync-fxa-begin-pairing = Associer un appareil
 sync-tos-link = Conditions d’utilisation
 sync-fxa-privacy-notice = Politique de confidentialité
 
@@ -546,6 +597,12 @@ forms-ask-to-save-logins =
 forms-exceptions =
     .label = Exceptions…
     .accesskey = x
+forms-generate-passwords =
+    .label = Suggérer et créer des mots de passe robustes
+    .accesskey = u
+forms-fill-logins-and-passwords =
+    .label = Renseigner automatiquement les identifiants et les mots de passe
+    .accesskey = R
 forms-saved-logins =
     .label = Identifiants enregistrés…
     .accesskey = I
@@ -606,15 +663,10 @@ sitedata-total-size-calculating = Calcul du volume des données de sites et du c
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = Le stockage des cookies, du cache et des données de sites utilise actuellement { $value } { $unit } d’espace disque.
 sitedata-learn-more = En savoir plus
-sitedata-keep-until = Les conserver jusqu’à
-    .accesskey = L
-sitedata-keep-until-expire =
-    .label = Leur expiration
-sitedata-keep-until-closed =
-    .label = La fermeture de { -brand-short-name }
 sitedata-delete-on-close =
     .label = Supprimer les cookies et les données des sites à la fermeture de { -brand-short-name }
     .accesskey = S
+sitedata-delete-on-close-private-browsing = En mode de navigation privée permanent, les cookies et les données de site sont toujours effacés à la fermeture de { -brand-short-name }.
 sitedata-allow-cookies-option =
     .label = Accepter les cookies et les données de site
     .accesskey = A
@@ -625,18 +677,12 @@ sitedata-disallow-cookies-option =
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = Type de contenu bloqué
     .accesskey = T
-sitedata-block-trackers-option-recommended =
-    .label = Traqueurs tiers (recommandé)
-sitedata-block-trackers-option =
-    .label = Traqueurs tiers
-sitedata-block-unvisited-option =
-    .label = Cookies de sites web non visités
-sitedata-block-all-third-party-option =
-    .label = Tous les cookies tiers (peut empêcher certains sites de fonctionner)
-sitedata-block-all-option =
-    .label = Tous les cookies (empêchera des sites de fonctionner)
 sitedata-option-block-trackers =
     .label = Traqueurs tiers
+sitedata-option-block-cross-site-trackers =
+    .label = Traqueurs d’un site à l’autre
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = Traqueurs d’un site à l’autre et sur les réseaux sociaux
 sitedata-option-block-unvisited =
     .label = Cookies de sites web non visités
 sitedata-option-block-all-third-party =
@@ -649,13 +695,6 @@ sitedata-clear =
 sitedata-settings =
     .label = Gérer les données…
     .accesskey = G
-sitedata-cookies-exceptions =
-    .label = Exceptions…
-    .accesskey = x
-# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
-# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
-# Cookies and Site Data section.
-sitedata-warning-your-settings-prevent-changes = Vos paramètres de blocage de contenu empêchent la modification des paramètres sur les cookies et les données de sites.
 sitedata-cookies-permissions =
     .label = Gérer les permissions…
     .accesskey = p
@@ -678,41 +717,9 @@ addressbar-suggestions-settings = Modifier les préférences pour les suggestion
 ## Privacy Section - Content Blocking
 
 content-blocking-header = Blocage de contenu
-content-blocking-desc = Bloquez des contenus tiers, tels que du code ou de la publicité, qui peuvent ralentir votre navigation et vous pister sur le Web. Réglez les paramètres à votre gré pour obtenir un équilibre entre protection et performance.
-content-blocking-description = Bloquez les contenus tiers qui vous pistent sur le Web. Contrôlez le niveau d’activité en ligne qui est enregistrée et partagée avec des sites web.
+content-blocking-enhanced-tracking-protection = Protection renforcée contre le pistage
+content-blocking-section-description = Protégez votre vie privée pendant votre navigation. Bloquez les contenus invisibles qui vous pistent de site en site et dressent votre profil. Le blocage d’une partie de ces contenus peut accélérer le chargement des pages.
 content-blocking-learn-more = En savoir plus
-content-blocking-restore-defaults =
-    .label = Restaurer les valeurs par défaut
-    .accesskey = R
-content-blocking-toggle-on =
-    .tooltiptext = Désactiver le blocage du contenu
-content-blocking-toggle-off =
-    .tooltiptext = Activer le blocage de contenu
-content-blocking-toggle-label-on = ACTIVÉ
-    .accesskey = C
-content-blocking-toggle-label-off = DÉSACTIVÉ
-    .accesskey = C
-content-blocking-category-label = Sélectionnez le contenu à bloquer
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-    .label = Traqueurs qui ralentissent
-    .accesskey = s
-content-blocking-fastblock-new-description = Ne bloquer que les traqueurs qui empêchent les pages de se charger rapidement.
-content-blocking-tracking-protection-trackers-label =
-    .label = Traqueurs
-    .accesskey = T
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = Tous les traqueurs détectés
-    .accesskey = T
-content-blocking-tracking-protection-new-description = Bloquer tous les traqueurs connus. (Peut empêcher certaines pages de se charger.)
-content-blocking-tracking-protection-option-always =
-    .label = Toujours
-    .accesskey = T
-content-blocking-tracking-protection-option-private =
-    .label = Uniquement en navigation privée
-    .accesskey = v
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
 content-blocking-setting-standard =
@@ -724,20 +731,39 @@ content-blocking-setting-strict =
 content-blocking-setting-custom =
     .label = Personnalisé
     .accesskey = P
-content-blocking-standard-description = Bloque uniquement les traqueurs connus dans les fenêtres de navigation privée.
 content-blocking-standard-desc = Équilibré entre protection et performances. Autorise quelques traqueurs pour que les sites web fonctionnent correctement.
-content-blocking-strict-desc = Bloque tous les traqueurs détectés par { -brand-short-name }. Peut provoquer le dysfonctionnement de certains sites.
+content-blocking-strict-description = Une protection renforcée, mais qui peut empêcher certains sites de fonctionner correctement.
 content-blocking-custom-desc = Choisissez ce que vous souhaitez bloquer.
-content-blocking-private-trackers = Les traqueurs connus dans les fenêtres de navigation privée seulement
-content-blocking-third-party-cookies = Les cookies tiers utilisés pour le pistage
-content-blocking-all-windows-trackers = Les traqueurs connus dans toutes les fenêtres
+content-blocking-private-trackers = Traqueurs connus dans les fenêtres de navigation privée seulement
+content-blocking-third-party-cookies = Cookies tiers utilisés pour le pistage
+content-blocking-etp-standard-desc = Équilibré entre protection et performances. Les pages se chargeront normalement.
+content-blocking-etp-strict-desc = Protection renforcée, mais certains sites ou contenus peuvent ne pas fonctionner correctement.
+content-blocking-etp-custom-desc = Choisissez les traqueurs et les scripts à bloquer.
+content-blocking-private-windows = Contenu utilisé pour le pistage dans les fenêtres de navigation privée
+content-blocking-cross-site-tracking-cookies = Cookies utilisés pour le pistage entre les sites
+content-blocking-social-media-trackers = Traqueurs de réseaux sociaux
+content-blocking-all-cookies = Tous les cookies
+content-blocking-unvisited-cookies = Cookies de sites non visités
+content-blocking-all-windows-trackers = Traqueurs connus dans toutes les fenêtres
+content-blocking-all-windows-tracking-content = Contenu utilisé pour le pistage dans toutes les fenêtres
 content-blocking-all-third-party-cookies = Tous les cookies tiers
+content-blocking-cryptominers = Mineurs de cryptomonnaies
+content-blocking-fingerprinters = Détecteurs d’empreinte numérique
 content-blocking-warning-title = Attention !
-content-blocking-warning-desc = Bloquer les cookies et les traqueurs peut provoquer le dysfonctionnement de certains sites. Il est facile de désactiver le blocage pour les sites de confiance.
+content-blocking-warning-description = Le blocage de contenu peut empêcher certains sites de fonctionner. Vous pouvez facilement désactiver le blocage pour les sites en lesquels vous avez confiance.
 content-blocking-learn-how = Découvrez comment
+content-blocking-etp-warning-description = Le blocage des traqueurs peut avoir une incidence sur les fonctionnalités de certains sites. Actualisez une page avec les traqueurs pour charger tout le contenu.
+content-blocking-warning-learn-how = Me montrer comment faire
+content-blocking-reload-description = Vous devrez actualiser vos onglets pour appliquer ces modifications.
+content-blocking-reload-tabs-button =
+    .label = Actualiser tous les onglets
+    .accesskey = A
 content-blocking-trackers-label =
     .label = Traqueurs
     .accesskey = T
+content-blocking-tracking-content-label =
+    .label = Contenu utilisé pour le pistage
+    .accesskey = C
 content-blocking-tracking-protection-option-all-windows =
     .label = Dans toutes les fenêtres
     .accesskey = t
@@ -745,51 +771,23 @@ content-blocking-option-private =
     .label = Seulement dans les fenêtres de navigation privée
     .accesskey = p
 content-blocking-tracking-protection-change-block-list = Changer de liste de blocage
-content-blocking-third-party-cookies-label =
-    .label = Cookies tiers
-    .accesskey = C
-content-blocking-reject-trackers-description = Bloquer tous les cookies tiers ou seulement ceux placés par des traqueurs.
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = Vos paramètres de cookies et de données de sites empêchent de modifier les paramètres sur les cookies tiers.
-content-blocking-change-cookie-settings =
-    .label = Modifier les paramètres de cookies
-    .accesskey = p
-content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = Traqueurs (recommandé)
-    .accesskey = q
-content-blocking-reject-trackers-block-trackers-option =
-    .label = Traqueurs
-    .accesskey = q
-content-blocking-reject-trackers-all-third-parties-option =
-    .label = Tous les cookies tiers (peut empêcher certains sites de fonctionner)
-    .accesskey = t
 content-blocking-cookies-label =
     .label = Cookies
     .accesskey = C
+content-blocking-expand-section =
+    .tooltiptext = Plus d’informations
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+    .label = Mineurs de cryptomonnaies
+    .accesskey = M
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+    .label = Détecteurs d’empreinte numérique
+    .accesskey = e
 
 ## Privacy Section - Tracking
 
-tracking-header = Protection contre le pistage
-tracking-desc = La protection contre le pistage bloque les traqueurs en ligne qui collectent vos données de navigation depuis plusieurs sites web. <a data-l10n-name="learn-more">En savoir plus sur la protection contre le pistage et sur la protection de votre vie privée</a>
-tracking-mode-label = Utiliser la protection contre le pistage pour bloquer les traqueurs connus
-tracking-mode-always =
-    .label = Toujours
-    .accesskey = T
-tracking-mode-private =
-    .label = Uniquement dans les fenêtres privées
-    .accesskey = U
-tracking-mode-never =
-    .label = Jamais
-    .accesskey = J
-tracking-exceptions =
-    .label = Exceptions…
-    .accesskey = x
-tracking-change-block-list =
-    .label = Modifier les listes de blocage…
-    .accesskey = b
 tracking-manage-exceptions =
     .label = Gérer les exceptions…
     .accesskey = x
@@ -817,20 +815,16 @@ permissions-notification-link = En savoir plus
 permissions-notification-pause =
     .label = Arrêter les notifications jusqu’au redémarrage de { -brand-short-name }
     .accesskey = n
-permissions-block-autoplay-media =
-    .label = Empêcher les sites web de lancer automatiquement la lecture de contenu multimédia comportant du son
-    .accesskey = E
-permissions-block-autoplay-media-menu = Lorsqu’un site web tente de lire automatiquement du son
+permissions-block-autoplay-media2 =
+    .label = Empêcher la lecture automatique de contenus sonores
+    .accesskey = l
 permissions-block-autoplay-media-exceptions =
     .label = Exceptions…
     .accesskey = x
-autoplay-option-ask =
-    .label = Toujours demander
-autoplay-option-allow =
-    .label = Autoriser la lecture automatique
-autoplay-option-dont =
-    .label = Interdire la lecture automatique
-permissions-autoplay-link = En savoir plus
+permissions-autoplay = Lecture automatique
+permissions-autoplay-settings =
+    .label = Paramètres…
+    .accesskey = P
 permissions-block-popups =
     .label = Bloquer les fenêtres popup
     .accesskey = B
@@ -866,10 +860,6 @@ addon-recommendations-link = En savoir plus
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = L’envoi de données est désactivé pour cette configuration de compilation
-collection-browser-errors =
-    .label = Autoriser { -brand-short-name } à envoyer les rapports d’erreur du navigateur (comprenant les messages d’erreur) à { -vendor-short-name }
-    .accesskey = u
-collection-browser-errors-link = En savoir plus
 collection-backlogged-crash-reports =
     .label = Autoriser { -brand-short-name } à envoyer pour vous les rapports de plantage en attente
     .accesskey = t

@@ -7,7 +7,13 @@
 
 <!ENTITY fromAddr.label "Expéditeur :">
 <!ENTITY fromAddr.accesskey "x">
-<!ENTITY subject.label  "Sujet :">
+<!ENTITY toAddr.label "Pour :">
+<!ENTITY ccAddr.label "Copie à :">
+<!ENTITY bccAddr.label "Copie cachée à :">
+<!ENTITY replyAddr.label "Répondre à :">
+<!ENTITY newsgroupsAddr.label "Groupe :">
+<!ENTITY followupAddr.label "Faire suivre à :">
+<!ENTITY subject.label "Sujet :">
 <!ENTITY subject.accesskey "S">
 <!ENTITY attachments.label "Pièces jointes :">
 <!ENTITY attachments.accesskey "j">

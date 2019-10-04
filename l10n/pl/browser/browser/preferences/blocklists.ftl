@@ -6,6 +6,7 @@ blocklist-window =
     .title = Lista blokowanych elementów
     .style = width: 57em
 blocklist-desc = Określ, którą listę { -brand-short-name } będzie wykorzystywał do blokowania elementów stron mogących śledzić Twoją aktywność.
+blocklist-description = Wybierz listę używaną przez przeglądarkę { -brand-short-name } do blokowania elementów śledzących użytkownika w Internecie. Listy są dostarczane przez <a data-l10n-name="disconnect-link" title="Disconnect">Disconnect</a>.
 blocklist-close-key =
     .key = w
 blocklist-treehead-list =
@@ -28,3 +29,7 @@ blocklist-item-moz-std-name = Disconnect.me, podstawowa (zalecana).
 blocklist-item-moz-std-desc = Dopuszcza pewne śledzące elementy, aby strony działały prawidłowo.
 blocklist-item-moz-full-name = Disconnect.me, ścisła.
 blocklist-item-moz-full-desc = Blokuje znane śledzące elementy. Niektóre strony mogą nie działać prawidłowo.
+blocklist-item-moz-std-listName = Lista blokowanych elementów 1. poziomu (zalecana).
+blocklist-item-moz-std-description = Zezwala na niektóre elementy śledzące, więc powoduje mniej problemów na stronach.
+blocklist-item-moz-full-listName = Lista blokowanych elementów 2. poziomu.
+blocklist-item-moz-full-description = Blokuje wszystkie wykryte elementy śledzące. Część stron lub ich treść mogą się niepoprawnie wczytywać.

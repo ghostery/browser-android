@@ -8,8 +8,14 @@
 <!ENTITY stretch.label              "Nyújtás">
 <!ENTITY fill.label                 "Kitöltés">
 <!ENTITY fit.label                  "Illesztés">
-<!ENTITY preview.label              "Előnézet">
+<!-- LOCALIZATION NOTE (span.label): This refers to the wallpaper "spanning"
+                       multiple monitors when the user has more than one. Only
+                       some of the entire image will be on each monitor.
+                       This should ideally match the wording in Windows' own
+                       Desktop Background settings page. -->
+<!ENTITY span.label                 "Átnyúlás">
 <!ENTITY color.label                "Szín:">
 <!ENTITY setDesktopBackground.title "Asztalháttér beállítása">
 <!ENTITY openDesktopPrefs.label     "Asztal beállítóablakának megnyitása">
 <!ENTITY closeWindow.key            "w">
+<!ENTITY previewUnavailable         "Nem érhető el előnézet">

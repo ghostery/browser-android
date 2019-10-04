@@ -6,7 +6,7 @@ blocklist-window =
     .title = Blokkeerlijsten
     .style = width: 55em
 
-blocklist-desc = U kunt kiezen welke lijst { -brand-short-name } zal gebruiken voor het blokkeren van web-elementen die uw surfactiviteit kunnen volgen.
+blocklist-description = Kies de lijst die { -brand-short-name } gebruikt om online trackers te blokkeren. Lijsten worden aangeboden door <a data-l10n-name="disconnect-link" title="Disconnect">Disconnect</a>.
 blocklist-close-key =
     .key = w
 
@@ -30,7 +30,7 @@ blocklist-button-ok =
 #   $description {string, "This list does a pretty good job."} - Description of the list.
 blocklist-item-list-template = { $listName } { $description }
 
-blocklist-item-moz-std-name = Disconnect.me - basisbescherming (Aanbevolen).
-blocklist-item-moz-std-desc = Staat enkele trackers toe, zodat websites goed functioneren.
-blocklist-item-moz-full-name = Disconnect.me - strenge bescherming.
-blocklist-item-moz-full-desc = Blokkeert bekende trackers. Sommige websites functioneren mogelijk niet goed.
+blocklist-item-moz-std-listName = Niveau 1-blokkeerlijst (Aanbevolen).
+blocklist-item-moz-std-description = Staat bepaalde trackers toe, zodat minder websites niet goed werken.
+blocklist-item-moz-full-listName = Niveau 2-blokkeerlijst.
+blocklist-item-moz-full-description = Blokkeert alle gedetecteerde trackers. Sommige websites of inhoud wordt mogelijk niet goed geladen.

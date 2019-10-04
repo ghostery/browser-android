@@ -57,3 +57,13 @@ rcwn-avg-long = Grande moyenne
 rcwn-std-dev-long = Grand écart-type
 rcwn-cache-slow = Nombre de fois où le cache est lent
 rcwn-cache-not-slow = Nombre de fois où le cache est rapide
+networkid = Identifiant réseau
+networkid-id = Identifiant réseau
+
+## Link is intended as "network link"
+
+networkid-isUp = Liaison établie
+networkid-statusKnown = L’état de la liaison est connu
+
+
+

@@ -4,10 +4,6 @@
 
 do-not-track-description = Передавать сайтам сигнал “Не отслеживать”, означающий, чтобы вы не хотите быть отслеживаемыми
 do-not-track-learn-more = Подробнее
-do-not-track-option-default =
-    .label = Только при использовании защиты от отслеживания
-do-not-track-option-default-content-blocking =
-    .label = Только когда { -brand-short-name } настроен на блокировку Обнаруженных трекеров
 do-not-track-option-default-content-blocking-known =
     .label = Только когда { -brand-short-name } настроен на блокировку известных трекеров
 do-not-track-option-always =
@@ -33,11 +29,7 @@ search-input-box =
             [windows] Найти в настройках
            *[other] Найти в настройках
         }
-policies-notice =
-    { PLATFORM() ->
-        [windows] Ваша организация запретила возможность изменения некоторых настроек.
-       *[other] Ваша организация запретила возможность изменения некоторых настроек.
-    }
+managed-notice = Этим браузером управляет ваша организация.
 pane-general-title = Основные
 category-general =
     .tooltiptext = { pane-general-title }
@@ -50,10 +42,9 @@ category-search =
 pane-privacy-title = Приватность и Защита
 category-privacy =
     .tooltiptext = { pane-privacy-title }
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Аккаунт Firefox
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 help-button-label = Поддержка { -brand-short-name }
 addons-button-label = Расширения и темы
 focus-search =
@@ -95,9 +86,6 @@ extension-controlled-default-search = Расширение <img data-l10n-name="
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
 extension-controlled-privacy-containers = Расширение <img data-l10n-name="icon"/> { $name } требует для своей работы «Вкладки в контейнере».
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = Расширение <img data-l10n-name="icon"/> { $name } контролирует параметры защиты от отслеживания.
 # This string is shown to notify the user that their content blocking "All Detected Trackers"
 # preferences are being controlled by an extension.
 extension-controlled-websites-content-blocking-all-trackers = Расширение <img data-l10n-name="icon"/> { $name } контролирует этот параметр.
@@ -129,9 +117,9 @@ startup-header = Запуск
 # since this setting is only exposed in Firefox Developer Edition
 separate-profile-mode =
     .label = Разрешить одновременный запуск { -brand-short-name } и Firefox
-use-firefox-sync = Совет: При этом используются отдельные профили. Используйте { -sync-brand-short-name[accusative] } для обмена между ними данными.
-get-started-not-logged-in = Войти в { -sync-brand-short-name[accusative] }…
-get-started-configured = Открыть настройки { -sync-brand-short-name[genitive] }
+use-firefox-sync = Совет: При этом используются отдельные профили. Используйте { -sync-brand-short-name(case: "accusative") } для обмена между ними данными.
+get-started-not-logged-in = Войти в { -sync-brand-short-name(case: "accusative") }…
+get-started-configured = Открыть настройки { -sync-brand-short-name(case: "genitive") }
 always-check-default =
     .label = Всегда проверять, является ли { -brand-short-name } вашим браузером по умолчанию
     .accesskey = а
@@ -141,7 +129,7 @@ set-as-my-default-browser =
     .label = Установить по умолчанию…
     .accesskey = н
 startup-restore-previous-session =
-    .label = Восстановить предыдущую сессию
+    .label = Восстанавливать предыдущую сессию
     .accesskey = о
 startup-restore-warn-on-quit =
     .label = Предупреждать при выходе из браузера
@@ -289,6 +277,7 @@ update-application-check-choose =
 update-application-manual =
     .label = Никогда не проверять наличие обновлений (не рекомендуется)
     .accesskey = и
+update-application-warning-cross-user-setting = Этот параметр применится ко всем учётным записям Windows и профилям { -brand-short-name }, использующим эту установку { -brand-short-name }.
 update-application-use-service =
     .label = Использовать фоновую службу для установки обновлений
     .accesskey = ф
@@ -299,6 +288,21 @@ update-pref-write-failure-title = Ошибка записи
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = Не удалось сохранить настройку. Не удалось произвести запись в файл: { $path }
+update-setting-write-failure-title = Ошибка при сохранении настроек обновления
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    { -brand-short-name } столкнулся с ошибкой и не смог сохранить это изменение. Обратите внимание, что для установки этой настройки обновления требуется разрешение на запись в файл, указанный ниже. Вы или системный администратор можете исправить эту проблему, если предоставите группе «Пользователи» полный доступ к этому файлу.
+    
+    Не удалось произвести запись в файл: { $path }
+update-in-progress-title = Идёт обновление
+update-in-progress-message = Вы хотите продолжить обновление { -brand-short-name }?
+update-in-progress-ok-button = &Отменить
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = &Продолжить
 
 ## General Section - Performance
 
@@ -341,6 +345,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = Рекомендовать расширения при просмотре
     .accesskey = к
+browsing-cfr-features =
+    .label = Рекомендовать функции при просмотре
+    .accesskey = ф
 browsing-cfr-recommendations-learn-more = Подробнее
 
 ## General Section - Proxy
@@ -388,6 +395,50 @@ use-current-pages =
 choose-bookmark =
     .label = Использовать закладку…
     .accesskey = в
+
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Домашняя страница Firefox
+home-prefs-content-description = Выберите, какое содержимое вы хотите видеть на домашней странице Firefox.
+home-prefs-content-discovery-description = Обнаружение содержимого на домашней странице Firefox позволит вам находить высококачественные релевантные статьи со всего Интернета.
+home-prefs-search-header =
+    .label = Поиск в Интернете
+home-prefs-topsites-header =
+    .label = Топ сайтов
+home-prefs-topsites-description = Сайты, которые вы чаще всего посещаете
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = Рекомендовано { $provider }
+home-prefs-recommended-by-description = Отличный контент со всего Интернета, отобранный по вашему вкусу
+home-prefs-recommended-by-learn-more = Как это работает
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = Статьи спонсоров
+home-prefs-highlights-header =
+    .label = Избранное
+home-prefs-highlights-description = Избранные сайты, которые вы сохранили или посещали
+home-prefs-highlights-option-visited-pages =
+    .label = Посещённые страницы
+home-prefs-highlights-options-bookmarks =
+    .label = Закладки
+home-prefs-highlights-option-most-recent-download =
+    .label = Недавние загрузки
+home-prefs-highlights-option-saved-to-pocket =
+    .label = Страницы, сохранённые в { -pocket-brand-name }
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = Заметки
+home-prefs-snippets-description = Обновления от { -vendor-short-name } и { -brand-product-name }
+home-prefs-sections-rows-option =
+    .label =
+        { $num ->
+            [one] { $num } строка
+            [few] { $num } строки
+           *[many] { $num } строк
+        }
 
 ## Search Section
 
@@ -449,7 +500,7 @@ containers-remove-button =
 
 sync-signedout-caption = Возьмите свой Интернет с собой
 sync-signedout-description = Синхронизируйте свои закладки, историю, вкладки, пароли, дополнения и настройки на всех ваших устройствах.
-sync-signedout-account-title = Соединитесь с { -fxaccount-brand-name[instrumental] }
+sync-signedout-account-title = Соединитесь с { -fxaccount-brand-name(case: "instrumental") }
 sync-signedout-account-create = Нет аккаунта? Давайте его создадим
     .accesskey = е
 sync-signedout-account-signin =
@@ -531,8 +582,9 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = Сохранить
     .accesskey = х
-sync-mobilepromo-single = Подключить другое устройство
-sync-mobilepromo-multi = Управление устройствами
+sync-connect-another-device = Подключить другое устройство
+sync-manage-devices = Управление устройствами
+sync-fxa-begin-pairing = Соединиться с устройством
 sync-tos-link = Условия службы
 sync-fxa-privacy-notice = Уведомление о приватности
 
@@ -549,6 +601,12 @@ forms-ask-to-save-logins =
 forms-exceptions =
     .label = Исключения…
     .accesskey = ю
+forms-generate-passwords =
+    .label = Предлагать и генерировать надежные пароли
+    .accesskey = н
+forms-fill-logins-and-passwords =
+    .label = Автозаполнять логины и пароли
+    .accesskey = в
 forms-saved-logins =
     .label = Сохранённые логины…
     .accesskey = х
@@ -609,15 +667,10 @@ sitedata-total-size-calculating = Вычисление объема данных
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
 sitedata-total-size = Ваши сохранённые куки, данные сайтов и кэш сейчас занимают на диске { $value } { $unit }.
 sitedata-learn-more = Подробнее
-sitedata-keep-until = Хранить их
-    .accesskey = ь
-sitedata-keep-until-expire =
-    .label = до истечения срока их действия
-sitedata-keep-until-closed =
-    .label = до закрытия { -brand-short-name }
 sitedata-delete-on-close =
     .label = Удалять куки и данные сайтов при закрытии { -brand-short-name }
     .accesskey = д
+sitedata-delete-on-close-private-browsing = В режиме постоянного приватного просмотра, куки и данные сайтов всегда будут удаляться при закрытии { -brand-short-name }.
 sitedata-allow-cookies-option =
     .label = Принимать куки и данные сайтов
     .accesskey = и
@@ -628,18 +681,12 @@ sitedata-disallow-cookies-option =
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = Тип заблокированного
     .accesskey = п
-sitedata-block-trackers-option-recommended =
-    .label = Сторонние трекеры (рекомендуется)
-sitedata-block-trackers-option =
-    .label = Сторонние трекеры
-sitedata-block-unvisited-option =
-    .label = Куки с непосещённых сайтов
-sitedata-block-all-third-party-option =
-    .label = Все сторонние куки (может нарушить работу веб-сайтов)
-sitedata-block-all-option =
-    .label = Все куки (нарушит работу веб-сайтов)
 sitedata-option-block-trackers =
     .label = Сторонние трекеры
+sitedata-option-block-cross-site-trackers =
+    .label = Межсайтовые трекеры
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = Межсайтовые и социальные трекеры
 sitedata-option-block-unvisited =
     .label = Куки с непосещённых сайтов
 sitedata-option-block-all-third-party =
@@ -652,13 +699,6 @@ sitedata-clear =
 sitedata-settings =
     .label = Управление данными…
     .accesskey = ы
-sitedata-cookies-exceptions =
-    .label = Исключения…
-    .accesskey = ю
-# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
-# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
-# Cookies and Site Data section.
-sitedata-warning-your-settings-prevent-changes = Ваши настройки в Блокировке содержимого не дают произвести изменения настроек в Куки и данные сайтов.
 sitedata-cookies-permissions =
     .label = Управление разрешениями…
     .accesskey = п
@@ -681,41 +721,9 @@ addressbar-suggestions-settings = Изменить настройки для п�
 ## Privacy Section - Content Blocking
 
 content-blocking-header = Блокировка содержимого
-content-blocking-desc = Блокирует стороннее содержимое, такое как реклама или код, которое может замедлить просмотр страниц и отслеживать вас в Интернете. Установите свои настройки, чтобы обеспечить наилучший баланс защиты и производительности.
-content-blocking-description = Блокирует стороннее содержимое, отслеживающее вас в Интернете. Контролируйте, что из вашей онлайн-активности хранится и пересылается между сайтами.
+content-blocking-enhanced-tracking-protection = Улучшенная защита от отслеживания
+content-blocking-section-description = Защищайте свою приватность во время веб-сёрфинга. Блокируйте невидимый контент, который отслеживает, какие сайты вы посещаете, и профилирует вас. Блокировка некоторого содержимого может ускорить загрузку страниц.
 content-blocking-learn-more = Подробнее
-content-blocking-restore-defaults =
-    .label = Восстановить по умолчанию
-    .accesskey = и
-content-blocking-toggle-on =
-    .tooltiptext = Отключить блокировку содержимого
-content-blocking-toggle-off =
-    .tooltiptext = Включить блокировку содержимого
-content-blocking-toggle-label-on = ВКЛ
-    .accesskey = к
-content-blocking-toggle-label-off = ОТКЛ
-    .accesskey = Л
-content-blocking-category-label = Выберите, что блокировать
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-    .label = Медленные трекеры
-    .accesskey = н
-content-blocking-fastblock-new-description = Блокировать только трекеры, не дающие страницам быстро загружаться.
-content-blocking-tracking-protection-trackers-label =
-    .label = Трекеры
-    .accesskey = к
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = Все обнаруженные трекеры
-    .accesskey = е
-content-blocking-tracking-protection-new-description = Блокировать все известные трекеры (Некоторые страницы могут не открыться).
-content-blocking-tracking-protection-option-always =
-    .label = Всегда
-    .accesskey = а
-content-blocking-tracking-protection-option-private =
-    .label = Только в приватных окнах
-    .accesskey = и
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
 content-blocking-setting-standard =
@@ -727,20 +735,39 @@ content-blocking-setting-strict =
 content-blocking-setting-custom =
     .label = Персональная
     .accesskey = а
-content-blocking-standard-description = Блокирует только известные трекеры в приватных окнах.
 content-blocking-standard-desc = Обеспечивает наилучший баланс защиты и производительности. Разрешает некоторые трекеры для корректной работы веб-сайтов.
-content-blocking-strict-desc = Блокирует все трекеры, известные { -brand-short-name }. Может вызывать проблемы с некоторыми веб-сайтами.
+content-blocking-strict-description = Усиленная защита может вызывать проблемы с некоторыми веб-сайтами.
 content-blocking-custom-desc = Выберите, что блокировать.
 content-blocking-private-trackers = Все известные трекеры в приватных окнах
 content-blocking-third-party-cookies = Куки сторонних трекеров
+content-blocking-etp-standard-desc = Обеспечивает наилучший баланс защиты и производительности. Страницы будут загружаться нормально.
+content-blocking-etp-strict-desc = Усиленная защита может вызывать проблемы с некоторыми веб-сайтами и их содержимым.
+content-blocking-etp-custom-desc = Выберите, какие трекеры и скрипты необходимо блокировать.
+content-blocking-private-windows = Отслеживающее содержимое в приватных окнах
+content-blocking-cross-site-tracking-cookies = Межсайтовые отслеживающие куки
+content-blocking-social-media-trackers = Трекеры социальных сетей
+content-blocking-all-cookies = Все куки
+content-blocking-unvisited-cookies = Куки с непосещённых сайтов
 content-blocking-all-windows-trackers = Все известные трекеры во всех окнах
+content-blocking-all-windows-tracking-content = Отслеживающее содержимое во всех окнах
 content-blocking-all-third-party-cookies = Все сторонние куки
+content-blocking-cryptominers = Криптомайнеры
+content-blocking-fingerprinters = Сборщики цифровых отпечатков
 content-blocking-warning-title = Осторожно!
-content-blocking-warning-desc = Блокировка куков и трекеров может вызывать проблемы с некоторыми веб-сайтами. Можно легко отключить блокировку для сайтов, которым вы доверяете.
+content-blocking-warning-description = Блокировка содержимого может вызывать проблемы с некоторыми веб-сайтами. Можно легко отключить блокировку для сайтов, которым вы доверяете.
 content-blocking-learn-how = Подробнее
+content-blocking-etp-warning-description = Блокировка трекеров может нарушить работу некоторых сайтов. Перезагрузите страницу с трекерами, чтобы загрузить все содержимое.
+content-blocking-warning-learn-how = Подробнее
+content-blocking-reload-description = Вам понадобится обновить свои вкладки, чтобы применить эти изменения.
+content-blocking-reload-tabs-button =
+    .label = Обновить все вкладки
+    .accesskey = н
 content-blocking-trackers-label =
     .label = Трекеры
     .accesskey = е
+content-blocking-tracking-content-label =
+    .label = Отслеживающее содержимое
+    .accesskey = ж
 content-blocking-tracking-protection-option-all-windows =
     .label = Во всех окнах
     .accesskey = е
@@ -748,51 +775,23 @@ content-blocking-option-private =
     .label = Только в приватных окнах
     .accesskey = и
 content-blocking-tracking-protection-change-block-list = Сменить список блокировки
-content-blocking-third-party-cookies-label =
-    .label = Сторонние куки
-    .accesskey = о
-content-blocking-reject-trackers-description = Блокировать все сторонние куки или только установленные трекерами.
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = Ваши настройки в Куки и данные сайтов не дают произвести изменения настроек в Сторонние куки.
-content-blocking-change-cookie-settings =
-    .label = Изменить параметры куков
-    .accesskey = м
-content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = Трекеры (рекомендуется)
-    .accesskey = ы
-content-blocking-reject-trackers-block-trackers-option =
-    .label = Все трекеры
-    .accesskey = к
-content-blocking-reject-trackers-all-third-parties-option =
-    .label = Все сторонние куки (может нарушить работу веб-сайтов)
-    .accesskey = о
 content-blocking-cookies-label =
     .label = Куки
     .accesskey = и
+content-blocking-expand-section =
+    .tooltiptext = Дополнительная информация
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+    .label = Криптомайнеры
+    .accesskey = п
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+    .label = Сборщики цифровых отпечатков
+    .accesskey = о
 
 ## Privacy Section - Tracking
 
-tracking-header = Защита от отслеживания
-tracking-desc = Защита от отслеживания блокирует онлайн-трекеры, которые собирают данные вашего веб-сёрфинга на различных веб-сайтах. <a data-l10n-name="learn-more">Узнайте больше о защите от отслеживания и вашей приватности</a>
-tracking-mode-label = Использовать защиту от отслеживания для блокировки известных трекеров
-tracking-mode-always =
-    .label = Всегда
-    .accesskey = е
-tracking-mode-private =
-    .label = Только в приватных окнах
-    .accesskey = в
-tracking-mode-never =
-    .label = Никогда
-    .accesskey = а
-tracking-exceptions =
-    .label = Исключения…
-    .accesskey = л
-tracking-change-block-list =
-    .label = Сменить список блокировки…
-    .accesskey = м
 tracking-manage-exceptions =
     .label = Управление исключениями…
     .accesskey = е
@@ -820,20 +819,16 @@ permissions-notification-link = Подробнее
 permissions-notification-pause =
     .label = Отключить уведомления до перезапуска { -brand-short-name }
     .accesskey = ю
-permissions-block-autoplay-media =
-    .label = Не разрешать веб-сайтам автоматически воспроизводить медиа со звуком
+permissions-block-autoplay-media2 =
+    .label = Не разрешать веб-сайтам автоматически воспроизводить звук
     .accesskey = ш
-permissions-block-autoplay-media-menu = Для веб-сайтов автоматически воспроизводящих звук
 permissions-block-autoplay-media-exceptions =
     .label = Исключения…
     .accesskey = ю
-autoplay-option-ask =
-    .label = Всегда спрашивать
-autoplay-option-allow =
-    .label = Разрешить автовоспроизведение
-autoplay-option-dont =
-    .label = Не разрешать автовоспроизведение
-permissions-autoplay-link = Подробнее
+permissions-autoplay = Автовоспроизведение
+permissions-autoplay-settings =
+    .label = Параметры…
+    .accesskey = м
 permissions-block-popups =
     .label = Блокировать всплывающие окна
     .accesskey = о
@@ -869,10 +864,6 @@ addon-recommendations-link = Подробнее
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
 collection-health-report-disabled = Для этой конфигурации сборки отправка данных отключена
-collection-browser-errors =
-    .label = Разрешить { -brand-short-name } отправлять сообщения об ошибках браузера (в том числе текст ошибок) в { -vendor-short-name }
-    .accesskey = з
-collection-browser-errors-link = Подробнее
 collection-backlogged-crash-reports =
     .label = Разрешить { -brand-short-name } отправлять от вашего имени накопившиеся сообщения о падении
     .accesskey = ш

@@ -3,22 +3,13 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY  pref.masterpass.title                  "Senhas mestra">
-<!ENTITY  managepassword.caption                 "Consulta da senha mestra">
-<!ENTITY  managepassword.text                    "O &brandShortName; perguntará a senha mestra para você:">
-<!ENTITY  managepassword.askfirsttime            "Quando precisar pela primeira vez">
-<!ENTITY  managepassword.askfirsttime.accesskey  "Q">
-<!ENTITY  managepassword.askeverytime            "Sempre que ela for necessária">
-<!ENTITY  managepassword.askeverytime.accesskey  "S">
-<!ENTITY  managepassword.asktimeout              "Se a senha não for usada por">
-<!ENTITY  managepassword.asktimeout.accesskey    "S">
-<!ENTITY  managepassword.timeout.unit            "minutos ou mais">
 
 <!ENTITY  changepassword.caption                 "Modificar senha mestra">
 <!ENTITY  changepassword.text                    "Sua senha mestra protege informações confidenciais tais como certificados e senhas de sites.">
 <!ENTITY  changepassword.button                  "Modificar…">
 <!ENTITY  changepassword.accesskey               "o">
 
-<!ENTITY  resetpassword.caption                  "Excluir a senha mestra">
+<!ENTITY  resetpassword.caption                  "Redefinir senha mestra">
 <!ENTITY  resetpassword.text                     "Se remover a senha mestra, todas as suas senhas de sites e email, dados de formulários, certificados pessoais e chaves privadas serão perdidas.">
 <!ENTITY  resetpassword.button                   "Excluir…">
 <!ENTITY  resetpassword.accesskey                "x">

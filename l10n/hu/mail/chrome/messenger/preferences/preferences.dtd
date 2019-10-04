@@ -19,11 +19,12 @@
 <!ENTITY paneAttachments.title    "Mellékletek">
 <!ENTITY panePrivacy.title        "Adatvédelem">
 <!ENTITY paneSecurity.title       "Biztonság">
+<!ENTITY panePrivacySecurity.title "Adatvédelem és biztonság">
 <!ENTITY paneLightning.title      "Naptár">
 <!ENTITY paneAdvanced.title       "Speciális">
 <!ENTITY paneAccount.title        "Postafiókok">
 
-<!ENTITY addonsButton.label       "Bővítmények és témák">
+<!ENTITY addonsButton.label       "Kiegészítők és témák">
 
 <!ENTITY okButton.title           "OK">
 <!ENTITY okButton.accesskey       "O">

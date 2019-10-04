@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 translation-window =
-    .title = Wyjątki - Tłumaczenie stron WWW
+    .title = Wyjątki — tłumaczenie stron WWW
     .style = width: 36em
 translation-close-key =
     .key = w

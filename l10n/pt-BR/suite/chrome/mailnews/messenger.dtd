@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY messengerWindow.title "Email &amp; grupos de notícias">
+<!ENTITY messengerWindow.title "Email e grupos de notícias">
 <!ENTITY titleModifier.label "&brandShortName;">
 <!ENTITY titleSeparator.label " - ">
 
@@ -58,9 +58,9 @@
 <!ENTITY renameFolder.label "Renomear pasta...">
 <!ENTITY renameFolder.accesskey "m">
 <!ENTITY compactFolders.label "Otimizar pastas">
-<!ENTITY compactFolders.accesskey		"t">
+<!ENTITY compactFolders.accesskey "t">
 <!ENTITY emptyTrashCmd.label "Esvaziar lixeira">
-<!ENTITY emptyTrashCmd.accesskey		"v">
+<!ENTITY emptyTrashCmd.accesskey "v">
 <!ENTITY offlineMenu.label "Modo desconectado">
 <!ENTITY offlineMenu.accesskey "o">
 <!ENTITY synchronizeOfflineCmd.label "Receber/sincronizar agora...">
@@ -216,7 +216,7 @@
 
 <!ENTITY bodyMenuFeed.label "Formatação do RSS como">
 <!ENTITY bodyMenuFeed.accesskey "S">
-<!ENTITY viewFeedWebPage.label "Página da web">
+<!ENTITY viewFeedWebPage.label "Página web">
 <!ENTITY viewFeedWebPage.accesskey "w">
 <!ENTITY viewFeedSummary.label "Resumo">
 <!ENTITY viewFeedSummary.accesskey "s">
@@ -284,23 +284,23 @@
 <!ENTITY newNewMsgCmd.accesskey "M">
 <!ENTITY replyMsgCmd.label "Responder">
 <!ENTITY replyMsgCmd.accesskey "R">
-<!ENTITY replyMsgCmd.key	"r">
+<!ENTITY replyMsgCmd.key "r">
 <!ENTITY replyListCmd.label "Responder à lista">
 <!ENTITY replyListCmd.accesskey "l">
 <!ENTITY replyNewsgroupCmd.label "Responder ao grupo de notícias">
-<!ENTITY replyNewsgroupCmd.accesskey	"n">
+<!ENTITY replyNewsgroupCmd.accesskey "n">
 <!ENTITY replySenderCmd.label "Responder">
 <!ENTITY replySenderCmd.accesskey "R">
 <!ENTITY replyToAllMsgCmd.label "Responder a todos">
-<!ENTITY replyToAllMsgCmd.accesskey	"t">
-<!ENTITY replyToAllMsgCmd.key	"r">
+<!ENTITY replyToAllMsgCmd.accesskey "t">
+<!ENTITY replyToAllMsgCmd.key "r">
 <!ENTITY replyToSenderAndNewsgroupCmd.label "Responder ao remetente e ao grupo de notícias">
 <!ENTITY replyToSenderAndNewsgroupCmd.accesskey "p">
 <!ENTITY replyToAllRecipientsCmd.label "Responder para todos">
 <!ENTITY replyToAllRecipientsCmd.accesskey "a">
 <!ENTITY forwardMsgCmd.label "Encaminhar">
 <!ENTITY forwardMsgCmd.accesskey "E">
-<!ENTITY forwardMsgCmd.key	"l">
+<!ENTITY forwardMsgCmd.key "l">
 <!ENTITY forwardAsMenu.label "Encaminhar como">
 <!ENTITY forwardAsMenu.accesskey "h">
 <!ENTITY forwardAsInline.label "Com o texto da mensagem">

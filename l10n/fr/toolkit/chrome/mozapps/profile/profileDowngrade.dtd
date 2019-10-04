@@ -1,0 +1,20 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- LOCALIZATION NOTE:
+ This UI can be most easily shown by modifying the version in compatibility.ini
+ to a newer version and then starting Firefox.
+ For this feature, "installation" is used to mean "this discrete download of
+ Firefox" and "version" is used to mean "the specific revision number of a
+ given Firefox channel". These terms are not synonymous.
+-->
+<!ENTITY window.title "Vous avez lancé une ancienne version de Firefox">
+<!ENTITY window.style "width: 490px;">
+
+<!ENTITY window.nosync "L’utilisation d’une ancienne version de Firefox peut corrompre les marque-pages et l’historique de navigation déjà enregistrés dans un profil Firefox existant. Pour protéger vos informations, créez un nouveau profil pour cette installation de &brandShortName;.">
+<!ENTITY window.sync "L’utilisation d’une ancienne version de Firefox peut corrompre les marque-pages et l’historique de navigation déjà enregistrés dans un profil Firefox existant. Pour protéger vos informations, créez un nouveau profil pour cette installation de &brandShortName;. Vous pouvez toujours vous connecter avec un &syncBrand.fxAccount.label; pour synchroniser vos marque-pages et votre historique de navigation entre les profils.">
+
+<!ENTITY window.create "Créer un nouveau profil">
+<!ENTITY window.quit-win "Quitter">
+<!ENTITY window.quit-nonwin "Quitter">

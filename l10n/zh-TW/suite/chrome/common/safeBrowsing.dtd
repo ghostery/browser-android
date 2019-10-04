@@ -21,9 +21,13 @@
 <!ENTITY safeb.blocked.phishingPage.shortDesc2 "位於 <span id='phishing_sitename'/> 的這張網頁已被回報為詐騙網站，並已依照您的安全性偏好設定封鎖。">
 <!ENTITY safeb.blocked.phishingPage.longDesc2 "<p>詐騙網站會設計來誤導您做某些危險的事情，例如安裝軟體或提供密碼、手機號碼、信用卡號等個人資訊。</p><p>在這些網頁中輸入任何資訊可能會導致個人身分被盜用，或其他詐騙事件。</p>">
 
+<!ENTITY safeb.blocked.harmfulPage.title "此網站可能含有惡意軟體">
+<!-- Localization note (safeb.blocked.harmfulPage.shortDesc) - Please don't translate the contents of the <span id="harmful_sitename"/> tag. It will be replaced at runtime with a domain name (e.g. www.badsite.com) -->
+<!ENTITY safeb.blocked.harmfulPage.shortDesc "&brandShortName; 已封鎖 <span id='harmful_sitename'/> 載入，因為這張網頁可能會嘗試安裝用來偷竊或刪除您的資訊（例如相片、密碼、訊息、信用卡卡號等）的危險程式。">
+<!ENTITY safeb.blocked.harmfulPage.longDesc "">
+
 <!-- Localization note (reportDeceptiveSite, notADeceptiveSite) - The two button strings will never be shown at the same time, so it's okay for them to have the same access key. -->
 <!ENTITY reportDeceptiveSite.label "回報詐騙網站…">
 <!ENTITY reportDeceptiveSite.accesskey "d">
 <!ENTITY notADeceptiveSite.label "此網站不是詐騙網站…">
 <!ENTITY notADeceptiveSite.accesskey "d">
-

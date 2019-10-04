@@ -8,12 +8,12 @@
 <!ENTITY organizationField.label "Organisatie: ">
 <!ENTITY replyToField.label "Antwoord-naar: ">
 
-<!ENTITY subjectField.label "Onderwerp:">
+<!ENTITY subjectField.label "Onderwerp: ">
 <!--# LOCALIZATION NOTE (ccField.label): DONT_TRANSLATE -->
 <!ENTITY ccField.label "Cc: ">
 <!ENTITY bccField.label "Bcc: ">
 <!ENTITY newsgroupsField.label "Nieuwsgroepen: ">
-<!ENTITY followupToField.label "Reacties-naar: ">
+<!ENTITY followupToField.label "Opvolgen-aan: ">
 
 <!ENTITY tagsHdr.label "Labels: ">
 <!ENTITY dateField.label "Datum:">

@@ -14,11 +14,12 @@
 
 <!ENTITY paneGeneral.title        "Geral">
 <!ENTITY paneDisplay.title        "Aparência">
-<!ENTITY paneComposition.title    "Edição">
+<!ENTITY paneComposition.title    "Redação">
 <!ENTITY paneChat.title           "Bate-papo">
 <!ENTITY paneAttachments.title    "Anexos">
 <!ENTITY panePrivacy.title        "Privacidade">
 <!ENTITY paneSecurity.title       "Segurança">
+<!ENTITY panePrivacySecurity.title "Privacidade e Segurança">
 <!ENTITY paneLightning.title      "Agenda">
 <!ENTITY paneAdvanced.title       "Avançado">
 <!ENTITY paneAccount.title        "Contas">

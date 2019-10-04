@@ -38,6 +38,10 @@
 <!ENTITY  noproxy.label                 "Не использовать прокси для:">
 <!ENTITY  noproxy.accesskey             "д">
 <!ENTITY  noproxyExplain.label          "Пример: .mozilla-russia.org, .net.nz, 192.168.1.0/24">
+<!-- LOCALIZATION NOTE (noproxyLocalhostDesc.label): Do not translate
+  localhost, 127.0.0.1 and ::1.
+-->
+<!ENTITY  noproxyLocalhostDesc.label   "Соединения с localhost, 127.0.0.1 и ::1 никогда не проксируются.">
 <!ENTITY  shareproxy.label              "Использовать этот прокси-сервер для всех протоколов">
 <!ENTITY  shareproxy.accesskey          "е">
 <!ENTITY  autologinproxy.label          "Не запрашивать аутентификацию (если был сохранён пароль)">
@@ -47,9 +51,6 @@
 <!ENTITY  socksRemoteDNS.accesskey      "я">
 <!ENTITY  dnsOverHttps.label            "Включить DNS через HTTPS">
 <!ENTITY  dnsOverHttps.accesskey        "л">
-<!ENTITY  dnsOverHttpsUrl.label         "URL">
-<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
-<!ENTITY  dnsOverHttpsUrl.tooltip       "URL для разрешения DNS через HTTPS">
 <!ENTITY  dnsOverHttpsUrlDefault.label     "Использовать URL по умолчанию">
 <!ENTITY  dnsOverHttpsUrlDefault.accesskey "п">
 <!ENTITY  dnsOverHttpsUrlDefault.tooltip   "Использовать URL по умолчанию для разрешения DNS через HTTPS">

@@ -85,6 +85,10 @@
 <!ENTITY deleteAllAttachmentsCmd.label "Eliminar todos…">
 <!ENTITY deleteAllAttachmentsCmd.accesskey "d">
 <!ENTITY openAttachment.tooltip "Abrir el archivo adjunto">
+<!ENTITY detachedAttachmentFolder.show.label "Abrir carpeta contenedora">
+<!ENTITY detachedAttachmentFolder.show.accesskey "c">
+<!ENTITY detachedAttachmentFolder.showMac.label "Mostrar en Finder">
+<!ENTITY detachedAttachmentFolder.showMac.accesskey "F">
 <!ENTITY saveAttachmentButton1.label "Guardar">
 <!ENTITY saveAttachmentButton1.tooltip "Guardar el archivo adjunto">
 <!ENTITY saveAllAttachmentsButton1.label "Guardar todo">

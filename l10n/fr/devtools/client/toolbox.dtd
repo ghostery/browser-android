@@ -10,15 +10,6 @@
 <!ENTITY toggleToolboxF12.keycode          "VK_F12">
 <!ENTITY toggleToolboxF12.keytext          "F12">
 
-<!-- LOCALIZATION NOTE (browserToolboxErrorMessage): This is the label
-  -  shown next to error details when the Browser Toolbox is unable to open. -->
-<!ENTITY browserToolboxErrorMessage          "Une erreur s’est produite lors de l’ouverture de la boîte à outils du navigateur :">
-
-<!-- LOCALIZATION NOTE (browserToolboxStatusMessage): This is the label
-  -  shown next to status details when the Browser Toolbox fails to connect or
-  -  appears to be taking a while to do so. -->
-<!ENTITY browserToolboxStatusMessage "État de la connexion de la boîte à outils du navigateur :">
-
 <!-- LOCALIZATION NOTE (options.context.advancedSettings): This is the label for
   -  the heading of the advanced settings group in the options panel. -->
 <!ENTITY options.context.advancedSettings "Paramètres avancés">
@@ -144,6 +135,11 @@
    - label for the checkbox that toggles timestamps in the Web Console -->
 <!ENTITY options.timestampMessages.label      "Activer l’horodatage">
 <!ENTITY options.timestampMessages.tooltip    "Si vous activez cette option, les commandes et les sorties dans la console web afficheront l’horodatage">
+
+<!-- LOCALIZATION NOTE (options.warningGroups.label): This is the
+   - label for the checkbox that toggles the warningGroups feature in the Web Console -->
+<!ENTITY options.warningGroups.label      "Grouper les messages similaires">
+<!ENTITY options.warningGroups.tooltip    "Lorsque ceci est activé, des messages similaires sont regroupés">
 
 <!-- LOCALIZATION NOTE (options.debugger.label): This is the label for the
   -  heading of the group of Debugger preferences in the options panel. -->

@@ -101,9 +101,9 @@
 <!ENTITY customizeToolbar.accesskey                     "C">
 <!ENTITY layoutMenu.label                               "布局">
 <!ENTITY layoutMenu.accesskey                           "L">
-<!ENTITY showDirectoryPane.label                        "文件夹面板">
+<!ENTITY showDirectoryPane.label                        "文件夹窗格">
 <!ENTITY showDirectoryPane.accesskey                    "D">
-<!ENTITY showContactPane2.label                         "联系人面板">
+<!ENTITY showContactPane2.label                         "联系人窗格">
 <!ENTITY showContactPane2.accesskey                     "C">
 <!ENTITY menu_ShowNameAs.label                          "名称显示方式">
 <!ENTITY menu_ShowNameAs.accesskey                      "N">
@@ -173,9 +173,6 @@ because displayed names don't have the comma in between. -->
 <!ENTITY newmsgButton.tooltip                           "发送一个邮件消息">
 <!ENTITY newIM.tooltip                                  "发送一条即时消息或聊天">
 <!ENTITY deleteButton2.tooltip                          "删除选中项">
-
-<!-- Dir Tree header -->
-<!ENTITY dirTreeHeader.label                            "通讯录">
 
 <!-- Search Bar -->
 <!ENTITY SearchNameOrEmail.label                        "名称或者电子邮件">

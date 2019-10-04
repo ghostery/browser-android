@@ -166,7 +166,7 @@
 <!ENTITY checkSpellingCmd2.key "p">
 <!ENTITY checkSpellingCmd2.key2 "VK_F7">
 <!ENTITY checkSpellingCmd2.accesskey "c">
-<!ENTITY enableInlineSpellChecker.label "Spellingcontrole tijdens typen">
+<!ENTITY enableInlineSpellChecker.label "Spellingcontrole tijdens het typen">
 <!ENTITY enableInlineSpellChecker.accesskey "S">
 <!ENTITY quoteCmd.label "Bericht citeren">
 <!ENTITY quoteCmd.accesskey "B">
@@ -265,7 +265,7 @@
 <!ENTITY bccAddr.label "Bcc:">
 <!ENTITY replyAddr.label "Antwoord-naar:">
 <!ENTITY newsgroupsAddr.label "Nieuwsgroep:">
-<!ENTITY followupAddr.label "Reacties-naar:">
+<!ENTITY followupAddr.label "Opvolgen-aan:">
 <!ENTITY subject.label "Onderwerp:">
 <!ENTITY subject.accesskey "n">
 <!-- LOCALIZATION NOTE (attachments.accesskey) This access key character should

@@ -30,11 +30,11 @@
 <!ENTITY retentionKeepAll.accesskey "A">
 <!ENTITY retentionKeepRecent.label "最新的">
 <!ENTITY retentionKeepRecent.accesskey "n">
-<!ENTITY retentionApplyToFlagged.label "总是保留带标记消息">
+<!ENTITY retentionApplyToFlagged.label "一律保留带标记消息">
 <!ENTITY retentionApplyToFlagged.accesskey "e">
 
 <!ENTITY folderSynchronizationTab.label          "同步">
-<!ENTITY folderCheckForNewMessages2.label        "当获取此账户的新邮件时，总是检查此文件夹">
+<!ENTITY folderCheckForNewMessages2.label        "当获取此账户的新邮件时，一律查收此文件夹">
 <!ENTITY folderCheckForNewMessages2.accesskey    "c">
 
 <!ENTITY offlineFolder.check.label               "选择此文件夹供脱机使用">

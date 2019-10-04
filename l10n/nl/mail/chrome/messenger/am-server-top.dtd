@@ -2,8 +2,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!-- extracted from am-server-top.xul -->
-
 <!ENTITY messageStorage.label "Berichtenopslag">
 <!ENTITY securitySettings.label "Beveiligingsinstellingen">
 <!ENTITY serverSettings.label "Serverinstellingen">
@@ -44,7 +42,6 @@
 <!ENTITY deleteOnServer2.accesskey "w">
 <!ENTITY downloadOnBiff.label "Nieuwe berichten automatisch downloaden">
 <!ENTITY downloadOnBiff.accesskey "m">
-<!ENTITY username.label "Uw aanmeldingsnaam">
 <!ENTITY deleteMessagePrefix.label "Als ik een bericht verwijder:">
 <!ENTITY modelMoveToTrash.label "Het naar deze map verplaatsen:">
 <!ENTITY modelMoveToTrash.accesskey "m">

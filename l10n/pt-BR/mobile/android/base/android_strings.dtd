@@ -2,12 +2,15 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY firstrun_panel_title_welcome "Bem-vindo">
+<!ENTITY firstrun_panel_title_welcome "Boas-vindas">
 <!ENTITY firstrun_urlbar_message2 "Obrigado por escolher o &brandShortName;">
+<!ENTITY newfirstrun_urlbar_message "Boas-vindas ao &brandShortName;">
 <!ENTITY firstrun_urlbar_subtext2 "Um moderno navegador para dispositivos móveis da Mozilla, a fundação sem fins lucrativos comprometida com uma Web livre e aberta.">
+<!ENTITY newfirstrun_urlbar_subtext "Rápido, privativo e do seu lado.">
 <!ENTITY firstrun_panel_title_privacy "Privacidade">
 <!ENTITY firstrun_privacy_message "Navegue como se ninguém estivesse olhando">
 <!ENTITY firstrun_privacy_subtext "A Navegação Privativa com Proteção Contra Rastreamento bloqueia rastreadores enquanto você navega e não irá memorizar o seu histórico quando você terminar.">
+<!ENTITY newfirstrun_privacy_subtext "A navegação privativa bloqueia rastreadores de anúncios que seguem você pela internet.">
 <!ENTITY firstrun_panel_title_customize "Personalizar">
 <!ENTITY firstrun_customize_message "Faça o &brandShortName; seu.">
 <!ENTITY firstrun_customize_subtext "Personalize o &brandShortName; com extensões. Bloqueie anúncios, adicione recursos, ou escolha um novo tema para refletir sua personalidade.">
@@ -18,10 +21,15 @@
 <!ENTITY firstrun_data_message "Menos dados, mais economia">
 <!ENTITY firstrun_data_subtext2 "Desligar imagens para economizar dados em todos os sites que visitar.">
 <!ENTITY firstrun_sync_title "Sync">
-<!ENTITY firstrun_sync_message2 "Continue de onde você parou.">
+<!ENTITY updatednewfirstrun_sync_title "Conta">
+<!ENTITY firstrun_sync_message2 "Continue de onde parou.">
 <!ENTITY firstrun_sync_subtext2 "Use o Sync para encontrar os favoritos, senhas e outras coisas que você salva no &brandShortName; em todos os seus dispositivos.">
+<!ENTITY newfirstrun_sync_subtext "Sincronize as coisas que você salva no celular para o Firefox do computador, com privacidade e segurança.">
+<!ENTITY updatednewfirstrun_sync_subtext "Entre na sua conta para aproveitar ao máximo o &brandShortName;">
 <!ENTITY firstrun_signin_message "Conecte-se para iniciar">
 <!ENTITY firstrun_signin_button "Entrar no Sync">
+<!ENTITY newfirstrun_signin_button "Ativar o Sync">
+<!ENTITY updatednewfirstrun_signin_button "Entrar no &brandShortName;">
 <!ENTITY  onboard_start_button_browser "Iniciar navegação">
 <!ENTITY firstrun_button_notnow "Agora não">
 <!ENTITY firstrun_button_next "Próximo">
@@ -61,8 +69,19 @@
 <!ENTITY  sending_crash_report "Enviando relatório de travamento\u2026">
 <!ENTITY  crash_close_label "Fechar">
 <!ENTITY  crash_restart_label "Reiniciar o &brandShortName;">
+<!-- Localization note (crash_notification_title, crash_notification_message, crash_notification_negative_button_text)
+     Text displayed in a system notification to allow starting the Crash Reporter (Android Q and later).-->
+<!ENTITY  crash_notification_title "O &brandShortName; travou">
+<!ENTITY  crash_notification_message "Toque para relatar à &vendorShortName;">
+<!ENTITY  crash_notification_negative_button_text "Ignorar">
 
 <!ENTITY url_bar_default_text2 "Pesquise ou digite um endereço">
+
+<!-- Localization note: this text will be displayed in the Search Widget -->
+<!ENTITY search_widget_default_text "Pesquisar na web">
+<!ENTITY search_widget_default_cropped_text "Pesquisar">
+<!ENTITY search_widget_logo_description "Pesquise na web com o &brandShortName;">
+
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -97,6 +116,9 @@
 <!ENTITY bookmark_folder_updated "Pasta atualizada">
 <!ENTITY bookmark_parent_folder "Pasta superior">
 <!ENTITY bookmark_add_folder "Adicionar nova pasta">
+<!-- Localization note (bookmark_default_folder_title): Default title is used if user doesn't specify
+     one when he is creating a bookmark folder -->
+<!ENTITY bookmark_default_folder_title "(sem título)">
 
 <!ENTITY reader_saved_offline "Salvo off-line">
 <!-- Localization note (reader_switch_to_bookmarks) : This
@@ -165,14 +187,14 @@
      "to bookmark", not the noun "a bookmark". -->
 <!ENTITY overlay_share_bookmark_btn_label "Favorito">
 <!ENTITY overlay_share_bookmark_btn_label_already "Já está nos favoritos">
-<!ENTITY overlay_share_send_other "Enviar para outros dispositivos">
+<!ENTITY overlay_share_send_other "Enviar para dispositivos">
 
 <!ENTITY overlay_share_open_browser_btn_label "Abrir no &brandShortName;">
 <!-- Localization note (overlay_share_send_tab_btn_label) : Used on the
      share overlay menu to represent the "Send Tab" action when the user
      either has not set up Sync, or has no other devices to send a tab
      to. -->
-<!ENTITY overlay_share_send_tab_btn_label "Enviar para outro dispositivo">
+<!ENTITY overlay_share_send_tab_btn_label "Enviar para dispositivo">
 <!ENTITY overlay_share_no_url "Nenhum link encontrado neste compartilhamento">
 <!ENTITY overlay_share_select_device "Selecionar dispositivo">
 <!-- Localization note (overlay_no_synced_devices) : Used when the menu option
@@ -201,7 +223,7 @@
      search providers.
      The &formatI; in the string will be replaced by a small image of the icon described, and can be moved to wherever
      it is applicable. -->
-<!ENTITY pref_search_hint2 "Dica: Adicione qualquer site à sua lista de provedores de pesquisa com um toque longo no campo de pesquisa e em seguida tocando no ícone &formatI;.">
+<!ENTITY pref_search_hint2 "Dica: Adicione qualquer site à sua lista de mecanismos de pesquisa com um toque longo no campo de pesquisa e em seguida tocando no ícone &formatI;">
 <!ENTITY pref_category_advanced "Avançado">
 <!-- Localization note (pref_category_advanced_summary3): “data saver” in this
      context means consuming less data, e.g. by not loading images, not
@@ -225,7 +247,7 @@
 <!ENTITY pref_category_home_homepage "Página inicial">
 <!-- Localization note (home_homepage_every_new_tab): The user will see a switch to determine if the
      home page will be use in every new tab. -->
-<!ENTITY home_homepage_every_new_tab "Também usar para novas abas">
+<!ENTITY home_homepage_every_new_tab "Também usar em novas abas">
 <!ENTITY home_homepage_title "Definir uma página inicial">
 <!-- Localization note (home_homepage_radio_user_address): The user will see a series of radio
      buttons to choose the homepage they'd like to start on. When they click the radio
@@ -241,7 +263,7 @@
      particular radio button, a text field will appear below the radio button and allow the
      user to insert an address of their choice. This string is the hint text to that
      text field. -->
-<!ENTITY home_homepage_hint_user_address "Digitar o endereço ou termo para pesquisa">
+<!ENTITY home_homepage_hint_user_address "Digite um endereço ou pesquisa">
 
 <!-- Localization note: These are shown in the left sidebar on tablets -->
 <!ENTITY pref_header_general "Geral">
@@ -256,6 +278,7 @@
 <!ENTITY pref_cookies_menu "Cookies">
 <!ENTITY pref_cookies_accept_all "Ativados">
 <!ENTITY pref_cookies_not_accept_foreign "Ativados, exceto de terceiros">
+<!ENTITY pref_cookies_not_accept_trackers "Ativado, exceto cookies de rastreamento">
 <!ENTITY pref_cookies_disabled "Desativados">
 
 <!-- Localization note (pref_category_data_saver): “data saver” in this
@@ -275,7 +298,7 @@
 
 <!ENTITY pref_tracking_protection_title2 "Proteção contra rastreamento">
 <!ENTITY pref_donottrack_title "Não rastrear">
-<!ENTITY pref_donottrack_summary "O &brandShortName; dirá aos sites que não quer ser rastreado">
+<!ENTITY pref_donottrack_summary "O &brandShortName; dirá aos sites que você não quer ser rastreado">
 
 <!ENTITY pref_tracking_protection_enabled "Ativada">
 <!ENTITY pref_tracking_protection_enabled_pb "Ativada na navegação privativa">
@@ -290,11 +313,6 @@
 <!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "Saiba mais sobre como usar o &brandShortName; e outros produtos &vendorShortName;">
-<!-- Localization note (pref_feature_tips_notification_enabling_hint):
-     Describe the action the user should do to enable this preference
-     Will be used in the context "<Turn on> ... to enable this feature" -->
-<!ENTITY pref_feature_tips_notification_enabling_hint "Ativar">
-
 <!-- Localization note (pref_feature_tips_notification_enabling_path):
      Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
 <!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
@@ -310,7 +328,7 @@
      Instead of switching to the browser it appears as if the user stays in the third-party app.
      For more see: https://developer.chrome.com/multidevice/android/customtabs -->
 <!ENTITY pref_custom_tabs2 "Abas personalizadas">
-<!ENTITY pref_custom_tabs_summary4 "Permitir que as aplicações abram conteúdo da web em uma aba personalizada de carregamento rápido">
+<!ENTITY pref_custom_tabs_summary4 "Permitir que aplicativos abram conteúdo da web em uma aba personalizada de carregamento rápido">
 
 <!-- Localization note (custom_tabs_menu_item_open_in): The variable is replaced by the name of
      default browser from user's preference, such as "Open in Firefox" -->
@@ -322,15 +340,10 @@
 <!ENTITY pref_pwa "Aplicativos Web progressivos">
 <!ENTITY pref_pwa_summary "Permitir que aplicativos web sejam adicionados à tela inicial">
 
-<!ENTITY tracking_protection_prompt_title "Agora com proteção contra rastreamento">
-<!ENTITY tracking_protection_prompt_text "Bloqueia elementos de rastreamento para que não precise se preocupar.">
-<!ENTITY tracking_protection_prompt_tip_text "Visitar as configurações de privacidade para saber mais">
-<!ENTITY tracking_protection_prompt_action_button "Entendi!">
-
 <!ENTITY tab_queue_toast_message3 "Aba salva no &brandShortName;">
 <!ENTITY tab_queue_toast_action "Abrir agora">
 <!ENTITY tab_queue_prompt_title "Abrindo múltiplos links?">
-<!ENTITY tab_queue_prompt_text4 "Salvar para a próxima vez que iniciar o &brandShortName;.">
+<!ENTITY tab_queue_prompt_text4 "Salve para a próxima vez que iniciar o &brandShortName;.">
 <!ENTITY tab_queue_prompt_tip_text2 "Você pode alterar isto mais tarde nas configurações">
 <!-- Localization note (tab_queue_prompt_permit_drawing_over_apps): This additional text is shown if the
      user needs to enable an Android setting in order to enable tab queues. -->
@@ -340,6 +353,9 @@
 <!-- Localization note (tab_queue_prompt_settings_button): This button is shown if the user needs to
      enable a permission in Android's setting in order to enable tab queues. -->
 <!ENTITY tab_queue_prompt_settings_button "Ir para as configurações">
+<!-- Localization note (tab_queue_notification_prompt): This is the text of the default notification
+shown from Android O while a tab is being queued.-->
+<!ENTITY tab_queue_notification_prompt "Adicionando nova aba à fila&#8230;">
 <!ENTITY tab_queue_notification_title "&brandShortName;">
 <!-- Localization note (tab_queue_notification_text_plural2) : The
      formatD is replaced with the number of tabs queued.  The
@@ -362,7 +378,7 @@
      The action is shown below a header saying "Clear private data"; See pref_clear_private_data -->
 <!ENTITY pref_clear_private_data_now_tablet "Limpar agora">
 <!ENTITY pref_clear_on_exit_title3 "Limpar dados ao sair">
-<!ENTITY pref_clear_on_exit_summary2 "&brandShortName; irá limpar automaticamente os seus dados sempre que selecionar \&quot;Sair\&quot; no menu principal">
+<!ENTITY pref_clear_on_exit_summary2 "O &brandShortName; limpará automaticamente seus dados sempre que selecionar \&quot;Sair\&quot; no menu principal">
 <!ENTITY pref_clear_on_exit_dialog_title "Selecionar quais dados limpar">
 <!ENTITY pref_restore_tabs "Restaurar abas">
 <!ENTITY pref_restore_always "Restaurar sempre">
@@ -373,7 +389,7 @@
 <!ENTITY pref_use_system_font_size "Usar o tamanho da fonte do sistema">
 <!ENTITY pref_use_system_font_size_summary "Redimensionar o conteúdo de acordo com o tamanho da fonte do sistema">
 
-<!ENTITY pref_media_autoplay_enabled "Permitir reprodução automática">
+<!ENTITY pref_media_autoplay_enabled "Permissão de reprodução automática">
 <!ENTITY pref_media_autoplay_allow "Permitir reprodução automática">
 <!ENTITY pref_media_autoplay_block "Bloquear reprodução automática">
 <!ENTITY pref_zoom_force_enabled "Sempre ativar o zoom">
@@ -398,15 +414,17 @@
 <!ENTITY pref_private_data_searchHistory "Histórico de pesquisas">
 <!ENTITY pref_private_data_formdata2 "Histórico de formulários">
 <!ENTITY pref_private_data_cookies2 "Cookies e contas de acesso ativas">
-<!ENTITY pref_private_data_passwords2 "Contas de acesso salvas">
 <!ENTITY pref_private_data_cache "Cache">
 <!ENTITY pref_private_data_offlineApps "Dados offline de sites">
 <!ENTITY pref_private_data_siteSettings2 "Configurações de sites">
 <!ENTITY pref_private_data_downloadFiles2 "Downloads">
 <!ENTITY pref_private_data_syncedTabs "Abas sincronizadas">
 
-<!ENTITY pref_default_browser "Tornar navegador padrão">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Visitar o suporte da Mozilla">
+<!ENTITY pref_default_browser2 "Torne o &brandShortName; seu navegador padrão">
+<!-- LOCALIZATION NOTE (default_browser_system_settings_toast):
+    Message of an Android Toast that appears after our app opens "Android System Settings -> Apps -> Default apps"
+    and instruct users to tap on the "Browser app" option on that settings screen to choose a default browser app. -->
+<!ENTITY default_browser_system_settings_toast "Toque em App de navegador e selecione &brandShortName;">
 <!ENTITY pref_about_firefox "Sobre o &brandShortName;">
 <!ENTITY pref_vendor_faqs "Perguntas frequentes">
 <!ENTITY pref_vendor_feedback "Enviar opinião">
@@ -441,10 +459,10 @@
      en-US/chrome/browser/preferences/advanced.dtd (healthReportSection.label,
      healthReportDesc.label, telemetrySection.label, telemetryDesc.label,
      crashReporterDesc.label). -->
-<!ENTITY datareporting_fhr_title "Relatório de integridade do &brandShortName;">
-<!ENTITY datareporting_fhr_summary2 "Compartilha dados com a &vendorShortName; sobre a saúde do seu navegador e ajuda a entender seu desempenho">
+<!ENTITY datareporting_fhr_title "Relatório de Integridade do &brandShortName;">
+<!ENTITY datareporting_fhr_summary2 "Compartilhar com a &vendorShortName; dados sobre a saúde do seu navegador e ajudar você a entender o desempenho do seu navegador">
 <!ENTITY datareporting_telemetry_title "Telemetria">
-<!ENTITY datareporting_telemetry_summary "Compartilha dados de desempenho, uso, hardware e personalizações com a &vendorShortName; para nos ajudar a fazer o &brandShortName; melhor">
+<!ENTITY datareporting_telemetry_summary "Compartilhar dados de desempenho, uso, hardware e personalização com a &vendorShortName; para nos ajudar a melhorar o &brandShortName;">
 <!ENTITY datareporting_crashreporter_summary "O &brandShortName; envia relatórios de travamento para ajudar a &vendorShortName; a tornar o navegador mais estável e seguro">
 <!-- Localization note (datareporting_crashreporter_title_short) : This string matches
      (crashReporterSection.label) in en-US/chrome/browser/preferences/advanced.dtd.-->
@@ -501,6 +519,10 @@
 <!ENTITY find_next "Próximo">
 <!ENTITY find_close "Fechar">
 
+<!-- Localization note (find_error) : Error message shown when there is no result for the
+     searched for text in this webpage -->
+<!ENTITY find_error "Frase não encontrada">
+
 <!-- Localization note (media_sending_to, media_play, media_pause, media_stop) : These strings are used
      as alternate text for accessibility. They are not visible in the UI. -->
 <!ENTITY media_sending_to "Enviando para dispositivo">
@@ -511,7 +533,7 @@
 <!ENTITY contextmenu_open_new_tab "Abrir em uma nova aba">
 <!ENTITY contextmenu_open_private_tab "Abrir em uma aba privativa">
 <!ENTITY contextmenu_remove "Remover">
-<!ENTITY contextmenu_add_page_shortcut "Adicionar atalho à página">
+<!ENTITY contextmenu_add_page_shortcut "Adicionar atalho para página">
 <!ENTITY contextmenu_set_as_homepage "Definir como página inicial">
 <!ENTITY contextmenu_share "Compartilhar">
 <!ENTITY contextmenu_pasteandgo "Colar e ir">
@@ -527,8 +549,8 @@
      pin/unpin items from top sites when the user is not on the top sites screen so they'd be missing context on what
      just "Pin Site" or "Unpin Site" would mean. -->
 <!ENTITY contextmenu_pin_to_top_sites "Fixar nos sites preferidos">
-<!ENTITY contextmenu_unpin_from_top_sites "Desafixar dos sites preferidos">
-<!ENTITY contextmenu_add_search_engine "Adicionar um mecanismo de pesquisa">
+<!ENTITY contextmenu_unpin_from_top_sites "Desafixar dos preferidos">
+<!ENTITY contextmenu_add_search_engine "Adicionar pesquisador">
 
 <!-- Localization note (pinned_page_to_top_sites, unpinned_page_from_top_sites): These strings are shown in a snackbar
      after the user pins/unpins the currently displayed page from top sites. -->
@@ -551,7 +573,7 @@
 <!-- Localization note (pref_scroll_title_bar2): Label for setting that controls
      whether or not the dynamic toolbar is enabled. -->
 <!ENTITY pref_scroll_title_bar2 "Navegação em tela inteira">
-<!ENTITY pref_scroll_title_bar_summary2 "Ocultar a barra de ferramentas do &brandShortName; ao rolar a tela para baixo">
+<!ENTITY pref_scroll_title_bar_summary2 "Ocultar a barra de ferramentas do &brandShortName; ao deslizar a tela para baixo">
 
 <!ENTITY pref_tab_queue_title3 "Fila de abas">
 <!ENTITY pref_tab_queue_summary4 "Salvar links para a próxima vez que abrir o &brandShortName;">
@@ -573,6 +595,8 @@
 <!ENTITY bookmark_edit_location "Endereço">
 <!ENTITY bookmark_edit_keyword "Palavra-chave">
 <!ENTITY bookmark_select_folder "Selecionar pasta">
+
+<!ENTITY bookmark_edit_undo "Desfazer">
 
 <!-- Localization note (site_settings_*) : These strings are used in the "Site Settings"
      dialog that appears after selecting the "Edit Site Settings" context menu item. -->
@@ -624,7 +648,7 @@
 <!ENTITY home_most_recent_empty "Sites visitados recentemente serão vistos aqui.">
 <!-- Localization note (home_most_recent_emptyhint2): "Psst" is a sound that might be used to attract someone's attention unobtrusively, and intended to hint at Private Browsing to the user.
      The placeholders &formatS1; and &formatS2; are used to mark the location of text underlining. -->
-<!ENTITY home_most_recent_emptyhint2 "Psst: ao usar uma &formatS1;Nova aba privativa&formatS2;, seu histórico não será salvo.">
+<!ENTITY home_most_recent_emptyhint2 "Dica: ao usar uma &formatS1;nova aba privativa&formatS2;, o histórico não é salvo.">
 
 <!-- Localization note (home_default_empty): This string is used as the default text when there
      is no data to show in an about:home panel that was created by an add-on. -->
@@ -655,12 +679,13 @@
 <!ENTITY remote_tabs_panel_moved_desc "Movemos suas abas de outros dispositivos para um painel na sua página inicial, que pode ser facilmente acessada ​​toda vez que abrir uma nova aba.">
 <!ENTITY remote_tabs_panel_moved_link "Leve-me para o meu novo painel.">
 
-<!ENTITY pin_site_dialog_hint "Digitar uma palavra-chave de pesquisa">
+<!ENTITY pin_site_dialog_hint "Digite uma palavra-chave de pesquisa">
 
 <!ENTITY filepicker_title "Escolher arquivo">
 <!ENTITY filepicker_audio_title "Escolher ou gravar um som">
 <!ENTITY filepicker_image_title "Escolher ou tirar uma foto">
 <!ENTITY filepicker_video_title "Escolher ou gravar um vídeo">
+<!ENTITY filepicker_permission_denied "Permissão necessária não concedida, revertendo para o selecionador de arquivos do sistema.">
 
 <!-- Site identity popup -->
 <!ENTITY identity_connected_to "Conectado a">
@@ -732,7 +757,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY updater_downloading_title2 "Baixando o &brandShortName;">
 <!ENTITY updater_downloading_title_failed2 "O download falhou">
 <!ENTITY updater_downloading_select2 "Toque para aplicar a atualização assim que for baixada">
-<!ENTITY updater_downloading_retry2 "Toque para tentar de novo">
+<!ENTITY updater_downloading_retry2 "Toque para tentar novamente">
 
 <!ENTITY updater_apply_title3 "Baixando atualização para o &brandShortName;">
 <!ENTITY updater_apply_select3 "Tocar para instalar">
@@ -803,7 +828,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
      code has already been displayed by the client trying to connect (such as
      desktop Firefox via WebIDE), so you just need to aim this device at the QR
      code. -->
-<!ENTITY devtools_auth_scan_header "Escaneando código QR exibido no seu outro dispositivo">
+<!ENTITY devtools_auth_scan_header "Capturando código QR exibido em outro dispositivo">
 
 <!-- Restrictable features -->
 <!-- Localization note: These are features the device owner (e.g. parent) can enable or disable for
@@ -869,9 +894,9 @@ Stream list for highlights sourced from th user's bookmarks. -->
 Stream list for highlights sourced from th user's bookmarks. -->
 <!ENTITY activity_stream_highlight_label_visited "Visitado">
 <!-- LOCALIZATION NOTE (activity_stream_highlight_label_trending): This label is shown in the Activity Stream list for highlights sourced from a recommendations engine. -->
-<!ENTITY activity_stream_highlight_label_trending "Tendência">
+<!ENTITY activity_stream_highlight_label_trending "Em alta">
 <!-- LOCALIZATION NOTE (activity_stream_highlights_empty): This text is shown when we could not find highlights for this user. This is also shown on first run. -->
-<!ENTITY activity_stream_highlights_empty "Comece a navegar e mostraremos aqui alguns ótimos artigos, vídeos e outras páginas que você favoritou ou visitou recentemente.">
+<!ENTITY activity_stream_highlights_empty "Comece a navegar e mostraremos aqui alguns ótimos artigos, vídeos e outras páginas que você visitou ou adicionou aos favoritos recentemente.">
 
 <!-- LOCALIZATION NOTE (activity_stream_remove): This label is shown in the Activity Stream context menu,
 and allows hiding a URL/page from highlights or topsites. The page remains in history/bookmarks, but
@@ -903,16 +928,11 @@ Picture-in-picture mini window -->
 <!ENTITY pip_pause_button_title "Pausa">
 <!ENTITY pip_pause_button_description "Pausar a reprodução">
 
-<!-- Notification channels names -->
-<!ENTITY default_notification_channel "&brandShortName;">
-
+<!ENTITY pref_notification_settings_link "Gerenciar configurações de notificação">
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel2 "Navegador">
 <!ENTITY mls_notification_channel "Serviço de localização do &vendorShortName;">
 <!ENTITY download_notification_channel "Downloads">
-<!ENTITY media_notification_channel "Reprodução de mídia">
-<!-- These push notifications come without a specific channel and/or name from Leanplum -->
-<!ENTITY leanplum_default_notifications_channel "Notificações push do &brandShortName;">
 <!ENTITY media_notification_channel2 "Som e vídeo">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel2 "Dicas e truques da &vendorShortName;">
@@ -921,3 +941,4 @@ Picture-in-picture mini window -->
 <!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
 web sites through the HTML Notifications API. -->
 <!ENTITY site_notifications_channel "Notificações do site">
+<!ENTITY crash_handler_notifications_channel "Relator de travamentos do &brandShortName;">

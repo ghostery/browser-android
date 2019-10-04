@@ -5,8 +5,6 @@
 <!ENTITY doNotDownloadPop3Movemail.label "为了节省磁盘空间，请不要下载：">
 <!ENTITY doNotDownloadNntp.label "为了节省磁盘空间，请不要下载供脱机使用：">
 <!ENTITY doNotDownloadImap.label "要节省磁盘空间，可对从服务器下载并保存到本地供离线使用的消息进行大小或时间上的限制。">
-<!ENTITY allFoldersOffline.label "在此计算机中保留此账户的消息">
-<!ENTITY allFoldersOffline.accesskey "o">
 <!ENTITY allFoldersOffline2.label "在此计算机上保留此账户所有文件夹中的消息">
 <!ENTITY allFoldersOffline2.accesskey "o">
 <!ENTITY allFoldersOfflineNote.label "注意：更改此项将影响此账户的所有文件夹。要设置单个文件夹，请用 高级… 按钮。">
@@ -30,7 +28,7 @@
 <!ENTITY retentionKeepAll.accesskey "n">
 <!ENTITY retentionKeepRecent.label "除最近使用的全部删除">
 <!ENTITY retentionKeepRecent.accesskey "b">
-<!ENTITY retentionApplyToFlagged.label "总是保留已加星标之消息">
+<!ENTITY retentionApplyToFlagged.label "一律保留已加星标之消息">
 <!ENTITY retentionApplyToFlagged.accesskey "k">
 <!ENTITY nntpRemoveMsgBody.label "移除消息体，当消息超过">
 <!ENTITY nntpRemoveMsgBody.accesskey "o">

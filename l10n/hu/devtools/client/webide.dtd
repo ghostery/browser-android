@@ -30,8 +30,8 @@
 
 <!ENTITY runtimeMenu_label "Futtatókörnyezet">
 <!ENTITY runtimeMenu_accesskey "F">
-<!ENTITY runtimeMenu_disconnect_label "Leválás">
-<!ENTITY runtimeMenu_disconnect_accesskey "L">
+<!ENTITY runtimeMenu_disconnect_label "Kapcsolat bontása">
+<!ENTITY runtimeMenu_disconnect_accesskey "b">
 <!ENTITY runtimeMenu_takeScreenshot_label "Képernyőkép">
 <!ENTITY runtimeMenu_takeScreenshot_accesskey "K">
 <!ENTITY runtimeMenu_showDetails_label "Futtatókörnyezet infó">
@@ -40,7 +40,6 @@
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "z">
 <!ENTITY runtimeMenu_showSettings_label "Eszközbeállítások">
 <!ENTITY runtimeMenu_showSettings_accesskey "z">
-
 <!ENTITY runtimeMenu_showPerformancePanel_label "Teljesítmény">
 <!ENTITY runtimeMenu_showPerformancePanel_accesskey "T">
 
@@ -77,7 +76,6 @@
 <!ENTITY runtimePanel_usb "USB eszközök">
 <!ENTITY runtimePanel_wifi "Wi-Fi eszközök">
 <!ENTITY runtimePanel_other "Egyéb">
-<!ENTITY runtimePanel_noadbhelper "ADB segéd telepítése">
 <!ENTITY runtimePanel_nousbdevice "Nem látja az eszközt?">
 <!ENTITY runtimePanel_refreshDevices_label "Eszközök frissítése">
 
@@ -111,8 +109,8 @@
 <!ENTITY prefs_general_title "Általános">
 <!ENTITY prefs_restore "Alapértelmezések visszaállítása">
 <!ENTITY prefs_manage_components "Extra összetevők kezelése">
-<!ENTITY prefs_options_autoconnectruntime "Újracsatlakozás a korábbi futtatókörnyezethez">
-<!ENTITY prefs_options_autoconnectruntime_tooltip "Újracsatlakozás a korábbi futtatókörnyezethez a WebIDE indulásakor">
+<!ENTITY prefs_options_autoconnectruntime "Újrakapcsolódás a korábbi futtatókörnyezethez">
+<!ENTITY prefs_options_autoconnectruntime_tooltip "Újrakapcsolódás a korábbi futtatókörnyezethez a WebIDE indulásakor">
 <!ENTITY prefs_options_rememberlastproject "Utolsó projekt megjegyzése">
 <!ENTITY prefs_options_rememberlastproject_tooltip "Előző projekt helyreállítása a WebIDE indulásakor">
 <!ENTITY prefs_options_templatesurl "Sablonok URL-je">

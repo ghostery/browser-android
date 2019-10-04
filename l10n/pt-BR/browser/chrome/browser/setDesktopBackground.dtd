@@ -8,8 +8,14 @@
 <!ENTITY stretch.label              "Toda a tela">
 <!ENTITY fill.label                 "Preencher">
 <!ENTITY fit.label                  "Ajustar">
-<!ENTITY preview.label              "Visualizar">
+<!-- LOCALIZATION NOTE (span.label): This refers to the wallpaper "spanning"
+                       multiple monitors when the user has more than one. Only
+                       some of the entire image will be on each monitor.
+                       This should ideally match the wording in Windows' own
+                       Desktop Background settings page. -->
+<!ENTITY span.label                 "Estender">
 <!ENTITY color.label                "Cor:">
 <!ENTITY setDesktopBackground.title "Definir papel de parede">
 <!ENTITY openDesktopPrefs.label     "Abrir preferências da área de trabalho">
 <!ENTITY closeWindow.key            "W">
+<!ENTITY previewUnavailable         "Visualização não disponível">

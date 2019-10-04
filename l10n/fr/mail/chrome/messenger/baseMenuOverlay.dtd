@@ -9,9 +9,11 @@
                        for the help button in the menubar but Gnome does not.   -->
 <!ENTITY helpMenuWin.label "?">
 <!ENTITY helpMenuWin.accesskey "?">
+<!ENTITY aboutProduct2.label "À propos de &brandShorterName;">
+<!ENTITY aboutProduct2.accesskey "p">
 <!ENTITY helpTroubleshootingInfo.label     "Informations de dépannage">
 <!ENTITY helpTroubleshootingInfo.accesskey "I">
-<!ENTITY helpSafeMode.label     "Redémarrer avec les modules désactivés…">
+<!ENTITY helpSafeMode.label     "Redémarrer, modules désactivés…">
 <!ENTITY helpSafeMode.accesskey "R">
 <!ENTITY releaseCmd2.label "Notes de version">
 <!ENTITY releaseCmd2.accesskey "N">
@@ -20,13 +22,31 @@
 <!ENTITY openHelp.label "Rubriques d’aide">
 <!ENTITY openHelp.accesskey "a">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "Aide de &brandShortName;">
 <!ENTITY openHelpMac2.label "Aide de &brandFullName;">
 <!ENTITY openHelpMac2.commandkey   "?">
 <!ENTITY openHelpMac2.modifiers    "accel">
 
-<!ENTITY aboutMenuCmd.label "À propos de &brandShortName;">
-<!ENTITY aboutMenuCmd.accesskey "p">
-
 <!ENTITY aboutMenuCmd2.label "À propos de &brandFullName;">
 <!ENTITY aboutMenuCmd2.accesskey "p">
+<!ENTITY helpSafeMode.stop.label     "Redémarrer, modules activés">
+<!ENTITY helpSafeMode.stop.accesskey "R">
+<!ENTITY productHelp.label "Aide de &brandShortName;">
+<!ENTITY productHelp.accesskey "e">
+<!ENTITY productHelp.commandkey "VK_F1">
+<!ENTITY productHelpMac.commandkey "?">
+<!ENTITY productHelpMac.modifiers "accel">
+
+<!ENTITY helpKeyboardShortcuts.label "Raccourcis clavier">
+<!ENTITY helpKeyboardShortcuts.accesskey "R">
+
+<!ENTITY helpFeedbackPage.label "Donner votre avis…">
+<!ENTITY helpFeedbackPage.accesskey "D">
+
+<!ENTITY helpShowTour2.label "Visite guidée de &brandShorterName;">
+<!ENTITY helpShowTour2.accesskey "V">
+
+<!ENTITY helpGetInvolvedPage.label "S’impliquer">
+<!ENTITY helpGetInvolvedPage.accesskey "S">
+
+<!ENTITY helpDonationsPage.label "Faire un don">
+<!ENTITY helpDonationsPage.accesskey "F">

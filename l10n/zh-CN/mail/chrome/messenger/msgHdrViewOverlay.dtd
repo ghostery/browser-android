@@ -49,7 +49,7 @@
 <!ENTITY hdrViewToolbarShowIcons.accesskey "I">
 <!ENTITY hdrViewToolbarShowText.label "仅显示文本">
 <!ENTITY hdrViewToolbarShowText.accesskey "T">
-<!ENTITY hdrViewToolbarAlwaysReplySender.label "总是回复至发件人">
+<!ENTITY hdrViewToolbarAlwaysReplySender.label "一律回复至发件人">
 <!ENTITY hdrViewToolbarAlwaysReplySender.accesskey "R">
 
 <!ENTITY otherActionsButton2.label "更多">
@@ -72,7 +72,7 @@
 <!ENTITY otherActionsPrint1.accesskey "P">
 
 <!-- Attachment bar context menu items -->
-<!ENTITY startExpandedCmd.label    "首先显示附件面板">
+<!ENTITY startExpandedCmd.label    "初始化时显示附件窗格">
 <!ENTITY startExpandedCmd.accesskey    "S">
 
 <!-- Attachment context menu items -->
@@ -94,6 +94,11 @@
 <!ENTITY deleteAllAttachmentsCmd.accesskey    "e">
 
 <!ENTITY openAttachment.tooltip "打开附件">
+
+<!ENTITY detachedAttachmentFolder.show.label        "打开所在文件夹">
+<!ENTITY detachedAttachmentFolder.show.accesskey    "F">
+<!ENTITY detachedAttachmentFolder.showMac.label     "在“访达”中显示">
+<!ENTITY detachedAttachmentFolder.showMac.accesskey "F">
 
 <!-- Attachment toolbar items -->
 <!ENTITY saveAttachmentButton1.label       "保存">

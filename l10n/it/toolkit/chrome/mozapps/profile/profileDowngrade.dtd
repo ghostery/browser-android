@@ -1,0 +1,12 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!ENTITY window.title "Stai utilizzando una versione più vecchia di Firefox">
+<!ENTITY window.style "width: 490px;">
+
+<!ENTITY window.nosync "L’utilizzo di una versione più vecchia di Firefox può danneggiare segnalibri e cronologia di navigazione già salvati in un profilo esistente di Firefox. Per proteggere queste informazioni, creare un nuovo profilo per questa installazione di &brandShortName;.">
+<!ENTITY window.sync "L’utilizzo di una versione più vecchia di Firefox può danneggiare segnalibri e cronologia di navigazione già salvati in un profilo esistente di Firefox. Per proteggere queste informazioni, creare un nuovo profilo per questa installazione di &brandShortName;. È possibile utilizzare un &syncBrand.fxAccount.label; per sincronizzare segnalibri e cronologia di navigazione tra profili diversi.">
+<!ENTITY window.create "Crea un nuovo profilo">
+<!ENTITY window.quit-win "Esci">
+<!ENTITY window.quit-nonwin "Esci">

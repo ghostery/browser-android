@@ -10,7 +10,7 @@
 <!ENTITY returnToPreviousPage.label "Вернуться назад">
 <!ENTITY returnToPreviousPage1.label "Вернуться назад (рекомендуется)">
 <!ENTITY advanced.label "Дополнительно">
-<!ENTITY continue2.label "Подробнее…">
+<!ENTITY advanced2.label "Дополнительно…">
 <!ENTITY moreInformation.label "Подробная информация">
 <!ENTITY viewCertificate.label "Просмотреть сертификат">
 
@@ -123,7 +123,7 @@
 </ul>
 ">
 
-<!ENTITY redirectLoop.title "Неверное перенаправление на странице">
+<!ENTITY redirectLoop.title "Циклическое перенаправление на странице">
 <!ENTITY redirectLoop.longDesc "
 <ul>
   <li>Эта проблема может возникать при отключении или запрещении принятия
@@ -148,12 +148,16 @@
 ">
 
 <!ENTITY certerror.longpagetitle1 "Ваше соединение не защищено">
+
 <!ENTITY certerror.longpagetitle2 "Предупреждение: Вероятная угроза безопасности">
 <!ENTITY certerror.sts.longpagetitle  "Соединение не установлено: Вероятная угроза безопасности">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "Владелец <span class='hostname'/> неправильно настроил свой веб-сайт. Чтобы защитить вашу информацию от кражи, &brandShortName; не соединился с этим веб-сайтом.">
+<!-- Localization note (certerror.introPara2) - The text content of the span tag
+will be replaced at runtime with the name of the server to which the user
+was trying to connect. -->
 <!ENTITY certerror.introPara2 "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>. Если вы посетите этот сайт, нападавшие могут попытаться похитить вашу информацию, такую как пароли, адреса электронной почты или данные банковских карт.">
 <!ENTITY certerror.sts.introPara "&brandShortName; обнаружил вероятную угрозу безопасности и не стал открывать <span class='hostname'/>, так как для подключения к этому сайту необходимо установить защищённое соединение.">
 
@@ -196,6 +200,7 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "Добавить исключение…">
+
 <!ENTITY securityOverride.exceptionButton1Label "Принять риск и продолжить">
 
 <!ENTITY errorReporting.automatic2 "Отправка сообщений о подобных ошибках поможет Mozilla обнаружить и заблокировать вредоносные сайты">
@@ -216,6 +221,7 @@ was trying to connect. -->
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>&brandShortName; не соединился с <span id='wrongSystemTimeWithoutReference_URL'/>, так как похоже, что часы на вашем компьютере показывают неправильное время, что не позволяет установить защищённое соединение.</p> <p>Ваш компьютер считает, что сейчас <span id='wrongSystemTimeWithoutReference_systemDate'/>. Чтобы устранить эту проблему, измените ваши настройки даты и времени, чтобы установить правильное время.</p>">
 
 <!ENTITY certerror.pagetitle1  "Незащищённое соединение">
+
 <!ENTITY certerror.pagetitle2  "Предупреждение: Вероятная угроза безопасности">
 <!ENTITY certerror.sts.pagetitle  "Соединение не установлено: Вероятная угроза безопасности">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "Этот сайт использует Форсированное защищённое соединение HTTP (HSTS), чтобы указать, что &brandShortName; должен подключаться к нему только через защищённое соединение. В результате, добавление исключения для этого сертификата невозможно.">

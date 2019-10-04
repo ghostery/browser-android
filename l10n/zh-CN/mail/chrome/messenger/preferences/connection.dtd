@@ -38,6 +38,10 @@
 <!ENTITY  noproxy.label                 "不使用代理:">
 <!ENTITY  noproxy.accesskey             "N">
 <!ENTITY  noproxyExplain.label          "例如： .mozilla.org.cn, .net.nz, 192.168.1.0/24">
+<!-- LOCALIZATION NOTE (noproxyLocalhostDesc.label): Do not translate
+  localhost, 127.0.0.1 and ::1.
+-->
+<!ENTITY  noproxyLocalhostDesc.label   "与 localhost、127.0.0.1 和 ::1 的连接永不经过代理。">
 <!ENTITY  shareproxy.label              "为所有协议使用此代理服务器">
 <!ENTITY  shareproxy.accesskey          "x">
 <!ENTITY  autologinproxy.label          "如果密码已保存，不提示身份验证">
@@ -47,9 +51,6 @@
 <!ENTITY  socksRemoteDNS.accesskey      "d">
 <!ENTITY  dnsOverHttps.label            "启用基于 HTTPS 的 DNS">
 <!ENTITY  dnsOverHttps.accesskey        "b">
-<!ENTITY  dnsOverHttpsUrl.label         "URL">
-<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
-<!ENTITY  dnsOverHttpsUrl.tooltip       "通过 HTTPS 解析 DNS 的 URL">
 <!ENTITY  dnsOverHttpsUrlDefault.label     "使用默认值">
 <!ENTITY  dnsOverHttpsUrlDefault.accesskey "l">
 <!ENTITY  dnsOverHttpsUrlDefault.tooltip   "使用默认 URL 完成基于 HTTPS 的 DNS 解析">

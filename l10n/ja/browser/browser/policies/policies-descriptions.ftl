@@ -9,6 +9,8 @@
 ## These are short descriptions for individual policies, to be displayed
 ## in the documentation section in about:policies.
 
+policy-3rdparty = WebExtension が chrome.storage.managed を経由してアクセス可能なポリシーを設定します。
+
 policy-AppUpdateURL = アプリケーションのカスタム更新 URL を設定します。
 
 policy-Authentication = ウェブサイトが対応する統合認証の設定を行います。
@@ -23,9 +25,13 @@ policy-BlockAboutSupport = about:support ページへのアクセスをブロッ
 
 policy-Bookmarks = ブックマークツールバー、ブックマークメニュー、または指定のフォルダーの中にブックマークを作成します。
 
+policy-CaptivePortal = キャプティブポータルサポートを有効または無効にします。
+
 policy-CertificatesDescription = 証明書を追加、または組み込みの証明書を利用します。
 
 policy-Cookies = ウェブサイトの Cookie の保存を許可するか拒否するか設定します。
+
+policy-DefaultDownloadDirectory = 既定のダウンロードディレクトリーを設定します。
 
 policy-DisableAppUpdate = ブラウザの更新を禁止します。
 
@@ -74,6 +80,8 @@ policy-DNSOverHTTPS = DNS over HTTPS の設定を指示します。
 
 policy-DontCheckDefaultBrowser = 起動時に既定のブラウザーか確認する機能を無効にします。
 
+policy-DownloadDirectory = ダウンロードディレクトリーを設定し、ロックします。
+
 # “lock” means that the user won’t be able to change this setting
 policy-EnableTrackingProtection = コンテンツブロッキングを有効または無効にし、任意で設定をロックします。
 
@@ -81,6 +89,12 @@ policy-EnableTrackingProtection = コンテンツブロッキングを有効ま�
 # takes 3 keys (“Install”, ”Uninstall”, ”Locked”), you can either keep them in
 # English or translate them as verbs.
 policy-Extensions = 拡張機能をインストール、削除、またはロックします。インストールは URL とパスを指定します。削除とロックは拡張機能の ID を指定します。
+
+policy-ExtensionSettings = 拡張機能のインストール全般を管理します。
+
+policy-ExtensionUpdate = 拡張機能の自動更新を有効または無効にします。
+
+policy-FirefoxHome = Firefox Home の設定を行います。
 
 policy-FlashPlugin = Flash プラグインの実行を許可、または拒否します。
 
@@ -90,6 +104,12 @@ policy-HardwareAcceleration = false にすると、ハードウェアアクセ�
 policy-Homepage = ホームページを設定し、任意でロックします。
 
 policy-InstallAddonsPermission = 特定のウェブサイトにアドオンのインストールを許可します。
+
+policy-LocalFileLinks = 特定のウェブサイトにローカルファイルへのリンクを許可します。
+
+policy-NetworkPrediction = 先読み機能 (DNS プリフェッチ) を有効または無効にします。
+
+policy-NewTabPage = 新しいタブページを有効または無効にします。
 
 policy-NoDefaultBookmarks = { -brand-short-name } の初期ブックマークとスマートブックマーク (よく見るページ、最近付けたタグ) の作成を無効にします。注意: このポリシーはプロファイルの初回起動より前に設定された場合のみ有効です。
 
@@ -103,18 +123,30 @@ policy-Permissions = カメラ、マイク、位置情報、通知の許可と�
 
 policy-PopupBlocking = 特定のウェブサイトのポッポアップ表示を既定で許可します。
 
-policy-Proxy = プロキシの設定を指示します。
+policy-Preferences = 設定のサブセットに対する値を設定してロックします。
+
+policy-PromptForDownloadLocation = ダウンロード時にファイルの保存先を確認します。
+
+policy-Proxy = プロキシーの設定を指示します。
 
 policy-RequestedLocales = アプリケーションに要求される言語リストと優先順位を設定します。
 
-policy-SanitizeOnShutdown = 終了時にナビゲーションデータをすべて消去します。
+policy-SanitizeOnShutdown2 = 終了時にナビゲーションデータを消去します。
 
 policy-SearchBar = 検索バーの既定の位置を設定します。ユーザーによる設定の変更は許可されます。
 
 policy-SearchEngines = 検索エンジンの設定を指示します。このポリシーは延長サポート版 (ESR) のみ有効です。
 
+policy-SearchSuggestEnabled = 検索候補の表示機能を有効または無効にします。
+
 # For more information, see https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/PKCS11/Module_Installation
 policy-SecurityDevices = PKCS #11 モジュールをインストールします。
+
+policy-SSLVersionMax = SSL の最高バージョンを設定します。
+
+policy-SSLVersionMin = SSL の最低バージョンを設定します。
+
+policy-SupportMenu = ヘルプメニューにカスタムサポートメニューを追加します。
 
 # “format” refers to the format used for the value of this policy.
 policy-WebsiteFilter = ウェブサイトを訪問済みにしません。書式の詳細はドキュメントをご覧ください。

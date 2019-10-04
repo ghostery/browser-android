@@ -14,13 +14,13 @@
 <!-- LOCALIZATION NOTE (reloadPlugin.middle): avoid leading/trailing spaces, this text is a link -->
 <!-- LOCALIZATION NOTE (reloadPlugin.post): include a starting space as needed -->
 <!ENTITY reloadPlugin.pre                                    "">
-<!ENTITY reloadPlugin.middle                                 "Recarregue a página">
+<!ENTITY reloadPlugin.middle                                 "Recarregar a página">
 <!ENTITY reloadPlugin.post                                   " para tentar novamente.">
 <!-- LOCALIZATION NOTE (report.please): This and the other report.* strings should be as short as possible, ideally 2-3 words. -->
-<!ENTITY report.please                                       "Enviar relatório">
+<!ENTITY report.please                                       "Enviar relato de travamento">
 <!ENTITY report.submitting                                   "Enviando relatório…">
 <!ENTITY report.submitted                                    "Relatório do travamento enviado.">
-<!ENTITY report.disabled                                     "Relatório de travamento desabilitado.">
+<!ENTITY report.disabled                                     "Relatório de travamentos desativado.">
 <!ENTITY report.failed                                       "Envio mal sucedido">
 <!ENTITY report.unavailable                                  "Nenhum relatório disponível.">
 <!ENTITY report.comment                                      "Adicione um comentário (será visível publicamente)">

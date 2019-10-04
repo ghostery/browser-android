@@ -15,7 +15,7 @@ dialog-title =
 dialog-title-everything =
     .title = Удаление всей истории
     .style = width: 34em
-clear-data-settings-label = При закрытии { -brand-short-name } должен автоматически удалить
+clear-data-settings-label = При закрытии { -brand-short-name } должен автоматически удалять
 
 ## clear-time-duration-prefix is followed by a dropdown list, with
 ## values localized using clear-time-duration-value-* messages.
@@ -44,7 +44,7 @@ clear-time-duration-suffix =
 ## These strings are used as section comments and checkboxes
 ## to select the items to remove
 
-history-section-label = История
+history-section-label = Историю
 item-history-and-downloads =
     .label = Журнал посещений и загрузок
     .accesskey = п

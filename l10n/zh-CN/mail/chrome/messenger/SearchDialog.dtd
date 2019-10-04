@@ -54,7 +54,7 @@
 <!ENTITY readColumn.label "已读">
 <!ENTITY receivedColumn.label "接收时间">
 <!ENTITY starredColumn.label "已加星标">
-<!ENTITY locationColumn.label "地址">
+<!ENTITY locationColumn.label "位置">
 <!ENTITY idColumn.label "按接收时间排序">
 
 <!-- Thread Pane Tooltips -->

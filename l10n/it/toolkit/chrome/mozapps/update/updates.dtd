@@ -34,6 +34,3 @@
 <!ENTITY finishedBackground.name "Aggiornamento:">
 <!ENTITY finishedBackground.more "L’aggiornamento verrà installato al prossimo avvio di &brandShortName;. È possibile riavviare ora &brandShortName;, oppure proseguire con il lavoro e riavviarlo in seguito.">
 <!ENTITY finishedBackground.moreElevated "L’installazione di questo aggiornamento richiede privilegi di amministratore e verrà effettuata al prossimo avvio di &brandShortName;. È possibile riavviare &brandShortName; adesso, proseguire con il proprio lavoro e riavviarlo più tardi, oppure annullare l’aggiornamento.">
-<!ENTITY update.details.label "Dettagli">
-<!ENTITY update.installedOn.label "Installato:">
-<!ENTITY update.status.label "Stato:">

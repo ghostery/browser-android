@@ -12,14 +12,12 @@
 <!ENTITY forwardMsg.accesskey                 "L">
 <!ENTITY inline.label                         "Beágyazva">
 <!ENTITY asAttachment.label                   "Mellékletként">
-<!ENTITY addExtension.label                   "Kiterjesztés hozzáadása a fájlnévhez">
+<!ENTITY addExtension.label                   "kiterjesztés hozzáadása a fájlnévhez">
 <!ENTITY addExtension.accesskey               "K">
 
 <!ENTITY htmlComposeHeader.label              "HTML">
 <!ENTITY font.label                           "Betű:">
 <!ENTITY font.accesskey                       "B">
-<!ENTITY size.label                           "Méret:">
-<!ENTITY size.accesskey                       "M">
 <!ENTITY fontSize.label                       "Méret:">
 <!ENTITY fontSize.accesskey                   "M">
 <!ENTITY useReaderDefaults.label              "Az olvasó alapértelmezett színeinek használata">

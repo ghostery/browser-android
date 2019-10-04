@@ -8,6 +8,7 @@
   -->
 
 <!ENTITY pref.mainbox.label "一般設定" >
+
 <!ENTITY pref.dateformat.label "日期文字格式:" >
 <!ENTITY pref.dateformat.accesskey "D">
 <!ENTITY pref.dateformat.long "長" >
@@ -24,6 +25,9 @@
 <!ENTITY pref.default_event_length.label "預設長度:" >
 <!ENTITY pref.default_event_length.accesskey "E">
 
+<!ENTITY pref.default_event_task_length.label "預設事件與任務長度">
+<!ENTITY pref.default_event_task_length.accesskey "E">
+
 <!ENTITY pref.default_task_none.label "無">
 <!ENTITY pref.default_task_start_of_day.label "每日開始時間">
 <!ENTITY pref.default_task_end_of_day.label "每日結束時間">
@@ -34,9 +38,6 @@
 <!ENTITY pref.default_task_offset_next_hour.label "相對於下一小時">
 
 <!ENTITY pref.calendar.todaypane.agenda.caption "今日窗格">
-<!ENTITY pref.soondays.label "「即將到來」區塊將顯示:">
-<!ENTITY pref.soondays.accesskey "u">
-
 <!-- LOCALIZATION NOTE (pref.soondays2.label):
      "Upcoming" is the name of a section and the translation must match the
      translation of that section name (calendar.upcoming.button.label). Also,

@@ -18,8 +18,6 @@
 <!ENTITY htmlComposeHeader.label              "HTML">
 <!ENTITY font.label                           "Lettertype:">
 <!ENTITY font.accesskey                       "L">
-<!ENTITY size.label                           "Grootte:">
-<!ENTITY size.accesskey                       "G">
 <!ENTITY fontSize.label                       "Grootte:">
 <!ENTITY fontSize.accesskey                   "G">
 <!ENTITY useReaderDefaults.label              "Standaardkleuren van lezer gebruiken">

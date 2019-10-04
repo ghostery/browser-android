@@ -46,6 +46,8 @@
 
 <!ENTITY onemonthbackward.tooltip "이전 달" >
 <!ENTITY onemonthforward.tooltip "다음 달" >
+<!ENTITY oneyearbackward.tooltip "1년 전" >
+<!ENTITY oneyearforward.tooltip "1년 후" >
 <!ENTITY showToday.tooltip "오늘">
 <!ENTITY onedayforward.tooltip "1일 후">
 <!ENTITY onedaybackward.tooltip "1일 전">

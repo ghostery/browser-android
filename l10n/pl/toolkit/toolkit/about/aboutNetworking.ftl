@@ -31,7 +31,7 @@ messages-received = Odebrano wiadomości
 bytes-sent = Wysłano bajtów
 bytes-received = Odebrano bajtów
 logging = Logging
-log-tutorial = Instrukcje dla tego narzędzia można znaleźć w artykule <a href='https://developer.mozilla.org/en-US/docs/Mozilla/Debugging/HTTP_logging'>HTTP Logging</a>.
+log-tutorial = Instrukcje dla tego narzędzia można znaleźć w artykule <a data-l10n-name="logging">HTTP Logging</a>.
 current-log-file = Plik dziennika:
 current-log-modules = Moduły:
 set-log-file = Ustaw jako plik dziennika
@@ -43,7 +43,7 @@ dns-lookup-button = Wyszukaj
 dns-domain = Domena:
 dns-lookup-table-column = Adresy IP
 rcwn = Statystyki RCWN
-rcwn-status = Status RCWN
+rcwn-status = Stan RCWN
 rcwn-cache-won-count = Trafienia pamięci podręcznej
 rcwn-net-won-count = Trafienia sieciowe
 total-network-requests = Liczba żądań sieciowych
@@ -57,3 +57,13 @@ rcwn-avg-long = Długa średnia
 rcwn-std-dev-long = Odchylenie standardowe długiej
 rcwn-cache-slow = Powolne trafienia
 rcwn-cache-not-slow = Normalne trafienia
+networkid = Identyfikator sieci
+networkid-id = Identyfikator sieci
+
+## Link is intended as "network link"
+
+networkid-isUp = Łącze jest aktywne
+networkid-statusKnown = Stan łącza jest nieznany
+
+
+

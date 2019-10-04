@@ -1,8 +1,8 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!-- Event Menu -->
 
+<!-- Event Menu -->
 <!ENTITY event.new.event                        "新事件…">
 <!ENTITY event.new.event.accesskey              "N">
 
@@ -22,10 +22,10 @@
 <!ENTITY calendar.deletecalendar.accesskey      "D">
 <!ENTITY calendar.unsubscribecalendar.label     "取消订阅选中的日历…">
 <!ENTITY calendar.unsubscribecalendar.accesskey "U">
+
 <!-- LOCALIZATION NOTE (calendar.removecalendar.label): Removing the calendar
       is the general action of removing it, while deleting means to clear the
       data and unsubscribing means just taking it out of the calendar list. -->
-
 <!ENTITY calendar.removecalendar.label          "移除选中的日历…">
 <!ENTITY calendar.removecalendar.accesskey      "R">
 
@@ -35,7 +35,7 @@
 
 <!ENTITY showUnifinderCmd.label                 "查找事件">
 <!ENTITY showUnifinderCmd.accesskey             "F">
-<!ENTITY showUnifinderCmd.tooltip               "切换查找事件面板">
+<!ENTITY showUnifinderCmd.tooltip               "切换查找事件窗格">
 
 <!ENTITY calendar.displaytodos.checkbox.label       "在日历上显示任务">
 <!ENTITY calendar.displaytodos.checkbox.accesskey   "T">

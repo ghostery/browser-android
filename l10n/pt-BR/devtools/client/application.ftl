@@ -27,6 +27,14 @@ serviceworker-worker-debug = Debug
 # Text for the start link displayed for a registered but not running Service Worker.
 # Clicking on the link will attempt to start the service worker.
 serviceworker-worker-start = Start
+# Text for the debug link displayed for an already started Service Worker, when we
+# are in multi e10s mode, which effectively disables this link.
+serviceworker-worker-debug-forbidden = Debug
+    .title = Can only debug service workers if multi e10s is disabled
+# Text for the start link displayed for a registered but not running Service Worker.
+# Clicking on the link will attempt to start the service worker.
+serviceworker-worker-start2 = Start
+    .title = Can only start service workers if multi e10s is disabled
 # Text displayed for the updated time of the service worker. The <time> element will
 # display the last update time of the service worker script.
 serviceworker-worker-updated = Updated <time>{ DATETIME($date, month: "long", year: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric") }</time>
@@ -61,3 +69,11 @@ serviceworker-empty-suggestions-debugger = Step through your Service Worker regi
 # Suggestion to go to about:debugging in order to see Service Workers for all domains.
 # Clicking on the link will open about:debugging in a new tab.
 serviceworker-empty-suggestions-aboutdebugging = Inspect Service Workers from other domains. <a>Open about:debugging</a>
+# Text displayed while we are loading the manifest file
+manifest-loading = Loading manifest…
+# Text displayed when the manifest has been successfully loaded
+manifest-loaded-ok = Manifest loaded.
+# Text displayed when there has been an error while trying to load the manifest
+manifest-loaded-error = There was an error while loading the manifest:
+# Text displayed when the page has no manifest available
+manifest-non-existing = No manifest found to inspect.

@@ -87,7 +87,7 @@
 <!ENTITY manBookmarksCmd.commandkey "b">
 
 <!-- Tools Menu -->
-<!ENTITY searchInternetCmd.label "Pesquisar na Web">
+<!ENTITY searchInternetCmd.label "Pesquisar na web">
 <!ENTITY searchInternetCmd.accesskey "P">
 <!ENTITY searchInternet.commandKey "s">
 <!ENTITY translateMenu.label "Traduzir esta página">

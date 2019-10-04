@@ -2,19 +2,32 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
 <!ENTITY pref.mainbox.label "Ustawienia ogólne" >
+
 <!ENTITY pref.dateformat.label "Format daty:" >
 <!ENTITY pref.dateformat.accesskey "F">
 <!ENTITY pref.dateformat.long "długi" >
-<!ENTITY pref.dateformat.short "krótki" >
+<!ENTITY pref.dateformat.short "krótki"  >
+
 <!ENTITY pref.timezones.caption "Strefa czasowa">
 <!ENTITY pref.timezones.label "Wybierz najbliższe miasto w swojej strefie czasowej:">
 <!ENTITY pref.timezones.accesskey "W">
+
 <!ENTITY pref.defaults.label "Domyślne wartości">
 <!ENTITY pref.events.label "Wydarzenia">
 <!ENTITY pref.tasks.label "Zadania">
-<!ENTITY pref.default_event_length.label "Czas trwania:">
+
+<!ENTITY pref.default_event_length.label "Czas trwania:" >
 <!ENTITY pref.default_event_length.accesskey "C">
+
+<!ENTITY pref.default_event_task_length.label "Domyślny czas trwania wydarzeń i zadań">
+<!ENTITY pref.default_event_task_length.accesskey "D">
+
 <!ENTITY pref.default_task_none.label "brak">
 <!ENTITY pref.default_task_start_of_day.label "początek dnia">
 <!ENTITY pref.default_task_end_of_day.label "koniec dnia">
@@ -25,14 +38,18 @@
 <!ENTITY pref.default_task_offset_next_hour.label "względem następnej godziny">
 
 <!ENTITY pref.calendar.todaypane.agenda.caption "Dzisiaj">
-
+<!-- LOCALIZATION NOTE (pref.soondays2.label):
+     "Upcoming" is the name of a section and the translation must match the
+     translation of that section name (calendar.upcoming.button.label). Also,
+     it should be upper case (as a proper name) if the target language permits.
+  -->
 <!ENTITY pref.soondays2.label "Nadchodzące:">
 <!ENTITY pref.soondays2.accesskey "N">
 
-<!ENTITY pref.accessibility.label   "Dostępność" >
-<!ENTITY pref.systemcolors.label    "Optymizuj kolory, by poprawić dostępność" >
+<!ENTITY pref.accessibility.label "Dostępność" >
+<!ENTITY pref.systemcolors.label "Optymizuj kolory, by poprawić dostępność" >
 <!ENTITY pref.systemcolors.accesskey "k">
 
-<!ENTITY pref.eventsandtasks.label "Wydarzenia i zadania">
-<!ENTITY pref.editInTab.label "Edytuj wydarzenia i zadania w karcie zamiast w oknie.">
+<!ENTITY pref.eventsandtasks.label "Wydarzenia i zadania" >
+<!ENTITY pref.editInTab.label "Edytuj wydarzenia i zadania w karcie zamiast w oknie." >
 <!ENTITY pref.editInTab.accesskey "E">

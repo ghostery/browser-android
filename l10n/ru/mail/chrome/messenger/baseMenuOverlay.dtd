@@ -9,6 +9,8 @@
                        for the help button in the menubar but Gnome does not.   -->
 <!ENTITY helpMenuWin.label "Справка">
 <!ENTITY helpMenuWin.accesskey "С">
+<!ENTITY aboutProduct2.label "О &brandShorterName;">
+<!ENTITY aboutProduct2.accesskey "О">
 <!ENTITY helpTroubleshootingInfo.label     "Информация для решения проблем">
 <!ENTITY helpTroubleshootingInfo.accesskey "ф">
 <!ENTITY helpSafeMode.label     "Перезапустить с отключёнными дополнениями…">
@@ -20,13 +22,31 @@
 <!ENTITY openHelp.label "Содержание">
 <!ENTITY openHelp.accesskey "С">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "Справка &brandShortName;">
 <!ENTITY openHelpMac2.label "Справка &brandFullName;">
 <!ENTITY openHelpMac2.commandkey   "?">
 <!ENTITY openHelpMac2.modifiers    "accel">
 
-<!ENTITY aboutMenuCmd.label "О &brandShortName;">
-<!ENTITY aboutMenuCmd.accesskey "О">
-
 <!ENTITY aboutMenuCmd2.label "О &brandFullName;">
 <!ENTITY aboutMenuCmd2.accesskey "О">
+<!ENTITY helpSafeMode.stop.label     "Перезапустить с дополнениями">
+<!ENTITY helpSafeMode.stop.accesskey "е">
+<!ENTITY productHelp.label "Помощь по &brandShortName;">
+<!ENTITY productHelp.accesskey "м">
+<!ENTITY productHelp.commandkey "VK_F1">
+<!ENTITY productHelpMac.commandkey "?">
+<!ENTITY productHelpMac.modifiers "accel">
+
+<!ENTITY helpKeyboardShortcuts.label "Сочетания клавиш">
+<!ENTITY helpKeyboardShortcuts.accesskey "ч">
+
+<!ENTITY helpFeedbackPage.label "Отправить отзыв…">
+<!ENTITY helpFeedbackPage.accesskey "т">
+
+<!ENTITY helpShowTour2.label "Знакомство с &brandShorterName;">
+<!ENTITY helpShowTour2.accesskey "м">
+
+<!ENTITY helpGetInvolvedPage.label "Принять участие">
+<!ENTITY helpGetInvolvedPage.accesskey "я">
+
+<!ENTITY helpDonationsPage.label "Сделать пожертвование">
+<!ENTITY helpDonationsPage.accesskey "ж">

@@ -77,8 +77,11 @@
 <!ENTITY Birthday.label                 "生日:">
 <!ENTITY Birthday.accesskey             "B">
 <!ENTITY In.label                       "">
+<!ENTITY Month.placeholder              "月">
+<!ENTITY Day.placeholder                "日">
 <!ENTITY Year.placeholder               "年">
 <!ENTITY Or.value                       "或">
+<!ENTITY Age.label                      "年齡:">
 <!ENTITY Age.placeholder                "年齡">
 <!ENTITY YearsOld.label                 "">
 
@@ -141,7 +144,6 @@
 
 <!ENTITY Photo.tab                      "相片">
 <!ENTITY Photo.accesskey                "o">
-<!ENTITY PhotoDesc.label                "從下列選一個:">
 <!ENTITY GenericPhoto.label             "一般相片">
 <!ENTITY GenericPhoto.accesskey         "G">
 <!ENTITY DefaultPhoto.label             "預設">

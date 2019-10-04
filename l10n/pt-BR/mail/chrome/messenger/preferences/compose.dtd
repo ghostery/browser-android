@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY itemGeneral.label                   "Geral">
-<!ENTITY itemAutoComplete.label              "Endereçar">
+<!ENTITY itemAutoComplete.label              "Endereçamento">
 <!ENTITY itemSpellCheck.label                "Ortografia">
 
 <!ENTITY dialogCompose.title                 "Compondo">
@@ -18,8 +18,6 @@
 <!ENTITY htmlComposeHeader.label              "HTML">
 <!ENTITY font.label                           "Fonte:">
 <!ENTITY font.accesskey                       "F">
-<!ENTITY size.label                           "Tamanho:">
-<!ENTITY size.accesskey                       "T">
 <!ENTITY fontSize.label                       "Tamanho:">
 <!ENTITY fontSize.accesskey                   "m">
 <!ENTITY useReaderDefaults.label              "Usar cores padrão do leitor">
@@ -58,7 +56,7 @@
 <!ENTITY directoriesNone.label                 "Nenhum">
 <!ENTITY editDirectories.label                 "Editar diretórios…">
 <!ENTITY editDirectories.accesskey             "E">
-<!ENTITY showAsDefault.label                   "Diretório de inicialização padrão da janela da lista de endereços:">
+<!ENTITY showAsDefault.label                   "Lista padrão ao abrir a janela do catálogo de endereços:">
 <!ENTITY showAsDefault.accesskey               "P">
 <!ENTITY showAsDefaultLast.label               "Último diretório usado">
 

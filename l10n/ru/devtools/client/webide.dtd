@@ -40,7 +40,6 @@
 <!ENTITY runtimeMenu_showDevicePrefs_accesskey "й">
 <!ENTITY runtimeMenu_showSettings_label "Параметры устройства">
 <!ENTITY runtimeMenu_showSettings_accesskey "а">
-
 <!ENTITY runtimeMenu_showPerformancePanel_label "Производительность">
 <!ENTITY runtimeMenu_showPerformancePanel_accesskey "ь">
 
@@ -77,7 +76,6 @@
 <!ENTITY runtimePanel_usb "USB устройства">
 <!ENTITY runtimePanel_wifi "Wi-Fi устройства">
 <!ENTITY runtimePanel_other "Другие">
-<!ENTITY runtimePanel_noadbhelper "Установить ADB Helper">
 <!ENTITY runtimePanel_nousbdevice "Не видите ваше устройство?">
 <!ENTITY runtimePanel_refreshDevices_label "Обновить список устройств">
 
@@ -120,12 +118,6 @@
 
 <!-- Runtime Details -->
 <!ENTITY runtimedetails_title "Сведения о Runtime">
-<!ENTITY runtimedetails_adbIsRoot "ADB это root: ">
-<!ENTITY runtimedetails_summonADBRoot "устройство root">
-<!ENTITY runtimedetails_ADBRootWarning "(требует незалоченного загрузчика)">
-<!ENTITY runtimedetails_unrestrictedPrivileges "Неограниченные права DevTools: ">
-<!ENTITY runtimedetails_requestPrivileges "запрашивать повышенные права">
-<!ENTITY runtimedetails_privilegesWarning "(Перезагрузит устройство. Требует root-доступа.)">
 
 <!-- Device Preferences and Settings -->
 <!ENTITY device_typeboolean "Логическое">
@@ -136,7 +128,7 @@
 
 <!-- Device Preferences -->
 <!ENTITY devicepreference_title "Настройки устройства">
-<!ENTITY devicepreference_search "Настройки поиска">
+<!ENTITY devicepreference_search "Поиск настроек">
 <!ENTITY devicepreference_newname "Имя новой настройки">
 <!ENTITY devicepreference_newtext "Значение настройки">
 <!ENTITY devicepreference_addnew "Добавить новую настройку">

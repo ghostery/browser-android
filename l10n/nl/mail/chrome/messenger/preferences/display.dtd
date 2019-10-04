@@ -49,6 +49,7 @@
 <!-- Advanced -->
 <!ENTITY reading.caption                  "Lezen">
 <!ENTITY display.caption                  "Weergave">
+<!ENTITY displayName.label                "Weergavenaam:">
 <!ENTITY showCondensedAddresses.label     "Van personen in mijn adresboek alleen weergavenaam tonen">
 <!ENTITY showCondensedAddresses.accesskey "V">
 

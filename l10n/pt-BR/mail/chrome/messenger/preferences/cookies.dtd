@@ -25,7 +25,7 @@
 <!ENTITY focusSearch1.key                  "F">
 <!ENTITY focusSearch2.key                  "K">
 
-<!ENTITY filter.label                      "Localizar:">
+<!ENTITY filter.label                      "Procurar:">
 <!ENTITY filter.accesskey                  "z">
 
 <!ENTITY button.close.label                "Fechar">

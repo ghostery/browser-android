@@ -25,16 +25,26 @@ features-title = { -brand-short-name } の機能
 features-name = 名前
 features-version = バージョン
 features-id = ID
+processes-title = リモートプロセス
+processes-type = 種類
+processes-count = プロセス数
 app-basics-title = アプリケーション基本情報
 app-basics-name = 名前
 app-basics-version = バージョン
 app-basics-build-id = ビルド ID
 app-basics-update-channel = 更新チャンネル
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] 更新ディレクトリー
+       *[other] 更新フォルダー
+    }
 app-basics-update-history = 更新履歴
 app-basics-show-update-history = 更新履歴を表示
+# Represents the path to the binary used to start the application.
+app-basics-binary = プログラムの実行ファイル
 app-basics-profile-dir =
     { PLATFORM() ->
-        [linux] プロファイルフォルダー
+        [linux] プロファイルディレクトリー
        *[other] プロファイルフォルダー
     }
 app-basics-enabled-plugins = 有効なプラグイン
@@ -45,10 +55,12 @@ app-basics-memory-use = メモリー使用量
 app-basics-performance = パフォーマンス
 app-basics-service-workers = 登録された Service Workers
 app-basics-profiles = プロファイル
+app-basics-launcher-process-status = 起動プロセス
 app-basics-multi-process-support = マルチプロセスウィンドウ
-app-basics-process-count = ウェブコンテンツプロセス
+app-basics-remote-processes-count = リモートプロセス
 app-basics-enterprise-policies = エンタープライズポリシー
-app-basics-key-google = Google キー
+app-basics-location-service-key-google = Google Location Service キー
+app-basics-safebrowsing-key-google = Google Safebrowsing キー
 app-basics-key-mozilla = Mozilla Location Service キー
 app-basics-safe-mode = セーフモード
 show-dir-label =
@@ -74,6 +86,8 @@ graphics-gpu2-title = GPU #2
 graphics-decision-log-title = 決定ログ
 graphics-crash-guards-title = クラッシュガードが無効化した機能
 graphics-workarounds-title = 回避策
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = ウィンドウプロトコル
 place-database-title = Places データベース
 place-database-integrity = 完全性
 place-database-verify-integrity = 完全性を検証
@@ -178,6 +192,7 @@ gpu-device-id = デバイス ID
 gpu-subsys-id = サブシステム ID
 gpu-drivers = ドライバー
 gpu-ram = RAM
+gpu-driver-vendor = ドライバーのベンダー
 gpu-driver-version = ドライバーのバージョン
 gpu-driver-date = ドライバーの日付
 gpu-active = 使用中
@@ -214,6 +229,7 @@ uses-tiling = タイリングの使用
 content-uses-tiling = タイリングの使用 (コンテンツ)
 off-main-thread-paint-enabled = メインスレッド外ペイント有効
 off-main-thread-paint-worker-count = メインスレッド外ペイントワーカー数
+target-frame-rate = ターゲットのフレームレート
 
 audio-backend = 音声バックエンド
 max-audio-channels = 最大チャンネル数
@@ -234,6 +250,12 @@ effective-content-sandbox-level = 効果的なコンテンツプロセスのサ�
 sandbox-proc-type-content = コンテンツ
 sandbox-proc-type-file = ファイルコンテンツ
 sandbox-proc-type-media-plugin = メディアプラグイン
+sandbox-proc-type-data-decoder = データデコーダー
+
+launcher-process-status-0 = 有効
+launcher-process-status-1 = 失敗したため無効
+launcher-process-status-2 = 強制的に無効
+launcher-process-status-unknown = 状態不明
 
 # Variables
 # $remoteWindows (integer) - Number of remote windows

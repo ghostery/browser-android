@@ -6,7 +6,7 @@ page-title = 疑難排解資訊
 page-subtitle =
     此頁面包含技術資訊，可能可以幫您解決一些問題。
     如果您正在尋找關於 { -brand-short-name } 的一些常見問題，
-    請看看我們的 <a data-l10n-name="support-link">支援網站</a>。
+    請看看我們的<a data-l10n-name="support-link">支援網站</a>。
 crashes-title = 錯誤資訊報表
 crashes-id = 報表編號
 crashes-send-date = 送出日期
@@ -27,13 +27,23 @@ features-title = { -brand-short-name } 功能
 features-name = 名稱
 features-version = 版本
 features-id = ID
+processes-title = 遠端處理程序
+processes-type = 類型
+processes-count = 數量
 app-basics-title = 應用程式一般資訊
 app-basics-name = 名稱
 app-basics-version = 版本
 app-basics-build-id = Build ID
 app-basics-update-channel = 更新頻道
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] 更新目錄
+       *[other] 更新資料夾
+    }
 app-basics-update-history = 更新記錄
 app-basics-show-update-history = 顯示更新記錄
+# Represents the path to the binary used to start the application.
+app-basics-binary = 應用程式二進位檔案
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] 設定檔目錄
@@ -47,10 +57,13 @@ app-basics-memory-use = 記憶體使用量
 app-basics-performance = 效能
 app-basics-service-workers = 已註冊的 Service Workers
 app-basics-profiles = 設定檔
+app-basics-launcher-process-status = 啟動器 Process
 app-basics-multi-process-support = 多程序視窗
 app-basics-process-count = 網頁內容處理程序
+app-basics-remote-processes-count = 遠端處理程序
 app-basics-enterprise-policies = 企業政策
-app-basics-key-google = Google 金鑰
+app-basics-location-service-key-google = Google Location Service 金鑰
+app-basics-safebrowsing-key-google = Google Safebrowsing 金鑰
 app-basics-key-mozilla = Mozilla Location Service 金鑰
 app-basics-safe-mode = 安全模式
 show-dir-label =
@@ -76,6 +89,8 @@ graphics-gpu2-title = GPU #2
 graphics-decision-log-title = 決策紀錄
 graphics-crash-guards-title = 因 Crash Guard 停用的功能
 graphics-workarounds-title = Workarounds
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = 視窗通訊協定
 place-database-title = Places 資料庫
 place-database-integrity = 資料完整
 place-database-verify-integrity = 確認資料完整
@@ -173,6 +188,7 @@ gpu-device-id = 裝置 ID (Device ID)
 gpu-subsys-id = Subsys ID
 gpu-drivers = 顯示卡驅動程式
 gpu-ram = 顯示卡記憶體大小
+gpu-driver-vendor = 驅動程式廠商
 gpu-driver-version = 驅動程式版本
 gpu-driver-date = 驅動程式日期
 gpu-active = 啟用
@@ -224,6 +240,11 @@ effective-content-sandbox-level = 有效內容處理程序沙盒等級
 sandbox-proc-type-content = 內容
 sandbox-proc-type-file = 檔案內容
 sandbox-proc-type-media-plugin = 媒體外掛程式
+sandbox-proc-type-data-decoder = 資料解碼器
+launcher-process-status-0 = 啟用
+launcher-process-status-1 = 由於失敗而停用
+launcher-process-status-2 = 強制停用
+launcher-process-status-unknown = 未知狀態
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows

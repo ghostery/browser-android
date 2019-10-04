@@ -15,7 +15,7 @@
 
      Also note the leading/trailing whitespace in strings here, which is
      deliberate for formatting around the embedded links. -->
-<!ENTITY rights.intro-point1a "&brandShortName; 是基於 ">
+<!ENTITY rights.intro-point1a "&brandShortName; 是依照 ">
 <!ENTITY rights.intro-point1b "Mozilla 公眾授權條款">
 <!ENTITY rights.intro-point1c " 中的條件所提供給您的。這表示您可以使用、複製，或散布 &brandShortName; 給其他人。歡迎您自行修改 &brandShortName; 的原始碼以滿足您的需求；Mozilla 公眾授權條款也同時賦予您散佈修改版本的權利。">
 
@@ -67,4 +67,3 @@
 <!ENTITY rights.webservices-term4 "除非法律要求，&vendorShortName;、它的貢獻者、授權人、與散布者不會對提供程式及「資訊服務」所造成的任何損害擔負責任，免責的範圍包含任何使用 &brandShortName; 與此「資訊服務」相關的，非直接的、特別的、偶發的、因果關係式的，以及示範性的懲罰性賠償金。如果法院就具體個案判定提供服務者仍需擔負上述的賠償責任，則各種損害賠償責任的總合須不逾美金五百元。若您所處的司法管轄區域不容許損害賠償責任的預先排除及限制，那麼本聲明裡關於損害賠償金的預先排除及限制規定便不適用於您。">
 <!ENTITY rights.webservices-term5 "&vendorShortName; 可在必要時更新聲明條款的內容。已公布聲明條款內容在沒有 &vendorShortName; 的書面同意下，任何人不得對其聲明內容進行修改或刪除。">
 <!ENTITY rights.webservices-term6 "本聲明條款的內容適用於美國加利福尼亞州法律，但準據法方面的相關規定除外。若此聲明條款有任何部分為承審司法機構認定無效或是無法執行，其他部分則仍然保持有效。若此正體中文翻譯版本與英文原文版本在解釋上有所疑義，則應以英文原文版本為準。">
-

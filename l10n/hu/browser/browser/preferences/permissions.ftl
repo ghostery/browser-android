@@ -34,8 +34,15 @@ permissions-button-cancel =
 permissions-button-ok =
     .label = Változtatások mentése
     .accesskey = V
+permissions-autoplay-menu = Alapértelmezés az összes webhelyhez:
 permissions-searchbox =
     .placeholder = Weboldal keresése
+permissions-capabilities-autoplay-allow =
+    .label = Hang és videó engedélyezése
+permissions-capabilities-autoplay-block =
+    .label = Hang blokkolása
+permissions-capabilities-autoplay-blockall =
+    .label = Hang és videó blokkolása
 permissions-capabilities-allow =
     .label = Engedélyezés
 permissions-capabilities-block =
@@ -46,8 +53,6 @@ permissions-capabilities-listitem-allow =
     .value = Engedélyezés
 permissions-capabilities-listitem-block =
     .value = Tiltás
-permissions-capabilities-listitem-allow-first-party =
-    .value = Csak első fél engedélyezése
 permissions-capabilities-listitem-allow-session =
     .value = Engedélyezés a munkamenetben
 
@@ -58,14 +63,14 @@ permissions-invalid-uri-label = Írjon be egy érvényes gépnevet.
 
 ## Exceptions - Tracking Protection
 
-permissions-exceptions-tracking-protection-window =
-    .title = Kivételek - követés elleni védelem
-    .style = { permissions-window.style }
-permissions-exceptions-tracking-protection-desc = Kikapcsolta a követés elleni védelmet ezeken a weboldalakon.
 permissions-exceptions-content-blocking-window =
     .title = Kivételek – Tartalomblokkolás
     .style = { permissions-window.style }
 permissions-exceptions-content-blocking-desc = Letiltotta a tartalomblokkolást ezeken az oldalakon.
+permissions-exceptions-etp-window =
+    .title = Kivételek a továbbfejlesztett követés elleni védelemhez
+    .style = { permissions-window.style }
+permissions-exceptions-etp-desc = Ezeken a webhelyeken kikapcsolta a védelmeket.
 
 ## Exceptions - Cookies
 
@@ -102,6 +107,13 @@ permissions-exceptions-autoplay-media-window2 =
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = Megadhatja azokat a webhelyeket, amelyek mindig vagy sohasem játszhatnak le automatikusan médiát hanggal. Írja be a kezelni kívánt webhely pontos nevét, majd kattintson a Tiltás vagy Engedélyezés gombok egyikére.
 
+## Site Permissions - Autoplay
+
+permissions-site-autoplay-window =
+    .title = Beállítások – Automatikus lejátszás
+    .style = { permissions-window.style }
+permissions-site-autoplay-desc = Itt kezelheti azokat a webhelyeket, amelyek nem követik az alapértelmezett automatikus lejátszási beállításokat.
+
 ## Site Permissions - Notifications
 
 permissions-site-notification-window =
@@ -110,7 +122,7 @@ permissions-site-notification-window =
 permissions-site-notification-desc = A következő weboldalak kérték, hogy küldhessenek értesítéseket. Megadhatja, hogy mely weboldalak küldhetnek értesítéseket. Az új értesítés engedélyezési kéréseket is blokkolhatja.
 permissions-site-notification-disable-label =
     .label = Új értesítés engedélyezési kérések blokkolása
-permissions-site-notification-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak értesítésküldést kérjenek. Az értesítések blokkolása eltörhet néhány weboldal-funkciót.
+permissions-site-notification-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak értesítésküldést kérjenek. Az értesítések blokkolása működésképtelenné tehet néhány weboldal-funkciót.
 
 ## Site Permissions - Location
 
@@ -120,7 +132,7 @@ permissions-site-location-window =
 permissions-site-location-desc = A következő weboldalak a helyadatait kérték. Megadhatja, hogy mely weboldalak érhetik el a tartózkodási helyét. Az új helyadat-kéréseket is blokkolhatja.
 permissions-site-location-disable-label =
     .label = Új tartózkodási hely kérések blokkolása
-permissions-site-location-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak helyadatokat kérjenek. A helyadatok blokkolása eltörhet néhány weboldal-funkciót.
+permissions-site-location-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak helyadatokat kérjenek. A helyadatok blokkolása működésképtelenné tehet néhány weboldal-funkciót.
 
 ## Site Permissions - Camera
 
@@ -130,7 +142,7 @@ permissions-site-camera-window =
 permissions-site-camera-desc = A következő weboldalak kérték, hogy hozzáférhessenek a kamerájához. Megadhatja, hogy mely weboldalak férjenek hozzá a kamerájához. Az új kamera hozzáférési kéréseket is blokkolhatja.
 permissions-site-camera-disable-label =
     .label = Új kamera hozzáfés kérések blokkolása
-permissions-site-camera-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak kamera hozzáférést kérjenek. A kamera hozzáférés blokkolása eltörhet néhány weboldal-funkciót.
+permissions-site-camera-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak kamera hozzáférést kérjenek. A kamera hozzáférés blokkolása működésképtelenné tehet néhány weboldal-funkciót.
 
 ## Site Permissions - Microphone
 
@@ -140,4 +152,4 @@ permissions-site-microphone-window =
 permissions-site-microphone-desc = A következő weboldalak kérték, hogy hozzáférhessenek a mikrofonjához. Megadhatja, hogy mely weboldalak férjenek hozzá a mikrofonjához. Az új mikrofon hozzáférési kéréseket is blokkolhatja.
 permissions-site-microphone-disable-label =
     .label = Új mikrofon hozzáférés kérések blokkolása
-permissions-site-microphone-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak mikrofon hozzáférést kérjenek. A mikrofon hozzáférés blokkolása eltörhet néhány weboldal-funkciót.
+permissions-site-microphone-disable-desc = Ez megakadályozza, hogy a fent fel nem sorolt weboldalak mikrofon hozzáférést kérjenek. A mikrofon hozzáférés blokkolása működésképtelenné tehet néhány weboldal-funkciót.

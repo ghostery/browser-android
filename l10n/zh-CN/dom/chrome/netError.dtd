@@ -55,7 +55,7 @@
 <!ENTITY unknownProtocolFound.longDesc "<p>浏览器无法识别该网址的协议。（例如 <q>wxyz://</q>），因此浏览器无法连接至该站点。</p><ul><li>您是否在尝试访问多媒体或其他非文字服务？请检查该站点是否有其他要求。</li><li>某些协议可能需要安装第三方软件或插件后浏览器才能识别。</li></ul>">
 
 <!ENTITY proxyConnectFailure.title "代理服务器拒绝连接">
-<!ENTITY proxyConnectFailure.longDesc "<p>浏览器被设置为使用代理服务器，但是该代理服务器拒绝了该连接。</p><ul><li>浏览器的代理服务器设置是否正确？请检查并重试。</li><li>该代理服务是否允许来自此网络的连接？</li><li>仍然不行？请联系您的网络管理员或者互联网服务提供商以寻求协助。</li></ul>">
+<!ENTITY proxyConnectFailure.longDesc "<p>浏览器被设置为使用代理服务器，但是该代理服务器拒绝了该连接。</p><ul><li>浏览器的代理服务器设置是否正确？请检查并重试。</li><li>该代理服务是否允许来自此网络的连接？</li><li>仍然不行？请联系您的网络管理员或者电信运营商以寻求协助。</li></ul>">
 
 <!ENTITY proxyResolveFailure.title "无法找到代理服务器">
 <!ENTITY proxyResolveFailure.longDesc "<p>浏览器被设置为使用代理服务器，但是无法找到该代理服务器。</p><ul><li>浏览器的代理服务器设置是否正确？请检查并重试。</li><li>计算机是否连接到了可用的网络？</li><li>仍然不行？请联系您的网络管理员或者互联网服务提供商以寻求协助。</li></ul>">

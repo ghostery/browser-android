@@ -19,3 +19,12 @@ state-header = 状态
 #   $buildID (String): build identifier from the local updates.xml
 update-full-name =
     .name = { $name } ({ $buildID })
+# Used to display update history
+#
+# Variables:
+#   $name (String): name of the update
+#   $buildID (String): build identifier from the local updates.xml
+update-full-build-name = { $name } ({ $buildID })
+update-details = 详细信息
+update-installed-on = 安装时间： { $date }
+update-status = 状态： { $status }

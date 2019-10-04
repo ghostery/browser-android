@@ -57,3 +57,7 @@ rcwn-avg-long = Media lunga
 rcwn-std-dev-long = Deviazione standard lunga
 rcwn-cache-slow = Conteggio cache lenta
 rcwn-cache-not-slow = Conteggio cache non lenta
+networkid = Network ID
+networkid-id = Network ID
+networkid-isUp = Il collegamento è attivo
+networkid-statusKnown = Lo stato del collegamento è noto

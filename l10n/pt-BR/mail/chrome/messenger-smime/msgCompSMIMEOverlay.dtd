@@ -4,7 +4,7 @@
 
 <!--LOCALIZATION NOTE msgCompSMIMEOverlay.dtd UI for s/mime hooks in message composition -->
 
-<!ENTITY menu_securityEncryptRequire.label "Criptografar">
+<!ENTITY menu_securityEncryptRequire.label "Criptografar esta mensagem">
 <!ENTITY menu_securityEncryptRequire.accesskey "C">
 
 <!ENTITY menu_securitySign.label "Assinar digitalmente">

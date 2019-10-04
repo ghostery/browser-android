@@ -11,6 +11,7 @@
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Mostrar el número de semana en las vistas y el minimés">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "M">
 <!ENTITY pref.daysoff.label "Incluir estos días en la semana laboral:">
+<!ENTITY pref.workweekDays.label "Días laborables:">
 <!ENTITY pref.calendar.view.daystart.label "El día comienza a las:">
 <!ENTITY pref.calendar.view.daystart.accesskey "d">
 <!ENTITY pref.calendar.view.dayend.label "El día termina a las:">

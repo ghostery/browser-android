@@ -34,8 +34,15 @@ permissions-button-cancel =
 permissions-button-ok =
     .label = Guardar cambios
     .accesskey = G
+permissions-autoplay-menu = Predeterminado para todos los sitios web:
 permissions-searchbox =
     .placeholder = Buscar sitio web
+permissions-capabilities-autoplay-allow =
+    .label = Permitir audio y video
+permissions-capabilities-autoplay-block =
+    .label = Bloquear audio
+permissions-capabilities-autoplay-blockall =
+    .label = Bloquear audio y video
 permissions-capabilities-allow =
     .label = Permitir
 permissions-capabilities-block =
@@ -46,8 +53,6 @@ permissions-capabilities-listitem-allow =
     .value = Permitir
 permissions-capabilities-listitem-block =
     .value = Bloquear
-permissions-capabilities-listitem-allow-first-party =
-    .value = Permitir sólo las de primeras partes
 permissions-capabilities-listitem-allow-session =
     .value = Permitir en esta sesión
 
@@ -58,10 +63,6 @@ permissions-invalid-uri-label = Introduzca un nombre de servidor válido
 
 ## Exceptions - Tracking Protection
 
-permissions-exceptions-tracking-protection-window =
-    .title = Exceptions - Tracking Protection
-    .style = { permissions-window.style }
-permissions-exceptions-tracking-protection-desc = Ha desactivado la protección contra rastreo en estos sitios web.
 permissions-exceptions-content-blocking-window =
     .title = Excepciones - Bloqueo de contenido
     .style = { permissions-window.style }
@@ -101,6 +102,13 @@ permissions-exceptions-autoplay-media-window2 =
     .title = Excepciones - Reproducción automática
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = Puede especificar qué sitios web pueden reproducir automáticamente contenido multimedia con sonido. Escriba la dirección del sitio que desea administrar y, a continuación, haga clic en Bloquear o Permitir.
+
+## Site Permissions - Autoplay
+
+permissions-site-autoplay-window =
+    .title = Ajustes - Reproducción automática
+    .style = { permissions-window.style }
+permissions-site-autoplay-desc = Aquí puedes gestionar los sitios que no cumplen con tus ajustes de reproducción automática predeterminada.
 
 ## Site Permissions - Notifications
 

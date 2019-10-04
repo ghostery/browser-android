@@ -6,3 +6,6 @@
 <!ENTITY  paneAlarms.title        "Оповещения">
 <!ENTITY  paneCategories.title    "Категории">
 <!ENTITY  paneViews.title         "Обзоры">
+<!ENTITY  panelHeader.title       "Календарь">
+<!ENTITY  panelReminder.title     "Напоминания">
+<!ENTITY  panelCatecory.title     "Категории">

@@ -22,7 +22,7 @@ update-otherInstanceHandlingUpdates = { -brand-short-name } est mis à jour par 
 update-manual = Mises à jour disponibles à <label data-l10n-name="manual-link"/>
 update-unsupported = La dernière version n’est pas disponible pour votre système. <label data-l10n-name="unsupported-link">En savoir plus</label>
 update-restarting = Redémarrage…
-channel-description = Vous utilisez actuellement le canal de mise à jour <label data-l10n-name="current-channel"></label>.{ " " }
+channel-description = Vous utilisez actuellement le canal de mise à jour <label data-l10n-name="current-channel"></label>.
 warningDesc-version = { -brand-short-name } est expérimental et peut être instable.
 community-exp = <label data-l10n-name="community-exp-mozillaLink">{ -vendor-short-name }</label> est une <label data-l10n-name="community-exp-creditsLink">communauté mondiale</label> de contributeurs qui travaillent ensemble pour garder le Web ouvert, public et accessible à tous.
 community-2 = { -brand-short-name } est conçu par <label data-l10n-name="community-mozillaLink">{ -vendor-short-name }</label>, une communauté mondiale de <label data-l10n-name="community-creditsLink">contributeurs</label> qui travaillent ensemble pour garder le Web ouvert, public et accessible à tous.
@@ -32,3 +32,14 @@ bottomLinks-rights = Droits de l’utilisateur
 bottomLinks-privacy = Politique de confidentialité
 aboutDialog-architecture-sixtyFourBit = 64 bits
 aboutDialog-architecture-thirtyTwoBit = 32 bits
+# Example of resulting string: 66.0.1 (64-bit)
+# Variables:
+#   $version (String): version of Firefox, e.g. 66.0.1
+#   $bits (Number): bits of the architecture (32 or 64)
+aboutDialog-version = { $version } ({ $bits } bits)
+# Example of resulting string: 66.0a1 (2019-01-16) (64-bit)
+# Variables:
+#   $version (String): version of Firefox for Nightly builds, e.g. 66.0a1
+#   $isodate (String): date in ISO format, e.g. 2019-01-16
+#   $bits (Number): bits of the architecture (32 or 64)
+aboutDialog-version-nightly = { $version } ({ $isodate }) ({ $bits } bits)

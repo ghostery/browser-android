@@ -41,7 +41,7 @@ features-responsive-desc = 在您的浏览器中模拟设备环境，测试网�
 features-visual-editing-title = 可视化编辑
 features-visual-editing-desc = 微调动画、对齐和填充。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
 features-performance-title = 性能
-features-performance-desc = 解除瓶颈、简化流程、优化资源加载。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
+features-performance-desc = 解除瓶颈、简化流程、优化资源载入。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
 features-memory-title = 内存
 features-memory-desc = 找出内存泄漏，使您的应用更快一步。 <a data-l10n-name="learn-more">{ features-learn-more }</a>
 # Variables:

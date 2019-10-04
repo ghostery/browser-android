@@ -4,10 +4,13 @@
 
 <!ENTITY firstrun_panel_title_welcome "Benvenuto">
 <!ENTITY firstrun_urlbar_message2 "Grazie per aver scelto &brandShortName;">
+<!ENTITY newfirstrun_urlbar_message "Benvenuto in &brandShortName;">
 <!ENTITY firstrun_urlbar_subtext2 "Un browser mobile moderno realizzato da Mozilla, l’organizzazione non-profit che si impegna per mantenere il Web libero e aperto.">
+<!ENTITY newfirstrun_urlbar_subtext "Veloce, riservato e sempre al tuo fianco.">
 <!ENTITY firstrun_panel_title_privacy "Privacy">
 <!ENTITY firstrun_privacy_message "Naviga come se nessuno stesse guardando">
 <!ENTITY firstrun_privacy_subtext "La navigaziona anonima con protezione antitracciamento blocca gli elementi traccianti durante la navigazione e non conserva alcuna cronologia quando hai finito.">
+<!ENTITY newfirstrun_privacy_subtext "La navigazione anonima blocca le pubblicità traccianti che cercano di pedinarti sul Web.">
 <!ENTITY firstrun_panel_title_customize "Personalizza">
 <!ENTITY firstrun_customize_message "Trasforma &brandShortName; nel “tuo” browser.">
 <!ENTITY firstrun_customize_subtext "Personalizza &brandShortName; con i componenti aggiuntivi: blocca le pubblicità, aggiungi nuove funzioni o scegli un tema che rifletta la tua personalità.">
@@ -18,10 +21,15 @@
 <!ENTITY firstrun_data_message "Risparmia sulla connessione">
 <!ENTITY firstrun_data_subtext2 "Disattiva le immagini per consumare meno dati ogni volta che visiti un sito.">
 <!ENTITY firstrun_sync_title "Sync">
+<!ENTITY updatednewfirstrun_sync_title "Account">
 <!ENTITY firstrun_sync_message2 "Riprendi da dove ti eri interrotto">
 <!ENTITY firstrun_sync_subtext2 "Utilizza Sync per accedere da tutti i dispositivi a segnalibri, password e altre informazioni salvate in &brandShortName;.">
+<!ENTITY newfirstrun_sync_subtext "Sincronizza le informazioni salvate sul tuo dispositivo mobile con Firefox sul tuo computer, in modo riservato e sicuro.">
+<!ENTITY updatednewfirstrun_sync_subtext "Accedi al tuo account per ottenere il massimo da &brandShortName;">
 <!ENTITY firstrun_signin_message "Connettiti e inizia">
 <!ENTITY firstrun_signin_button "Accedi a Sync">
+<!ENTITY newfirstrun_signin_button "Attiva Sync">
+<!ENTITY updatednewfirstrun_signin_button "Accedi a &brandShortName;">
 <!ENTITY onboard_start_button_browser "Inizia a navigare">
 <!ENTITY firstrun_button_notnow "Non adesso">
 <!ENTITY firstrun_button_next "Successivo">
@@ -49,7 +57,13 @@
 <!ENTITY sending_crash_report "Invio segnalazione\u2026">
 <!ENTITY crash_close_label "Chiudi">
 <!ENTITY crash_restart_label "Riavvia &brandShortName;">
+<!ENTITY crash_notification_title "Arresto anomalo di &brandShortName;">
+<!ENTITY crash_notification_message "Tocca per segnalare a &vendorShortName;">
+<!ENTITY crash_notification_negative_button_text "Ignora">
 <!ENTITY url_bar_default_text2 "Cerca o inserisci un indirizzo">
+<!ENTITY search_widget_default_text "Cerca sul Web">
+<!ENTITY search_widget_default_cropped_text "Cerca">
+<!ENTITY search_widget_logo_description "Cerca sul Web con &brandShortName;">
 <!ENTITY url_bar_qrcode_text2 "Utilizza il lettore QR per cercare o inserire un indirizzo">
 <!ENTITY url_bar_mic_text2 "Utilizza il microfono per cercare o inserire un indirizzo">
 <!ENTITY bookmark "Segnalibro">
@@ -68,6 +82,7 @@
 <!ENTITY bookmark_folder_one_item "1 elemento">
 <!ENTITY bookmark_parent_folder "Cartella superiore">
 <!ENTITY bookmark_add_folder "Nuova cartella">
+<!ENTITY bookmark_default_folder_title "(nessun titolo)">
 <!ENTITY reader_saved_offline "Salvato">
 <!ENTITY reader_switch_to_bookmarks "Visualizza">
 <!ENTITY history_today_section "Oggi">
@@ -111,12 +126,12 @@
 <!ENTITY pref_category_search_summary2 "Aggiungi nuovi motori di ricerca, imposta motore predefinito, suggerimenti">
 <!ENTITY pref_category_accessibility "Accessibilità">
 <!ENTITY pref_category_accessibility_summary2 "Dimensione del testo, zoom, input vocale">
-<!ENTITY pref_category_privacy_summary4 "Tracciamento, accessi, condivisione dati">
+<!ENTITY pref_category_privacy_summary4 "Tracciamento, credenziali, condivisione dati">
 <!ENTITY pref_category_privacy_short "Privacy">
 <!ENTITY pref_category_vendor2 "&vendorShortName; &brandShortName;">
 <!ENTITY pref_category_vendor_summary2 "Informazioni su &brandShortName;, FAQ, feedback">
 <!ENTITY pref_category_datareporting "Condivisione dati">
-<!ENTITY pref_category_logins "Accessi">
+<!ENTITY pref_category_logins "Credenziali">
 <!ENTITY pref_learn_more "Ulteriori informazioni">
 <!ENTITY pref_category_installed_search_engines "Motori di ricerca installati">
 <!ENTITY pref_category_add_search_providers "Aggiungi altri motori di ricerca">
@@ -131,8 +146,8 @@
 <!ENTITY pref_developer_remotedebugging_usb "Debug remoto tramite USB">
 <!ENTITY pref_developer_remotedebugging_wifi "Debug remoto tramite Wi-Fi">
 <!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Il debug tramite Wi-Fi richiede la presenza sul dispositivo di un’app per la scansione di codici QR.">
-<!ENTITY pref_remember_signons2 "Ricorda accessi">
-<!ENTITY pref_manage_logins "Gestione accessi">
+<!ENTITY pref_remember_signons2 "Ricorda credenziali">
+<!ENTITY pref_manage_logins "Gestione credenziali">
 <!ENTITY pref_category_home "Home">
 <!ENTITY pref_category_home_summary "Personalizza la pagina iniziale">
 <!ENTITY pref_category_home_panels "Pannelli">
@@ -156,6 +171,7 @@
 <!ENTITY pref_cookies_menu "Cookie">
 <!ENTITY pref_cookies_accept_all "Attivi">
 <!ENTITY pref_cookies_not_accept_foreign "Attivi, esclusi di terze parti">
+<!ENTITY pref_cookies_not_accept_trackers "Attivi, esclusi cookie traccianti">
 <!ENTITY pref_cookies_disabled "Disattivati">
 <!ENTITY pref_category_data_saver "Risparmio dati">
 <!ENTITY pref_category_media "Elementi multimediali">
@@ -176,7 +192,6 @@
 <!ENTITY pref_whats_new_notification_summary "Visualizza informazioni sulle nuove caratteristiche dopo un aggiornamento">
 <!ENTITY pref_feature_tips_notification "Suggerimenti relativi a prodotti e caratteristiche">
 <!ENTITY pref_feature_tips_notification_summary "Informazioni relative all’utilizzo di &brandShortName; e altri prodotti di &vendorShortName;">
-<!ENTITY pref_feature_tips_notification_enabling_hint "Attiva">
 <!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
 <!ENTITY pref_feature_tips_notification_enabling_hint2 "(Per attivare questa opzione, &pref_feature_tips_notification_enabling_path; deve essere già attivo.)">
 <!ENTITY pref_category_experimental "Caratteristiche sperimentali">
@@ -187,10 +202,6 @@
 <!ENTITY custom_tabs_hint_url_copy "Indirizzo copiato">
 <!ENTITY pref_pwa "Web app progressive">
 <!ENTITY pref_pwa_summary "Consenti di aggiungere web app alla pagina iniziale">
-<!ENTITY tracking_protection_prompt_title "Ora con protezione antitracciamento">
-<!ENTITY tracking_protection_prompt_text "Blocca in modo attivo gli elementi traccianti, rimuovendo ogni preoccupazione per l’utente.">
-<!ENTITY tracking_protection_prompt_tip_text "Per ulteriori informazioni visita la sezione Privacy delle impostazioni">
-<!ENTITY tracking_protection_prompt_action_button "Ricevuto!">
 <!ENTITY tab_queue_toast_message3 "Scheda salvata in &brandShortName;">
 <!ENTITY tab_queue_toast_action "Apri adesso">
 <!ENTITY tab_queue_prompt_title "Apertura di più link">
@@ -200,6 +211,7 @@
 <!ENTITY tab_queue_prompt_positive_action_button "Attiva">
 <!ENTITY tab_queue_prompt_negative_action_button "Non adesso">
 <!ENTITY tab_queue_prompt_settings_button "Vai a Impostazioni">
+<!ENTITY tab_queue_notification_prompt "Aggiunta nuova scheda alla coda…">
 <!ENTITY tab_queue_notification_title "&brandShortName;">
 <!ENTITY tab_queue_notification_text_plural2 "&formatD; schede in attesa">
 <!ENTITY tab_queue_notification_text_singular2 "1 scheda in attesa">
@@ -229,7 +241,7 @@
 <!ENTITY pref_use_master_password "Usa password principale">
 <!ENTITY pref_sync_default_title "Account Firefox">
 <!ENTITY pref_sync2 "Accedi">
-<!ENTITY pref_sync_summary2 "Sincronizza schede, segnalibri, accessi, cronologia">
+<!ENTITY pref_sync_summary2 "Sincronizza schede, segnalibri, credenziali, cronologia">
 <!ENTITY pref_search_suggestions "Mostra suggerimenti di ricerca">
 <!ENTITY pref_history_search_suggestions "Mostra cronologia di ricerca">
 <!ENTITY pref_import_options "Opzioni di importazione">
@@ -239,14 +251,13 @@
 <!ENTITY pref_private_data_searchHistory "Cronologia ricerche">
 <!ENTITY pref_private_data_formdata2 "Cronologia moduli">
 <!ENTITY pref_private_data_cookies2 "Cookie e accessi attivi">
-<!ENTITY pref_private_data_passwords2 "Accessi salvati">
 <!ENTITY pref_private_data_cache "Cache">
 <!ENTITY pref_private_data_offlineApps "Dati non in linea dei siti web">
 <!ENTITY pref_private_data_siteSettings2 "Impostazioni siti">
 <!ENTITY pref_private_data_downloadFiles2 "Download">
 <!ENTITY pref_private_data_syncedTabs "Schede sincronizzate">
-<!ENTITY pref_default_browser "Imposta come browser predefinito">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Visita il supporto Mozilla">
+<!ENTITY pref_default_browser2 "Imposta &brandShortName; come browser predefinito">
+<!ENTITY default_browser_system_settings_toast "Tocca App Browser e seleziona &brandShortName;">
 <!ENTITY pref_about_firefox "Informazioni su &brandShortName;">
 <!ENTITY pref_vendor_faqs "FAQ">
 <!ENTITY pref_vendor_feedback "Invia feedback">
@@ -283,7 +294,7 @@
 <!ENTITY help_menu "Guida">
 <!ENTITY quit "Esci">
 <!ENTITY addons "Componenti aggiuntivi">
-<!ENTITY logins "Accessi">
+<!ENTITY logins "Credenziali">
 <!ENTITY downloads "Download">
 <!ENTITY char_encoding "Codifica caratteri">
 <!ENTITY share "Condividi">
@@ -309,6 +320,7 @@
 <!ENTITY find_prev "Precedente">
 <!ENTITY find_next "Successivo">
 <!ENTITY find_close "Chiudi">
+<!ENTITY find_error "Testo non trovato">
 <!ENTITY media_sending_to "Invio a dispositivo">
 <!ENTITY media_play "Riproduci">
 <!ENTITY media_pause "Pausa">
@@ -356,6 +368,7 @@
 <!ENTITY bookmark_edit_location "Indirizzo">
 <!ENTITY bookmark_edit_keyword "Parola chiave">
 <!ENTITY bookmark_select_folder "Scegli cartella">
+<!ENTITY bookmark_edit_undo "Annulla">
 <!ENTITY site_settings_title3 "Impostazioni sito">
 <!ENTITY site_settings_cancel "Annulla">
 <!ENTITY site_settings_clear "Cancella">
@@ -404,6 +417,7 @@
 <!ENTITY filepicker_audio_title "Seleziona o registra un suono">
 <!ENTITY filepicker_image_title "Seleziona o scatta una fotografia">
 <!ENTITY filepicker_video_title "Seleziona o registra un video">
+<!ENTITY filepicker_permission_denied "Permesso non ottenuto, verrà utilizzato il gestore file di sistema.">
 <!ENTITY identity_connected_to "Si è connessi con">
 <!ENTITY identity_connection_secure "Connessione sicura">
 <!ENTITY identity_connection_insecure "Connessione non sicura">
@@ -446,7 +460,7 @@
 <!ENTITY guest_session_dialog_continue "Continua">
 <!ENTITY guest_session_dialog_cancel "Annulla">
 <!ENTITY new_guest_session_title "&brandShortName; verrà riavviato">
-<!ENTITY new_guest_session_text2 "La persona che utilizza il browser non potrà visualizzare alcun dato personale già presente, come ad esempio accessi salvati, cronologia o segnalibri.\n\nAl termine i dati relativi a questa sessione di navigazione verranno eliminati e verrà ripristinata la sessione precedente.">
+<!ENTITY new_guest_session_text2 "La persona che utilizza il browser non potrà visualizzare alcun dato personale già presente, come ad esempio credenziali salvate, cronologia o segnalibri.\n\nAl termine i dati relativi a questa sessione di navigazione verranno eliminati e verrà ripristinata la sessione precedente.">
 <!ENTITY guest_browsing_notification_title "Navigazione in mod. ospite attiva">
 <!ENTITY guest_browsing_notification_text "Tocca per uscire">
 <!ENTITY exit_guest_session_title "&brandShortName; verrà riavviato">
@@ -511,14 +525,13 @@
 <!ENTITY pip_play_button_description "Riprendi riproduzione">
 <!ENTITY pip_pause_button_title "Pausa">
 <!ENTITY pip_pause_button_description "Metti in pausa riproduzione">
-<!ENTITY default_notification_channel "&brandShortName;">
+<!ENTITY pref_notification_settings_link "Gestisci impostazioni notifiche">
 <!ENTITY default_notification_channel2 "Browser">
 <!ENTITY mls_notification_channel "Georilevazione di &vendorShortName;">
 <!ENTITY download_notification_channel "Download">
-<!ENTITY media_notification_channel "Riproduzione file multimediali">
 <!ENTITY media_notification_channel2 "Audio e video">
-<!ENTITY leanplum_default_notifications_channel "Notifiche push di &brandShortName;">
 <!ENTITY leanplum_default_notifications_channel2 "Consigli e suggerimenti da &vendorShortName;">
 <!ENTITY updater_notification_channel "Aggiornamenti app">
 <!ENTITY synced_tabs_notification_channel "Schede sincronizzate">
 <!ENTITY site_notifications_channel "Notifiche siti">
+<!ENTITY crash_handler_notifications_channel "Crash Reporter &brandShortName;">

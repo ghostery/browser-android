@@ -27,6 +27,14 @@ serviceworker-worker-debug = Отладить
 # Text for the start link displayed for a registered but not running Service Worker.
 # Clicking on the link will attempt to start the service worker.
 serviceworker-worker-start = Запустить
+# Text for the debug link displayed for an already started Service Worker, when we
+# are in multi e10s mode, which effectively disables this link.
+serviceworker-worker-debug-forbidden = Отладить
+    .title = Вы можете отлаживать service workers только при отключённой multi e10s
+# Text for the start link displayed for a registered but not running Service Worker.
+# Clicking on the link will attempt to start the service worker.
+serviceworker-worker-start2 = Запустить
+    .title = Вы можете запускать service workers только при отключённой multi e10s
 # Text displayed for the updated time of the service worker. The <time> element will
 # display the last update time of the service worker script.
 serviceworker-worker-updated = Обновлён <time>{ DATETIME($date, month: "long", year: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric") }</time>
@@ -61,3 +69,5 @@ serviceworker-empty-suggestions-debugger = Пройдите по шагам пр
 # Suggestion to go to about:debugging in order to see Service Workers for all domains.
 # Clicking on the link will open about:debugging in a new tab.
 serviceworker-empty-suggestions-aboutdebugging = Исследуйте Service Workers с других доменов. <a>Открыть about:debugging</a>
+# Text displayed when no manifest was found for the current page.
+manifest-empty-intro = Нет манифеста для отладки.

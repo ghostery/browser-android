@@ -10,7 +10,7 @@ config-window =
 # This text should be attention grabbing and playful
 config-about-warning-title =
     .value = Dit kan in overtreding zijn met uw garantievoorwaarden!
-config-about-warning-text = Aanpassen van deze uitgebreide voorkeuren kan schadelijk zijn voor de stabiliteit, veiligheid en prestaties van deze toepassing. Ga alleen door als u weet wat u doet.
+config-about-warning-text = Het wijzigen van deze uitgebreide voorkeuren kan schadelijk zijn voor de stabiliteit, veiligheid en prestaties van deze toepassing. Ga alleen door als u weet wat u doet.
 config-about-warning-button =
     .label = Ik aanvaard het risico!
 config-about-warning-checkbox =

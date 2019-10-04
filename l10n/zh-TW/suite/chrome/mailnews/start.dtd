@@ -21,12 +21,10 @@
 <!ENTITY dict.title "字典">
 <!ENTITY dict_intro.label "可以使用字典檢查文章當中的拼字。">
 <!--# LOCALIZATION NOTE (dict_info.label): the URL for <a id="dictURL"> is fetched from brand.properties -->
-<!ENTITY dict_info.label
-'可以自 <a href="https://addons.mozilla.org/seamonkey/">Mozilla Add-ons 附加元件站</a> 當中的 <a id="dictURL" href="">字典</a> 頁面下載安裝更多語言的字典。'>
 <!ENTITY dict_info.label2
 '可到 <a href="https://addons.thunderbird.net/seamonkey/">SeaMonkey 與 Thunderbird 附加元件站</a>的<a id="dictURL" href="">字典</a>區塊安裝其他語言。'>
 <!ENTITY info.title "更多資訊">
 <!--# LOCALIZATION NOTE (info_bugs.label): the URL for <a id="releaseNotesURL"> is fetched from brand.properties -->
 <!ENTITY info_bugs.label
-'<a href="https://developer.mozilla.org/docs/Mozilla/Projects/MailNews">我們</a> 歡迎您回報臭蟲或提出功能請求，但請先閱讀 <a id="releaseNotesURL" href="">新鮮事</a> 並找過 <a href="https://bugzilla.mozilla.org/query.cgi">Bugzilla</a> 上有沒有重複的內容。
+'<a href="https://developer.mozilla.org/docs/Mozilla/Projects/MailNews">我們</a>歡迎您回報臭蟲或提出功能請求，但請先閱讀<a id="releaseNotesURL" href="">發行公告</a>並找過 <a href="https://bugzilla.mozilla.org/query.cgi">Bugzilla</a> 上有沒有重複的內容。
 '>

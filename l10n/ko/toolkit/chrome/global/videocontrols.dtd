@@ -10,10 +10,13 @@
 <!ENTITY fullscreenButton.exitfullscreenlabel "전체 화면 표시 해제">
 <!ENTITY castingButton.castingLabel "화면으로 출력">
 <!ENTITY closedCaption.off "끔">
-
 <!-- LOCALIZATION NOTE (volumeScrubber.label): This label is exposed to
      accessibility software to clarify what the slider is for. -->
 <!ENTITY volumeScrubber.label "음량 조절바">
+
+<!-- LOCALIZATION NOTE (pictureInPicture.label): This string is used as part of
+the Picture-in-Picture video toggle button when the mouse is hovering it. -->
+<!ENTITY pictureInPicture.label "화면 속 화면">
 
 <!ENTITY stats.media "미디어">
 <!ENTITY stats.size "크기">
@@ -34,6 +37,8 @@
 <!ENTITY error.srcNotSupported "이 동영상의 파일 형식 또는 MIME 타입을 지원하지 않습니다.">
 <!ENTITY error.noSource2 "지원 파일 형식 및 MIME 타입의 동영상을 발견하지 못했습니다.">
 <!ENTITY error.generic "알 수 없는 오류가 발생했기 때문에 동영상의 재생을 중지했습니다.">
+
+<!ENTITY status.pictureInPicture "이 동영상은 화면 속 화면 모드에서 재생 중입니다.">
 
 <!-- LOCALIZATION NOTE (scrubberScale.nameFormat): the #1 string is the current
 media position, and the #2 string is the total duration. For example, when at

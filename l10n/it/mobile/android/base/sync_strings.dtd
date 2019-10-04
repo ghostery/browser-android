@@ -9,7 +9,7 @@
 <!ENTITY sync.subtitle.pair.label "Per attivare selezionare “Collega dispositivo” sull’altro dispositivo.">
 <!ENTITY sync.pin.default.label "...\n...\n...\n">
 <!ENTITY sync.link.nodevice.label "Il dispositivo non è disponibile…">
-<!ENTITY sync.configure.engines.title.passwords2 "Accessi">
+<!ENTITY sync.configure.engines.title.passwords2 "Credenziali">
 <!ENTITY sync.configure.engines.title.history "Cronologia">
 <!ENTITY sync.configure.engines.title.tabs "Schede">
 <!ENTITY sync.default.client.name "&formatS1; su &formatS2;">
@@ -23,7 +23,7 @@
 <!ENTITY bookmarks.folder.pinned.label "Bloccata">
 <!ENTITY fxaccount_back_to_browsing "Torna alla navigazione">
 <!ENTITY fxaccount_getting_started_welcome_to_sync "Benvenuto in &syncBrand.shortName.label;">
-<!ENTITY fxaccount_getting_started_description2 "Accedi per sincronizzare schede, segnalibri, accessi e altri elementi.">
+<!ENTITY fxaccount_getting_started_description2 "Accedi per sincronizzare schede, segnalibri, credenziali e altri elementi.">
 <!ENTITY fxaccount_getting_started_get_started "Inizia">
 <!ENTITY fxaccount_getting_started_old_firefox "Stai utilizzando una vecchia versione di &syncBrand.shortName.label;?">
 <!ENTITY fxaccount_status_auth_server "Server account">
@@ -40,7 +40,7 @@
 <!ENTITY fxaccount_status_choose_what "Scegli che cosa sincronizzare">
 <!ENTITY fxaccount_status_bookmarks "Segnalibri">
 <!ENTITY fxaccount_status_history "Cronologia">
-<!ENTITY fxaccount_status_passwords2 "Accessi">
+<!ENTITY fxaccount_status_passwords2 "Credenziali">
 <!ENTITY fxaccount_status_tabs "Schede aperte">
 <!ENTITY fxaccount_status_additional_settings "Impostazioni aggiuntive">
 <!ENTITY fxaccount_pref_sync_use_metered2 "Sincronizza solo via Wi-Fi">

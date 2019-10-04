@@ -59,3 +59,13 @@ rcwn-avg-long = Hosszú átlag
 rcwn-std-dev-long = Hosszú szórás
 rcwn-cache-slow = A gyorsítótár hányszor volt lassú
 rcwn-cache-not-slow = A gyorsítótár hányszor nem volt lassú
+networkid = Hálózati azonosító
+networkid-id = Hálózati azonosító
+
+## Link is intended as "network link"
+
+networkid-isUp = A kapcsolat él
+networkid-statusKnown = A kapcsolat állapota ismert
+
+
+

@@ -9,4 +9,4 @@
 <!ENTITY bccAddr.label "Bcc:">
 <!ENTITY replyAddr.label "Antwoord-naar:">
 <!ENTITY newsgroupsAddr.label "Nieuwsgroep:">
-<!ENTITY followupAddr.label "Reacties-naar:">
+<!ENTITY followupAddr.label "Opvolgen-aan:">

@@ -37,7 +37,7 @@ type-other = Autre
 
 energy-impact-high = Élevé ({ $value })
 energy-impact-medium = Moyen ({ $value })
-energy-impact-low = Bas ({ $value })
+energy-impact-low = Faible ({ $value })
 
 ## Values for the Memory column
 ##
@@ -62,5 +62,5 @@ show-addon =
 #   $durationSincePrevious (Number) - how much CPU time was used in the last 2 seconds
 item =
     .title =
-        Rapports depuis le chargement : { $totalDispatches } ({ $totalDuration } ms)
-        Rapports au cours des dernières secondes : { $dispatchesSincePrevious } ({ $durationSincePrevious } ms)
+        Exécutions depuis le chargement : { $totalDispatches } ({ $totalDuration } ms)
+        Exécutions au cours des dernières secondes : { $dispatchesSincePrevious } ({ $durationSincePrevious } ms)

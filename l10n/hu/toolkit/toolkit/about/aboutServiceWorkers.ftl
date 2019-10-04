@@ -5,9 +5,9 @@
 
 ### The term "Service Workers" and "Workers" should not be translated
 
-about-service-workers-title = A Service Workers-ről
+about-service-workers-title = A Service Workerekről
 about-service-workers-main-title = Regisztrált Service Workerek
-about-service-workers-warning-not-enabled = A Service Workers nincs engedélyezve
+about-service-workers-warning-not-enabled = A Service Workerek nem engedélyezettek.
 about-service-workers-warning-no-service-workers = Nincs Service Worker regisztrálva.
 # The original title of service workers' information
 #

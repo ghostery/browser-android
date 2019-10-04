@@ -8,6 +8,7 @@
   -->
 
 <!ENTITY pref.calendar.view.allview.caption "Geral">
+
 <!ENTITY pref.calendar.view.dayandweekviews.caption "Visualizações de dia e semana">
 <!ENTITY pref.calendar.view.multiweekview.caption "Visualização multissemanal">
 <!ENTITY pref.calendar.view.workweek.caption "Dias úteis">
@@ -17,6 +18,8 @@
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Mostrar número da semana em exibições e mini-mês">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "r">
 <!ENTITY pref.daysoff.label "Definir como dias úteis:">
+
+<!ENTITY pref.workweekDays.label "Dias de trabalho na semana:">
 
 <!ENTITY pref.calendar.view.daystart.label "Dia começa às:">
 <!ENTITY pref.calendar.view.daystart.accesskey "o">

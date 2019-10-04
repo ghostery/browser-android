@@ -18,8 +18,6 @@
 <!ENTITY htmlComposeHeader.label              "HTML">
 <!ENTITY font.label                           "字型:">
 <!ENTITY font.accesskey                       "n">
-<!ENTITY size.label                           "大小:">
-<!ENTITY size.accesskey                       "z">
 <!ENTITY fontSize.label                       "大小:">
 <!ENTITY fontSize.accesskey                   "z">
 <!ENTITY useReaderDefaults.label              "使用閱讀器的預設色彩">
@@ -41,7 +39,7 @@
 <!ENTITY languagePopup.accessKey              "L">
 <!ENTITY downloadDictionaries.label           "下載其他字典">
 
-<!ENTITY warnOnSendAccelKey.label             "用鍵盤快捷鍵發送郵件時需要確認">
+<!ENTITY warnOnSendAccelKey.label             "用快速鍵發送郵件時需要確認">
 <!ENTITY warnOnSendAccelKey.accesskey         "C">
 <!ENTITY autoSave.label                       "每隔">
 <!ENTITY autoSave.accesskey                   "A">

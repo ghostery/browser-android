@@ -30,5 +30,5 @@ helpus = Vuoi aiutarci? <label data-l10n-name="helpus-donateLink">Fai una donazi
 bottomLinks-license = Informazioni sulla licenza
 bottomLinks-rights = Diritti dell’utente finale
 bottomLinks-privacy = Informativa sulla privacy
-aboutDialog-architecture-sixtyFourBit = 64 bit
-aboutDialog-architecture-thirtyTwoBit = 32 bit
+aboutDialog-version = { $version } ({ $bits } bit)
+aboutDialog-version-nightly = { $version } ({ $isodate }) ({ $bits } bit)

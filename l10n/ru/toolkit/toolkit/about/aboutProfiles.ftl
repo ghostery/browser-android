@@ -8,6 +8,11 @@ profiles-create = Создать новый профиль
 profiles-restart-title = Перезапустить
 profiles-restart-in-safe-mode = Перезапустить с отключёнными дополнениями…
 profiles-restart-normal = Перезапустить в обычном режиме…
+profiles-conflict = Другая копия { -brand-product-name } сделала изменения в профилях. Вам необходимо перезапустить { -brand-short-name } перед тем, как производить какие-либо другие изменения.
+profiles-flush-fail-title = Изменения не сохранены
+profiles-flush-conflict = { profiles-conflict }
+profiles-flush-failed = Неожиданная ошибка не позволила сохранить ваши изменения.
+profiles-flush-restart-button = Перезапустить { -brand-short-name }
 # Variables:
 #   $name (String) - Name of the profile
 profiles-name = Профиль: { $name }
@@ -26,6 +31,8 @@ profiles-rename = Переименовать
 profiles-remove = Удалить
 profiles-set-as-default = Установить как профиль по умолчанию
 profiles-launch-profile = Запустить ещё один браузер с этим профилем
+profiles-cannot-set-as-default-title = Не удалось установить по умолчанию
+profiles-cannot-set-as-default-message = Не удалось сменить профиль по умолчанию для { -brand-short-name }.
 profiles-yes = да
 profiles-no = нет
 profiles-rename-profile-title = Переименовать профиль

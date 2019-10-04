@@ -2,8 +2,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!-- extracted from am-server-top.xul -->
-
 <!ENTITY messageStorage.label "消息存储">
 <!ENTITY securitySettings.label "安全设置">
 <!ENTITY serverSettings.label "服务器设置">
@@ -44,7 +42,6 @@
 <!ENTITY deleteOnServer2.accesskey "d">
 <!ENTITY downloadOnBiff.label "自动下载新消息">
 <!ENTITY downloadOnBiff.accesskey "m">
-<!ENTITY username.label "您的登录名">
 <!ENTITY deleteMessagePrefix.label "在删除消息时：">
 <!ENTITY modelMoveToTrash.label "将之移到此文件夹中:">
 <!ENTITY modelMoveToTrash.accesskey "o">
@@ -67,7 +64,7 @@
 <!ENTITY maxMessagesStart.accesskey "m">
 <!-- LOCALIZATION NOTE (maxMessagesEnd.label) : see note for maxMessagesStart.label -->
 <!ENTITY maxMessagesEnd.label "条时询问我">
-<!ENTITY alwaysAuthenticate.label "链接到该服务器时总是请求认证">
+<!ENTITY alwaysAuthenticate.label "连接到该服务器时一律请求认证">
 <!ENTITY alwaysAuthenticate.accesskey "w">
 <!ENTITY newsrcFilePath.label "newsrc 文件：">
 <!ENTITY newsrcPicker.label "选择 newsrc 文件">

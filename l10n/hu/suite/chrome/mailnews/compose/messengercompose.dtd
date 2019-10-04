@@ -1,20 +1,26 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!--LOCALIZATION NOTE messengercompose.dtd Main UI for message composition -->
 
+<!--LOCALIZATION NOTE messengercompose.dtd Main UI for message composition -->
 <!ENTITY msgComposeWindow.title "Új üzenet: (nincs tárgy)">
 
 <!ENTITY fromAddr.label "Feladó:">
 <!ENTITY fromAddr.accesskey "F">
-<!ENTITY subject.label  "Tárgy:">
+<!ENTITY toAddr.label "Címzett:">
+<!ENTITY ccAddr.label "Másolat:">
+<!ENTITY bccAddr.label "Rejtett másolat:">
+<!ENTITY replyAddr.label "Válaszcím:">
+<!ENTITY newsgroupsAddr.label "Hírcsoport:">
+<!ENTITY followupAddr.label "Hírcsop. vál.:">
+<!ENTITY subject.label "Tárgy:">
 <!ENTITY subject.accesskey "T">
 <!ENTITY attachments.label "Mellékletek:">
 <!ENTITY attachments.accesskey "M">
+
 <!-- menu items:  the . means that the menu item isn't implemented yet -->
+
 <!-- File menu items -->
-
-
 <!ENTITY saveCmd.label "Mentés">
 <!ENTITY saveCmd.accesskey "M">
 <!ENTITY saveAsCmd.label "Mentés másként">
@@ -40,25 +46,25 @@
 <!ENTITY sendLaterCmd.label "Küldés később">
 <!ENTITY sendLaterCmd.keycode "VK_RETURN">
 <!ENTITY sendLaterCmd.accesskey "l">
-<!-- Edit menu items -->
 
+<!-- Edit menu items -->
 <!ENTITY editRewrapCmd.label "Újratördelés">
 <!ENTITY editRewrapCmd.key "j">
 <!ENTITY editRewrapCmd.accesskey  "r">
 <!ENTITY accountManagerCmd.label "Postafiókok beállításai…">
 <!ENTITY accountManagerCmd.accesskey "P">
-<!-- View menu items -->
 
+<!-- View menu items -->
 <!ENTITY showComposeToolbarCmd.label "Fő eszköztár">
 <!ENTITY showComposeToolbarCmd.accesskey "e">
 <!ENTITY showFormatToolbarCmd.label "Formázás eszköztár">
 <!ENTITY showFormatToolbarCmd.accesskey "F">
-<!-- Format menu items -->
 
+<!-- Format menu items -->
 <!ENTITY formatMenu.label "Formátum">
 <!ENTITY formatMenu.accesskey "o">
-<!-- Options menu items -->
 
+<!-- Options menu items -->
 <!ENTITY optionsMenu.label "Beállítások">
 <!ENTITY optionsMenu.accesskey "B">
 
@@ -100,18 +106,18 @@
 <!ENTITY fileCarbonCopyCmd.label "Elküldött üzenet iktatása">
 <!ENTITY fileCarbonCopyCmd.accesskey "E">
 <!ENTITY fileHereMenu.label "Iktatás itt">
+
 <!--LOCALIZATION NOTE Toolbar items Don't change any "chrome://" URLs -->
 <!-- Toolbar items -->
-
 <!ENTITY sendButton.label "Küldés">
 <!ENTITY addressButton.label "Cím">
 <!ENTITY attachButton.label "Melléklet">
 <!ENTITY spellingButton.label "Helyesírás">
 <!ENTITY saveButton.label "Mentés">
 <!ENTITY stopButton.label "Leállítás">
+
 <!--tooltips-->
 <!-- We already inherit &menuBar.tooltip and &mailToolbar.tooltip from messenger.dtd -->
-
 <!ENTITY addressBar.tooltip "Címsor">
 <!ENTITY formatToolbar.tooltip "Formázás eszköztár">
 <!ENTITY sendButton.tooltip "Üzenet elküldése azonnal"> 
@@ -120,8 +126,8 @@
 <!ENTITY attachButton.tooltip "Melléklet hozzáadása"> 
 <!ENTITY saveButton.tooltip "Az üzenet mentése"> 
 <!ENTITY stopButton.tooltip "Átvitel megszakítása"> 
-<!-- context menu items -->
 
+<!-- context menu items -->
 <!ENTITY openAttachment.label "Megnyitás">
 <!ENTITY openAttachment.accesskey "M">
 <!ENTITY renameAttachment.label "Átnevezés">

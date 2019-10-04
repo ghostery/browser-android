@@ -34,8 +34,15 @@ permissions-button-cancel =
 permissions-button-ok =
     .label = Salva modifiche
     .accesskey = S
+permissions-autoplay-menu = Impostazione predefinita per tutti i siti web:
 permissions-searchbox =
     .placeholder = Cerca sito web
+permissions-capabilities-autoplay-allow =
+    .label = Consenti audio e video
+permissions-capabilities-autoplay-block =
+    .label = Blocca audio
+permissions-capabilities-autoplay-blockall =
+    .label = Blocca audio e video
 permissions-capabilities-allow =
     .label = Consenti
 permissions-capabilities-block =
@@ -46,8 +53,6 @@ permissions-capabilities-listitem-allow =
     .value = Consenti
 permissions-capabilities-listitem-block =
     .value = Blocca
-permissions-capabilities-listitem-allow-first-party =
-    .value = Consenti solo se generati dal sito
 permissions-capabilities-listitem-allow-session =
     .value = Consenti per la sessione
 
@@ -62,6 +67,10 @@ permissions-exceptions-content-blocking-window =
     .title = Eccezioni - Blocco contenuti
     .style = { permissions-window.style }
 permissions-exceptions-content-blocking-desc = Il blocco contenuti è stato disattivato per i seguenti siti web.
+permissions-exceptions-etp-window =
+    .title = Eccezioni per protezione antitracciamento avanzata
+    .style = { permissions-window.style }
+permissions-exceptions-etp-desc = La protezione è stata disattivata per i seguenti siti web.
 
 ## Exceptions - Cookies
 
@@ -80,7 +89,7 @@ permissions-exceptions-popup-desc = È possibile indicare quali siti web potrann
 ## Exceptions - Saved Logins
 
 permissions-exceptions-saved-logins-window =
-    .title = Eccezioni - Accessi salvati
+    .title = Eccezioni - Credenziali salvate
     .style = { permissions-window.style }
 permissions-exceptions-saved-logins-desc = Non verranno salvate le credenziali di accesso per i seguenti siti web
 
@@ -97,6 +106,11 @@ permissions-exceptions-autoplay-media-window2 =
     .title = Eccezioni - Riproduzione automatica
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = È possibile specificare quali siti web avranno sempre il permesso di riprodurre automaticamente contenuti sonori e quali verranno bloccati. Inserire l’indirizzo esatto del sito web da gestire e fare clic su Blocca o Consenti.
+
+permissions-site-autoplay-window =
+    .title = Impostazioni - Riproduzione automatica
+    .style = { permissions-window.style }
+permissions-site-autoplay-desc = È possibile specificare quali siti web non seguono le impostazioni predefinite per la riproduzione automatica.
 
 ## Site Permissions - Notifications
 

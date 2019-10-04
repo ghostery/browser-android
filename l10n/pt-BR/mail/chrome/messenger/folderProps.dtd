@@ -37,15 +37,15 @@
 <!ENTITY folderCheckForNewMessages2.label         "Ao receber novas mensagens desta conta, sempre verificar esta pasta">
 <!ENTITY folderCheckForNewMessages2.accesskey     "A">
 
-<!ENTITY offlineFolder.check.label               "Selecionar a pasta para leitura off-line">
+<!ENTITY offlineFolder.check.label               "Selecionar esta pasta para uso desconectado">
 <!ENTITY offlineFolder.check.accesskey           "S">
 <!ENTITY offlineFolder.button.label              "Baixar agora">
-<!ENTITY offlineFolder.button.accesskey          "R">
+<!ENTITY offlineFolder.button.accesskey          "B">
 
-<!ENTITY selectofflineNewsgroup.check.label      "Selecionar este newsgroup para leitura off-line">
-<!ENTITY selectofflineNewsgroup.check.accesskey  "S">
-<!ENTITY offlineNewsgroup.button.label           "Receber agora">
-<!ENTITY offlineNewsgroup.button.accesskey       "R">
+<!ENTITY selectofflineNewsgroup.check.label      "Selecionar este grupo de notícias para uso desconectado">
+<!ENTITY selectofflineNewsgroup.check.accesskey  "o">
+<!ENTITY offlineNewsgroup.button.label           "Baixar agora">
+<!ENTITY offlineNewsgroup.button.accesskey       "B">
 
 <!ENTITY folderProps.name.label                  "Nome:">
 <!ENTITY folderProps.name.accesskey              "N">
@@ -55,7 +55,7 @@
 <!ENTITY folderSharingTab.label                  "Compartilhamento">
 <!ENTITY privileges.button.label                 "Privilégios…">
 <!ENTITY privileges.button.accesskey             "D">
-<!ENTITY permissionsDesc.label                   "Você possui estas permissões:">
+<!ENTITY permissionsDesc.label                   "Você tem as seguintes permissões:">
 <!ENTITY folderType.label                        "Tipo da pasta:">
 
 <!ENTITY folderQuotaTab.label                    "Cota">

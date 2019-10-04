@@ -77,8 +77,11 @@
 <!ENTITY Birthday.label                 "Születési dátum:">
 <!ENTITY Birthday.accesskey             "s">
 <!ENTITY In.label                       "">
+<!ENTITY Month.placeholder              "Hónap">
+<!ENTITY Day.placeholder                "Nap">
 <!ENTITY Year.placeholder               "Év">
 <!ENTITY Or.value                       "vagy">
+<!ENTITY Age.label                      "Kor:">
 <!ENTITY Age.placeholder                "Kor">
 <!ENTITY YearsOld.label                 "">
 
@@ -141,7 +144,6 @@
 
 <!ENTITY Photo.tab                      "Fénykép">
 <!ENTITY Photo.accesskey                "p">
-<!ENTITY PhotoDesc.label                "Válasszon a következők közül:">
 <!ENTITY GenericPhoto.label             "Általános fénykép">
 <!ENTITY GenericPhoto.accesskey         "l">
 <!ENTITY DefaultPhoto.label             "Alapértelmezett">

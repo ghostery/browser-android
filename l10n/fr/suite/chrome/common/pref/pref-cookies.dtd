@@ -9,7 +9,7 @@
 <!ENTITY cookiePolicy.label             "Politique d’acceptation des cookies">
 
 <!ENTITY disableCookies.label           "Bloquer les cookies">
-<!ENTITY disableCookies.accesskey       "n">
+<!ENTITY disableCookies.accesskey       "B">
 
 <!ENTITY accNo3rdPartyCookies.label     "Autoriser les cookies du serveur initial seulement (aucun cookie tiers)">
 <!ENTITY accNo3rdPartyCookies.accesskey "u">
@@ -37,4 +37,3 @@
 
 <!ENTITY viewCookies.label              "Gérer les cookies">
 <!ENTITY viewCookies.accesskey          "G">
-

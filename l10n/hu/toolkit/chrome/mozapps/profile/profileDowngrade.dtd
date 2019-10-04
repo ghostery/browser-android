@@ -1,0 +1,20 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!-- LOCALIZATION NOTE:
+ This UI can be most easily shown by modifying the version in compatibility.ini
+ to a newer version and then starting Firefox.
+ For this feature, "installation" is used to mean "this discrete download of
+ Firefox" and "version" is used to mean "the specific revision number of a
+ given Firefox channel". These terms are not synonymous.
+-->
+<!ENTITY window.title "A Firefox egy régebbi verzióját indította el">
+<!ENTITY window.style "width: 490px;">
+
+<!ENTITY window.nosync "A Firefox régebbi verziójának használata megrongálhatja a létező Firefox profilba mentett könyvjelzőket és a böngészési előzményeket. Az információi védelme érdekében hozzon létre egy új profil a &brandShortName; ezen telepítéséhez.">
+<!ENTITY window.sync "A Firefox régebbi verziójának használata megrongálhatja a létező Firefox profilba mentett könyvjelzőket és a böngészési előzményeket. Az információi védelme érdekében hozzon létre egy új profil a &brandShortName; ezen telepítéséhez. Bármikor bejelentkezhet a &syncBrand.fxAccount.label;jába, hogy szinkronizálja a könyvjelzőit és böngészési előzményeit a profiljai között.">
+
+<!ENTITY window.create "Új profil létrehozása">
+<!ENTITY window.quit-win "Kilépés">
+<!ENTITY window.quit-nonwin "Kilépés">

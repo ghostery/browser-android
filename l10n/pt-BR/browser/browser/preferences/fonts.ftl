@@ -94,7 +94,7 @@ fonts-minsize = Tamanho mínimo da fonte
 fonts-minsize-none =
     .label = Nenhum
 fonts-allow-own =
-    .label = Permitir que páginas escolham suas próprias fontes, ao invés de suas seleções acima
+    .label = Permitir que páginas escolham as próprias fontes, ao invés das selecionadas acima
     .accesskey = P
 
 ## Text Encodings
@@ -138,9 +138,6 @@ fonts-languages-fallback-name-vietnamese =
     .label = Vietnamita
 fonts-languages-fallback-name-other =
     .label = Outro (incluindo Europa ocidental)
-fonts-very-large-warning-title = Tamanho mínimo de fonte muito grande
-fonts-very-large-warning-message = Você selecionou um tamanho mínimo de fonte muito grande (mais que 24 pixels). Isso pode dificultar ou tornar impossível o uso de algumas páginas importantes de configuração, como essa.
-fonts-very-large-warning-accept = Manter minhas alterações
 # Variables:
 #   $name {string, "Arial"} - Name of the default font
 fonts-label-default =

@@ -20,16 +20,13 @@
 <!ENTITY productHelp2.accesskey   "H">
 <!ENTITY helpMac.commandkey       "?">
 
-<!ENTITY helpKeyboardShortcuts.label     "鍵盤捷徑">
+<!ENTITY helpKeyboardShortcuts.label     "快速鍵">
 <!ENTITY helpKeyboardShortcuts.accesskey "K">
 
 <!ENTITY helpSafeMode.label       "重新啟動但停用附加元件…">
 <!ENTITY helpSafeMode.accesskey   "R">
 <!ENTITY helpSafeMode.stop.label       "重新啟動並啟用附加元件">
 <!ENTITY helpSafeMode.stop.accesskey   "R">
-
-<!ENTITY healthReport2.label      "&brandShorterName; 健康檢查報告">
-<!ENTITY healthReport2.accesskey  "e">
 
 <!ENTITY helpTroubleshootingInfo.label      "疑難排解資訊">
 <!ENTITY helpTroubleshootingInfo.accesskey  "T">
@@ -53,3 +50,4 @@
 
 <!ENTITY showAllAppsCmdMac.label        "全部顯示">
 
+<!ENTITY touchBarCmdMac.label           "自訂觸控列…">

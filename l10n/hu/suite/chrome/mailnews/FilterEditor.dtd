@@ -30,13 +30,15 @@
 <!ENTITY contextArchive.label "Archiválás">
 <!ENTITY contextArchive.accesskey "A">
 
+<!ENTITY contextPeriodic.accesskey "I">
+
 <!ENTITY filterActionDesc.label "Műveletek végrehajtása:">
 <!ENTITY filterActionDesc.accesskey "v">
 
 <!ENTITY filterActionOrderWarning.label "Megjegyzés: a szűrési műveletek más sorrendben lesznek futtatva.">
 <!ENTITY filterActionOrder.label "Végrehajtási sorrend megjelenítése">
-<!-- New Style Filter Rule Actions -->
 
+<!-- New Style Filter Rule Actions -->
 <!ENTITY moveMessage.label "Üzenet áthelyezése">
 <!ENTITY copyMessage.label "Üzenet átmásolása">
 <!ENTITY forwardTo.label "Üzenet továbbítása">

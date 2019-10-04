@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY migration.title "&brandFullName;: Importação de dados">
-<!ENTITY migration.welcome "Bem-vindo">
+<!ENTITY migration.welcome "Boas-vindas">
 <!ENTITY migration.importing "Importando">
 <!ENTITY migration.list.description "O &brandShortName; pode importar dados de agenda de vários aplicativos populares. Dados dos seguintes aplicativos foram encontrados no seu computador. Selecione de quais gostaria de importar dados.">
 <!ENTITY migration.progress.description "Importando dados selecionados">

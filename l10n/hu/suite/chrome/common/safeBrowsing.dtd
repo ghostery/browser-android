@@ -21,9 +21,13 @@
 <!ENTITY safeb.blocked.phishingPage.shortDesc2 "A(z) <span id='phishing_sitename'/> címen működő weboldalról bejelentés érkezett, hogy félrevezető weboldal, ezért a biztonsági beállítások alapján a böngésző a hozzáférést nem engedélyezi.">
 <!ENTITY safeb.blocked.phishingPage.longDesc2 "<p>A félrevezető oldalak arra készültek, hogy olyasmire vegyék rá, amely veszélyes, például szoftverek telepítése, vagy a személyes információinak megszerzése, mint jelszavak, telefonszámok vagy bankkártyák.</p><p>Bármilyen információ megadása ezen a weboldalon személyazonosság-lopást vagy más csalást eredményezhet.</p>">
 
+<!ENTITY safeb.blocked.harmfulPage.title "Az oldal rosszindulatú kódot tartalmazhat">
+<!-- Localization note (safeb.blocked.harmfulPage.shortDesc) - Please don't translate the contents of the <span id="harmful_sitename"/> tag. It will be replaced at runtime with a domain name (e.g. www.badsite.com) -->
+<!ENTITY safeb.blocked.harmfulPage.shortDesc "A &brandShortName; blokkolta a(z) <span id='harmful_sitename'/> oldalt, mert lehet, hogy veszélyes alkalmazásokat próbál meg telepíteni, amelyek ellopják vagy törlik az információit (például képek, üzenetek és bankkártyaadatok).">
+<!ENTITY safeb.blocked.harmfulPage.longDesc "">
+
 <!-- Localization note (reportDeceptiveSite, notADeceptiveSite) - The two button strings will never be shown at the same time, so it's okay for them to have the same access key. -->
 <!ENTITY reportDeceptiveSite.label "Félrevezető oldal jelentése…">
 <!ENTITY reportDeceptiveSite.accesskey "f">
 <!ENTITY notADeceptiveSite.label "Ez nem félrevezető webhely…">
 <!ENTITY notADeceptiveSite.accesskey "f">
-

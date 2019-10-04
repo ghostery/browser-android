@@ -11,7 +11,7 @@
 <!ENTITY  focusSearch1.key            "F">
 <!ENTITY  focusSearch2.key            "K">
 
-<!ENTITY  filter.placeholder          "Localizar">
+<!ENTITY  filter.placeholder          "Procurar">
 
 <!ENTITY saveTo.label                 "Salvar arquivos em:">
 <!ENTITY saveTo.accesskey             "S">
@@ -33,6 +33,8 @@
 <!ENTITY authRequired.description         "Sua autorização é necessária para verificar as configurações deste serviço de armazenamento.">
 <!ENTITY authRequired.button.label        "Autorizar">
 <!ENTITY authRequired.button.accesskey    "u">
+
+<!ENTITY findCloudFileProviders.label     "Procurar mais provedores…">
 
 <!ENTITY enableCloudFileAccountOffer.label "Oferecer compartilhamento para arquivos maiores que">
 <!ENTITY enableCloudFileAccountOffer.mb "MB">

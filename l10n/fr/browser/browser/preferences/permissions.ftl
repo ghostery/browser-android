@@ -34,8 +34,15 @@ permissions-button-cancel =
 permissions-button-ok =
     .label = Enregistrer les modifications
     .accesskey = E
+permissions-autoplay-menu = Par défaut pour tous les sites web :
 permissions-searchbox =
     .placeholder = Rechercher un site web
+permissions-capabilities-autoplay-allow =
+    .label = Autoriser l’audio et la vidéo
+permissions-capabilities-autoplay-block =
+    .label = Bloquer l’audio
+permissions-capabilities-autoplay-blockall =
+    .label = Bloquer l’audio et la vidéo
 permissions-capabilities-allow =
     .label = Autoriser
 permissions-capabilities-block =
@@ -46,8 +53,6 @@ permissions-capabilities-listitem-allow =
     .value = Autoriser
 permissions-capabilities-listitem-block =
     .value = Bloquer
-permissions-capabilities-listitem-allow-first-party =
-    .value = Domaine principal seul
 permissions-capabilities-listitem-allow-session =
     .value = Autoriser pour la session
 
@@ -58,14 +63,14 @@ permissions-invalid-uri-label = Veuillez saisir un nom d’hôte valide
 
 ## Exceptions - Tracking Protection
 
-permissions-exceptions-tracking-protection-window =
-    .title = Exceptions - Protection contre le pistage
-    .style = { permissions-window.style }
-permissions-exceptions-tracking-protection-desc = Vous avez désactivé la protection contre le pistage sur ces sites.
 permissions-exceptions-content-blocking-window =
     .title = Exceptions - Blocage de contenu
     .style = { permissions-window.style }
 permissions-exceptions-content-blocking-desc = Vous avez désactivé le blocage de contenu sur ces sites.
+permissions-exceptions-etp-window =
+    .title = Exceptions pour la protection renforcée contre le pistage
+    .style = { permissions-window.style }
+permissions-exceptions-etp-desc = Vous avez désactivé les protections sur ces sites web.
 
 ## Exceptions - Cookies
 
@@ -101,6 +106,13 @@ permissions-exceptions-autoplay-media-window2 =
     .title = Exceptions - Lecture automatique
     .style = { permissions-window.style }
 permissions-exceptions-autoplay-media-desc2 = Vous pouvez indiquer les sites web qui sont toujours ou ne sont jamais autorisés à lancer automatiquement la lecture de contenu multimédia comportant du son. Saisissez l’adresse du site et cliquez sur Bloquer ou Autoriser.
+
+## Site Permissions - Autoplay
+
+permissions-site-autoplay-window =
+    .title = Paramètres - Lecture automatique
+    .style = { permissions-window.style }
+permissions-site-autoplay-desc = Vous pouvez gérer ici les sites qui ne suivent pas vos paramètres de lecture automatique par défaut.
 
 ## Site Permissions - Notifications
 

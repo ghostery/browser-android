@@ -27,7 +27,7 @@
 <!ENTITY warn.leavingsecure                 "離開支援加密的網頁中">
 <!ENTITY warn.leavingsecure.accesskey       "a">
 
-<!ENTITY mixed.description                  "已加密的頁面可能包含容易被監聽或偽造的的未加密內容，&brandShortName; 可以幫您偵測並封鎖:">
+<!ENTITY mixed.description                  "已加密的頁面可能包含容易被監聽或偽造的未加密內容，&brandShortName; 可以幫您偵測並封鎖:">
 <!ENTITY warn.mixedactivecontent            "加密頁面中包含不安全內容時警告我">
 <!ENTITY warn.mixedactivecontent.accesskey  "W">
 <!ENTITY block.activecontent                "不要在加密頁面中載入不安全的內容">
@@ -42,4 +42,3 @@
 <!ENTITY certselect.auto.accesskey          "A">
 <!ENTITY certselect.ask                     "每次都要詢問">
 <!ENTITY certselect.ask.accesskey           "E">
-

@@ -38,3 +38,7 @@
 <!ENTITY browse.accesskey                 "б">
 
 <!ENTITY defaultSearchEngine.label        "Поисковая система по умолчанию">
+<!ENTITY addSearchEngine.label            "Добавить из файла">
+<!ENTITY addSearchEngine.accesskey        "й">
+<!ENTITY removeSearchEngine.label         "Удалить">
+<!ENTITY removeSearchEngine.accesskey     "л">

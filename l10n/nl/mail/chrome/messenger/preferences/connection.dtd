@@ -38,6 +38,10 @@
 <!ENTITY  noproxy.label                 "Geen proxy voor:">
 <!ENTITY  noproxy.accesskey             "G">
 <!ENTITY  noproxyExplain.label          "Voorbeeld: .mozilla.org, .net.nz, 192.168.1.0/24">
+<!-- LOCALIZATION NOTE (noproxyLocalhostDesc.label): Do not translate
+  localhost, 127.0.0.1 and ::1.
+-->
+<!ENTITY  noproxyLocalhostDesc.label   "Verbindingen met localhost, 127.0.0.1 en ::1 gaan nooit via een proxy.">
 <!ENTITY  shareproxy.label              "Deze proxyserver voor alle protocollen gebruiken">
 <!ENTITY  shareproxy.accesskey          "z">
 <!ENTITY  autologinproxy.label          "Niet om authenticatie vragen als wachtwoord is opgeslagen">
@@ -47,12 +51,4 @@
 <!ENTITY  socksRemoteDNS.accesskey      "D">
 <!ENTITY  dnsOverHttps.label            "DNS over HTTPS inschakelen">
 <!ENTITY  dnsOverHttps.accesskey        "N">
-<!ENTITY  dnsOverHttpsUrl.label         "URL">
-<!ENTITY  dnsOverHttpsUrl.accesskey     "U">
-<!ENTITY  dnsOverHttpsUrl.tooltip       "URL voor het omzetten van DNS over HTTPS">
-<!ENTITY  dnsOverHttpsUrlDefault.label     "Standaard gebruiken">
-<!ENTITY  dnsOverHttpsUrlDefault.accesskey "S">
 <!ENTITY  dnsOverHttpsUrlDefault.tooltip   "De standaard-URL voor het omzetten van DNS over HTTPS gebruiken">
-<!ENTITY  dnsOverHttpsUrlCustom.label      "Aangepast">
-<!ENTITY  dnsOverHttpsUrlCustom.accesskey  "A">
-<!ENTITY  dnsOverHttpsUrlCustom.tooltip    "Een URL van uw voorkeur voor het omzetten van DNS over HTTPS invoeren">

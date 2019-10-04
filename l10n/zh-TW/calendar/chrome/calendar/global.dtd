@@ -46,8 +46,9 @@
 
 <!ENTITY onemonthbackward.tooltip "上個月" >
 <!ENTITY onemonthforward.tooltip "下個月" >
+<!ENTITY oneyearbackward.tooltip "前一年" >
+<!ENTITY oneyearforward.tooltip "後一年" >
 <!ENTITY showToday.tooltip "前往今日">
-<!ENTITY onedayforward.tooltip "明天">
-<!ENTITY onedaybackward.tooltip "往後一天">
+<!ENTITY onedayforward.tooltip "後一天">
+<!ENTITY onedaybackward.tooltip "前一天">
 <!ENTITY showselectedday.tooltip "顯示所選擇日期的事件">
-

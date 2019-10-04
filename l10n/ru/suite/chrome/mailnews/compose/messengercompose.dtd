@@ -7,7 +7,13 @@
 
 <!ENTITY fromAddr.label "От:">
 <!ENTITY fromAddr.accesskey "т">
-<!ENTITY subject.label  "Тема:">
+<!ENTITY toAddr.label "Кому:">
+<!ENTITY ccAddr.label "Копия:">
+<!ENTITY bccAddr.label "Скрытая копия:">
+<!ENTITY replyAddr.label "Обратный адрес:">
+<!ENTITY newsgroupsAddr.label "Группа новостей:">
+<!ENTITY followupAddr.label "Ответ в группу новостей:">
+<!ENTITY subject.label "Тема:">
 <!ENTITY subject.accesskey "м">
 <!ENTITY attachments.label "Вложения:">
 <!ENTITY attachments.accesskey "л">

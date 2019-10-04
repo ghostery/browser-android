@@ -3,38 +3,58 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY autoconfigWizard2.title         "Configurar uma conta de e-mail existente">
+
+<!ENTITY emailWizard.title               "Configure seu endereço de e-mail existente">
+<!ENTITY emailWizard.caption             "Use seu endereço de e-mail atual">
 <!ENTITY name.label                      "Seu nome:">
 <!ENTITY name.accesskey                  "n">
-<!ENTITY name.placeholder                "Prenome">
-<!ENTITY name.text                       "Seu nome, como mostrado aos outros">
+<!ENTITY name.placeholder                "Nome">
+<!ENTITY fullname.placeholder            "Seu nome completo">
+<!ENTITY name.text                       "Seu nome, como será mostrado aos outros">
+<!ENTITY name.error                      "Digite seu nome">
 <!ENTITY email.label                     "Endereço de e-mail:">
 <!ENTITY email.accesskey                 "E">
 <!-- LOCALIZATION NOTE(email.placeholder): Domain @example.com must stay in English -->
 <!ENTITY email2.placeholder              "voce@example.com">
+<!ENTITY email3.placeholder              "Seu endereço de e-mail">
 <!ENTITY email.text                      "Seu endereço de e-mail existente">
+<!ENTITY email.error                     "Endereço de e-mail inválido">
 <!ENTITY password.label                  "Senha:">
 <!ENTITY password.accesskey              "S">
 <!ENTITY password.placeholder            "Senha">
 <!ENTITY password.text                   "Opcional, será usada somente para validar o nome de usuário">
+<!ENTITY password.toggle                 "Exibir/ocultar senha">
 <!ENTITY rememberPassword.label          "Memorizar a senha">
 <!ENTITY rememberPassword.accesskey      "M">
+<!ENTITY usernameEx.label                "Seu login:">
+<!ENTITY usernameEx.accesskey            "l">
+<!-- LOCALIZATION NOTE(usernameEx.placeholder): YOURDOMAIN refers to the Windows domain in ActiveDirectory. yourusername refers to the user's account name in Windows. -->
+<!ENTITY usernameEx.placeholder          "SEUDOMÍNIO\seunomedeusuário">
+<!-- LOCALIZATION NOTE(usernameEx.text): Domain refers to the Windows domain in ActiveDirectory. We mean the user's login in Windows at the local corporate network. -->
+<!ENTITY usernameEx.text                 "Login no domínio">
 
+<!ENTITY protocol.label                  "Protocolo:">
 <!ENTITY imapLong.label                  "IMAP (pastas remotas)">
 <!ENTITY pop3Long.label                  "POP3 (mantém as mensagens no seu computador)">
 
 <!ENTITY incoming.label                  "Recebimento:">
+<!ENTITY incomingColumn.label            "Recebimento">
 <!ENTITY outgoing.label                  "Envio:">
+<!ENTITY outgoingColumn.label            "Envio">
 <!ENTITY username.label                  "Nome de usuário:">
 <!ENTITY hostname.label                  "Nome do servidor">
 <!ENTITY port.label                      "Porta">
 <!ENTITY ssl.label                       "SSL">
+<!ENTITY serverRow.label                 "Servidor:">
+<!ENTITY portRow.label                   "Porta:">
+<!ENTITY sslRow.label                    "SSL:">
 <!ENTITY auth.label                      "Autenticação">
 <!ENTITY imap.label                      "IMAP">
 <!ENTITY pop3.label                      "POP3">
 <!-- LOCALIZATION NOTE(exchange.label): Do not translate Exchange, it is a product name. -->
 <!ENTITY exchange.label                  "Exchange">
 <!ENTITY smtp.label                      "SMTP">
-<!ENTITY autodetect.label                "Autodetectar">
+<!ENTITY autodetect.label                "Detectar automaticamente">
 <!-- LOCALIZATION NOTE(noEncryption.label): Neither SSL/TLS nor STARTTLS.
      Transmission of emails in cleartext over the Internet. -->
 <!ENTITY noEncryption.label              "Nenhuma">
@@ -53,15 +73,21 @@
 <!ENTITY stop.label                      "Parar">
 <!ENTITY stop.accesskey                  "P">
 <!-- LOCALIZATION NOTE (half-manual-test.label): This is the text that is
-     displayed on the button in manual edit mode which will re-guess
+     displayed on the button in manual config mode which will re-guess
      the account configuration, taking into account the settings that
      the user has manually changed. -->
 <!ENTITY half-manual-test.label          "Retestar">
 <!ENTITY half-manual-test.accesskey      "R">
 <!ENTITY manual-edit.label               "Config. manual">
 <!ENTITY manual-edit.accesskey           "o">
+<!ENTITY manual-config.label             "Configurar manualmente…">
+<!ENTITY manual-config.accesskey         "m">
 <!ENTITY open-provisioner.label          "Usar um novo endereço de e-mail…">
 <!ENTITY open-provisioner.accesskey      "o">
+
+
+<!ENTITY get-help.label                  "Obter ajuda">
+<!ENTITY get-help.accesskey              "a">
 
 
 <!ENTITY warning.label                   "Aviso!">

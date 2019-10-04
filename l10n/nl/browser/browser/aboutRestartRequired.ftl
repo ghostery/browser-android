@@ -4,7 +4,9 @@
 
 restart-required-title = Herstart vereist
 restart-required-header = Sorry. We moeten nog een klein dingetje uitvoeren om te kunnen blijven werken.
-restart-required-intro = We hebben zojuist een update op de achtergrond uitgevoerd. Klik op { -brand-short-name } herstarten om het toepassen ervan te voltooien.
+restart-required-intro = We hebben zojuist een update op de achtergrond uitgevoerd. Klik op { -brand-short-name } herstarten om het toepassen ervan
+    te voltooien.
+restart-required-intro-brand = { -brand-short-name } is zojuist op de achtergrond bijgewerkt. Klik op { -brand-short-name } herstarten om de update te voltooien.
 restart-required-description = Daarna worden al uw pagina’s, vensters en tabbladen weer hersteld, zodat u snel verder kunt.
 
 restart-button-label = { -brand-short-name } herstarten

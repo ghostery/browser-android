@@ -4,9 +4,9 @@
 
 <!-- extracted from content/viewSource.xul -->
 
-<!-- LOCALIZATION NOTE (mainWindow.title) : DONT_TRANSLATE --> 
+<!-- LOCALIZATION NOTE (mainWindow.title) : DONT_TRANSLATE -->
 <!ENTITY mainWindow.title "&brandFullName;">
-<!-- LOCALIZATION NOTE (mainWindow.titlemodifier) : DONT_TRANSLATE --> 
+<!-- LOCALIZATION NOTE (mainWindow.titlemodifier) : DONT_TRANSLATE -->
 <!ENTITY mainWindow.titlemodifier "&brandFullName;">
 <!-- LOCALIZATION NOTE (mainWindow.titlemodifierseparator) : DONT_TRANSLATE -->
 <!ENTITY mainWindow.titlemodifierseparator " - ">
@@ -24,7 +24,7 @@
 <!ENTITY printCmd.label "打印…">
 <!ENTITY printCmd.accesskey "P">
 <!ENTITY printCmd.commandkey "P">
-<!ENTITY closeCmd.label "关于">
+<!ENTITY closeCmd.label "关闭">
 <!ENTITY closeCmd.accesskey "C">
 <!ENTITY closeCmd.commandkey "W">
 
@@ -51,7 +51,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY reloadCmd.label "重新载入">
 <!ENTITY reloadCmd.accesskey "R">
 <!ENTITY reloadCmd.commandkey "r">
-<!ENTITY menu_wrapLongLines.title "自动折行"> 
+<!ENTITY menu_wrapLongLines.title "自动折行">
 <!ENTITY menu_wrapLongLines.accesskey "W">
 <!ENTITY menu_highlightSyntax.label "语法高亮">
 <!ENTITY menu_highlightSyntax.accesskey "H">
@@ -84,8 +84,3 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY copyLinkCmd.accesskey "L">
 <!ENTITY copyEmailCmd.label "复制电子邮件地址">
 <!ENTITY copyEmailCmd.accesskey "E">
-
-<!-- Copied from charsetMenu.dtd -->
-<!ENTITY charsetMenu2.label            "文字编码">
-<!ENTITY charsetMenu2.accesskey        "c">
-

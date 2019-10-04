@@ -3,12 +3,67 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-## UI strings for the simplified onboarding modal
+### UI strings for the simplified onboarding modal / about:welcome
+### Various strings use a non-breaking space to avoid a single dangling /
+### widowed word, so test on various window sizes if you also want this.
 
+
+## These button action text can be split onto multiple lines, so use explicit
+## newlines in translations to control where the line break appears (e.g., to
+## avoid breaking quoted text).
+
+onboarding-button-label-learn-more = 详细了解
 onboarding-button-label-try-now = 立即尝鲜
 onboarding-button-label-get-started = 开始使用
+
+## Welcome modal dialog strings
+
 onboarding-welcome-header = 欢迎使用 { -brand-short-name }
+onboarding-welcome-body = 浏览器安装完成。<br/>了解 { -brand-product-name } 的其他功能。
+onboarding-welcome-learn-more = 详细了解好处。
+onboarding-join-form-header = 加入 { -brand-product-name }
+onboarding-join-form-body = 在此输入您的电子邮件地址，即可开始使用。
+onboarding-join-form-email =
+    .placeholder = 输入电子邮件地址
+onboarding-join-form-email-error = 需要有效的电子邮件地址
+onboarding-join-form-legal = 若继续，即表示您同意我们的<a data-l10n-name="terms">服务条款</a>和<a data-l10n-name="privacy">隐私声明</a>。
+onboarding-join-form-continue = 继续
 onboarding-start-browsing-button-label = 开始浏览
+onboarding-cards-dismiss =
+    .title = 隐藏
+    .aria-label = 隐藏
+
+## Firefox Sync modal dialog strings.
+
+onboarding-sync-welcome-header = 随身携带 { -brand-product-name }
+onboarding-sync-welcome-content = 在您的所有设备上获取您的书签、历史记录、密码以及其他设置。
+onboarding-sync-welcome-learn-more-link = 详细了解 Firefox 账户
+onboarding-sync-form-invalid-input = 需要有效的电子邮件地址
+onboarding-sync-legal-notice = 若您选择继续，即表示您同意我们的<a data-l10n-name="terms">服务条款</a>和<a data-l10n-name="privacy">隐私声明</a>。
+onboarding-sync-form-input =
+    .placeholder = 电子邮件
+onboarding-sync-form-continue-button = 继续
+onboarding-sync-form-skip-login-button = 跳过此步骤
+
+## This is part of the line "Enter your email to continue to Firefox Sync"
+
+onboarding-sync-form-header = 请输入您的电子邮箱
+onboarding-sync-form-sub-header = 继续使用 { -sync-brand-name }服务。
+
+## These are individual benefit messages shown with an image, title and
+## description.
+
+onboarding-benefit-products-title = 有用的产品
+onboarding-benefit-products-text = 使用各种尊重您隐私的工具，更快完成工作。
+onboarding-benefit-knowledge-title = 实用小知识
+onboarding-benefit-knowledge-text = 了解所需要知道的一切，让您上网更智能、更安全。
+onboarding-benefit-privacy-title = 保障隐私权
+# "Personal Data Promise" is a concept that should be translated consistently
+# across the product. It refers to a concept shown elsewhere to the user: "The
+# Firefox Personal Data Promise is the way we honor your data in everything we
+# make and do. We take less data. We keep it safe. And we make sure that we are
+# transparent about how we use it."
+onboarding-benefit-privacy-text = 我们所做的一切，均符合我们对个人数据隐私的承诺：索取更少、确保安全、绝不隐瞒。
 
 ## These strings belong to the individual onboarding messages.
 
@@ -28,6 +83,41 @@ onboarding-ghostery-text = 使用 Ghostery 等扩展拦截恼人的广告，让�
 # Note: "Sync" in this case is a generic verb, as in "to synchronize"
 onboarding-fxa-title = 同步
 onboarding-fxa-text = 注册 { -fxaccount-brand-name } 之后，您可在任何使用 { -brand-short-name } 的任何地方同步您的书签、密码和打开的标签页。
+onboarding-tracking-protection-title2 = 保护您不受跟踪
+onboarding-tracking-protection-text2 = { -brand-short-name } 可帮助阻止网站的在线跟踪，让内容跟踪器更难盯上您。
+onboarding-tracking-protection-button2 = 工作原理
+onboarding-data-sync-title = 将您的设置随身带着走
+# "Sync" is short for synchronize.
+onboarding-data-sync-text2 = 在任何使用 { -brand-product-name } 的地方同步书签、密码等数据。
+onboarding-data-sync-button2 = 登录至{ -sync-brand-short-name }
+onboarding-firefox-monitor-title = 警惕数据外泄
+onboarding-firefox-monitor-text = { -monitor-brand-name } 会监控您的电子邮件地址是否出现在数据外泄事件中，并在有新外泄事件时通知您。
+onboarding-firefox-monitor-button = 订阅警报
+onboarding-browse-privately-title = 私密浏览
+onboarding-browse-privately-text = 隐私浏览会自动清除您的搜索与上网记录，让使用此计算机的其他人无法得知您在网上的活动。
+onboarding-browse-privately-button = 打开隐私窗口
+onboarding-firefox-send-title = 以私密的方式分享文件
+onboarding-firefox-send-text2 = 上传您的文件到 { -send-brand-name }，即可通过端到端加密与链接到期即焚来进行分享。
+onboarding-firefox-send-button = 试用 { -send-brand-name }
+onboarding-mobile-phone-title = 获取手机版 { -brand-product-name }
+onboarding-mobile-phone-text = 下载适用于 iOS 或 Android 的 { -brand-product-name }，即可跨设备同步数据。
+# "Mobile" is short for mobile/cellular phone, "Browser" is short for web
+# browser.
+onboarding-mobile-phone-button = 下载移动浏览器
+onboarding-send-tabs-title = 即时发送标签页给自己
+# "Send Tabs" refers to "Send Tab to Device" feature that appears when opening a
+# tab's context menu.
+onboarding-send-tabs-text = Send Tabs 可即时跨设备分享网页，无须复制、粘贴或离开浏览器。
+onboarding-send-tabs-button = 开始使用 Send Tabs
+onboarding-pocket-anywhere-title = 随时随地阅读和聆听
+onboarding-pocket-anywhere-text2 = 可使用 { -pocket-brand-name } 应用离线保存您喜爱的故事，以便您闲暇时阅读、聆听和观看。
+onboarding-pocket-anywhere-button = 试用 { -pocket-brand-name }
+onboarding-lockwise-passwords-title = 将您的密码随身带着走
+onboarding-lockwise-passwords-text2 = { -lockwise-brand-name } 会安全地保存您的密码，让您可轻松在各个网站上登录账号。
+onboarding-lockwise-passwords-button2 = 获取应用
+onboarding-facebook-container-title = 为 Facebook 设置边界
+onboarding-facebook-container-text2 = { -facebook-container-brand-name } 可将您的 Facebook 身份与其他网站隔离，使 Facebook 更难以通过广告定位您。
+onboarding-facebook-container-button = 添加扩展
 
 ## Message strings belonging to the Return to AMO flow
 

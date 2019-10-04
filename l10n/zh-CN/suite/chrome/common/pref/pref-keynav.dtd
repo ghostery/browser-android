@@ -8,7 +8,7 @@
 <!ENTITY tabNavigationLinks.accesskey "L">
 <!ENTITY tabNavigationForms.label "按钮，选项按钮，多选按钮，选项列表">
 <!ENTITY tabNavigationForms.accesskey "B">
-<!ENTITY tabNavigationTextboxes.label "注意：文本框以及滚动条通常在切换顺序中。">
+<!ENTITY tabNavigationTextboxes.label "注意：文本框以及滚动条均在 Tab 切换选取范围内。">
 <!ENTITY tabNavigationDesc.label "按下 Tab 键或 Shift+Tab 键时的切换顺序:">
 <!ENTITY accessibilityBrowseWithCaret.label "光标浏览">
 <!ENTITY browseWithCaretDesc.label "光标浏览让您可以使用光标键，在页面里移动可见光标以导航和选择。">

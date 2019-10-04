@@ -23,6 +23,8 @@
 
 <!ENTITY pref.default_event_length.label "Standaardlengte:" >
 <!ENTITY pref.default_event_length.accesskey "e">
+<!ENTITY pref.default_event_task_length.label "Standaardlengte gebeurtenissen en taken">
+<!ENTITY pref.default_event_task_length.accesskey "e">
 
 <!ENTITY pref.default_task_none.label "Geen">
 <!ENTITY pref.default_task_start_of_day.label "Begin van dag">

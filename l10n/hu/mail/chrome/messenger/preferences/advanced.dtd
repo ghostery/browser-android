@@ -67,17 +67,18 @@
  -->
 <!ENTITY updateApp.version.pre           "Verzió: ">
 <!ENTITY updateApp.version.post          "">
+<!ENTITY updateAppAllow.description      "A &brandShortName; megteheti:">
 <!ENTITY updateAuto.label                "Frissítések automatikus telepítése (ez ajánlott a maximális biztonság érdekében)">
 <!ENTITY updateAuto.accesskey            "a">
 <!ENTITY updateCheck.label               "Frissítések keresése, de a telepítés kézzel történik">
 <!ENTITY updateCheck.accesskey           "k">
-<!ENTITY updateManual.label              "Ne legyen frissítve (nem ajánlott a biztonsági kockázat miatt">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "Frissítési előzmények megjelenítése">
 <!ENTITY updateHistory.accesskey         "z">
 
 <!ENTITY useService.label                "Háttérben futó szolgáltatás intézze a frissítést">
 <!ENTITY useService.accesskey            "H">
+
+<!ENTITY updateCrossUserSettingWarning.description "Ez a beállítás érvényes lesz minden Windows-fiókra és &brandShortName;-profilra, amely a &brandShortName; ezen telepítését használja.">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "Beállítások…">
@@ -121,3 +122,8 @@
 <!ENTITY manageCertificates.accesskey "T">
 <!ENTITY viewSecurityDevices.label "Adatvédelmi eszközök">
 <!ENTITY viewSecurityDevices.accesskey "d">
+
+<!ENTITY manageCertificates2.label "Tanúsítványok kezelése…">
+<!ENTITY manageCertificates2.accesskey "T">
+<!ENTITY viewSecurityDevices2.label "Biztonsági eszközök…">
+<!ENTITY viewSecurityDevices2.accesskey "B">

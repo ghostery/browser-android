@@ -172,7 +172,6 @@
 <!ENTITY compactVersion.accesskey "C">
 <!ENTITY folderPaneBar.label "資料夾窗格工具列">
 <!ENTITY folderPaneBar.accesskey "F">
-<!ENTITY folderModeSelector.label "資料夾畫面">
 
 <!-- Sort Menu -->
 <!ENTITY sortMenu.label "排序方式">
@@ -587,6 +586,7 @@
 <!ENTITY fileButton.tooltip "歸檔所選的訊息">
 <!ENTITY archiveButton.tooltip "將選取的郵件備存">
 <!ENTITY openConversationButton.tooltip "顯示所選訊息當中的對話內容">
+<!ENTITY openMsgConversationButton.tooltip "顯示所選訊息當中的對話內容">
 <!ENTITY nextButton.tooltip "移至下一封未讀郵件">
 <!ENTITY nextMsgButton.tooltip "移動至下一封訊息">
 <!ENTITY previousButton.tooltip "移至上一封未讀郵件">
@@ -605,6 +605,7 @@
 <!ENTITY tagButton.tooltip "將郵件加上標籤">
 <!ENTITY compactButton.tooltip "從指定資料夾移除已刪郵件">
 <!ENTITY appmenuButton1.tooltip "顯示 &brandShortName; 選單">
+<!ENTITY addonsButton.tooltip "管理您的附加元件">
 
 <!-- Toolbar Button Popup -->
 <!ENTITY buttonMenuForwardAsInline.label "行內轉寄">
@@ -813,12 +814,6 @@
 <!ENTITY contextPrintPreview.label "預覽列印">
 <!ENTITY contextPrintPreview.accesskey "v">
 
-<!-- Thread Pane Column Picker -->
-<!-- LOCALIZATION NOTE (columnPicker.resetToInbox.label):
-     This option in the thread pane column picker causes us to reset the
-     customizations for the thread pane columns in this folder to their default.
-  -->
-<!ENTITY columnPicker.resetToInbox.label "重設欄位">
 <!-- LOCALIZATION NOTE (columnPicker.applyTo.label):
      This option in the thread pane column picker pops up a sub-menu containing
      the "columnPicker.applyToFolder.label" and
@@ -858,7 +853,6 @@
      "File here" option for the move to/copy to widget.
   -->
 <!ENTITY columnPicker.thisFolder.label "這個資料夾">
-
 
 <!-- Media (video/audio) controls -->
 <!ENTITY contextPlay.label "播放">

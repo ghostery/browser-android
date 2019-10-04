@@ -19,52 +19,6 @@
 <!ENTITY navbarOverflow.label                "Outils supplémentaires…">
 
 <!-- Tab context menu -->
-<!ENTITY  reloadTab.label                    "Actualiser l’onglet">
-<!ENTITY  reloadTab.accesskey                "A">
-<!ENTITY  selectAllTabs.label                "Sélectionner tous les onglets">
-<!ENTITY  selectAllTabs.accesskey            "S">
-<!-- LOCALIZATION NOTE (duplicateTab.label): This is a command to duplicate
-a tab (i.e. it is a verb, not adjective). -->
-<!ENTITY  duplicateTab.label                 "Dupliquer l’onglet">
-<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
-These items have the same accesskey but will never be visible at the same time. -->
-<!ENTITY  duplicateTab.accesskey             "D">
-<!ENTITY  closeTabOptions.label              "Options de fermeture des onglets">
-<!ENTITY  closeTabOptions.accesskey          "O">
-<!-- LOCALIZATION NOTE (duplicateTabs.label): This is a command to duplicate
-a tab (i.e. it is a verb, not adjective). -->
-<!ENTITY  duplicateTabs.label                "Dupliquer les onglets">
-<!-- LOCALIZATION NOTE (duplicateTab.accesskey, duplicateTabs.accesskey):
-These items have the same accesskey but will never be visible at the same time. -->
-<!ENTITY  duplicateTabs.accesskey            "D">
-<!-- LOCALIZATION NOTE (closeTabsToTheEnd.label): This should indicate the
-direction in which tabs are closed, i.e. locales that use RTL mode should say
-left instead of right. -->
-<!ENTITY  closeTabsToTheEnd.label            "Fermer les onglets situés à droite">
-<!ENTITY  closeTabsToTheEnd.accesskey        "m">
-<!ENTITY  closeOtherTabs.label               "Fermer les autres onglets">
-<!ENTITY  closeOtherTabs.accesskey           "t">
-
-<!ENTITY  closeTabs.label                    "Fermer les onglets">
-<!ENTITY  closeTabs.accesskey                "S">
-<!ENTITY  pinSelectedTabs.label              "Épingler les onglets">
-<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
-unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
-same accesskey but will never be visible at the same time. -->
-<!ENTITY  pinSelectedTabs.accesskey          "p">
-<!ENTITY  unpinSelectedTabs.label            "Désépingler les onglets">
-<!-- LOCALIZATION NOTE(pinTab.accesskey, pinSelectedTabs.accesskey,
-unpinTab.accesskey, unpinSelectedTabs.accesskey): These share the
-same accesskey but will never be visible at the same time. -->
-<!ENTITY  unpinSelectedTabs.accesskey        "R">
-<!-- LOCALIZATION NOTE(reloadTab.label, reloadTabs.label): have the same accesskey
-but will never be visible at the same time. -->
-<!ENTITY  reloadTabs.label                   "Actualiser les onglets">
-<!ENTITY  reloadTabs.accesskey               "R">
-<!ENTITY  bookmarkSelectedTabs.label         "Marquer ces onglets…">
-<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
-These items have the same accesskey but will never be visible at the same time. -->
-<!ENTITY  bookmarkSelectedTabs.accesskey     "u">
 
 <!-- LOCALIZATION NOTE (pinTab.label, unpinTab.label): "Pin" is being
 used as a metaphor for expressing the fact that these tabs are "pinned" to the
@@ -85,32 +39,11 @@ same accesskey but will never be visible at the same time. -->
 <!ENTITY  sendPageToDevice.accesskey         "v">
 <!ENTITY  sendLinkToDevice.label             "Envoyer le lien à un appareil">
 <!ENTITY  sendLinkToDevice.accesskey         "v">
-<!-- LOCALIZATION NOTE (moveTabOptions.label and moveSelectedTabOptions.label):
-These two items have the same accesskey but will never be visible at the same time. -->
-<!ENTITY  moveTabOptions.label               "Déplacer l’onglet">
-<!ENTITY  moveTabOptions.accesskey           "D">
-<!ENTITY  moveSelectedTabOptions.label       "Déplacer les onglets">
-<!ENTITY  moveSelectedTabOptions.accesskey   "D">
-<!ENTITY  moveToStart.label                  "Déplacer vers le début">
-<!ENTITY  moveToStart.accesskey              "S">
-<!ENTITY  moveToEnd.label                    "Déplacer vers la fin">
-<!ENTITY  moveToEnd.accesskey                "E">
-<!ENTITY  moveToNewWindow.label              "Déplacer vers une nouvelle fenêtre">
-<!ENTITY  moveToNewWindow.accesskey          "n">
-<!ENTITY  reopenInContainer.label            "Rouvrir dans un onglet contextuel">
-<!ENTITY  reopenInContainer.accesskey        "O">
-<!ENTITY  bookmarkTab.label                  "Ajouter l’onglet aux marque-pages">
-<!-- LOCALIZATION NOTE(bookmarkTab.accesskey, bookmarkSelectedTabs.accesskey):
-These items have the same accesskey but will never be visible at the same time. -->
-<!ENTITY  bookmarkTab.accesskey              "M">
 <!ENTITY  undoCloseTab.label                 "Annuler la fermeture de l’onglet">
 <!ENTITY  undoCloseTab.accesskey             "e">
-<!ENTITY  closeTab.label                     "Fermer l’onglet">
-<!ENTITY  closeTab.accesskey                 "F">
 <!ENTITY  hiddenTabs.label                   "Onglets masqués">
 
 <!ENTITY  listAllTabs.label      "Lister tous les onglets">
-
 <!-- LOCALIZATION NOTE (allTabsMenu.searchTabs.label): "Search" is a verb, as
 in "Search through tabs". -->
 <!ENTITY  allTabsMenu.searchTabs.label       "Rechercher dans les onglets">
@@ -132,6 +65,8 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY printCmd.label "Imprimer…">
 <!ENTITY printCmd.accesskey "p">
 <!ENTITY printCmd.commandkey "p">
+<!ENTITY importFromAnotherBrowserCmd.label "Importer depuis un autre navigateur…">
+<!ENTITY importFromAnotherBrowserCmd.accesskey "I">
 
 <!ENTITY taskManagerCmd.label "Gestionnaire de tâches">
 
@@ -144,31 +79,6 @@ when there are no windows but Firefox is still running. -->
 <!ENTITY personalbarCmd.label "Barre personnelle">
 <!ENTITY personalbarCmd.accesskey "B">
 <!ENTITY bookmarksToolbarItem.label "Éléments de la barre personnelle">
-
-<!ENTITY toolbarContextMenu.reloadSelectedTab.label "Recharger l’onglet sélectionné">
-<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
-toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
-same accesskey but will never be visible at the same time. -->
-<!ENTITY toolbarContextMenu.reloadSelectedTab.accesskey "C">
-<!ENTITY toolbarContextMenu.reloadSelectedTabs.label "Recharger les onglets sélectionnés">
-<!-- LOCALIZATION NOTE (toolbarContextMenu.reloadSelectedTab.accesskey,
-toolbarContextMenu.reloadSelectedTabs.accesskey): These share the
-same accesskey but will never be visible at the same time. -->
-<!ENTITY toolbarContextMenu.reloadSelectedTabs.accesskey "C">
-<!ENTITY toolbarContextMenu.bookmarkSelectedTab.label "Marquer l’onglet sélectionné…">
-<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
-toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
-same accesskey but will never be visible at the same time. -->
-<!ENTITY toolbarContextMenu.bookmarkSelectedTab.accesskey "T">
-<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.label "Ajouter les onglets sélectionnés aux marque-pages…">
-<!-- LOCALIZATION NOTE (toolbarContextMenu.bookmarkSelectedTab.accesskey,
-toolbarContextMenu.bookmarkSelectedTabs.accesskey): These share the
-same accesskey but will never be visible at the same time. -->
-<!ENTITY toolbarContextMenu.bookmarkSelectedTabs.accesskey "T">
-<!ENTITY toolbarContextMenu.selectAllTabs.label "Sélectionner tous les onglets">
-<!ENTITY toolbarContextMenu.selectAllTabs.accesskey "S">
-<!ENTITY toolbarContextMenu.undoCloseTab.label "Annuler la fermeture de l’onglet">
-<!ENTITY toolbarContextMenu.undoCloseTab.accesskey "n">
 
 <!ENTITY pageSourceCmd.label "Code source de la page">
 <!ENTITY pageSourceCmd.accesskey "C">
@@ -215,6 +125,39 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY fullScreenExit.label "Quitter le mode plein écran">
 <!ENTITY fullScreenExit.accesskey "Q">
 
+ <!-- LOCALIZATION NOTE (fxa.signin) Used to define the different labels
+     for the Firefox Account toolbar signin menu screen. -->
+<!ENTITY fxa.signin.callout.label "Emportez Firefox avec vous">
+<!ENTITY fxa.signin.description.label "Accédez à vos marque-pages, votre historique, vos mots de passe et d’autres paramètres sur l’ensemble de vos appareils.">
+<!ENTITY fxa.signin.button.label "Activer &syncBrand.shortName.label;…">
+
+<!-- LOCALIZATION NOTE (fxa.unverified) Used to define the different labels
+     for the Firefox Account toolbar unverified menu screen. -->
+<!ENTITY fxa.unverified.callout.label "Vérifiez votre adresse électronique">
+<!ENTITY fxa.unverified.description.label "Vous devrez vérifier votre compte avant de pouvoir lancer la synchronisation.">
+<!ENTITY fxa.unverified.button.label "Ouvrir les paramètres de &syncBrand.shortName.label;…">
+
+<!ENTITY pictureInPictureHideToggle.label "Masquer le bouton pour l’incrustation vidéo">
+<!ENTITY pictureInPictureHideToggle.accesskey "M">
+
+<!-- LOCALIZATION NOTE (fxa.menu) Used to define the different labels
+     for the Firefox Account toolbar menu screen. The `Signed in as` text is
+     followed by the user's email. -->
+<!ENTITY fxa.menu.signedInAs.label "Connecté(e) en tant que">
+<!ENTITY fxa.menu.manageAccount.label "Gérer le compte…">
+<!ENTITY fxa.menu.syncSettings.label "Paramètres de &syncBrand.shortName.label;…">
+<!ENTITY fxa.menu.connectAnotherDevice2.label "Connecter un autre appareil…">
+<!ENTITY fxa.menu.firefoxAccount "&syncBrand.fxAccount.label;">
+
+<!ENTITY fxa.menu.signin.label "Se connecter à &brandProductName;">
+<!ENTITY fxa.menu.turnOnSync.label "Activer &syncBrand.shortName.label;">
+<!ENTITY fxa.menu.account.label "Compte">
+<!ENTITY fxa.menu.firefoxServices.label "Services &brandProductName;">
+
+<!-- LOCALIZATION NOTE (fxa.service) Used to define the different FxA services
+     for the Firefox Account toolbar menu screen.  -->
+<!ENTITY fxa.service.sendTab.description "Envoyez instantanément un onglet sur n’importe quel appareil où vous êtes connecté·e.">
+
 <!-- LOCALIZATION NOTE (fullscreenWarning.beforeDomain.label,
      fullscreenWarning.afterDomain.label): these two strings are used
      respectively before and after the domain requiring fullscreen.
@@ -231,6 +174,12 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY exitDOMFullscreenMac.button "Quitter le mode plein écran (« esc »)">
 <!ENTITY leaveDOMFullScreen.label "Quitter le mode plein écran">
 <!ENTITY leaveDOMFullScreen.accesskey "u">
+
+<!-- LOCALIZATION NOTE (pictureInPicture.label, pictureInPicture.accesskey):
+     these two strings are used when right-clicking on a video in the
+     content area when the Picture-in-Picture feature is enabled. -->
+<!ENTITY pictureInPicture.label "Incrustation vidéo">
+<!ENTITY pictureInPicture.accesskey "u">
 
 <!-- LOCALIZATION NOTE (pointerlockWarning.beforeDomain.label,
      pointerlockWarning.afterDomain.label): these two strings are used
@@ -251,6 +200,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY bookmarkThisPageCmd.commandkey "d">
 
 <!ENTITY addCurPagesCmd.label "Marquer tous les onglets…">
+
 <!ENTITY showAllBookmarks2.label "Afficher tous les marque-pages">
 <!ENTITY recentBookmarks.label "Marqués récemment">
 <!ENTITY otherBookmarksCmd.label "Autres marque-pages">
@@ -288,7 +238,6 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.persistentStorageNotificationAnchor.tooltip     "Stocker des données dans le stockage persistant">
 <!ENTITY urlbar.remoteControlNotificationAnchor.tooltip   "Le navigateur est contrôlé à distance">
 <!ENTITY urlbar.webAuthnAnchor.tooltip                    "Ouvrir le panneau d’authentification web">
-
 <!ENTITY urlbar.storageAccessAnchor.tooltip               "Ouvrir le panneau des permissions relatives à la navigation">
 
 <!ENTITY urlbar.webRTCShareDevicesNotificationAnchor.tooltip      "Gérer le partage de la caméra et/ou du microphone avec ce site">
@@ -312,6 +261,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY urlbar.canvasBlocked.tooltip            "Vous avez empêché ce site d’extraire des informations de canvas.">
 <!ENTITY urlbar.flashPluginBlocked.tooltip       "Vous avez empêché ce site d’utiliser le plugin Adobe Flash.">
 <!ENTITY urlbar.midiBlocked.tooltip              "Vous avez bloqué l’accès MIDI pour ce site web.">
+<!ENTITY urlbar.installBlocked.tooltip           "Vous avez bloqué l’installation de modules complémentaires pour ce site web.">
 
 <!ENTITY urlbar.openHistoryPopup.tooltip                "Afficher l’historique">
 
@@ -373,6 +323,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY fileMenu.label         "Fichier">
 <!ENTITY fileMenu.accesskey       "F">
+
 <!ENTITY newUserContext.label             "Nouvel onglet contextuel">
 <!ENTITY newUserContext.accesskey         "c">
 <!ENTITY manageUserContext.label          "Gérer les contextes">
@@ -410,6 +361,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY preferencesCmd2.accesskey     "O">
 <!ENTITY preferencesCmdUnix.label       "Préférences">
 <!ENTITY preferencesCmdUnix.accesskey     "f">
+<!ENTITY logins.label                           "Identifiants et mots de passe">
 
 <!ENTITY clearRecentHistory.label               "Supprimer l’historique récent…">
 
@@ -421,6 +373,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY viewToolbarsMenu.accesskey     "T">
 <!ENTITY viewSidebarMenu.label "Panneau latéral">
 <!ENTITY viewSidebarMenu.accesskey "e">
+
 <!ENTITY viewCustomizeToolbar.label       "Personnaliser…">
 <!ENTITY viewCustomizeToolbar.accesskey     "P">
 <!ENTITY overflowCustomizeToolbar.label       "Personnaliser la barre d’outils…">
@@ -434,12 +387,14 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY historyRestoreLastSession.label "Restaurer la session précédente">
 
 <!ENTITY showAllHistoryCmd2.label "Afficher l’historique">
+
 <!ENTITY showAllHistoryCmd.commandkey "h">
 
 <!ENTITY appMenuHistory.showAll.label "Afficher l’historique">
 <!ENTITY appMenuHistory.clearRecent.label "Effacer l’historique récent…">
 <!ENTITY appMenuHistory.restoreSession.label "Restaurer la session précédente">
 <!ENTITY appMenuHistory.viewSidebar.label "Afficher le panneau de l’historique">
+<!ENTITY appMenuHistory.hideSidebar.label "Masquer le panneau latéral de l’historique">
 <!ENTITY appMenuHistory.recentHistory.label "Historique récent">
 <!ENTITY appMenuHelp.label "Aide">
 
@@ -468,6 +423,7 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY appMenuRemoteTabs.signin.label "Se connecter à Sync">
 <!ENTITY appMenuRemoteTabs.managedevices.label "Gérer les appareils…">
 <!ENTITY appMenuRemoteTabs.sidebar.label "Panneau latéral des onglets synchronisés">
+<!ENTITY appMenuRemoteTabs.hidesidebar.label "Masquer le panneau latéral des onglets synchronisés">
 <!ENTITY appMenuRemoteTabs.connectdevice.label "Connecter un autre appareil">
 
 <!ENTITY appMenuRecentHighlights.label "Éléments-clés récents">
@@ -497,6 +453,11 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 <!ENTITY customizeMenu.manageExtension.accesskey "G">
 <!ENTITY customizeMenu.removeExtension.label "Supprimer l’extension">
 <!ENTITY customizeMenu.removeExtension.accesskey "S">
+<!-- LOCALIZATION NOTE (reportExtension.label) This label is used in the extensions
+     toolbar buttons context menus, a user can use this command to submit to Mozilla
+     an abuse report related to that extension. "Report" is a verb. -->
+<!ENTITY customizeMenu.reportExtension.label "Signaler l’extension">
+<!ENTITY customizeMenu.reportExtension.accesskey "n">
 
 <!-- LOCALIZATION NOTE (moreMenu.label) This label is used in the new Photon
     app (hamburger) menu. When clicked, it opens a subview that contains
@@ -574,6 +535,12 @@ These should match what Safari and other Apple applications use on OS X Lion. --
      searchFor.label and searchWith.label. This string will be used instead of
      them when the user has not typed any keyword. -->
 <!ENTITY searchWithHeader.label       "Rechercher avec :">
+
+<!-- LOCALIZATION NOTE (searchWithDesc.label):
+     This string prompts the user to use the list of one-click search engines in
+     the Urlbar and searchbar. -->
+<!ENTITY searchWithDesc.label         "Pour cette fois-ci, rechercher avec :">
+
 <!-- LOCALIZATION NOTE (changeSearchSettings.button):
      This string won't wrap, so if the translated string is longer,
      consider translating it as if it said only "Search Settings". -->
@@ -647,9 +614,9 @@ These should match what Safari and other Apple applications use on OS X Lion. --
 
 <!ENTITY emailPageCmd.label           "Envoyer par courriel un lien vers la page…">
 <!ENTITY emailPageCmd.accesskey       "c">
+<!-- alternate for content area context menu -->
 <!ENTITY savePageCmd.label            "Enregistrer sous…">
 <!ENTITY savePageCmd.accesskey        "E">
-<!-- alternate for content area context menu -->
 <!ENTITY savePageCmd.accesskey2       "E">
 <!ENTITY savePageCmd.commandkey       "s">
 <!ENTITY saveFrameCmd.label           "Enregistrer le cadre sous…">
@@ -754,22 +721,26 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY fullZoomEnlargeCmd.label       "Zoom avant">
 <!ENTITY fullZoomEnlargeCmd.accesskey   "v">
+
 <!ENTITY fullZoomEnlargeCmd.commandkey  "+">
 <!ENTITY fullZoomEnlargeCmd.commandkey2 "="> <!-- + is above this key on many keyboards -->
 <!ENTITY fullZoomEnlargeCmd.commandkey3 "">
 
 <!ENTITY fullZoomReduceCmd.label        "Zoom arrière">
 <!ENTITY fullZoomReduceCmd.accesskey    "r">
+
 <!ENTITY fullZoomReduceCmd.commandkey   "-">
 <!ENTITY fullZoomReduceCmd.commandkey2  "">
 
 <!ENTITY fullZoomResetCmd.label         "Normal">
 <!ENTITY fullZoomResetCmd.accesskey     "N">
+
 <!ENTITY fullZoomResetCmd.commandkey    "0">
 <!ENTITY fullZoomResetCmd.commandkey2   "">
 
 <!ENTITY fullZoomToggleCmd.label        "Zoom texte seulement">
 <!ENTITY fullZoomToggleCmd.accesskey    "x">
+
 <!ENTITY fullZoom.label                 "Zoom">
 <!ENTITY fullZoom.accesskey             "Z">
 
@@ -787,6 +758,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY quitApplicationCmd.key         "Q">
 
 <!ENTITY closeCmd.label                 "Fermer">
+
 <!ENTITY closeCmd.key                   "W">
 <!ENTITY closeCmd.accesskey             "F">
 
@@ -829,7 +801,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!-- LOCALIZATION NOTE (editBookmark.panel.width): width of the bookmark panel.
      Should be large enough to fully display the Done and Cancel/
      Remove Bookmark buttons. -->
-<!ENTITY editBookmark.panel.width                    "26em">
+<!ENTITY editBookmark.panel.width                    "34em">
 <!ENTITY editBookmark.done.label                     "Terminer">
 <!ENTITY editBookmark.showForNewBookmarks.label       "Afficher l’éditeur lors de l’enregistrement">
 <!ENTITY editBookmark.showForNewBookmarks.accesskey   "A">
@@ -840,12 +812,23 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY identity.connection "Connexion">
 <!ENTITY identity.connectionSecure "Connexion sécurisée">
+
+<!-- LOCALIZATION NOTE (identity.securityView.label2)
+     This is the header of the security subview in the Site Identity panel. -->
+<!ENTITY identity.securityView.label2 "Sécurité de la connexion">
+
+<!ENTITY identity.connectionSecure2 "Connexion sécurisée">
 <!ENTITY identity.connectionNotSecure "Connexion non sécurisée">
+<!ENTITY identity.connectionNotSecureSecurityView "Votre connexion à ce site n’est pas sécurisée.">
 <!ENTITY identity.connectionFile "Cette page est stockée sur votre ordinateur.">
 <!ENTITY identity.connectionVerified2 "Votre connexion à ce site est sécurisée. Son détenteur est :">
+<!ENTITY identity.connectionVerified3 "Votre connexion à ce site est sécurisée.">
 <!ENTITY identity.connectionInternal "Cette page de &brandShortName; est sécurisée.">
 <!ENTITY identity.extensionPage "Cette page a été chargée depuis une extension.">
 <!ENTITY identity.insecureLoginForms2 "Les identifiants saisis sur cette page pourraient être compromis.">
+<!ENTITY identity.customRoot "Connexion vérifiée par un émetteur de certificat non reconnu par Mozilla.">
+
+<!ENTITY identity.evOwnerLabel "Site détenu par :">
 
 <!-- Strings for connection state warnings. -->
 <!ENTITY identity.activeBlocked "&brandShortName; a bloqué des éléments non sécurisés sur cette page.">
@@ -864,6 +847,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.description.passiveLoaded3 "Bien que &brandShortName; ait bloqué du contenu, il reste néanmoins des éléments non sécurisés sur la page (tels que des images).">
 <!ENTITY identity.description.activeLoaded "Ce site web possède du contenu non sécurisé (tel que des scripts) et la connexion établie n’est pas privée.">
 <!ENTITY identity.description.activeLoaded2 "Les informations que vous partagez avec ce site peuvent être visualisées par d’autres personnes (comme par exemple les mots de passe, les messages, les cartes bancaires, etc.).">
+<!ENTITY identity.description.customRoot "Mozilla ne reconnaît pas cet émetteur de certificat. Il a peut-être été ajouté à partir de votre système d’exploitation ou par un administrateur.">
 
 <!ENTITY identity.enableMixedContentBlocking.label "Activer la protection">
 <!ENTITY identity.enableMixedContentBlocking.accesskey "A">
@@ -879,9 +863,58 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY identity.clearSiteData "Effacer les cookies et les données de sites…">
 
 <!ENTITY identity.permissions "Permissions">
+
+<!-- LOCALIZATION NOTE (identity.permissions2): "set" as in "configured for this website" -->
+<!ENTITY identity.permissions2 "Liste de permissions">
 <!ENTITY identity.permissionsEmpty "Vous n’avez pas accordé de permission particulière à ce site.">
 <!ENTITY identity.permissionsReloadHint "Vous devrez peut-être actualiser la page pour que les changements prennent effet.">
 <!ENTITY identity.permissionsPreferences.tooltip "Ouvrir les préférences des permissions">
+<!ENTITY identity.contentBlockingPreferences.tooltip "Ouvrir les préférences de blocage de contenu">
+
+
+<!ENTITY protections.etpON.header "La protection renforcée contre le pistage est ACTIVÉE pour ce site.">
+<!ENTITY protections.etpOFF.header "La protection renforcée contre le pistage est DÉSACTIVÉE pour ce site.">
+<!-- LOCALIZATION NOTE:
+     protections.etpMoreInfo.label: The text a screen reader speaks when focused on the info button. -->
+<!ENTITY protections.etpMoreInfo.label "Plus d’informations sur la protection renforcée contre le pistage">
+<!ENTITY protections.settings.label "Paramètres de protection">
+<!ENTITY protections.report.label "Afficher le rapport complet">
+<!-- LOCALIZATION NOTE:
+     protections.siteNotWorking.label: The link to be clicked to open the sub-panel view
+     protections.siteNotWorkingView.title: The heading/title of the sub-panel view -->
+<!ENTITY protections.siteNotWorking.label "Le site ne fonctionne pas ?">
+<!ENTITY protections.siteNotWorkingView.title "Le site ne fonctionne pas ?">
+<!-- LOCALIZATION NOTE:
+     In the Site Not Working? view, we suggest turning off protections if
+     the user is experiencing issues with any of a variety of functionality.
+     protections.siteNotWorkingView.header: The header of the list
+     protections.siteNotWorkingView.issueList.*: The list items, shown in a <ul> -->
+<!ENTITY protections.siteNotWorkingView.header "Désactivez les protections si vous rencontrez des problèmes avec :">
+<!ENTITY protections.siteNotWorkingView.issueList.logInFields "Les champs de connexion">
+<!ENTITY protections.siteNotWorkingView.issueList.forms "Les formulaires">
+<!ENTITY protections.siteNotWorkingView.issueList.payments "Les paiements">
+<!ENTITY protections.siteNotWorkingView.issueList.comments "Les commentaires">
+<!ENTITY protections.siteNotWorkingView.issueList.videos "Les vidéos">
+<!ENTITY protections.siteNotWorkingView.siteStillBroken.label "Le site ne fonctionne toujours pas après avoir désactivé les protections ?">
+<!ENTITY protections.siteNotWorkingView.sendReport.label "Envoyer un rapport">
+
+<!ENTITY protections.blocking.label "Bloqués">
+<!ENTITY protections.notBlocking.label "Non bloqués">
+<!ENTITY protections.notBlocking.why.label "Pourquoi ?">
+<!ENTITY protections.notBlocking.why.etpOn.tooltip "Bloquer ces éléments peut entraîner un dysfonctionnement partiel de certains sites web. Sans les traqueurs, certains boutons, formulaires ou champs de connexion peuvent ne pas fonctionner correctement.">
+<!ENTITY protections.notBlocking.why.etpOff.tooltip "Désactiver les protections autorisera tous les traqueurs sur ce site. Cette action peut aussi améliorer le fonctionnement de certaines parties du site web.">
+<!ENTITY protections.socialMediaTrackers.label "Traqueurs de réseaux sociaux">
+<!ENTITY protections.crossSiteTrackingCookies.label "Cookies utilisés pour le pistage entre les sites">
+<!ENTITY protections.trackingContent.label "Contenu utilisé pour le pistage">
+<!ENTITY protections.fingerprinters.label "Détecteurs d’empreinte numérique">
+<!ENTITY protections.cryptominers.label "Mineurs de cryptomonnaies">
+<!ENTITY protections.noTrackersFound.description "Aucun traqueur connu par &brandShortName; n’a été détecté sur cette page.">
+
+<!ENTITY protections.crossSiteTrackingCookies.description "Ces cookies vous suivent de site en site pour collecter des données sur vos faits et gestes en ligne. Ils sont déposés par des tiers, tels que des annonceurs ou des entreprises d’analyse de données.">
+<!ENTITY protections.cryptominers.description "Les mineurs de cryptomonnaies utilisent la puissance de calcul de votre système pour « extraire » de l’argent numérique. Les scripts de cryptominage déchargent votre batterie, ralentissent votre ordinateur et peuvent augmenter votre facture énergétique.">
+<!ENTITY protections.fingerprinters.description "Les détecteurs d’empreinte numérique recueillent les paramètres de votre navigateur et de votre ordinateur pour créer un profil de vous. En utilisant cette empreinte numérique, ils peuvent vous pister sur différents sites web.">
+<!ENTITY protections.trackingContent.description "Les sites web peuvent charger des publicités, des vidéos et d’autres contenus externes qui contiennent des éléments de pistage. Le blocage du contenu utilisé pour le pistage peut accélérer le chargement des sites, mais certains boutons, formulaires ou champs de connexion risquent de ne pas fonctionner.">
+<!ENTITY protections.socialMediaTrackers.description "Les réseaux sociaux placent des traqueurs sur d’autres sites web pour suivre ce que vous faites, lisez et regardez en ligne. Cela permet aux entreprises de réseaux sociaux d’en savoir plus sur vous au-delà de ce que vous partagez sur vos profils en ligne.">
 
 <!-- Name for the tabs toolbar as spoken by screen readers.
      The word "toolbar" is appended automatically and should not be contained below! -->
@@ -891,86 +924,18 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY syncTabsMenu3.label     "Onglets synchronisés">
 
 <!ENTITY syncedTabs.sidebar.label              "Onglets synchronisés">
-<!ENTITY syncedTabs.sidebar.noclients.label    "Connectez-vous via Firefox depuis vos autres appareils pour afficher leurs onglets ici.">
-<!ENTITY syncedTabs.sidebar.noclients.subtitle "Vous souhaitez afficher ici les onglets de vos autres appareils ?">
-<!ENTITY syncedTabs.sidebar.notsignedin.label  "Connectez-vous pour afficher la liste des onglets de vos autres appareils.">
-<!ENTITY syncedTabs.sidebar.unverified.label   "Votre compte doit être vérifié.">
-<!ENTITY syncedTabs.sidebar.notabs.label       "Aucun onglet ouvert">
-<!ENTITY syncedTabs.sidebar.openprefs.label    "Ouvrir les préférences de &syncBrand.shortName.label;">
-<!-- LOCALIZATION NOTE (syncedTabs.sidebar.tabsnotsyncing.label): This is shown
-     when Sync is configured but syncing tabs is disabled. -->
-<!ENTITY syncedTabs.sidebar.tabsnotsyncing.label       "Activez la synchronisation des onglets pour afficher la liste des onglets de vos autres appareils.">
-<!ENTITY syncedTabs.sidebar.searchPlaceholder  "Rechercher dans les onglets synchronisés">
-<!ENTITY syncedTabs.sidebar.connectAnotherDevice  "Connecter un autre appareil">
-
-<!-- LOCALIZATION NOTE (syncedTabs.context.open.accesskey,
-                        syncedTabs.context.openAllInTabs.accesskey):
-     These access keys are identical because their associated menu items are
-     mutually exclusive -->
-<!ENTITY syncedTabs.context.open.label                       "Ouvrir">
-<!ENTITY syncedTabs.context.open.accesskey                   "O">
-<!ENTITY syncedTabs.context.openInNewTab.label               "Ouvrir dans un nouvel onglet">
-<!ENTITY syncedTabs.context.openInNewTab.accesskey           "v">
-<!ENTITY syncedTabs.context.openInNewWindow.label            "Ouvrir dans une nouvelle fenêtre">
-<!ENTITY syncedTabs.context.openInNewWindow.accesskey        "n">
-<!ENTITY syncedTabs.context.openInNewPrivateWindow.label     "Ouvrir dans une nouvelle fenêtre privée">
-<!ENTITY syncedTabs.context.openInNewPrivateWindow.accesskey "P">
-<!ENTITY syncedTabs.context.bookmarkSingleTab.label          "Marquer cet onglet…">
-<!ENTITY syncedTabs.context.bookmarkSingleTab.accesskey      "M">
-<!ENTITY syncedTabs.context.copy.label                       "Copier">
-<!ENTITY syncedTabs.context.copy.accesskey                   "C">
-
-<!ENTITY syncedTabs.context.openAllInTabs.label              "Tout ouvrir dans des onglets">
-<!ENTITY syncedTabs.context.openAllInTabs.accesskey          "T">
-<!ENTITY syncedTabs.context.managedevices.label              "Gérer les appareils…">
-<!ENTITY syncedTabs.context.managedevices.accesskey          "G">
-
 
 <!ENTITY syncBrand.shortName.label    "Sync">
 
 <!ENTITY syncSignIn.label             "Se connecter à &syncBrand.shortName.label;…">
 <!ENTITY syncSignIn.accesskey         "Y">
+
 <!ENTITY syncSyncNowItem.label        "Synchroniser maintenant">
+<!ENTITY syncSyncNowItemSyncing.label "Synchronisation…">
 <!ENTITY syncSyncNowItem.accesskey    "S">
 <!ENTITY syncReAuthItem.label         "Se reconnecter à &syncBrand.shortName.label;…">
 <!ENTITY syncReAuthItem.accesskey     "r">
 <!ENTITY syncToolbarButton.label      "Synchroniser">
-
-<!ENTITY customizeMode.menuAndToolbars.header3 "Déplacez vos outils favoris vers la barre d’outils ou le menu qui la prolonge.">
-<!ENTITY customizeMode.restoreDefaults "Configuration par défaut">
-<!ENTITY customizeMode.done "Terminé">
-<!ENTITY customizeMode.titlebar "Barre de titre">
-<!ENTITY customizeMode.extraDragSpace "Espace pour saisir la fenêtre">
-<!ENTITY customizeMode.toolbars2 "Barres d’outils">
-<!ENTITY customizeMode.lwthemes "Thèmes">
-<!ENTITY customizeMode.lwthemes.myThemes "Mes thèmes">
-<!ENTITY customizeMode.lwthemes.recommended "Recommandés">
-<!ENTITY customizeMode.lwthemes.menuManage "Gérer">
-<!ENTITY customizeMode.lwthemes.menuManage.accessKey "G">
-<!ENTITY customizeMode.lwthemes.menuGetMore "Obtenir plus de thèmes">
-<!ENTITY customizeMode.lwthemes.menuGetMore.accessKey "O">
-<!ENTITY customizeMode.overflowList.title2 "Menu prolongeant la barre d’outils">
-<!ENTITY customizeMode.overflowList.description "Faites glisser et déposer les éléments ici pour les garder à portée de main, mais hors de votre barre d’outils…">
-<!ENTITY customizeMode.uidensity "Densité">
-<!-- LOCALIZATION NOTE (customizeMode.uidensity.menuNormal.*):
-     “Normal” is displayed in the Customize screen, under the Density menu. -->
-<!ENTITY customizeMode.uidensity.menuNormal.label "Normale">
-<!ENTITY customizeMode.uidensity.menuNormal.tooltip "Normale">
-<!ENTITY customizeMode.uidensity.menuNormal.accessKey "N">
-<!-- LOCALIZATION NOTE (customizeMode.uidensity.menuCompact.*):
-     “Compact” is displayed in the Customize screen, under the Density menu.
-     It’s an adjective (Density -> Compact). -->
-<!ENTITY customizeMode.uidensity.menuCompact.label "Compacte">
-<!ENTITY customizeMode.uidensity.menuCompact.tooltip "Compacte">
-<!ENTITY customizeMode.uidensity.menuCompact.accessKey "C">
-<!-- LOCALIZATION NOTE (customizeMode.uidensity.menuTouch.*):
-     “Touch” is displayed in the Customize screen, under the Density menu.
-     It’s an adjective (Density -> Touch), and it means that control layout is
-     optimized for touch devices. -->
-<!ENTITY customizeMode.uidensity.menuTouch.label "Tactile">
-<!ENTITY customizeMode.uidensity.menuTouch.tooltip "Tactile">
-<!ENTITY customizeMode.uidensity.menuTouch.accessKey "T">
-<!ENTITY customizeMode.uidensity.autoTouchMode.checkbox.label "Utiliser le tactile en mode tablette">
 
 <!ENTITY customizeMode.autoHideDownloadsButton.label "Masquer automatiquement">
 
@@ -984,100 +949,45 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY contentBlocking.title "Blocage de contenu">
 <!ENTITY contentBlocking.detected "Du contenu pouvant être bloqué a été détecté sur ce site.">
 <!ENTITY contentBlocking.notDetected "Aucun contenu pouvant être bloqué n’a été détecté sur cette page.">
-<!ENTITY contentBlocking.disabled.label "Désactivé">
-<!ENTITY contentBlocking.disabled.tooltip "Vous avez désactivé le blocage de contenu.">
-<!ENTITY contentBlocking.exception.tooltip "Vous avez désactivé le blocage de contenu pour ce site.">
-
-<!ENTITY contentBlocking.fastBlock.label "Traqueurs qui ralentissent">
-<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocked.label):
-     This label signals that this type of content blocking is turned
-     ON and is successfully blocking malicious/slow content, so this is
-     a positive thing. It forms the end of the (imaginary) sentence
-     "Slow-Loading Trackers [are] Blocked"-->
-<!ENTITY contentBlocking.fastBlock.blocked.label "Bloqués">
-<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.blocking.label):
-     This label signals that this type of content blocking is turned
-     ON, so this is a positive thing. It forms the verb in (imaginary) sentence
-     "Firefox is blocking Slow-Loading Trackers"-->
-<!ENTITY contentBlocking.fastBlock.blocking.label "Bloqués">
-<!-- LOCALIZATION NOTE (contentBlocking.fastBlock.add.label):
-     This is displayed as a link to preferences, where the user can add
-     this specific type of content blocking. When this text is shown
-     the type of content blocking is currently not enabled. -->
-<!ENTITY contentBlocking.fastBlock.add.label "Ajouter un blocage…">
-
-<!ENTITY contentBlocking.trackingProtection2.label "Tous les traqueurs détectés">
 
 <!ENTITY contentBlocking.trackingProtection3.label "Traqueurs">
-<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.blocked.label):
-     This label signals that this type of content blocking is turned
-     ON and is successfully blocking tracker content, so this is
-     a positive thing. It forms the end of the (imaginary) sentence
-     "Trackers [are] Blocked"-->
-<!ENTITY contentBlocking.trackingProtection.blocked.label "Bloqués">
-<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
-     This label signals that this type of content blocking is turned
-     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
-     "Firefox is blocking Trackers"-->
-<!ENTITY contentBlocking.trackingProtection.blocking.label "Bloqués">
-<!-- LOCALIZATION NOTE (contentBlocking.trackingProtection.add.label):
-     This is displayed as a link to preferences, where the user can add
-     this specific type of content blocking. When this text is shown
-     the type of content blocking is currently not enabled. -->
-<!ENTITY contentBlocking.trackingProtection.add.label "Ajouter un blocage…">
-
-<!ENTITY contentBlocking.3rdPartyCookies.label "Cookies tiers">
-<!ENTITY contentBlocking.3rdPartyCookies.trackers.label "Cookies utilisés pour le pistage">
-<!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.blocked.label):
-     This label signals that this type of content blocking is turned
-     ON and is successfully blocking third-party cookies, so this is
-     a positive thing. It forms the end of the (imaginary) sentence
-     "Third-Party Cookies [are] Blocked"-->
-<!ENTITY contentBlocking.3rdPartyCookies.blocked.label "Bloqués">
-<!-- LOCALIZATION NOTE (contentBlocking.tranckingProtection.blocking.label):
-     This label signals that this type of content blocking is turned
-     ON, so this is a positive thing. It forms the verb in the (imaginary) sentence
-     "Firefox is blocking Third-Party Cookies"-->
-<!ENTITY contentBlocking.3rdPartyCookies.blocking.label "Bloqués">
-<!-- LOCALIZATION NOTE (contentBlocking.3rdPartyCookies.add.label):
-     This is displayed as a link to preferences, where the user can add
-     this specific type of content blocking. When this text is shown
-     the type of content blocking is currently not enabled. -->
-<!ENTITY contentBlocking.3rdPartyCookies.add.label "Ajouter un blocage…">
 
 <!ENTITY contentBlocking.manageSettings.label "Gérer le blocage de contenu">
+
+<!ENTITY contentBlocking.trackingProtection4.label "Contenu utilisé pour le pistage">
+
+<!ENTITY contentBlocking.manageSettings2.label "Gérer les paramètres de protection">
 <!ENTITY contentBlocking.manageSettings.accesskey "G">
 
 <!ENTITY contentBlocking.trackersView.label "Traqueurs">
+
 <!ENTITY contentBlocking.trackersView.strictInfo.label "Pour bloquer tous les traqueurs, définissez le blocage du contenu sur « Strict ».">
 
 <!ENTITY contentBlocking.cookies.label "Cookies">
 <!ENTITY contentBlocking.cookiesView.label "Cookies et données de sites">
 
+<!ENTITY contentBlocking.socialblock.label "Traqueurs de réseaux sociaux">
+
+<!ENTITY contentBlocking.cookies2.label "Cookies utilisés pour le pistage entre les sites">
+
+<!ENTITY contentBlocking.cryptominers.label "Mineurs de cryptomonnaies">
+<!ENTITY contentBlocking.cryptominersView.label "Mineurs de cryptomonnaies">
+
+<!ENTITY contentBlocking.fingerprinters.label "Détecteurs d’empreinte numérique">
+<!ENTITY contentBlocking.fingerprintersView.label "Détecteurs d’empreinte numérique">
+
 <!ENTITY contentBlocking.openBreakageReportView2.label "Signaler un problème">
 <!ENTITY contentBlocking.breakageReportView.label "Signaler des problèmes">
 <!ENTITY contentBlocking.breakageReportView2.description "Le blocage des contenus peut occasionner des problèmes sur certains sites web. Quand vous signalez des problèmes, vous contribuez à rendre &brandShortName; meilleur pour tout le monde. (Ceci enverra une URL ainsi que des informations sur les préférences de votre navigateur à Mozilla.)">
 <!ENTITY contentBlocking.breakageReportView.learnMore "En savoir plus">
+<!ENTITY contentBlocking.breakageReportView.title "Signaler des problèmes avec ce site">
+<!ENTITY contentBlocking.breakageReportView3.description "Le blocage de certains traqueurs peut occasionner des problèmes sur des sites web. En signalant ces problèmes, vous contribuez à rendre &brandShortName; meilleur pour tout le monde. L’envoi du rapport communiquera une URL ainsi que des informations sur les préférences de votre navigateur à Mozilla.">
+<!ENTITY contentBlocking.breakageReportView2.learnMore "En savoir plus">
 <!ENTITY contentBlocking.breakageReportView.collection.url.label "URL">
 <!ENTITY contentBlocking.breakageReportView.collection.comments.label "Quels problèmes avez-vous rencontrés ? (facultatif)">
+<!ENTITY contentBlocking.breakageReportView2.collection.comments.label "Facultatif : décrivez le problème">
 <!ENTITY contentBlocking.breakageReportView.sendReport.label "Envoyer le rapport">
 <!ENTITY contentBlocking.breakageReportView.cancel.label "Annuler">
-
-<!ENTITY trackingProtection.title "Protection contre le pistage">
-<!ENTITY trackingProtection.tooltip "Ouvrir les préférences de la protection contre le pistage">
-
-<!-- LOCALIZATION NOTE (trackingProtection.unblock3.label, trackingProtection.unblock3.accesskey):
-     The associated button with this label and accesskey is only shown when opening the control
-     center while looking at a site with trackers in NON-private browsing mode. -->
-<!ENTITY trackingProtection.unblock4.label "Désactiver le blocage pour ce site">
-<!ENTITY trackingProtection.unblock4.accesskey "D">
-<!-- LOCALIZATION NOTE (trackingProtection.unblockPrivate3.label, trackingProtection.unblockPrivate3.accesskey):
-     The associated button with this label and accesskey is only shown when opening the control
-     center while looking at a site with trackers in PRIVATE browsing mode. -->
-<!ENTITY trackingProtection.unblockPrivate4.label "Désactiver temporairement le blocage">
-<!ENTITY trackingProtection.unblockPrivate4.accesskey "D">
-<!ENTITY trackingProtection.block5.label "Activer le blocage pour ce site">
-<!ENTITY trackingProtection.block5.accesskey "A">
 
 <!-- LOCALIZATION NOTE (trackingProtection.unblock5.label, trackingProtection.unblock5.accesskey):
      The associated button with this label and accesskey is only shown when opening the control
@@ -1097,11 +1007,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY pluginNotification.showAll.label "Tout afficher">
 <!ENTITY pluginNotification.showAll.accesskey "T">
 
-<!-- LOCALIZATION NOTE (pluginActivateNow.label, pluginActivateAlways.label, pluginBlockNow.label): These should be the same as the matching strings in browser.properties -->
-<!ENTITY pluginActivateNow.label "Autoriser maintenant">
-<!ENTITY pluginActivateAlways.label "Toujours autoriser">
-<!ENTITY pluginBlockNow.label "Bloquer ce plugin">
-
 <!-- LOCALIZATION NOTE: (pluginNotification.width): This is used to determine the
      width of the plugin popup notification that can appear if a plugin has been
      blocked on a page. Should be wide enough to fit the pluginActivateNow.label
@@ -1111,27 +1016,6 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 
 <!ENTITY uiTour.infoPanel.close "Fermer">
 
-<!-- LOCALIZATION NOTE: (panicButton.view.mainTimeframeDesc, panicButton.view.5min, panicButton.view.2hr, panicButton.view.day):
-     The .mainTimeframeDesc string combined with any of the 3 others is meant to form a complete sentence, e.g. "Forget the last: Five minutes".
-     Please ensure that this remains the case in the translation. -->
-<!ENTITY panicButton.view.mainTimeframeDesc       "Effacer :">
-<!ENTITY panicButton.view.5min                    "Les cinq dernières minutes">
-<!ENTITY panicButton.view.2hr                     "Les deux dernières heures">
-<!ENTITY panicButton.view.day                     "Les 24 dernières heures">
-
-<!-- LOCALIZATION NOTE: (panicButton.view.mainLabel, panicButton.view.deleteCookies, panicButton.view.deleteHistory, panicButton.view.deleteTabsAndWindows, panicButton.view.openNewWindow):
-     The .mainActionDesc string combined with any of the 4 others is meant to form a complete sentence, e.g. "Proceeding will: Delete Recent Cookies".
-     Note also that the deleteCookies, deleteHistory and deleteTabsAndWindows strings include <html:strong> tags for emphasis on the words "Cookies", "History", "Tabs" and "Windows".
-     The translation should do the same. -->
-<!ENTITY panicButton.view.mainActionDesc          "Si vous continuez vous allez :">
-<!ENTITY panicButton.view.deleteCookies           "Effacer les <html:strong>cookies</html:strong> récents">
-<!ENTITY panicButton.view.deleteHistory           "Effacer <html:strong>l’historique</html:strong> récent">
-<!ENTITY panicButton.view.deleteTabsAndWindows    "Fermer tous les <html:strong>onglets</html:strong> et toutes les <html:strong>fenêtres</html:strong>">
-<!ENTITY panicButton.view.openNewWindow           "Ouvrir une nouvelle fenêtre vierge">
-
-<!ENTITY panicButton.view.undoWarning             "Cette action est irréversible.">
-<!ENTITY panicButton.view.forgetButton            "Effacer">
-
 <!ENTITY panicButton.thankyou.msg1                "Votre historique récent a été correctement effacé.">
 <!ENTITY panicButton.thankyou.msg2                "Bonne navigation !">
 <!ENTITY panicButton.thankyou.buttonlabel         "Fermer">
@@ -1139,30 +1023,9 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY emeLearnMoreContextMenu.label            "En savoir plus sur les DRM…">
 <!ENTITY emeLearnMoreContextMenu.accesskey        "D">
 
-<!ENTITY updateAvailable.message "Mettez à jour votre version de &brandShorterName; pour bénéficier des dernières améliorations en matière de sécurité et de vie privée.">
-<!ENTITY updateAvailable.whatsnew.label "Découvrez les nouveautés.">
-<!ENTITY updateAvailable.header.message "Une nouvelle mise à jour de &brandShorterName; est disponible.">
-<!ENTITY updateAvailable.acceptButton.label "Télécharger la mise à jour">
-<!ENTITY updateAvailable.acceptButton.accesskey "T">
-<!ENTITY updateAvailable.cancelButton.label "Plus tard">
-<!ENTITY updateAvailable.cancelButton.accesskey "P">
 <!ENTITY updateAvailable.panelUI.label "Télécharger la mise à jour de &brandShorterName;">
-
-<!ENTITY updateManual.message "Téléchargez à nouveau &brandShorterName; et nous pourrons vous guider pour l’installer.">
-<!ENTITY updateManual.whatsnew.label "Découvrez les nouveautés.">
-<!ENTITY updateManual.header.message "&brandShorterName; ne peut pas être mis à jour vers la version la plus récente.">
-<!ENTITY updateManual.acceptButton.label "Télécharger &brandShorterName;">
-<!ENTITY updateManual.acceptButton.accesskey "T">
-<!ENTITY updateManual.cancelButton.label "Plus tard">
-<!ENTITY updateManual.cancelButton.accesskey "P">
 <!ENTITY updateManual.panelUI.label "Télécharger &brandShorterName; à nouveau">
-
-<!ENTITY updateRestart.message2 "Après un rapide redémarrage, &brandShorterName; restaurera l’ensemble de vos onglets et fenêtres qui n’étaient pas en mode de navigation privée.">
-<!ENTITY updateRestart.header.message2 "Redémarrez pour mettre à jour &brandShorterName;.">
-<!ENTITY updateRestart.acceptButton.label "Redémarrer et restaurer">
-<!ENTITY updateRestart.acceptButton.accesskey "R">
-<!ENTITY updateRestart.cancelButton.label "Plus tard">
-<!ENTITY updateRestart.cancelButton.accesskey "P">
+<!ENTITY updateUnsupported.panelUI.label "Vous ne pouvez pas effectuer d’autres mises à jour">
 <!ENTITY updateRestart.panelUI.label2 "Redémarrer pour mettre à jour &brandShorterName;">
 
 <!ENTITY newTabControlled.header.message "La page Nouvel onglet a été modifiée.">
@@ -1201,8 +1064,3 @@ you can use these alternative items. Otherwise, their values should be empty.  -
      used as a textual label for the indicator used by assistive technology
      users. -->
 <!ENTITY accessibilityIndicator.tooltip "Fonctionnalités d’accessibilité activées">
-
-<!-- LOCALIZATION NOTE: (addonPostInstallMessage.label):
-     The first <image> tag is replaced with the icon for the add-ons menu.
-     The second <image> tag is replaced with the icon for the toolbar menu. -->
-<!ENTITY addonPostInstallMessage.label "Gérez vos modules en cliquant sur <image class='addon-addon-icon'/> dans le menu <image class='addon-toolbar-icon'/>.">

@@ -27,13 +27,23 @@ features-title = { -brand-short-name } 주요 기능
 features-name = 이름
 features-version = 버전
 features-id = ID
+processes-title = 원격 프로세스
+processes-type = 유형
+processes-count = 수
 app-basics-title = 응용 프로그램 기본 정보
 app-basics-name = 이름
 app-basics-version = 버전
 app-basics-build-id = 빌드 ID
 app-basics-update-channel = 업데이트 채널
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] 업데이트 디렉토리
+       *[other] 업데이트 폴더
+    }
 app-basics-update-history = 업데이트 기록
 app-basics-show-update-history = 업데이트 기록 표시
+# Represents the path to the binary used to start the application.
+app-basics-binary = 애플리케이션 바이너리
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] 프로필 저장 폴더
@@ -47,10 +57,13 @@ app-basics-memory-use = 메모리 사용
 app-basics-performance = 성능
 app-basics-service-workers = 등록된 Service Workers
 app-basics-profiles = 프로필
+app-basics-launcher-process-status = 런처 프로세스
 app-basics-multi-process-support = 다중프로세스 윈도우
 app-basics-process-count = 웹 콘텐츠 프로세스
+app-basics-remote-processes-count = 원격 프로세스
 app-basics-enterprise-policies = 엔터프라이즈 정책
-app-basics-key-google = Google 키
+app-basics-location-service-key-google = Google 위치 서비스 키
+app-basics-safebrowsing-key-google = Google 세이프 브라우징 키
 app-basics-key-mozilla = Mozilla 위치 서비스 키
 app-basics-safe-mode = 안전 모드
 show-dir-label =
@@ -59,7 +72,7 @@ show-dir-label =
         [windows] 폴더 열기
        *[other] 디렉토리 열기
     }
-modified-key-prefs-title = 변경 설정 목록
+modified-key-prefs-title = 중요한 변경된 환경 설정
 modified-prefs-name = 이름
 modified-prefs-value = 값
 user-js-title = user.js 환경 설정
@@ -76,6 +89,8 @@ graphics-gpu2-title = GPU #2
 graphics-decision-log-title = 의사결정 로그
 graphics-crash-guards-title = 크래시 보호 비활성화 기능
 graphics-workarounds-title = 회피방법
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = 윈도우 프로토콜
 place-database-title = 위치 데이터베이스
 place-database-integrity = 무결성
 place-database-verify-integrity = 무결성 확인
@@ -87,8 +102,8 @@ a11y-force-disabled = 접근성 끄기
 a11y-handler-used = 접근 가능한 핸들러 사용됨
 a11y-instantiator = 접근성 기능 사용 앱
 library-version-title = 라이브러리 버전
-copy-text-to-clipboard-label = 클립보드로 텍스트 복사하기
-copy-raw-data-to-clipboard-label = 클립보드로 원본 복사하기
+copy-text-to-clipboard-label = 클립보드에 텍스트 복사하기
+copy-raw-data-to-clipboard-label = 클립보드에 원본 데이터 복사하기
 sandbox-title = 샌드박스
 sandbox-sys-call-log-title = 거절된 시스템 콜
 sandbox-sys-call-index = #
@@ -173,6 +188,7 @@ gpu-device-id = 기기 ID
 gpu-subsys-id = 하위시스템 ID
 gpu-drivers = 드라이버
 gpu-ram = RAM
+gpu-driver-vendor = 드라이버 공급 업체
 gpu-driver-version = 드라이버 버전
 gpu-driver-date = 드라이버 날짜
 gpu-active = 활성화
@@ -205,6 +221,8 @@ uses-tiling = 타일링 사용
 content-uses-tiling = 타일링(콘텐츠) 사용
 off-main-thread-paint-enabled = 주 쓰레드 페인팅 끄기 활성화됨
 off-main-thread-paint-worker-count = 주 쓰레드 페인팅 워커 카운트 끔
+low-end-machine = 저성능 기기 감지
+target-frame-rate = 목표 프레임 레이트
 audio-backend = 오디오 백엔드
 max-audio-channels = 최대 채널
 channel-layout = 선호하는 채널 레이아웃
@@ -222,6 +240,11 @@ effective-content-sandbox-level = 효과적인 콘텐츠 프로세스 샌드박�
 sandbox-proc-type-content = 내용
 sandbox-proc-type-file = 파일 내용
 sandbox-proc-type-media-plugin = 미디어 플러그인
+sandbox-proc-type-data-decoder = 데이터 디코더
+launcher-process-status-0 = 활성화됨
+launcher-process-status-1 = 실패로 비활성화됨
+launcher-process-status-2 = 강제로 비활성화됨
+launcher-process-status-unknown = 알 수 없는 상태
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows

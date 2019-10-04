@@ -14,6 +14,10 @@
      accessibility software to clarify what the slider is for. -->
 <!ENTITY volumeScrubber.label "Volumeregelaar">
 
+<!-- LOCALIZATION NOTE (pictureInPicture.label): This string is used as part of
+the Picture-in-Picture video toggle button when the mouse is hovering it. -->
+<!ENTITY pictureInPicture.label "Picture-in-Picture">
+
 <!ENTITY stats.media "Media">
 <!ENTITY stats.size "Grootte">
 <!ENTITY stats.activity "Activiteit">
@@ -34,6 +38,8 @@
 <!ENTITY error.noSource2 "Geen video met ondersteunde indeling en MIME-type gevonden.">
 <!ENTITY error.generic "Video afspelen afgebroken vanwege een onbekende fout.">
 
+<!ENTITY status.pictureInPicture "Deze video wordt in Picture-in-Picture-modus afgespeeld.">
+
 <!-- LOCALIZATION NOTE (scrubberScale.nameFormat): the #1 string is the current
 media position, and the #2 string is the total duration. For example, when at
 the 5 minute mark in a 6 hour long video, #1 would be "5:00" and #2 would be
@@ -50,3 +56,4 @@ unknown duration video, #1 would be "5:00" and the string which is surrounded by
 <span> would be deleted, result string would be "5:00".
 -->
 <!ENTITY positionAndDuration.nameFormat "#1<span> / #2</span>">
+

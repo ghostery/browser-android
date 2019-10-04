@@ -38,3 +38,7 @@
 <!ENTITY browse.accesskey                 "T">
 
 <!ENTITY defaultSearchEngine.label        "Alapértelmezett keresőszolgáltatás">
+<!ENTITY addSearchEngine.label            "Hozzáadás fájlból">
+<!ENTITY addSearchEngine.accesskey        "a">
+<!ENTITY removeSearchEngine.label         "Eltávolítás">
+<!ENTITY removeSearchEngine.accesskey     "E">

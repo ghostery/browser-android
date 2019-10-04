@@ -28,13 +28,23 @@ features-title = Wbudowane rozszerzenia programu { -brand-short-name }
 features-name = Nazwa
 features-version = Wersja
 features-id = ID
-app-basics-title = Informacje o aplikacji
+processes-title = Zdalne procesy
+processes-type = Typ
+processes-count = Liczba
+app-basics-title = Informacje o programie
 app-basics-name = Nazwa
 app-basics-version = Wersja
 app-basics-build-id = ID kompilacji
 app-basics-update-channel = Kanał aktualizacji
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] Katalog aktualizacji
+       *[other] Folder aktualizacji
+    }
 app-basics-update-history = Historia aktualizacji
 app-basics-show-update-history = Wyświetl historię aktualizacji
+# Represents the path to the binary used to start the application.
+app-basics-binary = Plik binarny programu
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] Katalog profilu
@@ -48,10 +58,13 @@ app-basics-memory-use = Zużycie pamięci
 app-basics-performance = Wydajność
 app-basics-service-workers = Zarejestrowane wątki usługowe
 app-basics-profiles = Profile
+app-basics-launcher-process-status = Proces uruchamiający
 app-basics-multi-process-support = Okna wieloprocesowe
 app-basics-process-count = Procesy treści sieciowych
+app-basics-remote-processes-count = Zdalne procesy
 app-basics-enterprise-policies = Zasady organizacji
-app-basics-key-google = Klucz Google
+app-basics-location-service-key-google = Klucz usługi lokalizacji Google
+app-basics-safebrowsing-key-google = Klucz usługi „Bezpieczne przeglądanie” Google
 app-basics-key-mozilla = Klucz usługi lokalizacji Mozilli
 app-basics-safe-mode = Tryb awaryjny
 show-dir-label =
@@ -77,6 +90,8 @@ graphics-gpu2-title = GPU 2
 graphics-decision-log-title = Decyzje
 graphics-crash-guards-title = Funkcje wyłączone dla ochrony przed awariami
 graphics-workarounds-title = Obejścia problemów
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = Protokół okien
 place-database-title = Baza danych „Places”
 place-database-integrity = Integralność
 place-database-verify-integrity = Sprawdź integralność
@@ -98,7 +113,7 @@ sandbox-sys-call-pid = PID
 sandbox-sys-call-tid = TID
 sandbox-sys-call-proc-type = Typ procesu
 sandbox-sys-call-number = Syscall
-sandbox-sys-call-args = Argumenty
+sandbox-sys-call-args = Parametry
 safe-mode-title = Tryb awaryjny
 restart-in-safe-mode-label = Uruchom ponownie z wyłączonymi dodatkami…
 media-title = Media
@@ -182,6 +197,8 @@ hardware-h264 = Sprzętowe dekodowanie H.264
 main-thread-no-omtc = główny wątek, brak OMTC
 yes = Tak
 no = Nie
+unknown = Nieznane
+virtual-monitor-disp = Wirtualny monitor
 
 ## The following strings indicate if an API key has been found.
 ## In some development versions, it's expected for some API keys that they are
@@ -189,12 +206,15 @@ no = Nie
 
 found = Obecny
 missing = Brak
+gpu-process-pid = PID procesu GPU
+gpu-process = Proces GPU
 gpu-description = Opis
 gpu-vendor-id = ID dostawcy
 gpu-device-id = ID urządzenia
 gpu-subsys-id = ID podsystemu
 gpu-drivers = Sterowniki
 gpu-ram = RAM
+gpu-driver-vendor = Dostawca sterownika
 gpu-driver-version = Wersja sterownika
 gpu-driver-date = Data sterownika
 gpu-active = Aktywna
@@ -221,11 +241,14 @@ d3d9video-crash-buard = Dekoder wideo D3D9
 glcontext-crash-guard = OpenGL
 reset-on-next-restart = Spróbuj włączyć przy następnym uruchomieniu
 gpu-process-kill-button = Zakończ proces GPU
+gpu-device-reset = Reset urządzenia
 gpu-device-reset-button = Resetuj urządzenie
 uses-tiling = Używa kafelkowania
 content-uses-tiling = Używa kafelkowania (treść)
 off-main-thread-paint-enabled = Rysowanie poza głównym wątkiem
 off-main-thread-paint-worker-count = Wątki rysujące poza głównym
+low-end-machine = Wykryto mniej wydajny komputer
+target-frame-rate = Docelowa liczba klatek na sekundę
 audio-backend = Mechanizm dźwięku
 max-audio-channels = Maksymalna liczba kanałów
 channel-layout = Preferowany układ kanałów
@@ -243,6 +266,11 @@ effective-content-sandbox-level = Efektywny poziom separacji treści
 sandbox-proc-type-content = zawartość
 sandbox-proc-type-file = zawartość pliku
 sandbox-proc-type-media-plugin = wtyczka
+sandbox-proc-type-data-decoder = dekoder danych
+launcher-process-status-0 = włączony
+launcher-process-status-1 = wyłączony z powodu awarii
+launcher-process-status-2 = wymuszone wyłączenie
+launcher-process-status-unknown = nieznany stan
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows
@@ -254,7 +282,7 @@ multi-process-status-4 = wyłączone przez usługi ułatwień dostępu
 multi-process-status-6 = wyłączone ze względu na nieobsługiwaną metodę wprowadzania
 multi-process-status-7 = wyłączone przez dodatki
 multi-process-status-8 = wymuszone wyłączenie
-multi-process-status-unknown = nieznany status
+multi-process-status-unknown = nieznany stan
 async-pan-zoom = Asynchroniczne przewijanie/powiększanie
 apz-none = brak
 wheel-enabled = kółko
@@ -271,6 +299,6 @@ touch-warning = Asynchroniczne przewijanie/powiększanie za pomocą dotyku wył�
 
 ## Strings representing the status of the Enterprise Policies engine.
 
-policies-inactive = Nieaktywna
-policies-active = Aktywna
+policies-inactive = Nieaktywne
+policies-active = Aktywne
 policies-error = Błąd

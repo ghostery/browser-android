@@ -67,17 +67,18 @@
  -->
 <!ENTITY updateApp.version.pre           "版本: ">
 <!ENTITY updateApp.version.post          "">
+<!ENTITY updateAppAllow.description      "允许 &brandShortName;：">
 <!ENTITY updateAuto.label                "自动安装更新（推荐：可提升安全性）">
 <!ENTITY updateAuto.accesskey            "A">
 <!ENTITY updateCheck.label               "检查更新，但是让我选择是否安装">
 <!ENTITY updateCheck.accesskey           "C">
-<!ENTITY updateManual.label              "不检查更新（不推荐：存在安全风险）">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "显示更新历史">
 <!ENTITY updateHistory.accesskey         "p">
 
 <!ENTITY useService.label                "使用后台服务来安装更新">
 <!ENTITY useService.accesskey            "b">
+
+<!ENTITY updateCrossUserSettingWarning.description "此设置将影响使用这份 &brandShortName; 程序的所有 Windows 账户及 &brandShortName; 配置文件。">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "设置…">
@@ -121,3 +122,8 @@
 <!ENTITY manageCertificates.accesskey "M">
 <!ENTITY viewSecurityDevices.label "安全设备">
 <!ENTITY viewSecurityDevices.accesskey "D">
+
+<!ENTITY manageCertificates2.label "管理证书…">
+<!ENTITY manageCertificates2.accesskey "M">
+<!ENTITY viewSecurityDevices2.label "安全设备…">
+<!ENTITY viewSecurityDevices2.accesskey "D">

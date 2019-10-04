@@ -7,7 +7,13 @@
 
 <!ENTITY fromAddr.label "Van:">
 <!ENTITY fromAddr.accesskey "V">
-<!ENTITY subject.label  "Onderwerp:">
+<!ENTITY toAddr.label "Aan:">
+<!ENTITY ccAddr.label "Cc:">
+<!ENTITY bccAddr.label "Bcc:">
+<!ENTITY replyAddr.label "Antwoord-naar:">
+<!ENTITY newsgroupsAddr.label "Nieuwsgroep:">
+<!ENTITY followupAddr.label "Opvolgen-aan:">
+<!ENTITY subject.label "Onderwerp:">
 <!ENTITY subject.accesskey "n">
 <!ENTITY attachments.label "Bijlagen:">
 <!ENTITY attachments.accesskey "a">

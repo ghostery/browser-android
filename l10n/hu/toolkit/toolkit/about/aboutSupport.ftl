@@ -24,13 +24,23 @@ features-title = A { -brand-short-name } szolgáltatásai
 features-name = Név
 features-version = Verzió
 features-id = Azonosító
+processes-title = Távoli folyamatok
+processes-type = Típus
+processes-count = Darabszám
 app-basics-title = Alkalmazás alapadatai
 app-basics-name = Név
 app-basics-version = Verzió
 app-basics-build-id = Build az.
 app-basics-update-channel = Frissítési csatorna
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] Könyvtár frissítése
+       *[other] Mappa frissítése
+    }
 app-basics-update-history = Frissítési előzmények
 app-basics-show-update-history = Frissítési előzmények megjelenítése
+# Represents the path to the binary used to start the application.
+app-basics-binary = Alkalmazás binárisa
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] Profilkönyvtár
@@ -44,10 +54,13 @@ app-basics-memory-use = Memóriahasználat
 app-basics-performance = Teljesítmény
 app-basics-service-workers = Regisztrált Service Workerek
 app-basics-profiles = Profilok
+app-basics-launcher-process-status = Indító folyamat
 app-basics-multi-process-support = Több folyamatú ablakok
 app-basics-process-count = Webes tartalomfolyamat
+app-basics-remote-processes-count = Távoli folyamatok
 app-basics-enterprise-policies = Vállalati házirendek
-app-basics-key-google = Google kulcs
+app-basics-location-service-key-google = Google helymeghatározási szolgáltatás kulcs
+app-basics-safebrowsing-key-google = Google Safebrowsing kulcs
 app-basics-key-mozilla = Mozilla helymeghatározási szolgáltatás kulcs
 app-basics-safe-mode = Csökkentett mód
 show-dir-label =
@@ -73,6 +86,8 @@ graphics-gpu2-title = 2. GPU
 graphics-decision-log-title = Döntésnapló
 graphics-crash-guards-title = Összeomlásvédelem által letiltott funkciók
 graphics-workarounds-title = Kerülő eljárások
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = Ablakprotokoll
 place-database-title = Helyek adatbázisa
 place-database-integrity = Sértetlenség
 place-database-verify-integrity = Sértetlenség ellenőrzése
@@ -190,6 +205,7 @@ gpu-device-id = Eszközazonosító
 gpu-subsys-id = Alrendszer-azonosító
 gpu-drivers = Illesztőprogramok
 gpu-ram = RAM
+gpu-driver-vendor = Illesztőprogram szállítója
 gpu-driver-version = Illesztőprogram verziója
 gpu-driver-date = Illesztőprogram dátuma
 gpu-active = Aktív
@@ -241,6 +257,11 @@ effective-content-sandbox-level = Tartalomfolyamat tényleges sandboxing szintje
 sandbox-proc-type-content = tartalom
 sandbox-proc-type-file = fájltartalom
 sandbox-proc-type-media-plugin = médiabővítmény
+sandbox-proc-type-data-decoder = adatdekódoló
+launcher-process-status-0 = Engedélyezve
+launcher-process-status-1 = Hiba miatt letiltva
+launcher-process-status-2 = Kényszerítve letiltva
+launcher-process-status-unknown = Ismeretlen állapot
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows

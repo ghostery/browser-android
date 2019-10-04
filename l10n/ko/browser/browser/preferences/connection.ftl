@@ -54,6 +54,8 @@ connection-proxy-socks5 =
 connection-proxy-noproxy = 프록시를 지나지 않음
     .accesskey = n
 connection-proxy-noproxy-desc = 예: .mozilla.org, .net.nz, 192.168.1.0/24
+# Do not translate localhost, 127.0.0.1 and ::1.
+connection-proxy-noproxy-localhost-desc = Localhost나 127.0.0.1, ::1에 대한 연결은 결코 프록시 되지 않습니다.
 connection-proxy-autotype =
     .label = 자동 프록시 설정 URL
     .accesskey = A
@@ -68,18 +70,17 @@ connection-proxy-socks-remote-dns =
     .label = SOCKS v5를 사용할 때 프록시 DNS
     .accesskey = d
 connection-dns-over-https =
-    .label = HTTPS를 통한 DNS를 사용 하도록 설정
-    .accesskey = H
-connection-dns-over-https-url = URL
-    .accesskey = R
-    .tooltiptext = HTTPS를 통한 DNS를 처리하는 URL
+    .label = HTTPS를 통해 DNS를 사용 하도록 설정
+    .accesskey = b
+connection-dns-over-https-url-resolver = 공급자 사용
+    .accesskey = P
 # Variables:
-#   $url (String) - URL for the DNS over HTTPS provider
-connection-dns-over-https-url-default =
-    .label = 기본값 사용({ $url })
-    .accesskey = U
-    .tooltiptext = HTTPS에서 DNS 해석을 위해 기본 URL을 사용
+#   $name (String) - Display name or URL for the DNS over HTTPS provider
+connection-dns-over-https-url-item-default =
+    .label = { $name } (기본값)
+    .tooltiptext = HTTPS를 통한 DNS 확인에 기본 URL 사용
 connection-dns-over-https-url-custom =
-    .label = 사용자 정의
+    .label = 사용자 지정
     .accesskey = C
-    .tooltiptext = HTTPS에서 DNS 해석을 위한 선호하는 URL 입력
+    .tooltiptext = HTTPS를 통한 DNS 해석을 위한 선호하는 URL 입력
+connection-dns-over-https-custom-label = 사용자 지정

@@ -19,6 +19,7 @@
 <!ENTITY paneAttachments.title    "Вложенные файлы">
 <!ENTITY panePrivacy.title        "Приватность">
 <!ENTITY paneSecurity.title       "Защита">
+<!ENTITY panePrivacySecurity.title "Приватность и защита">
 <!ENTITY paneLightning.title      "Календарь">
 <!ENTITY paneAdvanced.title       "Дополнительные">
 <!ENTITY paneAccount.title        "Учётные записи">

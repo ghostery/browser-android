@@ -11,7 +11,7 @@
 <!ENTITY gdata.migration.description "Google 日历提供者发现您拥有一些只读的 Google 日历。如果您想要修改其中的日历，请从下面选择">
 <!ENTITY gdata.migration.upgrade.label "升级">
 <!ENTITY gdata.migration.upgrade.accesskey "U">
-<!ENTITY gdata.migration.showagain.label "总是检查">
+<!ENTITY gdata.migration.showagain.label "一律检查 ">
 
 <!ENTITY gdata.reminder.default "预设提醒">
 <!ENTITY gdata.reminder.action.sms.label "发送文本消息">

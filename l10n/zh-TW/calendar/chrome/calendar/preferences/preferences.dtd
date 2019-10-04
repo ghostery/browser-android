@@ -3,7 +3,9 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY  paneGeneral.title       "一般">
-<!ENTITY  paneAlarms.title        "鬧鈴">
+<!ENTITY  paneAlarms.title        "提醒">
 <!ENTITY  paneCategories.title    "分類">
 <!ENTITY  paneViews.title         "檢視">
-
+<!ENTITY  panelHeader.title       "行事曆">
+<!ENTITY  panelReminder.title     "提醒">
+<!ENTITY  panelCatecory.title     "分類">

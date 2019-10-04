@@ -4,8 +4,8 @@
 
 blocklist-window =
     .title = Listes de blocage
-    .style = width: 70em
-blocklist-desc = Vous pouvez désormais choisir quelle liste { -brand-short-name } doit utiliser pour bloquer les éléments web susceptibles de pister votre navigation.
+    .style = width: 66em
+blocklist-description = Choisissez quelle liste { -brand-short-name } utilise pour bloquer les traqueurs en ligne. Les listes proviennent de <a data-l10n-name="disconnect-link" title="Disconnect">Disconnect</a>.
 blocklist-close-key =
     .key = w
 blocklist-treehead-list =
@@ -24,7 +24,7 @@ blocklist-button-ok =
 #   $listName {string, "Standard (Recommended)."} - List name.
 #   $description {string, "This list does a pretty good job."} - Description of the list.
 blocklist-item-list-template = { $listName } { $description }
-blocklist-item-moz-std-name = Protection basique de Disconnect.me (Recommandée).
-blocklist-item-moz-std-desc = Autorise certains éléments de pistage afin que des sites fonctionnent correctement.
-blocklist-item-moz-full-name = Protection stricte de Disconnect.me.
-blocklist-item-moz-full-desc = Bloque les éléments de pistage connus. Certains sites peuvent ne pas fonctionner correctement.
+blocklist-item-moz-std-listName = Liste de blocage de niveau 1 (recommandé).
+blocklist-item-moz-std-description = Autorise certains traqueurs pour que moins de sites dysfonctionnent.
+blocklist-item-moz-full-listName = Liste de blocage de niveau 2.
+blocklist-item-moz-full-description = Bloque tous les traqueurs détectés. Certains sites web ou contenus peuvent ne pas se charger correctement.

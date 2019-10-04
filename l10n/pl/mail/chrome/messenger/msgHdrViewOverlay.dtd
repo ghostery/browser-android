@@ -42,8 +42,6 @@
 <!ENTITY hdrJunkButton1.tooltip "Oznacz wiadomość jako niechcianą">
 <!ENTITY hdrTrashButton1.label "Usuń">
 <!ENTITY hdrTrashButton1.tooltip "Usuń tę wiadomość">
-<!ENTITY otherActionsButton2.label "Więcej">
-<!ENTITY otherActionsButton.tooltip "Inne dostępne czynności">
 
 <!ENTITY hdrViewToolbarShowFull.label "Wyświetlaj ikony i tekst">
 <!ENTITY hdrViewToolbarShowFull.accesskey "t">
@@ -54,6 +52,8 @@
 <!ENTITY hdrViewToolbarAlwaysReplySender.label "Zawsze wyświetlaj przycisk „odpowiedz”">
 <!ENTITY hdrViewToolbarAlwaysReplySender.accesskey "Z">
 
+<!ENTITY otherActionsButton2.label "Więcej">
+<!ENTITY otherActionsButton.tooltip "Inne dostępne czynności">
 <!ENTITY otherActionsOpenConversation1.label "Otwórz wątek w karcie">
 <!ENTITY otherActionsOpenConversation1.accesskey "k">
 <!ENTITY otherActionsOpenInNewWindow1.label "Otwórz w nowym oknie">
@@ -71,35 +71,43 @@
 <!ENTITY otherActionsPrint1.label "Drukuj…">
 <!ENTITY otherActionsPrint1.accesskey "D">
 
-<!ENTITY startExpandedCmd.label "Wyświetlaj listę załączników">
-<!ENTITY startExpandedCmd.accesskey "W">
+<!-- Attachment bar context menu items -->
+<!ENTITY startExpandedCmd.label    "Wyświetlaj listę załączników">
+<!ENTITY startExpandedCmd.accesskey    "W">
 
-<!ENTITY openAttachmentCmd.label "Otwórz">
-<!ENTITY openAttachmentCmd.accesskey "O">
-<!ENTITY saveAsAttachmentCmd.label "Zapisz jako…">
-<!ENTITY saveAsAttachmentCmd.accesskey "a">
-<!ENTITY detachAttachmentCmd.label "Odłącz…">
-<!ENTITY detachAttachmentCmd.accesskey "c">
-<!ENTITY deleteAttachmentCmd.label "Usuń">
-<!ENTITY deleteAttachmentCmd.accesskey "s">
-<!ENTITY openAllAttachmentsCmd.label "Otwórz wszystkie…">
-<!ENTITY openAllAttachmentsCmd.accesskey "O">
-<!ENTITY saveAllAttachmentsCmd.label "Zapisz wszystkie…">
-<!ENTITY saveAllAttachmentsCmd.accesskey "Z">
-<!ENTITY detachAllAttachmentsCmd.label "Odłącz wszystkie…">
-<!ENTITY detachAllAttachmentsCmd.accesskey "w">
-<!ENTITY deleteAllAttachmentsCmd.label "Usuń wszystkie…">
-<!ENTITY deleteAllAttachmentsCmd.accesskey "U">
+<!-- Attachment context menu items -->
+<!ENTITY openAttachmentCmd.label    "Otwórz">
+<!ENTITY openAttachmentCmd.accesskey    "O">
+<!ENTITY saveAsAttachmentCmd.label    "Zapisz jako…">
+<!ENTITY saveAsAttachmentCmd.accesskey    "a">
+<!ENTITY detachAttachmentCmd.label    "Odłącz…">
+<!ENTITY detachAttachmentCmd.accesskey    "c">
+<!ENTITY deleteAttachmentCmd.label    "Usuń">
+<!ENTITY deleteAttachmentCmd.accesskey    "s">
+<!ENTITY openAllAttachmentsCmd.label    "Otwórz wszystkie…">
+<!ENTITY openAllAttachmentsCmd.accesskey    "O">
+<!ENTITY saveAllAttachmentsCmd.label    "Zapisz wszystkie…">
+<!ENTITY saveAllAttachmentsCmd.accesskey    "Z">
+<!ENTITY detachAllAttachmentsCmd.label    "Odłącz wszystkie…">
+<!ENTITY detachAllAttachmentsCmd.accesskey    "w">
+<!ENTITY deleteAllAttachmentsCmd.label    "Usuń wszystkie…">
+<!ENTITY deleteAllAttachmentsCmd.accesskey    "U">
 
 <!ENTITY openAttachment.tooltip "Otwórz załączony plik">
 
-<!ENTITY saveAttachmentButton1.label "Zapisz">
-<!ENTITY saveAttachmentButton1.tooltip "Zapisz załącznik">
-<!ENTITY saveAllAttachmentsButton1.label "Zapisz wszystkie">
+<!ENTITY detachedAttachmentFolder.show.label        "Otwórz folder nadrzędny">
+<!ENTITY detachedAttachmentFolder.show.accesskey    "n">
+<!ENTITY detachedAttachmentFolder.showMac.label     "Pokaż w Finderze">
+<!ENTITY detachedAttachmentFolder.showMac.accesskey "F">
+
+<!-- Attachment toolbar items -->
+<!ENTITY saveAttachmentButton1.label       "Zapisz">
+<!ENTITY saveAttachmentButton1.tooltip     "Zapisz załącznik">
+<!ENTITY saveAllAttachmentsButton1.label   "Zapisz wszystkie">
 <!ENTITY saveAllAttachmentsButton1.tooltip "Zapisz wszystkie załączniki">
 
-<!ENTITY copyLinkCmd.label "Kopiuj adres odnośnika">
-<!ENTITY copyLinkCmd.accesskey "K">
+<!ENTITY copyLinkCmd.label        "Kopiuj adres odnośnika">
+<!ENTITY copyLinkCmd.accesskey    "K">
 
 <!ENTITY CopyMessageId.label "Kopiuj identyfikator wiadomości">
 <!ENTITY CopyMessageId.accesskey "u">

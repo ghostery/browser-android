@@ -178,8 +178,6 @@
 <!ENTITY calendar.context.attendance.menu.label                 "出席">
 <!ENTITY calendar.context.attendance.menu.accesskey             "d">
 <!ENTITY calendar.context.attendance.occurrence.label           "此事件">
-<!ENTITY calendar.context.attendance.all.label        "所有事件" >
-
 <!ENTITY calendar.context.attendance.all2.label                 "完整系列">
 <!ENTITY calendar.context.attendance.send.label                 "立刻傳送通知">
 <!ENTITY calendar.context.attendance.send.accesskey             "S">
@@ -329,7 +327,7 @@
 
 <!ENTITY calendar.alarm.snoozefor.label             "稍後提醒" >
 <!ENTITY calendar.alarm.snoozeallfor.label          "全部稍後提醒:" >
-<!ENTITY calendar.alarm.title.label                 "行事曆鬧鈴" >
+<!ENTITY calendar.alarm.title.label                 "行事曆提醒" >
 <!ENTITY calendar.alarm.dismiss.label               "知道了！" >
 <!ENTITY calendar.alarm.dismissall.label            "全部解除" >
 
@@ -363,7 +361,7 @@
 <!ENTITY calendarproperties.refreshInterval.manual.label   "手動">
 <!ENTITY calendarproperties.name.label                     "名稱:">
 <!ENTITY calendarproperties.readonly.label                 "唯讀">
-<!ENTITY calendarproperties.firealarms.label               "顯示鬧鈴">
+<!ENTITY calendarproperties.firealarms.label               "顯示提醒">
 <!ENTITY calendarproperties.cache3.label                   "離線支援">
 <!ENTITY calendarproperties.enabled.label                  "顯示此行事曆">
 <!ENTITY calendarproperties.forceDisabled.label            "無法找到此行事曆的提供者，此狀況通常發生於您停用或移除某些套件。">

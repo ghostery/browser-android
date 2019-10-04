@@ -1,13 +1,13 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from content/pref-cache.xul -->
+
 <!--LOCALIZATION NOTE : FILE Cache prefs dialog -->
-
-
 <!ENTITY pref.cache.title                "高速缓存">
 <!ENTITY pref.cache.caption              "设置缓存选项">
-<!ENTITY cachePara                       "缓存将经常访问的网页副本保存在你的硬盘上。（点击 重新载入 总会显示网页的最新版本。）">
+<!ENTITY cachePara                       "缓存将经常访问的网页副本保存在你的硬盘上。（点击“重新载入”可以显示网页的最新版本。）">
 <!ENTITY cacheCheck.label                "让 &brandShortName; 管理我的缓存大小。">
 <!ENTITY cacheCheck.accesskey            "L">
 <!ENTITY diskCacheUpTo.label             "最多使用">

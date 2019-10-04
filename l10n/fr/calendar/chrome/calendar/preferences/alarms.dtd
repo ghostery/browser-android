@@ -12,13 +12,14 @@
 <!ENTITY pref.calendar.alarms.playsound.accessKey "J">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "Utiliser le son par défaut">
 <!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "U">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "Utiliser le fichier son suivant">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "U">
 <!ENTITY pref.calendar.alarms.sound.browse.label "Parcourir…">
 <!ENTITY pref.calendar.alarms.sound.browse.accessKey "P">
 <!ENTITY pref.calendar.alarms.sound.play.label "Lire">
 <!ENTITY pref.calendar.alarms.sound.play.accessKey "L">
 <!ENTITY pref.showalarmbox "Afficher une boîte d’alarme">
 <!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "b">
-<!ENTITY pref.missedalarms "Afficher les alarmes manquées">
 <!ENTITY pref.missedalarms2 "Afficher les rappels manqués pour les agendas modifiables">
 <!ENTITY pref.calendar.alarms.missedAlarms.accessKey "m">
 <!ENTITY pref.calendar.alarms.defaults.label "Paramètres d’alarme par défaut">

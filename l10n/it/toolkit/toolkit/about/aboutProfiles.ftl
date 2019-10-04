@@ -20,12 +20,14 @@ profiles-rootdir = Cartella radice
 # part of a backup scheme.)
 # In case localDir and rootDir are equal, localDir is not shown.
 profiles-localdir = Cartella locale
-profiles-current-profile = Non è possibile eliminare il profilo attualmente in uso.
+profiles-current-profile = Non è possibile eliminare questo profilo in quanto è attualmente in uso.
 profiles-in-use-profile = Questo profilo è attualmente utilizzato da un’altra applicazione e non può essere eliminato.
 profiles-rename = Rinomina
 profiles-remove = Elimina
 profiles-set-as-default = Imposta come profilo predefinito
 profiles-launch-profile = Avvia un nuovo browser con questo profilo
+profiles-cannot-set-as-default-title = Impossibile impostare come predefinito
+profiles-cannot-set-as-default-message = Non è stato possibile modificare il profilo predefinito di { -brand-short-name }.
 profiles-yes = Sì
 profiles-no = No
 profiles-rename-profile-title = Rinomina il profilo
@@ -53,3 +55,8 @@ profiles-opendir =
         [windows] Apri cartella
        *[other] Apri percorso
     }
+profiles-conflict = Un’altra copia di { -brand-product-name } ha effettuato modifiche ai profili. È necessario riavviare { -brand-short-name } per fare ulteriori modifiche.
+profiles-flush-fail-title = Modifiche non salvate
+profiles-flush-conflict = { profiles-conflict }
+profiles-flush-failed = Un errore imprevisto ha impedito il salvataggio delle modifiche.
+profiles-flush-restart-button = Riavvia { -brand-short-name }

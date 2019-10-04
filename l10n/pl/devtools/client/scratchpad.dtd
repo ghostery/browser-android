@@ -5,7 +5,13 @@
 <!-- LOCALIZATION NOTE : FILE This file contains the Scratchpad window strings -->
 <!-- LOCALIZATION NOTE : FILE Do not translate commandkeys -->
 
-<!-- LOCALIZATION NOTE (scratchpad.title):
+<!-- LOCALIZATION NOTE : FILE The correct localization of this file might be to
+  - keep it in English, or another language commonly spoken among web developers.
+  - You want to make that choice consistent across the developer tools.
+  - A good criteria is the language in which you'd find the best
+  - documentation on web development on the web. -->
+
+<!-- LOCALIZATION NOTE (window.title):
   -  The Scratchpad is intended to provide a simple text editor for creating
   -  and evaluating bits of JavaScript code for the purposes of function
   -  prototyping, experimentation and convenient scripting.
@@ -44,24 +50,30 @@
 <!ENTITY closeCmd.key                 "W">
 <!ENTITY closeCmd.accesskey           "k">
 
-<!ENTITY viewMenu.label "Widok">
-<!ENTITY viewMenu.accesskey "W">
-<!ENTITY lineNumbers.label "Numeracja wierszy">
-<!ENTITY lineNumbers.accesskey "N">
-<!ENTITY wordWrap.label "Zawijanie długich wierszy">
-<!ENTITY wordWrap.accesskey "Z">
-<!ENTITY highlightTrailingSpace.label "Podkreślanie spacji na końcu wiersza">
-<!ENTITY highlightTrailingSpace.accesskey "P">
-<!ENTITY largerFont.label "Większa czcionka">
-<!ENTITY largerFont.accesskey "a">
-<!ENTITY largerFont.commandkey "+">
-<!ENTITY largerFont.commandkey2 "=">
-<!ENTITY smallerFont.label "Mniejsza czcionka">
-<!ENTITY smallerFont.accesskey "M">
-<!ENTITY smallerFont.commandkey "-">
-<!ENTITY normalSize.label "Rozmiar pierwotny">
-<!ENTITY normalSize.accesskey "R">
-<!ENTITY normalSize.commandkey "0">
+<!ENTITY viewMenu.label               "Widok">
+<!ENTITY viewMenu.accesskey           "W">
+
+<!ENTITY lineNumbers.label             "Numeracja wierszy">
+<!ENTITY lineNumbers.accesskey         "N">
+
+<!ENTITY wordWrap.label                "Zawijanie długich wierszy">
+<!ENTITY wordWrap.accesskey            "Z">
+
+<!ENTITY highlightTrailingSpace.label     "Wyróżnianie spacji na końcu wiersza">
+<!ENTITY highlightTrailingSpace.accesskey "W">
+
+<!ENTITY largerFont.label             "Większa czcionka">
+<!ENTITY largerFont.accesskey         "a">
+<!ENTITY largerFont.commandkey        "+">
+<!ENTITY largerFont.commandkey2       "="> <!-- + is above this key on many keyboards -->
+
+<!ENTITY smallerFont.label            "Mniejsza czcionka">
+<!ENTITY smallerFont.accesskey        "M">
+<!ENTITY smallerFont.commandkey       "-">
+
+<!ENTITY normalSize.label             "Rozmiar pierwotny">
+<!ENTITY normalSize.accesskey         "R">
+<!ENTITY normalSize.commandkey        "0">
 
 <!ENTITY editMenu.label               "Edycja">
 <!ENTITY editMenu.accesskey           "E">
@@ -78,9 +90,9 @@
 <!ENTITY display.accesskey            "l">
 <!ENTITY display.key                  "l">
 
-<!ENTITY pprint.label "Popraw czytelność">
-<!ENTITY pprint.accesskey "P">
-<!ENTITY pprint.key "p">
+<!ENTITY pprint.label                 "Popraw czytelność">
+<!ENTITY pprint.key                   "p">
+<!ENTITY pprint.accesskey             "P">
 
 <!-- LOCALIZATION NOTE (environmentMenu.label, accesskey): This menu item was
   -  renamed from "Context" to avoid confusion with the right-click context
@@ -115,11 +127,12 @@
 <!ENTITY documentationLink.label      "Pomoc dla Brudnopisu na MDN">
 <!ENTITY documentationLink.accesskey  "D">
 
+
 <!-- LOCALIZATION NOTE (resetContext2.label): This command allows the developer
-  -  to reset/clear the global object of the context where the code executes.
+  -  to reset/clear the global object of the environment where the code executes.
   -->
-<!ENTITY resetContext2.label           "Zresetuj zmienne">
-<!ENTITY resetContext2.accesskey       "Z">
+<!ENTITY resetContext2.label          "Zresetuj zmienne">
+<!ENTITY resetContext2.accesskey      "Z">
 
 <!ENTITY reloadAndRun.label           "Wczytaj ponownie i uruchom">
 <!ENTITY reloadAndRun.accesskey       "h">
@@ -134,6 +147,9 @@
   -->
 <!ENTITY errorConsoleCmd.commandkey   "j">
 
+<!-- LOCALIZATION NOTE (evalFunction.label): This command allows the developer
+  -  to evaluate the top-level function that the cursor is currently at.
+  -->
 <!ENTITY evalFunction.label "Uruchom bieżącą funkcję">
 <!ENTITY evalFunction.accesskey "m">
 <!ENTITY evalFunction.key "e">

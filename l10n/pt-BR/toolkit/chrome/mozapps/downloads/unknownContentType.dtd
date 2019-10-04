@@ -23,4 +23,4 @@
 <!ENTITY  chooseHandler.label         "Procurar…">
 <!ENTITY  chooseHandler.accesskey     "P">
 
-<!ENTITY  unknownPromptText.label     "Gostaria de salvar este arquivo?">
+<!ENTITY  unknownPromptText.label     "Quer salvar este arquivo?">

@@ -4,10 +4,10 @@
 
 <!ENTITY time.midnight "éjfél" >
 <!ENTITY time.noon "dél" >
+
 <!-- Day Names -->
 <!-- LOCALIZATION NOTE : Accesskeys for day.1.Ddd to day.7.Ddd are currently
      only used in Preferences > Views > Workweek groupbox -->
-
 <!ENTITY day.1.Ddd "Va." >
 <!ENTITY day.1.Ddd.accesskey "V">
 <!ENTITY day.2.Ddd "Hé." >
@@ -46,6 +46,8 @@
 
 <!ENTITY onemonthbackward.tooltip "Egy hónapot előre" >
 <!ENTITY onemonthforward.tooltip "Egy hónapot vissza" >
+<!ENTITY oneyearbackward.tooltip "Egy évet vissza" >
+<!ENTITY oneyearforward.tooltip "Egy évet előre" >
 <!ENTITY showToday.tooltip "Ugrás a mai napra">
 <!ENTITY onedayforward.tooltip "Egy napot előre">
 <!ENTITY onedaybackward.tooltip "Egy napot vissza">

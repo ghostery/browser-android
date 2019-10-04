@@ -28,9 +28,6 @@
 <!ENTITY helpSafeMode.stop.label       "Újraindítás engedélyezett kiegészítőkkel">
 <!ENTITY helpSafeMode.stop.accesskey   "r">
 
-<!ENTITY healthReport2.label      "&brandShorterName; állapotjelentés">
-<!ENTITY healthReport2.accesskey  "e">
-
 <!ENTITY helpTroubleshootingInfo.label      "Hibakeresési információ">
 <!ENTITY helpTroubleshootingInfo.accesskey  "H">
 
@@ -52,3 +49,5 @@
 <!ENTITY hideOtherAppsCmdMac.commandkey "H">
 
 <!ENTITY showAllAppsCmdMac.label        "Mindet mutat">
+
+<!ENTITY touchBarCmdMac.label           "Érintősár testreszabása…">

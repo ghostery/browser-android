@@ -61,4 +61,4 @@ sentence. -->
 <!ENTITY messageStyleShowHeader.label      "Mostra intestazione">
 <!ENTITY messageStyleShowHeader.accesskey  "I">
 <!ENTITY messageStyleNoPreview.title       "Anteprima non disponibile">
-<!ENTITY messageStyleNoPreview.description "Questo tema non è valido o in questo momento non è disponibile (componente aggiuntivo disattivato, modalità provvisoria, ...).">
+<!ENTITY messageStyleNoPreview.description "Questo tema non è valido o in questo momento non è disponibile (componente aggiuntivo disattivato, modalità provvisoria, …).">

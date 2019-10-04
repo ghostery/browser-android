@@ -42,7 +42,7 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY textReset.commandkey "0">
 <!ENTITY textReset.commandkey2 "">
 
-<!ENTITY goToLineCmd.label "Vá para a linha…">
+<!ENTITY goToLineCmd.label "Ir para linha…">
 <!ENTITY goToLineCmd.accesskey "G">
 <!ENTITY goToLineCmd.commandkey "l">
 
@@ -84,4 +84,3 @@ you can use these alternative items. Otherwise, their values should be empty.  -
 <!ENTITY copyLinkCmd.accesskey "L">
 <!ENTITY copyEmailCmd.label "Copiar e-mail">
 <!ENTITY copyEmailCmd.accesskey "E">
-

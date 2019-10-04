@@ -38,3 +38,7 @@
 <!ENTITY browse.accesskey                 "B">
 
 <!ENTITY defaultSearchEngine.label        "預設搜尋引擎">
+<!ENTITY addSearchEngine.label            "從檔案新增">
+<!ENTITY addSearchEngine.accesskey        "A">
+<!ENTITY removeSearchEngine.label         "移除">
+<!ENTITY removeSearchEngine.accesskey     "v">

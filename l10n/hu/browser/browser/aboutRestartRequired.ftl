@@ -5,5 +5,6 @@
 restart-required-title = Újraindítás szükséges
 restart-required-header = Sajnáljuk. Csak egy apróság szükséges a folytatáshoz.
 restart-required-intro = Egy frissítést telepítettünk a háttérben. Kattintson a { -brand-short-name } újraindítására a befejezéshez
+restart-required-intro-brand = A { -brand-short-name } a háttérben frissült. Kattintson a { -brand-short-name } újraindítására a frissítés befejezéséhez.
 restart-required-description = Utána helyreállítjuk az összes oldalt, ablakot és lapot, így gyorsan folytathatja.
 restart-button-label = A { -brand-short-name } újraindítása

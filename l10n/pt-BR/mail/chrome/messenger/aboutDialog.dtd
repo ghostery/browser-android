@@ -45,7 +45,7 @@
 <!ENTITY helpus.getInvolvedLink     "envolva-se!">
 <!ENTITY helpus.end                 "">
 
-<!ENTITY releaseNotes.link          "Notas de Lançamento">
+<!ENTITY releaseNotes.link          "Notas de lançamento">
 
 <!-- LOCALIZATION NOTE (bottomLinks.license): This is a link title that links to about:license. -->
 <!ENTITY bottomLinks.license        "Informações de licenciamento">
@@ -101,13 +101,12 @@
 <!ENTITY update.downloading.end     "">
 
 <!ENTITY update.applying            "Aplicando a atualização…">
-
 <!ENTITY update.restarting          "Reiniciando…">
 
 <!-- LOCALIZATION NOTE (channel.description.start,channel.description.end): channel.description.start and
      channel.description.end create one sentence, with the current channel label inserted in between.
      example: You are currently on the _Stable_ update channel. -->
-<!ENTITY channel.description.start  "Você está atualmente no ">
-<!ENTITY channel.description.end    " canal de atualização. ">
+<!ENTITY channel.description.start  "Usando o canal de atualização ">
+<!ENTITY channel.description.end    ". ">
 
 <!ENTITY cmdCloseMac.commandKey "w">

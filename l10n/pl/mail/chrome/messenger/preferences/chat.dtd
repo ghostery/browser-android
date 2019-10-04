@@ -2,57 +2,63 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY generalTab.label "Ogólne">
+<!ENTITY  generalTab.label            "Ogólne">
 
-<!ENTITY startupAction.label "Po uruchomieniu programu &brandShortName;:">
-<!ENTITY startupAction.accesskey "P">
-<!ENTITY startupOffline.label "nie łącz z kontami komunikatora">
-<!ENTITY startupConnectAuto.label "łącz z kontami komunikatora automatycznie">
+<!ENTITY  startupAction.label         "Po uruchomieniu programu &brandShortName;:">
+<!ENTITY  startupAction.accesskey     "P">
+<!ENTITY  startupOffline.label        "nie łącz z kontami komunikatora">
+<!ENTITY  startupConnectAuto.label    "łącz z kontami komunikatora automatycznie">
 
-<!ENTITY reportIdleAfter.label "Wyświetlaj informacje o mojej nieaktywności po">
-<!ENTITY reportIdleAfter.accesskey "W">
-<!ENTITY idleTime "minutach">
+<!-- LOCALIZATION NOTE: reportIdleAfter.label is displayed first, then
+there's a field where the user can enter a number, and itemTime is
+displayed at the end of the line. The translations of the
+reportIdleAfter.label and idleTime parts don't have to mean the exact
+same thing as in English; please try instead to translate the whole
+sentence. -->
+<!ENTITY  reportIdleAfter.label         "Wyświetlaj informacje o mojej nieaktywności po">
+<!ENTITY  reportIdleAfter.accesskey     "W">
+<!ENTITY  idleTime                      "minutach">
 
-<!ENTITY andSetStatusToAway.label "i ustawiaj status na „Zaraz wracam” z opisem:">
-<!ENTITY andSetStatusToAway.accesskey "u">
+<!ENTITY  andSetStatusToAway.label      "i ustawiaj stan na „Zaraz wracam” z opisem:">
+<!ENTITY  andSetStatusToAway.accesskey  "u">
 
-<!ENTITY sendTyping.label "Wysyłaj powiadomienia o pisaniu w trakcie rozmów">
-<!ENTITY sendTyping.accesskey "t">
+<!ENTITY  sendTyping.label              "Wysyłaj powiadomienia o pisaniu w trakcie rozmów">
+<!ENTITY  sendTyping.accesskey          "t">
 
-<!ENTITY chatNotifications.label "Przy odebraniu wiadomości bezpośrednio skierowanych do użytkownika:">
-<!ENTITY desktopChatNotifications.label "Wyświetlaj powiadomienia:">
-<!ENTITY completeNotification.label "z nazwą nadawcy i podglądem wiadomości">
-<!ENTITY buddyInfoOnly.label "tylko z nazwą nadawcy">
-<!ENTITY dummyNotification.label "bez żadnych informacji">
-<!ENTITY getAttention.label "Migaj elementem paska zadań">
-<!ENTITY getAttention.accesskey "M">
-<!ENTITY getAttentionMac.label "Animuj ikonę dokowania">
-<!ENTITY getAttentionMac.accesskey "A">
-<!ENTITY desktopChatNotifications.accesskey "e">
-<!ENTITY chatSound.accesskey "d">
-<!ENTITY chatSound.label "odtwarzaj dźwięk">
-<!ENTITY play.label "Odtwórz">
-<!ENTITY play.accesskey "O">
-<!ENTITY systemSound.label "systemowy dźwięk powiadomienia o nowej poczcie">
-<!ENTITY systemSound.accesskey "s">
-<!ENTITY customsound.label "użyj pliku">
-<!ENTITY customsound.accesskey "u">
-<!ENTITY browse.label "Przeglądaj…">
-<!ENTITY browse.accesskey "r">
+<!ENTITY  chatNotifications.label             "Przy odebraniu wiadomości bezpośrednio skierowanych do użytkownika:">
+<!ENTITY  desktopChatNotifications.label      "Wyświetlaj powiadomienia:">
+<!ENTITY  desktopChatNotifications.accesskey  "e">
+<!ENTITY  completeNotification.label          "z nazwą nadawcy i podglądem wiadomości">
+<!ENTITY  buddyInfoOnly.label                 "tylko z nazwą nadawcy">
+<!ENTITY  dummyNotification.label             "bez żadnych informacji">
+<!ENTITY  getAttention.label                  "Migaj elementem paska zadań">
+<!ENTITY  getAttention.accesskey              "M">
+<!ENTITY  getAttentionMac.label               "Animuj ikonę dokowania">
+<!ENTITY  getAttentionMac.accesskey           "A">
+<!ENTITY  chatSound.accesskey                 "d">
+<!ENTITY  chatSound.label                     "odtwarzaj dźwięk">
+<!ENTITY  play.label                          "Odtwórz">
+<!ENTITY  play.accesskey                      "O">
+<!ENTITY  systemSound.label                   "systemowy dźwięk powiadomienia o nowej poczcie">
+<!ENTITY  systemSound.accesskey               "s">
+<!ENTITY  customsound.label                   "użyj pliku">
+<!ENTITY  customsound.accesskey               "u">
+<!ENTITY  browse.label                        "Przeglądaj…">
+<!ENTITY  browse.accesskey                    "r">
 
-<!ENTITY messageStyleTab.title "Style wiadomości">
-<!ENTITY messageStylePreview.label "Podgląd:">
-<!ENTITY messageStyleTheme.label "Motyw:">
-<!ENTITY messageStyleTheme.accesskey "M">
+<!ENTITY messageStyleTab.title             "Style wiadomości">
+<!ENTITY messageStylePreview.label         "Podgląd:">
+<!ENTITY messageStyleTheme.label           "Motyw:">
+<!ENTITY messageStyleTheme.accesskey       "M">
 <!ENTITY messageStyleThunderbirdTheme.label "Thunderbird">
-<!ENTITY messageStyleBubblesTheme.label "Bąbelki">
-<!ENTITY messageStyleDarkTheme.label "Ciemny">
+<!ENTITY messageStyleBubblesTheme.label    "Bąbelki">
+<!ENTITY messageStyleDarkTheme.label       "Ciemny">
 <!ENTITY messageStylePaperSheetsTheme.label "Arkusze papieru">
-<!ENTITY messageStyleSimpleTheme.label "Prosty">
-<!ENTITY messageStyleDefaultTheme.label "Domyślny">
-<!ENTITY messageStyleVariant.label "Wariant:">
-<!ENTITY messageStyleVariant.accesskey "W">
-<!ENTITY messageStyleShowHeader.label "Wyświetl nagłówek">
-<!ENTITY messageStyleShowHeader.accesskey "n">
-<!ENTITY messageStyleNoPreview.title "Podgląd jest niedostępny">
+<!ENTITY messageStyleSimpleTheme.label     "Prosty">
+<!ENTITY messageStyleDefaultTheme.label    "Domyślny">
+<!ENTITY messageStyleVariant.label         "Wariant:">
+<!ENTITY messageStyleVariant.accesskey     "W">
+<!ENTITY messageStyleShowHeader.label      "Wyświetl nagłówek">
+<!ENTITY messageStyleShowHeader.accesskey  "n">
+<!ENTITY messageStyleNoPreview.title       "Podgląd jest niedostępny">
 <!ENTITY messageStyleNoPreview.description "Ten motyw jest nieprawidłowy lub obecnie niedostępny (wyłączony dodatek, tryb awaryjny itp.).">

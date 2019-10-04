@@ -38,3 +38,7 @@
 <!ENTITY browse.accesskey                 "B">
 
 <!ENTITY defaultSearchEngine.label        "기본 검색 엔진">
+<!ENTITY addSearchEngine.label            "파일에서 추가">
+<!ENTITY addSearchEngine.accesskey        "A">
+<!ENTITY removeSearchEngine.label         "삭제">
+<!ENTITY removeSearchEngine.accesskey     "v">

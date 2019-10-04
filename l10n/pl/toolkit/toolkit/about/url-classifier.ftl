@@ -3,12 +3,22 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 url-classifier-title = Informacje o klasyfikatorze adresów
+url-classifier-search-title = Wyszukiwanie
+url-classifier-search-result-title = Wyniki wyszukiwania
+url-classifier-search-result-uri = URI: { $uri }
+url-classifier-search-result-list = Lista tabel: { $list }
+url-classifier-search-input = Adres URL
+url-classifier-search-error-invalid-url = Nieprawidłowy adres
+url-classifier-search-error-no-features = Nie wybrano żadnych funkcji
+url-classifier-search-btn = Szukaj
+url-classifier-search-features = Funkcje
+url-classifier-search-listType = Typ listy
 url-classifier-provider-title = Dostawca
 url-classifier-provider = Dostawca
 url-classifier-provider-last-update-time = Ostatnie uaktualnienie
 url-classifier-provider-next-update-time = Następne uaktualnienie
 url-classifier-provider-back-off-time = Wycofano
-url-classifier-provider-last-update-status = Status ostatniego uaktualnienia
+url-classifier-provider-last-update-status = Stan ostatniego uaktualnienia
 url-classifier-provider-update-btn = Uaktualnij
 url-classifier-cache-title = Pamięć podręczna
 url-classifier-cache-refresh-btn = Odśwież

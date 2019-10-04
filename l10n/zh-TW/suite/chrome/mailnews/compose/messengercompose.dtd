@@ -7,7 +7,13 @@
 
 <!ENTITY fromAddr.label "寄件者:">
 <!ENTITY fromAddr.accesskey "r">
-<!ENTITY subject.label  "主旨:">
+<!ENTITY toAddr.label "收件者:">
+<!ENTITY ccAddr.label "副本:">
+<!ENTITY bccAddr.label "密件副本:">
+<!ENTITY replyAddr.label "回函地址:">
+<!ENTITY newsgroupsAddr.label "新聞群組:">
+<!ENTITY followupAddr.label "原文參見:">
+<!ENTITY subject.label "主旨:">
 <!ENTITY subject.accesskey "S">
 <!ENTITY attachments.label "附件:">
 <!ENTITY attachments.accesskey "c">
@@ -132,4 +138,3 @@
 <!ENTITY attachFile.accesskey "F">
 <!ENTITY attachPage.label "附加網頁…">
 <!ENTITY attachPage.accesskey "W">
-

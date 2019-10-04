@@ -2,7 +2,13 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!-- WARNING! This file contains UTF-8 encoded characters!
+   - If this ==> … <== doesn't look like an ellipsis (three dots in a row),
+   - your editor isn't using UTF-8 encoding and may munge up the document!
+  -->
+
 <!ENTITY pref.calendar.view.allview.caption "Ogólny">
+
 <!ENTITY pref.calendar.view.dayandweekviews.caption "Widoki dnia i tygodnia">
 <!ENTITY pref.calendar.view.multiweekview.caption "Widok wielu tygodni">
 <!ENTITY pref.calendar.view.workweek.caption "Tydzień roboczy">
@@ -11,7 +17,9 @@
 <!ENTITY pref.weekstarts.accesskey "e">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Wyświetlaj numer tygodnia w widokach oraz kalendarzu podręcznym">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "W">
-<!ENTITY pref.daysoff.label "Dni robocze:">
+<!ENTITY pref.daysoff.label "Tydzień roboczy obejmuje:">
+
+<!ENTITY pref.workweekDays.label "Dni robocze:">
 
 <!ENTITY pref.calendar.view.daystart.label "Dzień zaczyna się o:">
 <!ENTITY pref.calendar.view.daystart.accesskey "z">

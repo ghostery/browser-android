@@ -49,6 +49,7 @@
 <!-- Advanced -->
 <!ENTITY reading.caption                  "in lettura">
 <!ENTITY display.caption                  "Visualizzazione">
+<!ENTITY displayName.label                "Nome visualizzato:">
 <!ENTITY showCondensedAddresses.label     "mostra solo il nome visualizzato per le persone nella rubrica">
 <!ENTITY showCondensedAddresses.accesskey "m">
 

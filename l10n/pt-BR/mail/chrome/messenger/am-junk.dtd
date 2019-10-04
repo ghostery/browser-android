@@ -13,15 +13,15 @@
 <!ENTITY junkFolderOn.accesskey "P">
 <!ENTITY otherFolder.label "Outra:">
 <!ENTITY otherFolder.accesskey "O">
-<!ENTITY purge1.label "Excluir automaticamente spans com mais de">
+<!ENTITY purge1.label "Excluir automaticamente spam com mais de">
 <!ENTITY purge1.accesskey "E">
 <!ENTITY purge2.label "dias">
 
-<!ENTITY whitelistHeader.label "Não marcar mensagens como spam automaticamente se o remetente estiver em:">
+<!ENTITY whitelistHeader.label "Não marcar automaticamente mensagens como spam se o remetente estiver em: ">
 <!ENTITY whitelistHeader.accesskey "N">
 
-<!ENTITY ispHeadersWarning.label "Se ativado, o &brandShortName; considerará mensagens marcadas por esse serviço como spam automaticamente.">
-<!ENTITY ispHeaders.label "Confiar em cabeçalhos de spam definidos pelo:">
+<!ENTITY ispHeadersWarning.label "Se ativado, o &brandShortName; considerará automaticamente as mensagens marcadas por este classificador externo como spam.">
+<!ENTITY ispHeaders.label "Confiar em cabeçalhos de spam definidos por: ">
 <!ENTITY ispHeaders.accesskey "o">
 
 <!ENTITY junkClassification.label "Seleção">

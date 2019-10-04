@@ -15,21 +15,16 @@
   -  is displayed as the tooltip for the buffer capacity during a recording. -->
 <!ENTITY performanceUI.bufferStatusTooltip "效能檢測器會將樣本儲存於一個循環的緩衝區當中，當緩衝區已滿時，新的取樣將會覆蓋開始記錄時的取樣。">
 
-<!-- LOCALIZATION NOTE (performanceUI.disabledRealTime.nonE10SBuild): This string
-  -  is displayed as a message for why the real time overview graph is disabled
-  -  when running on a non-multiprocess build. -->
-<!ENTITY performanceUI.disabledRealTime.nonE10SBuild "在非多程序的 Firefox 裡面無法即時紀錄資料。">
-
 <!-- LOCALIZATION NOTE (performanceUI.disabledRealTime.disabledE10S): This string
   -  is displayed as a message for why the real time overview graph is disabled
   -  when running on a build that can run multiprocess Firefox, but just is not enabled. -->
-<!ENTITY performanceUI.disabledRealTime.disabledE10S "在偏好設定當中，執行多程序的 Firefox，以便即時描繪紀錄資料。">
+<!ENTITY performanceUI.disabledRealTime.disabledE10S "在偏好設定當中使用多程序的 Firefox，以便即時描繪紀錄資料。">
 
 <!-- LOCALIZATION NOTE (performanceUI.bufferStatusFull): This string
   -  is displayed when the profiler's circular buffer has started to overlap. -->
 <!ENTITY performanceUI.bufferStatusFull "緩衝區已滿，舊的取樣將被覆蓋。">
 
-<!-- LOCALIZATION NOTE (performanceUI.loadingNotice): This is the label shown
+<!-- LOCALIZATION NOTE (performanceUI.unavailableNoticePB): This is the label shown
   -  in the details view while the profiler is unavailable, for example, while
   -  in Private Browsing mode. -->
 <!ENTITY performanceUI.unavailableNoticePB "目前無法記錄檢測資料。請關閉所有的隱私瀏覽視窗後再試一次。">

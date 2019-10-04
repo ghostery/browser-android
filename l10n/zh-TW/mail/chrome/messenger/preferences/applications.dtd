@@ -34,5 +34,7 @@
 <!ENTITY authRequired.button.label        "授權">
 <!ENTITY authRequired.button.accesskey    "u">
 
+<!ENTITY findCloudFileProviders.label     "尋找更多供應商…">
+
 <!ENTITY enableCloudFileAccountOffer.label "檔案超過一定大小時使用雲端鏈結服務:">
 <!ENTITY enableCloudFileAccountOffer.mb "MB">

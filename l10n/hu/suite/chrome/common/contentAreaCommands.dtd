@@ -53,6 +53,8 @@
 <!ENTITY reloadImageCmd.accesskey     "j">
 <!ENTITY viewImageCmd.label           "Kép megjelenítése">
 <!ENTITY viewImageCmd.accesskey       "g">
+<!ENTITY viewImageInfoCmd.label       "Képadatok megjelenítése">
+<!ENTITY viewImageInfoCmd.accesskey   "K">
 <!ENTITY viewVideoCmd.label           "Videó megtekintése">
 <!ENTITY viewVideoCmd.accesskey       "m">
 <!ENTITY viewBGImageCmd.label         "Háttérkép megjelenítése">

@@ -46,7 +46,7 @@
 <!ENTITY viewMenu_zoomin_accesskey "A">
 <!ENTITY viewMenu_zoomout_label "Riduci zoom">
 <!ENTITY viewMenu_zoomout_accesskey "R">
-<!ENTITY viewMenu_resetzoom_label "Ripristina zoom">
+<!ENTITY viewMenu_resetzoom_label "Reimposta zoom">
 <!ENTITY viewMenu_resetzoom_accesskey "i">
 <!ENTITY projectButton_label "Apri app">
 <!ENTITY runtimeButton_label "Seleziona runtime">
@@ -92,12 +92,6 @@
 <!ENTITY prefs_options_templatesurl "URL modelli">
 <!ENTITY prefs_options_templatesurl_tooltip "Indice dei modelli disponibili">
 <!ENTITY runtimedetails_title "Informazioni runtime">
-<!ENTITY runtimedetails_adbIsRoot "ADB è root: ">
-<!ENTITY runtimedetails_summonADBRoot "dispositivo root">
-<!ENTITY runtimedetails_ADBRootWarning "(richiede bootloader sbloccato)">
-<!ENTITY runtimedetails_unrestrictedPrivileges "Permessi illimitati per strumenti di sviluppo: ">
-<!ENTITY runtimedetails_requestPrivileges "richiede permessi più elevati">
-<!ENTITY runtimedetails_privilegesWarning "(Il dispositivo verrà riavviato. Richiede accesso root.)">
 <!ENTITY device_typeboolean "booleano">
 <!ENTITY device_typenumber "intero">
 <!ENTITY device_typestring "stringa">

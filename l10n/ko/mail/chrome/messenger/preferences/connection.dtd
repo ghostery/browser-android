@@ -38,6 +38,10 @@
 <!ENTITY  noproxy.label                 "프록시 사용 안 함:">
 <!ENTITY  noproxy.accesskey             "n">
 <!ENTITY  noproxyExplain.label          "예: .mozilla.or.kr, .net.nz 192.168.1.0/24">
+<!-- LOCALIZATION NOTE (noproxyLocalhostDesc.label): Do not translate
+  localhost, 127.0.0.1 and ::1.
+-->
+<!ENTITY  noproxyLocalhostDesc.label   "Localhost나 127.0.0.1, ::1로의 연결은 프록시 되지 않습니다.">
 <!ENTITY  shareproxy.label              "이 프록시 서버를 모든 프로토콜에 적용">
 <!ENTITY  shareproxy.accesskey          "x">
 <!ENTITY  autologinproxy.label          "비밀번호가 저장되어 있으면 인증시 묻지 않기">
@@ -47,9 +51,6 @@
 <!ENTITY  socksRemoteDNS.accesskey      "d">
 <!ENTITY  dnsOverHttps.label            "HTTPS를 통한 DNS 활성화">
 <!ENTITY  dnsOverHttps.accesskey        "b">
-<!ENTITY  dnsOverHttpsUrl.label         "URL">
-<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
-<!ENTITY  dnsOverHttpsUrl.tooltip       "HTTPS를 통한 DNS를 해결하는 URL">
 <!ENTITY  dnsOverHttpsUrlDefault.label     "기본값 사용">
 <!ENTITY  dnsOverHttpsUrlDefault.accesskey "l">
 <!ENTITY  dnsOverHttpsUrlDefault.tooltip   "HTTPS를 통한 DNS를 해결할 때 기본 URL 사용">

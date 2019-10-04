@@ -1,96 +1,12 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-<!ENTITY addons.windowTitle                   "Управление дополнениями">
-
-<!ENTITY search.placeholder3                  "Поиск на addons.mozilla.org">
-<!ENTITY search.buttonlabel                   "Поиск">
-<!-- LOCALIZATION NOTE (search.commandkey):
-     The search command key should match findOnCmd.commandkey from browser.dtd -->
-<!ENTITY search.commandkey                    "f">
-
-<!ENTITY loading.label                        "Загрузка…">
-<!ENTITY listEmpty.installed.label            "У вас не установлено ни одного дополнения данного типа">
-<!ENTITY listEmpty.availableUpdates.label     "Обновлений не найдено">
-<!ENTITY listEmpty.recentUpdates.label        "В последнее время вы не обновляли никаких дополнений">
-<!ENTITY listEmpty.findUpdates.label          "Проверить наличие обновлений">
-<!ENTITY listEmpty.button.label               "Узнать больше о дополнениях">
-<!ENTITY installAddonFromFile.label           "Установить дополнение из файла…">
-<!ENTITY installAddonFromFile.accesskey       "а">
-<!ENTITY toolsMenu.tooltip                    "Инструменты для всех дополнений">
-
-
-<!ENTITY showUnsignedExtensions.button.label  "Некоторые расширения не могут быть проверены">
-<!ENTITY showAllExtensions.button.label       "Показать все расширения">
-<!ENTITY debugAddons.label                    "Отладка дополнений">
-<!ENTITY debugAddons.accesskey                "л">
-
-<!-- global warnings -->
-<!ENTITY warning.safemode.label                    "В безопасном режиме все дополнения отключены.">
-<!ENTITY warning.checkcompatibility.label          "Проверка совместимости дополнений отключена. У вас могут иметься несовместимые дополнения.">
-<!ENTITY warning.checkcompatibility.enable.label   "Включить">
-<!ENTITY warning.checkcompatibility.enable.tooltip "Включить проверку совместимости дополнений">
-<!ENTITY warning.updatesecurity.label              "Проверка безопасного обновления дополнений отключена. Обновления могут поставить вас под угрозу.">
-<!ENTITY warning.updatesecurity.enable.label       "Включить">
-<!ENTITY warning.updatesecurity.enable.tooltip     "Включить проверку безопасного обновления дополнений">
-
-<!-- categories / views -->
-<!ENTITY view.discover.label                  "Загрузить дополнения">
-<!ENTITY view.recentUpdates.label             "Недавние обновления">
-<!ENTITY view.availableUpdates.label          "Доступные обновления">
-
-<!ENTITY helpButton.label                      "Поддержка дополнений">
-<!ENTITY preferencesWin.label                  "Настройки &brandShortName;">
-<!ENTITY preferencesUnix.label                 "Настройки &brandShortName;">
-
-<!-- addon updates -->
-<!ENTITY updates.checkForUpdates.label        "Проверить наличие обновлений">
-<!ENTITY updates.checkForUpdates.accesskey    "о">
-<!ENTITY updates.viewUpdates.label            "Показать недавние обновления">
-<!ENTITY updates.viewUpdates.accesskey        "к">
-<!-- LOCALIZATION NOTE (updates.updateAddonsAutomatically.label): This menu item
-     is a checkbox that toggles the default global behavior for add-on update
-     checking. -->
-<!ENTITY updates.updateAddonsAutomatically.label     "Автоматически обновлять дополнения">
-<!ENTITY updates.updateAddonsAutomatically.accesskey "в">
-<!-- LOCALIZATION NOTE (updates.resetUpdatesToAutomatic.label, updates.resetUpdatesToManual.label):
-     Specific addons can have custom update checking behaviors ("Manually",
-     "Automatically", "Use default global behavior"). These menu items reset the
-     update checking behavior for all add-ons to the default global behavior
-     (which itself is either "Automatically" or "Manually", controlled by the
-     updates.updateAddonsAutomatically.label menu item). -->
-<!ENTITY updates.resetUpdatesToAutomatic.label       "Установить для всех дополнений режим автоматического обновления">
-<!ENTITY updates.resetUpdatesToAutomatic.accesskey   "с">
-<!ENTITY updates.resetUpdatesToManual.label          "Установить для всех дополнений режим ручного обновления">
-<!ENTITY updates.resetUpdatesToManual.accesskey      "с">
-<!ENTITY updates.updating.label               "Обновление дополнений">
-<!ENTITY updates.installed.label              "Ваши дополнения были обновлены.">
-<!ENTITY updates.downloaded.label             "Обновления дополнений загружены.">
-<!ENTITY updates.restart.label                "Перезапустить для завершения установки">
-<!ENTITY updates.noneFound.label              "Обновлений не найдено">
-<!ENTITY updates.manualUpdatesFound.label     "Показать доступные обновления">
-<!ENTITY updates.updateSelected.label         "Установить обновления">
-<!ENTITY updates.updateSelected.tooltip       "Установить доступные обновления из этого списка">
-
-<!-- addon actions -->
-<!ENTITY cmd.showDetails.label                "Подробнее">
-<!ENTITY cmd.showDetails.accesskey            "р">
-<!ENTITY cmd.findUpdates.label                "Найти обновления">
-<!ENTITY cmd.findUpdates.accesskey            "а">
-<!ENTITY cmd.preferencesWin.label             "Настройки">
-<!ENTITY cmd.preferencesWin.accesskey         "с">
-<!ENTITY cmd.preferencesUnix.label            "Настройки">
-<!ENTITY cmd.preferencesUnix.accesskey        "с">
 
 <!-- addon actions -->
 <!ENTITY cmd.enableAddon.label                "Включить">
 <!ENTITY cmd.enableAddon.accesskey            "ч">
 <!ENTITY cmd.disableAddon.label               "Отключить">
 <!ENTITY cmd.disableAddon.accesskey           "ю">
-<!ENTITY cmd.enableTheme.label                "Использовать тему">
-<!ENTITY cmd.enableTheme.accesskey            "п">
-<!ENTITY cmd.disableTheme.label               "Больше не использовать тему">
-<!ENTITY cmd.disableTheme.accesskey           "п">
 
 <!ENTITY cmd.askToActivate.label              "Включать по запросу">
 <!ENTITY cmd.askToActivate.tooltip            "Каждый раз спрашивать, использовать ли это дополнение">
@@ -99,8 +15,6 @@
 <!ENTITY cmd.neverActivate.label              "Никогда не включать">
 <!ENTITY cmd.neverActivate.tooltip            "Никогда не использовать это дополнение">
 <!ENTITY cmd.stateMenu.tooltip                "Решить, когда запускать это дополнение">
-<!ENTITY cmd.installAddon.label               "Установить">
-<!ENTITY cmd.installAddon.accesskey           "н">
 
 <!ENTITY cmd.uninstallAddon.label             "Удалить">
 <!ENTITY cmd.uninstallAddon.accesskey         "д">
@@ -108,9 +22,6 @@
 <!ENTITY cmd.showPreferencesWin.tooltip       "Изменить настройки этого дополнения">
 <!ENTITY cmd.showPreferencesUnix.label        "Настройки">
 <!ENTITY cmd.showPreferencesUnix.tooltip      "Изменить настройки этого дополнения">
-<!ENTITY cmd.contribute.label                 "Внести вклад">
-<!ENTITY cmd.contribute.accesskey             "т">
-<!ENTITY cmd.contribute.tooltip               "Внести вклад в развитие этого дополнения">
 
 <!ENTITY cmd.showReleaseNotes.label           "Показать примечания к выпуску">
 <!ENTITY cmd.showReleaseNotes.tooltip         "Показать примечания к выпуску для этого обновления">
@@ -118,53 +29,8 @@
 <!ENTITY cmd.hideReleaseNotes.tooltip         "Скрыть примечания к выпуску для этого обновления">
 <!ENTITY cmd.findReplacement.label            "Найти замену">
 
-<!-- discovery view -->
-<!-- LOCALIZATION NOTE (discover.title,discover.description,discover.footer):
-     Displayed in the center of the Get Add-ons view, see bug 601143 for mockups. -->
-<!ENTITY discover.title                       "Что такое дополнения?">
-<!ENTITY discover.description2                "Дополнения — это приложения, которые позволяют вам настроить &brandShortName; по своему вкусу, добавив в него дополнительные функции или придав ему свой стиль. Попробуйте использовать экономящую время боковую панель, настройте уведомление о прогнозе погоды или измените его внешний вид, чтобы сделать &brandShortName; именно таким, каким вы желаете.">
-<!ENTITY discover.footer                      "Когда вы соединитесь с Интернетом, в этой панели появятся некоторые из лучших и наиболее популярных дополнений, которые вы можете испытать в работе.">
-
-<!-- detail view -->
-<!ENTITY detail.version.label                 "Версия">
-<!ENTITY detail.lastupdated.label             "Последнее обновление">
-<!ENTITY detail.creator.label                 "Разработчик">
-<!ENTITY detail.homepage.label                "Домашняя страница">
-
-<!ENTITY detail.contributions.description     "Разработчик этого дополнения просит вас помочь поддержать его дальнейшее развитие, внеся небольшое пожертвование.">
-
-<!ENTITY detail.updateType                    "Автоматическое обновление">
-<!ENTITY detail.updateDefault.label           "По умолчанию">
-<!ENTITY detail.updateDefault.tooltip         "Автоматически устанавливать обновления только если это настройка по умолчанию">
-<!ENTITY detail.updateAutomatic.label         "Включено">
-<!ENTITY detail.updateAutomatic.tooltip       "Устанавливать обновления автоматически">
-<!ENTITY detail.updateManual.label            "Отключено">
-<!ENTITY detail.updateManual.tooltip          "Не устанавливать обновления автоматически">
-<!ENTITY detail.home                          "Домашняя страница">
-<!ENTITY detail.repository                    "Профиль дополнения">
-<!ENTITY detail.size                          "Размер">
-
-<!ENTITY detail.checkForUpdates.label         "Проверить наличие обновлений">
-<!ENTITY detail.checkForUpdates.accesskey     "в">
-<!ENTITY detail.checkForUpdates.tooltip       "Проверить наличие обновлений для этого дополнения">
-<!ENTITY detail.showPreferencesWin.label      "Настройки">
-<!ENTITY detail.showPreferencesWin.accesskey  "с">
-<!ENTITY detail.showPreferencesWin.tooltip    "Изменить настройки этого дополнения">
-<!ENTITY detail.showPreferencesUnix.label     "Настройки">
-<!ENTITY detail.showPreferencesUnix.accesskey "с">
-<!ENTITY detail.showPreferencesUnix.tooltip   "Изменить настройки этого дополнения">
-
-
-<!-- ratings -->
-<!ENTITY rating2.label                        "Рейтинг">
-
-<!-- download/install progress -->
-<!ENTITY progress.pause.tooltip               "Приостановить">
-
 <!-- download/install progress -->
 <!ENTITY progress.cancel.tooltip              "Отмена">
-
-<!ENTITY addon.homepage                       "Домашняя страница">
 
 <!ENTITY addon.details.label                  "Подробнее">
 <!ENTITY addon.details.tooltip                "Подробнее об этом дополнении">
@@ -173,6 +39,7 @@
      to the add-on name for extensions that are not webextensions, which
      will stop working in Firefox 57. -->
 <!ENTITY addon.legacy.label                   "УСТАРЕВШЕЕ">
+<!ENTITY addon.privateBrowsing.label          "РАЗРЕШЕНО В ПРИВАТНЫХ ОКНАХ">
 <!-- LOCALIZATION NOTE (addon.disabled.postfix): This is used in a normal list
      to signify that an add-on is disabled, in the form
      "<Addon name> <1.0> (disabled)" -->
@@ -186,7 +53,6 @@
 <!ENTITY addon.undoAction.tooltip             "Отменить это действие">
 <!ENTITY addon.undoRemove.label               "Отменить">
 <!ENTITY addon.undoRemove.tooltip             "Оставить это дополнение установленным">
-<!ENTITY addon.restartNow.label               "Перезапустить сейчас">
 
 <!ENTITY addon.install.label                  "Установить">
 <!ENTITY addon.install.tooltip                "Установить это дополнение">
@@ -201,34 +67,5 @@
 
 <!ENTITY addon.createdBy.label                "От ">
 
-<!ENTITY eula.title                           "Лицензионное соглашение с конечным пользователем">
-<!ENTITY eula.width                           "560px">
-<!ENTITY eula.height                          "400px">
-<!ENTITY eula.accept                          "Принять и установить…">
-
 <!ENTITY settings.path.button.label           "Обзор…">
-
 <!ENTITY setting.learnmore "Подробнее…">
-
-<!ENTITY disabledUnsigned.heading "Некоторые дополнения были отключены">
-<!-- LOCALIZATION NOTE (disabledUnsigned.description.start, disabledUnsigned.description.findAddonsLink, disabledUnsigned.description.end):
-     These entities form a sentence, with
-     disabledUnsigned.description.findAddonsLink being a link to an external site. -->
-<!ENTITY disabledUnsigned.description.start "Работа следующих дополнений в &brandShortName; не была проверена. Вы можете ">
-<!ENTITY disabledUnsigned.description.findAddonsLink "найти им замену">
-<!ENTITY disabledUnsigned.description.end " или попросить разработчика произвести их проверку.">
-<!ENTITY disabledUnsigned.learnMore "Узнайте больше о наших усилиях по обеспечению вашей безопасности в Интернете.">
-<!-- LOCALIZATION NOTE (disabledUnsigned.devInfo.start, disabledUnsigned.devInfo.linkToManual, disabledUnsigned.devInfo.end):
-     These entities form a sentence, with disabledUnsigned.devInfo.linkToManual
-     being a link to an external site. -->
-<!ENTITY disabledUnsigned.devInfo.start "Разработчики, заинтересованные в проверке своих дополнений, могут прочесть наше ">
-<!ENTITY disabledUnsigned.devInfo.linkToManual "руководство">
-<!ENTITY disabledUnsigned.devInfo.end ".">
-
-<!ENTITY pluginDeprecation.description "Что-то отсутствует? &brandShortName; больше не поддерживает некоторые плагины.">
-<!ENTITY pluginDeprecation.learnMore "Подробнее.">
-
-<!ENTITY legacyWarning.showLegacy "Показать устаревшие расширения">
-<!ENTITY legacyExtensions.title "Устаревшие расширения">
-<!ENTITY legacyExtensions.description "Эти расширения не соответствуют текущим стандартам &brandShortName;, поэтому они были отключены.">
-<!ENTITY legacyExtensions.learnMore "Узнайте об изменениях в дополнениях">

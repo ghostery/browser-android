@@ -9,9 +9,9 @@
 
     <DT><H3>Zoeken op het web</H3>
     <DL><p>
-        <DT><A HREF="http://www.google.com/">Google</A>
-        <DT><A HREF="http://groups.google.com/">Google Discussiegroepen</A>
-        <DT><A HREF="http://news.google.com/">Google Nieuws</A>
+        <DT><A HREF="https://www.google.com/">Google</A>
+        <DT><A HREF="https://groups.google.com/">Google Discussiegroepen</A>
+        <DT><A HREF="https://news.google.com/">Google Nieuws</A>
     </DL><p>
 
 #unfilter emptyLines

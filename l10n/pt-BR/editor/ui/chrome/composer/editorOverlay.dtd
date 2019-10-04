@@ -283,7 +283,7 @@
 <!ENTITY tableProperties.accesskey "o">
 
 <!-- Toolbar-only items -->
-<!ENTITY menuBar.tooltip "Barra de menus">
+<!ENTITY menuBar.tooltip "Barra de menu">
 <!ENTITY formatToolbar.tooltip "Barra de formatação">
 <!ENTITY cutToolbarCmd.tooltip "Recortar">
 <!ENTITY copyToolbarCmd.tooltip "Copiar">

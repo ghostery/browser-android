@@ -50,7 +50,7 @@
 
 <!-- add-on related points for branded builds -->
 <!ENTITY rights.addons-a "Kiegészítők szolgáltatás: ">
-<!ENTITY rights.addons-b "Alapértelmezésben a &brandShortName; kiterjesztéseket fog ajánlani a &view.discover.label; oldalon keresztül, valamint meghatározott időközönként frissítéseket keres. Ha teljesen le akarja tiltani ezeket funkciókat, hogy megakadályozza a telepített kiegészítőkkel kapcsolatos információk közlését a kiszolgálóval, kövesse az alábbi lépéseket:">
+<!ENTITY rights.addons-b "Alapértelmezésben a &brandShortName; kiegészítőket fog ajánlani a &view.discover.label; oldalon keresztül, valamint meghatározott időközönként frissítéseket keres. Ha teljesen le akarja tiltani ezeket funkciókat, hogy megakadályozza a telepített kiegészítőkkel kapcsolatos információk közlését a kiszolgálóval, kövesse az alábbi lépéseket:">
 <!ENTITY rights.addons-term1 "Nyissa meg az alkalmazás beállítópaneljét.">
 <!ENTITY rights.addons-term2 "Válassza ki a &smart.label; panelt a fő &advance.label; beállítópanelen">
 <!ENTITY rights.addons-term3 "Vegye ki a jelölést a &quot;&autoAddOnsUpdates.label;&quot; és a &quot;&enablePersonalized.label;&quot; jelölőnégyzetekből">

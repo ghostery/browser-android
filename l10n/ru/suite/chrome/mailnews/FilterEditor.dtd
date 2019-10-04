@@ -30,6 +30,8 @@
 <!ENTITY contextArchive.label "Архивации">
 <!ENTITY contextArchive.accesskey "х">
 
+<!ENTITY contextPeriodic.accesskey "е">
+
 <!ENTITY filterActionDesc.label "Производить следующие действия">
 <!ENTITY filterActionDesc.accesskey "и">
 

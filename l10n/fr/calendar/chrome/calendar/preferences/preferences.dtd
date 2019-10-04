@@ -6,3 +6,6 @@
 <!ENTITY  paneAlarms.title        "Alarmes">
 <!ENTITY  paneCategories.title    "Catégories">
 <!ENTITY  paneViews.title         "Vues">
+<!ENTITY  panelHeader.title       "Agenda">
+<!ENTITY  panelReminder.title     "Rappels">
+<!ENTITY  panelCatecory.title     "Catégories">

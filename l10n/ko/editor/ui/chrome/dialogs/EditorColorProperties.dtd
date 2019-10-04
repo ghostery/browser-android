@@ -26,4 +26,4 @@
 <!ENTITY backgroundImage.label "배경 이미지:">
 <!ENTITY backgroundImage.accessKey "m">
 <!ENTITY backgroundImage.tooltip "이미지 파일을 배경으로 사용">
-<!ENTITY backgroundImage.shortenedDataURI "데이타 URI 축약 (복사하면 클립보드에 전체 URI가 복사됨)">
+<!ENTITY backgroundImage.shortenedDataURI "데이터 URI 축약 (복사하면 클립보드에 전체 URI가 복사됨)">

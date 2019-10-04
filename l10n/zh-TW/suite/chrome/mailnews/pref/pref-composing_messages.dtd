@@ -12,7 +12,7 @@
 
 <!ENTITY replyQuoteInline.label               "在回覆內容裡引用/顯示附件">
 <!ENTITY replyQuoteInline.accesskey           "Q">
-<!ENTITY warnOnSendAccelKey.label             "用鍵盤快捷鍵發送郵件時需要確認">
+<!ENTITY warnOnSendAccelKey.label             "用快速鍵發送郵件時需要確認">
 <!ENTITY warnOnSendAccelKey.accesskey         "k">
 <!-- LOCALIZATION NOTE (autoSave.label): This will concatenate with
      "xxx minutes", using a number and (autoSaveEnd.label). -->
@@ -54,4 +54,3 @@
   mailnews.reply_header_authorwroteondate preference. [Author] and [date]
   need to be translated. -->
 <!ENTITY authorWroteOnDateOption.label        "[作者] 於 [日期] 寫道:">
-

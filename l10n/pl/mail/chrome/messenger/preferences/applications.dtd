@@ -2,37 +2,39 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY typeColumn.label "Typ zawartości">
-<!ENTITY typeColumn.accesskey "T">
+<!ENTITY  typeColumn.label            "Typ zawartości">
+<!ENTITY  typeColumn.accesskey        "T">
 
-<!ENTITY actionColumn2.label "Czynność">
-<!ENTITY actionColumn2.accesskey "C">
+<!ENTITY  actionColumn2.label         "Czynność">
+<!ENTITY  actionColumn2.accesskey     "C">
 
-<!ENTITY focusSearch1.key "f">
-<!ENTITY focusSearch2.key "k">
+<!ENTITY  focusSearch1.key            "f">
+<!ENTITY  focusSearch2.key            "k">
 
-<!ENTITY filter.placeholder "Szukaj">
+<!ENTITY  filter.placeholder          "Szukaj">
 
-<!ENTITY saveTo.label "Zapisuj pliki do">
-<!ENTITY saveTo.accesskey "Z">
-<!ENTITY alwaysAsk.label "Zawsze pytaj gdzie zapisać plik">
-<!ENTITY alwaysAsk.accesskey "e">
-<!ENTITY chooseFolderWin.label "Przeglądaj…">
-<!ENTITY chooseFolderWin.accesskey "P">
-<!ENTITY chooseFolderMac.label "Wybierz…">
-<!ENTITY chooseFolderMac.accesskey "W">
+<!ENTITY saveTo.label                 "Zapisuj pliki do">
+<!ENTITY saveTo.accesskey             "Z">
+<!ENTITY alwaysAsk.label              "Zawsze pytaj gdzie zapisać plik">
+<!ENTITY alwaysAsk.accesskey          "e">
+<!ENTITY chooseFolderWin.label        "Przeglądaj…">
+<!ENTITY chooseFolderWin.accesskey    "P">
+<!ENTITY chooseFolderMac.label        "Wybierz…">
+<!ENTITY chooseFolderMac.accesskey    "W">
 
-<!ENTITY attachments.incoming.label "Przychodzące">
-<!ENTITY attachments.outgoing.label "Wychodzące">
+<!ENTITY attachments.incoming.label   "Przychodzące">
+<!ENTITY attachments.outgoing.label   "Wychodzące">
 
-<!ENTITY addCloudFileAccount1.label "Dodaj…">
-<!ENTITY addCloudFileAccount1.accesskey "D">
-<!ENTITY addCloudFileAccount.description "Dodaj nowy serwis przechowywania plików">
-<!ENTITY removeCloudFileAccount.label "Usuń">
+<!ENTITY addCloudFileAccount1.label       "Dodaj…">
+<!ENTITY addCloudFileAccount1.accesskey   "D">
+<!ENTITY addCloudFileAccount.description  "Dodaj nowy serwis przechowywania plików">
+<!ENTITY removeCloudFileAccount.label     "Usuń">
 <!ENTITY removeCloudFileAccount.accesskey "U">
-<!ENTITY authRequired.description "Wymagane jest upoważnienie, aby wyświetlić ustawienia tego serwisu przechowywania.">
-<!ENTITY authRequired.button.label "Upoważnienie">
-<!ENTITY authRequired.button.accesskey "a">
+<!ENTITY authRequired.description         "Wymagane jest upoważnienie, aby wyświetlić ustawienia tego serwisu przechowywania.">
+<!ENTITY authRequired.button.label        "Upoważnienie">
+<!ENTITY authRequired.button.accesskey    "a">
+
+<!ENTITY findCloudFileProviders.label     "Znajdź więcej dostawców…">
 
 <!ENTITY enableCloudFileAccountOffer.label "Proponuj udostępnianie plików większych niż">
 <!ENTITY enableCloudFileAccountOffer.mb "MB">

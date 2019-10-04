@@ -2,7 +2,7 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY pref.mailnews.title              "Email &amp; grupos de notícias">
+<!ENTITY pref.mailnews.title              "Email e grupos de notícias">
 <!ENTITY generalSettings.caption          "Geral">
 <!ENTITY confirmMove.label                "Confirmar ao mover pastas para a lixeira">
 <!ENTITY confirmMove.accesskey            "l">
@@ -19,14 +19,14 @@
 <!ENTITY setDefaultFeed.label             "RSS">
 <!ENTITY setDefaultFeed.accesskey         "R">
 
-<!ENTITY useInternalSettings.description  "Usar o &brandShortName; Email &amp; grupos de notícias quando abrir links no navegador para:">
+<!ENTITY useInternalSettings.description  "Usar o Email e grupos de notícias do &brandShortName; quando abrir no navegador links de:">
 <!ENTITY useInternalMail.label            "E-mail (mailto:)">
 <!ENTITY useInternalMail.accesskey        "a">
 <!ENTITY useInternalNews.label            "Servidor de notícias (news:, snews:, nntp:)">
 <!ENTITY useInternalNews.accesskey        "s">
 
 <!ENTITY messengerStartPage.caption       "Página inicial do Mail">
-<!ENTITY enableStartPage.label            "Ao iniciar o Email &amp; grupos de notícias, abrir a página inicial na área da mensagem">
+<!ENTITY enableStartPage.label            "Ao iniciar o Email, abrir a página inicial na área da mensagem">
 <!ENTITY enableStartPage.accesskey        "A">
 <!ENTITY location.label                   "Endereço:">
 <!ENTITY location.accesskey               "E">

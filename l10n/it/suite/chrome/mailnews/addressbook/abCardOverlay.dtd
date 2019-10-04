@@ -37,7 +37,7 @@
 <!ENTITY NickName.accesskey             "m">
 
 <!ENTITY PrimaryEmail.label             "Email:">
-<!ENTITY PrimaryEmail.accesskey         "-">
+<!ENTITY PrimaryEmail.accesskey         "m">
 <!ENTITY SecondEmail.label              "Email aggiuntiva:">
 <!ENTITY SecondEmail.accesskey          "v">
 <!ENTITY PreferMailFormat.label         "Formato preferito per i messaggi di posta:">

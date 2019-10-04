@@ -46,7 +46,7 @@
      Firefox. -->
 <!ENTITY fxaccount_back_to_browsing 'Voltar a navegar'>
 
-<!ENTITY fxaccount_getting_started_welcome_to_sync 'Bem-vindo ao &syncBrand.shortName.label;'>
+<!ENTITY fxaccount_getting_started_welcome_to_sync 'Boas-vindas ao &syncBrand.shortName.label;'>
 <!ENTITY fxaccount_getting_started_description2 'Identifique-se para sincronizar suas abas, favoritos, contas de acesso e mais.'>
 <!ENTITY fxaccount_getting_started_get_started 'Iniciar'>
 <!ENTITY fxaccount_getting_started_old_firefox 'Usando uma versão velha do &syncBrand.shortName.label;?'>
@@ -66,7 +66,7 @@
 <!ENTITY fxaccount_status_bookmarks 'Favoritos'>
 <!ENTITY fxaccount_status_history 'Histórico'>
 <!ENTITY fxaccount_status_passwords2 'Contas de acesso'>
-<!ENTITY fxaccount_status_tabs 'Abrir abas'>
+<!ENTITY fxaccount_status_tabs 'Abas abertas'>
 <!ENTITY fxaccount_status_additional_settings 'Configurações adicionais'>
 <!ENTITY fxaccount_pref_sync_use_metered2 'Sincronizar somente via Wi-Fi'>
 <!-- Localization note: Only affects background syncing, user initiated
@@ -78,7 +78,7 @@
      these strings are separated to accommodate languages that decline
      the two uses differently. -->
 <!ENTITY fxaccount_status_linktos2 'Termos do serviço'>
-<!ENTITY fxaccount_status_linkprivacy2 'Nota sobre privacidade'>
+<!ENTITY fxaccount_status_linkprivacy2 'Aviso de privacidade'>
 <!ENTITY fxaccount_remove_account 'Desconectar&ellipsis;'>
 
 <!ENTITY fxaccount_remove_account_dialog_title2 'Desconectar do Sync?'>

@@ -28,9 +28,6 @@
 <!ENTITY helpSafeMode.stop.label       "부가 기능이 켜진 채로 다시 시작">
 <!ENTITY helpSafeMode.stop.accesskey   "R">
 
-<!ENTITY healthReport2.label      "&brandShorterName; 상태 검사 보고서">
-<!ENTITY healthReport2.accesskey  "e">
-
 <!ENTITY helpTroubleshootingInfo.label      "문제 해결 정보…">
 <!ENTITY helpTroubleshootingInfo.accesskey  "T">
 
@@ -52,3 +49,5 @@
 <!ENTITY hideOtherAppsCmdMac.commandkey "H">
 
 <!ENTITY showAllAppsCmdMac.label        "모두 보이기">
+
+<!ENTITY touchBarCmdMac.label           "터치바 사용자 정의…">

@@ -11,11 +11,11 @@
 <!ENTITY  noProxyTypeRadio.accesskey    "S">
 <!ENTITY  systemTypeRadio.label         "Usar as configurações de proxy do sistema">
 <!ENTITY  systemTypeRadio.accesskey     "a">
-<!ENTITY  WPADTypeRadio.label           "Autodetectar as configurações de proxy para esta rede">
+<!ENTITY  WPADTypeRadio.label           "Detectar automaticamente as configurações de proxy desta rede">
 <!ENTITY  WPADTypeRadio.accesskey       "d">
 <!ENTITY  manualTypeRadio.label         "Configuração manual de proxy:">
 <!ENTITY  manualTypeRadio.accesskey     "n">
-<!ENTITY  autoTypeRadio.label           "URL de configuração automática do proxy:">
+<!ENTITY  autoTypeRadio.label           "URL de configuração automática de proxy:">
 <!ENTITY  autoTypeRadio.accesskey       "E">
 <!ENTITY  reload.label                  "Recarregar">
 <!ENTITY  reload.accesskey              "c">
@@ -38,18 +38,19 @@
 <!ENTITY  noproxy.label                 "Sem proxy para:">
 <!ENTITY  noproxy.accesskey             "S">
 <!ENTITY  noproxyExplain.label          "Exemplo: .mozilla.org, .net.nz, 192.168.1.0/24">
+<!-- LOCALIZATION NOTE (noproxyLocalhostDesc.label): Do not translate
+  localhost, 127.0.0.1 and ::1.
+-->
+<!ENTITY  noproxyLocalhostDesc.label   "Conexões para localhost, 127.0.0.1 e ::1 não passam por proxy.">
 <!ENTITY  shareproxy.label              "Usar este proxy para todos os protocolos">
 <!ENTITY  shareproxy.accesskey          "x">
-<!ENTITY  autologinproxy.label          "Não pedir confirmação da autenticação se senha estiver memorizada">
+<!ENTITY  autologinproxy.label          "Não pedir confirmação de autenticação se senha estiver memorizada">
 <!ENTITY  autologinproxy.accesskey      "i">
 <!ENTITY  autologinproxy.tooltip        "Esta opção autentica-o silenciosamente em proxys quando tem credenciais memorizadas para os mesmos. Uma confirmação será solicitada se a autenticação falhar.">
 <!ENTITY  socksRemoteDNS.label          "Proxy DNS ao usar SOCKS v5">
 <!ENTITY  socksRemoteDNS.accesskey      "d">
 <!ENTITY  dnsOverHttps.label            "Habilitar DNS sobre HTTPS">
 <!ENTITY  dnsOverHttps.accesskey        "b">
-<!ENTITY  dnsOverHttpsUrl.label         "URL">
-<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
-<!ENTITY  dnsOverHttpsUrl.tooltip       "URL para resolver DNS sobre HTTPS">
 <!ENTITY  dnsOverHttpsUrlDefault.label     "Usar padrão">
 <!ENTITY  dnsOverHttpsUrlDefault.accesskey "d">
 <!ENTITY  dnsOverHttpsUrlDefault.tooltip   "Usar a URL padrão para resolver DNS sobre HTTPS">

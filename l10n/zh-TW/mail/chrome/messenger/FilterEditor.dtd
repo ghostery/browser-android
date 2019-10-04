@@ -28,6 +28,8 @@
 <!ENTITY contextArchive.label "備存中">
 <!ENTITY contextArchive.accesskey "A">
 
+<!ENTITY contextPeriodic.accesskey "e">
+
 <!ENTITY filterActionDesc.label "執行下列動作:">
 <!ENTITY filterActionDesc.accesskey "P">
 
@@ -57,10 +59,10 @@
 <!ENTITY removeAction.tooltip "移除此動作">
 
 <!-- LOCALIZATION NOTE
-  The values below are used to control the widths of the filter action widgets.
-  Change the values only when the localized strings in the popup menus
-  are truncated in the widgets.
- -->
+     The values below are used to control the widths of the filter action widgets.
+     Change the values only when the localized strings in the popup menus
+     are truncated in the widgets.
+  -->
+<!-- Flex Attribute: https://developer.mozilla.org/docs/XUL/Attribute/flex -->
 <!ENTITY filterActionTypeFlexValue "1">
 <!ENTITY filterActionTargetFlexValue "4">
-

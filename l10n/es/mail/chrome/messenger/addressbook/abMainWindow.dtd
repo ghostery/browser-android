@@ -156,7 +156,6 @@
 <!ENTITY newmsgButton.tooltip "Enviar un mensaje de correo">
 <!ENTITY newIM.tooltip "Enviar un mensaje o conversación instantáneos">
 <!ENTITY deleteButton2.tooltip "Eliminar elemento seleccionado">
-<!ENTITY dirTreeHeader.label "Libretas de direcciones">
 <!ENTITY SearchNameOrEmail.label "Nombre o dirección de correo">
 <!ENTITY SearchNameOrEmail.accesskey "N">
 <!ENTITY advancedButton.tooltip "Búsqueda avanzada de direcciones">

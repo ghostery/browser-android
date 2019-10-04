@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY dialog.title                  "返回回执">
-<!ENTITY requestReceipt.label          "发送消息时，总是要求得到邮件回执">
+<!ENTITY requestReceipt.label          "发送消息时，一律要求得到邮件回执">
 <!ENTITY requestReceipt.accesskey      "W">
 <!ENTITY receiptArrive.label           "当收到邮件回执时:">
 <!ENTITY leaveIt.label                 "留在“收件箱”中">
@@ -22,5 +22,5 @@
 <!ENTITY otherCases.label              "其它情况:">
 <!ENTITY otherCases.accesskey          "a">
 <!ENTITY askMe.label                   "询问我">
-<!ENTITY alwaysSend.label              "总是发送">
+<!ENTITY alwaysSend.label              "一律发送">
 <!ENTITY neverSend.label               "总不发送">

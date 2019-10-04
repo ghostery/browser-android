@@ -7,6 +7,8 @@
 <!ENTITY pref.calendar.alarms.playsound.accessKey "R">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "Usar sonido predeterminado">
 <!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "d">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "Usar el siguiente archivo de sonido">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "U">
 <!ENTITY pref.calendar.alarms.sound.browse.label "Examinar...">
 <!ENTITY pref.calendar.alarms.sound.browse.accessKey "x">
 <!ENTITY pref.calendar.alarms.sound.play.label "Reproducir">

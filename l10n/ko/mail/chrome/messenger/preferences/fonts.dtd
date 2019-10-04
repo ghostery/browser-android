@@ -14,9 +14,9 @@
 <!ENTITY  proportional.label                      "가변폭 글꼴:">
 <!ENTITY  proportional.accesskey                  "P">
 
-<!ENTITY  serif.label                             "명조체:">
-<!ENTITY  serif.accesskey                         "s">
-<!ENTITY  sans-serif.label                        "고딕체:">
+<!ENTITY  serif.label                             "세리프:">
+<!ENTITY  serif.accesskey                         "S">
+<!ENTITY  sans-serif.label                        "산세리프:">
 <!ENTITY  sans-serif.accesskey                    "n">
 <!ENTITY  monospace.label                         "고정폭 글꼴:">
 <!ENTITY  monospace.accesskey                     "m">
@@ -58,8 +58,8 @@
 <!ENTITY minSize.none                             "없음">
 
 <!-- default font type -->
-<!ENTITY  useDefaultFontSerif.label               "명조체">
-<!ENTITY  useDefaultFontSansSerif.label           "고딕체">
+<!ENTITY  useDefaultFontSerif.label               "세리프">
+<!ENTITY  useDefaultFontSansSerif.label           "산세리프">
 
 <!-- fonts in message -->
 <!ENTITY  fontControl.label                       "글꼴 제어">

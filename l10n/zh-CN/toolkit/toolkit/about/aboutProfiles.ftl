@@ -8,6 +8,11 @@ profiles-create = 创建新配置文件
 profiles-restart-title = 重新打开
 profiles-restart-in-safe-mode = 重新打开并禁用附加组件…
 profiles-restart-normal = 正常重新打开…
+profiles-conflict = 有另一份 { -brand-product-name } 对配置文件作了更改。您必须重新打开 { -brand-short-name } 才能再作变更。
+profiles-flush-fail-title = 更改未保存
+profiles-flush-conflict = { profiles-conflict }
+profiles-flush-failed = 发生意外错误，无法保存更改。
+profiles-flush-restart-button = 重新打开 { -brand-short-name }
 # Variables:
 #   $name (String) - Name of the profile
 profiles-name = 配置文件：{ $name }
@@ -26,6 +31,8 @@ profiles-rename = 重命名
 profiles-remove = 移除
 profiles-set-as-default = 设为默认配置文件
 profiles-launch-profile = 在新的浏览器实例中启动配置文件
+profiles-cannot-set-as-default-title = 无法设为默认
+profiles-cannot-set-as-default-message = 无法更改 { -brand-short-name } 的默认配置文件。
 profiles-yes = 是
 profiles-no = 否
 profiles-rename-profile-title = 重命名配置文件

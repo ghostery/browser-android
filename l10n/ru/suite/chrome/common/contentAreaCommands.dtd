@@ -53,6 +53,8 @@
 <!ENTITY reloadImageCmd.accesskey     "р">
 <!ENTITY viewImageCmd.label           "Открыть изображение">
 <!ENTITY viewImageCmd.accesskey       "р">
+<!ENTITY viewImageInfoCmd.label       "Информация об изображении">
+<!ENTITY viewImageInfoCmd.accesskey   "ж">
 <!ENTITY viewVideoCmd.label           "Открыть видео">
 <!ENTITY viewVideoCmd.accesskey       "к">
 <!ENTITY viewBGImageCmd.label         "Открыть фоновое изображение">

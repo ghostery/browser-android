@@ -5,7 +5,7 @@
 <!ENTITY header.label     "제목"> 
 <!ENTITY message.label    "예제 문자:">
 <!ENTITY editfield0.label "사용자 이름:"> 
-<!ENTITY editfield1.label "암호:"> 
+<!ENTITY editfield1.label "비밀번호:"> 
 <!ENTITY checkbox.label   "확인">
 <!ENTITY copyCmd.label    "복사하기">
 <!ENTITY copyCmd.accesskey "C">

@@ -4,10 +4,6 @@
 
 do-not-track-description = 웹사이트에 “방문자 추적 금지” 신호를 보내서 추적을 원하지 않는다고 알림
 do-not-track-learn-more = 자세히 보기
-do-not-track-option-default =
-    .label = 추적 방지 기능을 사용할 때만
-do-not-track-option-default-content-blocking =
-    .label = { -brand-short-name }가 감지된 추적기를 차단하도록 설정 됐을 때만
 do-not-track-option-default-content-blocking-known =
     .label = { -brand-short-name }가 알려진 추적기를 차단하도록 설정 됐을 때만
 do-not-track-option-always =
@@ -33,11 +29,7 @@ search-input-box =
             [windows] 옵션에서 찾기
            *[other] 설정에서 찾기
         }
-policies-notice =
-    { PLATFORM() ->
-        [windows] 기관에서 몇몇 옵션을 바꿀 수 없게 하였습니다.
-       *[other] 기관에서 몇몇 설정을 바꿀 수 없게 하였습니다.
-    }
+managed-notice = 속한 회사나 단체에서 브라우저를 관리하고 있습니다.
 pane-general-title = 일반
 category-general =
     .tooltiptext = { pane-general-title }
@@ -50,10 +42,9 @@ category-search =
 pane-privacy-title = 개인 정보 및 보안
 category-privacy =
     .tooltiptext = { pane-privacy-title }
-# The word "account" can be translated, do not translate or transliterate "Firefox".
-pane-sync-title = Firefox 계정
-category-sync =
-    .tooltiptext = { pane-sync-title }
+pane-sync-title2 = { -sync-brand-short-name }
+category-sync2 =
+    .tooltiptext = { pane-sync-title2 }
 help-button-label = { -brand-short-name } 도움말
 addons-button-label = 확장기능과 테마
 focus-search =
@@ -95,9 +86,6 @@ extension-controlled-default-search = <img data-l10n-name="icon"/> { $name } 확
 # This string is shown to notify the user that Container Tabs
 # are being enabled by an extension.
 extension-controlled-privacy-containers = <img data-l10n-name="icon"/> { $name } 확장기능에는 컨테이너 탭이 필요합니다.
-# This string is shown to notify the user that their tracking protection preferences
-# are being controlled by an extension.
-extension-controlled-websites-tracking-protection-mode = <img data-l10n-name="icon"/> { $name } 확장기능이 추적 방지 기능을 제어하고 있습니다.
 # This string is shown to notify the user that their content blocking "All Detected Trackers"
 # preferences are being controlled by an extension.
 extension-controlled-websites-content-blocking-all-trackers = <img data-l10n-name="icon"/> { $name } 확장기능이 이 설정을 제어하고 있습니다.
@@ -167,15 +155,15 @@ show-tabs-in-taskbar =
     .label = Windows 작업표시줄에 탭 미리 보기 표시
     .accesskey = k
 browser-containers-enabled =
-    .label = 포함 탭 활성화
+    .label = 컨테이너 탭 활성화
     .accesskey = n
 browser-containers-learn-more = 더 알아보기
 browser-containers-settings =
     .label = 설정…
     .accesskey = i
-containers-disable-alert-title = 모든 포함 탭을 닫으시겠습니까?
-containers-disable-alert-desc = 지금 포함 탭을 비활성화 하면 { $tabCount }개의 포함 탭이 닫히게 됩니다. 포함 탭을 비활성화 하시겠습니까?
-containers-disable-alert-ok-button = { $tabCount }개의 포함탭 닫기
+containers-disable-alert-title = 모든 컨테이너 탭을 닫으시겠습니까?
+containers-disable-alert-desc = 지금 컨테이너 탭을 비활성화 하면 { $tabCount }개의 컨테이너 탭이 닫히게 됩니다. 컨테이너 탭을 비활성화 하시겠습니까?
+containers-disable-alert-ok-button = { $tabCount }개의 컨테이너 탭 닫기
 containers-disable-alert-cancel-button = 활성화 하기
 containers-remove-alert-title = 이 컨테이너를 삭제하시겠습니까?
 # Variables:
@@ -205,9 +193,9 @@ choose-button =
     .accesskey = o
 choose-browser-language-description = { -brand-short-name }가 메뉴나 메시지, 알림을 표시하는데 사용할 언어를 선택해 주세요.
 manage-browser-languages-button =
-    .label = 대안 설정…
+    .label = 대체 설정…
     .accesskey = I
-confirm-browser-language-change-description = 변경사항 적용을 위해 { -brand-short-name } 재시작
+confirm-browser-language-change-description = 변경 내용 적용을 위해 { -brand-short-name } 재시작
 confirm-browser-language-change-button = 적용하고 재시작
 translate-web-pages =
     .label = 웹 콘텐츠 번역하기
@@ -274,6 +262,7 @@ update-application-check-choose =
 update-application-manual =
     .label = 업데이트 확인 안함(권장하지 않음)
     .accesskey = N
+update-application-warning-cross-user-setting = 이 설정은 이 { -brand-short-name } 설치를 사용하는 모든 윈도우즈 계정 및 { -brand-short-name } 프로필에 적용됩니다.
 update-application-use-service =
     .label = 업데이트 설치 시 백그라운드 작업으로 하기
     .accesskey = b
@@ -284,6 +273,21 @@ update-pref-write-failure-title = 쓰기 실패
 # Variables:
 #   $path (String) - Path to the configuration file
 update-pref-write-failure-message = 환경 설정을 저장할 수 없습니다. 파일에 쓸 수 없습니다: { $path }
+update-setting-write-failure-title = 업데이트 설정 저장 중 오류 발생
+# Variables:
+#   $path (String) - Path to the configuration file
+# The newlines between the main text and the line containing the path is
+# intentional so the path is easier to identify.
+update-setting-write-failure-message =
+    오류가 발생하여 { -brand-short-name }가 이 변경 내용을 저장하지 않았습니다. 이 업데이트 환경 설정을 하려면 아래 파일에 쓰기 권한이 필요합니다. 사용자나 시스템 관리자가 사용자 그룹에 이 파일에 대한 모든 권한을 부여하여 오류를 해결할 수 있습니다.
+    
+    파일에 쓸 수 없음: { $path }
+update-in-progress-title = 업데이트 진행 중
+update-in-progress-message = { -brand-short-name }가 이 업데이트를 계속하길 원하십니까?
+update-in-progress-ok-button = 취소
+# Continue is the cancel button so pressing escape or using a platform standard
+# method of closing the UI will not discard the update.
+update-in-progress-cancel-button = 계속
 
 ## General Section - Performance
 
@@ -326,6 +330,9 @@ browsing-search-on-start-typing =
 browsing-cfr-recommendations =
     .label = 탐색시 확장 기능 추천
     .accesskey = R
+browsing-cfr-features =
+    .label = 탐색시 기능 추천
+    .accesskey = f
 browsing-cfr-recommendations-learn-more = 더 알아보기
 
 ## General Section - Proxy
@@ -354,7 +361,7 @@ home-restore-defaults =
 home-mode-choice-default =
     .label = Firefox 홈페이지(기본값)
 home-mode-choice-custom =
-    .label = 사용자 정의 URL…
+    .label = 사용자 지정 URL…
 home-mode-choice-blank =
     .label = 빈 페이지
 home-homepage-custom-url =
@@ -374,6 +381,45 @@ choose-bookmark =
     .label = 북마크 사용…
     .accesskey = B
 
+## Home Section - Firefox Home Content Customization
+
+home-prefs-content-header = Firefox 홈 콘텐츠
+home-prefs-content-description = Firefox 홈 화면에 나올 콘텐츠를 선택하세요.
+home-prefs-content-discovery-description = Firefox 홈의 콘텐츠 탐색 기능을 사용하면 웹에 있는 고품질의 관련 문서를 탐색할 수 있습니다.
+home-prefs-search-header =
+    .label = 웹 검색
+home-prefs-topsites-header =
+    .label = 상위 사이트
+home-prefs-topsites-description = 가장 많이 방문한 사이트
+# Variables:
+#  $provider (String): Name of the corresponding content provider, e.g "Pocket".
+home-prefs-recommended-by-header =
+    .label = { $provider } 추천
+home-prefs-recommended-by-description = 여러분에게 맞춰진 웹에서 제공되는 훌륭한 컨텐츠
+home-prefs-recommended-by-learn-more = 사용 방법
+home-prefs-recommended-by-option-sponsored-stories =
+    .label = 후원된 스토리
+home-prefs-highlights-header =
+    .label = 하이라이트
+home-prefs-highlights-description = 저장하거나 방문한 사이트 모음
+home-prefs-highlights-option-visited-pages =
+    .label = 방문한 페이지
+home-prefs-highlights-options-bookmarks =
+    .label = 즐겨찾기
+home-prefs-highlights-option-most-recent-download =
+    .label = 가장 최근 다운로드
+home-prefs-highlights-option-saved-to-pocket =
+    .label = { -pocket-brand-name }에 저장된 페이지
+# For the "Snippets" feature traditionally on about:home.
+# Alternative translation options: "Small Note" or something that
+# expresses the idea of "a small message, shortened from something else,
+# and non-essential but also not entirely trivial and useless.
+home-prefs-snippets-header =
+    .label = 짧은 요약
+home-prefs-snippets-description = { -vendor-short-name }와 { -brand-product-name } 소식
+home-prefs-sections-rows-option =
+    .label = { $num } 행
+
 ## Search Section
 
 search-bar-header = 검색 표시줄
@@ -384,10 +430,10 @@ search-bar-shown =
 search-engine-default-header = 기본 검색 사이트
 search-engine-default-desc = 주소바와 검색바에서 사용할 기본 검색 엔진을 선택하세요.
 search-suggestions-option =
-    .label = 검색어 자동 완성 쓰기
+    .label = 검색어 자동 완성 사용
     .accesskey = s
 search-show-suggestions-url-bar-option =
-    .label = 주소바 결과에 검색 추천 보임
+    .label = 주소창 결과에 검색 추천 보이기
     .accesskey = l
 # This string describes what the user will observe when the system
 # prioritizes search suggestions over browsing history in the results
@@ -395,7 +441,7 @@ search-show-suggestions-url-bar-option =
 # "ahead" refers to location (appearing most proximate to), not time
 # (appearing before).
 search-show-suggestions-above-history-option =
-    .label = 주소창의 검색 기록 앞에 검색 추천 보이기
+    .label = 주소창 결과의 방문 기록 앞에 검색 추천 보이기
 search-suggestions-cant-show = { -brand-short-name }가 탐색 목록을 저장하지 않도록 설정했기 때문에 주소창 결과에 검색 추천이 나오지 않을 것입니다.
 search-one-click-header = 원클릭 검색 사이트
 search-one-click-desc = 단어 입력을 시작했을 때 주소바와 검색바 아래에 나타날 대체 검색 엔진을 선택하세요.
@@ -407,8 +453,8 @@ search-restore-default =
     .label = 기본 검색 사이트 되돌리기
     .accesskey = d
 search-remove-engine =
-    .label = 지우기
-    .accesskey = r
+    .label = 삭제
+    .accesskey = R
 search-find-more-link = 더 많은 검색 엔진 찾기
 # This warning is displayed when the chosen keyword is already in use
 # ('Duplicate' is an adjective)
@@ -421,7 +467,7 @@ search-keyword-warning-bookmark = 북마크에서 이미 사용 중인 키워드
 ## Containers Section
 
 containers-back-link = « 뒤로가기
-containers-header = 포함 탭
+containers-header = 컨테이너 탭
 containers-add-button =
     .label = 새 컨테이너 추가
     .accesskey = A
@@ -434,7 +480,7 @@ containers-remove-button =
 
 sync-signedout-caption = 웹과 함께 하세요.
 sync-signedout-description = 북마크, 방문 기록, 탭, 비밀번호, 부가기능, 설정을 모든 기기에 걸쳐 동기화 하세요.
-sync-signedout-account-title = { -fxaccount-brand-name }와 연결
+sync-signedout-account-title = { -fxaccount-brand-name }과 연결
 sync-signedout-account-create = 계정이 없으신가요? 시작하세요
     .accesskey = C
 sync-signedout-account-signin =
@@ -479,8 +525,8 @@ sync-engine-history =
     .label = 방문 기록
     .accesskey = r
 sync-engine-tabs =
-    .label = 탭 열기
-    .tooltiptext = 모든 동기화된 장치에서 열리는 항목의 목록
+    .label = 열린 탭
+    .tooltiptext = 모든 동기화된 장치에서 열린 항목의 목록
     .accesskey = T
 sync-engine-logins =
     .label = 로그인
@@ -516,8 +562,9 @@ sync-device-name-cancel =
 sync-device-name-save =
     .label = 저장
     .accesskey = v
-sync-mobilepromo-single = 다른 기기에 연결
-sync-mobilepromo-multi = 기기 관리
+sync-connect-another-device = 다른 기기 연결
+sync-manage-devices = 기기 관리
+sync-fxa-begin-pairing = 기기 연결하기
 sync-tos-link = 서비스 약관
 sync-fxa-privacy-notice = 개인 정보 보호 정책
 
@@ -534,14 +581,20 @@ forms-ask-to-save-logins =
 forms-exceptions =
     .label = 예외 목록…
     .accesskey = x
+forms-generate-passwords =
+    .label = 강력한 암호 제안 및 생성
+    .accesskey = u
+forms-fill-logins-and-passwords =
+    .label = 로그인과 비밀번호 자동완성
+    .accesskey = i
 forms-saved-logins =
     .label = 저장된 로그인…
     .accesskey = L
 forms-master-pw-use =
-    .label = 정보 보호을 위해 기본 암호 사용
+    .label = 정보 보호을 위해 기본 비밀번호 사용
     .accesskey = U
 forms-master-pw-change =
-    .label = 기본 암호 변경…
+    .label = 기본 비밀번호 변경…
     .accesskey = M
 
 ## Privacy Section - History
@@ -559,18 +612,18 @@ history-header = 방문 기록
 history-remember-label = { -brand-short-name }의 방문 기록을
     .accesskey = w
 history-remember-option-all =
-    .label = 남기기
+    .label = 방문 기록 저장
 history-remember-option-never =
-    .label = 날리기
+    .label = 방문 기록 저장 안 함
 history-remember-option-custom =
-    .label = 이렇게 하기
+    .label = 방문 기록 사용자 지정 설정 사용
 history-remember-description = { -brand-short-name }가 탐색과 다운로드, 서식, 검색 히스토리를 저장합니다.
 history-dontremember-description = { -brand-short-name }는 사생활 보호 모드와 같은 설정을 가지며 웹 사이트 방문 중 어떤 기록도 저장하지 않습니다.
 history-private-browsing-permanent =
-    .label = 사생활 보호 모드로만 이용
+    .label = 항상 사생활 보호 모드 사용
     .accesskey = p
 history-remember-browser-option =
-    .label = 표시한 페이지 및 파일 다운로드 기록 저장
+    .label = 방문 및 다운로드 기록 저장
     .accesskey = b
 history-remember-search-option =
     .label = 검색 및 입력 기록 저장
@@ -587,44 +640,33 @@ history-clear-button =
 
 ## Privacy Section - Site Data
 
-sitedata-header = 쿠키와 사이트 데이타
-sitedata-total-size-calculating = 사이트 데이타와 캐시 크기 계산중…
+sitedata-header = 쿠키와 사이트 데이터
+sitedata-total-size-calculating = 사이트 데이터와 캐시 크기 계산중…
 # Variables:
 #   $value (Number) - Value of the unit (for example: 4.6, 500)
 #   $unit (String) - Name of the unit (for example: "bytes", "KB")
-sitedata-total-size = 현재 저장된 쿠키와 사이트 데이타, 캐시가 { $value } { $unit }의 디스크를 사용하고 있습니다.
+sitedata-total-size = 현재 저장된 쿠키와 사이트 데이터, 캐시가 { $value } { $unit }의 디스크를 사용하고 있습니다.
 sitedata-learn-more = 더 알아보기
-sitedata-keep-until = 유지 기간
-    .accesskey = u
-sitedata-keep-until-expire =
-    .label = 만료 될 때까지
-sitedata-keep-until-closed =
-    .label = { -brand-short-name }가 닫힐때 까지
 sitedata-delete-on-close =
-    .label = { -brand-short-name }가 닫힐 때 쿠키와 사이트 데이타를 삭제
+    .label = { -brand-short-name }가 닫힐 때 쿠키와 사이트 데이터를 삭제
     .accesskey = c
+sitedata-delete-on-close-private-browsing = 영구 사생활 보호 모드에서는 { -brand-short-name }가 닫히면 쿠키와 사이트 데이터가 항상 지워집니다.
 sitedata-allow-cookies-option =
-    .label = 쿠키와 사이트 데이타 허용
+    .label = 쿠키와 사이트 데이터 허용
     .accesskey = A
 sitedata-disallow-cookies-option =
-    .label = 쿠키와 사이트 데이타 차단
+    .label = 쿠키와 사이트 데이터 차단
     .accesskey = B
 # This label means 'type of content that is blocked', and is followed by a drop-down list with content types below.
 # The list items are the strings named sitedata-block-*-option*.
 sitedata-block-desc = 차단 유형
     .accesskey = T
-sitedata-block-trackers-option-recommended =
-    .label = 제3자 추적기 (권장)
-sitedata-block-trackers-option =
-    .label = 제3자 추적기
-sitedata-block-unvisited-option =
-    .label = 방문하지 않은 웹사이트의 쿠키
-sitedata-block-all-third-party-option =
-    .label = 모든 제3자 쿠키(웹사이트가 작동하지 않을 수 있음)
-sitedata-block-all-option =
-    .label = 모든 쿠키(웹사이트가 작동 안하게 됨)
 sitedata-option-block-trackers =
     .label = 제3자 추적기
+sitedata-option-block-cross-site-trackers =
+    .label = 교차 사이트 추적기
+sitedata-option-block-cross-site-and-social-media-trackers =
+    .label = 교차 사이트 및 소셜 미디어 추적기
 sitedata-option-block-unvisited =
     .label = 방문하지 않은 웹 사이트의 쿠키
 sitedata-option-block-all-third-party =
@@ -632,18 +674,11 @@ sitedata-option-block-all-third-party =
 sitedata-option-block-all =
     .label = 모든 쿠키(웹사이트가 깨질 수 있음)
 sitedata-clear =
-    .label = 데이타 삭제…
+    .label = 데이터 삭제…
     .accesskey = l
 sitedata-settings =
-    .label = 데이타 관리…
+    .label = 데이터 관리…
     .accesskey = M
-sitedata-cookies-exceptions =
-    .label = 예외 목록…
-    .accesskey = E
-# This is a warning message shown next to a yellow warning icon when the Cookies and Site Data subsection
-# in Preferences has been disabled due to Content Blocking being disabled. It is displayed next to the
-# Cookies and Site Data section.
-sitedata-warning-your-settings-prevent-changes = 콘텐츠 차단 설정이 쿠키와 사이트 데이타 설정의 변경을 막고 있습니다.
 sitedata-cookies-permissions =
     .label = 권한 관리…
     .accesskey = P
@@ -651,56 +686,24 @@ sitedata-cookies-permissions =
 ## Privacy Section - Address Bar
 
 addressbar-header = 주소 표시줄
-addressbar-suggest = 주소 표시줄과 추천을 사용할 때
+addressbar-suggest = 주소 표시줄 사용시 제안할 항목
 addressbar-locbar-history-option =
-    .label = 브라우징 히스토리
+    .label = 방문 기록
     .accesskey = H
 addressbar-locbar-bookmarks-option =
     .label = 북마크
     .accesskey = k
 addressbar-locbar-openpage-option =
-    .label = 탭 열기
+    .label = 열린 탭
     .accesskey = O
 addressbar-suggestions-settings = 검색 엔진 추천 설정 변경
 
 ## Privacy Section - Content Blocking
 
 content-blocking-header = 콘텐츠 차단
-content-blocking-desc = 브라우징을 느리게 하거나 웹에서 사용자를 추적할 수 있는 광고나 코드와 같은 제3자 콘텐츠를 차단합니다. 보호와 성능 사이에서 최적의 균형을 위해 설정을 개인화 하세요.
-content-blocking-description = 사용자의 웹 활동을 추적하는 제3차 콘텐츠를 차단합니다. 웹사이트 간에 사용자의 온라인 활동이 얼마나 저장되고 공유되는지를 제어하세요.
+content-blocking-enhanced-tracking-protection = 향상된 추적 방지 기능
+content-blocking-section-description = 탐색하는 동안 개인 정보를 보호하십시오. 사용자가 방문하는 사이트를 추적하고 개인을 식별하는 보이지 않는 콘텐츠를 차단합니다. 이 콘텐츠 중 일부를 차단하면 페이지가 더 빨리 로드 될 수 있습니다.
 content-blocking-learn-more = 자세히 보기
-content-blocking-restore-defaults =
-    .label = 기본값으로
-    .accesskey = R
-content-blocking-toggle-on =
-    .tooltiptext = 콘텐츠 차단 해제
-content-blocking-toggle-off =
-    .tooltiptext = 콘텐츠 차단 설정
-content-blocking-toggle-label-on = 켬
-    .accesskey = O
-content-blocking-toggle-label-off = 끔
-    .accesskey = O
-content-blocking-category-label = 차단할 대상 선택
-# "Slow" in this instance means "slow to load on the network".
-# FastBlock is a feature that blocks requests to tracking sites if they
-# have not finished loading after a certain threshold of seconds.
-content-blocking-fastblock-slow-loading-trackers-label =
-    .label = 느리게 로딩되는 추적기
-    .accesskey = S
-content-blocking-fastblock-new-description = 페이지가 더 빨리 뜰 수 있도록 추적기를 차단해보세요.
-content-blocking-tracking-protection-trackers-label =
-    .label = 추적기
-    .accesskey = T
-content-blocking-tracking-protection-all-detected-trackers-label =
-    .label = 모든 감지된 추적기
-    .accesskey = T
-content-blocking-tracking-protection-new-description = 알려진 모든 추적기를 차단합니다. (몇몇 페이지가 로딩되지 않을 수 있습니다.)
-content-blocking-tracking-protection-option-always =
-    .label = 항상
-    .accesskey = A
-content-blocking-tracking-protection-option-private =
-    .label = 사생활 보호 창에서만
-    .accesskey = P
 # The terminology used to refer to categories of Content Blocking is also used in chrome/browser/browser.properties and should be translated consistently.
 # "Standard" in this case is an adjective, meaning "default" or "normal".
 content-blocking-setting-standard =
@@ -710,21 +713,40 @@ content-blocking-setting-strict =
     .label = 엄격
     .accesskey = r
 content-blocking-setting-custom =
-    .label = 사용자 정의
+    .label = 사용자 지정
     .accesskey = C
-content-blocking-standard-description = 사생활 보호 창에서 알려진 추적기만 차단합니다.
 content-blocking-standard-desc = 보호와 성능 사이의 균형을 유지합니다. 웹 사이트가 제대로 작동하도록 일부 추적기를 허용합니다.
-content-blocking-strict-desc = { -brand-short-name }가 감지하는 모든 추적기를 차단합니다. 일부 사이트가 정상 작동하지 않을 수 있습니다.
+content-blocking-strict-description = 강한 보호 기능으로 인해 일부 사이트가 손상될 수 있습니다.
 content-blocking-custom-desc = 차단할 항목을 선택하세요.
 content-blocking-private-trackers = 사생활 보호 모드에서 알려진 추적기만
 content-blocking-third-party-cookies = 제3자 추적 쿠키
+content-blocking-etp-standard-desc = 보호와 성능사이의 균형이 잡혀 있습니다. 페이지가 정상적으로 로드됩니다.
+content-blocking-etp-strict-desc = 더 강력한 보호 기능을 제공하지만, 일부 사이트나 콘텐츠가 손상될 수 있습니다.
+content-blocking-etp-custom-desc = 차단할 추적기와 스크립트를 선택하십시오.
+content-blocking-private-windows = 사생활 보호 창의 추적 콘텐츠
+content-blocking-cross-site-tracking-cookies = 교차 사이트 추적 쿠키
+content-blocking-social-media-trackers = 소셜 미디어 추적기
+content-blocking-all-cookies = 모든 쿠키
+content-blocking-unvisited-cookies = 방문하지 않은 사이트의 쿠키
 content-blocking-all-windows-trackers = 알려진 추적기를 모든 창에서
+content-blocking-all-windows-tracking-content = 모든 창의 추적 콘텐츠
 content-blocking-all-third-party-cookies = 모든 제3자 쿠키
+content-blocking-cryptominers = 크립토마이너
+content-blocking-fingerprinters = 핑거프린터
 content-blocking-warning-title = 조심하세요!
-content-blocking-warning-desc = 쿠키와 추적기를 차단하면 일부 웹사이트가 정상 작동하지 않을 수 있습니다. 신뢰하는 사이트에 대한 차단은 쉽게 해제할 수 있습니다.
+content-blocking-warning-description = 콘텐츠를 차단하면 일부 웹사이트가 깨질 수 있습니다. 신뢰할 수 있는 사이트에 대한 차단은 쉽게 해제 할 수 있습니다.
 content-blocking-learn-how = 방법 알아보기
+content-blocking-etp-warning-description = 추적기 차단은 일부 사이트의 기능에 영향을 줄 수 있습니다. 모든 콘텐츠를 로드하려면 추적기가 있는 페이지를 다시 로드하십시오.
+content-blocking-warning-learn-how = 방법 알아보기
+content-blocking-reload-description = 이러한 변경 사항을 적용하려면 탭을 다시 로드해야 합니다.
+content-blocking-reload-tabs-button =
+    .label = 모든 탭 다시 읽기
+    .accesskey = R
 content-blocking-trackers-label =
     .label = 추적기
+    .accesskey = T
+content-blocking-tracking-content-label =
+    .label = 추적 콘텐츠
     .accesskey = T
 content-blocking-tracking-protection-option-all-windows =
     .label = 모든 창에서
@@ -733,51 +755,23 @@ content-blocking-option-private =
     .label = 사생활 보호 창에서만
     .accesskey = P
 content-blocking-tracking-protection-change-block-list = 차단 목록 변경
-content-blocking-third-party-cookies-label =
-    .label = 제3자 쿠키
-    .accesskey = C
-content-blocking-reject-trackers-description = 모든 제3자 쿠키나 추적기에 의해 설정된 쿠기를 차단합니다.
-# This is a warning message shown next to a yellow warning icon when the Third-Party Cookies subsection
-# of the Content Blocking UI in Preferences has been disabled due to the either the "All cookies" option
-# or the "Cookies from unvisited websites" option being selected in the Cookies and Site Data section of
-# the UI.
-content-blocking-reject-trackers-warning-your-settings-prevent-changes = 쿠키와 사이트 데이타 설정이 제3자 쿠키 설정의 변경을 막고 있습니다.
-content-blocking-change-cookie-settings =
-    .label = 쿠키 설정 변경
-    .accesskey = S
-content-blocking-reject-trackers-block-trackers-option-recommended =
-    .label = 추적기(권장)
-    .accesskey = k
-content-blocking-reject-trackers-block-trackers-option =
-    .label = 추적기
-    .accesskey = k
-content-blocking-reject-trackers-all-third-parties-option =
-    .label = 모든 제3자 쿠키(웹사이트가 작동 안 할 수 있음)
-    .accesskey = A
 content-blocking-cookies-label =
     .label = 쿠키
     .accesskey = C
+content-blocking-expand-section =
+    .tooltiptext = 더 알아보기
+# Cryptomining refers to using scripts on websites that can use a computer’s resources to mine cryptocurrency without a user’s knowledge.
+content-blocking-cryptominers-label =
+    .label = 크립토마이너
+    .accesskey = y
+# Browser fingerprinting is a method of tracking users by the configuration and settings information (their "digital fingerprint")
+# that is visible to websites they browse, rather than traditional tracking methods such as IP addresses and unique cookies.
+content-blocking-fingerprinters-label =
+    .label = 핑거프린터
+    .accesskey = F
 
 ## Privacy Section - Tracking
 
-tracking-header = 추적 방지
-tracking-desc = 추적 방지 기능은 여러 웹사이트에 걸처 사용자의 탐색 데이터를 수집하는 추적자를 차단합니다. <a data-l10n-name="learn-more">추적 방지와 개인정보 보호 살펴보기</a>
-tracking-mode-label = 알려진 추적자를 차단하는 추적 방지 기능 사용
-tracking-mode-always =
-    .label = 항상 사용하기
-    .accesskey = y
-tracking-mode-private =
-    .label = 사생활 보호 창에서만 사용하기
-    .accesskey = y
-tracking-mode-never =
-    .label = 항상 사용하지 않기
-    .accesskey = n
-tracking-exceptions =
-    .label = 예외…
-    .accesskey = x
-tracking-change-block-list =
-    .label = 차단 목록 변경…
-    .accesskey = C
 tracking-manage-exceptions =
     .label = 예외 관리…
     .accesskey = x
@@ -805,20 +799,16 @@ permissions-notification-link = 더 알아보기
 permissions-notification-pause =
     .label = { -brand-short-name }를 재시작 할 때 까지 알림을 멈춤
     .accesskey = n
-permissions-block-autoplay-media =
-    .label = 웹사이트에서 소리가 있는 미디어를 자동으로 재생하지 않음
+permissions-block-autoplay-media2 =
+    .label = 웹사이트가 자동으로 소리를 재생하는 것 차단
     .accesskey = B
-permissions-block-autoplay-media-menu = 소리를 자동으로 재생하는 사이트
 permissions-block-autoplay-media-exceptions =
     .label = 예외 목록…
     .accesskey = E
-autoplay-option-ask =
-    .label = 항상 확인
-autoplay-option-allow =
-    .label = 자동 재생 허용
-autoplay-option-dont =
-    .label = 자동 재생 금지
-permissions-autoplay-link = 자세히 보기
+permissions-autoplay = 자동 재생
+permissions-autoplay-settings =
+    .label = 설정…
+    .accesskey = t
 permissions-block-popups =
     .label = 팝업 창 차단
     .accesskey = B
@@ -853,11 +843,7 @@ addon-recommendations =
 addon-recommendations-link = 자세히 보기
 # This message is displayed above disabled data sharing options in developer builds
 # or builds with no Telemetry support available.
-collection-health-report-disabled = 이 빌드 설정에서는 데이타 보고가 비활성화 되어 있음
-collection-browser-errors =
-    .label = { -brand-short-name }가 { -vendor-short-name }에 브라우저 오류 보고서(오류 메시지 포함)를 보내도록 허용
-    .accesskey = b
-collection-browser-errors-link = 자세히 보기
+collection-health-report-disabled = 이 빌드 설정에서는 데이터 보고가 비활성화 되어 있음
 collection-backlogged-crash-reports =
     .label = { -brand-short-name }가 사용자를 대신해서 백로그 충돌 보고서를 보낼 수 있게 함
     .accesskey = c
@@ -869,9 +855,9 @@ collection-backlogged-crash-reports-link = 더 알아보기
 ## https://developers.google.com/safe-browsing/developers_guide_v2#AcceptableUsage
 
 security-header = 보안
-security-browsing-protection = 사기성있는 내용과 위험한 소프트웨어 보호
+security-browsing-protection = 사기성 콘텐츠 및 위험한 소프트웨어 보호
 security-enable-safe-browsing =
-    .label = 위험하고 사기성있는 내용을 차단
+    .label = 위험하고 사기성 콘텐츠 차단
     .accesskey = B
 security-enable-safe-browsing-link = 더 알아보기
 security-block-downloads =
@@ -916,8 +902,8 @@ space-alert-over-5gb-pref-button =
         }
 space-alert-over-5gb-message =
     { PLATFORM() ->
-        [windows] { -brand-short-name } 디스크 용량이 부족합니다. 웹사이트 내용이 제대로 표시되지 않을 수 있습니다. 옵션 > 개인정보와 보안 > 쿠키와 사이트 데이타에서 저장된 데이타를 지울 수 있습니다.
-       *[other] { -brand-short-name } 디스크 용량이 부족합니다. 웹사이트 내용이 제대로 표시되지 않을 수 있습니다. 설정 > 개인정보와 보안 > 쿠키와 사이트 데이타에서 저장된 데이터를 지울 수 있습니다.
+        [windows] { -brand-short-name } 디스크 용량이 부족합니다. 웹사이트 내용이 제대로 표시되지 않을 수 있습니다. 옵션 > 개인정보와 보안 > 쿠키와 사이트 데이터에서 저장된 데이터를 지울 수 있습니다.
+       *[other] { -brand-short-name } 디스크 용량이 부족합니다. 웹사이트 내용이 제대로 표시되지 않을 수 있습니다. 설정 > 개인정보와 보안 > 쿠키와 사이트 데이터에서 저장된 데이터를 지울 수 있습니다.
     }
 space-alert-under-5gb-ok-button =
     .label = 알겠습니다

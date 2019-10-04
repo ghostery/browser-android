@@ -67,6 +67,7 @@
  -->
 <!ENTITY updateApp.version.pre           "">
 <!ENTITY updateApp.version.post          " 版">
+<!ENTITY updateAppAllow.description      "讓 &brandShortName;:">
 <!ENTITY updateAuto.label                "自動安裝更新（建議的，保持安全性）">
 <!ENTITY updateAuto.accesskey            "A">
 <!ENTITY updateCheck.label               "自動檢查更新，但讓我選擇要不要安裝">
@@ -76,6 +77,8 @@
 
 <!ENTITY useService.label                "在背景服務當中安裝更新">
 <!ENTITY useService.accesskey            "b">
+
+<!ENTITY updateCrossUserSettingWarning.description "此設定將套用到本電腦上的所有 Windows 帳號及此份 &brandShortName; 的所有 &brandShortName; 設定檔。">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "設定…">
@@ -119,3 +122,8 @@
 <!ENTITY manageCertificates.accesskey "M">
 <!ENTITY viewSecurityDevices.label "安全裝置">
 <!ENTITY viewSecurityDevices.accesskey "S">
+
+<!ENTITY manageCertificates2.label "管理憑證…">
+<!ENTITY manageCertificates2.accesskey "M">
+<!ENTITY viewSecurityDevices2.label "安全性裝置…">
+<!ENTITY viewSecurityDevices2.accesskey "D">

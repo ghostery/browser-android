@@ -71,7 +71,3 @@
                                            keer dat &brandShortName; start worden geïnstalleerd. U kunt
                                            &brandShortName; nu herstarten, doorgaan met werken en later herstarten, of deze
                                            update weigeren.">
-
-<!ENTITY  update.details.label            "Details">
-<!ENTITY  update.installedOn.label        "Geïnstalleerd op:">
-<!ENTITY  update.status.label             "Status:">

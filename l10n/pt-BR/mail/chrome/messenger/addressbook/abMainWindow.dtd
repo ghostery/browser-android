@@ -91,7 +91,7 @@
 <!ENTITY viewMenu.accesskey                             "x">
 <!ENTITY viewToolbarsMenu.label                         "Barras de ferramentas">
 <!ENTITY viewToolbarsMenu.accesskey                     "B">
-<!ENTITY menubarCmd.label                               "Barra de menus">
+<!ENTITY menubarCmd.label                               "Barra de menu">
 <!ENTITY menubarCmd.accesskey                           "m">
 <!ENTITY showAbToolbarCmd.label                         "Barra de ferramentas do catálogo de endereços">
 <!ENTITY showAbToolbarCmd.accesskey                     "a">
@@ -143,7 +143,7 @@ because displayed names don't have the comma in between. -->
 <!ENTITY newContactButton.accesskey                     "N">
 <!ENTITY newlistButton.label                            "Nova lista">
 <!ENTITY newlistButton.accesskey                        "l">
-<!ENTITY showAsDefault.label                            "Diretório de inicialização padrão">
+<!ENTITY showAsDefault.label                            "Lista padrão ao abrir o catálogo">
 <!ENTITY showAsDefault.accesskey                        "S">
 <!ENTITY editPropertiesButton.label                     "Editar">
 <!ENTITY propertiesContext.label                        "Propriedades">
@@ -173,9 +173,6 @@ because displayed names don't have the comma in between. -->
 <!ENTITY newmsgButton.tooltip                           "Enviar um nova mensagem">
 <!ENTITY newIM.tooltip                                  "Enviar uma mensagem instantânea ou de bate-papo">
 <!ENTITY deleteButton2.tooltip                          "Excluir o item selecionado">
-
-<!-- Dir Tree header -->
-<!ENTITY dirTreeHeader.label                            "Catálogos de endereços">
 
 <!-- Search Bar -->
 <!ENTITY SearchNameOrEmail.label                        "Nome ou e-mail">
@@ -223,7 +220,7 @@ because displayed names don't have the comma in between. -->
 <!-- Card Summary Pane -->
 <!-- Box Headings -->
 <!ENTITY contact.heading                                "Contato">
-<!ENTITY home.heading                                   "Endereço residencial">
+<!ENTITY home.heading                                   "Casa">
 <!ENTITY other.heading                                  "Outros">
 <!ENTITY chat.heading                                   "Bate-papo">
 <!ENTITY phone.heading                                  "Telefones">

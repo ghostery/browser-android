@@ -2,7 +2,17 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-url-classifier-title = URL Classifier 정보
+url-classifier-title = URL 분류자 정보
+url-classifier-search-title = 검색
+url-classifier-search-result-title = 결과
+url-classifier-search-result-uri = URI: { $uri }
+url-classifier-search-result-list = 테이블 목록: { $list }
+url-classifier-search-input = URL
+url-classifier-search-error-invalid-url = 잘못된 URL
+url-classifier-search-error-no-features = 선택한 기능 없음
+url-classifier-search-btn = 검색 시작
+url-classifier-search-features = 기능
+url-classifier-search-listType = 유형 목록
 url-classifier-provider-title = 공급자
 url-classifier-provider = 공급자
 url-classifier-provider-last-update-time = 마지막 업데이트 시간

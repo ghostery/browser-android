@@ -63,7 +63,7 @@
 
 <!-- permissions -->
 <!ENTITY perm.UseDefault "使用默认设置">
-<!ENTITY perm.AskAlways "总是询问">
+<!ENTITY perm.AskAlways "每次都问我">
 <!ENTITY perm.NeverSave "总不保存">
 <!ENTITY perm.Allow "允许">
 <!ENTITY perm.AllowSameDomain "允许同域">

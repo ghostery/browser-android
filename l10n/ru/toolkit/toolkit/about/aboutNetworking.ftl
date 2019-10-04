@@ -57,3 +57,13 @@ rcwn-avg-long = Долгое среднее
 rcwn-std-dev-long = Долгое стандартное отклонение
 rcwn-cache-slow = Счётчик медленного кэша
 rcwn-cache-not-slow = Счётчик не медленного кэша
+networkid = Сетевой ID
+networkid-id = Сетевой ID
+
+## Link is intended as "network link"
+
+networkid-isUp = Соединение установлено
+networkid-statusKnown = Состояние соединения известно
+
+
+

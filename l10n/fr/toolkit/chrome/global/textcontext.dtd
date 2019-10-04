@@ -29,6 +29,10 @@
 
 <!ENTITY fillLoginMenu.label          "Renseigner l’identifiant">
 <!ENTITY fillLoginMenu.accesskey      "R">
+<!ENTITY fillSuggestedPassword.label  "Utiliser un mot de passe suggéré">
+<!ENTITY fillSuggestedPassword.accesskey "U">
+<!ENTITY fillGeneratedPassword.label  "Utiliser un mot de passe généré de manière sécurisée">
+<!ENTITY fillGeneratedPassword.accesskey "U">
 <!ENTITY fillPasswordMenu.label       "Renseigner le mot de passe">
 <!ENTITY fillPasswordMenu.accesskey   "R">
 <!ENTITY fillUsernameMenu.label       "Renseigner le nom d’utilisateur">

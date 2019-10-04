@@ -3,22 +3,29 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY autoconfigWizard2.title         "设置现有的电子邮件账户">
+
+<!ENTITY emailWizard.title               "设置现有的电子邮件地址">
+<!ENTITY emailWizard.caption             "使用您当前的电子邮件地址">
 <!ENTITY name.label                      "你的名字：">
 <!ENTITY name.accesskey                  "n">
 <!ENTITY name.placeholder                "姓名">
+<!ENTITY fullname.placeholder            "您的全名">
 <!ENTITY name.text                       "你的名字，显示给其他人">
+<!ENTITY name.error                      "请输入您的名字">
 <!ENTITY email.label                     "电子邮件：">
 <!ENTITY email.accesskey                 "l">
 <!-- LOCALIZATION NOTE(email.placeholder): Domain @example.com must stay in English -->
 <!ENTITY email2.placeholder              "you@example.com">
+<!ENTITY email3.placeholder              "你的电子邮件地址">
 <!ENTITY email.text                      "您现有的电子邮件地址">
+<!ENTITY email.error                     "无效的电子邮件地址">
 <!ENTITY password.label                  "密码：">
 <!ENTITY password.accesskey              "P">
 <!ENTITY password.placeholder            "密码">
 <!ENTITY password.text                   "可选，仅用于验证用户名">
+<!ENTITY password.toggle                 "显示/隐藏密码">
 <!ENTITY rememberPassword.label          "记住密码">
 <!ENTITY rememberPassword.accesskey      "m">
-
 <!ENTITY usernameEx.label                "您的登录信息：">
 <!ENTITY usernameEx.accesskey            "l">
 <!-- LOCALIZATION NOTE(usernameEx.placeholder): YOURDOMAIN refers to the Windows domain in ActiveDirectory. yourusername refers to the user's account name in Windows. -->
@@ -26,15 +33,21 @@
 <!-- LOCALIZATION NOTE(usernameEx.text): Domain refers to the Windows domain in ActiveDirectory. We mean the user's login in Windows at the local corporate network. -->
 <!ENTITY usernameEx.text                 "域登录">
 
+<!ENTITY protocol.label                  "协议：">
 <!ENTITY imapLong.label                  "IMAP（远程文件夹）">
 <!ENTITY pop3Long.label                  "POP3（在您的计算机上保留邮件）">
 
 <!ENTITY incoming.label                  "接收：">
+<!ENTITY incomingColumn.label            "接收">
 <!ENTITY outgoing.label                  "发出：">
+<!ENTITY outgoingColumn.label            "发出">
 <!ENTITY username.label                  "用户名：">
 <!ENTITY hostname.label                  "服务器主机名">
 <!ENTITY port.label                      "端口">
 <!ENTITY ssl.label                       "SSL">
+<!ENTITY serverRow.label                 "服务器：">
+<!ENTITY portRow.label                   "端口：">
+<!ENTITY sslRow.label                    "SSL：">
 <!ENTITY auth.label                      "身份验证">
 <!ENTITY imap.label                      "IMAP">
 <!ENTITY pop3.label                      "POP3">
@@ -60,15 +73,21 @@
 <!ENTITY stop.label                      "停止">
 <!ENTITY stop.accesskey                  "S">
 <!-- LOCALIZATION NOTE (half-manual-test.label): This is the text that is
-     displayed on the button in manual edit mode which will re-guess
+     displayed on the button in manual config mode which will re-guess
      the account configuration, taking into account the settings that
      the user has manually changed. -->
 <!ENTITY half-manual-test.label          "重新测试">
 <!ENTITY half-manual-test.accesskey      "t">
 <!ENTITY manual-edit.label               "手动配置">
 <!ENTITY manual-edit.accesskey           "M">
+<!ENTITY manual-config.label             "手动配置…">
+<!ENTITY manual-config.accesskey         "M">
 <!ENTITY open-provisioner.label          "获取新的电子邮件地址…">
 <!ENTITY open-provisioner.accesskey      "g">
+
+
+<!ENTITY get-help.label                  "获取帮助">
+<!ENTITY get-help.accesskey              "H">
 
 
 <!ENTITY warning.label                   "警告!">

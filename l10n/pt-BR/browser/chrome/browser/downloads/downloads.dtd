@@ -27,10 +27,10 @@
 <!ENTITY cmd.show.accesskey               "r">
 <!ENTITY cmd.showMac.label                "Mostrar no Finder">
 <!ENTITY cmd.showMac.accesskey            "F">
-<!ENTITY cmd.showDownloads.label          "Mostrar pasta de Downloads">
+<!ENTITY cmd.showDownloads.label          "Mostrar pasta de downloads">
 <!ENTITY cmd.retry.label                  "Repetir">
 <!ENTITY cmd.goToDownloadPage.label       "Ir para a página de download">
-<!ENTITY cmd.goToDownloadPage.accesskey   "b">
+<!ENTITY cmd.goToDownloadPage.accesskey   "d">
 <!ENTITY cmd.copyDownloadLink.label       "Copiar link do download">
 <!ENTITY cmd.copyDownloadLink.accesskey   "l">
 <!ENTITY cmd.removeFromHistory.label      "Remover do histórico">
@@ -103,7 +103,7 @@
      downloads fit in the available space, or when there are no downloads in
      the panel at all.
      -->
-<!ENTITY downloadsHistory.label           "Mostrar downloads">
+<!ENTITY downloadsHistory.label           "Mostrar todos os downloads">
 <!ENTITY downloadsHistory.accesskey       "s">
 
 <!-- LOCALIZATION NOTE (downloadDetails.label):

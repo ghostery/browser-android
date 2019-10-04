@@ -3,9 +3,6 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!ENTITY aboutPage.title                        "關於 &brandShortName;">
 <!ENTITY aboutPage.warningVersion               "&brandShortName; 是一個實驗用的測試版本，可能不夠穩定。">
-<!ENTITY aboutPage.telemetryStart               "將自動傳送相關資訊（效能、軟硬體設定、使用程度等）給 ">
-<!ENTITY aboutPage.telemetryMozillaLink         "&vendorShortName;">
-<!ENTITY aboutPage.telemetryEnd                 " 以幫助 &brandShortName; 變得更好。">
 <!ENTITY aboutPage.checkForUpdates.link         "檢查更新 »">
 <!ENTITY aboutPage.checkForUpdates.checking     "正在尋找更新…">
 <!ENTITY aboutPage.checkForUpdates.none         "沒有可用的更新">
@@ -16,7 +13,7 @@
 <!ENTITY aboutPage.support.label                "技術支援">
 <!ENTITY aboutPage.privacyPolicy.label          "隱私權保護政策">
 <!ENTITY aboutPage.rights.label                 "瞭解您的權利">
-<!ENTITY aboutPage.relNotes.label               "版本資訊">
+<!ENTITY aboutPage.relNotes.label               "發行公告">
 <!ENTITY aboutPage.credits.label                "感謝">
 <!ENTITY aboutPage.license.label                "授權資訊">
 

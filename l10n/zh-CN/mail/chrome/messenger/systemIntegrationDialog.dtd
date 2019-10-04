@@ -14,7 +14,7 @@
 
 <!ENTITY unsetDefault.tooltip "无法在 &brandShortName; 中取消 &brandShortName; 的默认程序设置，要将另一个应用程序设置为默认，你必须使用它自己的“设置为默认”对话框。">
 
-<!ENTITY checkOnStartup.label "启动 &brandShortName; 时总是进行此项检查">
+<!ENTITY checkOnStartup.label "每次启动 &brandShortName; 时都进行此项检查">
 <!ENTITY checkOnStartup.accesskey "A">
 
 <!ENTITY searchIntegration.label "允许 &searchIntegration.engineName; 搜索邮件">

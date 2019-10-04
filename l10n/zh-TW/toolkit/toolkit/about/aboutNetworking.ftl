@@ -18,7 +18,7 @@ http2 = HTTP/2
 ssl = SSL
 active = 使用中
 idle = 閒置
-host = Host
+host = 主機
 tcp = TCP
 sent = 已送出
 received = 已接收
@@ -57,3 +57,13 @@ rcwn-avg-long = 長平均
 rcwn-std-dev-long = 長標準差
 rcwn-cache-slow = 快取較慢數量
 rcwn-cache-not-slow = 快取較快數量
+networkid = 網路 ID
+networkid-id = 網路 ID
+
+## Link is intended as "network link"
+
+networkid-isUp = 網路已連線
+networkid-statusKnown = 已知網路連線狀態
+
+
+

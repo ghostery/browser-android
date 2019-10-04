@@ -10,7 +10,7 @@
 
 <!ENTITY settingsTab.label       "Geral">
 <!ENTITY copiesFoldersTab.label "Cópias e pastas">
-<!ENTITY addressingTab.label    "Editar e endereçar">
+<!ENTITY addressingTab.label    "Redação e endereçamento">
 
 <!ENTITY publicData.label        "Dados públicos">
 <!ENTITY privateData.label       "Dados particulares">

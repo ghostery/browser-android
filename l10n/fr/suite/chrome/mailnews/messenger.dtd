@@ -58,9 +58,9 @@
 <!ENTITY renameFolder.label "Renommer le dossier…">
 <!ENTITY renameFolder.accesskey "R">
 <!ENTITY compactFolders.label "Compacter les dossiers">
-<!ENTITY compactFolders.accesskey		"C">
+<!ENTITY compactFolders.accesskey "C">
 <!ENTITY emptyTrashCmd.label "Vider la corbeille">
-<!ENTITY emptyTrashCmd.accesskey		"V">
+<!ENTITY emptyTrashCmd.accesskey "V">
 <!ENTITY offlineMenu.label "Hors connexion">
 <!ENTITY offlineMenu.accesskey "x">
 <!ENTITY synchronizeOfflineCmd.label "Synchroniser…">
@@ -272,7 +272,7 @@
 <!ENTITY goForwardCmd.commandKey "]">
 <!ENTITY prevFlaggedMsgCmd.label "Message coché">
 <!ENTITY prevFlaggedMsgCmd.accesskey "c">
-<!ENTITY startPageCmd.label "Page de garde du Courrier">
+<!ENTITY startPageCmd.label "Page de démarrage du Courrier">
 <!ENTITY startPageCmd.accesskey "g">
 
 <!-- Message Menu -->
@@ -284,23 +284,23 @@
 <!ENTITY newNewMsgCmd.accesskey "M">
 <!ENTITY replyMsgCmd.label "Répondre">
 <!ENTITY replyMsgCmd.accesskey "R">
-<!ENTITY replyMsgCmd.key	"r">
+<!ENTITY replyMsgCmd.key "r">
 <!ENTITY replyListCmd.label "Répondre à la liste">
 <!ENTITY replyListCmd.accesskey "l">
 <!ENTITY replyNewsgroupCmd.label "Répondre dans le groupe">
-<!ENTITY replyNewsgroupCmd.accesskey	"g">
+<!ENTITY replyNewsgroupCmd.accesskey "g">
 <!ENTITY replySenderCmd.label "Répondre à l’exp. seulement">
 <!ENTITY replySenderCmd.accesskey "x">
 <!ENTITY replyToAllMsgCmd.label "Répondre à tous">
-<!ENTITY replyToAllMsgCmd.accesskey	"t">
-<!ENTITY replyToAllMsgCmd.key	"r">
+<!ENTITY replyToAllMsgCmd.accesskey "t">
+<!ENTITY replyToAllMsgCmd.key "r">
 <!ENTITY replyToSenderAndNewsgroupCmd.label "Répondre à l’exp. et dans le groupe">
 <!ENTITY replyToSenderAndNewsgroupCmd.accesskey "p">
 <!ENTITY replyToAllRecipientsCmd.label "Répondre à tous les destinataires">
 <!ENTITY replyToAllRecipientsCmd.accesskey "a">
 <!ENTITY forwardMsgCmd.label "Transférer">
 <!ENTITY forwardMsgCmd.accesskey "s">
-<!ENTITY forwardMsgCmd.key	"l">
+<!ENTITY forwardMsgCmd.key "l">
 <!ENTITY forwardAsMenu.label "Transférer au format">
 <!ENTITY forwardAsMenu.accesskey "u">
 <!ENTITY forwardAsInline.label "Intégré">

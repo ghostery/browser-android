@@ -275,7 +275,7 @@
 -->
 <!ENTITY tableJoinCells.label "Fusionner les cellules">
 <!ENTITY tableJoinCells.accesskey "F">
-<!ENTITY tableSplitCell.label "Découper la cellule">
+<!ENTITY tableSplitCell.label "Scinder la cellule">
 <!ENTITY tableSplitCell.accesskey "D">
 <!ENTITY convertToTable.label "Créer un tableau à partir de la sélection">
 <!ENTITY convertToTable.accesskey "b">

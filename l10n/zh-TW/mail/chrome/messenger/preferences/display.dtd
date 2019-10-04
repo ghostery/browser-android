@@ -49,6 +49,7 @@
 <!-- Advanced -->
 <!ENTITY reading.caption                  "閱讀">
 <!ENTITY display.caption                  "顯示">
+<!ENTITY displayName.label                "顯示名稱:">
 <!ENTITY showCondensedAddresses.label     "顯示通訊錄裡設定的名字">
 <!ENTITY showCondensedAddresses.accesskey "S">
 

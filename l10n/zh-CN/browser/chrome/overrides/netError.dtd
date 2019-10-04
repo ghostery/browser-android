@@ -10,7 +10,6 @@
 <!ENTITY returnToPreviousPage.label "后退">
 <!ENTITY returnToPreviousPage1.label "返回上一页（推荐）">
 <!ENTITY advanced.label "高级">
-<!ENTITY continue2.label "更多选项…">
 <!ENTITY advanced2.label "高级…">
 <!ENTITY moreInformation.label "更多信息">
 <!ENTITY viewCertificate.label "查看证书">
@@ -70,7 +69,7 @@
 <!ENTITY netOffline.title "脱机模式">
 <!ENTITY netOffline.longDesc2 "<ul>
   
-  <li>请按“重试”切换到在线模式并重新载入此页面。</li>
+  <li>请按“重试”切换到联网模式并重新载入此页面。</li>
 </ul>">
 
 <!ENTITY contentEncodingError.title "内容编码错误">
@@ -115,7 +114,7 @@
 
 <!ENTITY certerror.longpagetitle1 "您的连接并不安全">
 <!ENTITY certerror.longpagetitle2 "警告：面临潜在的安全风险">
-<!ENTITY certerror.sts.longpagetitle  "未连接：潜在的安全问题">
+<!ENTITY certerror.sts.longpagetitle  "未连接：有潜在的安全问题">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
@@ -124,13 +123,13 @@ was trying to connect. -->
 <!ENTITY certerror.sts.introPara "&brandShortName; 检测到潜在的安全威胁，并因 <span class='hostname'/> 要求安全连接而没有继续。">
 
 <!ENTITY certerror.expiredCert.introPara "&brandShortName; 检测到问题而没有继续连接 <span class='hostname'/>。可能是该网站配置有误，或者您的计算机时钟设置有误。">
-<!ENTITY certerror.expiredCert.secondPara2 "很可能该网站的证书已过期，因而阻拦 &brandShortName; 安全连接。如果您继续访问该网站，可能有攻击者尝试窃取您的密码、电子邮件或信用卡等信息。">
-<!ENTITY certerror.expiredCert.sts.secondPara "很可能该网站的证书已过期，因而阻拦 &brandShortName; 安全连接。">
+<!ENTITY certerror.expiredCert.secondPara2 "很可能该网站的证书已过期，因而阻碍 &brandShortName; 安全地连接。如果您继续访问该网站，攻击者可能尝试窃取您的密码、电子邮件或信用卡等信息。">
+<!ENTITY certerror.expiredCert.sts.secondPara "很可能该网站的证书已过期，因而阻碍 &brandShortName; 安全地连接。">
 
 <!ENTITY certerror.whatCanYouDoAboutItTitle "您可以做什么？">
 
 <!ENTITY certerror.unknownIssuer.whatCanYouDoAboutIt "
-<p>这个问题大多与网站有关，您无法解决。</p>
+<p>这个问题大多与网站有关，无法通过您的操作解决。</p>
 <p>如果您是在使用公司网络或某些防病毒软件时遇到此问题，可考虑联系客服（技术支持）以寻求帮助。您也可以向网站管理员告知此问题。</p>
 ">
 
@@ -139,7 +138,7 @@ was trying to connect. -->
 <p>如果您的时钟已设置正确的时间，则此网站可能存在配置错误，您无法解决此问题。您可以向网站管理员反馈该问题。</p>">
 
 <!ENTITY certerror.badCertDomain.whatCanYouDoAboutIt "
-<p>这个问题大多与网站有关，您无法解决。您可以向网站管理员告知此问题。</p>
+<p>这个问题大多与网站有关，无法通过您的操作解决。您可以向此网站的管理者反馈此问题。</p>
 ">
 
 <!ENTITY sharedLongDesc "<ul> 
@@ -194,10 +193,10 @@ was trying to connect. -->
 <!ENTITY certerror.mitm.whatCanYouDoAboutIt1 "如果您的防病毒软件包含扫描加密连接的功能（名称通常为“Web 扫描”或“HTTPS 扫描”），您该考虑禁用该功能。若上述操作无效，您可以尝试卸载并重新安装该防病毒软件。">
 <!ENTITY certerror.mitm.whatCanYouDoAboutIt2 "如果您在使用公司网络，可以联系您的 IT 部门以寻求帮助。">
 <!ENTITY certerror.mitm.whatCanYouDoAboutIt3 "如果您并不熟悉 <span class='mitm-name'/>，这可能是一起攻击，您不应该继续访问该网站。">
-<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "如果您并不熟悉 <span class='mitm-name'/>，这可能是一起攻击，您无法再做什么以访问该网站。">
+<!ENTITY certerror.mitm.sts.whatCanYouDoAboutIt3 "如果您并不熟悉 <span class='mitm-name'/>，这可能是一起攻击，无法通过您的操作来访问此网站。">
 
-<!ENTITY clockSkewError.title "您的计算机时钟有误">
-<!ENTITY clockSkewError.longDesc "您的计算机时钟为 <span id='wrongSystemTime_systemDate1'/>，这阻止了 &brandShortName; 进行安全连接。要访问 <span class='hostname'></span>，请在您的系统设置中更新计算机时钟至当前日期、时间和时区，然后刷新 <span class='hostname'></span>。">
+<!ENTITY clockSkewError.title "您的电脑时间有误">
+<!ENTITY clockSkewError.longDesc "您电脑上的时间是 <span id='wrongSystemTime_systemDate1'/>，&brandShortName; 无法在这个设定的时间下进行安全连接。要访问 <span class='hostname'></span>，请在您的系统设置中确认当前的日期、时间、时区设置是否正确，然后重新载入 <span class='hostname'></span>。">
 
 <!ENTITY prefReset.longDesc "看来可能是您的网络安全设置造成了此问题。您想还原到默认设置吗？">
 <!ENTITY prefReset.label "恢复默认设置">

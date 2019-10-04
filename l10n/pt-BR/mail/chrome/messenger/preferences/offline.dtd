@@ -2,28 +2,28 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY offlineDialog.title "Configurar modo off-line">
+<!ENTITY offlineDialog.title "Configurações do modo desconectado">
 
-<!ENTITY checkAutoDetect.label "Seguir automaticamente o estado on-line detectado">
+<!ENTITY checkAutoDetect.label "Seguir automaticamente o estado de conexão detectado">
 <!ENTITY checkAutoDetect.accesskey "d">
-<!ENTITY titleStartUp "Estado manual quando inicializando:">
-<!ENTITY radioRememberPrevState.label "Somente se já estava no modo off-line">
+<!ENTITY titleStartUp "Estado manual ao iniciar:">
+<!ENTITY radioRememberPrevState.label "Lembrar modo de conexão anterior">
 <!ENTITY radioRememberPrevState.accesskey "t">
-<!ENTITY radioAskState.label "Pergunte-me pelo estado on-line">
+<!ENTITY radioAskState.label "Pergunte se deve conectar">
 <!ENTITY radioAskState.accesskey "g">
-<!ENTITY radioAlwaysOnlineState.label "On-line">
+<!ENTITY radioAlwaysOnlineState.label "Conectado">
 <!ENTITY radioAlwaysOnlineState.accesskey "l">
 <!ENTITY radioAlwaysOffline.label "Desconectado">
 <!ENTITY radioAlwaysOffline.accesskey "D">
 
-<!ENTITY textGoingOnline "Ao sair do modo off-line enviar as mensagens não enviadas?">
+<!ENTITY textGoingOnline "Ao sair do modo desconectado, enviar mensagens não enviadas?">
 <!ENTITY radioAutoSend.label "Sim">
 <!ENTITY radioAutoSend.accesskey "S">
 <!ENTITY radioNotSend.label "Não">
 <!ENTITY radioNotSend.accesskey "N">
 <!ENTITY radioAskUnsent.label "Perguntar">
 <!ENTITY radioAskUnsent.accesskey "P">
-<!ENTITY textGoingOffline "Ao entrar no modo off-line receber as mensagens definidas para leitura off-line?">
+<!ENTITY textGoingOffline "Baixar mensagens para uso desconectado ao entrar no modo desconectado?">
 <!ENTITY radioAutoDownload.label "Sim">
 <!ENTITY radioAutoDownload.accesskey "m">
 <!ENTITY radioNotDownload.label "Não">

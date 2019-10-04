@@ -95,6 +95,11 @@
 
 <!ENTITY openAttachment.tooltip "開啟附加的檔案">
 
+<!ENTITY detachedAttachmentFolder.show.label        "開啟所在資料夾">
+<!ENTITY detachedAttachmentFolder.show.accesskey    "F">
+<!ENTITY detachedAttachmentFolder.showMac.label     "在 Finder 中顯示">
+<!ENTITY detachedAttachmentFolder.showMac.accesskey "F">
+
 <!-- Attachment toolbar items -->
 <!ENTITY saveAttachmentButton1.label       "儲存">
 <!ENTITY saveAttachmentButton1.tooltip     "儲存附加檔案">

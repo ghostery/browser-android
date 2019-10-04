@@ -8,6 +8,7 @@
   -->
 
 <!ENTITY pref.mainbox.label "Általános beállítások" >
+
 <!ENTITY pref.dateformat.label "Dátumszöveg formátuma:" >
 <!ENTITY pref.dateformat.accesskey "D">
 <!ENTITY pref.dateformat.long "Hosszú" >
@@ -24,6 +25,9 @@
 <!ENTITY pref.default_event_length.label "Alapértelmezett hossz:" >
 <!ENTITY pref.default_event_length.accesskey "A">
 
+<!ENTITY pref.default_event_task_length.label "Alapértelmezett esemény- és a feladathossz">
+<!ENTITY pref.default_event_task_length.accesskey "E">
+
 <!ENTITY pref.default_task_none.label "Nincs">
 <!ENTITY pref.default_task_start_of_day.label "Nap kezdete">
 <!ENTITY pref.default_task_end_of_day.label "Nap vége">
@@ -34,9 +38,6 @@
 <!ENTITY pref.default_task_offset_next_hour.label "Következő órához képest">
 
 <!ENTITY pref.calendar.todaypane.agenda.caption "Ma panel">
-<!ENTITY pref.soondays.label "A várakozó szakaszban megjelenik:">
-<!ENTITY pref.soondays.accesskey "v">
-
 <!-- LOCALIZATION NOTE (pref.soondays2.label):
      "Upcoming" is the name of a section and the translation must match the
      translation of that section name (calendar.upcoming.button.label). Also,

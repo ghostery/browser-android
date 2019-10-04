@@ -27,13 +27,25 @@ features-title = Funcionalidades do { -brand-short-name }
 features-name = Nome
 features-version = Versão
 features-id = ID
+processes-title = Processos remotos
+processes-type = Tipo
+processes-count = Quantidade
 app-basics-title = Informações básicas sobre o aplicativo
 app-basics-name = Nome
 app-basics-version = Versão
 app-basics-build-id = ID da compilação
 app-basics-update-channel = Canal de atualização
+# This message refers to the folder used to store updates on the device,
+# as in "Folder for updates". "Update" is a noun, not a verb.
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] Diretório de atualizações
+       *[other] Pasta de atualizações
+    }
 app-basics-update-history = Histórico de atualizações
 app-basics-show-update-history = Mostrar histórico de atualizações
+# Represents the path to the binary used to start the application.
+app-basics-binary = Binário da aplicação
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] Diretório do perfil
@@ -47,10 +59,12 @@ app-basics-memory-use = Uso de memória
 app-basics-performance = Desempenho
 app-basics-service-workers = Service Workers registrados
 app-basics-profiles = Perfis
+app-basics-launcher-process-status = Processo de lançamento
 app-basics-multi-process-support = Janelas multiprocessadas
-app-basics-process-count = Processos de conteúdo web
+app-basics-remote-processes-count = Processos remotos
 app-basics-enterprise-policies = Políticas empresariais
-app-basics-key-google = Chave do Google
+app-basics-location-service-key-google = Chave do Serviço de Localização do Google
+app-basics-safebrowsing-key-google = Chave do Google Safebrowsing
 app-basics-key-mozilla = Chave do serviço de localização da Mozilla
 app-basics-safe-mode = Modo de segurança
 show-dir-label =
@@ -74,8 +88,10 @@ graphics-failure-log-title = Registro de falhas
 graphics-gpu1-title = GPU #1
 graphics-gpu2-title = GPU #2
 graphics-decision-log-title = Registro de decisões
-graphics-crash-guards-title = Proteção contra travamentos desabilitada
+graphics-crash-guards-title = Recursos desativados da proteção contra travamentos
 graphics-workarounds-title = Soluções alternativas
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = Protocolo de janelas
 place-database-title = Base de dados de lugares
 place-database-integrity = Integridade
 place-database-verify-integrity = Verificar integridade
@@ -98,7 +114,7 @@ sandbox-sys-call-tid = TID
 sandbox-sys-call-proc-type = Tipo de processo
 sandbox-sys-call-number = Chamadas de sistema
 sandbox-sys-call-args = Argumentos
-safe-mode-title = Usar o Modo Seguro
+safe-mode-title = Experimentar o modo de segurança
 restart-in-safe-mode-label = Reiniciar com extensões desativadas…
 media-title = Mídia
 media-output-devices-title = Dispositivos de Saída
@@ -173,7 +189,7 @@ try-newer-driver = Bloqueado para a versão do seu driver gráfico. Tentar atual
 clear-type-parameters = Parâmetros ClearType
 compositing = Composição
 hardware-h264 = Decodificação H264 por hardware
-main-thread-no-omtc = tópico principal, sem OMTC
+main-thread-no-omtc = thread principal, sem OMTC
 yes = Sim
 no = Não
 unknown = Desconhecido
@@ -193,6 +209,7 @@ gpu-device-id = ID do dispositivo
 gpu-subsys-id = ID do subsistema
 gpu-drivers = Drivers
 gpu-ram = RAM
+gpu-driver-vendor = Fornecedor do driver
 gpu-driver-version = Versão do driver
 gpu-driver-date = Data do driver
 gpu-active = Ativo
@@ -224,8 +241,7 @@ gpu-device-reset-button = Ativar a Redefinição de Dispositivo
 uses-tiling = Usa mosaicos
 content-uses-tiling = Usa mosaicos (conteúdo)
 off-main-thread-paint-enabled = Ativado o desenho fora do processo principal
-off-main-thread-paint-worker-count = Contagem de desenho fora do tópico principal
-low-end-machine = Detectada máquina com desempenho inferior
+off-main-thread-paint-worker-count = Contagem de desenho fora do thread principal
 target-frame-rate = Alvo de taxa de atualização
 audio-backend = Infraestrutura de Áudio
 max-audio-channels = Máximo de Canais
@@ -234,7 +250,7 @@ sample-rate = Taxa de amostragem preferida
 min-lib-versions = Versão mínima esperada
 loaded-lib-versions = Versão em uso
 has-seccomp-bpf = Seccomp-BPF (Sistema de filtragem de chamadas)
-has-seccomp-tsync = Sincronização do Tópico Seccomp
+has-seccomp-tsync = Sincronização do thread Seccomp
 has-user-namespaces = Espaço de nomes do usuário
 has-privileged-user-namespaces = Espaço de nomes do usuário para processos privilegiados
 can-sandbox-content = Isolamento de processamento de conteúdo
@@ -244,6 +260,11 @@ effective-content-sandbox-level = Nível efetivo de isolamento de processamento 
 sandbox-proc-type-content = conteúdo
 sandbox-proc-type-file = conteúdo do arquivo
 sandbox-proc-type-media-plugin = plugin de mídia
+sandbox-proc-type-data-decoder = decodificador de dados
+launcher-process-status-0 = Ativado
+launcher-process-status-1 = Desativado devido a falha
+launcher-process-status-2 = Desativado à força
+launcher-process-status-unknown = Status desconhecido
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows
@@ -267,8 +288,8 @@ autoscroll-enabled = rolagem automática ativada
 ## Variables
 ## $preferenceKey (string) - String ID of preference
 
-wheel-warning = entrada wheel assíncrona desabilitada devido a preferência não suportada: { $preferenceKey }
-touch-warning = entrada touch assíncrona desabilitada devido a preferência não suportada: { $preferenceKey }
+wheel-warning = entrada com roda do mouse assíncrona desativada devido a preferência não suportada: { $preferenceKey }
+touch-warning = entrada touch assíncrona desativada devido a preferência não suportada: { $preferenceKey }
 
 ## Strings representing the status of the Enterprise Policies engine.
 

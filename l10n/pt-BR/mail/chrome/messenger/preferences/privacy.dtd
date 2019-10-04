@@ -9,7 +9,7 @@
 <!ENTITY acceptRemoteContent.accesskey "m">
 <!ENTITY remoteContentExceptions.label "Exceções…">
 <!ENTITY remoteContentExceptions.accesskey "x">
-<!ENTITY acceptRemoteContentInfo.label "Aprenda mais sobre os problemas de privacidade de conteúdo remoto">
+<!ENTITY acceptRemoteContentInfo.label "Saiba mais sobre os problemas de privacidade de conteúdo remoto">
 
 <!-- Web Content -->
 <!ENTITY captionWebContent.label "Conteúdo da web">
@@ -36,3 +36,7 @@
 <!ENTITY dntTrackingNotOkay.label2 "Avisar aos sites que eu não quero ser rastreado">
 <!ENTITY dntTrackingNotOkay.accesskey "n">
 <!ENTITY doNotTrackInfo.label "Saiba mais sobre o Não rastrear">
+
+<!ENTITY doNotTrackCheck.label "Enviar aos sites um sinal “Não rastrear” indicando que você não quer ser rastreado">
+<!ENTITY doNotTrackCheck.accesskey "n">
+<!ENTITY doNotTrackLearnMore.label "Saiba mais">

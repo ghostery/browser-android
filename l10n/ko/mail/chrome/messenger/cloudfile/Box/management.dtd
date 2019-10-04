@@ -2,4 +2,5 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this file,
    - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
 
+<!ENTITY boxMgmt.doAuth "Box 계정 연결…">
 <!ENTITY boxMgmt.viewSettings "box.com의 계정설정 보기">

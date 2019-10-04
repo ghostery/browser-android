@@ -17,6 +17,7 @@
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Weeknummer tonen in overzichten en minimaand">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "k">
 <!ENTITY pref.daysoff.label "De werkweek bevat de volgende dagen:">
+<!ENTITY pref.workweekDays.label "Dagen werkweek:">
 
 <!ENTITY pref.calendar.view.daystart.label "Dag begint om:">
 <!ENTITY pref.calendar.view.daystart.accesskey "b">

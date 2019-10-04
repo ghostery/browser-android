@@ -4,8 +4,8 @@
 
 <!ENTITY window.title  "Sobre o anti-spam">
 <!ENTITY window.width  "450">
-<!ENTITY info1a.label  "O Email &amp; grupos de notícias pode identificar, assim que forem recebidas, mensagens que podem ser spam. Essas mensagens indesejadas possuem o campo &quot;Spam&quot; marcado com um ícone">
+<!ENTITY info1a.label  "O Email detecta automaticamente mensagens recebidas que parecem ser lixo eletrônico (também conhecido como spam). Essas mensagens são exibidas com um ícone de lixo eletrônico.">
 <!ENTITY info1b.label  ".">
-<!ENTITY info2.label   "Inicialmente, você deve treinar o Email &amp; grupos de notícias a identificar spam usando o botão da barra de ferramentas para marcar mensagens como spam ou não spam.">
+<!ENTITY info2.label   "Inicialmente, você deve treinar o Email para identificar lixo eletrônico usando o botão da barra de ferramentas para marcar mensagens como spam ou não spam.">
 <!ENTITY info3.label   "Quando spans estiverem sendo identificados corretamente, você pode ativar a opção de movê-los para outra pasta assim que forem recebidos.">
 <!ENTITY info4.label   "Para mais informações, clique no botão Ajuda.">

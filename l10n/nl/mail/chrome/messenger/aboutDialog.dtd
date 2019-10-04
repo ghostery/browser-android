@@ -101,7 +101,6 @@
 <!ENTITY update.downloading.end     "">
 
 <!ENTITY update.applying            "Update toepassen…">
-
 <!ENTITY update.restarting          "Herstarten…">
 
 <!-- LOCALIZATION NOTE (channel.description.start,channel.description.end): channel.description.start and

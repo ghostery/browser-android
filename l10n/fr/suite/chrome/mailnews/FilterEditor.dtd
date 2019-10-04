@@ -30,6 +30,8 @@
 <!ENTITY contextArchive.label "Lors de l’archivage">
 <!ENTITY contextArchive.accesskey "a">
 
+<!ENTITY contextPeriodic.accesskey "e">
+
 <!ENTITY filterActionDesc.label "Exécuter ces actions :">
 <!ENTITY filterActionDesc.accesskey "x">
 

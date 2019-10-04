@@ -11,8 +11,8 @@
 <!ENTITY newPref.valueString           "String">
 <!ENTITY newPref.valueInteger          "Inteiro">
 
-<!ENTITY newPref.stringPlaceholder     "Digitar uma string">
-<!ENTITY newPref.numberPlaceholder     "Digitar um número">
+<!ENTITY newPref.stringPlaceholder     "Digite um texto">
+<!ENTITY newPref.numberPlaceholder     "Digite um número">
 
 <!ENTITY newPref.toggleButton          "Alternar">
 <!ENTITY newPref.cancelButton          "Cancelar">

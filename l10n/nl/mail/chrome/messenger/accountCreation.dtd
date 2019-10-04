@@ -3,31 +3,50 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!ENTITY autoconfigWizard2.title         "Een bestaande e-mailaccount instellen">
+<!ENTITY emailWizard.title               "Uw bestaande e-mailadres instellen">
+<!ENTITY emailWizard.caption             "Uw bestaande e-mailadres gebruiken">
 <!ENTITY name.label                      "Uw naam:">
 <!ENTITY name.accesskey                  "U">
 <!ENTITY name.placeholder                "Voornaam Achternaam">
+<!ENTITY fullname.placeholder            "Uw volledige naam">
 <!ENTITY name.text                       "Uw naam, zoals getoond aan anderen">
+<!ENTITY name.error                      "Voer uw naam in">
 <!ENTITY email.label                     "E-mailadres:">
 <!ENTITY email.accesskey                 "E">
 <!-- LOCALIZATION NOTE(email.placeholder): Domain @example.com must stay in English -->
 <!ENTITY email2.placeholder              "email@example.com">
+<!ENTITY email3.placeholder              "Uw e-mailadres">
 <!ENTITY email.text                      "Uw bestaande e-mailadres">
+<!ENTITY email.error                     "Ongeldig e-mailadres">
 <!ENTITY password.label                  "Wachtwoord:">
 <!ENTITY password.accesskey              "W">
 <!ENTITY password.placeholder            "Wachtwoord">
 <!ENTITY password.text                   "Optioneel, wordt alleen gebruikt om de gebruikersnaam te valideren">
+<!ENTITY password.toggle                 "Wachtwoord tonen/verbergen">
 <!ENTITY rememberPassword.label          "Wachtwoord onthouden">
 <!ENTITY rememberPassword.accesskey      "o">
+<!ENTITY usernameEx.label                "Uw gebruikersnaam:">
+<!ENTITY usernameEx.accesskey            "r">
+<!-- LOCALIZATION NOTE(usernameEx.placeholder): YOURDOMAIN refers to the Windows domain in ActiveDirectory. yourusername refers to the user's account name in Windows. -->
+<!ENTITY usernameEx.placeholder          "UWDOMEIN\gebruikersnaam">
+<!-- LOCALIZATION NOTE(usernameEx.text): Domain refers to the Windows domain in ActiveDirectory. We mean the user's login in Windows at the local corporate network. -->
+<!ENTITY usernameEx.text                 "Domeingebruikersnaam">
 
+<!ENTITY protocol.label                  "Protocol:">
 <!ENTITY imapLong.label                  "IMAP (externe mappen)">
 <!ENTITY pop3Long.label                  "POP3 (e-mail op uw computer bewaren)">
 
 <!ENTITY incoming.label                  "Inkomend:">
+<!ENTITY incomingColumn.label            "Inkomend">
 <!ENTITY outgoing.label                  "Uitgaand:">
+<!ENTITY outgoingColumn.label            "Uitgaand">
 <!ENTITY username.label                  "Gebruikersnaam:">
 <!ENTITY hostname.label                  "Serverhostnaam">
 <!ENTITY port.label                      "Poort">
 <!ENTITY ssl.label                       "SSL">
+<!ENTITY serverRow.label                 "Server:">
+<!ENTITY portRow.label                   "Poort:">
+<!ENTITY sslRow.label                    "SSL:">
 <!ENTITY auth.label                      "Authenticatie">
 <!ENTITY imap.label                      "IMAP">
 <!ENTITY pop3.label                      "POP3">
@@ -60,8 +79,12 @@
 <!ENTITY half-manual-test.accesskey      "t">
 <!ENTITY manual-edit.label               "Handmatige configuratie">
 <!ENTITY manual-edit.accesskey           "H">
+<!ENTITY manual-config.label             "Handmatig configureren…">
+<!ENTITY manual-config.accesskey         "c">
 <!ENTITY open-provisioner.label          "Een nieuw e-mailadres verkrijgen…">
-<!ENTITY open-provisioner.accesskey      "E">
+<!ENTITY open-provisioner.accesskey      "v">
+<!ENTITY get-help.label                  "Hulp">
+<!ENTITY get-help.accesskey              "H">
 
 
 <!ENTITY warning.label                   "Waarschuwing!">

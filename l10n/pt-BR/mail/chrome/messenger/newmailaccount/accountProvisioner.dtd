@@ -2,11 +2,11 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY window.title "Bem-vindo ao &brandShortName;">
-<!ENTITY header2.label "Deseja um novo endereço de e-mail?">
+<!ENTITY window.title "Boas-vindas ao &brandShortName;">
+<!ENTITY header2.label "Quer um novo endereço de e-mail?">
 <!ENTITY other.languages "Apenas mostramos os provedores que oferecem endereços para a sua região. Clique aqui para mostrar todos os provedores.">
-<!ENTITY error.line1 "Desculpe, não pudemos localizar nenhuma sugestão de endereço de e-mail.">
-<!ENTITY error.line2 "Você pode tentar pesquisar por apelidos ou qualquer outro termo para localizar mais e-mails">
+<!ENTITY error.line1 "Desculpe, não encontramos nenhuma sugestão de endereço de e-mail.">
+<!ENTITY error.line2 "Você pode tentar pesquisar por apelidos ou qualquer outro termo para procurar mais e-mails.">
 
 <!-- LOCALIZATION NOTE(error.suggest.before, error.suggest.middle, error.suggest.after):
      error.suggest.before, error.suggest.middle, and error.suggest.after all go into
@@ -20,9 +20,9 @@
      success.title.before and success.title.after all go into one line, wrapping
      around the name that the user has typed in to the search input. -->
 <!ENTITY success.title.before "Olá ">
-<!ENTITY success.title.after ", estes endereços de e-mail estão disponíveis para você:">
-<!ENTITY success.tip "(você também pode pesquisar por apelidos ou qualquer outro termo para localizar mais e-mails)">
-<!ENTITY partnership.description "Em parceria com diversos provedores, o &brandShortName; pode oferecer a você uma nova conta de e-mail. Para começar, preencha nos campos acima o seu primeiro e último nome ou quaisquer palavras que deseje.">
+<!ENTITY success.title.after ", esses endereços de e-mail estão disponíveis para você:">
+<!ENTITY success.tip "(você também pode pesquisar por apelidos ou qualquer outro termo para procurar mais e-mails)">
+<!ENTITY partnership.description "Em parceria com diversos provedores, o &brandShortName; pode oferecer a você uma nova conta de e-mail. Para começar, preencha nos campos acima o seu primeiro e último nome ou quaisquer palavras que deseje. Depois clique no botão Pesquisar.">
 <!ENTITY existing.header "Já tem um endereço que deseja usar?">
 <!ENTITY tinyheader.title "Já tem um e-mail?">
 <!ENTITY tinyheader.existing "Ignorar e usar meu e-mail existente">

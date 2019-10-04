@@ -34,5 +34,7 @@
 <!ENTITY authRequired.button.label        "Авторизоваться">
 <!ENTITY authRequired.button.accesskey    "и">
 
+<!ENTITY findCloudFileProviders.label     "Найти больше провайдеров…">
+
 <!ENTITY enableCloudFileAccountOffer.label "Предлагать службу хранения для файлов больше чем">
 <!ENTITY enableCloudFileAccountOffer.mb "МБ">

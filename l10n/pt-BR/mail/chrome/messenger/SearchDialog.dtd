@@ -3,7 +3,7 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <!-- for SearchDialog.xul -->
-<!ENTITY searchHeading.label         "Localizar em:">
+<!ENTITY searchHeading.label         "Procurar mensagens em:">
 <!ENTITY searchHeading.accesskey     "z">
 <!ENTITY searchSubfolders.label      "Incluir subpastas">
 <!ENTITY searchSubfolders.accesskey  "I">

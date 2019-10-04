@@ -12,13 +12,14 @@
 <!ENTITY pref.calendar.alarms.playsound.accessKey "H">
 <!ENTITY pref.calendar.alarms.sound.useDefault.label "Alapértelmezett hang használata">
 <!ENTITY pref.calendar.alarms.sound.useDefault.accessKey "A">
+<!ENTITY pref.calendar.alarms.sound.useCustom.label "A következő hangfájl használata">
+<!ENTITY pref.calendar.alarms.sound.useCustom.accessKey "h">
 <!ENTITY pref.calendar.alarms.sound.browse.label "Tallózás…">
 <!ENTITY pref.calendar.alarms.sound.browse.accessKey "T">
 <!ENTITY pref.calendar.alarms.sound.play.label "Lejátszás">
 <!ENTITY pref.calendar.alarms.sound.play.accessKey "L">
 <!ENTITY pref.showalarmbox "Értesítő párbeszédpanel megjelenítése">
 <!ENTITY pref.calendar.alarms.showAlarmBox.accessKey "r">
-<!ENTITY pref.missedalarms "Az elmulasztott értesítések megjelenítése">
 <!ENTITY pref.missedalarms2 "Elszalasztott emlékeztetők megjelenítése az írható naptárakhoz">
 <!ENTITY pref.calendar.alarms.missedAlarms.accessKey "z">
 <!ENTITY pref.calendar.alarms.defaults.label "Értesítések alapbeállításai">

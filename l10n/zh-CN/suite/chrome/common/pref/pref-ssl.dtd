@@ -40,5 +40,5 @@
 <!ENTITY certselect.description             "用于决定 &brandShortName; 如何为那些请求证书的网站选择安全证书:">
 <!ENTITY certselect.auto                    "自动选择">
 <!ENTITY certselect.auto.accesskey          "A">
-<!ENTITY certselect.ask                     "总是询问">
+<!ENTITY certselect.ask                     "每次都问我">
 <!ENTITY certselect.ask.accesskey           "E">

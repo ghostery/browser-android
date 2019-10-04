@@ -15,6 +15,8 @@
 <!ENTITY pref.tasks.label "Tareas">
 <!ENTITY pref.default_event_length.label "Duración predeterminada:">
 <!ENTITY pref.default_event_length.accesskey "D">
+<!ENTITY pref.default_event_task_length.label "Longitud predeterminada de eventos y tareas">
+<!ENTITY pref.default_event_task_length.accesskey "L">
 <!ENTITY pref.default_task_none.label "Ninguna">
 <!ENTITY pref.default_task_start_of_day.label "Comienzo del día">
 <!ENTITY pref.default_task_end_of_day.label "Final del día">

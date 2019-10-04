@@ -18,8 +18,10 @@
 <!ENTITY htmlComposeHeader.label              "HTML">
 <!ENTITY font.label                           "Carattere:">
 <!ENTITY font.accesskey                       "c">
-<!ENTITY size.label                           "Dimensione:">
-<!ENTITY size.accesskey                       "s">
+<!ENTITY fontSize.label                       "Dimensione:">
+<!ENTITY fontSize.accesskey                   "d">
+<!ENTITY useReaderDefaults.label              "Usa i colori predefiniti del lettore">
+<!ENTITY useReaderDefaults.accesskey          "u">
 <!ENTITY fontColor.label                      "Colore del testo:">
 <!ENTITY fontColor.accesskey                  "o">
 <!ENTITY bgColor.label                        "Colore di sfondo:">

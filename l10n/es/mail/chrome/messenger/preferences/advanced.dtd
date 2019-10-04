@@ -48,6 +48,7 @@
 <!ENTITY updateApp2.label "Actualizaciones de &brandShortName;">
 <!ENTITY updateApp.version.pre "Versión ">
 <!ENTITY updateApp.version.post "">
+<!ENTITY updateAppAllow.description "Permitir a &brandShortName;">
 <!ENTITY updateAuto.label "Instalar actualizaciones automáticamente (recomendado: mejora la seguridad)">
 <!ENTITY updateAuto.accesskey "I">
 <!ENTITY updateCheck.label "Buscar actualizaciones, pero permitirme elegir si las instalo">
@@ -56,6 +57,7 @@
 <!ENTITY updateHistory.accesskey "M">
 <!ENTITY useService.label "Usar un servicio en segundo plano para instalar actualizaciones">
 <!ENTITY useService.accesskey "v">
+<!ENTITY updateCrossUserSettingWarning.description "Este ajuste se aplicará a todas las cuentas de Windows y a todos los perfiles de &brandShortName; que usen esta instalación de &brandShortName;.">
 <!ENTITY showSettings.label "Configuración…">
 <!ENTITY showSettings.accesskey "C">
 <!ENTITY proxiesConfigure.label "Configurar cómo se conecta &brandShortName; a Internet">
@@ -86,3 +88,7 @@
 <!ENTITY manageCertificates.accesskey "A">
 <!ENTITY viewSecurityDevices.label "Dispositivos de seguridad">
 <!ENTITY viewSecurityDevices.accesskey "D">
+<!ENTITY manageCertificates2.label "Administrar certificados…">
+<!ENTITY manageCertificates2.accesskey "M">
+<!ENTITY viewSecurityDevices2.label "Dispositivos de seguridad…">
+<!ENTITY viewSecurityDevices2.accesskey "D">

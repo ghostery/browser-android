@@ -67,17 +67,18 @@
  -->
 <!ENTITY updateApp.version.pre           "Versione ">
 <!ENTITY updateApp.version.post          "">
+<!ENTITY updateAppAllow.description      "Consenti a &brandShortName; di">
 <!ENTITY updateAuto.label                "Installa automaticamente aggiornamenti (consigliato: maggiore sicurezza)">
 <!ENTITY updateAuto.accesskey            "n">
 <!ENTITY updateCheck.label               "Controlla aggiornamenti ma permetti all'utente di scegliere se installarli">
 <!ENTITY updateCheck.accesskey           "C">
-<!ENTITY updateManual.label              "Non cercare aggiornamenti (non consigliato: rischi per la sicurezza)">
-<!ENTITY updateManual.accesskey          "N">
 <!ENTITY updateHistory.label             "Mostra cronologia aggiornamenti">
 <!ENTITY updateHistory.accesskey         "S">
 
 <!ENTITY useService.label                "Utilizza un servizio di sistema per installare gli aggiornamenti">
 <!ENTITY useService.accesskey            "U">
+
+<!ENTITY updateCrossUserSettingWarning.description "Questa impostazione si applicherà a tutti gli account Windows e ai profili di &brandShortName; che utilizzano questa installazione di &brandShortName;.">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "Impostazioni…">
@@ -121,3 +122,8 @@
 <!ENTITY manageCertificates.accesskey "G">
 <!ENTITY viewSecurityDevices.label "Dispositivi di sicurezza">
 <!ENTITY viewSecurityDevices.accesskey "D">
+
+<!ENTITY manageCertificates2.label "Gestisci certificati…">
+<!ENTITY manageCertificates2.accesskey "G">
+<!ENTITY viewSecurityDevices2.label "Dispositivi di sicurezza…">
+<!ENTITY viewSecurityDevices2.accesskey "D">

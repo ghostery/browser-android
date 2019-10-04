@@ -8,6 +8,7 @@
   -->
 
 <!ENTITY pref.calendar.view.allview.caption "Основные настройки">
+
 <!ENTITY pref.calendar.view.dayandweekviews.caption "Обзоры дня и недели">
 <!ENTITY pref.calendar.view.multiweekview.caption "Обзор по неделям">
 <!ENTITY pref.calendar.view.workweek.caption "Рабочая неделя">
@@ -17,6 +18,8 @@
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.label "Показывать номер недели в обзорах и минимесяце">
 <!ENTITY pref.calendar.view-minimonth.showweeknumber.accesskey "о">
 <!ENTITY pref.daysoff.label "Включать эти дни в рабочую неделю:">
+
+<!ENTITY pref.workweekDays.label "Рабочие дни:">
 
 <!ENTITY pref.calendar.view.daystart.label "День начинается в:">
 <!ENTITY pref.calendar.view.daystart.accesskey "а">

@@ -53,6 +53,8 @@
 <!ENTITY reloadImageCmd.accesskey     "R">
 <!ENTITY viewImageCmd.label           "Ver imagem">
 <!ENTITY viewImageCmd.accesskey       "V">
+<!ENTITY viewImageInfoCmd.label       "Ver informações da imagem">
+<!ENTITY viewImageInfoCmd.accesskey   "f">
 <!ENTITY viewVideoCmd.label           "Exibir vídeo">
 <!ENTITY viewVideoCmd.accesskey       "i">
 <!ENTITY viewBGImageCmd.label         "Exibir plano de fundo">
@@ -102,10 +104,10 @@
 <!ENTITY mediaPlay.accesskey          "P">
 <!ENTITY mediaPause.label             "Pausar">
 <!ENTITY mediaPause.accesskey         "P">
-<!ENTITY mediaMute.label              "Emudecer">
-<!ENTITY mediaMute.accesskey          "E">
-<!ENTITY mediaUnmute.label            "Desemudecer">
-<!ENTITY mediaUnmute.accesskey        "m">
+<!ENTITY mediaMute.label              "Silenciar">
+<!ENTITY mediaMute.accesskey          "S">
+<!ENTITY mediaUnmute.label            "Ativar som">
+<!ENTITY mediaUnmute.accesskey        "s">
 <!ENTITY mediaPlaybackRate.label        "Velocidade de reprodução">
 <!ENTITY mediaPlaybackRate.accesskey    "d">
 <!ENTITY mediaPlaybackRate050.label     "Câmera lenta (½×)">

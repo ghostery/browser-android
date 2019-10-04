@@ -38,6 +38,10 @@
 <!ENTITY  noproxy.label                 "Nincs proxy a következőhöz:">
 <!ENTITY  noproxy.accesskey             "N">
 <!ENTITY  noproxyExplain.label          "Példa: .mozilla.org, .net.nz, 192.168.1.0/24">
+<!-- LOCALIZATION NOTE (noproxyLocalhostDesc.label): Do not translate
+  localhost, 127.0.0.1 and ::1.
+-->
+<!ENTITY  noproxyLocalhostDesc.label   "A localhost, a 127.0.0.1 és a ::1 felé nyitott kapcsolatok sosem kerülnek proxyzásra.">
 <!ENTITY  shareproxy.label              "Ugyanazon proxy használata minden protokollhoz">
 <!ENTITY  shareproxy.accesskey          "U">
 <!ENTITY  autologinproxy.label          "Ne kérjen hitelesítést, ha a jelszó el van mentve">
@@ -47,9 +51,6 @@
 <!ENTITY  socksRemoteDNS.accesskey      "d">
 <!ENTITY  dnsOverHttps.label            "HTTPS feletti DNS bekapcsolása">
 <!ENTITY  dnsOverHttps.accesskey        "b">
-<!ENTITY  dnsOverHttpsUrl.label         "URL">
-<!ENTITY  dnsOverHttpsUrl.accesskey     "R">
-<!ENTITY  dnsOverHttpsUrl.tooltip       "URL a HTTPS feletti DNS feloldásához">
 <!ENTITY  dnsOverHttpsUrlDefault.label     "Alapértelmezés használata">
 <!ENTITY  dnsOverHttpsUrlDefault.accesskey "A">
 <!ENTITY  dnsOverHttpsUrlDefault.tooltip   "Az alapértelmezett URL használata a HTTPS feletti DNS feloldáshoz">

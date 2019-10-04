@@ -27,13 +27,23 @@ features-title = { -brand-short-name } 功能
 features-name = 名称
 features-version = 版本
 features-id = ID
+processes-title = 远程进程
+processes-type = 类型
+processes-count = 数量
 app-basics-title = 应用程序概要
 app-basics-name = 名称
 app-basics-version = 版本
 app-basics-build-id = 版本 ID
 app-basics-update-channel = 更新通道
+app-basics-update-dir =
+    { PLATFORM() ->
+        [linux] 更新目录
+       *[other] 更新文件夹
+    }
 app-basics-update-history = 更新历史
 app-basics-show-update-history = 显示更新历史
+# Represents the path to the binary used to start the application.
+app-basics-binary = 应用程序二进制文件
 app-basics-profile-dir =
     { PLATFORM() ->
         [linux] 配置文件夹
@@ -47,10 +57,13 @@ app-basics-memory-use = 内存使用
 app-basics-performance = 性能
 app-basics-service-workers = 已注册的 Service Worker
 app-basics-profiles = 配置文件
+app-basics-launcher-process-status = 启动器进程
 app-basics-multi-process-support = 多进程窗口
 app-basics-process-count = 网页内容处理进程
+app-basics-remote-processes-count = 远程进程
 app-basics-enterprise-policies = 企业策略
-app-basics-key-google = Google 密钥
+app-basics-location-service-key-google = Google 位置服务密钥
+app-basics-safebrowsing-key-google = Google 安全浏览密钥
 app-basics-key-mozilla = Mozilla 位置服务密钥
 app-basics-safe-mode = 安全模式
 show-dir-label =
@@ -64,7 +77,7 @@ modified-prefs-name = 名称
 modified-prefs-value = 值
 user-js-title = user.js 设置
 user-js-description = 您的配置文件夹中有一个 <a data-l10n-name="user-js-link">user.js 文件</a>，其中包含了一些并非由 { -brand-short-name } 所创建的首选项（偏好设置）。
-locked-key-prefs-title = 重要的已锁定的首选项
+locked-key-prefs-title = 已锁定的重要首选项
 locked-prefs-name = 名称
 locked-prefs-value = 值
 graphics-title = 图像
@@ -76,6 +89,8 @@ graphics-gpu2-title = GPU #2
 graphics-decision-log-title = 决策日志
 graphics-crash-guards-title = 被崩溃守卫禁用的功能
 graphics-workarounds-title = 变通方法
+# Windowing system in use on Linux (e.g. X11, Wayland).
+graphics-window-protocol = 窗口协议
 place-database-title = Places 数据库
 place-database-integrity = 完整性
 place-database-verify-integrity = 验证完整性
@@ -173,6 +188,7 @@ gpu-device-id = 设备 ID
 gpu-subsys-id = 子系统 ID
 gpu-drivers = 驱动程序
 gpu-ram = 内存
+gpu-driver-vendor = 驱动程序供应商
 gpu-driver-version = 驱动程序版本
 gpu-driver-date = 驱动程序日期
 gpu-active = 活动
@@ -224,6 +240,11 @@ effective-content-sandbox-level = 生效的内容进程沙盒级别
 sandbox-proc-type-content = 内容
 sandbox-proc-type-file = 文件内容
 sandbox-proc-type-media-plugin = 媒体插件
+sandbox-proc-type-data-decoder = 数据解码器
+launcher-process-status-0 = 启用
+launcher-process-status-1 = 因故障而禁用
+launcher-process-status-2 = 强制禁用
+launcher-process-status-unknown = 未知状态
 # Variables
 # $remoteWindows (integer) - Number of remote windows
 # $totalWindows (integer) - Number of total windows
@@ -252,6 +273,6 @@ touch-warning = 因为不支持的首选项: { $preferenceKey }，已禁用异�
 
 ## Strings representing the status of the Enterprise Policies engine.
 
-policies-inactive = 非活跃
-policies-active = 活跃
+policies-inactive = 未激活
+policies-active = 已激活
 policies-error = 错误

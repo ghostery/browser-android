@@ -4,10 +4,10 @@
 
 <!ENTITY time.midnight "午夜" >
 <!ENTITY time.noon "中午" >
+
 <!-- Day Names -->
 <!-- LOCALIZATION NOTE : Accesskeys for day.1.Ddd to day.7.Ddd are currently
      only used in Preferences > Views > Workweek groupbox -->
-
 <!ENTITY day.1.Ddd "日" >
 <!ENTITY day.1.Ddd.accesskey "S">
 <!ENTITY day.2.Ddd "一" >
@@ -46,6 +46,8 @@
 
 <!ENTITY onemonthbackward.tooltip "上一月" >
 <!ENTITY onemonthforward.tooltip "下一月" >
+<!ENTITY oneyearbackward.tooltip "前一年" >
+<!ENTITY oneyearforward.tooltip "后一年" >
 <!ENTITY showToday.tooltip "转至今日">
 <!ENTITY onedayforward.tooltip "下一日">
 <!ENTITY onedaybackward.tooltip "延后一天">

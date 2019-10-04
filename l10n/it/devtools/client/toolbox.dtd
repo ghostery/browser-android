@@ -39,6 +39,8 @@
 <!ENTITY options.usedeveditiontheme.tooltip "Attiva/disattiva il tema Developer Edition per il browser.">
 <!ENTITY options.webconsole.label "Console web">
 <!ENTITY options.timestampMessages.label "Attiva timestamp">
+<!ENTITY options.warningGroups.label "Raggruppa messaggi simili">
+<!ENTITY options.warningGroups.tooltip "Attivando questa opzione i messaggi simili verranno visualizzati in gruppi">
 <!ENTITY options.timestampMessages.tooltip "Attivando questa opzione verrà visualizzato nella Console web il timestamp associato a comandi e risultati">
 <!ENTITY options.debugger.label "Debugger">
 <!ENTITY options.sourceMaps.label "Attiva mapping di origine">

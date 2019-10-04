@@ -1,29 +1,24 @@
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
 <!-- extracted from content/pref-scripts.xul -->
+
 <!--LOCALIZATION NOTE : FILE The 'Scripts & Plugins' preferences dialog -->
-
-
-<!ENTITY pref.scripts.title              "Scripts &amp; Plug-ins">
+<!ENTITY pref.scripts.title              "Scripts e Plugins">
 
 <!ENTITY navigator.label                 "Navigator">
 <!ENTITY navigator.accesskey             "N">
-<!--LOCALIZATION NOTE (enableJavaScript.label): 'JavaScript' should never be translated -->
 
+<!--LOCALIZATION NOTE (enableJavaScript.label): 'JavaScript' should never be translated -->
 <!ENTITY enableJavaScript.label          "Permitir JavaScript no">
 <!ENTITY allowScripts.label              "Scripts têm permissão para:">
 <!ENTITY allowScripts.accesskey          "s">
 <!ENTITY allowWindowMoveResize.label     "Mover ou alterar o tamanho de janelas existentes">
 <!ENTITY allowWindowFlip.label           "Alterar a disposição entre as janelas">
 <!ENTITY allowWindowStatusChange.label   "Alterar o texto da barra de status">
-<!ENTITY allowWindowImageSrcChange.label "Alterar imagens">
 <!ENTITY allowContextmenuDisable.label   "Desativar ou substituir menus de contexto">
 <!ENTITY allowHideStatusBar.label        "Ocultar a barra de status ">
-
-<!ENTITY enableDrmMedia.label            "Ativar Gestão dos Direitos Digitais para">
-<!ENTITY enableEmeForSuite.label         "Módulos de terceiros para decodificação de conteúdo">
-<!ENTITY enableEmeForSuite.accesskey     "c">
 
 <!ENTITY enablePlugins.label             "Permitir plugins para">
 <!ENTITY enablePluginForSuite.label      "Suite">

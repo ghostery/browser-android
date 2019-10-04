@@ -159,7 +159,6 @@
 <!ENTITY compactVersion.accesskey "C">
 <!ENTITY folderPaneBar.label "Barra de herramientas del panel de carpetas">
 <!ENTITY folderPaneBar.accesskey "h">
-<!ENTITY folderModeSelector.label "Vistas de carpeta">
 <!ENTITY sortMenu.label "Ordenar por">
 <!ENTITY sortMenu.accesskey "O">
 <!ENTITY sortByDateCmd.label "Fecha">
@@ -541,6 +540,7 @@
 <!ENTITY fileButton.tooltip "Archivar mensaje seleccionado">
 <!ENTITY archiveButton.tooltip "Archivar mensajes seleccionados">
 <!ENTITY openConversationButton.tooltip "Mostrar conversación de este mensaje">
+<!ENTITY openMsgConversationButton.tooltip "Mostrar conversación del mensaje seleccionado">
 <!ENTITY nextButton.tooltip "Ir al siguiente mensaje no leído">
 <!ENTITY nextMsgButton.tooltip "Moverse al mensaje siguiente">
 <!ENTITY previousButton.tooltip "Ir al anterior mensaje no leído">
@@ -559,6 +559,7 @@
 <!ENTITY tagButton.tooltip "Etiquetar mensajes">
 <!ENTITY compactButton.tooltip "Eliminar mensajes borrados de la carpeta seleccionada">
 <!ENTITY appmenuButton1.tooltip "Mostrar el menú &brandShortName;">
+<!ENTITY addonsButton.tooltip "Administre sus complementos">
 <!ENTITY buttonMenuForwardAsInline.label "Reenviar en el cuerpo del mensaje">
 <!ENTITY buttonMenuForwardAsAttachment.label "Reenviar como adjunto">
 <!ENTITY remoteContentOptionsAllowForMsg.label "Mostrar el contenido remoto en este mensaje">
@@ -716,6 +717,8 @@
 <!ENTITY contextMoveMsgMenu.accesskey "m">
 <!ENTITY contextMoveCopyMsgRecentMenu.label "Reciente">
 <!ENTITY contextMoveCopyMsgRecentMenu.accesskey "R">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.label "Favoritos">
+<!ENTITY contextMoveCopyMsgFavoritesMenu.accesskey "F">
 <!ENTITY contextCopyMsgMenu.label "Copiar a">
 <!ENTITY contextCopyMsgMenu.accesskey "C">
 <!ENTITY contextKillThreadMenu.label "Ignorar conversación">
@@ -730,7 +733,6 @@
 <!ENTITY contextPrint.accesskey "i">
 <!ENTITY contextPrintPreview.label "Vista preliminar">
 <!ENTITY contextPrintPreview.accesskey "V">
-<!ENTITY columnPicker.resetToInbox.label "Restaurar las columnas predeterminadas">
 <!ENTITY columnPicker.applyTo.label "Aplicar columnas a…">
 <!ENTITY columnPicker.applyToFolder.label "Carpeta…">
 <!ENTITY columnPicker.applyToFolderAndChildren.label "Carpeta y sus subcarpetas…">

@@ -2,39 +2,43 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
-<!ENTITY messengerStartPage.label "Strona startowa programu &brandShortName;">
-<!ENTITY enableStartPage.label "Po uruchomieniu programu wyświetlaj poniższą stronę startową w oknie wiadomości:">
-<!ENTITY enableStartPage.accesskey "P">
-<!ENTITY location.label "Adres:">
-<!ENTITY location1.accesskey "A">
-<!ENTITY useDefault.label "Przywróć domyślną">
-<!ENTITY useDefault.accesskey "d">
+<!ENTITY messengerStartPage.label         "Strona startowa programu &brandShortName;">
+<!ENTITY enableStartPage.label            "Po uruchomieniu programu wyświetlaj poniższą stronę startową w oknie wiadomości:">
+<!ENTITY enableStartPage.accesskey        "P">
+<!ENTITY location.label                   "Adres:">
+<!ENTITY location1.accesskey               "A">
+<!ENTITY useDefault.label                 "Przywróć domyślną">
+<!ENTITY useDefault.accesskey             "d">
 
-<!ENTITY changeDockIconOptions.label "Zmień preferencje ikony aplikacji">
-<!ENTITY dockOptions.label "Opcje ikony aplikacji…">
-<!ENTITY dockOptions.accesskey "i">
+<!ENTITY changeDockIconOptions.label      "Zmień preferencje ikony aplikacji">
+<!ENTITY dockOptions.label                "Opcje ikony aplikacji…">
+<!ENTITY dockOptions.accesskey            "i">
 
-<!ENTITY newMessagesArrive.label "Po odebraniu nowej wiadomości:">
-<!ENTITY playSound.label "odtwarzaj dźwięk">
-<!ENTITY playSound1.accesskey "o">
-<!ENTITY playSoundMac.label "odtwarzaj plik:">
-<!ENTITY playSoundMac.accesskey "o">
-<!ENTITY showAnimatedAlert.label "wyświetlaj powiadomienie">
-<!ENTITY showAnimatedAlert.accesskey "w">
+<!ENTITY newMessagesArrive.label          "Po odebraniu nowej wiadomości:">
+<!ENTITY playSound.label                  "odtwarzaj dźwięk">
+<!ENTITY playSound1.accesskey             "o">
+<!ENTITY playSoundMac.label               "odtwarzaj plik:">
+<!ENTITY playSoundMac.accesskey           "o">
+<!ENTITY showAnimatedAlert.label          "wyświetlaj powiadomienie">
+<!ENTITY showAnimatedAlert.accesskey      "w">
 <!ENTITY notificationAlertSettings2.label "Powiadomienia i domyślny dźwięk można wyłączyć w panelu Powiadomienia Preferencji systemowych.">
-<!ENTITY customizeMailAlert.label "Dostosuj…">
-<!ENTITY customizeMailAlert.accesskey "s">
+<!ENTITY customizeMailAlert.label         "Dostosuj…">
+<!ENTITY customizeMailAlert.accesskey     "s">
 
-<!ENTITY showTrayIcon.label "wyświetlaj ikonę w obszarze powiadomień">
-<!ENTITY showTrayIcon.accesskey "t">
+<!ENTITY showTrayIcon.label               "wyświetlaj ikonę w obszarze powiadomień">
+<!ENTITY showTrayIcon.accesskey           "t">
 
-<!ENTITY play.label "Odtwórz">
-<!ENTITY play.accesskey "r">
-<!ENTITY systemsound.label "domyślny systemowy dźwięk powiadomienia o nowej poczcie">
-<!ENTITY systemsound.accesskey "m">
-<!ENTITY customsound.label "użyj pliku">
-<!ENTITY customsound.accesskey "u">
-<!ENTITY browse.label "Przeglądaj…">
-<!ENTITY browse.accesskey "e">
+<!ENTITY play.label                       "Odtwórz">
+<!ENTITY play.accesskey                   "r">
+<!ENTITY systemsound.label                "domyślny systemowy dźwięk powiadomienia o nowej poczcie">
+<!ENTITY systemsound.accesskey            "m">
+<!ENTITY customsound.label                "użyj pliku">
+<!ENTITY customsound.accesskey            "u">
+<!ENTITY browse.label                     "Przeglądaj…">
+<!ENTITY browse.accesskey                 "e">
 
-<!ENTITY defaultSearchEngine.label "Domyślna wyszukiwarka">
+<!ENTITY defaultSearchEngine.label        "Domyślna wyszukiwarka">
+<!ENTITY addSearchEngine.label            "Dodaj z pliku">
+<!ENTITY addSearchEngine.accesskey        "D">
+<!ENTITY removeSearchEngine.label         "Usuń">
+<!ENTITY removeSearchEngine.accesskey     "U">

@@ -2,14 +2,18 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
+<!-- Mail Content -->
 <!ENTITY captionMailContent.label "Wiadomości">
+
 <!ENTITY acceptRemoteContent.label "Zdalne treści w wiadomościach">
 <!ENTITY acceptRemoteContent.accesskey "Z">
 <!ENTITY remoteContentExceptions.label "Wyjątki…">
 <!ENTITY remoteContentExceptions.accesskey "t">
 <!ENTITY acceptRemoteContentInfo.label "Informacje o wpływie zdalnych treści na prywatność">
 
+<!-- Web Content -->
 <!ENTITY captionWebContent.label "Strony">
+
 <!ENTITY keepHistory.label "Zachowywanie historii odwiedzonych stron">
 <!ENTITY keepHistory.accesskey "e">
 <!ENTITY acceptCookies.label "Akceptowanie ciasteczek">
@@ -32,3 +36,7 @@
 <!ENTITY dntTrackingNotOkay.label2 "Informowanie witryn, że użytkownik nie chce być śledzony">
 <!ENTITY dntTrackingNotOkay.accesskey "I">
 <!ENTITY doNotTrackInfo.label "Informacje o preferencjach dotyczących śledzenia">
+
+<!ENTITY doNotTrackCheck.label "Informowanie witryn o preferencjach względem śledzenia (wysyłanie nagłówka „Do Not Track”)">
+<!ENTITY doNotTrackCheck.accesskey "n">
+<!ENTITY doNotTrackLearnMore.label "Więcej informacji">

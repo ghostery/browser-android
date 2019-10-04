@@ -10,5 +10,5 @@
 <!ENTITY newsgroups.label "新闻组">
 <!ENTITY feeds.label "收取点">
 
-<!ENTITY checkOnStartup.label "启动 &brandShortName; 时总是进行此项检查">
+<!ENTITY checkOnStartup.label "每次启动 &brandShortName; 时都进行此项检查">
 <!ENTITY checkOnStartup.accesskey "A">

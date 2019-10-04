@@ -101,4 +101,4 @@
 <!ENTITY blockedByPolicy.title "Geblokkeerde pagina">
 
 <!ENTITY networkProtocolError.title "Netwerkprotocolfout">
-<!ENTITY networkProtocolError.longDesc "<p>De pagina die u wilt bekijken kan niet worden weergegeven, omdat een fout in het netwerkprotocol is gedetecteerd.</p><ul><li>Neem contact op met de website-eigenaars om ze over dit probleem te informeren.</li></ul>">
+<!ENTITY networkProtocolError.longDesc "<p>De pagina die u wilt bekijken kan niet worden weergegeven, omdat er een fout in het netwerkprotocol is gedetecteerd.</p><ul><li>Neem contact op met de website-eigenaars om ze over dit probleem te informeren.</li></ul>">

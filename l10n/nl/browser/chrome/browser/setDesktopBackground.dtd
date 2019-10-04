@@ -8,7 +8,14 @@
 <!ENTITY stretch.label              "Uitrekken">
 <!ENTITY fill.label                 "Uitvullen">
 <!ENTITY fit.label                  "Passend maken">
+<!-- LOCALIZATION NOTE (span.label): This refers to the wallpaper "spanning"
+                       multiple monitors when the user has more than one. Only
+                       some of the entire image will be on each monitor.
+                       This should ideally match the wording in Windows' own
+                       Desktop Background settings page. -->
+<!ENTITY span.label                 "Uitbreiden">
 <!ENTITY color.label                "Kleur:">
 <!ENTITY setDesktopBackground.title "Bureaubladachtergrond instellen">
 <!ENTITY openDesktopPrefs.label     "Bureaubladvoorkeuren openen">
 <!ENTITY closeWindow.key            "w">
+<!ENTITY previewUnavailable         "Voorbeeld niet beschikbaar">

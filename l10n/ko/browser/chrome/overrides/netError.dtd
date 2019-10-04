@@ -10,7 +10,7 @@
 <!ENTITY returnToPreviousPage.label "뒤로">
 <!ENTITY returnToPreviousPage1.label "뒤로(권장)">
 <!ENTITY advanced.label "고급">
-<!ENTITY continue2.label "더보기…">
+<!ENTITY advanced2.label "고급…">
 <!ENTITY moreInformation.label "상세 정보">
 <!ENTITY viewCertificate.label "인증서 보기">
 
@@ -150,12 +150,16 @@
 ">
 
 <!ENTITY certerror.longpagetitle1 "연결이 안전하지 않음">
+
 <!ENTITY certerror.longpagetitle2 "경고: 보안 위험 가능성">
 <!ENTITY certerror.sts.longpagetitle  "연결하지 않음 : 잠재적인 보안 문제">
 <!-- Localization note (certerror.introPara, certerror.introPara2) - The text content of the span tag
 will be replaced at runtime with the name of the server to which the user
 was trying to connect. -->
 <!ENTITY certerror.introPara "<span class='hostname'/>의 소유자가 웹사이트를 적절히 설정하지 않았습니다. 정보가 도난당하는 것을 막기 위해서 &brandShortName;가 웹사이트에 연결하지 않았습니다.">
+<!-- Localization note (certerror.introPara2) - The text content of the span tag
+will be replaced at runtime with the name of the server to which the user
+was trying to connect. -->
 <!ENTITY certerror.introPara2 "&brandShortName;가 잠재적인 보안 위협을 감지하고 <span class='hostname'/>로 진행하지 않았습니다. 사이트를 방문하면 공격자가 비밀번호나 이메일, 신용카드와 같은 정보를 탈취할 수 있습니다.">
 <!ENTITY certerror.sts.introPara "이 웹사이트가 보안 접속을 필요로 하지만 &brandShortName;가 잠재적인 보안 위협을 감지하고 <span class='hostname'/>로 진행하지 않았습니다.">
 
@@ -198,9 +202,10 @@ was trying to connect. -->
 
 
 <!ENTITY securityOverride.exceptionButtonLabel "예외 추가…">
+
 <!ENTITY securityOverride.exceptionButton1Label "위험을 감수하고 계속">
 
-<!ENTITY errorReporting.automatic2 "오류 보고서를 보내면 멜웨어 사이트를 차단하거나 그 오류를 분석하는데 도움이 됩니다.">
+<!ENTITY errorReporting.automatic2 "이러한 오류를 보고하여 Mozilla가 악성 사이트를 식별하고 차단하는 것을 돕습니다.">
 <!ENTITY errorReporting.learnMore "더 알아보기…">
 
 <!ENTITY remoteXUL.title "원격 XUL">
@@ -218,6 +223,7 @@ was trying to connect. -->
 <!ENTITY certerror.wrongSystemTimeWithoutReference "<p>사용자 컴퓨터의 시계가 맞지 않기 때문에 보안 연결을 할 수 없어서 &brandShortName;가 <span id='wrongSystemTimeWithoutReference_URL'/>에 연결하지 않았습니다.</p> <p><span id='wrongSystemTimeWithoutReference_systemDate'/>로 설정되어 있습니다. 올바른 날짜와 시간을 설정해 주세요.</p>">
 
 <!ENTITY certerror.pagetitle1  "안전하지 않은 연결">
+
 <!ENTITY certerror.pagetitle2  "경고: 보안 위험 가능성">
 <!ENTITY certerror.sts.pagetitle  "연결하지 않음 : 잠재적인 보안 문제">
 <!ENTITY certerror.whatShouldIDo.badStsCertExplanation "이 사이트는 &brandShortName;가 안전한 경우에만 

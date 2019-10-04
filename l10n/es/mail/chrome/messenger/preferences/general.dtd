@@ -33,3 +33,7 @@
 <!ENTITY browse.label "Examinar…">
 <!ENTITY browse.accesskey "E">
 <!ENTITY defaultSearchEngine.label "Buscador predeterminado">
+<!ENTITY addSearchEngine.label "Añadir desde archivo">
+<!ENTITY addSearchEngine.accesskey "s">
+<!ENTITY removeSearchEngine.label "Eliminar">
+<!ENTITY removeSearchEngine.accesskey "l">

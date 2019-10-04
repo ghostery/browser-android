@@ -67,17 +67,18 @@
  -->
 <!ENTITY updateApp.version.pre           "Версия ">
 <!ENTITY updateApp.version.post          "">
+<!ENTITY updateAppAllow.description      "Разрешить &brandShortName;">
 <!ENTITY updateAuto.label                "Автоматически устанавливать обновления (рекомендовано: повышает безопасность)">
 <!ENTITY updateAuto.accesskey            "и">
 <!ENTITY updateCheck.label               "Проверять наличие обновлений, но позволять мне решать, устанавливать ли их или нет">
 <!ENTITY updateCheck.accesskey           "о">
-<!ENTITY updateManual.label              "Никогда не проверять наличие обновлений (не рекомендовано: ставит безопасность под угрозу)">
-<!ENTITY updateManual.accesskey          "е">
 <!ENTITY updateHistory.label             "Показать журнал обновлений">
 <!ENTITY updateHistory.accesskey         "й">
 
 <!ENTITY useService.label                "Использовать фоновую службу для установки обновлений">
 <!ENTITY useService.accesskey            "у">
+
+<!ENTITY updateCrossUserSettingWarning.description "Этот параметр применится ко всем учётным записям Windows и профилям &brandShortName;, использующим эту установку &brandShortName;.">
 
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label            "Настроить…">
@@ -121,3 +122,8 @@
 <!ENTITY manageCertificates.accesskey "ф">
 <!ENTITY viewSecurityDevices.label "Устройства защиты">
 <!ENTITY viewSecurityDevices.accesskey "ы">
+
+<!ENTITY manageCertificates2.label "Управление сертификатами…">
+<!ENTITY manageCertificates2.accesskey "ф">
+<!ENTITY viewSecurityDevices2.label "Устройства защиты…">
+<!ENTITY viewSecurityDevices2.accesskey "ы">

@@ -59,7 +59,7 @@
 <!ENTITY otherActionsOpenInNewWindow1.label "Открыть в новом окне">
 <!ENTITY otherActionsOpenInNewWindow1.accesskey "н">
 <!ENTITY otherActionsOpenInNewTab1.label "Открыть в новой вкладке">
-<!ENTITY otherActionsOpenInNewTab1.accesskey "к">
+<!ENTITY otherActionsOpenInNewTab1.accesskey "ы">
 <!ENTITY markAsReadMenuItem1.label "Отметить как прочитанное">
 <!ENTITY markAsReadMenuItem1.accesskey "и">
 <!ENTITY markAsUnreadMenuItem1.label "Отметить как непрочитанное">
@@ -77,7 +77,7 @@
 
 <!-- Attachment context menu items -->
 <!ENTITY openAttachmentCmd.label    "Открыть">
-<!ENTITY openAttachmentCmd.accesskey    "к">
+<!ENTITY openAttachmentCmd.accesskey    "ь">
 <!ENTITY saveAsAttachmentCmd.label    "Сохранить как…">
 <!ENTITY saveAsAttachmentCmd.accesskey    "х">
 <!ENTITY detachAttachmentCmd.label    "Отделить…">
@@ -94,6 +94,11 @@
 <!ENTITY deleteAllAttachmentsCmd.accesskey    "е">
 
 <!ENTITY openAttachment.tooltip "Открыть вложенный файл">
+
+<!ENTITY detachedAttachmentFolder.show.label        "Открыть папку с файлом">
+<!ENTITY detachedAttachmentFolder.show.accesskey    "к">
+<!ENTITY detachedAttachmentFolder.showMac.label     "Показать в Finder">
+<!ENTITY detachedAttachmentFolder.showMac.accesskey "к">
 
 <!-- Attachment toolbar items -->
 <!ENTITY saveAttachmentButton1.label       "Сохранить">

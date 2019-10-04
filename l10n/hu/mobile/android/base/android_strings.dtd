@@ -4,10 +4,13 @@
 
 <!ENTITY firstrun_panel_title_welcome "Üdvözöljük">
 <!ENTITY firstrun_urlbar_message2 "Köszönjük hogy a &brandShortName; böngészőt választotta">
+<!ENTITY newfirstrun_urlbar_message "Üdvözli a &brandShortName;">
 <!ENTITY firstrun_urlbar_subtext2 "Egy modern mobil böngésző a Mozillától, a nonprofit szervezettől, amely elkötelezett a szabad és nyílt web mellett.">
+<!ENTITY newfirstrun_urlbar_subtext "Gyors, privát és az Ön oldalán áll.">
 <!ENTITY firstrun_panel_title_privacy "Adatvédelem">
 <!ENTITY firstrun_privacy_message "Böngésszen úgy, mintha senki sem figyelné">
 <!ENTITY firstrun_privacy_subtext "A követésvédelemmel ellátott privát böngészés blokkolja a követőket miközben böngészik, és azután sem jegyzi meg az előzményeket, ha befejezi a böngészést.">
+<!ENTITY newfirstrun_privacy_subtext "A privát böngészés blokkolja az Önt követő hirdetéskövetőket.">
 <!ENTITY firstrun_panel_title_customize "Testreszabás">
 <!ENTITY firstrun_customize_message "Tegye a sajátjává a &brandShortName; böngészőt.">
 <!ENTITY firstrun_customize_subtext "Szabja testre a &brandShortName; böngészőt kiegészítőkkel. Blokkolja a hirdetéseket, adjon hozzá funkciókat, vagy válasszon egy témát, amely tükrözi a személyiségét.">
@@ -18,10 +21,15 @@
 <!ENTITY firstrun_data_message "Kevesebb adat, több spórolás">
 <!ENTITY firstrun_data_subtext2 "Kapcsolja ki a képeket az adatforgalommal való spóroláshoz.">
 <!ENTITY firstrun_sync_title "Sync">
+<!ENTITY updatednewfirstrun_sync_title "Fiók">
 <!ENTITY firstrun_sync_message2 "Folytassa ott, ahol abbahagyta.">
 <!ENTITY firstrun_sync_subtext2 "Használja a Syncet a könyjzők, jelszavak, és más dolgok megtalálására, amelyeket a &brandShortName; böngészőbe ment az összes eszközén.">
+<!ENTITY newfirstrun_sync_subtext "Szinkronizálja a mobilra mentett dolgokat az asztali Firefoxszal, bizalmasan és biztonságosan.">
+<!ENTITY updatednewfirstrun_sync_subtext "Jelentkezzen be fiókjába, hogy a legtöbbet hozza ki a &brandShortName;ból">
 <!ENTITY firstrun_signin_message "Kapcsolódjon, vágjon bele">
 <!ENTITY firstrun_signin_button "Jelentkezzen be a Syncbe">
+<!ENTITY newfirstrun_signin_button "Sync bekapcsolása">
+<!ENTITY updatednewfirstrun_signin_button "Jelentkezzen be a &brandShortName;ba">
 <!ENTITY  onboard_start_button_browser "Böngészés megkezdése">
 <!ENTITY firstrun_button_notnow "Most nem">
 <!ENTITY firstrun_button_next "Következő">
@@ -61,8 +69,19 @@
 <!ENTITY  sending_crash_report "Hibajelentés elküldése \u2026">
 <!ENTITY  crash_close_label "Bezárás">
 <!ENTITY  crash_restart_label "A &brandShortName; újraindítása">
+<!-- Localization note (crash_notification_title, crash_notification_message, crash_notification_negative_button_text)
+     Text displayed in a system notification to allow starting the Crash Reporter (Android Q and later).-->
+<!ENTITY  crash_notification_title "A &brandShortName; összeomlott">
+<!ENTITY  crash_notification_message "Koppintson, hogy jelentse a &vendorShortName; felé">
+<!ENTITY  crash_notification_negative_button_text "Kihagyás">
 
 <!ENTITY url_bar_default_text2 "Keresés vagy cím">
+
+<!-- Localization note: this text will be displayed in the Search Widget -->
+<!ENTITY search_widget_default_text "Keresés a weben">
+<!ENTITY search_widget_default_cropped_text "Keresés">
+<!ENTITY search_widget_logo_description "Keresés a weben a &brandShortName;szal">
+
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -97,6 +116,9 @@
 <!ENTITY bookmark_folder_updated "Mappa frissítve">
 <!ENTITY bookmark_parent_folder "Szülőmappa">
 <!ENTITY bookmark_add_folder "Új mappa hozzáadása">
+<!-- Localization note (bookmark_default_folder_title): Default title is used if user doesn't specify
+     one when he is creating a bookmark folder -->
+<!ENTITY bookmark_default_folder_title "(nincs cím)">
 
 <!ENTITY reader_saved_offline "Kapcsolat nélkül mentve">
 <!-- Localization note (reader_switch_to_bookmarks) : This
@@ -255,7 +277,8 @@
 
 <!ENTITY pref_cookies_menu "Sütik">
 <!ENTITY pref_cookies_accept_all "Engedélyezve">
-<!ENTITY pref_cookies_not_accept_foreign "Engedélyezve, kivéve harmadik féltől származó">
+<!ENTITY pref_cookies_not_accept_foreign "Engedélyezve, kivéve a harmadik féltől származók">
+<!ENTITY pref_cookies_not_accept_trackers "Engedélyezve, kivéve a nyomkövető sütiket">
 <!ENTITY pref_cookies_disabled "Tiltva">
 
 <!-- Localization note (pref_category_data_saver): “data saver” in this
@@ -290,12 +313,6 @@
 <!-- Localization note (pref_feature_tips_notification_summary): Description of a new toggleable setting in Settings-Notifications screen.
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "Tudjon meg többet a &brandShortName; és más &vendorShortName; termékek használatáról">
-
-<!-- Localization note (pref_feature_tips_notification_enabling_hint):
-     Describe the action the user should do to enable this preference
-     Will be used in the context "<Turn on> ... to enable this feature" -->
-<!ENTITY pref_feature_tips_notification_enabling_hint "Bekapcsolás">
-
 <!-- Localization note (pref_feature_tips_notification_enabling_path):
      Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
 <!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
@@ -323,11 +340,6 @@
 <!ENTITY pref_pwa "Progresszív webappok">
 <!ENTITY pref_pwa_summary "Webappok kezdőképernyőhöz adásának engedélyezése">
 
-<!ENTITY tracking_protection_prompt_title "Most követés elleni védelemmel">
-<!ENTITY tracking_protection_prompt_text "Aktívan blokkolja a követő elemeket, hogy ne kelljen aggódnia.">
-<!ENTITY tracking_protection_prompt_tip_text "További tudnivalókért keresse fel az Adatvédelmi beállításokat">
-<!ENTITY tracking_protection_prompt_action_button "Megértettem!">
-
 <!ENTITY tab_queue_toast_message3 "Lap mentve a &brandShortName;ban">
 <!ENTITY tab_queue_toast_action "Megnyitás most">
 <!ENTITY tab_queue_prompt_title "Megnyit több hivatkozást?">
@@ -341,6 +353,9 @@
 <!-- Localization note (tab_queue_prompt_settings_button): This button is shown if the user needs to
      enable a permission in Android's setting in order to enable tab queues. -->
 <!ENTITY tab_queue_prompt_settings_button "Ugrás a beállításokhoz">
+<!-- Localization note (tab_queue_notification_prompt): This is the text of the default notification
+shown from Android O while a tab is being queued.-->
+<!ENTITY tab_queue_notification_prompt "Új lap hozzáadása a sorhoz&#8230;">
 <!ENTITY tab_queue_notification_title "&brandShortName;">
 <!-- Localization note (tab_queue_notification_text_plural2) : The
      formatD is replaced with the number of tabs queued.  The
@@ -399,15 +414,17 @@
 <!ENTITY pref_private_data_searchHistory "Keresés előzményei">
 <!ENTITY pref_private_data_formdata2 "Űrlapok előzményei">
 <!ENTITY pref_private_data_cookies2 "Sütik és aktív bejelentkezések">
-<!ENTITY pref_private_data_passwords2 "Mentett bejelentkezések">
 <!ENTITY pref_private_data_cache "Gyorsítótár">
 <!ENTITY pref_private_data_offlineApps "Kapcsolat nélküli webhelyadatok">
 <!ENTITY pref_private_data_siteSettings2 "Oldalbeállítások">
 <!ENTITY pref_private_data_downloadFiles2 "Letöltések">
 <!ENTITY pref_private_data_syncedTabs "Szinkronizált lapok">
 
-<!ENTITY pref_default_browser "Alapértelmezett böngészővé tétel">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Mozilla támogatás">
+<!ENTITY pref_default_browser2 "A &brandShortName; beállítása alapértelmezett böngészőnek">
+<!-- LOCALIZATION NOTE (default_browser_system_settings_toast):
+    Message of an Android Toast that appears after our app opens "Android System Settings -> Apps -> Default apps"
+    and instruct users to tap on the "Browser app" option on that settings screen to choose a default browser app. -->
+<!ENTITY default_browser_system_settings_toast "Koppintson a Böngésző alkalmazásra és válassza a &brandShortName;ot">
 <!ENTITY pref_about_firefox "A &brandShortName; névjegye">
 <!ENTITY pref_vendor_faqs "GYIK">
 <!ENTITY pref_vendor_feedback "Visszajelzés">
@@ -502,6 +519,10 @@
 <!ENTITY find_next "Tovább">
 <!ENTITY find_close "Bezárás">
 
+<!-- Localization note (find_error) : Error message shown when there is no result for the
+     searched for text in this webpage -->
+<!ENTITY find_error "A kifejezés nem található">
+
 <!-- Localization note (media_sending_to, media_play, media_pause, media_stop) : These strings are used
      as alternate text for accessibility. They are not visible in the UI. -->
 <!ENTITY media_sending_to "Küldés eszközre">
@@ -574,6 +595,8 @@
 <!ENTITY bookmark_edit_location "Hely">
 <!ENTITY bookmark_edit_keyword "Kulcsszó">
 <!ENTITY bookmark_select_folder "Válasszon mappát">
+
+<!ENTITY bookmark_edit_undo "Visszavonás">
 
 <!-- Localization note (site_settings_*) : These strings are used in the "Site Settings"
      dialog that appears after selecting the "Edit Site Settings" context menu item. -->
@@ -662,6 +685,7 @@
 <!ENTITY filepicker_audio_title "Válasszon vagy vegyen fel egy hangot">
 <!ENTITY filepicker_image_title "Válasszon vagy készítsen egy képet">
 <!ENTITY filepicker_video_title "Válasszon vagy vegyen fel egy videót">
+<!ENTITY filepicker_permission_denied "A szükséges engedélyek nem lettek megadva, visszatérés a rendszer fájlválasztójához.">
 
 <!-- Site identity popup -->
 <!ENTITY identity_connected_to "A következőhöz csatlakozott:">
@@ -844,8 +868,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY whatsnew_notification_title "A &brandShortName; naprakész">
 <!ENTITY whatsnew_notification_summary "Ismerje meg ezen verzió újdonságait">
 
-<!ENTITY promotion_add_page_shortcut "Lap ikon hozzáadása">
-
 <!ENTITY helper_first_offline_bookmark_title "Olvasás kapcsolat nélkül">
 <!ENTITY helper_first_offline_bookmark_message "Találja meg az olvasónézet elemeit a könyvjelzőknél, kapcsolat nélkül is.">
 <!ENTITY helper_first_offline_bookmark_button "Ugrás a könyvjelzőkhöz.">
@@ -903,16 +925,11 @@ Picture-in-picture mini window -->
 <!ENTITY pip_pause_button_title "Szünet">
 <!ENTITY pip_pause_button_description "Lejátszás szüneteltetése">
 
-<!-- Notification channels names -->
-<!ENTITY default_notification_channel "&brandShortName;">
-
+<!ENTITY pref_notification_settings_link "Értesítési beállítások kezelése">
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel2 "Böngésző">
 <!ENTITY mls_notification_channel "&vendorShortName; földrajzihely-szolgáltatás">
 <!ENTITY download_notification_channel "Letöltések">
-<!ENTITY media_notification_channel "Médialejátszás">
-<!-- These push notifications come without a specific channel and/or name from Leanplum -->
-<!ENTITY leanplum_default_notifications_channel "&brandShortName; leküldéses értesítések">
 <!ENTITY media_notification_channel2 "Hang és videó">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel2 "&vendorShortName; tippek és trükkök">
@@ -921,3 +938,4 @@ Picture-in-picture mini window -->
 <!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
 web sites through the HTML Notifications API. -->
 <!ENTITY site_notifications_channel "Oldalértesítések">
+<!ENTITY crash_handler_notifications_channel "&brandShortName; összeomlás-jelentő">

@@ -40,11 +40,11 @@
 <!ENTITY cmd.deleteDomainData.accesskey "D">
 <!ENTITY cmd.open.label "Apri">
 <!ENTITY cmd.open.accesskey "A">
-<!ENTITY cmd.open_window.label "Apri in una nuova finestra">
+<!ENTITY cmd.open_window.label "Apri in nuova finestra">
 <!ENTITY cmd.open_window.accesskey "f">
-<!ENTITY cmd.open_private_window.label "Apri in una nuova finestra anonima">
+<!ENTITY cmd.open_private_window.label "Apri in nuova finestra anonima">
 <!ENTITY cmd.open_private_window.accesskey "m">
-<!ENTITY cmd.open_tab.label "Apri in una nuova scheda">
+<!ENTITY cmd.open_tab.label "Apri in nuova scheda">
 <!ENTITY cmd.open_tab.accesskey "h">
 <!ENTITY cmd.open_all_in_tabs.label "Apri tutti in schede">
 <!ENTITY cmd.open_all_in_tabs.accesskey "u">
@@ -60,8 +60,6 @@
 <!ENTITY cmd.context_new_folder.accesskey "N">
 <!ENTITY cmd.new_separator.label "Nuovo separatore">
 <!ENTITY cmd.new_separator.accesskey "u">
-<!ENTITY cmd.reloadLivebookmark.label "Ricarica segnalibro Live">
-<!ENTITY cmd.reloadLivebookmark.accesskey "R">
 <!ENTITY col.name.label "Nome">
 <!ENTITY col.tags.label "Etichette">
 <!ENTITY col.url.label "Indirizzo">

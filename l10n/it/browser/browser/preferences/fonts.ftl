@@ -138,9 +138,6 @@ fonts-languages-fallback-name-vietnamese =
     .label = Vietnamita
 fonts-languages-fallback-name-other =
     .label = Altro (incl. Europa occidentale)
-fonts-very-large-warning-title = Dimensione minima caratteri eccessiva
-fonts-very-large-warning-message = È stata impostata una dimensione minima dei caratteri molto grande (maggiore di 24 pixel). Questo potrebbe rendere difficile o impossibile l’utilizzo di alcune pagine importanti di configurazione.
-fonts-very-large-warning-accept = Mantieni la dimensione selezionata
 # Variables:
 #   $name {string, "Arial"} - Name of the default font
 fonts-label-default =

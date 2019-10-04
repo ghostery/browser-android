@@ -28,13 +28,15 @@
 <!ENTITY contextArchive.label "Archiválás">
 <!ENTITY contextArchive.accesskey "A">
 
+<!ENTITY contextPeriodic.accesskey "p">
+
 <!ENTITY filterActionDesc.label "Műveletek végrehajtása:">
 <!ENTITY filterActionDesc.accesskey "v">
 
 <!ENTITY filterActionOrderWarning.label "Megjegyzés: a szűrési műveletek más sorrendben lesznek futtatva.">
 <!ENTITY filterActionOrder.label "Végrehajtási sorrend megjelenítése">
-<!-- New Style Filter Rule Actions -->
 
+<!-- New Style Filter Rule Actions -->
 <!ENTITY moveMessage.label "Üzenet áthelyezése">
 <!ENTITY copyMessage.label "Üzenet átmásolása">
 <!ENTITY forwardTo.label "Üzenet továbbítása">
@@ -55,12 +57,12 @@
 
 <!ENTITY addAction.tooltip "Új művelet hozzáadása">
 <!ENTITY removeAction.tooltip "A művelet eltávolítása">
+
 <!-- LOCALIZATION NOTE
      The values below are used to control the widths of the filter action widgets.
      Change the values only when the localized strings in the popup menus
      are truncated in the widgets.
   -->
 <!-- Flex Attribute: https://developer.mozilla.org/docs/XUL/Attribute/flex -->
-
 <!ENTITY filterActionTypeFlexValue "1">
 <!ENTITY filterActionTargetFlexValue "4">

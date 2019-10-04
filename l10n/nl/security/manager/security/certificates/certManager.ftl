@@ -45,6 +45,14 @@ certmgr-period-of-validity-label =
 certmgr-fingerprints-label =
     .value = Vingerafdrukken
 
+certmgr-subject-label = Uitgegeven aan
+
+certmgr-issuer-label = Uitgegeven door
+
+certmgr-period-of-validity = Geldigheidsduur
+
+certmgr-fingerprints = Vingerafdrukken
+
 certmgr-cert-detail =
     .title = Detail van certificaat
     .buttonlabelaccept = Sluiten
@@ -67,6 +75,18 @@ certmgr-cert-detail-sha256-fingerprint =
 
 certmgr-cert-detail-sha1-fingerprint =
     .value = SHA1-vingerafdruk
+
+certmgr-cert-detail-commonname = Algemene naam (CN)
+
+certmgr-cert-detail-org = Organisatie (O)
+
+certmgr-cert-detail-orgunit = Organisatorische eenheid (OU)
+
+certmgr-cert-detail-serial-number = Serienummer
+
+certmgr-cert-detail-sha-256-fingerprint = SHA-256-vingerafdruk
+
+certmgr-cert-detail-sha-1-fingerprint = SHA1-vingerafdruk
 
 certmgr-edit-ca-cert =
     .title = CA-certificaat-vertrouwensinstellingen bewerken
@@ -96,11 +116,15 @@ certmgr-override-lifetime =
 certmgr-token-name =
     .label = Beveiligingsapparaat
 
+certmgr-begins-on = Begint op
+
 certmgr-begins-label =
     .label = Begint op
 
 certmgr-begins-value =
     .value = { certmgr-begins-label.label }
+
+certmgr-expires-on = Verloopt op
 
 certmgr-expires-label =
     .label = Verloopt op

@@ -4,10 +4,13 @@
 
 <!ENTITY firstrun_panel_title_welcome "ようこそ">
 <!ENTITY firstrun_urlbar_message2 "&brandShortName; をお選びいただきありがとうございます">
+<!ENTITY newfirstrun_urlbar_message "&brandShortName; へようこそ">
 <!ENTITY firstrun_urlbar_subtext2 "自由でオープンなウェブに取り組む非営利団体 Mozilla の提供するモダンなモバイルブラウザーです。">
+<!ENTITY newfirstrun_urlbar_subtext "速く、秘密を守る、あなたの味方">
 <!ENTITY firstrun_panel_title_privacy "プライバシー">
 <!ENTITY firstrun_privacy_message "人目を気にせずブラウジング">
 <!ENTITY firstrun_privacy_subtext "トラッキング防止されたプライベートブラウジングでは、ブラウジング中の追跡をブロックし、ブラウジングが終われば履歴が残ることはありません。">
+<!ENTITY newfirstrun_privacy_subtext "プライベートブラウジングはオンラインでユーザーを追跡する広告をブロックします。">
 <!ENTITY firstrun_panel_title_customize "カスタマイズ">
 <!ENTITY firstrun_customize_message "あなただけの &brandShortName; を">
 <!ENTITY firstrun_customize_subtext "アドオンで &brandShortName; をカスタマイズできます。広告をブロックしたり、機能を追加したり、新しいテーマを選んだりして、あなたの個性を反映させましょう。">
@@ -18,10 +21,15 @@
 <!ENTITY firstrun_data_message "データを減らせば節約に">
 <!ENTITY firstrun_data_subtext2 "画像を非表示にしてサイト訪問時のデータ消費を節約しましょう。">
 <!ENTITY firstrun_sync_title "同期">
+<!ENTITY updatednewfirstrun_sync_title "アカウント">
 <!ENTITY firstrun_sync_message2 "中断してもピックアップ">
 <!ENTITY firstrun_sync_subtext2 "Sync を利用すれば、&brandShortName; に保存したブックマーク、パスワードやその他の情報を、利用中のどの端末からでも見つけることができます。">
+<!ENTITY newfirstrun_sync_subtext "モバイル端末に保存したものをデスクトップ版 Firefox と、秘密を守って安全に同期します。">
+<!ENTITY updatednewfirstrun_sync_subtext "アカウントにログインして &brandShortName; を活用しましょう">
 <!ENTITY firstrun_signin_message "接続して始めましょう">
 <!ENTITY firstrun_signin_button "Sync にログイン">
+<!ENTITY newfirstrun_signin_button "Sync をオンにする">
+<!ENTITY updatednewfirstrun_signin_button "&brandShortName; にログイン">
 <!ENTITY  onboard_start_button_browser "ブラウジングを始める">
 <!ENTITY firstrun_button_notnow "今はしない">
 <!ENTITY firstrun_button_next "次へ">
@@ -61,8 +69,19 @@
 <!ENTITY  sending_crash_report "クラッシュレポートを送信しています...">
 <!ENTITY  crash_close_label "閉じる">
 <!ENTITY  crash_restart_label "&brandShortName; を再起動">
+<!-- Localization note (crash_notification_title, crash_notification_message, crash_notification_negative_button_text)
+     Text displayed in a system notification to allow starting the Crash Reporter (Android Q and later).-->
+<!ENTITY  crash_notification_title "&brandShortName; がクラッシュしました">
+<!ENTITY  crash_notification_message "タップして &vendorShortName; に報告してください">
+<!ENTITY  crash_notification_negative_button_text "無視">
 
 <!ENTITY url_bar_default_text2 "検索するか URL を入力してください">
+
+<!-- Localization note: this text will be displayed in the Search Widget -->
+<!ENTITY search_widget_default_text "ウェブ検索">
+<!ENTITY search_widget_default_cropped_text "検索">
+<!ENTITY search_widget_logo_description "&brandShortName; でウェブを検索します">
+
 <!-- Localization note (url_bar_qrcode_text2) : This text will be
      heard by non-visual users when the focus is on the QR Code
      icon in the url bar. -->
@@ -97,6 +116,9 @@
 <!ENTITY bookmark_folder_updated "フォルダーを更新しました">
 <!ENTITY bookmark_parent_folder "親フォルダー">
 <!ENTITY bookmark_add_folder "新しいフォルダーを追加">
+<!-- Localization note (bookmark_default_folder_title): Default title is used if user doesn't specify
+     one when he is creating a bookmark folder -->
+<!ENTITY bookmark_default_folder_title "(タイトルなし)">
 
 <!ENTITY reader_saved_offline "オフラインに保存しました">
 <!-- Localization note (reader_switch_to_bookmarks) : This
@@ -211,7 +233,7 @@
 <!ENTITY pref_category_notifications_summary2 "新しい機能、製品のヒント">
 <!ENTITY pref_developer_remotedebugging_usb "USB 経由でリモートデバッグする">
 <!ENTITY pref_developer_remotedebugging_wifi "Wi-Fi 経由でリモートデバッグする">
-<!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wi-Fi でのデバッグには端末に QR コードリーダーアプリをインストールする必要があります">
+<!ENTITY pref_developer_remotedebugging_wifi_disabled_summary "Wi-Fi でのデバッグは端末に QR コードリーダーアプリをインストールする必要があります">
 <!ENTITY pref_remember_signons2 "ログイン情報を保存する">
 <!ENTITY pref_manage_logins "ログイン情報の管理">
 
@@ -221,7 +243,7 @@
 <!ENTITY pref_category_home_add_ons "アドオン">
 <!ENTITY pref_home_updates2 "コンテンツの更新">
 <!ENTITY pref_home_updates_enabled "有効">
-<!ENTITY pref_home_updates_wifi "Wi-Fi のみ有効">
+<!ENTITY pref_home_updates_wifi "Wi-Fi 利用時のみ有効">
 <!ENTITY pref_category_home_homepage "ホームページ">
 <!-- Localization note (home_homepage_every_new_tab): The user will see a switch to determine if the
      home page will be use in every new tab. -->
@@ -256,6 +278,7 @@
 <!ENTITY pref_cookies_menu "Cookie">
 <!ENTITY pref_cookies_accept_all "すべてのサイトで有効">
 <!ENTITY pref_cookies_not_accept_foreign "有効 (サードパーティを除く)">
+<!ENTITY pref_cookies_not_accept_trackers "有効 (トラッキング Cookie を除く)">
 <!ENTITY pref_cookies_disabled "無効">
 
 <!-- Localization note (pref_category_data_saver): “data saver” in this
@@ -291,11 +314,6 @@
      Similar to the already existing "pref_whats_new_notification_summary"-->
 <!ENTITY pref_feature_tips_notification_summary "&brandShortName; の使い方と他の &vendorShortName; 製品の使い方について学びます">
 
-<!-- Localization note (pref_feature_tips_notification_enabling_hint):
-     Describe the action the user should do to enable this preference
-     Will be used in the context "<Turn on> ... to enable this feature" -->
-<!ENTITY pref_feature_tips_notification_enabling_hint "有効化">
-
 <!-- Localization note (pref_feature_tips_notification_enabling_path):
      Nothing to translate. Simple concatenation of already localized strings. Result is used below. -->
 <!ENTITY pref_feature_tips_notification_enabling_path "&pref_category_privacy_short; > &pref_category_datareporting; > &datareporting_fhr_title;">
@@ -321,12 +339,7 @@
 <!ENTITY custom_tabs_hint_url_copy "URL をコピーしました">
 
 <!ENTITY pref_pwa "プログレッシブウェブアプリ">
-<!ENTITY pref_pwa_summary "ホーム画面へのウェブアプリの追加を許可する">
-
-<!ENTITY tracking_protection_prompt_title "トラッキング防止が有効です">
-<!ENTITY tracking_protection_prompt_text "プライバシー確保のため、オンライン行動を追跡する要素をブロックします。">
-<!ENTITY tracking_protection_prompt_tip_text "詳細はプライバシー設定をご確認ください">
-<!ENTITY tracking_protection_prompt_action_button "了解！">
+<!ENTITY pref_pwa_summary "ウェブアプリにホーム画面への追加を許可する">
 
 <!ENTITY tab_queue_toast_message3 "タブが &brandShortName; に保存されました">
 <!ENTITY tab_queue_toast_action "すぐに開く">
@@ -341,6 +354,9 @@
 <!-- Localization note (tab_queue_prompt_settings_button): This button is shown if the user needs to
      enable a permission in Android's setting in order to enable tab queues. -->
 <!ENTITY tab_queue_prompt_settings_button "設定に移動">
+<!-- Localization note (tab_queue_notification_prompt): This is the text of the default notification
+shown from Android O while a tab is being queued.-->
+<!ENTITY tab_queue_notification_prompt "新しいタブをキューに追加します&#8230;">
 <!ENTITY tab_queue_notification_title "&brandShortName;">
 <!-- Localization note (tab_queue_notification_text_plural2) : The
      formatD is replaced with the number of tabs queued.  The
@@ -398,15 +414,17 @@
 <!ENTITY pref_private_data_searchHistory "検索履歴">
 <!ENTITY pref_private_data_formdata2 "フォームの履歴">
 <!ENTITY pref_private_data_cookies2 "Cookie">
-<!ENTITY pref_private_data_passwords2 "保存されたログイン情報">
 <!ENTITY pref_private_data_cache "キャッシュ">
 <!ENTITY pref_private_data_offlineApps "オフライン作業用データ">
 <!ENTITY pref_private_data_siteSettings2 "サイト設定">
 <!ENTITY pref_private_data_downloadFiles2 "ダウンロードしたファイル">
 <!ENTITY pref_private_data_syncedTabs "同期したタブ">
 
-<!ENTITY pref_default_browser "既定のブラウザーに設定">
-<!ENTITY pref_default_browser_mozilla_support_tablet "Mozilla サポート">
+<!ENTITY pref_default_browser2 "&brandShortName; を既定のブラウザーに設定">
+<!-- LOCALIZATION NOTE (default_browser_system_settings_toast):
+    Message of an Android Toast that appears after our app opens "Android System Settings -> Apps -> Default apps"
+    and instruct users to tap on the "Browser app" option on that settings screen to choose a default browser app. -->
+<!ENTITY default_browser_system_settings_toast "ブラウザーアプリをタップし、&brandShortName; を選択してください。">
 <!ENTITY pref_about_firefox "&brandShortName; について">
 <!ENTITY pref_vendor_faqs "FAQ">
 <!ENTITY pref_vendor_feedback "フィードバック提供">
@@ -450,7 +468,7 @@
      (crashReporterSection.label) in en-US/chrome/browser/preferences/advanced.dtd.-->
 <!ENTITY datareporting_crashreporter_title_short "クラッシュレポーター">
 <!ENTITY datareporting_wifi_title2 "&vendorShortName; 位置情報サービス">
-<!ENTITY datareporting_wifi_geolocation_summary4 "&vendorShortName; による世界地図の作成にご協力を！位置情報サービスの向上のため、Wi-Fi と基地局から得た端末の位置情報を共有します。">
+<!ENTITY datareporting_wifi_geolocation_summary4 "&vendorShortName; による世界地図の作成にご協力を！ 位置情報サービスの向上のため、Wi-Fi と基地局から得た端末の位置情報を共有します。">
 <!-- Localization note (datareporting_notification_title ) : This will be the title
      of the notification shown whenever the user has enabled data reporting and the stumbler
      service is running. -->
@@ -459,7 +477,7 @@
      specifically, since the pref only prevents automatic downloads and not the
      actual notification that an update is available. -->
 <!ENTITY pref_update_autodownload3 "自動更新">
-<!ENTITY pref_update_autodownload_wifi "Wi-Fi 環境でのみ有効にする">
+<!ENTITY pref_update_autodownload_wifi "Wi-Fi 利用時のみ有効にする">
 <!ENTITY pref_update_autodownload_never "許可しない">
 <!ENTITY pref_update_autodownload_always "常に許可する">
 
@@ -499,6 +517,10 @@
 <!ENTITY find_prev "前を検索">
 <!ENTITY find_next "次を検索">
 <!ENTITY find_close "閉じる">
+
+<!-- Localization note (find_error) : Error message shown when there is no result for the
+     searched for text in this webpage -->
+<!ENTITY find_error "見つかりませんでした">
 
 <!-- Localization note (media_sending_to, media_play, media_pause, media_stop) : These strings are used
      as alternate text for accessibility. They are not visible in the UI. -->
@@ -572,6 +594,8 @@
 <!ENTITY bookmark_edit_location "場所">
 <!ENTITY bookmark_edit_keyword "キーワード">
 <!ENTITY bookmark_select_folder "フォルダーを選択">
+
+<!ENTITY bookmark_edit_undo "元に戻す">
 
 <!-- Localization note (site_settings_*) : These strings are used in the "Site Settings"
      dialog that appears after selecting the "Edit Site Settings" context menu item. -->
@@ -660,6 +684,7 @@
 <!ENTITY filepicker_audio_title "音声を選択または録音する">
 <!ENTITY filepicker_image_title "写真を選択または撮影する">
 <!ENTITY filepicker_video_title "動画を選択または録画する">
+<!ENTITY filepicker_permission_denied "必要な許可設定がありません。システムのファイル選択に戻します。">
 
 <!-- Site identity popup -->
 <!ENTITY identity_connected_to "このウェブサイトは認証されています">
@@ -688,8 +713,8 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY doorhanger_tracking_title2 "トラッキング防止">
 <!ENTITY doorhanger_tracking_state_enabled "有効">
 <!ENTITY doorhanger_tracking_state_disabled "無効">
-<!ENTITY doorhanger_tracking_message_enabled1 "オンライン上の行動をトラッキングしようとすることはブロックされました。">
-<!ENTITY doorhanger_tracking_message_disabled2 "このページにはブラウジングをトラッキングするような要素が含まれています。">
+<!ENTITY doorhanger_tracking_message_enabled1 "オンライン行動を追跡しようとするコンテンツをブロックしました。">
+<!ENTITY doorhanger_tracking_message_disabled2 "このページにはブラウジングを追跡する可能性のある要素が含まれています。">
 
 <!-- Common mixed and tracking content strings in site identity popup -->
 <!ENTITY learn_more "詳細情報">
@@ -750,7 +775,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY guest_browsing_notification_title "ゲストブラウジングが有効です">
 <!ENTITY guest_browsing_notification_text "タップして終了">
 
-<!ENTITY exit_guest_session_title "&brandShortName; は今すぐ再起動します">
+<!ENTITY exit_guest_session_title "&brandShortName; を今すぐ再起動します">
 <!ENTITY exit_guest_session_text "このセッションの閲覧データは削除されます。">
 
 <!-- Miscellaneous -->
@@ -819,13 +844,13 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 
 <!-- Default Bookmarks titles-->
 <!-- LOCALIZATION NOTE (bookmarks_about_browser): link title for about:fennec -->
-<!ENTITY bookmarks_about_browser "Firefox: あなたのブラウザーについて">
+<!ENTITY bookmarks_about_browser "Firefox: このブラウザーについて">
 <!-- LOCALIZATION NOTE (bookmarks_addons): link title for https://addons.mozilla.org/en-US/mobile -->
 <!ENTITY bookmarks_addons "Firefox: アドオンでカスタマイズ">
 <!-- LOCALIZATION NOTE (bookmarks_support): link title for https://support.mozilla.org/ -->
 <!ENTITY bookmarks_support "Firefox: サポート">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_support): link title for https://support.mozilla.org/kb/controlledaccess -->
-<!ENTITY bookmarks_restricted_support2 "Android タブレットでの制限つきプロファイルについての Firefox ヘルプ">
+<!ENTITY bookmarks_restricted_support2 "Android タブレット上の制限付きプロファイルについての Firefox ヘルプとサポート">
 <!-- LOCALIZATION NOTE (bookmarks_restricted_webmaker):link title for https://webmaker.org -->
 <!ENTITY bookmarks_restricted_webmaker "ウェブについて学ぶ: Mozilla Webmaker">
 
@@ -842,8 +867,6 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY whatsnew_notification_title "&brandShortName; は最新版です">
 <!ENTITY whatsnew_notification_summary "このバージョンの新機能">
 
-<!ENTITY promotion_add_page_shortcut "ページのショートカットを追加">
-
 <!ENTITY helper_first_offline_bookmark_title "オフラインで読む">
 <!ENTITY helper_first_offline_bookmark_message "オフラインであってもブックマークのまとめ読み項目を表示します。">
 <!ENTITY helper_first_offline_bookmark_button "ブックマークへ移動">
@@ -858,7 +881,7 @@ just addresses the organization to follow, e.g. "This site is run by " -->
 <!ENTITY activity_stream_highlights "ハイライト">
 
 <!-- LOCALIZATION NOTE (activity_stream_link_more1): Link-like text displayed to take user to a website with more content from Pocket. -->
-<!ENTITY activity_stream_link_more1 "詳細">
+<!ENTITY activity_stream_link_more1 "詳細情報">
 
 <!-- LOCALIZATION NOTE (activity_stream_highlight_label_bookmarked): This label is shown in the Activity
 Stream list for highlights sourced from th user's bookmarks. -->
@@ -879,7 +902,7 @@ is simply hidden from the Activity Stream panel. -->
 
 <!ENTITY private_tab_panel_title "プライベートブラウジングとトラッキング防止">
 <!ENTITY private_tab_panel_description "&brandShortName; は、ページ内のブラウジング行動を追跡する部分をブロックします。">
-<!ENTITY private_tab_panel_description2 "履歴は残りませんが、ダウンロードされたファイルと新しいブックマークは端末に保存されます。">
+<!ENTITY private_tab_panel_description2 "履歴は残りませんが、ダウンロードしたファイルと新しいブックマークは端末に保存されます。">
 <!ENTITY private_tab_learn_more "さらに詳細を知りたいですか？">
 
 <!ENTITY fullscreen_warning "全画面表示です">
@@ -892,7 +915,7 @@ displayed when there are more than 3 actions available for a page.
 See also https://bug1409261.bmoattachments.org/attachment.cgi?id=8919897 -->
 <!ENTITY pwa_add_to_launcher_badge2 "ホーム画面に追加">
 <!ENTITY pwa_continue_to_website "ウェブサイトを開く">
-<!ENTITY pwa_onboarding_sumo "このウェブサイトを簡単な操作でホーム画面に追加することで、アプリのような感覚で手軽にアクセスしたりより速くブラウジングしたりできます。">
+<!ENTITY pwa_onboarding_sumo "このウェブサイトを簡単な操作でホーム画面に追加しましょう。アプリのような感覚で手軽にアクセスして素早くブラウジングできます。">
 
 <!-- Used by accessibility services to identify the play/pause buttons shown in the
 Picture-in-picture mini window -->
@@ -901,16 +924,11 @@ Picture-in-picture mini window -->
 <!ENTITY pip_pause_button_title "一時停止">
 <!ENTITY pip_pause_button_description "再生を一時停止します">
 
-<!-- Notification channels names -->
-<!ENTITY default_notification_channel "&brandShortName;">
-
+<!ENTITY pref_notification_settings_link "通知設定を管理">
 <!-- Notification channels names -->
 <!ENTITY default_notification_channel2 "ブラウザー">
 <!ENTITY mls_notification_channel "&vendorShortName; 位置情報サービス">
 <!ENTITY download_notification_channel "ダウンロード">
-<!ENTITY media_notification_channel "メディア再生">
-<!-- These push notifications come without a specific channel and/or name from Leanplum -->
-<!ENTITY leanplum_default_notifications_channel "&brandShortName; プッシュ通知">
 <!ENTITY media_notification_channel2 "音声と動画">
 <!-- These push notifications come without a specific channel and/or name from Leanplum -->
 <!ENTITY leanplum_default_notifications_channel2 "&vendorShortName; ヒントと活用法">
@@ -919,3 +937,4 @@ Picture-in-picture mini window -->
 <!-- LOCALIZATION NOTE (site_notifications_channel): This is for system notifications displayed by
 web sites through the HTML Notifications API. -->
 <!ENTITY site_notifications_channel "サイト通知">
+<!ENTITY crash_handler_notifications_channel "&brandShortName; クラッシュレポーター">

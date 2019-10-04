@@ -67,6 +67,7 @@
  -->
 <!ENTITY updateApp.version.pre			"バージョン ">
 <!ENTITY updateApp.version.post			"">
+<!ENTITY updateAppAllow.description		"&brandShortName; の更新動作">
 <!ENTITY updateAuto.label			"更新を自動的にインストールする (推奨: セキュリティ向上)">
 <!ENTITY updateAuto.accesskey			"A">
 <!ENTITY updateCheck.label			"更新を確認するが、インストールするかどうかを選択する">
@@ -77,10 +78,12 @@
 <!ENTITY useService.label			"更新のインストールにバックグラウンドサービスを使用する">
 <!ENTITY useService.accesskey			"b">
 
+<!ENTITY updateCrossUserSettingWarning.description	"この設定はすべての Windows アカウントと、このバージョンの &brandShortName; で使用するすべてのプロファイルに適用されます。">
+
 <!-- Networking and Disk Space -->
 <!ENTITY showSettings.label			"接続設定...">
 <!ENTITY showSettings.accesskey			"S">
-<!ENTITY proxiesConfigure.label			"インターネット接続に使用するプロキシを設定できます。">
+<!ENTITY proxiesConfigure.label			"インターネット接続に使用するプロキシーを設定できます。">
 <!ENTITY connectionsInfo.caption		"接続">
 <!ENTITY offlineInfo.caption			"オフライン">
 <!ENTITY offlineInfo.label			"オフライン時の動作を設定します。">
@@ -119,3 +122,8 @@
 <!ENTITY manageCertificates.accesskey		"M">
 <!ENTITY viewSecurityDevices.label		"セキュリティデバイス">
 <!ENTITY viewSecurityDevices.accesskey		"D">
+
+<!ENTITY manageCertificates2.label		"証明書を管理...">
+<!ENTITY manageCertificates2.accesskey		"M">
+<!ENTITY viewSecurityDevices2.label		"セキュリティデバイス...">
+<!ENTITY viewSecurityDevices2.accesskey		"D">

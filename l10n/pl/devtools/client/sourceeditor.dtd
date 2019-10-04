@@ -14,6 +14,6 @@
   - A good criteria is the language in which you'd find the best
   - documentation on web development on the web. -->
 
-<!ENTITY gotoLineCmd.label         "Przeskocz do wiersza…">
+<!ENTITY gotoLineCmd.label         "Przejdź do wiersza…">
 <!ENTITY gotoLineCmd.key           "J">
 <!ENTITY gotoLineCmd.accesskey     "P">

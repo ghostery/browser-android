@@ -29,7 +29,7 @@
 
 <!ENTITY importBookmarksFromHTML.label     "HTML에서 북마크 가져오기…">
 <!ENTITY importBookmarksFromHTML.accesskey "I">
-<!ENTITY exportBookmarksToHTML.label       "북마크를 HTML으로 내보내기…">
+<!ENTITY exportBookmarksToHTML.label       "북마크를 HTML로 내보내기…">
 <!ENTITY exportBookmarksToHTML.accesskey   "E">
 <!ENTITY importOtherBrowser.label          "다른 브라우저에서 가져오기…">
 <!ENTITY importOtherBrowser.accesskey      "A">
@@ -44,7 +44,7 @@
 <!ENTITY cmd.deleteDomainData.label     "이 사이트 기억 안 함">
 <!ENTITY cmd.deleteDomainData.accesskey "F">
 
-<!ENTITY cmd.open.label                  "새로 열기">
+<!ENTITY cmd.open.label                  "열기">
 <!ENTITY cmd.open.accesskey              "O">
 <!ENTITY cmd.open_window.label           "새 창에 열기">
 <!ENTITY cmd.open_window.accesskey       "N">
@@ -70,9 +70,6 @@
 <!ENTITY cmd.new_separator.label           "새 구분자">
 <!ENTITY cmd.new_separator.accesskey       "S">
 
-<!ENTITY cmd.reloadLivebookmark.label      "라이브 북마크 갱신">
-<!ENTITY cmd.reloadLivebookmark.accesskey  "R">
-
 <!ENTITY col.name.label          "이름">
 <!ENTITY col.tags.label          "태그">
 <!ENTITY col.url.label           "주소">
@@ -86,7 +83,7 @@
 
 <!ENTITY cmd.find.key  "f">
 
-<!ENTITY maintenance.label      "가져오기 및 복구">
+<!ENTITY maintenance.label      "가져오기 및 백업">
 <!ENTITY maintenance.accesskey  "I">
 <!ENTITY maintenance.tooltip    "북마크 가져오기 및 백업">
 

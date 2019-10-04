@@ -19,21 +19,12 @@
 <!ENTITY saveTo.accesskey               "v">
 <!ENTITY chooseDownloadFolder.label     "选择文件夹…">
 <!ENTITY chooseDownloadFolder.accesskey "C">
-<!ENTITY alwaysAsk.label                "总是询问保存文件的位置">
+<!ENTITY alwaysAsk.label                "每次都问我保存文件的位置">
 <!ENTITY alwaysAsk.accesskey            "A">
-
-<!ENTITY downloadHistory.label          "下载历史">
-<!ENTITY removeEntries.label            "移除下载项">
-<!ENTITY removeEntries.accesskey        "R">
-<!ENTITY whenCompleted.label            "当完成时">
-<!ENTITY whenQuittingApp.label          "当退出 &brandShortName;">
-<!ENTITY neverRemove.label              "总不">
 
 <!ENTITY finishedBehavior.label         "当一个下载项结束时">
 <!ENTITY playSound.label                "声音播放">
 <!ENTITY playSound.accesskey            "P">
-<!ENTITY showAlert.label                "显示警告">
-<!ENTITY showAlert.accesskey            "S">
 <!ENTITY browse.label                   "浏览…">
 <!ENTITY browse.accesskey               "B">
 <!ENTITY playButton.label               "播放">

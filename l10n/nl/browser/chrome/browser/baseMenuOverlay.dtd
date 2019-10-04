@@ -21,7 +21,7 @@
 <!ENTITY helpMac.commandkey       "?">
 
 <!ENTITY helpKeyboardShortcuts.label     "Sneltoetsen">
-<!ENTITY helpKeyboardShortcuts.accesskey "t">
+<!ENTITY helpKeyboardShortcuts.accesskey "S">
 
 <!ENTITY helpSafeMode.label       "Herstarten met uitgeschakelde add-ons…">
 <!ENTITY helpSafeMode.accesskey   "r">
@@ -49,3 +49,5 @@
 <!ENTITY hideOtherAppsCmdMac.commandkey "H">
 
 <!ENTITY showAllAppsCmdMac.label        "Toon alles">
+
+<!ENTITY touchBarCmdMac.label           "Aanraakbalk aanpassen…">

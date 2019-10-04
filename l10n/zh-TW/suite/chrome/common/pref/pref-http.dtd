@@ -13,15 +13,10 @@
 <!ENTITY prefEnableHTTP11.label              "使用 HTTP 1.1">
 <!ENTITY prefEnableHTTP11.accesskey          "e">
 <!ENTITY prefEnableHTTP11Proxy.accesskey     "T">
-<!ENTITY prefEnablePipelining.label          "使用 Pipelining">
-<!ENTITY prefEnablePipelining.accesskey      "P">
-<!ENTITY prefEnablePipeliningProxy.accesskey "N">
-<!ENTITY prefPara                            "可經由這些選項來微調 HTTP 連線的效能或相容性。像有些 Proxy 代理伺服器就需要使用 HTTP/1.0。（請看版本資訊以獲得進一步資訊）">
-<!ENTITY prefPipeWarning                     "警告: pipelining 是實驗中的功能，可用來增進網頁載入的性能，不過有些網頁伺服器或 Proxy 不支援此功能。">
+<!ENTITY prefPara                            "可透過這些選項來微調 HTTP 連線的效能或相容性。有些 Proxy 代理伺服器必需使用 HTTP/1.0 才能正常運作。（請參考發行公告以獲得進一步資訊）">
 <!ENTITY prefUseragent.label                 "使用者代理字串">
 <!ENTITY prefFirefoxCompat.label             "宣告 Firefox 相容性">
 <!ENTITY prefFirefoxCompat.accesskey         "F">
 <!ENTITY prefLightningShow.label             "通知已安裝 Lightning">
 <!ENTITY prefLightningShow.accesskey         "L">
 <!ENTITY prefCompatWarning                   "警告: 關閉這些設定可能會造成網站或服務無法正常使用。">
-

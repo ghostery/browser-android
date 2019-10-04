@@ -9,6 +9,8 @@
                        for the help button in the menubar but Gnome does not.   -->
 <!ENTITY helpMenuWin.label "Súgó">
 <!ENTITY helpMenuWin.accesskey "S">
+<!ENTITY aboutProduct2.label "A &brandShorterName; névjegye">
+<!ENTITY aboutProduct2.accesskey "n">
 <!ENTITY helpTroubleshootingInfo.label     "Hibakeresési információ">
 <!ENTITY helpTroubleshootingInfo.accesskey "H">
 <!ENTITY helpSafeMode.label     "Újraindítás letiltott kiegészítőkkel…">
@@ -20,13 +22,31 @@
 <!ENTITY openHelp.label "Tartalom">
 <!ENTITY openHelp.accesskey "T">
 <!ENTITY openHelp.commandkey "VK_F1">
-<!ENTITY openHelpMac.label "&brandShortName; súgó">
 <!ENTITY openHelpMac2.label "&brandFullName; Súgó">
 <!ENTITY openHelpMac2.commandkey   "?">
 <!ENTITY openHelpMac2.modifiers    "accel">
 
-<!ENTITY aboutMenuCmd.label "A &brandShortName; névjegye">
-<!ENTITY aboutMenuCmd.accesskey "n">
-
 <!ENTITY aboutMenuCmd2.label "A &brandFullName; névjegye">
 <!ENTITY aboutMenuCmd2.accesskey "n">
+<!ENTITY helpSafeMode.stop.label     "Újraindítás engedélyezett kiegészítőkkel">
+<!ENTITY helpSafeMode.stop.accesskey "R">
+<!ENTITY productHelp.label "&brandShortName; Súgó">
+<!ENTITY productHelp.accesskey "S">
+<!ENTITY productHelp.commandkey "VK_F1">
+<!ENTITY productHelpMac.commandkey "?">
+<!ENTITY productHelpMac.modifiers "accel">
+
+<!ENTITY helpKeyboardShortcuts.label "Gyorsbillentyűk">
+<!ENTITY helpKeyboardShortcuts.accesskey "b">
+
+<!ENTITY helpFeedbackPage.label "Visszajelzés küldése…">
+<!ENTITY helpFeedbackPage.accesskey "V">
+
+<!ENTITY helpShowTour2.label "&brandShorterName; Túra">
+<!ENTITY helpShowTour2.accesskey "r">
+
+<!ENTITY helpGetInvolvedPage.label "Csatlakozzon">
+<!ENTITY helpGetInvolvedPage.accesskey "l">
+
+<!ENTITY helpDonationsPage.label "Támogasson">
+<!ENTITY helpDonationsPage.accesskey "T">

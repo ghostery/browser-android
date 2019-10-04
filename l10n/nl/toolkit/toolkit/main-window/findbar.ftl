@@ -12,11 +12,6 @@ findbar-previous =
 findbar-find-button-close =
     .tooltiptext = Zoekbalk sluiten
 
-findbar-highlight-all =
-    .label = Alles markeren
-    .accesskey = A
-    .tooltiptext = Alle overeenkomsten van de tekst markeren
-
 findbar-highlight-all2 =
     .label = Alles markeren
     .accesskey = { PLATFORM() ->

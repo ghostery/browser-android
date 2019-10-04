@@ -6,3 +6,6 @@
 <!ENTITY  paneAlarms.title        "Herinneringen">
 <!ENTITY  paneCategories.title    "Categorieën">
 <!ENTITY  paneViews.title         "Overzichten">
+<!ENTITY  panelHeader.title       "Agenda">
+<!ENTITY  panelReminder.title     "Herinneringen">
+<!ENTITY  panelCatecory.title     "Categorieën">

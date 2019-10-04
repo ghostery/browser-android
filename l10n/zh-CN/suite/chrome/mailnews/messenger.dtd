@@ -58,9 +58,9 @@
 <!ENTITY renameFolder.label "重命名文件夹…">
 <!ENTITY renameFolder.accesskey "R">
 <!ENTITY compactFolders.label "压缩文件夹。">
-<!ENTITY compactFolders.accesskey		"F">
+<!ENTITY compactFolders.accesskey "F">
 <!ENTITY emptyTrashCmd.label "清空“废件箱”">
-<!ENTITY emptyTrashCmd.accesskey		"y">
+<!ENTITY emptyTrashCmd.accesskey "y">
 <!ENTITY offlineMenu.label "脱机">
 <!ENTITY offlineMenu.accesskey "l">
 <!ENTITY synchronizeOfflineCmd.label "立即下载/同步…">
@@ -129,9 +129,9 @@
 <!ENTITY messagePaneVertical.accesskey "V">
 <!ENTITY showMessagePaneCmd.label "消息">
 <!ENTITY showMessagePaneCmd.accesskey "M">
-<!ENTITY showThreadPaneCmd.label "话题面板">
+<!ENTITY showThreadPaneCmd.label "话题窗格">
 <!ENTITY showThreadPaneCmd.accesskey "T">
-<!ENTITY showFolderPaneCmd.label "文件夹面板">
+<!ENTITY showFolderPaneCmd.label "文件夹窗格">
 <!ENTITY showFolderPaneCmd.accesskey "F">
 
 <!-- sortMenu is also used by addressbook -->
@@ -284,23 +284,23 @@
 <!ENTITY newNewMsgCmd.accesskey "M">
 <!ENTITY replyMsgCmd.label "回复">
 <!ENTITY replyMsgCmd.accesskey "R">
-<!ENTITY replyMsgCmd.key	"r">
+<!ENTITY replyMsgCmd.key "r">
 <!ENTITY replyListCmd.label "回复到列表">
 <!ENTITY replyListCmd.accesskey "y">
 <!ENTITY replyNewsgroupCmd.label "回复到新闻组">
-<!ENTITY replyNewsgroupCmd.accesskey	"y">
+<!ENTITY replyNewsgroupCmd.accesskey "y">
 <!ENTITY replySenderCmd.label "只回复发件人">
 <!ENTITY replySenderCmd.accesskey "R">
 <!ENTITY replyToAllMsgCmd.label "全部回复">
-<!ENTITY replyToAllMsgCmd.accesskey	"p">
-<!ENTITY replyToAllMsgCmd.key	"r">
+<!ENTITY replyToAllMsgCmd.accesskey "p">
+<!ENTITY replyToAllMsgCmd.key "r">
 <!ENTITY replyToSenderAndNewsgroupCmd.label "回复发送人和新闻组">
 <!ENTITY replyToSenderAndNewsgroupCmd.accesskey "p">
 <!ENTITY replyToAllRecipientsCmd.label "回复所有收件人">
 <!ENTITY replyToAllRecipientsCmd.accesskey "A">
 <!ENTITY forwardMsgCmd.label "转发">
 <!ENTITY forwardMsgCmd.accesskey "F">
-<!ENTITY forwardMsgCmd.key	"l">
+<!ENTITY forwardMsgCmd.key "l">
 <!ENTITY forwardAsMenu.label "转发">
 <!ENTITY forwardAsMenu.accesskey "o">
 <!ENTITY forwardAsInline.label "内联">
@@ -371,7 +371,7 @@
 <!ENTITY openFeedWebPageInWindow.accesskey "W">
 <!ENTITY openFeedSummaryInWindow.label "在新窗口打开摘要">
 <!ENTITY openFeedSummaryInWindow.accesskey "S">
-<!ENTITY openFeedWebPageInMP.label "切换是否显示消息面板中的网页和摘要">
+<!ENTITY openFeedWebPageInMP.label "切换是否显示消息窗格中的网页和摘要">
 <!ENTITY openFeedWebPageInMP.accesskey "T">
 
 <!-- Tools Menu -->
