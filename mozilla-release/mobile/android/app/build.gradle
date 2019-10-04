@@ -56,6 +56,7 @@ android {
     defaultConfig {
         targetSdkVersion project.ext.targetSdkVersion
         minSdkVersion project.ext.minSdkVersion
+        maxSdkVersion 29
         manifestPlaceholders = project.ext.manifestPlaceholders
 
         /* Cliqz start */
