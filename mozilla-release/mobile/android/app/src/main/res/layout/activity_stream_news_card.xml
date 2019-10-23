@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/top_news_item_background_selector"
+    android:background="@drawable/top_news_item_background_selector"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/new_card_padding_10"
     android:paddingEnd="@dimen/new_card_padding_5"

@@ -147,7 +147,9 @@ class TabMenuStripLayout extends ThemedLinearLayout
         tintTabDrawables(getContext(), activeTabTintColor, inactiveTabTintColor);
 
         // Just to remove the badge from the Offrz page
-        selectedView.setSelected(false);
+        if (selectedView != null) {
+            selectedView.setSelected(false);
+        }
         /*Cliqz End*/
 
         // Callback to measure and draw the strip after the view is visible.
