@@ -35,7 +35,7 @@ node('master') {
 //                        [   "x86_64-linux-android",     21       ],
                         [   "aarch64-linux-android",    21       ],
 //                        [   "i686-linux-android",       16       ],
-                        [   "arm-linux-androideabi",    16       ] ]
+                        [   "arm-linux-androideabi",    19       ] ]
                     archs.each {
                         def (arch, minSdk) = it
                         apk = cliqz.buildBrowser(arch, minSdk, brand, "release")
