@@ -23,6 +23,11 @@ var { XPCOMUtils } = ChromeUtils.import(
 var { TelemetryController } = ChromeUtils.import(
   "resource://gre/modules/TelemetryController.jsm"
 );
+/* Cliqz start */
+const { ExtensionUtils } = ChromeUtils.import(
+  "resource://gre/modules/ExtensionUtils.jsm"
+);
+/* Cliqz end */
 
 if (AppConstants.ACCESSIBILITY) {
   ChromeUtils.defineModuleGetter(
@@ -7732,8 +7737,6 @@ var Cliqz = {
       "Privacy:Show",
       "Privacy:SetBlockingPolicy"
     ]);
-
-    ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
 
     Services.cpmm.addMessageListener("MessageChannel:Messages",
       this._extensionListener.bind(this));
