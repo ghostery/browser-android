@@ -1,6 +1,6 @@
-# Ghostery Browser for Android
+# DEPRECATED - Ghostery Browser for Android v2.x
 
-This is the next generation Ghostery Browser for Android based on Firefox.
+This project is no longer active.  Please see our [current Android browser](https://github.com/ghostery/user-agent-android) project for Ghostery Android v3+.
 
 ## Building
 
